@@ -189,6 +189,16 @@ Windows path.
 
 Recorded in the "Defects (manual)" table of `20-plan/handoff.md`.
 
+**P-01 decisions (2026-10-10):**
+
+- D-S04-1, applied in the batched spec revision after S-06: replace C001-REQ-1105 with a
+  minimum supported Claude Code version (verified 2.1.295), stated in the README and checked
+  by the doctor. TS-1106 becomes a doctor/version scenario. Guards: `architect:sdd-*` callers
+  are guarded, all others are allowed.
+- Headless sessions in later spikes and evals use the desktop app's bundled Claude Code
+  binary (`$CLAUDE_CODE_EXECPATH`, 2.1.295 at the time of writing), with the parent
+  session's `CLAUDE*`/`ANTHROPIC*` variables removed. The PATH CLI (2.0.76) is not used.
+
 ## Test cases in `verified_by`
 
 C001-TC-1103 and C001-TC-1106 are integration tests of `sdd guard-path` with synthetic hook
