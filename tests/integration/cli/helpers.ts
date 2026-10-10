@@ -57,11 +57,16 @@ export function makeWorkspace(files: Record<string, string>): { root: string; cl
 /** Marker value for `.sdd/registry.json`: write the registry rebuilt from the other files. */
 export const REBUILD = "<rebuilt registry>";
 
-/** A minimal valid change folder `004-x` with one requirement. */
+/** The coverage table of C001-IF-03 §7 for C004-REQ-012. */
+export const COVERAGE =
+  "| REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |\n|---|---|---|---|---|---|---|---|\n" +
+  "| C004-REQ-012 | TS-012 | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x |\n";
+
 /** The story fields of C001-REQ-402 before Requirements and Traces to, for persona P-01. */
 export const STORY_FIELDS =
   "- **As a** P-01 owner\n- **I want** a thing\n- **So that** it is done\n- **Value / outcome:** done\n- **Priority:** Must · **Size hint:** S · **Capability:** C004-CAP-01\n";
 
+/** A minimal lint-clean change folder `004-x` with one requirement. */
 export function minimalChange(): Record<string, string> {
   return {
     ".sdd/SDD.md": "# SDD workspace\n",
@@ -76,6 +81,8 @@ export function minimalChange(): Record<string, string> {
     ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/stories.md":
       "---\nid: C004-CAP-01\nartifact: spec/stories\n---\n\n### C004-US-001 — Story\n" + STORY_FIELDS + "- **Requirements:** C004-REQ-012\n- **Traces to:** Q1\n",
     ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/acceptance.md":
-      "---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — Criterion\n```gherkin\nScenario: C004-TS-012 — s\n  Given a\n  When b\n  Then c\n```\n",
+      "---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — Criterion\n```gherkin\nScenario: C004-TS-012 — s\n  Given a\n  When b\n  Then c\n```\n\n" + COVERAGE,
+    ".sdd/004-x/10-spec/70-dod.md":
+      "---\nid: C004-SPEC-DOD\nartifact: spec/dod\n---\n\n| ID | Statement | Evidence type | Covers |\n|---|---|---|---|\n| C004-DOD-001 | Tests pass | test-report | C004-REQ-012 |\n",
   };
 }

@@ -156,6 +156,8 @@ test("lint on a copy of this repository's workspace reports only the known dogfo
     const unexpected = findings.filter((f) => {
       if (f.code === "LINT-WS-002") return false;
       if (f.path.includes("/00-ideation/") && (f.code === "TR-12" || f.code === "LINT-TXT-001")) return false;
+      // C001-T-020: 70 approved scenarios have no Given step and C001-TS-205 has no When (C001-REQ-413).
+      if (f.code === "LINT-TS-001" && f.path.endsWith("/acceptance.md")) return false;
       const known = ["C001-NG-01", "C001-NG-02", "C001-NG-03", "C001-NG-04", "C001-NG-05", "C001-NG-06", "C001-AS-01", "C001-AS-08", "C001-REQ-012", "C001-AC-012.1"];
       return !(f.code === "TR-12" && known.includes(f.ids?.[0] ?? ""));
     });

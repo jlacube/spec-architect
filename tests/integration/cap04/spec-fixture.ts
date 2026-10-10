@@ -1,6 +1,6 @@
-// Shared fixture for the requirement-quality lint scenarios (C001-TS-402 … 410): the lint-clean
-// minimal change of the CLI tests, with one artifact replaced per scenario.
-import { makeWorkspace, minimalChange, runInProcess, STORY_FIELDS } from "../cli/helpers.ts";
+// Shared fixture for the spec-phase lint scenarios (C001-TS-402 … 422): the lint-clean minimal
+// change of the CLI tests, with one artifact replaced per scenario.
+import { COVERAGE, makeWorkspace, minimalChange, runInProcess, STORY_FIELDS } from "../cli/helpers.ts";
 
 export const CAP = ".sdd/004-x/10-spec/20-capabilities/CAP-01-a";
 export const REQ_FILE = `${CAP}/requirements.md`;
@@ -47,7 +47,7 @@ export function storiesFile(...sections: string[]): string {
 }
 
 export function acceptance(title: string): string {
-  return `---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — ${title}\n\`\`\`gherkin\nScenario: C004-TS-012 — s\n  Given a\n  When b\n  Then c\n\`\`\`\n`;
+  return `---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — ${title}\n\`\`\`gherkin\nScenario: C004-TS-012 — s\n  Given a\n  When b\n  Then c\n\`\`\`\n\n${COVERAGE}`;
 }
 
 export function personas(...ids: string[]): string {
@@ -73,3 +73,33 @@ export function lint(overrides: Record<string, string>): { code: number; finding
 export function withCode(findings: LintFinding[], code: string): LintFinding[] {
   return findings.filter((f) => f.code === code);
 }
+
+export const NFR_FILE = ".sdd/004-x/10-spec/30-nfr/nfr.md";
+export const DOD_FILE = ".sdd/004-x/10-spec/70-dod.md";
+
+const NFR_FIELDS: [string, string][] = [
+  ["Category", "Performance efficiency"],
+  ["Statement", "THE sdd CLI SHALL answer within the threshold."],
+  ["Metric", "wall-clock time"],
+  ["Threshold", "≤ 1 s"],
+  ["Method", "benchmark"],
+  ["Environment", "REF-WIN"],
+  ["Rationale", "r"],
+  ["DoD", "C004-DOD-001"],
+];
+
+/** nfr.md with one NFR `id`; `omit` drops fields, `empty` leaves them blank. */
+export function nfrFile(id: string, opts: { omit?: string[]; empty?: string[] } = {}): string {
+  const body = NFR_FIELDS.filter(([n]) => !(opts.omit ?? []).includes(n))
+    .map(([n, v]) => `- **${n}:**${(opts.empty ?? []).includes(n) ? "" : " " + v}\n`)
+    .join("");
+  return `---\nid: C004-SPEC-NFR\nartifact: spec/nfr\n---\n\n### ${id} — Answer time\n${body}`;
+}
+
+/** 70-dod.md with the given rows `[id, evidence, covers]`. */
+export function dodFile(...rows: [string, string, string][]): string {
+  return "---\nid: C004-SPEC-DOD\nartifact: spec/dod\n---\n\n| ID | Statement | Evidence type | Covers |\n|---|---|---|---|\n" + rows.map(([id, ev, cov]) => `| ${id} | Item | ${ev} | ${cov} |\n`).join("");
+}
+
+/** A brownfield change.md for CHG-004. */
+export const BROWNFIELD = "---\nid: CHG-004\ntitle: x\nkind: brownfield\n---\n# CHG-004\n";

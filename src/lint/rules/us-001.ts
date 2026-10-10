@@ -11,6 +11,7 @@ export const us001: LintRule = {
     const out: RuleFinding[] = [];
     for (const c of ctx.changes)
       for (const [id, s] of c.spec.sections) {
+        if (!id.includes("-US-")) continue;
         const at = s.lines.findIndex((l) => /\*\*As an?:?\*\*/i.test(l));
         if (at < 0) continue;
         const file = c.graph.byId.get(id)?.[0]?.file ?? "";

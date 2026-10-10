@@ -14,3 +14,9 @@ Scenario: C004-TS-101 — scenario
   When b
   Then c
 ```
+
+## Coverage table
+
+| REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
+|---|---|---|---|---|---|---|---|
+| C004-REQ-101 | TS-101 | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x |

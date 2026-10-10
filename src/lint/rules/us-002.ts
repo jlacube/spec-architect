@@ -29,6 +29,7 @@ export const us002: LintRule = {
     const out: RuleFinding[] = [];
     for (const c of ctx.changes)
       for (const [id, s] of c.spec.sections) {
+        if (!id.includes("-US-")) continue;
         const missing = LABELS.filter(([, re]) => !s.lines.some((l) => value(re.exec(l)?.[1] ?? "") !== "")).map(([name]) => name);
         if (missing.length === 0) continue;
         const file = c.graph.byId.get(id)?.[0]?.file ?? "";

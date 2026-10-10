@@ -1,4 +1,5 @@
 // Lint contracts: the context the engine gathers and the pure rules it runs (C001-CON-13).
+import type { Blocks } from "../model/blocks.ts";
 import type { ChangeGraph, GraphEdge, GraphNode } from "../model/graph.ts";
 import type { JsonDiff } from "../workspace/status.ts";
 
@@ -47,8 +48,15 @@ export interface SpecFacts {
   personas: ReadonlySet<string>;
   /** System names allowed after `THE`: "System names" tables (change and project glossary) and COMP titles. */
   systems: readonly string[];
-  /** Lines of each heading-defined user story's section, by ID; `line` is the heading line. */
+  /** Lines of each heading-defined US, REQ and NFR section, by ID; `line` is the heading line. */
   sections: ReadonlyMap<string, { line: number; lines: string[] }>;
+  /** Parsed 10-spec Markdown files by change-relative path (lines are 1-based in `blocks`). */
+  docs: ReadonlyMap<string, SpecDoc>;
+}
+
+export interface SpecDoc {
+  lines: string[];
+  blocks: Blocks;
 }
 
 /** A requirement's Statement field, located for reporting. */
