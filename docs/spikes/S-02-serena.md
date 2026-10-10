@@ -152,6 +152,18 @@ Open points that this spike cannot settle on its own; they are part of the defec
 
 Recorded in the "Defects (manual)" table of `20-plan/handoff.md`.
 
+**P-01 decisions (2026-10-10), to be applied in one spec revision after spikes S-03 … S-06:**
+
+- D-S02-1: use the read-only launch of config D (custom mode file shipped in the plugin,
+  `--project-from-cwd`, dashboard off). TS-1007 asserts the observed read-only tool set.
+- D-S02-2: grant symbol tools only: `find_symbol`, `get_symbols_overview`,
+  `find_referencing_symbols`, `find_declaration`, `find_implementations`. File and text
+  search stay with Glob/Grep.
+- D-S02-3: relocate Serena's project data through `SERENA_HOME`. The plugin's `.mcp.json`
+  points it at a dedicated per-user folder whose `serena_config.yml` sets
+  `project_serena_folder_location` outside the repository, and the doctor creates and checks
+  that config. The exact path expression in `.mcp.json` follows S-05/S-06.
+
 ## Install notes for the README and doctor (C001-IF-10 §3, `[VERIFY S-02]`)
 
 - `uv tool install -p 3.13 serena-agent` works as written. Pin to the minor version that
