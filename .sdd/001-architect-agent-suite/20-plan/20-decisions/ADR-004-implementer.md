@@ -3,7 +3,7 @@ id: C001-ADR-004
 artifact: plan/adr
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-ADR-004 — Implementers are plain Claude Code sessions in this repository

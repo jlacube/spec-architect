@@ -3,7 +3,7 @@ id: C001-PLAN-INDEX
 artifact: plan/index
 change: CHG-001
 phase: 20-plan
-status: in-review
+status: approved
 ---
 
 # CHG-001 — Plan index

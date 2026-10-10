@@ -3,7 +3,7 @@ id: C001-ADR-006
 artifact: plan/adr
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-ADR-006 — `node --test` as the test runner

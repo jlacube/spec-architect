@@ -3,7 +3,7 @@ id: C001-PLAN-RISKS
 artifact: plan/risks
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Risk register

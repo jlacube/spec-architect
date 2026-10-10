@@ -29,6 +29,8 @@ Build the harness that runs agent-behaviour scenarios (level eval): scripted `cl
 | add | `evals/harness/run.mjs` | spawn sessions, capture transcript JSON, apply assertions, N runs, pass rate |
 | add | `evals/harness/assert.mjs` | helpers: toolCalls(), askUserQuestions(), writesOutside(), firstReply() |
 | add | `evals/README.md` | tiers: dev 1 run, milestone 3 runs, release 10 runs (≥ 9/10 pass) |
+| add | `evals/harness/metrics.mjs` | per-run metrics record: input, output, cache-read and cache-write tokens per agent/subagent and per model; cost estimate; wall-clock per session, per subagent and per tool call; tool-call counts; pass/fail |
+| add | `evals/harness/report.mjs` | aggregates evals/results/*.json into docs/metrics/eval-metrics.md: per scenario, per agent, per milestone (mean, p50, p95, max) and a release-tier projection (runs × scenarios × p95) |
 
 ## Preconditions
 
@@ -39,7 +41,8 @@ Build the harness that runs agent-behaviour scenarios (level eval): scripted `cl
 
 1. Implement session runner with fixture copy per run.
 2. Implement transcript assertions used by eval TCs.
-3. Record tokens per run into evals/results/*.json.
+3. Capture token usage (input, output, cache read/write) per agent and model, and timings (session, subagent, tool call) for every run into evals/results/*.json, using Claude Code usage/transcript data.
+4. Implement the aggregate metrics report with release-tier cost and duration projection.
 
 ## Verification
 
@@ -48,6 +51,8 @@ Build the harness that runs agent-behaviour scenarios (level eval): scripted `cl
 
 ## Done when
 
-- [ ] Harness documented; cost per run reported
+- [ ] Harness documented
+- [ ] Every eval run produces a complete metrics record (tokens by type, agent and model; timings by session, subagent and tool call)
+- [ ] docs/metrics/eval-metrics.md generated from results
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003
 - [ ] Progress reported: `sdd task set C001-T-029 --status done --commit <sha>` (or frontmatter fallback before T-026)

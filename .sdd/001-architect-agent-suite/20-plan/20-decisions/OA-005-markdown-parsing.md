@@ -3,7 +3,7 @@ id: C001-OA-005
 artifact: plan/option-analysis
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-OA-005 — How the CLI parses markdown artifacts

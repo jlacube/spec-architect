@@ -35,6 +35,10 @@ for r in files:
     if not r.endswith('.md'):
         continue
     t = norm(open(os.path.join(pdir, r), encoding='utf-8').read()).split(NL)
+    raw = open(os.path.join(pdir, r), encoding='utf-8').read()
+    mid = re.search(r'^id: (C001-(?:T|ADR|OA)-[0-9]+)[ 	]*$', raw, re.M)
+    if mid and raw.startswith('---'):
+        ids[mid.group(1)] = 'sha256:' + h(NL.join(t))
     for i, l in enumerate(t):
         m = re.match(r'^(#{3,4}) (C001-[A-Z]+-[\d.]+) ', l)
         if m:
@@ -50,7 +54,7 @@ for r in files:
             while e < len(t) and t[e] != FENCE:
                 e += 1
             ids[m.group(1)] = 'sha256:' + h(NL.join(t[s:e + 1]))
-        m = re.match(r'^\| (C001-(?:GOAL|SC|CON|DOD|IF)-\d+) \|', l) or re.search(r'\*\*(C001-INV-\d+)\*\*', l)
+        m = re.match(r'^\| (C001-(?:GOAL|SC|CON|DOD|IF|RISK|RB|M)-\d+) \|', l) or re.search(r'\*\*(C001-INV-\d+)\*\*', l)
         if m:
             ids.setdefault(m.group(1), 'sha256:' + h(l))
 ap = os.path.join(chg, 'approvals.json')

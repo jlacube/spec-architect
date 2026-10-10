@@ -3,7 +3,7 @@ id: C001-ADR-003
 artifact: plan/adr
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-ADR-003 — Tiered runs for agent-behaviour evals
@@ -34,6 +34,7 @@ Option 1, chosen by P-01 ("Tiered: 1 run in dev, 10 at release (Recommended)").
 
 ## Consequences
 
-- The harness (T-029) records tokens and cost per run in `evals/results/`.
+- The harness (T-029) records detailed metrics per run in `evals/results/`: input, output and cache tokens per agent and model, cost estimate, and wall-clock timings per session, subagent and tool call. `docs/metrics/eval-metrics.md` aggregates them (mean, p50, p95, max) and projects the release-tier cost and duration.
+- **Budget decision (G3, 2026-10-10):** the release eval budget is set by P-01 at the M-3 exit from that metrics report; the release tier may be reduced for low-risk scenarios by revising this ADR.
 - Flakiness surfaces at milestone exit at the latest.
 - Affects: C001-COMP-12; test plan §4; RISK-005.

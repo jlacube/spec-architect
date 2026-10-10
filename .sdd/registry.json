@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-10T21:00:00Z",
+  "generated_at": "2026-10-10T22:00:00Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -24,7 +24,11 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "in-review"
+          "status": "approved",
+          "approved_hash": "sha256:e31a6cbd289c98fec43f8e2786eee58f8c2c48502618b90c79699663f4a78483",
+          "hash_scope": "C001-IF-13 §2 (multi-file, generated files excluded)",
+          "approved_at": "2026-10-10",
+          "approved_by": "jerome.lacube"
         }
       },
       "implementation": {

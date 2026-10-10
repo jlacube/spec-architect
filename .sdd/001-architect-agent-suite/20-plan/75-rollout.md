@@ -3,7 +3,7 @@ id: C001-PLAN-ROLLOUT
 artifact: plan/rollout
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Rollout, migration and rollback

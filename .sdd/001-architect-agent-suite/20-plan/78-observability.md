@@ -3,7 +3,7 @@ id: C001-PLAN-OBS
 artifact: plan/observability
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Observability plan

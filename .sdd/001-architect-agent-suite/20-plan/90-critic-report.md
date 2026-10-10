@@ -18,7 +18,7 @@ on T/RISK/RB/M/ADR/OA IDs and an arithmetic check of OA-005/006.
 
 | blocker | major | minor |
 |---|---|---|
-| 0 | 2 | 6 (2 resolved) |
+| 0 | 2 (1 resolved) | 6 (2 resolved, 1 partly) |
 
 ## Findings
 
@@ -36,7 +36,7 @@ on T/RISK/RB/M/ADR/OA IDs and an arithmetic check of OA-005/006.
 - **Evidence:** 79 eval TCs × 10 runs at release = 790 sessions, with no token or cost cap stated
 - **Why it matters:** release-tier cost could be large and unbudgeted.
 - **Suggested fix:** T-029 measures cost per run in M-3. P-01 sets a release budget at the M-3 exit and may lower release runs for low-risk scenarios through an ADR-003 revision.
-- **Status:** open (P-01 decides budget at M-3 exit)
+- **Status:** resolved at G3 — P-01: "ok let's see after M-3, which means we need to have detailed metrics of token consumption + timings". T-029 now records tokens by type, agent and model and timings by session, subagent and tool call; the M-3 exit criterion includes the metrics report and the budget decision.
 
 ### CR-3 — Spike tasks implement no requirement
 - **Severity:** minor
@@ -67,7 +67,7 @@ on T/RISK/RB/M/ADR/OA IDs and an arithmetic check of OA-005/006.
 - **Severity:** minor
 - **Refs:** C001-T-073, C001-T-074
 - **Why it matters:** T-074 needs an existing repository from P-01; T-073 proposes "lint auto-fix suggestions" as the greenfield change.
-- **Status:** open (P-01 to name both before M-7)
+- **Status:** partly resolved at G3 — greenfield proposal accepted ("looks good"); the brownfield target repository is still to be named by P-01 before M-7.
 
 ### CR-8 — macOS/Linux untested at v0.1.0
 - **Severity:** minor

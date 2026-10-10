@@ -3,7 +3,7 @@ id: C001-PLAN-TEST
 artifact: plan/test-plan
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Test plan

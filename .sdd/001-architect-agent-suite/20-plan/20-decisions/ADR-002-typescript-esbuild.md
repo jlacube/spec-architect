@@ -3,7 +3,7 @@ id: C001-ADR-002
 artifact: plan/adr
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-ADR-002 — CLI sources in TypeScript, bundled with esbuild

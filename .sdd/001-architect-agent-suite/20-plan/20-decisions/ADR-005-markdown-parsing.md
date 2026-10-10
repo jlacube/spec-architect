@@ -3,7 +3,7 @@ id: C001-ADR-005
 artifact: plan/adr
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # C001-ADR-005 — Custom line-oriented artifact parser with `yaml` for frontmatter

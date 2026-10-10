@@ -2,7 +2,7 @@
 artifact: plan/work-breakdown
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Work breakdown

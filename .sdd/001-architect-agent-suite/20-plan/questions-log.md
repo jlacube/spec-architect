@@ -2,7 +2,7 @@
 artifact: plan/questions-log
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Plan-phase questions log

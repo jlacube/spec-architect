@@ -3,7 +3,7 @@ id: C001-PLAN-STRATEGY
 artifact: plan/strategy
 change: CHG-001
 phase: 20-plan
-status: draft
+status: approved
 ---
 
 # CHG-001 — Strategy
@@ -41,7 +41,7 @@ The suite is built **from the deterministic core outwards** (C001-ADR-001):
 |---|---|---|---|---|
 | C001-M-1 | Verification spikes and scaffolding | Unknown platform behaviours resolved before design-dependent work starts | All six spike reports have a verdict; resulting spec defects raised and triaged | C001-T-001 … C001-T-007 |
 | C001-M-2 | Deterministic CLI core, dogfooded | A working `sdd` CLI that validates this repository | `sdd lint` exits 0 on this repository; G1/G2 hashes reproduce; prototypes retired; all M-2 test cases pass | C001-T-010 … C001-T-028 |
-| C001-M-3 | Conductor and ideation/spec agents | Ideation and specification phases run end to end with interview, critic and gates | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2 | C001-T-029 … C001-T-039 |
+| C001-M-3 | Conductor and ideation/spec agents | Ideation and specification phases run end to end with interview, critic and gates | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2; eval metrics report (tokens by type, agent and model; timings by session, subagent and tool call) produced, and P-01 decides the release eval budget from it | C001-T-029 … C001-T-039 |
 | C001-M-4 | Code intelligence, architecture and planning agents | Brownfield grounding and the plan phase run end to end | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | C001-T-041 … C001-T-044 |
 | C001-M-5 | Hooks, guards and archive | The write/shell boundary is enforced and the archive loop works | Guard corpora 100%; injection evals 0 failures; archive test cases pass | C001-T-050 … C001-T-054 |
 | C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green; routing ≥ 90%; NFR results recorded | C001-T-060 … C001-T-065 |
