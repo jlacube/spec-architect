@@ -1,0 +1,16 @@
+{
+  "name": "architect-local",
+  "owner": {
+    "name": "Jerome LACUBE"
+  },
+  "metadata": {
+    "description": "Local marketplace for the Architect spec-driven development plugin"
+  },
+  "plugins": [
+    {
+      "name": "architect",
+      "source": "./plugins/architect",
+      "description": "Spec-driven development agent suite"
+    }
+  ]
+}

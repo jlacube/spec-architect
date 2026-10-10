@@ -1,2 +1,6 @@
 # Local tooling output not owned by the SDD workspace
 .sdd/metrics/
+# Node toolchain output
+node_modules/
+build/
+coverage/

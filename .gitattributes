@@ -1,2 +1,4 @@
 # Keep spec artifacts LF so approval hashes are stable across platforms
 .sdd/** text eol=lf
+# Repository text files are LF (C001-CON-09; hashes and bundles stable across platforms)
+* text=auto eol=lf

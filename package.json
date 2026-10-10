@@ -1,0 +1,24 @@
+{
+  "name": "architect-plugin",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Architect: a Claude Code agent suite for spec-driven development",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node scripts/build.mjs && node scripts/test.mjs",
+    "check": "npm run typecheck && npm test",
+    "bench": "node bench/run.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "yaml": "^2.9.1"
+  }
+}
