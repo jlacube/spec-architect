@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-1103.1, C001-AC-1105.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1103, C001-TS-1106, C001-TC-1103, C001-TC-1106]
 components: [C001-COMP-08]
 risk_refs: [C001-RISK-002]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 2d34ff2, completed_at: 2026-10-10, notes: "Verdict works: primary guard design (docs/spikes/S-04-hooks.md). Claude Code 2.1.295 hook input carries agent_type 'architect:<agent>' for plugin subagents and --agent main sessions (agent_id for subagents); SubagentStop matcher matches agent_type; probe guard deny/allow verified end to end. PATH claude 2.0.76 is unusable (API 400 duplicate tool_use ids, hooks fire twice). Spec defect D-S04-1 (C001-REQ-1105 fallback) opened. C001-TC-1103/1106 belong to C001-T-050." }
 ---
 
 # C001-T-005 — Spike S-04: hook input and agent identity
