@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync2, statSync as statSync4 } from "node:fs";
-import { dirname as dirname3, join as join6 } from "node:path";
+import { existsSync as existsSync3, statSync as statSync4 } from "node:fs";
+import { dirname as dirname3, join as join7 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7528,7 +7528,7 @@ function relativePath(root, target, options = {}) {
 
 // src/cli/commands.ts
 import { readdirSync as readdirSync3, statSync as statSync3 } from "node:fs";
-import { join as join5 } from "node:path";
+import { join as join6 } from "node:path";
 
 // src/lint/rules/ws-002.ts
 import { readdirSync } from "node:fs";
@@ -8035,6 +8035,10 @@ function initWorkspace(root, options = {}) {
   return { root, existed, created, rewritten };
 }
 
+// src/workspace/ledger.ts
+import { existsSync as existsSync2, readFileSync as readFileSync3 } from "node:fs";
+import { basename as basename3, join as join5 } from "node:path";
+
 // src/cli/errors.ts
 var entries = [
   ["ERR-CLI-001", "No `.sdd/` found (command other than `init`)", "Not an SDD workspace", "Run `sdd init` or `/architect:init`"],
@@ -8094,6 +8098,130 @@ function usage(command, detail) {
   return new CliError("ERR-CLI-003", { detail, command });
 }
 
+// src/workspace/ledger.ts
+var LEDGER_TYPES = [
+  "GOAL",
+  "SC",
+  "NG",
+  "AS",
+  "CON",
+  "CAP",
+  "US",
+  "REQ",
+  "AC",
+  "TS",
+  "NFR",
+  "INV",
+  "IF",
+  "ERR",
+  "COMP",
+  "DEC",
+  "ADR",
+  "OA",
+  "R",
+  "M",
+  "T",
+  "TC",
+  "RISK",
+  "RB",
+  "DOD"
+];
+var TWO_DIGIT2 = /* @__PURE__ */ new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M"]);
+function changeNumber(dir) {
+  const m = /^(\d{3})-/.exec(basename3(dir));
+  if (!m?.[1]) throw new Error(`not a change folder: ${dir}`);
+  return m[1];
+}
+function loadLedger(dir) {
+  const path = join5(dir, "ids.json");
+  const nnn = changeNumber(dir);
+  const raw = existsSync2(path) ? JSON.parse(readFileSync3(path, "utf8")) : {};
+  const doc = {
+    ...raw,
+    change: raw.change ?? `CHG-${nnn}`,
+    allocated: raw.allocated ?? {},
+    blocks: raw.blocks ?? [],
+    tombstones: raw.tombstones ?? []
+  };
+  const tomb = new Set(doc.tombstones.map((t) => t.id));
+  return { ...doc, dir, path, isTombstoned: (id) => tomb.has(id) };
+}
+function inline(v) {
+  if (Array.isArray(v)) return "[" + v.map(inline).join(", ") + "]";
+  if (v !== null && typeof v === "object") {
+    const e = Object.entries(v);
+    return e.length === 0 ? "{}" : "{ " + e.map(([k, x]) => `${JSON.stringify(k)}: ${inline(x)}`).join(", ") + " }";
+  }
+  return JSON.stringify(v);
+}
+var objLine = (o) => inline(o);
+function formatLedger(doc) {
+  const out = ["{"];
+  const keys = Object.keys(doc).filter((k) => !["dir", "path", "isTombstoned"].includes(k));
+  keys.forEach((k, i) => {
+    const v = doc[k];
+    const comma = i < keys.length - 1 ? "," : "";
+    if (Array.isArray(v)) {
+      if (v.length === 0) out.push(`  ${JSON.stringify(k)}: []${comma}`);
+      else {
+        out.push(`  ${JSON.stringify(k)}: [`);
+        v.forEach((item, j) => out.push(`    ${objLine(item)}${j < v.length - 1 ? "," : ""}`));
+        out.push(`  ]${comma}`);
+      }
+    } else if (typeof v === "object" && v !== null) {
+      out.push(`  ${JSON.stringify(k)}: ${Object.keys(v).length === 0 ? "{}" : objLine(v)}${comma}`);
+    } else {
+      out.push(`  ${JSON.stringify(k)}: ${JSON.stringify(v)}${comma}`);
+    }
+  });
+  out.push("}");
+  return out.join("\n") + "\n";
+}
+function save(l) {
+  const { dir: _d, path, isTombstoned: _t, ...doc } = l;
+  writeTextAtomic(path, formatLedger(doc));
+}
+function capabilityId(nnn, name) {
+  const m = /^(?:C\d{3}-)?CAP-(\d+)$/.exec(name) ?? /^(\d+)$/.exec(name);
+  if (!m?.[1]) throw usage("id next", `--block must name a capability such as CAP-01: ${name}`);
+  return `C${nnn}-CAP-${m[1].padStart(2, "0")}`;
+}
+function blockTypes(b) {
+  return b.type.split("|").map((t) => t.trim());
+}
+function nextId(dir, type, options = {}) {
+  if (!LEDGER_TYPES.includes(type)) throw new CliError("ERR-CLI-004", { TYPE: type, list: LEDGER_TYPES.join(", ") });
+  if (type === "AC") throw usage("id next", "AC IDs derive from their requirement (AC-<req-seq>.<n>) and are not allocated");
+  const nnn = changeNumber(dir);
+  const ledger = loadLedger(dir);
+  const blocks = ledger.blocks.filter((b) => blockTypes(b).includes(type));
+  let block;
+  if (blocks.length > 0) {
+    if (options.block === void 0) throw usage("id next", `${type} uses capability blocks; pass --block <capability>`);
+    const cap = capabilityId(nnn, options.block);
+    block = blocks.find((b) => capabilityId(nnn, b.capability) === cap);
+    if (!block) throw usage("id next", `no block for ${type} in capability ${cap}`);
+  }
+  const defined = buildChangeGraph(dir).nodes.filter((n) => n.type === type).map((n) => Number(parseId(n.id)?.seq ?? 0)).filter((n) => !block || n >= block.from && n <= block.to);
+  const counter = block ? block.allocated?.[type] ?? block.from - 1 : ledger.allocated[type] ?? 0;
+  let seq = Math.max(counter, ...defined, block ? block.from - 1 : 0) + 1;
+  const width = TWO_DIGIT2.has(type) ? 2 : 3;
+  const idOf = (n) => formatId({ change: nnn, type, seq: String(n).padStart(width, "0") });
+  while (ledger.isTombstoned(idOf(seq))) seq++;
+  if (block && seq > block.to) throw usage("id next", `block ${capabilityId(nnn, block.capability)} for ${type} is full (${block.from}–${block.to})`);
+  if (block) block.allocated = { ...block.allocated ?? {}, [type]: seq };
+  else ledger.allocated = { ...ledger.allocated, [type]: seq };
+  save(ledger);
+  return { id: idOf(seq) };
+}
+function tombstoneId(dir, id, reason, date = /* @__PURE__ */ new Date()) {
+  const ledger = loadLedger(dir);
+  if (ledger.isTombstoned(id)) throw usage("id tombstone", `${id} is already tombstoned`);
+  const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  ledger.tombstones = [...ledger.tombstones, { id, reason, date: iso }];
+  save(ledger);
+}
+
 // src/cli/output.ts
 function formatFinding(f) {
   const where = f.line !== void 0 ? `${f.path}:${f.line}` : f.path;
@@ -8138,8 +8266,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders(root) {
-  const sdd = join5(root, ".sdd");
-  return readdirSync3(sdd).filter((n) => /^\d{3}-/.test(n) && statSync3(join5(sdd, n)).isDirectory()).sort();
+  const sdd = join6(root, ".sdd");
+  return readdirSync3(sdd).filter((n) => /^\d{3}-/.test(n) && statSync3(join6(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -8149,7 +8277,7 @@ function lint(ctx) {
   let file;
   if (values["file"] !== void 0) {
     const abs = normalisePath(values["file"], { cwd: ctx.cwd });
-    if (!isInside(join5(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
+    if (!isInside(join6(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
     file = relativePath(root, abs);
     const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
     folders = folder ? folders.filter((f) => f === folder) : [];
@@ -8160,7 +8288,7 @@ function lint(ctx) {
     folders = match;
   }
   const changes = folders.map((f) => {
-    const graph = buildChangeGraph(join5(root, ".sdd", f));
+    const graph = buildChangeGraph(join6(root, ".sdd", f));
     out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f}`, graph };
   });
@@ -8176,11 +8304,41 @@ function lint(ctx) {
   }
   return report.summary.error > 0 ? 1 : 0;
 }
+function resolveChange(ctx, nnn) {
+  const folders = changeFolders(ctx.root);
+  if (nnn !== void 0) {
+    if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
+    const match = folders.filter((f) => f.startsWith(nnn + "-"));
+    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+    return join6(ctx.root, ".sdd", match[0]);
+  }
+  const inside = folders.find((f) => isInside(join6(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join6(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join6(ctx.root, ".sdd", folders[0]);
+  throw usage(ctx.name, "several changes exist; pass --change <NNN>");
+}
+function idNext(ctx) {
+  const dir = resolveChange(ctx, ctx.values["change"]);
+  const opts = ctx.values["block"] !== void 0 ? { block: ctx.values["block"] } : {};
+  const { id } = nextId(dir, ctx.args["TYPE"], opts);
+  ctx.out.trace("id.next", { id });
+  ctx.out.line(id);
+  return 0;
+}
+function idTombstone(ctx) {
+  const id = ctx.args["ID"];
+  const parts = parseId(id);
+  if (!parts) throw usage(ctx.name, `<ID> must be a full ID such as C004-REQ-007: ${id}`);
+  const dir = resolveChange(ctx, parts.change);
+  tombstoneId(dir, id, ctx.values["reason"]);
+  ctx.out.line(`tombstoned: ${id}`);
+  return 0;
+}
 function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join5(root, ".sdd");
+  const where = join6(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -8196,8 +8354,8 @@ var COMMANDS = [
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
-  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"] },
-  { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"] },
+  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
+  { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [] },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
@@ -8254,8 +8412,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir = start;
   for (; ; ) {
-    const sdd = join6(dir, ".sdd");
-    if (existsSync2(sdd) && statSync4(sdd).isDirectory()) return dir;
+    const sdd = join7(dir, ".sdd");
+    if (existsSync3(sdd) && statSync4(sdd).isDirectory()) return dir;
     const parent = dirname3(dir);
     if (parent === dir) return null;
     dir = parent;

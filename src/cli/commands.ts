@@ -9,6 +9,8 @@ import { PHASES, type LintChange, type LintRule, type Phase } from "../lint/type
 import { buildChangeGraph } from "../model/graph.ts";
 import { TOOL } from "../version.ts";
 import { initRoot, initWorkspace } from "../workspace/init.ts";
+import { nextId, tombstoneId } from "../workspace/ledger.ts";
+import { parseId } from "../model/ids.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
 
@@ -96,6 +98,43 @@ function lint(ctx: CommandContext): number {
   return report.summary.error > 0 ? 1 : 0;
 }
 
+/**
+ * The change a command acts on: `--change NNN`, else the change folder containing the current
+ * directory, else the only change of the workspace.
+ */
+export function resolveChange(ctx: CommandContext, nnn: string | undefined): string {
+  const folders = changeFolders(ctx.root);
+  if (nnn !== undefined) {
+    if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
+    const match = folders.filter((f) => f.startsWith(nnn + "-"));
+    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+    return join(ctx.root, ".sdd", match[0]!);
+  }
+  const inside = folders.find((f) => isInside(join(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join(ctx.root, ".sdd", folders[0]!);
+  throw usage(ctx.name, "several changes exist; pass --change <NNN>");
+}
+
+function idNext(ctx: CommandContext): number {
+  const dir = resolveChange(ctx, ctx.values["change"] as string | undefined);
+  const opts = ctx.values["block"] !== undefined ? { block: ctx.values["block"] as string } : {};
+  const { id } = nextId(dir, ctx.args["TYPE"]!, opts);
+  ctx.out.trace("id.next", { id });
+  ctx.out.line(id);
+  return 0;
+}
+
+function idTombstone(ctx: CommandContext): number {
+  const id = ctx.args["ID"]!;
+  const parts = parseId(id);
+  if (!parts) throw usage(ctx.name, `<ID> must be a full ID such as C004-REQ-007: ${id}`);
+  const dir = resolveChange(ctx, parts.change);
+  tombstoneId(dir, id, ctx.values["reason"] as string);
+  ctx.out.line(`tombstoned: ${id}`);
+  return 0;
+}
+
 function init(ctx: CommandContext): number {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
@@ -118,8 +157,8 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
-  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"] },
-  { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"] },
+  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
+  { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [] },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
