@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-10T19:00:00Z",
+  "generated_at": "2026-10-10T21:00:00Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -24,13 +24,13 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "draft"
+          "status": "in-review"
         }
       },
       "implementation": {
         "status": "not-started",
         "tasks": {
-          "total": 0,
+          "total": 58,
           "done": 0,
           "blocked": 0,
           "in_progress": 0
