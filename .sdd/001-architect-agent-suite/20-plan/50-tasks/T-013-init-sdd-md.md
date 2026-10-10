@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-012]
 implements: [C001-REQ-101, C001-REQ-102, C001-REQ-103, C001-REQ-123, C001-REQ-124]
 satisfies_ac: [C001-AC-101.1, C001-AC-101.2, C001-AC-102.1, C001-AC-103.1, C001-AC-123.1, C001-AC-124.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-101, C001-TS-102, C001-TS-103, C001-TS-104, C001-TS-129, C
 components: [C001-COMP-03]
 risk_refs: [C001-RISK-012]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c49420b, completed_at: 2026-10-11, notes: "init, SDD.md rendering, adoption and LINT-WS-002 done. C001-TC-101..104 pass on the bundled CLI. C001-TC-129 and the status --write half of C001-TC-130 run at module level (adoptBootstrap) because status --write is C001-T-017, which must call adoptBootstrap() and add the command-level runs. init on a copy of this repo's .sdd/ changes no file and only adds the five root folders. --force re-renders SDD.md only (status block kept; registry and user files untouched)." }
 ---
 
 # C001-T-013 — init, SDD.md generation and bootstrap adoption
