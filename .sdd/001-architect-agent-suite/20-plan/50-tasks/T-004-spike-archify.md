@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-504.1, C001-AC-505.1, C001-AC-506.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-504, C001-TS-505, C001-TS-506, C001-TC-504, C001-TC-505, C
 components: [C001-COMP-02]
 risk_refs: [C001-RISK-009]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a2b2a00, completed_at: 2026-10-10, notes: "Verdict fallback-only (docs/spikes/S-03-archify.md). License MIT (code; bundled brand marks mixed incl. CC-BY-NC-SA, not to be used). Hyphenated component IDs accepted. All output commands fail on Windows 11 with Archify 3.0.1 (upstream issue #474); doctor gives a false positive. Spec defects D-S03-1 (C001-REQ-504..506, Mermaid fallback per strategy contingency) and D-S03-2 (C001-IF-14 §3 IR conventions) opened. C001-TC-504..506 belong to C001-T-042 and cannot pass on REF-WIN with Archify 3.0.1." }
 ---
 
 # C001-T-004 — Spike S-03: Archify validate, deliver and compare
