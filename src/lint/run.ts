@@ -1,5 +1,5 @@
 // Runs lint rules over the selected changes and assembles the report of C001-IF-11 §1.
-import type { Finding, LintChange, LintContext, LintRule, Phase, Statement } from "./types.ts";
+import type { Finding, LintChange, LintContext, LintRule, Phase, Statement, WorkspaceFacts } from "./types.ts";
 
 export interface LintReport {
   tool: string;
@@ -14,8 +14,8 @@ function inScope(path: string, ctx: LintContext): boolean {
   return ctx.changes.some((c) => path.startsWith(`${c.folder}/${ctx.phase}/`));
 }
 
-export function buildContext(root: string, changes: LintChange[], phase: Phase | null, file?: string): LintContext {
-  const ctx: LintContext = { root, changes, phase, statements: [] };
+export function buildContext(root: string, changes: LintChange[], phase: Phase | null, file: string | undefined, workspace: WorkspaceFacts): LintContext {
+  const ctx: LintContext = { root, changes, phase, statements: [], workspace };
   if (file !== undefined) ctx.file = file;
   const statements: Statement[] = [];
   for (const c of changes) {

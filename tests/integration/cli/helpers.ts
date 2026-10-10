@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { runCli, type CliIo } from "../../../src/cli/run.ts";
 import type { LintRule } from "../../../src/lint/types.ts";
+import { rebuildRegistry } from "../../../src/workspace/status.ts";
 import { repoRoot } from "../../helpers.ts";
 
 export const CLI = join(repoRoot(), "plugins", "architect", "scripts", "sdd.mjs");
@@ -46,14 +47,21 @@ export function makeWorkspace(files: Record<string, string>): { root: string; cl
     mkdirSync(dirname(p), { recursive: true });
     writeFileSync(p, content);
   }
+  // `REBUILD` asks for a registry.json consistent with the files, so LINT-REG-001 stays quiet.
+  if (files[".sdd/registry.json"] === REBUILD) {
+    writeFileSync(join(root, ".sdd", "registry.json"), JSON.stringify(rebuildRegistry(join(root, ".sdd")), null, 2) + "\n");
+  }
   return { root, cleanup: () => rmSync(root, { recursive: true, force: true }) };
 }
+
+/** Marker value for `.sdd/registry.json`: write the registry rebuilt from the other files. */
+export const REBUILD = "<rebuilt registry>";
 
 /** A minimal valid change folder `004-x` with one requirement. */
 export function minimalChange(): Record<string, string> {
   return {
     ".sdd/SDD.md": "# SDD workspace\n",
-    ".sdd/registry.json": "{}\n",
+    ".sdd/registry.json": REBUILD,
     ".sdd/004-x/change.md": "---\nid: CHG-004\ntitle: x\n---\n# CHG-004\n",
     ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/requirements.md":
       "---\nid: C004-CAP-01\nartifact: spec/requirements\n---\n\n### C004-REQ-012 — Thing\n- **Pattern:** ubiquitous\n- **Statement:** THE sdd CLI SHALL do one thing.\n",

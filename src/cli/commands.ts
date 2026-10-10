@@ -1,6 +1,6 @@
 // Command table of C001-IF-01. Usage strings are copied from the interface. Commands without `run`
 // are refused with ERR-CLI-003 until their task implements them.
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { isInside, normalisePath, relativePath } from "../io/paths.ts";
 import { RULES } from "../lint/rules/index.ts";
@@ -14,6 +14,7 @@ import { createChange, KINDS, PROFILES, type Kind } from "../workspace/change.ts
 import { upgradeToFull } from "../workspace/upgrade.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
 import type { Profile } from "../workspace/templates.ts";
+import { rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
@@ -89,7 +90,14 @@ function lint(ctx: CommandContext): number {
     out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f}`, graph };
   });
-  const report = runLint(buildContext(root, changes, phase, file), ctx.rules, TOOL);
+  const sdd = join(root, ".sdd");
+  const regPath = join(sdd, "registry.json");
+  const stored = existsSync(regPath) ? (JSON.parse(readFileSync(regPath, "utf8")) as unknown) : null;
+  const workspace = {
+    entries: readdirSync(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() })),
+    registryDrift: registryDrift(stored, rebuildRegistry(sdd)),
+  };
+  const report = runLint(buildContext(root, changes, phase, file, workspace), ctx.rules, TOOL);
   out.trace("lint", { rules: ctx.rules.length, error: report.summary.error, warn: report.summary.warn, info: report.summary.info });
   if (values["json"]) out.json(report);
   else {
@@ -118,6 +126,32 @@ export function resolveChange(ctx: CommandContext, nnn: string | undefined): str
   if (inside) return join(ctx.root, ".sdd", inside);
   if (folders.length === 1) return join(ctx.root, ".sdd", folders[0]!);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
+}
+
+function status(ctx: CommandContext): number {
+  const sdd = join(ctx.root, ".sdd");
+  if (ctx.values["write"]) {
+    const r = writeStatus(sdd);
+    ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
+    if (ctx.values["json"]) {
+      ctx.out.json(r.registry);
+      return 0;
+    }
+    if (r.adopted) ctx.out.line("adopted: bootstrap workspace (SDD.md generator set)");
+    ctx.out.line(r.registryWritten ? "written: registry.json" : "unchanged: registry.json");
+    ctx.out.line(r.sddMdWritten ? "written: SDD.md status block" : "unchanged: SDD.md status block");
+    return 0;
+  }
+  const registry = rebuildRegistry(sdd);
+  if (ctx.values["json"]) ctx.out.json(registry);
+  else if (ctx.values["brief"]) {
+    for (const c of registry.changes.filter((x) => x.status !== "archived")) {
+      const t = c.implementation.tasks;
+      const open = c.defects.filter((d) => d["status"] === "open").length;
+      ctx.out.line(`${c.id} ${c.phase} ${c.phases[c.phase as "10-spec"]?.status ?? "not-started"} · tasks ${t.done}/${t.total} · ${open} open defect${open === 1 ? "" : "s"}`);
+    }
+  } else ctx.out.line(renderStatusBlock(registry));
+  return 0;
 }
 
 function changeNew(ctx: CommandContext): number {
@@ -187,7 +221,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
-  { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [] },
+  { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },

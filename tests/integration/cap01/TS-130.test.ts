@@ -40,3 +40,17 @@ test("C001-TS-130: an unknown metrics folder is reported as LINT-WS-002 info and
     ws.cleanup();
   }
 });
+
+test("C001-TS-130 through the CLI: `sdd status --write` exits 0 and leaves the metrics folder untouched", () => {
+  const ws = makeWorkspace(minimalChange());
+  try {
+    const metrics = join(ws.root, ".sdd", "metrics");
+    mkdirSync(metrics);
+    writeFileSync(join(metrics, "snapshots.jsonl"), "x\r\n");
+    assert.equal(runBundled(["status", "--write"], { cwd: ws.root }).code, 0);
+    assert.equal(runBundled(["lint"], { cwd: ws.root }).code, 0);
+    assert.equal(readFileSync(join(metrics, "snapshots.jsonl"), "utf8"), "x\r\n");
+  } finally {
+    ws.cleanup();
+  }
+});

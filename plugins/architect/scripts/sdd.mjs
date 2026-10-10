@@ -984,13 +984,13 @@ var require_Collection = __commonJS({
 var require_stringifyComment = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyComment.js"(exports) {
     "use strict";
-    var stringifyComment = (str2) => str2.replace(/^(?!$)(?: $)?/gm, "#");
+    var stringifyComment = (str3) => str3.replace(/^(?!$)(?: $)?/gm, "#");
     function indentComment(comment, indent) {
       if (/^\n+$/.test(comment))
         return comment.substring(1);
       return indent ? comment.replace(/^(?! *$)/gm, indent) : comment;
     }
-    var lineComment = (str2, indent, comment) => str2.endsWith("\n") ? indentComment(comment, indent) : comment.includes("\n") ? "\n" + indentComment(comment, indent) : (str2.endsWith(" ") ? "" : " ") + comment;
+    var lineComment = (str3, indent, comment) => str3.endsWith("\n") ? indentComment(comment, indent) : comment.includes("\n") ? "\n" + indentComment(comment, indent) : (str3.endsWith(" ") ? "" : " ") + comment;
     exports.indentComment = indentComment;
     exports.lineComment = lineComment;
     exports.stringifyComment = stringifyComment;
@@ -1144,16 +1144,16 @@ var require_stringifyString = __commonJS({
       lineWidth: ctx.options.lineWidth,
       minContentWidth: ctx.options.minContentWidth
     });
-    var containsDocumentMarker = (str2) => /^(%|---|\.\.\.)/m.test(str2);
-    function lineLengthOverLimit(str2, lineWidth, indentLength) {
+    var containsDocumentMarker = (str3) => /^(%|---|\.\.\.)/m.test(str3);
+    function lineLengthOverLimit(str3, lineWidth, indentLength) {
       if (!lineWidth || lineWidth < 0)
         return false;
       const limit = lineWidth - indentLength;
-      const strLen = str2.length;
+      const strLen = str3.length;
       if (strLen <= limit)
         return false;
       for (let i = 0, start = 0; i < strLen; ++i) {
-        if (str2[i] === "\n") {
+        if (str3[i] === "\n") {
           if (i - start > limit)
             return true;
           start = i + 1;
@@ -1170,11 +1170,11 @@ var require_stringifyString = __commonJS({
       const { implicitKey } = ctx;
       const minMultiLineLength = ctx.options.doubleQuotedMinMultiLineLength;
       const indent = ctx.indent || (containsDocumentMarker(value) ? "  " : "");
-      let str2 = "";
+      let str3 = "";
       let start = 0;
       for (let i = 0, ch = json[i]; ch; ch = json[++i]) {
         if (ch === " " && json[i + 1] === "\\" && json[i + 2] === "n") {
-          str2 += json.slice(start, i) + "\\ ";
+          str3 += json.slice(start, i) + "\\ ";
           i += 1;
           start = i;
           ch = "\\";
@@ -1183,38 +1183,38 @@ var require_stringifyString = __commonJS({
           switch (json[i + 1]) {
             case "u":
               {
-                str2 += json.slice(start, i);
+                str3 += json.slice(start, i);
                 const code = json.substr(i + 2, 4);
                 switch (code) {
                   case "0000":
-                    str2 += "\\0";
+                    str3 += "\\0";
                     break;
                   case "0007":
-                    str2 += "\\a";
+                    str3 += "\\a";
                     break;
                   case "000b":
-                    str2 += "\\v";
+                    str3 += "\\v";
                     break;
                   case "001b":
-                    str2 += "\\e";
+                    str3 += "\\e";
                     break;
                   case "0085":
-                    str2 += "\\N";
+                    str3 += "\\N";
                     break;
                   case "00a0":
-                    str2 += "\\_";
+                    str3 += "\\_";
                     break;
                   case "2028":
-                    str2 += "\\L";
+                    str3 += "\\L";
                     break;
                   case "2029":
-                    str2 += "\\P";
+                    str3 += "\\P";
                     break;
                   default:
                     if (code.substr(0, 2) === "00")
-                      str2 += "\\x" + code.substr(2);
+                      str3 += "\\x" + code.substr(2);
                     else
-                      str2 += json.substr(i, 6);
+                      str3 += json.substr(i, 6);
                 }
                 i += 5;
                 start = i + 1;
@@ -1224,14 +1224,14 @@ var require_stringifyString = __commonJS({
               if (implicitKey || json[i + 2] === '"' || json.length < minMultiLineLength) {
                 i += 1;
               } else {
-                str2 += json.slice(start, i) + "\n\n";
+                str3 += json.slice(start, i) + "\n\n";
                 while (json[i + 2] === "\\" && json[i + 3] === "n" && json[i + 4] !== '"') {
-                  str2 += "\n";
+                  str3 += "\n";
                   i += 2;
                 }
-                str2 += indent;
+                str3 += indent;
                 if (json[i + 2] === " ")
-                  str2 += "\\";
+                  str3 += "\\";
                 i += 1;
                 start = i + 1;
               }
@@ -1240,8 +1240,8 @@ var require_stringifyString = __commonJS({
               i += 1;
           }
       }
-      str2 = start ? str2 + json.slice(start) : json;
-      return implicitKey ? str2 : foldFlowLines.foldFlowLines(str2, indent, foldFlowLines.FOLD_QUOTED, getFoldOptions(ctx, false));
+      str3 = start ? str3 + json.slice(start) : json;
+      return implicitKey ? str3 : foldFlowLines.foldFlowLines(str3, indent, foldFlowLines.FOLD_QUOTED, getFoldOptions(ctx, false));
     }
     function singleQuotedString(value, ctx) {
       if (ctx.options.singleQuote === false || ctx.implicitKey && value.includes("\n") || /[ \t]\n|\n[ \t]/.test(value))
@@ -1369,15 +1369,15 @@ ${indent}${start}${value}${end}`;
           return quotedString(value, ctx);
         }
       }
-      const str2 = value.replace(/\n+/g, `$&
+      const str3 = value.replace(/\n+/g, `$&
 ${indent}`);
       if (actualString) {
-        const test = (tag) => tag.default && tag.tag !== "tag:yaml.org,2002:str" && tag.test?.test(str2);
+        const test = (tag) => tag.default && tag.tag !== "tag:yaml.org,2002:str" && tag.test?.test(str3);
         const { compat, tags } = ctx.doc.schema;
         if (tags.some(test) || compat?.some(test))
           return quotedString(value, ctx);
       }
-      return implicitKey ? str2 : foldFlowLines.foldFlowLines(str2, indent, foldFlowLines.FOLD_FLOW, getFoldOptions(ctx, false));
+      return implicitKey ? str3 : foldFlowLines.foldFlowLines(str3, indent, foldFlowLines.FOLD_FLOW, getFoldOptions(ctx, false));
     }
     function stringifyString(item, ctx, onComment, onChompKeep) {
       const { implicitKey, inFlow } = ctx;
@@ -1529,11 +1529,11 @@ var require_stringify = __commonJS({
       const props = stringifyProps(node, tagObj, ctx);
       if (props.length > 0)
         ctx.indentAtStart = (ctx.indentAtStart ?? 0) + props.length + 1;
-      const str2 = typeof tagObj.stringify === "function" ? tagObj.stringify(node, ctx, onComment, onChompKeep) : identity.isScalar(node) ? stringifyString.stringifyString(node, ctx, onComment, onChompKeep) : node.toString(ctx, onComment, onChompKeep);
+      const str3 = typeof tagObj.stringify === "function" ? tagObj.stringify(node, ctx, onComment, onChompKeep) : identity.isScalar(node) ? stringifyString.stringifyString(node, ctx, onComment, onChompKeep) : node.toString(ctx, onComment, onChompKeep);
       if (!props)
-        return str2;
-      return identity.isScalar(node) || str2[0] === "{" || str2[0] === "[" ? `${props} ${str2}` : `${props}
-${ctx.indent}${str2}`;
+        return str3;
+      return identity.isScalar(node) || str3[0] === "{" || str3[0] === "[" ? `${props} ${str3}` : `${props}
+${ctx.indent}${str3}`;
     }
     exports.createStringifyContext = createStringifyContext;
     exports.stringify = stringify;
@@ -1568,8 +1568,8 @@ var require_stringifyPair = __commonJS({
       });
       let keyCommentDone = false;
       let chompKeep = false;
-      let str2 = stringify.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
-      if (!explicitKey && !ctx.inFlow && str2.length > 1024) {
+      let str3 = stringify.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
+      if (!explicitKey && !ctx.inFlow && str3.length > 1024) {
         if (simpleKeys)
           throw new Error("With simple keys, single line scalar must not span more than 1024 characters");
         explicitKey = true;
@@ -1578,27 +1578,27 @@ var require_stringifyPair = __commonJS({
         if (allNullValues || value == null) {
           if (keyCommentDone && onComment)
             onComment();
-          return str2 === "" ? "?" : explicitKey ? `? ${str2}` : str2;
+          return str3 === "" ? "?" : explicitKey ? `? ${str3}` : str3;
         }
       } else if (allNullValues && !simpleKeys || value == null && explicitKey) {
-        str2 = `? ${str2}`;
+        str3 = `? ${str3}`;
         if (keyComment && !keyCommentDone) {
-          str2 += stringifyComment.lineComment(str2, ctx.indent, commentString(keyComment));
+          str3 += stringifyComment.lineComment(str3, ctx.indent, commentString(keyComment));
         } else if (chompKeep && onChompKeep)
           onChompKeep();
-        return str2;
+        return str3;
       }
       if (keyCommentDone)
         keyComment = null;
       if (explicitKey) {
         if (keyComment)
-          str2 += stringifyComment.lineComment(str2, ctx.indent, commentString(keyComment));
-        str2 = `? ${str2}
+          str3 += stringifyComment.lineComment(str3, ctx.indent, commentString(keyComment));
+        str3 = `? ${str3}
 ${indent}:`;
       } else {
-        str2 = `${str2}:`;
+        str3 = `${str3}:`;
         if (keyComment)
-          str2 += stringifyComment.lineComment(str2, ctx.indent, commentString(keyComment));
+          str3 += stringifyComment.lineComment(str3, ctx.indent, commentString(keyComment));
       }
       let vsb, vcb, valueComment;
       if (identity.isNode(value)) {
@@ -1614,7 +1614,7 @@ ${indent}:`;
       }
       ctx.implicitKey = false;
       if (!explicitKey && !keyComment && identity.isScalar(value))
-        ctx.indentAtStart = str2.length + 1;
+        ctx.indentAtStart = str3.length + 1;
       chompKeep = false;
       if (!indentSeq && indentStep.length >= 2 && !ctx.inFlow && !explicitKey && identity.isSeq(value) && !value.flow && !value.tag && !value.anchor) {
         ctx.indent = ctx.indent.substring(2);
@@ -1658,16 +1658,16 @@ ${ctx.indent}`;
       } else if (valueStr === "" || valueStr[0] === "\n") {
         ws = "";
       }
-      str2 += ws + valueStr;
+      str3 += ws + valueStr;
       if (ctx.inFlow) {
         if (valueCommentDone && onComment)
           onComment();
       } else if (valueComment && !valueCommentDone) {
-        str2 += stringifyComment.lineComment(str2, ctx.indent, commentString(valueComment));
+        str3 += stringifyComment.lineComment(str3, ctx.indent, commentString(valueComment));
       } else if (chompKeep && onChompKeep) {
         onChompKeep();
       }
-      return str2;
+      return str3;
     }
     exports.stringifyPair = stringifyPair;
   }
@@ -1894,31 +1894,31 @@ var require_stringifyCollection = __commonJS({
           }
         }
         chompKeep = false;
-        let str3 = stringify.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
+        let str4 = stringify.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
         if (comment2)
-          str3 += stringifyComment.lineComment(str3, itemIndent, commentString(comment2));
+          str4 += stringifyComment.lineComment(str4, itemIndent, commentString(comment2));
         if (chompKeep && comment2)
           chompKeep = false;
-        lines.push(blockItemPrefix + str3);
+        lines.push(blockItemPrefix + str4);
       }
-      let str2;
+      let str3;
       if (lines.length === 0) {
-        str2 = flowChars.start + flowChars.end;
+        str3 = flowChars.start + flowChars.end;
       } else {
-        str2 = lines[0];
+        str3 = lines[0];
         for (let i = 1; i < lines.length; ++i) {
           const line = lines[i];
-          str2 += line ? `
+          str3 += line ? `
 ${indent}${line}` : "\n";
         }
       }
       if (comment) {
-        str2 += "\n" + stringifyComment.indentComment(commentString(comment), indent);
+        str3 += "\n" + stringifyComment.indentComment(commentString(comment), indent);
         if (onComment)
           onComment();
       } else if (chompKeep && onChompKeep)
         onChompKeep();
-      return str2;
+      return str3;
     }
     function stringifyFlowCollection({ items }, ctx, { flowChars, itemIndent }) {
       const { indent, indentStep, flowCollectionPadding: fcPadding, options: { commentString } } = ctx;
@@ -1961,21 +1961,21 @@ ${indent}${line}` : "\n";
         }
         if (comment)
           reqNewline = true;
-        let str2 = stringify.stringify(item, itemCtx, () => comment = null);
-        reqNewline || (reqNewline = lines.length > linesAtValue || str2.includes("\n"));
+        let str3 = stringify.stringify(item, itemCtx, () => comment = null);
+        reqNewline || (reqNewline = lines.length > linesAtValue || str3.includes("\n"));
         if (i < items.length - 1) {
-          str2 += ",";
+          str3 += ",";
         } else if (ctx.options.trailingComma) {
           if (ctx.options.lineWidth > 0) {
-            reqNewline || (reqNewline = lines.reduce((sum, line) => sum + line.length + 2, 2) + (str2.length + 2) > ctx.options.lineWidth);
+            reqNewline || (reqNewline = lines.reduce((sum, line) => sum + line.length + 2, 2) + (str3.length + 2) > ctx.options.lineWidth);
           }
           if (reqNewline) {
-            str2 += ",";
+            str3 += ",";
           }
         }
         if (comment)
-          str2 += stringifyComment.lineComment(str2, itemIndent, commentString(comment));
-        lines.push(str2);
+          str3 += stringifyComment.lineComment(str3, itemIndent, commentString(comment));
+        lines.push(str3);
         linesAtValue = lines.length;
       }
       const { start, end } = flowChars;
@@ -1987,11 +1987,11 @@ ${indent}${line}` : "\n";
           reqNewline = ctx.options.lineWidth > 0 && len > ctx.options.lineWidth;
         }
         if (reqNewline) {
-          let str2 = start;
+          let str3 = start;
           for (const line of lines)
-            str2 += line ? `
+            str3 += line ? `
 ${indentStep}${indent}${line}` : "\n";
-          return `${str2}
+          return `${str3}
 ${indent}${end}`;
         } else {
           return `${start}${fcPadding}${lines.join(" ")}${fcPadding}${end}`;
@@ -2323,7 +2323,7 @@ var require_string = __commonJS({
       identify: (value) => typeof value === "string",
       default: true,
       tag: "tag:yaml.org,2002:str",
-      resolve: (str2) => str2,
+      resolve: (str3) => str3,
       stringify(item, ctx, onComment, onChompKeep) {
         ctx = Object.assign({ actualString: true }, ctx);
         return stringifyString.stringifyString(item, ctx, onComment, onChompKeep);
@@ -2361,7 +2361,7 @@ var require_bool = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:bool",
       test: /^(?:[Tt]rue|TRUE|[Ff]alse|FALSE)$/,
-      resolve: (str2) => new Scalar.Scalar(str2[0] === "t" || str2[0] === "T"),
+      resolve: (str3) => new Scalar.Scalar(str3[0] === "t" || str3[0] === "T"),
       stringify({ source, value }, ctx) {
         if (source && boolTag.test.test(source)) {
           const sv = source[0] === "t" || source[0] === "T";
@@ -2413,7 +2413,7 @@ var require_float = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
-      resolve: (str2) => str2.slice(-3).toLowerCase() === "nan" ? NaN : str2[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
+      resolve: (str3) => str3.slice(-3).toLowerCase() === "nan" ? NaN : str3[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
       stringify: stringifyNumber.stringifyNumber
     };
     var floatExp = {
@@ -2422,7 +2422,7 @@ var require_float = __commonJS({
       tag: "tag:yaml.org,2002:float",
       format: "EXP",
       test: /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)[eE][-+]?[0-9]+$/,
-      resolve: (str2) => parseFloat(str2),
+      resolve: (str3) => parseFloat(str3),
       stringify(node) {
         const num = Number(node.value);
         return isFinite(num) ? num.toExponential() : stringifyNumber.stringifyNumber(node);
@@ -2433,11 +2433,11 @@ var require_float = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^[-+]?(?:\.[0-9]+|[0-9]+\.[0-9]*)$/,
-      resolve(str2) {
-        const node = new Scalar.Scalar(parseFloat(str2));
-        const dot = str2.indexOf(".");
-        if (dot !== -1 && str2[str2.length - 1] === "0")
-          node.minFractionDigits = str2.length - dot - 1;
+      resolve(str3) {
+        const node = new Scalar.Scalar(parseFloat(str3));
+        const dot = str3.indexOf(".");
+        if (dot !== -1 && str3[str3.length - 1] === "0")
+          node.minFractionDigits = str3.length - dot - 1;
         return node;
       },
       stringify: stringifyNumber.stringifyNumber
@@ -2454,7 +2454,7 @@ var require_int = __commonJS({
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
-    var intResolve = (str2, offset, radix, { intAsBigInt }) => intAsBigInt ? BigInt(str2) : parseInt(str2.substring(offset), radix);
+    var intResolve = (str3, offset, radix, { intAsBigInt }) => intAsBigInt ? BigInt(str3) : parseInt(str3.substring(offset), radix);
     function intStringify(node, radix, prefix) {
       const { value } = node;
       if (intIdentify(value) && value >= 0)
@@ -2467,7 +2467,7 @@ var require_int = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "OCT",
       test: /^0o[0-7]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 2, 8, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 2, 8, opt),
       stringify: (node) => intStringify(node, 8, "0o")
     };
     var int = {
@@ -2475,7 +2475,7 @@ var require_int = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:int",
       test: /^[-+]?[0-9]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 0, 10, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 0, 10, opt),
       stringify: stringifyNumber.stringifyNumber
     };
     var intHex = {
@@ -2484,7 +2484,7 @@ var require_int = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "HEX",
       test: /^0x[0-9a-fA-F]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 2, 16, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 2, 16, opt),
       stringify: (node) => intStringify(node, 16, "0x")
     };
     exports.int = int;
@@ -2537,7 +2537,7 @@ var require_schema2 = __commonJS({
         identify: (value) => typeof value === "string",
         default: true,
         tag: "tag:yaml.org,2002:str",
-        resolve: (str2) => str2,
+        resolve: (str3) => str3,
         stringify: stringifyJSON
       },
       {
@@ -2554,7 +2554,7 @@ var require_schema2 = __commonJS({
         default: true,
         tag: "tag:yaml.org,2002:bool",
         test: /^true$|^false$/,
-        resolve: (str2) => str2 === "true",
+        resolve: (str3) => str3 === "true",
         stringify: stringifyJSON
       },
       {
@@ -2562,7 +2562,7 @@ var require_schema2 = __commonJS({
         default: true,
         tag: "tag:yaml.org,2002:int",
         test: /^-?(?:0|[1-9][0-9]*)$/,
-        resolve: (str2, _onError, { intAsBigInt }) => intAsBigInt ? BigInt(str2) : parseInt(str2, 10),
+        resolve: (str3, _onError, { intAsBigInt }) => intAsBigInt ? BigInt(str3) : parseInt(str3, 10),
         stringify: ({ value }) => intIdentify(value) ? value.toString() : JSON.stringify(value)
       },
       {
@@ -2570,7 +2570,7 @@ var require_schema2 = __commonJS({
         default: true,
         tag: "tag:yaml.org,2002:float",
         test: /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]*)?(?:[eE][-+]?[0-9]+)?$/,
-        resolve: (str2) => parseFloat(str2),
+        resolve: (str3) => parseFloat(str3),
         stringify: stringifyJSON
       }
     ];
@@ -2578,9 +2578,9 @@ var require_schema2 = __commonJS({
       default: true,
       tag: "",
       test: /^/,
-      resolve(str2, onError) {
-        onError(`Unresolved plain scalar ${JSON.stringify(str2)}`);
-        return str2;
+      resolve(str3, onError) {
+        onError(`Unresolved plain scalar ${JSON.stringify(str3)}`);
+        return str3;
       }
     };
     var schema = [map.map, seq.seq].concat(jsonScalars, jsonError);
@@ -2612,10 +2612,10 @@ var require_binary = __commonJS({
         if (typeof node_buffer.Buffer === "function") {
           return node_buffer.Buffer.from(src, "base64");
         } else if (typeof atob === "function") {
-          const str2 = atob(src.replace(/[\n\r]/g, ""));
-          const buffer = new Uint8Array(str2.length);
-          for (let i = 0; i < str2.length; ++i)
-            buffer[i] = str2.charCodeAt(i);
+          const str3 = atob(src.replace(/[\n\r]/g, ""));
+          const buffer = new Uint8Array(str3.length);
+          for (let i = 0; i < str3.length; ++i)
+            buffer[i] = str3.charCodeAt(i);
           return buffer;
         } else {
           onError("This environment does not support reading binary tags; either Buffer or atob is required");
@@ -2626,28 +2626,28 @@ var require_binary = __commonJS({
         if (!value)
           return "";
         const buf = value;
-        let str2;
+        let str3;
         if (typeof node_buffer.Buffer === "function") {
-          str2 = buf instanceof node_buffer.Buffer ? buf.toString("base64") : node_buffer.Buffer.from(buf.buffer).toString("base64");
+          str3 = buf instanceof node_buffer.Buffer ? buf.toString("base64") : node_buffer.Buffer.from(buf.buffer).toString("base64");
         } else if (typeof btoa === "function") {
           let s = "";
           for (let i = 0; i < buf.length; ++i)
             s += String.fromCharCode(buf[i]);
-          str2 = btoa(s);
+          str3 = btoa(s);
         } else {
           throw new Error("This environment does not support writing binary tags; either Buffer or btoa is required");
         }
         type ?? (type = Scalar.Scalar.BLOCK_LITERAL);
         if (type !== Scalar.Scalar.QUOTE_DOUBLE) {
           const lineWidth = Math.max(ctx.options.lineWidth - ctx.indent.length, ctx.options.minContentWidth);
-          const n = Math.ceil(str2.length / lineWidth);
+          const n = Math.ceil(str3.length / lineWidth);
           const lines = new Array(n);
           for (let i = 0, o = 0; i < n; ++i, o += lineWidth) {
-            lines[i] = str2.substr(o, lineWidth);
+            lines[i] = str3.substr(o, lineWidth);
           }
-          str2 = lines.join(type === Scalar.Scalar.BLOCK_LITERAL ? "\n" : " ");
+          str3 = lines.join(type === Scalar.Scalar.BLOCK_LITERAL ? "\n" : " ");
         }
-        return stringifyString.stringifyString({ comment, type, value: str2 }, ctx, onComment, onChompKeep);
+        return stringifyString.stringifyString({ comment, type, value: str3 }, ctx, onComment, onChompKeep);
       }
     };
     exports.binary = binary;
@@ -2853,7 +2853,7 @@ var require_float2 = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
-      resolve: (str2) => str2.slice(-3).toLowerCase() === "nan" ? NaN : str2[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
+      resolve: (str3) => str3.slice(-3).toLowerCase() === "nan" ? NaN : str3[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
       stringify: stringifyNumber.stringifyNumber
     };
     var floatExp = {
@@ -2862,7 +2862,7 @@ var require_float2 = __commonJS({
       tag: "tag:yaml.org,2002:float",
       format: "EXP",
       test: /^[-+]?(?:[0-9][0-9_]*)?(?:\.[0-9_]*)?[eE][-+]?[0-9]+$/,
-      resolve: (str2) => parseFloat(str2.replace(/_/g, "")),
+      resolve: (str3) => parseFloat(str3.replace(/_/g, "")),
       stringify(node) {
         const num = Number(node.value);
         return isFinite(num) ? num.toExponential() : stringifyNumber.stringifyNumber(node);
@@ -2873,11 +2873,11 @@ var require_float2 = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^[-+]?(?:[0-9][0-9_]*)?\.[0-9_]*$/,
-      resolve(str2) {
-        const node = new Scalar.Scalar(parseFloat(str2.replace(/_/g, "")));
-        const dot = str2.indexOf(".");
+      resolve(str3) {
+        const node = new Scalar.Scalar(parseFloat(str3.replace(/_/g, "")));
+        const dot = str3.indexOf(".");
         if (dot !== -1) {
-          const f = str2.substring(dot + 1).replace(/_/g, "");
+          const f = str3.substring(dot + 1).replace(/_/g, "");
           if (f[f.length - 1] === "0")
             node.minFractionDigits = f.length;
         }
@@ -2897,34 +2897,34 @@ var require_int2 = __commonJS({
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
-    function intResolve(str2, offset, radix, { intAsBigInt }) {
-      const sign = str2[0];
+    function intResolve(str3, offset, radix, { intAsBigInt }) {
+      const sign = str3[0];
       if (sign === "-" || sign === "+")
         offset += 1;
-      str2 = str2.substring(offset).replace(/_/g, "");
+      str3 = str3.substring(offset).replace(/_/g, "");
       if (intAsBigInt) {
         switch (radix) {
           case 2:
-            str2 = `0b${str2}`;
+            str3 = `0b${str3}`;
             break;
           case 8:
-            str2 = `0o${str2}`;
+            str3 = `0o${str3}`;
             break;
           case 16:
-            str2 = `0x${str2}`;
+            str3 = `0x${str3}`;
             break;
         }
-        const n2 = BigInt(str2);
+        const n2 = BigInt(str3);
         return sign === "-" ? BigInt(-1) * n2 : n2;
       }
-      const n = parseInt(str2, radix);
+      const n = parseInt(str3, radix);
       return sign === "-" ? -1 * n : n;
     }
     function intStringify(node, radix, prefix) {
       const { value } = node;
       if (intIdentify(value)) {
-        const str2 = value.toString(radix);
-        return value < 0 ? "-" + prefix + str2.substr(1) : prefix + str2;
+        const str3 = value.toString(radix);
+        return value < 0 ? "-" + prefix + str3.substr(1) : prefix + str3;
       }
       return stringifyNumber.stringifyNumber(node);
     }
@@ -2934,7 +2934,7 @@ var require_int2 = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "BIN",
       test: /^[-+]?0b[0-1_]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 2, 2, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 2, 2, opt),
       stringify: (node) => intStringify(node, 2, "0b")
     };
     var intOct = {
@@ -2943,7 +2943,7 @@ var require_int2 = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "OCT",
       test: /^[-+]?0[0-7_]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 1, 8, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 1, 8, opt),
       stringify: (node) => intStringify(node, 8, "0")
     };
     var int = {
@@ -2951,7 +2951,7 @@ var require_int2 = __commonJS({
       default: true,
       tag: "tag:yaml.org,2002:int",
       test: /^[-+]?[0-9][0-9_]*$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 0, 10, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 0, 10, opt),
       stringify: stringifyNumber.stringifyNumber
     };
     var intHex = {
@@ -2960,7 +2960,7 @@ var require_int2 = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "HEX",
       test: /^[-+]?0x[0-9a-fA-F_]+$/,
-      resolve: (str2, _onError, opt) => intResolve(str2, 2, 16, opt),
+      resolve: (str3, _onError, opt) => intResolve(str3, 2, 16, opt),
       stringify: (node) => intStringify(node, 16, "0x")
     };
     exports.int = int;
@@ -3064,9 +3064,9 @@ var require_timestamp = __commonJS({
   "node_modules/yaml/dist/schema/yaml-1.1/timestamp.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
-    function parseSexagesimal(str2, asBigInt) {
-      const sign = str2[0];
-      const parts = sign === "-" || sign === "+" ? str2.substring(1) : str2;
+    function parseSexagesimal(str3, asBigInt) {
+      const sign = str3[0];
+      const parts = sign === "-" || sign === "+" ? str3.substring(1) : str3;
       const num = (n) => asBigInt ? BigInt(n) : Number(n);
       const res = parts.replace(/_/g, "").split(":").reduce((res2, p) => res2 * num(60) + num(p), num(0));
       return sign === "-" ? num(-1) * res : res;
@@ -3103,7 +3103,7 @@ var require_timestamp = __commonJS({
       tag: "tag:yaml.org,2002:int",
       format: "TIME",
       test: /^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+$/,
-      resolve: (str2, _onError, { intAsBigInt }) => parseSexagesimal(str2, intAsBigInt),
+      resolve: (str3, _onError, { intAsBigInt }) => parseSexagesimal(str3, intAsBigInt),
       stringify: stringifySexagesimal
     };
     var floatTime = {
@@ -3112,7 +3112,7 @@ var require_timestamp = __commonJS({
       tag: "tag:yaml.org,2002:float",
       format: "TIME",
       test: /^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\.[0-9_]*$/,
-      resolve: (str2) => parseSexagesimal(str2, false),
+      resolve: (str3) => parseSexagesimal(str3, false),
       stringify: stringifySexagesimal
     };
     var timestamp = {
@@ -3123,8 +3123,8 @@ var require_timestamp = __commonJS({
       // may be omitted altogether, resulting in a date format. In such a case, the time part is
       // assumed to be 00:00:00Z (start of day, UTC).
       test: RegExp("^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(?:(?:t|T|[ \\t]+)([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}(\\.[0-9]+)?)(?:[ \\t]*(Z|[-+][012]?[0-9](?::[0-9]{2})?))?)?$"),
-      resolve(str2) {
-        const match = str2.match(timestamp.test);
+      resolve(str3) {
+        const match = str3.match(timestamp.test);
         if (!match)
           throw new Error("!!timestamp expects a date, starting with yyyy-mm-dd");
         const [, year, month, day, hour, minute, second] = match.map(Number);
@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync6, statSync as statSync6 } from "node:fs";
-import { dirname as dirname5, join as join10 } from "node:path";
+import { existsSync as existsSync8, statSync as statSync7 } from "node:fs";
+import { dirname as dirname5, join as join11 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,12 +7527,22 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync5, readFileSync as readFileSync6, statSync as statSync5 } from "node:fs";
-import { join as join9 } from "node:path";
+import { existsSync as existsSync7, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync6 } from "node:fs";
+import { join as join10 } from "node:path";
 
-// src/lint/rules/ws-002.ts
-import { readdirSync } from "node:fs";
-import { join as join2 } from "node:path";
+// src/lint/rules/reg-001.ts
+var show = (v) => v === void 0 ? "(absent)" : `\`${typeof v === "string" ? v : JSON.stringify(v)}\``;
+var reg001 = {
+  code: "LINT-REG-001",
+  severity: "error",
+  fix: "Run `sdd status --write`",
+  check(ctx) {
+    return ctx.workspace.registryDrift.map((d) => ({
+      path: ".sdd/registry.json",
+      message: d.path === "$" ? "registry.json is missing" : `${d.path}: stored ${show(d.stored)}, expected ${show(d.expected)}`
+    }));
+  }
+};
 
 // src/workspace/layout.ts
 var ROOT_FILES = ["SDD.md", "registry.json"];
@@ -7549,15 +7559,15 @@ var ws002 = {
   severity: "info",
   fix: "None needed (preserved)",
   check(ctx) {
-    return readdirSync(join2(ctx.root, ".sdd"), { withFileTypes: true }).filter((e) => !isKnownRootEntry(e.name, e.isDirectory())).sort((a, b) => a.name.localeCompare(b.name)).map((e) => {
-      const name = e.isDirectory() ? `${e.name}/` : e.name;
+    return ctx.workspace.entries.filter((e) => !isKnownRootEntry(e.name, e.isDirectory)).sort((a, b) => a.name.localeCompare(b.name)).map((e) => {
+      const name = e.isDirectory ? `${e.name}/` : e.name;
       return { path: `.sdd/${name}`, message: `Unknown entry \`${name}\` in .sdd/ is preserved` };
     });
   }
 };
 
 // src/lint/rules/index.ts
-var RULES = [ws002];
+var RULES = [ws002, reg001];
 
 // src/lint/run.ts
 function inScope(path, ctx) {
@@ -7565,8 +7575,8 @@ function inScope(path, ctx) {
   if (ctx.phase === null) return true;
   return ctx.changes.some((c) => path.startsWith(`${c.folder}/${ctx.phase}/`));
 }
-function buildContext(root, changes, phase, file) {
-  const ctx = { root, changes, phase, statements: [] };
+function buildContext(root, changes, phase, file, workspace) {
+  const ctx = { root, changes, phase, statements: [], workspace };
   if (file !== void 0) ctx.file = file;
   const statements = [];
   for (const c of changes) {
@@ -7608,8 +7618,8 @@ var PHASES = ["00-ideation", "10-spec", "20-plan"];
 
 // src/model/graph.ts
 import { createHash } from "node:crypto";
-import { readdirSync as readdirSync2, readFileSync, statSync } from "node:fs";
-import { basename as basename2, join as join3, relative, sep } from "node:path";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { basename as basename2, join as join2, relative, sep } from "node:path";
 
 // src/model/blocks.ts
 var FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
@@ -7808,8 +7818,8 @@ var sha256 = (text) => "sha256:" + createHash("sha256").update(text, "utf8").dig
 var toPosix = (p) => p.split(sep).join("/");
 function listMarkdown(dir) {
   const out = [];
-  for (const name of readdirSync2(dir).sort()) {
-    const p = join3(dir, name);
+  for (const name of readdirSync(dir).sort()) {
+    const p = join2(dir, name);
     if (statSync(p).isDirectory()) out.push(...listMarkdown(p));
     else if (name.endsWith(".md")) out.push(p);
   }
@@ -7941,7 +7951,7 @@ var TOOL = `architect-plugin@${VERSION}`;
 
 // src/workspace/init.ts
 import { existsSync, mkdirSync, readFileSync as readFileSync2, statSync as statSync2 } from "node:fs";
-import { dirname as dirname2, join as join4 } from "node:path";
+import { dirname as dirname2, join as join3 } from "node:path";
 
 // src/workspace/sddmd.ts
 var STATUS_BEGIN = "<!-- sdd:status:begin -->";
@@ -7997,7 +8007,7 @@ function initRoot(start) {
   for (const marker of [".sdd", ".git"]) {
     let dir = start;
     for (; ; ) {
-      if (existsSync(join4(dir, marker))) return dir;
+      if (existsSync(join3(dir, marker))) return dir;
       const parent = dirname2(dir);
       if (parent === dir) break;
       dir = parent;
@@ -8006,24 +8016,24 @@ function initRoot(start) {
   return start;
 }
 function initWorkspace(root, options = {}) {
-  const sdd = join4(root, ".sdd");
+  const sdd = join3(root, ".sdd");
   const existed = isDir(sdd);
   const created = [];
   const rewritten = [];
   if (!existed) mkdirSync(sdd, { recursive: true });
   for (const d of ROOT_DIRS) {
-    if (!isDir(join4(sdd, d))) {
-      mkdirSync(join4(sdd, d));
+    if (!isDir(join3(sdd, d))) {
+      mkdirSync(join3(sdd, d));
       created.push(d + "/");
     }
   }
-  const registry = join4(sdd, "registry.json");
+  const registry = join3(sdd, "registry.json");
   if (!existsSync(registry)) {
     const doc = { sdd_version: 1, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
     writeTextAtomic(registry, JSON.stringify(doc, null, 2) + "\n");
     created.push("registry.json");
   }
-  const sddMd = join4(sdd, "SDD.md");
+  const sddMd = join3(sdd, "SDD.md");
   if (!existsSync(sddMd)) {
     writeTextAtomic(sddMd, renderSddMd(TOOL));
     created.push("SDD.md");
@@ -8037,7 +8047,7 @@ function initWorkspace(root, options = {}) {
 
 // src/workspace/ledger.ts
 import { existsSync as existsSync2, readFileSync as readFileSync3 } from "node:fs";
-import { basename as basename3, join as join5 } from "node:path";
+import { basename as basename3, join as join4 } from "node:path";
 
 // src/cli/errors.ts
 var entries = [
@@ -8133,7 +8143,7 @@ function changeNumber(dir) {
   return m[1];
 }
 function loadLedger(dir) {
-  const path = join5(dir, "ids.json");
+  const path = join4(dir, "ids.json");
   const nnn = changeNumber(dir);
   const raw = existsSync2(path) ? JSON.parse(readFileSync3(path, "utf8")) : {};
   const doc = {
@@ -8223,12 +8233,12 @@ function tombstoneId(dir, id, reason, date = /* @__PURE__ */ new Date()) {
 }
 
 // src/workspace/change.ts
-import { existsSync as existsSync4, mkdirSync as mkdirSync2, readdirSync as readdirSync4, statSync as statSync4 } from "node:fs";
-import { join as join7 } from "node:path";
+import { existsSync as existsSync4, mkdirSync as mkdirSync2, readdirSync as readdirSync3, statSync as statSync4 } from "node:fs";
+import { join as join6 } from "node:path";
 
 // src/workspace/templates.ts
-import { existsSync as existsSync3, readdirSync as readdirSync3, readFileSync as readFileSync4, statSync as statSync3 } from "node:fs";
-import { dirname as dirname3, join as join6 } from "node:path";
+import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync3 } from "node:fs";
+import { dirname as dirname3, join as join5 } from "node:path";
 import { fileURLToPath } from "node:url";
 var LITE_SCAFFOLD = [
   "00-ideation/ideation.md",
@@ -8241,18 +8251,18 @@ var LITE_SCAFFOLD = [
 function defaultPluginRoot() {
   const env = process.env["CLAUDE_PLUGIN_ROOT"];
   if (env) return env;
-  return join6(dirname3(fileURLToPath(import.meta.url)), "..");
+  return join5(dirname3(fileURLToPath(import.meta.url)), "..");
 }
 function templatesDir(profile, options) {
-  return join6(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
+  return join5(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
 }
 function resolveTemplate(profile, rel, options = {}) {
   const parts = rel.split("/");
   if (options.sddDir) {
-    const override = join6(options.sddDir, "_templates", profile, ...parts);
+    const override = join5(options.sddDir, "_templates", profile, ...parts);
     if (existsSync3(override)) return { path: override, source: "override", text: readFileSync4(override, "utf8") };
   }
-  const path = join6(templatesDir(profile, options), ...parts);
+  const path = join5(templatesDir(profile, options), ...parts);
   if (!existsSync3(path)) throw new Error(`no ${profile} template for ${rel}`);
   return { path, source: "plugin", text: readFileSync4(path, "utf8") };
 }
@@ -8268,11 +8278,11 @@ function slugify(title) {
 }
 function nextChangeNumber(sddDir) {
   let max = 0;
-  for (const dir of [sddDir, join7(sddDir, "_archive")]) {
+  for (const dir of [sddDir, join6(sddDir, "_archive")]) {
     if (!existsSync4(dir)) continue;
-    for (const name of readdirSync4(dir)) {
+    for (const name of readdirSync3(dir)) {
       const m = /^(\d{3})-/.exec(name);
-      if (m?.[1] && statSync4(join7(dir, name)).isDirectory()) max = Math.max(max, Number(m[1]));
+      if (m?.[1] && statSync4(join6(dir, name)).isDirectory()) max = Math.max(max, Number(m[1]));
     }
   }
   return String(max + 1).padStart(3, "0");
@@ -8294,7 +8304,7 @@ function createChange(sddDir, title, options) {
   if (slug === "") throw usage("change new", "title yields an empty slug; use letters or digits");
   const nnn = nextChangeNumber(sddDir);
   const folder = `${nnn}-${slug}`;
-  const dir = join7(sddDir, folder);
+  const dir = join6(sddDir, folder);
   const vars = {
     CHANGE: `CHG-${nnn}`,
     P: `C${nnn}`,
@@ -8307,16 +8317,16 @@ function createChange(sddDir, title, options) {
   const tpl = { ...options.pluginRoot !== void 0 ? { pluginRoot: options.pluginRoot } : {}, sddDir };
   const render = (rel) => renderTemplate(resolveTemplate(options.profile, rel, tpl).text, vars);
   mkdirSync2(dir);
-  for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join7(dir, phase));
-  writeTextAtomic(join7(dir, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
-  writeTextAtomic(join7(dir, "ids.json"), render("ids.json"));
-  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join7(dir, ...rel.split("/")), render(rel));
+  for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join6(dir, phase));
+  writeTextAtomic(join6(dir, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
+  writeTextAtomic(join6(dir, "ids.json"), render("ids.json"));
+  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join6(dir, ...rel.split("/")), render(rel));
   return { id: `CHG-${nnn}`, folder, dir };
 }
 
 // src/workspace/upgrade.ts
 import { existsSync as existsSync5, mkdirSync as mkdirSync3, readFileSync as readFileSync5, rmSync } from "node:fs";
-import { basename as basename4, dirname as dirname4, join as join8 } from "node:path";
+import { basename as basename4, dirname as dirname4, join as join7 } from "node:path";
 function readLite(path) {
   if (!existsSync5(path)) return null;
   const doc = splitFrontmatter(readFileSync5(path, "utf8"));
@@ -8345,10 +8355,10 @@ var PLAN_MAP = {
   Risks: "20-plan/70-risks.md"
 };
 var TEMPLATE_OF = (target) => target.replace(/CAP-01-[^/]+\//, "CAP-{{NN}}-{{SLUG}}/");
-function frontmatterOf(templateText, status) {
+function frontmatterOf(templateText, status2) {
   const doc = splitFrontmatter(templateText);
   const end = doc.bodyStartLine - 1;
-  const fmLines = doc.lines.slice(0, end).map((l) => l.startsWith("status:") ? `status: ${status}` : l);
+  const fmLines = doc.lines.slice(0, end).map((l) => l.startsWith("status:") ? `status: ${status2}` : l);
   const title = doc.lines.slice(end).find((l) => l.startsWith("# ")) ?? "";
   return { fm: fmLines.join("\n"), title };
 }
@@ -8394,7 +8404,7 @@ function planUpgrade(dir, tpl) {
   const slug = basename4(dir).slice(4);
   const vars = { CHANGE: `CHG-${nnn}`, P: `C${nnn}`, NNN: nnn, NN: "01", B: "1", SLUG: slug, NAME: slug, TITLE: slug, DATE: "", KIND: "", PROFILE: "full", SEQ: "001" };
   const writes = /* @__PURE__ */ new Map();
-  const append = (rel, status, chunk) => {
+  const append = (rel, status2, chunk) => {
     const target = renderTemplate(rel, vars);
     const existing = writes.get(target);
     if (existing !== void 0) {
@@ -8403,7 +8413,7 @@ ${chunk}
 `);
       return;
     }
-    const { fm, title } = frontmatterOf(renderTemplate(resolveTemplate("full", TEMPLATE_OF(rel), tpl).text, vars), status);
+    const { fm, title } = frontmatterOf(renderTemplate(resolveTemplate("full", TEMPLATE_OF(rel), tpl).text, vars), status2);
     writes.set(target, `${fm}
 ${title}
 
@@ -8411,7 +8421,7 @@ ${chunk}
 `);
   };
   const removes = [];
-  const spec = readLite(join8(dir, "10-spec", "spec.md"));
+  const spec = readLite(join7(dir, "10-spec", "spec.md"));
   if (spec) {
     removes.push("10-spec/spec.md");
     if (spec.preamble) append("10-spec/00-index.md", spec.status, spec.preamble);
@@ -8423,7 +8433,7 @@ ${chunk}
 ${s.body}`);
     }
   }
-  const dod = readLite(join8(dir, "10-spec", "dod.md"));
+  const dod = readLite(join7(dir, "10-spec", "dod.md"));
   if (dod) {
     removes.push("10-spec/dod.md");
     const parts = [dod.preamble, ...dod.sections.map((s) => `## ${s.heading}
@@ -8431,7 +8441,7 @@ ${s.body}`);
 ${s.body}`)].filter(Boolean);
     append("10-spec/70-dod.md", dod.status, parts.join("\n\n"));
   }
-  const plan = readLite(join8(dir, "20-plan", "plan.md"));
+  const plan = readLite(join7(dir, "20-plan", "plan.md"));
   if (plan) {
     removes.push("20-plan/plan.md");
     if (plan.preamble) append("20-plan/00-index.md", plan.status, plan.preamble);
@@ -8468,18 +8478,18 @@ function upgradeToFull(dir, tpl = {}) {
   const { writes, removes } = planUpgrade(dir, tpl);
   const originals = /* @__PURE__ */ new Map();
   for (const rel of [...removes, ...writes.keys()]) {
-    const p = join8(dir, ...rel.split("/"));
+    const p = join7(dir, ...rel.split("/"));
     if (existsSync5(p)) originals.set(rel, readFileSync5(p, "utf8"));
   }
-  const changeMd = join8(dir, "change.md");
+  const changeMd = join7(dir, "change.md");
   const changeText = readFileSync5(changeMd, "utf8");
   try {
     for (const [rel, text] of writes) {
-      const p = join8(dir, ...rel.split("/"));
+      const p = join7(dir, ...rel.split("/"));
       mkdirSync3(dirname4(p), { recursive: true });
       writeTextAtomic(p, text);
     }
-    for (const rel of removes) rmSync(join8(dir, ...rel.split("/")));
+    for (const rel of removes) rmSync(join7(dir, ...rel.split("/")));
     writeTextAtomic(changeMd, setFrontmatterValue(changeText, "profile", "full"));
     const after = snapshot(buildChangeGraph(dir));
     const lost = before.ids.filter((id) => !after.ids.includes(id));
@@ -8491,12 +8501,176 @@ function upgradeToFull(dir, tpl = {}) {
       throw new CliError("ERR-CLI-016", { detail });
     }
   } catch (e) {
-    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join8(dir, ...rel.split("/")), { force: true });
-    for (const [rel, text] of originals) writeTextAtomic(join8(dir, ...rel.split("/")), text);
+    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join7(dir, ...rel.split("/")), { force: true });
+    for (const [rel, text] of originals) writeTextAtomic(join7(dir, ...rel.split("/")), text);
     writeTextAtomic(changeMd, changeText);
     throw e;
   }
   return [...writes.keys()].sort();
+}
+
+// src/workspace/status.ts
+import { existsSync as existsSync6, readdirSync as readdirSync4, readFileSync as readFileSync7, statSync as statSync5 } from "node:fs";
+import { join as join9 } from "node:path";
+
+// src/workspace/adopt.ts
+import { readFileSync as readFileSync6 } from "node:fs";
+import { join as join8 } from "node:path";
+function adoptBootstrap(sddDir) {
+  const path = join8(sddDir, "SDD.md");
+  const text = readFileSync6(path, "utf8");
+  const doc = splitFrontmatter(text);
+  const generator = doc.data?.["generator"];
+  if (typeof generator !== "string" || !generator.startsWith("manual")) return false;
+  const lines = doc.lines;
+  const end = doc.bodyStartLine - 2;
+  const at = lines.findIndex((l, i) => i > 0 && i < end && /^generator:/.test(l));
+  if (at < 0) return false;
+  lines[at] = `generator: ${TOOL}`;
+  writeTextAtomic(path, lines.join("\n"));
+  return true;
+}
+
+// src/workspace/status.ts
+var PHASE_NAMES = ["00-ideation", "10-spec", "20-plan"];
+function deriveImplementation(statuses) {
+  const live = statuses.filter((s) => s !== "dropped");
+  if (live.length === 0) return "not-started";
+  if (live.every((s) => s === "done")) return "done";
+  if (live.includes("blocked") && !live.includes("in-progress")) return "blocked";
+  if (live.some((s) => s === "in-progress" || s === "done")) return "in-progress";
+  return "not-started";
+}
+var str2 = (v) => typeof v === "string" ? v : v instanceof Date ? v.toISOString().slice(0, 10) : null;
+function taskStates(dir) {
+  const g = buildChangeGraph(dir);
+  const out = [];
+  for (const n of g.nodes) {
+    if (n.type !== "T") continue;
+    if (n.form === "frontmatter") {
+      const fm = g.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+      const report = fm["report"] ?? {};
+      out.push({ status: str2(fm["status"]) ?? "todo", completedAt: str2(report["completed_at"]) });
+    } else {
+      out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
+    }
+  }
+  return out;
+}
+function changeEntry(dir, folder, archived) {
+  const fm = splitFrontmatter(readFileSync7(join9(dir, "change.md"), "utf8")).data ?? {};
+  const phasesFm = fm["phases"] ?? {};
+  const phases = {};
+  for (const p of PHASE_NAMES) {
+    const src = phasesFm[p] ?? {};
+    const entry = { status: str2(src["status"]) ?? "not-started" };
+    for (const k of ["approved_hash", "hash_scope", "approved_at", "approved_by"]) if (k in src) entry[k] = str2(src[k]);
+    if (entry.hash_scope === null) delete entry.hash_scope;
+    phases[p] = entry;
+  }
+  const tasks = taskStates(dir);
+  const live = tasks.filter((t) => t.status !== "dropped");
+  const dates = tasks.map((t) => t.completedAt).filter((d) => d !== null).sort();
+  const last = dates.at(-1);
+  return {
+    id: str2(fm["id"]) ?? `CHG-${folder.slice(0, 3)}`,
+    slug: folder,
+    title: str2(fm["title"]) ?? folder.slice(4),
+    kind: str2(fm["kind"]) ?? "greenfield",
+    profile: str2(fm["profile"]) ?? "full",
+    status: archived ? "archived" : str2(fm["status"]) ?? "active",
+    phase: str2(fm["phase"]) ?? "00-ideation",
+    phases,
+    implementation: {
+      status: deriveImplementation(tasks.map((t) => t.status)),
+      tasks: {
+        total: live.length,
+        done: live.filter((t) => t.status === "done").length,
+        blocked: live.filter((t) => t.status === "blocked").length,
+        in_progress: live.filter((t) => t.status === "in-progress").length
+      },
+      last_report: last ? last.length === 10 ? `${last}T00:00:00Z` : last : null
+    },
+    defects: Array.isArray(fm["defects"]) ? fm["defects"] : [],
+    waivers: Array.isArray(fm["waivers"]) ? fm["waivers"] : []
+  };
+}
+function listChanges(sddDir) {
+  const out = [];
+  for (const [base, archived] of [[sddDir, false], [join9(sddDir, "_archive"), true]]) {
+    if (!existsSync6(base)) continue;
+    for (const name of readdirSync4(base)) {
+      const dir = join9(base, name);
+      if (/^\d{3}-/.test(name) && statSync5(dir).isDirectory() && existsSync6(join9(dir, "change.md"))) out.push({ dir, folder: name, archived });
+    }
+  }
+  return out.sort((a, b) => a.folder.localeCompare(b.folder));
+}
+function rebuildRegistry(sddDir, now = /* @__PURE__ */ new Date()) {
+  return {
+    sdd_version: 1,
+    generated_at: now.toISOString().replace(/\.\d{3}Z$/, "Z"),
+    changes: listChanges(sddDir).map((c) => changeEntry(c.dir, c.folder, c.archived))
+  };
+}
+function updated(c) {
+  const dates = [
+    ...Object.values(c.phases).map((p) => p.approved_at ?? null),
+    c.implementation.last_report?.slice(0, 10) ?? null,
+    ...c.defects.map((d) => str2(d["date"]))
+  ].filter((d) => !!d);
+  return dates.sort().at(-1) ?? "—";
+}
+function renderStatusBlock(reg) {
+  const rows = reg.changes.filter((c) => c.status !== "archived").map((c) => {
+    const t = c.implementation.tasks;
+    const open = c.defects.filter((d) => d["status"] === "open").length;
+    const status2 = c.phases[c.phase]?.status ?? "not-started";
+    return `| ${c.id.replace(/^CHG-/, "")} | ${c.title.replace(/\|/g, "\\|")} | ${c.phase} | ${status2} | ${t.done}/${t.total} | ${open} | ${updated(c)} |`;
+  });
+  return ["| Change | Title | Phase | Status | Tasks done | Open defects | Updated |", "|---|---|---|---|---|---|---|", ...rows].join("\n");
+}
+function diffJson(stored, expected, path = "") {
+  if (Array.isArray(stored) && Array.isArray(expected)) {
+    const out = [];
+    for (let i = 0; i < Math.max(stored.length, expected.length); i++) out.push(...diffJson(stored[i], expected[i], `${path}[${i}]`));
+    return out;
+  }
+  const isObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+  if (isObj(stored) && isObj(expected)) {
+    const keys = [.../* @__PURE__ */ new Set([...Object.keys(expected), ...Object.keys(stored)])];
+    return keys.flatMap((k) => diffJson(stored[k], expected[k], path ? `${path}.${k}` : k));
+  }
+  return JSON.stringify(stored) === JSON.stringify(expected) ? [] : [{ path: path || "$", stored, expected }];
+}
+function registryDrift(stored, rebuilt) {
+  if (stored === null) return [{ path: "$", stored: null, expected: "a registry" }];
+  return diffJson(stored, rebuilt).filter((d) => d.path !== "generated_at");
+}
+function writeStatus(sddDir, now = /* @__PURE__ */ new Date()) {
+  const adopted = existsSync6(join9(sddDir, "SDD.md")) ? adoptBootstrap(sddDir) : false;
+  const registry = rebuildRegistry(sddDir, now);
+  const regPath = join9(sddDir, "registry.json");
+  const stored = existsSync6(regPath) ? JSON.parse(readFileSync7(regPath, "utf8")) : null;
+  const registryWritten = stored === null || registryDrift(stored, registry).length > 0;
+  if (registryWritten) writeTextAtomic(regPath, JSON.stringify(registry, null, 2) + "\n");
+  let sddMdWritten = false;
+  const sddPath = join9(sddDir, "SDD.md");
+  if (existsSync6(sddPath)) {
+    const raw = readFileSync7(sddPath, "utf8");
+    if (readStatusBlock(raw.replace(/\r\n/g, "\n")) !== null) {
+      const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+      const block = renderStatusBlock(registry).split("\n").join(eol);
+      const b = raw.indexOf(STATUS_BEGIN) + STATUS_BEGIN.length;
+      const e = raw.indexOf(STATUS_END);
+      const next = raw.slice(0, b) + eol + block + eol + raw.slice(e);
+      if (next !== raw) {
+        writeFileAtomic(sddPath, next);
+        sddMdWritten = true;
+      }
+    }
+  }
+  return { adopted, registryWritten, sddMdWritten, registry };
 }
 
 // src/cli/output.ts
@@ -8543,8 +8717,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders(root) {
-  const sdd = join9(root, ".sdd");
-  return readdirSync5(sdd).filter((n) => /^\d{3}-/.test(n) && statSync5(join9(sdd, n)).isDirectory()).sort();
+  const sdd = join10(root, ".sdd");
+  return readdirSync5(sdd).filter((n) => /^\d{3}-/.test(n) && statSync6(join10(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -8554,7 +8728,7 @@ function lint(ctx) {
   let file;
   if (values["file"] !== void 0) {
     const abs = normalisePath(values["file"], { cwd: ctx.cwd });
-    if (!isInside(join9(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
+    if (!isInside(join10(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
     file = relativePath(root, abs);
     const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
     folders = folder ? folders.filter((f) => f === folder) : [];
@@ -8565,11 +8739,18 @@ function lint(ctx) {
     folders = match;
   }
   const changes = folders.map((f) => {
-    const graph = buildChangeGraph(join9(root, ".sdd", f));
+    const graph = buildChangeGraph(join10(root, ".sdd", f));
     out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f}`, graph };
   });
-  const report = runLint(buildContext(root, changes, phase, file), ctx.rules, TOOL);
+  const sdd = join10(root, ".sdd");
+  const regPath = join10(sdd, "registry.json");
+  const stored = existsSync7(regPath) ? JSON.parse(readFileSync8(regPath, "utf8")) : null;
+  const workspace = {
+    entries: readdirSync5(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() })),
+    registryDrift: registryDrift(stored, rebuildRegistry(sdd))
+  };
+  const report = runLint(buildContext(root, changes, phase, file, workspace), ctx.rules, TOOL);
   out.trace("lint", { rules: ctx.rules.length, error: report.summary.error, warn: report.summary.warn, info: report.summary.info });
   if (values["json"]) out.json(report);
   else {
@@ -8587,17 +8768,42 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join9(ctx.root, ".sdd", match[0]);
+    return join10(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join9(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join9(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join9(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join10(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join10(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join10(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
+}
+function status(ctx) {
+  const sdd = join10(ctx.root, ".sdd");
+  if (ctx.values["write"]) {
+    const r = writeStatus(sdd);
+    ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
+    if (ctx.values["json"]) {
+      ctx.out.json(r.registry);
+      return 0;
+    }
+    if (r.adopted) ctx.out.line("adopted: bootstrap workspace (SDD.md generator set)");
+    ctx.out.line(r.registryWritten ? "written: registry.json" : "unchanged: registry.json");
+    ctx.out.line(r.sddMdWritten ? "written: SDD.md status block" : "unchanged: SDD.md status block");
+    return 0;
+  }
+  const registry = rebuildRegistry(sdd);
+  if (ctx.values["json"]) ctx.out.json(registry);
+  else if (ctx.values["brief"]) {
+    for (const c of registry.changes.filter((x) => x.status !== "archived")) {
+      const t = c.implementation.tasks;
+      const open = c.defects.filter((d) => d["status"] === "open").length;
+      ctx.out.line(`${c.id} ${c.phase} ${c.phases[c.phase]?.status ?? "not-started"} · tasks ${t.done}/${t.total} · ${open} open defect${open === 1 ? "" : "s"}`);
+    }
+  } else ctx.out.line(renderStatusBlock(registry));
+  return 0;
 }
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join9(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join10(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -8605,7 +8811,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync6(join9(dir, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync8(join10(dir, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -8637,7 +8843,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join9(root, ".sdd");
+  const where = join10(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -8655,7 +8861,7 @@ var COMMANDS = [
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
-  { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [] },
+  { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
@@ -8718,8 +8924,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir = start;
   for (; ; ) {
-    const sdd = join10(dir, ".sdd");
-    if (existsSync6(sdd) && statSync6(sdd).isDirectory()) return dir;
+    const sdd = join11(dir, ".sdd");
+    if (existsSync8(sdd) && statSync7(sdd).isDirectory()) return dir;
     const parent = dirname5(dir);
     if (parent === dir) return null;
     dir = parent;

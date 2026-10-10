@@ -1,6 +1,7 @@
 // Lint contracts shared by the CLI front-end and the rules. The rule framework itself (fixtures,
 // generic rules, per-rule modules) is built in C001-T-018; this is the minimum the CLI needs.
 import type { ChangeGraph } from "../model/graph.ts";
+import type { JsonDiff } from "../workspace/status.ts";
 
 export type Severity = "error" | "warn" | "info";
 export type Phase = "00-ideation" | "10-spec" | "20-plan";
@@ -47,6 +48,15 @@ export interface LintContext {
   file?: string;
   /** Requirement statements in scope. */
   statements: Statement[];
+  /** Workspace-level data gathered by the engine, so rules stay pure (C001-CON-13). */
+  workspace: WorkspaceFacts;
+}
+
+export interface WorkspaceFacts {
+  /** Root entries of `.sdd/`. */
+  entries: { name: string; isDirectory: boolean }[];
+  /** Differences between the stored registry.json and the rebuild (generated_at ignored). */
+  registryDrift: JsonDiff[];
 }
 
 export interface LintRule {

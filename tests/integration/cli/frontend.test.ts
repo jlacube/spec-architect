@@ -2,7 +2,8 @@
 // codes, SDD_DEBUG traces (C001-NFR-702) and the error catalogue mirror of errors.md.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { splitCells } from "../../../src/model/blocks.ts";
 import { CATALOGUE, formatError, CliError } from "../../../src/cli/errors.ts";
@@ -142,8 +143,15 @@ test("SDD_DEBUG=1 writes timing and decision traces to standard error for every 
   }
 });
 
-test("lint on this repository runs without errors from the (empty) rule registry", () => {
-  const r = runBundled(["lint", "001"], { cwd: repoRoot() });
-  assert.equal(r.code, 0, r.stderr);
-  assert.match(r.stdout, /^lint: 0 errors, 0 warnings, \d+ info$/m);
+test("lint on a copy of this repository's workspace runs clean after status --write", () => {
+  const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-repo-")));
+  try {
+    cpSync(join(repoRoot(), ".sdd"), join(root, ".sdd"), { recursive: true });
+    assert.equal(runBundled(["status", "--write"], { cwd: root }).code, 0);
+    const r = runBundled(["lint", "001"], { cwd: root });
+    assert.equal(r.code, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /^lint: 0 errors, 0 warnings, \d+ info$/m);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

@@ -74,3 +74,22 @@ test("init on a copy of this repository's workspace only adds the missing root f
     ws.cleanup();
   }
 });
+
+test("C001-TS-129 through the CLI: `sdd status --write` adopts the bootstrap and keeps change.md", () => {
+  const ws = bootstrapCopy();
+  try {
+    const changeMd = join(ws.root, ".sdd", "001-architect-agent-suite", "change.md");
+    const before = readFileSync(changeMd, "utf8");
+    const r = runBundled(["status", "--write"], { cwd: ws.root });
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /^adopted: bootstrap workspace/m);
+    assert.equal(readFileSync(changeMd, "utf8"), before);
+    const phases = splitFrontmatter(before).data?.["phases"] as Record<string, { status: string; approved_hash: string }>;
+    const reg = JSON.parse(readFileSync(join(ws.root, ".sdd", "registry.json"), "utf8")) as { changes: { phases: Record<string, { status: string; approved_hash: string }> }[] };
+    assert.equal(reg.changes[0]?.phases["00-ideation"]?.status, "approved");
+    assert.equal(reg.changes[0]?.phases["00-ideation"]?.approved_hash, phases["00-ideation"]?.approved_hash);
+    assert.match(String(splitFrontmatter(readFileSync(join(ws.root, ".sdd", "SDD.md"), "utf8")).data?.["generator"]), /^architect-plugin@/);
+  } finally {
+    ws.cleanup();
+  }
+});
