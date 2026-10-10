@@ -55,23 +55,23 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 
 ### C001-REQ-1006 — Serena launched read-only
 - **Pattern:** ubiquitous
-- **Statement:** THE plugin's MCP configuration SHALL start Serena with the `claude-code` context and the `planning` mode, so that Serena's editing and shell tools are excluded.
-- **Rationale:** C001-CON-08; IDEA-§7.3 (planning mode excludes write tools)
+- **Statement:** THE plugin's MCP configuration SHALL start Serena with the launch arguments and environment of C001-IF-14 §4 (context `claude-code`, modes `planning` and the plugin's read-only mode file, project taken from the working directory, web dashboard disabled), so that the server exposes only the read-only tools listed there.
+- **Rationale:** C001-CON-08; IDEA-§7.3; spike S-02 (planning mode alone leaves file-changing and memory tools exposed)
 - **Stories:** C001-US-1003
 - **Priority:** Must
 - **Acceptance:** C001-AC-1006.1
 
 ### C001-REQ-1007 — Serena tools by explicit name
 - **Pattern:** ubiquitous
-- **Statement:** THE definitions of the cartographer and the architect SHALL grant Serena tools only by explicit name, limited to `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `search_for_pattern`, `list_dir` and `find_file`.
-- **Rationale:** defense in depth; IDEA-§17.3
+- **Statement:** THE definitions of the cartographer and the architect SHALL grant Serena tools only by explicit plugin-scoped name (`mcp__plugin_architect_serena__<tool>`), limited to `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration` and `find_implementations`.
+- **Rationale:** defense in depth; IDEA-§17.3; spikes S-02 (tool set under the `claude-code` context) and S-06 (plugin-scoped tool names)
 - **Stories:** C001-US-1003
 - **Priority:** Must
 - **Acceptance:** C001-AC-1007.1
 
 ### C001-REQ-1008 — No Serena elsewhere
 - **Pattern:** ubiquitous
-- **Statement:** THE definitions of the agents other than the cartographer and the architect SHALL NOT grant any `mcp__serena` tool.
+- **Statement:** THE definitions of the agents other than the cartographer and the architect SHALL NOT grant any tool whose name starts with `mcp__plugin_architect_serena__`.
 - **Rationale:** context cost (IDEA-RK-07)
 - **Stories:** C001-US-1003
 - **Priority:** Must
@@ -108,3 +108,11 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 - **Stories:** C001-US-1005
 - **Priority:** Should
 - **Acceptance:** C001-AC-1012.1
+
+### C001-REQ-1013 — Serena data outside the repository
+- **Pattern:** event-driven
+- **Statement:** WHEN `/architect:init` or `/architect:doctor` runs, THE conductor SHALL ensure that `serena/serena_config.yml` exists in the plugin's data folder (`${CLAUDE_PLUGIN_DATA}`) with `project_serena_folder_location` set to a folder inside that data folder and `web_dashboard` set to false.
+- **Rationale:** C001-CON-01, C001-CON-08; spikes S-02 and S-06 (without this file Serena writes `<repo>/.serena/`; it must exist before Serena first starts, C001-IF-14 §4)
+- **Stories:** C001-US-1003
+- **Priority:** Must
+- **Acceptance:** C001-AC-1013.1

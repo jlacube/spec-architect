@@ -43,52 +43,14 @@ Scenario: C001-TS-503 — orphan component
   Then the report contains warning "TR-10" for "C004-COMP-07"
 ```
 
-## C001-REQ-504
-
-#### C001-AC-504.1 — IR exists, validates and uses component IDs
-```gherkin
-Scenario: C001-TS-504 — to-be IR with Archify present
-  Given "toolchain.md" records Archify detected
-  And the catalogue lists "C004-COMP-01" to "C004-COMP-05"
-  When the architect completes the architecture
-  Then "to-be.architecture.json" exists
-  And its node IDs are exactly "C004-COMP-01" to "C004-COMP-05"
-  And the transcript shows "archify … validate architecture" with a final result of zero errors
-```
-
-## C001-REQ-505
-
-#### C001-AC-505.1 — HTML rendered after validation
-```gherkin
-Scenario: C001-TS-505 — deliver
-  Given "to-be.architecture.json" validated without errors
-  When the architect finishes
-  Then "to-be.html" exists in "60-architecture/"
-  And it was produced by "archify … deliver" after the last successful validate
-```
-
-## C001-REQ-506
-
-#### C001-AC-506.1 — As-is and delta for brownfield
-```gherkin
-Scenario: C001-TS-506 — brownfield architecture delta
-  Given a brownfield change on "fx-brownfield-ts" with Archify detected
-  When the architect completes the architecture
-  Then "as-is.architecture.json" exists with evidence entries referencing the HEAD commit SHA
-  And "delta.html" exists, produced by "archify compare architecture as-is.architecture.json to-be.architecture.json"
-```
-
 ## C001-REQ-507
 
-#### C001-AC-507.1 — Mermaid diagrams when Archify is absent
+#### C001-AC-507.1 — Mermaid diagrams
 ```gherkin
-Scenario: C001-TS-507 — fallback
-  Given "toolchain.md" records Archify not detected
+Scenario: C001-TS-507 — Mermaid component and sequence diagrams
   When the architect completes the architecture
   Then "architecture.md" contains a "mermaid" block with "flowchart" whose node IDs are the catalogue's COMP IDs
   And one "sequenceDiagram" block per listed runtime flow
-  And the Diagrams section contains "Archify: not available — Mermaid fallback"
-  And no ".architecture.json" file is required by the lint
 ```
 
 ## C001-REQ-508
@@ -98,7 +60,7 @@ Scenario: C001-TS-507 — fallback
 Scenario: C001-TS-508 — every runtime flow has a sequence
   Given the Runtime flows section lists 3 flows
   When the lint checks the architecture
-  Then 3 sequence diagrams exist (Archify sequence IR or Mermaid)
+  Then 3 Mermaid sequence diagrams exist
   And each names at least one existing TS ID
   And a missing one raises "LINT-ARCH-004"
 ```
@@ -197,15 +159,6 @@ Scenario: C001-TS-516 — modified component without evidence
   Then the report contains error "LINT-ARCH-005" for "C004-COMP-02"
 ```
 
-## C001-REQ-517
-
-#### C001-AC-517.1 — Update check disabled
-```gherkin
-Scenario: C001-TS-517 — Archify invocation environment
-  When the architect runs any Archify command
-  Then the Bash command in the transcript sets "ARCHIFY_UPDATE_CHECK_DISABLED=1" for that command
-```
-
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -213,9 +166,6 @@ Scenario: C001-TS-517 — Archify invocation environment
 | C001-REQ-501 | TS-501 | TS-501 (kinds) | n/a | TS-501 | n/a | n/a | n/a |
 | C001-REQ-502 | TS-502 | n/a | n/a | TS-502 | n/a | n/a | n/a |
 | C001-REQ-503 | TS-503 | n/a | n/a | TS-503 | n/a | n/a | n/a |
-| C001-REQ-504 | TS-504 | TS-507 (absent) | n/a | TS-504 (validate loop) | n/a | n/a | n/a |
-| C001-REQ-505 | TS-505 | n/a | n/a | n/a: only after successful validate | n/a | n/a | n/a |
-| C001-REQ-506 | TS-506 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-507 | TS-507 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-508 | TS-508 | n/a | n/a | TS-508 | n/a | n/a | n/a |
 | C001-REQ-509 | TS-509 | TS-509 | n/a | TS-509 | n/a | n/a | n/a |
@@ -226,7 +176,6 @@ Scenario: C001-TS-517 — Archify invocation environment
 | C001-REQ-514 | TS-514 | n/a | n/a | TS-514 | n/a | n/a | n/a |
 | C001-REQ-515 | TS-515 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-516 | TS-516 | n/a | n/a | TS-516 | n/a | n/a | n/a |
-| C001-REQ-517 | TS-517 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 Per-column n/a reasons: *alternate/boundary*: these are authoring rules with a single path
 and no numeric limits. *Authorization*: local single-user tool. *Concurrency*: single writer

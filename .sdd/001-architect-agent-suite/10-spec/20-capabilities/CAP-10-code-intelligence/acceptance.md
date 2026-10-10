@@ -90,8 +90,9 @@ Scenario: C001-TS-1006 — plugin MCP config
 ```gherkin
 Scenario: C001-TS-1007 — Serena read-only launch
   When the plugin's ".mcp.json" is parsed
-  Then the "serena" server arguments include "--context" "claude-code" and "--mode" "planning"
-  And, with the server running, its tool list contains none of create_text_file, replace_symbol_body, insert_after_symbol, insert_before_symbol, replace_content, execute_shell_command
+  Then the "serena" server arguments include "--context" "claude-code", "--mode" "planning", "--mode" "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project-from-cwd", "--enable-web-dashboard" "False" and "--open-web-dashboard" "False"
+  And its environment sets "SERENA_HOME" to "${CLAUDE_PLUGIN_DATA}/serena"
+  And, with the server running, every tool it lists is one of find_symbol, get_symbols_overview, find_referencing_symbols, find_declaration, find_implementations, get_diagnostics_for_file, initial_instructions
 ```
 
 ## C001-REQ-1007
@@ -100,8 +101,9 @@ Scenario: C001-TS-1007 — Serena read-only launch
 ```gherkin
 Scenario: C001-TS-1008 — cartographer and architect Serena grants
   When the frontmatter of "sdd-cartographer" and "sdd-architect" is parsed
-  Then every Serena entry in "tools" is one of "mcp__serena__find_symbol", "mcp__serena__get_symbols_overview", "mcp__serena__find_referencing_symbols", "mcp__serena__search_for_pattern", "mcp__serena__list_dir", "mcp__serena__find_file"
-  And no entry is the bare server pattern "mcp__serena"
+  Then every Serena entry in "tools" is one of "mcp__plugin_architect_serena__find_symbol", "mcp__plugin_architect_serena__get_symbols_overview", "mcp__plugin_architect_serena__find_referencing_symbols", "mcp__plugin_architect_serena__find_declaration", "mcp__plugin_architect_serena__find_implementations"
+  And no entry is the bare server pattern "mcp__plugin_architect_serena"
+  And "tools" contains "ToolSearch"
 ```
 
 ## C001-REQ-1008
@@ -110,7 +112,7 @@ Scenario: C001-TS-1008 — cartographer and architect Serena grants
 ```gherkin
 Scenario: C001-TS-1009 — other agents
   When the frontmatter of the other eight agents is parsed
-  Then none of their "tools" entries starts with "mcp__serena"
+  Then none of their "tools" entries starts with "mcp__plugin_architect_serena"
 ```
 
 ## C001-REQ-1009
@@ -164,6 +166,17 @@ Scenario: C001-TS-1013 — cartographer return size
   And it names the layers used
 ```
 
+## C001-REQ-1013
+
+#### C001-AC-1013.1 — Serena configuration written before first use
+```gherkin
+Scenario: C001-TS-1015 — Serena data kept outside the repository
+  Given the plugin's data folder contains no "serena/serena_config.yml"
+  When P-01 runs "/architect:doctor"
+  Then "serena/serena_config.yml" exists in the plugin's data folder with "project_serena_folder_location" inside that folder and "web_dashboard" false
+  And after the cartographer's first Serena call in "fx-brownfield-ts", "git status --porcelain --ignored" lists no ".serena/" entry
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -177,9 +190,10 @@ Scenario: C001-TS-1013 — cartographer return size
 | C001-REQ-1007 | TS-1008 | n/a | n/a | n/a | TS-1008 | n/a | n/a |
 | C001-REQ-1008 | TS-1009 | n/a | n/a | n/a | TS-1009 | n/a | n/a |
 | C001-REQ-1009 | TS-1010 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C001-REQ-1010 | TS-1011 | n/a | n/a | TS-1011 | n/a | n/a | n/a |
+| C001-REQ-1010 | TS-1011 | TS-1014 (answer exit code) | n/a | TS-1011 | n/a | n/a | n/a |
 | C001-REQ-1011 | TS-1012 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1012 | TS-1013 | n/a | TS-1013 (20 lines) | n/a | n/a | n/a | n/a |
+| C001-REQ-1013 | TS-1015 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 Per-column n/a reasons: as in CAP-05. Abuse (malicious repository content steering the
 cartographer) is covered by C001-NFR-205.

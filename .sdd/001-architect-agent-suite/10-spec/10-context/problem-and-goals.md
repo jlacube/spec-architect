@@ -60,5 +60,6 @@ Additional non-goals decided during the spec interview:
 
 - C001-NG-07: running CI on remote servers at v1. Workflows for macOS/Linux are authored and
   kept dormant (Spec-Q4).
-- C001-NG-08: installing Archify during CHG-001's specification. Architecture is written with
-  Mermaid and IR-ready component IDs; Archify outputs are a plan task (Spec-Q3).
+- C001-NG-08: Archify in CHG-001. Architecture is written with Mermaid and component IDs
+  (Spec-Q3); spike S-03 found Archify unusable on Windows 11, so Archify outputs are deferred to
+  a later change.

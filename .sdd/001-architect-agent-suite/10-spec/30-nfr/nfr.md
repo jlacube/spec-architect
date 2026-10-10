@@ -61,11 +61,11 @@ All NFRs: `Delta: ADDED`.
 ### C001-NFR-105 — Preloaded skill budget
 - **Category:** Performance efficiency / resource utilisation
 - **Statement:** THE skills preloaded by any one agent SHALL stay within the threshold.
-- **Metric:** total lines of `SKILL.md` bodies listed in an agent's `skills` field (references excluded)
-- **Threshold:** ≤ 400 lines per skill and ≤ 1,600 lines per agent
+- **Metric:** characters of the `SKILL.md` bodies listed in an agent's `skills` field (references excluded)
+- **Threshold:** ≤ 24,000 characters per skill and ≤ 64,000 characters per agent (≈ 7,400 and ≈ 19,700 tokens at the 308 tokens per 1,000 characters measured in spike S-06)
 - **Method:** plugin structure check `PLG-SIZE-001`
 - **Environment:** repository
-- **Rationale:** IDEA-§15.3; context cost on every invocation
+- **Rationale:** IDEA-§15.3; context cost on every invocation; spike S-06 (a line budget does not bound tokens)
 - **DoD:** C001-DOD-012
 
 ### C001-NFR-106 — Medium-feature token budget
@@ -164,7 +164,7 @@ All NFRs: `Delta: ADDED`.
 
 ### C001-NFR-304 — Graceful degradation coverage
 - **Category:** Reliability / fault tolerance
-- **Statement:** WHILE any optional tool (ripwire, Serena, Archify, ast-grep, Context7, DeepWiki) is unavailable, THE suite SHALL complete each phase using its documented fallback.
+- **Statement:** WHILE any optional tool (ripwire, Serena, ast-grep, Context7, DeepWiki) is unavailable, THE suite SHALL complete each phase using its documented fallback.
 - **Metric:** phases completed per machine configuration
 - **Threshold:** 100% of phases on `cfg-full`, `cfg-no-ripwire` and `cfg-bare`
 - **Method:** dogfood runs on the three configurations

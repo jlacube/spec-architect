@@ -40,7 +40,7 @@ NNN-<slug>/
 │   ├── 30-nfr/*.md                           one or more files; NFR blocks by category
 │   ├── 40-domain/{domain-model, state-machines, glossary-delta}.md
 │   ├── 50-interfaces/README.md, errors.md, contract files (C001-IF-03 §9)
-│   ├── 60-architecture/architecture.md, constraints.md, *.architecture.json/*.html (when Archify), sequences/
+│   ├── 60-architecture/architecture.md, constraints.md, sequences/
 │   ├── 70-dod.md
 │   ├── 80-traceability.md                    generated
 │   ├── 85-open-items.md                      generated

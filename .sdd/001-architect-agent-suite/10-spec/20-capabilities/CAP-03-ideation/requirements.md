@@ -39,7 +39,7 @@ questions contract C001-IF-05.
 
 ### C001-REQ-304 — DeepWiki for public-repository internals
 - **Pattern:** event-driven
-- **Statement:** WHEN a research question concerns how a public GitHub repository implements a behaviour, THE researcher SHALL query DeepWiki `ask_question` for that repository before reading its source files through WebFetch.
+- **Statement:** WHEN a research question concerns how a public GitHub repository implements a behaviour, THE researcher SHALL query DeepWiki `ask_wiki_question` for that repository before reading its source files through WebFetch.
 - **Rationale:** OQ-04
 - **Stories:** C001-US-302
 - **Priority:** Must

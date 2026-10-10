@@ -23,16 +23,16 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **As a** P-01 spec owner
 - **I want** architecture diagrams generated from a typed, validated model whose node IDs are the component IDs
 - **So that** diagrams cannot drift from the catalogue or show components that don't exist
-- **Value / outcome:** Q12 (Archify); fewer hallucinated components
+- **Value / outcome:** Q12; fewer hallucinated components. v1 checks Mermaid diagrams against the catalogue; the Archify model is deferred to a later change (spike S-03)
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-05
-- **Requirements:** C001-REQ-504, C001-REQ-505, C001-REQ-509, C001-REQ-517
+- **Requirements:** C001-REQ-509
 - **Traces to:** Q12, IDEA-§7.4
 
 ### C001-US-503 — Diagrams without Archify
 - **As a** P-03 adopter without Archify installed (or P-01 during CHG-001)
 - **I want** Mermaid diagrams that use the same component IDs
 - **So that** the spec is complete and renders on GitHub even without Archify
-- **Value / outcome:** Q12 fallback; Spec-Q3 (Mermaid now, Archify later)
+- **Value / outcome:** Q12; Spec-Q3 (Mermaid in v1, Archify in a later change, spike S-03)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-05
 - **Requirements:** C001-REQ-507
 - **Traces to:** Q12, Spec-Q3, IDEA-P-10
@@ -41,9 +41,9 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **As a** P-01 spec owner changing an existing system
 - **I want** the current architecture, backed by code evidence, next to the target one and a visual delta between them
 - **So that** I see exactly what the change does to the structure
-- **Value / outcome:** C001-GOAL-04
+- **Value / outcome:** C001-GOAL-04. v1 provides the evidence-backed as-is components; the visual delta needs Archify and is deferred (spike S-03)
 - **Priority:** Should · **Size hint:** M · **Capability:** C001-CAP-05
-- **Requirements:** C001-REQ-506, C001-REQ-516
+- **Requirements:** C001-REQ-516
 - **Traces to:** Q3, IDEA-§7.4 (compare)
 
 ### C001-US-505 — Machine-readable interface contracts

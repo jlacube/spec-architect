@@ -32,7 +32,7 @@ this repository must carry them into `_constitution/constitution.md` (plan task)
 | C001-DOD-002 | Conductor and interview behaviours pass all CAP-02 scenarios in the scripted-session/eval harness | test-report | CAP-02 (C001-REQ-201 … 220) |
 | C001-DOD-003 | Ideation behaviours (research, options, decisions, readiness) pass all CAP-03 scenarios | test-report | CAP-03 (C001-REQ-301 … 318) |
 | C001-DOD-004 | Specification authoring rules pass all CAP-04 scenarios | test-report | CAP-04 (C001-REQ-401 … 422) |
-| C001-DOD-005 | Architecture and interface rules pass all CAP-05 scenarios; Archify path verified on a machine with Archify | test-report | CAP-05 (C001-REQ-501 … 517) |
+| C001-DOD-005 | Architecture and interface rules pass all CAP-05 scenarios | test-report | CAP-05 (C001-REQ-501 … 503, 507 … 516) |
 | C001-DOD-006 | Planning and hand-off rules pass all CAP-06 scenarios, including the Superpowers portability run (C001-TS-621) | test-report | CAP-06 (C001-REQ-601 … 618) |
 | C001-DOD-007 | Lint, trace, critic and auditor pass all CAP-07 scenarios | test-report | CAP-07 (C001-REQ-701 … 720) |
 | C001-DOD-008 | Gate engine passes all CAP-08 scenarios, including the bootstrap hash check (C001-TS-806) | test-report | CAP-08 (C001-REQ-801 … 815) |

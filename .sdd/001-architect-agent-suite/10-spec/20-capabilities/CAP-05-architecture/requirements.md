@@ -10,7 +10,9 @@ delta_default: ADDED
 
 # C001-CAP-05 — Requirements
 
-All `Delta: ADDED`. Interfaces: Archify CLI (external, C001-IF-14), templates C001-IF-03 §9.
+All `Delta: ADDED`. Interfaces: templates C001-IF-03 §9; Mermaid diagrams. Archify outputs
+(former C001-REQ-504, 505, 506 and 517) are deferred to a later change: spike S-03 found Archify
+3.0.1 unable to produce output on Windows 11 (`docs/spikes/S-03-archify.md`).
 
 ### C001-REQ-501 — Architecture document sections
 - **Pattern:** event-driven
@@ -36,41 +38,17 @@ All `Delta: ADDED`. Interfaces: Archify CLI (external, C001-IF-14), templates C0
 - **Priority:** Should
 - **Acceptance:** C001-AC-503.1
 
-### C001-REQ-504 — To-be Archify model
-- **Pattern:** optional-feature
-- **Statement:** WHERE `toolchain.md` records Archify as detected, THE architect SHALL write `60-architecture/to-be.architecture.json` in Archify IR with one node per catalogue component whose node ID equals the component ID, and run `archify validate architecture` on it until it reports no errors.
-- **Rationale:** Q12, IDEA-§7.4
-- **Stories:** C001-US-502
-- **Priority:** Must
-- **Acceptance:** C001-AC-504.1
-
-### C001-REQ-505 — Rendered HTML
-- **Pattern:** event-driven
-- **Statement:** WHEN an Archify IR file validates without errors, THE architect SHALL render it with `archify deliver` to an HTML file of the same base name in `60-architecture/`.
-- **Rationale:** human view of the model
-- **Stories:** C001-US-502
-- **Priority:** Must
-- **Acceptance:** C001-AC-505.1
-
-### C001-REQ-506 — As-is model and delta
-- **Pattern:** complex
-- **Statement:** WHILE the change `kind` is `brownfield` or `mixed`, WHERE Archify is detected, THE architect SHALL produce `as-is.architecture.json` with evidence pinned to the repository's HEAD commit and render `delta.html` with `archify compare architecture as-is.architecture.json to-be.architecture.json`.
-- **Rationale:** C001-US-504
-- **Stories:** C001-US-504
-- **Priority:** Should
-- **Acceptance:** C001-AC-506.1
-
-### C001-REQ-507 — Mermaid fallback
-- **Pattern:** unwanted-behaviour
-- **Statement:** IF Archify is not detected, THEN THE architect SHALL express the component view as a Mermaid `flowchart` and each runtime flow as a Mermaid `sequenceDiagram`, using component IDs as node and participant IDs (with `-` replaced by `_`, as Mermaid identifiers require), and state "Archify: not available — Mermaid fallback" in the Diagrams section.
-- **Rationale:** Q12 fallback; Spec-Q3; IDEA-P-10
+### C001-REQ-507 — Mermaid diagrams
+- **Pattern:** ubiquitous
+- **Statement:** THE architect SHALL express the component view as a Mermaid `flowchart` and each runtime flow as a Mermaid `sequenceDiagram`, using component IDs as node and participant IDs (with `-` replaced by `_`, as Mermaid identifiers require).
+- **Rationale:** Q12; Spec-Q3; IDEA-P-10; spike S-03 (Archify deferred, Mermaid only in v1)
 - **Stories:** C001-US-503
 - **Priority:** Must
 - **Acceptance:** C001-AC-507.1
 
 ### C001-REQ-508 — One sequence per runtime flow
 - **Pattern:** event-driven
-- **Statement:** WHEN the architect lists a runtime flow in the Runtime flows section, THE architect SHALL provide a sequence diagram for it (Archify sequence IR or Mermaid) that names the TS IDs the flow realizes.
+- **Statement:** WHEN the architect lists a runtime flow in the Runtime flows section, THE architect SHALL provide a Mermaid sequence diagram for it that names the TS IDs the flow realizes.
 - **Rationale:** IDEA-§13.7 key runtime flows
 - **Stories:** C001-US-501
 - **Priority:** Must
@@ -78,7 +56,7 @@ All `Delta: ADDED`. Interfaces: Archify CLI (external, C001-IF-14), templates C0
 
 ### C001-REQ-509 — Diagram/catalogue ID consistency
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF a component ID (compared after mapping `_` back to `-`) appears in an Archify IR file or a Mermaid component diagram but not in the catalogue, or a non-removed catalogue component appears in no component diagram, THEN THE lint SHALL report error `LINT-ARCH-001`.
+- **Statement:** IF a component ID (compared after mapping `_` back to `-`) appears in a Mermaid component diagram but not in the catalogue, or a non-removed catalogue component appears in no component diagram, THEN THE lint SHALL report error `LINT-ARCH-001`.
 - **Rationale:** no drift between model and catalogue
 - **Stories:** C001-US-502
 - **Priority:** Must
@@ -139,11 +117,3 @@ All `Delta: ADDED`. Interfaces: Archify CLI (external, C001-IF-14), templates C0
 - **Stories:** C001-US-504
 - **Priority:** Must
 - **Acceptance:** C001-AC-516.1
-
-### C001-REQ-517 — Deterministic Archify runs
-- **Pattern:** event-driven
-- **Statement:** WHEN the architect invokes the Archify CLI, THE architect SHALL set the environment variable `ARCHIFY_UPDATE_CHECK_DISABLED=1` for that invocation.
-- **Rationale:** IDEA-§7.4; determinism and no unsolicited network calls
-- **Stories:** C001-US-502
-- **Priority:** Should
-- **Acceptance:** C001-AC-517.1

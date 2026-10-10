@@ -229,7 +229,7 @@ Scenario: C001-TS-120 — constitution interview length
 Scenario: C001-TS-121 — toolchain.md on a machine without ripwire
   Given ripwire is not on PATH and Serena is not installed
   When "/architect:doctor" completes
-  Then "toolchain.md" has one row for each of node, git, ripwire, Serena, Archify, ast-grep, Context7, DeepWiki
+  Then "toolchain.md" has one row for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki
   And the ripwire row says detected "no" and fallback "serena → lsp → grep" or the next available layer
 ```
 

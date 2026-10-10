@@ -25,7 +25,7 @@ status: approved
 | `/architect:decide` | `"<question>" [--change NNN]` | options-analysis, interview-protocol | OA + one question + DEC/ADR | C001-REQ-316 |
 | `/architect:research` | `"<question>" [--change NNN]` | research-protocol | researcher note | C001-REQ-315 |
 | `/architect:archive` | `<NNN> [--dry-run]` | sdd-conventions | preview, confirmation, `sdd archive` | C001-REQ-913 … 921 |
-| `/architect:doctor` | — | code-discovery | tool checks, toolchain.md, remedies table | C001-REQ-115, 1110, 1111 |
+| `/architect:doctor` | — | code-discovery | tool checks, toolchain.md, remedies table, Serena configuration | C001-REQ-115, 1013, 1110, 1111, 1123 |
 
 ## §2 Command body pattern
 
@@ -39,9 +39,9 @@ and the command-specific preconditions. Phase procedures live in the phase skill
 |---|---|---|
 | node | `node -v` ≥ 20 | `winget install OpenJS.NodeJS.LTS` |
 | git | `git --version` | `winget install Git.Git` |
+| Claude Code | `claude --version` ≥ 2.1.295 (C001-REQ-1123) | `claude update`, or update the Claude desktop app (which bundles its own Claude Code) |
 | ripwire | `ripwire --version` (0.6.x) | download `ripwire-<version>-windows-x64.zip` from `github.com/redhat-et/ripwire/releases`, check it against the published `.sha256`, extract it and add the extracted folder to the user PATH; then `ripwire <repo> --doctor` reports 9/9 checks (verified with 0.6.5, spike S-01) |
-| Serena | MCP tool listing of server `serena` | `winget install astral-sh.uv` then `uv tool install -p 3.13 serena-agent` [VERIFY S-02] |
-| Archify | `node <skills>/archify/bin/archify.mjs doctor` | `npx skills add tt-a1i/archify -g` |
+| Serena | `serena --version` (1.7.x) | `winget install astral-sh.uv` then `uv tool install -p 3.13 "serena-agent==1.7.*"`; keep uv and Node on PATH (language servers); the doctor writes the Serena configuration of C001-REQ-1013 (verified, spike S-02) |
 | ast-grep | `ast-grep --version` | `npm install -g @ast-grep/cli` |
 | Context7 | MCP `resolve-library-id` probe | check network; endpoint `https://mcp.context7.com/mcp` |
 | DeepWiki | MCP `read_wiki_structure` probe on `oraios/serena` | check network; endpoint `https://mcp.deepwiki.com/mcp` |

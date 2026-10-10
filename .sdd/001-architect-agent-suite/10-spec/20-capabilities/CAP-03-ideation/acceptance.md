@@ -57,7 +57,7 @@ Scenario: C001-TS-304 — library question routing
 Scenario: C001-TS-305 — repo internals routing
   Given the research question "How does oraios/serena decide which tools are excluded in planning mode?"
   When the researcher works on it
-  Then the transcript contains a DeepWiki "ask_question" call with repository "oraios/serena"
+  Then the transcript contains a DeepWiki "ask_wiki_question" call with repository "oraios/serena"
   And it occurs before any WebFetch of a github.com source file of that repository
 ```
 

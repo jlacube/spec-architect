@@ -29,7 +29,7 @@ CLI, templates) plus the `.sdd/` workspace format.
 | Anthropic models (Opus 5.5, Sonnet 5, Haiku 4.5) | Agent reasoning | platform |
 | Target repository source code | Read by cartographer/architect | **untrusted content** (may contain injected instructions, C001-NFR-205) |
 | Web and remote MCPs (Context7, DeepWiki) | Research | **untrusted content** |
-| ripwire, Serena, ast-grep, Archify, git | Local tools | trusted binaries, untrusted output content |
+| ripwire, Serena, ast-grep, git | Local tools | trusted binaries, untrusted output content |
 
 **Trust boundaries:** (1) agent ↔ repository content and web content (data, never
 instructions); (2) agent ↔ filesystem (path guard, bash guard); (3) agent ↔ gate (only P-01
@@ -186,7 +186,7 @@ when an agent with Serena tools runs); `node` processes for each CLI and hook in
 | Untrusted content | Agents treat repository and web content as data (C001-NFR-205); skills state this rule explicitly |
 | Error handling | Stable codes with fixes (errors.md); refusals never partially write (atomic writes) |
 | Idempotency | `init`, `status --write`, `trace --write` are idempotent; deterministic outputs (C001-NFR-302) |
-| Configuration | Constitution (per repo), `_templates` overrides, environment `SDD_DEBUG`, `ARCHIFY_UPDATE_CHECK_DISABLED` |
+| Configuration | Constitution (per repo), `_templates` overrides, environment `SDD_DEBUG` |
 | Observability | `SDD_DEBUG` traces; gate-log usage cells; NFR benchmarks |
 | Portability | Node built-ins only at runtime; path normalisation module; LF artifacts |
 | Concurrency | One conductor session writes a change at a time (C001-CON-11); the CLI does not lock files |
@@ -197,8 +197,8 @@ See `constraints.md` (C001-CON-11 … C001-CON-16) and the scope constraints C00
 
 ## 8. Diagrams
 
-Archify: not available — Mermaid fallback (Spec-Q3; Archify JSON IR and HTML are produced by
-a plan task once Archify is installed; node and participant IDs below are the component IDs with `-` replaced by `_`).
+Mermaid diagrams (Spec-Q3; Archify is deferred to a later change, spike S-03). Node and participant
+IDs below are the component IDs with `-` replaced by `_`.
 
 ### 8.1 Component view
 
@@ -224,7 +224,7 @@ flowchart LR
   C001_COMP_12[Build and check tooling]
   C001_COMP_13[Templates]
   WS[(.sdd/ workspace)]
-  EXT[[ripwire, Serena, ast-grep, Archify, git]]
+  EXT[[ripwire, Serena, ast-grep, git]]
   MCP[[Context7, DeepWiki]]
   P01 --> C001_COMP_01
   P01 --> C001_COMP_09

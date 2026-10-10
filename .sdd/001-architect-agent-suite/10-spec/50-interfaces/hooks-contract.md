@@ -11,18 +11,18 @@ status: approved
 
 ## §1 Hook input
 
-Claude Code passes hook input as JSON on standard input. Fields used (names per the Claude
-Code hooks documentation; verified in spike S-04 [VERIFY]):
+Claude Code passes hook input as JSON on standard input. Fields used (verified in spike S-04 with
+Claude Code 2.1.295; samples in `docs/spikes/S-04-hooks.md`):
 
 | Field | Used by | Purpose |
 |---|---|---|
 | `hook_event_name` | all | `PreToolUse`, `PostToolUse`, `SessionStart`, `SubagentStop` |
 | `tool_name` | guards, post-write | `Write`, `Edit`, `NotebookEdit`, `Bash`, `PowerShell` |
-| `tool_input.file_path` / `tool_input.notebook_path` | path guard, post-write | write target |
+| `tool_input.file_path` / `tool_input.notebook_path` | path guard, post-write | write target (absolute path) |
 | `tool_input.command` | bash guard | shell command |
 | `cwd` | all | repository root resolution |
-| `agent_type` (or equivalent agent identity) | guards | caller identity; absent → fallback (C001-REQ-1105) |
-| `session_id`, `transcript_path` | fallback | detect main agent of the session |
+| `agent_type` | guards, SubagentStop matcher | caller identity: `architect:<agent>` for Architect subagents and for a session started with `--agent architect:<agent>`; a bare name for built-in agents (`general-purpose`); absent for a plain main session |
+| `session_id`, `transcript_path` | session-start, trace | session correlation |
 
 ## §2 `hooks/hooks.json`
 
@@ -34,9 +34,9 @@ Code hooks documentation; verified in spike S-04 [VERIFY]):
 | SubagentStop | `^architect:sdd-(spec-writer\|architect\|planner\|test-designer)$` | `trace --quiet --write --active` | always exit 0 |
 | SessionStart | (none) | `hook session-start` | always exit 0; brief on stdout |
 
-Guards apply only when the caller is an Architect agent (`architect:sdd-*`) or, in fallback
-mode, when the session's main agent is `architect:sdd-conductor`. For all other callers the
-guards exit 0 immediately (C001-TS-1103 row 4).
+Guards apply only when `agent_type` names an Architect agent (`architect:sdd-*`). For all other
+callers, including a plain main session without `agent_type`, the guards exit 0 immediately
+(C001-TS-1103 row 4). Claude Code versions below the minimum of C001-REQ-1123 are unsupported.
 
 ## §3 Bash allowlist (Architect agents)
 
@@ -50,8 +50,7 @@ denied), backticks or `$(`. Pipe targets are limited to the "pipe-only" entries.
 | ripwire read verbs | `ripwire [<path>] (--for=… \| --pack-task=… \| --callers=… \| --uses=… \| --impact=… \| --expand=… \| --test-gate \| --situ \| --hotspots \| --quality-panel \| --quality-delta \| --pack-signatures \| --doctor \| --help-task \| --version) [--token-budget=N] [--max-tokens=N] [--limit=N] [--offset=N] [--top-k=N] [--json]` | span-edit verbs excluded; bounding flags per C001-IF-14 §2 |
 | ast-grep search | `ast-grep run --pattern <p> [--lang <l>] [<paths>] [--json]` | `--rewrite`, `-U`, `--update-all`, `-i` excluded |
 | git read-only | `git (log\|show\|diff\|blame\|ls-files\|rev-parse\|status\|grep) …` | no `-o`/`--output`; `git diff --output` excluded |
-| Archify | `node <path>/archify.mjs (doctor\|guide\|validate\|deliver\|compare) …` with `ARCHIFY_UPDATE_CHECK_DISABLED=1` prefix allowed | `deliver`/`compare` outputs must be under `.sdd/` (checked) |
-| tool versions | `node -v`, `git --version`, `ast-grep --version`, `uv --version` | doctor |
+| tool versions | `node -v`, `git --version`, `claude --version`, `serena --version`, `ast-grep --version`, `uv --version` | doctor |
 | pipe-only | `head -n N`, `tail -n N`, `wc -l`, `sort`, `uniq` | only after `\|` |
 
 PowerShell commands from Architect agents are denied except `node <path>/sdd.mjs …` and the

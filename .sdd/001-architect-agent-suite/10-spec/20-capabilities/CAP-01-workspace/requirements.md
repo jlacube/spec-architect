@@ -128,7 +128,7 @@ All requirements in this file are `Delta: ADDED` (greenfield). Interfaces refere
 
 ### C001-REQ-115 — Toolchain record
 - **Pattern:** event-driven
-- **Statement:** WHEN the baseline survey of `/architect:init` or `/architect:doctor` completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, ripwire, Serena, Archify, ast-grep, Context7 and DeepWiki: detected (yes/no), version, path or endpoint, and the fallback in use.
+- **Statement:** WHEN the baseline survey of `/architect:init` or `/architect:doctor` completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7 and DeepWiki: detected (yes/no), version, path or endpoint, and the fallback in use.
 - **Rationale:** IDEA-P-10; C001-CAP-10
 - **Stories:** C001-US-106
 - **Priority:** Must

@@ -25,7 +25,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** the "spec phases only" boundary holds even if an agent misbehaves or is prompt-injected
 - **Value / outcome:** C001-CON-01; D-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
-- **Requirements:** C001-REQ-1103, C001-REQ-1104, C001-REQ-1105
+- **Requirements:** C001-REQ-1103, C001-REQ-1104
 - **Traces to:** Q2, IDEA-P-01, §17.2
 
 ### C001-US-1103 — Shell access limited to read-only tools
@@ -52,7 +52,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** I get a working setup without reading the source
 - **Value / outcome:** C001-SC-09
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-11
-- **Requirements:** C001-REQ-1110, C001-REQ-1111
+- **Requirements:** C001-REQ-1110, C001-REQ-1111, C001-REQ-1123
 - **Traces to:** IDEA-§16, §21
 
 ### C001-US-1106 — Shareable: license, notices, documentation, no machine-specific paths

@@ -45,14 +45,6 @@ agent definitions C001-IF-09, commands C001-IF-10.
 - **Priority:** Must
 - **Acceptance:** C001-AC-1104.1
 
-### C001-REQ-1105 — Guard fallback without agent identity
-- **Pattern:** unwanted-behaviour
-- **Statement:** IF the hook input does not identify the calling agent, THEN THE path guard SHALL apply the restriction to every write made in a session whose main agent is `architect:sdd-conductor`.
-- **Rationale:** C001-AS-10; spike S-04
-- **Stories:** C001-US-1102
-- **Priority:** Must
-- **Acceptance:** C001-AC-1105.1
-
 ### C001-REQ-1106 — Bash allowlist
 - **Pattern:** event-driven
 - **Statement:** WHEN an Architect agent requests a Bash or PowerShell command, THE bash guard SHALL allow it only if it matches an entry of the allowlist in C001-IF-07 §3, and deny it otherwise with rule `GUARD-BASH-001`.
@@ -79,7 +71,7 @@ agent definitions C001-IF-09, commands C001-IF-10.
 
 ### C001-REQ-1109 — Research MCP scoping
 - **Pattern:** ubiquitous
-- **Statement:** THE definitions of agents other than the researcher SHALL NOT grant `mcp__context7` or `mcp__deepwiki` tools.
+- **Statement:** THE definitions of agents other than the researcher SHALL NOT grant tools whose names start with `mcp__plugin_architect_context7__` or `mcp__plugin_architect_deepwiki__`.
 - **Rationale:** OQ-04 (researcher only); context cost
 - **Stories:** C001-US-1104
 - **Priority:** Must
@@ -87,7 +79,7 @@ agent definitions C001-IF-09, commands C001-IF-10.
 
 ### C001-REQ-1110 — Doctor report
 - **Pattern:** event-driven
-- **Statement:** WHEN `/architect:doctor` runs, THE conductor SHALL print a table with, for each of node, git, ripwire, Serena, Archify, ast-grep, Context7 and DeepWiki, its status (ok, missing, unreachable or error), version, fallback and, for non-ok tools, the install or fix command from C001-IF-10 §3.
+- **Statement:** WHEN `/architect:doctor` runs, THE conductor SHALL print a table with, for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7 and DeepWiki, its status (ok, missing, unreachable or error), version, fallback and, for non-ok tools, the install or fix command from C001-IF-10 §3.
 - **Rationale:** C001-SC-09
 - **Stories:** C001-US-1105
 - **Priority:** Must
@@ -188,3 +180,11 @@ agent definitions C001-IF-09, commands C001-IF-10.
 - **Stories:** C001-US-1107
 - **Priority:** Should
 - **Acceptance:** C001-AC-1122.1
+
+### C001-REQ-1123 — Minimum Claude Code version
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the Claude Code version reported by `claude --version` is lower than 2.1.295, THEN THE conductor SHALL show Claude Code with status `error` and the update command from C001-IF-10 §3 in the doctor table.
+- **Rationale:** C001-AS-09, C001-AS-10; spike S-04 (Claude Code 2.0.76 passes no agent identity to hooks and fails on current models); replaces the guard fallback (former C001-REQ-1105), which hook input cannot support
+- **Stories:** C001-US-1105
+- **Priority:** Must
+- **Acceptance:** C001-AC-1123.1

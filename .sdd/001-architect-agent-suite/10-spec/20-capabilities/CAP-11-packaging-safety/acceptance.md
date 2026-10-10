@@ -74,18 +74,6 @@ Scenario Outline: C001-TS-1105 — normalisation
   And ".sdd/link-to-src" is a symbolic link to "C:/repo/src" in the fixture
 ```
 
-## C001-REQ-1105
-
-#### C001-AC-1105.1 — Fallback scope
-```gherkin
-Scenario: C001-TS-1106 — hook input without agent identity
-  Given hook input without agent identification for a Write to "C:/repo/src/app.ts"
-  And the session's main agent is "architect:sdd-conductor"
-  When the path guard evaluates it
-  Then the exit code is 2
-  And for a session whose main agent is not the conductor the exit code is 0
-```
-
 ## C001-REQ-1106
 
 #### C001-AC-1106.1 — Allowlist decisions
@@ -142,7 +130,7 @@ Scenario: C001-TS-1109 — .mcp.json content
 ```gherkin
 Scenario: C001-TS-1110 — research MCP scoping
   When the frontmatter of all ten agents is parsed
-  Then only "sdd-researcher" has "tools" entries starting with "mcp__context7" or "mcp__deepwiki"
+  Then only "sdd-researcher" has "tools" entries starting with "mcp__plugin_architect_context7" or "mcp__plugin_architect_deepwiki"
 ```
 
 ## C001-REQ-1110
@@ -152,7 +140,7 @@ Scenario: C001-TS-1110 — research MCP scoping
 Scenario: C001-TS-1111 — doctor on cfg-no-ripwire
   Given machine configuration "cfg-no-ripwire"
   When P-01 runs "/architect:doctor"
-  Then the reply contains a table with 8 rows (node, git, ripwire, Serena, Archify, ast-grep, Context7, DeepWiki)
+  Then the reply contains a table with 8 rows (node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)
   And the ripwire row shows status "missing", the fallback, and the install command from C001-IF-10 §3
 ```
 
@@ -167,7 +155,7 @@ Scenario Outline: C001-TS-1112 — doctor outcome
   Examples:
     | situation                                  | outcome |
     | DeepWiki endpoint unreachable              | completed with warnings |
-    | Serena, Archify and ast-grep missing       | completed with warnings |
+    | Serena and ast-grep missing                | completed with warnings |
     | node 18 on PATH                            | failed: node ≥ 20 required |
 ```
 
@@ -282,6 +270,17 @@ Scenario: C001-TS-1123 — duplicated procedure
   Then it reports "PLG-DUP-001" naming both files
 ```
 
+## C001-REQ-1123
+
+#### C001-AC-1123.1 — Outdated Claude Code reported
+```gherkin
+Scenario: C001-TS-1124 — Claude Code below the minimum version
+  Given "claude --version" reports "2.0.76 (Claude Code)"
+  When P-01 runs "/architect:doctor"
+  Then the Claude Code row shows status "error", version "2.0.76" and the update command from C001-IF-10 §3
+  And the doctor run reports "completed with warnings"
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -290,7 +289,6 @@ Scenario: C001-TS-1123 — duplicated procedure
 | C001-REQ-1102 | TS-1102 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1103 | TS-1103 | TS-1103 (non-architect agent) | n/a | TS-1104 | TS-1103 | n/a | TS-1105 |
 | C001-REQ-1104 | TS-1105 | n/a | TS-1105 (case) | n/a | TS-1105 | n/a | TS-1105 |
-| C001-REQ-1105 | TS-1106 | TS-1106 | n/a | n/a | TS-1106 | n/a | n/a |
 | C001-REQ-1106 | TS-1107 | n/a | n/a | TS-1107 | TS-1107 | n/a | TS-1107 |
 | C001-REQ-1107 | TS-1108 | TS-1108 (pipe to head) | n/a | TS-1108 | n/a | n/a | TS-1108 |
 | C001-REQ-1108 | TS-1109 | n/a | n/a | n/a | n/a | n/a | n/a |
@@ -308,6 +306,7 @@ Scenario: C001-TS-1123 — duplicated procedure
 | C001-REQ-1120 | TS-1121 | n/a | n/a | TS-1121 | n/a | n/a | n/a |
 | C001-REQ-1121 | TS-1122 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1122 | TS-1123 | n/a | n/a | TS-1123 | n/a | n/a | n/a |
+| C001-REQ-1123 | TS-1124 | n/a | TS-1124 (version) | TS-1124 | n/a | n/a | n/a |
 
 Per-column n/a reasons: as in CAP-05. Concurrency is n/a because guards are stateless
 per call.

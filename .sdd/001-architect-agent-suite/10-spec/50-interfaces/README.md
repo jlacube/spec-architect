@@ -23,6 +23,6 @@ status: approved
 | C001-IF-11 | Lint report, critic report, readiness checklist | JSON document + Markdown | `reports.md`, `lint-report.schema.json` | C001-COMP-04, critic | conductor, auditor, gate engine | C001-REQ-317, 702, 703, 710, 711 |
 | C001-IF-12 | Trace graph | JSON document | `trace.schema.json` | C001-COMP-04 | P-04, v2 conformance checker | C001-REQ-709 |
 | C001-IF-13 | Gate summary and approval hash | Conventions | `gate.md` | C001-COMP-05 | conductor, P-01 | C001-REQ-801, 806 |
-| C001-IF-14 | External tools (ripwire, Serena, Archify, ast-grep, Context7, DeepWiki) | External CLI / MCP | `external-tools.md` | third parties | cartographer, architect, researcher | CAP-03, 05, 10 |
+| C001-IF-14 | External tools (ripwire, Serena, ast-grep, Context7, DeepWiki; Archify deferred) | External CLI / MCP | `external-tools.md` | third parties | cartographer, architect, researcher | CAP-03, 05, 10 |
 
 Error and rule codes of all interfaces: `errors.md`.

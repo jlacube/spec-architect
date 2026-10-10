@@ -34,7 +34,7 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** I get LSP precision without risking code changes or bloating every agent's context
 - **Value / outcome:** C001-CON-08; mitigates IDEA-RK-07
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-10
-- **Requirements:** C001-REQ-1006, C001-REQ-1007, C001-REQ-1008
+- **Requirements:** C001-REQ-1006, C001-REQ-1007, C001-REQ-1008, C001-REQ-1013
 - **Traces to:** Q9, IDEA-§7.3, §17.3
 
 ### C001-US-1004 — Structural evidence with ast-grep
