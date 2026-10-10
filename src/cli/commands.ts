@@ -8,6 +8,7 @@ import { buildContext, runLint } from "../lint/run.ts";
 import { PHASES, type LintChange, type LintRule, type Phase } from "../lint/types.ts";
 import { buildChangeGraph } from "../model/graph.ts";
 import { TOOL } from "../version.ts";
+import { initRoot, initWorkspace } from "../workspace/init.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
 
@@ -95,13 +96,24 @@ function lint(ctx: CommandContext): number {
   return report.summary.error > 0 ? 1 : 0;
 }
 
+function init(ctx: CommandContext): number {
+  const root = initRoot(ctx.cwd);
+  ctx.out.trace("init", { root });
+  const r = initWorkspace(root, { force: ctx.values["force"] === true });
+  const where = join(root, ".sdd");
+  ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
+  for (const c of r.created) ctx.out.line(`created: ${c}`);
+  for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
+  return 0;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
 }
 
 export const COMMANDS: readonly CommandSpec[] = [
-  { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [] },
+  { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"] },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },

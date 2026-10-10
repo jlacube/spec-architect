@@ -7368,11 +7368,14 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync, statSync as statSync3 } from "node:fs";
-import { dirname, join as join3 } from "node:path";
+import { existsSync as existsSync2, statSync as statSync4 } from "node:fs";
+import { dirname as dirname3, join as join6 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
+import { randomBytes } from "node:crypto";
+import { closeSync, fsyncSync, openSync, renameSync, unlinkSync, writeSync } from "node:fs";
+import { basename, dirname, join } from "node:path";
 var AtomicWriteError = class extends Error {
   constructor(path, cause) {
     super(`Could not write \`${path}\`; previous version kept`, { cause });
@@ -7384,6 +7387,80 @@ var AtomicWriteError = class extends Error {
   exitCode = 3;
   fix = "Check disk space and permissions";
 };
+function faultAfterBytes() {
+  const m = /(?:^|,)atomic-write-after-bytes=(\d+)(?:,|$)/.exec(process.env["SDD_TEST_FAULT"] ?? "");
+  return m?.[1] !== void 0 ? Number(m[1]) : void 0;
+}
+function writeAll(fd, data) {
+  let off = 0;
+  while (off < data.length) off += writeSync(fd, data, off, data.length - off);
+}
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+function renameWithRetry(from, to) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      renameSync(from, to);
+      return;
+    } catch (e) {
+      const code = e.code;
+      if (attempt >= 8 || code !== "EPERM" && code !== "EACCES" && code !== "EBUSY") throw e;
+      sleep(10 * (attempt + 1));
+    }
+  }
+}
+function fsyncDirectory(dir) {
+  let fd;
+  try {
+    fd = openSync(dir, "r");
+    fsyncSync(fd);
+  } catch {
+  } finally {
+    if (fd !== void 0) closeSync(fd);
+  }
+}
+function writeFileAtomic(path, data, options = {}) {
+  const bytes = typeof data === "string" ? Buffer.from(data, "utf8") : data;
+  const dir = dirname(path);
+  const temp = join(dir, `${basename(path)}.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
+  let fd;
+  try {
+    fd = openSync(temp, "wx");
+    const limit = faultAfterBytes();
+    if (limit !== void 0) {
+      writeAll(fd, bytes.subarray(0, Math.min(limit, bytes.length)));
+      throw new Error(`SDD_TEST_FAULT: temporary-file write failed after ${Math.min(limit, bytes.length)} bytes`);
+    }
+    writeAll(fd, bytes);
+    options.fault?.("write");
+    fsyncSync(fd);
+    options.fault?.("fsync");
+    closeSync(fd);
+    fd = void 0;
+    options.fault?.("rename");
+    renameWithRetry(temp, path);
+  } catch (e) {
+    if (fd !== void 0) {
+      try {
+        closeSync(fd);
+      } catch {
+      }
+    }
+    try {
+      unlinkSync(temp);
+    } catch {
+    }
+    throw new AtomicWriteError(path, e);
+  }
+  fsyncDirectory(dir);
+}
+function toArtifactText(text) {
+  return text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
+}
+function writeTextAtomic(path, text, options = {}) {
+  writeFileAtomic(path, toArtifactText(text), options);
+}
 
 // src/io/paths.ts
 import { realpathSync } from "node:fs";
@@ -7450,11 +7527,37 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+import { readdirSync as readdirSync3, statSync as statSync3 } from "node:fs";
+import { join as join5 } from "node:path";
+
+// src/lint/rules/ws-002.ts
+import { readdirSync } from "node:fs";
 import { join as join2 } from "node:path";
 
+// src/workspace/layout.ts
+var ROOT_FILES = ["SDD.md", "registry.json"];
+var ROOT_DIRS = ["_constitution", "_living", "_decisions", "_templates", "_archive"];
+var CHANGE_FOLDER = /^\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+function isKnownRootEntry(name, isDirectory) {
+  if (!isDirectory) return ROOT_FILES.includes(name);
+  return ROOT_DIRS.includes(name) || CHANGE_FOLDER.test(name);
+}
+
+// src/lint/rules/ws-002.ts
+var ws002 = {
+  code: "LINT-WS-002",
+  severity: "info",
+  fix: "None needed (preserved)",
+  check(ctx) {
+    return readdirSync(join2(ctx.root, ".sdd"), { withFileTypes: true }).filter((e) => !isKnownRootEntry(e.name, e.isDirectory())).sort((a, b) => a.name.localeCompare(b.name)).map((e) => {
+      const name = e.isDirectory() ? `${e.name}/` : e.name;
+      return { path: `.sdd/${name}`, message: `Unknown entry \`${name}\` in .sdd/ is preserved` };
+    });
+  }
+};
+
 // src/lint/rules/index.ts
-var RULES = [];
+var RULES = [ws002];
 
 // src/lint/run.ts
 function inScope(path, ctx) {
@@ -7505,8 +7608,8 @@ var PHASES = ["00-ideation", "10-spec", "20-plan"];
 
 // src/model/graph.ts
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, join, relative, sep } from "node:path";
+import { readdirSync as readdirSync2, readFileSync, statSync } from "node:fs";
+import { basename as basename2, join as join3, relative, sep } from "node:path";
 
 // src/model/blocks.ts
 var FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
@@ -7705,8 +7808,8 @@ var sha256 = (text) => "sha256:" + createHash("sha256").update(text, "utf8").dig
 var toPosix = (p) => p.split(sep).join("/");
 function listMarkdown(dir) {
   const out = [];
-  for (const name of readdirSync(dir).sort()) {
-    const p = join(dir, name);
+  for (const name of readdirSync2(dir).sort()) {
+    const p = join3(dir, name);
     if (statSync(p).isDirectory()) out.push(...listMarkdown(p));
     else if (name.endsWith(".md")) out.push(p);
   }
@@ -7821,7 +7924,7 @@ function parseFile(path, rel, change, nodes, edges) {
   return file;
 }
 function buildChangeGraph(changeDir) {
-  const m = /^(\d{3})-/.exec(basename(changeDir));
+  const m = /^(\d{3})-/.exec(basename2(changeDir));
   if (!m?.[1]) throw new Error(`not a change folder (expected NNN-slug): ${changeDir}`);
   const change = m[1];
   const nodes = [];
@@ -7835,6 +7938,102 @@ function buildChangeGraph(changeDir) {
 // src/version.ts
 var VERSION = true ? "0.0.1" : "0.0.0-dev";
 var TOOL = `architect-plugin@${VERSION}`;
+
+// src/workspace/init.ts
+import { existsSync, mkdirSync, readFileSync as readFileSync2, statSync as statSync2 } from "node:fs";
+import { dirname as dirname2, join as join4 } from "node:path";
+
+// src/workspace/sddmd.ts
+var STATUS_BEGIN = "<!-- sdd:status:begin -->";
+var STATUS_END = "<!-- sdd:status:end -->";
+var EMPTY_STATUS = [
+  "| Change | Title | Phase | Status | Tasks done | Open defects | Updated |",
+  "|---|---|---|---|---|---|---|"
+].join("\n");
+function renderSddMd(generator, statusBlock = EMPTY_STATUS) {
+  return `---
+sdd_version: 1
+workspace: .sdd
+generator: ${generator}
+id_scheme: "C{NNN}-{TYPE}-{seq}"
+---
+# Spec-Driven Development workspace
+
+This folder holds the specifications for this repository. **Agents: read this file first.**
+
+## How to orient yourself (agents)
+1. Read \`registry.json\` → find changes whose status is not \`archived\`.
+2. For the change you work on, read \`NNN-slug/change.md\` (phase, gate state, open defects).
+3. Respect phase order: \`00-ideation\` → \`10-spec\` → \`20-plan\`. Never consume an artifact whose
+   \`status\` is not \`approved\` (or whose approval hash no longer matches its content).
+4. Current system truth lives in \`_living/\`; per-change deltas live in change folders.
+5. Project rules: \`_constitution/constitution.md\`.
+
+## If you are implementing a change
+Read \`NNN-slug/20-plan/handoff.md\` and report progress with
+\`node <plugin-root>/scripts/sdd.mjs task set <task-id> --status <status>\` as described there.
+
+## Conventions
+- IDs: \`C<NNN>-<TYPE>-<seq>\` (e.g. \`C004-REQ-012\`); short forms (\`REQ-012\`) inside a change folder.
+- Status: not-started → draft → in-review → approved → (stale | in-revision) → archived.
+- Markers: \`[NEEDS CLARIFICATION: …]\`, \`[ASSUMPTION: …]\`, \`[WAIVED: <gate> <reason>]\`.
+- Only the sdd CLI writes \`registry.json\`, \`ids.json\`, \`approvals.json\` and the status block below.
+
+${STATUS_BEGIN}
+${statusBlock}
+${STATUS_END}
+`;
+}
+function readStatusBlock(text) {
+  const b = text.indexOf(STATUS_BEGIN);
+  const e = text.indexOf(STATUS_END);
+  if (b < 0 || e < b || text.indexOf(STATUS_BEGIN, b + 1) >= 0 || text.indexOf(STATUS_END, e + 1) >= 0) return null;
+  return text.slice(b + STATUS_BEGIN.length, e).replace(/^\n/, "").replace(/\n$/, "");
+}
+
+// src/workspace/init.ts
+var isDir = (p) => existsSync(p) && statSync2(p).isDirectory();
+function initRoot(start) {
+  for (const marker of [".sdd", ".git"]) {
+    let dir = start;
+    for (; ; ) {
+      if (existsSync(join4(dir, marker))) return dir;
+      const parent = dirname2(dir);
+      if (parent === dir) break;
+      dir = parent;
+    }
+  }
+  return start;
+}
+function initWorkspace(root, options = {}) {
+  const sdd = join4(root, ".sdd");
+  const existed = isDir(sdd);
+  const created = [];
+  const rewritten = [];
+  if (!existed) mkdirSync(sdd, { recursive: true });
+  for (const d of ROOT_DIRS) {
+    if (!isDir(join4(sdd, d))) {
+      mkdirSync(join4(sdd, d));
+      created.push(d + "/");
+    }
+  }
+  const registry = join4(sdd, "registry.json");
+  if (!existsSync(registry)) {
+    const doc = { sdd_version: 1, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
+    writeTextAtomic(registry, JSON.stringify(doc, null, 2) + "\n");
+    created.push("registry.json");
+  }
+  const sddMd = join4(sdd, "SDD.md");
+  if (!existsSync(sddMd)) {
+    writeTextAtomic(sddMd, renderSddMd(TOOL));
+    created.push("SDD.md");
+  } else if (options.force) {
+    const block = readStatusBlock(readFileSync2(sddMd, "utf8"));
+    writeTextAtomic(sddMd, block === null ? renderSddMd(TOOL) : renderSddMd(TOOL, block));
+    rewritten.push("SDD.md");
+  }
+  return { root, existed, created, rewritten };
+}
 
 // src/cli/errors.ts
 var entries = [
@@ -7939,8 +8138,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders(root) {
-  const sdd = join2(root, ".sdd");
-  return readdirSync2(sdd).filter((n) => /^\d{3}-/.test(n) && statSync2(join2(sdd, n)).isDirectory()).sort();
+  const sdd = join5(root, ".sdd");
+  return readdirSync3(sdd).filter((n) => /^\d{3}-/.test(n) && statSync3(join5(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -7950,7 +8149,7 @@ function lint(ctx) {
   let file;
   if (values["file"] !== void 0) {
     const abs = normalisePath(values["file"], { cwd: ctx.cwd });
-    if (!isInside(join2(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
+    if (!isInside(join5(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
     file = relativePath(root, abs);
     const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
     folders = folder ? folders.filter((f) => f === folder) : [];
@@ -7961,7 +8160,7 @@ function lint(ctx) {
     folders = match;
   }
   const changes = folders.map((f) => {
-    const graph = buildChangeGraph(join2(root, ".sdd", f));
+    const graph = buildChangeGraph(join5(root, ".sdd", f));
     out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f}`, graph };
   });
@@ -7977,12 +8176,22 @@ function lint(ctx) {
   }
   return report.summary.error > 0 ? 1 : 0;
 }
+function init(ctx) {
+  const root = initRoot(ctx.cwd);
+  ctx.out.trace("init", { root });
+  const r = initWorkspace(root, { force: ctx.values["force"] === true });
+  const where = join5(root, ".sdd");
+  ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
+  for (const c of r.created) ctx.out.line(`created: ${c}`);
+  for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
+  return 0;
+}
 function version(ctx) {
   ctx.out.line(TOOL);
   return 0;
 }
 var COMMANDS = [
-  { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [] },
+  { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"] },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
@@ -8045,9 +8254,9 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir = start;
   for (; ; ) {
-    const sdd = join3(dir, ".sdd");
-    if (existsSync(sdd) && statSync3(sdd).isDirectory()) return dir;
-    const parent = dirname(dir);
+    const sdd = join6(dir, ".sdd");
+    if (existsSync2(sdd) && statSync4(sdd).isDirectory()) return dir;
+    const parent = dirname3(dir);
     if (parent === dir) return null;
     dir = parent;
   }

@@ -145,5 +145,5 @@ test("SDD_DEBUG=1 writes timing and decision traces to standard error for every 
 test("lint on this repository runs without errors from the (empty) rule registry", () => {
   const r = runBundled(["lint", "001"], { cwd: repoRoot() });
   assert.equal(r.code, 0, r.stderr);
-  assert.match(r.stdout, /^lint: 0 errors, 0 warnings, 0 info$/m);
+  assert.match(r.stdout, /^lint: 0 errors, 0 warnings, \d+ info$/m);
 });

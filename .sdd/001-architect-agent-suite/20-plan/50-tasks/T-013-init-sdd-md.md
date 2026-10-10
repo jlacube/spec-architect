@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: todo
+status: in-progress
 depends_on: [C001-T-012]
 implements: [C001-REQ-101, C001-REQ-102, C001-REQ-103, C001-REQ-123, C001-REQ-124]
 satisfies_ac: [C001-AC-101.1, C001-AC-101.2, C001-AC-102.1, C001-AC-103.1, C001-AC-123.1, C001-AC-124.1]
