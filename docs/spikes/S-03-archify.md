@@ -100,6 +100,12 @@ validator's diagnostics:
 
 Recorded in the "Defects (manual)" table of `20-plan/handoff.md`.
 
+**P-01 decision (2026-10-10), to be applied in the batched spec revision after S-06:**
+Mermaid-only in v1. C001-REQ-504, 505 and 506 leave this change and are deferred to a later
+change once an Archify release fixes issue #474. C001-TC-504…506 are removed, C001-T-071 is
+dropped with a waiver, and the architect always uses the Mermaid path (C001-REQ-507).
+D-S03-2 (IR conventions) is recorded for the later change.
+
 ## Install notes for the README and doctor
 
 - Install: `npx skills add tt-a1i/archify -g -a claude-code -y` (non-interactive; this spike
