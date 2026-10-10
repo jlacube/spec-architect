@@ -143,6 +143,13 @@ written, so no defect is needed.
 Recorded in the "Defects (manual)" table of `20-plan/handoff.md` (`sdd defect add` does not
 exist yet; it arrives with T-026).
 
+**Resolution (2026-10-10):** fixed by the spec revision re-approved at G2 (commit `baa1a3e`):
+C001-REQ-1003 / AC-1003.1 / TS-1004 now name a bounding flag per verb family, C001-IF-14 §2
+records the flags, exit codes and disclosure mapping above, C001-REQ-1010 and new
+C001-TS-1014 treat `--test-gate` exit 4 as an answer, the C001-IF-07 §3 allowlist accepts
+`--max-tokens`/`--limit`/`--offset`, and the doctor detects ripwire with `--version`. The plan
+followed at G3 (commit `ccda4b3`).
+
 ## Notes for the cartographer (T-041) and the code-discovery skill
 
 1. Treat exit 4 from `--test-gate` as a successful answer, and exit 3 as "over budget; retry
