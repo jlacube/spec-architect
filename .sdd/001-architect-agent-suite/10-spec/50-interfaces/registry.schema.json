@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://architect.local/schemas/registry.schema.json",
+  "title": "C001-IF-02 SDD registry",
+  "type": "object",
+  "required": ["sdd_version", "generated_at", "changes"],
+  "additionalProperties": false,
+  "properties": {
+    "sdd_version": { "type": "integer", "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "changes": { "type": "array", "items": { "$ref": "#/$defs/change" } }
+  },
+  "$defs": {
+    "phaseName": { "enum": ["00-ideation", "10-spec", "20-plan"] },
+    "phaseStatus": { "enum": ["not-started", "draft", "in-review", "approved", "stale", "in-revision"] },
+    "hash": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" },
+    "phase": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/$defs/phaseStatus" },
+        "approved_hash": { "$ref": "#/$defs/hash" },
+        "hash_scope": { "type": "string" },
+        "approved_at": { "type": ["string", "null"], "format": "date" },
+        "approved_by": { "type": ["string", "null"] }
+      }
+    },
+    "defect": {
+      "type": "object",
+      "required": ["id", "ref", "summary", "reporter", "date", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^D-[0-9]{3}$" },
+        "ref": { "type": "string" },
+        "summary": { "type": "string", "minLength": 1 },
+        "reporter": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "status": { "enum": ["open", "closed"] },
+        "resolution": { "type": ["string", "null"] },
+        "closed_at": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+    "waiver": {
+      "type": "object",
+      "required": ["item", "gate", "date", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "item": { "type": "string" },
+        "gate": { "enum": ["constitution", "00-ideation", "10-spec", "20-plan"] },
+        "date": { "type": "string", "format": "date" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "change": {
+      "type": "object",
+      "required": ["id", "slug", "title", "kind", "profile", "status", "phase", "phases", "implementation", "defects", "waivers"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^CHG-[0-9]{3}$" },
+        "slug": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9]+(-[a-z0-9]+)*$" },
+        "title": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["greenfield", "brownfield", "mixed"] },
+        "profile": { "enum": ["lite", "full"] },
+        "status": { "enum": ["active", "stopped", "archived"] },
+        "phase": { "$ref": "#/$defs/phaseName" },
+        "phases": {
+          "type": "object",
+          "required": ["00-ideation", "10-spec", "20-plan"],
+          "additionalProperties": false,
+          "properties": {
+            "00-ideation": { "$ref": "#/$defs/phase" },
+            "10-spec": { "$ref": "#/$defs/phase" },
+            "20-plan": { "$ref": "#/$defs/phase" }
+          }
+        },
+        "implementation": {
+          "type": "object",
+          "required": ["status", "tasks", "last_report"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "enum": ["not-started", "in-progress", "blocked", "done"] },
+            "tasks": {
+              "type": "object",
+              "required": ["total", "done", "blocked", "in_progress"],
+              "additionalProperties": false,
+              "properties": {
+                "total": { "type": "integer", "minimum": 0 },
+                "done": { "type": "integer", "minimum": 0 },
+                "blocked": { "type": "integer", "minimum": 0 },
+                "in_progress": { "type": "integer", "minimum": 0 }
+              }
+            },
+            "last_report": { "type": ["string", "null"], "format": "date-time" }
+          }
+        },
+        "defects": { "type": "array", "items": { "$ref": "#/$defs/defect" } },
+        "waivers": { "type": "array", "items": { "$ref": "#/$defs/waiver" } }
+      }
+    }
+  }
+}

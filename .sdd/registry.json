@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-10T12:00:00Z",
+  "generated_at": "2026-10-10T18:00:00Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -17,7 +17,7 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "draft"
+          "status": "in-review"
         },
         "20-plan": {
           "status": "not-started"

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://architect.local/schemas/trace.schema.json",
+  "title": "C001-IF-12 Trace graph",
+  "type": "object",
+  "required": ["change", "generated_at", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "change": { "type": "string", "pattern": "^CHG-[0-9]{3}$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "file", "line", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "enum": ["GOAL", "SC", "NG", "AS", "CON", "CAP", "US", "REQ", "AC", "TS", "NFR", "INV", "IF", "COMP", "DEC", "ADR", "OA", "R", "M", "T", "TC", "RISK", "RB", "DOD"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string" },
+          "status": { "type": "string" },
+          "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "tombstoned": { "type": "boolean" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relation"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation": { "enum": ["story-of", "acceptance-of", "scenario-of", "implements", "satisfies", "verified-by", "depends-on", "realizes", "serves", "covers", "mitigates", "traces-to", "supersedes", "references"] }
+        }
+      }
+    }
+  }
+}
