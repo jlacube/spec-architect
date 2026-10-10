@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-013]
 implements: [C001-REQ-104, C001-REQ-105, C001-REQ-106, C001-REQ-905]
 satisfies_ac: [C001-AC-104.1, C001-AC-104.2, C001-AC-105.1, C001-AC-105.2, C001-AC-106.1, C001-AC-905.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-105, C001-TS-106, C001-TS-107, C001-TS-108, C001-TS-109, C
 components: [C001-COMP-03]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3a75c0a, completed_at: 2026-10-11, notes: "status --write, registry rebuild, status block, implementation derivation and LINT-REG-001 done; C001-TC-105..109 and 906 pass on the bundled CLI, plus the command-level runs owed by T-011 (TC-132) and T-013 (TC-129, TC-130). Lint rules are now pure (workspace facts gathered by the engine, C001-CON-13), which also fixes LINT-WS-002. SDD.md CRLF content outside the markers is kept byte-identical (C001-REQ-105 over NFR-404 for that file). This repository's workspace adopted with status --write (registry schema-valid, 14/57 tasks done at that point)." }
 ---
 
 # C001-T-017 — status: registry rebuild, SDD.md block, implementation derivation
