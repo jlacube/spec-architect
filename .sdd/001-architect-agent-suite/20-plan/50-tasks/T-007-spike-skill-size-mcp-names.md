@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-1008.1, C001-AC-1109.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1009, C001-TS-1110, C001-TC-1009, C001-TC-1110]
 components: [C001-COMP-10, C001-COMP-11]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e53a430, completed_at: 2026-10-10, notes: "Verdict works-with-caveats (docs/spikes/S-06-skills-mcp.md). Skill preload 308 tokens/1,000 chars, linear. C001-IF-09 tool names not confirmed: plugin MCP tools are mcp__plugin_architect_<server>__<tool>, deferred (ToolSearch needed), DeepWiki ask_wiki_question. Defects D-S06-1..3 opened; D-S02-3 refined (SERENA_HOME=${CLAUDE_PLUGIN_DATA}/serena with pre-seeded config). C001-TC-1009/1110 belong to C001-T-060." }
 ---
 
 # C001-T-007 — Spike S-06: preloaded skill cost and MCP tool names
