@@ -7,6 +7,7 @@ export const ws002: LintRule = {
   code: "LINT-WS-002",
   severity: "info",
   fix: "None needed (preserved)",
+  scope: "workspace",
   check(ctx) {
     return ctx.workspace.entries
       .filter((e) => !isKnownRootEntry(e.name, e.isDirectory))

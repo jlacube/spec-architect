@@ -64,6 +64,10 @@ export function minimalChange(): Record<string, string> {
     ".sdd/registry.json": REBUILD,
     ".sdd/004-x/change.md": "---\nid: CHG-004\ntitle: x\n---\n# CHG-004\n",
     ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/requirements.md":
-      "---\nid: C004-CAP-01\nartifact: spec/requirements\n---\n\n### C004-REQ-012 — Thing\n- **Pattern:** ubiquitous\n- **Statement:** THE sdd CLI SHALL do one thing.\n",
+      "---\nid: C004-CAP-01\nartifact: spec/requirements\n---\n\n### C004-REQ-012 — Thing\n- **Pattern:** ubiquitous\n- **Statement:** THE sdd CLI SHALL do one thing.\n- **Stories:** C004-US-001\n- **Acceptance:** C004-AC-012.1\n",
+    ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/stories.md":
+      "---\nid: C004-CAP-01\nartifact: spec/stories\n---\n\n### C004-US-001 — Story\n- **Requirements:** C004-REQ-012\n",
+    ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/acceptance.md":
+      "---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — Criterion\n```gherkin\nScenario: C004-TS-012 — s\n  Given a\n  When b\n  Then c\n```\n",
   };
 }

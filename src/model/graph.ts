@@ -129,7 +129,7 @@ interface Pending {
   to: number;
 }
 
-function parseFile(path: string, rel: string, change: string, nodes: GraphNode[], edges: GraphEdge[]): ArtifactFile {
+function parseFile(path: string, rel: string, change: string | null, nodes: GraphNode[], edges: GraphEdge[]): ArtifactFile {
   const text = readFileSync(path, "utf8");
   const doc = splitFrontmatter(text);
   const fm = doc.data;
@@ -246,6 +246,17 @@ function parseFile(path: string, rel: string, change: string, nodes: GraphNode[]
     }
   });
   return file;
+}
+
+/**
+ * Parses one artifact outside a change folder (for example `_living/CAP-x.md`); short-form IDs are
+ * not resolved there.
+ */
+export function parseArtifact(path: string, rel: string, change: string | null = null): { file: ArtifactFile; nodes: GraphNode[]; edges: GraphEdge[] } {
+  const nodes: GraphNode[] = [];
+  const edges: GraphEdge[] = [];
+  const file = parseFile(path, rel, change, nodes, edges);
+  return { file, nodes, edges };
 }
 
 /** Parses one change folder (`.sdd/NNN-slug`). */

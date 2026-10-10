@@ -4,8 +4,8 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { isInside, normalisePath, relativePath } from "../io/paths.ts";
 import { RULES } from "../lint/rules/index.ts";
-import { buildContext, runLint } from "../lint/run.ts";
-import { PHASES, type LintChange, type LintRule, type Phase } from "../lint/types.ts";
+import { lintWorkspace, type LintOptions } from "../lint/engine.ts";
+import { PHASES, type LintRule, type Phase } from "../lint/types.ts";
 import { buildChangeGraph } from "../model/graph.ts";
 import { TOOL } from "../version.ts";
 import { initRoot, initWorkspace } from "../workspace/init.ts";
@@ -69,36 +69,10 @@ function changeFolders(root: string): string[] {
 
 function lint(ctx: CommandContext): number {
   const { out, root, values } = ctx;
-  const phase = (values["phase"] as Phase | undefined) ?? null;
-  let folders = changeFolders(root);
-  const nnn = ctx.args["NNN"];
-  let file: string | undefined;
-  if (values["file"] !== undefined) {
-    const abs = normalisePath(values["file"] as string, { cwd: ctx.cwd });
-    if (!isInside(join(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
-    file = relativePath(root, abs);
-    const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
-    folders = folder ? folders.filter((f) => f === folder) : [];
-  }
-  if (nnn !== undefined) {
-    const match = folders.filter((f) => f.startsWith(nnn + "-"));
-    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    folders = match;
-  }
-  const changes: LintChange[] = folders.map((f) => {
-    const graph = buildChangeGraph(join(root, ".sdd", f));
-    out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
-    return { change: graph.change, folder: `.sdd/${f}`, graph };
-  });
-  const sdd = join(root, ".sdd");
-  const regPath = join(sdd, "registry.json");
-  const stored = existsSync(regPath) ? (JSON.parse(readFileSync(regPath, "utf8")) as unknown) : null;
-  const workspace = {
-    entries: readdirSync(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() })),
-    registryDrift: registryDrift(stored, rebuildRegistry(sdd)),
-  };
-  const report = runLint(buildContext(root, changes, phase, file, workspace), ctx.rules, TOOL);
-  out.trace("lint", { rules: ctx.rules.length, error: report.summary.error, warn: report.summary.warn, info: report.summary.info });
+  const options: LintOptions = { cwd: ctx.cwd, rules: ctx.rules, tool: TOOL, phase: (values["phase"] as Phase | undefined) ?? null, trace: (e, d) => out.trace(e, d) };
+  if (ctx.args["NNN"] !== undefined) options.change = ctx.args["NNN"];
+  if (values["file"] !== undefined) options.file = values["file"] as string;
+  const report = lintWorkspace(root, options);
   if (values["json"]) out.json(report);
   else {
     for (const f of report.findings) out.line(formatFinding(f));

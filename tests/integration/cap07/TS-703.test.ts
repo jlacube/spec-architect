@@ -50,7 +50,7 @@ test("findings in --json carry code, severity, path, line, ids, message and fix"
   try {
     const r = runInProcess(["lint", "--json"], {
       cwd: ws.root,
-      rules: [{ code: "LINT-WORD-001", severity: "error", fix: "Replace with a measurable term", check: (ctx) => ctx.statements.map((s) => ({ path: s.path, line: s.line, ids: [s.id], message: "Weak word \"thing\"" })) }],
+      rules: [{ code: "LINT-WORD-001", severity: "error", fix: "Replace with a measurable term", scope: "change", check: (ctx) => ctx.statements.map((s) => ({ path: s.path, line: s.line, ids: [s.id], message: "Weak word \"thing\"" })) }],
     });
     assert.equal(r.code, 1);
     const doc = assertReport(r.stdout);

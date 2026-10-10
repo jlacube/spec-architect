@@ -13,7 +13,7 @@ const REQ_FILE = ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/requirements.md";
 const ears002: LintRule = {
   code: "LINT-EARS-002",
   severity: "error",
-  fix: "Split into two requirements",
+  fix: "Split into two requirements", scope: "change",
   check(ctx) {
     return ctx.statements
       .filter((s) => (s.text.match(/\bSHALL\b/g) ?? []).length > 1)

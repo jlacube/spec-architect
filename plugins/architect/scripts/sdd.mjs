@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync8, statSync as statSync7 } from "node:fs";
-import { dirname as dirname5, join as join11 } from "node:path";
+import { existsSync as existsSync9, statSync as statSync8 } from "node:fs";
+import { dirname as dirname5, join as join12 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,26 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync7, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync6 } from "node:fs";
-import { join as join10 } from "node:path";
+import { readdirSync as readdirSync6, readFileSync as readFileSync9, statSync as statSync7 } from "node:fs";
+import { join as join11 } from "node:path";
+
+// src/lint/rules/liv-001.ts
+var liv001 = {
+  code: "LINT-LIV-001",
+  severity: "error",
+  fix: "Remove it or set `inventory_only: false` via archive",
+  scope: "workspace",
+  check(ctx) {
+    const out = [];
+    for (const l of ctx.workspace.living) {
+      if (!l.inventoryOnly) continue;
+      for (const n of l.nodes)
+        if (n.type === "REQ" && n.form === "heading")
+          out.push({ path: l.path, line: n.line, ids: [n.id], message: `${n.id} is a requirement in an inventory-only living file` });
+    }
+    return out;
+  }
+};
 
 // src/lint/rules/reg-001.ts
 var show = (v) => v === void 0 ? "(absent)" : `\`${typeof v === "string" ? v : JSON.stringify(v)}\``;
@@ -7536,11 +7554,190 @@ var reg001 = {
   code: "LINT-REG-001",
   severity: "error",
   fix: "Run `sdd status --write`",
+  scope: "workspace",
   check(ctx) {
     return ctx.workspace.registryDrift.map((d) => ({
       path: ".sdd/registry.json",
       message: d.path === "$" ? "registry.json is missing" : `${d.path}: stored ${show(d.stored)}, expected ${show(d.expected)}`
     }));
+  }
+};
+
+// src/lint/rules/sec-001.ts
+var SECRET_PATTERNS = [
+  { name: "private key", re: /-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED |PGP )?PRIVATE KEY(?: BLOCK)?-----/ },
+  { name: "AWS access key", re: /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/ },
+  { name: "GitHub token", re: /\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{60,})\b/ },
+  { name: "Slack token", re: /\bxox[abprs]-[A-Za-z0-9-]{10,}/ },
+  { name: "Anthropic API key", re: /\bsk-ant-[A-Za-z0-9_-]{20,}/ },
+  { name: "OpenAI-style API key", re: /\bsk-(?:proj-)?[A-Za-z0-9]{32,}\b/ },
+  { name: "Stripe live key", re: /\b[rs]k_live_[A-Za-z0-9]{20,}\b/ },
+  { name: "Google API key", re: /\bAIza[0-9A-Za-z_-]{35}\b/ },
+  { name: "npm token", re: /\bnpm_[A-Za-z0-9]{36}\b/ },
+  { name: "JSON Web Token", re: /\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/ },
+  { name: "Azure storage key", re: /AccountKey=[A-Za-z0-9+/]{40,}={0,2}/ },
+  { name: "connection string with password", re: /\b[a-z][a-z0-9+.-]*:\/\/[^\s:@/"'`]+:[^\s@/"'`]{3,}@[^\s/"'`]+/i }
+];
+var PLACEHOLDER = /<[^>]+>|\$\{[^}]+\}|x{3,}|\*{3,}|changeme|example|placeholder|redacted/i;
+function findSecrets(line) {
+  const hits = [];
+  for (const p of SECRET_PATTERNS) {
+    const m = p.re.exec(line);
+    if (m && !PLACEHOLDER.test(m[0])) hits.push(p.name);
+  }
+  return hits;
+}
+var sec001 = {
+  code: "LINT-SEC-001",
+  severity: "error",
+  fix: "Remove the secret; rotate it if real",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const t of ctx.texts)
+      t.lines.forEach((line, i) => {
+        const hits = findSecrets(line);
+        if (hits.length > 0) out.push({ path: t.path, line: i + 1, message: `Secret-like string (${hits.join(", ")})` });
+      });
+    return out;
+  }
+};
+
+// src/model/ids.ts
+var ID_TYPES = [
+  "GOAL",
+  "SC",
+  "NG",
+  "AS",
+  "CON",
+  "CAP",
+  "US",
+  "REQ",
+  "AC",
+  "TS",
+  "NFR",
+  "INV",
+  "IF",
+  "COMP",
+  "DEC",
+  "ADR",
+  "OA",
+  "R",
+  "M",
+  "T",
+  "TC",
+  "RISK",
+  "RB",
+  "DOD"
+];
+var TYPE_ALT = [...ID_TYPES].sort((a, b) => b.length - a.length).join("|");
+var BODY = `(${TYPE_ALT})-(\\d+)(?:\\.(\\d+))?`;
+var FULL = new RegExp(`^C(\\d{3})-${BODY}$`);
+var SCAN = new RegExp(`(?<![A-Za-z0-9_§-])(?:C(\\d{3})-)?${BODY}(?![A-Za-z0-9_-]|\\.\\w)`, "g");
+function valid(type, sub) {
+  return type === "AC" ? sub !== void 0 : sub === void 0;
+}
+var TWO_DIGIT = /* @__PURE__ */ new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M"]);
+var minDigits = (type) => TWO_DIGIT.has(type) ? 2 : 3;
+function parseId(text) {
+  const m = FULL.exec(text);
+  if (!m || !valid(m[2], m[4])) return null;
+  const parts = { change: m[1], type: m[2], seq: m[3] };
+  if (m[4] !== void 0) parts.sub = m[4];
+  return parts;
+}
+function formatId(p) {
+  return `C${p.change}-${p.type}-${p.seq}${p.sub !== void 0 ? "." + p.sub : ""}`;
+}
+function findIds(line, change) {
+  const hits = [];
+  for (const m of line.matchAll(SCAN)) {
+    const [raw, own, type, seq, sub] = m;
+    if (!type || !seq || !valid(type, sub)) continue;
+    const owner = own ?? change;
+    if (!owner) continue;
+    if (own === void 0 && seq.length < minDigits(type)) continue;
+    const parts = { change: owner, type, seq };
+    if (sub !== void 0) parts.sub = sub;
+    hits.push({ id: formatId(parts), raw, short: own === void 0, column: m.index });
+  }
+  return hits;
+}
+
+// src/lint/rules/tr-02.ts
+var tr02 = {
+  code: "TR-02",
+  severity: "error",
+  fix: "List the requirement's user stories under Stories and its criteria under Acceptance",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const n of c.graph.nodes) {
+        if (n.type !== "REQ") continue;
+        const field = (name) => n.fields.find((f) => f.name === name)?.value ?? "";
+        const types = (name) => findIds(field(name), c.change).map((h) => h.id.split("-")[1]);
+        const missing = [
+          ...types("Stories").includes("US") ? [] : ["user story"],
+          ...types("Acceptance").includes("AC") ? [] : ["acceptance criterion"]
+        ];
+        if (missing.length > 0) out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} lists no ${missing.join(" and no ")}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-12.ts
+var tr12 = {
+  code: "TR-12",
+  severity: "error",
+  fix: "Define the ID, correct the reference, or tombstone the ID",
+  scope: "change",
+  check(ctx) {
+    return ctx.references.filter((r) => r.context === "text" && !ctx.definitions.has(r.to) && !ctx.tombstones.has(r.to)).map((r) => ({ path: r.path, line: r.line, ids: [r.to], message: `${r.to} is neither defined nor tombstoned` }));
+  }
+};
+
+// src/lint/rules/tr-13.ts
+var tr13 = {
+  code: "TR-13",
+  severity: "error",
+  fix: "Keep one definition; allocate a new ID with `sdd id next` for the other",
+  scope: "change",
+  check(ctx) {
+    const out = [];
+    for (const [id, locs] of ctx.activeDefinitions) {
+      const first = locs[0];
+      if (locs.length > 1)
+        out.push({ path: first.path, line: first.line, ids: [id], message: `${id} is defined ${locs.length} times: ${locs.map((l) => `${l.path}:${l.line}`).join(", ")}` });
+      if (ctx.tombstones.has(id))
+        out.push({ path: first.path, line: first.line, ids: [id], message: `${id} is tombstoned but defined again at ${locs.map((l) => `${l.path}:${l.line}`).join(", ")}` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/txt-001.ts
+var WORDS = /\bTBD\b|\bTODO\b|\b[Ll]orem\b|\betc\./g;
+function prose(line) {
+  return line.replace(/`[^`]*`/g, (m) => " ".repeat(m.length)).replace(/"[^"]*"|“[^”]*”/g, (m) => " ".repeat(m.length));
+}
+var txt001 = {
+  code: "LINT-TXT-001",
+  severity: "error",
+  fix: "Replace with real content",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const t of ctx.texts) {
+      if (!t.path.endsWith(".md")) continue;
+      t.lines.forEach((line, i) => {
+        if (t.inFence(i + 1)) return;
+        const words = [...prose(line).matchAll(WORDS)].map((m) => m[0]);
+        if (words.length > 0) out.push({ path: t.path, line: i + 1, message: `Placeholder text ${words.map((w) => `\`${w}\``).join(", ")}` });
+      });
+    }
+    return out;
   }
 };
 
@@ -7558,6 +7755,7 @@ var ws002 = {
   code: "LINT-WS-002",
   severity: "info",
   fix: "None needed (preserved)",
+  scope: "workspace",
   check(ctx) {
     return ctx.workspace.entries.filter((e) => !isKnownRootEntry(e.name, e.isDirectory)).sort((a, b) => a.name.localeCompare(b.name)).map((e) => {
       const name = e.isDirectory ? `${e.name}/` : e.name;
@@ -7567,59 +7765,70 @@ var ws002 = {
 };
 
 // src/lint/rules/index.ts
-var RULES = [ws002, reg001];
+var RULES = [tr02, tr12, tr13, txt001, sec001, ws002, reg001, liv001];
 
-// src/lint/run.ts
-function inScope(path, ctx) {
-  if (ctx.file !== void 0) return path === ctx.file;
-  if (ctx.phase === null) return true;
-  return ctx.changes.some((c) => path.startsWith(`${c.folder}/${ctx.phase}/`));
+// src/lint/engine.ts
+import { existsSync as existsSync3, readdirSync as readdirSync3, readFileSync as readFileSync5, statSync as statSync3 } from "node:fs";
+import { join as join6 } from "node:path";
+
+// src/cli/errors.ts
+var entries = [
+  ["ERR-CLI-001", "No `.sdd/` found (command other than `init`)", "Not an SDD workspace", "Run `sdd init` or `/architect:init`"],
+  ["ERR-CLI-002", "Change number not found or ambiguous", "Change `<NNN>` not found", "Check `sdd status`"],
+  ["ERR-CLI-003", "Invalid arguments or options", "Usage error: `<detail>`", "See `sdd <command> --help`"],
+  ["ERR-CLI-004", "Unknown ID type", "Unknown ID type `<TYPE>`; valid: …", "Use a type from C001-IF-04 §2"],
+  ["ERR-CLI-005", "Invalid task status", "Invalid status `<s>`; valid: todo, in-progress, blocked, done, dropped", "Use a valid status"],
+  ["ERR-CLI-006", "`blocked` without reason", "`--reason` is required for status blocked", 'Add `--reason "<text>"`'],
+  ["ERR-CLI-007", "Profile downgrade requested", "A full change cannot become lite", "Keep full; split the work into a new lite change"],
+  ["ERR-CLI-008", "Defect reference unknown", "`<ID>` is not defined in an active change", "Reference an existing REQ/AC/TS/T ID"],
+  ["ERR-CLI-009", "Archive preconditions unmet", "Cannot archive `<NNN>`: `<list>`", "Finish/drop tasks, close defects, approve G3"],
+  ["ERR-CLI-010", "Unwaived lint errors at approval", "Approval blocked by lint errors: `<list>`", "Fix the findings or `--waive` them with a note"],
+  ["ERR-CLI-011", "Open clarification markers at approval", "Approval blocked by open markers: `<list>`", "Answer the questions or `--waive` them"],
+  ["ERR-CLI-012", "Unresolved critic blockers at approval", "Approval blocked by critic blockers: `<list>`", "Resolve the findings or `--waive` them"],
+  ["ERR-CLI-013", "Task transition not allowed", "Transition `<from>` → `<to>` not allowed", "See task state machine"],
+  ["ERR-CLI-014", "Change not active", "Change `<NNN>` is `<stopped|archived>`", "Create a new change"],
+  ["ERR-CLI-015", "Predecessor phase not approved at approval", "`<phase>` requires approved `<predecessor>`", "Approve the predecessor first"],
+  ["ERR-CLI-016", "Internal error (exit 3)", "Internal error: `<detail>`", "Re-run with `SDD_DEBUG=1` and report"],
+  ["ERR-CLI-017", "Atomic write failed (exit 3)", "Could not write `<file>`; previous version kept", "Check disk space and permissions"],
+  ["WARN-CLI-001", "Task done while dependencies unfinished", "`<T>` done before `<deps>`", "Confirm order or update dependencies"]
+];
+var CATALOGUE = Object.fromEntries(
+  entries.map(([code, condition, message, fix]) => [
+    code,
+    { code, condition, message, fix, exitCode: code.startsWith("WARN") ? 0 : /\(exit 3\)/.test(condition) ? 3 : 2 }
+  ])
+);
+function fill(template, params) {
+  let s = template.replace(/<([^<>]+)>/g, (m, key) => params[key] ?? m);
+  if (params["list"] !== void 0) s = s.replace("…", params["list"]);
+  return s;
 }
-function buildContext(root, changes, phase, file, workspace) {
-  const ctx = { root, changes, phase, statements: [], workspace };
-  if (file !== void 0) ctx.file = file;
-  const statements = [];
-  for (const c of changes) {
-    for (const n of c.graph.nodes) {
-      if (n.type !== "REQ") continue;
-      const f = n.fields.find((x) => x.name === "Statement");
-      if (!f) continue;
-      const path = `${c.folder}/${n.file}`;
-      if (inScope(path, ctx)) statements.push({ id: n.id, path, line: f.line, text: f.value });
-    }
+var CliError = class extends Error {
+  constructor(code, params = {}) {
+    const entry = CATALOGUE[code];
+    if (!entry) throw new Error(`unknown catalogue code ${code}`);
+    super(fill(entry.message, params));
+    this.code = code;
+    this.params = params;
+    this.entry = entry;
+    this.name = "CliError";
   }
-  ctx.statements = statements;
-  return ctx;
-}
-var ORDER = { error: 0, warn: 1, info: 2 };
-function runLint(ctx, rules, tool) {
-  const findings = [];
-  for (const rule of rules) {
-    for (const f of rule.check(ctx)) {
-      if (!inScope(f.path, ctx)) continue;
-      const finding = { code: rule.code, severity: rule.severity, path: f.path, message: f.message, fix: rule.fix };
-      if (f.line !== void 0) finding.line = f.line;
-      if (f.ids !== void 0) finding.ids = f.ids;
-      findings.push(finding);
-    }
+  code;
+  params;
+  entry;
+  get exitCode() {
+    return this.entry.exitCode;
   }
-  findings.sort(
-    (a, b) => (ORDER[a.severity] ?? 3) - (ORDER[b.severity] ?? 3) || a.path.localeCompare(b.path) || (a.line ?? 0) - (b.line ?? 0) || a.code.localeCompare(b.code)
-  );
-  const summary = { error: 0, warn: 0, info: 0 };
-  for (const f of findings) summary[f.severity]++;
-  const scope = { changes: ctx.changes.map((c) => `CHG-${c.change}`), phase: ctx.phase, quick: ctx.file !== void 0 };
-  if (ctx.file !== void 0) scope.file = ctx.file;
-  return { tool, scope, summary, findings };
+  get fix() {
+    return fill(this.entry.fix, this.params);
+  }
+};
+function formatError(e) {
+  return `${e.code}: ${e.message}. Fix: ${e.fix}`;
 }
-
-// src/lint/types.ts
-var PHASES = ["00-ideation", "10-spec", "20-plan"];
-
-// src/model/graph.ts
-import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { basename as basename2, join as join2, relative, sep } from "node:path";
+function usage(command, detail) {
+  return new CliError("ERR-CLI-003", { detail, command });
+}
 
 // src/model/blocks.ts
 var FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
@@ -7725,68 +7934,10 @@ function splitFrontmatter(text) {
   return doc;
 }
 
-// src/model/ids.ts
-var ID_TYPES = [
-  "GOAL",
-  "SC",
-  "NG",
-  "AS",
-  "CON",
-  "CAP",
-  "US",
-  "REQ",
-  "AC",
-  "TS",
-  "NFR",
-  "INV",
-  "IF",
-  "COMP",
-  "DEC",
-  "ADR",
-  "OA",
-  "R",
-  "M",
-  "T",
-  "TC",
-  "RISK",
-  "RB",
-  "DOD"
-];
-var TYPE_ALT = [...ID_TYPES].sort((a, b) => b.length - a.length).join("|");
-var BODY = `(${TYPE_ALT})-(\\d+)(?:\\.(\\d+))?`;
-var FULL = new RegExp(`^C(\\d{3})-${BODY}$`);
-var SCAN = new RegExp(`(?<![A-Za-z0-9_§-])(?:C(\\d{3})-)?${BODY}(?![A-Za-z0-9_-]|\\.\\w)`, "g");
-function valid(type, sub) {
-  return type === "AC" ? sub !== void 0 : sub === void 0;
-}
-var TWO_DIGIT = /* @__PURE__ */ new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M"]);
-var minDigits = (type) => TWO_DIGIT.has(type) ? 2 : 3;
-function parseId(text) {
-  const m = FULL.exec(text);
-  if (!m || !valid(m[2], m[4])) return null;
-  const parts = { change: m[1], type: m[2], seq: m[3] };
-  if (m[4] !== void 0) parts.sub = m[4];
-  return parts;
-}
-function formatId(p) {
-  return `C${p.change}-${p.type}-${p.seq}${p.sub !== void 0 ? "." + p.sub : ""}`;
-}
-function findIds(line, change) {
-  const hits = [];
-  for (const m of line.matchAll(SCAN)) {
-    const [raw, own, type, seq, sub] = m;
-    if (!type || !seq || !valid(type, sub)) continue;
-    const owner = own ?? change;
-    if (!owner) continue;
-    if (own === void 0 && seq.length < minDigits(type)) continue;
-    const parts = { change: owner, type, seq };
-    if (sub !== void 0) parts.sub = sub;
-    hits.push({ id: formatId(parts), raw, short: own === void 0, column: m.index });
-  }
-  return hits;
-}
-
 // src/model/graph.ts
+import { createHash } from "node:crypto";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { basename as basename2, join as join2, relative, sep } from "node:path";
 var TABLE_DEFINED = {
   GOAL: ["10-context/problem-and-goals.md"],
   SC: ["10-context/problem-and-goals.md"],
@@ -7933,6 +8084,12 @@ function parseFile(path, rel, change, nodes, edges) {
   });
   return file;
 }
+function parseArtifact(path, rel, change = null) {
+  const nodes = [];
+  const edges = [];
+  const file = parseFile(path, rel, change, nodes, edges);
+  return { file, nodes, edges };
+}
 function buildChangeGraph(changeDir) {
   const m = /^(\d{3})-/.exec(basename2(changeDir));
   if (!m?.[1]) throw new Error(`not a change folder (expected NNN-slug): ${changeDir}`);
@@ -7945,170 +8102,9 @@ function buildChangeGraph(changeDir) {
   return { change, dir: changeDir, files, nodes, byId, edges };
 }
 
-// src/version.ts
-var VERSION = true ? "0.0.1" : "0.0.0-dev";
-var TOOL = `architect-plugin@${VERSION}`;
-
-// src/workspace/init.ts
-import { existsSync, mkdirSync, readFileSync as readFileSync2, statSync as statSync2 } from "node:fs";
-import { dirname as dirname2, join as join3 } from "node:path";
-
-// src/workspace/sddmd.ts
-var STATUS_BEGIN = "<!-- sdd:status:begin -->";
-var STATUS_END = "<!-- sdd:status:end -->";
-var EMPTY_STATUS = [
-  "| Change | Title | Phase | Status | Tasks done | Open defects | Updated |",
-  "|---|---|---|---|---|---|---|"
-].join("\n");
-function renderSddMd(generator, statusBlock = EMPTY_STATUS) {
-  return `---
-sdd_version: 1
-workspace: .sdd
-generator: ${generator}
-id_scheme: "C{NNN}-{TYPE}-{seq}"
----
-# Spec-Driven Development workspace
-
-This folder holds the specifications for this repository. **Agents: read this file first.**
-
-## How to orient yourself (agents)
-1. Read \`registry.json\` → find changes whose status is not \`archived\`.
-2. For the change you work on, read \`NNN-slug/change.md\` (phase, gate state, open defects).
-3. Respect phase order: \`00-ideation\` → \`10-spec\` → \`20-plan\`. Never consume an artifact whose
-   \`status\` is not \`approved\` (or whose approval hash no longer matches its content).
-4. Current system truth lives in \`_living/\`; per-change deltas live in change folders.
-5. Project rules: \`_constitution/constitution.md\`.
-
-## If you are implementing a change
-Read \`NNN-slug/20-plan/handoff.md\` and report progress with
-\`node <plugin-root>/scripts/sdd.mjs task set <task-id> --status <status>\` as described there.
-
-## Conventions
-- IDs: \`C<NNN>-<TYPE>-<seq>\` (e.g. \`C004-REQ-012\`); short forms (\`REQ-012\`) inside a change folder.
-- Status: not-started → draft → in-review → approved → (stale | in-revision) → archived.
-- Markers: \`[NEEDS CLARIFICATION: …]\`, \`[ASSUMPTION: …]\`, \`[WAIVED: <gate> <reason>]\`.
-- Only the sdd CLI writes \`registry.json\`, \`ids.json\`, \`approvals.json\` and the status block below.
-
-${STATUS_BEGIN}
-${statusBlock}
-${STATUS_END}
-`;
-}
-function readStatusBlock(text) {
-  const b = text.indexOf(STATUS_BEGIN);
-  const e = text.indexOf(STATUS_END);
-  if (b < 0 || e < b || text.indexOf(STATUS_BEGIN, b + 1) >= 0 || text.indexOf(STATUS_END, e + 1) >= 0) return null;
-  return text.slice(b + STATUS_BEGIN.length, e).replace(/^\n/, "").replace(/\n$/, "");
-}
-
-// src/workspace/init.ts
-var isDir = (p) => existsSync(p) && statSync2(p).isDirectory();
-function initRoot(start) {
-  for (const marker of [".sdd", ".git"]) {
-    let dir = start;
-    for (; ; ) {
-      if (existsSync(join3(dir, marker))) return dir;
-      const parent = dirname2(dir);
-      if (parent === dir) break;
-      dir = parent;
-    }
-  }
-  return start;
-}
-function initWorkspace(root, options = {}) {
-  const sdd = join3(root, ".sdd");
-  const existed = isDir(sdd);
-  const created = [];
-  const rewritten = [];
-  if (!existed) mkdirSync(sdd, { recursive: true });
-  for (const d of ROOT_DIRS) {
-    if (!isDir(join3(sdd, d))) {
-      mkdirSync(join3(sdd, d));
-      created.push(d + "/");
-    }
-  }
-  const registry = join3(sdd, "registry.json");
-  if (!existsSync(registry)) {
-    const doc = { sdd_version: 1, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
-    writeTextAtomic(registry, JSON.stringify(doc, null, 2) + "\n");
-    created.push("registry.json");
-  }
-  const sddMd = join3(sdd, "SDD.md");
-  if (!existsSync(sddMd)) {
-    writeTextAtomic(sddMd, renderSddMd(TOOL));
-    created.push("SDD.md");
-  } else if (options.force) {
-    const block = readStatusBlock(readFileSync2(sddMd, "utf8"));
-    writeTextAtomic(sddMd, block === null ? renderSddMd(TOOL) : renderSddMd(TOOL, block));
-    rewritten.push("SDD.md");
-  }
-  return { root, existed, created, rewritten };
-}
-
 // src/workspace/ledger.ts
-import { existsSync as existsSync2, readFileSync as readFileSync3 } from "node:fs";
-import { basename as basename3, join as join4 } from "node:path";
-
-// src/cli/errors.ts
-var entries = [
-  ["ERR-CLI-001", "No `.sdd/` found (command other than `init`)", "Not an SDD workspace", "Run `sdd init` or `/architect:init`"],
-  ["ERR-CLI-002", "Change number not found or ambiguous", "Change `<NNN>` not found", "Check `sdd status`"],
-  ["ERR-CLI-003", "Invalid arguments or options", "Usage error: `<detail>`", "See `sdd <command> --help`"],
-  ["ERR-CLI-004", "Unknown ID type", "Unknown ID type `<TYPE>`; valid: …", "Use a type from C001-IF-04 §2"],
-  ["ERR-CLI-005", "Invalid task status", "Invalid status `<s>`; valid: todo, in-progress, blocked, done, dropped", "Use a valid status"],
-  ["ERR-CLI-006", "`blocked` without reason", "`--reason` is required for status blocked", 'Add `--reason "<text>"`'],
-  ["ERR-CLI-007", "Profile downgrade requested", "A full change cannot become lite", "Keep full; split the work into a new lite change"],
-  ["ERR-CLI-008", "Defect reference unknown", "`<ID>` is not defined in an active change", "Reference an existing REQ/AC/TS/T ID"],
-  ["ERR-CLI-009", "Archive preconditions unmet", "Cannot archive `<NNN>`: `<list>`", "Finish/drop tasks, close defects, approve G3"],
-  ["ERR-CLI-010", "Unwaived lint errors at approval", "Approval blocked by lint errors: `<list>`", "Fix the findings or `--waive` them with a note"],
-  ["ERR-CLI-011", "Open clarification markers at approval", "Approval blocked by open markers: `<list>`", "Answer the questions or `--waive` them"],
-  ["ERR-CLI-012", "Unresolved critic blockers at approval", "Approval blocked by critic blockers: `<list>`", "Resolve the findings or `--waive` them"],
-  ["ERR-CLI-013", "Task transition not allowed", "Transition `<from>` → `<to>` not allowed", "See task state machine"],
-  ["ERR-CLI-014", "Change not active", "Change `<NNN>` is `<stopped|archived>`", "Create a new change"],
-  ["ERR-CLI-015", "Predecessor phase not approved at approval", "`<phase>` requires approved `<predecessor>`", "Approve the predecessor first"],
-  ["ERR-CLI-016", "Internal error (exit 3)", "Internal error: `<detail>`", "Re-run with `SDD_DEBUG=1` and report"],
-  ["ERR-CLI-017", "Atomic write failed (exit 3)", "Could not write `<file>`; previous version kept", "Check disk space and permissions"],
-  ["WARN-CLI-001", "Task done while dependencies unfinished", "`<T>` done before `<deps>`", "Confirm order or update dependencies"]
-];
-var CATALOGUE = Object.fromEntries(
-  entries.map(([code, condition, message, fix]) => [
-    code,
-    { code, condition, message, fix, exitCode: code.startsWith("WARN") ? 0 : /\(exit 3\)/.test(condition) ? 3 : 2 }
-  ])
-);
-function fill(template, params) {
-  let s = template.replace(/<([^<>]+)>/g, (m, key) => params[key] ?? m);
-  if (params["list"] !== void 0) s = s.replace("…", params["list"]);
-  return s;
-}
-var CliError = class extends Error {
-  constructor(code, params = {}) {
-    const entry = CATALOGUE[code];
-    if (!entry) throw new Error(`unknown catalogue code ${code}`);
-    super(fill(entry.message, params));
-    this.code = code;
-    this.params = params;
-    this.entry = entry;
-    this.name = "CliError";
-  }
-  code;
-  params;
-  entry;
-  get exitCode() {
-    return this.entry.exitCode;
-  }
-  get fix() {
-    return fill(this.entry.fix, this.params);
-  }
-};
-function formatError(e) {
-  return `${e.code}: ${e.message}. Fix: ${e.fix}`;
-}
-function usage(command, detail) {
-  return new CliError("ERR-CLI-003", { detail, command });
-}
-
-// src/workspace/ledger.ts
+import { existsSync, readFileSync as readFileSync2 } from "node:fs";
+import { basename as basename3, join as join3 } from "node:path";
 var LEDGER_TYPES = [
   "GOAL",
   "SC",
@@ -8143,9 +8139,9 @@ function changeNumber(dir) {
   return m[1];
 }
 function loadLedger(dir) {
-  const path = join4(dir, "ids.json");
+  const path = join3(dir, "ids.json");
   const nnn = changeNumber(dir);
-  const raw = existsSync2(path) ? JSON.parse(readFileSync3(path, "utf8")) : {};
+  const raw = existsSync(path) ? JSON.parse(readFileSync2(path, "utf8")) : {};
   const doc = {
     ...raw,
     change: raw.change ?? `CHG-${nnn}`,
@@ -8232,13 +8228,454 @@ function tombstoneId(dir, id, reason, date = /* @__PURE__ */ new Date()) {
   save(ledger);
 }
 
+// src/workspace/status.ts
+import { existsSync as existsSync2, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync2 } from "node:fs";
+import { join as join5 } from "node:path";
+
+// src/workspace/adopt.ts
+import { readFileSync as readFileSync3 } from "node:fs";
+import { join as join4 } from "node:path";
+
+// src/version.ts
+var VERSION = true ? "0.0.1" : "0.0.0-dev";
+var TOOL = `architect-plugin@${VERSION}`;
+
+// src/workspace/adopt.ts
+function adoptBootstrap(sddDir) {
+  const path = join4(sddDir, "SDD.md");
+  const text = readFileSync3(path, "utf8");
+  const doc = splitFrontmatter(text);
+  const generator = doc.data?.["generator"];
+  if (typeof generator !== "string" || !generator.startsWith("manual")) return false;
+  const lines = doc.lines;
+  const end = doc.bodyStartLine - 2;
+  const at = lines.findIndex((l, i) => i > 0 && i < end && /^generator:/.test(l));
+  if (at < 0) return false;
+  lines[at] = `generator: ${TOOL}`;
+  writeTextAtomic(path, lines.join("\n"));
+  return true;
+}
+
+// src/workspace/sddmd.ts
+var STATUS_BEGIN = "<!-- sdd:status:begin -->";
+var STATUS_END = "<!-- sdd:status:end -->";
+var EMPTY_STATUS = [
+  "| Change | Title | Phase | Status | Tasks done | Open defects | Updated |",
+  "|---|---|---|---|---|---|---|"
+].join("\n");
+function renderSddMd(generator, statusBlock = EMPTY_STATUS) {
+  return `---
+sdd_version: 1
+workspace: .sdd
+generator: ${generator}
+id_scheme: "C{NNN}-{TYPE}-{seq}"
+---
+# Spec-Driven Development workspace
+
+This folder holds the specifications for this repository. **Agents: read this file first.**
+
+## How to orient yourself (agents)
+1. Read \`registry.json\` → find changes whose status is not \`archived\`.
+2. For the change you work on, read \`NNN-slug/change.md\` (phase, gate state, open defects).
+3. Respect phase order: \`00-ideation\` → \`10-spec\` → \`20-plan\`. Never consume an artifact whose
+   \`status\` is not \`approved\` (or whose approval hash no longer matches its content).
+4. Current system truth lives in \`_living/\`; per-change deltas live in change folders.
+5. Project rules: \`_constitution/constitution.md\`.
+
+## If you are implementing a change
+Read \`NNN-slug/20-plan/handoff.md\` and report progress with
+\`node <plugin-root>/scripts/sdd.mjs task set <task-id> --status <status>\` as described there.
+
+## Conventions
+- IDs: \`C<NNN>-<TYPE>-<seq>\` (e.g. \`C004-REQ-012\`); short forms (\`REQ-012\`) inside a change folder.
+- Status: not-started → draft → in-review → approved → (stale | in-revision) → archived.
+- Markers: \`[NEEDS CLARIFICATION: …]\`, \`[ASSUMPTION: …]\`, \`[WAIVED: <gate> <reason>]\`.
+- Only the sdd CLI writes \`registry.json\`, \`ids.json\`, \`approvals.json\` and the status block below.
+
+${STATUS_BEGIN}
+${statusBlock}
+${STATUS_END}
+`;
+}
+function readStatusBlock(text) {
+  const b = text.indexOf(STATUS_BEGIN);
+  const e = text.indexOf(STATUS_END);
+  if (b < 0 || e < b || text.indexOf(STATUS_BEGIN, b + 1) >= 0 || text.indexOf(STATUS_END, e + 1) >= 0) return null;
+  return text.slice(b + STATUS_BEGIN.length, e).replace(/^\n/, "").replace(/\n$/, "");
+}
+
+// src/workspace/status.ts
+var PHASE_NAMES = ["00-ideation", "10-spec", "20-plan"];
+function deriveImplementation(statuses) {
+  const live = statuses.filter((s) => s !== "dropped");
+  if (live.length === 0) return "not-started";
+  if (live.every((s) => s === "done")) return "done";
+  if (live.includes("blocked") && !live.includes("in-progress")) return "blocked";
+  if (live.some((s) => s === "in-progress" || s === "done")) return "in-progress";
+  return "not-started";
+}
+var str2 = (v) => typeof v === "string" ? v : v instanceof Date ? v.toISOString().slice(0, 10) : null;
+function taskStates(dir) {
+  const g = buildChangeGraph(dir);
+  const out = [];
+  for (const n of g.nodes) {
+    if (n.type !== "T") continue;
+    if (n.form === "frontmatter") {
+      const fm = g.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+      const report = fm["report"] ?? {};
+      out.push({ status: str2(fm["status"]) ?? "todo", completedAt: str2(report["completed_at"]) });
+    } else {
+      out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
+    }
+  }
+  return out;
+}
+function changeEntry(dir, folder, archived) {
+  const fm = splitFrontmatter(readFileSync4(join5(dir, "change.md"), "utf8")).data ?? {};
+  const phasesFm = fm["phases"] ?? {};
+  const phases = {};
+  for (const p of PHASE_NAMES) {
+    const src = phasesFm[p] ?? {};
+    const entry = { status: str2(src["status"]) ?? "not-started" };
+    for (const k of ["approved_hash", "hash_scope", "approved_at", "approved_by"]) if (k in src) entry[k] = str2(src[k]);
+    if (entry.hash_scope === null) delete entry.hash_scope;
+    phases[p] = entry;
+  }
+  const tasks = taskStates(dir);
+  const live = tasks.filter((t) => t.status !== "dropped");
+  const dates = tasks.map((t) => t.completedAt).filter((d) => d !== null).sort();
+  const last = dates.at(-1);
+  return {
+    id: str2(fm["id"]) ?? `CHG-${folder.slice(0, 3)}`,
+    slug: folder,
+    title: str2(fm["title"]) ?? folder.slice(4),
+    kind: str2(fm["kind"]) ?? "greenfield",
+    profile: str2(fm["profile"]) ?? "full",
+    status: archived ? "archived" : str2(fm["status"]) ?? "active",
+    phase: str2(fm["phase"]) ?? "00-ideation",
+    phases,
+    implementation: {
+      status: deriveImplementation(tasks.map((t) => t.status)),
+      tasks: {
+        total: live.length,
+        done: live.filter((t) => t.status === "done").length,
+        blocked: live.filter((t) => t.status === "blocked").length,
+        in_progress: live.filter((t) => t.status === "in-progress").length
+      },
+      last_report: last ? last.length === 10 ? `${last}T00:00:00Z` : last : null
+    },
+    defects: Array.isArray(fm["defects"]) ? fm["defects"] : [],
+    waivers: Array.isArray(fm["waivers"]) ? fm["waivers"] : []
+  };
+}
+function listChanges(sddDir) {
+  const out = [];
+  for (const [base, archived] of [[sddDir, false], [join5(sddDir, "_archive"), true]]) {
+    if (!existsSync2(base)) continue;
+    for (const name of readdirSync2(base)) {
+      const dir = join5(base, name);
+      if (/^\d{3}-/.test(name) && statSync2(dir).isDirectory() && existsSync2(join5(dir, "change.md"))) out.push({ dir, folder: name, archived });
+    }
+  }
+  return out.sort((a, b) => a.folder.localeCompare(b.folder));
+}
+function rebuildRegistry(sddDir, now = /* @__PURE__ */ new Date()) {
+  return {
+    sdd_version: 1,
+    generated_at: now.toISOString().replace(/\.\d{3}Z$/, "Z"),
+    changes: listChanges(sddDir).map((c) => changeEntry(c.dir, c.folder, c.archived))
+  };
+}
+function updated(c) {
+  const dates = [
+    ...Object.values(c.phases).map((p) => p.approved_at ?? null),
+    c.implementation.last_report?.slice(0, 10) ?? null,
+    ...c.defects.map((d) => str2(d["date"]))
+  ].filter((d) => !!d);
+  return dates.sort().at(-1) ?? "—";
+}
+function renderStatusBlock(reg) {
+  const rows = reg.changes.filter((c) => c.status !== "archived").map((c) => {
+    const t = c.implementation.tasks;
+    const open = c.defects.filter((d) => d["status"] === "open").length;
+    const status2 = c.phases[c.phase]?.status ?? "not-started";
+    return `| ${c.id.replace(/^CHG-/, "")} | ${c.title.replace(/\|/g, "\\|")} | ${c.phase} | ${status2} | ${t.done}/${t.total} | ${open} | ${updated(c)} |`;
+  });
+  return ["| Change | Title | Phase | Status | Tasks done | Open defects | Updated |", "|---|---|---|---|---|---|---|", ...rows].join("\n");
+}
+function diffJson(stored, expected, path = "") {
+  if (Array.isArray(stored) && Array.isArray(expected)) {
+    const out = [];
+    for (let i = 0; i < Math.max(stored.length, expected.length); i++) out.push(...diffJson(stored[i], expected[i], `${path}[${i}]`));
+    return out;
+  }
+  const isObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+  if (isObj(stored) && isObj(expected)) {
+    const keys = [.../* @__PURE__ */ new Set([...Object.keys(expected), ...Object.keys(stored)])];
+    return keys.flatMap((k) => diffJson(stored[k], expected[k], path ? `${path}.${k}` : k));
+  }
+  return JSON.stringify(stored) === JSON.stringify(expected) ? [] : [{ path: path || "$", stored, expected }];
+}
+function registryDrift(stored, rebuilt) {
+  if (stored === null) return [{ path: "$", stored: null, expected: "a registry" }];
+  return diffJson(stored, rebuilt).filter((d) => d.path !== "generated_at");
+}
+function writeStatus(sddDir, now = /* @__PURE__ */ new Date()) {
+  const adopted = existsSync2(join5(sddDir, "SDD.md")) ? adoptBootstrap(sddDir) : false;
+  const registry = rebuildRegistry(sddDir, now);
+  const regPath = join5(sddDir, "registry.json");
+  const stored = existsSync2(regPath) ? JSON.parse(readFileSync4(regPath, "utf8")) : null;
+  const registryWritten = stored === null || registryDrift(stored, registry).length > 0;
+  if (registryWritten) writeTextAtomic(regPath, JSON.stringify(registry, null, 2) + "\n");
+  let sddMdWritten = false;
+  const sddPath = join5(sddDir, "SDD.md");
+  if (existsSync2(sddPath)) {
+    const raw = readFileSync4(sddPath, "utf8");
+    if (readStatusBlock(raw.replace(/\r\n/g, "\n")) !== null) {
+      const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+      const block = renderStatusBlock(registry).split("\n").join(eol);
+      const b = raw.indexOf(STATUS_BEGIN) + STATUS_BEGIN.length;
+      const e = raw.indexOf(STATUS_END);
+      const next = raw.slice(0, b) + eol + block + eol + raw.slice(e);
+      if (next !== raw) {
+        writeFileAtomic(sddPath, next);
+        sddMdWritten = true;
+      }
+    }
+  }
+  return { adopted, registryWritten, sddMdWritten, registry };
+}
+
+// src/lint/engine.ts
+function changeFolders(sdd) {
+  const out = [];
+  for (const [base, archived] of [[sdd, false], [join6(sdd, "_archive"), true]]) {
+    if (!existsSync3(base)) continue;
+    for (const name of readdirSync3(base).sort()) {
+      const dir = join6(base, name);
+      if (/^\d{3}-/.test(name) && statSync3(dir).isDirectory()) out.push({ name, dir, archived });
+    }
+  }
+  return out;
+}
+function changeStatus(dir) {
+  const p = join6(dir, "change.md");
+  const fm = existsSync3(p) ? splitFrontmatter(readFileSync5(p, "utf8")).data ?? {} : {};
+  return { status: typeof fm["status"] === "string" ? fm["status"] : "active", profile: fm["profile"] === "lite" ? "lite" : "full" };
+}
+function textFile(abs, path) {
+  const text = readFileSync5(abs, "utf8");
+  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  if (!path.endsWith(".md")) return { path, lines, inFence: () => false };
+  const blocks = parseBlocks(lines, 1);
+  return { path, lines, inFence: (l) => blocks.inFence(l) };
+}
+function filesOf(dir) {
+  const out = [];
+  const walk = (d) => {
+    for (const name of readdirSync3(d).sort()) {
+      const p = join6(d, name);
+      if (statSync3(p).isDirectory()) walk(p);
+      else if (name.endsWith(".md")) out.push(p);
+    }
+  };
+  walk(dir);
+  return out;
+}
+function addDefinitions(map, graph, folderRel) {
+  for (const n of graph.nodes) map.set(n.id, [...map.get(n.id) ?? [], { path: `${folderRel}/${n.file}`, line: n.line }]);
+}
+function inScope(path, ctx) {
+  if (ctx.file !== void 0) return path === ctx.file;
+  if (ctx.phase === null) return true;
+  return ctx.changes.some((c) => path.startsWith(`${c.folder}/${ctx.phase}/`));
+}
+function statements(changes) {
+  const out = [];
+  for (const c of changes)
+    for (const n of c.graph.nodes) {
+      if (n.type !== "REQ") continue;
+      const f = n.fields.find((x) => x.name === "Statement");
+      if (f) out.push({ id: n.id, path: `${c.folder}/${n.file}`, line: f.line, text: f.value });
+    }
+  return out;
+}
+function lintWorkspace(root, options) {
+  const trace = options.trace ?? (() => {
+  });
+  const sdd = join6(root, ".sdd");
+  const folders = changeFolders(sdd);
+  const phase = options.phase ?? null;
+  let file;
+  let selected = folders.filter((f) => !f.archived && changeStatus(f.dir).status !== "archived");
+  if (options.file !== void 0) {
+    const abs = normalisePath(options.file, { cwd: options.cwd });
+    if (!isInside(sdd, abs)) throw usage("lint", "--file must be inside .sdd/");
+    if (!existsSync3(abs)) throw usage("lint", `--file does not exist: ${options.file}`);
+    file = relativePath(root, abs);
+    const name = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
+    selected = folders.filter((f) => !f.archived && f.name === name);
+  }
+  if (options.change !== void 0) {
+    const match = folders.filter((f) => !f.archived && f.name.startsWith(options.change + "-"));
+    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: options.change });
+    selected = match;
+  }
+  const quick = file !== void 0;
+  const workspaceScope = options.change === void 0 && !quick;
+  const rules = options.rules.filter((r) => quick ? r.scope === "file" : r.scope !== "workspace" || workspaceScope);
+  const changes = selected.map((f) => {
+    const graph = buildChangeGraph(f.dir);
+    trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
+    return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph };
+  });
+  const definitions = /* @__PURE__ */ new Map();
+  const activeDefinitions = /* @__PURE__ */ new Map();
+  const tombstones = /* @__PURE__ */ new Set();
+  const living = [];
+  if (!quick) {
+    const graphs = new Map(changes.map((c) => [c.folder, c.graph]));
+    for (const f of folders) {
+      const rel = f.archived ? `.sdd/_archive/${f.name}` : `.sdd/${f.name}`;
+      const g = graphs.get(rel) ?? buildChangeGraph(f.dir);
+      addDefinitions(definitions, g, rel);
+      if (!f.archived && changeStatus(f.dir).status !== "archived") addDefinitions(activeDefinitions, g, rel);
+      for (const t of loadLedger(f.dir).tombstones) tombstones.add(t.id);
+    }
+    const livingDir = join6(sdd, "_living");
+    if (existsSync3(livingDir)) {
+      for (const abs of filesOf(livingDir)) {
+        const rel = relativePath(root, abs);
+        const parsed = parseArtifact(abs, rel.replace(/^\.sdd\//, ""));
+        living.push({ path: rel, inventoryOnly: parsed.file.frontmatter?.["inventory_only"] === true, nodes: parsed.nodes });
+        for (const n of parsed.nodes) {
+          const loc = { path: rel, line: n.line };
+          definitions.set(n.id, [...definitions.get(n.id) ?? [], loc]);
+          activeDefinitions.set(n.id, [...activeDefinitions.get(n.id) ?? [], loc]);
+        }
+      }
+    }
+  }
+  const texts = [];
+  const references = [];
+  for (const c of changes) {
+    for (const f of c.graph.files) {
+      const path = `${c.folder}/${f.path}`;
+      if (file !== void 0 && path !== file) continue;
+      if (!f.generated) texts.push(textFile(join6(root, ...path.split("/")), path));
+    }
+    for (const e of c.graph.edges) references.push({ ...e, path: `${c.folder}/${e.file}` });
+  }
+  if (workspaceScope) {
+    for (const name of ["SDD.md", "registry.json"]) if (existsSync3(join6(sdd, name))) texts.push(textFile(join6(sdd, name), `.sdd/${name}`));
+    for (const l of living) texts.push(textFile(join6(root, ...l.path.split("/")), l.path));
+  }
+  const workspace = { entries: [], registryDrift: [], living };
+  if (workspaceScope) {
+    workspace.entries = readdirSync3(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() }));
+    const regPath = join6(sdd, "registry.json");
+    let stored = null;
+    if (existsSync3(regPath)) {
+      try {
+        stored = JSON.parse(readFileSync5(regPath, "utf8"));
+      } catch {
+        stored = { invalid_json: true };
+      }
+    }
+    workspace.registryDrift = registryDrift(stored, rebuildRegistry(sdd));
+  }
+  const ctx = {
+    root,
+    changes,
+    phase,
+    statements: [],
+    texts,
+    definitions,
+    activeDefinitions,
+    tombstones,
+    references,
+    workspace
+  };
+  if (file !== void 0) ctx.file = file;
+  ctx.statements = statements(changes).filter((s) => inScope(s.path, ctx));
+  const findings = [];
+  for (const rule of rules) {
+    for (const f of rule.check(ctx)) {
+      if (!inScope(f.path, ctx)) continue;
+      const finding = { code: rule.code, severity: rule.severity, path: f.path, message: f.message, fix: rule.fix };
+      if (f.line !== void 0) finding.line = f.line;
+      if (f.ids !== void 0) finding.ids = f.ids;
+      findings.push(finding);
+    }
+  }
+  const order = { error: 0, warn: 1, info: 2 };
+  findings.sort(
+    (a, b) => (order[a.severity] ?? 3) - (order[b.severity] ?? 3) || a.path.localeCompare(b.path) || (a.line ?? 0) - (b.line ?? 0) || a.code.localeCompare(b.code)
+  );
+  const summary = { error: 0, warn: 0, info: 0 };
+  for (const f of findings) summary[f.severity]++;
+  trace("lint", { rules: rules.length, error: summary.error, warn: summary.warn, info: summary.info });
+  const scope = { changes: changes.map((c) => `CHG-${c.change}`), phase, quick };
+  if (file !== void 0) scope.file = file;
+  return { tool: options.tool, scope, summary, findings };
+}
+
+// src/lint/types.ts
+var PHASES = ["00-ideation", "10-spec", "20-plan"];
+
+// src/workspace/init.ts
+import { existsSync as existsSync4, mkdirSync, readFileSync as readFileSync6, statSync as statSync4 } from "node:fs";
+import { dirname as dirname2, join as join7 } from "node:path";
+var isDir = (p) => existsSync4(p) && statSync4(p).isDirectory();
+function initRoot(start) {
+  for (const marker of [".sdd", ".git"]) {
+    let dir = start;
+    for (; ; ) {
+      if (existsSync4(join7(dir, marker))) return dir;
+      const parent = dirname2(dir);
+      if (parent === dir) break;
+      dir = parent;
+    }
+  }
+  return start;
+}
+function initWorkspace(root, options = {}) {
+  const sdd = join7(root, ".sdd");
+  const existed = isDir(sdd);
+  const created = [];
+  const rewritten = [];
+  if (!existed) mkdirSync(sdd, { recursive: true });
+  for (const d of ROOT_DIRS) {
+    if (!isDir(join7(sdd, d))) {
+      mkdirSync(join7(sdd, d));
+      created.push(d + "/");
+    }
+  }
+  const registry = join7(sdd, "registry.json");
+  if (!existsSync4(registry)) {
+    const doc = { sdd_version: 1, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
+    writeTextAtomic(registry, JSON.stringify(doc, null, 2) + "\n");
+    created.push("registry.json");
+  }
+  const sddMd = join7(sdd, "SDD.md");
+  if (!existsSync4(sddMd)) {
+    writeTextAtomic(sddMd, renderSddMd(TOOL));
+    created.push("SDD.md");
+  } else if (options.force) {
+    const block = readStatusBlock(readFileSync6(sddMd, "utf8"));
+    writeTextAtomic(sddMd, block === null ? renderSddMd(TOOL) : renderSddMd(TOOL, block));
+    rewritten.push("SDD.md");
+  }
+  return { root, existed, created, rewritten };
+}
+
 // src/workspace/change.ts
-import { existsSync as existsSync4, mkdirSync as mkdirSync2, readdirSync as readdirSync3, statSync as statSync4 } from "node:fs";
-import { join as join6 } from "node:path";
+import { existsSync as existsSync6, mkdirSync as mkdirSync2, readdirSync as readdirSync5, statSync as statSync6 } from "node:fs";
+import { join as join9 } from "node:path";
 
 // src/workspace/templates.ts
-import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync3 } from "node:fs";
-import { dirname as dirname3, join as join5 } from "node:path";
+import { existsSync as existsSync5, readdirSync as readdirSync4, readFileSync as readFileSync7, statSync as statSync5 } from "node:fs";
+import { dirname as dirname3, join as join8 } from "node:path";
 import { fileURLToPath } from "node:url";
 var LITE_SCAFFOLD = [
   "00-ideation/ideation.md",
@@ -8251,20 +8688,20 @@ var LITE_SCAFFOLD = [
 function defaultPluginRoot() {
   const env = process.env["CLAUDE_PLUGIN_ROOT"];
   if (env) return env;
-  return join5(dirname3(fileURLToPath(import.meta.url)), "..");
+  return join8(dirname3(fileURLToPath(import.meta.url)), "..");
 }
 function templatesDir(profile, options) {
-  return join5(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
+  return join8(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
 }
 function resolveTemplate(profile, rel, options = {}) {
   const parts = rel.split("/");
   if (options.sddDir) {
-    const override = join5(options.sddDir, "_templates", profile, ...parts);
-    if (existsSync3(override)) return { path: override, source: "override", text: readFileSync4(override, "utf8") };
+    const override = join8(options.sddDir, "_templates", profile, ...parts);
+    if (existsSync5(override)) return { path: override, source: "override", text: readFileSync7(override, "utf8") };
   }
-  const path = join5(templatesDir(profile, options), ...parts);
-  if (!existsSync3(path)) throw new Error(`no ${profile} template for ${rel}`);
-  return { path, source: "plugin", text: readFileSync4(path, "utf8") };
+  const path = join8(templatesDir(profile, options), ...parts);
+  if (!existsSync5(path)) throw new Error(`no ${profile} template for ${rel}`);
+  return { path, source: "plugin", text: readFileSync7(path, "utf8") };
 }
 function renderTemplate(text, vars) {
   return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key) => vars[key] ?? m);
@@ -8278,11 +8715,11 @@ function slugify(title) {
 }
 function nextChangeNumber(sddDir) {
   let max = 0;
-  for (const dir of [sddDir, join6(sddDir, "_archive")]) {
-    if (!existsSync4(dir)) continue;
-    for (const name of readdirSync3(dir)) {
+  for (const dir of [sddDir, join9(sddDir, "_archive")]) {
+    if (!existsSync6(dir)) continue;
+    for (const name of readdirSync5(dir)) {
       const m = /^(\d{3})-/.exec(name);
-      if (m?.[1] && statSync4(join6(dir, name)).isDirectory()) max = Math.max(max, Number(m[1]));
+      if (m?.[1] && statSync6(join9(dir, name)).isDirectory()) max = Math.max(max, Number(m[1]));
     }
   }
   return String(max + 1).padStart(3, "0");
@@ -8304,7 +8741,7 @@ function createChange(sddDir, title, options) {
   if (slug === "") throw usage("change new", "title yields an empty slug; use letters or digits");
   const nnn = nextChangeNumber(sddDir);
   const folder = `${nnn}-${slug}`;
-  const dir = join6(sddDir, folder);
+  const dir = join9(sddDir, folder);
   const vars = {
     CHANGE: `CHG-${nnn}`,
     P: `C${nnn}`,
@@ -8312,24 +8749,30 @@ function createChange(sddDir, title, options) {
     TITLE: title,
     DATE: isoDate(options.date),
     KIND: options.kind,
-    PROFILE: options.profile
+    PROFILE: options.profile,
+    // Entity placeholders of the scaffolded lite files: the first entity of each kind.
+    NAME: title,
+    SEQ: "001",
+    NN: "01",
+    B: "1",
+    SLUG: slug
   };
   const tpl = { ...options.pluginRoot !== void 0 ? { pluginRoot: options.pluginRoot } : {}, sddDir };
   const render = (rel) => renderTemplate(resolveTemplate(options.profile, rel, tpl).text, vars);
   mkdirSync2(dir);
-  for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join6(dir, phase));
-  writeTextAtomic(join6(dir, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
-  writeTextAtomic(join6(dir, "ids.json"), render("ids.json"));
-  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join6(dir, ...rel.split("/")), render(rel));
+  for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join9(dir, phase));
+  writeTextAtomic(join9(dir, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
+  writeTextAtomic(join9(dir, "ids.json"), render("ids.json"));
+  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join9(dir, ...rel.split("/")), render(rel));
   return { id: `CHG-${nnn}`, folder, dir };
 }
 
 // src/workspace/upgrade.ts
-import { existsSync as existsSync5, mkdirSync as mkdirSync3, readFileSync as readFileSync5, rmSync } from "node:fs";
-import { basename as basename4, dirname as dirname4, join as join7 } from "node:path";
+import { existsSync as existsSync7, mkdirSync as mkdirSync3, readFileSync as readFileSync8, rmSync } from "node:fs";
+import { basename as basename4, dirname as dirname4, join as join10 } from "node:path";
 function readLite(path) {
-  if (!existsSync5(path)) return null;
-  const doc = splitFrontmatter(readFileSync5(path, "utf8"));
+  if (!existsSync7(path)) return null;
+  const doc = splitFrontmatter(readFileSync8(path, "utf8"));
   const body = doc.lines.slice(doc.bodyStartLine - 1);
   const blocks = parseBlocks(body, 1);
   const tops = blocks.headings.filter((h) => h.level === 2);
@@ -8421,7 +8864,7 @@ ${chunk}
 `);
   };
   const removes = [];
-  const spec = readLite(join7(dir, "10-spec", "spec.md"));
+  const spec = readLite(join10(dir, "10-spec", "spec.md"));
   if (spec) {
     removes.push("10-spec/spec.md");
     if (spec.preamble) append("10-spec/00-index.md", spec.status, spec.preamble);
@@ -8433,7 +8876,7 @@ ${chunk}
 ${s.body}`);
     }
   }
-  const dod = readLite(join7(dir, "10-spec", "dod.md"));
+  const dod = readLite(join10(dir, "10-spec", "dod.md"));
   if (dod) {
     removes.push("10-spec/dod.md");
     const parts = [dod.preamble, ...dod.sections.map((s) => `## ${s.heading}
@@ -8441,7 +8884,7 @@ ${s.body}`);
 ${s.body}`)].filter(Boolean);
     append("10-spec/70-dod.md", dod.status, parts.join("\n\n"));
   }
-  const plan = readLite(join7(dir, "20-plan", "plan.md"));
+  const plan = readLite(join10(dir, "20-plan", "plan.md"));
   if (plan) {
     removes.push("20-plan/plan.md");
     if (plan.preamble) append("20-plan/00-index.md", plan.status, plan.preamble);
@@ -8478,18 +8921,18 @@ function upgradeToFull(dir, tpl = {}) {
   const { writes, removes } = planUpgrade(dir, tpl);
   const originals = /* @__PURE__ */ new Map();
   for (const rel of [...removes, ...writes.keys()]) {
-    const p = join7(dir, ...rel.split("/"));
-    if (existsSync5(p)) originals.set(rel, readFileSync5(p, "utf8"));
+    const p = join10(dir, ...rel.split("/"));
+    if (existsSync7(p)) originals.set(rel, readFileSync8(p, "utf8"));
   }
-  const changeMd = join7(dir, "change.md");
-  const changeText = readFileSync5(changeMd, "utf8");
+  const changeMd = join10(dir, "change.md");
+  const changeText = readFileSync8(changeMd, "utf8");
   try {
     for (const [rel, text] of writes) {
-      const p = join7(dir, ...rel.split("/"));
+      const p = join10(dir, ...rel.split("/"));
       mkdirSync3(dirname4(p), { recursive: true });
       writeTextAtomic(p, text);
     }
-    for (const rel of removes) rmSync(join7(dir, ...rel.split("/")));
+    for (const rel of removes) rmSync(join10(dir, ...rel.split("/")));
     writeTextAtomic(changeMd, setFrontmatterValue(changeText, "profile", "full"));
     const after = snapshot(buildChangeGraph(dir));
     const lost = before.ids.filter((id) => !after.ids.includes(id));
@@ -8501,176 +8944,12 @@ function upgradeToFull(dir, tpl = {}) {
       throw new CliError("ERR-CLI-016", { detail });
     }
   } catch (e) {
-    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join7(dir, ...rel.split("/")), { force: true });
-    for (const [rel, text] of originals) writeTextAtomic(join7(dir, ...rel.split("/")), text);
+    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join10(dir, ...rel.split("/")), { force: true });
+    for (const [rel, text] of originals) writeTextAtomic(join10(dir, ...rel.split("/")), text);
     writeTextAtomic(changeMd, changeText);
     throw e;
   }
   return [...writes.keys()].sort();
-}
-
-// src/workspace/status.ts
-import { existsSync as existsSync6, readdirSync as readdirSync4, readFileSync as readFileSync7, statSync as statSync5 } from "node:fs";
-import { join as join9 } from "node:path";
-
-// src/workspace/adopt.ts
-import { readFileSync as readFileSync6 } from "node:fs";
-import { join as join8 } from "node:path";
-function adoptBootstrap(sddDir) {
-  const path = join8(sddDir, "SDD.md");
-  const text = readFileSync6(path, "utf8");
-  const doc = splitFrontmatter(text);
-  const generator = doc.data?.["generator"];
-  if (typeof generator !== "string" || !generator.startsWith("manual")) return false;
-  const lines = doc.lines;
-  const end = doc.bodyStartLine - 2;
-  const at = lines.findIndex((l, i) => i > 0 && i < end && /^generator:/.test(l));
-  if (at < 0) return false;
-  lines[at] = `generator: ${TOOL}`;
-  writeTextAtomic(path, lines.join("\n"));
-  return true;
-}
-
-// src/workspace/status.ts
-var PHASE_NAMES = ["00-ideation", "10-spec", "20-plan"];
-function deriveImplementation(statuses) {
-  const live = statuses.filter((s) => s !== "dropped");
-  if (live.length === 0) return "not-started";
-  if (live.every((s) => s === "done")) return "done";
-  if (live.includes("blocked") && !live.includes("in-progress")) return "blocked";
-  if (live.some((s) => s === "in-progress" || s === "done")) return "in-progress";
-  return "not-started";
-}
-var str2 = (v) => typeof v === "string" ? v : v instanceof Date ? v.toISOString().slice(0, 10) : null;
-function taskStates(dir) {
-  const g = buildChangeGraph(dir);
-  const out = [];
-  for (const n of g.nodes) {
-    if (n.type !== "T") continue;
-    if (n.form === "frontmatter") {
-      const fm = g.files.find((f) => f.path === n.file)?.frontmatter ?? {};
-      const report = fm["report"] ?? {};
-      out.push({ status: str2(fm["status"]) ?? "todo", completedAt: str2(report["completed_at"]) });
-    } else {
-      out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
-    }
-  }
-  return out;
-}
-function changeEntry(dir, folder, archived) {
-  const fm = splitFrontmatter(readFileSync7(join9(dir, "change.md"), "utf8")).data ?? {};
-  const phasesFm = fm["phases"] ?? {};
-  const phases = {};
-  for (const p of PHASE_NAMES) {
-    const src = phasesFm[p] ?? {};
-    const entry = { status: str2(src["status"]) ?? "not-started" };
-    for (const k of ["approved_hash", "hash_scope", "approved_at", "approved_by"]) if (k in src) entry[k] = str2(src[k]);
-    if (entry.hash_scope === null) delete entry.hash_scope;
-    phases[p] = entry;
-  }
-  const tasks = taskStates(dir);
-  const live = tasks.filter((t) => t.status !== "dropped");
-  const dates = tasks.map((t) => t.completedAt).filter((d) => d !== null).sort();
-  const last = dates.at(-1);
-  return {
-    id: str2(fm["id"]) ?? `CHG-${folder.slice(0, 3)}`,
-    slug: folder,
-    title: str2(fm["title"]) ?? folder.slice(4),
-    kind: str2(fm["kind"]) ?? "greenfield",
-    profile: str2(fm["profile"]) ?? "full",
-    status: archived ? "archived" : str2(fm["status"]) ?? "active",
-    phase: str2(fm["phase"]) ?? "00-ideation",
-    phases,
-    implementation: {
-      status: deriveImplementation(tasks.map((t) => t.status)),
-      tasks: {
-        total: live.length,
-        done: live.filter((t) => t.status === "done").length,
-        blocked: live.filter((t) => t.status === "blocked").length,
-        in_progress: live.filter((t) => t.status === "in-progress").length
-      },
-      last_report: last ? last.length === 10 ? `${last}T00:00:00Z` : last : null
-    },
-    defects: Array.isArray(fm["defects"]) ? fm["defects"] : [],
-    waivers: Array.isArray(fm["waivers"]) ? fm["waivers"] : []
-  };
-}
-function listChanges(sddDir) {
-  const out = [];
-  for (const [base, archived] of [[sddDir, false], [join9(sddDir, "_archive"), true]]) {
-    if (!existsSync6(base)) continue;
-    for (const name of readdirSync4(base)) {
-      const dir = join9(base, name);
-      if (/^\d{3}-/.test(name) && statSync5(dir).isDirectory() && existsSync6(join9(dir, "change.md"))) out.push({ dir, folder: name, archived });
-    }
-  }
-  return out.sort((a, b) => a.folder.localeCompare(b.folder));
-}
-function rebuildRegistry(sddDir, now = /* @__PURE__ */ new Date()) {
-  return {
-    sdd_version: 1,
-    generated_at: now.toISOString().replace(/\.\d{3}Z$/, "Z"),
-    changes: listChanges(sddDir).map((c) => changeEntry(c.dir, c.folder, c.archived))
-  };
-}
-function updated(c) {
-  const dates = [
-    ...Object.values(c.phases).map((p) => p.approved_at ?? null),
-    c.implementation.last_report?.slice(0, 10) ?? null,
-    ...c.defects.map((d) => str2(d["date"]))
-  ].filter((d) => !!d);
-  return dates.sort().at(-1) ?? "—";
-}
-function renderStatusBlock(reg) {
-  const rows = reg.changes.filter((c) => c.status !== "archived").map((c) => {
-    const t = c.implementation.tasks;
-    const open = c.defects.filter((d) => d["status"] === "open").length;
-    const status2 = c.phases[c.phase]?.status ?? "not-started";
-    return `| ${c.id.replace(/^CHG-/, "")} | ${c.title.replace(/\|/g, "\\|")} | ${c.phase} | ${status2} | ${t.done}/${t.total} | ${open} | ${updated(c)} |`;
-  });
-  return ["| Change | Title | Phase | Status | Tasks done | Open defects | Updated |", "|---|---|---|---|---|---|---|", ...rows].join("\n");
-}
-function diffJson(stored, expected, path = "") {
-  if (Array.isArray(stored) && Array.isArray(expected)) {
-    const out = [];
-    for (let i = 0; i < Math.max(stored.length, expected.length); i++) out.push(...diffJson(stored[i], expected[i], `${path}[${i}]`));
-    return out;
-  }
-  const isObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
-  if (isObj(stored) && isObj(expected)) {
-    const keys = [.../* @__PURE__ */ new Set([...Object.keys(expected), ...Object.keys(stored)])];
-    return keys.flatMap((k) => diffJson(stored[k], expected[k], path ? `${path}.${k}` : k));
-  }
-  return JSON.stringify(stored) === JSON.stringify(expected) ? [] : [{ path: path || "$", stored, expected }];
-}
-function registryDrift(stored, rebuilt) {
-  if (stored === null) return [{ path: "$", stored: null, expected: "a registry" }];
-  return diffJson(stored, rebuilt).filter((d) => d.path !== "generated_at");
-}
-function writeStatus(sddDir, now = /* @__PURE__ */ new Date()) {
-  const adopted = existsSync6(join9(sddDir, "SDD.md")) ? adoptBootstrap(sddDir) : false;
-  const registry = rebuildRegistry(sddDir, now);
-  const regPath = join9(sddDir, "registry.json");
-  const stored = existsSync6(regPath) ? JSON.parse(readFileSync7(regPath, "utf8")) : null;
-  const registryWritten = stored === null || registryDrift(stored, registry).length > 0;
-  if (registryWritten) writeTextAtomic(regPath, JSON.stringify(registry, null, 2) + "\n");
-  let sddMdWritten = false;
-  const sddPath = join9(sddDir, "SDD.md");
-  if (existsSync6(sddPath)) {
-    const raw = readFileSync7(sddPath, "utf8");
-    if (readStatusBlock(raw.replace(/\r\n/g, "\n")) !== null) {
-      const eol = raw.includes("\r\n") ? "\r\n" : "\n";
-      const block = renderStatusBlock(registry).split("\n").join(eol);
-      const b = raw.indexOf(STATUS_BEGIN) + STATUS_BEGIN.length;
-      const e = raw.indexOf(STATUS_END);
-      const next = raw.slice(0, b) + eol + block + eol + raw.slice(e);
-      if (next !== raw) {
-        writeFileAtomic(sddPath, next);
-        sddMdWritten = true;
-      }
-    }
-  }
-  return { adopted, registryWritten, sddMdWritten, registry };
 }
 
 // src/cli/output.ts
@@ -8716,42 +8995,16 @@ var S = { type: "string" };
 var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
-function changeFolders(root) {
-  const sdd = join10(root, ".sdd");
-  return readdirSync5(sdd).filter((n) => /^\d{3}-/.test(n) && statSync6(join10(sdd, n)).isDirectory()).sort();
+function changeFolders2(root) {
+  const sdd = join11(root, ".sdd");
+  return readdirSync6(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join11(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
-  const phase = values["phase"] ?? null;
-  let folders = changeFolders(root);
-  const nnn = ctx.args["NNN"];
-  let file;
-  if (values["file"] !== void 0) {
-    const abs = normalisePath(values["file"], { cwd: ctx.cwd });
-    if (!isInside(join10(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
-    file = relativePath(root, abs);
-    const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
-    folders = folder ? folders.filter((f) => f === folder) : [];
-  }
-  if (nnn !== void 0) {
-    const match = folders.filter((f) => f.startsWith(nnn + "-"));
-    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    folders = match;
-  }
-  const changes = folders.map((f) => {
-    const graph = buildChangeGraph(join10(root, ".sdd", f));
-    out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
-    return { change: graph.change, folder: `.sdd/${f}`, graph };
-  });
-  const sdd = join10(root, ".sdd");
-  const regPath = join10(sdd, "registry.json");
-  const stored = existsSync7(regPath) ? JSON.parse(readFileSync8(regPath, "utf8")) : null;
-  const workspace = {
-    entries: readdirSync5(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() })),
-    registryDrift: registryDrift(stored, rebuildRegistry(sdd))
-  };
-  const report = runLint(buildContext(root, changes, phase, file, workspace), ctx.rules, TOOL);
-  out.trace("lint", { rules: ctx.rules.length, error: report.summary.error, warn: report.summary.warn, info: report.summary.info });
+  const options = { cwd: ctx.cwd, rules: ctx.rules, tool: TOOL, phase: values["phase"] ?? null, trace: (e, d) => out.trace(e, d) };
+  if (ctx.args["NNN"] !== void 0) options.change = ctx.args["NNN"];
+  if (values["file"] !== void 0) options.file = values["file"];
+  const report = lintWorkspace(root, options);
   if (values["json"]) out.json(report);
   else {
     for (const f of report.findings) out.line(formatFinding(f));
@@ -8763,20 +9016,20 @@ function lint(ctx) {
   return report.summary.error > 0 ? 1 : 0;
 }
 function resolveChange(ctx, nnn) {
-  const folders = changeFolders(ctx.root);
+  const folders = changeFolders2(ctx.root);
   if (nnn !== void 0) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join10(ctx.root, ".sdd", match[0]);
+    return join11(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join10(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join10(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join10(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join11(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join11(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join11(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join10(ctx.root, ".sdd");
+  const sdd = join11(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -8803,7 +9056,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join10(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join11(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -8811,7 +9064,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync8(join10(dir, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync9(join11(dir, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -8843,7 +9096,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join10(root, ".sdd");
+  const where = join11(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -8924,8 +9177,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir = start;
   for (; ; ) {
-    const sdd = join11(dir, ".sdd");
-    if (existsSync8(sdd) && statSync7(sdd).isDirectory()) return dir;
+    const sdd = join12(dir, ".sdd");
+    if (existsSync9(sdd) && statSync8(sdd).isDirectory()) return dir;
     const parent = dirname5(dir);
     if (parent === dir) return null;
     dir = parent;

@@ -13,6 +13,10 @@ import { makeWorkspace, minimalChange, runBundled } from "../cli/helpers.ts";
 function bootstrapCopy(): { root: string; cleanup: () => void } {
   const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bootstrap-")));
   cpSync(join(repoRoot(), ".sdd"), join(root, ".sdd"), { recursive: true, filter: (src) => !src.includes(`${join(".sdd", "metrics")}`) });
+  // This repository's workspace was adopted in C001-T-017; restore the bootstrap generator so the
+  // copy is the hand-written workspace of the scenario.
+  const sddMd = join(root, ".sdd", "SDD.md");
+  writeFileSync(sddMd, readFileSync(sddMd, "utf8").replace(/^generator: .*$/m, "generator: manual (bootstrap — Architect suite not yet built)"));
   return { root, cleanup: () => rmSync(root, { recursive: true, force: true }) };
 }
 

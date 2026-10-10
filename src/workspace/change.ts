@@ -69,6 +69,8 @@ export function createChange(
   const vars = {
     CHANGE: `CHG-${nnn}`, P: `C${nnn}`, NNN: nnn, TITLE: title, DATE: isoDate(options.date),
     KIND: options.kind, PROFILE: options.profile,
+    // Entity placeholders of the scaffolded lite files: the first entity of each kind.
+    NAME: title, SEQ: "001", NN: "01", B: "1", SLUG: slug,
   };
   const tpl = { ...(options.pluginRoot !== undefined ? { pluginRoot: options.pluginRoot } : {}), sddDir };
   const render = (rel: string) => renderTemplate(resolveTemplate(options.profile, rel, tpl).text, vars);

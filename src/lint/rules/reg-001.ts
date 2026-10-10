@@ -8,6 +8,7 @@ export const reg001: LintRule = {
   code: "LINT-REG-001",
   severity: "error",
   fix: "Run `sdd status --write`",
+  scope: "workspace",
   check(ctx) {
     return ctx.workspace.registryDrift.map((d) => ({
       path: ".sdd/registry.json",

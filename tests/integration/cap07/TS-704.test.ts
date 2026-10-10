@@ -10,7 +10,7 @@ function rule(severity: LintRule["severity"], count: number): LintRule {
   return {
     code: severity === "error" ? "LINT-TXT-001" : "LINT-EARS-003",
     severity,
-    fix: "Fix it",
+    fix: "Fix it", scope: "change",
     check: (ctx) => Array.from({ length: count }, (_, i) => ({ path: ctx.statements[0]!.path, line: i + 1, message: `finding ${i + 1}` })),
   };
 }
