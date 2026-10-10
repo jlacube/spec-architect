@@ -85,3 +85,11 @@ export function isInside(root: string, target: string, options: InsideOptions = 
   if (t === r) return true;
   return t.startsWith(r.endsWith("/") ? r : r + "/");
 }
+
+/** `target` relative to `root` with forward slashes; both are normalised first. */
+export function relativePath(root: string, target: string, options: PathOptions = {}): string {
+  const platform = options.platform ?? CURRENT;
+  const r = normalisePath(root, options);
+  const t = normalisePath(target, options);
+  return (platform === "win32" ? win32.relative(r, t) : posix.relative(r, t)).replace(/\\/g, "/");
+}

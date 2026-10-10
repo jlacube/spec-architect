@@ -4,7 +4,7 @@
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join, relative, sep } from "node:path";
-import { parseBlocks, type Blocks } from "./blocks.ts";
+import { parseBlocks, type Blocks, type Field } from "./blocks.ts";
 import { splitFrontmatter } from "./frontmatter.ts";
 import { findIds, parseId, type IdType } from "./ids.ts";
 
@@ -20,6 +20,8 @@ export interface GraphNode {
   form: DefinitionForm;
   /** `sha256:<hex>` of the normalised defining block. */
   contentHash: string;
+  /** `- **Name:** value` bullets inside the defining block (heading definitions only). */
+  fields: Field[];
 }
 
 export interface GraphEdge {
@@ -153,7 +155,8 @@ function parseFile(path: string, rel: string, change: string, nodes: GraphNode[]
   const add = (id: string, line: number, title: string, form: DefinitionForm, from: number, to: number, hashed: string) => {
     const parts = parseId(id);
     if (!parts) return;
-    defs.push({ node: { id, type: parts.type, file: rel, line, title, form, contentHash: sha256(hashed) }, from, to });
+    const fields = form === "heading" ? blocks.fields.filter((f) => f.line > from && f.line <= to) : [];
+    defs.push({ node: { id, type: parts.type, file: rel, line, title, form, contentHash: sha256(hashed), fields }, from, to });
   };
   const fullId = (s: string) => (parseId(s) ? s : null);
 

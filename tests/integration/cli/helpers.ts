@@ -1,0 +1,61 @@
+// Helpers for CLI tests: run the bundled CLI as a subprocess, run it in-process with test-double
+// lint rules, and build throwaway workspaces.
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { runCli, type CliIo } from "../../../src/cli/run.ts";
+import type { LintRule } from "../../../src/lint/types.ts";
+import { repoRoot } from "../../helpers.ts";
+
+export const CLI = join(repoRoot(), "plugins", "architect", "scripts", "sdd.mjs");
+
+export interface Result {
+  code: number;
+  stdout: string;
+  stderr: string;
+}
+
+/** Runs the bundled CLI with a clean environment (no inherited SDD_DEBUG). */
+export function runBundled(args: string[], opts: { cwd: string; env?: Record<string, string> }): Result {
+  const env: Record<string, string | undefined> = { ...process.env, SDD_DEBUG: undefined, SDD_TEST_FAULT: undefined, ...opts.env };
+  const r = spawnSync(process.execPath, [CLI, ...args], { cwd: opts.cwd, env, encoding: "utf8" });
+  return { code: r.status ?? -1, stdout: r.stdout, stderr: r.stderr };
+}
+
+/** Runs the CLI in-process; `rules` replaces the registered lint rules. */
+export function runInProcess(args: string[], opts: { cwd: string; env?: Record<string, string>; rules?: LintRule[] }): Result {
+  let stdout = "";
+  let stderr = "";
+  const io: CliIo = {
+    cwd: opts.cwd,
+    env: opts.env ?? {},
+    stdout: (s) => (stdout += s),
+    stderr: (s) => (stderr += s),
+  };
+  if (opts.rules) io.rules = opts.rules;
+  const code = runCli(args, io);
+  return { code, stdout, stderr };
+}
+
+/** Creates a temporary folder with the given files (paths relative to it, `/` separated). */
+export function makeWorkspace(files: Record<string, string>): { root: string; cleanup: () => void } {
+  const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-cli-")));
+  for (const [rel, content] of Object.entries(files)) {
+    const p = join(root, ...rel.split("/"));
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, content);
+  }
+  return { root, cleanup: () => rmSync(root, { recursive: true, force: true }) };
+}
+
+/** A minimal valid change folder `004-x` with one requirement. */
+export function minimalChange(): Record<string, string> {
+  return {
+    ".sdd/SDD.md": "# SDD workspace\n",
+    ".sdd/registry.json": "{}\n",
+    ".sdd/004-x/change.md": "---\nid: CHG-004\ntitle: x\n---\n# CHG-004\n",
+    ".sdd/004-x/10-spec/20-capabilities/CAP-01-a/requirements.md":
+      "---\nid: C004-CAP-01\nartifact: spec/requirements\n---\n\n### C004-REQ-012 — Thing\n- **Pattern:** ubiquitous\n- **Statement:** THE sdd CLI SHALL do one thing.\n",
+  };
+}

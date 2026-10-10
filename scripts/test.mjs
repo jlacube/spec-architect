@@ -2,7 +2,7 @@
 // (C001-ADR-006). Explicit file lists keep behaviour identical on Node 20 and 22.
 import { build } from "esbuild";
 import { spawnSync } from "node:child_process";
-import { readdirSync, rmSync } from "node:fs";
+import { readdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -39,6 +39,7 @@ await build({
   format: "esm",
   target: "node20",
   outExtension: { ".js": ".mjs" },
+  define: { __SDD_VERSION__: JSON.stringify(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version) },
   logLevel: "warning",
 });
 
