@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-012]
 implements: [C001-REQ-109, C001-REQ-110, C001-REQ-111, C001-REQ-113]
 satisfies_ac: [C001-AC-109.1, C001-AC-110.1, C001-AC-111.1, C001-AC-113.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-114, C001-TS-115, C001-TS-116, C001-TS-118, C001-TC-114, C
 components: [C001-COMP-03]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e9e2baf, completed_at: 2026-10-11, notes: "id next / id tombstone done; C001-TC-114/115/116/118 pass on the bundled CLI. Next number = max(ledger counter, numbers defined in the change files, tombstones) + 1, so bootstrap ledgers without counters (CHG-001) cannot collide. Block counters are stored inside the block entry (allocated), an addition to the C001-IF-03 §4 example. AC allocation is refused (IF-03 §4). This repo's ids.json loads and round-trips byte-identically." }
 ---
 
 # C001-T-016 — ID ledger: id next, tombstone, type validation
