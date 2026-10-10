@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: [C001-REQ-126]
 satisfies_ac: [C001-AC-126.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-132, C001-TC-132]
 components: [C001-COMP-03, C001-COMP-08]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 1648bbb, completed_at: 2026-10-11, notes: "writeFileAtomic/writeTextAtomic and path normalisation done; C001-TC-132 passes at module level (fault via SDD_TEST_FAULT, as a CLI subprocess will use it); the sdd status --write run is added by C001-T-017. Path tables for win32 and POSIX, junction and 8.3 short-name cases pass on REF-WIN (8.3 enabled). No other src module writes files or checks the platform. Node 22.13 only." }
 ---
 
 # C001-T-011 — Atomic writes and path normalisation
