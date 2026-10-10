@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-013, C001-T-015, C001-T-016]
 implements: [C001-REQ-107, C001-REQ-108, C001-REQ-119, C001-REQ-120, C001-REQ-125]
 satisfies_ac: [C001-AC-107.1, C001-AC-107.2, C001-AC-108.1, C001-AC-108.2, C001-AC-119.1, C001-AC-120.1, C001-AC-125.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-110, C001-TS-111, C001-TS-112, C001-TS-113, C001-TS-125, C
 components: [C001-COMP-03, C001-COMP-13]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 5873bae, completed_at: 2026-10-11, notes: "change new and change profile done; C001-TC-110..113, 125, 126, 131 pass on the bundled CLI. Upgrade self-checks the set of found IDs (defined or referenced) and requirement texts and rolls back on difference; the lite capability reference C<NNN>-CAP-01 becomes a definition in the full layout. Full changes get empty phase folders; agents create files from templates. change stop is left to C001-T-044, which implements C001-REQ-815. change new does not yet update registry.json (status --write, C001-T-017)." }
 ---
 
 # C001-T-014 — change new, profile, stop: numbering, slugs and scaffolds
