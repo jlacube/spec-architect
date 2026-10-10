@@ -3,8 +3,8 @@ id: CHG-001
 artifact: ideation
 title: "Architect — a Spec-Driven Development agent suite for Claude Code (ideation)"
 phase: 00-ideation
-status: draft            # draft → in-review → approved (gate G1)
-version: 0.1.2
+status: approved         # gate G1 passed 2026-10-10 (see change.md gate log)
+version: 0.2.0
 created: 2026-10-10
 updated: 2026-10-10
 authors:
@@ -87,6 +87,7 @@ supersedes: null
 | 0.1.0 | 2026-10-10 | First full draft after 20-question Q&A and web research |
 | 0.1.1 | 2026-10-10 | G1 pre-review: OQ-02 decided (keep 10 agents), OQ-05 decided (lite profile); OQ-07 under discussion; repo initialised with git (OQ-14 closed) |
 | 0.1.2 | 2026-10-10 | OQ-07 decided: archive in v1; brownfield `_living/` seeded with a capability inventory (no requirements) at init. All G1-blocking questions closed |
+| 0.2.0 | 2026-10-10 | OQ-04 decided: DeepWiki MCP adopted for the researcher. **Gate G1 approved.** |
 
 ### 1.2 Conventions used in this document
 
@@ -218,7 +219,7 @@ recommendation. The table records what was offered, what you chose, and how it c
 |---|---|---|---|---|
 | Q9 | Code intelligence | ripwire CLI + Serena MCP role split · ripwire only · Serena only | **Role split, plus "search for other authoritative tools on the same scope and other tools we might have missed"** | §7 surveys code-intelligence alternatives and gap tools; OA-05 re-scores with the wider field. Result: ripwire CLI + Serena (read-only) stay core; ast-grep optional; native LSP as fallback; GitNexus rejected (license). |
 | Q10 | ripwire fork | redhat-et upstream · specific fork · evaluate | **redhat-et/ripwire** | Pin to upstream; current release 0.6.5 (2026-09-14), Windows x64 binary is **preview** [VERIFY]. |
-| Q11 | Research tooling | built-in web + Context7 · Exa/Tavily + Context7 · built-in only | **Built-in web + Context7** | Researcher uses WebSearch/WebFetch + Context7. **New candidate surfaced: DeepWiki MCP** (free, no auth, public repos) — see OA-06 / OQ-04. |
+| Q11 | Research tooling | built-in web + Context7 · Exa/Tavily + Context7 · built-in only | **Built-in web + Context7** | Researcher uses WebSearch/WebFetch + Context7. **DeepWiki MCP added** (free, no auth, public repos) — [DECIDED OQ-04, 2026-10-10], see OA-06. |
 | Q12 | Diagrams | Archify + Mermaid fallback · Archify only · Mermaid only | **Archify + Mermaid fallback** | Architecture, sequence, data-flow, workflow and lifecycle views as Archify JSON IR → validated HTML in `10-spec/60-architecture/`; Mermaid inline for small diagrams that must render on GitHub. |
 
 ### 4.4 Round 4 — Process and gates
@@ -501,7 +502,7 @@ one of them.
 |---|---|---|---|
 | WebSearch / WebFetch (built-in) | General research, competitor and prior-art scans | none | **Core** [DECIDED Q11] |
 | **Context7** (`@upstash/context7-mcp` or remote `https://mcp.context7.com/mcp`) | Version-accurate library docs: `resolve-library-id` → `query-docs` | free tier; key optional | **Core** [DECIDED Q11] |
-| **DeepWiki MCP** (Cognition; remote `https://mcp.deepwiki.com/mcp`) | Ask questions of *public GitHub repos* (`read_wiki_structure`, `read_wiki_contents`, `ask_question`); good for "how does library X do Y internally" | free, no auth, public repos only | **Proposed addition** (OQ-04) — not in your original list |
+| **DeepWiki MCP** (Cognition; remote `https://mcp.deepwiki.com/mcp`) | Ask questions of *public GitHub repos* (`read_wiki_structure`, `read_wiki_contents`, `ask_question`); good for "how does library X do Y internally" | free, no auth, public repos only | **Core, researcher only** [DECIDED OQ-04] |
 | Exa / Tavily / Perplexity | Higher-quality semantic search, multi-step research | paid keys | Optional slot, off by default |
 | Firecrawl | Scraping hard pages | paid | Not needed for v1 |
 
@@ -661,7 +662,7 @@ piece of evidence (`evidence.source: ripwire|serena|lsp|grep|ast-grep`).
 
 **Presented:** B (rec.), A (your choice), C. **Recommendation:** B. DeepWiki adds the
 question "how does upstream library/repo X actually implement Y", which Context7 (API docs)
-does not answer, at zero cost. Scope it to the researcher agent only. → **OQ-04**.
+does not answer, at zero cost. Scope it to the researcher agent only. → **[DECIDED OQ-04: adopted]**.
 
 ### OA-07 — Traceability enforcement (Q16)
 
@@ -1370,7 +1371,7 @@ screenshot, link, command output), never as aspirations.
 | # | Agent | Kind | Runs as | Writes? | Model / effort | Core tools | Preloaded skills |
 |---|---|---|---|---|---|---|---|
 | A0 | `sdd-conductor` | orchestrator + interviewer | **main session** (`claude --agent architect:sdd-conductor`) | `.sdd/` only | Opus 5.5 / xhigh | Agent(allowlist), AskUserQuestion, Read, Glob, Grep, Write, Edit, Bash(sdd.mjs) | sdd-conventions, interview-protocol, options-analysis, phase-ideation, phase-spec, phase-plan, gate-protocol |
-| A1 | `sdd-researcher` | specialist | subagent (background-capable) | `research/` only | Sonnet 5 / high | WebSearch, WebFetch, Context7, DeepWiki*, Read, Write | research-protocol, sdd-conventions |
+| A1 | `sdd-researcher` | specialist | subagent (background-capable) | `research/` only | Sonnet 5 / high | WebSearch, WebFetch, Context7, DeepWiki, Read, Write | research-protocol, sdd-conventions |
 | A2 | `sdd-cartographer` | specialist | subagent | `evidence/`, `30-impact/` only | Sonnet 5 / high | Bash(ripwire, ast-grep, git read-only), Serena (read-only), LSP, Read, Grep, Glob, Write | code-discovery, sdd-conventions |
 | A3 | `sdd-options-analyst` | specialist | subagent | `options/`, `decisions/` drafts | Opus 5.5 / high | Read, Grep, Glob, WebSearch, WebFetch, Write | options-analysis, sdd-conventions |
 | A4 | `sdd-spec-writer` | author | subagent | `10-spec/` (except architecture) | Opus 5.5 / xhigh | Read, Grep, Glob, Write, Edit, Bash(sdd.mjs) | sdd-conventions, ears-requirements, user-stories, nfr-catalogue, options-analysis |
@@ -1380,7 +1381,7 @@ screenshot, link, command output), never as aspirations.
 | A8 | `sdd-critic` | reviewer (adversarial) | subagent | `*critic-report.md` only | Opus 5.5 / xhigh | Read, Grep, Glob, Bash(sdd.mjs lint/trace), Write | critique-rubrics, ears-requirements, sdd-conventions |
 | A9 | `sdd-auditor` | bookkeeper | subagent | `80-traceability.md`, `85-open-items.md`, registry via script | Haiku 4.5 / low | Bash(sdd.mjs), Read, Write | sdd-conventions |
 
-\* DeepWiki pending OQ-04.
+DeepWiki adopted [DECIDED OQ-04].
 
 **Why ten and not four or twenty.** Fewer agents (e.g. one "spec agent") would put
 interviewing, writing and critiquing into one context: worse quality and no independent
@@ -1968,7 +1969,7 @@ acceptable or install ripwire.
 | Serena on Windows | Python 3.13 via `uv`; language servers per language; Windows support not stated explicitly [VERIFY] | Spike S-02; scope Serena to the cartographer and architect only |
 | Archify | Node; `npx skills add tt-a1i/archify -g` → `~/.claude/skills/` | Doctor checks `node bin/archify.mjs doctor`; set `ARCHIFY_UPDATE_CHECK_DISABLED=1` |
 | Context7 | Remote HTTP MCP or `npx @upstash/context7-mcp` | Prefer remote (no local process) |
-| DeepWiki | Remote HTTP MCP, no auth | If adopted (OQ-04) |
+| DeepWiki | Remote HTTP MCP, no auth (`https://mcp.deepwiki.com/mcp`) | Declared in plugin `.mcp.json`; tools allowlisted for the researcher only; public repos only (private-repo questions fall back to the cartographer) |
 | Git | Hash pinning uses file content, not git (works before the first commit); the repo is **not yet a git repo** | Recommend `git init` before the spec phase so worktrees/evidence pinning work (OQ-14) |
 | Line endings | CRLF vs LF changes hashes | Hash after normalising to LF; add `.gitattributes` `* text=auto eol=lf` for `.sdd/` |
 | Encoding | UTF-8 everywhere (PowerShell 7 default is UTF-8 without BOM) | Lint rejects a BOM in `.sdd/` files |
@@ -2021,7 +2022,7 @@ Each has a recommendation. Answer at G1, or defer explicitly to the spec phase.
 | OQ-01 | Plugin and command name: `architect` (`/architect:*`) vs `sdd` vs another? | `architect` | No |
 | OQ-02 | Agent count: accept the 10-agent roster, or merge test-designer into spec-writer (9) / auditor into conductor (8)? | **[DECIDED 2026-10-10] Keep 10.** | closed |
 | OQ-03 | Should the conductor *also* be usable as a subagent from a normal session (without interviewing, returning questions instead)? | No for v1; commands cover that need | No |
-| OQ-04 | Adopt **DeepWiki MCP** for the researcher (free, public repos)? | Yes | No |
+| OQ-04 | Adopt **DeepWiki MCP** for the researcher (free, public repos)? | **[DECIDED 2026-10-10] Yes**, researcher only | closed |
 | OQ-05 | Provide a "lite" profile for small changes (fewer mandatory files, same IDs/gates)? | **[DECIDED 2026-10-10] Yes**, defined in the constitution; same phases, IDs and gates, fewer mandatory files. Becomes a requirement in CHG-001's spec. | closed |
 | OQ-06 | ripwire's 17 bundled skills: install globally, or keep only our `code-discovery` skill and let the cartographer call ripwire `--help-task`? | Ours only; disable the global install of ripwire skills | No |
 | OQ-07 | (a) Is `/architect:archive` (merging a finished change's deltas into `_living/`) in scope for v1? (b) How does `_living/` start on a brownfield repo? | **[DECIDED 2026-10-10]** (a) **Yes, v1**: archive edits `.sdd/` only, so it respects Q2. (b) **Capability inventory at init**: the cartographer lists capabilities with code pointers (entry points, main modules, owning tests) and writes **no requirements**; `_living/CAP-*.md` files fill in as changes are archived. Full reverse-spec stays v2. | closed |
@@ -2161,4 +2162,4 @@ Research performed 2026-10-10.
 
 ---
 
-*End of ideation document CHG-001 v0.1.0. Next action: gate G1 (see §24 for the blocking questions).*
+*End of ideation document CHG-001 v0.2.0. Gate G1 approved 2026-10-10; next phase: 10-spec.*

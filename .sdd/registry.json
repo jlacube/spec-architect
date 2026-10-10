@@ -1,21 +1,36 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-10T00:00:00Z",
+  "generated_at": "2026-10-10T12:00:00Z",
   "changes": [
     {
       "id": "CHG-001",
       "slug": "001-architect-agent-suite",
       "title": "Architect agent suite",
       "kind": "greenfield",
-      "phase": "00-ideation",
+      "phase": "10-spec",
       "phases": {
-        "00-ideation": { "status": "draft", "approved_hash": null, "approved_at": null, "approved_by": null },
-        "10-spec": { "status": "not-started" },
-        "20-plan": { "status": "not-started" }
+        "00-ideation": {
+          "status": "approved",
+          "approved_hash": "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401",
+          "hash_scope": "body excluding YAML frontmatter, LF-normalised, trailing whitespace stripped",
+          "approved_at": "2026-10-10",
+          "approved_by": "jerome.lacube"
+        },
+        "10-spec": {
+          "status": "draft"
+        },
+        "20-plan": {
+          "status": "not-started"
+        }
       },
       "implementation": {
         "status": "not-started",
-        "tasks": { "total": 0, "done": 0, "blocked": 0, "in_progress": 0 },
+        "tasks": {
+          "total": 0,
+          "done": 0,
+          "blocked": 0,
+          "in_progress": 0
+        },
         "last_report": null
       },
       "defects": [],

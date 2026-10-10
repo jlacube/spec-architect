@@ -1,0 +1,2 @@
+# Keep spec artifacts LF so approval hashes are stable across platforms
+.sdd/** text eol=lf
