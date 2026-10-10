@@ -31,6 +31,11 @@
     { "id": "C001-TS-517", "reason": "deferred to a later change: Archify produces no output on Windows 11 (spike S-03, D-S03-1)", "date": "2026-10-10" },
     { "id": "C001-REQ-1105", "reason": "replaced by C001-REQ-1123: hook input cannot identify a session's main agent without agent_type (spike S-04, D-S04-1)", "date": "2026-10-10" },
     { "id": "C001-AC-1105.1", "reason": "replaced by C001-REQ-1123: hook input cannot identify a session's main agent without agent_type (spike S-04, D-S04-1)", "date": "2026-10-10" },
-    { "id": "C001-TS-1106", "reason": "replaced by C001-REQ-1123: hook input cannot identify a session's main agent without agent_type (spike S-04, D-S04-1)", "date": "2026-10-10" }
+    { "id": "C001-TS-1106", "reason": "replaced by C001-REQ-1123: hook input cannot identify a session's main agent without agent_type (spike S-04, D-S04-1)", "date": "2026-10-10" },
+    { "id": "C001-TC-504", "reason": "deferred to a later change: Archify produces no output on Windows 11 (spike S-03, D-S03-1)", "date": "2026-10-10" },
+    { "id": "C001-TC-505", "reason": "deferred to a later change: Archify produces no output on Windows 11 (spike S-03, D-S03-1)", "date": "2026-10-10" },
+    { "id": "C001-TC-506", "reason": "deferred to a later change: Archify produces no output on Windows 11 (spike S-03, D-S03-1)", "date": "2026-10-10" },
+    { "id": "C001-TC-517", "reason": "deferred to a later change: Archify produces no output on Windows 11 (spike S-03, D-S03-1)", "date": "2026-10-10" },
+    { "id": "C001-TC-1106", "reason": "replaced by C001-TC-1124: hook input cannot identify a session's main agent without agent_type (spike S-04, D-S04-1)", "date": "2026-10-10" }
   ]
 }
