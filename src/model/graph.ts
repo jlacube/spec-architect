@@ -67,18 +67,21 @@ export interface Workspace {
   changes: ChangeGraph[];
 }
 
-/** Types whose definition is a table row whose first cell is the ID, with the defining files (C001-IF-04 §2). */
+/**
+ * Types whose definition is a table row whose first cell is the ID, with the defining files of
+ * C001-IF-04 §2 and their lite-profile equivalents of C001-IF-06 §3 (dod.md, plan.md).
+ */
 const TABLE_DEFINED: Partial<Record<IdType, readonly string[]>> = {
   GOAL: ["10-context/problem-and-goals.md"],
   SC: ["10-context/problem-and-goals.md"],
   AS: ["10-context/scope.md"],
   CON: ["10-context/scope.md", "60-architecture/constraints.md"],
-  DOD: ["70-dod.md"],
+  DOD: ["70-dod.md", "10-spec/dod.md"],
   IF: ["50-interfaces/README.md"],
   M: ["10-strategy.md"],
-  RISK: ["70-risks.md"],
+  RISK: ["70-risks.md", "20-plan/plan.md"],
   RB: ["75-rollout.md"],
-  TC: ["60-test-plan.md"],
+  TC: ["60-test-plan.md", "20-plan/plan.md"],
 };
 /**
  * Types defined by the frontmatter `id` of their own file. A capability's three files share its

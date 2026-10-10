@@ -1,6 +1,6 @@
 // Command table of C001-IF-01. Usage strings are copied from the interface. Commands without `run`
 // are refused with ERR-CLI-003 until their task implements them.
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { isInside, normalisePath, relativePath } from "../io/paths.ts";
 import { RULES } from "../lint/rules/index.ts";
@@ -10,6 +10,10 @@ import { buildChangeGraph } from "../model/graph.ts";
 import { TOOL } from "../version.ts";
 import { initRoot, initWorkspace } from "../workspace/init.ts";
 import { nextId, tombstoneId } from "../workspace/ledger.ts";
+import { createChange, KINDS, PROFILES, type Kind } from "../workspace/change.ts";
+import { upgradeToFull } from "../workspace/upgrade.ts";
+import { splitFrontmatter } from "../model/frontmatter.ts";
+import type { Profile } from "../workspace/templates.ts";
 import { parseId } from "../model/ids.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
@@ -116,6 +120,30 @@ export function resolveChange(ctx: CommandContext, nnn: string | undefined): str
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 
+function changeNew(ctx: CommandContext): number {
+  const profile = (ctx.values["profile"] as Profile | undefined) ?? "full";
+  const kind = (ctx.values["kind"] as Kind | undefined) ?? "greenfield";
+  const c = createChange(join(ctx.root, ".sdd"), ctx.args["title"]!, { profile, kind });
+  ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
+  ctx.out.line(`${c.id} .sdd/${c.folder}`);
+  return 0;
+}
+
+function changeProfile(ctx: CommandContext): number {
+  const dir = resolveChange(ctx, ctx.args["NNN"]);
+  const target = ctx.args["profile"] as Profile;
+  const current = splitFrontmatter(readFileSync(join(dir, "change.md"), "utf8")).data?.["profile"];
+  if (current === target) {
+    ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
+    return 0;
+  }
+  if (target === "lite") throw new CliError("ERR-CLI-007");
+  const written = upgradeToFull(dir);
+  for (const f of written) ctx.out.line(`written: ${f}`);
+  ctx.out.line(`CHG-${ctx.args["NNN"]} upgraded to full`);
+  return 0;
+}
+
 function idNext(ctx: CommandContext): number {
   const dir = resolveChange(ctx, ctx.values["change"] as string | undefined);
   const opts = ctx.values["block"] !== undefined ? { block: ctx.values["block"] as string } : {};
@@ -153,8 +181,8 @@ function version(ctx: CommandContext): number {
 
 export const COMMANDS: readonly CommandSpec[] = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
-  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"] },
-  { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
+  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
+  { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
@@ -184,10 +212,17 @@ export const COMMANDS: readonly CommandSpec[] = [
 export function checkPositional(command: string, name: string, value: string): void {
   if (name === "NNN" && !/^\d{3}$/.test(value)) throw usage(command, `<NNN> must have three digits: ${value}`);
   if (name === "phase" && !(PHASES as readonly string[]).includes(value)) throw usage(command, `<phase> must be one of ${PHASES.join(", ")}: ${value}`);
+  if (name === "profile" && !(PROFILES as readonly string[]).includes(value)) throw usage(command, `<profile> must be one of ${PROFILES.join(", ")}: ${value}`);
 }
 
 /** Command-specific option checks that parseArgs cannot express. */
 export function checkOptions(spec: CommandSpec, values: CommandContext["values"]): void {
+  if (spec.name === "change new") {
+    const profile = values["profile"];
+    if (profile !== undefined && !(PROFILES as readonly string[]).includes(profile as string)) throw usage(spec.name, `--profile must be one of ${PROFILES.join(", ")}`);
+    const kind = values["kind"];
+    if (kind !== undefined && !(KINDS as readonly string[]).includes(kind as string)) throw usage(spec.name, `--kind must be one of ${KINDS.join(", ")}`);
+  }
   if (spec.name === "lint") {
     const phase = values["phase"];
     if (phase !== undefined && !(PHASES as readonly string[]).includes(phase as string)) throw usage(spec.name, `--phase must be one of ${PHASES.join(", ")}`);

@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync3, statSync as statSync4 } from "node:fs";
-import { dirname as dirname3, join as join7 } from "node:path";
+import { existsSync as existsSync6, statSync as statSync6 } from "node:fs";
+import { dirname as dirname5, join as join10 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync3, statSync as statSync3 } from "node:fs";
-import { join as join6 } from "node:path";
+import { readdirSync as readdirSync5, readFileSync as readFileSync6, statSync as statSync5 } from "node:fs";
+import { join as join9 } from "node:path";
 
 // src/lint/rules/ws-002.ts
 import { readdirSync } from "node:fs";
@@ -7782,12 +7782,12 @@ var TABLE_DEFINED = {
   SC: ["10-context/problem-and-goals.md"],
   AS: ["10-context/scope.md"],
   CON: ["10-context/scope.md", "60-architecture/constraints.md"],
-  DOD: ["70-dod.md"],
+  DOD: ["70-dod.md", "10-spec/dod.md"],
   IF: ["50-interfaces/README.md"],
   M: ["10-strategy.md"],
-  RISK: ["70-risks.md"],
+  RISK: ["70-risks.md", "20-plan/plan.md"],
   RB: ["75-rollout.md"],
-  TC: ["60-test-plan.md"]
+  TC: ["60-test-plan.md", "20-plan/plan.md"]
 };
 var FRONTMATTER_DEFINED = /* @__PURE__ */ new Set(["T", "ADR", "OA", "DEC", "R", "CAP"]);
 var definesByFrontmatter = (id, rel) => {
@@ -8222,6 +8222,283 @@ function tombstoneId(dir, id, reason, date = /* @__PURE__ */ new Date()) {
   save(ledger);
 }
 
+// src/workspace/change.ts
+import { existsSync as existsSync4, mkdirSync as mkdirSync2, readdirSync as readdirSync4, statSync as statSync4 } from "node:fs";
+import { join as join7 } from "node:path";
+
+// src/workspace/templates.ts
+import { existsSync as existsSync3, readdirSync as readdirSync3, readFileSync as readFileSync4, statSync as statSync3 } from "node:fs";
+import { dirname as dirname3, join as join6 } from "node:path";
+import { fileURLToPath } from "node:url";
+var LITE_SCAFFOLD = [
+  "00-ideation/ideation.md",
+  "00-ideation/questions-log.md",
+  "10-spec/spec.md",
+  "10-spec/dod.md",
+  "20-plan/plan.md",
+  "20-plan/handoff.md"
+];
+function defaultPluginRoot() {
+  const env = process.env["CLAUDE_PLUGIN_ROOT"];
+  if (env) return env;
+  return join6(dirname3(fileURLToPath(import.meta.url)), "..");
+}
+function templatesDir(profile, options) {
+  return join6(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
+}
+function resolveTemplate(profile, rel, options = {}) {
+  const parts = rel.split("/");
+  if (options.sddDir) {
+    const override = join6(options.sddDir, "_templates", profile, ...parts);
+    if (existsSync3(override)) return { path: override, source: "override", text: readFileSync4(override, "utf8") };
+  }
+  const path = join6(templatesDir(profile, options), ...parts);
+  if (!existsSync3(path)) throw new Error(`no ${profile} template for ${rel}`);
+  return { path, source: "plugin", text: readFileSync4(path, "utf8") };
+}
+function renderTemplate(text, vars) {
+  return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key) => vars[key] ?? m);
+}
+
+// src/workspace/change.ts
+var PROFILES = ["lite", "full"];
+var KINDS = ["greenfield", "brownfield", "mixed"];
+function slugify(title) {
+  return title.normalize("NFKD").replace(new RegExp("\\p{M}", "gu"), "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40).replace(/-+$/, "");
+}
+function nextChangeNumber(sddDir) {
+  let max = 0;
+  for (const dir of [sddDir, join7(sddDir, "_archive")]) {
+    if (!existsSync4(dir)) continue;
+    for (const name of readdirSync4(dir)) {
+      const m = /^(\d{3})-/.exec(name);
+      if (m?.[1] && statSync4(join7(dir, name)).isDirectory()) max = Math.max(max, Number(m[1]));
+    }
+  }
+  return String(max + 1).padStart(3, "0");
+}
+function isoDate(d = /* @__PURE__ */ new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function setFrontmatterValue(text, key, yamlValue) {
+  const lines = text.split("\n");
+  if (lines[0] !== "---") throw new Error("no frontmatter");
+  const end = lines.indexOf("---", 1);
+  const at = lines.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
+  if (at < 0) throw new Error(`frontmatter has no ${key}`);
+  lines[at] = `${key}: ${yamlValue}`;
+  return lines.join("\n");
+}
+function createChange(sddDir, title, options) {
+  const slug = slugify(title);
+  if (slug === "") throw usage("change new", "title yields an empty slug; use letters or digits");
+  const nnn = nextChangeNumber(sddDir);
+  const folder = `${nnn}-${slug}`;
+  const dir = join7(sddDir, folder);
+  const vars = {
+    CHANGE: `CHG-${nnn}`,
+    P: `C${nnn}`,
+    NNN: nnn,
+    TITLE: title,
+    DATE: isoDate(options.date),
+    KIND: options.kind,
+    PROFILE: options.profile
+  };
+  const tpl = { ...options.pluginRoot !== void 0 ? { pluginRoot: options.pluginRoot } : {}, sddDir };
+  const render = (rel) => renderTemplate(resolveTemplate(options.profile, rel, tpl).text, vars);
+  mkdirSync2(dir);
+  for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join7(dir, phase));
+  writeTextAtomic(join7(dir, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
+  writeTextAtomic(join7(dir, "ids.json"), render("ids.json"));
+  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join7(dir, ...rel.split("/")), render(rel));
+  return { id: `CHG-${nnn}`, folder, dir };
+}
+
+// src/workspace/upgrade.ts
+import { existsSync as existsSync5, mkdirSync as mkdirSync3, readFileSync as readFileSync5, rmSync } from "node:fs";
+import { basename as basename4, dirname as dirname4, join as join8 } from "node:path";
+function readLite(path) {
+  if (!existsSync5(path)) return null;
+  const doc = splitFrontmatter(readFileSync5(path, "utf8"));
+  const body = doc.lines.slice(doc.bodyStartLine - 1);
+  const blocks = parseBlocks(body, 1);
+  const tops = blocks.headings.filter((h) => h.level === 2);
+  const text = (from, to) => body.slice(from - 1, to).join("\n").replace(/^\n+|\n+$/g, "");
+  const firstTop = tops[0]?.line ?? body.length + 1;
+  const preamble = text(1, firstTop - 1).replace(/^# .*\n?/, "").replace(/^\n+/, "");
+  const sections = tops.map((h, i) => ({ heading: h.text, body: text(h.line + 1, (tops[i + 1]?.line ?? body.length + 1) - 1) }));
+  return { status: typeof doc.data?.["status"] === "string" ? doc.data["status"] : "draft", preamble, sections };
+}
+var SPEC_MAP = {
+  Context: "10-spec/10-context/problem-and-goals.md",
+  Stories: "10-spec/20-capabilities/CAP-01-{{SLUG}}/stories.md",
+  Requirements: "10-spec/20-capabilities/CAP-01-{{SLUG}}/requirements.md",
+  Acceptance: "10-spec/20-capabilities/CAP-01-{{SLUG}}/acceptance.md",
+  NFRs: "10-spec/30-nfr/nfr.md",
+  "Domain notes": "10-spec/40-domain/domain-model.md",
+  Interfaces: "10-spec/50-interfaces/README.md",
+  "Architecture notes": "10-spec/60-architecture/architecture.md"
+};
+var PLAN_MAP = {
+  Strategy: "20-plan/10-strategy.md",
+  "Test mapping": "20-plan/60-test-plan.md",
+  Risks: "20-plan/70-risks.md"
+};
+var TEMPLATE_OF = (target) => target.replace(/CAP-01-[^/]+\//, "CAP-{{NN}}-{{SLUG}}/");
+function frontmatterOf(templateText, status) {
+  const doc = splitFrontmatter(templateText);
+  const end = doc.bodyStartLine - 1;
+  const fmLines = doc.lines.slice(0, end).map((l) => l.startsWith("status:") ? `status: ${status}` : l);
+  const title = doc.lines.slice(end).find((l) => l.startsWith("# ")) ?? "";
+  return { fm: fmLines.join("\n"), title };
+}
+var yamlList = (ids) => `[${ids.join(", ")}]`;
+function taskFile(heading, block, nnn) {
+  const m = /^(C\d{3}-T-(\d+))(?:\s+—\s+(.*))?$/.exec(heading);
+  if (!m?.[1] || !m[2]) throw usage("change profile", `task heading without a task ID: ${heading}`);
+  const fields = /* @__PURE__ */ new Map();
+  for (const l of block) {
+    const f = /^\s*- \*\*([^*]+?):\*\*\s?(.*)$/.exec(l);
+    if (f?.[1]) fields.set(f[1].trim().toLowerCase(), (f[2] ?? "").trim());
+  }
+  const ids = (key) => findIds(fields.get(key) ?? "", nnn).map((h) => h.id);
+  const title = m[3] ?? "";
+  const fm = [
+    "---",
+    `id: ${m[1]}`,
+    `title: ${JSON.stringify(title)}`,
+    `change: CHG-${nnn}`,
+    "phase: 20-plan",
+    "artifact: plan/task",
+    `milestone: ${ids("milestone")[0] ?? "null"}`,
+    `status: ${fields.get("status") || "todo"}`,
+    `depends_on: ${yamlList(ids("depends on"))}`,
+    `implements: ${yamlList(ids("implements"))}`,
+    `satisfies_ac: ${yamlList(ids("satisfies ac"))}`,
+    `verified_by: ${yamlList(ids("verified by"))}`,
+    `components: ${yamlList(ids("components"))}`,
+    `risk_refs: ${yamlList(ids("risks"))}`,
+    `estimate: ${fields.get("estimate") || "M"}`,
+    "report: { commit: null, completed_at: null, notes: null }",
+    "---"
+  ].join("\n");
+  const body = block.join("\n").replace(/^\n+|\n+$/g, "");
+  return { rel: `20-plan/50-tasks/T-${m[2]}-${slugify(title) || "task"}.md`, text: `${fm}
+# ${heading}
+
+${body}
+` };
+}
+function planUpgrade(dir, tpl) {
+  const nnn = changeNumber(dir);
+  const slug = basename4(dir).slice(4);
+  const vars = { CHANGE: `CHG-${nnn}`, P: `C${nnn}`, NNN: nnn, NN: "01", B: "1", SLUG: slug, NAME: slug, TITLE: slug, DATE: "", KIND: "", PROFILE: "full", SEQ: "001" };
+  const writes = /* @__PURE__ */ new Map();
+  const append = (rel, status, chunk) => {
+    const target = renderTemplate(rel, vars);
+    const existing = writes.get(target);
+    if (existing !== void 0) {
+      writes.set(target, `${existing}
+${chunk}
+`);
+      return;
+    }
+    const { fm, title } = frontmatterOf(renderTemplate(resolveTemplate("full", TEMPLATE_OF(rel), tpl).text, vars), status);
+    writes.set(target, `${fm}
+${title}
+
+${chunk}
+`);
+  };
+  const removes = [];
+  const spec = readLite(join8(dir, "10-spec", "spec.md"));
+  if (spec) {
+    removes.push("10-spec/spec.md");
+    if (spec.preamble) append("10-spec/00-index.md", spec.status, spec.preamble);
+    for (const s of spec.sections) {
+      const rel = SPEC_MAP[s.heading];
+      if (rel) append(rel, spec.status, s.body);
+      else append("10-spec/00-index.md", spec.status, `## ${s.heading}
+
+${s.body}`);
+    }
+  }
+  const dod = readLite(join8(dir, "10-spec", "dod.md"));
+  if (dod) {
+    removes.push("10-spec/dod.md");
+    const parts = [dod.preamble, ...dod.sections.map((s) => `## ${s.heading}
+
+${s.body}`)].filter(Boolean);
+    append("10-spec/70-dod.md", dod.status, parts.join("\n\n"));
+  }
+  const plan = readLite(join8(dir, "20-plan", "plan.md"));
+  if (plan) {
+    removes.push("20-plan/plan.md");
+    if (plan.preamble) append("20-plan/00-index.md", plan.status, plan.preamble);
+    for (const s of plan.sections) {
+      if (s.heading === "Tasks") {
+        const lines = s.body.split("\n");
+        const starts = lines.flatMap((l, i) => /^### C\d{3}-T-\d+/.test(l) ? [i] : []);
+        if (starts.length > 0 && starts[0] > 0 && lines.slice(0, starts[0]).some((l) => l.trim()))
+          append("20-plan/00-index.md", plan.status, lines.slice(0, starts[0]).join("\n"));
+        starts.forEach((st, k) => {
+          const block = lines.slice(st + 1, starts[k + 1] ?? lines.length);
+          const t = taskFile(lines[st].replace(/^### /, ""), block, nnn);
+          writes.set(t.rel, t.text);
+        });
+        continue;
+      }
+      const rel = PLAN_MAP[s.heading];
+      if (rel) append(rel, plan.status, s.body);
+      else append("20-plan/00-index.md", plan.status, `## ${s.heading}
+
+${s.body}`);
+    }
+  }
+  return { writes, removes };
+}
+function snapshot(g) {
+  const texts = /* @__PURE__ */ new Map();
+  for (const n of g.nodes) for (const f of n.fields) if (["Statement", "Pattern"].includes(f.name)) texts.set(`${n.id}:${f.name}`, f.value);
+  const found = /* @__PURE__ */ new Set([...g.byId.keys(), ...g.edges.filter((e) => e.context === "text").map((e) => e.to)]);
+  return { ids: [...found].sort(), texts };
+}
+function upgradeToFull(dir, tpl = {}) {
+  const before = snapshot(buildChangeGraph(dir));
+  const { writes, removes } = planUpgrade(dir, tpl);
+  const originals = /* @__PURE__ */ new Map();
+  for (const rel of [...removes, ...writes.keys()]) {
+    const p = join8(dir, ...rel.split("/"));
+    if (existsSync5(p)) originals.set(rel, readFileSync5(p, "utf8"));
+  }
+  const changeMd = join8(dir, "change.md");
+  const changeText = readFileSync5(changeMd, "utf8");
+  try {
+    for (const [rel, text] of writes) {
+      const p = join8(dir, ...rel.split("/"));
+      mkdirSync3(dirname4(p), { recursive: true });
+      writeTextAtomic(p, text);
+    }
+    for (const rel of removes) rmSync(join8(dir, ...rel.split("/")));
+    writeTextAtomic(changeMd, setFrontmatterValue(changeText, "profile", "full"));
+    const after = snapshot(buildChangeGraph(dir));
+    const lost = before.ids.filter((id) => !after.ids.includes(id));
+    const gained = after.ids.filter((id) => !before.ids.includes(id));
+    const changed = [...before.texts].filter(([k, v]) => after.texts.get(k) !== v).map(([k]) => k);
+    if (lost.length + gained.length + changed.length > 0) {
+      const list = (label, xs) => xs.length ? `${label} ${xs.slice(0, 5).join(" ")}${xs.length > 5 ? " …" : ""}` : "";
+      const detail = ["upgrade would change the change's content; nothing was changed:", list("lost", lost), list("gained", gained), list("changed", changed)].filter(Boolean).join(" ");
+      throw new CliError("ERR-CLI-016", { detail });
+    }
+  } catch (e) {
+    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join8(dir, ...rel.split("/")), { force: true });
+    for (const [rel, text] of originals) writeTextAtomic(join8(dir, ...rel.split("/")), text);
+    writeTextAtomic(changeMd, changeText);
+    throw e;
+  }
+  return [...writes.keys()].sort();
+}
+
 // src/cli/output.ts
 function formatFinding(f) {
   const where = f.line !== void 0 ? `${f.path}:${f.line}` : f.path;
@@ -8266,8 +8543,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders(root) {
-  const sdd = join6(root, ".sdd");
-  return readdirSync3(sdd).filter((n) => /^\d{3}-/.test(n) && statSync3(join6(sdd, n)).isDirectory()).sort();
+  const sdd = join9(root, ".sdd");
+  return readdirSync5(sdd).filter((n) => /^\d{3}-/.test(n) && statSync5(join9(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -8277,7 +8554,7 @@ function lint(ctx) {
   let file;
   if (values["file"] !== void 0) {
     const abs = normalisePath(values["file"], { cwd: ctx.cwd });
-    if (!isInside(join6(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
+    if (!isInside(join9(root, ".sdd"), abs)) throw usage(ctx.name, "--file must be inside .sdd/");
     file = relativePath(root, abs);
     const folder = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
     folders = folder ? folders.filter((f) => f === folder) : [];
@@ -8288,7 +8565,7 @@ function lint(ctx) {
     folders = match;
   }
   const changes = folders.map((f) => {
-    const graph = buildChangeGraph(join6(root, ".sdd", f));
+    const graph = buildChangeGraph(join9(root, ".sdd", f));
     out.trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f}`, graph };
   });
@@ -8310,12 +8587,34 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join6(ctx.root, ".sdd", match[0]);
+    return join9(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join6(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join6(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join6(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join9(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join9(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join9(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
+}
+function changeNew(ctx) {
+  const profile = ctx.values["profile"] ?? "full";
+  const kind = ctx.values["kind"] ?? "greenfield";
+  const c = createChange(join9(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
+  ctx.out.line(`${c.id} .sdd/${c.folder}`);
+  return 0;
+}
+function changeProfile(ctx) {
+  const dir = resolveChange(ctx, ctx.args["NNN"]);
+  const target = ctx.args["profile"];
+  const current = splitFrontmatter(readFileSync6(join9(dir, "change.md"), "utf8")).data?.["profile"];
+  if (current === target) {
+    ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
+    return 0;
+  }
+  if (target === "lite") throw new CliError("ERR-CLI-007");
+  const written = upgradeToFull(dir);
+  for (const f of written) ctx.out.line(`written: ${f}`);
+  ctx.out.line(`CHG-${ctx.args["NNN"]} upgraded to full`);
+  return 0;
 }
 function idNext(ctx) {
   const dir = resolveChange(ctx, ctx.values["change"]);
@@ -8338,7 +8637,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join6(root, ".sdd");
+  const where = join9(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -8350,8 +8649,8 @@ function version(ctx) {
 }
 var COMMANDS = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
-  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"] },
-  { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"] },
+  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
+  { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
@@ -8379,8 +8678,15 @@ var COMMANDS = [
 function checkPositional(command, name, value) {
   if (name === "NNN" && !/^\d{3}$/.test(value)) throw usage(command, `<NNN> must have three digits: ${value}`);
   if (name === "phase" && !PHASES.includes(value)) throw usage(command, `<phase> must be one of ${PHASES.join(", ")}: ${value}`);
+  if (name === "profile" && !PROFILES.includes(value)) throw usage(command, `<profile> must be one of ${PROFILES.join(", ")}: ${value}`);
 }
 function checkOptions(spec, values) {
+  if (spec.name === "change new") {
+    const profile = values["profile"];
+    if (profile !== void 0 && !PROFILES.includes(profile)) throw usage(spec.name, `--profile must be one of ${PROFILES.join(", ")}`);
+    const kind = values["kind"];
+    if (kind !== void 0 && !KINDS.includes(kind)) throw usage(spec.name, `--kind must be one of ${KINDS.join(", ")}`);
+  }
   if (spec.name === "lint") {
     const phase = values["phase"];
     if (phase !== void 0 && !PHASES.includes(phase)) throw usage(spec.name, `--phase must be one of ${PHASES.join(", ")}`);
@@ -8412,9 +8718,9 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir = start;
   for (; ; ) {
-    const sdd = join7(dir, ".sdd");
-    if (existsSync3(sdd) && statSync4(sdd).isDirectory()) return dir;
-    const parent = dirname3(dir);
+    const sdd = join10(dir, ".sdd");
+    if (existsSync6(sdd) && statSync6(sdd).isDirectory()) return dir;
+    const parent = dirname5(dir);
     if (parent === dir) return null;
     dir = parent;
   }

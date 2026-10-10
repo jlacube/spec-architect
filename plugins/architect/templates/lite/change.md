@@ -6,9 +6,9 @@ profile: "{{PROFILE}}"
 status: active
 phase: 00-ideation
 phases:
-  00-ideation: { status: not-started }
-  10-spec: { status: not-started }
-  20-plan: { status: not-started }
+  00-ideation: { status: not-started, approved_hash: null, approved_at: null, approved_by: null }
+  10-spec: { status: not-started, approved_hash: null, approved_at: null, approved_by: null }
+  20-plan: { status: not-started, approved_hash: null, approved_at: null, approved_by: null }
 implementation: { status: not-started }
 stopped: null
 owners: []
