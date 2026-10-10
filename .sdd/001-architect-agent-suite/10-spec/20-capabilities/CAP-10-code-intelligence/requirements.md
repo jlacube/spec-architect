@@ -31,8 +31,8 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 
 ### C001-REQ-1003 — ripwire budgets
 - **Pattern:** event-driven
-- **Statement:** WHEN the cartographer invokes a ripwire query verb, THE cartographer SHALL pass `--token-budget` with a value no greater than the budget set in the `code-discovery` skill (default 4000) or `--top-k`.
-- **Rationale:** IDEA-§7.2 token budget
+- **Statement:** WHEN the cartographer invokes a ripwire query verb, THE cartographer SHALL pass the bounding flag that C001-IF-14 §2 assigns to that verb, with a value no greater than the matching budget set in the `code-discovery` skill (defaults: 4000 tokens for `--token-budget` and `--max-tokens`, 50 rows for `--limit`).
+- **Rationale:** IDEA-§7.2 token budget; spike S-01 (ripwire 0.6.5 refuses `--token-budget` and `--top-k` on graph and list verbs, `docs/spikes/S-01-ripwire.md`)
 - **Stories:** C001-US-1002
 - **Priority:** Must
 - **Acceptance:** C001-AC-1003.1
@@ -87,8 +87,8 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 
 ### C001-REQ-1010 — Layer failure fallback
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF a layer's invocation fails (non-zero exit, timeout of 120 seconds, or tool error), THEN THE cartographer SHALL retry the question on the next available layer and record the failed layer and its error in the disclosures of the resulting evidence.
-- **Rationale:** IDEA-P-10; IDEA-§20.5
+- **Statement:** IF a layer's invocation fails (non-zero exit other than an exit code that C001-IF-14 §2 documents as an answer, timeout of 120 seconds, or tool error), THEN THE cartographer SHALL retry the question on the next available layer and record the failed layer and its error in the disclosures of the resulting evidence.
+- **Rationale:** IDEA-P-10; IDEA-§20.5; spike S-01 (`--test-gate` exits 4 when it returns a result)
 - **Stories:** C001-US-1001
 - **Priority:** Must
 - **Acceptance:** C001-AC-1010.1

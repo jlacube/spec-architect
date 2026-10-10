@@ -98,7 +98,7 @@ Scenario Outline: C001-TS-1107 — bash guard
     | cmd                                                      | code |
     | node C:/p/scripts/sdd.mjs lint --json                    | 0    |
     | ripwire . --for="payment method" --token-budget=4000     | 0    |
-    | ripwire --callers=createIntent --top-k=20                | 0    |
+    | ripwire . --callers=createIntent --limit=50              | 0    |
     | git log --oneline -20                                    | 0    |
     | ast-grep run --pattern 'app.get($A, $B)'                 | 0    |
     | git commit -m x                                          | 2    |

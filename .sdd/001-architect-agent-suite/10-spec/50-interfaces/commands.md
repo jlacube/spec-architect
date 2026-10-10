@@ -39,7 +39,7 @@ and the command-specific preconditions. Phase procedures live in the phase skill
 |---|---|---|
 | node | `node -v` ≥ 20 | `winget install OpenJS.NodeJS.LTS` |
 | git | `git --version` | `winget install Git.Git` |
-| ripwire | `ripwire --doctor` | download the Windows x64 release from `github.com/redhat-et/ripwire/releases` and add it to PATH (preview build) [VERIFY S-01] |
+| ripwire | `ripwire --version` (0.6.x) | download `ripwire-<version>-windows-x64.zip` from `github.com/redhat-et/ripwire/releases`, check it against the published `.sha256`, extract it and add the extracted folder to the user PATH; then `ripwire <repo> --doctor` reports 9/9 checks (verified with 0.6.5, spike S-01) |
 | Serena | MCP tool listing of server `serena` | `winget install astral-sh.uv` then `uv tool install -p 3.13 serena-agent` [VERIFY S-02] |
 | Archify | `node <skills>/archify/bin/archify.mjs doctor` | `npx skills add tt-a1i/archify -g` |
 | ast-grep | `ast-grep --version` | `npm install -g @ast-grep/cli` |

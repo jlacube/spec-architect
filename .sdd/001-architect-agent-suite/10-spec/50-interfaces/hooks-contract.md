@@ -47,7 +47,7 @@ denied), backticks or `$(`. Pipe targets are limited to the "pipe-only" entries.
 | Entry | Allowed form | Notes |
 |---|---|---|
 | sdd CLI | `node <path>/sdd.mjs <any subcommand>` | the CLI enforces its own write discipline |
-| ripwire read verbs | `ripwire [<path>] (--for=… \| --pack-task=… \| --callers=… \| --uses=… \| --impact=… \| --expand=… \| --test-gate \| --situ \| --hotspots \| --quality-panel \| --quality-delta \| --pack-signatures \| --doctor \| --help-task \| --version) [--token-budget=N] [--top-k=N] [--json]` | span-edit verbs excluded |
+| ripwire read verbs | `ripwire [<path>] (--for=… \| --pack-task=… \| --callers=… \| --uses=… \| --impact=… \| --expand=… \| --test-gate \| --situ \| --hotspots \| --quality-panel \| --quality-delta \| --pack-signatures \| --doctor \| --help-task \| --version) [--token-budget=N] [--max-tokens=N] [--limit=N] [--offset=N] [--top-k=N] [--json]` | span-edit verbs excluded; bounding flags per C001-IF-14 §2 |
 | ast-grep search | `ast-grep run --pattern <p> [--lang <l>] [<paths>] [--json]` | `--rewrite`, `-U`, `--update-all`, `-i` excluded |
 | git read-only | `git (log\|show\|diff\|blame\|ls-files\|rev-parse\|status\|grep) …` | no `-o`/`--output`; `git diff --output` excluded |
 | Archify | `node <path>/archify.mjs (doctor\|guide\|validate\|deliver\|compare) …` with `ARCHIFY_UPDATE_CHECK_DISABLED=1` prefix allowed | `deliver`/`compare` outputs must be under `.sdd/` (checked) |

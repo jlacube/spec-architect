@@ -48,11 +48,21 @@ Scenario: C001-TS-1003 — evidence entry fields
 
 ## C001-REQ-1003
 
-#### C001-AC-1003.1 — Budget flag present
+#### C001-AC-1003.1 — Bounding flag matches the verb
 ```gherkin
-Scenario: C001-TS-1004 — ripwire budget
-  When the cartographer runs any ripwire query verb in a scripted session
-  Then each ripwire command line contains "--token-budget=" with a value ≤ 4000 or "--top-k="
+Scenario Outline: C001-TS-1004 — ripwire budget flag per verb family
+  When the cartographer runs the ripwire verb "<verb>" in a scripted session
+  Then the command line contains "<flag>" with a value ≤ <max>
+  And the command line contains neither "--token-budget=" nor "--top-k=" when <flag> is "--limit="
+  Examples:
+    | verb              | flag            | max  |
+    | --for=            | --token-budget= | 4000 |
+    | (default map)     | --max-tokens=   | 4000 |
+    | --pack-signatures | --max-tokens=   | 4000 |
+    | --callers=        | --limit=        | 50   |
+    | --impact=         | --limit=        | 50   |
+    | --test-gate       | --limit=        | 50   |
+    | --hotspots        | --limit=        | 50   |
 ```
 
 ## C001-REQ-1004
@@ -123,6 +133,14 @@ Scenario: C001-TS-1011 — ripwire crashes
   When the cartographer is asked "who calls createIntent?"
   Then the evidence layer is "serena"
   And the disclosures contain "ripwire failed: exit 134"
+```
+
+```gherkin
+Scenario: C001-TS-1014 — documented answer exit code is not a failure
+  Given machine configuration "cfg-full" and repository "fx-brownfield-ts"
+  When the cartographer runs "ripwire … --test-gate=src/checkout/payments.ts --limit=50" and ripwire exits with code 4
+  Then the evidence layer is "ripwire"
+  And no disclosure contains "ripwire failed"
 ```
 
 ## C001-REQ-1011
