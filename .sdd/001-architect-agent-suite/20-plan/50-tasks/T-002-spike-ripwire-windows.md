@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-1001.1, C001-AC-1003.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1001, C001-TS-1004, C001-TC-1001, C001-TC-1004]
 components: [C001-COMP-02]
 risk_refs: [C001-RISK-003]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 423117e, completed_at: 2026-10-10, notes: "Verdict works-with-caveats (docs/spikes/S-01-ripwire.md). ripwire 0.6.5 Windows x64 runs; all six verbs correct on bolt.diy (TS) and crawl4ai (Python), callers exact 10/10. Spec defect D-S01-1 opened against C001-REQ-1003 (budget flags: graph/list verbs need --limit, map/pack-signatures need --max-tokens). C001-TC-1001/1004 are cartographer evals owned by C001-T-041 and not runnable yet; TC-1004 will fail as specified until D-S01-1 is resolved." }
 ---
 
 # C001-T-002 — Spike S-01: ripwire on Windows
