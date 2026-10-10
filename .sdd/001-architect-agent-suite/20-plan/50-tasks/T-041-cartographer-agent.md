@@ -9,7 +9,7 @@ status: todo
 depends_on: [C001-T-002, C001-T-003, C001-T-030, C001-T-029]
 implements: [C001-REQ-1001, C001-REQ-1002, C001-REQ-1003, C001-REQ-1004, C001-REQ-1009, C001-REQ-1010, C001-REQ-1011, C001-REQ-1012, C001-REQ-115, C001-REQ-121, C001-REQ-314, C001-REQ-610, C001-REQ-611]
 satisfies_ac: [C001-AC-1001.1, C001-AC-1001.2, C001-AC-1002.1, C001-AC-1003.1, C001-AC-1004.1, C001-AC-1009.1, C001-AC-1010.1, C001-AC-1011.1, C001-AC-1012.1, C001-AC-115.1, C001-AC-121.1, C001-AC-314.1, C001-AC-610.1, C001-AC-611.1]
-verified_by: [C001-TS-1001, C001-TS-1002, C001-TS-1003, C001-TS-1004, C001-TS-1005, C001-TS-1010, C001-TS-1011, C001-TS-1012, C001-TS-1013, C001-TS-121, C001-TS-127, C001-TS-315, C001-TS-612, C001-TS-613, C001-TC-1001, C001-TC-1002, C001-TC-1003, C001-TC-1004, C001-TC-1005, C001-TC-1010, C001-TC-1011, C001-TC-1012, C001-TC-1013, C001-TC-121, C001-TC-127, C001-TC-315, C001-TC-612, C001-TC-613]
+verified_by: [C001-TS-1001, C001-TS-1002, C001-TS-1003, C001-TS-1004, C001-TS-1005, C001-TS-1010, C001-TS-1011, C001-TS-1012, C001-TS-1013, C001-TS-1014, C001-TS-121, C001-TS-127, C001-TS-315, C001-TS-612, C001-TS-613, C001-TC-1001, C001-TC-1002, C001-TC-1003, C001-TC-1004, C001-TC-1005, C001-TC-1010, C001-TC-1011, C001-TC-1012, C001-TC-1013, C001-TC-1014, C001-TC-121, C001-TC-127, C001-TC-315, C001-TC-612, C001-TC-613]
 components: [C001-COMP-02, C001-COMP-10]
 risk_refs: [C001-RISK-003, C001-RISK-004]
 estimate: L
@@ -20,15 +20,15 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Author sdd-cartographer with the layer ladder, budgets, disclosures, evidence format, toolchain record, capability inventory, baseline survey and impact files.
+Author sdd-cartographer with the layer ladder, budgets, disclosures, evidence format, toolchain record, capability inventory, baseline survey and impact files. ripwire usage follows C001-IF-14 §2 as verified by spike S-01 (`docs/spikes/S-01-ripwire.md`): one bounding flag per verb family, `--test-gate` exit 4 treated as an answer, header attributes mapped to disclosures, availability probed with `ripwire --version`.
 
 ## Targets
 
 | Kind | Target | Change |
 |---|---|---|
 | add | `plugins/architect/agents/sdd-cartographer.md` | IF-09 A2; Bash allowlist reminder |
-| add | `plugins/architect/skills/code-discovery/SKILL.md` | verb table, ladder, evidence format IF-03 §11, budgets |
-| add | `tests/fixtures/cfg-*/` | machine configurations cfg-full, cfg-no-ripwire, cfg-bare (PATH shims) |
+| add | `plugins/architect/skills/code-discovery/SKILL.md` | verb table with the bounding flag and answer exit codes of C001-IF-14 §2, ladder, evidence format IF-03 §11, budgets, header-to-disclosure mapping |
+| add | `tests/fixtures/cfg-*/` | machine configurations cfg-full, cfg-no-ripwire, cfg-bare (PATH shims); ripwire shims exiting 134 (TC-1011) and 4 on `--test-gate` (TC-1014) |
 
 ## Preconditions
 
@@ -42,7 +42,7 @@ Author sdd-cartographer with the layer ladder, budgets, disclosures, evidence fo
 
 ## Verification
 
-- C001-TC-1001…1013, 121, 127, 315, 612, 613 pass (dev tier)
+- C001-TC-1001…1014, 121, 127, 315, 612, 613 pass (dev tier)
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when

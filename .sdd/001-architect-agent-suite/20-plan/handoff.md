@@ -142,4 +142,4 @@ Used only before `sdd defect add` exists (T-026).
 
 | Date | Ref | Summary | Reporter | Status |
 |---|---|---|---|---|
-| 2026-10-10 | C001-REQ-1003 | ripwire 0.6.5 rejects `--token-budget`/`--top-k` (exit 1) on graph/list verbs (`--callers`, `--impact`, `--test-gate`, `--hotspots`, …), which need `--limit=N`. On map/`--pack-signatures`, `--token-budget` withholds the whole output (exit 3); `--max-tokens=N` shapes it. Also affects C001-AC-1003.1, C001-TS-1004, C001-IF-14. Evidence: `docs/spikes/S-01-ripwire.md` (D-S01-1) | C001-T-002 | open |
+| 2026-10-10 | C001-REQ-1003 | ripwire 0.6.5 rejects `--token-budget`/`--top-k` (exit 1) on graph/list verbs (`--callers`, `--impact`, `--test-gate`, `--hotspots`, …), which need `--limit=N`. On map/`--pack-signatures`, `--token-budget` withholds the whole output (exit 3); `--max-tokens=N` shapes it. Also affects C001-AC-1003.1, C001-TS-1004, C001-IF-14. Evidence: `docs/spikes/S-01-ripwire.md` (D-S01-1) | C001-T-002 | resolved: G2 revision approved 2026-10-10 (commit baa1a3e) |

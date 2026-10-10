@@ -13,7 +13,7 @@ generated: true
 |---|---|
 | TR-06 Every REQ implemented by ≥ 1 task | 213 / 213 |
 | TR-07 Every task links ≥ 1 REQ/AC and ≥ 1 TS/TC | 58 / 58 |
-| TR-08 Every TS mapped to ≥ 1 TC | 235 / 235 |
+| TR-08 Every TS mapped to ≥ 1 TC | 236 / 236 |
 | TR-11 Task DAG acyclic, dependencies resolve | yes |
 
 ## REQ → task → test cases → DoD
@@ -208,7 +208,7 @@ generated: true
 | C001-REQ-1007 | C001-T-060 | TC-1008 | C001-DOD-010 |
 | C001-REQ-1008 | C001-T-060 | TC-1009 | C001-DOD-010 |
 | C001-REQ-1009 | C001-T-041 | TC-1010 | C001-DOD-010 |
-| C001-REQ-1010 | C001-T-041 | TC-1011 | C001-DOD-010 |
+| C001-REQ-1010 | C001-T-041 | TC-1011, TC-1014 | C001-DOD-010 |
 | C001-REQ-1011 | C001-T-041 | TC-1012 | C001-DOD-010 |
 | C001-REQ-1012 | C001-T-041 | TC-1013 | C001-DOD-010 |
 | C001-REQ-1101 | C001-T-060 | TC-1101 | C001-DOD-020 |

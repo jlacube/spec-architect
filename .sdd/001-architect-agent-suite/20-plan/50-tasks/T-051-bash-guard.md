@@ -27,7 +27,7 @@ Implement `sdd guard-bash` with the allowlist of C001-IF-07 §3, pipe-only targe
 | Kind | Target | Change |
 |---|---|---|
 | add | `src/hooks/guard-bash.ts` | tokeniser (quotes aware), segment matcher |
-| add | `tests/guards/bash-corpus.json` | allowed/denied commands incl. scenario tables |
+| add | `tests/guards/bash-corpus.json` | allowed/denied commands incl. scenario tables and every ripwire bounding flag of C001-IF-14 §2 (`--token-budget`, `--max-tokens`, `--limit`, `--offset`) |
 
 ## Preconditions
 

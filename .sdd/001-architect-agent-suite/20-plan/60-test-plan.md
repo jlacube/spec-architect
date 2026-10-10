@@ -16,7 +16,7 @@ the same number (`C001-TS-n` → `C001-TC-n`), so coverage stays mechanically ch
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
 | integration | CLI, hooks, files and schemas, run against fixture repositories | 154 | `node --test` (C001-ADR-006) |
-| eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 79 | eval harness (T-029), tiers of C001-ADR-003 |
+| eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 80 | eval harness (T-029), tiers of C001-ADR-003 |
 | manual | Needs a human-controlled environment | 2 | checklists under `tests/manual/` |
 | unit | Module-level tests supporting the above (not mapped to TS) | as needed | `node --test` |
 
@@ -291,6 +291,7 @@ run before every task commit.
 | C001-TC-1011 | C001-TS-1011 | eval | `evals/cap10/TS-1011.eval.mjs` | fx-brownfield-ts | REF-WIN, cfg-full (ripwire shim exits 134) | C001-T-041 |
 | C001-TC-1012 | C001-TS-1012 | eval | `evals/cap10/TS-1012.eval.mjs` | fx-empty | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
 | C001-TC-1013 | C001-TS-1013 | eval | `evals/cap10/TS-1013.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
+| C001-TC-1014 | C001-TS-1014 | eval | `evals/cap10/TS-1014.eval.mjs` | fx-brownfield-ts | REF-WIN, cfg-full (ripwire shim exits 4 on `--test-gate`) | C001-T-041 |
 | C001-TC-1101 | C001-TS-1101 | integration | `tests/integration/cap11/TS-1101.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-1102 | C001-TS-1102 | manual | `tests/manual/TS-1102.md` | inline fixture from scenario Given/Examples | REF-WIN fresh user profile | C001-T-060 |
 | C001-TC-1103 | C001-TS-1103 | integration | `tests/integration/cap11/TS-1103.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |

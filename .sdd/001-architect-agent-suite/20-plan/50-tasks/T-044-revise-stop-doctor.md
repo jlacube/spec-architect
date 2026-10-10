@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Author /architect:revise (CLI revise + impact list), stop handling and /architect:doctor (tool table with remedies of C001-IF-10 §3).
+Author /architect:revise (CLI revise + impact list), stop handling and /architect:doctor (tool table with remedies of C001-IF-10 §3; ripwire detected with `ripwire --version`, never `--doctor`, per C001-IF-14 §2).
 
 ## Targets
 
