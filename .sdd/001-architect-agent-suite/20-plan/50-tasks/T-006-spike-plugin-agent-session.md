@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: [C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-201.1, C001-AC-1102.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-201, C001-TS-1102, C001-TC-201, C001-TC-1102]
 components: [C001-COMP-01, C001-COMP-11]
 risk_refs: [C001-RISK-001]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 4474b63, completed_at: 2026-10-10, notes: "Verdict works-with-caveats (docs/spikes/S-05-plugin-agent.md). D-01/AS-11 holds: plugin agent via --agent is the main session and AskUserQuestion works interactively (P-01 answered); AS-11 fallback not needed. Defects D-S05-1 (Agent(...) grants need plugin-qualified names) and D-S05-2 (AskUserQuestion unavailable headless; affects eval harness T-029) opened. Local marketplace install verified and removed. C001-TC-201 (T-030) and C001-TC-1102 (T-060/T-072) not run here." }
 ---
 
 # C001-T-006 — Spike S-05: plugin agent as main session with AskUserQuestion
