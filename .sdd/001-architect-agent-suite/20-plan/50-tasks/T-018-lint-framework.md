@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-010, C001-T-012]
 implements: [C001-REQ-701, C001-REQ-705, C001-REQ-717, C001-REQ-718, C001-REQ-719, C001-REQ-118, C001-REQ-122]
 satisfies_ac: [C001-AC-701.1, C001-AC-705.1, C001-AC-717.1, C001-AC-718.1, C001-AC-719.1, C001-AC-118.1, C001-AC-122.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-701, C001-TS-705, C001-TS-717, C001-TS-718, C001-TS-719, C
 components: [C001-COMP-04]
 risk_refs: [C001-RISK-006]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c60cda8, completed_at: 2026-10-11, notes: "Engine and 8 rules done (TR-02 added for C001-TS-124); C001-TC-701, 705, 717..719, 124, 128 pass. Quick lint ~470 ms on this repo, full ~700 ms; the NFR-102 p95 on fx-large is measured in C001-T-065. LINT-SEC-001 patterns are in place; the detection corpus is C001-T-054. On this repository the lint reports TR-12 for ideation labels written as short forms in spec prose (IDEA NG-01..06, AS-01..08), example IDs in ideation prose and T-010's text, and two LINT-TXT-001 meta-mentions in ideation.md: residue for C001-T-028, tracked by a test." }
 ---
 
 # C001-T-018 — Lint engine framework and generic rules
