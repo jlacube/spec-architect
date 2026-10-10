@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-018]
 implements: [C001-REQ-410, C001-REQ-413, C001-REQ-415, C001-REQ-420]
 satisfies_ac: [C001-AC-410.1, C001-AC-413.1, C001-AC-415.1, C001-AC-420.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-412, C001-TS-415, C001-TS-417, C001-TS-422, C001-TC-412, C
 components: [C001-COMP-04]
 risk_refs: [C001-RISK-006]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: f3b3c63, completed_at: 2026-10-11, notes: "11 rules done (TR-01, 03, 04, 05, 09, LINT-TS-001, COV-001/002, NFR-001, DOD-001, DELTA-001); C001-TC-412, 415, 417, 422 pass, plus TS-411, 413, 414, 416 (plan owners C001-T-037/038). TR-01..05 give zero findings on this repository, matching the generator (100%). Escalation for C001-T-028: LINT-TS-001 reports 71 approved scenarios (70 without a Given step, C001-TS-205 without a When); a spec revision or a change to C001-REQ-413 is P-01 decision. Quick lint ~580 ms on this repository (C001-NFR-102 threshold 800 ms, measured in C001-T-065)." }
 ---
 
 # C001-T-020 — Lint rules: acceptance, coverage, NFR, DoD, delta evidence
