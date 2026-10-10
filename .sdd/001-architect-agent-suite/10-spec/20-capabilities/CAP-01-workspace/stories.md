@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Workspace, registry and identifiers"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 101-199, REQ: 101-199, TS: 101-199 }
 ---
 

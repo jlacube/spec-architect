@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Workspace, registry and identifiers"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-01 — Acceptance criteria and scenarios

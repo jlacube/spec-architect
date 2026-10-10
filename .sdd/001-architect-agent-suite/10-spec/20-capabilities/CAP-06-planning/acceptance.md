@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Planning and hand-off"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-06 — Acceptance criteria and scenarios

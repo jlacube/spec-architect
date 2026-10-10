@@ -4,7 +4,7 @@ artifact: spec/interface
 kind: conventions
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-IF-04 — ID scheme, EARS shapes, weak words, traceability rules
@@ -73,6 +73,15 @@ document of the change and does not apply TR-12 to them.
 `<sys>` is the longest glossary system name (C001 glossary-delta §2, project glossary or
 COMP names) matching the text between `THE` and `SHALL`; if none matches, rule
 `LINT-EARS-003` warns.
+
+### §3.1 Singularity rule (decided at G2, 2026-10-10)
+
+A requirement is singular when its Statement contains exactly one `SHALL` (checked by
+`LINT-EARS-002`) and that `SHALL` describes **one observable outcome**. The outcome may be
+made of several grouped actions that are verified together (for example C001-REQ-805:
+setting the approval fields and appending the gate-log row is one "approval recorded"
+outcome). Requirements whose actions can succeed or fail independently must be split. The
+critic checks the outcome criterion; the lint checks only the keyword count.
 
 ## §4 Weak-word list (LINT-WORD-001)
 

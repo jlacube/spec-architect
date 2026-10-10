@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Quality: lint, traceability, critic, auditor"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-07 — Acceptance criteria and scenarios

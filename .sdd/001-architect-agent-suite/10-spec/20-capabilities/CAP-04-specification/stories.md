@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Specification authoring"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 401-499, REQ: 401-499, TS: 401-499 }
 ---
 

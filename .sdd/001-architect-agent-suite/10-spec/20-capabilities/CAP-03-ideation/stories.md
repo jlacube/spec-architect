@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Ideation: research, options, decisions"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 ---
 

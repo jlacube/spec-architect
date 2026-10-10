@@ -3,7 +3,7 @@ id: C001-SPEC-ARCH
 artifact: spec/architecture
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 kind: greenfield
 ---
 

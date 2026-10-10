@@ -4,7 +4,7 @@ artifact: spec/interface
 kind: commands
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-IF-10 — Commands and doctor remedies

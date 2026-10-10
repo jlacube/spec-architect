@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Packaging, safety and environment"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 ---
 

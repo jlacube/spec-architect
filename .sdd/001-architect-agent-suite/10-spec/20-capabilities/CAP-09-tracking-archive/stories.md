@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Implementation tracking, orientation and archive"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 ---
 

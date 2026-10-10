@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Architecture, interfaces and diagrams"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 ---
 

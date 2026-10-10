@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Gates, approvals and revisions"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-08 — Acceptance criteria and scenarios

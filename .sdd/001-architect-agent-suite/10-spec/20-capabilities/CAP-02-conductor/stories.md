@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Conductor and interview"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 ---
 

@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Quality: lint, traceability, critic, auditor"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 701-799, REQ: 701-799, TS: 701-799 }
 ---
 

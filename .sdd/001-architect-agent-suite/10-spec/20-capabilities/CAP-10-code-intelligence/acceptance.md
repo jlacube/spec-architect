@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Code intelligence integration"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-10 — Acceptance criteria and scenarios

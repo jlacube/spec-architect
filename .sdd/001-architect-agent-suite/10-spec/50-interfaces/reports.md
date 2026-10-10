@@ -4,7 +4,7 @@ artifact: spec/interface
 kind: report formats
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-IF-11 — Lint report, critic report, ideation readiness checklist

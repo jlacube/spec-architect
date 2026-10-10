@@ -3,7 +3,7 @@ id: C001-SPEC-INDEX
 artifact: spec/index
 change: CHG-001
 phase: 10-spec
-status: in-review
+status: approved
 ---
 
 # C001 — Specification index

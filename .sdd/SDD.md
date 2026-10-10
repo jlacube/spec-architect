@@ -28,5 +28,5 @@ Read `NNN-slug/20-plan/handoff.md` and report progress as described there.
 <!-- sdd:status:begin -->
 | Change | Title | Phase | Status | Tasks done | Open defects | Updated |
 |---|---|---|---|---|---|---|
-| 001 | Architect agent suite | 10-spec | in-review (awaiting G2) | – | 0 | 2026-10-10 |
+| 001 | Architect agent suite | 20-plan | draft (G1, G2 approved) | – | 0 | 2026-10-10 |
 <!-- sdd:status:end -->

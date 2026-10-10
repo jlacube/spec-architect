@@ -3,7 +3,7 @@ id: C001-SPEC-CTX-03
 artifact: spec/context/scope
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 traces_to: [IDEA-§5.3, IDEA-§21, IDEA-§23, Spec-Q1..Q4]
 ---
 

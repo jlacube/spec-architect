@@ -3,7 +3,7 @@ id: C001-SPEC-ERRORS
 artifact: spec/error-catalogue
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001 — Error, warning and rule catalogue

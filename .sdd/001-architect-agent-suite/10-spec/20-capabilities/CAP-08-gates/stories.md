@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Gates, approvals and revisions"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 ---
 

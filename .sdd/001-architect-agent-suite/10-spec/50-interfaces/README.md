@@ -3,7 +3,7 @@ id: C001-SPEC-IF
 artifact: spec/interfaces-registry
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001 — Interface registry

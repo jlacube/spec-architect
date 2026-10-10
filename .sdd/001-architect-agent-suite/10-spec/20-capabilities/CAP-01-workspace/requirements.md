@@ -4,7 +4,7 @@ artifact: spec/requirements
 capability: "Workspace, registry and identifiers"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 delta_default: ADDED
 ---
 

@@ -4,7 +4,7 @@ artifact: spec/interface
 kind: agent definitions
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-IF-09 — Agent definitions

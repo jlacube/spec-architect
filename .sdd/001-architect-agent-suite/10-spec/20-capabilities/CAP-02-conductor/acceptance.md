@@ -4,7 +4,7 @@ artifact: spec/acceptance
 capability: "Conductor and interview"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-CAP-02 — Acceptance criteria and scenarios

@@ -4,7 +4,7 @@ artifact: spec/interface
 kind: hook protocol
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001-IF-07 — Hooks contract and Bash allowlist

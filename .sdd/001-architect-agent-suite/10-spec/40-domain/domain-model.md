@@ -3,7 +3,7 @@ id: C001-SPEC-DOMAIN
 artifact: spec/domain-model
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001 — Domain model

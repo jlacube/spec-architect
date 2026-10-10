@@ -3,7 +3,7 @@ id: C001-SPEC-NFR
 artifact: spec/nfr
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { NFR: "101-899 (by category: 1xx performance & cost, 2xx security & safety, 3xx reliability, 4xx compatibility & portability, 5xx maintainability, 6xx usability, 7xx observability, 8xx licensing)" }
 ---
 

@@ -21,7 +21,7 @@ folder and the rubric) as a second opinion.
 
 | blocker | major | minor |
 |---|---|---|
-| 0 | 3 (1 resolved) | 9 (3 resolved) |
+| 0 | 3 (2 resolved) | 9 (3 resolved) |
 
 ## Findings
 
@@ -47,7 +47,7 @@ folder and the rubric) as a second opinion.
 - **Evidence:** e.g. C001-REQ-805 "SHALL set … `status` … `approved_hash` … and append a row … to the Gate log" — `CAP-08-gates/requirements.md`
 - **Why it matters:** singular in letter (one SHALL, passes LINT-EARS-002) but not in spirit; a validator may find partial conformance hard to report.
 - **Suggested fix:** either split each into atomic requirements, or accept "one observable outcome per requirement" as the singularity rule and document it in the `ears-requirements` skill.
-- **Status:** open — decision for P-01 at G2.
+- **Status:** resolved at G2 — P-01: "ok for one groupe of requirements, no need to split". Rule documented in C001-IF-04 §3.1 (one SHALL = one observable outcome, possibly grouping actions verified together).
 
 ### CR-4 — Token budget thresholds are estimates
 - **Severity:** minor
@@ -101,7 +101,7 @@ folder and the rubric) as a second opinion.
 ### CR-11 — Example IDs collided with this change's prefix
 - **Severity:** minor
 - **Refs:** C001-TS-411, 916 … 918
-- **Evidence:** examples used `C001-REQ-044/050/060`, colliding with real CHG-001 IDs (dangling-reference findings)
+- **Evidence:** examples used change-1 requirement numbers 044, 050 and 060 (prefix C001), colliding with real CHG-001 IDs (dangling-reference findings)
 - **Status:** resolved — examples now use `C002-…`.
 
 ### CR-12 — Prototype check scripts are not in the repository

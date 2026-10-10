@@ -4,7 +4,7 @@ artifact: spec/stories
 capability: "Planning and hand-off"
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 ---
 

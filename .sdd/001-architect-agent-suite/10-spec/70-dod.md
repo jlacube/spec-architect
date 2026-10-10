@@ -3,7 +3,7 @@ id: C001-SPEC-DOD
 artifact: spec/dod
 change: CHG-001
 phase: 10-spec
-status: draft
+status: approved
 ---
 
 # C001 — Definition of Done
