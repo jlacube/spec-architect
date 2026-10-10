@@ -1,7 +1,7 @@
 ---
 sdd_version: 1
 workspace: .sdd
-generator: manual (bootstrap — Architect suite not yet built)
+generator: architect-plugin@0.0.1
 id_scheme: "C{NNN}-{TYPE}-{seq}"
 ---
 # Spec-Driven Development workspace
@@ -28,5 +28,5 @@ Read `NNN-slug/20-plan/handoff.md` and report progress as described there.
 <!-- sdd:status:begin -->
 | Change | Title | Phase | Status | Tasks done | Open defects | Updated |
 |---|---|---|---|---|---|---|
-| 001 | Architect agent suite | 20-plan | approved (G1–G3) — ready for implementation | 0/58 | 0 | 2026-10-10 |
+| 001 | Architect agent suite | 20-plan | approved | 14/57 | 0 | 2026-10-11 |
 <!-- sdd:status:end -->

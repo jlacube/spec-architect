@@ -1,45 +1,44 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-10T22:00:00Z",
+  "generated_at": "2026-10-10T23:00:31Z",
   "changes": [
     {
       "id": "CHG-001",
       "slug": "001-architect-agent-suite",
       "title": "Architect agent suite",
       "kind": "greenfield",
+      "profile": "full",
+      "status": "active",
       "phase": "20-plan",
       "phases": {
         "00-ideation": {
           "status": "approved",
           "approved_hash": "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401",
-          "hash_scope": "body excluding YAML frontmatter, LF-normalised, trailing whitespace stripped",
           "approved_at": "2026-10-10",
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:ce832cee236b2639113780bf0042139124deebf886e31ed3af6813a3c4c91af1",
-          "hash_scope": "C001-IF-13 §2 (multi-file, generated files excluded)",
+          "approved_hash": "sha256:1b861c673c78dd87cf5d84cbcfa3866ac634ccab330a218f6cc8fcd8b769a40b",
           "approved_at": "2026-10-10",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
           "status": "approved",
-          "approved_hash": "sha256:e31a6cbd289c98fec43f8e2786eee58f8c2c48502618b90c79699663f4a78483",
-          "hash_scope": "C001-IF-13 §2 (multi-file, generated files excluded)",
+          "approved_hash": "sha256:200d2d3a6846a3b0da96c06943ef8aa57f72cbdae69ecf1a1b59fdcf15320db8",
           "approved_at": "2026-10-10",
           "approved_by": "jerome.lacube"
         }
       },
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "tasks": {
-          "total": 58,
-          "done": 0,
+          "total": 57,
+          "done": 14,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
-        "last_report": null
+        "last_report": "2026-10-11T00:00:00Z"
       },
       "defects": [],
       "waivers": []
