@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-1
-status: in-progress
+status: done
 depends_on: []
 implements: [C001-REQ-1112]
 satisfies_ac: [C001-AC-1112.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1113, C001-TC-1113]
 components: [C001-COMP-11, C001-COMP-12]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 26d092f, completed_at: 2026-10-10, notes: "Scaffolding, toolchain, plugin skeleton, manifests and MIT license in place. npm run check (tsc typecheck + node --test) passes 6/6 incl. C001-TC-1113 on Node 22.13 (REF-WIN); Node 20 not installed locally, not yet run. plugin.json/marketplace.json pass claude plugin validate; marketplace gained metadata.description to clear its warning. Manifest version 0.0.1 per this task (IF-08 example shows the 0.1.0 release value). TypeScript resolved to 7.x. scripts/sdd.mjs is committed so the plugin installs without a build." }
 ---
 
 # C001-T-001 — Repository scaffolding and toolchain
