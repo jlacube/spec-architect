@@ -14,6 +14,7 @@ import { splitFrontmatter } from "../model/frontmatter.ts";
 import { buildChangeGraph, parseArtifact, type ChangeGraph } from "../model/graph.ts";
 import { loadLedger } from "../workspace/ledger.ts";
 import { rebuildRegistry, registryDrift } from "../workspace/status.ts";
+import { gatherSpecFacts } from "./spec-facts.ts";
 import type { Finding, LintChange, LintContext, LintRule, Located, Phase, Statement, TextFile, WorkspaceFacts } from "./types.ts";
 
 export interface LintReport {
@@ -129,7 +130,7 @@ export function lintWorkspace(root: string, options: LintOptions): LintReport {
   const changes: LintChange[] = selected.map((f) => {
     const graph = buildChangeGraph(f.dir);
     trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
-    return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph };
+    return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
   });
 
   // Workspace-wide definitions, tombstones and living files (not needed in quick mode).

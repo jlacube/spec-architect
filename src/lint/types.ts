@@ -36,6 +36,19 @@ export interface LintChange {
   folder: string;
   profile: "lite" | "full";
   graph: ChangeGraph;
+  spec: SpecFacts;
+}
+
+/** Facts of a change's spec that the graph does not hold (C001-IF-04 §3; C001-REQ-402, 403, 404). */
+export interface SpecFacts {
+  /** `kind` of change.md (`greenfield` when absent). */
+  kind: string;
+  /** Persona IDs defined by `P-NN` headings in the change's 10-spec. */
+  personas: ReadonlySet<string>;
+  /** System names allowed after `THE`: "System names" tables (change and project glossary) and COMP titles. */
+  systems: readonly string[];
+  /** Lines of each heading-defined user story's section, by ID; `line` is the heading line. */
+  sections: ReadonlyMap<string, { line: number; lines: string[] }>;
 }
 
 /** A requirement's Statement field, located for reporting. */
