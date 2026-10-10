@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-010, C001-T-011]
 implements: [C001-REQ-702, C001-REQ-703, C001-REQ-704]
 satisfies_ac: [C001-AC-702.1, C001-AC-703.1, C001-AC-704.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-702, C001-TS-703, C001-TS-704, C001-TC-702, C001-TC-703, C
 components: [C001-COMP-07]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8ae2c26, completed_at: 2026-10-11, notes: "CLI front-end done; all 18 ERR/WARN-CLI codes mirror errors.md (tested). C001-TC-703 passes end to end on the bundled CLI (Ajv schema check, also with SDD_DEBUG=1). C001-TC-702 and the error row of C001-TC-704 pass through the real dispatcher/format/exit path with test-double rules, since lint rules arrive in C001-T-018/T-019; T-019 re-runs TS-702 with the real LINT-EARS-002. Hook commands are still stubs that exit 2: do not wire hooks.json before T-050..T-052. Node start-up is ~200 ms here, the CLI adds ~30 ms: keep the guards' load path lean for C001-NFR-103 (300 ms). Node 22.13 only." }
 ---
 
 # C001-T-012 — CLI front-end, output formats and error catalogue
