@@ -4,7 +4,7 @@ artifact: ideation
 title: "Architect — a Spec-Driven Development agent suite for Claude Code (ideation)"
 phase: 00-ideation
 status: draft            # draft → in-review → approved (gate G1)
-version: 0.1.1
+version: 0.1.2
 created: 2026-10-10
 updated: 2026-10-10
 authors:
@@ -86,6 +86,7 @@ supersedes: null
 |---|---|---|
 | 0.1.0 | 2026-10-10 | First full draft after 20-question Q&A and web research |
 | 0.1.1 | 2026-10-10 | G1 pre-review: OQ-02 decided (keep 10 agents), OQ-05 decided (lite profile); OQ-07 under discussion; repo initialised with git (OQ-14 closed) |
+| 0.1.2 | 2026-10-10 | OQ-07 decided: archive in v1; brownfield `_living/` seeded with a capability inventory (no requirements) at init. All G1-blocking questions closed |
 
 ### 1.2 Conventions used in this document
 
@@ -709,7 +710,7 @@ IDs are **never reused**, and deleted IDs are tombstoned in the change's `ids.js
 happens after implementation, which is out of scope for our agents. We provide
 `/architect:archive <change>` as a **spec-maintenance** command (it touches only `.sdd/`), run
 once the implementer reports the change done. That fits the scope, because it edits specs,
-not code. → **OQ-07**.
+not code. → **[DECIDED OQ-07a: in v1]**.
 
 ### OA-10 — Running the interview when subagents cannot ask
 
@@ -830,7 +831,7 @@ These principles turn the Q&A into rules the agents and the critic can check.
 | Purpose | Create `.sdd/` in a target repo, the constitution and the tool inventory |
 | Inputs | Target repo; optional existing docs (README, ADRs, CLAUDE.md) |
 | Steps | 1. `sdd.mjs init` scaffolds `.sdd/` (§11). 2. `sdd-cartographer` runs a **baseline survey** (languages, size, ripwire `--doctor`, Serena availability, test layout, build commands). 3. The conductor runs a short interview (≤2 rounds) to draft `_constitution/constitution.md` (quality bar, NFR defaults, forbidden tech, DoD defaults). 4. Tool inventory written to `.sdd/_constitution/toolchain.md`. |
-| Outputs | `.sdd/SDD.md`, `registry.json`, `_constitution/{constitution.md, toolchain.md, glossary.md}`, `_living/` (empty, or seeded from the baseline survey if you ask — OQ-07) |
+| Outputs | `.sdd/SDD.md`, `registry.json`, `_constitution/{constitution.md, toolchain.md, glossary.md}`, `_living/` — empty for greenfield; for brownfield, one `CAP-*.md` stub per detected capability containing a **capability inventory** only (purpose line, entry points, main modules, owning tests, evidence layer), no requirements [DECIDED OQ-07b] |
 | Exit | Constitution `approved` (gate G0, lightweight) |
 
 ### 10.3 Phase 1 — Ideation (`00-ideation/`)
@@ -2023,7 +2024,7 @@ Each has a recommendation. Answer at G1, or defer explicitly to the spec phase.
 | OQ-04 | Adopt **DeepWiki MCP** for the researcher (free, public repos)? | Yes | No |
 | OQ-05 | Provide a "lite" profile for small changes (fewer mandatory files, same IDs/gates)? | **[DECIDED 2026-10-10] Yes**, defined in the constitution; same phases, IDs and gates, fewer mandatory files. Becomes a requirement in CHG-001's spec. | closed |
 | OQ-06 | ripwire's 17 bundled skills: install globally, or keep only our `code-discovery` skill and let the cartographer call ripwire `--help-task`? | Ours only; disable the global install of ripwire skills | No |
-| OQ-07 | Is `/architect:archive` (merging deltas into `_living/` after implementation) in scope for v1? And should `init` seed `_living/` from code for brownfield repos (reverse-spec)? | Archive: yes (it edits specs only). Reverse-spec seeding: v2 | **Yes** |
+| OQ-07 | (a) Is `/architect:archive` (merging a finished change's deltas into `_living/`) in scope for v1? (b) How does `_living/` start on a brownfield repo? | **[DECIDED 2026-10-10]** (a) **Yes, v1**: archive edits `.sdd/` only, so it respects Q2. (b) **Capability inventory at init**: the cartographer lists capabilities with code pointers (entry points, main modules, owning tests) and writes **no requirements**; `_living/CAP-*.md` files fill in as changes are archived. Full reverse-spec stays v2. | closed |
 | OQ-08 | Agent memory for cartographer + researcher only? | Yes | No |
 | OQ-09 | Also emit `.feature` files (executable Gherkin) from scenarios? | Optional command, off by default | No |
 | OQ-10 | Test-designer model: Opus everywhere, or Sonnet for bulk scenario drafting with an Opus review? | Opus for v1; measure, then decide | No |
