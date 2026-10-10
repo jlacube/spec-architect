@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-018]
 implements: [C001-REQ-403, C001-REQ-405, C001-REQ-406, C001-REQ-407, C001-REQ-408]
 satisfies_ac: [C001-AC-403.1, C001-AC-405.1, C001-AC-405.2, C001-AC-406.1, C001-AC-407.1, C001-AC-408.1, C001-AC-408.2]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-403, C001-TS-405, C001-TS-406, C001-TS-407, C001-TS-408, C
 components: [C001-COMP-04]
 risk_refs: [C001-RISK-006]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c51c1ad, completed_at: 2026-10-11, notes: "7 rules done (LINT-US-001/002, LINT-REQ-001, LINT-EARS-001/002/003, LINT-WORD-001); C001-TC-403, 405..410 pass, plus TS-402/404 (plan owner C001-T-037) and TS-702 against the real LINT-EARS-002. Zero findings for these rules on this repository, as with tools/prototypes/speccheck.py. Deviation for review: C001-REQ-402 lists Context & notes as a story field, but 66 of the 80 CHG-001 stories have none, so LINT-US-002 does not check it (nor Out of scope, which is conditional)." }
 ---
 
 # C001-T-019 — Lint rules: stories and EARS requirements
