@@ -20,7 +20,15 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Build the harness that runs agent-behaviour scenarios (level eval): scripted `claude -p --agent` sessions on fixtures, transcript parsing and assertions, `claude plugin eval` integration, and the tiered run policy of C001-ADR-003 with per-run cost capture.
+Build the harness that runs agent-behaviour scenarios (level eval): scripted Claude Code sessions with `--agent` on fixtures, transcript parsing and assertions, `claude plugin eval` integration, and the tiered run policy of C001-ADR-003 with per-run cost capture.
+
+**Prerequisite from spike S-05 (D-S05-2):** AskUserQuestion is unavailable in headless Claude Code (`-p`,
+also with stream-json input). Before any M-3 eval is written, this task must establish a harness that
+can run interview scenarios and answer AskUserQuestion with scripted choices: either by driving
+interactive sessions (for example through a pseudo-terminal) or through the Agent SDK. The mechanism is
+chosen in this task, recorded as an ADR, and demonstrated by one scenario that asserts an
+AskUserQuestion call and its answer. Headless runs use the desktop-bundled Claude Code (≥ 2.1.295,
+C001-REQ-1123) with the parent session's environment variables removed (`docs/spikes/S-04-hooks.md`).
 
 ## Targets
 
@@ -39,14 +47,16 @@ Build the harness that runs agent-behaviour scenarios (level eval): scripted `cl
 
 ## Step outline (no production code)
 
-1. Implement session runner with fixture copy per run.
-2. Implement transcript assertions used by eval TCs.
-3. Capture token usage (input, output, cache read/write) per agent and model, and timings (session, subagent, tool call) for every run into evals/results/*.json, using Claude Code usage/transcript data.
-4. Implement the aggregate metrics report with release-tier cost and duration projection.
+1. Choose and prototype the interview-capable session mechanism (pseudo-terminal or Agent SDK); record the decision as an ADR.
+2. Implement session runner with fixture copy per run.
+3. Implement transcript assertions used by eval TCs.
+4. Capture token usage (input, output, cache read/write) per agent and model, and timings (session, subagent, tool call) for every run into evals/results/*.json, using Claude Code usage/transcript data.
+5. Implement the aggregate metrics report with release-tier cost and duration projection.
 
 ## Verification
 
 - A sample eval (C001-TC-206 against a stub agent) runs in all three tiers
+- One sample interview scenario asserts an AskUserQuestion call answered with a scripted choice
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when

@@ -32,7 +32,7 @@ The suite is built **from the deterministic core outwards** (C001-ADR-001):
 | `sdd task set` / `defect` in M-2 (not M-5) | Implementers of this plan (C001-ADR-004) report progress with the real protocol from M-3 onward | C001-REQ-901, C001-ADR-004 |
 | Eval harness first in M-3 | Every M-3/M-4 agent task is verified by eval-level test cases | C001-ADR-003 |
 | Guards in M-5, not M-1 | Guard decisions depend on S-04 and must be tested against real Architect agents | RISK-002 |
-| Archify outputs for CHG-001 in M-7 | Deferred by Spec-Q3; done via a revision of 60-architecture to dogfood `/architect:revise` | T-071 |
+| Archify outputs for CHG-001 in M-7 | Deferred by Spec-Q3; done via a revision of 60-architecture to dogfood `/architect:revise`. Dropped 2026-10-10: Archify is unusable on Windows 11 (spike S-03) | T-071 (dropped) |
 | Constitution for this repo in M-7 | The constitution interview needs the conductor (M-3) and doctor (M-4) | CR-9, T-070 |
 
 ## 3. Milestones
@@ -66,6 +66,17 @@ marks itself stale (C001-REQ-810) and the affected tasks are revised. Known cont
 | S-02 Serena Windows | Install or LSP failures | Serena optional; LSP/grep layers |
 | S-03 Archify | License not permissive or headless failure | Mermaid-only (C001-REQ-507); T-071 dropped with a waiver |
 | S-06 tool names / skill cost | Names differ; cost too high | Update C001-IF-09 names; reduce preloads, move content to `references/` |
+
+Outcomes (2026-10-10, reports in `docs/spikes/`), applied by the G2/G3 revisions of 2026-10-10:
+
+| Spike | Verdict | Effect on spec and plan |
+|---|---|---|
+| S-01 ripwire | works-with-caveats | bounding flag per verb family, answer exit codes (C001-REQ-1003, 1010, C001-IF-14 §2) |
+| S-02 Serena | works-with-caveats | read-only launch with a plugin mode file, symbol tools only, data outside the repository (C001-REQ-1006, 1007, 1013, C001-IF-14 §4) |
+| S-03 Archify | fallback-only | Mermaid only; C001-REQ-504…506, 517 deferred; T-071 dropped with a waiver |
+| S-04 hook identity | works | primary guard design; fallback C001-REQ-1105 replaced by minimum Claude Code version C001-REQ-1123 |
+| S-05 plugin agent | works-with-caveats | AS-11 holds (no fallback needed); qualified `Agent(...)` names; interview evals need an interactive or SDK harness (T-029) |
+| S-06 skills and MCP | works-with-caveats | plugin-scoped MCP tool names with `ToolSearch`; skill budget in characters (C001-NFR-105) |
 
 ## 5. Ways of working for implementers
 

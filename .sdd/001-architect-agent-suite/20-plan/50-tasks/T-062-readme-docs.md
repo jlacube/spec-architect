@@ -26,7 +26,7 @@ Write the README (Windows-first install, optional tools, quickstart, commands, a
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `plugins/architect/README.md and README.md` | sections of C001-REQ-1115; macOS/Linux variants marked “prepared, untested”; ripwire install per spike S-01 (optional; Windows x64 zip, verify `.sha256`, add the folder to the user PATH, do not install the bundled hooks/skills) |
+| add | `plugins/architect/README.md and README.md` | sections of C001-REQ-1115; macOS/Linux variants marked “prepared, untested”; ripwire install per spike S-01 (optional; Windows x64 zip, verify `.sha256`, add the folder to the user PATH, do not install the bundled hooks/skills); minimum Claude Code 2.1.295 (C001-REQ-1123); Serena 1.7.x with uv and Node on PATH (spike S-02); Archify not used in v1 (spike S-03) |
 
 ## Preconditions
 

@@ -7,9 +7,9 @@ artifact: plan/task
 milestone: C001-M-4
 status: todo
 depends_on: [C001-T-034, C001-T-041]
-implements: [C001-REQ-812, C001-REQ-813, C001-REQ-815, C001-REQ-1110, C001-REQ-1111]
-satisfies_ac: [C001-AC-812.1, C001-AC-813.1, C001-AC-815.1, C001-AC-1110.1, C001-AC-1111.1]
-verified_by: [C001-TS-814, C001-TS-815, C001-TS-817, C001-TS-1111, C001-TS-1112, C001-TC-814, C001-TC-815, C001-TC-817, C001-TC-1111, C001-TC-1112]
+implements: [C001-REQ-812, C001-REQ-813, C001-REQ-815, C001-REQ-1110, C001-REQ-1111, C001-REQ-1013, C001-REQ-1123]
+satisfies_ac: [C001-AC-812.1, C001-AC-813.1, C001-AC-815.1, C001-AC-1110.1, C001-AC-1111.1, C001-AC-1013.1, C001-AC-1123.1]
+verified_by: [C001-TS-814, C001-TS-815, C001-TS-817, C001-TS-1111, C001-TS-1112, C001-TS-1015, C001-TS-1124, C001-TC-814, C001-TC-815, C001-TC-817, C001-TC-1111, C001-TC-1112, C001-TC-1015, C001-TC-1124]
 components: [C001-COMP-01, C001-COMP-05, C001-COMP-09]
 risk_refs: []
 estimate: M
@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Author /architect:revise (CLI revise + impact list), stop handling and /architect:doctor (tool table with remedies of C001-IF-10 §3; ripwire detected with `ripwire --version`, never `--doctor`, per C001-IF-14 §2).
+Author /architect:revise (CLI revise + impact list), stop handling and /architect:doctor (tool table with remedies of C001-IF-10 §3; ripwire detected with `ripwire --version`, never `--doctor`, per C001-IF-14 §2; Claude Code version check of C001-REQ-1123; Serena configuration in the plugin data folder per C001-REQ-1013 and C001-IF-14 §4, written before Serena first starts; the same Serena step runs during `/architect:init`).
 
 ## Targets
 
@@ -42,7 +42,7 @@ Author /architect:revise (CLI revise + impact list), stop handling and /architec
 
 ## Verification
 
-- C001-TC-814, 815, 817, 1111, 1112 pass
+- C001-TC-814, 815, 817, 1111, 1112, 1015, 1124 pass
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when

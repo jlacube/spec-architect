@@ -27,8 +27,9 @@ Finalise the installable plugin: manifests, .mcp.json (context7, deepwiki, seren
 | Kind | Target | Change |
 |---|---|---|
 | modify | `plugins/architect/.claude-plugin/plugin.json` | version, description, author |
-| add | `plugins/architect/.mcp.json` | servers per C001-REQ-1108 with S-02 launch args |
-| modify | `plugins/architect/agents/*.md` | tools exactly per C001-IF-09 |
+| add | `plugins/architect/.mcp.json` | servers per C001-REQ-1108; Serena entry per C001-IF-14 §4 (launch arguments, `SERENA_HOME=${CLAUDE_PLUGIN_DATA}/serena`) |
+| add | `plugins/architect/serena/architect-read-only.yml` | Serena read-only mode file per C001-IF-14 §4 |
+| modify | `plugins/architect/agents/*.md` | tools exactly per C001-IF-09 (plugin-qualified `Agent(...)` names, `mcp__plugin_architect_<server>__<tool>`, `ToolSearch` for MCP agents; spikes S-05, S-06) |
 
 ## Preconditions
 

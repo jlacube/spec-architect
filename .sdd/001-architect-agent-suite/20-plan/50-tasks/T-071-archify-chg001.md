@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
-status: todo
+status: dropped
 depends_on: [C001-T-042, C001-T-004]
 implements: []
 satisfies_ac: [C001-AC-504.1, C001-AC-505.1]
@@ -13,10 +13,14 @@ verified_by: [C001-TS-504, C001-TS-505, C001-TC-504, C001-TC-505]
 components: [C001-COMP-02]
 risk_refs: [C001-RISK-009]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "Dropped 2026-10-10 by P-01 through the plan revision after spikes S-02..S-06: Archify 3.0.1 produces no output on Windows 11 (spike S-03, D-S03-1); C001-REQ-504/505 tombstoned and deferred to a later change. Waiver: no Archify outputs in CHG-001." }
 ---
 
 # C001-T-071 — Archify architecture outputs for CHG-001
+
+> **Dropped (2026-10-10).** P-01 approved dropping this task with a waiver in the plan revision after
+> spikes S-02 … S-06: Archify cannot produce output on Windows 11 (`docs/spikes/S-03-archify.md`), and the
+> requirements it served (former C001-REQ-504, 505) are deferred to a later change.
 
 ## Intent
 

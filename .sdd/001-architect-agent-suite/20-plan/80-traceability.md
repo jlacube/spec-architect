@@ -11,9 +11,9 @@ generated: true
 
 | Rule | Coverage |
 |---|---|
-| TR-06 Every REQ implemented by ≥ 1 task | 213 / 213 |
-| TR-07 Every task links ≥ 1 REQ/AC and ≥ 1 TS/TC | 58 / 58 |
-| TR-08 Every TS mapped to ≥ 1 TC | 236 / 236 |
+| TR-06 Every REQ implemented by ≥ 1 task | 210 / 210 |
+| TR-07 Every task links ≥ 1 REQ/AC and ≥ 1 TS/TC | 57 / 57 (C001-T-071 dropped) |
+| TR-08 Every TS mapped to ≥ 1 TC | 233 / 233 |
 | TR-11 Task DAG acyclic, dependencies resolve | yes |
 
 ## REQ → task → test cases → DoD
@@ -109,9 +109,6 @@ generated: true
 | C001-REQ-501 | C001-T-042 | TC-501 | C001-DOD-005 |
 | C001-REQ-502 | C001-T-042 | TC-502 | C001-DOD-005 |
 | C001-REQ-503 | C001-T-021 | TC-503 | C001-DOD-005 |
-| C001-REQ-504 | C001-T-042 | TC-504 | C001-DOD-005 |
-| C001-REQ-505 | C001-T-042 | TC-505 | C001-DOD-005 |
-| C001-REQ-506 | C001-T-042 | TC-506 | C001-DOD-005 |
 | C001-REQ-507 | C001-T-042 | TC-507 | C001-DOD-005 |
 | C001-REQ-508 | C001-T-042 | TC-508 | C001-DOD-005 |
 | C001-REQ-509 | C001-T-021 | TC-509 | C001-DOD-005 |
@@ -122,7 +119,6 @@ generated: true
 | C001-REQ-514 | C001-T-042 | TC-514 | C001-DOD-005 |
 | C001-REQ-515 | C001-T-042 | TC-515 | C001-DOD-005 |
 | C001-REQ-516 | C001-T-042 | TC-516 | C001-DOD-005 |
-| C001-REQ-517 | C001-T-042 | TC-517 | C001-DOD-005 |
 | C001-REQ-601 | C001-T-043 | TC-601 | C001-DOD-006 |
 | C001-REQ-602 | C001-T-043 | TC-602 | C001-DOD-006 |
 | C001-REQ-603 | C001-T-022 | TC-603 | C001-DOD-006 |
@@ -211,11 +207,11 @@ generated: true
 | C001-REQ-1010 | C001-T-041 | TC-1011, TC-1014 | C001-DOD-010 |
 | C001-REQ-1011 | C001-T-041 | TC-1012 | C001-DOD-010 |
 | C001-REQ-1012 | C001-T-041 | TC-1013 | C001-DOD-010 |
+| C001-REQ-1013 | C001-T-044 | TC-1015 | C001-DOD-010 |
 | C001-REQ-1101 | C001-T-060 | TC-1101 | C001-DOD-020 |
 | C001-REQ-1102 | C001-T-060 | TC-1102 | C001-DOD-020 |
 | C001-REQ-1103 | C001-T-050 | TC-1103, TC-1104 | C001-DOD-020 |
 | C001-REQ-1104 | C001-T-050 | TC-1105 | C001-DOD-020 |
-| C001-REQ-1105 | C001-T-050 | TC-1106 | C001-DOD-020 |
 | C001-REQ-1106 | C001-T-051 | TC-1107 | C001-DOD-020 |
 | C001-REQ-1107 | C001-T-051 | TC-1108 | C001-DOD-020 |
 | C001-REQ-1108 | C001-T-060 | TC-1109 | C001-DOD-020 |
@@ -233,6 +229,7 @@ generated: true
 | C001-REQ-1120 | C001-T-061 | TC-1121 | C001-DOD-020 |
 | C001-REQ-1121 | C001-T-052 | TC-1122 | C001-DOD-020 |
 | C001-REQ-1122 | C001-T-061 | TC-1123 | C001-DOD-020 |
+| C001-REQ-1123 | C001-T-044 | TC-1124 | C001-DOD-020 |
 
 ## Task → milestone
 
@@ -276,10 +273,10 @@ generated: true
 | C001-T-038 | C001-M-3 | 3 | 3 |
 | C001-T-039 | C001-M-3 | 8 | 8 |
 | C001-T-041 | C001-M-4 | 13 | 14 |
-| C001-T-042 | C001-M-4 | 14 | 14 |
+| C001-T-042 | C001-M-4 | 10 | 10 |
 | C001-T-043 | C001-M-4 | 10 | 13 |
-| C001-T-044 | C001-M-4 | 5 | 5 |
-| C001-T-050 | C001-M-5 | 3 | 4 |
+| C001-T-044 | C001-M-4 | 7 | 7 |
+| C001-T-050 | C001-M-5 | 2 | 3 |
 | C001-T-051 | C001-M-5 | 2 | 2 |
 | C001-T-052 | C001-M-5 | 3 | 3 |
 | C001-T-053 | C001-M-5 | 9 | 9 |
@@ -291,7 +288,7 @@ generated: true
 | C001-T-064 | C001-M-6 | 1 | 1 |
 | C001-T-065 | C001-M-6 | 0 | 2 |
 | C001-T-070 | C001-M-7 | 0 | 2 |
-| C001-T-071 | C001-M-7 | 0 | 2 |
+| C001-T-071 | C001-M-7 | dropped | dropped |
 | C001-T-072 | C001-M-7 | 0 | 1 |
 | C001-T-073 | C001-M-7 | 0 | 2 |
 | C001-T-074 | C001-M-7 | 0 | 3 |

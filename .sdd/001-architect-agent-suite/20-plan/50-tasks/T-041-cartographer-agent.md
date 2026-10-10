@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Author sdd-cartographer with the layer ladder, budgets, disclosures, evidence format, toolchain record, capability inventory, baseline survey and impact files. ripwire usage follows C001-IF-14 §2 as verified by spike S-01 (`docs/spikes/S-01-ripwire.md`): one bounding flag per verb family, `--test-gate` exit 4 treated as an answer, header attributes mapped to disclosures, availability probed with `ripwire --version`.
+Author sdd-cartographer with the layer ladder, budgets, disclosures, evidence format, toolchain record, capability inventory, baseline survey and impact files. ripwire usage follows C001-IF-14 §2 as verified by spike S-01 (`docs/spikes/S-01-ripwire.md`): one bounding flag per verb family, `--test-gate` exit 4 treated as an answer, header attributes mapped to disclosures, availability probed with `ripwire --version`. Serena usage follows C001-IF-14 §4 (spikes S-02, S-06): tools granted as `mcp__plugin_architect_serena__<tool>` together with `ToolSearch`; retry or fall back (C001-REQ-1010) while Serena is still connecting; convert Serena's 0-based lines to 1-based evidence lines.
 
 ## Targets
 

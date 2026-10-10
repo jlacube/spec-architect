@@ -77,7 +77,7 @@ flowchart TB
   end
   subgraph M7["C001-M-7 Release and dogfood"]
     T070["T-070 Constitution for this repository via /architect:init"]
-    T071["T-071 Archify architecture outputs for CHG-001"]
+    T071["T-071 Archify architecture outputs for CHG-001 (dropped)"]
     T072["T-072 Release gate v0.1.0"]
     T073["T-073 Dogfood: greenfield change CHG-002 through G1–G3"]
     T074["T-074 Dogfood: brownfield change CHG-003 and Superpowers execution"]
@@ -183,8 +183,6 @@ flowchart TB
   T027 --> T065
   T044 --> T070
   T060 --> T070
-  T042 --> T071
-  T004 --> T071
   T061 --> T072
   T062 --> T072
   T063 --> T072
@@ -193,7 +191,6 @@ flowchart TB
   T054 --> T072
   T053 --> T072
   T070 --> T072
-  T071 --> T072
   T072 --> T073
   T072 --> T074
   T073 --> T075
@@ -258,8 +255,8 @@ flowchart TB
 | C001-M-6 | C001-T-064 | Dormant cross-platform CI workflows | S | T-061 |
 | C001-M-6 | C001-T-065 | NFR measurements: performance, coverage, compatibility | M | T-061, T-052, T-027 |
 | C001-M-7 | C001-T-070 | Constitution for this repository via /architect:init | S | T-044, T-060 |
-| C001-M-7 | C001-T-071 | Archify architecture outputs for CHG-001 | S | T-042, T-004 |
-| C001-M-7 | C001-T-072 | Release gate v0.1.0 | M | T-061, T-062, T-063, T-064, T-065, T-054, T-053, T-070, T-071 |
+| C001-M-7 | C001-T-071 | Archify architecture outputs for CHG-001 (dropped 2026-10-10, spike S-03) | S | — |
+| C001-M-7 | C001-T-072 | Release gate v0.1.0 | M | T-061, T-062, T-063, T-064, T-065, T-054, T-053, T-070 |
 | C001-M-7 | C001-T-073 | Dogfood: greenfield change CHG-002 through G1–G3 | M | T-072 |
 | C001-M-7 | C001-T-074 | Dogfood: brownfield change CHG-003 and Superpowers execution | L | T-072 |
 | C001-M-7 | C001-T-075 | Archive CHG-001 into living specs | S | T-073, T-074, T-053 |

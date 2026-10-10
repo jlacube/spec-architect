@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Author agents/sdd-conductor.md per C001-IF-09 A0 with its operating loop (orient, plan, delegate, interview, gate), including orientation over SDD.md/registry/change.md and surfacing open defects.
+Author agents/sdd-conductor.md per C001-IF-09 A0 with its operating loop (orient, plan, delegate, interview, gate), including orientation over SDD.md/registry/change.md and surfacing open defects. Spike S-05: grant specialists by plugin-qualified name (`Agent(architect:sdd-…)`; short names admit no agent), and run specialists in the foreground or wait for their hand-back before using a result or presenting a gate (subagents may launch asynchronously).
 
 ## Targets
 

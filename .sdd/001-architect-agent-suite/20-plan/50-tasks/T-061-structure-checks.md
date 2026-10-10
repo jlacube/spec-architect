@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Implement the PLG-* checks of C001-IF-08 §3, the bundled-dependency license allowlist with THIRD_PARTY_NOTICES.md generation, and the aggregate `npm run check`.
+Implement the PLG-* checks of C001-IF-08 §3 (PLG-SIZE-001 in characters per C001-NFR-105: ≤ 24,000 per skill, ≤ 64,000 per agent; PLG-TOOLS-001 against the plugin-scoped names of C001-IF-09), the bundled-dependency license allowlist with THIRD_PARTY_NOTICES.md generation, and the aggregate `npm run check`.
 
 ## Targets
 
