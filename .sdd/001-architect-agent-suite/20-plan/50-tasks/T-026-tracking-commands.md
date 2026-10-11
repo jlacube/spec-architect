@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-017]
 implements: [C001-REQ-901, C001-REQ-902, C001-REQ-903, C001-REQ-904, C001-REQ-907, C001-REQ-908, C001-REQ-910, C001-REQ-922, C001-REQ-923]
 satisfies_ac: [C001-AC-901.1, C001-AC-901.2, C001-AC-902.1, C001-AC-903.1, C001-AC-904.1, C001-AC-907.1, C001-AC-908.1, C001-AC-910.1, C001-AC-922.1, C001-AC-923.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-901, C001-TS-902, C001-TS-903, C001-TS-904, C001-TS-905, C
 components: [C001-COMP-06]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: ffe41ae, completed_at: 2026-10-11, notes: "task set and defect add/close/reopen done; C001-TC-901..905, 908, 909, 911, 923, 924 pass. Reported with sdd task set itself. The registry schema has no defect history field, so reopen history stays in change.md (spec gap noted for C001-T-028). Same-status updates (for example done to done) are refused as the state machine lists no such transition." }
 ---
 
 # C001-T-026 — Tracking commands: task set, defect add/close/reopen
