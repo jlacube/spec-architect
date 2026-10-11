@@ -1,0 +1,171 @@
+{
+  "scenario": "TS-217",
+  "title": "Brief size discipline",
+  "tier": "dev",
+  "label": "t032",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:55:49.703Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.1470339,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "no specialist dispatched"
+      ],
+      "metrics": {
+        "cost_usd": 0.1470339,
+        "session_ms": 66578,
+        "api_ms": 32622,
+        "turns": 20,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1220,
+            "output": 23,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001335
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 3278,
+            "cache_read": 109162,
+            "cache_write": 11892,
+            "cost_usd": 0.1469004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 3278,
+              "cache_read": 109162,
+              "cache_write": 11892
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bcafez3p2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Glob": 1,
+          "Read": 4,
+          "Skill": 1,
+          "Edit": 1,
+          "TaskCreate": 8,
+          "Bash": 1,
+          "TaskUpdate": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 160
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 60
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 50
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 47
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 9
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 12
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 13
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33885
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 33448
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 33047
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-217-2026-10-11T09-54-42-130Z-run1.json"
+    }
+  ]
+}

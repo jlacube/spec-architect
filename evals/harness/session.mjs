@@ -51,9 +51,16 @@ export async function runSession({ cwd, prompt, agent, plugins = [], answer = fi
   if (agent) options.agent = agent;
   if (model) options.model = model;
   let result = null;
-  for await (const message of query({ prompt, options })) {
-    stamp({ type: "sdk", message });
-    if (message.type === "result") result = message;
+  try {
+    for await (const message of query({ prompt, options })) {
+      stamp({ type: "sdk", message });
+      if (message.type === "result") result = message;
+    }
+  } catch (e) {
+    // An error result (for example the turn limit) ends the iteration with an exception after the
+    // result message; the transcript up to there is still graded and its cost still counted.
+    stamp({ type: "harness", event: "error", message: e instanceof Error ? e.message : String(e) });
+    if (!result) throw e;
   }
   return { transcript, answers, result, wallMs: Date.now() - t0 };
 }

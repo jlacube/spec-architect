@@ -1,0 +1,97 @@
+{
+  "scenario": "TS-133",
+  "title": "G0 enforcement",
+  "tier": "dev",
+  "label": "t032",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:37:15.512Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.111376,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.111376,
+        "session_ms": 59941,
+        "api_ms": 13264,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 747,
+            "cache_read": 41140,
+            "cache_write": 17610,
+            "cost_usd": 0.11125000000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 747,
+              "cache_read": 41140,
+              "cache_write": 17610
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b18nlnc5p",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjczyzl9s",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 2,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33101
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12595
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 30
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-11T09-36-15-006Z-run1.json"
+    }
+  ]
+}

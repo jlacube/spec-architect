@@ -37,7 +37,7 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         cwd: ws.root,
         prompt,
         agent: scenario.agent,
-        plugins: (scenario.plugins ?? [join(ROOT, "plugins", "architect")]).map((p) => resolve(ROOT, p)),
+        plugins: (scenario.plugins ?? [join(ROOT, "plugins", "architect")]).map((p) => (typeof p === "function" ? p() : resolve(ROOT, p))),
         answer: scenario.answer,
         allowTools: scenario.allowTools ?? [],
         maxTurns: scenario.maxTurns ?? 30,

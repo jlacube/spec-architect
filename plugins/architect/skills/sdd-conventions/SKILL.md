@@ -86,8 +86,10 @@ Markers inside backticks, quotes or fences are examples and do not count.
 ## Files only the CLI writes
 
 `registry.json`, `ids.json`, `approvals.json`, the status block of `SDD.md`, `trace.json`,
-`80-traceability.md`, `85-open-items.md`, phase statuses, waivers, defects and Gate log rows in
-`change.md`. Change them only through `sdd` commands.
+`80-traceability.md`, `85-open-items.md` (C001-CON-14). In `change.md`, approvals (`approved`,
+hashes, dates, approvers), `stale`, `in-revision`, waivers, defects and Gate log rows are written
+only by `sdd` commands. The conductor itself sets a phase `draft` when it starts the phase and
+`in-review` when it presents the gate (with `phase:`), then runs `sdd status --write`.
 
 ## Writing rules
 

@@ -20,7 +20,10 @@ Questions come from two sources:
 - **The phase procedure.** When the procedure needs P-01's input, write the question in the
   same shape (`id`, `topic`, `question`, `why_it_matters`, `blocking`, `material`, options).
 
-Question IDs are `Q-<topic-slug>-<nn>`, unique within the phase.
+Question IDs are `Q-<topic-slug>-<nn>`, unique within the phase. **Keep the ID a specialist gave**
+(a merged question keeps the first one); assign a new ID only to a question you write yourself.
+The same ID is used in the log, in briefs and in `[ASSUMPTION: …]` / `[NEEDS CLARIFICATION: …]`
+markers.
 
 ## 2. Merge and order
 

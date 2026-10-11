@@ -5,14 +5,17 @@ import { isAbsolute, relative, resolve } from "node:path";
 
 const sdkMessages = (transcript) => transcript.filter((r) => r.type === "sdk").map((r) => r.message);
 
-/** Every tool call, in order: `{ id, name, input, agent, t }`; `agent` is null on the main thread. */
+/**
+ * Every tool call, in order: `{ id, name, input, agent, t, message }`; `agent` is null on the main
+ * thread; `message` is the assistant message ID (calls of one turn share it).
+ */
 export function toolCalls(transcript, name) {
   const out = [];
   for (const r of transcript) {
     if (r.type !== "sdk" || r.message.type !== "assistant") continue;
     for (const block of r.message.message?.content ?? [])
       if (block.type === "tool_use" && (name === undefined || block.name === name))
-        out.push({ id: block.id, name: block.name, input: block.input, agent: r.message.parent_tool_use_id ?? null, t: r.t });
+        out.push({ id: block.id, name: block.name, input: block.input, agent: r.message.parent_tool_use_id ?? null, t: r.t, message: r.message.message?.id ?? null });
   }
   return out;
 }
@@ -84,4 +87,11 @@ export function checker() {
       return Boolean(cond);
     },
   };
+}
+
+/** Main-thread Agent (or legacy Task) calls: `{ …call, type, prompt }` with the subagent type and brief. */
+export function dispatches(transcript) {
+  return toolCalls(transcript)
+    .filter((c) => (c.name === "Agent" || c.name === "Task") && c.agent === null)
+    .map((c) => ({ ...c, type: String(c.input?.subagent_type ?? ""), prompt: String(c.input?.prompt ?? "") }));
 }

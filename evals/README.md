@@ -39,7 +39,7 @@ A scenario is an ES module (`evals/cap02/TS-206.eval.mjs`) whose default export 
 |---|---|
 | `id`, `title` | TS ID (or sample name) and a short title |
 | `agent` | main-thread agent, e.g. `architect:sdd-conductor` |
-| `plugins` | plugin directories, relative to the repository (default `plugins/architect`) |
+| `plugins` | plugin directories, relative to the repository (default `plugins/architect`), or functions returning a path — `architectWithStubs` (`harness/overlay.mjs`) gives the plugin with haiku stand-ins for specialists not written yet |
 | `fixture` | `fx-empty`, `fx-brownfield-ts`, `fx-large`, a directory to copy, or `null` (empty) |
 | `prompt` | the user's message (or a function of the workspace root) |
 | `answer(question)` | label to answer each AskUserQuestion question (default: the first option, the recommended one) |

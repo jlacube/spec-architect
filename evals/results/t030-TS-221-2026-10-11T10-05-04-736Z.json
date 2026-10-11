@@ -1,0 +1,120 @@
+{
+  "scenario": "TS-221",
+  "title": "Visible phase plan",
+  "tier": "dev",
+  "label": "t030",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T10:06:48.300Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.0908699,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TaskCreate subjects cover 0/8 phase-spec steps",
+        "no TaskUpdate marks a step completed"
+      ],
+      "metrics": {
+        "cost_usd": 0.0908699,
+        "session_ms": 102738,
+        "api_ms": 18921,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 19,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001273
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1682,
+            "cache_read": 78388,
+            "cache_write": 8277,
+            "cost_usd": 0.0907426
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1682,
+              "cache_read": 78388,
+              "cache_write": 8277
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b1okn8nau",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "belpsw7sx",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b01l1uxmx",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bd50xotno",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 41163
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 15037
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12863
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13137
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-221-2026-10-11T10-05-04-736Z-run1.json"
+    }
+  ]
+}

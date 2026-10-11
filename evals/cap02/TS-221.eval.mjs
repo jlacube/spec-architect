@@ -7,7 +7,8 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { checker, toolCalls } from "../harness/assert.mjs";
 import { ROOT } from "../harness/fixtures.mjs";
-import { edit, git, sdd } from "../harness/workspaces.mjs";
+import { architectWithStubs } from "../harness/overlay.mjs";
+import { specStart } from "./drafting.mjs";
 
 const SKILL = join(ROOT, "plugins", "architect", "skills", "phase-spec", "SKILL.md");
 
@@ -21,18 +22,13 @@ export default {
   id: "TS-221",
   title: "Visible phase plan",
   agent: "architect:sdd-conductor",
-  fixture: (root) => {
-    git(root, "init", "-q");
-    sdd(root, "init");
-    sdd(root, "change", "new", "Card payments", "--profile", "lite");
-    // Ideation approved (lite), so the spec phase may start.
-    edit(root, ".sdd/001-card-payments/change.md", (t) => t.replace(/^( {2}00-ideation: \{ status: )not-started/m, "$1approved").replace(/^phase: 00-ideation$/m, "phase: 10-spec"));
-    sdd(root, "status", "--write");
-  },
+  // Ideation written and approved through the CLI (real hash), so the spec phase may start.
+  fixture: specStart(),
   env: { CLAUDE_CODE_ENABLE_TODO_TOOLS: "1" },
   allowTools: ["Agent", "Write", "Edit", "Bash"],
   maxTurns: 40,
   maxBudgetUsd: 0.5,
+  plugins: [architectWithStubs],
   prompt: "Start the spec phase of CHG-001.",
   assert({ transcript }) {
     const { failures, check } = checker();
