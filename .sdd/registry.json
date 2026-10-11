@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T20:16:08Z",
+  "generated_at": "2026-10-11T20:25:53Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -36,7 +36,7 @@
           "total": 59,
           "done": 44,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },
@@ -90,6 +90,16 @@
           "status": "closed",
           "resolution": "C001-IF-13 section 1 documents the two impact lines of sdd gate show for a phase in revision (G2/G3 re-approved 2026-10-11)",
           "closed_at": "2026-10-11"
+        },
+        {
+          "id": "D-006",
+          "ref": "C001-IF-01",
+          "summary": "IF-07 §2 wires SubagentStop to 'trace --quiet --write --active', but the IF-01 trace row is '<NNN> [--write] [--json]' (no --active, <NNN> required) and trace exits 1/2 on gaps or errors, while SubagentStop needs exit 0 (exit 2 blocks the subagent). T-052 implemented trace --active: every active change, always exit 0, silent outside a workspace. Proposed: add '--active' to the IF-01 trace row with that behaviour.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []

@@ -1,0 +1,32 @@
+{
+  "description": "Architect guards and workspace feedback (C001-IF-07 §2)",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" guard-path" }]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" guard-bash" }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" hook post-write" }]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "^architect:sdd-(spec-writer|architect|planner|test-designer)$",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" trace --quiet --write --active" }]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" hook session-start" }]
+      }
+    ]
+  }
+}

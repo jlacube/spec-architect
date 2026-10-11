@@ -16,9 +16,12 @@ import { splitFrontmatter } from "../model/frontmatter.ts";
 import { decideBash } from "../hooks/guard-bash.ts";
 import { decidePath } from "../hooks/guard-path.ts";
 import { parseHookInput } from "../hooks/input.ts";
+import { postWriteFeedback } from "../hooks/post-write.ts";
+import { changeLine, sessionBrief } from "../hooks/session-start.ts";
+import { findWorkspace } from "../workspace/find.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
 import type { Profile } from "../workspace/templates.ts";
-import { rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
+import { listChanges, rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
 import { percent } from "../trace/matrix.ts";
 import { trace } from "../trace/write.ts";
@@ -261,6 +264,11 @@ function staleCmd(ctx: CommandContext): number {
  */
 function traceCmd(ctx: CommandContext): number {
   const { out, values } = ctx;
+  if (values["active"]) return traceActive(ctx);
+  if (ctx.args["NNN"] === undefined) throw usage(ctx.name, "missing argument <NNN> (or --active)");
+  const root = findWorkspace(ctx.cwd);
+  if (root === null) throw new CliError("ERR-CLI-001");
+  ctx = { ...ctx, root };
   const dir = resolveChange(ctx, ctx.args["NNN"]);
   const r = trace(dir, { write: values["write"] === true });
   out.trace("trace", { nodes: r.document.nodes.length, edges: r.document.edges.length, written: r.written.length });
@@ -272,6 +280,29 @@ function traceCmd(ctx: CommandContext): number {
     for (const w of r.written) out.line(`written: ${w}`);
   }
   return r.coverage.some((c) => c.gaps.length > 0) || r.dagOk === false ? 1 : 0;
+}
+
+/**
+ * `sdd trace --active [--write]` (SubagentStop hook, C001-IF-07 §2): traces every active change (not
+ * archived, not stopped). Always exits 0 and prints nothing with --quiet: exit 2 would keep the
+ * subagent from stopping. Outside a workspace it does nothing.
+ */
+function traceActive(ctx: CommandContext): number {
+  try {
+    const root = findWorkspace(ctx.cwd);
+    if (root === null) return 0;
+    const sdd = join(root, ".sdd");
+    const registry = rebuildRegistry(sdd);
+    listChanges(sdd).forEach((c, i) => {
+      const status = registry.changes[i]?.status;
+      if (c.archived || status === "stopped" || status === "archived") return;
+      const r = trace(c.dir, { write: ctx.values["write"] === true });
+      if (!ctx.values["quiet"]) ctx.out.line(`${registry.changes[i]!.id}: open items ${r.markers.length}${r.written.length > 0 ? `, written ${r.written.length} file(s)` : ""}`);
+    });
+  } catch (e) {
+    ctx.out.trace("trace.active.error", { detail: e instanceof Error ? e.message : String(e) });
+  }
+  return 0;
 }
 
 /**
@@ -309,11 +340,7 @@ function status(ctx: CommandContext): number {
   const registry = rebuildRegistry(sdd);
   if (ctx.values["json"]) ctx.out.json(registry);
   else if (ctx.values["brief"]) {
-    for (const c of registry.changes.filter((x) => x.status !== "archived")) {
-      const t = c.implementation.tasks;
-      const open = c.defects.filter((d) => d["status"] === "open").length;
-      ctx.out.line(`${c.id} ${c.phase} ${c.phases[c.phase as "10-spec"]?.status ?? "not-started"} · tasks ${t.done}/${t.total} · ${open} open defect${open === 1 ? "" : "s"}`);
-    }
+    for (const c of registry.changes.filter((x) => x.status !== "archived")) ctx.out.line(changeLine(c));
   } else ctx.out.line(renderStatusBlock(registry));
   return 0;
 }
@@ -395,6 +422,19 @@ function guardBash(ctx: CommandContext): number {
   return 2;
 }
 
+/** SessionStart hook: the brief on standard output, nothing without .sdd/ (C001-REQ-911, 912). Always exit 0. */
+function hookSessionStart(ctx: CommandContext): number {
+  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
+  return 0;
+}
+
+/** PostToolUse hook on Write|Edit: quick-lint feedback for .sdd/ files as additionalContext. Always exit 0. */
+function hookPostWrite(ctx: CommandContext): number {
+  const doc = postWriteFeedback(parseHookInput(ctx.stdin()), ctx.rules, TOOL);
+  if (doc !== null) ctx.out.line(doc);
+  return 0;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
@@ -410,7 +450,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
-  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"], run: traceCmd },
+  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN", true)], options: { write: B, active: B }, workspace: false, sampleArgs: ["004"], run: traceCmd },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: gateShow },
   { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
@@ -423,8 +463,8 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
-  { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [] },
-  { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [] },
+  { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
+  { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookPostWrite },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
