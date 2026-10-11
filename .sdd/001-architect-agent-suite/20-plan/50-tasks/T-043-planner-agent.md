@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-4
-status: in-progress
+status: done
 depends_on: [C001-T-042, C001-T-022, C001-T-038]
 implements: [C001-REQ-601, C001-REQ-602, C001-REQ-608, C001-REQ-609, C001-REQ-613, C001-REQ-614, C001-REQ-615, C001-REQ-616, C001-REQ-617, C001-REQ-618]
 satisfies_ac: [C001-AC-601.1, C001-AC-602.1, C001-AC-608.1, C001-AC-609.1, C001-AC-609.2, C001-AC-613.1, C001-AC-613.2, C001-AC-614.1, C001-AC-615.1, C001-AC-616.1, C001-AC-617.1, C001-AC-617.2, C001-AC-618.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-601, C001-TS-602, C001-TS-609, C001-TS-610, C001-TS-611, C
 components: [C001-COMP-02, C001-COMP-10]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: aa13e2e, completed_at: 2026-10-11, notes: "TCs pass: 609 (regraded run), 622 (eval), 601/602/610/611/615/616/617/618/619/620 (integration; 602-620 as structure checks, D-003); TC-621 manual procedure written, executed at dogfood (T-074); eval spend ~$0.77" }
 ---
 
 # C001-T-043 — Planner agent, planning and phase-plan skills, test plan
