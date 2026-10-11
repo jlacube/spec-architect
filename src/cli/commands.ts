@@ -1,7 +1,7 @@
 // Command table of C001-IF-01. Usage strings are copied from the interface. Commands without `run`
 // are refused with ERR-CLI-003 until their task implements them.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { isInside, normalisePath, relativePath } from "../io/paths.ts";
 import { RULES } from "../lint/rules/index.ts";
 import { lintWorkspace, type LintOptions } from "../lint/engine.ts";
@@ -19,7 +19,9 @@ import { parseId } from "../model/ids.ts";
 import { percent } from "../trace/matrix.ts";
 import { trace } from "../trace/write.ts";
 import { phaseHash } from "../gate/hash.ts";
-import { approvalBlockers, approve, gateSummary, record, type ApproveOptions, type GateContext } from "../gate/gate.ts";
+import { approvalBlockers, approve, gateSummary, gitUser, record, type ApproveOptions, type GateContext } from "../gate/gate.ts";
+import { setTask, type TaskSetOptions } from "../tracking/task.ts";
+import { addDefect, closeDefect, reopenDefect } from "../tracking/defect.ts";
 import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
@@ -130,6 +132,61 @@ function gateRecord(ctx: CommandContext): number {
   const sdd = join(ctx.root, ".sdd");
   if (existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
+  return 0;
+}
+
+/** The change folder owning a full ID (`C004-…` → `.sdd/004-*`), or null. */
+function changeOfId(ctx: CommandContext, id: string): string | null {
+  const nnn = /^C(\d{3})-/.exec(id)?.[1];
+  const folder = nnn ? changeFolders(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : undefined;
+  return folder ? join(ctx.root, ".sdd", folder) : null;
+}
+
+function refreshRegistry(ctx: CommandContext): void {
+  const sdd = join(ctx.root, ".sdd");
+  if (existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
+}
+
+/** `sdd task set <T-ID> --status <s> [--commit] [--note] [--reason]` (C001-REQ-901 … 904, 922). */
+function taskSet(ctx: CommandContext): number {
+  const raw = ctx.args["T-ID"]!;
+  const dir = /^C\d{3}-/.test(raw) ? changeOfId(ctx, raw) : resolveChange(ctx, undefined);
+  if (!dir) throw new CliError("ERR-CLI-002", { NNN: raw.slice(1, 4) });
+  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename(dir).slice(0, 3)}-${raw}`;
+  const o: TaskSetOptions = { status: ctx.values["status"] as string };
+  for (const k of ["commit", "note", "reason"] as const) if (ctx.values[k] !== undefined) o[k] = ctx.values[k] as string;
+  const r = setTask(dir, id, o);
+  refreshRegistry(ctx);
+  ctx.out.line(`${r.id}: ${r.from} → ${r.to}`);
+  if (r.unfinished.length > 0) ctx.out.warn(new CliError("WARN-CLI-001", { T: r.id, deps: r.unfinished.join(", ") }));
+  return 0;
+}
+
+/** `sdd defect add --ref <ID> --summary "<t>" [--by <name>]` (C001-REQ-907, 908). */
+function defectAdd(ctx: CommandContext): number {
+  const ref = ctx.values["ref"] as string;
+  const dir = changeOfId(ctx, ref);
+  const status = dir ? String(splitFrontmatter(readFileSync(join(dir, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  if (!dir || status === "archived" || !buildChangeGraph(dir).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
+  const d = addDefect(dir, ref, ctx.values["summary"] as string, (ctx.values["by"] as string | undefined) ?? gitUser(ctx.root));
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename(dir).slice(0, 3)})`);
+  return 0;
+}
+
+/** `sdd defect close <D-id> --change <NNN> --resolution "<t>"` (C001-REQ-910). */
+function defectClose(ctx: CommandContext): number {
+  const d = closeDefect(resolveChange(ctx, ctx.values["change"] as string), ctx.args["D-id"]!, ctx.values["resolution"] as string);
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: closed`);
+  return 0;
+}
+
+/** `sdd defect reopen <D-id> --change <NNN>` (C001-REQ-923). */
+function defectReopen(ctx: CommandContext): number {
+  const d = reopenDefect(resolveChange(ctx, ctx.values["change"] as string), ctx.args["D-id"]!);
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: open (reopened)`);
   return 0;
 }
 
@@ -307,10 +364,10 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
-  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
-  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"] },
-  { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"] },
-  { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"] },
+  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"], run: taskSet },
+  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
+  { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"], run: defectClose },
+  { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },

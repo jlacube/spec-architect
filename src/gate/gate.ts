@@ -101,7 +101,8 @@ export interface ApproveOptions {
   today?: string;
 }
 
-function gitUser(root: string): string {
+/** git user.name in `root`, or "unknown". */
+export function gitUser(root: string): string {
   try {
     return execFileSync("git", ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
   } catch {

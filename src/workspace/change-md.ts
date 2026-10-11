@@ -15,7 +15,14 @@ function frontmatterEnd(lines: string[]): number {
 /** YAML scalar for a flow map: plain when safe, double-quoted otherwise. */
 function scalar(v: string | null): string {
   if (v === null) return "null";
-  return /^[\w.@-]+$/.test(v) && !/^(true|false|null|yes|no|~)$/i.test(v) ? v : JSON.stringify(v);
+  return plainSafe(v) ? v : JSON.stringify(v);
+}
+
+/** True when a string reads back as the same string without quotes (not a keyword or a number). */
+function plainSafe(v: string): boolean {
+  if (!/^[\w.@-]+$/.test(v) || /^(true|false|null|yes|no|on|off|~)$/i.test(v)) return false;
+  // Dates stay plain (the core schema reads them as strings); other number-like values are quoted.
+  return /^\d{4}-\d{2}-\d{2}$/.test(v) || !/^[-+]?(\d[\d_]*\.?\d*([eE][-+]?\d+)?|\.\d+([eE][-+]?\d+)?|0x[\da-fA-F]+|0o[0-7]+)$/.test(v);
 }
 
 /**
@@ -112,4 +119,18 @@ export function appendGateLog(text: string, cells: string[]): string {
   while (i < lines.length && lines[i]!.trimStart().startsWith("|")) i++;
   lines.splice(i, 0, row);
   return lines.join("\n");
+}
+
+/** A value in YAML flow style (maps, sequences, scalars); strings with special characters quoted. */
+export function flow(value: unknown): string {
+  if (value === null || value === undefined) return "null";
+  if (Array.isArray(value)) return `[${value.map(flow).join(", ")}]`;
+  if (typeof value === "object") return `{ ${Object.entries(value as Record<string, unknown>).map(([k, v]) => `${k}: ${flow(v)}`).join(", ")} }`;
+  if (typeof value === "string") return plainSafe(value) ? value : JSON.stringify(value);
+  return String(value);
+}
+
+/** A list in block form, one flow map per item (`[]` when empty). */
+export function listYaml(items: unknown[]): string {
+  return items.length === 0 ? "[]" : "\n" + items.map((i) => `  - ${flow(i)}`).join("\n");
 }

@@ -1640,8 +1640,8 @@ ${ctx.indent}`;
         const vs0 = valueStr[0];
         const nl0 = valueStr.indexOf("\n");
         const hasNewline = nl0 !== -1;
-        const flow = ctx.inFlow ?? value2.flow ?? value2.items.length === 0;
-        if (hasNewline || !flow) {
+        const flow2 = ctx.inFlow ?? value2.flow ?? value2.items.length === 0;
+        if (hasNewline || !flow2) {
           let hasPropsLine = false;
           if (hasNewline && (vs0 === "&" || vs0 === "!")) {
             let sp0 = valueStr.indexOf(" ");
@@ -1867,8 +1867,8 @@ var require_stringifyCollection = __commonJS({
     var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyCollection(collection, ctx, options) {
-      const flow = ctx.inFlow ?? collection.flow;
-      const stringify2 = flow ? stringifyFlowCollection : stringifyBlockCollection;
+      const flow2 = ctx.inFlow ?? collection.flow;
+      const stringify2 = flow2 ? stringifyFlowCollection : stringifyBlockCollection;
       return stringify2(collection, ctx, options);
     }
     function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, flowChars, itemIndent, onChompKeep, onComment }) {
@@ -3511,7 +3511,7 @@ var require_Document = __commonJS({
           options = replacer;
           replacer = void 0;
         }
-        const { aliasDuplicateObjects, anchorPrefix, flow, keepUndefined, onTagObj, tag } = options ?? {};
+        const { aliasDuplicateObjects, anchorPrefix, flow: flow2, keepUndefined, onTagObj, tag } = options ?? {};
         const { onAnchor, setAnchors, sourceObjects } = anchors.createNodeAnchors(
           this,
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -3527,7 +3527,7 @@ var require_Document = __commonJS({
           sourceObjects
         };
         const node = createNode.createNode(value2, tag, ctx);
-        if (flow && identity.isCollection(node))
+        if (flow2 && identity.isCollection(node))
           node.flow = true;
         setAnchors();
         return node;
@@ -3775,7 +3775,7 @@ ${pointer}
 var require_resolve_props = __commonJS({
   "node_modules/yaml/dist/compose/resolve-props.js"(exports) {
     "use strict";
-    function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
+    function resolveProps(tokens, { flow: flow2, indicator, next, offset, onError, parentIndent, startOnNewline }) {
       let spaceBefore = false;
       let atNewline = startOnNewline;
       let hasSpace = startOnNewline;
@@ -3804,7 +3804,7 @@ var require_resolve_props = __commonJS({
         }
         switch (token.type) {
           case "space":
-            if (!flow && (indicator !== "doc-start" || next?.type !== "flow-collection") && token.source.includes("	")) {
+            if (!flow2 && (indicator !== "doc-start" || next?.type !== "flow-collection") && token.source.includes("	")) {
               tab = token;
             }
             hasSpace = true;
@@ -3860,15 +3860,15 @@ var require_resolve_props = __commonJS({
             if (anchor || tag)
               onError(token, "BAD_PROP_ORDER", `Anchors and tags must be after the ${token.source} indicator`);
             if (found)
-              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.source} in ${flow ?? "collection"}`);
+              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.source} in ${flow2 ?? "collection"}`);
             found = token;
             atNewline = indicator === "seq-item-ind" || indicator === "explicit-key-ind";
             hasSpace = false;
             break;
           case "comma":
-            if (flow) {
+            if (flow2) {
               if (comma)
-                onError(token, "UNEXPECTED_TOKEN", `Unexpected , in ${flow}`);
+                onError(token, "UNEXPECTED_TOKEN", `Unexpected , in ${flow2}`);
               comma = token;
               atNewline = false;
               hasSpace = false;
@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync14, statSync as statSync9 } from "node:fs";
-import { dirname as dirname6, join as join20 } from "node:path";
+import { existsSync as existsSync15, statSync as statSync9 } from "node:fs";
+import { dirname as dirname6, join as join22 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync13, readdirSync as readdirSync8, readFileSync as readFileSync15, statSync as statSync8 } from "node:fs";
-import { join as join19 } from "node:path";
+import { existsSync as existsSync14, readdirSync as readdirSync9, readFileSync as readFileSync17, statSync as statSync8 } from "node:fs";
+import { basename as basename7, join as join21 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -7917,10 +7917,10 @@ var arch004 = {
       for (const t of tables(doc, PATH2))
         for (const r of t.rows) {
           if (r.line <= section.line || r.line > section.end) continue;
-          const flow = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
-          if (flow === "") continue;
-          const word = new RegExp(`(^|[^\\w-])${flow.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
-          if (!sequences.some((s) => word.test(s))) out.push({ path: `${c.folder}/${PATH2}`, line: r.line, message: `Runtime flow ${flow} has no sequence diagram` });
+          const flow2 = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
+          if (flow2 === "") continue;
+          const word = new RegExp(`(^|[^\\w-])${flow2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
+          if (!sequences.some((s) => word.test(s))) out.push({ path: `${c.folder}/${PATH2}`, line: r.line, message: `Runtime flow ${flow2} has no sequence diagram` });
         }
     }
     return out;
@@ -9987,8 +9987,8 @@ function readStatusBlock(text) {
 
 // src/workspace/status.ts
 var PHASE_NAMES = ["00-ideation", "10-spec", "20-plan"];
-function deriveImplementation(statuses) {
-  const live = statuses.filter((s) => s !== "dropped");
+function deriveImplementation(statuses2) {
+  const live = statuses2.filter((s) => s !== "dropped");
   if (live.length === 0) return "not-started";
   if (live.every((s) => s === "done")) return "done";
   if (live.includes("blocked") && !live.includes("in-progress")) return "blocked";
@@ -10045,9 +10045,14 @@ function changeEntry(dir2, folder, archived) {
       },
       last_report: last ? last.length === 10 ? `${last}T00:00:00Z` : last : null
     },
-    defects: Array.isArray(fm["defects"]) ? fm["defects"] : [],
+    // The registry carries the C001-IF-02 defect fields; a defect's reopen history stays in change.md.
+    defects: Array.isArray(fm["defects"]) ? fm["defects"].map(registryDefect) : [],
     waivers: Array.isArray(fm["waivers"]) ? fm["waivers"] : []
   };
+}
+var DEFECT_FIELDS = ["id", "ref", "summary", "reporter", "date", "status", "resolution", "closed_at"];
+function registryDefect(d) {
+  return Object.fromEntries(DEFECT_FIELDS.filter((k) => k in d).map((k) => [k, d[k]]));
 }
 function listChanges(sddDir) {
   const out = [];
@@ -11052,7 +11057,11 @@ function frontmatterEnd2(lines) {
 }
 function scalar(v) {
   if (v === null) return "null";
-  return /^[\w.@-]+$/.test(v) && !/^(true|false|null|yes|no|~)$/i.test(v) ? v : JSON.stringify(v);
+  return plainSafe(v) ? v : JSON.stringify(v);
+}
+function plainSafe(v) {
+  if (!/^[\w.@-]+$/.test(v) || /^(true|false|null|yes|no|on|off|~)$/i.test(v)) return false;
+  return /^\d{4}-\d{2}-\d{2}$/.test(v) || !/^[-+]?(\d[\d_]*\.?\d*([eE][-+]?\d+)?|\.\d+([eE][-+]?\d+)?|0x[\da-fA-F]+|0o[0-7]+)$/.test(v);
 }
 function setPhase(text, phase, fields) {
   const lines = text.split("\n");
@@ -11130,6 +11139,16 @@ ${row2}
   while (i < lines.length && lines[i].trimStart().startsWith("|")) i++;
   lines.splice(i, 0, row2);
   return lines.join("\n");
+}
+function flow(value2) {
+  if (value2 === null || value2 === void 0) return "null";
+  if (Array.isArray(value2)) return `[${value2.map(flow).join(", ")}]`;
+  if (typeof value2 === "object") return `{ ${Object.entries(value2).map(([k, v]) => `${k}: ${flow(v)}`).join(", ")} }`;
+  if (typeof value2 === "string") return plainSafe(value2) ? value2 : JSON.stringify(value2);
+  return String(value2);
+}
+function listYaml(items) {
+  return items.length === 0 ? "[]" : "\n" + items.map((i) => `  - ${flow(i)}`).join("\n");
 }
 
 // src/gate/critic-parse.ts
@@ -11277,12 +11296,146 @@ function record(ctx, decision, note, today) {
   writeTextAtomic(join17(ctx.changeDir, "change.md"), text);
 }
 
-// src/gate/stale.ts
-import { readFileSync as readFileSync14 } from "node:fs";
+// src/tracking/task.ts
+import { existsSync as existsSync13, readdirSync as readdirSync8, readFileSync as readFileSync14 } from "node:fs";
 import { join as join18 } from "node:path";
-function staleCheck(changeDir, write) {
-  const path = join18(changeDir, "change.md");
-  const text = readFileSync14(path, "utf8");
+var TASK_STATUSES = ["todo", "in-progress", "blocked", "done", "dropped"];
+var TRANSITIONS = {
+  todo: ["in-progress", "dropped", "done"],
+  "in-progress": ["blocked", "done", "dropped"],
+  blocked: ["in-progress", "dropped"],
+  done: ["in-progress"],
+  dropped: []
+};
+function findTask(changeDir, id) {
+  const dir2 = join18(changeDir, "20-plan", "50-tasks");
+  if (existsSync13(dir2))
+    for (const name of readdirSync8(dir2).filter((n) => n.endsWith(".md"))) {
+      const path = join18(dir2, name);
+      const text = readFileSync14(path, "utf8");
+      const fm = splitFrontmatter(text).data ?? {};
+      if (fm["id"] !== id) continue;
+      const deps = Array.isArray(fm["depends_on"]) ? fm["depends_on"].map(String) : [];
+      return { path, text, status: String(fm["status"] ?? "todo"), report: fm["report"] ?? {}, dependsOn: deps, lite: false };
+    }
+  const plan = join18(changeDir, "20-plan", "plan.md");
+  if (existsSync13(plan)) {
+    const node = buildChangeGraph(changeDir).nodes.find((n) => n.id === id && n.file === "20-plan/plan.md");
+    if (node) {
+      const field = (name) => node.fields.find((f) => f.name === name)?.value ?? "";
+      return {
+        path: plan,
+        text: readFileSync14(plan, "utf8"),
+        status: field("Status") || "todo",
+        report: { commit: field("Commit") || null, notes: field("Notes") || null, completed_at: field("Completed at") || null },
+        dependsOn: field("Depends on").split(/[,\s]+/).filter((x) => /-T-/.test(x)),
+        lite: true
+      };
+    }
+  }
+  throw usage("task set", `task ${id} not found in ${changeDir}`);
+}
+function statuses(changeDir) {
+  const out = /* @__PURE__ */ new Map();
+  const graph = buildChangeGraph(changeDir);
+  for (const n of graph.nodes) {
+    if (n.type !== "T") continue;
+    if (n.form === "frontmatter") out.set(n.id, String(graph.files.find((f) => f.path === n.file)?.frontmatter?.["status"] ?? "todo"));
+    else if (n.form === "heading") out.set(n.id, n.fields.find((f) => f.name === "Status")?.value ?? "todo");
+  }
+  return out;
+}
+function setLiteField(text, id, name, value2) {
+  const lines = text.split("\n");
+  const at = lines.findIndex((l) => new RegExp(`^#{2,4}\\s+${id}\\b`).test(l));
+  let end = lines.findIndex((l, i) => i > at && /^#{1,4}\s/.test(l));
+  if (end < 0) end = lines.length;
+  const f = lines.findIndex((l, i) => i > at && i < end && l.startsWith(`- **${name}:**`));
+  if (f >= 0) lines[f] = `- **${name}:** ${value2}`;
+  else {
+    let last = at;
+    for (let i = at + 1; i < end; i++) if (lines[i].startsWith("- **")) last = i;
+    lines.splice(last + 1, 0, `- **${name}:** ${value2}`);
+  }
+  return lines.join("\n");
+}
+function setTask(changeDir, id, o) {
+  if (!TASK_STATUSES.includes(o.status)) throw new CliError("ERR-CLI-005", { s: o.status });
+  if (o.status === "blocked" && (o.reason === void 0 || o.reason.trim() === "")) throw new CliError("ERR-CLI-006");
+  const task = findTask(changeDir, id);
+  if (!(TRANSITIONS[task.status] ?? []).includes(o.status)) throw new CliError("ERR-CLI-013", { from: task.status, to: o.status });
+  const today = o.today ?? isoDate();
+  const report = { commit: task.report["commit"] ?? null, completed_at: task.report["completed_at"] ?? null, notes: task.report["notes"] ?? null };
+  if (o.commit !== void 0) report["commit"] = o.commit;
+  if (o.status === "done") report["completed_at"] = today;
+  if (task.status === "done" && o.status === "in-progress") report["completed_at"] = null;
+  const notes = [o.note, o.status === "blocked" ? `blocked: ${o.reason}` : void 0].filter((x) => x !== void 0);
+  if (notes.length > 0) report["notes"] = notes.join("; ");
+  for (const k of Object.keys(report)) if (report[k] instanceof Date) report[k] = report[k].toISOString().slice(0, 10);
+  let text;
+  if (task.lite) {
+    text = setLiteField(task.text, id, "Status", o.status);
+    if (report["commit"] !== null) text = setLiteField(text, id, "Commit", String(report["commit"]));
+    if (report["notes"] !== null) text = setLiteField(text, id, "Notes", String(report["notes"]));
+    text = setLiteField(text, id, "Completed at", report["completed_at"] === null ? "—" : String(report["completed_at"]));
+  } else {
+    text = setTopLevel(task.text, "status", o.status);
+    text = setTopLevel(text, "report", flow(report));
+  }
+  const all = statuses(changeDir);
+  const unfinished = o.status === "done" ? task.dependsOn.filter((d) => !["done", "dropped"].includes(all.get(d) ?? "todo")) : [];
+  writeTextAtomic(task.path, text);
+  return { id, from: task.status, to: o.status, unfinished };
+}
+
+// src/tracking/defect.ts
+import { readFileSync as readFileSync15 } from "node:fs";
+import { join as join19 } from "node:path";
+function read(changeDir) {
+  const text = readFileSync15(join19(changeDir, "change.md"), "utf8");
+  const fm = splitFrontmatter(text).data ?? {};
+  const list = Array.isArray(fm["defects"]) ? fm["defects"] : [];
+  return { text, defects: list.map((d) => Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v instanceof Date ? v.toISOString().slice(0, 10) : v]))) };
+}
+function write(changeDir, text, defects) {
+  writeTextAtomic(join19(changeDir, "change.md"), setTopLevel(text, "defects", listYaml(defects)));
+}
+function addDefect(changeDir, ref, summary, reporter, today = isoDate()) {
+  const { text, defects } = read(changeDir);
+  const seq = defects.reduce((m, d) => Math.max(m, Number(/^D-(\d+)$/.exec(d.id)?.[1] ?? 0)), 0) + 1;
+  const defect = { id: `D-${String(seq).padStart(3, "0")}`, ref, summary, reporter, date: today, status: "open", resolution: null, closed_at: null };
+  write(changeDir, text, [...defects, defect]);
+  return defect;
+}
+function find(defects, id) {
+  const d = defects.find((x) => x.id === id);
+  if (!d) throw usage("defect", `defect ${id} not found`);
+  return d;
+}
+function closeDefect(changeDir, id, resolution, today = isoDate()) {
+  const { text, defects } = read(changeDir);
+  const d = find(defects, id);
+  if (d.status === "closed") throw usage("defect close", `${id} is already closed`);
+  Object.assign(d, { status: "closed", resolution, closed_at: today });
+  write(changeDir, text, defects);
+  return d;
+}
+function reopenDefect(changeDir, id) {
+  const { text, defects } = read(changeDir);
+  const d = find(defects, id);
+  if (d.status !== "closed") throw usage("defect reopen", `${id} is not closed`);
+  const history = Array.isArray(d["history"]) ? d["history"] : [];
+  Object.assign(d, { status: "open", history: [...history, { resolution: d["resolution"] ?? null, closed_at: d["closed_at"] ?? null }], resolution: null, closed_at: null });
+  write(changeDir, text, defects);
+  return d;
+}
+
+// src/gate/stale.ts
+import { readFileSync as readFileSync16 } from "node:fs";
+import { join as join20 } from "node:path";
+function staleCheck(changeDir, write2) {
+  const path = join20(changeDir, "change.md");
+  const text = readFileSync16(path, "utf8");
   const phases = splitFrontmatter(text).data?.["phases"] ?? {};
   const checks = [];
   let staleFrom = false;
@@ -11301,7 +11454,7 @@ function staleCheck(changeDir, write) {
     }
     checks.push(check);
   }
-  if (write && checks.some((c) => c.stale)) {
+  if (write2 && checks.some((c) => c.stale)) {
     let next = text;
     for (const c of checks) if (c.stale) next = setPhaseStatus(next, c.phase, "stale");
     writeTextAtomic(path, next);
@@ -11353,8 +11506,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join19(root, ".sdd");
-  return readdirSync8(sdd).filter((n) => /^\d{3}-/.test(n) && statSync8(join19(sdd, n)).isDirectory()).sort();
+  const sdd = join21(root, ".sdd");
+  return readdirSync9(sdd).filter((n) => /^\d{3}-/.test(n) && statSync8(join21(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -11390,8 +11543,8 @@ function gateApprove(ctx) {
   if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
-  const sdd = join19(ctx.root, ".sdd");
-  if (existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join21(ctx.root, ".sdd");
+  if (existsSync14(join21(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   return 0;
@@ -11400,9 +11553,53 @@ function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
-  const sdd = join19(ctx.root, ".sdd");
-  if (existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join21(ctx.root, ".sdd");
+  if (existsSync14(join21(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
+  return 0;
+}
+function changeOfId(ctx, id) {
+  const nnn = /^C(\d{3})-/.exec(id)?.[1];
+  const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
+  return folder ? join21(ctx.root, ".sdd", folder) : null;
+}
+function refreshRegistry(ctx) {
+  const sdd = join21(ctx.root, ".sdd");
+  if (existsSync14(join21(sdd, "registry.json"))) writeStatus(sdd);
+}
+function taskSet(ctx) {
+  const raw = ctx.args["T-ID"];
+  const dir2 = /^C\d{3}-/.test(raw) ? changeOfId(ctx, raw) : resolveChange(ctx, void 0);
+  if (!dir2) throw new CliError("ERR-CLI-002", { NNN: raw.slice(1, 4) });
+  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename7(dir2).slice(0, 3)}-${raw}`;
+  const o = { status: ctx.values["status"] };
+  for (const k of ["commit", "note", "reason"]) if (ctx.values[k] !== void 0) o[k] = ctx.values[k];
+  const r = setTask(dir2, id, o);
+  refreshRegistry(ctx);
+  ctx.out.line(`${r.id}: ${r.from} → ${r.to}`);
+  if (r.unfinished.length > 0) ctx.out.warn(new CliError("WARN-CLI-001", { T: r.id, deps: r.unfinished.join(", ") }));
+  return 0;
+}
+function defectAdd(ctx) {
+  const ref = ctx.values["ref"];
+  const dir2 = changeOfId(ctx, ref);
+  const status2 = dir2 ? String(splitFrontmatter(readFileSync17(join21(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
+  const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename7(dir2).slice(0, 3)})`);
+  return 0;
+}
+function defectClose(ctx) {
+  const d = closeDefect(resolveChange(ctx, ctx.values["change"]), ctx.args["D-id"], ctx.values["resolution"]);
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: closed`);
+  return 0;
+}
+function defectReopen(ctx) {
+  const d = reopenDefect(resolveChange(ctx, ctx.values["change"]), ctx.args["D-id"]);
+  refreshRegistry(ctx);
+  ctx.out.line(`${d.id}: open (reopened)`);
   return 0;
 }
 function hashCmd(ctx) {
@@ -11414,16 +11611,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join19(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join19(sdd, f));
+  const sdd = join21(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join21(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync15(join19(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync17(join21(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync14(join21(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -11452,15 +11649,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join19(ctx.root, ".sdd", match[0]);
+    return join21(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join19(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join19(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join19(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join21(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join21(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join21(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join19(ctx.root, ".sdd");
+  const sdd = join21(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -11487,7 +11684,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join19(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join21(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -11495,7 +11692,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync15(join19(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync17(join21(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -11527,7 +11724,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join19(root, ".sdd");
+  const where = join21(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -11553,10 +11750,10 @@ var COMMANDS = [
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
-  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
-  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"] },
-  { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"] },
-  { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"] },
+  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"], run: taskSet },
+  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
+  { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"], run: defectClose },
+  { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
@@ -11608,8 +11805,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir2 = start;
   for (; ; ) {
-    const sdd = join20(dir2, ".sdd");
-    if (existsSync14(sdd) && statSync9(sdd).isDirectory()) return dir2;
+    const sdd = join22(dir2, ".sdd");
+    if (existsSync15(sdd) && statSync9(sdd).isDirectory()) return dir2;
     const parent = dirname6(dir2);
     if (parent === dir2) return null;
     dir2 = parent;
