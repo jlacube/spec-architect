@@ -20,11 +20,11 @@ export const SECRET_PATTERNS: readonly Pattern[] = [
   { name: "npm token", re: /\bnpm_[A-Za-z0-9]{36}\b/ },
   { name: "JSON Web Token", re: /\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/ },
   { name: "Azure storage key", re: /AccountKey=[A-Za-z0-9+/]{40,}={0,2}/ },
-  { name: "connection string with password", re: /\b[a-z][a-z0-9+.-]*:\/\/[^\s:@/"'`]+:[^\s@/"'`]{3,}@[^\s/"'`]+/i },
+  { name: "connection string with password", re: /\b[a-z][a-z0-9+.-]*:\/\/[^\s:@/"'`]*:[^\s@/"'`]{3,}@[^\s/"'`]+/i },
 ];
 
-/** Values that are obviously illustrative (`<password>`, `xxx`, `changeme`, `${VAR}`). */
-const PLACEHOLDER = /<[^>]+>|\$\{[^}]+\}|x{3,}|\*{3,}|changeme|example|placeholder|redacted/i;
+/** Values that are obviously illustrative (`<password>`, `xxx`, `changeme`, `${VAR}`, `user:password@`). */
+const PLACEHOLDER = /<[^>]+>|\$\{[^}]+\}|x{3,}|\*{3,}|changeme|example|placeholder|redacted|:(?:password|passwd|pass|pwd|secret)@/i;
 
 export function findSecrets(line: string): string[] {
   const hits: string[] = [];

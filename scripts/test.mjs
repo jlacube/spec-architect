@@ -2,9 +2,9 @@
 // (C001-ADR-006). Explicit file lists keep behaviour identical on Node 20 and 22.
 import { build } from "esbuild";
 import { spawnSync } from "node:child_process";
-import { readdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outdir = join(root, "build", "tests");
@@ -45,5 +45,17 @@ await build({
 
 const files = entries.map((e) => join(outdir, relative(join(root, "tests"), e)).replace(/\.ts$/, ".mjs"));
 console.log(`running ${files.length} test file(s): ${files.map((f) => relative(root, f).split(sep).join("/")).join(", ")}`);
-const res = spawnSync(process.execPath, ["--test", ...flags, ...files], { stdio: "inherit", cwd: root });
+// C001-NFR-202: every Node process of the run (tests and the CLI they spawn) loads the no-network stubs;
+// any recorded attempt fails the run.
+const netLog = join(root, "build", "no-network.log");
+rmSync(netLog, { force: true });
+const preload = `--import=${pathToFileURL(join(root, "tests", "no-network.mjs")).href}`;
+const env = { ...process.env, NODE_OPTIONS: [process.env.NODE_OPTIONS, preload].filter(Boolean).join(" "), SDD_NO_NETWORK_LOG: netLog };
+const res = spawnSync(process.execPath, ["--test", ...flags, ...files], { stdio: "inherit", cwd: root, env });
+const attempts = existsSync(netLog) ? readFileSync(netLog, "utf8").trim() : "";
+if (attempts) {
+  console.error(`network access attempted during the tests (C001-NFR-202):\n${attempts}`);
+  process.exit(1);
+}
+console.log("network calls during the tests: 0 (C001-NFR-202)");
 process.exit(res.status ?? 1);

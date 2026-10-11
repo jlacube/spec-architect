@@ -1,6 +1,6 @@
 // Eval runner (C001-T-029, C001-ADR-003, C001-ADR-007). Usage:
 //   node evals/harness/run.mjs <scenario.eval.mjs>… [--tier dev|milestone|release] [--runs N]
-//                              [--max-total-usd X] [--label NAME]
+//                              [--max-total-usd X] [--label NAME] [--only ID,ID…]
 // Each run copies the scenario's fixture into a temporary directory, runs the session through the
 // Agent SDK, applies the scenario's assertions and records metrics. Results go to
 // evals/results/<label>-<scenario>-<time>.json (transcripts to evals/results/transcripts/, not
@@ -94,11 +94,13 @@ async function main(argv) {
   if (!TIERS[tier]) throw new Error(`unknown tier ${tier}; use dev, milestone or release`);
   const runs = opt("runs") ? Number(opt("runs")) : undefined;
   const budget = { spent: 0, limit: Number(opt("max-total-usd", "5")) };
+  const only = opt("only")?.split(",");
   let ok = true;
   for (const f of files) {
     // A scenario outline exports an array: one scenario per Examples row.
     const exported = (await import(pathToFileURL(resolve(f)).href)).default;
     for (const scenario of Array.isArray(exported) ? exported : [exported]) {
+      if (only && !only.includes(scenario.id)) continue;
       const doc = await runScenario(scenario, { tier, runs, label: opt("label"), budget });
       console.log(`${doc.scenario}: ${doc.passed}/${doc.runs} passed (rule ${doc.pass_rule}) → ${doc.pass ? "PASS" : "FAIL"} · $${doc.cost_usd.toFixed(4)}`);
       ok &&= doc.pass;

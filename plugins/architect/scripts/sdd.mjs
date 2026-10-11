@@ -8804,9 +8804,9 @@ var SECRET_PATTERNS = [
   { name: "npm token", re: /\bnpm_[A-Za-z0-9]{36}\b/ },
   { name: "JSON Web Token", re: /\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/ },
   { name: "Azure storage key", re: /AccountKey=[A-Za-z0-9+/]{40,}={0,2}/ },
-  { name: "connection string with password", re: /\b[a-z][a-z0-9+.-]*:\/\/[^\s:@/"'`]+:[^\s@/"'`]{3,}@[^\s/"'`]+/i }
+  { name: "connection string with password", re: /\b[a-z][a-z0-9+.-]*:\/\/[^\s:@/"'`]*:[^\s@/"'`]{3,}@[^\s/"'`]+/i }
 ];
-var PLACEHOLDER = /<[^>]+>|\$\{[^}]+\}|x{3,}|\*{3,}|changeme|example|placeholder|redacted/i;
+var PLACEHOLDER = /<[^>]+>|\$\{[^}]+\}|x{3,}|\*{3,}|changeme|example|placeholder|redacted|:(?:password|passwd|pass|pwd|secret)@/i;
 function findSecrets(line) {
   const hits = [];
   for (const p of SECRET_PATTERNS) {
@@ -10382,9 +10382,15 @@ function lintWorkspace(root, options) {
     }
     for (const e of c.graph.edges) references.push({ ...e, path: `${c.folder}/${e.file}` });
   }
+  const shared = ["_constitution", "_decisions"].flatMap((d) => existsSync5(join8(sdd, d)) ? filesOf(join8(sdd, d)) : []);
+  if (file !== void 0 && /^\.sdd\/(_constitution|_decisions|_living)\//.test(file)) {
+    const abs = join8(root, ...file.split("/"));
+    if (existsSync5(abs)) texts.push(textFile(abs, file));
+  }
   if (workspaceScope) {
     for (const name of ["SDD.md", "registry.json"]) if (existsSync5(join8(sdd, name))) texts.push(textFile(join8(sdd, name), `.sdd/${name}`));
     for (const l of living) texts.push(textFile(join8(root, ...l.path.split("/")), l.path));
+    for (const abs of shared) texts.push(textFile(abs, relativePath(root, abs)));
   }
   const workspace = { entries: [], registryDrift: [], living };
   if (workspaceScope) {

@@ -174,9 +174,16 @@ export function lintWorkspace(root: string, options: LintOptions): LintReport {
     }
     for (const e of c.graph.edges) references.push({ ...e, path: `${c.folder}/${e.file}` });
   }
+  // Workspace-level artifacts outside change folders: constitution and decisions (C001-NFR-203).
+  const shared = ["_constitution", "_decisions"].flatMap((d) => (existsSync(join(sdd, d)) ? filesOf(join(sdd, d)) : []));
+  if (file !== undefined && /^\.sdd\/(_constitution|_decisions|_living)\//.test(file)) {
+    const abs = join(root, ...file.split("/"));
+    if (existsSync(abs)) texts.push(textFile(abs, file));
+  }
   if (workspaceScope) {
     for (const name of ["SDD.md", "registry.json"]) if (existsSync(join(sdd, name))) texts.push(textFile(join(sdd, name), `.sdd/${name}`));
     for (const l of living) texts.push(textFile(join(root, ...l.path.split("/")), l.path));
+    for (const abs of shared) texts.push(textFile(abs, relativePath(root, abs)));
   }
 
   const workspace: WorkspaceFacts = { entries: [], registryDrift: [], living };
