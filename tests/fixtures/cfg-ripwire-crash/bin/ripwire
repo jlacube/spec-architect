@@ -1,0 +1,8 @@
+#!/bin/sh
+# Machine configuration cfg-full with a crashing ripwire (C001-TC-1011): --version answers, every
+# query aborts with exit 134 as a crash would.
+case "$*" in
+  *--version*) echo "ripwire 0.6.5 (shim: crashes on queries)"; exit 0 ;;
+esac
+echo "ripwire: internal error: assertion failed (shim)" >&2
+exit 134

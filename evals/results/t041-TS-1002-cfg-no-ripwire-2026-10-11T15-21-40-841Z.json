@@ -1,0 +1,214 @@
+{
+  "scenario": "TS-1002-cfg-no-ripwire",
+  "title": "Fallback by configuration (cfg-no-ripwire → serena)",
+  "tier": "dev",
+  "label": "t041",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T15:23:59.879Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.15600012500000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "evidence layers [\"grep\",\"grep\",\"grep\",\"grep\"], expected serena"
+      ],
+      "metrics": {
+        "cost_usd": 0.15600012500000002,
+        "session_ms": 137823,
+        "api_ms": 47871,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1450,
+            "output": 1567,
+            "cache_read": 5180,
+            "cache_write": 6977,
+            "cost_usd": 0.001852425
+          },
+          "claude-sonnet-5-5": {
+            "input": 22,
+            "output": 5164,
+            "cache_read": 206181,
+            "cache_write": 24491,
+            "cost_usd": 0.1541477
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1567,
+              "cache_read": 5180,
+              "cache_write": 6977
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 0,
+              "cache_read": 181918,
+              "cache_write": 24263
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "acb91f08b3dd91b6f",
+            "ms": 127301,
+            "tool_uses": 15,
+            "total_tokens": 26149
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bw4njuapr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b1ec5tea6",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8usmqmw0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btep8okmq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bhp6h6ch9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 1,
+          "Bash": 5,
+          "ToolSearch": 3,
+          "Glob": 1,
+          "Grep": 2,
+          "Write": 2,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 127318
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 15
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 34163
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 46858
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 5
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 152
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 3
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 2
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 207
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 156
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13038
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 58
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13221
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-cartographer",
+            "ms": 36
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 74
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12943
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-1002-cfg-no-ripwire-2026-10-11T15-21-40-841Z-run1.json"
+    }
+  ]
+}

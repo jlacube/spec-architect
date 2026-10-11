@@ -16,8 +16,9 @@ export function firstOption(question) {
  * - `answer(question, call)`: returns the label (or labels) to answer each AskUserQuestion question
  * - `allowTools`: tools approved without asking (others are denied, so a run cannot wander)
  * - `env`: extra environment variables for the session (for example CLAUDE_CODE_ENABLE_TODO_TOOLS)
+ * - `startDelayMs`: send the prompt only after this delay (MCP servers connect first)
  */
-export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {} }) {
+export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0 }) {
   const transcript = [];
   const answers = [];
   const t0 = Date.now();
@@ -52,7 +53,11 @@ export async function runSession({ cwd, prompt, agent, plugins = [], answer = fi
   if (model) options.model = model;
   let result = null;
   try {
-    for await (const message of query({ prompt, options })) {
+    // With startDelayMs the prompt is streamed in after that delay, so MCP servers that connect a few
+    // seconds after session start (Serena) are ready before the first subagent is spawned: a
+    // subagent's tool set is fixed when it starts (C001-T-041).
+    const input = startDelayMs > 0 ? delayedPrompt(prompt, startDelayMs) : prompt;
+    for await (const message of query({ prompt: input, options })) {
       stamp({ type: "sdk", message });
       if (message.type === "result") result = message;
     }
@@ -63,4 +68,9 @@ export async function runSession({ cwd, prompt, agent, plugins = [], answer = fi
     if (!result) throw e;
   }
   return { transcript, answers, result, wallMs: Date.now() - t0 };
+}
+
+async function* delayedPrompt(text, ms) {
+  await new Promise((r) => setTimeout(r, ms));
+  yield { type: "user", message: { role: "user", content: text }, parent_tool_use_id: null, session_id: "" };
 }

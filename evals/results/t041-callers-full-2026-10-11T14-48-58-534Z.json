@@ -1,0 +1,186 @@
+{
+  "scenario": "callers-full",
+  "title": "Callers on cfg-full (TS-1001, TS-1002 cfg-full, TS-1004 --callers, TS-1013)",
+  "tier": "dev",
+  "label": "t041",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T14:50:47.577Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.125577085,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-1001: first code-intelligence call: {\"pattern\":\"createIntent\",\"output_mode\":\"content\",\"-n\":true,\"glob\":\"!.sdd/**\"}",
+        "TS-1001/1002: evidence layers [\"grep\",\"grep\",\"grep\"]"
+      ],
+      "metrics": {
+        "cost_usd": 0.125577085,
+        "session_ms": 107881,
+        "api_ms": 34023,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1450,
+            "output": 1245,
+            "cache_read": 5176,
+            "cache_write": 6741,
+            "cost_usd": 0.0016618849999999999
+          },
+          "claude-sonnet-5-5": {
+            "input": 18,
+            "output": 3590,
+            "cache_read": 158696,
+            "cache_write": 22496,
+            "cost_usd": 0.12391520000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1245,
+              "cache_read": 5176,
+              "cache_write": 6741
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 136432,
+              "cache_write": 22264
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a436f58a999a7e802",
+            "ms": 98401,
+            "tool_uses": 11,
+            "total_tokens": 23641
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b28n52bcd",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "ba1elabyg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b222a5nw3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkob0rkqk",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 2,
+          "Bash": 4,
+          "Grep": 1,
+          "Glob": 1,
+          "Write": 2,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 98416
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 16
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 32933
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 45474
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 181
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 14
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 136
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 48
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12530
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-cartographer",
+            "ms": 39
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 65
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12298
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/callers-full-2026-10-11T14-48-58-534Z-run1.json"
+    }
+  ]
+}

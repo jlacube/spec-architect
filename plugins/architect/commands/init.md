@@ -8,9 +8,13 @@ This command runs in the `architect:sdd-conductor` main session. If you are not 
 1. Run `sdd init` (creates or completes `.sdd/`; it never overwrites existing files).
 2. If `.sdd/_constitution/constitution.md` exists, report its status and stop: approve a draft
    with `/architect:gate constitution`.
-3. If the repository has code, dispatch `sdd-cartographer` for the baseline survey
-   (`.sdd/_constitution/baseline-survey.md`: languages, size, test layout, build commands) and
-   use it to propose defaults.
+3. Dispatch `sdd-cartographer` (code-discovery skill) for:
+   - the toolchain record `.sdd/_constitution/toolchain.md` (always);
+   - if the repository has code: the baseline survey `.sdd/_constitution/baseline-survey.md`
+     (languages, size, test layout, build commands), and, when `.sdd/_living/` is empty, one
+     inventory stub `.sdd/_living/CAP-<slug>.md` per detected capability (inventory only, no
+     requirements).
+   Use the survey to propose defaults.
 4. **Constitution interview — at most two rounds** (interview-protocol skill), asking only what
    the sections below need: principles and quality bar; NFR defaults and forbidden technologies;
    global DoD items; profile thresholds; language and conventions. Recommend defaults P-01 can

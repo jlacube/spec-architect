@@ -1,0 +1,10 @@
+#!/bin/sh
+# Machine configuration cfg-full where `--test-gate` exits 4 (C001-TC-1014): the real ripwire answers
+# (its directory is RIPWIRE_REAL), and a successful --test-gate answer is returned with exit 4, the
+# documented "tests to run" answer code.
+"$RIPWIRE_REAL/ripwire.exe" "$@"
+code=$?
+case "$*" in
+  *--test-gate*) [ "$code" -eq 0 ] && exit 4 ;;
+esac
+exit $code

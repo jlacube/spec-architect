@@ -1,0 +1,210 @@
+{
+  "scenario": "TS-1002-cfg-no-ripwire",
+  "title": "Fallback by configuration (cfg-no-ripwire → serena)",
+  "tier": "dev",
+  "label": "t041",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T15:42:07.869Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.115791045,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "startCheckout entry has layer grep, expected serena"
+      ],
+      "metrics": {
+        "cost_usd": 0.115791045,
+        "session_ms": 132825,
+        "api_ms": 30527,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1450,
+            "output": 1186,
+            "cache_read": 7317,
+            "cache_write": 4351,
+            "cost_usd": 0.001355045
+          },
+          "claude-sonnet-5-5": {
+            "input": 18,
+            "output": 3051,
+            "cache_read": 174975,
+            "cache_write": 19558,
+            "cost_usd": 0.114436
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1186,
+              "cache_read": 7317,
+              "cache_write": 4351
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 150725,
+              "cache_write": 19306
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a3ffde0c6acf4c0d2",
+            "ms": 112157,
+            "tool_uses": 14,
+            "total_tokens": 25719
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b874cugpj",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bb1kb7vbw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brtfit78e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7uj58thu",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpm2pk28l",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 3,
+          "Bash": 5,
+          "ToolSearch": 1,
+          "mcp__plugin_architect_serena__find_symbol": 1,
+          "mcp__plugin_architect_serena__find_referencing_symbols": 1,
+          "Grep": 1,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 112179
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 18
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 32872
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 45311
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12086
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 11619
+          },
+          {
+            "tool": "mcp__plugin_architect_serena__find_symbol",
+            "agent": "architect:sdd-cartographer",
+            "ms": 762
+          },
+          {
+            "tool": "mcp__plugin_architect_serena__find_referencing_symbols",
+            "agent": "architect:sdd-cartographer",
+            "ms": 5112
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 167
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 175
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 15
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 12
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12028
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 55
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12307
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-1002-cfg-no-ripwire-2026-10-11T15-39-54-015Z-run1.json"
+    }
+  ]
+}

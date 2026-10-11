@@ -1,0 +1,179 @@
+{
+  "scenario": "TS-1011",
+  "title": "ripwire crashes",
+  "tier": "dev",
+  "label": "t041",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T16:22:23.024Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.10649177000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.10649177000000001,
+        "session_ms": 122600,
+        "api_ms": 28819,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1450,
+            "output": 1118,
+            "cache_read": 7317,
+            "cache_write": 4296,
+            "cost_usd": 0.00131417
+          },
+          "claude-sonnet-5-5": {
+            "input": 16,
+            "output": 2791,
+            "cache_read": 150328,
+            "cache_write": 18868,
+            "cost_usd": 0.10517760000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1118,
+              "cache_read": 7317,
+              "cache_write": 4296
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 0,
+              "cache_read": 126740,
+              "cache_write": 18644
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a383243fe3d354dd7",
+            "ms": 102141,
+            "tool_uses": 10,
+            "total_tokens": 24940
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkn1cbw3g",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bh7o7jloj",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bp7lhqnq2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3vcdn0ij",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 1,
+          "Bash": 4,
+          "ToolSearch": 1,
+          "mcp__plugin_architect_serena__find_symbol": 1,
+          "mcp__plugin_architect_serena__find_referencing_symbols": 1,
+          "Grep": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 102154
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 18
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 34055
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 46979
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12797
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 12443
+          },
+          {
+            "tool": "mcp__plugin_architect_serena__find_symbol",
+            "agent": "architect:sdd-cartographer",
+            "ms": 896
+          },
+          {
+            "tool": "mcp__plugin_architect_serena__find_referencing_symbols",
+            "agent": "architect:sdd-cartographer",
+            "ms": 5225
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 199
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 61
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13105
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-1011-2026-10-11T16-20-19-312Z-run1.json"
+    }
+  ]
+}

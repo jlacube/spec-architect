@@ -1,0 +1,9 @@
+# Serena mode for the Architect cartographer and architect (C001-IF-14 §4), as verified in spike S-02:
+# every tool that changes files or memories, runs commands or onboards is excluded.
+description: Architect read-only mode — every editing, shell, memory and onboarding tool excluded
+prompt: |
+  You are operating in read-only analysis mode. Do not attempt to modify files or memories.
+excluded_tools: [create_text_file, replace_symbol_body, insert_after_symbol, insert_before_symbol,
+  delete_lines, replace_lines, insert_at_line, replace_content, replace_in_files, rename_symbol,
+  safe_delete_symbol, execute_shell_command, write_memory, edit_memory, delete_memory,
+  rename_memory, read_memory, list_memories, onboarding]

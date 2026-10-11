@@ -1,0 +1,116 @@
+{
+  "scenario": "TS-1012",
+  "title": "Empty repository",
+  "tier": "dev",
+  "label": "t041",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T15:59:47.352Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.05126253,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.05126253,
+        "session_ms": 63444,
+        "api_ms": 15344,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1450,
+            "output": 1211,
+            "cache_read": 6788,
+            "cache_write": 4790,
+            "cost_usd": 0.00141713
+          },
+          "claude-sonnet-5-5": {
+            "input": 4,
+            "output": 1046,
+            "cache_read": 21962,
+            "cache_write": 13994,
+            "cost_usd": 0.0498454
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1211,
+              "cache_read": 6788,
+              "cache_write": 4790
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 2699,
+              "cache_read": 4944,
+              "cache_write": 12074
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a894efc9a66e7d200",
+            "ms": 42587,
+            "tool_uses": 3,
+            "total_tokens": 19719
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b18uvu21u",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 1,
+          "Bash": 1,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 42608
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 14
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 33039
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 33174
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-1012-2026-10-11T15-58-43-316Z-run1.json"
+    }
+  ]
+}

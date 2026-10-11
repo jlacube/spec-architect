@@ -4,7 +4,7 @@
 // does the brief in minimal form and can return a scripted hand-back from the workspace
 // (`.eval/handbacks/<agent-name>.md`). Real agent files are always kept.
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { ROOT } from "./fixtures.mjs";
 
@@ -54,6 +54,32 @@ with its final message verbatim and nothing else.
 /** Prompt for the relay: dispatch `agent` (e.g. "sdd-researcher") with `brief`. */
 export const dispatchPrompt = (agent, brief) => `Dispatch: ${agent}\n${brief}`;
 
+/**
+ * Serena home for eval sessions (created once, kept across runs so the language servers Serena
+ * fetches on first use are downloaded once). Its config keeps project data out of the fixture
+ * repository and disables the web dashboard, as the doctor does for users (C001-REQ-1013).
+ */
+export function evalSerenaHome() {
+  const home = join(tmpdir(), "sdd-eval-serena-home");
+  const config = join(home, "serena_config.yml");
+  if (!existsSync(config) || !/^projects:/m.test(readFileSync(config, "utf8"))) {
+    mkdirSync(home, { recursive: true });
+    const projects = join(home, "projects").split("\\").join("/");
+    // Start from the user's Serena config (Serena requires its full key set, e.g. `projects`) and
+    // change only the dashboard, the project-data location and the registered projects.
+    const user = join(homedir(), ".serena", "serena_config.yml");
+    const base = existsSync(user) ? readFileSync(user, "utf8") : "projects: []\n";
+    const text = base
+      .replace(/^web_dashboard:.*$/m, "web_dashboard: false")
+      .replace(/^web_dashboard_open_on_launch:.*$/m, "web_dashboard_open_on_launch: false")
+      .replace(/^project_serena_folder_location:.*$/m, `project_serena_folder_location: "${projects}/$projectFolderName/.serena"`)
+      // `projects:` and its list items (written at column 0 or indented) → an empty list.
+      .replace(/^projects:.*\n(?:(?:-|\s).*(?:\n|$))*/m, "projects: []\n");
+    writeFileSync(config, /^projects:/m.test(text) ? text : `${text}\nprojects: []\n`);
+  }
+  return home;
+}
+
 const cache = new Map();
 
 function build(omitServers) {
@@ -68,9 +94,11 @@ function build(omitServers) {
   }
   writeFileSync(join(dir, "agents", "eval-dispatcher.md"), DISPATCHER);
   const mcp = join(dir, ".mcp.json");
-  if (omitServers.length > 0 && existsSync(mcp)) {
+  if (existsSync(mcp)) {
     const config = JSON.parse(readFileSync(mcp, "utf8"));
     for (const s of omitServers) delete config.mcpServers?.[s];
+    // Serena's home for evals: persistent, outside the fixture repository (C001-IF-14 §4).
+    if (config.mcpServers?.serena?.env) config.mcpServers.serena.env.SERENA_HOME = evalSerenaHome();
     writeFileSync(mcp, JSON.stringify(config, null, 2) + "\n");
   }
   cache.set(key, dir);
