@@ -16,7 +16,7 @@ C001-NFR-204) and preloaded skills. Plugin agents ignore `hooks`, `mcpServers`,
 
 | # | name | model | effort | tools (exact set) | skills |
 |---|---|---|---|---|---|
-| A0 | `sdd-conductor` | opus | xhigh | `Agent(architect:sdd-researcher, architect:sdd-cartographer, architect:sdd-options-analyst, architect:sdd-spec-writer, architect:sdd-test-designer, architect:sdd-architect, architect:sdd-planner, architect:sdd-critic, architect:sdd-auditor)`, AskUserQuestion, Read, Glob, Grep, Write, Edit, Bash, TodoWrite, Skill | sdd-conventions, interview-protocol, options-analysis, gate-protocol, phase-ideation, phase-spec, phase-plan |
+| A0 | `sdd-conductor` | opus | xhigh | `Agent(architect:sdd-researcher, architect:sdd-cartographer, architect:sdd-options-analyst, architect:sdd-spec-writer, architect:sdd-test-designer, architect:sdd-architect, architect:sdd-planner, architect:sdd-critic, architect:sdd-auditor)`, AskUserQuestion, Read, Glob, Grep, Write, Edit, Bash, TaskCreate, TaskUpdate, TaskList, Skill | sdd-conventions, interview-protocol, options-analysis, gate-protocol, phase-ideation, phase-spec, phase-plan |
 | A1 | `sdd-researcher` | sonnet | high | WebSearch, WebFetch, ToolSearch, `mcp__plugin_architect_context7__resolve-library-id`, `mcp__plugin_architect_context7__query-docs`, `mcp__plugin_architect_deepwiki__read_wiki_structure`, `mcp__plugin_architect_deepwiki__read_wiki_contents`, `mcp__plugin_architect_deepwiki__ask_wiki_question`, Read, Glob, Write | research-protocol, sdd-conventions |
 | A2 | `sdd-cartographer` | sonnet | high | Bash, Read, Grep, Glob, LSP, Write, ToolSearch, `mcp__plugin_architect_serena__find_symbol`, `mcp__plugin_architect_serena__get_symbols_overview`, `mcp__plugin_architect_serena__find_referencing_symbols`, `mcp__plugin_architect_serena__find_declaration`, `mcp__plugin_architect_serena__find_implementations` | code-discovery, sdd-conventions |
 | A3 | `sdd-options-analyst` | opus | high | Read, Grep, Glob, WebSearch, WebFetch, Write | options-analysis, sdd-conventions |
@@ -37,6 +37,10 @@ Notes:
 - A0 is started as the main session (`claude --agent architect:sdd-conductor`); it is not
   meant to be spawned as a subagent. Its description says so.
 - A1–A9 never include `Agent` (C001-REQ-218).
+- The task-tracking tools `TaskCreate`, `TaskUpdate` and `TaskList` (which replaced `TodoWrite`) are
+  offered on current models only when the session sets `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`; listing them
+  in `tools` does not enable them (verified with Claude Code 2.1.295 in C001-T-030). The doctor
+  reports the setting (C001-IF-10 §3).
 - `memory: project` is set for A1 and A2 only (OA-13 / OQ-08).
 - `color` is cosmetic: A0 purple, A1 cyan, A2 green, A3 yellow, A4 blue, A5 orange,
   A6 red, A7 pink, A8 red, A9 green.

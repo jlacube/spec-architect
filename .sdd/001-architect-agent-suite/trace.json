@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-11T06:36:03.964Z",
+  "generated_at": "2026-10-11T07:00:49.814Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -432,13 +432,13 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 222,
       "title": "Todo list maintained",
-      "content_hash": "sha256:caec14ef8b21700c546ac1b3e93de85ef4d0bf2d27970fb4bdfaa69ea7d0c08a"
+      "content_hash": "sha256:e19a87933ab2267e12c8bb63dc7be6dd9315082359113cb27166c6291172942e"
     },
     {
       "id": "C001-AC-220.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 232,
+      "line": 233,
       "title": "Shortcut offered at round six",
       "content_hash": "sha256:053eebd987d67c95db48ffa948272d177c98597f0aabafedf60c2ef11cdc2f19"
     },
@@ -1919,7 +1919,7 @@
       "line": 1,
       "title": "",
       "content_hash": "sha256:9a37eb9daa6878dca0013dc91840dfa629211f6ab02476f04f1555dcfd74e9fd",
-      "status": "draft"
+      "status": "approved"
     },
     {
       "id": "C001-AS-09",
@@ -3524,7 +3524,7 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/requirements.md",
       "line": 160,
       "title": "Visible phase plan",
-      "content_hash": "sha256:253b6910d039af0408109340e7b5216debaf81078e008bb805cd0fcdeac90624"
+      "content_hash": "sha256:723959948ccbf492285763b2eda85042533e32ac24e2e983cf73f226a5e4417a"
     },
     {
       "id": "C001-REQ-220",
@@ -5263,7 +5263,7 @@
       "line": 1,
       "title": "Agent eval harness and tiered runs",
       "content_hash": "sha256:d950321200824c9d4d33d0b6d58fbf7101867297e92053acdfad4aa541f668f3",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "C001-T-030",
@@ -5272,7 +5272,7 @@
       "line": 1,
       "title": "Conductor agent: definition, orientation, allowlist",
       "content_hash": "sha256:37e58c9c9049fd5e3a9d235e8e61d5cdea6d97b12a68da8439fb81fdf05d020b",
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "C001-T-031",
@@ -7838,13 +7838,13 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 224,
       "title": "visible phase plan",
-      "content_hash": "sha256:9cd6b6c8278fd1d64e75ba0afe032a567b38ac7124f67407a8d9453136eab950"
+      "content_hash": "sha256:ad3f29863922590f11adbe6fb6e516682f4c348605f69fffe93a26b8c78deaaf"
     },
     {
       "id": "C001-TS-222",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 234,
+      "line": 235,
       "title": "fatigue guard",
       "content_hash": "sha256:3f42041a90a7ca39ebc03f10ab8642f2ce3903410e49e45087f3bbbd37a7d2b9"
     },

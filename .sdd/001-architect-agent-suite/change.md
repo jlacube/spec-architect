@@ -5,10 +5,12 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:08557099c6ce18c676a5b42b867e5e1de1e8e7dd4a47645bfba067908d8376e0", approved_at: 2026-10-11, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:5bbceb152be57d3879b37c11890a26e31a7ff63ba6d43bd6eb68043a2d12564c", approved_at: 2026-10-11, approved_by: jerome.lacube }
   20-plan: { status: approved, approved_hash: "sha256:adb86d74bcaea656732c6d6b25b125f65d8bc98f4461818bad7b25f1fde278e1", approved_at: 2026-10-11, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
+defects:
+  - { id: D-001, ref: C001-REQ-219, summary: "TodoWrite (granted to the conductor by C001-IF-09 A0 and assumed by C001-TS-221) is absent on Opus 5.x in Claude Code >= 2.1.268; TaskCreate/TaskUpdate/TaskList replace it and appear only when the session sets CLAUDE_CODE_ENABLE_TODO_TOOLS=1 (verified 2.1.295, C001-T-030)", reporter: implementer, date: 2026-10-11, status: closed, resolution: "C001-REQ-219, C001-TS-221, C001-IF-09 A0 and C001-IF-10 section 3 revised for the task tools (G2/G3 re-approved 2026-10-11)", closed_at: 2026-10-11 }
 ---
 # CHG-001 — Architect agent suite
 
@@ -34,4 +36,7 @@ owners: [jerome.lacube]
 | 2026-10-11 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-11 | G3 (plan) | **Revise** | "C001-T-029 adds C001-ADR-007 (eval harness mechanism) to 20-plan/20-decisions, as the task requires" | none | unavailable |
+| 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-11 | G2 (spec) | **Revise** | "Defect D-001 (C001-T-030): task-tracking tools on current models; revise C001-REQ-219, C001-TS-221, C001-IF-09 A0 and the doctor remedies of C001-IF-10 section 3" | none | unavailable |
+| 2026-10-11 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |

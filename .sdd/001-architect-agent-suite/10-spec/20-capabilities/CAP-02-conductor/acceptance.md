@@ -222,9 +222,10 @@ Scenario: C001-TS-220 — no Agent tool in specialists
 #### C001-AC-219.1 — Todo list maintained
 ```gherkin
 Scenario: C001-TS-221 — visible phase plan
+  Given a conductor session started with CLAUDE_CODE_ENABLE_TODO_TOOLS=1
   When the conductor starts the spec phase
-  Then the transcript contains a TodoWrite call whose items include the phase-spec procedure steps
-  And later TodoWrite calls mark completed steps
+  Then the transcript contains TaskCreate calls whose subjects include the phase-spec procedure steps
+  And later TaskUpdate calls mark completed steps
 ```
 
 ## C001-REQ-220

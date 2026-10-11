@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T06:39:27Z",
+  "generated_at": "2026-10-11T07:00:48Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -19,7 +19,7 @@
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:08557099c6ce18c676a5b42b867e5e1de1e8e7dd4a47645bfba067908d8376e0",
+          "approved_hash": "sha256:5bbceb152be57d3879b37c11890a26e31a7ff63ba6d43bd6eb68043a2d12564c",
           "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         },
@@ -36,11 +36,22 @@
           "total": 57,
           "done": 27,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },
-      "defects": [],
+      "defects": [
+        {
+          "id": "D-001",
+          "ref": "C001-REQ-219",
+          "summary": "TodoWrite (granted to the conductor by C001-IF-09 A0 and assumed by C001-TS-221) is absent on Opus 5.x in Claude Code >= 2.1.268; TaskCreate/TaskUpdate/TaskList replace it and appear only when the session sets CLAUDE_CODE_ENABLE_TODO_TOOLS=1 (verified 2.1.295, C001-T-030)",
+          "reporter": "implementer",
+          "date": "2026-10-11",
+          "status": "closed",
+          "resolution": "C001-REQ-219, C001-TS-221, C001-IF-09 A0 and C001-IF-10 section 3 revised for the task tools (G2/G3 re-approved 2026-10-11)",
+          "closed_at": "2026-10-11"
+        }
+      ],
       "waivers": []
     }
   ]

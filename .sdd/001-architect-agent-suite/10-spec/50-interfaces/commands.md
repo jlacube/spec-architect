@@ -43,5 +43,6 @@ and the command-specific preconditions. Phase procedures live in the phase skill
 | ripwire | `ripwire --version` (0.6.x) | download `ripwire-<version>-windows-x64.zip` from `github.com/redhat-et/ripwire/releases`, check it against the published `.sha256`, extract it and add the extracted folder to the user PATH; then `ripwire <repo> --doctor` reports 9/9 checks (verified with 0.6.5, spike S-01) |
 | Serena | `serena --version` (1.7.x) | `winget install astral-sh.uv` then `uv tool install -p 3.13 "serena-agent==1.7.*"`; keep uv and Node on PATH (language servers); the doctor writes the Serena configuration of C001-REQ-1013 (verified, spike S-02) |
 | ast-grep | `ast-grep --version` | `npm install -g @ast-grep/cli` |
+| Task tools (conductor phase plan, C001-REQ-219) | `CLAUDE_CODE_ENABLE_TODO_TOOLS` is `1` in the environment or in the `env` of `~/.claude/settings.json` | add `"env": { "CLAUDE_CODE_ENABLE_TODO_TOOLS": "1" }` to `~/.claude/settings.json`; without it the conductor lists the phase steps in its messages |
 | Context7 | MCP `resolve-library-id` probe | check network; endpoint `https://mcp.context7.com/mcp` |
 | DeepWiki | MCP `read_wiki_structure` probe on `oraios/serena` | check network; endpoint `https://mcp.deepwiki.com/mcp` |

@@ -159,7 +159,7 @@ contract C001-IF-05.
 
 ### C001-REQ-219 — Visible phase plan
 - **Pattern:** state-driven
-- **Statement:** WHILE a phase is in progress in a conductor session, THE conductor SHALL maintain a todo list of the phase procedure steps with their status.
+- **Statement:** WHILE a phase is in progress in a conductor session, THE conductor SHALL keep the phase procedure steps with their status in the session task list (`TaskCreate`, `TaskUpdate`) when the session provides the task tools, and otherwise list the steps with their status in its message at each step change.
 - **Rationale:** transparency for P-01
 - **Stories:** C001-US-201
 - **Priority:** Should
