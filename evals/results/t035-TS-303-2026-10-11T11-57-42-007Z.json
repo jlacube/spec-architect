@@ -1,0 +1,110 @@
+{
+  "scenario": "TS-303",
+  "title": "Sources were actually fetched",
+  "tier": "dev",
+  "label": "t035",
+  "agent": "architect:sdd-researcher",
+  "measured_at": "2026-10-11T11:58:14.012Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.07572200000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "Findings cite no URL"
+      ],
+      "metrics": {
+        "cost_usd": 0.07572200000000001,
+        "session_ms": 31423,
+        "api_ms": 35954,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 21860,
+            "output": 2658,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.003515
+          },
+          "claude-sonnet-5-5": {
+            "input": 8,
+            "output": 3110,
+            "cache_read": 35030,
+            "cache_write": 13634,
+            "cost_usd": 0.072207
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 3110,
+              "cache_read": 35030,
+              "cache_write": 13634
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "ToolSearch": 2,
+          "Glob": 2,
+          "Read": 1,
+          "WebFetch": 2,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 147
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 151
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 6651
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 6097
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 55
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-303-2026-10-11T11-57-42-007Z-run1.json"
+    }
+  ]
+}

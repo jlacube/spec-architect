@@ -1,0 +1,157 @@
+{
+  "scenario": "TS-301",
+  "title": "Research note shape",
+  "tier": "dev",
+  "label": "t035",
+  "agent": "architect:sdd-researcher",
+  "measured_at": "2026-10-11T11:57:42.004Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.15395159999999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "heading \"Method\" missing",
+        "heading \"Confidence\" missing",
+        "heading \"Implications\" missing",
+        "heading \"Conflicting evidence\" missing",
+        "heading \"Follow-up questions\" missing"
+      ],
+      "metrics": {
+        "cost_usd": 0.15395159999999997,
+        "session_ms": 49836,
+        "api_ms": 45679,
+        "turns": 17,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 42449,
+            "output": 2226,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.025357900000000003
+          },
+          "claude-sonnet-5-5": {
+            "input": 18,
+            "output": 4417,
+            "cache_read": 132376,
+            "cache_write": 23165,
+            "cost_usd": 0.12859369999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 4417,
+              "cache_read": 132376,
+              "cache_write": 23165
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "ToolSearch": 2,
+          "Glob": 2,
+          "Read": 2,
+          "mcp__plugin_architect_context7__resolve-library-id": 2,
+          "mcp__plugin_architect_context7__query-docs": 1,
+          "WebSearch": 1,
+          "WebFetch": 5,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 18
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 159
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 146
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 50
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "main",
+            "ms": 1276
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "main",
+            "ms": 1917
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__query-docs",
+            "agent": "main",
+            "ms": 1695
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "main",
+            "ms": 9286
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 428
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 235
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 252
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 3884
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 242
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 61
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-301-2026-10-11T11-56-51-399Z-run1.json"
+    }
+  ]
+}

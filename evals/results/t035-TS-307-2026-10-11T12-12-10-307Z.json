@@ -1,0 +1,144 @@
+{
+  "scenario": "TS-307",
+  "title": "Context7 unreachable",
+  "tier": "dev",
+  "label": "t035",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T12:13:33.522Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.20018353999999994,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.20018353999999994,
+        "session_ms": 82468,
+        "api_ms": 93434,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 60253,
+            "output": 11656,
+            "cache_read": 6579,
+            "cache_write": 3774,
+            "cost_usd": 0.032390840000000004
+          },
+          "claude-sonnet-5-5": {
+            "input": 14,
+            "output": 5846,
+            "cache_read": 137136,
+            "cache_write": 32751,
+            "cost_usd": 0.16779269999999996
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 11656,
+              "cache_read": 6579,
+              "cache_write": 3774
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 105551,
+              "cache_write": 29242
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "accc26e34e35ded89",
+            "ms": 74111,
+            "tool_uses": 10,
+            "total_tokens": 36006
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "ToolSearch": 2,
+          "WebSearch": 2,
+          "WebFetch": 5,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 74124
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 12
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7661
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6215
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 358
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 5960
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 9304
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8824
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 9828
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 76
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-307-2026-10-11T12-12-10-307Z-run1.json"
+    }
+  ]
+}

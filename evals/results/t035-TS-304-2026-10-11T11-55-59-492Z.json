@@ -1,0 +1,125 @@
+{
+  "scenario": "TS-304",
+  "title": "Library question routing",
+  "tier": "dev",
+  "label": "t035",
+  "agent": "architect:sdd-researcher",
+  "measured_at": "2026-10-11T11:56:33.920Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.0979654,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0979654,
+        "session_ms": 33697,
+        "api_ms": 33231,
+        "turns": 12,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-sonnet-5-5": {
+            "input": 12,
+            "output": 3204,
+            "cache_read": 70983,
+            "cache_write": 19584,
+            "cost_usd": 0.0952206
+          },
+          "claude-haiku-5-5": {
+            "input": 19018,
+            "output": 1686,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0027448000000000004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 3204,
+              "cache_read": 70983,
+              "cache_write": 19584
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "ToolSearch": 2,
+          "Glob": 3,
+          "mcp__plugin_architect_context7__resolve-library-id": 1,
+          "Read": 2,
+          "mcp__plugin_architect_context7__query-docs": 1,
+          "WebFetch": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "main",
+            "ms": 21
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 203
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 141
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "main",
+            "ms": 1263
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 156
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__query-docs",
+            "agent": "main",
+            "ms": 1719
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 48
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 7732
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 60
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-304-2026-10-11T11-55-59-492Z-run1.json"
+    }
+  ]
+}

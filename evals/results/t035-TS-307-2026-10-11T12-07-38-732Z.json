@@ -1,0 +1,166 @@
+{
+  "scenario": "TS-307",
+  "title": "Context7 unreachable",
+  "tier": "dev",
+  "label": "t035",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T12:09:10.355Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.23864147000000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "Method does not say \"Context7 unavailable\":\nRoute: named library, so library documentation first.\n- Library-documentation service (context7): unavailable (the tools are not exposed in this session; ToolSearch found no match); substitute: WebSearch/WebFetch.\n- WebSearch (2 queries): \"AWS SDK for JavaScript v3 S3Client maxAttempts retryMode configure retries\"; same topic restricted to docs.aws.amazon.com.\n- WebFetch of: `@smithy/util-retry` R"
+      ],
+      "metrics": {
+        "cost_usd": 0.23864147000000002,
+        "session_ms": 90888,
+        "api_ms": 97547,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 62941,
+            "output": 10182,
+            "cache_read": 6572,
+            "cache_write": 3750,
+            "cost_usd": 0.03191957
+          },
+          "claude-sonnet-5-5": {
+            "input": 16,
+            "output": 7282,
+            "cache_read": 177337,
+            "cache_write": 39361,
+            "cost_usd": 0.20672190000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 10182,
+              "cache_read": 6572,
+              "cache_write": 3750
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 0,
+              "cache_read": 139898,
+              "cache_write": 35096
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a6bf26ccef6352304",
+            "ms": 82282,
+            "tool_uses": 14,
+            "total_tokens": 43183
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "ToolSearch": 2,
+          "WebSearch": 2,
+          "WebFetch": 9,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 82297
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 9
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 4
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8060
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6392
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 4549
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 391
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6026
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8686
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 576
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 217
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 3663
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 263
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7668
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 84
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-307-2026-10-11T12-07-38-732Z-run1.json"
+    }
+  ]
+}
