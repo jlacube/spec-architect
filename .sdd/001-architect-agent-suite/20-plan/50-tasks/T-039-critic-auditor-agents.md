@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-030, C001-T-023]
 implements: [C001-REQ-317, C001-REQ-318, C001-REQ-710, C001-REQ-711, C001-REQ-712, C001-REQ-713, C001-REQ-714, C001-REQ-715]
 satisfies_ac: [C001-AC-317.1, C001-AC-318.1, C001-AC-710.1, C001-AC-711.1, C001-AC-712.1, C001-AC-713.1, C001-AC-714.1, C001-AC-715.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-319, C001-TS-320, C001-TS-710, C001-TS-711, C001-TS-712, C
 components: [C001-COMP-02, C001-COMP-10]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 06efacf, completed_at: 2026-10-11, notes: "All 8 TCs pass (dev); seeded calibration ≥ 80 %; eval spend ~$3.20; TS-714 gets the changed IDs in the brief until T-044 adds the impact computation" }
 ---
 
 # C001-T-039 — Critic and auditor agents
