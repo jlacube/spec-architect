@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-044]
 implements: [C001-REQ-1013]
 satisfies_ac: [C001-AC-1013.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1015, C001-TC-1015]
 components: [C001-COMP-02, C001-COMP-09]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 37b0a79, completed_at: 2026-10-11, notes: "serena-config command + tests; init/doctor use it; TC-1015 passes (dev, $0.25)" }
 ---
 
 # C001-T-077 — sdd serena-config command
