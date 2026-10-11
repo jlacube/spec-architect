@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-006, C001-T-001]
 implements: []
 satisfies_ac: [C001-AC-206.1, C001-AC-1116.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-207, C001-TS-1117, C001-TC-207, C001-TC-1117]
 components: [C001-COMP-12]
 risk_refs: [C001-RISK-005]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7ad65b2, completed_at: 2026-10-11, notes: "Harness done (C001-ADR-007, G3 re-approved): Agent SDK sessions with scripted AskUserQuestion answers; stub interviewer passes dev 1/1, milestone 3/3, release 10/10; metrics per model/agent/subagent/tool call; docs/metrics/eval-metrics.md generated. TC-207 and TC-1117 belong to C001-T-031 and C001-T-063 per the test plan; their assertions (optionProblems) and case-file runner are in place. claude plugin eval needs an auth token for its children (README). Spend for T-029: about $0.05." }
 ---
 
 # C001-T-029 — Agent eval harness and tiered runs
