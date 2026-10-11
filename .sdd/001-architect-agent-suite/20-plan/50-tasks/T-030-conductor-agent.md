@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-006, C001-T-028, C001-T-029]
 implements: [C001-REQ-201, C001-REQ-202, C001-REQ-203, C001-REQ-217, C001-REQ-219, C001-REQ-909]
 satisfies_ac: [C001-AC-201.1, C001-AC-202.1, C001-AC-203.1, C001-AC-217.1, C001-AC-219.1, C001-AC-909.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-201, C001-TS-202, C001-TS-203, C001-TS-219, C001-TS-221, C
 components: [C001-COMP-01, C001-COMP-11]
 risk_refs: [C001-RISK-001]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3003d4c, completed_at: 2026-10-11, notes: "Conductor and sdd-conventions done; TC-201, 202, 203, 910 pass (dev tier), TC-219 passes; TC-221 written, runs after C001-T-032 (needs phase-spec). Defect D-001 (task tools) fixed by a spec revision, G2/G3 re-approved. Eval spend about $0.75." }
 ---
 
 # C001-T-030 — Conductor agent: definition, orientation, allowlist
