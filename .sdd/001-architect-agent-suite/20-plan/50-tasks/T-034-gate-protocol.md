@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-032, C001-T-025]
 implements: [C001-REQ-802, C001-REQ-803, C001-REQ-804]
 satisfies_ac: [C001-AC-802.1, C001-AC-803.1, C001-AC-804.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-802, C001-TS-803, C001-TS-804, C001-TC-802, C001-TC-803, C
 components: [C001-COMP-01, C001-COMP-10]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: f092093, completed_at: 2026-10-11, notes: "TC-802/803/804 pass (dev; TS-804 3 examples); eval spend ~$2.86; D-002 open: gate question exception to C001-REQ-206 awaits a G2 revision" }
 ---
 
 # C001-T-034 — Gate protocol skill and gate presentation
