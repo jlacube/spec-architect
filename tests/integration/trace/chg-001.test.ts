@@ -1,6 +1,6 @@
 // C001-T-023 on this repository's CHG-001: trace.json validates against C001-IF-12, outputs are
 // deterministic apart from generated_at (C001-NFR-302), and the coverage equals the prototype
-// generator's (tools/prototypes/specgen.py, planrender.py) recorded in the approved matrices.
+// generator's (specgen.py and planrender.py, retired in C001-T-028) recorded before the dogfood switch.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

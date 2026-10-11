@@ -1,6 +1,6 @@
 // Approval hash of C001-IF-13 §2 (C001-REQ-806) and the per-ID content hashes of approvals.json
-// (C001-REQ-814). Ported from tools/prototypes/phasehash.py; this repository's G1–G3 hashes are the
-// golden values.
+// (C001-REQ-814). Ported from the bootstrap prototype phasehash.py (retired in C001-T-028); this
+// repository's G1–G3 hashes are the golden values.
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";

@@ -11,8 +11,9 @@ import { runBundled } from "../cli/helpers.ts";
 
 const dir = join(repoRoot(), ".sdd", "001-architect-agent-suite");
 
-test("the 00-ideation hash of CHG-001 equals the G1 value", () => {
-  const r = phaseHash(dir, "00-ideation");
+test("the 00-ideation hash of CHG-001 at G1 equals the G1 value", () => {
+  // fx-bootstrap at G1: the ideation as approved on 2026-10-10, before the C001-T-028 revision.
+  const r = phaseHash(join(repoRoot(), "tests", "fixtures", "fx-bootstrap-g1"), "00-ideation");
   assert.equal(r.files, 1);
   assert.equal(r.hash, "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401");
 });

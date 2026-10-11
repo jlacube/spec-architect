@@ -10,8 +10,6 @@ status: draft
 #### C004-AC-101.1 — Report written
 ```gherkin
 Scenario: C004-TS-101 — scenario
-  Given a
-  And a2
   When b
   Then c
   But d

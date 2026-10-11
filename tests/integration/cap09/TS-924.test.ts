@@ -16,10 +16,10 @@ test("defect reopen sets status open and keeps the previous resolution and date 
     assert.equal(d["status"], "open");
     const history = (d["history"] as Record<string, unknown>[]).map((h) => ({ ...h, closed_at: String(h["closed_at"]) }));
     assert.deepEqual(history, [{ resolution: "REQ-012 now uses UTC (rev 2)", closed_at: isoDate() }]);
-    // The registry keeps the C001-IF-02 defect fields only.
+    // The registry carries the same defect, history included (C001-IF-02).
     const reg = registry(ws.root).changes.find((c) => c.id === "CHG-004")!.defects[0]!;
     assert.equal(reg["status"], "open");
-    assert.equal("history" in reg, false);
+    assert.deepEqual((reg["history"] as Record<string, unknown>[]).map((h) => ({ ...h, closed_at: String(h["closed_at"]) })), history);
   } finally {
     ws.cleanup();
   }

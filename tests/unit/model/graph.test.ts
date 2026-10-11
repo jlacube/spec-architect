@@ -1,5 +1,5 @@
 // The CHG-001 workspace of this repository is the parsing fixture: definition counts must match
-// the bootstrap prototypes (tools/prototypes), and every per-ID content hash must reproduce the
+// the bootstrap prototypes (retired in C001-T-028), and every per-ID content hash must reproduce the
 // hashes recorded at the G2/G3 approvals (C001-IF-13 §2 step 5).
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -79,11 +79,10 @@ test("references record whether they sit in code, quotes or text", () => {
 
 test("references resolve to a definition or a tombstone, except example IDs in code or quotes", () => {
   const tomb = new Set((JSON.parse(readFileSync(join(changeDir, "ids.json"), "utf8")) as { tombstones: { id: string }[] }).tombstones.map((t) => t.id));
-  const unresolved = graph.edges.filter((e) => e.context === "text" && !e.file.startsWith("00-ideation/") && !graph.byId.has(e.to) && !tomb.has(e.to));
-  // Known residue, left to the lint rules (C001-T-018, C001-T-021): ideation labels carried into the
-  // spec as prose ("IDEA NG-01 … 06", "IDEA AS-01 … 08") and the example short forms in C001-T-010's text.
-  const known = ["C001-AC-012.1", "C001-AS-01", "C001-AS-08", "C001-NG-01", "C001-NG-02", "C001-NG-03", "C001-NG-04", "C001-NG-05", "C001-NG-06", "C001-REQ-012"];
-  assert.deepEqual([...new Set(unresolved.map((e) => e.to))].sort(), known);
+  // Since the C001-T-028 revision, ideation labels are written IDEA-NG/IDEA-AS and example IDs sit in
+  // backticks, so every text reference of the change resolves.
+  const unresolved = graph.edges.filter((e) => e.context === "text" && !graph.byId.has(e.to) && !tomb.has(e.to));
+  assert.deepEqual([...new Set(unresolved.map((e) => e.to))].sort(), []);
 });
 
 test("generated files contribute neither definitions nor edges", () => {

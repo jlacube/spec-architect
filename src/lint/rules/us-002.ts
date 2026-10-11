@@ -1,6 +1,6 @@
 // LINT-US-002 (error): a user story lacks one of the fields of C001-REQ-402, or leaves it empty.
-// "Context & notes" and "Out of scope" are not checked: whether a story needs them is a judgement
-// the critic makes, not a lint.
+// "Out of scope" is required only when a neighbouring feature is excluded, a judgement the critic
+// makes, so the lint does not check it.
 import type { LintRule, RuleFinding } from "../types.ts";
 
 const LABELS: [string, RegExp][] = [
@@ -11,6 +11,7 @@ const LABELS: [string, RegExp][] = [
   ["Priority", /\*\*Priority:?\*\*(.*)/i],
   ["Size hint", /\*\*Size hint:?\*\*(.*)/i],
   ["Capability", /\*\*Capability:?\*\*(.*)/i],
+  ["Context & notes", /\*\*Context & notes:?\*\*(.*)/i],
   ["Requirements", /\*\*Requirements:?\*\*(.*)/i],
   ["Traces to", /\*\*Traces to:?\*\*(.*)/i],
 ];

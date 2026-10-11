@@ -64,7 +64,7 @@ export const COVERAGE =
 
 /** The story fields of C001-REQ-402 before Requirements and Traces to, for persona P-01. */
 export const STORY_FIELDS =
-  "- **As a** P-01 owner\n- **I want** a thing\n- **So that** it is done\n- **Value / outcome:** done\n- **Priority:** Must · **Size hint:** S · **Capability:** C004-CAP-01\n";
+  "- **As a** P-01 owner\n- **I want** a thing\n- **So that** it is done\n- **Value / outcome:** done\n- **Priority:** Must · **Size hint:** S · **Capability:** C004-CAP-01\n- **Context & notes:** none beyond the requirement\n";
 
 /** A minimal lint-clean change folder `004-x` with one requirement. */
 export function minimalChange(): Record<string, string> {

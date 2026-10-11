@@ -1,6 +1,5 @@
-// C001-TC-801 — verifies C001-TS-801 (C001-AC-801.1, C001-REQ-801): gate show. The scenario writes
-// "US: 14" and "lint: 0 error / 3 warn"; the output follows the C001-IF-13 §1 layout ("US 14",
-// "Lint: 0 error · 3 warn"), so the assertions accept both punctuations.
+// C001-TC-801 — verifies C001-TS-801 (C001-AC-801.1, C001-REQ-801): gate show, in the C001-IF-13 §1
+// layout.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
@@ -29,8 +28,8 @@ test("gate show lists files, ID counts, coverage, lint, critic, markers and stal
     const out = r.stdout;
     assert.match(out, /^Gate G2 — CHG-004 "x" — phase 10-spec \(status: draft\)$/m);
     assert.match(out, /^Files \(\d+\): .*20-capabilities\/CAP-01-a\/requirements\.md/m);
-    assert.match(out, /\bUS:? 14\b/);
-    assert.match(out, /\bREQ:? 41\b/);
+    assert.match(out, /^IDs: .*\bUS 14\b/m);
+    assert.match(out, /^IDs: .*\bREQ 41\b/m);
     for (const rule of ["TR-01", "TR-02", "TR-03", "TR-04", "TR-05"]) assert.match(out, new RegExp(`^Coverage: .*${rule} \\d+/\\d+`, "m"), rule);
     assert.match(out, /^Lint: 0 error · 3 warn · \d+ info$/m);
     assert.match(out, /^Critic: 0 blocker · 1 major \(CR-1\) · 0 minor$/m);

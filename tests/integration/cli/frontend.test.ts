@@ -143,27 +143,16 @@ test("SDD_DEBUG=1 writes timing and decision traces to standard error for every 
   }
 });
 
-// Dogfood tracker for C001-T-028 ("sdd lint exits 0 on this repository"): after status --write the
-// only findings are the known residue (ideation labels and example IDs in prose). Any other finding
-// fails here; T-028 turns this into a clean run.
-test("lint on a copy of this repository's workspace reports only the known dogfood residue", () => {
+// M-2 exit criterion (C001-T-028): `sdd lint` exits 0 on this repository, after status --write.
+test("lint on a copy of this repository's workspace exits 0 with no error or warning", () => {
   const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-repo-")));
   try {
     cpSync(join(repoRoot(), ".sdd"), join(root, ".sdd"), { recursive: true });
     assert.equal(runBundled(["status", "--write"], { cwd: root }).code, 0);
     const r = runBundled(["lint", "--json"], { cwd: root });
-    const findings = (JSON.parse(r.stdout) as { findings: { code: string; path: string; ids?: string[] }[] }).findings;
-    const unexpected = findings.filter((f) => {
-      if (f.code === "LINT-WS-002") return false;
-      if (f.path.includes("/00-ideation/") && (f.code === "TR-12" || f.code === "LINT-TXT-001")) return false;
-      // C001-T-020: 70 approved scenarios have no Given step and C001-TS-205 has no When (C001-REQ-413).
-      if (f.code === "LINT-TS-001" && f.path.endsWith("/acceptance.md")) return false;
-      // C001-T-021: the bootstrap ideation lacks three template sections (C001-REQ-313).
-      if (f.code === "LINT-IDE-001" && f.path.endsWith("/00-ideation/ideation.md")) return false;
-      const known = ["C001-NG-01", "C001-NG-02", "C001-NG-03", "C001-NG-04", "C001-NG-05", "C001-NG-06", "C001-AS-01", "C001-AS-08", "C001-REQ-012", "C001-AC-012.1"];
-      return !(f.code === "TR-12" && known.includes(f.ids?.[0] ?? ""));
-    });
-    assert.deepEqual(unexpected, []);
+    assert.equal(r.code, 0, r.stdout);
+    const findings = (JSON.parse(r.stdout) as { findings: { code: string; severity: string }[] }).findings;
+    assert.deepEqual(findings.filter((f) => f.severity !== "info"), []);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

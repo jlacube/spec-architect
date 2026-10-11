@@ -7570,7 +7570,7 @@ var SCAN = new RegExp(`(?<![A-Za-z0-9_§-])(?:C(\\d{3})-)?${BODY}(?![A-Za-z0-9_-
 function valid(type, sub) {
   return type === "AC" ? sub !== void 0 : sub === void 0;
 }
-var TWO_DIGIT = /* @__PURE__ */ new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M"]);
+var TWO_DIGIT = /* @__PURE__ */ new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M", "COMP", "IF"]);
 var minDigits = (type) => TWO_DIGIT.has(type) ? 2 : 3;
 function parseId(text) {
   const m = FULL.exec(text);
@@ -9245,13 +9245,13 @@ var tr15 = {
 var ts001 = {
   code: "LINT-TS-001",
   severity: "error",
-  fix: "One When, ≥ 1 Given, ≥ 1 Then",
+  fix: "Exactly one When and ≥ 1 Then",
   scope: "file",
   check(ctx) {
     const out = [];
     for (const c of ctx.changes)
       for (const s of scenarios(c)) {
-        if (s.given >= 1 && s.when === 1 && s.then >= 1) continue;
+        if (s.when === 1 && s.then >= 1) continue;
         const label = s.id ?? "Scenario";
         out.push({
           path: `${c.folder}/${s.path}`,
@@ -9318,6 +9318,7 @@ var LABELS = [
   ["Priority", /\*\*Priority:?\*\*(.*)/i],
   ["Size hint", /\*\*Size hint:?\*\*(.*)/i],
   ["Capability", /\*\*Capability:?\*\*(.*)/i],
+  ["Context & notes", /\*\*Context & notes:?\*\*(.*)/i],
   ["Requirements", /\*\*Requirements:?\*\*(.*)/i],
   ["Traces to", /\*\*Traces to:?\*\*(.*)/i]
 ];
@@ -10053,12 +10054,12 @@ function changeEntry(dir2, folder, archived) {
       },
       last_report: last ? last.length === 10 ? `${last}T00:00:00Z` : last : null
     },
-    // The registry carries the C001-IF-02 defect fields; a defect's reopen history stays in change.md.
+    // The registry carries the C001-IF-02 defect fields, including the reopen history.
     defects: Array.isArray(fm["defects"]) ? fm["defects"].map(registryDefect) : [],
     waivers: Array.isArray(fm["waivers"]) ? fm["waivers"] : []
   };
 }
-var DEFECT_FIELDS = ["id", "ref", "summary", "reporter", "date", "status", "resolution", "closed_at"];
+var DEFECT_FIELDS = ["id", "ref", "summary", "reporter", "date", "status", "resolution", "closed_at", "history"];
 function registryDefect(d) {
   return Object.fromEntries(DEFECT_FIELDS.filter((k) => k in d).map((k) => [k, d[k]]));
 }
@@ -11282,7 +11283,7 @@ function approve(ctx, o) {
     date,
     GATES[ctx.phase],
     waivers.length > 0 ? "**Approved with waivers**" : "**Approved**",
-    JSON.stringify(o.note),
+    `"${o.note}"`,
     waivers.length > 0 ? waivers.map((w) => w.item).join(", ") : "none",
     o.usage ?? "unavailable"
   ]);
@@ -11300,7 +11301,7 @@ function record(ctx, decision, note, today) {
     text = setTopLevel(text, "status", "stopped");
     text = setTopLevel(text, "stopped", `{ reason: ${JSON.stringify(note)}, date: ${date} }`);
   }
-  text = appendGateLog(text, [date, GATES[ctx.phase], decision === "revise" ? "**Revise**" : "**Stop**", JSON.stringify(note), "none", "unavailable"]);
+  text = appendGateLog(text, [date, GATES[ctx.phase], decision === "revise" ? "**Revise**" : "**Stop**", `"${note}"`, "none", "unavailable"]);
   writeTextAtomic(join17(ctx.changeDir, "change.md"), text);
 }
 

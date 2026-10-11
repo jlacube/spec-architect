@@ -112,13 +112,13 @@ function changeEntry(dir: string, folder: string, archived: boolean): RegistryCh
       },
       last_report: last ? (last.length === 10 ? `${last}T00:00:00Z` : last) : null,
     },
-    // The registry carries the C001-IF-02 defect fields; a defect's reopen history stays in change.md.
+    // The registry carries the C001-IF-02 defect fields, including the reopen history.
     defects: Array.isArray(fm["defects"]) ? (fm["defects"] as Record<string, unknown>[]).map(registryDefect) : [],
     waivers: Array.isArray(fm["waivers"]) ? (fm["waivers"] as Record<string, unknown>[]) : [],
   };
 }
 
-const DEFECT_FIELDS = ["id", "ref", "summary", "reporter", "date", "status", "resolution", "closed_at"];
+const DEFECT_FIELDS = ["id", "ref", "summary", "reporter", "date", "status", "resolution", "closed_at", "history"];
 
 function registryDefect(d: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(DEFECT_FIELDS.filter((k) => k in d).map((k) => [k, d[k]]));

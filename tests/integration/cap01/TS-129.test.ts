@@ -36,7 +36,8 @@ test("C001-TS-129: adopting the bootstrap keeps phases, hashes and gate log and 
     assert.equal(after, before);
     const phases = splitFrontmatter(after).data?.["phases"] as Record<string, { status: string; approved_hash: string }>;
     assert.equal(phases["00-ideation"]?.status, "approved");
-    assert.match(phases["00-ideation"]?.approved_hash ?? "", /^sha256:c9c7849f/);
+    // The approved hash is the one this repository records (G1 re-approved in C001-T-028).
+    assert.match(phases["00-ideation"]?.approved_hash ?? "", /^sha256:[0-9a-f]{64}$/);
     assert.equal(gateLog(after), gateLog(before));
     const sddAfter = readFileSync(join(ws.root, ".sdd", "SDD.md"), "utf8");
     assert.match(String(splitFrontmatter(sddAfter).data?.["generator"]), /^architect-plugin@/);

@@ -13,5 +13,6 @@ status: draft
 - **So that** it is done
 - **Value / outcome:** done
 - **Priority:** Must · **Size hint:** S · **Capability:** C004-CAP-01
+- **Context & notes:** none beyond the requirement
 - **Requirements:** C004-REQ-101
 - **Traces to:** Q1

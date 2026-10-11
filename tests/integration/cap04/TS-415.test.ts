@@ -11,7 +11,7 @@ function acceptanceWith(steps: string): string {
 // The scenario's Examples table, verbatim.
 const rows: [givens: number, whens: number, thens: number, contains: boolean][] = [
   [1, 1, 1, false],
-  [0, 1, 1, true],
+  [0, 1, 1, false],
   [1, 2, 1, true],
   [2, 1, 0, true],
 ];

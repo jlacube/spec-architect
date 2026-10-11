@@ -40,7 +40,7 @@ function valid(type: string, sub: string | undefined): boolean {
 }
 
 /** C001-IF-04 §1 sequence widths: ≥ 2 digits for these types, ≥ 3 for the others. */
-const TWO_DIGIT: ReadonlySet<string> = new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M"]);
+const TWO_DIGIT: ReadonlySet<string> = new Set(["GOAL", "SC", "NG", "AS", "CON", "CAP", "INV", "M", "COMP", "IF"]);
 const minDigits = (type: string) => (TWO_DIGIT.has(type) ? 2 : 3);
 
 export function parseId(text: string): IdParts | null {

@@ -44,7 +44,7 @@ function change(c) {
       const seq = k * 100 + i;
       const us = `${P}-US-${seq}`, req = `${P}-REQ-${seq}`, ac = `${P}-AC-${seq}.1`, ts = `${P}-TS-${seq}`;
       reqs.push({ req, ts, cap: `${P}-CAP-${cap}` });
-      stories.push(`### ${us} — Story ${seq}\n- **As a** P-01 owner\n- **I want** behaviour ${seq}\n- **So that** outcome ${seq} holds\n- **Value / outcome:** measurable outcome ${seq}\n- **Priority:** Must · **Size hint:** S · **Capability:** ${P}-CAP-${cap}\n- **Requirements:** ${req}\n- **Traces to:** Q${i}\n`);
+      stories.push(`### ${us} — Story ${seq}\n- **As a** P-01 owner\n- **I want** behaviour ${seq}\n- **So that** outcome ${seq} holds\n- **Value / outcome:** measurable outcome ${seq}\n- **Priority:** Must · **Size hint:** S · **Capability:** ${P}-CAP-${cap}\n- **Context & notes:** generated story ${seq}\n- **Requirements:** ${req}\n- **Traces to:** Q${i}\n`);
       requirements.push(`### ${req} — Requirement ${seq}\n- **Pattern:** event-driven\n- **Statement:** WHEN request ${seq} arrives, THE sdd CLI SHALL record entry ${seq}.\n- **Rationale:** traceability\n- **Stories:** ${us}\n- **Priority:** Must\n- **Acceptance:** ${ac}\n`);
       acceptance.push(`#### ${ac} — Entry ${seq} recorded\n\`\`\`gherkin\nScenario: ${ts} — entry ${seq}\n  Given a workspace\n  When request ${seq} arrives\n  Then entry ${seq} is recorded\n\`\`\`\n`);
       coverage.push(`| ${req} | TS-${seq} | n/a: one path | n/a: none | n/a: none | n/a: local tool | n/a: single writer | n/a: own files |`);

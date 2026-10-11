@@ -151,7 +151,7 @@ export function approve(ctx: GateContext, o: ApproveOptions): ApproveResult {
     text = setTopLevel(text, "waivers", waiversYaml([...kept, ...waivers]));
   }
   text = appendGateLog(text, [
-    date, GATES[ctx.phase]!, waivers.length > 0 ? "**Approved with waivers**" : "**Approved**", JSON.stringify(o.note),
+    date, GATES[ctx.phase]!, waivers.length > 0 ? "**Approved with waivers**" : "**Approved**", `"${o.note}"`,
     waivers.length > 0 ? waivers.map((w) => w.item).join(", ") : "none", o.usage ?? "unavailable",
   ]);
   writeTextAtomic(join(ctx.changeDir, "change.md"), text);
@@ -174,7 +174,7 @@ export function record(ctx: GateContext, decision: "revise" | "stop", note: stri
     text = setTopLevel(text, "status", "stopped");
     text = setTopLevel(text, "stopped", `{ reason: ${JSON.stringify(note)}, date: ${date} }`);
   }
-  text = appendGateLog(text, [date, GATES[ctx.phase]!, decision === "revise" ? "**Revise**" : "**Stop**", JSON.stringify(note), "none", "unavailable"]);
+  text = appendGateLog(text, [date, GATES[ctx.phase]!, decision === "revise" ? "**Revise**" : "**Stop**", `"${note}"`, "none", "unavailable"]);
   writeTextAtomic(join(ctx.changeDir, "change.md"), text);
 }
 
