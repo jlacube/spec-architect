@@ -1,0 +1,154 @@
+{
+  "scenario": "TS-803",
+  "title": "Note equals answer",
+  "tier": "dev",
+  "label": "t034",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T11:28:28.747Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.16534659999999998,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16534659999999998,
+        "session_ms": 138532,
+        "api_ms": 33752,
+        "turns": 11,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 16,
+            "output": 3283,
+            "cache_read": 145788,
+            "cache_write": 14093,
+            "cost_usd": 0.16534659999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 3283,
+              "cache_read": 145788,
+              "cache_write": 14093
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bogglbjxi",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b37bbk37t",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brh91vhj6",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bs9c1p26p",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7htta1ec",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "biw3wzzc7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 6,
+          "Skill": 1,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 35612
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 35403
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 14784
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13907
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13603
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 92
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13067
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11901
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-803-2026-10-11T11-26-06-811Z-run1.json"
+    }
+  ]
+}

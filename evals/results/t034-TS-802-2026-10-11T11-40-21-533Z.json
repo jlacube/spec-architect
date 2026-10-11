@@ -1,0 +1,252 @@
+{
+  "scenario": "TS-802",
+  "title": "Gate question",
+  "tier": "dev",
+  "label": "t034",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T11:43:16.677Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.258276515,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "the gate summary (sdd gate show output) is not shown"
+      ],
+      "metrics": {
+        "cost_usd": 0.258276515,
+        "session_ms": 171660,
+        "api_ms": 70494,
+        "turns": 16,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 26,
+            "output": 5104,
+            "cache_read": 276419,
+            "cache_write": 19693,
+            "cost_usd": 0.2559328
+          },
+          "claude-haiku-5-5": {
+            "input": 10,
+            "output": 2481,
+            "cache_read": 33109,
+            "cache_write": 6169,
+            "cost_usd": 0.0023437149999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 5104,
+              "cache_read": 276419,
+              "cache_write": 19693
+            },
+            "output": "derived"
+          },
+          "architect:sdd-spec-writer": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 24325,
+              "cache_write": 5001
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bo86lkiyo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "byk4rlaae",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3e28p2su",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bikawk3bf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsiyjrinb",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-spec-writer",
+            "task_id": "a42590a904bb80f92",
+            "ms": 14076,
+            "tool_uses": 8,
+            "total_tokens": 10478
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bd33hx7q2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 6,
+          "Skill": 1,
+          "Read": 4,
+          "Edit": 2,
+          "AskUserQuestion": 2,
+          "Grep": 4,
+          "Agent": 1,
+          "Glob": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33563
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 33349
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13711
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12990
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 74
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12572
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12441
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 41
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 202
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-spec-writer",
+            "ms": 14094
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 11
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 148
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 153
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 18
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 150
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 155
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 81
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13175
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 31
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-802-2026-10-11T11-40-21-533Z-run1.json"
+    }
+  ]
+}

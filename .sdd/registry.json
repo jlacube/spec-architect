@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T11:07:54Z",
+  "generated_at": "2026-10-11T11:09:26Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -36,7 +36,7 @@
           "total": 57,
           "done": 31,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },
@@ -50,6 +50,16 @@
           "status": "closed",
           "resolution": "C001-REQ-219, C001-TS-221, C001-IF-09 A0 and C001-IF-10 section 3 revised for the task tools (G2/G3 re-approved 2026-10-11)",
           "closed_at": "2026-10-11"
+        },
+        {
+          "id": "D-002",
+          "ref": "C001-REQ-206",
+          "summary": "C001-REQ-206/TS-207 require 2-3 options with the first labelled (Recommended) for every optioned question, but C001-REQ-802/TS-802 require the gate question to offer exactly Approve, Approve with waivers, Revise and Stop; the gate question needs an explicit exception (four fixed options, no recommendation) (found in C001-T-034)",
+          "reporter": "implementer",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []

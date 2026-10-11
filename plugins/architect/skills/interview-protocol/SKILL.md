@@ -39,7 +39,8 @@ markers.
 ## 3. Shape each question
 
 - **Two or three options.** The recommended option comes **first** and its label ends with
-  ` (Recommended)`. No other label carries that suffix.
+  ` (Recommended)`. No other label carries that suffix. (The gate question is the one exception: four fixed
+  choices and no recommendation — gate-protocol skill.)
 - Every option has a **one-sentence rationale** (its description): why it fits, or what it
   costs. No empty descriptions.
 - Labels are short (1–5 words). The question text is complete on its own and ends with `?`.

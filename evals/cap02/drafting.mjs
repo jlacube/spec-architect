@@ -156,14 +156,22 @@ phase: 10-spec
 | C001-DOD-001 | Acceptance tests pass | test-report | C001-REQ-101 |
 `;
 
-/** Lite change 001 at 10-spec draft whose spec is complete and lint-clean (ideation approved). */
-export function liteSpecDrafted(root) {
-  specStart()(root);
-  write(root, ".sdd/001-coupon-codes/10-spec/spec.md", LITE_SPEC);
-  write(root, ".sdd/001-coupon-codes/10-spec/dod.md", LITE_DOD);
-  edit(root, ".sdd/001-coupon-codes/change.md", (t) => t.replace(/^( {2}10-spec: \{ status: )not-started/m, "$1draft").replace(/^phase: 00-ideation$/m, "phase: 10-spec"));
-  sdd(root, "trace", "001", "--write");
-  sdd(root, "status", "--write");
-  git(root, "add", "-A");
-  git(root, "commit", "-q", "-m", "draft");
+/** Lite change `nnn` at 10-spec draft whose spec is complete and lint-clean (ideation approved). */
+export function liteSpecDraftedAt(nnn) {
+  const NNN = String(nnn).padStart(3, "0");
+  const ids = (t) => t.replaceAll("C001-", `C${NNN}-`).replaceAll("CHG-001", `CHG-${NNN}`);
+  return (root) => {
+    specStart({ nnn })(root);
+    const dir = `.sdd/${NNN}-coupon-codes`;
+    write(root, `${dir}/10-spec/spec.md`, ids(LITE_SPEC));
+    write(root, `${dir}/10-spec/dod.md`, ids(LITE_DOD));
+    edit(root, `${dir}/change.md`, (t) => t.replace(/^( {2}10-spec: \{ status: )not-started/m, "$1draft").replace(/^phase: 00-ideation$/m, "phase: 10-spec"));
+    sdd(root, "trace", NNN, "--write");
+    sdd(root, "status", "--write");
+    git(root, "add", "-A");
+    git(root, "commit", "-q", "-m", "draft");
+  };
 }
+
+/** Lite change 001 at 10-spec draft (see liteSpecDraftedAt). */
+export const liteSpecDrafted = liteSpecDraftedAt(1);

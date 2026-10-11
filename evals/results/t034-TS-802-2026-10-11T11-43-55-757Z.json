@@ -1,0 +1,540 @@
+{
+  "scenario": "TS-802",
+  "title": "Gate question",
+  "tier": "dev",
+  "label": "t034",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T11:50:00.903Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.453035185,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.453035185,
+        "session_ms": 361607,
+        "api_ms": 248547,
+        "turns": 23,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 34,
+            "output": 9482,
+            "cache_read": 425556,
+            "cache_write": 29503,
+            "cost_usd": 0.42240219999999995
+          },
+          "claude-haiku-5-5": {
+            "input": 50,
+            "output": 39415,
+            "cache_read": 280961,
+            "cache_write": 64887,
+            "cost_usd": 0.030632985000000005
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 34,
+              "output": 9482,
+              "cache_read": 425556,
+              "cache_write": 29503
+            },
+            "output": "derived"
+          },
+          "architect:sdd-spec-writer": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 36,
+              "output": 0,
+              "cache_read": 186815,
+              "cache_write": 42801
+            },
+            "output": "derived"
+          },
+          "architect:sdd-test-designer": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 18365,
+              "cache_write": 18547
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bi2k6xplu",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8l2u3gag",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bivphmsea",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b11hwodbh",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bk5fri8ez",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-spec-writer",
+            "task_id": "a1143ad00eb69c4e4",
+            "ms": 57955,
+            "tool_uses": 8,
+            "total_tokens": 22088
+          },
+          {
+            "subagent": "architect:sdd-spec-writer",
+            "task_id": "aa54779e933385b4d",
+            "ms": 37775,
+            "tool_uses": 18,
+            "total_tokens": 21889
+          },
+          {
+            "subagent": "architect:sdd-spec-writer",
+            "task_id": "ac86f671bbe4c3083",
+            "ms": 16020,
+            "tool_uses": 11,
+            "total_tokens": 14500
+          },
+          {
+            "subagent": "architect:sdd-test-designer",
+            "task_id": "aa9c35b98b0ee1e37",
+            "ms": 46966,
+            "tool_uses": 13,
+            "total_tokens": 24152
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bfdudjq21",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0i9gti37",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Bash": 7,
+          "Read": 16,
+          "Edit": 32,
+          "AskUserQuestion": 4,
+          "Write": 3,
+          "Agent": 4,
+          "Grep": 3,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 53
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33051
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12969
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13128
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 67
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12274
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12269
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-spec-writer",
+            "ms": 57972
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 17
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 21
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 74
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 60
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 54
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-spec-writer",
+            "ms": 37793
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 10
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 181
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 131
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 165
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 56
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 44
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 37
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 52
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 49
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 50
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 55
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 42
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 45
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 55
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 166
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 49
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-spec-writer",
+            "ms": 16032
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 6
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 11
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 56
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 53
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 54
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 44
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 48
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 42
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 47
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 50
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-test-designer",
+            "ms": 46981
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 11
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 46
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 43
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 49
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 56
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 41
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 45
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 36
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 63
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 47
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12699
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12328
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-802-2026-10-11T11-43-55-757Z-run1.json"
+    }
+  ]
+}
