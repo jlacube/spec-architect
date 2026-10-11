@@ -48,10 +48,12 @@ export interface SpecFacts {
   personas: ReadonlySet<string>;
   /** System names allowed after `THE`: "System names" tables (change and project glossary) and COMP titles. */
   systems: readonly string[];
-  /** Lines of each heading-defined US, REQ and NFR section, by ID; `line` is the heading line. */
+  /** Lines of each heading-defined US, REQ, NFR and COMP section, by ID; `line` is the heading line. */
   sections: ReadonlyMap<string, { line: number; lines: string[] }>;
-  /** Parsed 10-spec Markdown files by change-relative path (lines are 1-based in `blocks`). */
+  /** Parsed Markdown files of every phase by change-relative path (lines are 1-based in `blocks`). */
   docs: ReadonlyMap<string, SpecDoc>;
+  /** Files of `10-spec/50-interfaces/` by change-relative path; JSON/YAML contracts carry their text. */
+  interfaces: ReadonlyMap<string, string | null>;
 }
 
 export interface SpecDoc {

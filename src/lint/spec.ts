@@ -4,6 +4,11 @@ import { findIds, formatId, parseId } from "../model/ids.ts";
 import type { GraphNode } from "../model/graph.ts";
 import type { LintChange, SpecDoc } from "./types.ts";
 
+/** The parsed files of the change's 10-spec phase. */
+export function specDocs(c: LintChange): [string, SpecDoc][] {
+  return [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/"));
+}
+
 /**
  * Full IDs named in a cell, expanding the list forms of the spec: `C001-NFR-101, 102, 103` and
  * ranges `C001-REQ-101 … 127` (or `...`); a bare number continues the type of the ID before it.
@@ -74,7 +79,7 @@ export interface DodRow {
 /** Feature DoD rows of the change (C001-REQ-419): tables whose first cell is a DOD ID. */
 export function dodRows(c: LintChange): DodRow[] {
   const out: DodRow[] = [];
-  for (const [path, doc] of c.spec.docs) {
+  for (const [path, doc] of specDocs(c)) {
     if (!/(^|\/)(70-dod|dod)\.md$/.test(path)) continue;
     for (const t of tables(doc, path)) {
       const evidence = t.header.find((h) => h.startsWith("evidence"));
@@ -102,7 +107,7 @@ export interface CoverageTable {
 /** Coverage tables (C001-IF-03 §7): tables whose header starts with REQ and names `happy`. */
 export function coverageTables(c: LintChange): CoverageTable[] {
   const out: CoverageTable[] = [];
-  for (const [path, doc] of c.spec.docs)
+  for (const [path, doc] of specDocs(c))
     for (const t of tables(doc, path)) {
       if (t.header[0] !== "req" || !t.header.includes("happy")) continue;
       let i = t.endLine; // 0-based index of the line after the table
@@ -127,7 +132,7 @@ export interface Scenario {
 /** Scenarios of the `gherkin` fences; `And`/`But` count as the keyword they continue. */
 export function scenarios(c: LintChange): Scenario[] {
   const out: Scenario[] = [];
-  for (const [path, doc] of c.spec.docs)
+  for (const [path, doc] of specDocs(c))
     for (const f of doc.blocks.fences) {
       if (f.info.toLowerCase() !== "gherkin") continue;
       let cur: Scenario | null = null;
@@ -193,3 +198,54 @@ export function capabilityOf(c: LintChange, n: GraphNode): string[] {
   return [...caps];
 }
 
+
+const EVIDENCE_PATH = /[\w@-]+(?:\/[\w@.-]+)*\.[A-Za-z]\w*(?::\d+)?/;
+const EVIDENCE_SYMBOL = /[A-Za-z_$][\w$.#:]*\(\)|›\s*`?[A-Za-z_$][\w$.#:]*/;
+const EVIDENCE_LAYER = /\blayer:\s*(?:ripwire|serena|lsp|grep|ast-grep)\b/;
+
+/** What a code-evidence citation lacks among file path, symbol and evidence layer (C001-IF-03 §11). */
+export function evidenceGaps(text: string): string[] {
+  const t = text.replace(/`/g, "");
+  return [...(EVIDENCE_PATH.test(t) ? [] : ["file path"]), ...(EVIDENCE_SYMBOL.test(t) ? [] : ["symbol"]), ...(EVIDENCE_LAYER.test(t) ? [] : ["evidence layer"])];
+}
+
+export interface MermaidBlock {
+  path: string;
+  /** Line of the opening fence. */
+  line: number;
+  /** First keyword of the diagram (`flowchart`, `sequenceDiagram`, …). */
+  kind: string;
+  /** Diagram source lines. */
+  lines: string[];
+}
+
+/** Mermaid fences of the given docs. */
+export function mermaidBlocks(docs: [string, SpecDoc][]): MermaidBlock[] {
+  const out: MermaidBlock[] = [];
+  for (const [path, doc] of docs)
+    for (const f of doc.blocks.fences) {
+      if (f.info.toLowerCase() !== "mermaid") continue;
+      const lines = doc.lines.slice(f.start, f.end - 1);
+      const kind = lines.map((l) => l.trim()).find((l) => l !== "" && !l.startsWith("%%"))?.split(/\s+/)[0] ?? "";
+      out.push({ path, line: f.start, kind, lines });
+    }
+  return out;
+}
+
+/** Text of the nearest heading above `line`, or "". */
+export function headingAbove(doc: SpecDoc, line: number): string {
+  let text = "";
+  for (const h of doc.blocks.headings) if (h.line < line) text = h.text;
+  return text;
+}
+
+/** Heading text without its section number ("8.2 F1 — …" → "F1 — …"), lower-cased. */
+export function headingName(text: string): string {
+  return text.replace(/^\d+(?:\.\d+)*\.?\s+/, "").trim().toLowerCase();
+}
+
+/** Lines (1-based numbers) of the section under the first heading whose name starts with `name`. */
+export function sectionByName(doc: SpecDoc, name: string): { line: number; end: number } | null {
+  const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
+  return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
+}

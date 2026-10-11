@@ -17,7 +17,7 @@ test("every CHG-001 story section, persona and system name is gathered", () => {
   const stories = [...facts.sections.keys()].filter((id) => id.includes("-US-"));
   assert.equal(stories.length, graph.nodes.filter((n) => n.type === "US").length);
   assert.ok(stories.length >= 80);
-  assert.equal(facts.sections.size, graph.nodes.filter((n) => ["US", "REQ", "NFR"].includes(n.type) && n.form === "heading").length);
+  assert.equal(facts.sections.size, graph.nodes.filter((n) => ["US", "REQ", "NFR", "COMP"].includes(n.type) && n.form === "heading").length);
   assert.deepEqual([...facts.personas].sort(), ["P-01", "P-02", "P-03", "P-04", "P-05"]);
   for (const name of ["sdd CLI", "plugin", "Conductor"]) assert.ok(facts.systems.includes(name), name);
 });

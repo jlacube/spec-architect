@@ -18,3 +18,4 @@ status: draft
 - **Evidence:**
   - **E-1** `src/auth/lock.ts:42` › `lockAccount()` — locks the account
     - layer: serena · confidence: high
+    - disclosures: none

@@ -1,6 +1,6 @@
 // Spec facts the requirement-quality rules need beyond the graph (C001-CON-13: the engine reads,
 // the rules stay pure): change kind, personas, system names, sections and the parsed 10-spec files.
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseBlocks } from "../model/blocks.ts";
 import { toLines } from "../model/frontmatter.ts";
@@ -32,7 +32,8 @@ function systemNames(lines: string[], first: number): string[] {
   return out;
 }
 
-const SECTION_TYPES = new Set(["US", "REQ", "NFR"]);
+const SECTION_TYPES = new Set(["US", "REQ", "NFR", "COMP"]);
+const CONTRACT = /\.(json|ya?ml)$/i;
 
 export function gatherSpecFacts(sddDir: string, graph: ChangeGraph): SpecFacts {
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
@@ -42,11 +43,12 @@ export function gatherSpecFacts(sddDir: string, graph: ChangeGraph): SpecFacts {
   const docs = new Map<string, SpecDoc>();
 
   for (const f of graph.files) {
-    if (f.generated || !f.path.endsWith(".md") || !f.path.startsWith("10-spec/")) continue;
+    if (f.generated || !f.path.endsWith(".md")) continue;
     const src = readLines(join(graph.dir, ...f.path.split("/")));
     if (!src) continue;
     const b = parseBlocks(src.lines, src.first);
     docs.set(f.path, { lines: src.lines, blocks: b });
+    if (!f.path.startsWith("10-spec/")) continue;
     for (const h of b.headings) {
       const m = PERSONA_HEADING.exec(h.text);
       if (m?.[1]) personas.add(m[1]);
@@ -58,9 +60,15 @@ export function gatherSpecFacts(sddDir: string, graph: ChangeGraph): SpecFacts {
       sections.set(n.id, { line: n.line, lines: src.lines.slice(n.line - src.first, end - src.first + 1) });
     }
   }
+  // Interface folder: every file name, and the text of JSON/YAML contracts (C001-REQ-510, 512).
+  const interfaces = new Map<string, string | null>();
+  const ifDir = join(graph.dir, "10-spec", "50-interfaces");
+  if (existsSync(ifDir))
+    for (const e of readdirSync(ifDir, { withFileTypes: true }))
+      if (e.isFile()) interfaces.set(`10-spec/50-interfaces/${e.name}`, CONTRACT.test(e.name) ? readFileSync(join(ifDir, e.name), "utf8") : null);
   const constitution = readLines(join(sddDir, "_constitution", "glossary.md"));
   if (constitution) systems.push(...systemNames(constitution.lines, constitution.first));
   for (const n of graph.nodes) if (n.type === "COMP" && n.title !== "") systems.push(n.title);
 
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs };
+  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces };
 }

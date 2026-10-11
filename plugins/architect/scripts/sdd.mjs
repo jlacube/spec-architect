@@ -2382,9 +2382,9 @@ var require_stringifyNumber = __commonJS({
     function stringifyNumber({ format, minFractionDigits, tag, value: value2 }) {
       if (typeof value2 === "bigint")
         return String(value2);
-      const num = typeof value2 === "number" ? value2 : Number(value2);
-      if (!isFinite(num))
-        return isNaN(num) ? ".nan" : num < 0 ? "-.inf" : ".inf";
+      const num2 = typeof value2 === "number" ? value2 : Number(value2);
+      if (!isFinite(num2))
+        return isNaN(num2) ? ".nan" : num2 < 0 ? "-.inf" : ".inf";
       let n = Object.is(value2, -0) ? "-0" : JSON.stringify(value2);
       if (!format && minFractionDigits && (!tag || tag === "tag:yaml.org,2002:float") && /^-?\d/.test(n) && !n.includes("e")) {
         let i = n.indexOf(".");
@@ -2424,8 +2424,8 @@ var require_float = __commonJS({
       test: /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)[eE][-+]?[0-9]+$/,
       resolve: (str3) => parseFloat(str3),
       stringify(node) {
-        const num = Number(node.value);
-        return isFinite(num) ? num.toExponential() : stringifyNumber.stringifyNumber(node);
+        const num2 = Number(node.value);
+        return isFinite(num2) ? num2.toExponential() : stringifyNumber.stringifyNumber(node);
       }
     };
     var float = {
@@ -2864,8 +2864,8 @@ var require_float2 = __commonJS({
       test: /^[-+]?(?:[0-9][0-9_]*)?(?:\.[0-9_]*)?[eE][-+]?[0-9]+$/,
       resolve: (str3) => parseFloat(str3.replace(/_/g, "")),
       stringify(node) {
-        const num = Number(node.value);
-        return isFinite(num) ? num.toExponential() : stringifyNumber.stringifyNumber(node);
+        const num2 = Number(node.value);
+        return isFinite(num2) ? num2.toExponential() : stringifyNumber.stringifyNumber(node);
       }
     };
     var float = {
@@ -3067,23 +3067,23 @@ var require_timestamp = __commonJS({
     function parseSexagesimal(str3, asBigInt) {
       const sign = str3[0];
       const parts = sign === "-" || sign === "+" ? str3.substring(1) : str3;
-      const num = (n) => asBigInt ? BigInt(n) : Number(n);
-      const res = parts.replace(/_/g, "").split(":").reduce((res2, p) => res2 * num(60) + num(p), num(0));
-      return sign === "-" ? num(-1) * res : res;
+      const num2 = (n) => asBigInt ? BigInt(n) : Number(n);
+      const res = parts.replace(/_/g, "").split(":").reduce((res2, p) => res2 * num2(60) + num2(p), num2(0));
+      return sign === "-" ? num2(-1) * res : res;
     }
     function stringifySexagesimal(node) {
       let { value: value2 } = node;
-      let num = (n) => n;
+      let num2 = (n) => n;
       if (typeof value2 === "bigint")
-        num = (n) => BigInt(n);
+        num2 = (n) => BigInt(n);
       else if (isNaN(value2) || !isFinite(value2))
         return stringifyNumber.stringifyNumber(node);
       let sign = "";
       if (value2 < 0) {
         sign = "-";
-        value2 *= num(-1);
+        value2 *= num2(-1);
       }
-      const _60 = num(60);
+      const _60 = num2(60);
       const parts = [value2 % _60];
       if (value2 < 60) {
         parts.unshift(0);
@@ -7234,7 +7234,7 @@ var require_public_api = __commonJS({
       const lineCounter$1 = options.lineCounter || prettyErrors && new lineCounter.LineCounter() || null;
       return { lineCounter: lineCounter$1, prettyErrors };
     }
-    function parseAllDocuments(source, options = {}) {
+    function parseAllDocuments2(source, options = {}) {
       const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options);
       const parser$1 = new parser.Parser(lineCounter2?.addNewLine);
       const composer$1 = new composer.Composer(options);
@@ -7309,7 +7309,7 @@ var require_public_api = __commonJS({
       return new Document.Document(value2, _replacer, options).toString(options);
     }
     exports.parse = parse;
-    exports.parseAllDocuments = parseAllDocuments;
+    exports.parseAllDocuments = parseAllDocuments2;
     exports.parseDocument = parseDocument;
     exports.stringify = stringify;
   }
@@ -7527,7 +7527,7 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync6, readFileSync as readFileSync10, statSync as statSync7 } from "node:fs";
+import { readdirSync as readdirSync7, readFileSync as readFileSync10, statSync as statSync7 } from "node:fs";
 import { join as join12 } from "node:path";
 
 // src/model/ids.ts
@@ -7592,6 +7592,9 @@ function findIds(line, change) {
 }
 
 // src/lint/spec.ts
+function specDocs(c) {
+  return [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/"));
+}
 function expandIds(text, change) {
   const out = /* @__PURE__ */ new Set();
   const hits = findIds(text, change);
@@ -7629,7 +7632,7 @@ function tables(doc, path) {
 }
 function dodRows(c) {
   const out = [];
-  for (const [path, doc] of c.spec.docs) {
+  for (const [path, doc] of specDocs(c)) {
     if (!/(^|\/)(70-dod|dod)\.md$/.test(path)) continue;
     for (const t of tables(doc, path)) {
       const evidence = t.header.find((h) => h.startsWith("evidence"));
@@ -7646,7 +7649,7 @@ function dodRows(c) {
 var COVERAGE_COLUMNS = ["happy", "alternate", "boundary", "error", "authorization", "concurrency/idempotency", "abuse"];
 function coverageTables(c) {
   const out = [];
-  for (const [path, doc] of c.spec.docs)
+  for (const [path, doc] of specDocs(c))
     for (const t of tables(doc, path)) {
       if (t.header[0] !== "req" || !t.header.includes("happy")) continue;
       let i = t.endLine;
@@ -7659,7 +7662,7 @@ function coverageTables(c) {
 }
 function scenarios(c) {
   const out = [];
-  for (const [path, doc] of c.spec.docs)
+  for (const [path, doc] of specDocs(c))
     for (const f of doc.blocks.fences) {
       if (f.info.toLowerCase() !== "gherkin") continue;
       let cur = null;
@@ -7719,6 +7722,201 @@ function capabilityOf(c, n) {
   }
   return [...caps];
 }
+var EVIDENCE_PATH = /[\w@-]+(?:\/[\w@.-]+)*\.[A-Za-z]\w*(?::\d+)?/;
+var EVIDENCE_SYMBOL = /[A-Za-z_$][\w$.#:]*\(\)|›\s*`?[A-Za-z_$][\w$.#:]*/;
+var EVIDENCE_LAYER = /\blayer:\s*(?:ripwire|serena|lsp|grep|ast-grep)\b/;
+function evidenceGaps(text) {
+  const t = text.replace(/`/g, "");
+  return [...EVIDENCE_PATH.test(t) ? [] : ["file path"], ...EVIDENCE_SYMBOL.test(t) ? [] : ["symbol"], ...EVIDENCE_LAYER.test(t) ? [] : ["evidence layer"]];
+}
+function mermaidBlocks(docs) {
+  const out = [];
+  for (const [path, doc] of docs)
+    for (const f of doc.blocks.fences) {
+      if (f.info.toLowerCase() !== "mermaid") continue;
+      const lines = doc.lines.slice(f.start, f.end - 1);
+      const kind = lines.map((l) => l.trim()).find((l) => l !== "" && !l.startsWith("%%"))?.split(/\s+/)[0] ?? "";
+      out.push({ path, line: f.start, kind, lines });
+    }
+  return out;
+}
+function headingAbove(doc, line) {
+  let text = "";
+  for (const h of doc.blocks.headings) if (h.line < line) text = h.text;
+  return text;
+}
+function headingName(text) {
+  return text.replace(/^\d+(?:\.\d+)*\.?\s+/, "").trim().toLowerCase();
+}
+function sectionByName(doc, name) {
+  const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
+  return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
+}
+
+// src/lint/rules/arch-003.ts
+var FIELDS = ["Name", "Responsibility", "Owned data", "Interfaces", "Depends on", "Realizes", "Status"];
+var COMPONENT_STATUSES = ["existing", "new", "modified", "removed"];
+function componentStatus(value2) {
+  return value2.replace(/[*`_]/g, "").trim().toLowerCase();
+}
+var arch003 = {
+  code: "LINT-ARCH-003",
+  severity: "error",
+  fix: "Add the field",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const n of c.graph.nodes) {
+        if (n.type !== "COMP" || n.form !== "heading") continue;
+        const at = { path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id] };
+        const missing = FIELDS.filter((name) => !n.fields.some((f) => f.name === name));
+        if (missing.length > 0) out.push({ ...at, message: `${n.id} lacks the field${missing.length > 1 ? "s" : ""} ${missing.map((m) => `"${m}"`).join(", ")}` });
+        const status2 = n.fields.find((f) => f.name === "Status");
+        if (status2 && !COMPONENT_STATUSES.includes(componentStatus(status2.value)))
+          out.push({ ...at, line: status2.line, message: `${n.id} has Status "${status2.value}", not one of ${COMPONENT_STATUSES.join(", ")}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/arch-001.ts
+var COMPONENT_DIAGRAMS = /^(flowchart|graph|C4Context|C4Container|C4Component|block-beta|architecture-beta)$/;
+var DIAGRAM_ID = /\b(?:C(\d{3})[-_])?COMP[-_](\d+)\b/g;
+var arch001 = {
+  code: "LINT-ARCH-001",
+  severity: "error",
+  fix: "Align IDs",
+  scope: "change",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const catalogue = c.graph.nodes.filter((n) => n.type === "COMP" && n.form === "heading");
+      const known = new Set(catalogue.map((n) => n.id));
+      const shown = /* @__PURE__ */ new Set();
+      const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
+      for (const b of mermaidBlocks(docs)) {
+        if (!COMPONENT_DIAGRAMS.test(b.kind)) continue;
+        b.lines.forEach((text, i) => {
+          for (const m of text.matchAll(DIAGRAM_ID)) {
+            const id = formatId({ change: m[1] ?? c.change, type: "COMP", seq: m[2] });
+            if (shown.has(id)) continue;
+            shown.add(id);
+            if (!known.has(id)) out.push({ path: `${c.folder}/${b.path}`, line: b.line + 1 + i, ids: [id], message: `${id} is in a component diagram but not in the catalogue` });
+          }
+        });
+      }
+      for (const n of catalogue)
+        if (!shown.has(n.id) && componentStatus(n.fields.find((f) => f.name === "Status")?.value ?? "") !== "removed")
+          out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} is in the catalogue but in no component diagram` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/arch-002.ts
+var ARCHITECTURE_SECTIONS = [
+  "Context and scope",
+  "Component catalogue",
+  "Runtime flows",
+  "Data view",
+  "Deployment view",
+  "Cross-cutting concerns",
+  "Constraints",
+  "Diagrams"
+];
+var PATH = "10-spec/60-architecture/architecture.md";
+var arch002 = {
+  code: "LINT-ARCH-002",
+  severity: "error",
+  fix: "Add the section",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(PATH);
+      if (!doc) continue;
+      const required = c.spec.kind === "greenfield" ? ARCHITECTURE_SECTIONS : [...ARCHITECTURE_SECTIONS, "As-is to to-be delta"];
+      const names = doc.blocks.headings.map((h) => headingName(h.text));
+      for (const s of required.filter((r) => !names.some((n) => n.startsWith(r.toLowerCase()))))
+        out.push({ path: `${c.folder}/${PATH}`, line: 1, message: `Architecture section "${s}" is missing` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/arch-004.ts
+var PATH2 = "10-spec/60-architecture/architecture.md";
+var arch004 = {
+  code: "LINT-ARCH-004",
+  severity: "error",
+  fix: "Add the diagram",
+  scope: "change",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(PATH2);
+      const section = doc ? sectionByName(doc, "runtime flows") : null;
+      if (!doc || !section) continue;
+      const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
+      const sequences = mermaidBlocks(docs).filter((b) => b.kind === "sequenceDiagram").map((b) => [headingAbove(c.spec.docs.get(b.path), b.line), ...b.lines, b.path.slice(b.path.lastIndexOf("/") + 1)].join("\n"));
+      for (const t of tables(doc, PATH2))
+        for (const r of t.rows) {
+          if (r.line <= section.line || r.line > section.end) continue;
+          const flow = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
+          if (flow === "") continue;
+          const word = new RegExp(`(^|[^\\w-])${flow.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
+          if (!sequences.some((s) => word.test(s))) out.push({ path: `${c.folder}/${PATH2}`, line: r.line, message: `Runtime flow ${flow} has no sequence diagram` });
+        }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/arch-005.ts
+var arch005 = {
+  code: "LINT-ARCH-005",
+  severity: "error",
+  fix: "Add cartographer evidence",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const n of c.graph.nodes) {
+        if (n.type !== "COMP" || n.form !== "heading") continue;
+        const status2 = componentStatus(n.fields.find((f) => f.name === "Status")?.value ?? "");
+        if (!["existing", "modified", "removed"].includes(status2)) continue;
+        const missing = evidenceGaps(fieldText(c.spec.sections.get(n.id)?.lines ?? [], "Evidence") ?? "");
+        if (missing.length > 0)
+          out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} (${status2}) has no evidence ${missing.join(", ")}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/con-001.ts
+var con001 = {
+  code: "LINT-CON-001",
+  severity: "error",
+  fix: "Add DEC/ADR/NFR/constitution source",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const [path, doc] of specDocs(c))
+        for (const t of tables(doc, path)) {
+          if (!t.header.includes("source")) continue;
+          for (const r of t.rows) {
+            const id = findIds(r.raw[0] ?? "", c.change).find((h) => h.id.includes("-CON-"))?.id;
+            if (!id) continue;
+            const source = (r.cells.get("source") ?? "").replace(/[*_`]/g, "").trim();
+            if (source === "" || source === "—" || source === "-" || /^n\/a$/i.test(source))
+              out.push({ path: `${c.folder}/${path}`, line: r.line, ids: [id], message: `${id} has no source` });
+          }
+        }
+    return out;
+  }
+};
 
 // src/lint/rules/cov-001.ts
 var dir = (p) => p.slice(0, p.lastIndexOf("/") + 1);
@@ -7961,6 +8159,241 @@ var ears003 = {
   }
 };
 
+// src/lint/rules/err-001.ts
+var CODE = /\b(?:(?:ERR|WARN)-[A-Z]+(?:-[A-Z]+)*-\d{3}|LINT-[A-Z]+-\d{3}|PLG-[A-Z]+-\d{3}|GUARD-[A-Z]+-\d{3}|TR-\d{2})\b/g;
+var err001 = {
+  code: "LINT-ERR-001",
+  severity: "error",
+  fix: "Add it to `errors.md`",
+  scope: "change",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const catalogue = /* @__PURE__ */ new Set();
+      for (const [path, doc] of specDocs(c)) {
+        if (!path.startsWith("10-spec/50-interfaces/") && !/(^|\/)spec\.md$/.test(path)) continue;
+        for (const t of tables(doc, path)) for (const r of t.rows) for (const m of (r.raw[0] ?? "").matchAll(CODE)) catalogue.add(m[0]);
+      }
+      for (const n of c.graph.nodes) {
+        if (n.type !== "REQ" && n.type !== "NFR" || n.form !== "heading") continue;
+        const st = n.fields.find((f) => f.name === "Statement");
+        if (!st) continue;
+        for (const code of new Set([...st.value.matchAll(CODE)].map((m) => m[0])))
+          if (!catalogue.has(code)) out.push({ path: `${c.folder}/${n.file}`, line: st.line, ids: [n.id], message: `${n.id} names ${code}, which is not in the error catalogue` });
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/evd-001.ts
+var ENTRY = /^(\s*)[-*] \*\*E-\d+\*\*(.*)$/;
+var CHECKS = [
+  ["path and line", /`[^`\s]+:\d+(?:-\d+)?`/],
+  ["symbol", /›\s*(?:`[^`]+`|-)/],
+  ["claim", /\s[—–]\s+\S/],
+  ["layer", /\blayer:\s*(?:ripwire|serena|lsp|grep|ast-grep)\b/],
+  ["confidence", /\bconfidence:\s*(?:high|medium|low)\b/],
+  ["disclosures", /\bdisclosures:\s*\S/]
+];
+var evd001 = {
+  code: "LINT-EVD-001",
+  severity: "error",
+  fix: "Add path/symbol/layer/confidence/disclosures",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const [path, doc] of c.spec.docs)
+        doc.lines.forEach((line, i) => {
+          const m = ENTRY.exec(line);
+          if (!m || doc.blocks.inFence(i + 1)) return;
+          const indent = m[1]?.length ?? 0;
+          let text = line;
+          for (let j = i + 1; j < doc.lines.length; j++) {
+            const next = doc.lines[j] ?? "";
+            if (next.trim() === "" || next.length - next.trimStart().length <= indent) break;
+            text += "\n" + next;
+          }
+          const missing = CHECKS.filter(([, re]) => !re.test(text)).map(([name]) => name);
+          if (missing.length > 0) out.push({ path: `${c.folder}/${path}`, line: i + 1, message: `Evidence entry lacks ${missing.join(", ")}` });
+        });
+    return out;
+  }
+};
+
+// src/lint/rules/ide-001.ts
+var IDEATION_SECTIONS = [
+  "Document control",
+  "Problem statement",
+  "Q&A decision record",
+  "Goals and non-goals",
+  "Scope boundary",
+  "Research index",
+  "Options and decisions index",
+  "Design direction",
+  "Risks",
+  "Assumptions",
+  "Open questions",
+  "Sources"
+];
+var ide001 = {
+  code: "LINT-IDE-001",
+  severity: "error",
+  fix: "Add the section",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (c.profile !== "full") continue;
+      const doc = c.spec.docs.get("00-ideation/ideation.md");
+      if (!doc) continue;
+      const names = doc.blocks.headings.map((h) => headingName(h.text).replace(/,\s+/g, " and "));
+      const missing = IDEATION_SECTIONS.filter((s) => !names.some((n) => n.startsWith(s.toLowerCase())));
+      for (const s of missing) out.push({ path: `${c.folder}/00-ideation/ideation.md`, line: 1, message: `Ideation section "${s}" is missing` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/if-001.ts
+var import_yaml = __toESM(require_dist(), 1);
+function position(text, offset) {
+  const before = text.slice(0, offset).split("\n");
+  return { line: before.length, col: (before[before.length - 1]?.length ?? 0) + 1 };
+}
+function jsonErrorOffset(s) {
+  let i = 0;
+  const ws = () => {
+    while (i < s.length && " 	\n\r".includes(s[i])) i++;
+  };
+  const fail = () => {
+    throw i;
+  };
+  const value2 = () => {
+    ws();
+    const ch = s[i];
+    if (ch === "{") {
+      i++;
+      ws();
+      if (s[i] === "}") return void i++;
+      for (; ; ) {
+        ws();
+        if (s[i] !== '"') fail();
+        string();
+        ws();
+        if (s[i] !== ":") fail();
+        i++;
+        value2();
+        ws();
+        if (s[i] === ",") i++;
+        else if (s[i] === "}") return void i++;
+        else fail();
+      }
+    }
+    if (ch === "[") {
+      i++;
+      ws();
+      if (s[i] === "]") return void i++;
+      for (; ; ) {
+        value2();
+        ws();
+        if (s[i] === ",") i++;
+        else if (s[i] === "]") return void i++;
+        else fail();
+      }
+    }
+    if (ch === '"') return string();
+    const lit = /^(?:true|false|null|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)/.exec(s.slice(i));
+    if (!lit) fail();
+    i += lit[0].length;
+  };
+  const string = () => {
+    i++;
+    while (i < s.length && s[i] !== '"') {
+      if (s[i] === "\\") i++;
+      else if (s.charCodeAt(i) < 32) fail();
+      i++;
+    }
+    if (i >= s.length) fail();
+    i++;
+  };
+  try {
+    value2();
+    ws();
+    return i < s.length ? i : -1;
+  } catch (at) {
+    return typeof at === "number" ? at : -1;
+  }
+}
+function parseError(path, text) {
+  const src = text.replace(/^﻿/, "");
+  if (/\.json$/i.test(path)) {
+    try {
+      JSON.parse(src);
+      return null;
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      const offset = jsonErrorOffset(src);
+      const p = position(src, offset < 0 ? 0 : offset);
+      return { line: p.line, message: `${message.split("\n")[0]} (line ${p.line}, column ${p.col})` };
+    }
+  }
+  for (const doc of (0, import_yaml.parseAllDocuments)(src, { prettyErrors: false })) {
+    const err = "errors" in doc ? doc.errors[0] : void 0;
+    if (err) {
+      const p = err.linePos?.[0] ?? position(src, err.pos[0]);
+      return { line: p.line, message: `${err.message.split("\n")[0]} (line ${p.line}, column ${p.col})` };
+    }
+  }
+  return null;
+}
+var if001 = {
+  code: "LINT-IF-001",
+  severity: "error",
+  fix: "Fix syntax at the reported position",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const [path, text] of c.spec.interfaces) {
+        if (text === null) continue;
+        const err = parseError(path, text);
+        if (err) out.push({ path: `${c.folder}/${path}`, line: err.line, message: `Contract does not parse: ${err.message}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/if-002.ts
+var REGISTRY = "10-spec/50-interfaces/README.md";
+var EXEMPT = /* @__PURE__ */ new Set(["README.md", "errors.md"]);
+var if002 = {
+  code: "LINT-IF-002",
+  severity: "error",
+  fix: "Add a row to `50-interfaces/README.md`",
+  scope: "change",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(REGISTRY);
+      const registered = /* @__PURE__ */ new Set();
+      if (doc)
+        for (const t of tables(doc, REGISTRY)) {
+          const col = t.header.findIndex((h) => h === "file" || h === "files");
+          if (col < 0) continue;
+          for (const r of t.rows) for (const m of (r.raw[col] ?? "").matchAll(/[^\s`,;]+/g)) registered.add(m[0].replace(/^\.\//, ""));
+        }
+      for (const path of c.spec.interfaces.keys()) {
+        const name = path.slice(path.lastIndexOf("/") + 1);
+        if (EXEMPT.has(name) || registered.has(name)) continue;
+        out.push({ path: `${c.folder}/${path}`, line: 1, message: `${name} has no row in the interface registry (50-interfaces/README.md)` });
+      }
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/liv-001.ts
 var liv001 = {
   code: "LINT-LIV-001",
@@ -7980,7 +8413,7 @@ var liv001 = {
 };
 
 // src/lint/rules/nfr-001.ts
-var FIELDS = ["Category", "Statement", "Environment", "Rationale", "DoD"];
+var FIELDS2 = ["Category", "Statement", "Environment", "Rationale", "DoD"];
 var nfr001 = {
   code: "LINT-NFR-001",
   severity: "error",
@@ -7991,9 +8424,72 @@ var nfr001 = {
     for (const c of ctx.changes)
       for (const n of c.graph.nodes) {
         if (n.type !== "NFR" || n.form !== "heading") continue;
-        const missing = FIELDS.filter((name) => (n.fields.find((f) => f.name === name)?.value ?? "") === "");
+        const missing = FIELDS2.filter((name) => (n.fields.find((f) => f.name === name)?.value ?? "") === "");
         if (missing.length > 0)
           out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} lacks the field${missing.length > 1 ? "s" : ""} ${missing.map((m) => `"${m}"`).join(", ")}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/oa-001.ts
+var num = (cell) => {
+  const m = /-?\d+(?:\.\d+)?/.exec(cell.replace(/\*/g, ""));
+  return m ? Number(m[0]) : NaN;
+};
+function weights(t, all) {
+  const criteria = t.header.slice(1, -1);
+  const row = t.rows.find((r) => /^weights?$/i.test((r.raw[0] ?? "").replace(/\*/g, "").trim()));
+  if (row) {
+    const w = row.raw.slice(1, 1 + criteria.length).map(num);
+    return w.every((x) => !Number.isNaN(x)) ? w : null;
+  }
+  const byName = /* @__PURE__ */ new Map();
+  for (const ct of all)
+    if (ct !== t && ct.header.length >= 2 && ct.header[0]?.startsWith("criteri") && ct.header[1]?.startsWith("weight"))
+      for (const r of ct.rows) byName.set((r.raw[0] ?? "").replace(/\*/g, "").trim().toLowerCase(), num(r.raw[1] ?? ""));
+  if (byName.size > 0) {
+    const w = criteria.map((c) => byName.get(c) ?? NaN);
+    return w.every((x) => !Number.isNaN(x)) ? w : null;
+  }
+  const inHeader = /\(([\d\s/.]+)\)/.exec(t.header[t.header.length - 1] ?? "")?.[1]?.split("/").map(Number);
+  return inHeader && inHeader.length === criteria.length && inHeader.every((x) => !Number.isNaN(x)) ? inHeader : null;
+}
+function weightedErrors(doc, path) {
+  const out = [];
+  const all = tables(doc, path);
+  for (const t of all) {
+    if (t.header.length < 3 || !(t.header[t.header.length - 1] ?? "").startsWith("weighted")) continue;
+    const w = weights(t, all);
+    if (!w) continue;
+    const total = w.reduce((a, b) => a + b, 0);
+    if (total <= 0) continue;
+    for (const r of t.rows) {
+      const name = (r.raw[0] ?? "").replace(/\*/g, "").trim();
+      if (/^weights?$/i.test(name)) continue;
+      const scores = r.raw.slice(1, 1 + w.length).map(num);
+      const stated = num(r.raw[w.length + 1] ?? "");
+      if (scores.some(Number.isNaN) || Number.isNaN(stated)) continue;
+      const computed = scores.reduce((a, s, i) => a + s * (w[i] ?? 0), 0) / total;
+      if (Math.abs(stated - computed) > 0.01 + 1e-9) out.push({ line: r.line, candidate: name, stated, computed });
+    }
+  }
+  return out;
+}
+var oa001 = {
+  code: "LINT-OA-001",
+  severity: "error",
+  fix: "Recompute Σ score × weight",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const [path, doc] of c.spec.docs) {
+        if (!path.startsWith("00-ideation/")) continue;
+        for (const e of weightedErrors(doc, path)) {
+          const candidate = e.candidate.length > 60 ? e.candidate.slice(0, 57) + "…" : e.candidate;
+          out.push({ path: `${c.folder}/${path}`, line: e.line, message: `Candidate "${candidate}" states ${e.stated.toFixed(2)}, computed ${e.computed.toFixed(2)}` });
+        }
       }
     return out;
   }
@@ -8015,7 +8511,7 @@ var reg001 = {
 };
 
 // src/lint/rules/req-001.ts
-var FIELDS2 = ["Pattern", "Statement", "Rationale", "Stories", "Priority", "Acceptance"];
+var FIELDS3 = ["Pattern", "Statement", "Rationale", "Stories", "Priority", "Acceptance"];
 var req001 = {
   code: "LINT-REQ-001",
   severity: "error",
@@ -8024,7 +8520,7 @@ var req001 = {
   check(ctx) {
     const out = [];
     for (const c of ctx.changes) {
-      const required = c.spec.kind === "greenfield" ? FIELDS2 : [...FIELDS2, "Delta"];
+      const required = c.spec.kind === "greenfield" ? FIELDS3 : [...FIELDS3, "Delta"];
       for (const n of c.graph.nodes) {
         if (n.type !== "REQ" || n.form !== "heading") continue;
         const path = `${c.folder}/${n.file}`;
@@ -8037,6 +8533,60 @@ var req001 = {
           out.push({ path, line: pattern.line, ids: [n.id], message: `${n.id} declares pattern "${pattern.value}", which is not one of ${PATTERNS.join(", ")}` });
       }
     }
+    return out;
+  }
+};
+
+// src/lint/rules/res-001.ts
+function researchFindings(c) {
+  const out = [];
+  for (const [path, doc] of c.spec.docs) {
+    if (!/^00-ideation\/research\/R-[^/]*\.md$/.test(path)) continue;
+    const s = sectionByName(doc, "findings");
+    if (!s) continue;
+    let cur = null;
+    for (let l = s.line + 1; l <= s.end; l++) {
+      const text = doc.lines[l - 1] ?? "";
+      if (doc.blocks.inFence(l)) continue;
+      if (/^[-*] /.test(text)) {
+        cur = { path, line: l, text: text.slice(2) };
+        out.push(cur);
+      } else if (cur && /^\s+\S/.test(text)) cur.text += " " + text.trim();
+      else cur = null;
+    }
+  }
+  return out;
+}
+var URL = /\bhttps?:\/\/\S+/;
+var DATE = /\b\d{4}-\d{2}-\d{2}\b/;
+var res001 = {
+  code: "LINT-RES-001",
+  severity: "error",
+  fix: "Add source URL and date",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const f of researchFindings(c)) {
+        const missing = [...URL.test(f.text) ? [] : ["source URL"], ...DATE.test(f.text) ? [] : ["access date (YYYY-MM-DD)"]];
+        if (missing.length > 0) out.push({ path: `${c.folder}/${f.path}`, line: f.line, message: `Finding without ${missing.join(" and ")}` });
+      }
+    return out;
+  }
+};
+
+// src/lint/rules/res-002.ts
+var RATED = /\bconfidence:\s*(?:high|medium|low)\b\s*(?:\(\s*[^)\s][^)]*\)|[—:–-]\s*\S)/i;
+var res002 = {
+  code: "LINT-RES-002",
+  severity: "error",
+  fix: "Add high/medium/low with reason",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const f of researchFindings(c))
+        if (!RATED.test(f.text)) out.push({ path: `${c.folder}/${f.path}`, line: f.line, message: "Finding without a confidence rating (high, medium or low) and its reason" });
     return out;
   }
 };
@@ -8193,9 +8743,6 @@ var tr05 = {
 };
 
 // src/lint/rules/tr-09.ts
-var PATH = /[\w@-]+(?:\/[\w@.-]+)*\.[A-Za-z]\w*(?::\d+)?/;
-var SYMBOL = /[A-Za-z_$][\w$.#:]*\(\)|›\s*`?[A-Za-z_$][\w$.#:]*/;
-var LAYER = /\blayer:\s*(?:ripwire|serena|lsp|grep|ast-grep)\b/;
 var tr09 = {
   code: "TR-09",
   severity: "error",
@@ -8210,16 +8757,31 @@ var tr09 = {
         const delta = n.fields.find((f) => f.name === "Delta")?.value ?? "";
         if (!/^(MODIFIED|REMOVED)\b/.test(delta)) continue;
         const evidence = fieldText(c.spec.sections.get(n.id)?.lines ?? [], "Evidence") ?? "";
-        const text = evidence.replace(/`/g, "");
-        const missing = [
-          ...PATH.test(text) ? [] : ["file path"],
-          ...SYMBOL.test(text) ? [] : ["symbol"],
-          ...LAYER.test(text) ? [] : ["evidence layer"]
-        ];
+        const missing = evidenceGaps(evidence);
         if (missing.length > 0)
           out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} (${delta.split(/\s/)[0]}) has no evidence ${missing.join(", ")}` });
       }
     }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-10.ts
+var tr10 = {
+  code: "TR-10",
+  severity: "warn",
+  fix: "List the requirements or NFRs the component realizes, or mark it removed",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const n of c.graph.nodes) {
+        if (n.type !== "COMP" || n.form !== "heading") continue;
+        if (componentStatus(n.fields.find((f) => f.name === "Status")?.value ?? "") === "removed") continue;
+        const realizes = [...expandIds(n.fields.find((f) => f.name === "Realizes")?.value ?? "", c.change)];
+        if (!realizes.some((id) => /-(REQ|NFR|CAP)-/.test(id)))
+          out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} realizes no requirement or NFR` });
+      }
     return out;
   }
 };
@@ -8412,6 +8974,7 @@ var RULES = [
   tr04,
   tr05,
   tr09,
+  tr10,
   tr12,
   tr13,
   txt001,
@@ -8431,11 +8994,25 @@ var RULES = [
   cov002,
   nfr001,
   dod001,
-  delta001
+  delta001,
+  res001,
+  res002,
+  oa001,
+  ide001,
+  arch001,
+  arch002,
+  arch003,
+  arch004,
+  arch005,
+  if001,
+  if002,
+  err001,
+  con001,
+  evd001
 ];
 
 // src/lint/engine.ts
-import { existsSync as existsSync4, readdirSync as readdirSync3, readFileSync as readFileSync6, statSync as statSync3 } from "node:fs";
+import { existsSync as existsSync4, readdirSync as readdirSync4, readFileSync as readFileSync6, statSync as statSync3 } from "node:fs";
 import { join as join7 } from "node:path";
 
 // src/cli/errors.ts
@@ -8576,7 +9153,7 @@ function parseBlocks(lines, firstLine) {
 }
 
 // src/model/frontmatter.ts
-var import_yaml = __toESM(require_dist(), 1);
+var import_yaml2 = __toESM(require_dist(), 1);
 function toLines(text) {
   return text.replace(/^﻿/, "").replace(/\r\n?/g, "\n").split("\n");
 }
@@ -8592,7 +9169,7 @@ function splitFrontmatter(text) {
   const raw = lines.slice(1, end).join("\n");
   const doc = { lines, data: null, raw, bodyStartLine: end + 2 };
   try {
-    const parsed = (0, import_yaml.parse)(raw);
+    const parsed = (0, import_yaml2.parse)(raw);
     if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) doc.data = parsed;
     else if (parsed !== null && parsed !== void 0) doc.error = "frontmatter is not a mapping";
   } catch (e) {
@@ -9114,7 +9691,7 @@ function writeStatus(sddDir, now = /* @__PURE__ */ new Date()) {
 }
 
 // src/lint/spec-facts.ts
-import { existsSync as existsSync3, readFileSync as readFileSync5 } from "node:fs";
+import { existsSync as existsSync3, readdirSync as readdirSync3, readFileSync as readFileSync5 } from "node:fs";
 import { join as join6 } from "node:path";
 var PERSONA_HEADING = /^(P-\d{2,})\b/;
 var SEPARATOR2 = /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/;
@@ -9137,7 +9714,8 @@ function systemNames(lines, first) {
   }
   return out;
 }
-var SECTION_TYPES = /* @__PURE__ */ new Set(["US", "REQ", "NFR"]);
+var SECTION_TYPES = /* @__PURE__ */ new Set(["US", "REQ", "NFR", "COMP"]);
+var CONTRACT = /\.(json|ya?ml)$/i;
 function gatherSpecFacts(sddDir, graph) {
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const personas = /* @__PURE__ */ new Set();
@@ -9145,11 +9723,12 @@ function gatherSpecFacts(sddDir, graph) {
   const sections = /* @__PURE__ */ new Map();
   const docs = /* @__PURE__ */ new Map();
   for (const f of graph.files) {
-    if (f.generated || !f.path.endsWith(".md") || !f.path.startsWith("10-spec/")) continue;
+    if (f.generated || !f.path.endsWith(".md")) continue;
     const src = readLines(join6(graph.dir, ...f.path.split("/")));
     if (!src) continue;
     const b = parseBlocks(src.lines, src.first);
     docs.set(f.path, { lines: src.lines, blocks: b });
+    if (!f.path.startsWith("10-spec/")) continue;
     for (const h of b.headings) {
       const m = PERSONA_HEADING.exec(h.text);
       if (m?.[1]) personas.add(m[1]);
@@ -9161,10 +9740,16 @@ function gatherSpecFacts(sddDir, graph) {
       sections.set(n.id, { line: n.line, lines: src.lines.slice(n.line - src.first, end - src.first + 1) });
     }
   }
+  const interfaces = /* @__PURE__ */ new Map();
+  const ifDir = join6(graph.dir, "10-spec", "50-interfaces");
+  if (existsSync3(ifDir)) {
+    for (const e of readdirSync3(ifDir, { withFileTypes: true }))
+      if (e.isFile()) interfaces.set(`10-spec/50-interfaces/${e.name}`, CONTRACT.test(e.name) ? readFileSync5(join6(ifDir, e.name), "utf8") : null);
+  }
   const constitution = readLines(join6(sddDir, "_constitution", "glossary.md"));
   if (constitution) systems.push(...systemNames(constitution.lines, constitution.first));
   for (const n of graph.nodes) if (n.type === "COMP" && n.title !== "") systems.push(n.title);
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs };
+  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces };
 }
 
 // src/lint/engine.ts
@@ -9172,7 +9757,7 @@ function changeFolders(sdd) {
   const out = [];
   for (const [base, archived] of [[sdd, false], [join7(sdd, "_archive"), true]]) {
     if (!existsSync4(base)) continue;
-    for (const name of readdirSync3(base).sort()) {
+    for (const name of readdirSync4(base).sort()) {
       const dir2 = join7(base, name);
       if (/^\d{3}-/.test(name) && statSync3(dir2).isDirectory()) out.push({ name, dir: dir2, archived });
     }
@@ -9194,7 +9779,7 @@ function textFile(abs, path) {
 function filesOf(dir2) {
   const out = [];
   const walk = (d) => {
-    for (const name of readdirSync3(d).sort()) {
+    for (const name of readdirSync4(d).sort()) {
       const p = join7(d, name);
       if (statSync3(p).isDirectory()) walk(p);
       else if (name.endsWith(".md")) out.push(p);
@@ -9293,7 +9878,7 @@ function lintWorkspace(root, options) {
   }
   const workspace = { entries: [], registryDrift: [], living };
   if (workspaceScope) {
-    workspace.entries = readdirSync3(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() }));
+    workspace.entries = readdirSync4(sdd, { withFileTypes: true }).map((e) => ({ name: e.name, isDirectory: e.isDirectory() }));
     const regPath = join7(sdd, "registry.json");
     let stored = null;
     if (existsSync4(regPath)) {
@@ -9391,11 +9976,11 @@ function initWorkspace(root, options = {}) {
 }
 
 // src/workspace/change.ts
-import { existsSync as existsSync7, mkdirSync as mkdirSync2, readdirSync as readdirSync5, statSync as statSync6 } from "node:fs";
+import { existsSync as existsSync7, mkdirSync as mkdirSync2, readdirSync as readdirSync6, statSync as statSync6 } from "node:fs";
 import { join as join10 } from "node:path";
 
 // src/workspace/templates.ts
-import { existsSync as existsSync6, readdirSync as readdirSync4, readFileSync as readFileSync8, statSync as statSync5 } from "node:fs";
+import { existsSync as existsSync6, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync5 } from "node:fs";
 import { dirname as dirname3, join as join9 } from "node:path";
 import { fileURLToPath } from "node:url";
 var LITE_SCAFFOLD = [
@@ -9438,7 +10023,7 @@ function nextChangeNumber(sddDir) {
   let max = 0;
   for (const dir2 of [sddDir, join10(sddDir, "_archive")]) {
     if (!existsSync7(dir2)) continue;
-    for (const name of readdirSync5(dir2)) {
+    for (const name of readdirSync6(dir2)) {
       const m = /^(\d{3})-/.exec(name);
       if (m?.[1] && statSync6(join10(dir2, name)).isDirectory()) max = Math.max(max, Number(m[1]));
     }
@@ -9718,7 +10303,7 @@ var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
   const sdd = join12(root, ".sdd");
-  return readdirSync6(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join12(sdd, n)).isDirectory()).sort();
+  return readdirSync7(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join12(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
