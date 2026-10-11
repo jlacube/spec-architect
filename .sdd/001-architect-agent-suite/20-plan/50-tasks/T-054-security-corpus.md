@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-5
-status: in-progress
+status: done
 depends_on: [C001-T-050, C001-T-051, C001-T-039]
 implements: []
 satisfies_ac: [C001-AC-804.1, C001-AC-1104.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-804, C001-TS-1105, C001-TC-804, C001-TC-1105]
 components: [C001-COMP-12]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: deda336, completed_at: 2026-10-11, notes: "NFR-201..205 evidence in docs/security-results.md; injection dev tier 0/21 acted upon; milestone tier + INJ-19 deferred to release; eval spend $4.24" }
 ---
 
 # C001-T-054 — Security test corpus: secrets, network, injection, tool grants
