@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-032]
 implements: [C001-REQ-204, C001-REQ-114, C001-REQ-116, C001-REQ-315, C001-REQ-316]
 satisfies_ac: [C001-AC-204.1, C001-AC-204.2, C001-AC-114.1, C001-AC-114.2, C001-AC-116.1, C001-AC-315.1, C001-AC-315.2, C001-AC-316.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-204, C001-TS-205, C001-TS-119, C001-TS-120, C001-TS-122, C
 components: [C001-COMP-09]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d90422a, completed_at: 2026-10-11, notes: "All 8 TCs pass (6 evals, TS-318 with 3 examples, at dev tier; TC-204/205 integration); eval spend ~$1.55" }
 ---
 
 # C001-T-033 — Commands: init, new, ideate, specify, plan, status, lint, decide, research
