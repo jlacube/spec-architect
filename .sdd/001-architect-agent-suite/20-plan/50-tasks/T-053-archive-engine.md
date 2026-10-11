@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-5
-status: in-progress
+status: done
 depends_on: [C001-T-025, C001-T-026]
 implements: [C001-REQ-913, C001-REQ-914, C001-REQ-915, C001-REQ-916, C001-REQ-917, C001-REQ-918, C001-REQ-919, C001-REQ-920, C001-REQ-921]
 satisfies_ac: [C001-AC-913.1, C001-AC-914.1, C001-AC-915.1, C001-AC-916.1, C001-AC-917.1, C001-AC-918.1, C001-AC-919.1, C001-AC-920.1, C001-AC-921.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-914, C001-TS-915, C001-TS-916, C001-TS-917, C001-TS-918, C
 components: [C001-COMP-06, C001-COMP-09]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 5ced824, completed_at: 2026-10-11, notes: "TS-914..922 pass; dry run byte-identical; no paid evals" }
 ---
 
 # C001-T-053 — Archive engine and /architect:archive
