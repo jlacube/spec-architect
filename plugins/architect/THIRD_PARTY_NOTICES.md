@@ -1,0 +1,36 @@
+# Third-party notices
+
+## Bundled into `scripts/sdd.mjs`
+
+### yaml 2.9.1 — ISC License
+
+Used to read and write YAML frontmatter.
+
+```text
+Copyright Eemeli Aro <eemeli@gmail.com>
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+```
+
+## Used but not bundled
+
+These tools are installed separately by the user (see `README.md` and `/architect:doctor`) or reached
+over the network by Claude Code. The plugin contains none of their code.
+
+| Tool | Role | License | Source |
+|---|---|---|---|
+| ripwire | code intelligence CLI (optional) | see its repository | github.com/redhat-et/ripwire |
+| Serena | code intelligence MCP server, read-only mode (optional) | MIT | github.com/oraios/serena |
+| ast-grep | structural code search CLI (optional) | MIT | github.com/ast-grep/ast-grep |
+| Context7 | library documentation MCP service (remote) | service terms of Upstash | mcp.context7.com |
+| DeepWiki | repository documentation MCP service (remote) | service terms of Cognition | mcp.deepwiki.com |
