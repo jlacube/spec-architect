@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-018]
 implements: [C001-REQ-603, C001-REQ-604, C001-REQ-605, C001-REQ-606, C001-REQ-607, C001-REQ-612, C001-REQ-906]
 satisfies_ac: [C001-AC-603.1, C001-AC-604.1, C001-AC-605.1, C001-AC-606.1, C001-AC-607.1, C001-AC-607.2, C001-AC-612.1, C001-AC-906.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-603, C001-TS-604, C001-TS-605, C001-TS-606, C001-TS-607, C
 components: [C001-COMP-04]
 risk_refs: [C001-RISK-006]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e24f695, completed_at: 2026-10-11, notes: "12 rules done (TR-06, 07, 08, 11, 14, 15, LINT-PLAN-001, TASK-001..003, OBS-001, GATE-001); C001-TC-603..608, 614, 907 pass, plus TC-601, 610, 616, 618 (plan owner C001-T-043). TC-615 (risk entry structure) has no lint code in errors.md; left to C001-T-043. Plan rules run only once phases.20-plan has started. Rules can declare a phase so --phase 20-plan keeps cross-phase findings (TR-06 at the requirement, TR-08 at the scenario), per C001-TS-701. CHG-001 plan: zero findings, 58 tasks read. Quick lint ~590 ms, full ~810 ms." }
 ---
 
 # C001-T-022 — Lint rules: plan phase
