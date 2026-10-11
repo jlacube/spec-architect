@@ -177,6 +177,8 @@ export function record(ctx: GateContext, decision: "revise" | "stop", note: stri
   let text = s.text;
   if (decision === "revise") {
     text = setPhaseStatus(text, ctx.phase, "in-revision");
+    // Work resumes in the revised phase: it becomes the change's current phase again.
+    text = setTopLevel(text, "phase", ctx.phase);
     for (const p of PHASES.slice(PHASES.indexOf(ctx.phase as (typeof PHASES)[number]) + 1)) if (phaseStatus(s, p) === "approved") text = setPhaseStatus(text, p, "stale");
   } else {
     text = setTopLevel(text, "status", "stopped");

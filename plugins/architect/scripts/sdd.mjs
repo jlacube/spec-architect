@@ -11323,6 +11323,7 @@ function record(ctx, decision, note, today) {
   let text = s.text;
   if (decision === "revise") {
     text = setPhaseStatus(text, ctx.phase, "in-revision");
+    text = setTopLevel(text, "phase", ctx.phase);
     for (const p of PHASES2.slice(PHASES2.indexOf(ctx.phase) + 1)) if (phaseStatus(s, p) === "approved") text = setPhaseStatus(text, p, "stale");
   } else {
     text = setTopLevel(text, "status", "stopped");

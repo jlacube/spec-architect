@@ -104,10 +104,10 @@ One milestone.
 
 ## Test mapping
 
-| TS | TC |
-|---|---|
-| C004-TS-012 | unit |
-| C004-TS-020 | unit |
+| TC | TS | Level |
+|---|---|---|
+| C004-TC-001 | C004-TS-012 | unit |
+| C004-TC-002 | C004-TS-020 | unit |
 
 ## Risks
 
@@ -147,6 +147,30 @@ export function revised(root) {
       .replace("  Then the outcome of REQ-012 is observed\n```\n", "  Then the outcome of REQ-012 is observed\n```\n```gherkin\nScenario: C004-TS-044 — rounding\n  Given an order of 9.99 EUR and coupon \"TEN\" for 10 %\n  When the customer applies \"TEN\"\n  Then the total before tax is 8.99 EUR\n```\n"),
   );
   sdd(root, "id", "tombstone", "C004-REQ-020", "--reason", "folded into the order summary of CHG-005");
+  edit(root, `${DIR}/20-plan/plan.md`, (t) => t.replace("| C004-TC-002 | C004-TS-020 | unit |", "| C004-TC-003 | C004-TS-044 | unit |").replace("- **Satisfies AC:** C004-AC-020.1", "- **Satisfies AC:** C004-AC-012.1").replace("- **Verified by:** C004-TS-020", "- **Verified by:** C004-TS-044"));
+  // The critic has re-reviewed the changed IDs and the IDs linked to them: no finding open.
+  write(root, `${DIR}/10-spec/critic-report.md`, `---
+artifact: critic-report
+change: CHG-004
+phase: 10-spec
+reviewed_ids: [C004-REQ-012, C004-AC-012.1, C004-TS-012, C004-TS-044, C004-US-101, C004-REQ-020]
+---
+# Critic report — CHG-004 10-spec (revision)
+
+## Summary
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 0 |
+
+## Findings
+
+None.
+
+## Why no further findings
+
+The revised requirement, its new scenario and the removal of REQ-020 are consistent; no other ID is affected.
+`);
   git(root, "add", "-A");
   git(root, "commit", "-q", "-m", "revision");
 }

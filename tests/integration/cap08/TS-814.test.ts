@@ -16,6 +16,7 @@ test("revise spec: 10-spec in-revision, 20-plan stale, Gate log row with the rea
     const r = runBundled(["change", "revise", "004", "10-spec", "--reason", "defect D-001"], { cwd: ws.root });
     assert.equal(r.code, 0, r.stderr);
     assert.deepEqual(statuses(ws.dir), { "00-ideation": "approved", "10-spec": "in-revision", "20-plan": "stale" });
+    assert.match(readFileSync(join(ws.dir, "change.md"), "utf8"), /^phase: 10-spec$/m, "the revised phase is the current phase again");
     const log = readFileSync(join(ws.dir, "change.md"), "utf8").split("\n").filter((l) => /\*\*Revise\*\*/.test(l));
     assert.equal(log.length, 1);
     assert.match(log[0]!, /G2 \(spec\)/);

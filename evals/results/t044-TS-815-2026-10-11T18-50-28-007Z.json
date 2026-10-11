@@ -1,0 +1,122 @@
+{
+  "scenario": "TS-815",
+  "title": "Changed IDs and dependents",
+  "tier": "dev",
+  "label": "t044",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T18:52:08.040Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.1709402,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "downstream task C004-T-001 not shown"
+      ],
+      "metrics": {
+        "cost_usd": 0.1709402,
+        "session_ms": 96588,
+        "api_ms": 33464,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 3008,
+            "cache_read": 92976,
+            "cache_write": 18429,
+            "cost_usd": 0.1709402
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 3008,
+              "cache_read": 92976,
+              "cache_write": 18429
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "btr9u0b01",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bebktvv9t",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bylukezv3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Bash": 3,
+          "Glob": 1,
+          "Read": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33046
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13030
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12843
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 176
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-815-2026-10-11T18-50-28-007Z-run1.json"
+    }
+  ]
+}

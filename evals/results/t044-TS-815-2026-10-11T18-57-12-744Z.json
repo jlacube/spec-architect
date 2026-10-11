@@ -1,0 +1,102 @@
+{
+  "scenario": "TS-815",
+  "title": "Changed IDs and dependents",
+  "tier": "dev",
+  "label": "t044",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T18:58:29.427Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.136656,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "modified C004-REQ-012 not shown",
+        "added C004-TS-044 not shown",
+        "removed C004-REQ-020 not shown",
+        "downstream task C004-T-001 not shown",
+        "downstream task C004-T-002 not shown"
+      ],
+      "metrics": {
+        "cost_usd": 0.136656,
+        "session_ms": 73346,
+        "api_ms": 20998,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1999,
+            "cache_read": 68845,
+            "cache_write": 16575,
+            "cost_usd": 0.136656
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1999,
+              "cache_read": 68845,
+              "cache_write": 16575
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b29u24xg1",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8uhna7s3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Bash": 2,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34416
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13615
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 199
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-815-2026-10-11T18-57-12-744Z-run1.json"
+    }
+  ]
+}
