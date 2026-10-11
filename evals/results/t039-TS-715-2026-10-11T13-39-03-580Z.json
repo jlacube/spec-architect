@@ -1,0 +1,136 @@
+{
+  "scenario": "TS-715",
+  "title": "Auditor run",
+  "tier": "dev",
+  "label": "t039",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T13:40:40.666Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.0035502249999999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0035502249999999997,
+        "session_ms": 93845,
+        "api_ms": 20486,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1234,
+            "output": 2295,
+            "cache_read": 30895,
+            "cache_write": 15763,
+            "cost_usd": 0.0035502249999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 2295,
+              "cache_read": 4648,
+              "cache_write": 5680
+            },
+            "output": "derived"
+          },
+          "architect:sdd-auditor": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 16448,
+              "cache_write": 9799
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-auditor",
+            "task_id": "a84c0563f50df63fc",
+            "ms": 85141,
+            "tool_uses": 4,
+            "total_tokens": 10652
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnovuk3jv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0ui9w6h4",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "biwwfu20z",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmum0ymdw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Bash": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-auditor",
+            "ms": 85161
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 33593
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 12993
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 25495
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 12229
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-715-2026-10-11T13-39-03-580Z-run1.json"
+    }
+  ]
+}

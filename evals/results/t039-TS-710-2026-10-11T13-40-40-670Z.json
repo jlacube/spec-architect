@@ -1,0 +1,160 @@
+{
+  "scenario": "TS-710",
+  "title": "Critic finding fields",
+  "tier": "dev",
+  "label": "t039",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T13:44:05.783Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.5499646300000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.5499646300000001,
+        "session_ms": 203305,
+        "api_ms": 155523,
+        "turns": 1,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1442,
+            "output": 542,
+            "cache_read": 1663,
+            "cache_write": 3208,
+            "cost_usd": 0.0008328299999999999
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 17411,
+            "cache_read": 74284,
+            "cache_write": 37203,
+            "cost_usd": 0.5491318000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 542,
+              "cache_read": 1663,
+              "cache_write": 3208
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 52480,
+              "cache_write": 21804
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "afb9d399d0b9e7421",
+            "ms": 197734,
+            "tool_uses": 10,
+            "total_tokens": 38112
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpjwauqn4",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpi2tvye9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 6,
+          "Bash": 2,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": null
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 18
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 10
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 13
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 32661
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 12699
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 12299
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 16
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": 68
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-710-2026-10-11T13-40-40-670Z-run1.json"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "scenario": "TS-319",
+  "title": "Readiness gaps",
+  "tier": "dev",
+  "label": "t039",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T13:48:01.989Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.529763105,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.529763105,
+        "session_ms": 235611,
+        "api_ms": 189062,
+        "turns": 1,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1402,
+            "output": 685,
+            "cache_read": 1663,
+            "cache_write": 3163,
+            "cost_usd": 0.0008947050000000001
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 19142,
+            "cache_read": 68467,
+            "cache_write": 26459,
+            "cost_usd": 0.5288683999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 685,
+              "cache_read": 1663,
+              "cache_write": 3163
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 0,
+              "cache_read": 68467,
+              "cache_write": 26459
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "ae51d01cf48eda4b3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bk1b51aoy",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bn9yol1rg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 5,
+          "Glob": 1,
+          "Bash": 2,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": null
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 19
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 110
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 13
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 33362
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 16
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 12047
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": null
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-319-2026-10-11T13-44-05-786Z-run1.json"
+    }
+  ]
+}
