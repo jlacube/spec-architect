@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-11T06:01:44.395Z",
+  "generated_at": "2026-10-11T06:36:03.964Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -1911,6 +1911,15 @@
       "title": "",
       "content_hash": "sha256:8f480e60759893e43049e3a182cedd96acd5c56545ca18efc53b1da95d19dbde",
       "status": "approved"
+    },
+    {
+      "id": "C001-ADR-007",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-007-eval-harness.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:9a37eb9daa6878dca0013dc91840dfa629211f6ab02476f04f1555dcfd74e9fd",
+      "status": "draft"
     },
     {
       "id": "C001-AS-09",
@@ -5245,7 +5254,7 @@
       "line": 1,
       "title": "Dogfood the CLI core on CHG-001",
       "content_hash": "sha256:0f59775b699a996b39389a027e114ae9103b4de995e743c5c3c4ee5969bf5574",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "C001-T-029",
@@ -5254,7 +5263,7 @@
       "line": 1,
       "title": "Agent eval harness and tiered runs",
       "content_hash": "sha256:d950321200824c9d4d33d0b6d58fbf7101867297e92053acdfad4aa541f668f3",
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "C001-T-030",
@@ -11228,6 +11237,46 @@
     {
       "from": "C001-ADR-006",
       "to": "C001-T-065",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-ADR-003",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-COMP-12",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-CON-05",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-REQ-1116",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-T-029",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-T-031",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-T-039",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-007",
+      "to": "C001-T-063",
       "relation": "references"
     },
     {

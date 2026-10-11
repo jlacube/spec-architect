@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:08557099c6ce18c676a5b42b867e5e1de1e8e7dd4a47645bfba067908d8376e0", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:29812fa5e55daae993dd8651b221ca4d3b18e8af398b09dbb15e2d2f0a692d80", approved_at: 2026-10-11, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:adb86d74bcaea656732c6d6b25b125f65d8bc98f4461818bad7b25f1fde278e1", approved_at: 2026-10-11, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 ---
@@ -32,4 +32,6 @@ owners: [jerome.lacube]
 | 2026-10-11 | G1 (ideation) | **Revise** | "T-028 dogfood revision. P-01 answers (2026-10-11): labels/IDs "Prefix/backtick"; scenarios "Relax REQ-413"; gaps "Index + fill stories"; small fixes "Fix in revision"" | none | unavailable |
 | 2026-10-11 | G1 (ideation) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-11 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-11 | G3 (plan) | **Revise** | "C001-T-029 adds C001-ADR-007 (eval harness mechanism) to 20-plan/20-decisions, as the task requires" | none | unavailable |
 | 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
