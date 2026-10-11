@@ -94,9 +94,9 @@ test("usage errors exit 2: unknown command, missing or extra arguments, bad opti
 test("commands not yet implemented are refused with ERR-CLI-003 and exit 2", () => {
   const ws = makeWorkspace(minimalChange());
   try {
-    const r = runInProcess(["archive", "004", "--dry-run"], { cwd: ws.root });
+    const r = runInProcess(["extract-features", "004"], { cwd: ws.root });
     assert.equal(r.code, 2);
-    assert.equal(r.stderr, "ERR-CLI-003: Usage error: `sdd archive is not implemented yet`. Fix: See `sdd archive --help`\n");
+    assert.equal(r.stderr, "ERR-CLI-003: Usage error: `sdd extract-features is not implemented yet`. Fix: See `sdd extract-features --help`\n");
   } finally {
     ws.cleanup();
   }

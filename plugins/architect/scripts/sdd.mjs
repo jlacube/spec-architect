@@ -396,7 +396,7 @@ var require_directives = __commonJS({
         return tag[0] === "!" ? tag : `!<${tag}>`;
       }
       toString(doc) {
-        const lines = this.yaml.explicit ? [`%YAML ${this.yaml.version || "1.2"}`] : [];
+        const lines2 = this.yaml.explicit ? [`%YAML ${this.yaml.version || "1.2"}`] : [];
         const tagEntries = Object.entries(this.tags);
         let tagNames;
         if (doc && tagEntries.length > 0 && identity.isNode(doc.contents)) {
@@ -412,9 +412,9 @@ var require_directives = __commonJS({
           if (handle === "!!" && prefix === "tag:yaml.org,2002:")
             continue;
           if (!doc || tagNames.some((tn) => tn.startsWith(prefix)))
-            lines.push(`%TAG ${handle} ${prefix}`);
+            lines2.push(`%TAG ${handle} ${prefix}`);
         }
-        return lines.join("\n");
+        return lines2.join("\n");
       }
     };
     Directives.defaultYaml = { explicit: false, version: "1.2" };
@@ -1875,22 +1875,22 @@ var require_stringifyCollection = __commonJS({
       const { indent, options: { commentString } } = ctx;
       const itemCtx = Object.assign({}, ctx, { indent: itemIndent, type: null });
       let chompKeep = false;
-      const lines = [];
+      const lines2 = [];
       for (let i = 0; i < items.length; ++i) {
         const item = items[i];
         let comment2 = null;
         if (identity.isNode(item)) {
           if (!chompKeep && item.spaceBefore)
-            lines.push("");
-          addCommentBefore(ctx, lines, item.commentBefore, chompKeep);
+            lines2.push("");
+          addCommentBefore(ctx, lines2, item.commentBefore, chompKeep);
           if (item.comment)
             comment2 = item.comment;
         } else if (identity.isPair(item)) {
           const ik = identity.isNode(item.key) ? item.key : null;
           if (ik) {
             if (!chompKeep && ik.spaceBefore)
-              lines.push("");
-            addCommentBefore(ctx, lines, ik.commentBefore, chompKeep);
+              lines2.push("");
+            addCommentBefore(ctx, lines2, ik.commentBefore, chompKeep);
           }
         }
         chompKeep = false;
@@ -1899,15 +1899,15 @@ var require_stringifyCollection = __commonJS({
           str4 += stringifyComment.lineComment(str4, itemIndent, commentString(comment2));
         if (chompKeep && comment2)
           chompKeep = false;
-        lines.push(blockItemPrefix + str4);
+        lines2.push(blockItemPrefix + str4);
       }
       let str3;
-      if (lines.length === 0) {
+      if (lines2.length === 0) {
         str3 = flowChars.start + flowChars.end;
       } else {
-        str3 = lines[0];
-        for (let i = 1; i < lines.length; ++i) {
-          const line = lines[i];
+        str3 = lines2[0];
+        for (let i = 1; i < lines2.length; ++i) {
+          const line = lines2[i];
           str3 += line ? `
 ${indent}${line}` : "\n";
         }
@@ -1930,22 +1930,22 @@ ${indent}${line}` : "\n";
       });
       let reqNewline = false;
       let linesAtValue = 0;
-      const lines = [];
+      const lines2 = [];
       for (let i = 0; i < items.length; ++i) {
         const item = items[i];
         let comment = null;
         if (identity.isNode(item)) {
           if (item.spaceBefore)
-            lines.push("");
-          addCommentBefore(ctx, lines, item.commentBefore, false);
+            lines2.push("");
+          addCommentBefore(ctx, lines2, item.commentBefore, false);
           if (item.comment)
             comment = item.comment;
         } else if (identity.isPair(item)) {
           const ik = identity.isNode(item.key) ? item.key : null;
           if (ik) {
             if (ik.spaceBefore)
-              lines.push("");
-            addCommentBefore(ctx, lines, ik.commentBefore, false);
+              lines2.push("");
+            addCommentBefore(ctx, lines2, ik.commentBefore, false);
             if (ik.comment)
               reqNewline = true;
           }
@@ -1962,12 +1962,12 @@ ${indent}${line}` : "\n";
         if (comment)
           reqNewline = true;
         let str3 = stringify.stringify(item, itemCtx, () => comment = null);
-        reqNewline || (reqNewline = lines.length > linesAtValue || str3.includes("\n"));
+        reqNewline || (reqNewline = lines2.length > linesAtValue || str3.includes("\n"));
         if (i < items.length - 1) {
           str3 += ",";
         } else if (ctx.options.trailingComma) {
           if (ctx.options.lineWidth > 0) {
-            reqNewline || (reqNewline = lines.reduce((sum, line) => sum + line.length + 2, 2) + (str3.length + 2) > ctx.options.lineWidth);
+            reqNewline || (reqNewline = lines2.reduce((sum, line) => sum + line.length + 2, 2) + (str3.length + 2) > ctx.options.lineWidth);
           }
           if (reqNewline) {
             str3 += ",";
@@ -1975,35 +1975,35 @@ ${indent}${line}` : "\n";
         }
         if (comment)
           str3 += stringifyComment.lineComment(str3, itemIndent, commentString(comment));
-        lines.push(str3);
-        linesAtValue = lines.length;
+        lines2.push(str3);
+        linesAtValue = lines2.length;
       }
       const { start, end } = flowChars;
-      if (lines.length === 0) {
+      if (lines2.length === 0) {
         return start + end;
       } else {
         if (!reqNewline) {
-          const len = lines.reduce((sum, line) => sum + line.length + 2, 2);
+          const len = lines2.reduce((sum, line) => sum + line.length + 2, 2);
           reqNewline = ctx.options.lineWidth > 0 && len > ctx.options.lineWidth;
         }
         if (reqNewline) {
           let str3 = start;
-          for (const line of lines)
+          for (const line of lines2)
             str3 += line ? `
 ${indentStep}${indent}${line}` : "\n";
           return `${str3}
 ${indent}${end}`;
         } else {
-          return `${start}${fcPadding}${lines.join(" ")}${fcPadding}${end}`;
+          return `${start}${fcPadding}${lines2.join(" ")}${fcPadding}${end}`;
         }
       }
     }
-    function addCommentBefore({ indent, options: { commentString } }, lines, comment, chompKeep) {
+    function addCommentBefore({ indent, options: { commentString } }, lines2, comment, chompKeep) {
       if (comment && chompKeep)
         comment = comment.replace(/^\n+/, "");
       if (comment) {
         const ic = stringifyComment.indentComment(commentString(comment), indent);
-        lines.push(ic.trimStart());
+        lines2.push(ic.trimStart());
       }
     }
     exports.stringifyCollection = stringifyCollection;
@@ -2641,11 +2641,11 @@ var require_binary = __commonJS({
         if (type !== Scalar.Scalar.QUOTE_DOUBLE) {
           const lineWidth = Math.max(ctx.options.lineWidth - ctx.indent.length, ctx.options.minContentWidth);
           const n = Math.ceil(str3.length / lineWidth);
-          const lines = new Array(n);
+          const lines2 = new Array(n);
           for (let i = 0, o = 0; i < n; ++i, o += lineWidth) {
-            lines[i] = str3.substr(o, lineWidth);
+            lines2[i] = str3.substr(o, lineWidth);
           }
-          str3 = lines.join(type === Scalar.Scalar.BLOCK_LITERAL ? "\n" : " ");
+          str3 = lines2.join(type === Scalar.Scalar.BLOCK_LITERAL ? "\n" : " ");
         }
         return stringifyString.stringifyString({ comment, type, value: str3 }, ctx, onComment, onChompKeep);
       }
@@ -3325,35 +3325,35 @@ var require_stringifyDocument = __commonJS({
     var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyDocument(doc, options) {
-      const lines = [];
+      const lines2 = [];
       let hasDirectives = options.directives === true;
       if (options.directives !== false && doc.directives) {
         const dir2 = doc.directives.toString(doc);
         if (dir2) {
-          lines.push(dir2);
+          lines2.push(dir2);
           hasDirectives = true;
         } else if (doc.directives.docStart)
           hasDirectives = true;
       }
       if (hasDirectives)
-        lines.push("---");
+        lines2.push("---");
       const ctx = stringify.createStringifyContext(doc, options);
       const { commentString } = ctx.options;
       if (doc.commentBefore) {
-        if (lines.length !== 1)
-          lines.unshift("");
+        if (lines2.length !== 1)
+          lines2.unshift("");
         const cs = commentString(doc.commentBefore);
-        lines.unshift(stringifyComment.indentComment(cs, ""));
+        lines2.unshift(stringifyComment.indentComment(cs, ""));
       }
       let chompKeep = false;
       let contentComment = null;
       if (doc.contents) {
         if (identity.isNode(doc.contents)) {
           if (doc.contents.spaceBefore && hasDirectives)
-            lines.push("");
+            lines2.push("");
           if (doc.contents.commentBefore) {
             const cs = commentString(doc.contents.commentBefore);
-            lines.push(stringifyComment.indentComment(cs, ""));
+            lines2.push(stringifyComment.indentComment(cs, ""));
           }
           ctx.forceBlockIndent = !!doc.comment;
           contentComment = doc.contents.comment;
@@ -3362,36 +3362,36 @@ var require_stringifyDocument = __commonJS({
         let body = stringify.stringify(doc.contents, ctx, () => contentComment = null, onChompKeep);
         if (contentComment)
           body += stringifyComment.lineComment(body, "", commentString(contentComment));
-        if ((body[0] === "|" || body[0] === ">") && lines[lines.length - 1] === "---") {
-          lines[lines.length - 1] = `--- ${body}`;
+        if ((body[0] === "|" || body[0] === ">") && lines2[lines2.length - 1] === "---") {
+          lines2[lines2.length - 1] = `--- ${body}`;
         } else
-          lines.push(body);
+          lines2.push(body);
       } else {
-        lines.push(stringify.stringify(doc.contents, ctx));
+        lines2.push(stringify.stringify(doc.contents, ctx));
       }
       if (doc.directives?.docEnd) {
         if (doc.comment) {
           const cs = commentString(doc.comment);
           if (cs.includes("\n")) {
-            lines.push("...");
-            lines.push(stringifyComment.indentComment(cs, ""));
+            lines2.push("...");
+            lines2.push(stringifyComment.indentComment(cs, ""));
           } else {
-            lines.push(`... ${cs}`);
+            lines2.push(`... ${cs}`);
           }
         } else {
-          lines.push("...");
+          lines2.push("...");
         }
       } else {
         let dc = doc.comment;
         if (dc && chompKeep)
           dc = dc.replace(/^\n+/, "");
         if (dc) {
-          if ((!chompKeep || contentComment) && lines[lines.length - 1] !== "")
-            lines.push("");
-          lines.push(stringifyComment.indentComment(commentString(dc), ""));
+          if ((!chompKeep || contentComment) && lines2[lines2.length - 1] !== "")
+            lines2.push("");
+          lines2.push(stringifyComment.indentComment(commentString(dc), ""));
         }
       }
-      return lines.join("\n") + "\n";
+      return lines2.join("\n") + "\n";
     }
     exports.stringifyDocument = stringifyDocument;
   }
@@ -4453,17 +4453,17 @@ var require_resolve_block_scalar = __commonJS({
       if (!header2)
         return { value: "", type: null, comment: "", range: [start, start, start] };
       const type = header2.mode === ">" ? Scalar.Scalar.BLOCK_FOLDED : Scalar.Scalar.BLOCK_LITERAL;
-      const lines = scalar2.source ? splitLines(scalar2.source) : [];
-      let chompStart = lines.length;
-      for (let i = lines.length - 1; i >= 0; --i) {
-        const content = lines[i][1];
+      const lines2 = scalar2.source ? splitLines(scalar2.source) : [];
+      let chompStart = lines2.length;
+      for (let i = lines2.length - 1; i >= 0; --i) {
+        const content = lines2[i][1];
         if (content === "" || content === "\r")
           chompStart = i;
         else
           break;
       }
       if (chompStart === 0) {
-        const value3 = header2.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
+        const value3 = header2.chomp === "+" && lines2.length > 0 ? "\n".repeat(Math.max(1, lines2.length - 1)) : "";
         let end2 = start + header2.length;
         if (scalar2.source)
           end2 += scalar2.source.length;
@@ -4473,7 +4473,7 @@ var require_resolve_block_scalar = __commonJS({
       let offset = scalar2.offset + header2.length;
       let contentStart = 0;
       for (let i = 0; i < chompStart; ++i) {
-        const [indent, content] = lines[i];
+        const [indent, content] = lines2[i];
         if (content === "" || content === "\r") {
           if (header2.indent === 0 && indent.length > trimIndent)
             trimIndent = indent.length;
@@ -4493,17 +4493,17 @@ var require_resolve_block_scalar = __commonJS({
         }
         offset += indent.length + content.length + 1;
       }
-      for (let i = lines.length - 1; i >= chompStart; --i) {
-        if (lines[i][0].length > trimIndent)
+      for (let i = lines2.length - 1; i >= chompStart; --i) {
+        if (lines2[i][0].length > trimIndent)
           chompStart = i + 1;
       }
       let value2 = "";
       let sep2 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
-        value2 += lines[i][0].slice(trimIndent) + "\n";
+        value2 += lines2[i][0].slice(trimIndent) + "\n";
       for (let i = contentStart; i < chompStart; ++i) {
-        let [indent, content] = lines[i];
+        let [indent, content] = lines2[i];
         offset += indent.length + content.length + 1;
         const crlf = content[content.length - 1] === "\r";
         if (crlf)
@@ -4540,8 +4540,8 @@ var require_resolve_block_scalar = __commonJS({
         case "-":
           break;
         case "+":
-          for (let i = chompStart; i < lines.length; ++i)
-            value2 += "\n" + lines[i][0].slice(trimIndent);
+          for (let i = chompStart; i < lines2.length; ++i)
+            value2 += "\n" + lines2[i][0].slice(trimIndent);
           if (value2[value2.length - 1] !== "\n")
             value2 += "\n";
           break;
@@ -4616,10 +4616,10 @@ var require_resolve_block_scalar = __commonJS({
       const first = split[0];
       const m = first.match(/^( *)/);
       const line0 = m?.[1] ? [m[1], first.slice(m[1].length)] : ["", first];
-      const lines = [line0];
+      const lines2 = [line0];
       for (let i = 1; i < split.length; i += 2)
-        lines.push([split[i], split[i + 1]]);
-      return lines;
+        lines2.push([split[i], split[i + 1]]);
+      return lines2;
     }
     exports.resolveBlockScalar = resolveBlockScalar;
   }
@@ -7368,7 +7368,7 @@ var require_dist = __commonJS({
 });
 
 // src/cli.ts
-import { readFileSync as readFileSync19 } from "node:fs";
+import { readFileSync as readFileSync20 } from "node:fs";
 
 // src/cli/run.ts
 import { parseArgs } from "node:util";
@@ -7589,8 +7589,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync16, readdirSync as readdirSync9, readFileSync as readFileSync18, statSync as statSync10 } from "node:fs";
-import { basename as basename8, join as join24, resolve } from "node:path";
+import { existsSync as existsSync18, readdirSync as readdirSync10, readFileSync as readFileSync19, statSync as statSync10 } from "node:fs";
+import { basename as basename9, join as join26, resolve } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -7756,13 +7756,13 @@ function scenarios(c) {
     }
   return out;
 }
-function fieldText(lines, name) {
+function fieldText(lines2, name) {
   const re = new RegExp(`^[-*] \\*\\*${name.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}:\\*\\*\\s?(.*)$`);
-  const at = lines.findIndex((l) => re.test(l));
+  const at = lines2.findIndex((l) => re.test(l));
   if (at < 0) return null;
-  const parts = [re.exec(lines[at])?.[1] ?? ""];
-  for (let i = at + 1; i < lines.length; i++) {
-    const l = lines[i] ?? "";
+  const parts = [re.exec(lines2[at])?.[1] ?? ""];
+  for (let i = at + 1; i < lines2.length; i++) {
+    const l = lines2[i] ?? "";
     if (l.trim() === "" || !/^\s+/.test(l)) break;
     parts.push(l.trim());
   }
@@ -7796,9 +7796,9 @@ function mermaidBlocks(docs) {
   for (const [path, doc] of docs)
     for (const f of doc.blocks.fences) {
       if (f.info.toLowerCase() !== "mermaid") continue;
-      const lines = doc.lines.slice(f.start, f.end - 1);
-      const kind = lines.map((l) => l.trim()).find((l) => l !== "" && !l.startsWith("%%"))?.split(/\s+/)[0] ?? "";
-      out.push({ path, line: f.start, kind, lines });
+      const lines2 = doc.lines.slice(f.start, f.end - 1);
+      const kind = lines2.map((l) => l.trim()).find((l) => l !== "" && !l.startsWith("%%"))?.split(/\s+/)[0] ?? "";
+      out.push({ path, line: f.start, kind, lines: lines2 });
     }
   return out;
 }
@@ -7972,13 +7972,13 @@ var arch004 = {
     const out = [];
     for (const c of ctx.changes) {
       const doc = c.spec.docs.get(PATH2);
-      const section = doc ? sectionByName(doc, "runtime flows") : null;
-      if (!doc || !section) continue;
+      const section2 = doc ? sectionByName(doc, "runtime flows") : null;
+      if (!doc || !section2) continue;
       const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
       const sequences = mermaidBlocks(docs).filter((b) => b.kind === "sequenceDiagram").map((b) => [headingAbove(c.spec.docs.get(b.path), b.line), ...b.lines, b.path.slice(b.path.lastIndexOf("/") + 1)].join("\n"));
       for (const t of tables(doc, PATH2))
         for (const r of t.rows) {
-          if (r.line <= section.line || r.line > section.end) continue;
+          if (r.line <= section2.line || r.line > section2.end) continue;
           const flow2 = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
           if (flow2 === "") continue;
           const word = new RegExp(`(^|[^\\w-])${flow2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
@@ -8836,17 +8836,17 @@ function emptySections(t) {
   const doc = t.doc;
   if (!doc) return [];
   if (t.lite) {
-    const lines = doc.lines.slice(t.from - 1, t.to);
-    return ["Targets", "Verification", "Done when"].filter((name) => (fieldText(lines, name) ?? "") === "");
+    const lines2 = doc.lines.slice(t.from - 1, t.to);
+    return ["Targets", "Verification", "Done when"].filter((name) => (fieldText(lines2, name) ?? "") === "");
   }
-  const section = (name) => {
+  const section2 = (name) => {
     const s = sectionByName(doc, name);
     return s ? doc.lines.slice(s.line, s.end) : [];
   };
   const targets2 = sectionByName(doc, "targets");
   const hasRow = targets2 !== null && tables(doc, t.path).some((tb) => tb.headerLine > targets2.line && tb.headerLine <= targets2.end && tb.rows.length > 0);
-  const step = section("verification").some((l) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(l));
-  const box = section("done when").some((l) => /^\s*[-*+] \[[ xX]\]\s+\S/.test(l));
+  const step = section2("verification").some((l) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(l));
+  const box = section2("done when").some((l) => /^\s*[-*+] \[[ xX]\]\s+\S/.test(l));
   return [...hasRow ? [] : ["Targets"], ...step ? [] : ["Verification"], ...box ? [] : ["Done when"]];
 }
 var task001 = {
@@ -9594,14 +9594,14 @@ function splitCells(row2) {
   cells.push(cur.trim());
   return cells;
 }
-function parseBlocks(lines, firstLine) {
+function parseBlocks(lines2, firstLine) {
   const headings = [];
   const fences = [];
-  const tableRows = [];
+  const tableRows2 = [];
   const fields = [];
-  const lastLine = firstLine + lines.length - 1;
+  const lastLine = firstLine + lines2.length - 1;
   let open = null;
-  lines.forEach((text, i) => {
+  lines2.forEach((text, i) => {
     const line = firstLine + i;
     const fm = FENCE.exec(text);
     if (open) {
@@ -9622,7 +9622,7 @@ function parseBlocks(lines, firstLine) {
       return;
     }
     if (text.trimStart().startsWith("|")) {
-      if (!SEPARATOR.test(text.trim())) tableRows.push({ line, cells: splitCells(text) });
+      if (!SEPARATOR.test(text.trim())) tableRows2.push({ line, cells: splitCells(text) });
       return;
     }
     const fd = FIELD.exec(text);
@@ -9633,7 +9633,7 @@ function parseBlocks(lines, firstLine) {
   return {
     headings,
     fences,
-    tableRows,
+    tableRows: tableRows2,
     fields,
     inFence: fenceAt,
     sectionEnd(line) {
@@ -9651,17 +9651,17 @@ var import_yaml2 = __toESM(require_dist(), 1);
 function toLines(text) {
   return text.replace(/^﻿/, "").replace(/\r\n?/g, "\n").split("\n");
 }
-function frontmatterEnd(lines) {
-  if (lines[0] !== "---") return -1;
-  for (let i = 1; i < lines.length; i++) if (lines[i] === "---") return i;
+function frontmatterEnd(lines2) {
+  if (lines2[0] !== "---") return -1;
+  for (let i = 1; i < lines2.length; i++) if (lines2[i] === "---") return i;
   return -1;
 }
 function splitFrontmatter(text) {
-  const lines = toLines(text);
-  const end = frontmatterEnd(lines);
-  if (end < 0) return { lines, data: null, raw: null, bodyStartLine: 1 };
-  const raw = lines.slice(1, end).join("\n");
-  const doc = { lines, data: null, raw, bodyStartLine: end + 2 };
+  const lines2 = toLines(text);
+  const end = frontmatterEnd(lines2);
+  if (end < 0) return { lines: lines2, data: null, raw: null, bodyStartLine: 1 };
+  const raw = lines2.slice(1, end).join("\n");
+  const doc = { lines: lines2, data: null, raw, bodyStartLine: end + 2 };
   try {
     const parsed = (0, import_yaml2.parse)(raw);
     if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) doc.data = parsed;
@@ -9672,10 +9672,10 @@ function splitFrontmatter(text) {
   return doc;
 }
 function normalizeForHash(text) {
-  let lines = toLines(text);
-  const end = frontmatterEnd(lines);
-  if (end >= 0) lines = lines.slice(end + 1);
-  return lines.map((l) => l.replace(/[ \t]+$/, "")).join("\n");
+  let lines2 = toLines(text);
+  const end = frontmatterEnd(lines2);
+  if (end >= 0) lines2 = lines2.slice(end + 1);
+  return lines2.map((l) => l.replace(/[ \t]+$/, "")).join("\n");
 }
 
 // src/model/graph.ts
@@ -9738,7 +9738,7 @@ function parseFile(path, rel, change, nodes, edges) {
   if (doc.error) file.frontmatterError = doc.error;
   if (file.generated) return file;
   const body = doc.lines.slice(doc.bodyStartLine - 1);
-  const blocks = parseBlocks(body, doc.bodyStartLine);
+  const blocks2 = parseBlocks(body, doc.bodyStartLine);
   const norm = (line) => (doc.lines[line - 1] ?? "").replace(/[ \t]+$/, "");
   const blockText = (a, b) => {
     const out = [];
@@ -9750,7 +9750,7 @@ function parseFile(path, rel, change, nodes, edges) {
   const add = (id, line, title, form, from, to, hashed) => {
     const parts = parseId(id);
     if (!parts) return;
-    const fields = form === "heading" ? blocks.fields.filter((f) => f.line > from && f.line <= to) : [];
+    const fields = form === "heading" ? blocks2.fields.filter((f) => f.line > from && f.line <= to) : [];
     defs.push({ node: { id, type: parts.type, file: rel, line, title, form, contentHash: sha256(hashed), fields }, from, to });
   };
   const fullId = (s) => parseId(s) ? s : null;
@@ -9759,21 +9759,21 @@ function parseFile(path, rel, change, nodes, edges) {
     const whole = doc.lines.slice(doc.bodyStartLine - 1).map((l) => l.replace(/[ \t]+$/, "")).join("\n");
     add(fmId, 1, str(fm?.["title"]) ?? str(fm?.["capability"]) ?? "", "frontmatter", 1, lastLine, whole);
   }
-  for (const h of blocks.headings) {
+  for (const h of blocks2.headings) {
     if (h.level < 3 || h.level > 4) continue;
     const m = /^(\S+)(?:\s+—\s+(.*))?$/.exec(h.text);
     const id = m?.[1] ? fullId(m[1]) : null;
     if (!id) continue;
-    const end = blocks.sectionEnd(h.line);
+    const end = blocks2.sectionEnd(h.line);
     add(id, h.line, m?.[2] ?? "", "heading", h.line, end, blockText(h.line, end));
   }
-  for (const f of blocks.fences) {
+  for (const f of blocks2.fences) {
     for (let l = f.start; l <= f.end; l++) {
       const m = /Scenario(?: Outline)?: (C\d{3}-TS-\d+)(?:\s+—\s+(.*))?/.exec(doc.lines[l - 1] ?? "");
       if (m?.[1]) add(m[1], l, m[2]?.trim() ?? "", "scenario", l, l, blockText(f.start, f.end));
     }
   }
-  for (const r of blocks.tableRows) {
+  for (const r of blocks2.tableRows) {
     const id = r.cells[0] ? fullId(r.cells[0]) : null;
     if (!id) continue;
     const type = parseId(id).type;
@@ -9784,7 +9784,7 @@ function parseFile(path, rel, change, nodes, edges) {
   }
   body.forEach((text2, i) => {
     const line = doc.bodyStartLine + i;
-    if (blocks.inFence(line)) return;
+    if (blocks2.inFence(line)) return;
     const inv = /\*\*(C\d{3}-INV-\d+)\*\*\s*(.*)$/.exec(text2);
     if (inv?.[1]) add(inv[1], line, inv[2] ?? "", "bullet", line, line, norm(line));
     const ng = /^- (C\d{3}-NG-\d+):\s*(.*)$/.exec(text2);
@@ -9797,7 +9797,7 @@ function parseFile(path, rel, change, nodes, edges) {
       if (d.node.form !== "scenario" && line >= d.from && line <= d.to && (!best || d.to - d.from < best.to - best.from)) best = d;
     return best ? best.node.id : `file:${rel}`;
   };
-  const fieldAt = new Map(blocks.fields.map((f) => [f.line, f.name]));
+  const fieldAt = new Map(blocks2.fields.map((f) => [f.line, f.name]));
   const definedAt = /* @__PURE__ */ new Map();
   for (const d of defs) definedAt.set(d.node.line, (definedAt.get(d.node.line) ?? /* @__PURE__ */ new Set()).add(d.node.id));
   const kindOf = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
@@ -9814,7 +9814,7 @@ function parseFile(path, rel, change, nodes, edges) {
   body.forEach((text2, i) => {
     const line = doc.bodyStartLine + i;
     const own = definedAt.get(line);
-    const fenced = blocks.inFence(line);
+    const fenced = blocks2.inFence(line);
     for (const hit of findIds(text2, change)) {
       const context = fenced ? "code" : inlineContext(text2, hit.column);
       if (own?.has(hit.id)) {
@@ -9944,12 +9944,12 @@ function nextId(dir2, type, options = {}) {
   if (type === "AC") throw usage("id next", "AC IDs derive from their requirement (AC-<req-seq>.<n>) and are not allocated");
   const nnn = changeNumber(dir2);
   const ledger = loadLedger(dir2);
-  const blocks = ledger.blocks.filter((b) => blockTypes(b).includes(type));
+  const blocks2 = ledger.blocks.filter((b) => blockTypes(b).includes(type));
   let block;
-  if (blocks.length > 0) {
+  if (blocks2.length > 0) {
     if (options.block === void 0) throw usage("id next", `${type} uses capability blocks; pass --block <capability>`);
     const cap = capabilityId(nnn, options.block);
-    block = blocks.find((b) => capabilityId(nnn, b.capability) === cap);
+    block = blocks2.find((b) => capabilityId(nnn, b.capability) === cap);
     if (!block) throw usage("id next", `no block for ${type} in capability ${cap}`);
   }
   const defined = buildChangeGraph(dir2).nodes.filter((n) => n.type === type).map((n) => Number(parseId(n.id)?.seq ?? 0)).filter((n) => !block || n >= block.from && n <= block.to);
@@ -9991,12 +9991,12 @@ function adoptBootstrap(sddDir) {
   const doc = splitFrontmatter(text);
   const generator = doc.data?.["generator"];
   if (typeof generator !== "string" || !generator.startsWith("manual")) return false;
-  const lines = doc.lines;
+  const lines2 = doc.lines;
   const end = doc.bodyStartLine - 2;
-  const at = lines.findIndex((l, i) => i > 0 && i < end && /^generator:/.test(l));
+  const at = lines2.findIndex((l, i) => i > 0 && i < end && /^generator:/.test(l));
   if (at < 0) return false;
-  lines[at] = `generator: ${TOOL}`;
-  writeTextAtomic(path, lines.join("\n"));
+  lines2[at] = `generator: ${TOOL}`;
+  writeTextAtomic(path, lines2.join("\n"));
   return true;
 }
 
@@ -10206,15 +10206,15 @@ function readLines(abs) {
   if (!existsSync4(abs)) return null;
   return { lines: toLines(readFileSync5(abs, "utf8")), first: 1 };
 }
-function systemNames(lines, first) {
-  const b = parseBlocks(lines, first);
+function systemNames(lines2, first) {
+  const b = parseBlocks(lines2, first);
   const out = [];
   for (const h of b.headings) {
     if (!/system names/i.test(h.text)) continue;
     const end = b.sectionEnd(h.line);
     for (const row2 of b.tableRows) {
       if (row2.line <= h.line || row2.line > end) continue;
-      if (SEPARATOR2.test((lines[row2.line - first + 1] ?? "").trim())) continue;
+      if (SEPARATOR2.test((lines2[row2.line - first + 1] ?? "").trim())) continue;
       const name = (row2.cells[0] ?? "").replace(/`/g, "").trim();
       if (name !== "" && name !== "—") out.push(name);
     }
@@ -10281,10 +10281,10 @@ function changeStatus(dir2) {
 }
 function textFile(abs, path) {
   const text = readFileSync6(abs, "utf8");
-  const lines = text.replace(/\r\n?/g, "\n").split("\n");
-  if (!path.endsWith(".md")) return { path, lines, inFence: () => false };
-  const blocks = parseBlocks(lines, 1);
-  return { path, lines, inFence: (l) => blocks.inFence(l) };
+  const lines2 = text.replace(/\r\n?/g, "\n").split("\n");
+  if (!path.endsWith(".md")) return { path, lines: lines2, inFence: () => false };
+  const blocks2 = parseBlocks(lines2, 1);
+  return { path, lines: lines2, inFence: (l) => blocks2.inFence(l) };
 }
 function filesOf(dir2) {
   const out = [];
@@ -10545,13 +10545,13 @@ function isoDate(d = /* @__PURE__ */ new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 function setFrontmatterValue(text, key, yamlValue) {
-  const lines = text.split("\n");
-  if (lines[0] !== "---") throw new Error("no frontmatter");
-  const end = lines.indexOf("---", 1);
-  const at = lines.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
+  const lines2 = text.split("\n");
+  if (lines2[0] !== "---") throw new Error("no frontmatter");
+  const end = lines2.indexOf("---", 1);
+  const at = lines2.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
   if (at < 0) throw new Error(`frontmatter has no ${key}`);
-  lines[at] = `${key}: ${yamlValue}`;
-  return lines.join("\n");
+  lines2[at] = `${key}: ${yamlValue}`;
+  return lines2.join("\n");
 }
 function createChange(sddDir, title, options) {
   const slug = slugify(title);
@@ -10591,8 +10591,8 @@ function readLite(path) {
   if (!existsSync9(path)) return null;
   const doc = splitFrontmatter(readFileSync9(path, "utf8"));
   const body = doc.lines.slice(doc.bodyStartLine - 1);
-  const blocks = parseBlocks(body, 1);
-  const tops = blocks.headings.filter((h) => h.level === 2);
+  const blocks2 = parseBlocks(body, 1);
+  const tops = blocks2.headings.filter((h) => h.level === 2);
   const text = (from, to) => body.slice(from - 1, to).join("\n").replace(/^\n+|\n+$/g, "");
   const firstTop = tops[0]?.line ?? body.length + 1;
   const preamble = text(1, firstTop - 1).replace(/^# .*\n?/, "").replace(/^\n+/, "");
@@ -10707,13 +10707,13 @@ ${s.body}`)].filter(Boolean);
     if (plan.preamble) append("20-plan/00-index.md", plan.status, plan.preamble);
     for (const s of plan.sections) {
       if (s.heading === "Tasks") {
-        const lines = s.body.split("\n");
-        const starts = lines.flatMap((l, i) => /^### C\d{3}-T-\d+/.test(l) ? [i] : []);
-        if (starts.length > 0 && starts[0] > 0 && lines.slice(0, starts[0]).some((l) => l.trim()))
-          append("20-plan/00-index.md", plan.status, lines.slice(0, starts[0]).join("\n"));
+        const lines2 = s.body.split("\n");
+        const starts = lines2.flatMap((l, i) => /^### C\d{3}-T-\d+/.test(l) ? [i] : []);
+        if (starts.length > 0 && starts[0] > 0 && lines2.slice(0, starts[0]).some((l) => l.trim()))
+          append("20-plan/00-index.md", plan.status, lines2.slice(0, starts[0]).join("\n"));
         starts.forEach((st, k) => {
-          const block = lines.slice(st + 1, starts[k + 1] ?? lines.length);
-          const t = taskFile(lines[st].replace(/^### /, ""), block, nnn);
+          const block = lines2.slice(st + 1, starts[k + 1] ?? lines2.length);
+          const t = taskFile(lines2[st].replace(/^### /, ""), block, nnn);
           writes2.set(t.rel, t.text);
         });
         continue;
@@ -10767,6 +10767,457 @@ function upgradeToFull(dir2, tpl = {}) {
     throw e;
   }
   return [...writes2.keys()].sort();
+}
+
+// src/archive/apply.ts
+import { existsSync as existsSync10, mkdirSync as mkdirSync4, renameSync as renameSync2 } from "node:fs";
+import { dirname as dirname6, join as join13 } from "node:path";
+function applyArchive(root, plan) {
+  for (const [path, text] of plan.writes) {
+    mkdirSync4(dirname6(path), { recursive: true });
+    writeTextAtomic(path, text);
+  }
+  mkdirSync4(dirname6(plan.move.to), { recursive: true });
+  if (existsSync10(plan.move.to)) throw new Error(`${plan.move.to} already exists`);
+  renameSync2(plan.move.from, plan.move.to);
+  writeStatus(join13(root, ".sdd"));
+}
+
+// src/archive/plan.ts
+import { existsSync as existsSync11, readdirSync as readdirSync7, readFileSync as readFileSync10 } from "node:fs";
+import { basename as basename6, join as join14 } from "node:path";
+
+// src/workspace/change-md.ts
+var import_yaml3 = __toESM(require_dist(), 1);
+var GATES = { "00-ideation": "G1 (ideation)", "10-spec": "G2 (spec)", "20-plan": "G3 (plan)" };
+function frontmatterEnd2(lines2) {
+  if (lines2[0] !== "---") throw new Error("change.md has no frontmatter");
+  const end = lines2.indexOf("---", 1);
+  if (end < 0) throw new Error("change.md frontmatter is not closed");
+  return end;
+}
+function scalar(v) {
+  if (v === null) return "null";
+  return plainSafe(v) ? v : JSON.stringify(v);
+}
+function plainSafe(v) {
+  if (!/^[\w.@-]+$/.test(v) || /^(true|false|null|yes|no|on|off|~)$/i.test(v)) return false;
+  return /^\d{4}-\d{2}-\d{2}$/.test(v) || !/^[-+]?(\d[\d_]*\.?\d*([eE][-+]?\d+)?|\.\d+([eE][-+]?\d+)?|0x[\da-fA-F]+|0o[0-7]+)$/.test(v);
+}
+function setPhase(text, phase, fields) {
+  const lines2 = text.split("\n");
+  const end = frontmatterEnd2(lines2);
+  const at = lines2.findIndex((l, i) => i > 0 && i < end && new RegExp(`^(\\s+)${phase}:`).test(l));
+  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
+  const indent = /^(\s*)/.exec(lines2[at])[1];
+  let last = at;
+  let current = {};
+  const inline2 = lines2[at].slice(lines2[at].indexOf(":") + 1).replace(/\s+#.*$/, "").trim();
+  if (inline2.startsWith("{")) current = (0, import_yaml3.parse)(inline2) ?? {};
+  else {
+    while (last + 1 < end && /^(\s*)/.exec(lines2[last + 1])[1].length > indent.length) last++;
+    current = (0, import_yaml3.parse)(lines2.slice(at + 1, last + 1).map((l) => l.slice(indent.length + 2)).join("\n")) ?? {};
+  }
+  const merged = { ...current, ...fields };
+  const body = Object.entries(merged).map(([k, v]) => `${k}: ${v === null || v === void 0 ? "null" : typeof v === "string" ? scalar(v) : String(v instanceof Date ? v.toISOString().slice(0, 10) : v)}`).join(", ");
+  lines2.splice(at, last - at + 1, `${indent}${phase}: { ${body} }`);
+  return lines2.join("\n");
+}
+function setPhaseStatus(text, phase, status2) {
+  const lines2 = text.split("\n");
+  const end = frontmatterEnd2(lines2);
+  const at = lines2.findIndex((l, i) => i > 0 && i < end && new RegExp(`^\\s+${phase}:`).test(l));
+  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
+  if (lines2[at].includes("{")) {
+    lines2[at] = lines2[at].replace(/(\bstatus:\s*)[\w-]+/, `$1${status2}`);
+    return lines2.join("\n");
+  }
+  const indent = /^(\s*)/.exec(lines2[at])[1].length;
+  for (let i = at + 1; i < end; i++) {
+    if (/^(\s*)/.exec(lines2[i])[1].length <= indent) break;
+    if (/^\s+status:/.test(lines2[i])) {
+      lines2[i] = lines2[i].replace(/(status:\s*)[\w-]+/, `$1${status2}`);
+      return lines2.join("\n");
+    }
+  }
+  throw new Error(`change.md phase ${phase} has no status`);
+}
+function setTopLevel(text, key, yaml) {
+  const lines2 = text.split("\n");
+  const end = frontmatterEnd2(lines2);
+  const at = lines2.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
+  const parts = yaml.split("\n");
+  const value2 = yaml.startsWith("\n") ? [`${key}:`, ...parts.slice(1)] : [`${key}: ${parts[0]}`, ...parts.slice(1)];
+  if (at < 0) {
+    lines2.splice(end, 0, ...value2);
+    return lines2.join("\n");
+  }
+  let last = at;
+  while (last + 1 < end && /^\s+\S/.test(lines2[last + 1])) last++;
+  lines2.splice(at, last - at + 1, ...value2);
+  return lines2.join("\n");
+}
+function waiversYaml(waivers) {
+  if (waivers.length === 0) return "[]";
+  return "\n" + waivers.map((w) => `  - { item: ${scalar(w.item)}, gate: ${w.gate}, date: ${w.date}, note: ${JSON.stringify(w.note)} }`).join("\n");
+}
+function appendGateLog(text, cells) {
+  const row2 = `| ${cells.map((c) => c.replace(/\|/g, "\\|").replace(/\n/g, " ")).join(" | ")} |`;
+  const header2 = "| Date | Gate | Decision | Words of approver | Waivers | Usage |\n|---|---|---|---|---|---|";
+  const lines2 = text.split("\n");
+  const at = lines2.findIndex((l) => /^##\s+Gate log\s*$/.test(l));
+  if (at < 0) return text.replace(/\n*$/, "\n") + `
+## Gate log
+${header2}
+${row2}
+`;
+  let i = at + 1;
+  while (i < lines2.length && !lines2[i].trimStart().startsWith("|") && !/^#{1,2}\s/.test(lines2[i])) i++;
+  if (i >= lines2.length || !lines2[i].trimStart().startsWith("|")) {
+    lines2.splice(at + 1, 0, ...header2.split("\n"), row2);
+    return lines2.join("\n");
+  }
+  while (i < lines2.length && lines2[i].trimStart().startsWith("|")) i++;
+  lines2.splice(i, 0, row2);
+  return lines2.join("\n");
+}
+function flow(value2) {
+  if (value2 === null || value2 === void 0) return "null";
+  if (Array.isArray(value2)) return `[${value2.map(flow).join(", ")}]`;
+  if (typeof value2 === "object") return `{ ${Object.entries(value2).map(([k, v]) => `${k}: ${flow(v)}`).join(", ")} }`;
+  if (typeof value2 === "string") return plainSafe(value2) ? value2 : JSON.stringify(value2);
+  return String(value2);
+}
+function listYaml(items) {
+  return items.length === 0 ? "[]" : "\n" + items.map((i) => `  - ${flow(i)}`).join("\n");
+}
+
+// src/archive/living.ts
+var HISTORY_HEADER = ["| ID | Event | Change | Date | Note |", "|---|---|---|---|---|"];
+function newLivingFile(slug, date) {
+  return [
+    "---",
+    `capability: ${slug}`,
+    "inventory_only: false",
+    `updated: ${date}`,
+    "---",
+    `# CAP-${slug} — Living specification`,
+    "",
+    "## Requirements",
+    "",
+    "## History",
+    "",
+    ...HISTORY_HEADER,
+    ""
+  ].join("\n");
+}
+var lines = (text) => text.split("\n");
+var blocks = (ls) => parseBlocks(ls, 1);
+function findEntry(text, id) {
+  const ls = lines(text);
+  const b = blocks(ls);
+  const h = b.headings.find((x) => x.level === 3 && (x.text === id || x.text.startsWith(`${id} — `) || x.text.startsWith(`${id} `)));
+  if (!h) return null;
+  let end = b.sectionEnd(h.line);
+  while (end > h.line && ls[end - 1].trim() === "") end--;
+  return { start: h.line, end, title: h.text.slice(id.length).replace(/^\s*—\s*/, "").trim() };
+}
+function section(ls, name) {
+  const b = blocks(ls);
+  const h = b.headings.find((x) => x.level === 2 && x.text.trim().toLowerCase() === name.toLowerCase());
+  return h ? { line: h.line, end: b.sectionEnd(h.line) } : null;
+}
+function ensureSections(text) {
+  const ls = lines(text);
+  if (!section(ls, "History")) {
+    while (ls.length > 0 && ls[ls.length - 1] === "") ls.pop();
+    ls.push("", "## History", "", ...HISTORY_HEADER, "");
+  }
+  if (!section(ls, "Requirements")) {
+    const h2 = section(ls, "History");
+    ls.splice(h2.line - 1, 0, "## Requirements", "");
+  }
+  const h = section(ls, "History");
+  if (!ls.slice(h.line, h.end).some((l) => /^\|\s*ID\s*\|/.test(l))) ls.splice(h.line, 0, "", ...HISTORY_HEADER);
+  return ls.join("\n");
+}
+function markUpdated(text, slug, date) {
+  let t = text.startsWith("---\n") ? text : `---
+capability: ${slug}
+---
+${text}`;
+  t = setTopLevel(t, "inventory_only", "false");
+  t = setTopLevel(t, "updated", date);
+  return ensureSections(t);
+}
+function appendEntry(text, entry) {
+  const ls = lines(ensureSections(text));
+  const s = section(ls, "Requirements");
+  let at = s.end;
+  while (at > s.line && ls[at - 1].trim() === "") at--;
+  ls.splice(at, 0, "", ...entry, "");
+  return tidy(ls);
+}
+function replaceRange(text, start, end, entry) {
+  const ls = lines(text);
+  ls.splice(start - 1, end - start + 1, ...entry);
+  return tidy(ls);
+}
+function deleteRange(text, start, end) {
+  const ls = lines(text);
+  ls.splice(start - 1, end - start + 1);
+  return tidy(ls);
+}
+function addHistory(text, cells) {
+  const ls = lines(ensureSections(text));
+  const s = section(ls, "History");
+  let last = s.line;
+  for (let i = s.line; i <= s.end; i++) if (ls[i - 1].startsWith("|")) last = i;
+  ls.splice(last, 0, `| ${cells.map((c) => c.replace(/\|/g, "\\|")).join(" | ")} |`);
+  return tidy(ls);
+}
+function tidy(ls) {
+  const b = blocks(ls);
+  const out = [];
+  ls.forEach((l, i) => {
+    if (l.trim() === "" && out.length > 0 && out[out.length - 1].trim() === "" && !b.inFence(i + 1)) return;
+    out.push(l);
+  });
+  while (out.length > 0 && out[out.length - 1].trim() === "") out.pop();
+  return out.join("\n") + "\n";
+}
+
+// src/archive/plan.ts
+var REQ_HEADING = /^(C\d{3}-REQ-\d+)\s*—\s*(.*)$/;
+var SEPARATOR3 = /^\|?\s*:?-{3,}/;
+function trimBlank(ls) {
+  let a = 0;
+  let b = ls.length;
+  while (a < b && ls[a].trim() === "") a++;
+  while (b > a && ls[b - 1].trim() === "") b--;
+  return ls.slice(a, b);
+}
+function acceptanceBlocks(text) {
+  const ls = text.split("\n");
+  const b = parseBlocks(ls, 1);
+  const out = /* @__PURE__ */ new Map();
+  for (const h of b.headings) {
+    const m = /^(C\d{3})-AC-(\d+)\.\d+\b/.exec(h.text);
+    if (h.level !== 4 || !m) continue;
+    const block = [];
+    for (let i = h.line; i <= b.sectionEnd(h.line); i++) {
+      if (i > h.line && ls[i - 1].startsWith("|") && !b.inFence(i)) break;
+      block.push(ls[i - 1]);
+    }
+    const key = `${m[1]}-REQ-${m[2]}`;
+    out.set(key, [...out.get(key) ?? [], trimBlank(block)]);
+  }
+  return out;
+}
+function requirements(reqText, accText, slug, kind, change, date) {
+  const ls = reqText.split("\n");
+  const b = parseBlocks(ls, 1);
+  const acs = acceptanceBlocks(accText);
+  const out = [];
+  for (const h of b.headings) {
+    const m = REQ_HEADING.exec(h.text);
+    if (h.level !== 3 || !m) continue;
+    const block = trimBlank(ls.slice(h.line - 1, b.sectionEnd(h.line)));
+    const deltaLine = block.find((l) => /^- \*\*Delta:\*\*/.test(l));
+    const delta = deltaLine ? deltaLine.replace(/^- \*\*Delta:\*\*\s*/, "").trim() : kind === "greenfield" ? "ADDED" : "";
+    const body = block.slice(1).filter((l) => l !== deltaLine);
+    const entry = [block[0], `- **Source:** ${change}, archived ${date}`, ...body];
+    for (const ac of acs.get(m[1]) ?? []) entry.push("", ...ac);
+    out.push({ id: m[1], title: m[2].trim(), slug, delta, entry });
+  }
+  return out;
+}
+function frontmatter(path) {
+  return splitFrontmatter(readFileSync10(path, "utf8")).data ?? {};
+}
+function archiveBlockers(changeDir) {
+  const fm = frontmatter(join14(changeDir, "change.md"));
+  const out = [];
+  const plan = fm["phases"]?.["20-plan"]?.status ?? "not-started";
+  if (plan !== "approved") out.push(`G3 not approved (20-plan ${plan})`);
+  const tasksDir = join14(changeDir, "20-plan", "50-tasks");
+  if (existsSync11(tasksDir))
+    for (const f of readdirSync7(tasksDir).filter((n) => n.endsWith(".md")).sort()) {
+      const t = frontmatter(join14(tasksDir, f));
+      const status2 = String(t["status"] ?? "todo");
+      if (status2 !== "done" && status2 !== "dropped") out.push(`${String(t["id"] ?? f)} ${status2}`);
+    }
+  for (const d of fm["defects"] ?? []) if (d["status"] === "open") out.push(`${String(d["id"])} open`);
+  return out;
+}
+function sources(changeDir, folder) {
+  const capDir = join14(changeDir, "10-spec", "20-capabilities");
+  if (existsSync11(capDir))
+    return readdirSync7(capDir).filter((n) => /^CAP-\d+-/.test(n) && existsSync11(join14(capDir, n, "requirements.md"))).sort().map((n) => ({ req: join14(capDir, n, "requirements.md"), acc: join14(capDir, n, "acceptance.md"), slug: n.replace(/^CAP-\d+-/, "") }));
+  const lite = join14(changeDir, "10-spec", "spec.md");
+  if (!existsSync11(lite)) return [];
+  const cap = frontmatter(lite)["capability"];
+  return [{ req: lite, acc: lite, slug: typeof cap === "string" && cap !== "" ? cap : folder.replace(/^\d{3}-/, "") }];
+}
+function tableRows(text, name) {
+  const ls = text.split("\n");
+  const b = parseBlocks(ls, 1);
+  const out = [];
+  for (const h of b.headings) {
+    if (!name.test(h.text)) continue;
+    const end = b.sectionEnd(h.line);
+    for (const r of b.tableRows) {
+      if (r.line <= h.line || r.line > end) continue;
+      if (SEPARATOR3.test(ls[r.line - 1].trim()) || SEPARATOR3.test((ls[r.line] ?? "").trim())) continue;
+      if (r.cells.length >= 2 && r.cells[0].trim() !== "") out.push([r.cells[0].trim(), r.cells[1].trim()]);
+    }
+  }
+  return out;
+}
+var GLOSSARY_SECTIONS = [
+  [/domain terms/i, "## Domain terms", "| Term | Definition |"],
+  [/system names/i, "## System names (allowed after `THE` in EARS statements)", "| Name | Component |"]
+];
+function upsertRow(text, section2, row2) {
+  const ls = text.split("\n");
+  let b = parseBlocks(ls, 1);
+  let h = b.headings.find((x) => x.level === 2 && section2[0].test(x.text));
+  if (!h) {
+    while (ls.length > 0 && ls[ls.length - 1] === "") ls.pop();
+    ls.push("", section2[1]);
+    b = parseBlocks(ls, 1);
+    h = b.headings.find((x) => x.level === 2 && section2[0].test(x.text));
+  }
+  const end = b.sectionEnd(h.line);
+  const line = `| ${row2.map((c) => c.replace(/\|/g, "\\|")).join(" | ")} |`;
+  const rows = b.tableRows.filter((r) => r.line > h.line && r.line <= end);
+  const hit = rows.find((r) => !SEPARATOR3.test(ls[r.line - 1].trim()) && !SEPARATOR3.test((ls[r.line] ?? "").trim()) && r.cells[0]?.trim().toLowerCase() === row2[0].toLowerCase());
+  if (hit) {
+    ls[hit.line - 1] = line;
+    return { text: ls.join("\n"), replaced: true };
+  }
+  const last = rows.length > 0 ? rows[rows.length - 1].line : h.line;
+  if (rows.length === 0) ls.splice(last, 0, section2[2], "|---|---|", line);
+  else ls.splice(last, 0, line);
+  return { text: ls.join("\n").replace(/\n*$/, "\n"), replaced: false };
+}
+function planArchive(root, changeDir, date) {
+  const sdd = join14(root, ".sdd");
+  const folder = basename6(changeDir);
+  const fm = frontmatter(join14(changeDir, "change.md"));
+  const change = String(fm["id"] ?? `CHG-${folder.slice(0, 3)}`);
+  const nnn = folder.slice(0, 3);
+  if (fm["status"] === "stopped" || fm["status"] === "archived") throw new CliError("ERR-CLI-014", { NNN: nnn, "stopped|archived": String(fm["status"]) });
+  const blockers = archiveBlockers(changeDir);
+  const kind = typeof fm["kind"] === "string" ? fm["kind"] : "greenfield";
+  const reqs = sources(changeDir, folder).flatMap((s) => requirements(readFileSync10(s.req, "utf8"), existsSync11(s.acc) ? readFileSync10(s.acc, "utf8") : "", s.slug, kind, change, date));
+  const livingDir = join14(sdd, "_living");
+  const living = /* @__PURE__ */ new Map();
+  if (existsSync11(livingDir)) for (const n of readdirSync7(livingDir).filter((x) => /^CAP-.+\.md$/.test(x)).sort()) living.set(n, readFileSync10(join14(livingDir, n), "utf8"));
+  const original = new Map(living);
+  const ops = [];
+  const rel = (n) => `.sdd/_living/${n}`;
+  const fileOf = (slug) => `CAP-${slug}.md`;
+  const edit = (name, slug, fn) => {
+    const cur = living.get(name);
+    const base = cur === void 0 || cur === null ? newLivingFile(slug, date) : markUpdated(cur, slug, date);
+    living.set(name, fn(base));
+  };
+  const locate = (id) => {
+    for (const [name, text] of living) if (text !== null) {
+      const e = findEntry(text, id);
+      if (e) return { name, ...e };
+    }
+    return null;
+  };
+  const slugOf = (name) => name.replace(/^CAP-/, "").replace(/\.md$/, "");
+  for (const r of reqs) {
+    const tag = /^[A-Z]+/.exec(r.delta)?.[0] ?? "";
+    const cited = findIds(r.delta, null).filter((h) => !h.short && h.id.includes("-REQ-")).map((h) => h.id);
+    if (tag === "ADDED") {
+      const name = fileOf(r.slug);
+      ops.push({ file: rel(name), op: living.has(name) ? "add" : "create+add", id: r.id });
+      edit(name, r.slug, (t) => appendEntry(t, r.entry));
+      continue;
+    }
+    if (!["MODIFIED", "REMOVED", "RENAMED"].includes(tag)) {
+      blockers.push(`${r.id} has no valid Delta (${r.delta || "missing"})`);
+      continue;
+    }
+    if (cited.length === 0) {
+      blockers.push(`${r.id} is ${tag} but cites no living requirement`);
+      continue;
+    }
+    for (const old of cited) {
+      const at = locate(old);
+      if (!at) {
+        blockers.push(`${old} (cited by ${r.id}) is not in _living/`);
+        continue;
+      }
+      const slug = slugOf(at.name);
+      if (tag === "MODIFIED") {
+        ops.push({ file: rel(at.name), op: "replace", id: old, detail: `superseded by ${r.id}` });
+        edit(at.name, slug, (t) => {
+          const e = findEntry(t, old);
+          return addHistory(replaceRange(t, e.start, e.end, r.entry), [old, `superseded by ${r.id}`, change, date, ""]);
+        });
+      } else if (tag === "REMOVED") {
+        ops.push({ file: rel(at.name), op: "remove", id: old, detail: `removed by ${r.id}` });
+        edit(at.name, slug, (t) => {
+          const e = findEntry(t, old);
+          return addHistory(deleteRange(t, e.start, e.end), [old, "removed", change, date, `by ${r.id}`]);
+        });
+      } else {
+        const text = living.get(at.name);
+        const body = text.split("\n").slice(at.start - 1, at.end);
+        const renamed = [`### ${old} — ${r.title}`, ...body.slice(1)];
+        const event = `renamed from "${at.title}" to "${r.title}"`;
+        if (r.slug === slug) {
+          ops.push({ file: rel(at.name), op: "rename", id: old, detail: `"${at.title}" → "${r.title}"` });
+          edit(at.name, slug, (t) => {
+            const e = findEntry(t, old);
+            return addHistory(replaceRange(t, e.start, e.end, renamed), [old, event, change, date, `by ${r.id}`]);
+          });
+        } else {
+          const target = fileOf(r.slug);
+          ops.push({ file: rel(at.name), op: "move-out", id: old, detail: `to ${rel(target)}, "${at.title}" → "${r.title}"` });
+          ops.push({ file: rel(target), op: living.has(target) ? "move-in" : "create+move-in", id: old, detail: `from ${rel(at.name)}` });
+          edit(at.name, slug, (t) => {
+            const e = findEntry(t, old);
+            return addHistory(deleteRange(t, e.start, e.end), [old, `${event}, moved to CAP-${r.slug}`, change, date, `by ${r.id}`]);
+          });
+          edit(target, r.slug, (t) => addHistory(appendEntry(t, renamed), [old, `moved from CAP-${slug} (was "${at.title}")`, change, date, `by ${r.id}`]));
+        }
+      }
+    }
+  }
+  if (blockers.length > 0) throw new CliError("ERR-CLI-009", { NNN: nnn, list: blockers.join("; ") });
+  const writes2 = /* @__PURE__ */ new Map();
+  for (const [name, text] of living) if (text !== null && text !== original.get(name)) writes2.set(join14(livingDir, name), text);
+  const delta = join14(changeDir, "10-spec", "40-domain", "glossary-delta.md");
+  if (existsSync11(delta)) {
+    const dText = readFileSync10(delta, "utf8");
+    const gPath = join14(sdd, "_constitution", "glossary.md");
+    let g = existsSync11(gPath) ? readFileSync10(gPath, "utf8") : ["---", "id: GLOSSARY", "artifact: constitution/glossary", `updated: ${date}`, "---", "# Glossary", ""].join("\n");
+    const before = g;
+    for (const section2 of GLOSSARY_SECTIONS)
+      for (const row2 of tableRows(dText, section2[0])) {
+        const r = upsertRow(g, section2, row2);
+        g = r.text;
+        ops.push({ file: ".sdd/_constitution/glossary.md", op: r.replaced ? "redefine" : "add-term", id: row2[0] });
+      }
+    if (g !== before) writes2.set(gPath, setTopLevel(g, "updated", date).replace(/\n*$/, "\n"));
+  }
+  const changeMd = join14(changeDir, "change.md");
+  writes2.set(changeMd, setTopLevel(readFileSync10(changeMd, "utf8"), "status", "archived"));
+  ops.push({ file: `.sdd/${folder}/change.md`, op: "set-status", id: change, detail: "archived" });
+  const to = join14(sdd, "_archive", folder);
+  ops.push({ file: `.sdd/${folder}`, op: "move", id: change, detail: `to .sdd/_archive/${folder}` });
+  ops.push({ file: ".sdd/registry.json, .sdd/SDD.md", op: "regenerate", id: change });
+  return { change, ops, writes: writes2, move: { from: changeDir, to } };
+}
+function formatOp(o) {
+  return `${o.file}: ${o.op} ${o.id}${o.detail ? ` — ${o.detail}` : ""}`;
 }
 
 // src/hooks/input.ts
@@ -11092,14 +11543,14 @@ function postWriteFeedback(input, rules, tool) {
   }
   if (findings.length === 0) return null;
   const sorted2 = [...findings].sort((a, b) => (RANK[a.severity] ?? 3) - (RANK[b.severity] ?? 3));
-  const lines = sorted2.slice(0, MAX_FINDINGS).map(formatFinding);
-  if (sorted2.length > MAX_FINDINGS) lines.push(`… ${sorted2.length - MAX_FINDINGS} more: run sdd lint --quick --file ${raw}`);
-  const context = [`sdd quick lint of ${raw}: ${findings.length} finding(s)`, ...lines].join("\n");
+  const lines2 = sorted2.slice(0, MAX_FINDINGS).map(formatFinding);
+  if (sorted2.length > MAX_FINDINGS) lines2.push(`… ${sorted2.length - MAX_FINDINGS} more: run sdd lint --quick --file ${raw}`);
+  const context = [`sdd quick lint of ${raw}: ${findings.length} finding(s)`, ...lines2].join("\n");
   return JSON.stringify({ hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext: context } });
 }
 
 // src/hooks/session-start.ts
-import { join as join13 } from "node:path";
+import { join as join15 } from "node:path";
 var MAX_LINES = 10;
 function changeLine(c) {
   const t = c.implementation.tasks;
@@ -11111,7 +11562,7 @@ function sessionBrief(input, fallbackCwd) {
   const root = findWorkspace(normalisePath(cwd));
   if (root === null) return [];
   try {
-    const active = rebuildRegistry(join13(root, ".sdd")).changes.filter((c) => c.status !== "archived" && c.status !== "stopped");
+    const active = rebuildRegistry(join15(root, ".sdd")).changes.filter((c) => c.status !== "archived" && c.status !== "stopped");
     const head = `SDD workspace: ${active.length} active change(s)`;
     if (active.length < MAX_LINES) return [head, ...active.map(changeLine)];
     const shown = MAX_LINES - 2;
@@ -11122,10 +11573,10 @@ function sessionBrief(input, fallbackCwd) {
 }
 
 // src/workspace/serena-config.ts
-import { existsSync as existsSync10, mkdirSync as mkdirSync4, readFileSync as readFileSync10 } from "node:fs";
-import { join as join14 } from "node:path";
+import { existsSync as existsSync12, mkdirSync as mkdirSync5, readFileSync as readFileSync11 } from "node:fs";
+import { join as join16 } from "node:path";
 function requiredSettings(dataDir) {
-  const projects = join14(dataDir, "serena", "projects").split("\\").join("/");
+  const projects = join16(dataDir, "serena", "projects").split("\\").join("/");
   return {
     web_dashboard: "false",
     web_dashboard_open_on_launch: "false",
@@ -11140,23 +11591,23 @@ function setKey(text, key, value2) {
 `;
 }
 function writeSerenaConfig(dataDir) {
-  const dir2 = join14(dataDir, "serena");
-  const path = join14(dir2, "serena_config.yml");
-  const existed = existsSync10(path);
-  const before = existed ? readFileSync10(path, "utf8") : "";
+  const dir2 = join16(dataDir, "serena");
+  const path = join16(dir2, "serena_config.yml");
+  const existed = existsSync12(path);
+  const before = existed ? readFileSync11(path, "utf8") : "";
   let text = before;
   for (const [k, v] of Object.entries(requiredSettings(dataDir))) text = setKey(text, k, v);
   if (!/^projects:/m.test(text)) text = setKey(text, "projects", "[]");
   if (existed && text === before) return { path, outcome: "unchanged" };
-  mkdirSync4(dir2, { recursive: true });
+  mkdirSync5(dir2, { recursive: true });
   writeTextAtomic(path, text);
   return { path, outcome: existed ? "updated" : "created" };
 }
 
 // src/trace/model.ts
-import { basename as basename6, dirname as dirname6 } from "node:path";
-import { readFileSync as readFileSync11, existsSync as existsSync11 } from "node:fs";
-import { join as join15 } from "node:path";
+import { basename as basename7, dirname as dirname7 } from "node:path";
+import { readFileSync as readFileSync12, existsSync as existsSync13 } from "node:fs";
+import { join as join17 } from "node:path";
 var RELATIONS = {
   stories: "story-of",
   requirements: "traces-to",
@@ -11181,11 +11632,11 @@ function compareIds(a, b) {
 }
 function buildTrace(changeDir) {
   const graph = buildChangeGraph(changeDir);
-  const sddDir = dirname6(changeDir);
+  const sddDir = dirname7(changeDir);
   const spec = gatherSpecFacts(sddDir, graph);
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const profile = fm["profile"] === "lite" ? "lite" : "full";
-  const lint2 = { change: graph.change, folder: `.sdd/${basename6(changeDir)}`, profile, graph, spec };
+  const lint2 = { change: graph.change, folder: `.sdd/${basename7(changeDir)}`, profile, graph, spec };
   const defined = new Set(graph.nodes.map((n) => n.id));
   const nodes = [];
   const seen = /* @__PURE__ */ new Set();
@@ -11215,8 +11666,8 @@ function buildTrace(changeDir) {
   for (const n of graph.nodes) if (n.form === "heading" && !headings.has(n.id)) headings.set(n.id, n);
   const scenarios2 = /* @__PURE__ */ new Map();
   for (const e of graph.edges) if (e.kind === "scenario") scenarios2.set(e.from, [...scenarios2.get(e.from) ?? [], e.to]);
-  const changeMd = join15(changeDir, "change.md");
-  const phases = existsSync11(changeMd) ? splitFrontmatter(readFileSync11(changeMd, "utf8")).data?.["phases"] ?? {} : {};
+  const changeMd = join17(changeDir, "change.md");
+  const phases = existsSync13(changeMd) ? splitFrontmatter(readFileSync12(changeMd, "utf8")).data?.["phases"] ?? {} : {};
   return {
     lint: lint2,
     doc: { change: `CHG-${graph.change}`, nodes, edges },
@@ -11232,7 +11683,7 @@ function percent(covered, total) {
   return `${covered} / ${total} (${total === 0 ? 100 : Math.floor(100 * covered / total)}%)`;
 }
 var row = (cells) => `| ${cells.join(" | ")} |`;
-var join16 = (ids2) => [...new Set(ids2)].sort(compareIds).join(", ") || "—";
+var join18 = (ids2) => [...new Set(ids2)].sort(compareIds).join(", ") || "—";
 function coverage(rule, label, items, ok) {
   const gaps = items.filter((id) => !ok(id));
   return { rule, label, covered: items.length - gaps.length, total: items.length, gaps };
@@ -11285,7 +11736,7 @@ function renderSpecMatrix(t) {
   const forward = (cap, us, req) => {
     const acs = t.field(req, "Acceptance", "AC");
     if (acs.length === 0) out.push(row([cap, us, req, "—", "—"]));
-    for (const ac of acs) out.push(row([cap, us, req, ac, join16(t.scenariosOf(ac))]));
+    for (const ac of acs) out.push(row([cap, us, req, ac, join18(t.scenariosOf(ac))]));
   };
   for (const us of ids(t, "US"))
     for (const req of t.field(us, "Requirements", "REQ")) {
@@ -11298,7 +11749,7 @@ function renderSpecMatrix(t) {
   out.push("", "## Backward: TS → AC → REQ → US", "", row(["TS", "AC", "REQ", "US"]), "|---|---|---|---|");
   for (const req of ids(t, "REQ"))
     for (const ac of t.field(req, "Acceptance", "AC"))
-      for (const ts of t.scenariosOf(ac)) out.push(row([ts, ac, req, join16(storiesOf.get(req) ?? [])]));
+      for (const ts of t.scenariosOf(ac)) out.push(row([ts, ac, req, join18(storiesOf.get(req) ?? [])]));
   return out.join("\n") + "\n";
 }
 function planFacts(t, tombstones) {
@@ -11368,18 +11819,18 @@ function renderPlanMatrix(t, tombstones = /* @__PURE__ */ new Set()) {
     }
   out.push("## Forward: REQ → T → TC → DOD", "", row(["REQ", "Task", "Test cases", "DoD"]), "|---|---|---|---|");
   for (const req of ids(t, "REQ"))
-    out.push(row([req, join16(f.live.filter((x) => x.implements.includes(req)).map((x) => x.id)), join16(tcsOfReq.get(req) ?? []), join16(dod.get(req) ?? [])]));
+    out.push(row([req, join18(f.live.filter((x) => x.implements.includes(req)).map((x) => x.id)), join18(tcsOfReq.get(req) ?? []), join18(dod.get(req) ?? [])]));
   out.push("", "## Backward: TC → T → REQ", "", row(["TC", "Task", "REQ"]), "|---|---|---|");
   for (const tc of [...f.tcToTs.keys()].sort(compareIds)) {
     const reqs = (f.tcToTs.get(tc) ?? []).map((ts) => f.acToReq.get(f.tsToAc.get(ts) ?? "")).filter((x) => x !== void 0);
-    out.push(row([tc, join16(f.tcToTasks.get(tc) ?? []), join16(reqs)]));
+    out.push(row([tc, join18(f.tcToTasks.get(tc) ?? []), join18(reqs)]));
   }
   return out.join("\n") + "\n";
 }
 
 // src/trace/write.ts
-import { existsSync as existsSync12 } from "node:fs";
-import { join as join17 } from "node:path";
+import { existsSync as existsSync14 } from "node:fs";
+import { join as join19 } from "node:path";
 
 // src/trace/open-items.ts
 var MARKER = /\[(NEEDS CLARIFICATION|ASSUMPTION|WAIVED)(?::\s*([^\]]*))?\]/g;
@@ -11418,7 +11869,7 @@ function trace(changeDir, options) {
   const tombstones = new Set(loadLedger(changeDir).tombstones.map((x) => x.id));
   const planStarted = model.lint.spec.planStarted;
   const plan = planStarted ? planCoverage(model, tombstones) : null;
-  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync12(join17(changeDir, p)));
+  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync14(join19(changeDir, p)));
   const document = { change: model.doc.change, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
   const result = {
     model,
@@ -11430,11 +11881,11 @@ function trace(changeDir, options) {
   };
   if (!options.write) return result;
   const put = (rel, text) => {
-    writeTextAtomic(join17(changeDir, ...rel.split("/")), text);
+    writeTextAtomic(join19(changeDir, ...rel.split("/")), text);
     result.written.push(rel);
   };
-  if (existsSync12(join17(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
-  if (planStarted && existsSync12(join17(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
+  if (existsSync14(join19(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
+  if (planStarted && existsSync14(join19(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
   for (const p of phases) put(`${p}/85-open-items.md`, renderOpenItems(model, p));
   put("trace.json", JSON.stringify(document, null, 2) + "\n");
   return result;
@@ -11442,31 +11893,31 @@ function trace(changeDir, options) {
 
 // src/gate/hash.ts
 import { createHash as createHash2 } from "node:crypto";
-import { existsSync as existsSync13, readdirSync as readdirSync7, readFileSync as readFileSync12, statSync as statSync9 } from "node:fs";
-import { join as join18 } from "node:path";
+import { existsSync as existsSync15, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync9 } from "node:fs";
+import { join as join20 } from "node:path";
 var GENERATED2 = /* @__PURE__ */ new Set(["80-traceability.md", "85-open-items.md"]);
 var PHASES2 = ["00-ideation", "10-spec", "20-plan"];
 var sha2562 = (text) => createHash2("sha256").update(text, "utf8").digest("hex");
 function phaseFiles(phaseDir) {
   const out = [];
   const walk = (dir2, prefix) => {
-    for (const name of readdirSync7(dir2)) {
-      const abs = join18(dir2, name);
+    for (const name of readdirSync8(dir2)) {
+      const abs = join20(dir2, name);
       const rel = prefix + name;
       if (statSync9(abs).isDirectory()) walk(abs, rel + "/");
       else if (!GENERATED2.has(rel)) out.push(rel);
     }
   };
-  if (existsSync13(phaseDir)) walk(phaseDir, "");
+  if (existsSync15(phaseDir)) walk(phaseDir, "");
   return out.sort((a, b) => Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8")));
 }
 function fileHash(abs) {
-  return sha2562(normalizeForHash(readFileSync12(abs, "utf8")));
+  return sha2562(normalizeForHash(readFileSync13(abs, "utf8")));
 }
 function phaseHash(changeDir, phase) {
-  const dir2 = join18(changeDir, phase);
+  const dir2 = join20(changeDir, phase);
   const files = phaseFiles(dir2);
-  const hashes = files.map((rel) => [rel, fileHash(join18(dir2, ...rel.split("/")))]);
+  const hashes = files.map((rel) => [rel, fileHash(join20(dir2, ...rel.split("/")))]);
   if (hashes.length === 1) return { hash: `sha256:${hashes[0][1]}`, files: 1 };
   return { hash: `sha256:${sha2562(hashes.map(([rel, h]) => `${rel}	${h}
 `).join(""))}`, files: hashes.length };
@@ -11478,150 +11929,45 @@ function idHashes(changeDir, phase) {
   return Object.fromEntries([...ids2].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }
 function readApprovals(changeDir) {
-  const p = join18(changeDir, "approvals.json");
-  return existsSync13(p) ? JSON.parse(readFileSync12(p, "utf8")) : {};
+  const p = join20(changeDir, "approvals.json");
+  return existsSync15(p) ? JSON.parse(readFileSync13(p, "utf8")) : {};
 }
 function recordApproval(changeDir, phase, approvedAt) {
   const { hash, files } = phaseHash(changeDir, phase);
   const record2 = { hash, approved_at: approvedAt, files, ids: idHashes(changeDir, phase) };
   const all = readApprovals(changeDir);
   all[phase] = record2;
-  writeTextAtomic(join18(changeDir, "approvals.json"), JSON.stringify(all, null, 2) + "\n");
+  writeTextAtomic(join20(changeDir, "approvals.json"), JSON.stringify(all, null, 2) + "\n");
   return record2;
 }
 
 // src/gate/gate.ts
 import { execFileSync } from "node:child_process";
-import { readFileSync as readFileSync14 } from "node:fs";
-import { basename as basename7, join as join20 } from "node:path";
-
-// src/workspace/change-md.ts
-var import_yaml3 = __toESM(require_dist(), 1);
-var GATES = { "00-ideation": "G1 (ideation)", "10-spec": "G2 (spec)", "20-plan": "G3 (plan)" };
-function frontmatterEnd2(lines) {
-  if (lines[0] !== "---") throw new Error("change.md has no frontmatter");
-  const end = lines.indexOf("---", 1);
-  if (end < 0) throw new Error("change.md frontmatter is not closed");
-  return end;
-}
-function scalar(v) {
-  if (v === null) return "null";
-  return plainSafe(v) ? v : JSON.stringify(v);
-}
-function plainSafe(v) {
-  if (!/^[\w.@-]+$/.test(v) || /^(true|false|null|yes|no|on|off|~)$/i.test(v)) return false;
-  return /^\d{4}-\d{2}-\d{2}$/.test(v) || !/^[-+]?(\d[\d_]*\.?\d*([eE][-+]?\d+)?|\.\d+([eE][-+]?\d+)?|0x[\da-fA-F]+|0o[0-7]+)$/.test(v);
-}
-function setPhase(text, phase, fields) {
-  const lines = text.split("\n");
-  const end = frontmatterEnd2(lines);
-  const at = lines.findIndex((l, i) => i > 0 && i < end && new RegExp(`^(\\s+)${phase}:`).test(l));
-  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
-  const indent = /^(\s*)/.exec(lines[at])[1];
-  let last = at;
-  let current = {};
-  const inline2 = lines[at].slice(lines[at].indexOf(":") + 1).replace(/\s+#.*$/, "").trim();
-  if (inline2.startsWith("{")) current = (0, import_yaml3.parse)(inline2) ?? {};
-  else {
-    while (last + 1 < end && /^(\s*)/.exec(lines[last + 1])[1].length > indent.length) last++;
-    current = (0, import_yaml3.parse)(lines.slice(at + 1, last + 1).map((l) => l.slice(indent.length + 2)).join("\n")) ?? {};
-  }
-  const merged = { ...current, ...fields };
-  const body = Object.entries(merged).map(([k, v]) => `${k}: ${v === null || v === void 0 ? "null" : typeof v === "string" ? scalar(v) : String(v instanceof Date ? v.toISOString().slice(0, 10) : v)}`).join(", ");
-  lines.splice(at, last - at + 1, `${indent}${phase}: { ${body} }`);
-  return lines.join("\n");
-}
-function setPhaseStatus(text, phase, status2) {
-  const lines = text.split("\n");
-  const end = frontmatterEnd2(lines);
-  const at = lines.findIndex((l, i) => i > 0 && i < end && new RegExp(`^\\s+${phase}:`).test(l));
-  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
-  if (lines[at].includes("{")) {
-    lines[at] = lines[at].replace(/(\bstatus:\s*)[\w-]+/, `$1${status2}`);
-    return lines.join("\n");
-  }
-  const indent = /^(\s*)/.exec(lines[at])[1].length;
-  for (let i = at + 1; i < end; i++) {
-    if (/^(\s*)/.exec(lines[i])[1].length <= indent) break;
-    if (/^\s+status:/.test(lines[i])) {
-      lines[i] = lines[i].replace(/(status:\s*)[\w-]+/, `$1${status2}`);
-      return lines.join("\n");
-    }
-  }
-  throw new Error(`change.md phase ${phase} has no status`);
-}
-function setTopLevel(text, key, yaml) {
-  const lines = text.split("\n");
-  const end = frontmatterEnd2(lines);
-  const at = lines.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
-  const parts = yaml.split("\n");
-  const value2 = yaml.startsWith("\n") ? [`${key}:`, ...parts.slice(1)] : [`${key}: ${parts[0]}`, ...parts.slice(1)];
-  if (at < 0) {
-    lines.splice(end, 0, ...value2);
-    return lines.join("\n");
-  }
-  let last = at;
-  while (last + 1 < end && /^\s+\S/.test(lines[last + 1])) last++;
-  lines.splice(at, last - at + 1, ...value2);
-  return lines.join("\n");
-}
-function waiversYaml(waivers) {
-  if (waivers.length === 0) return "[]";
-  return "\n" + waivers.map((w) => `  - { item: ${scalar(w.item)}, gate: ${w.gate}, date: ${w.date}, note: ${JSON.stringify(w.note)} }`).join("\n");
-}
-function appendGateLog(text, cells) {
-  const row2 = `| ${cells.map((c) => c.replace(/\|/g, "\\|").replace(/\n/g, " ")).join(" | ")} |`;
-  const header2 = "| Date | Gate | Decision | Words of approver | Waivers | Usage |\n|---|---|---|---|---|---|";
-  const lines = text.split("\n");
-  const at = lines.findIndex((l) => /^##\s+Gate log\s*$/.test(l));
-  if (at < 0) return text.replace(/\n*$/, "\n") + `
-## Gate log
-${header2}
-${row2}
-`;
-  let i = at + 1;
-  while (i < lines.length && !lines[i].trimStart().startsWith("|") && !/^#{1,2}\s/.test(lines[i])) i++;
-  if (i >= lines.length || !lines[i].trimStart().startsWith("|")) {
-    lines.splice(at + 1, 0, ...header2.split("\n"), row2);
-    return lines.join("\n");
-  }
-  while (i < lines.length && lines[i].trimStart().startsWith("|")) i++;
-  lines.splice(i, 0, row2);
-  return lines.join("\n");
-}
-function flow(value2) {
-  if (value2 === null || value2 === void 0) return "null";
-  if (Array.isArray(value2)) return `[${value2.map(flow).join(", ")}]`;
-  if (typeof value2 === "object") return `{ ${Object.entries(value2).map(([k, v]) => `${k}: ${flow(v)}`).join(", ")} }`;
-  if (typeof value2 === "string") return plainSafe(value2) ? value2 : JSON.stringify(value2);
-  return String(value2);
-}
-function listYaml(items) {
-  return items.length === 0 ? "[]" : "\n" + items.map((i) => `  - ${flow(i)}`).join("\n");
-}
+import { readFileSync as readFileSync15 } from "node:fs";
+import { basename as basename8, join as join22 } from "node:path";
 
 // src/gate/critic-parse.ts
-import { existsSync as existsSync14, readFileSync as readFileSync13 } from "node:fs";
-import { join as join19 } from "node:path";
+import { existsSync as existsSync16, readFileSync as readFileSync14 } from "node:fs";
+import { join as join21 } from "node:path";
 function criticReportPath(changeDir, phase) {
   for (const name of ["90-critic-report.md", "critic-report.md"]) {
-    const p = join19(changeDir, phase, name);
-    if (existsSync14(p)) return p;
+    const p = join21(changeDir, phase, name);
+    if (existsSync16(p)) return p;
   }
   return null;
 }
 function criticFindings(changeDir, phase) {
   const path = criticReportPath(changeDir, phase);
   if (!path) return [];
-  const lines = toLines(readFileSync13(path, "utf8"));
-  const blocks = parseBlocks(lines, 1);
+  const lines2 = toLines(readFileSync14(path, "utf8"));
+  const blocks2 = parseBlocks(lines2, 1);
   const file = `${phase}/${path.slice(path.lastIndexOf(path.includes("\\") ? "\\" : "/") + 1)}`;
   const out = [];
-  for (const h of blocks.headings) {
+  for (const h of blocks2.headings) {
     const m = /^(CR-\d+)\s*[—–-]\s*(.*)$/.exec(h.text);
     if (!m) continue;
-    const end = blocks.sectionEnd(h.line);
-    const field = (name) => blocks.fields.find((f) => f.line > h.line && f.line <= end && f.name === name)?.value ?? "";
+    const end = blocks2.sectionEnd(h.line);
+    const field = (name) => blocks2.fields.find((f) => f.line > h.line && f.line <= end && f.name === name)?.value ?? "";
     const status2 = (/^(open|resolved|waived)\b/i.exec(field("Status").replace(/[*_`]/g, "").trim())?.[1] ?? "open").toLowerCase();
     out.push({ id: m[1], title: m[2].trim(), severity: field("Severity").replace(/[*_`]/g, "").trim().toLowerCase(), status: status2, file, line: h.line });
   }
@@ -11651,11 +11997,11 @@ function impactLines(i) {
 
 // src/gate/gate.ts
 function readChange(changeDir) {
-  const text = readFileSync14(join20(changeDir, "change.md"), "utf8");
+  const text = readFileSync15(join22(changeDir, "change.md"), "utf8");
   const fm = splitFrontmatter(text).data ?? {};
   return { text, fm, phases: fm["phases"] ?? {} };
 }
-var nnnOf = (changeDir) => basename7(changeDir).slice(0, 3);
+var nnnOf = (changeDir) => basename8(changeDir).slice(0, 3);
 var phaseStatus = (s, phase) => String(s.phases[phase]?.["status"] ?? "not-started");
 function lintPhase(ctx) {
   return lintWorkspace(ctx.root, { change: nnnOf(ctx.changeDir), phase: ctx.phase, cwd: ctx.root, rules: ctx.rules, tool: ctx.tool }).findings;
@@ -11673,7 +12019,7 @@ function revisionImpact(ctx) {
 function gateSummary(ctx) {
   const s = readChange(ctx.changeDir);
   const t = buildTrace(ctx.changeDir);
-  const files = phaseFiles(join20(ctx.changeDir, ctx.phase));
+  const files = phaseFiles(join22(ctx.changeDir, ctx.phase));
   const counts = /* @__PURE__ */ new Map();
   for (const n of t.doc.nodes) if (n.file.startsWith(`${ctx.phase}/`)) counts.set(n.type, (counts.get(n.type) ?? 0) + 1);
   const coverage2 = coverageFor(ctx.changeDir, ctx.phase);
@@ -11754,7 +12100,7 @@ function approve(ctx, o) {
     waivers.length > 0 ? waivers.map((w) => w.item).join(", ") : "none",
     o.usage ?? "unavailable"
   ]);
-  writeTextAtomic(join20(ctx.changeDir, "change.md"), text);
+  writeTextAtomic(join22(ctx.changeDir, "change.md"), text);
   return { hash: record2.hash, approvedBy, date, waivers };
 }
 function record(ctx, decision, note, today) {
@@ -11770,12 +12116,12 @@ function record(ctx, decision, note, today) {
     text = setTopLevel(text, "stopped", `{ reason: ${JSON.stringify(note)}, date: ${date} }`);
   }
   text = appendGateLog(text, [date, GATES[ctx.phase], decision === "revise" ? "**Revise**" : "**Stop**", `"${note}"`, "none", "unavailable"]);
-  writeTextAtomic(join20(ctx.changeDir, "change.md"), text);
+  writeTextAtomic(join22(ctx.changeDir, "change.md"), text);
 }
 
 // src/tracking/task.ts
-import { existsSync as existsSync15, readdirSync as readdirSync8, readFileSync as readFileSync15 } from "node:fs";
-import { join as join21 } from "node:path";
+import { existsSync as existsSync17, readdirSync as readdirSync9, readFileSync as readFileSync16 } from "node:fs";
+import { join as join23 } from "node:path";
 var TASK_STATUSES = ["todo", "in-progress", "blocked", "done", "dropped"];
 var TRANSITIONS = {
   todo: ["in-progress", "dropped", "done"],
@@ -11785,24 +12131,24 @@ var TRANSITIONS = {
   dropped: []
 };
 function findTask(changeDir, id) {
-  const dir2 = join21(changeDir, "20-plan", "50-tasks");
-  if (existsSync15(dir2))
-    for (const name of readdirSync8(dir2).filter((n) => n.endsWith(".md"))) {
-      const path = join21(dir2, name);
-      const text = readFileSync15(path, "utf8");
+  const dir2 = join23(changeDir, "20-plan", "50-tasks");
+  if (existsSync17(dir2))
+    for (const name of readdirSync9(dir2).filter((n) => n.endsWith(".md"))) {
+      const path = join23(dir2, name);
+      const text = readFileSync16(path, "utf8");
       const fm = splitFrontmatter(text).data ?? {};
       if (fm["id"] !== id) continue;
       const deps = Array.isArray(fm["depends_on"]) ? fm["depends_on"].map(String) : [];
       return { path, text, status: String(fm["status"] ?? "todo"), report: fm["report"] ?? {}, dependsOn: deps, lite: false };
     }
-  const plan = join21(changeDir, "20-plan", "plan.md");
-  if (existsSync15(plan)) {
+  const plan = join23(changeDir, "20-plan", "plan.md");
+  if (existsSync17(plan)) {
     const node = buildChangeGraph(changeDir).nodes.find((n) => n.id === id && n.file === "20-plan/plan.md");
     if (node) {
       const field = (name) => node.fields.find((f) => f.name === name)?.value ?? "";
       return {
         path: plan,
-        text: readFileSync15(plan, "utf8"),
+        text: readFileSync16(plan, "utf8"),
         status: field("Status") || "todo",
         report: { commit: field("Commit") || null, notes: field("Notes") || null, completed_at: field("Completed at") || null },
         dependsOn: field("Depends on").split(/[,\s]+/).filter((x) => /-T-/.test(x)),
@@ -11823,18 +12169,18 @@ function statuses(changeDir) {
   return out;
 }
 function setLiteField(text, id, name, value2) {
-  const lines = text.split("\n");
-  const at = lines.findIndex((l) => new RegExp(`^#{2,4}\\s+${id}\\b`).test(l));
-  let end = lines.findIndex((l, i) => i > at && /^#{1,4}\s/.test(l));
-  if (end < 0) end = lines.length;
-  const f = lines.findIndex((l, i) => i > at && i < end && l.startsWith(`- **${name}:**`));
-  if (f >= 0) lines[f] = `- **${name}:** ${value2}`;
+  const lines2 = text.split("\n");
+  const at = lines2.findIndex((l) => new RegExp(`^#{2,4}\\s+${id}\\b`).test(l));
+  let end = lines2.findIndex((l, i) => i > at && /^#{1,4}\s/.test(l));
+  if (end < 0) end = lines2.length;
+  const f = lines2.findIndex((l, i) => i > at && i < end && l.startsWith(`- **${name}:**`));
+  if (f >= 0) lines2[f] = `- **${name}:** ${value2}`;
   else {
     let last = at;
-    for (let i = at + 1; i < end; i++) if (lines[i].startsWith("- **")) last = i;
-    lines.splice(last + 1, 0, `- **${name}:** ${value2}`);
+    for (let i = at + 1; i < end; i++) if (lines2[i].startsWith("- **")) last = i;
+    lines2.splice(last + 1, 0, `- **${name}:** ${value2}`);
   }
-  return lines.join("\n");
+  return lines2.join("\n");
 }
 function setTask(changeDir, id, o) {
   if (!TASK_STATUSES.includes(o.status)) throw new CliError("ERR-CLI-005", { s: o.status });
@@ -11866,16 +12212,16 @@ function setTask(changeDir, id, o) {
 }
 
 // src/tracking/defect.ts
-import { readFileSync as readFileSync16 } from "node:fs";
-import { join as join22 } from "node:path";
+import { readFileSync as readFileSync17 } from "node:fs";
+import { join as join24 } from "node:path";
 function read(changeDir) {
-  const text = readFileSync16(join22(changeDir, "change.md"), "utf8");
+  const text = readFileSync17(join24(changeDir, "change.md"), "utf8");
   const fm = splitFrontmatter(text).data ?? {};
   const list = Array.isArray(fm["defects"]) ? fm["defects"] : [];
   return { text, defects: list.map((d) => Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v instanceof Date ? v.toISOString().slice(0, 10) : v]))) };
 }
 function write(changeDir, text, defects) {
-  writeTextAtomic(join22(changeDir, "change.md"), setTopLevel(text, "defects", listYaml(defects)));
+  writeTextAtomic(join24(changeDir, "change.md"), setTopLevel(text, "defects", listYaml(defects)));
 }
 function addDefect(changeDir, ref, summary, reporter, today = isoDate()) {
   const { text, defects } = read(changeDir);
@@ -11908,11 +12254,11 @@ function reopenDefect(changeDir, id) {
 }
 
 // src/gate/stale.ts
-import { readFileSync as readFileSync17 } from "node:fs";
-import { join as join23 } from "node:path";
+import { readFileSync as readFileSync18 } from "node:fs";
+import { join as join25 } from "node:path";
 function staleCheck(changeDir, write2) {
-  const path = join23(changeDir, "change.md");
-  const text = readFileSync17(path, "utf8");
+  const path = join25(changeDir, "change.md");
+  const text = readFileSync18(path, "utf8");
   const phases = splitFrontmatter(text).data?.["phases"] ?? {};
   const checks = [];
   let staleFrom = false;
@@ -11945,8 +12291,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join24(root, ".sdd");
-  return readdirSync9(sdd).filter((n) => /^\d{3}-/.test(n) && statSync10(join24(sdd, n)).isDirectory()).sort();
+  const sdd = join26(root, ".sdd");
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync10(join26(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -11982,8 +12328,8 @@ function gateApprove(ctx) {
   if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
-  const sdd = join24(ctx.root, ".sdd");
-  if (existsSync16(join24(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join26(ctx.root, ".sdd");
+  if (existsSync18(join26(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   return 0;
@@ -11997,7 +12343,7 @@ function changeRevise(ctx) {
 }
 function changeStop(ctx) {
   const changeDir = resolveChange(ctx, ctx.args["NNN"]);
-  const current = String(splitFrontmatter(readFileSync18(join24(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  const current = String(splitFrontmatter(readFileSync19(join26(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
   record({ root: ctx.root, changeDir, phase: current, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"]);
   refreshRegistry(ctx);
   ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
@@ -12007,25 +12353,25 @@ function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
-  const sdd = join24(ctx.root, ".sdd");
-  if (existsSync16(join24(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join26(ctx.root, ".sdd");
+  if (existsSync18(join26(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
   return 0;
 }
 function changeOfId(ctx, id) {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
   const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
-  return folder ? join24(ctx.root, ".sdd", folder) : null;
+  return folder ? join26(ctx.root, ".sdd", folder) : null;
 }
 function refreshRegistry(ctx) {
-  const sdd = join24(ctx.root, ".sdd");
-  if (existsSync16(join24(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join26(ctx.root, ".sdd");
+  if (existsSync18(join26(sdd, "registry.json"))) writeStatus(sdd);
 }
 function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
   const dir2 = /^C\d{3}-/.test(raw) ? changeOfId(ctx, raw) : resolveChange(ctx, void 0);
   if (!dir2) throw new CliError("ERR-CLI-002", { NNN: raw.slice(1, 4) });
-  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename8(dir2).slice(0, 3)}-${raw}`;
+  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename9(dir2).slice(0, 3)}-${raw}`;
   const o = { status: ctx.values["status"] };
   for (const k of ["commit", "note", "reason"]) if (ctx.values[k] !== void 0) o[k] = ctx.values[k];
   const r = setTask(dir2, id, o);
@@ -12037,11 +12383,11 @@ function taskSet(ctx) {
 function defectAdd(ctx) {
   const ref = ctx.values["ref"];
   const dir2 = changeOfId(ctx, ref);
-  const status2 = dir2 ? String(splitFrontmatter(readFileSync18(join24(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  const status2 = dir2 ? String(splitFrontmatter(readFileSync19(join26(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
   if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
   const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
   refreshRegistry(ctx);
-  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename8(dir2).slice(0, 3)})`);
+  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename9(dir2).slice(0, 3)})`);
   return 0;
 }
 function defectClose(ctx) {
@@ -12065,16 +12411,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join24(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join24(sdd, f));
+  const sdd = join26(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join26(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync18(join24(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync19(join26(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync16(join24(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync18(join26(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -12106,7 +12452,7 @@ function traceActive(ctx) {
   try {
     const root = findWorkspace(ctx.cwd);
     if (root === null) return 0;
-    const sdd = join24(root, ".sdd");
+    const sdd = join26(root, ".sdd");
     const registry = rebuildRegistry(sdd);
     listChanges(sdd).forEach((c, i) => {
       const status2 = registry.changes[i]?.status;
@@ -12125,15 +12471,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join24(ctx.root, ".sdd", match[0]);
+    return join26(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join24(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join24(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join24(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join26(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join26(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join26(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join24(ctx.root, ".sdd");
+  const sdd = join26(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -12156,7 +12502,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join24(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join26(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -12164,7 +12510,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync18(join24(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync19(join26(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -12196,7 +12542,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join24(root, ".sdd");
+  const where = join26(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -12218,6 +12564,17 @@ function guardBash(ctx) {
   if (d.allow) return 0;
   ctx.out.errorLine(d.message);
   return 2;
+}
+function archiveCmd(ctx) {
+  const dir2 = resolveChange(ctx, ctx.args["NNN"]);
+  const plan = planArchive(ctx.root, dir2, isoDate());
+  const dry = ctx.values["dry-run"] === true;
+  ctx.out.line(`archive ${plan.change}${dry ? " (dry run)" : ""}: ${plan.ops.length} operation(s)`);
+  for (const o of plan.ops) ctx.out.line(formatOp(o));
+  if (dry) return 0;
+  applyArchive(ctx.root, plan);
+  ctx.out.line(`archived: ${plan.change} → .sdd/_archive/${basename9(dir2)}`);
+  return 0;
 }
 function hookSessionStart(ctx) {
   for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
@@ -12252,7 +12609,7 @@ var COMMANDS = [
   { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
   { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"], run: defectClose },
   { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
-  { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
+  { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"], run: archiveCmd },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
@@ -12306,12 +12663,12 @@ function optionHelp(spec) {
 }
 function topHelp() {
   const width = Math.max(...COMMANDS.map((c) => c.name.length));
-  const lines = COMMANDS.map((c) => `  ${c.name.padEnd(width)}  ${c.summary}`);
+  const lines2 = COMMANDS.map((c) => `  ${c.name.padEnd(width)}  ${c.summary}`);
   return [
     "Usage: sdd <command> [<subcommand>] [arguments] [options]",
     "",
     "Commands:",
-    ...lines,
+    ...lines2,
     "",
     "Global options: --cwd <path>, --json (where supported), --quiet, --help. SDD_DEBUG=1 writes traces to standard error."
   ].join("\n");
@@ -12388,7 +12745,7 @@ process.exitCode = runCli(process.argv.slice(2), {
   stderr: (text) => process.stderr.write(text),
   stdin: () => {
     try {
-      return readFileSync19(0, "utf8");
+      return readFileSync20(0, "utf8");
     } catch {
       return "";
     }

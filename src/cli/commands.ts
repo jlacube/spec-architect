@@ -10,9 +10,11 @@ import { buildChangeGraph } from "../model/graph.ts";
 import { TOOL } from "../version.ts";
 import { initRoot, initWorkspace } from "../workspace/init.ts";
 import { nextId, tombstoneId } from "../workspace/ledger.ts";
-import { createChange, KINDS, PROFILES, type Kind } from "../workspace/change.ts";
+import { createChange, isoDate, KINDS, PROFILES, type Kind } from "../workspace/change.ts";
 import { upgradeToFull } from "../workspace/upgrade.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
+import { applyArchive } from "../archive/apply.ts";
+import { formatOp, planArchive } from "../archive/plan.ts";
 import { decideBash } from "../hooks/guard-bash.ts";
 import { decidePath } from "../hooks/guard-path.ts";
 import { parseHookInput } from "../hooks/input.ts";
@@ -422,6 +424,19 @@ function guardBash(ctx: CommandContext): number {
   return 2;
 }
 
+/** `sdd archive <NNN> [--dry-run]` (C001-REQ-913 … 921): plan in memory, print every operation, then apply. */
+function archiveCmd(ctx: CommandContext): number {
+  const dir = resolveChange(ctx, ctx.args["NNN"]);
+  const plan = planArchive(ctx.root, dir, isoDate());
+  const dry = ctx.values["dry-run"] === true;
+  ctx.out.line(`archive ${plan.change}${dry ? " (dry run)" : ""}: ${plan.ops.length} operation(s)`);
+  for (const o of plan.ops) ctx.out.line(formatOp(o));
+  if (dry) return 0;
+  applyArchive(ctx.root, plan);
+  ctx.out.line(`archived: ${plan.change} → .sdd/_archive/${basename(dir)}`);
+  return 0;
+}
+
 /** SessionStart hook: the brief on standard output, nothing without .sdd/ (C001-REQ-911, 912). Always exit 0. */
 function hookSessionStart(ctx: CommandContext): number {
   for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
@@ -460,7 +475,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
   { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"], run: defectClose },
   { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
-  { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
+  { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"], run: archiveCmd },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
