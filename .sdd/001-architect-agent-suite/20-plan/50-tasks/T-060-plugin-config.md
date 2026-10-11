@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-041, C001-T-042, C001-T-043, C001-T-035, C001-T-036, C001-T-039, C001-T-052]
 implements: [C001-REQ-1101, C001-REQ-1102, C001-REQ-1108, C001-REQ-1109, C001-REQ-1005, C001-REQ-1006, C001-REQ-1007, C001-REQ-1008, C001-REQ-218]
 satisfies_ac: [C001-AC-1101.1, C001-AC-1102.1, C001-AC-1108.1, C001-AC-1109.1, C001-AC-1005.1, C001-AC-1006.1, C001-AC-1007.1, C001-AC-1008.1, C001-AC-218.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1101, C001-TS-1102, C001-TS-1109, C001-TS-1110, C001-TS-10
 components: [C001-COMP-11]
 risk_refs: [C001-RISK-008]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: def3514, completed_at: 2026-10-12, notes: "plugin validate passes; live Serena lists only the 7 read-only tools in a git repo; D-008 open (non-git folders); TC-1102 is a manual procedure to run at release" }
 ---
 
 # C001-T-060 — Plugin manifests, marketplace, .mcp.json and agent tool contract
