@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-018]
 implements: [C001-REQ-310, C001-REQ-503, C001-REQ-509, C001-REQ-512]
 satisfies_ac: [C001-AC-310.1, C001-AC-310.2, C001-AC-503.1, C001-AC-509.1, C001-AC-512.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-310, C001-TS-311, C001-TS-503, C001-TS-509, C001-TS-512, C
 components: [C001-COMP-04]
 risk_refs: [C001-RISK-006]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 2ec426a, completed_at: 2026-10-11, notes: "15 rules done (LINT-RES-001/002, OA-001, IDE-001, ARCH-001..005, TR-10, IF-001/002, ERR-001, CON-001, EVD-001); C001-TC-310, 311, 503, 509, 512 pass, plus TC-302, 308, 314, 501, 502, 510, 513, 514, 516, 1003 (plan owners are agent tasks). The CHG-001 OA tables give no LINT-OA-001 (12+ tables checked). Zero findings on this repository except LINT-IDE-001: the approved bootstrap ideation lacks Research index, Options and decisions index and Design direction; escalation for C001-T-028. LINT-ERR-001 reads every 50-interfaces table as the catalogue, because errors.md delegates TR-* to C001-IF-04 §5 and PLG-* to C001-IF-08 §3. Quick lint ~570 ms, full ~830 ms." }
 ---
 
 # C001-T-021 — Lint rules: ideation, architecture and interfaces
