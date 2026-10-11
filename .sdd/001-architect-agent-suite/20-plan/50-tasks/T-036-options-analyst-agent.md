@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-030, C001-T-021]
 implements: [C001-REQ-309, C001-REQ-311, C001-REQ-312]
 satisfies_ac: [C001-AC-309.1, C001-AC-311.1, C001-AC-312.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-309, C001-TS-312, C001-TS-313, C001-TC-309, C001-TC-312, C
 components: [C001-COMP-02]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 69b1f32, completed_at: 2026-10-11, notes: "TC-309/312/313 pass (dev); eval spend ~$1.14" }
 ---
 
 # C001-T-036 — Options-analyst agent
