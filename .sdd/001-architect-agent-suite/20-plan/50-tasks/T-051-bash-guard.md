@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-5
-status: in-progress
+status: done
 depends_on: [C001-T-050]
 implements: [C001-REQ-1106, C001-REQ-1107]
 satisfies_ac: [C001-AC-1106.1, C001-AC-1107.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1107, C001-TS-1108, C001-TC-1107, C001-TC-1108]
 components: [C001-COMP-08]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 794d13e, completed_at: 2026-10-11, notes: "277-case corpus 100%; sdd.mjs inside .sdd/ denied (stricter than IF-07 §3); no paid evals" }
 ---
 
 # C001-T-051 — Bash guard with allowlist and compound-command parsing
