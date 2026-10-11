@@ -4447,13 +4447,13 @@ var require_resolve_block_scalar = __commonJS({
   "node_modules/yaml/dist/compose/resolve-block-scalar.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
-    function resolveBlockScalar(ctx, scalar, onError) {
-      const start = scalar.offset;
-      const header2 = parseBlockScalarHeader(scalar, ctx.options.strict, onError);
+    function resolveBlockScalar(ctx, scalar2, onError) {
+      const start = scalar2.offset;
+      const header2 = parseBlockScalarHeader(scalar2, ctx.options.strict, onError);
       if (!header2)
         return { value: "", type: null, comment: "", range: [start, start, start] };
       const type = header2.mode === ">" ? Scalar.Scalar.BLOCK_FOLDED : Scalar.Scalar.BLOCK_LITERAL;
-      const lines = scalar.source ? splitLines(scalar.source) : [];
+      const lines = scalar2.source ? splitLines(scalar2.source) : [];
       let chompStart = lines.length;
       for (let i = lines.length - 1; i >= 0; --i) {
         const content = lines[i][1];
@@ -4465,12 +4465,12 @@ var require_resolve_block_scalar = __commonJS({
       if (chompStart === 0) {
         const value3 = header2.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
         let end2 = start + header2.length;
-        if (scalar.source)
-          end2 += scalar.source.length;
+        if (scalar2.source)
+          end2 += scalar2.source.length;
         return { value: value3, type, comment: header2.comment, range: [start, end2, end2] };
       }
-      let trimIndent = scalar.indent + header2.indent;
-      let offset = scalar.offset + header2.length;
+      let trimIndent = scalar2.indent + header2.indent;
+      let offset = scalar2.offset + header2.length;
       let contentStart = 0;
       for (let i = 0; i < chompStart; ++i) {
         const [indent, content] = lines[i];
@@ -4548,7 +4548,7 @@ var require_resolve_block_scalar = __commonJS({
         default:
           value2 += "\n";
       }
-      const end = start + header2.length + scalar.source.length;
+      const end = start + header2.length + scalar2.source.length;
       return { value: value2, type, comment: header2.comment, range: [start, end, end] };
     }
     function parseBlockScalarHeader({ offset, props }, strict, onError) {
@@ -4631,8 +4631,8 @@ var require_resolve_flow_scalar = __commonJS({
     "use strict";
     var Scalar = require_Scalar();
     var resolveEnd = require_resolve_end();
-    function resolveFlowScalar(scalar, strict, onError) {
-      const { offset, type, source, end } = scalar;
+    function resolveFlowScalar(scalar2, strict, onError) {
+      const { offset, type, source, end } = scalar2;
       let _type;
       let value2;
       const _onError = (rel, code, msg) => onError(offset + rel, code, msg);
@@ -4651,7 +4651,7 @@ var require_resolve_flow_scalar = __commonJS({
           break;
         /* istanbul ignore next should not happen */
         default:
-          onError(scalar, "UNEXPECTED_TOKEN", `Expected a flow scalar value, but found: ${type}`);
+          onError(scalar2, "UNEXPECTED_TOKEN", `Expected a flow scalar value, but found: ${type}`);
           return {
             value: "",
             type: null,
@@ -4866,26 +4866,26 @@ var require_compose_scalar = __commonJS({
         tag = findScalarTagByTest(ctx, value2, token, onError);
       else
         tag = ctx.schema[identity.SCALAR];
-      let scalar;
+      let scalar2;
       try {
         const res = tag.resolve(value2, (msg) => onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg), ctx.options);
-        scalar = identity.isScalar(res) ? res : new Scalar.Scalar(res);
+        scalar2 = identity.isScalar(res) ? res : new Scalar.Scalar(res);
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
         onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg);
-        scalar = new Scalar.Scalar(value2);
+        scalar2 = new Scalar.Scalar(value2);
       }
-      scalar.range = range;
-      scalar.source = value2;
+      scalar2.range = range;
+      scalar2.source = value2;
       if (type)
-        scalar.type = type;
+        scalar2.type = type;
       if (tagName)
-        scalar.tag = tagName;
+        scalar2.tag = tagName;
       if (tag.format)
-        scalar.format = tag.format;
+        scalar2.format = tag.format;
       if (comment)
-        scalar.comment = comment;
-      return scalar;
+        scalar2.comment = comment;
+      return scalar2;
     }
     function findScalarTagByName(schema, value2, tagName, tagToken, onError) {
       if (tagName === "!")
@@ -6713,37 +6713,37 @@ var require_parser = __commonJS({
           };
         }
       }
-      *scalar(scalar) {
+      *scalar(scalar2) {
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
           let sep2;
-          if (scalar.end) {
-            sep2 = scalar.end;
+          if (scalar2.end) {
+            sep2 = scalar2.end;
             sep2.push(this.sourceToken);
-            delete scalar.end;
+            delete scalar2.end;
           } else
             sep2 = [this.sourceToken];
           const map = {
             type: "block-map",
-            offset: scalar.offset,
-            indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep2 }]
+            offset: scalar2.offset,
+            indent: scalar2.indent,
+            items: [{ start, key: scalar2, sep: sep2 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
         } else
-          yield* this.lineEnd(scalar);
+          yield* this.lineEnd(scalar2);
       }
-      *blockScalar(scalar) {
+      *blockScalar(scalar2) {
         switch (this.type) {
           case "space":
           case "comment":
           case "newline":
-            scalar.props.push(this.sourceToken);
+            scalar2.props.push(this.sourceToken);
             return;
           case "scalar":
-            scalar.source = this.source;
+            scalar2.source = this.source;
             this.atNewLine = true;
             this.indent = 0;
             if (this.onNewLine) {
@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync13, statSync as statSync9 } from "node:fs";
-import { dirname as dirname6, join as join18 } from "node:path";
+import { existsSync as existsSync14, statSync as statSync9 } from "node:fs";
+import { dirname as dirname6, join as join20 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync12, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync8 } from "node:fs";
-import { join as join17 } from "node:path";
+import { existsSync as existsSync13, readdirSync as readdirSync8, readFileSync as readFileSync15, statSync as statSync8 } from "node:fs";
+import { join as join19 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -11017,23 +11017,74 @@ function phaseHash(changeDir, phase) {
   return { hash: `sha256:${sha2562(hashes.map(([rel, h]) => `${rel}	${h}
 `).join(""))}`, files: hashes.length };
 }
+function idHashes(changeDir, phase) {
+  const graph = buildChangeGraph(changeDir);
+  const ids2 = /* @__PURE__ */ new Map();
+  for (const n of graph.nodes) if (n.file.startsWith(`${phase}/`) && !GENERATED2.has(n.file.slice(phase.length + 1)) && !ids2.has(n.id)) ids2.set(n.id, n.contentHash);
+  return Object.fromEntries([...ids2].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
+}
+function readApprovals(changeDir) {
+  const p = join15(changeDir, "approvals.json");
+  return existsSync11(p) ? JSON.parse(readFileSync11(p, "utf8")) : {};
+}
+function recordApproval(changeDir, phase, approvedAt) {
+  const { hash, files } = phaseHash(changeDir, phase);
+  const record2 = { hash, approved_at: approvedAt, files, ids: idHashes(changeDir, phase) };
+  const all = readApprovals(changeDir);
+  all[phase] = record2;
+  writeTextAtomic(join15(changeDir, "approvals.json"), JSON.stringify(all, null, 2) + "\n");
+  return record2;
+}
 
-// src/gate/stale.ts
-import { readFileSync as readFileSync12 } from "node:fs";
-import { join as join16 } from "node:path";
+// src/gate/gate.ts
+import { execFileSync } from "node:child_process";
+import { readFileSync as readFileSync13 } from "node:fs";
+import { basename as basename6, join as join17 } from "node:path";
+
+// src/workspace/change-md.ts
+var import_yaml3 = __toESM(require_dist(), 1);
+var GATES = { "00-ideation": "G1 (ideation)", "10-spec": "G2 (spec)", "20-plan": "G3 (plan)" };
+function frontmatterEnd2(lines) {
+  if (lines[0] !== "---") throw new Error("change.md has no frontmatter");
+  const end = lines.indexOf("---", 1);
+  if (end < 0) throw new Error("change.md frontmatter is not closed");
+  return end;
+}
+function scalar(v) {
+  if (v === null) return "null";
+  return /^[\w.@-]+$/.test(v) && !/^(true|false|null|yes|no|~)$/i.test(v) ? v : JSON.stringify(v);
+}
+function setPhase(text, phase, fields) {
+  const lines = text.split("\n");
+  const end = frontmatterEnd2(lines);
+  const at = lines.findIndex((l, i) => i > 0 && i < end && new RegExp(`^(\\s+)${phase}:`).test(l));
+  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
+  const indent = /^(\s*)/.exec(lines[at])[1];
+  let last = at;
+  let current = {};
+  const inline2 = lines[at].slice(lines[at].indexOf(":") + 1).replace(/\s+#.*$/, "").trim();
+  if (inline2.startsWith("{")) current = (0, import_yaml3.parse)(inline2) ?? {};
+  else {
+    while (last + 1 < end && /^(\s*)/.exec(lines[last + 1])[1].length > indent.length) last++;
+    current = (0, import_yaml3.parse)(lines.slice(at + 1, last + 1).map((l) => l.slice(indent.length + 2)).join("\n")) ?? {};
+  }
+  const merged = { ...current, ...fields };
+  const body = Object.entries(merged).map(([k, v]) => `${k}: ${v === null || v === void 0 ? "null" : typeof v === "string" ? scalar(v) : String(v instanceof Date ? v.toISOString().slice(0, 10) : v)}`).join(", ");
+  lines.splice(at, last - at + 1, `${indent}${phase}: { ${body} }`);
+  return lines.join("\n");
+}
 function setPhaseStatus(text, phase, status2) {
   const lines = text.split("\n");
-  const end = lines.indexOf("---", 1);
+  const end = frontmatterEnd2(lines);
   const at = lines.findIndex((l, i) => i > 0 && i < end && new RegExp(`^\\s+${phase}:`).test(l));
   if (at < 0) throw new Error(`change.md has no phase ${phase}`);
-  if (/\{/.test(lines[at])) {
+  if (lines[at].includes("{")) {
     lines[at] = lines[at].replace(/(\bstatus:\s*)[\w-]+/, `$1${status2}`);
     return lines.join("\n");
   }
   const indent = /^(\s*)/.exec(lines[at])[1].length;
   for (let i = at + 1; i < end; i++) {
-    const own = /^(\s*)/.exec(lines[i])[1].length;
-    if (own <= indent) break;
+    if (/^(\s*)/.exec(lines[i])[1].length <= indent) break;
     if (/^\s+status:/.test(lines[i])) {
       lines[i] = lines[i].replace(/(status:\s*)[\w-]+/, `$1${status2}`);
       return lines.join("\n");
@@ -11041,9 +11092,197 @@ function setPhaseStatus(text, phase, status2) {
   }
   throw new Error(`change.md phase ${phase} has no status`);
 }
+function setTopLevel(text, key, yaml) {
+  const lines = text.split("\n");
+  const end = frontmatterEnd2(lines);
+  const at = lines.findIndex((l, i) => i > 0 && i < end && l.startsWith(`${key}:`));
+  const parts = yaml.split("\n");
+  const value2 = yaml.startsWith("\n") ? [`${key}:`, ...parts.slice(1)] : [`${key}: ${parts[0]}`, ...parts.slice(1)];
+  if (at < 0) {
+    lines.splice(end, 0, ...value2);
+    return lines.join("\n");
+  }
+  let last = at;
+  while (last + 1 < end && /^\s+\S/.test(lines[last + 1])) last++;
+  lines.splice(at, last - at + 1, ...value2);
+  return lines.join("\n");
+}
+function waiversYaml(waivers) {
+  if (waivers.length === 0) return "[]";
+  return "\n" + waivers.map((w) => `  - { item: ${scalar(w.item)}, gate: ${w.gate}, date: ${w.date}, note: ${JSON.stringify(w.note)} }`).join("\n");
+}
+function appendGateLog(text, cells) {
+  const row2 = `| ${cells.map((c) => c.replace(/\|/g, "\\|").replace(/\n/g, " ")).join(" | ")} |`;
+  const header2 = "| Date | Gate | Decision | Words of approver | Waivers | Usage |\n|---|---|---|---|---|---|";
+  const lines = text.split("\n");
+  const at = lines.findIndex((l) => /^##\s+Gate log\s*$/.test(l));
+  if (at < 0) return text.replace(/\n*$/, "\n") + `
+## Gate log
+${header2}
+${row2}
+`;
+  let i = at + 1;
+  while (i < lines.length && !lines[i].trimStart().startsWith("|") && !/^#{1,2}\s/.test(lines[i])) i++;
+  if (i >= lines.length || !lines[i].trimStart().startsWith("|")) {
+    lines.splice(at + 1, 0, ...header2.split("\n"), row2);
+    return lines.join("\n");
+  }
+  while (i < lines.length && lines[i].trimStart().startsWith("|")) i++;
+  lines.splice(i, 0, row2);
+  return lines.join("\n");
+}
+
+// src/gate/critic-parse.ts
+import { existsSync as existsSync12, readFileSync as readFileSync12 } from "node:fs";
+import { join as join16 } from "node:path";
+function criticReportPath(changeDir, phase) {
+  for (const name of ["90-critic-report.md", "critic-report.md"]) {
+    const p = join16(changeDir, phase, name);
+    if (existsSync12(p)) return p;
+  }
+  return null;
+}
+function criticFindings(changeDir, phase) {
+  const path = criticReportPath(changeDir, phase);
+  if (!path) return [];
+  const lines = toLines(readFileSync12(path, "utf8"));
+  const blocks = parseBlocks(lines, 1);
+  const file = `${phase}/${path.slice(path.lastIndexOf(path.includes("\\") ? "\\" : "/") + 1)}`;
+  const out = [];
+  for (const h of blocks.headings) {
+    const m = /^(CR-\d+)\s*[—–-]\s*(.*)$/.exec(h.text);
+    if (!m) continue;
+    const end = blocks.sectionEnd(h.line);
+    const field = (name) => blocks.fields.find((f) => f.line > h.line && f.line <= end && f.name === name)?.value ?? "";
+    const status2 = (/^(open|resolved|waived)\b/i.exec(field("Status").replace(/[*_`]/g, "").trim())?.[1] ?? "open").toLowerCase();
+    out.push({ id: m[1], title: m[2].trim(), severity: field("Severity").replace(/[*_`]/g, "").trim().toLowerCase(), status: status2, file, line: h.line });
+  }
+  return out;
+}
+
+// src/gate/gate.ts
+function readChange(changeDir) {
+  const text = readFileSync13(join17(changeDir, "change.md"), "utf8");
+  const fm = splitFrontmatter(text).data ?? {};
+  return { text, fm, phases: fm["phases"] ?? {} };
+}
+var nnnOf = (changeDir) => basename6(changeDir).slice(0, 3);
+var phaseStatus = (s, phase) => String(s.phases[phase]?.["status"] ?? "not-started");
+function lintPhase(ctx) {
+  return lintWorkspace(ctx.root, { change: nnnOf(ctx.changeDir), phase: ctx.phase, cwd: ctx.root, rules: ctx.rules, tool: ctx.tool }).findings;
+}
+function coverageFor(changeDir, phase) {
+  const t = buildTrace(changeDir);
+  if (phase === "10-spec") return specCoverage(t);
+  if (phase === "20-plan") return planCoverage(t).rows;
+  return [];
+}
+function gateSummary(ctx) {
+  const s = readChange(ctx.changeDir);
+  const t = buildTrace(ctx.changeDir);
+  const files = phaseFiles(join17(ctx.changeDir, ctx.phase));
+  const counts = /* @__PURE__ */ new Map();
+  for (const n of t.doc.nodes) if (n.file.startsWith(`${ctx.phase}/`)) counts.set(n.type, (counts.get(n.type) ?? 0) + 1);
+  const coverage2 = coverageFor(ctx.changeDir, ctx.phase);
+  const findings = lintPhase(ctx);
+  const sev = (x) => findings.filter((f) => f.severity === x).length;
+  const critic = criticFindings(ctx.changeDir, ctx.phase).filter((f) => f.status === "open");
+  const crit = (x) => {
+    const list = critic.filter((f) => f.severity === x);
+    return `${list.length} ${x}${list.length > 0 && x !== "minor" ? ` (${list.map((f) => f.id).join(", ")})` : ""}`;
+  };
+  const open = markers(t, ctx.phase);
+  const clar = open.filter((m) => m.type === "NEEDS CLARIFICATION");
+  const others = ["ASSUMPTION", "WAIVED"].map((k) => [k, open.filter((m) => m.type === k).length]).filter(([, n]) => n > 0);
+  const markerText = open.length === 0 ? "none" : [
+    ...clar.length > 0 ? [`${clar.length} [NEEDS CLARIFICATION] (${clar.map((m) => `${m.reference} at ${m.file.slice(ctx.phase.length + 1)}:${m.line}`).join(", ")})`] : [],
+    ...others.map(([k, n]) => `${n} [${k}]`)
+  ].join(" · ");
+  const status2 = phaseStatus(s, ctx.phase);
+  const approvedHash = s.phases[ctx.phase]?.["approved_hash"];
+  const stale = status2 === "stale" || status2 === "approved" && typeof approvedHash === "string" && phaseHash(ctx.changeDir, ctx.phase).hash !== approvedHash;
+  const previous = typeof approvedHash === "string" ? `${String(s.phases[ctx.phase]?.["approved_at"] ?? "?")} (${approvedHash.slice(0, 15)}…)` : "none";
+  return [
+    `Gate ${GATES[ctx.phase].split(" ")[0]} — CHG-${nnnOf(ctx.changeDir)} ${JSON.stringify(String(s.fm["title"] ?? ""))} — phase ${ctx.phase} (status: ${status2})`,
+    `Files (${files.length}): ${files.join(", ") || "none"}`,
+    `IDs: ${[...counts].sort(([a], [b]) => a.localeCompare(b)).map(([k, n]) => `${k} ${n}`).join(" · ") || "none"}`,
+    `Coverage: ${coverage2.map((c) => `${c.rule} ${c.covered}/${c.total}`).join(" · ") || "n/a"}`,
+    `Lint: ${sev("error")} error · ${sev("warn")} warn · ${sev("info")} info`,
+    `Critic: ${crit("blocker")} · ${crit("major")} · ${crit("minor")}`,
+    `Open markers: ${markerText}`,
+    `Stale: ${stale ? "yes" : "no"} · Previous approval: ${previous}`,
+    "Proposed waivers: (none)"
+  ].join("\n");
+}
+function gitUser(root) {
+  try {
+    return execFileSync("git", ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+function approvalBlockers(ctx, waive) {
+  const s = readChange(ctx.changeDir);
+  const changeStatus2 = String(s.fm["status"] ?? "active");
+  if (changeStatus2 === "stopped" || changeStatus2 === "archived") throw new CliError("ERR-CLI-014", { NNN: nnnOf(ctx.changeDir), "stopped|archived": changeStatus2 });
+  const index = PHASES2.indexOf(ctx.phase);
+  if (index > 0) {
+    const predecessor = PHASES2[index - 1];
+    if (phaseStatus(s, predecessor) !== "approved") throw new CliError("ERR-CLI-015", { phase: ctx.phase, predecessor: `${predecessor} (${phaseStatus(s, predecessor)})` });
+  }
+  const lint2 = lintPhase(ctx).filter((f) => f.severity === "error" && !waive.has(f.code) && !(f.ids ?? []).some((id) => waive.has(id)));
+  if (lint2.length > 0) throw new CliError("ERR-CLI-010", { list: lint2.map((f) => `${f.code}${f.ids?.length ? ` [${f.ids.join(", ")}]` : ""} at ${f.path}${f.line ? `:${f.line}` : ""}`).join("; ") });
+  const open = markers(buildTrace(ctx.changeDir), ctx.phase).filter((m) => m.type === "NEEDS CLARIFICATION" && !waive.has(m.reference));
+  if (open.length > 0) throw new CliError("ERR-CLI-011", { list: open.map((m) => `${m.reference} at ${m.file}:${m.line}`).join("; ") });
+  const blockers = criticFindings(ctx.changeDir, ctx.phase).filter((f) => f.severity === "blocker" && f.status === "open" && !waive.has(f.id));
+  if (blockers.length > 0) throw new CliError("ERR-CLI-012", { list: blockers.map((f) => `${f.id} (${f.title})`).join("; ") });
+}
+function approve(ctx, o) {
+  const waive = new Set(o.waive);
+  approvalBlockers(ctx, waive);
+  const date = o.today ?? isoDate();
+  const approvedBy = o.by ?? gitUser(ctx.root);
+  const record2 = recordApproval(ctx.changeDir, ctx.phase, date);
+  const s = readChange(ctx.changeDir);
+  const waivers = o.waive.map((item) => ({ item, gate: ctx.phase, date, note: o.note }));
+  let text = setPhase(s.text, ctx.phase, { status: "approved", approved_hash: record2.hash, approved_at: date, approved_by: approvedBy });
+  if (waivers.length > 0) {
+    const existing = Array.isArray(s.fm["waivers"]) ? s.fm["waivers"] : [];
+    const kept = existing.map((w) => ({ item: String(w["item"]), gate: String(w["gate"]), date: String(w["date"]), note: String(w["note"]) }));
+    text = setTopLevel(text, "waivers", waiversYaml([...kept, ...waivers]));
+  }
+  text = appendGateLog(text, [
+    date,
+    GATES[ctx.phase],
+    waivers.length > 0 ? "**Approved with waivers**" : "**Approved**",
+    JSON.stringify(o.note),
+    waivers.length > 0 ? waivers.map((w) => w.item).join(", ") : "none",
+    o.usage ?? "unavailable"
+  ]);
+  writeTextAtomic(join17(ctx.changeDir, "change.md"), text);
+  return { hash: record2.hash, approvedBy, date, waivers };
+}
+function record(ctx, decision, note, today) {
+  const date = today ?? isoDate();
+  const s = readChange(ctx.changeDir);
+  let text = s.text;
+  if (decision === "revise") {
+    text = setPhaseStatus(text, ctx.phase, "in-revision");
+    for (const p of PHASES2.slice(PHASES2.indexOf(ctx.phase) + 1)) if (phaseStatus(s, p) === "approved") text = setPhaseStatus(text, p, "stale");
+  } else {
+    text = setTopLevel(text, "status", "stopped");
+    text = setTopLevel(text, "stopped", `{ reason: ${JSON.stringify(note)}, date: ${date} }`);
+  }
+  text = appendGateLog(text, [date, GATES[ctx.phase], decision === "revise" ? "**Revise**" : "**Stop**", JSON.stringify(note), "none", "unavailable"]);
+  writeTextAtomic(join17(ctx.changeDir, "change.md"), text);
+}
+
+// src/gate/stale.ts
+import { readFileSync as readFileSync14 } from "node:fs";
+import { join as join18 } from "node:path";
 function staleCheck(changeDir, write) {
-  const path = join16(changeDir, "change.md");
-  const text = readFileSync12(path, "utf8");
+  const path = join18(changeDir, "change.md");
+  const text = readFileSync14(path, "utf8");
   const phases = splitFrontmatter(text).data?.["phases"] ?? {};
   const checks = [];
   let staleFrom = false;
@@ -11114,8 +11353,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join17(root, ".sdd");
-  return readdirSync8(sdd).filter((n) => /^\d{3}-/.test(n) && statSync8(join17(sdd, n)).isDirectory()).sort();
+  const sdd = join19(root, ".sdd");
+  return readdirSync8(sdd).filter((n) => /^\d{3}-/.test(n) && statSync8(join19(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -11133,6 +11372,39 @@ function lint(ctx) {
   }
   return report.summary.error > 0 ? 1 : 0;
 }
+function gateContext(ctx) {
+  const phase = ctx.args["phase"];
+  return { root: ctx.root, changeDir: resolveChange(ctx, ctx.args["NNN"]), phase, rules: ctx.rules, tool: TOOL };
+}
+function gateShow(ctx) {
+  ctx.out.line(gateSummary(gateContext(ctx)));
+  return 0;
+}
+function gateApprove(ctx) {
+  const g = gateContext(ctx);
+  const waive = ctx.values["waive"] ?? [];
+  approvalBlockers(g, new Set(waive));
+  const note = ctx.values["note"];
+  if (note === void 0 || note.trim() === "") throw usage(ctx.name, "--note is required");
+  const o = { note, waive };
+  if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
+  if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
+  const r = approve(g, o);
+  const sdd = join19(ctx.root, ".sdd");
+  if (existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
+  ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
+  for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
+  return 0;
+}
+function gateRecord(ctx) {
+  const decision = ctx.values["decision"];
+  if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
+  record(gateContext(ctx), decision, ctx.values["note"]);
+  const sdd = join19(ctx.root, ".sdd");
+  if (existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
+  ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
+  return 0;
+}
 function hashCmd(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const phase = ctx.args["phase"];
@@ -11142,16 +11414,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join17(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join17(sdd, f));
+  const sdd = join19(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join19(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync13(join17(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync15(join19(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync12(join17(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync13(join19(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -11180,15 +11452,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join17(ctx.root, ".sdd", match[0]);
+    return join19(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join17(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join17(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join17(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join19(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join19(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join19(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join17(ctx.root, ".sdd");
+  const sdd = join19(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -11215,7 +11487,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join17(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join19(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -11223,7 +11495,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync13(join17(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync15(join19(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -11255,7 +11527,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join17(root, ".sdd");
+  const where = join19(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -11276,9 +11548,9 @@ var COMMANDS = [
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"], run: traceCmd },
-  { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
-  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
-  { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
+  { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: gateShow },
+  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
+  { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
   { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
@@ -11336,8 +11608,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir2 = start;
   for (; ; ) {
-    const sdd = join18(dir2, ".sdd");
-    if (existsSync13(sdd) && statSync9(sdd).isDirectory()) return dir2;
+    const sdd = join20(dir2, ".sdd");
+    if (existsSync14(sdd) && statSync9(sdd).isDirectory()) return dir2;
     const parent = dirname6(dir2);
     if (parent === dir2) return null;
     dir2 = parent;

@@ -19,6 +19,7 @@ import { parseId } from "../model/ids.ts";
 import { percent } from "../trace/matrix.ts";
 import { trace } from "../trace/write.ts";
 import { phaseHash } from "../gate/hash.ts";
+import { approvalBlockers, approve, gateSummary, record, type ApproveOptions, type GateContext } from "../gate/gate.ts";
 import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
@@ -86,6 +87,50 @@ function lint(ctx: CommandContext): number {
     }
   }
   return report.summary.error > 0 ? 1 : 0;
+}
+
+function gateContext(ctx: CommandContext): GateContext {
+  const phase = ctx.args["phase"] as Phase;
+  return { root: ctx.root, changeDir: resolveChange(ctx, ctx.args["NNN"]), phase, rules: ctx.rules, tool: TOOL };
+}
+
+/** `sdd gate show <NNN> <phase>` (C001-REQ-801). */
+function gateShow(ctx: CommandContext): number {
+  ctx.out.line(gateSummary(gateContext(ctx)));
+  return 0;
+}
+
+/**
+ * `sdd gate approve <NNN> <phase> --note … [--waive …]… [--by …] [--usage …]` (C001-REQ-805 … 809,
+ * 720). The refusal conditions are checked first, so a refused approval needs no note and writes
+ * nothing; registry.json and SDD.md are refreshed after a successful approval.
+ */
+function gateApprove(ctx: CommandContext): number {
+  const g = gateContext(ctx);
+  const waive = (ctx.values["waive"] as string[] | undefined) ?? [];
+  approvalBlockers(g, new Set(waive));
+  const note = ctx.values["note"] as string | undefined;
+  if (note === undefined || note.trim() === "") throw usage(ctx.name, "--note is required");
+  const o: ApproveOptions = { note, waive };
+  if (ctx.values["by"] !== undefined) o.by = ctx.values["by"] as string;
+  if (ctx.values["usage"] !== undefined) o.usage = ctx.values["usage"] as string;
+  const r = approve(g, o);
+  const sdd = join(ctx.root, ".sdd");
+  if (existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
+  ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
+  for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
+  return 0;
+}
+
+/** `sdd gate record <NNN> <phase> --decision revise|stop --note …` (C001-REQ-812, 815). */
+function gateRecord(ctx: CommandContext): number {
+  const decision = ctx.values["decision"] as string;
+  if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
+  record(gateContext(ctx), decision, ctx.values["note"] as string);
+  const sdd = join(ctx.root, ".sdd");
+  if (existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
+  ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
+  return 0;
 }
 
 /** `sdd hash <NNN> <phase>` (C001-REQ-806): prints the phase's approval hash. */
@@ -257,9 +302,9 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"], run: traceCmd },
-  { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
-  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
-  { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
+  { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: gateShow },
+  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
+  { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
   { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
