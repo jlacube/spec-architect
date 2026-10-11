@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-030, C001-T-021, C001-T-007]
 implements: [C001-REQ-301, C001-REQ-302, C001-REQ-303, C001-REQ-304, C001-REQ-305, C001-REQ-306, C001-REQ-307]
 satisfies_ac: [C001-AC-301.1, C001-AC-302.1, C001-AC-302.2, C001-AC-303.1, C001-AC-304.1, C001-AC-305.1, C001-AC-306.1, C001-AC-307.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-301, C001-TS-302, C001-TS-303, C001-TS-304, C001-TS-305, C
 components: [C001-COMP-02, C001-COMP-10]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b79f59b, completed_at: 2026-10-11, notes: "All 8 TCs pass (6 evals at dev tier, TC-302/308 integration); TS-209 of T-031 passes; eval spend ~$2.35; .mcp.json added early with context7/deepwiki (Serena in T-060)" }
 ---
 
 # C001-T-035 — Researcher agent and research-protocol skill
