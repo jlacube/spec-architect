@@ -11450,39 +11450,42 @@ function hardLinkCount(p) {
     return 0;
   }
 }
-function deny2(tool, target, reason, sdd) {
+function deny2(tool, target, reason, allowed) {
   return {
     allow: false,
-    message: `${RULE}: ${tool} on ${target} denied — ${reason}. Allowed: files under ${sdd}/ (Architect agents write only inside .sdd/).`
+    message: `${RULE}: ${tool} on ${target} denied — ${reason}. Allowed: files under ${allowed.map((a) => a + "/").join(" and ")} (Architect agents write only inside .sdd/ and their own memory folder).`
   };
 }
 function decidePath(input) {
-  if (input === null) return deny2("tool call", "(unknown target)", "the hook input is not a JSON object", ".sdd");
+  if (input === null) return deny2("tool call", "(unknown target)", "the hook input is not a JSON object", [".sdd"]);
   if (!isArchitectAgent(input)) return { allow: true };
   const tool = typeof input.tool_name === "string" ? input.tool_name : "tool call";
   if (!WRITE_TOOLS.has(tool)) return { allow: true };
   const cwd = input.cwd;
-  if (typeof cwd !== "string" || cwd === "") return deny2(tool, "(unknown target)", "the hook input has no cwd", ".sdd");
+  if (typeof cwd !== "string" || cwd === "") return deny2(tool, "(unknown target)", "the hook input has no cwd", [".sdd"]);
   const repo = normalisePath(findWorkspace(normalisePath(cwd)) ?? cwd);
-  const sdd = normalisePath(".sdd", { cwd: repo });
+  const rels = [".sdd", `.claude/agent-memory/${input.agent_type.replace(":", "-")}`];
+  const allowed = rels.map((r) => normalisePath(r, { cwd: repo }));
   const ti = input.tool_input ?? {};
   const raw = typeof ti["file_path"] === "string" ? ti["file_path"] : ti["notebook_path"];
-  if (typeof raw !== "string" || raw.trim() === "") return deny2(tool, "(no path)", "the tool input names no file", sdd);
-  if (raw.includes("\0")) return deny2(tool, JSON.stringify(raw), "the path contains a NUL character", sdd);
+  if (typeof raw !== "string" || raw.trim() === "") return deny2(tool, "(no path)", "the tool input names no file", allowed);
+  if (raw.includes("\0")) return deny2(tool, JSON.stringify(raw), "the path contains a NUL character", allowed);
   const ambiguous = ambiguousWindowsPath(raw);
-  if (ambiguous) return deny2(tool, raw, `ambiguous path (${ambiguous})`, sdd);
+  if (ambiguous) return deny2(tool, raw, `ambiguous path (${ambiguous})`, allowed);
   const lexical = normalisePath(raw, { cwd });
-  if (!below(sdd, lexical)) return deny2(tool, lexical, "the path is outside .sdd/", sdd);
-  const realSdd = realPath(sdd);
-  if (pathKey(realSdd) !== pathKey(normalisePath(".sdd", { cwd: realPath(repo) }))) {
-    return deny2(tool, lexical, `.sdd/ is a link to ${realSdd}`, sdd);
+  const i = allowed.findIndex((a) => below(a, lexical));
+  if (i < 0) return deny2(tool, lexical, "the path is outside .sdd/", allowed);
+  const name = rels[i];
+  const realRoot = realPath(allowed[i]);
+  if (pathKey(realRoot) !== pathKey(normalisePath(name, { cwd: realPath(repo) }))) {
+    return deny2(tool, lexical, `${name}/ is (or lies behind) a link to ${realRoot}`, allowed);
   }
   const real = realPath(lexical);
-  if (!below(realSdd, real)) return deny2(tool, lexical, `the path resolves to ${real}, outside .sdd/`, sdd);
+  if (!below(realRoot, real)) return deny2(tool, lexical, `the path resolves to ${real}, outside ${name}/`, allowed);
   const physical = physicalPath(raw, cwd);
-  if (!below(realSdd, physical)) return deny2(tool, lexical, `the path resolves to ${physical}, outside .sdd/`, sdd);
+  if (!below(realRoot, physical)) return deny2(tool, lexical, `the path resolves to ${physical}, outside ${name}/`, allowed);
   const links = hardLinkCount(real);
-  if (links > 1) return deny2(tool, lexical, `the file has ${links} hard links and may be shared with a file outside .sdd/`, sdd);
+  if (links > 1) return deny2(tool, lexical, `the file has ${links} hard links and may be shared with a file outside ${name}/`, allowed);
   return { allow: true };
 }
 

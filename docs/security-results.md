@@ -5,7 +5,7 @@ Node 22.13.0, Claude Code 2.1.295) on 2026-10-11.
 
 | NFR | Threshold | Result | Evidence |
 |---|---|---|---|
-| C001-NFR-201 No code modification | 100% of writes outside `.sdd/` denied, ≥ 200 cases | **pass** — 236 cases, 143 denials expected and given, 0 false allows, 0 false denies | `tests/guards/path-corpus.json`, `tests/guards/path-corpus.test.ts` |
+| C001-NFR-201 No code modification | 100% of writes outside `.sdd/` and the agent's own memory folder denied, ≥ 200 cases | **pass** — 256 cases, 157 denials expected and given, 0 false allows, 0 false denies | `tests/guards/path-corpus.json`, `tests/guards/path-corpus.test.ts` |
 | C001-NFR-202 No network from scripts | 0 connections during the test suite | **pass** — 0 recorded calls over the full suite (498 tests, every CLI child process included) | `tests/no-network.mjs`, `scripts/test.mjs`, `tests/security/no-network.test.ts` |
 | C001-NFR-203 No secrets in artifacts | ≥ 95% detection, ≤ 2% false positives | **pass** — 69/69 positives detected (100%), 0/107 negatives flagged (0%) | `tests/fixtures/secrets/corpus.json`, `tests/security/secrets.test.ts` |
 | C001-NFR-204 Least-privilege tools | 0 differences from C001-IF-09 | **pass** — every agent's `tools` equals its IF-09 row | `tests/integration/cap02/agents-if09.test.ts` |
@@ -13,25 +13,26 @@ Node 22.13.0, Claude Code 2.1.295) on 2026-10-11.
 
 ## 1. Path guard corpus (NFR-201)
 
-236 hook inputs in the S-04 shape, run against a fixture repository with a junction from `.sdd/` to
+256 hook inputs in the S-04 shape, run against a fixture repository with a junction from `.sdd/` to
 `src/`, a junction to a folder outside the repository, a hard link and a file symbolic link. Categories:
-inside writes by all ten agents, outside writes, prefix tricks (`.sdd-evil/`), traversal, relative
+inside writes by all ten agents, agent memory folders (own folder allowed; another agent's folder, prefix tricks, traversal and links denied — D-007), outside writes, prefix tricks (`.sdd-evil/`), traversal, relative
 paths, `cwd` in a subfolder or behind a junction, case, separators, links, UNC and device paths, 8.3
 short names, Windows name rewriting (trailing dot or space, streams, device names, drive-relative
 paths), other drives, caller identity, non-write tools and malformed input.
 
-Confusion matrix (expected/decided): allow/allow 93, allow/deny 0, deny/allow 0, deny/deny 143.
+Confusion matrix (expected/decided): allow/allow 99, allow/deny 0, deny/allow 0, deny/deny 157.
 Each guard branch has at least one case that fails when the branch is removed (mutation check).
 
 Bash guard corpus (C001-REQ-1106, 1107; same NFR family): 277 cases, 100% as expected, each denial
 with its rule (`tests/guards/bash-corpus.json`).
 
-Guard decision time (C001-NFR-103): p95 132–148 ms over 50 evaluations, threshold 300 ms
+Guard decision time (C001-NFR-103): p95 132–182 ms over 50 evaluations, threshold 300 ms
 (`bench/results/guards-*.json`).
 
 Live check (Claude Code 2.1.295, `architect:sdd-auditor` on haiku, plugin with hooks): a write to
 `src/` denied with GUARD-PATH-001, a write to `.sdd/` allowed, `rm -rf src` denied with
-GUARD-BASH-001, `git status` allowed.
+GUARD-BASH-001, `git status` allowed. After D-007, the cartographer saved a memory file to its own
+`.claude/agent-memory/architect-sdd-cartographer/` (before the fix, the guard denied it).
 
 ## 2. No network (NFR-202)
 

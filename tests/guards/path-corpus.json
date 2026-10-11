@@ -20,7 +20,8 @@
    ".sdd/long-change-folder-name/a.md": "x\n",
    "src/app.ts": "x\n",
    "README.md": "x\n",
-   "source-code-folder/app.ts": "x\n"
+   "source-code-folder/app.ts": "x\n",
+   ".claude/agent-memory/architect-sdd-cartographer/MEMORY.md": "- [n](n.md)\n"
   },
   "dirs": [
    ".sdd/005-y/inner"
@@ -31,7 +32,9 @@
    ".sdd/link-to-deep": ".sdd/005-y/inner",
    ".sdd/link-to-outside": "{outside}",
    ".sdd/link-to-repo": ".",
-   ".sdd/long-link-to-source-folder": "source-code-folder"
+   ".sdd/long-link-to-source-folder": "source-code-folder",
+   ".claude/agent-memory/architect-sdd-researcher/link-to-src": "src",
+   ".claude/agent-memory/architect-sdd-critic": "src"
   },
   "hardlinks": {
    ".sdd/hard.md": "src/app.ts"
@@ -1865,6 +1868,182 @@
   },
   {
    "id": "PG-205",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-206",
+   "category": "memory",
+   "tool": "Edit",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md",
+   "expect": "allow",
+   "note": "existing memory index"
+  },
+  {
+   "id": "PG-207",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-researcher/vendor_notes.md",
+   "expect": "allow",
+   "note": "folder created on first save"
+  },
+  {
+   "id": "PG-208",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": ".claude/agent-memory/architect-sdd-cartographer/notes/x.md",
+   "expect": "allow",
+   "note": "relative to cwd"
+  },
+  {
+   "id": "PG-209",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{REPO}/.CLAUDE/Agent-Memory/ARCHITECT-SDD-CARTOGRAPHER/x.md",
+   "expect": {
+    "win32": "allow",
+    "posix": "deny"
+   }
+  },
+  {
+   "id": "PG-210",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md",
+   "expect": "deny",
+   "note": "another agent's memory"
+  },
+  {
+   "id": "PG-211",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-spec-writer-evil/x.md",
+   "expect": "deny",
+   "note": "prefix trick"
+  },
+  {
+   "id": "PG-212",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-spec-writerx/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-213",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-214",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer",
+   "expect": "deny",
+   "note": "the folder itself"
+  },
+  {
+   "id": "PG-215",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/settings.json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-216",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agents/sdd-cartographer.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-217",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/../architect-sdd-researcher/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-218",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/../../../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-219",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-researcher/link-to-src/app.ts",
+   "expect": "deny",
+   "note": "junction inside the memory folder"
+  },
+  {
+   "id": "PG-220",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-researcher/link-to-src/../../../../README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-221",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-critic/x.md",
+   "expect": "deny",
+   "note": "the memory folder is a junction to src/"
+  },
+  {
+   "id": "PG-222",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/x.md.",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-223",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{outside}/.claude/agent-memory/architect-sdd-cartographer/x.md",
+   "expect": "deny",
+   "note": "another repository's memory"
+  },
+  {
+   "id": "PG-224",
+   "category": "memory",
+   "tool": "Write",
+   "agent": "general-purpose",
+   "path": "{repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md",
+   "expect": "allow",
+   "note": "not guarded"
+  },
+  {
+   "id": "PG-225",
    "category": "identity",
    "tool": "Write",
    "agent": null,
@@ -1872,7 +2051,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-206",
+   "id": "PG-226",
    "category": "identity",
    "tool": "Write",
    "agent": "general-purpose",
@@ -1880,7 +2059,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-207",
+   "id": "PG-227",
    "category": "identity",
    "tool": "Write",
    "agent": "Explore",
@@ -1888,7 +2067,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-208",
+   "id": "PG-228",
    "category": "identity",
    "tool": "Write",
    "agent": "Plan",
@@ -1896,7 +2075,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-209",
+   "id": "PG-229",
    "category": "identity",
    "tool": "Write",
    "agent": "other-plugin:sdd-spec-writer",
@@ -1904,7 +2083,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-210",
+   "id": "PG-230",
    "category": "identity",
    "tool": "Write",
    "agent": "architect:helper",
@@ -1912,7 +2091,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-211",
+   "id": "PG-231",
    "category": "identity",
    "tool": "Write",
    "agent": "architect-x:sdd-spec-writer",
@@ -1920,7 +2099,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-212",
+   "id": "PG-232",
    "category": "identity",
    "tool": "Write",
    "agent": "sdd-spec-writer",
@@ -1928,7 +2107,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-213",
+   "id": "PG-233",
    "category": "identity",
    "tool": "Write",
    "agent": "ARCHITECT:sdd-spec-writer",
@@ -1936,7 +2115,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-214",
+   "id": "PG-234",
    "category": "identity",
    "tool": "Write",
    "agent": "",
@@ -1944,7 +2123,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-215",
+   "id": "PG-235",
    "category": "identity",
    "tool": "Write",
    "agent": 42,
@@ -1952,7 +2131,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-216",
+   "id": "PG-236",
    "category": "identity",
    "tool": "Write",
    "agent": "xarchitect:sdd-planner",
@@ -1960,7 +2139,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-217",
+   "id": "PG-237",
    "category": "identity",
    "tool": "Write",
    "agent": "architect:sdd-unknown",
@@ -1969,7 +2148,7 @@
    "note": "any architect:sdd-* agent is guarded"
   },
   {
-   "id": "PG-218",
+   "id": "PG-238",
    "category": "identity",
    "tool": "Write",
    "agent": "architect:sdd-",
@@ -1977,7 +2156,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-219",
+   "id": "PG-239",
    "category": "identity",
    "tool": "Write",
    "agent": null,
@@ -1985,7 +2164,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-220",
+   "id": "PG-240",
    "category": "identity",
    "tool": "Edit",
    "agent": "general-purpose",
@@ -1993,7 +2172,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-221",
+   "id": "PG-241",
    "category": "tool",
    "tool": "Read",
    "agent": "architect:sdd-spec-writer",
@@ -2001,7 +2180,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-222",
+   "id": "PG-242",
    "category": "tool",
    "tool": "Glob",
    "agent": "architect:sdd-spec-writer",
@@ -2009,7 +2188,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-223",
+   "id": "PG-243",
    "category": "tool",
    "tool": "Bash",
    "agent": "architect:sdd-spec-writer",
@@ -2017,7 +2196,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-224",
+   "id": "PG-244",
    "category": "tool",
    "tool": "Grep",
    "agent": "architect:sdd-spec-writer",
@@ -2025,7 +2204,7 @@
    "expect": "allow"
   },
   {
-   "id": "PG-225",
+   "id": "PG-245",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2033,7 +2212,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-226",
+   "id": "PG-246",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2041,7 +2220,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-227",
+   "id": "PG-247",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2049,7 +2228,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-228",
+   "id": "PG-248",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2057,7 +2236,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-229",
+   "id": "PG-249",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2066,7 +2245,7 @@
    "note": "no tool_input"
   },
   {
-   "id": "PG-230",
+   "id": "PG-250",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2074,7 +2253,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-231",
+   "id": "PG-251",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2082,7 +2261,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-232",
+   "id": "PG-252",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2090,7 +2269,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-233",
+   "id": "PG-253",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2100,7 +2279,7 @@
    "note": "no cwd"
   },
   {
-   "id": "PG-234",
+   "id": "PG-254",
    "category": "malformed",
    "tool": "Write",
    "agent": "architect:sdd-spec-writer",
@@ -2109,7 +2288,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-235",
+   "id": "PG-255",
    "category": "malformed",
    "tool": "NotebookEdit",
    "agent": "architect:sdd-spec-writer",
@@ -2118,7 +2297,7 @@
    "expect": "deny"
   },
   {
-   "id": "PG-236",
+   "id": "PG-256",
    "category": "malformed",
    "tool": null,
    "agent": "architect:sdd-spec-writer",

@@ -20,6 +20,9 @@ const examples: [string, string | null, string, number][] = [
   ["Edit", "architect:sdd-architect", "C:/repo/README.md", 2],
   ["Write", "general-purpose", "C:/repo/src/app.ts", 0],
   ["Write", null, "C:/repo/src/app.ts", 0],
+  // D-007: an Architect agent's own memory folder, never another agent's.
+  ["Write", "architect:sdd-cartographer", "C:/repo/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md", 0],
+  ["Write", "architect:sdd-researcher", "C:/repo/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md", 2],
 ];
 
 for (const [tool, agent, path, code] of examples) {

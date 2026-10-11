@@ -74,7 +74,10 @@ export function buildFixture(spec: Corpus["fixture"]): Fixture {
     writeFileSync(at(rel), content);
   }
   for (const rel of spec.dirs) mkdirSync(at(rel), { recursive: true });
-  for (const [rel, t] of Object.entries(spec.junctions)) symlinkSync(target(t), at(rel), linkType);
+  for (const [rel, t] of Object.entries(spec.junctions)) {
+    mkdirSync(dirname(at(rel)), { recursive: true });
+    symlinkSync(target(t), at(rel), linkType);
+  }
   for (const [rel, t] of Object.entries(spec.hardlinks)) linkSync(target(t), at(rel));
   const capabilities = new Set<string>();
   try {
