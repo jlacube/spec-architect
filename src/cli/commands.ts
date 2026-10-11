@@ -1,7 +1,7 @@
 // Command table of C001-IF-01. Usage strings are copied from the interface. Commands without `run`
 // are refused with ERR-CLI-003 until their task implements them.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { isInside, normalisePath, relativePath } from "../io/paths.ts";
 import { RULES } from "../lint/rules/index.ts";
 import { lintWorkspace, type LintOptions } from "../lint/engine.ts";
@@ -13,6 +13,7 @@ import { nextId, tombstoneId } from "../workspace/ledger.ts";
 import { createChange, KINDS, PROFILES, type Kind } from "../workspace/change.ts";
 import { upgradeToFull } from "../workspace/upgrade.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
+import { writeSerenaConfig } from "../workspace/serena-config.ts";
 import type { Profile } from "../workspace/templates.ts";
 import { rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
@@ -366,6 +367,13 @@ function init(ctx: CommandContext): number {
   return 0;
 }
 
+/** `sdd serena-config <plugin-data-dir>` (C001-REQ-1013): Serena's config in the plugin data folder. */
+function serenaConfig(ctx: CommandContext): number {
+  const r = writeSerenaConfig(resolve(ctx.cwd, String(ctx.args["plugin-data-dir"])));
+  ctx.out.line(`${r.outcome}: ${r.path}`);
+  return 0;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
@@ -396,7 +404,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [] },
-  { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"] },
+  { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
 ];

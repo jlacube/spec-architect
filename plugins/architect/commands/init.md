@@ -5,11 +5,8 @@ argument-hint: ""
 
 This command runs in the `architect:sdd-conductor` main session. If you are not that agent, reply that P-01 should start `claude --agent architect:sdd-conductor` and run the command there, and do nothing else.
 
-1. Run `sdd init` (creates or completes `.sdd/`; it never overwrites existing files). Set up
-   Serena's data folder as in step 1 of `/architect:doctor`: ensure
-   `${CLAUDE_PLUGIN_DATA}/serena/serena_config.yml` sets `web_dashboard: false`,
-   `web_dashboard_open_on_launch: false`, `project_serena_folder_location:
-   "${CLAUDE_PLUGIN_DATA}/serena/projects/$projectFolderName/.serena"` and `projects: []`.
+1. Run `sdd init` (creates or completes `.sdd/`; it never overwrites existing files). Then run
+   `sdd serena-config "${CLAUDE_PLUGIN_DATA}"` (Serena's data folder, as `/architect:doctor` does).
 2. If `.sdd/_constitution/constitution.md` exists, report its status and stop: approve a draft
    with `/architect:gate constitution`.
 3. Dispatch `sdd-cartographer` (code-discovery skill) for:

@@ -5,19 +5,9 @@ argument-hint: ""
 
 This command runs in the `architect:sdd-conductor` main session. If you are not that agent, reply that P-01 should start `claude --agent architect:sdd-conductor` and run the command there, and do nothing else.
 
-1. **Serena data folder.** Ensure `${CLAUDE_PLUGIN_DATA}/serena/serena_config.yml` exists with
-   these values (create the file with exactly these lines when it is missing; otherwise set these
-   keys and keep the rest):
-
-   ```yaml
-   web_dashboard: false
-   web_dashboard_open_on_launch: false
-   project_serena_folder_location: "${CLAUDE_PLUGIN_DATA}/serena/projects/$projectFolderName/.serena"
-   projects: []
-   ```
-
-   Write the path with forward slashes. Serena reads it from its next start, so it never writes
-   `.serena/` into the repository.
+1. **Serena data folder.** Run `sdd serena-config "${CLAUDE_PLUGIN_DATA}"` and report its line
+   (created, updated or unchanged). It keeps Serena's project data in the plugin data folder (never
+   `.serena/` in the repository) and turns the dashboard off, from Serena's next start.
 2. **Probe.** Dispatch `sdd-cartographer` to write `.sdd/_constitution/toolchain.md` (code-discovery
    skill, toolchain record): one row each for node, git, Claude Code, ripwire, Serena, ast-grep,
    Context7, DeepWiki with detected, version, path or endpoint, fallback. Probes: `--version` for
