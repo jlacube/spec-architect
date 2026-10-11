@@ -1,9 +1,8 @@
 // The sdd CLI front-end (C001-IF-01): dispatch, option parsing (node:util parseArgs), workspace
 // discovery, error rendering and exit codes. No side effects at import; src/cli.ts wires it to the
 // process.
-import { existsSync, statSync } from "node:fs";
-import { dirname, join } from "node:path";
 import { parseArgs } from "node:util";
+import { findWorkspace } from "../workspace/find.ts";
 import { AtomicWriteError } from "../io/atomic.ts";
 import { normalisePath } from "../io/paths.ts";
 import type { LintRule } from "../lint/types.ts";
@@ -16,6 +15,8 @@ export interface CliIo {
   env: Readonly<Record<string, string | undefined>>;
   stdout(text: string): void;
   stderr(text: string): void;
+  /** Reads standard input (hook commands); absent means empty input. */
+  stdin?: () => string;
   /** Replaces the registered lint rules (tests). */
   rules?: readonly LintRule[];
 }
@@ -43,17 +44,7 @@ function findCommand(argv: readonly string[]): { spec: CommandSpec; rest: string
   return { spec, rest: argv.slice(1) };
 }
 
-/** First folder containing `.sdd/`, walking up from `start` (C001-IF-01 "Synopsis"). */
-export function findWorkspace(start: string): string | null {
-  let dir = start;
-  for (;;) {
-    const sdd = join(dir, ".sdd");
-    if (existsSync(sdd) && statSync(sdd).isDirectory()) return dir;
-    const parent = dirname(dir);
-    if (parent === dir) return null;
-    dir = parent;
-  }
-}
+export { findWorkspace };
 
 function optionHelp(spec: CommandSpec): string {
   return Object.entries({ ...spec.options })
@@ -144,5 +135,5 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     out.trace("workspace", { root });
   }
   if (!spec.run) throw usage(spec.name, `sdd ${spec.name} is not implemented yet`);
-  return spec.run({ name: spec.name, out, cwd, root, args, values, rules: io.rules ?? RULES });
+  return spec.run({ name: spec.name, out, cwd, root, args, values, rules: io.rules ?? RULES, stdin: io.stdin ?? (() => "") });
 }

@@ -40,6 +40,11 @@ export class Output {
     this.w.stderr(formatError(e) + "\n");
   }
 
+  /** A line on standard error (guard decisions, C001-IF-07 §4). */
+  errorLine(text: string): void {
+    this.w.stderr(text + "\n");
+  }
+
   /** WARN-CLI-* lines go to standard output; the command still succeeds. */
   warn(e: CliError): void {
     this.w.stdout(formatError(e) + "\n");

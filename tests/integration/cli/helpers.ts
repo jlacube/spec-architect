@@ -18,14 +18,14 @@ export interface Result {
 }
 
 /** Runs the bundled CLI with a clean environment (no inherited SDD_DEBUG). */
-export function runBundled(args: string[], opts: { cwd: string; env?: Record<string, string> }): Result {
+export function runBundled(args: string[], opts: { cwd: string; env?: Record<string, string>; stdin?: string }): Result {
   const env: Record<string, string | undefined> = { ...process.env, SDD_DEBUG: undefined, SDD_TEST_FAULT: undefined, ...opts.env };
-  const r = spawnSync(process.execPath, [CLI, ...args], { cwd: opts.cwd, env, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [CLI, ...args], { cwd: opts.cwd, env, encoding: "utf8", input: opts.stdin ?? "" });
   return { code: r.status ?? -1, stdout: r.stdout, stderr: r.stderr };
 }
 
 /** Runs the CLI in-process; `rules` replaces the registered lint rules. */
-export function runInProcess(args: string[], opts: { cwd: string; env?: Record<string, string>; rules?: LintRule[] }): Result {
+export function runInProcess(args: string[], opts: { cwd: string; env?: Record<string, string>; rules?: LintRule[]; stdin?: string }): Result {
   let stdout = "";
   let stderr = "";
   const io: CliIo = {
@@ -35,6 +35,7 @@ export function runInProcess(args: string[], opts: { cwd: string; env?: Record<s
     stderr: (s) => (stderr += s),
   };
   if (opts.rules) io.rules = opts.rules;
+  if (opts.stdin !== undefined) io.stdin = () => opts.stdin!;
   const code = runCli(args, io);
   return { code, stdout, stderr };
 }

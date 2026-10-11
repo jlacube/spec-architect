@@ -1,0 +1,2130 @@
+{
+ "description": "Path guard corpus (C001-NFR-201, C001-REQ-1103, C001-REQ-1104). Placeholders are resolved by tests/guards/path-corpus.test.ts against a fixture built from `fixture`. `expect` is allow/deny, or per platform. Cases with `platforms` run only there; `requires` names a capability the test probes first.",
+ "placeholders": {
+  "{repo}": "fixture repository (real path, forward slashes)",
+  "{REPO}": "{repo} upper-cased",
+  "{repo\\}": "{repo} with backslashes",
+  "{repo-nodrive\\}": "{repo\\} without its drive letter and colon",
+  "{repo-lowerdrive}": "{repo} with a lower-case drive letter",
+  "{repolink}": "a junction to {repo}",
+  "{repo2}": "a second repository whose .sdd/ is a junction to its src/",
+  "{outside}": "a folder outside {repo}",
+  "{drive}": "drive letter of {repo}",
+  "{otherdrive}": "a drive letter other than {drive}",
+  "{short:rel}": "8.3 short spelling of {repo}/rel (all segments)",
+  "{shortname:rel}": "8.3 short name of the last segment of {repo}/rel"
+ },
+ "fixture": {
+  "files": {
+   ".sdd/004-x/existing.md": "x\n",
+   ".sdd/long-change-folder-name/a.md": "x\n",
+   "src/app.ts": "x\n",
+   "README.md": "x\n",
+   "source-code-folder/app.ts": "x\n"
+  },
+  "dirs": [
+   ".sdd/005-y/inner"
+  ],
+  "junctions": {
+   ".sdd/link-to-src": "src",
+   ".sdd/link-to-sdd-sub": ".sdd/004-x",
+   ".sdd/link-to-deep": ".sdd/005-y/inner",
+   ".sdd/link-to-outside": "{outside}",
+   ".sdd/link-to-repo": ".",
+   ".sdd/long-link-to-source-folder": "source-code-folder"
+  },
+  "hardlinks": {
+   ".sdd/hard.md": "src/app.ts"
+  },
+  "fileSymlinks": {
+   ".sdd/file-link.md": "src/app.ts"
+  }
+ },
+ "cases": [
+  {
+   "id": "PG-001",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-002",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-003",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-004",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-005",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-006",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-007",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-008",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-009",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-010",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-011",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-012",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-013",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-014",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-015",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-016",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-017",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-018",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-019",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-020",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-021",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-022",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-023",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-024",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-025",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-026",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-027",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-028",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-029",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-030",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-031",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-032",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-033",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-034",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-035",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-036",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-037",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-038",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/.sdd/004-x/10-spec/20-capabilities/CAP-01/requirements.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-039",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-040",
+   "category": "inside",
+   "tool": "Edit",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-041",
+   "category": "inside",
+   "tool": "MultiEdit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/existing.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-042",
+   "category": "inside",
+   "tool": "NotebookEdit",
+   "agent": "architect:sdd-spec-writer",
+   "field": "notebook_path",
+   "path": "{repo}/.sdd/004-x/notes.ipynb",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-043",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/SDD.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-044",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/_living/CAP-auth.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-045",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/005-y/new-folder/deep/file.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-046",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/%2e%2e/src/app.ts",
+   "expect": "allow",
+   "note": "percent-encoding is a literal folder name"
+  },
+  {
+   "id": "PG-047",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-sdd-sub/a.md",
+   "expect": "allow",
+   "note": "junction to a folder inside .sdd/"
+  },
+  {
+   "id": "PG-048",
+   "category": "inside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/",
+   "expect": "allow",
+   "note": "trailing separator"
+  },
+  {
+   "id": "PG-049",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-050",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-051",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/package.json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-052",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/.git/config",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-053",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.claude/settings.json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-054",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/.mcp.json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-055",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/plugins/architect/hooks/hooks.json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-056",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/.github/workflows/ci.yml",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-057",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/docs/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-058",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/node_modules/x/index.js",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-059",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-060",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-061",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-062",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-063",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-064",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-065",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-066",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-067",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-068",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-069",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-conductor",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-070",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-researcher",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-071",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-cartographer",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-072",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-options-analyst",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-073",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-074",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-test-designer",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-075",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-076",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-planner",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-077",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-critic",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-078",
+   "category": "outside",
+   "tool": "Edit",
+   "agent": "architect:sdd-auditor",
+   "path": "{repo}/README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-079",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}",
+   "expect": "deny",
+   "note": "the repository folder itself"
+  },
+  {
+   "id": "PG-080",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd",
+   "expect": "deny",
+   "note": "the .sdd folder itself"
+  },
+  {
+   "id": "PG-081",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{outside}/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-082",
+   "category": "outside",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{outside}/.sdd/a.md",
+   "expect": "deny",
+   "note": ".sdd/ of another folder"
+  },
+  {
+   "id": "PG-083",
+   "category": "outside",
+   "tool": "NotebookEdit",
+   "agent": "architect:sdd-spec-writer",
+   "field": "notebook_path",
+   "path": "{repo}/src/analysis.ipynb",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-084",
+   "category": "outside",
+   "tool": "NotebookEdit",
+   "agent": "architect:sdd-spec-writer",
+   "field": "notebook_path",
+   "path": "{repo}/.sdd/../nb.ipynb",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-085",
+   "category": "outside",
+   "tool": "MultiEdit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-086",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd-evil/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-087",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sddx/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-088",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd.bak/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-089",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-090",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-091",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/x.sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-092",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/.sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-093",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd2/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-094",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/_sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-095",
+   "category": "prefix",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd_/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-096",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-097",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/../../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-098",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/./../README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-099",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/../../../outside.txt",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-100",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/../.sdd/../src/x.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-101",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/../../.git/hooks/pre-commit",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-102",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a/b/c/../../../../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-103",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/..",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-104",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/../",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-105",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/../.sdd-evil/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-106",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/../005-y/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-107",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/./a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-108",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/../.sdd/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-109",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a/../b/./c.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-110",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/../.sdd/../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-111",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x/./../../README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-112",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}\\.sdd\\..\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-113",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd\\..\\..\\outside.txt",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-114",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}\\.sdd\\004-x\\..\\005-y\\a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-115",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-src/../README.md",
+   "expect": "deny",
+   "note": "link/.. is the link target's parent (POSIX)"
+  },
+  {
+   "id": "PG-116",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-outside/../x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-117",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-deep/../link-to-src/new-file.ts",
+   "expect": "deny",
+   "note": "Windows applies .. before links: the write lands in src/ although the physical walk stays in .sdd/"
+  },
+  {
+   "id": "PG-118",
+   "category": "traversal",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-deep/../a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-119",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": ".sdd/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-120",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "./.sdd/004-x/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-121",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-122",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "../outside.txt",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-123",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "README.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-124",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": ".sdd/../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-125",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "src/../.sdd/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-126",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "./x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-127",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": ".sdd\\a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-128",
+   "category": "relative",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-129",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/src",
+   "path": "../.sdd/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-130",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/src",
+   "path": "app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-131",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/src",
+   "path": "{repo}/.sdd/a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-132",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/.sdd/004-x",
+   "path": "a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-133",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/.sdd/004-x",
+   "path": "../../src/x.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-134",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo}/src",
+   "path": ".sdd/a.md",
+   "expect": "deny",
+   "note": "relative to cwd this is src/.sdd/"
+  },
+  {
+   "id": "PG-135",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repolink}",
+   "path": "{repolink}/.sdd/a.md",
+   "expect": "allow",
+   "note": "session started through a junction to the repository"
+  },
+  {
+   "id": "PG-136",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repolink}",
+   "path": "{repolink}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-137",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo2}",
+   "path": "{repo2}/.sdd/a.md",
+   "expect": "deny",
+   "note": ".sdd/ is a junction to src/"
+  },
+  {
+   "id": "PG-138",
+   "category": "cwd",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "{repo2}",
+   "path": ".sdd/x.ts",
+   "expect": "deny",
+   "note": ".sdd/ is a junction to src/"
+  },
+  {
+   "id": "PG-139",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{REPO}/.SDD/004-x/a.md",
+   "expect": {
+    "win32": "allow",
+    "posix": "deny"
+   }
+  },
+  {
+   "id": "PG-140",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.SDD/a.md",
+   "expect": {
+    "win32": "allow",
+    "posix": "deny"
+   }
+  },
+  {
+   "id": "PG-141",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.Sdd/004-X/A.MD",
+   "expect": {
+    "win32": "allow",
+    "posix": "deny"
+   }
+  },
+  {
+   "id": "PG-142",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.Sdd/../SRC/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-143",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{REPO}/SRC/APP.TS",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-144",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo-lowerdrive}/.sdd/a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-145",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo-lowerdrive}/src/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-146",
+   "category": "case",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.SDD-evil/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-147",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo\\}\\.sdd\\a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-148",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo\\}\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-149",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo\\}/.sdd\\004-x/a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-150",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}//.sdd//a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-151",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd///004-x//a.md",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-152",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}//src//app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-153",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd\\..\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-154",
+   "category": "separators",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}\\.sdd/../src/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-155",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-156",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-src/new/deep.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-157",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-outside/x.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-158",
+   "category": "symlink",
+   "tool": "Edit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-159",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-architect",
+   "path": "{repo}/.sdd/link-to-repo/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-160",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-repo/.sdd/a.md",
+   "expect": "allow",
+   "note": "through a link to the repository root, back into .sdd/"
+  },
+  {
+   "id": "PG-161",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/link-to-sdd-sub/../../src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-162",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repolink}/.sdd/a.md",
+   "expect": "deny",
+   "note": "a different spelling of the repository than cwd; denied (fail closed)"
+  },
+  {
+   "id": "PG-163",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/file-link.md",
+   "expect": "deny",
+   "requires": "file-symlink"
+  },
+  {
+   "id": "PG-164",
+   "category": "symlink",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/hard.md",
+   "expect": "deny",
+   "note": "hard link to src/app.ts"
+  },
+  {
+   "id": "PG-165",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "//server/share/.sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-166",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\server\\share\\repo\\.sdd\\a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-167",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\localhost\\{drive}$\\{repo-nodrive\\}\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-168",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\localhost\\{drive}$\\{repo-nodrive\\}\\.sdd\\a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ],
+   "note": "another spelling of .sdd/; denied (fail closed)"
+  },
+  {
+   "id": "PG-169",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\?\\UNC\\server\\share\\x.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-170",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\.\\{drive}:\\x.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-171",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\.\\PhysicalDrive0",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-172",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\?\\GLOBALROOT\\Device\\HarddiskVolume1\\x.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-173",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\?\\{repo\\}\\.sdd\\a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ],
+   "note": "long-path prefix"
+  },
+  {
+   "id": "PG-174",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\?\\{repo\\}\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-175",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "\\\\?\\{repo\\}\\.sdd\\..\\src\\app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-176",
+   "category": "unc",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "//?/{repo}/.sdd/a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-177",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{short:source-code-folder}/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-178",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{short:.sdd}/a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ],
+   "note": "short name of .sdd/ itself; denied (fail closed)"
+  },
+  {
+   "id": "PG-179",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{short:.sdd/long-change-folder-name}/a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-180",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/{shortname:.sdd/long-change-folder-name}/a.md",
+   "expect": "allow",
+   "platforms": [
+    "win32"
+   ],
+   "note": "short name of a folder inside .sdd/"
+  },
+  {
+   "id": "PG-181",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/{shortname:.sdd/long-change-folder-name}/../../source-code-folder/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-182",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/{shortname:.sdd/long-link-to-source-folder}/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ],
+   "note": "short name of a junction to source-code-folder/"
+  },
+  {
+   "id": "PG-183",
+   "category": "short-name",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/{shortname:source-code-folder}/app.ts",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-184",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a.md.",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-185",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a.md ",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-186",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a.md...",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-187",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/.. /src/app.ts",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-188",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/004-x. /a.md",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-189",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a.md:stream",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-190",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a.md::$DATA",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-191",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/con",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-192",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/NUL.md",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-193",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/com1.txt",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-194",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/aux",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-195",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/LPT1",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-196",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/prn.txt",
+   "expect": {
+    "win32": "deny",
+    "posix": "allow"
+   }
+  },
+  {
+   "id": "PG-197",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd:stream",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-198",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{drive}:relative.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ],
+   "note": "drive-relative path"
+  },
+  {
+   "id": "PG-199",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{drive}:.sdd\\a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ],
+   "note": "drive-relative path"
+  },
+  {
+   "id": "PG-200",
+   "category": "windows-names",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/.sdd/a\u0000.md",
+   "expect": "deny",
+   "note": "NUL character"
+  },
+  {
+   "id": "PG-201",
+   "category": "drive",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{otherdrive}:/repo/.sdd/a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-202",
+   "category": "drive",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{otherdrive}:/other/.sdd/a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-203",
+   "category": "drive",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{otherdrive}:\\{repo-nodrive\\}\\.sdd\\a.md",
+   "expect": "deny",
+   "platforms": [
+    "win32"
+   ]
+  },
+  {
+   "id": "PG-204",
+   "category": "drive",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "/.sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-205",
+   "category": "identity",
+   "tool": "Write",
+   "agent": null,
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-206",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "general-purpose",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-207",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "Explore",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-208",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "Plan",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-209",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "other-plugin:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-210",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "architect:helper",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-211",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "architect-x:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-212",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-213",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "ARCHITECT:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-214",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-215",
+   "category": "identity",
+   "tool": "Write",
+   "agent": 42,
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-216",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "xarchitect:sdd-planner",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-217",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "architect:sdd-unknown",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny",
+   "note": "any architect:sdd-* agent is guarded"
+  },
+  {
+   "id": "PG-218",
+   "category": "identity",
+   "tool": "Write",
+   "agent": "architect:sdd-",
+   "path": "{repo}/src/app.ts",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-219",
+   "category": "identity",
+   "tool": "Write",
+   "agent": null,
+   "path": "{repo}/.sdd/../src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-220",
+   "category": "identity",
+   "tool": "Edit",
+   "agent": "general-purpose",
+   "path": "{repo}/.sdd/link-to-src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-221",
+   "category": "tool",
+   "tool": "Read",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-222",
+   "category": "tool",
+   "tool": "Glob",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-223",
+   "category": "tool",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-224",
+   "category": "tool",
+   "tool": "Grep",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow"
+  },
+  {
+   "id": "PG-225",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "stdin": "",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-226",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "stdin": "not json",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-227",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "stdin": "[]",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-228",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "stdin": "null",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-229",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": null,
+   "expect": "deny",
+   "note": "no tool_input"
+  },
+  {
+   "id": "PG-230",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-231",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": "   ",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-232",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "path": 7,
+   "expect": "deny"
+  },
+  {
+   "id": "PG-233",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": null,
+   "path": "{repo}/.sdd/a.md",
+   "expect": "deny",
+   "note": "no cwd"
+  },
+  {
+   "id": "PG-234",
+   "category": "malformed",
+   "tool": "Write",
+   "agent": "architect:sdd-spec-writer",
+   "cwd": "",
+   "path": "{repo}/.sdd/a.md",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-235",
+   "category": "malformed",
+   "tool": "NotebookEdit",
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/x.ipynb",
+   "field": "notebook_path",
+   "expect": "deny"
+  },
+  {
+   "id": "PG-236",
+   "category": "malformed",
+   "tool": null,
+   "agent": "architect:sdd-spec-writer",
+   "path": "{repo}/src/app.ts",
+   "expect": "allow",
+   "note": "no tool name: not a write tool"
+  }
+ ]
+}

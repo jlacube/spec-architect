@@ -72,6 +72,59 @@ export function realPath(p: string): string {
   return absolute;
 }
 
+/**
+ * Path the OS would reach when it resolves `..` after following links (POSIX semantics): segments are
+ * applied one by one from `cwd` (or the path's root) and every existing prefix is replaced by its real
+ * path, so `link/..` is the link target's parent. Current platform only.
+ */
+export function physicalPath(p: string, cwd: string): string {
+  const isWin = CURRENT === "win32";
+  let s = isWin ? p.replace(/\//g, "\\") : p;
+  if (isWin && s.startsWith("\\\\?\\UNC\\")) s = "\\\\" + s.slice(8);
+  else if (isWin && s.startsWith("\\\\?\\")) s = s.slice(4);
+  const path = isWin ? win32 : posix;
+  const root = path.isAbsolute(s) ? path.parse(s).root : "";
+  let cur = root ? normalisePath(root, { cwd }) : normalisePath(cwd);
+  const real = (q: string): string => {
+    try {
+      return normalisePath(realpathSync.native(isWin ? q.replace(/\//g, "\\") : q));
+    } catch {
+      return q;
+    }
+  };
+  cur = real(cur);
+  for (const seg of s.slice(root.length).split(isWin ? "\\" : "/")) {
+    if (seg === "" || seg === ".") continue;
+    if (seg === "..") {
+      cur = normalisePath(cur + "/.."); // `cur` is already real, so its lexical parent is its physical parent
+    } else {
+      cur = real(cur.endsWith("/") ? cur + seg : cur + "/" + seg);
+    }
+  }
+  return cur;
+}
+
+/**
+ * Why a write target is ambiguous on Windows, or null: a drive-relative path (`C:x`), a device path
+ * (`\\.\`), a colon after the drive (alternate data stream), a name ending in a dot or a space (Windows
+ * strips them, so `.. ` means `..`) or a reserved device name. Always null on POSIX.
+ */
+export function ambiguousWindowsPath(p: string, platform: Platform = CURRENT): string | null {
+  if (platform !== "win32") return null;
+  const s = p.replace(/\//g, "\\");
+  if (/^[a-zA-Z]:(?!\\)/.test(s)) return "drive-relative path";
+  if (s.startsWith("\\\\.\\") || s.startsWith("\\\\?\\GLOBALROOT")) return "device path";
+  const body = s.startsWith("\\\\?\\") ? s.slice(4) : s;
+  const segments = body.replace(/^[a-zA-Z]:\\/, "").split("\\");
+  for (const seg of segments) {
+    if (seg === "" || seg === "." || seg === "..") continue;
+    if (seg.includes(":")) return "alternate data stream or colon in a name";
+    if (/[. ]$/.test(seg)) return "name ending in a dot or a space";
+    if (/^(con|prn|aux|nul|com[0-9¹²³]|lpt[0-9¹²³])(\..*)?$/i.test(seg)) return "reserved device name";
+  }
+  return null;
+}
+
 export interface InsideOptions extends PathOptions {
   /** Resolve both paths through the file system first (current platform only). */
   real?: boolean;
