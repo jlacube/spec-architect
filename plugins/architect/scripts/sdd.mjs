@@ -1325,9 +1325,9 @@ ${indent}`) + "'";
         start = start.replace(/\n+/g, `$&${indent}`);
       }
       const indentSize = indent ? "2" : "1";
-      let header = (startWithSpace ? indentSize : "") + chomp;
+      let header2 = (startWithSpace ? indentSize : "") + chomp;
       if (comment) {
-        header += " " + commentString(comment.replace(/ ?[\r\n]+/g, " "));
+        header2 += " " + commentString(comment.replace(/ ?[\r\n]+/g, " "));
         if (onComment)
           onComment();
       }
@@ -1342,11 +1342,11 @@ ${indent}`) + "'";
         }
         const body = foldFlowLines.foldFlowLines(`${start}${foldedValue}${end}`, indent, foldFlowLines.FOLD_BLOCK, foldOptions);
         if (!literalFallback)
-          return `>${header}
+          return `>${header2}
 ${indent}${body}`;
       }
       value2 = value2.replace(/\n+/g, `$&${indent}`);
-      return `|${header}
+      return `|${header2}
 ${indent}${start}${value2}${end}`;
     }
     function plainString(item, ctx, onComment, onChompKeep) {
@@ -4449,10 +4449,10 @@ var require_resolve_block_scalar = __commonJS({
     var Scalar = require_Scalar();
     function resolveBlockScalar(ctx, scalar, onError) {
       const start = scalar.offset;
-      const header = parseBlockScalarHeader(scalar, ctx.options.strict, onError);
-      if (!header)
+      const header2 = parseBlockScalarHeader(scalar, ctx.options.strict, onError);
+      if (!header2)
         return { value: "", type: null, comment: "", range: [start, start, start] };
-      const type = header.mode === ">" ? Scalar.Scalar.BLOCK_FOLDED : Scalar.Scalar.BLOCK_LITERAL;
+      const type = header2.mode === ">" ? Scalar.Scalar.BLOCK_FOLDED : Scalar.Scalar.BLOCK_LITERAL;
       const lines = scalar.source ? splitLines(scalar.source) : [];
       let chompStart = lines.length;
       for (let i = lines.length - 1; i >= 0; --i) {
@@ -4463,26 +4463,26 @@ var require_resolve_block_scalar = __commonJS({
           break;
       }
       if (chompStart === 0) {
-        const value3 = header.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
-        let end2 = start + header.length;
+        const value3 = header2.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
+        let end2 = start + header2.length;
         if (scalar.source)
           end2 += scalar.source.length;
-        return { value: value3, type, comment: header.comment, range: [start, end2, end2] };
+        return { value: value3, type, comment: header2.comment, range: [start, end2, end2] };
       }
-      let trimIndent = scalar.indent + header.indent;
-      let offset = scalar.offset + header.length;
+      let trimIndent = scalar.indent + header2.indent;
+      let offset = scalar.offset + header2.length;
       let contentStart = 0;
       for (let i = 0; i < chompStart; ++i) {
         const [indent, content] = lines[i];
         if (content === "" || content === "\r") {
-          if (header.indent === 0 && indent.length > trimIndent)
+          if (header2.indent === 0 && indent.length > trimIndent)
             trimIndent = indent.length;
         } else {
           if (indent.length < trimIndent) {
             const message = "Block scalars with more-indented leading empty lines must use an explicit indentation indicator";
             onError(offset + indent.length, "MISSING_CHAR", message);
           }
-          if (header.indent === 0)
+          if (header2.indent === 0)
             trimIndent = indent.length;
           contentStart = i;
           if (trimIndent === 0 && !ctx.atRoot) {
@@ -4509,7 +4509,7 @@ var require_resolve_block_scalar = __commonJS({
         if (crlf)
           content = content.slice(0, -1);
         if (content && indent.length < trimIndent) {
-          const src = header.indent ? "explicit indentation indicator" : "first line";
+          const src = header2.indent ? "explicit indentation indicator" : "first line";
           const message = `Block scalar lines must not be less indented than their ${src}`;
           onError(offset - content.length - (crlf ? 2 : 1), "BAD_INDENT", message);
           indent = "";
@@ -4536,7 +4536,7 @@ var require_resolve_block_scalar = __commonJS({
           prevMoreIndented = false;
         }
       }
-      switch (header.chomp) {
+      switch (header2.chomp) {
         case "-":
           break;
         case "+":
@@ -4548,8 +4548,8 @@ var require_resolve_block_scalar = __commonJS({
         default:
           value2 += "\n";
       }
-      const end = start + header.length + scalar.source.length;
-      return { value: value2, type, comment: header.comment, range: [start, end, end] };
+      const end = start + header2.length + scalar.source.length;
+      return { value: value2, type, comment: header2.comment, range: [start, end, end] };
     }
     function parseBlockScalarHeader({ offset, props }, strict, onError) {
       if (props[0].type !== "block-scalar-header") {
@@ -5388,10 +5388,10 @@ var require_cst_scalar = __commonJS({
             type = "QUOTE_DOUBLE";
             break;
           case "block-scalar": {
-            const header = token.props[0];
-            if (header.type !== "block-scalar-header")
+            const header2 = token.props[0];
+            if (header2.type !== "block-scalar-header")
               throw new Error("Invalid block scalar header");
-            type = header.source[0] === ">" ? "BLOCK_FOLDED" : "BLOCK_LITERAL";
+            type = header2.source[0] === ">" ? "BLOCK_FOLDED" : "BLOCK_LITERAL";
             break;
           }
           default:
@@ -5423,10 +5423,10 @@ var require_cst_scalar = __commonJS({
       const head = source.substring(0, he);
       const body = source.substring(he + 1) + "\n";
       if (token.type === "block-scalar") {
-        const header = token.props[0];
-        if (header.type !== "block-scalar-header")
+        const header2 = token.props[0];
+        if (header2.type !== "block-scalar-header")
           throw new Error("Invalid block scalar header");
-        header.source = head;
+        header2.source = head;
         token.source = body;
       } else {
         const { offset } = token;
@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync10, statSync as statSync8 } from "node:fs";
-import { dirname as dirname5, join as join13 } from "node:path";
+import { existsSync as existsSync12, statSync as statSync8 } from "node:fs";
+import { dirname as dirname6, join as join16 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync7, readFileSync as readFileSync10, statSync as statSync7 } from "node:fs";
-import { join as join12 } from "node:path";
+import { readdirSync as readdirSync7, readFileSync as readFileSync11, statSync as statSync7 } from "node:fs";
+import { join as join15 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -7624,8 +7624,8 @@ function tables(doc, path) {
       out.push(cur);
       continue;
     }
-    const header = cur.header;
-    cur.rows.push({ path, line: r.line, cells: new Map(header.map((h, i) => [h, r.cells[i] ?? ""])), raw: r.cells });
+    const header2 = cur.header;
+    cur.rows.push({ path, line: r.line, cells: new Map(header2.map((h, i) => [h, r.cells[i] ?? ""])), raw: r.cells });
     cur.endLine = r.line;
   }
   return out;
@@ -8006,8 +8006,8 @@ var cov002 = {
     for (const c of ctx.changes)
       for (const t of coverageTables(c)) {
         const path = `${c.folder}/${t.path}`;
-        const header = t.rows[0] ? [...t.rows[0].cells.keys()] : [];
-        const absent = COVERAGE_COLUMNS.filter((col) => t.rows.length > 0 && !header.includes(col));
+        const header2 = t.rows[0] ? [...t.rows[0].cells.keys()] : [];
+        const absent = COVERAGE_COLUMNS.filter((col) => t.rows.length > 0 && !header2.includes(col));
         if (absent.length > 0) out.push({ path, line: t.line, message: `Coverage table lacks the column${absent.length > 1 ? "s" : ""} ${absent.join(", ")}` });
         for (const r of t.rows) {
           const req = r.raw[0] ?? "";
@@ -8516,9 +8516,9 @@ var num = (cell) => {
 };
 function weights(t, all) {
   const criteria = t.header.slice(1, -1);
-  const row = t.rows.find((r) => /^weights?$/i.test((r.raw[0] ?? "").replace(/\*/g, "").trim()));
-  if (row) {
-    const w = row.raw.slice(1, 1 + criteria.length).map(num);
+  const row2 = t.rows.find((r) => /^weights?$/i.test((r.raw[0] ?? "").replace(/\*/g, "").trim()));
+  if (row2) {
+    const w = row2.raw.slice(1, 1 + criteria.length).map(num);
     return w.every((x) => !Number.isNaN(x)) ? w : null;
   }
   const byName = /* @__PURE__ */ new Map();
@@ -8947,7 +8947,7 @@ var tr05 = {
     const out = [];
     for (const c of ctx.changes) {
       const covered = /* @__PURE__ */ new Set();
-      for (const row of dodRows(c)) for (const id of expandIds(row.covers, c.change)) covered.add(id);
+      for (const row2 of dodRows(c)) for (const id of expandIds(row2.covers, c.change)) covered.add(id);
       for (const n of c.graph.nodes) {
         if (n.form !== "heading" || n.type !== "REQ" && n.type !== "NFR") continue;
         if (covered.has(n.id)) continue;
@@ -8980,7 +8980,7 @@ var tr06 = {
 };
 
 // src/lint/rules/tr-07.ts
-var has = (ids, ...types) => ids.some((id) => types.some((t) => id.includes(`-${t}-`)));
+var has = (ids2, ...types) => ids2.some((id) => types.some((t) => id.includes(`-${t}-`)));
 var tr07 = {
   code: "TR-07",
   severity: "error",
@@ -9510,8 +9510,8 @@ var FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 var HEADING = /^(#{1,6})[ \t]+(.*?)[ \t]*#*[ \t]*$/;
 var FIELD = /^\s*[-*] \*\*([^*]+?):\*\*\s?(.*)$/;
 var SEPARATOR = /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/;
-function splitCells(row) {
-  let s = row.trim();
+function splitCells(row2) {
+  let s = row2.trim();
   if (s.startsWith("|")) s = s.slice(1);
   if (s.endsWith("|") && !s.endsWith("\\|")) s = s.slice(0, -1);
   const cells = [];
@@ -10136,10 +10136,10 @@ function systemNames(lines, first) {
   for (const h of b.headings) {
     if (!/system names/i.test(h.text)) continue;
     const end = b.sectionEnd(h.line);
-    for (const row of b.tableRows) {
-      if (row.line <= h.line || row.line > end) continue;
-      if (SEPARATOR2.test((lines[row.line - first + 1] ?? "").trim())) continue;
-      const name = (row.cells[0] ?? "").replace(/`/g, "").trim();
+    for (const row2 of b.tableRows) {
+      if (row2.line <= h.line || row2.line > end) continue;
+      if (SEPARATOR2.test((lines[row2.line - first + 1] ?? "").trim())) continue;
+      const name = (row2.cells[0] ?? "").replace(/`/g, "").trim();
       if (name !== "" && name !== "—") out.push(name);
     }
   }
@@ -10241,7 +10241,7 @@ function statements(changes) {
   return out;
 }
 function lintWorkspace(root, options) {
-  const trace = options.trace ?? (() => {
+  const trace2 = options.trace ?? (() => {
   });
   const sdd = join7(root, ".sdd");
   const folders = changeFolders(sdd);
@@ -10266,7 +10266,7 @@ function lintWorkspace(root, options) {
   const rules = options.rules.filter((r) => quick ? r.scope === "file" : r.scope !== "workspace" || workspaceScope);
   const changes = selected.map((f) => {
     const graph = buildChangeGraph(f.dir);
-    trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
+    trace2("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
     return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
   });
   const definitions = /* @__PURE__ */ new Map();
@@ -10355,7 +10355,7 @@ function lintWorkspace(root, options) {
   );
   const summary = { error: 0, warn: 0, info: 0 };
   for (const f of findings) summary[f.severity]++;
-  trace("lint", { rules: rules.length, error: summary.error, warn: summary.warn, info: summary.info });
+  trace2("lint", { rules: rules.length, error: summary.error, warn: summary.warn, info: summary.info });
   const scope = { changes: changes.map((c) => `CHG-${c.change}`), phase, quick };
   if (file !== void 0) scope.file = file;
   return { tool: options.tool, scope, summary, findings };
@@ -10546,7 +10546,7 @@ function frontmatterOf(templateText, status2) {
   const title = doc.lines.slice(end).find((l) => l.startsWith("# ")) ?? "";
   return { fm: fmLines.join("\n"), title };
 }
-var yamlList = (ids) => `[${ids.join(", ")}]`;
+var yamlList = (ids2) => `[${ids2.join(", ")}]`;
 function taskFile(heading, block, nnn) {
   const m = /^(C\d{3}-T-(\d+))(?:\s+—\s+(.*))?$/.exec(heading);
   if (!m?.[1] || !m[2]) throw usage("change profile", `task heading without a task ID: ${heading}`);
@@ -10555,7 +10555,7 @@ function taskFile(heading, block, nnn) {
     const f = /^\s*- \*\*([^*]+?):\*\*\s?(.*)$/.exec(l);
     if (f?.[1]) fields.set(f[1].trim().toLowerCase(), (f[2] ?? "").trim());
   }
-  const ids = (key) => findIds(fields.get(key) ?? "", nnn).map((h) => h.id);
+  const ids2 = (key) => findIds(fields.get(key) ?? "", nnn).map((h) => h.id);
   const title = m[3] ?? "";
   const fm = [
     "---",
@@ -10564,14 +10564,14 @@ function taskFile(heading, block, nnn) {
     `change: CHG-${nnn}`,
     "phase: 20-plan",
     "artifact: plan/task",
-    `milestone: ${ids("milestone")[0] ?? "null"}`,
+    `milestone: ${ids2("milestone")[0] ?? "null"}`,
     `status: ${fields.get("status") || "todo"}`,
-    `depends_on: ${yamlList(ids("depends on"))}`,
-    `implements: ${yamlList(ids("implements"))}`,
-    `satisfies_ac: ${yamlList(ids("satisfies ac"))}`,
-    `verified_by: ${yamlList(ids("verified by"))}`,
-    `components: ${yamlList(ids("components"))}`,
-    `risk_refs: ${yamlList(ids("risks"))}`,
+    `depends_on: ${yamlList(ids2("depends on"))}`,
+    `implements: ${yamlList(ids2("implements"))}`,
+    `satisfies_ac: ${yamlList(ids2("satisfies ac"))}`,
+    `verified_by: ${yamlList(ids2("verified by"))}`,
+    `components: ${yamlList(ids2("components"))}`,
+    `risk_refs: ${yamlList(ids2("risks"))}`,
     `estimate: ${fields.get("estimate") || "M"}`,
     "report: { commit: null, completed_at: null, notes: null }",
     "---"
@@ -10693,12 +10693,299 @@ function upgradeToFull(dir2, tpl = {}) {
   return [...writes.keys()].sort();
 }
 
+// src/trace/model.ts
+import { basename as basename5, dirname as dirname5 } from "node:path";
+import { readFileSync as readFileSync10, existsSync as existsSync9 } from "node:fs";
+import { join as join12 } from "node:path";
+var RELATIONS = {
+  stories: "story-of",
+  requirements: "traces-to",
+  traces_to: "traces-to",
+  acceptance: "acceptance-of",
+  scenario: "scenario-of",
+  implements: "implements",
+  satisfies_ac: "satisfies",
+  verified_by: "verified-by",
+  depends_on: "depends-on",
+  realizes: "realizes",
+  serves: "serves",
+  dod: "covers",
+  risk_refs: "mitigates",
+  supersedes: "supersedes"
+};
+function compareIds(a, b) {
+  const pa = /^C(\d{3})-([A-Z]+)-(\d+)(?:\.(\d+))?$/.exec(a);
+  const pb = /^C(\d{3})-([A-Z]+)-(\d+)(?:\.(\d+))?$/.exec(b);
+  if (!pa || !pb) return a.localeCompare(b);
+  return pa[1].localeCompare(pb[1]) || pa[2].localeCompare(pb[2]) || Number(pa[3]) - Number(pb[3]) || Number(pa[4] ?? 0) - Number(pb[4] ?? 0);
+}
+function buildTrace(changeDir) {
+  const graph = buildChangeGraph(changeDir);
+  const sddDir = dirname5(changeDir);
+  const spec = gatherSpecFacts(sddDir, graph);
+  const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
+  const profile = fm["profile"] === "lite" ? "lite" : "full";
+  const lint2 = { change: graph.change, folder: `.sdd/${basename5(changeDir)}`, profile, graph, spec };
+  const defined = new Set(graph.nodes.map((n) => n.id));
+  const nodes = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const n of graph.nodes) {
+    if (seen.has(n.id)) continue;
+    seen.add(n.id);
+    const node = { id: n.id, type: n.type, file: n.file, line: n.line, title: n.title, content_hash: n.contentHash };
+    if (n.form === "frontmatter") {
+      const status2 = graph.files.find((f) => f.path === n.file)?.frontmatter?.["status"];
+      if (typeof status2 === "string") node.status = status2;
+    }
+    nodes.push(node);
+  }
+  nodes.sort((a, b) => compareIds(a.id, b.id));
+  const keys = /* @__PURE__ */ new Set();
+  const edges = [];
+  for (const e of graph.edges) {
+    if (e.context !== "text" || !defined.has(e.from) || !defined.has(e.to) || e.from === e.to) continue;
+    const relation = RELATIONS[e.kind] ?? "references";
+    const key = `${e.from} ${e.to} ${relation}`;
+    if (keys.has(key)) continue;
+    keys.add(key);
+    edges.push({ from: e.from, to: e.to, relation });
+  }
+  edges.sort((a, b) => compareIds(a.from, b.from) || compareIds(a.to, b.to) || a.relation.localeCompare(b.relation));
+  const headings = /* @__PURE__ */ new Map();
+  for (const n of graph.nodes) if (n.form === "heading" && !headings.has(n.id)) headings.set(n.id, n);
+  const scenarios2 = /* @__PURE__ */ new Map();
+  for (const e of graph.edges) if (e.kind === "scenario") scenarios2.set(e.from, [...scenarios2.get(e.from) ?? [], e.to]);
+  const changeMd = join12(changeDir, "change.md");
+  const phases = existsSync9(changeMd) ? splitFrontmatter(readFileSync10(changeMd, "utf8")).data?.["phases"] ?? {} : {};
+  return {
+    lint: lint2,
+    doc: { change: `CHG-${graph.change}`, nodes, edges },
+    node: (id) => headings.get(id),
+    field: (id, name, type) => findIds(headings.get(id)?.fields.find((f) => f.name === name)?.value ?? "", graph.change).map((h) => h.id).filter((x) => x.includes(`-${type}-`)),
+    scenariosOf: (ac) => [...new Set(scenarios2.get(ac) ?? [])],
+    phaseStatus: (phase) => typeof phases[phase]?.status === "string" ? phases[phase].status : "not-started"
+  };
+}
+
+// src/trace/matrix.ts
+function percent(covered, total) {
+  return `${covered} / ${total} (${total === 0 ? 100 : Math.floor(100 * covered / total)}%)`;
+}
+var row = (cells) => `| ${cells.join(" | ")} |`;
+var join13 = (ids2) => [...new Set(ids2)].sort(compareIds).join(", ") || "—";
+function coverage(rule, label, items, ok) {
+  const gaps = items.filter((id) => !ok(id));
+  return { rule, label, covered: items.length - gaps.length, total: items.length, gaps };
+}
+function ids(t, type, form = "heading") {
+  const out = [];
+  for (const n of t.lint.graph.nodes) if (n.type === type && n.form === form && n.file.startsWith("10-spec/") && !out.includes(n.id)) out.push(n.id);
+  return out;
+}
+function dodCoverage(t) {
+  const out = /* @__PURE__ */ new Map();
+  const add = (id, dod) => out.set(id, [...out.get(id) ?? [], dod]);
+  for (const r of dodRows(t.lint)) {
+    const covered = expandIds(r.covers, t.lint.change);
+    for (const id of covered) add(id, r.id);
+    for (const req of ids(t, "REQ")) {
+      const n = t.node(req);
+      if (n && !covered.has(req) && capabilityOf(t.lint, n).some((cap) => covered.has(cap))) add(req, r.id);
+    }
+  }
+  return out;
+}
+function specCoverage(t) {
+  const reqs = ids(t, "REQ");
+  const nfrs = ids(t, "NFR");
+  const dod = dodCoverage(t);
+  const measurable = (id) => ["Metric", "Threshold", "Method"].every((f) => (t.node(id)?.fields.find((x) => x.name === f)?.value ?? "") !== "");
+  return [
+    coverage("TR-01", "Every US lists ≥ 1 REQ", ids(t, "US"), (id) => t.field(id, "Requirements", "REQ").length > 0),
+    coverage("TR-02", "Every REQ has ≥ 1 AC", reqs, (id) => t.field(id, "Acceptance", "AC").length > 0),
+    coverage("TR-03", "Every AC has ≥ 1 TS", ids(t, "AC"), (id) => t.scenariosOf(id).length > 0),
+    coverage("TR-04", "Every NFR has metric, threshold, method", nfrs, measurable),
+    coverage("TR-05", "Every REQ covered by a DoD item", reqs, (id) => dod.has(id)),
+    coverage("TR-05", "Every NFR covered by a DoD item", nfrs, (id) => dod.has(id))
+  ];
+}
+function folderOf(file) {
+  return /20-capabilities\/(CAP-[^/]+)\//.exec(file)?.[1] ?? "—";
+}
+var coverageTable = (rows) => ["| Rule | Coverage |", "|---|---|", ...rows.map((r) => row([`${r.rule} ${r.label}`, percent(r.covered, r.total)]))];
+function header(artifact, change, phase) {
+  return ["---", `artifact: ${artifact}`, `change: ${change}`, `phase: ${phase}`, "generated: true", "---", ""];
+}
+function renderSpecMatrix(t) {
+  const p = `C${t.lint.change}`;
+  const out = [...header("spec/traceability", t.doc.change, "10-spec"), `# ${p} — Traceability (generated)`, "", "Generated by `sdd trace --write`; do not edit by hand.", ""];
+  out.push("## Coverage", "", ...coverageTable(specCoverage(t)), "");
+  out.push("## Forward: US → REQ → AC → TS", "", row(["Capability", "US", "REQ", "AC", "TS"]), "|---|---|---|---|---|");
+  const listed = /* @__PURE__ */ new Set();
+  const forward = (cap, us, req) => {
+    const acs = t.field(req, "Acceptance", "AC");
+    if (acs.length === 0) out.push(row([cap, us, req, "—", "—"]));
+    for (const ac of acs) out.push(row([cap, us, req, ac, join13(t.scenariosOf(ac))]));
+  };
+  for (const us of ids(t, "US"))
+    for (const req of t.field(us, "Requirements", "REQ")) {
+      listed.add(req);
+      forward(folderOf(t.node(us)?.file ?? ""), us, req);
+    }
+  for (const req of ids(t, "REQ")) if (!listed.has(req)) forward(folderOf(t.node(req)?.file ?? ""), "—", req);
+  const storiesOf = /* @__PURE__ */ new Map();
+  for (const us of ids(t, "US")) for (const req of t.field(us, "Requirements", "REQ")) storiesOf.set(req, [...storiesOf.get(req) ?? [], us]);
+  out.push("", "## Backward: TS → AC → REQ → US", "", row(["TS", "AC", "REQ", "US"]), "|---|---|---|---|");
+  for (const req of ids(t, "REQ"))
+    for (const ac of t.field(req, "Acceptance", "AC"))
+      for (const ts of t.scenariosOf(ac)) out.push(row([ts, ac, req, join13(storiesOf.get(req) ?? [])]));
+  return out.join("\n") + "\n";
+}
+function planFacts(t, tombstones) {
+  const all = tasks(t.lint);
+  const live = all.filter((x) => x.status !== "dropped");
+  const tcToTs = /* @__PURE__ */ new Map();
+  const tcToTasks = /* @__PURE__ */ new Map();
+  for (const [path, doc] of planDocs(t.lint))
+    for (const tb of tables(doc, path))
+      for (const r of tb.rows) {
+        const tc = findIds(r.raw[0] ?? "", t.lint.change).find((h) => h.id.includes("-TC-"))?.id;
+        if (!tc) continue;
+        const rest = r.raw.slice(1).flatMap((c) => findIds(c, t.lint.change).map((h) => h.id));
+        tcToTs.set(tc, [...tcToTs.get(tc) ?? [], ...rest.filter((x) => x.includes("-TS-"))]);
+        tcToTasks.set(tc, [...tcToTasks.get(tc) ?? [], ...rest.filter((x) => x.includes("-T-"))]);
+      }
+  for (const x of live) for (const v of x.verifiedBy) if (v.includes("-TC-")) tcToTasks.set(v, [...tcToTasks.get(v) ?? [], x.id]);
+  const tsToAc = /* @__PURE__ */ new Map();
+  for (const ac of ids(t, "AC")) for (const ts of t.scenariosOf(ac)) tsToAc.set(ts, ac);
+  const acToReq = /* @__PURE__ */ new Map();
+  for (const req of ids(t, "REQ")) for (const ac of t.field(req, "Acceptance", "AC")) acToReq.set(ac, req);
+  const byId = new Map(all.map((x) => [x.id, x]));
+  const dangling = all.some((x) => x.dependsOn.some((d) => !byId.has(d) && !tombstones.has(d)));
+  const state = /* @__PURE__ */ new Map();
+  let cycle = false;
+  const visit = (id) => {
+    state.set(id, 1);
+    for (const d of byId.get(id)?.dependsOn ?? []) {
+      if (!byId.has(d)) continue;
+      if (state.get(d) === 1) cycle = true;
+      else if (!state.has(d)) visit(d);
+    }
+    state.set(id, 2);
+  };
+  for (const x of all) if (!state.has(x.id)) visit(x.id);
+  return { live, tcToTs, tcToTasks, tsToAc, acToReq, cycle, dangling };
+}
+function planCoverage(t, tombstones = /* @__PURE__ */ new Set()) {
+  const f = planFacts(t, tombstones);
+  const implemented = new Set(f.live.flatMap((x) => x.implements));
+  const mapped = new Set([...f.tcToTs.values()].flat());
+  const linked = (id) => {
+    const x = f.live.find((y) => y.id === id);
+    return [...x.implements, ...x.satisfiesAc].some((v) => /-(REQ|AC)-/.test(v)) && x.verifiedBy.some((v) => /-(TS|TC)-/.test(v));
+  };
+  const scenarios2 = t.lint.graph.nodes.filter((n) => n.type === "TS" && n.form === "scenario" && n.file.startsWith("10-spec/")).map((n) => n.id);
+  return {
+    rows: [
+      coverage("TR-06", "Every REQ implemented by ≥ 1 task", ids(t, "REQ"), (id) => implemented.has(id)),
+      coverage("TR-07", "Every task links ≥ 1 REQ/AC and ≥ 1 TS/TC", f.live.map((x) => x.id), linked),
+      coverage("TR-08", "Every TS mapped to ≥ 1 TC", [...new Set(scenarios2)], (id) => mapped.has(id))
+    ],
+    dagOk: !f.cycle && !f.dangling
+  };
+}
+function renderPlanMatrix(t, tombstones = /* @__PURE__ */ new Set()) {
+  const f = planFacts(t, tombstones);
+  const { rows, dagOk } = planCoverage(t, tombstones);
+  const dod = dodCoverage(t);
+  const out = [...header("plan/traceability", t.doc.change, "20-plan"), `# ${t.doc.change} — Plan traceability (generated)`, "", "Generated by `sdd trace --write`; do not edit by hand.", ""];
+  out.push("## Coverage", "", ...coverageTable(rows), row(["TR-11 Task DAG acyclic, dependencies resolve", dagOk ? "yes" : "no"]), "");
+  const tcsOfReq = /* @__PURE__ */ new Map();
+  for (const [tc, tss] of f.tcToTs)
+    for (const ts of tss) {
+      const req = f.acToReq.get(f.tsToAc.get(ts) ?? "");
+      if (req) tcsOfReq.set(req, [...tcsOfReq.get(req) ?? [], tc]);
+    }
+  out.push("## Forward: REQ → T → TC → DOD", "", row(["REQ", "Task", "Test cases", "DoD"]), "|---|---|---|---|");
+  for (const req of ids(t, "REQ"))
+    out.push(row([req, join13(f.live.filter((x) => x.implements.includes(req)).map((x) => x.id)), join13(tcsOfReq.get(req) ?? []), join13(dod.get(req) ?? [])]));
+  out.push("", "## Backward: TC → T → REQ", "", row(["TC", "Task", "REQ"]), "|---|---|---|");
+  for (const tc of [...f.tcToTs.keys()].sort(compareIds)) {
+    const reqs = (f.tcToTs.get(tc) ?? []).map((ts) => f.acToReq.get(f.tsToAc.get(ts) ?? "")).filter((x) => x !== void 0);
+    out.push(row([tc, join13(f.tcToTasks.get(tc) ?? []), join13(reqs)]));
+  }
+  return out.join("\n") + "\n";
+}
+
+// src/trace/write.ts
+import { existsSync as existsSync10 } from "node:fs";
+import { join as join14 } from "node:path";
+
+// src/trace/open-items.ts
+var MARKER = /\[(NEEDS CLARIFICATION|ASSUMPTION|WAIVED)(?::\s*([^\]]*))?\]/g;
+var GENERATED = /(^|\/)(80-traceability|85-open-items)\.md$/;
+function markers(t, phase) {
+  const out = [];
+  const files = [...t.lint.spec.docs].filter(([p]) => p.startsWith(`${phase}/`) && !GENERATED.test(p)).sort(([a], [b]) => a.localeCompare(b));
+  for (const [file, doc] of files)
+    doc.lines.forEach((line, i) => {
+      if (doc.blocks.inFence(i + 1)) return;
+      const plain = prose(line);
+      for (const m of plain.matchAll(MARKER)) out.push({ type: m[1], file, line: i + 1, reference: (m[2] ?? "").trim() || "—" });
+    });
+  return out;
+}
+function renderOpenItems(t, phase) {
+  const list = markers(t, phase);
+  const artifact = phase === "00-ideation" ? "ideation/open-items" : phase === "10-spec" ? "spec/open-items" : "plan/open-items";
+  const out = ["---", `artifact: ${artifact}`, `change: ${t.doc.change}`, `phase: ${phase}`, "generated: true", "---", "", `# C${t.lint.change} — Open items (generated)`, ""];
+  out.push("Markers outside code spans, quoted strings and fenced blocks (C001-REQ-716). Generated by `sdd trace --write`.", "");
+  out.push(`Total: ${list.length === 0 ? "0 (none)" : list.length}`, "", "| Type | File | Line | Reference |", "|---|---|---|---|");
+  for (const m of list) out.push(`| ${m.type} | \`${m.file}\` | ${m.line} | ${m.reference.replace(/\|/g, "\\|")} |`);
+  return out.join("\n") + "\n";
+}
+
+// src/trace/write.ts
+var PHASE_FOLDERS = ["00-ideation", "10-spec", "20-plan"];
+function started(t, phase) {
+  const status2 = t.phaseStatus(phase);
+  if (status2 !== "not-started") return true;
+  const anyStatus = PHASE_FOLDERS.some((p) => t.phaseStatus(p) !== "not-started");
+  return !anyStatus && [...t.lint.spec.docs.keys()].some((p) => p.startsWith(`${phase}/`));
+}
+function trace(changeDir, options) {
+  const model = buildTrace(changeDir);
+  const tombstones = new Set(loadLedger(changeDir).tombstones.map((x) => x.id));
+  const planStarted = model.lint.spec.planStarted;
+  const plan = planStarted ? planCoverage(model, tombstones) : null;
+  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync10(join14(changeDir, p)));
+  const document = { change: model.doc.change, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
+  const result = {
+    model,
+    document,
+    coverage: [...specCoverage(model), ...plan?.rows ?? []],
+    dagOk: plan ? plan.dagOk : null,
+    markers: phases.flatMap((p) => markers(model, p)),
+    written: []
+  };
+  if (!options.write) return result;
+  const put = (rel, text) => {
+    writeTextAtomic(join14(changeDir, ...rel.split("/")), text);
+    result.written.push(rel);
+  };
+  if (existsSync10(join14(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
+  if (planStarted && existsSync10(join14(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
+  for (const p of phases) put(`${p}/85-open-items.md`, renderOpenItems(model, p));
+  put("trace.json", JSON.stringify(document, null, 2) + "\n");
+  return result;
+}
+
 // src/cli/output.ts
 function formatFinding(f) {
   const where = f.line !== void 0 ? `${f.path}:${f.line}` : f.path;
-  const ids = f.ids && f.ids.length > 0 ? ` [${f.ids.join(", ")}]` : "";
+  const ids2 = f.ids && f.ids.length > 0 ? ` [${f.ids.join(", ")}]` : "";
   const message = f.message.replace(/\.+$/, "");
-  return `${f.severity} ${f.code} ${where}${ids} — ${message}. Fix: ${f.fix}`;
+  return `${f.severity} ${f.code} ${where}${ids2} — ${message}. Fix: ${f.fix}`;
 }
 var Output = class {
   constructor(w, env) {
@@ -10737,8 +11024,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join12(root, ".sdd");
-  return readdirSync7(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join12(sdd, n)).isDirectory()).sort();
+  const sdd = join15(root, ".sdd");
+  return readdirSync7(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join15(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -10756,21 +11043,35 @@ function lint(ctx) {
   }
   return report.summary.error > 0 ? 1 : 0;
 }
+function traceCmd(ctx) {
+  const { out, values } = ctx;
+  const dir2 = resolveChange(ctx, ctx.args["NNN"]);
+  const r = trace(dir2, { write: values["write"] === true });
+  out.trace("trace", { nodes: r.document.nodes.length, edges: r.document.edges.length, written: r.written.length });
+  if (values["json"]) out.json(r.document);
+  else {
+    for (const c of r.coverage) out.line(`${c.rule} ${c.label}: ${percent(c.covered, c.total)}${c.gaps.length > 0 ? ` — missing ${c.gaps.slice(0, 10).join(", ")}${c.gaps.length > 10 ? ", …" : ""}` : ""}`);
+    if (r.dagOk !== null) out.line(`TR-11 Task DAG acyclic, dependencies resolve: ${r.dagOk ? "yes" : "no"}`);
+    out.line(`open items: ${r.markers.length}`);
+    for (const w of r.written) out.line(`written: ${w}`);
+  }
+  return r.coverage.some((c) => c.gaps.length > 0) || r.dagOk === false ? 1 : 0;
+}
 function resolveChange(ctx, nnn) {
   const folders = changeFolders2(ctx.root);
   if (nnn !== void 0) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join12(ctx.root, ".sdd", match[0]);
+    return join15(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join12(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join12(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join12(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join15(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join15(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join15(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join12(ctx.root, ".sdd");
+  const sdd = join15(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -10797,7 +11098,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join12(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join15(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -10805,7 +11106,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync10(join12(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync11(join15(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -10837,7 +11138,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join12(root, ".sdd");
+  const where = join15(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -10857,7 +11158,7 @@ var COMMANDS = [
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
-  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
+  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"], run: traceCmd },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
   { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
@@ -10918,9 +11219,9 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir2 = start;
   for (; ; ) {
-    const sdd = join13(dir2, ".sdd");
-    if (existsSync10(sdd) && statSync8(sdd).isDirectory()) return dir2;
-    const parent = dirname5(dir2);
+    const sdd = join16(dir2, ".sdd");
+    if (existsSync12(sdd) && statSync8(sdd).isDirectory()) return dir2;
+    const parent = dirname6(dir2);
     if (parent === dir2) return null;
     dir2 = parent;
   }

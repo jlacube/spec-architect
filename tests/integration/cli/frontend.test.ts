@@ -94,9 +94,9 @@ test("usage errors exit 2: unknown command, missing or extra arguments, bad opti
 test("commands not yet implemented are refused with ERR-CLI-003 and exit 2", () => {
   const ws = makeWorkspace(minimalChange());
   try {
-    const r = runInProcess(["trace", "004"], { cwd: ws.root });
+    const r = runInProcess(["gate", "show", "004", "10-spec"], { cwd: ws.root });
     assert.equal(r.code, 2);
-    assert.equal(r.stderr, "ERR-CLI-003: Usage error: `sdd trace is not implemented yet`. Fix: See `sdd trace --help`\n");
+    assert.equal(r.stderr, "ERR-CLI-003: Usage error: `sdd gate show is not implemented yet`. Fix: See `sdd gate show --help`\n");
   } finally {
     ws.cleanup();
   }

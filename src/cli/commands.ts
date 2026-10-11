@@ -16,6 +16,8 @@ import { splitFrontmatter } from "../model/frontmatter.ts";
 import type { Profile } from "../workspace/templates.ts";
 import { rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
+import { percent } from "../trace/matrix.ts";
+import { trace } from "../trace/write.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
 
@@ -82,6 +84,26 @@ function lint(ctx: CommandContext): number {
     }
   }
   return report.summary.error > 0 ? 1 : 0;
+}
+
+/**
+ * `sdd trace <NNN> [--write] [--json]` (C001-REQ-706 … 709, 716). Prints the coverage of TR-01 …
+ * TR-08 (and the TR-11 verdict once the plan has started) and the open markers, or the trace graph
+ * with --json. Exits 1 when a coverage rule has gaps or the task DAG is broken.
+ */
+function traceCmd(ctx: CommandContext): number {
+  const { out, values } = ctx;
+  const dir = resolveChange(ctx, ctx.args["NNN"]);
+  const r = trace(dir, { write: values["write"] === true });
+  out.trace("trace", { nodes: r.document.nodes.length, edges: r.document.edges.length, written: r.written.length });
+  if (values["json"]) out.json(r.document);
+  else {
+    for (const c of r.coverage) out.line(`${c.rule} ${c.label}: ${percent(c.covered, c.total)}${c.gaps.length > 0 ? ` — missing ${c.gaps.slice(0, 10).join(", ")}${c.gaps.length > 10 ? ", …" : ""}` : ""}`);
+    if (r.dagOk !== null) out.line(`TR-11 Task DAG acyclic, dependencies resolve: ${r.dagOk ? "yes" : "no"}`);
+    out.line(`open items: ${r.markers.length}`);
+    for (const w of r.written) out.line(`written: ${w}`);
+  }
+  return r.coverage.some((c) => c.gaps.length > 0) || r.dagOk === false ? 1 : 0;
 }
 
 /**
@@ -197,7 +219,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
-  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"] },
+  { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN")], options: { write: B }, workspace: true, sampleArgs: ["004"], run: traceCmd },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
   { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
