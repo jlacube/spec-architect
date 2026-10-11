@@ -2,7 +2,7 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:5114fc9b3f93a0df56a3329b2c56d72e408f1e1256d8db49c8631d0a86af17dd", approved_at: 2026-10-12, approved_by: jerome.lacube }

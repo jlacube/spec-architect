@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T22:46:23Z",
+  "generated_at": "2026-10-11T22:48:58Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -9,7 +9,7 @@
       "kind": "greenfield",
       "profile": "full",
       "status": "active",
-      "phase": "10-spec",
+      "phase": "20-plan",
       "phases": {
         "00-ideation": {
           "status": "approved",

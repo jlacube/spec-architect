@@ -12096,6 +12096,8 @@ function approve(ctx, o) {
   const s = readChange(ctx.changeDir);
   const waivers = o.waive.map((item) => ({ item, gate: ctx.phase, date, note: o.note }));
   let text = setPhase(s.text, ctx.phase, { status: "approved", approved_hash: record2.hash, approved_at: date, approved_by: approvedBy });
+  const current = PHASES2.indexOf(String(s.fm["phase"] ?? ""));
+  if (PHASES2.indexOf(ctx.phase) > current) text = setTopLevel(text, "phase", ctx.phase);
   if (waivers.length > 0) {
     const existing = Array.isArray(s.fm["waivers"]) ? s.fm["waivers"] : [];
     const kept = existing.map((w) => ({ item: String(w["item"]), gate: String(w["gate"]), date: String(w["date"]), note: String(w["note"]) }));

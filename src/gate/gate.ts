@@ -153,6 +153,9 @@ export function approve(ctx: GateContext, o: ApproveOptions): ApproveResult {
   const s = readChange(ctx.changeDir);
   const waivers: Waiver[] = o.waive.map((item) => ({ item, gate: ctx.phase, date, note: o.note }));
   let text = setPhase(s.text, ctx.phase, { status: "approved", approved_hash: record.hash, approved_at: date, approved_by: approvedBy });
+  // After a revision moved the current phase back, re-approving a later phase moves it forward again.
+  const current = PHASES.indexOf(String(s.fm["phase"] ?? "") as (typeof PHASES)[number]);
+  if (PHASES.indexOf(ctx.phase as (typeof PHASES)[number]) > current) text = setTopLevel(text, "phase", ctx.phase);
   if (waivers.length > 0) {
     const existing = (Array.isArray(s.fm["waivers"]) ? s.fm["waivers"] : []) as Record<string, unknown>[];
     const kept: Waiver[] = existing.map((w) => ({ item: String(w["item"]), gate: String(w["gate"]), date: String(w["date"]), note: String(w["note"]) }));

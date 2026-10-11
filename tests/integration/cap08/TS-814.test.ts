@@ -26,6 +26,22 @@ test("revise spec: 10-spec in-revision, 20-plan stale, Gate log row with the rea
   }
 });
 
+test("re-approving the revised phase and the stale later phase moves the current phase forward again", () => {
+  const ws = approvedChange();
+  try {
+    assert.equal(runBundled(["change", "revise", "004", "10-spec", "--reason", "r"], { cwd: ws.root }).code, 0);
+    const approve = (phase: string) => runBundled(["gate", "approve", "004", phase, "--note", "Approve", "--by", "p01"], { cwd: ws.root });
+    let r = approve("10-spec");
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(readFileSync(join(ws.dir, "change.md"), "utf8"), /^phase: 10-spec$/m);
+    r = approve("20-plan");
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(readFileSync(join(ws.dir, "change.md"), "utf8"), /^phase: 20-plan$/m);
+  } finally {
+    ws.cleanup();
+  }
+});
+
 test("gate show of a phase in revision lists the changed IDs and their downstream references", () => {
   const ws = approvedChange();
   try {
