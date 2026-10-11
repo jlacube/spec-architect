@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-4
-status: in-progress
+status: done
 depends_on: [C001-T-034, C001-T-041]
 implements: [C001-REQ-812, C001-REQ-813, C001-REQ-815, C001-REQ-1110, C001-REQ-1111, C001-REQ-1013, C001-REQ-1123]
 satisfies_ac: [C001-AC-812.1, C001-AC-813.1, C001-AC-815.1, C001-AC-1110.1, C001-AC-1111.1, C001-AC-1013.1, C001-AC-1123.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-814, C001-TS-815, C001-TS-817, C001-TS-1111, C001-TS-1112,
 components: [C001-COMP-01, C001-COMP-05, C001-COMP-09]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: f4b7bc2, completed_at: 2026-10-11, notes: "All 7 TCs pass (TC-814 integration; 815, 817 (2), 1015, 1111, 1112 (3), 1124 evals at dev tier); defects D-004, D-005 opened; eval spend ~$2.7" }
 ---
 
 # C001-T-044 — Revise, stop and doctor commands
