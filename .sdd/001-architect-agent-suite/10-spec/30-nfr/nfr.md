@@ -82,7 +82,7 @@ All NFRs: `Delta: ADDED`.
 
 ### C001-NFR-201 — No code modification
 - **Category:** Security / integrity
-- **Statement:** WHILE any Architect agent is active, THE path guard SHALL deny 100% of write attempts outside `.sdd/`.
+- **Statement:** WHILE any Architect agent is active, THE path guard SHALL deny 100% of write attempts outside `.sdd/` and the agent's own memory folder (C001-REQ-1103).
 - **Metric:** denied / attempted writes outside `.sdd/` in the guard test corpus
 - **Threshold:** 100% (0 false allows) over a corpus of ≥ 200 hostile and benign cases
 - **Method:** guard test corpus `tests/guards/` (includes traversal, case, symlink, UNC paths, 8.3 short names)

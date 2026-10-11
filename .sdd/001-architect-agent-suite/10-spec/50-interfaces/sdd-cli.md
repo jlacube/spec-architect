@@ -33,7 +33,7 @@ for `init`). Global options: `--cwd <path>`, `--json` (where supported), `--quie
 | `id tombstone` | `<ID> --reason "<text>"` | Retire an ID | C001-REQ-111 |
 | `status` | `[--write] [--brief] [--json]` | Print status; with `--write` rebuild registry and SDD.md block | C001-REQ-104, 105, 123, 905 |
 | `lint` | `[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]` | Run lint rules | CAP-07 and rule REQs |
-| `trace` | `<NNN> [--write] [--json]` | Build trace graph; write matrix, open items, trace.json | C001-REQ-706 … 709, 716 |
+| `trace` | `<NNN> [--write] [--json]` or `--active [--write]` | Build trace graph; write matrix, open items, trace.json. `--active`: every active change (not archived, not stopped); always exit 0, nothing outside a workspace (SubagentStop hook, C001-IF-07 §2) | C001-REQ-706 … 709, 716 |
 | `gate show` | `<NNN> <phase>` | Print gate summary | C001-REQ-801 |
 | `gate approve` | `<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]` | Approve phase | C001-REQ-805 … 809, 814, 720 |
 | `gate record` | `<NNN> <phase> --decision revise\|stop --note "<text>"` | Log a non-approval decision | C001-REQ-812, 815 |

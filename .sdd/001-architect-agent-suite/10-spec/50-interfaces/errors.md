@@ -93,7 +93,7 @@ specifies it. Severity applies to lint/check rules; CLI errors exit with code 2 
 
 | Code | Condition | Spec |
 |---|---|---|
-| GUARD-PATH-001 | Architect agent write outside `.sdd/` | C001-REQ-1103, 1104, 1105 |
+| GUARD-PATH-001 | Architect agent write outside `.sdd/` and its own memory folder | C001-REQ-1103, 1104, 1105 |
 | GUARD-BASH-001 | Shell command not allowlisted | C001-REQ-1106 |
 | GUARD-BASH-002 | Redirection, substitution or non-allowlisted chained segment | C001-REQ-1107 |
 

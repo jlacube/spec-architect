@@ -48,6 +48,8 @@ Scenario Outline: C001-TS-1103 — path guard decisions
     | Write | architect:sdd-spec-writer  | C:/repo/src/app.ts           | 2    |
     | Edit  | architect:sdd-architect    | C:/repo/README.md            | 2    |
     | Write | (non-architect agent)      | C:/repo/src/app.ts           | 0    |
+    | Write | architect:sdd-cartographer | C:/repo/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md | 0 |
+    | Write | architect:sdd-researcher   | C:/repo/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md | 2 |
 ```
 
 #### C001-AC-1103.2 — Message content

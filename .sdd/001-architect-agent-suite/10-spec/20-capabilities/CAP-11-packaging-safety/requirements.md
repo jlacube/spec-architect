@@ -31,8 +31,8 @@ agent definitions C001-IF-09, commands C001-IF-10.
 
 ### C001-REQ-1103 — Path guard
 - **Pattern:** event-driven
-- **Statement:** WHEN an Architect agent requests Write, Edit or NotebookEdit on a path outside the `.sdd/` folder of the current repository, THE path guard SHALL deny the call (exit code 2) with a message naming the path and the rule `GUARD-PATH-001`.
-- **Rationale:** C001-CON-01; D-02
+- **Statement:** WHEN an Architect agent requests Write, Edit or NotebookEdit on a path outside both the `.sdd/` folder of the current repository and that agent's own memory folder `.claude/agent-memory/architect-<agent>/`, THE path guard SHALL deny the call (exit code 2) with a message naming the path and the rule `GUARD-PATH-001`.
+- **Rationale:** C001-CON-01; D-02; agent memory of C001-IF-09 (`memory: project`), which Claude Code saves with Write in the repository (defect D-007)
 - **Stories:** C001-US-1102
 - **Priority:** Must
 - **Acceptance:** C001-AC-1103.1, C001-AC-1103.2

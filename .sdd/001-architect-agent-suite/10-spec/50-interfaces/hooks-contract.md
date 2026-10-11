@@ -38,6 +38,12 @@ Guards apply only when `agent_type` names an Architect agent (`architect:sdd-*`)
 callers, including a plain main session without `agent_type`, the guards exit 0 immediately
 (C001-TS-1103 row 4). Claude Code versions below the minimum of C001-REQ-1123 are unsupported.
 
+The path guard allows an Architect agent two folders: `.sdd/` and its own memory folder
+`.claude/agent-memory/architect-<agent>/` (the folder Claude Code uses for `memory: project`; `<agent>`
+is the part of `agent_type` after `architect:`), with the same normalisation (C001-REQ-1104). The
+SubagentStop command uses `trace --active` (C001-IF-01): it always exits 0, because exit 2 would keep
+the subagent from stopping.
+
 ## §3 Bash allowlist (Architect agents)
 
 A command is allowed when, after splitting on pipes, every segment matches one entry below

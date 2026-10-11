@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-11T19:23:32.564Z",
+  "generated_at": "2026-10-11T22:16:29.250Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -1696,13 +1696,13 @@
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
       "line": 39,
       "title": "Outside write denied",
-      "content_hash": "sha256:1757fe7facee74b42e9ca8a1638b89e8b2e59460c194e13e7c5e1de24e5976eb"
+      "content_hash": "sha256:bcb642760785e1176a2a9b6e13d43c2852c3058ad7af48984ce273a053b57de3"
     },
     {
       "id": "C001-AC-1103.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 53,
+      "line": 55,
       "title": "Message content",
       "content_hash": "sha256:3dfed864932804599b99eddf2b22b1c50e73780af6a23c71b783c51e7626a2ba"
     },
@@ -1710,7 +1710,7 @@
       "id": "C001-AC-1104.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 62,
+      "line": 64,
       "title": "Traversal and case tricks denied",
       "content_hash": "sha256:3b2340489fb7b97f850aade4c0507dfd7cee5aae39cba4c7e1b06b0add621041"
     },
@@ -1718,7 +1718,7 @@
       "id": "C001-AC-1106.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 79,
+      "line": 81,
       "title": "Allowlist decisions",
       "content_hash": "sha256:dbebb19cb77955c5961969bc7a09267b66020cde4522308e89a2d23c6d53b747"
     },
@@ -1726,7 +1726,7 @@
       "id": "C001-AC-1107.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 100,
+      "line": 102,
       "title": "Chaining and redirection",
       "content_hash": "sha256:df1b57a703e1fb5d72e52e6dc960ffe3347115d233019296f605984436d18b1a"
     },
@@ -1734,7 +1734,7 @@
       "id": "C001-AC-1108.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 118,
+      "line": 120,
       "title": "Declared servers",
       "content_hash": "sha256:7f9d082a239935ce42dc06825f7fb30048268656c68a1021e01292022c53c57b"
     },
@@ -1742,7 +1742,7 @@
       "id": "C001-AC-1109.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 129,
+      "line": 131,
       "title": "Research tools only for the researcher",
       "content_hash": "sha256:f24aeb3361fd149d4ff9546f5f9dcb63692c87bbebf2e999f445cfc1d916f7cc"
     },
@@ -1750,7 +1750,7 @@
       "id": "C001-AC-1110.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 138,
+      "line": 140,
       "title": "Doctor table",
       "content_hash": "sha256:f7d958521a161e335d857669e482ad2efb4ffd8599fc97ed7b24bbaebd9d5ea3"
     },
@@ -1758,7 +1758,7 @@
       "id": "C001-AC-1111.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 149,
+      "line": 151,
       "title": "Only node is fatal",
       "content_hash": "sha256:299c33bb934160f765f184ae83f8d28c40018cd9bd1bc92b1d8021ed618e5342"
     },
@@ -1766,7 +1766,7 @@
       "id": "C001-AC-1112.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 164,
+      "line": 166,
       "title": "License file",
       "content_hash": "sha256:4fb09ce8f1f72bf65e1d42cc841bad07f39adfedd2ce0ff3e581b790a67b9d46"
     },
@@ -1774,7 +1774,7 @@
       "id": "C001-AC-1113.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 174,
+      "line": 176,
       "title": "Notices complete",
       "content_hash": "sha256:81136729a6124bac3b6d894b5b5b85f34de8a6925cdad064155f08fdb39b238e"
     },
@@ -1782,7 +1782,7 @@
       "id": "C001-AC-1114.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 184,
+      "line": 186,
       "title": "Non-permissive dependency fails the build",
       "content_hash": "sha256:c29288087bca284ee91d288341663b369c8a058d07a0e38109f803714774f1a1"
     },
@@ -1790,7 +1790,7 @@
       "id": "C001-AC-1115.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 194,
+      "line": 196,
       "title": "README sections",
       "content_hash": "sha256:c231b8fc477c56487c146cefcbb8cd77cd4d0de90d3f4fd90392e483bb1436ed"
     },
@@ -1798,7 +1798,7 @@
       "id": "C001-AC-1116.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 203,
+      "line": 205,
       "title": "Eval suite size and spread",
       "content_hash": "sha256:ba8a0e1c51cd9cf6790c4c0787fb5db31cd3aeacec5b695414dfff2fa336eefb"
     },
@@ -1806,7 +1806,7 @@
       "id": "C001-AC-1117.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 213,
+      "line": 215,
       "title": "Check aggregates and fails",
       "content_hash": "sha256:e43e148ffc7460843673339eebbba75b36098acf70faccab1b7005bc6dcf1183"
     },
@@ -1814,7 +1814,7 @@
       "id": "C001-AC-1118.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 224,
+      "line": 226,
       "title": "Portable skills",
       "content_hash": "sha256:5c6c9fbbd0553d4706f2be2760453b064f4cee08a42ee40227a4d0a06459263f"
     },
@@ -1822,7 +1822,7 @@
       "id": "C001-AC-1119.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 235,
+      "line": 237,
       "title": "Workflows dormant",
       "content_hash": "sha256:1a98ca9ad75303368d0f6f5eb30ee5a0c877b83c7b436010db451d1e689269e2"
     },
@@ -1830,7 +1830,7 @@
       "id": "C001-AC-1120.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 245,
+      "line": 247,
       "title": "Absolute paths detected",
       "content_hash": "sha256:a388cae02575a53308030a929a6d7e581baeb8430d4f2fe14d94f30fc94d3812"
     },
@@ -1838,7 +1838,7 @@
       "id": "C001-AC-1121.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 255,
+      "line": 257,
       "title": "Hook command form",
       "content_hash": "sha256:0c9ccabb8f88ca22fb60ea6efe62be4a19960dca72a4a7760887d273f3edfbb0"
     },
@@ -1846,7 +1846,7 @@
       "id": "C001-AC-1122.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 265,
+      "line": 267,
       "title": "Duplication detected",
       "content_hash": "sha256:beb86634d4327defff1dbf7936bcec859069e6e4b24d2a03b3324fc997ed91fb"
     },
@@ -1854,7 +1854,7 @@
       "id": "C001-AC-1123.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 275,
+      "line": 277,
       "title": "Outdated Claude Code reported",
       "content_hash": "sha256:0acc7a87f243d61d46cecc0f044ba948760359ea254c25a259d51f551ba89e1a"
     },
@@ -2930,7 +2930,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 83,
       "title": "No code modification",
-      "content_hash": "sha256:5568ce5ebf8e497d5232b4d889749aea8350c3fbb873555d48aa8fc769c929a7"
+      "content_hash": "sha256:ee0348091c468e522a4ac003a572db4746318dc00b40303fad09083b8b9498b8"
     },
     {
       "id": "C001-NFR-202",
@@ -4684,7 +4684,7 @@
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/requirements.md",
       "line": 32,
       "title": "Path guard",
-      "content_hash": "sha256:6bfddbd8e836d17790098f97f1b39b40eb9e6c7baff555cddcc3140baa232802"
+      "content_hash": "sha256:dcb8aa53df3e43f8a606e6050d0aa18ff6da7d787430911472df76283415c7ba"
     },
     {
       "id": "C001-REQ-1104",
@@ -5398,7 +5398,7 @@
       "line": 1,
       "title": "Path guard (PreToolUse) with normalisation and fallback",
       "content_hash": "sha256:a87f4e4aa90a6f12c13f22baa0e6508d30e8e8597541c6cd0f342da64b925289",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-051",
@@ -5407,7 +5407,7 @@
       "line": 1,
       "title": "Bash guard with allowlist and compound-command parsing",
       "content_hash": "sha256:6bf21911e005a4f1a954065f756be5b3dd0b00e4ab704f9873d993bba02ffd1f",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-052",
@@ -5416,7 +5416,7 @@
       "line": 1,
       "title": "Session-start, post-write, SubagentStop hooks and hooks.json",
       "content_hash": "sha256:b8b7ef1fa63b425f77828f074b33dbaa8b39bd0b616b16be3159d5cf5ece825d",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-053",
@@ -5425,7 +5425,7 @@
       "line": 1,
       "title": "Archive engine and /architect:archive",
       "content_hash": "sha256:5db0db1e4b93b83e7991b59ea9089e11a5cef68638f1949e3cf9fa3ca3211275",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-054",
@@ -5434,7 +5434,7 @@
       "line": 1,
       "title": "Security test corpus: secrets, network, injection, tool grants",
       "content_hash": "sha256:fc9dba848618189d55263740ab7bf4a7c31b11916547c39d8e9e68c7f73c9dd5",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-060",
@@ -5560,7 +5560,7 @@
       "line": 1,
       "title": "sdd serena-config command",
       "content_hash": "sha256:7a1aec15669bba57df884f85c903e2f72cc4064aa48624fded591e058a006279",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-TC-101",
@@ -9128,13 +9128,13 @@
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
       "line": 41,
       "title": "path guard decisions",
-      "content_hash": "sha256:ab6ee1578ee542897c65480070a1495da1d607ceb2dbf847bd0f224253777d7c"
+      "content_hash": "sha256:d909282a63eb46c211ec8f0966ec0964a90552328d0828bba55e2412e820c7c7"
     },
     {
       "id": "C001-TS-1104",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 55,
+      "line": 57,
       "title": "denial message",
       "content_hash": "sha256:1f624a13b734700ab3920c76e124566e1cba6b36d27e4cd8b443a3d86ffbfbfb"
     },
@@ -9142,7 +9142,7 @@
       "id": "C001-TS-1105",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 64,
+      "line": 66,
       "title": "normalisation",
       "content_hash": "sha256:299af50ed87b8c16f6edb6a1a14caa214087f5c4fa1f1cadbb9682707346dee7"
     },
@@ -9150,7 +9150,7 @@
       "id": "C001-TS-1107",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 81,
+      "line": 83,
       "title": "bash guard",
       "content_hash": "sha256:c145744bcd05b255d7cc932624af44cb90c46b0b6541d82695bfafc03d68bc8b"
     },
@@ -9158,7 +9158,7 @@
       "id": "C001-TS-1108",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 102,
+      "line": 104,
       "title": "compound commands",
       "content_hash": "sha256:b20372ec7a1198c58b1b77da4ec07c9dc1749316a9a70bb8bf68e0125f54e5c4"
     },
@@ -9166,7 +9166,7 @@
       "id": "C001-TS-1109",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 120,
+      "line": 122,
       "title": ".mcp.json content",
       "content_hash": "sha256:1fa5c681628c98a65bb7c38fead877a125ee28303776306666343085e5383160"
     },
@@ -9174,7 +9174,7 @@
       "id": "C001-TS-1110",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 131,
+      "line": 133,
       "title": "research MCP scoping",
       "content_hash": "sha256:78c72df790805fe46f8586d7dd35f104b7ead373f1ccbb67017b45579f754634"
     },
@@ -9182,7 +9182,7 @@
       "id": "C001-TS-1111",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 140,
+      "line": 142,
       "title": "doctor on cfg-no-ripwire",
       "content_hash": "sha256:e7142f65bbcd728c5c73827fb4ac45a40e1164dac00f046c9b84c6b71bf73c39"
     },
@@ -9190,7 +9190,7 @@
       "id": "C001-TS-1112",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 151,
+      "line": 153,
       "title": "doctor outcome",
       "content_hash": "sha256:4524018689a970b25b92413ed5b0346982b7f1cebbae0658433febe2cb9e4a7d"
     },
@@ -9198,7 +9198,7 @@
       "id": "C001-TS-1113",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 166,
+      "line": 168,
       "title": "MIT license",
       "content_hash": "sha256:cf452017a61d0f24837b751354d9017e725ef5fb1c9cab611d1604fb04045e5e"
     },
@@ -9206,7 +9206,7 @@
       "id": "C001-TS-1114",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 176,
+      "line": 178,
       "title": "notices match the bundle",
       "content_hash": "sha256:393175709e34ca95828940b79945fcfba5e9ee599875363e19f0862dedda2521"
     },
@@ -9214,7 +9214,7 @@
       "id": "C001-TS-1115",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 186,
+      "line": 188,
       "title": "GPL dependency",
       "content_hash": "sha256:4eb4cc4235eaba06798f514709601b9ea2016f735d6c3528dd98536289b801bf"
     },
@@ -9222,7 +9222,7 @@
       "id": "C001-TS-1116",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 196,
+      "line": 198,
       "title": "README completeness",
       "content_hash": "sha256:9e7ad6c050388c50bcf7288ddfcf807d742f82cb9c07cbf9668583f936f4ab6d"
     },
@@ -9230,7 +9230,7 @@
       "id": "C001-TS-1117",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 205,
+      "line": 207,
       "title": "eval inventory",
       "content_hash": "sha256:68c274d19983de61c7222cd1e78003fee79d8d573ce09b84636a4045592ea13b"
     },
@@ -9238,7 +9238,7 @@
       "id": "C001-TS-1118",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 215,
+      "line": 217,
       "title": "npm run check",
       "content_hash": "sha256:998108d6c69bfcddee7bd59d950c94b8ed17b569280c3990d87a24bca47f8f6a"
     },
@@ -9246,7 +9246,7 @@
       "id": "C001-TS-1119",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 226,
+      "line": 228,
       "title": "tool names in skills",
       "content_hash": "sha256:ffcede30c645e186ec5292513413610058f8c0090f1fcd267acc5a59667baa6b"
     },
@@ -9254,7 +9254,7 @@
       "id": "C001-TS-1120",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 237,
+      "line": 239,
       "title": "workflow triggers",
       "content_hash": "sha256:8de6907dd566e614e8474644e7e966c57bd104a28822cef4cb36ef88a549e148"
     },
@@ -9262,7 +9262,7 @@
       "id": "C001-TS-1121",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 247,
+      "line": 249,
       "title": "machine path in a skill",
       "content_hash": "sha256:36600001e48d7941c7eb4be083a0d0b4ffee69aced5bd022bcfaea419c6a47a8"
     },
@@ -9270,7 +9270,7 @@
       "id": "C001-TS-1122",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 257,
+      "line": 259,
       "title": "hooks.json commands",
       "content_hash": "sha256:e83cc30349c9f3a4449c98c6fb45b5db6f3cb76358752e3b79005452675c9f10"
     },
@@ -9278,7 +9278,7 @@
       "id": "C001-TS-1123",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 267,
+      "line": 269,
       "title": "duplicated procedure",
       "content_hash": "sha256:40ff59bad0112716ad09e5a1d1bc455b8280a8095aaed281a98e00c8404b5784"
     },
@@ -9286,7 +9286,7 @@
       "id": "C001-TS-1124",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/acceptance.md",
-      "line": 277,
+      "line": 279,
       "title": "Claude Code below the minimum version",
       "content_hash": "sha256:a8646ea7abe7d379ab20e8fc9222df53148cd762216513cc6dc06e24603ff20b"
     },
@@ -12313,6 +12313,11 @@
       "relation": "covers"
     },
     {
+      "from": "C001-NFR-201",
+      "to": "C001-REQ-1103",
+      "relation": "references"
+    },
+    {
       "from": "C001-NFR-202",
       "to": "C001-DOD-014",
       "relation": "covers"
@@ -14850,6 +14855,11 @@
     {
       "from": "C001-REQ-1103",
       "to": "C001-CON-01",
+      "relation": "references"
+    },
+    {
+      "from": "C001-REQ-1103",
+      "to": "C001-IF-09",
       "relation": "references"
     },
     {

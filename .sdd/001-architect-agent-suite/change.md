@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:d5d23f29a8e4433ea822ffab408bea99f0d01d1ad94dc04a1911ddd08ba066af", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:41f862434da5ca86a3735bf69967fb651412940ebf8e6e9905ce1147fc7e9e41", approved_at: 2026-10-11, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:5114fc9b3f93a0df56a3329b2c56d72e408f1e1256d8db49c8631d0a86af17dd", approved_at: 2026-10-12, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:41f862434da5ca86a3735bf69967fb651412940ebf8e6e9905ce1147fc7e9e41", approved_at: 2026-10-12, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -49,3 +49,6 @@ defects:
 | 2026-10-11 | G2 (spec) | **Revise** | "Revision for defects D-002..D-005. P-01 answers (2026-10-11): D-002 "Gate exception (Recommended)"; D-003 "Add lint rules (Recommended)"; D-004 "CLI writes it (Recommended)"; D-005 "Gate summary lines (Recommended)"" | none | unavailable |
 | 2026-10-11 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-12 | G2 (spec) | **Revise** | "D-007: Own memory folder (Recommended). D-006: Add --active to IF-01 (Recommended)." | none | unavailable |
+| 2026-10-12 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-12 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
