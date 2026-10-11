@@ -7,7 +7,7 @@ closed.
 | Date | Milestone | Exit criterion | Decision (P-01, verbatim) | Status |
 |---|---|---|---|---|
 | 2026-10-11 | C001-M-3 | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2; P-01 decides the release eval budget from the metrics report | "Defer to release (Recommended)" — continue M-4 at dev tier; run the milestone tier for M-3 and M-4 together when P-01 decides the eval budget | deferred |
+| 2026-10-11 | C001-M-4 | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | "defer M-4 exit too, do T-077 then M-5" — run the milestone tier for M-3 and M-4 together before release | deferred |
 
 State at the decision: 52 M-3 scenarios pass at dev tier (one run each, ≈ $14.70 per full pass);
 the metrics report is `docs/metrics/eval-metrics.md`. Evals are billed to a prepaid API key.
-| 2026-10-11 | C001-M-4 | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | "defer M-4 exit too, do T-077 then M-5" — run the milestone tier for M-3 and M-4 together before release | deferred |
