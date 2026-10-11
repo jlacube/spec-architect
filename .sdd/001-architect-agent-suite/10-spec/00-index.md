@@ -71,5 +71,5 @@ status: approved
 | C001-CAP-11 Packaging, safety, environment | `CAP-11-packaging-safety` | 1101–1109 (9) | 1101–1123 (22; 1105 tombstoned) | 23 | 1101–1124 (23; 1106 tombstoned) |
 | **Total** | | **80** | **210** | **232** | **233** |
 
-Other IDs: GOAL 8 · SC 10 · NG 2 (plus IDEA NG-01 … 06) · AS 4 (plus IDEA AS-01 … 08) · CON 16 ·
+Other IDs: GOAL 8 · SC 10 · NG 2 (plus IDEA-NG-01 … 06) · AS 4 (plus IDEA-AS-01 … 08) · CON 16 ·
 NFR 27 · INV 24 · IF 14 · COMP 13 · DOD 21 (+ DOD-G 7).

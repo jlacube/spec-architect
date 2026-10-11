@@ -27,7 +27,7 @@ traces_to: [IDEA-§5.3, IDEA-§21, IDEA-§23, Spec-Q1..Q4]
 
 ## 2. Out of scope
 
-- Everything listed in `problem-and-goals.md` §4 (NG-01 … NG-08).
+- Everything listed in `problem-and-goals.md` §4 (IDEA-NG-01 … 06, C001-NG-07 and C001-NG-08).
 - Reverse-spec generation of requirements from existing code (v2; IDEA-§26.3).
 - Conformance checking of code against specs (v2), although v1 must produce its inputs
   (C001-CAP-07 `trace.json`, C001-CAP-09 reports).
@@ -36,7 +36,7 @@ traces_to: [IDEA-§5.3, IDEA-§21, IDEA-§23, Spec-Q1..Q4]
 
 ## 3. Assumptions
 
-Carried from IDEA-§23 (AS-01 … AS-08), plus:
+Carried from IDEA-§23 (IDEA-AS-01 … 08), plus:
 
 | ID | Assumption | If false |
 |---|---|---|

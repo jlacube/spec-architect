@@ -38,7 +38,20 @@
         "date": { "type": "string", "format": "date" },
         "status": { "enum": ["open", "closed"] },
         "resolution": { "type": ["string", "null"] },
-        "closed_at": { "type": ["string", "null"], "format": "date" }
+        "closed_at": { "type": ["string", "null"], "format": "date" },
+        "history": {
+          "description": "Earlier closures of a reopened defect (C001-REQ-923)",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["resolution", "closed_at"],
+            "additionalProperties": false,
+            "properties": {
+              "resolution": { "type": ["string", "null"] },
+              "closed_at": { "type": ["string", "null"], "format": "date" }
+            }
+          }
+        }
       }
     },
     "waiver": {

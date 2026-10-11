@@ -111,7 +111,7 @@ artifact templates C001-IF-03 §5–§8.
 
 ### C001-REQ-413 — Scenario steps
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF a scenario lacks at least one `Given`, exactly one `When` or at least one `Then` step, THEN THE lint SHALL report error `LINT-TS-001`.
+- **Statement:** IF a scenario does not have exactly one `When` step and at least one `Then` step, THEN THE lint SHALL report error `LINT-TS-001`; `Given` steps are optional.
 - **Rationale:** IDEA-§13.8
 - **Stories:** C001-US-405
 - **Priority:** Must

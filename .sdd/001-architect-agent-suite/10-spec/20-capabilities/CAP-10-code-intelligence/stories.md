@@ -16,6 +16,7 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** brownfield grounding works on any machine and I know how much to trust each claim
 - **Value / outcome:** IDEA-P-09, P-10; OA-05
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-10
+- **Context & notes:** Layer order ripwire → Serena → LSP → grep (OA-05); every evidence entry names its layer and confidence (C001-IF-03 §11).
 - **Requirements:** C001-REQ-1001, C001-REQ-1010, C001-REQ-1011
 - **Traces to:** Q9, OA-05, IDEA-§20.5
 
@@ -25,6 +26,7 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** I get its ranking, blast radius and test selection without paying MCP schema cost or losing caveats
 - **Value / outcome:** D-05; C001-SC-07
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-10
+- **Context & notes:** Budget flags per verb are set in C001-IF-14 §2 after spike S-01 (ripwire 0.6.5); its disclosures are copied into the evidence entries.
 - **Requirements:** C001-REQ-1003, C001-REQ-1004, C001-REQ-1005
 - **Traces to:** Q9, Q10, IDEA-§7.2
 
@@ -34,6 +36,7 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** I get LSP precision without risking code changes or bloating every agent's context
 - **Value / outcome:** C001-CON-08; mitigates IDEA-RK-07
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-10
+- **Context & notes:** Serena runs in its read-only mode with project data outside the repository (C001-CON-08, C001-REQ-1013), granted only to the cartographer and the architect.
 - **Requirements:** C001-REQ-1006, C001-REQ-1007, C001-REQ-1008, C001-REQ-1013
 - **Traces to:** Q9, IDEA-§7.3, §17.3
 
@@ -43,6 +46,7 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** NFR and constraint statements about existing code are backed by exhaustive structural evidence
 - **Value / outcome:** OA-05 option B (optional)
 - **Priority:** Could · **Size hint:** S · **Capability:** C001-CAP-10
+- **Context & notes:** ast-grep is optional; without it the cartographer falls back to grep and says so in the evidence.
 - **Requirements:** C001-REQ-1009
 - **Traces to:** Q9 extension, IDEA-§7.6
 
@@ -52,5 +56,6 @@ id_block: { US: 1001-1099, REQ: 1001-1099, TS: 1001-1099 }
 - **So that** claims are checkable and the conductor's context stays small
 - **Value / outcome:** IDEA-P-03; cost control
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-10
+- **Context & notes:** Digest-only returns keep the conductor's context small; the full evidence stays in files the next agent reads by path.
 - **Requirements:** C001-REQ-1002, C001-REQ-1012
 - **Traces to:** IDEA-§14.3 A2

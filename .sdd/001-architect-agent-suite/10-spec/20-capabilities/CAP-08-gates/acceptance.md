@@ -16,7 +16,7 @@ status: approved
 Scenario: C001-TS-801 — gate show
   Given change "004" whose spec has 14 stories, 41 REQs, 3 lint warnings and 1 critic major
   When the user runs "$SDD gate show 004 10-spec"
-  Then the output lists the spec files, "US: 14", "REQ: 41", TR-01..TR-05 coverage, "lint: 0 error / 3 warn / n info", "critic: 0 blocker / 1 major / n minor", open markers and "stale: no"
+  Then the output follows C001-IF-13 §1 and lists the spec files, "US 14", "REQ 41", TR-01 … TR-05 coverage, "Lint: 0 error · 3 warn · n info", "Critic: 0 blocker · 1 major (…) · n minor", the open markers and "Stale: no"
 ```
 
 ## C001-REQ-802

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T04:29:48Z",
+  "generated_at": "2026-10-11T06:00:30Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -13,20 +13,20 @@
       "phases": {
         "00-ideation": {
           "status": "approved",
-          "approved_hash": "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401",
-          "approved_at": "2026-10-10",
+          "approved_hash": "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6",
+          "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:1b861c673c78dd87cf5d84cbcfa3866ac634ccab330a218f6cc8fcd8b769a40b",
-          "approved_at": "2026-10-10",
+          "approved_hash": "sha256:08557099c6ce18c676a5b42b867e5e1de1e8e7dd4a47645bfba067908d8376e0",
+          "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
           "status": "approved",
-          "approved_hash": "sha256:200d2d3a6846a3b0da96c06943ef8aa57f72cbdae69ecf1a1b59fdcf15320db8",
-          "approved_at": "2026-10-10",
+          "approved_hash": "sha256:29812fa5e55daae993dd8651b221ca4d3b18e8af398b09dbb15e2d2f0a692d80",
+          "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         }
       },
@@ -36,7 +36,7 @@
           "total": 57,
           "done": 25,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },

@@ -60,7 +60,7 @@ specifies it. Severity applies to lint/check rules; CLI errors exit with code 2 
 | LINT-DELTA-001 | error | Delta cites unknown living requirement | Fix the cited ID | C001-REQ-409 |
 | LINT-COV-001 | error | Requirement missing from coverage table | Add its row | C001-REQ-412 |
 | LINT-COV-002 | error | Empty coverage cell | Add TS IDs or `n/a: <reason>` | C001-REQ-412 |
-| LINT-TS-001 | error | Scenario step structure wrong | One When, ≥ 1 Given, ≥ 1 Then | C001-REQ-413 |
+| LINT-TS-001 | error | Scenario step structure wrong | Exactly one When and ≥ 1 Then (Given optional) | C001-REQ-413 |
 | LINT-NFR-001 | error | NFR field missing | Add the field | C001-REQ-414 |
 | LINT-DOD-001 | error | DoD item without evidence type | Add an evidence type (C001-IF-03 §8) | C001-REQ-420 |
 | LINT-ARCH-001 | error | Component ID mismatch between diagrams and catalogue | Align IDs | C001-REQ-509 |

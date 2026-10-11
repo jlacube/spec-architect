@@ -59,6 +59,7 @@ Scenario: C001-TS-204 — command inventory
 ```gherkin
 Scenario: C001-TS-205 — phase skill identity
   Given the definitions of "sdd-conductor" and of the command "/architect:specify"
+  When the plugin structure check reads both definitions
   Then the conductor's "skills" list contains "phase-spec"
   And the command body loads the skill "phase-spec"
   And no phase procedure text is duplicated between the command body and the conductor body (checked by the plugin lint rule "PLG-DUP-001")

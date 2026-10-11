@@ -4,9 +4,9 @@ title: Architect agent suite
 kind: greenfield
 phase: 20-plan
 phases:
-  00-ideation: { status: approved, approved_hash: "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401", approved_at: 2026-10-10, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:1b861c673c78dd87cf5d84cbcfa3866ac634ccab330a218f6cc8fcd8b769a40b", approved_at: 2026-10-10, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:200d2d3a6846a3b0da96c06943ef8aa57f72cbdae69ecf1a1b59fdcf15320db8", approved_at: 2026-10-10, approved_by: jerome.lacube }
+  00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:08557099c6ce18c676a5b42b867e5e1de1e8e7dd4a47645bfba067908d8376e0", approved_at: 2026-10-11, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:29812fa5e55daae993dd8651b221ca4d3b18e8af398b09dbb15e2d2f0a692d80", approved_at: 2026-10-11, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 ---
@@ -29,3 +29,7 @@ owners: [jerome.lacube]
 | 2026-10-10 | G2 (spec) | **Revision opened** (`10-spec` → in-revision, `20-plan` → stale) | "Do task C001-T-007 next, then the single combined revision right after it, before any M-2 work starts. The revision covers spec and plan, with one G2 and one G3 re-approval." | Reason: spec defects D-S02-1…3, D-S03-1…2, D-S04-1, D-S05-1, D-S06-1…3 and plan defect D-S05-2 from spikes S-02 … S-06 (`docs/spikes/`), with the P-01 decisions recorded in `20-plan/handoff.md` | none | unavailable |
 | 2026-10-10 | G2 (spec) | **Approved** (revision S-02 … S-06) | "Approve" | Added C001-REQ-1013, C001-REQ-1123 (+ AC-1013.1, AC-1123.1, TS-1015, TS-1124); tombstoned C001-REQ-504, 505, 506, 517, 1105 with their ACs and TSs; 41 IDs modified; interfaces C001-IF-07, 08, 09, 10, 14; hash sha256:1b861c673c78dd87cf5d84cbcfa3866ac634ccab330a218f6cc8fcd8b769a40b | none | unavailable |
 | 2026-10-10 | G3 (plan) | **Approved** (revision S-02 … S-06) | "Approve" | Modified C001-T-029, 030, 041, 042, 044, 050, 060, 061, 062, 072 and C001-RISK-001, 002, 004, 005, 009; C001-T-071 dropped with a waiver (no Archify outputs in CHG-001); test plan 233 TCs; 11 handoff defects resolved; hash sha256:200d2d3a6846a3b0da96c06943ef8aa57f72cbdae69ecf1a1b59fdcf15320db8 | T-071 (Archify outputs) | unavailable |
+| 2026-10-11 | G1 (ideation) | **Revise** | "T-028 dogfood revision. P-01 answers (2026-10-11): labels/IDs "Prefix/backtick"; scenarios "Relax REQ-413"; gaps "Index + fill stories"; small fixes "Fix in revision"" | none | unavailable |
+| 2026-10-11 | G1 (ideation) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-11 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-11 | G3 (plan) | **Approved** | "Approve" | none | unavailable |

@@ -58,6 +58,7 @@ id_block: { US: 101-199, REQ: 101-199, TS: 101-199 }
 - **So that** the status I see is never stale or hand-edited into inconsistency
 - **Value / outcome:** a single source of truth (frontmatter) with a derived, verified index (C001-SC-02)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-01
+- **Context & notes:** The registry is a derived index (OA-03): frontmatter is the source of truth and only the CLI writes `registry.json` (C001-CON-14); writes are atomic so a crash never leaves a half-written registry. Schema: C001-IF-02.
 - **Requirements:** C001-REQ-104, C001-REQ-105, C001-REQ-106, C001-REQ-126
 - **Traces to:** OA-03, IDEA-G-06
 

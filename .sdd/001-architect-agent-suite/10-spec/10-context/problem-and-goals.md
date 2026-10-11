@@ -52,9 +52,10 @@ Each goal is referenced by user stories (`Goals:` field) and measured by a succe
 
 ## 4. Non-goals
 
-Carried from IDEA-§5.2 (normative for this spec): NG-01 writing production code; NG-02 running
-tests/CI on behalf of the implementer; NG-03 reviewing implementation diffs; NG-04 replacing issue
-trackers; NG-05 non-Claude-Code runtimes at v1 (portability is designed, not delivered); NG-06 GUI.
+Carried from IDEA-§5.2 (normative for this spec): IDEA-NG-01 writing production code; IDEA-NG-02
+running tests/CI on behalf of the implementer; IDEA-NG-03 reviewing implementation diffs;
+IDEA-NG-04 replacing issue trackers; IDEA-NG-05 non-Claude-Code runtimes at v1 (portability is
+designed, not delivered); IDEA-NG-06 GUI.
 
 Additional non-goals decided during the spec interview:
 

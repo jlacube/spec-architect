@@ -26,6 +26,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** specs don't contain hallucinated APIs or outdated behaviour
 - **Value / outcome:** fewer spec defects caused by wrong library assumptions
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-03
+- **Context & notes:** Tool order: Context7 for library documentation, DeepWiki for public-repository questions, web search last; every finding keeps its source and access date (C001-REQ-302).
 - **Requirements:** C001-REQ-303, C001-REQ-304, C001-REQ-306
 - **Traces to:** Q11, OQ-04, OA-06
 
@@ -45,6 +46,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** I know why the system is the way it is
 - **Value / outcome:** auditability (C001-GOAL-05)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-03
+- **Context & notes:** Decision records (`DEC-<seq>`) link to the option analysis they close and quote the decider's words; they live in `00-ideation/decisions/` (C001-IF-06).
 - **Requirements:** C001-REQ-312
 - **Traces to:** Q15, IDEA-§11.2
 
@@ -54,6 +56,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** the specification phase starts from a complete, approved basis
 - **Value / outcome:** fewer spec gaps; Q16 detail expectation
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-03
+- **Context & notes:** The section set is fixed so readers and the lint (LINT-IDE-001) can rely on it; index sections point to research notes, option analyses and decisions instead of repeating them.
 - **Requirements:** C001-REQ-313
 - **Traces to:** IDEA-§10.3, Q16, Q20
 
@@ -63,6 +66,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** my questions and decisions consider what really exists
 - **Value / outcome:** C001-GOAL-04
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-03
+- **Context & notes:** Brownfield and mixed changes only; the survey is produced by the cartographer with evidence entries (C001-IF-03 §11) in `00-ideation/evidence/baseline-survey.md`.
 - **Requirements:** C001-REQ-314
 - **Traces to:** Q3, IDEA-§20.2
 
@@ -72,6 +76,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** I can settle questions as they arise without starting a phase
 - **Value / outcome:** low-friction rigor
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-03
+- **Context & notes:** Ad-hoc research and analyses use the same formats as the ideation phase (research notes, option analyses), so they can be cited later by ID.
 - **Requirements:** C001-REQ-315, C001-REQ-316
 - **Traces to:** IDEA-§16, IDEA-§20.4
 
@@ -81,5 +86,6 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** I don't approve an ideation with holes, and weak ideas can be killed early
 - **Value / outcome:** borrowed from the Spec Kit assessment verdict (IDEA-§6.1.1)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-03
+- **Context & notes:** The verdict comes from the critic in a fresh context, not from the authoring session; its checklist is C001-IF-11 §3.
 - **Requirements:** C001-REQ-317, C001-REQ-318
 - **Traces to:** IDEA-§6.1.1, IDEA-§18.3

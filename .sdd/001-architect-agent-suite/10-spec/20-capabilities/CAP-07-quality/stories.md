@@ -19,6 +19,7 @@ This capability specifies the lint engine, the traceability engine, the critic a
 - **So that** gates rest on objective checks and tools can consume the results
 - **Value / outcome:** C001-SC-02; OA-07 option C
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-07
+- **Context & notes:** Deterministic and offline: the same inputs give the same findings (C001-NFR-302); output formats are C001-IF-11 §1; `--quick --file` serves the after-write hook within C001-NFR-102.
 - **Requirements:** C001-REQ-701, C001-REQ-702, C001-REQ-703, C001-REQ-704, C001-REQ-705
 - **Traces to:** Q16, OA-07, IDEA-§17.1
 
@@ -28,6 +29,7 @@ This capability specifies the lint engine, the traceability engine, the critic a
 - **So that** I can navigate from any requirement to its proof and later compare it with the code
 - **Value / outcome:** C001-GOAL-02; v2 conformance-checker input
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-07
+- **Context & notes:** Generated files are excluded from approval hashes, so regenerating them never stales a phase; `trace.json` follows C001-IF-12 and is the input of the future conformance checker (IDEA-NG-03 / v2).
 - **Requirements:** C001-REQ-706, C001-REQ-707, C001-REQ-708, C001-REQ-709
 - **Traces to:** IDEA-§12.2, §12.3
 
@@ -37,6 +39,7 @@ This capability specifies the lint engine, the traceability engine, the critic a
 - **So that** I'm not the only line of defence before approving a gate
 - **Value / outcome:** C001-SC-03; mitigates IDEA-RK-08 (lenient critic) and RK-09 (gaming the lint)
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-07
+- **Context & notes:** The critic runs in a fresh context with a fixed rubric and must justify having found fewer than three findings (C001-REQ-712); blockers stop the gate unless waived.
 - **Requirements:** C001-REQ-710, C001-REQ-711, C001-REQ-712, C001-REQ-713, C001-REQ-714
 - **Traces to:** OA-07, IDEA-§14.3 A8
 
@@ -46,6 +49,7 @@ This capability specifies the lint engine, the traceability engine, the critic a
 - **So that** expensive models are not spent on bookkeeping
 - **Value / outcome:** cost control (Q17)
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-07
+- **Context & notes:** The auditor runs on the cheapest model tier (IDEA-§19): it only runs `sdd trace` and `sdd status` and reports, it does not edit artifacts.
 - **Requirements:** C001-REQ-715, C001-REQ-716
 - **Traces to:** Q17, IDEA-§14.3 A9
 
@@ -55,5 +59,6 @@ This capability specifies the lint engine, the traceability engine, the critic a
 - **So that** nothing in an approved artifact points at nothing or says "TBD"
 - **Value / outcome:** C001-SC-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-07
+- **Context & notes:** Example IDs in code spans, quotes or fenced blocks are exempt, so specs can show IDs in examples without creating dangling references.
 - **Requirements:** C001-REQ-717, C001-REQ-718, C001-REQ-719, C001-REQ-720
 - **Traces to:** TR-12, TR-13, IDEA-§13.8

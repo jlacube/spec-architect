@@ -16,6 +16,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** `.sdd/` always reflects where implementation stands without editing several files
 - **Value / outcome:** Q19 "know where they are in terms of implementation"; C001-SC-10
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-09
+- **Context & notes:** Transitions follow the task state machine (`40-domain/state-machines.md` §3); done without a commit is a warning (LINT-TASK-003), done before dependencies a warning (WARN-CLI-001).
 - **Requirements:** C001-REQ-901, C001-REQ-902, C001-REQ-903, C001-REQ-904, C001-REQ-922
 - **Traces to:** Q19, IDEA-§10.6
 
@@ -25,6 +26,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** tracking works in any environment
 - **Value / outcome:** C001-GOAL-07; mitigates IDEA-RK-13
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-09
+- **Context & notes:** The registry is rebuilt from frontmatter, so edits made by hand are picked up at the next `sdd status --write` and by the session-start brief.
 - **Requirements:** C001-REQ-905, C001-REQ-906
 - **Traces to:** IDEA-§10.6 point 3
 
@@ -34,6 +36,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** wrong specs get fixed at the source and the fix is traceable
 - **Value / outcome:** closes the loop of IDEA-§20.3
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-09
+- **Context & notes:** Defects are `D-<seq>` per change with the referenced ID; reopening keeps the earlier resolution in the defect's history (C001-REQ-923).
 - **Requirements:** C001-REQ-907, C001-REQ-908, C001-REQ-909, C001-REQ-910, C001-REQ-923
 - **Traces to:** IDEA-§10.6, §20.3
 
@@ -43,6 +46,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** implementers and other agents are reminded of active changes, progress and open defects
 - **Value / outcome:** C001-SC-10; mitigates IDEA-RK-13
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-09
+- **Context & notes:** The brief is short and read from `registry.json` and `SDD.md` (C001-NFR-104); sessions in repositories without `.sdd/` get nothing.
 - **Requirements:** C001-REQ-911, C001-REQ-912
 - **Traces to:** IDEA-§17.2 SessionStart
 
@@ -52,6 +56,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** the next change and any validator see one current truth
 - **Value / outcome:** OQ-07a decided in v1; C001-GOAL-02
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-09
+- **Context & notes:** Living specs follow C001-IF-03 §10; IDs keep their originating change prefix after the merge, and the History table records what each change added, modified or removed.
 - **Requirements:** C001-REQ-914, C001-REQ-915, C001-REQ-916, C001-REQ-917, C001-REQ-918, C001-REQ-919, C001-REQ-920
 - **Traces to:** OQ-07, OA-09
 
@@ -61,5 +66,6 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **So that** living specs never claim behaviour that isn't implemented, and I can check the merge
 - **Value / outcome:** integrity of `_living/`
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-09
+- **Context & notes:** Preconditions are listed in ERR-CLI-009 (tasks done or dropped, defects closed, G3 approved); `--dry-run` prints the merge without writing.
 - **Requirements:** C001-REQ-913, C001-REQ-921
 - **Traces to:** OQ-07, DOD-G-07

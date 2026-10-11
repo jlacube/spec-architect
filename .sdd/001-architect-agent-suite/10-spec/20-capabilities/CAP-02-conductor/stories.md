@@ -36,6 +36,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** I can decide quickly and well, and see why something is recommended
 - **Value / outcome:** fast high-quality decisions (Q14); C001-GOAL-05
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-02
+- **Context & notes:** The four-question limit comes from AskUserQuestion; options are pre-researched by the specialists, and the question contract is C001-IF-05.
 - **Requirements:** C001-REQ-205, C001-REQ-206, C001-REQ-207
 - **Traces to:** Q14, Q15, IDEA-§15.4
 
@@ -55,6 +56,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** extensions such as "1 + also search for other tools" are acted on, not lost
 - **Value / outcome:** fidelity to intent (this session: Q5, Q9, Q16, Q19, Spec-Q4 all carried extensions)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-02
+- **Context & notes:** Answers often carry extra instructions ("…and also rename X"); the conductor restates what it understood before acting, so nothing is silently dropped or invented.
 - **Requirements:** C001-REQ-211
 - **Traces to:** IDEA-§15.4 round rules
 
@@ -64,6 +66,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** I can trace any requirement back to the decision that produced it
 - **Value / outcome:** auditability (C001-GOAL-05)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-02
+- **Context & notes:** The questions log is the audit trail of every decision's origin (`questions-log.md`, one section per round); answers are copied verbatim, never paraphrased.
 - **Requirements:** C001-REQ-210
 - **Traces to:** Q15, P-03 (every claim has a source)
 
@@ -73,6 +76,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** I can let it work while I'm away, with every assumption flagged for review
 - **Value / outcome:** throughput without losing control (OQ-16 default accepted)
 - **Priority:** Should · **Size hint:** M · **Capability:** C001-CAP-02
+- **Context & notes:** Unattended drafting still stops at the gate: recommendations are marked as such in the artifacts, and approval stays with P-01.
 - **Out of scope:** passing gates unattended (never allowed, IDEA-P-14).
 - **Requirements:** C001-REQ-212, C001-REQ-213
 - **Traces to:** OQ-16
@@ -83,6 +87,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** cost stays predictable and outputs land where they should
 - **Value / outcome:** cost control (C001-SC-06); predictable behaviour
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-02
+- **Context & notes:** Briefs pass file paths rather than content to keep the conductor's context small; only the conductor delegates (plugin agents get no agent-spawning tool, C001-IF-09).
 - **Requirements:** C001-REQ-214, C001-REQ-215, C001-REQ-216, C001-REQ-217, C001-REQ-218
 - **Traces to:** IDEA-§14.2, §19
 
@@ -92,5 +97,6 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** I don't get interview fatigue
 - **Value / outcome:** mitigates IDEA-RK-10
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-02
+- **Context & notes:** Guards against interview fatigue (IDEA-RK-10): the conductor tracks what the phase still needs and offers the shortcut instead of asking further rounds.
 - **Requirements:** C001-REQ-220
 - **Traces to:** IDEA-RK-10

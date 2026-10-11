@@ -16,6 +16,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I build in an order that reduces risk early and know when each stage is finished
 - **Value / outcome:** C001-GOAL-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-06
+- **Context & notes:** Milestones deliver usable increments and name their tasks; the work breakdown shows them as Mermaid groups with the critical path (C001-REQ-608).
 - **Requirements:** C001-REQ-601, C001-REQ-608
 - **Traces to:** IDEA-§10.5, §11.4
 
@@ -25,6 +26,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can execute any task without re-reading the whole spec, and P-04 can validate it later
 - **Value / outcome:** C001-GOAL-03, C001-GOAL-07; OA-11 option B
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-06
+- **Context & notes:** Tasks describe intent, targets and verification, never production code (OA-11; LINT-TASK-002 warns on code blocks); task frontmatter follows C001-IF-03 §3.
 - **Out of scope:** code-level plans with complete function bodies (OA-11 option C rejected).
 - **Requirements:** C001-REQ-602, C001-REQ-603, C001-REQ-604, C001-REQ-605, C001-REQ-606
 - **Traces to:** Q6, OA-11, IDEA-§12.5
@@ -35,6 +37,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I never get stuck on circular prerequisites and know what gates the finish date
 - **Value / outcome:** executability (C001-SC-04)
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-06
+- **Context & notes:** Cycles and unresolved `depends_on` are TR-11 errors; the hand-off lists tasks in a topological order.
 - **Requirements:** C001-REQ-607, C001-REQ-608
 - **Traces to:** TR-11
 
@@ -44,6 +47,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can confirm, scenario by scenario, that the specification is verified by tests
 - **Value / outcome:** C001-GOAL-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-06
+- **Context & notes:** Levels are unit, integration, e2e, eval and manual; agent-behaviour scenarios are verified at level eval with the pass rule of the DoD.
 - **Requirements:** C001-REQ-609
 - **Traces to:** TR-08, IDEA-§11.4
 
@@ -53,6 +57,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** risky areas get explicit tasks and tests, and nothing breaks silently
 - **Value / outcome:** C001-GOAL-04
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-06
+- **Context & notes:** Brownfield and mixed changes; produced by the cartographer from ripwire, Serena or grep evidence, with the layer stated for each fact (`20-plan/30-impact/`).
 - **Requirements:** C001-REQ-610, C001-REQ-611, C001-REQ-612
 - **Traces to:** Q9, IDEA-§7.2, §20.2
 
@@ -62,6 +67,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** delivery is safe and quality is observable after release
 - **Value / outcome:** C001-GOAL-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-06
+- **Context & notes:** High-impact risks need a mitigation task or an explicit acceptance (TR-14); each NFR maps to a signal and the task that implements it (LINT-OBS-001).
 - **Requirements:** C001-REQ-613, C001-REQ-614, C001-REQ-615
 - **Traces to:** IDEA-§11.4, TR-14
 
@@ -71,6 +77,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can start immediately and keep `.sdd/` informed of progress and spec defects
 - **Value / outcome:** C001-GOAL-06, C001-GOAL-07; Q6, Q19
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-06
+- **Context & notes:** The hand-off is tool-neutral: an implementer without the plugin follows the frontmatter fallback; with the CLI it reports through `sdd task set` and `sdd defect add`.
 - **Requirements:** C001-REQ-616, C001-REQ-617
 - **Traces to:** Q6, Q19, IDEA-§10.6
 
@@ -80,5 +87,6 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** small changes keep traceability with little overhead
 - **Value / outcome:** OQ-05
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-06
+- **Context & notes:** Lite profile only (OQ-05): one capability, plan in `20-plan/plan.md`; the IDs and the rules stay those of a full change.
 - **Requirements:** C001-REQ-618
 - **Traces to:** OQ-05, Spec-Q1

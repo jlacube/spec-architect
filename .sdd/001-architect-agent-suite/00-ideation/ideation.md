@@ -64,6 +64,9 @@ supersedes: null
 27. Glossary
 28. Sources
 
+Unnumbered index sections: Research index (before §6), Options and decisions index (before §8),
+Design direction (before §9).
+
 ---
 
 ## 1. Document control
@@ -144,7 +147,7 @@ Two reasons the spec agents must understand code even though they never write it
 | Decision rigor | Implicit | Explicit: 4–5 options → scored → 2–3 presented → recommendation → decision record |
 | Brownfield discovery | Agent greps around | Dedicated cartographer agent: ripwire (map, blast radius, tests-to-run) + Serena (symbols, references) |
 | Spec detail | Often one `spec.md` | Multi-file spec: user stories, EARS requirements, Given/When/Then scenarios, NFRs, domain model, interfaces, architecture, DoD |
-| Verification of the spec | Checklists | Deterministic Node lint (traceability, ID integrity, EARS conformance, no-TBD) + adversarial critic agent |
+| Verification of the spec | Checklists | Deterministic Node lint (traceability, ID integrity, EARS conformance, `no-TBD`) + adversarial critic agent |
 | Progress tracking | Per-tool | `.sdd/SDD.md` + `registry.json` that any agent (or implementer) reads to know where it is |
 | Diagrams | Mermaid or none | Archify (typed, validated, code-evidenced) + Mermaid fallback |
 
@@ -279,12 +282,12 @@ These follow from combining answers; flag any you disagree with at G1.
 
 | ID | Non-goal | Why |
 |---|---|---|
-| NG-01 | Writing production code | Q2 — out of scope; delegated to the implementer |
-| NG-02 | Running tests or CI | Q2 |
-| NG-03 | Reviewing implementation PRs | Q2 — but see v2 roadmap: a conformance checker that *reads* code against the spec is a natural extension (§26.3) |
-| NG-04 | Replacing issue trackers | Registry is local state, not a project-management tool; export can come later |
-| NG-05 | Supporting non-Claude-Code runtimes at v1 | Q1 — portability is designed in, not delivered |
-| NG-06 | A GUI | Claude Code (CLI/desktop) is the UI; Archify HTML is the only rendered output |
+| IDEA-NG-01 | Writing production code | Q2 — out of scope; delegated to the implementer |
+| IDEA-NG-02 | Running tests or CI | Q2 |
+| IDEA-NG-03 | Reviewing implementation PRs | Q2 — but see v2 roadmap: a conformance checker that *reads* code against the spec is a natural extension (§26.3) |
+| IDEA-NG-04 | Replacing issue trackers | Registry is local state, not a project-management tool; export can come later |
+| IDEA-NG-05 | Supporting non-Claude-Code runtimes at v1 | Q1 — portability is designed in, not delivered |
+| IDEA-NG-06 | A GUI | Claude Code (CLI/desktop) is the UI; Archify HTML is the only rendered output |
 
 ### 5.3 Scope boundary (where the agents stop)
 
@@ -306,6 +309,20 @@ updates** (task done, commit links) so `.sdd/` stays the single place where an a
 where a change stands [DECIDED, Q19].
 
 ---
+
+## Research index
+
+Index of the research behind this document (C001-REQ-313); the research itself is in §6, §7 and
+the sources in §28. No separate research notes exist for this bootstrap change.
+
+| Topic | Section | Main sources |
+|---|---|---|
+| SDD frameworks: GitHub Spec Kit, OpenSpec, BMAD Method, Superpowers, Kiro | §6.1 | §28 (framework repositories and docs) |
+| Cross-framework synthesis and the evidence on SDD | §6.2, §6.3 | §28 |
+| Disambiguation of the tools named in Q9 | §7.1 | §28 |
+| ripwire, Serena, Archify for spec agents | §7.2 … §7.4 | §28 (tool repositories) |
+| Research tooling (Context7, DeepWiki, web) | §7.5 | §28 |
+| Code-intelligence survey and gap scan | §7.6, §7.7 | §28 |
 
 ## 6. Landscape research: SDD frameworks in 2026
 
@@ -544,6 +561,28 @@ Sources: Sverklo's 12-server comparison (2026), the Repowise buyer's guide, GitN
 
 ---
 
+## Options and decisions index
+
+Index of the option analyses of §8 and their outcomes (C001-REQ-313); the decisions taken in the
+Q&A rounds are in §4, and the open questions decided at G1 in §24.
+
+| Analysis | Topic | Outcome |
+|---|---|---|
+| OA-01 | Orchestration topology (Q5) | C: conductor for the end-to-end run, commands for re-entry, same specialists |
+| OA-02 | Packaging and distribution | C: plugin installed from a local marketplace pointing at this repository |
+| OA-03 | The `.sdd/` description file (Q19) | C: `SDD.md` + `registry.json` + `change.md` frontmatter per change |
+| OA-04 | Decomposition of the spec and the plan into files (Q16) | E: files by concern, capability folders for the functional core |
+| OA-05 | Code-intelligence stack (Q9) | A: ripwire CLI + read-only Serena + LSP/Grep fallback; ast-grep optional |
+| OA-06 | Research stack (Q11) | B: Context7 + web, plus DeepWiki for the researcher (OQ-04 adopted) |
+| OA-07 | Traceability enforcement (Q16) | C: Node lint as hard gate + critic agent + fast lint after writes |
+| OA-08 | Identifier scheme | B: change-scoped prefix (`C004-REQ-012`) with short forms inside a change |
+| OA-09 | Living-spec strategy (Q3) | B: `_living/` per capability + per-change deltas merged at archive |
+| OA-10 | Interview when subagents cannot ask | A: specialists return `questions[]`; the main thread asks in batches |
+| OA-11 | Plan granularity | B: task = one coherent change with links, outline, verification; no production code |
+| OA-12 | `sdd.mjs` dependency policy (Q18) | B: small dependencies bundled into one file at build time |
+| OA-13 | Agent memory usage | B: project memory only for the cartographer and the researcher |
+| OA-14 | Plugin and command naming | A: plugin `architect`, commands `/architect:*` (cosmetic, OQ-01) |
+
 ## 8. Option analyses
 
 Scoring scale: 1 (poor) … 5 (excellent). Weights sum to 100%. "Weighted" = Σ(score × weight).
@@ -780,6 +819,15 @@ AST); the distributed artifact is one bundled `scripts/sdd.mjs`, runnable with p
 **Recommendation:** A (repo name continuity), but this is cosmetic → **OQ-01**.
 
 ---
+
+## Design direction
+
+Summary of the chosen design (C001-REQ-313), detailed in the numbered sections that follow: the
+design principles (§9); the phase model ideation → specification → planning → hand-off with a
+gate at every phase exit (§10, §18); the `.sdd/` workspace with `SDD.md`, `registry.json` and
+per-change folders (§11); the artifact model, IDs and traceability (§12); the quality standards
+for stories, EARS requirements, scenarios, NFRs and DoD (§13); the agent roster, skills, commands
+and Node.js helper (§14 … §17); and model and cost routing (§19).
 
 ## 9. Design principles
 
@@ -1155,7 +1203,7 @@ Full form: `C{NNN}-{PREFIX}-{seq}` (OA-08). Change-local shorthand is allowed in
 `sdd.mjs trace <change>` parses all artifacts, builds a graph and writes:
 
 - `80-traceability.md` (markdown tables, forward and backward),
-- `trace.json` (machine form, for the future conformance checker, NG-03 / v2),
+- `trace.json` (machine form, for the future conformance checker, IDEA-NG-03 / v2),
 - orphan and coverage statistics (included in the gate summary).
 
 ### 12.4 Requirement entry format (in `requirements.md`)
@@ -1256,7 +1304,7 @@ feature; the out-of-scope line is present whenever a neighbouring feature is tem
 | Characteristic | Check | By |
 |---|---|---|
 | Necessary | Traces to a US/DEC/constraint | lint (TR-02) |
-| Unambiguous | One interpretation; no weak words (banned list: *fast, easy, flexible, robust, user-friendly, appropriate, etc., and/or, as needed, if possible, support* …) | lint (word list) + critic |
+| Unambiguous | One interpretation; no weak words (banned list: `fast`, `easy`, `flexible`, `robust`, `user-friendly`, `appropriate`, `etc.`, `and/or`, `as needed`, `if possible`, `support` …) | lint (word list) + critic |
 | Singular | One SHALL per requirement (compound → split) | lint (count `SHALL`) + critic |
 | Verifiable | ≥1 AC with scenario; measurable thresholds | lint (TR-02, TR-03) |
 | Feasible | Not contradicted by cartographer evidence or constraints | critic + cartographer |
@@ -1940,8 +1988,8 @@ These scenarios become acceptance scenarios for the suite itself in CHG-001's sp
    expiry in UTC; REQ assumes local date"`.
 2. `SessionStart` shows "1 open spec defect on CHG-004".
 3. `/architect:revise spec --reason "defect D-001"`: the conductor runs one question round
-   (timezone policy). The spec-writer modifies REQ-012, the test-designer adds TS-044
-   (timezone boundary) and the planner updates T-031 and adds T-047.
+   (timezone policy). The spec-writer modifies `REQ-012`, the test-designer adds `TS-044`
+   (timezone boundary) and the planner updates `T-031` and adds `T-047`.
 4. Gates G2 and G3 are re-approved on the changed IDs only. The defect is closed and the
    registry reflects it.
 
@@ -2002,14 +2050,14 @@ acceptable or install ripwire.
 
 | ID | Assumption | Consequence if false |
 |---|---|---|
-| AS-01 | You use Claude Code (desktop/CLI) with plugin support and subagent frontmatter as documented (Oct 2026) | Re-target to project-local agents |
-| AS-02 | Node ≥ 20 is available on your machine | Add a Node install step to the README |
-| AS-03 | Target repos are git repositories (for evidence pinning and Archify evidence) | Evidence without commit pinning; weaker |
-| AS-04 | You are willing to approve 3–4 gates per change | Revisit Q13 → configurable profile |
-| AS-05 | English is the artifact language | Archify supports zh-CN/en; templates would need localization |
-| AS-06 | Implementers can run `node sdd.mjs task set` or edit frontmatter | Registry drifts (RK-13) |
-| AS-07 | Opus 5.5 / Sonnet 5 / Haiku 4.5 remain the available tiers | Update model fields (single place: frontmatter) |
-| AS-08 | Medium-sized features are the common case (≈5–40 REQs) | Tune the lite profile and thresholds |
+| IDEA-AS-01 | You use Claude Code (desktop/CLI) with plugin support and subagent frontmatter as documented (Oct 2026) | Re-target to project-local agents |
+| IDEA-AS-02 | Node ≥ 20 is available on your machine | Add a Node install step to the README |
+| IDEA-AS-03 | Target repos are git repositories (for evidence pinning and Archify evidence) | Evidence without commit pinning; weaker |
+| IDEA-AS-04 | You are willing to approve 3–4 gates per change | Revisit Q13 → configurable profile |
+| IDEA-AS-05 | English is the artifact language | Archify supports zh-CN/en; templates would need localization |
+| IDEA-AS-06 | Implementers can run `node sdd.mjs task set` or edit frontmatter | Registry drifts (RK-13) |
+| IDEA-AS-07 | Opus 5.5 / Sonnet 5 / Haiku 4.5 remain the available tiers | Update model fields (single place: frontmatter) |
+| IDEA-AS-08 | Medium-sized features are the common case (≈5–40 REQs) | Tune the lite profile and thresholds |
 
 ---
 

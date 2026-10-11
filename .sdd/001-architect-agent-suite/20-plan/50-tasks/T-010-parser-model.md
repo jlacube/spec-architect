@@ -41,7 +41,7 @@ Parse every workspace artifact into a typed graph: frontmatter, headings, ID def
 
 1. Implement block parsing with exact line numbers.
 2. Implement ID extraction for every definition form used in CHG-001 (headings ###/####, table rows, **INV** bullets, gherkin Scenario titles, frontmatter id of stories.md).
-3. Resolve short forms (REQ-012, AC-012.1, TS-40) to full IDs using the change folder number.
+3. Resolve short forms (`REQ-012`, `AC-012.1`, `TS-40`) to full IDs using the change folder number.
 4. Build the graph and per-ID content blocks (C001-IF-13 §2 step 5 boundaries).
 
 ## Verification

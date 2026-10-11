@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-11T00:31:48.904Z",
+  "generated_at": "2026-10-11T06:01:44.395Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -304,13 +304,13 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 58,
       "title": "Same phase skill behind both doors",
-      "content_hash": "sha256:80efef3b538c8a2fb1ee32c7218d9ab36a34f87cdefafc8f1f986e027305cbbf"
+      "content_hash": "sha256:e93b7a24786ea6e72607f8d6bb63a33edb11a990d98d49c7c5b989b64eaeb0d8"
     },
     {
       "id": "C001-AC-205.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 69,
+      "line": 70,
       "title": "At most four questions per round",
       "content_hash": "sha256:cd9277d172c1922d0404c4b602a88fc6e0d638e0cb4959a280783a1083884eb3"
     },
@@ -318,7 +318,7 @@
       "id": "C001-AC-206.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 80,
+      "line": 81,
       "title": "Options shape",
       "content_hash": "sha256:533fd0fcf61260bc52c06f195b7171eca49a3cda80d22b88324ccac83a93fc98"
     },
@@ -326,7 +326,7 @@
       "id": "C001-AC-207.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 91,
+      "line": 92,
       "title": "Material decisions carry 4–5 candidates",
       "content_hash": "sha256:ed423cd3d193e2d8db351954148cd4ee31fa51f3717c5c647e1383c11cbfb665"
     },
@@ -334,7 +334,7 @@
       "id": "C001-AC-208.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 102,
+      "line": 103,
       "title": "Researcher returns a questions block",
       "content_hash": "sha256:5fc9bacae8e077048e49342de7c9fb79c17bbae980a3e16200cd00b58bd77bd4"
     },
@@ -342,7 +342,7 @@
       "id": "C001-AC-209.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 114,
+      "line": 115,
       "title": "Duplicates merged, blocking first",
       "content_hash": "sha256:0463a144d30022fde62555a74a31c2fa6ffb6b3f35646ccdedefee4b1a9e89b3"
     },
@@ -350,7 +350,7 @@
       "id": "C001-AC-210.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 125,
+      "line": 126,
       "title": "Verbatim log",
       "content_hash": "sha256:ebabc34cb29503fa2f4bf387a80068b77fe233bd8f20762ce2dbcb28480e77b6"
     },
@@ -358,7 +358,7 @@
       "id": "C001-AC-211.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 135,
+      "line": 136,
       "title": "Extracted instructions are confirmed",
       "content_hash": "sha256:4b94cb96db04131e226ef77ff0d522de9bc41f335832979dc803ee5599d81141"
     },
@@ -366,7 +366,7 @@
       "id": "C001-AC-212.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 144,
+      "line": 145,
       "title": "Assumptions are marked",
       "content_hash": "sha256:7571bc3cf08e4cb28a777a5c4a8270d37d77e50aac4c2beb83374eecb7cb2301"
     },
@@ -374,7 +374,7 @@
       "id": "C001-AC-213.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 156,
+      "line": 157,
       "title": "Stops at the gate",
       "content_hash": "sha256:dbc4bdda9594981219e57562cd2734ba099db8ec04dd6bdfe93b814b468a38b3"
     },
@@ -382,7 +382,7 @@
       "id": "C001-AC-213.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 165,
+      "line": 166,
       "title": "Stops on a blocking question",
       "content_hash": "sha256:c7871d70263ef53dbbc31a86753cd9617cca6b485ec962055d99b3faaa22c70e"
     },
@@ -390,7 +390,7 @@
       "id": "C001-AC-214.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 175,
+      "line": 176,
       "title": "Brief completeness",
       "content_hash": "sha256:cbae236c1cd4fd8dec96bd088393ba9cb03201865fee31de59808ba24a6e9041"
     },
@@ -398,7 +398,7 @@
       "id": "C001-AC-215.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 184,
+      "line": 185,
       "title": "No pasted artifacts",
       "content_hash": "sha256:58a41a19d3bfb61d7148611413be984cef7fa1193e7037f3c61cbcaaf321799a"
     },
@@ -406,7 +406,7 @@
       "id": "C001-AC-216.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 193,
+      "line": 194,
       "title": "Independent fan-out in one turn",
       "content_hash": "sha256:3208434e8eac687a4c21fb286eb15f769d13671b4c77d18d50f94ee98c14caf7"
     },
@@ -414,7 +414,7 @@
       "id": "C001-AC-217.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 203,
+      "line": 204,
       "title": "Allowlist in definition",
       "content_hash": "sha256:2ff5c0765bf5f63b84fde9993e0440ba5722fefa9691ed72fae3264d0d94fa88"
     },
@@ -422,7 +422,7 @@
       "id": "C001-AC-218.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 212,
+      "line": 213,
       "title": "Specialists cannot spawn",
       "content_hash": "sha256:fab83754de8f0b137df14a7eda6912247ccb1bd06408feca9f9732c1565b7b52"
     },
@@ -430,7 +430,7 @@
       "id": "C001-AC-219.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 221,
+      "line": 222,
       "title": "Todo list maintained",
       "content_hash": "sha256:caec14ef8b21700c546ac1b3e93de85ef4d0bf2d27970fb4bdfaa69ea7d0c08a"
     },
@@ -438,7 +438,7 @@
       "id": "C001-AC-220.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 231,
+      "line": 232,
       "title": "Shortcut offered at round six",
       "content_hash": "sha256:053eebd987d67c95db48ffa948272d177c98597f0aabafedf60c2ef11cdc2f19"
     },
@@ -720,7 +720,7 @@
       "file": "10-spec/20-capabilities/CAP-04-specification/acceptance.md",
       "line": 183,
       "title": "Scenario steps checked",
-      "content_hash": "sha256:e22da3ebd9d616483db33ceaf438730eef95403d13a4a7f7c14bdec5331ea271"
+      "content_hash": "sha256:1f89c16947ec67c096a521cc5693f5be9557df64f833f62e71ed5ee94f1edabf"
     },
     {
       "id": "C001-AC-414.1",
@@ -1240,7 +1240,7 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
       "line": 14,
       "title": "Summary content",
-      "content_hash": "sha256:76017e60c3026497a32bb45ba13bcde9c42c0b146021ed3e515a9ee68938a06b"
+      "content_hash": "sha256:5cd447db17c9a5303f8638c958fe4021d4040769cb92318a2ce987b480903182"
     },
     {
       "id": "C001-AC-802.1",
@@ -1950,7 +1950,7 @@
       "file": "10-spec/20-capabilities/CAP-01-workspace/stories.md",
       "line": 1,
       "title": "Workspace, registry and identifiers",
-      "content_hash": "sha256:69266b18f1473e1909122b1125245695dd56380c5c9730be082063636591c91f",
+      "content_hash": "sha256:4f141c54c5e9d6e0b792c84a405e24b1afd19515fb965ecff78bef3873e055af",
       "status": "approved"
     },
     {
@@ -1959,7 +1959,7 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
       "line": 1,
       "title": "Conductor and interview",
-      "content_hash": "sha256:c175b48ad8308d3a95a75f5f7d00dc9a8be16633248ccc3718bf48c0fca3904d",
+      "content_hash": "sha256:2304f123a35337127d55f4c7ee588ff72406444ca33cd5898123641e651349b0",
       "status": "approved"
     },
     {
@@ -1968,7 +1968,7 @@
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
       "line": 1,
       "title": "Ideation: research, options, decisions",
-      "content_hash": "sha256:972d790831e4e4746ca67d5d823385f3564512bfe50b70c5815818a1e3ef5e68",
+      "content_hash": "sha256:cebdf4f407900f5bf9c22836b43c2aefe1a77b81dd0ac53bd06d1d7b9aa858ad",
       "status": "approved"
     },
     {
@@ -1977,7 +1977,7 @@
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
       "line": 1,
       "title": "Specification authoring",
-      "content_hash": "sha256:2df41ee7511011e48ae98c73c64529f24b462e9852665636e6f3965822133db2",
+      "content_hash": "sha256:6cc38bff4682188532d4ba2a98c78b862c899d51dc558c41cc2de647035bd2af",
       "status": "approved"
     },
     {
@@ -1986,7 +1986,7 @@
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
       "line": 1,
       "title": "Architecture, interfaces and diagrams",
-      "content_hash": "sha256:98de32e4a394034865273302f8899019f6e08c8fe4f324843fbc5c78f812c9db",
+      "content_hash": "sha256:75406a7b432b32809a3398b40e51fb775a64c67a8495e9673156bfdcf0873823",
       "status": "approved"
     },
     {
@@ -1995,7 +1995,7 @@
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
       "line": 1,
       "title": "Planning and hand-off",
-      "content_hash": "sha256:2ee945e58f04c5f6ca8941ea822f1387989787b9f8b8da48aa367e4b5d02138e",
+      "content_hash": "sha256:ae1082cbb7410ccedbb38a816ad94b74dafd41e70f2e62f148e34f51ffcf8ce3",
       "status": "approved"
     },
     {
@@ -2004,7 +2004,7 @@
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
       "line": 1,
       "title": "Quality: lint, traceability, critic, auditor",
-      "content_hash": "sha256:0eddecd9f87687092acd67f9a83eb80843c8a3f2811f9082ddc657ba937e3c48",
+      "content_hash": "sha256:cdbb69d3061ddc3df3673467ccf70db2daf0dea07964ca3e30e27a3f9e510a1a",
       "status": "approved"
     },
     {
@@ -2013,7 +2013,7 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
       "line": 1,
       "title": "Gates, approvals and revisions",
-      "content_hash": "sha256:2e8288abbe669fd8f275c4d5e62019ac161e91c3415f62c60a50db5156b2cf87",
+      "content_hash": "sha256:8fa7441ce7820831faf28d4c24c4d30c09aa3a8609e033cfb49ceb06ba314a95",
       "status": "approved"
     },
     {
@@ -2022,7 +2022,7 @@
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
       "line": 1,
       "title": "Implementation tracking, orientation and archive",
-      "content_hash": "sha256:e3b95f35ea1e794a00a2ed5c97167f55d2c1aea98a4ab3a3adff621e66f6ab79",
+      "content_hash": "sha256:ea163c65315de2d073318a5946b632d186d6b58ecd5d702ca1cff4be69d5e385",
       "status": "approved"
     },
     {
@@ -2031,7 +2031,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
       "line": 1,
       "title": "Code intelligence integration",
-      "content_hash": "sha256:e812c5f249c704b56bbad6f3f3946f2d54c99f26f8adee0e0fc7f665411eef49",
+      "content_hash": "sha256:06161684e8ed5fc3da56be3cecb5634a70cfcba42fa8e9ee54d2fdca879c59f5",
       "status": "approved"
     },
     {
@@ -2040,7 +2040,7 @@
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
       "line": 1,
       "title": "Packaging, safety and environment",
-      "content_hash": "sha256:6b2630e06ccc242f1e0889b7f6d9ea68c8d1df258518ec5b5fb7c2bcd09e3f52",
+      "content_hash": "sha256:7046c9764c07d40d98f9557200759f0f129b35158e65367e0e23619f55ea027f",
       "status": "approved"
     },
     {
@@ -3087,7 +3087,7 @@
       "id": "C001-NG-07",
       "type": "NG",
       "file": "10-spec/10-context/problem-and-goals.md",
-      "line": 61,
+      "line": 62,
       "title": "running CI on remote servers at v1. Workflows for macOS/Linux are authored and",
       "content_hash": "sha256:288102e3227d28875ad3b266d2b6438ae22940d216985bc32d9d414648f5b6b1"
     },
@@ -3095,7 +3095,7 @@
       "id": "C001-NG-08",
       "type": "NG",
       "file": "10-spec/10-context/problem-and-goals.md",
-      "line": 63,
+      "line": 64,
       "title": "Archify in CHG-001. Architecture is written with Mermaid and component IDs",
       "content_hash": "sha256:3bbd07cabc0e1d836cfc1405309fb2f151ae07bc388d9e472c67e96604ed6580"
     },
@@ -3763,7 +3763,7 @@
       "file": "10-spec/20-capabilities/CAP-04-specification/requirements.md",
       "line": 112,
       "title": "Scenario steps",
-      "content_hash": "sha256:93554a716bc6a512d168378cad973e0a714ef4819ed507f0e756d00adc18b22e"
+      "content_hash": "sha256:506fa062cfc32006e1a807fcac0fdeb702d0a312ec96f2d1d8419801030ccfd2"
     },
     {
       "id": "C001-REQ-414",
@@ -5082,7 +5082,7 @@
       "file": "20-plan/50-tasks/T-010-parser-model.md",
       "line": 1,
       "title": "Markdown/frontmatter parser and workspace model",
-      "content_hash": "sha256:d94756d7b36353352a76a87207e9c52eaf5a9ae20ac12eee5a53cc047127a3e6",
+      "content_hash": "sha256:d91713167d77756bc87d727ba578cd953ade14f3c063fe4327f20edd213ba011",
       "status": "done"
     },
     {
@@ -5200,7 +5200,7 @@
       "line": 1,
       "title": "Trace engine: matrices, trace.json, coverage, open items",
       "content_hash": "sha256:daa21c32f59b5b54259f83bf1a921ca24113235fb3eb211f6ebee516cd231e92",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "C001-T-024",
@@ -5209,7 +5209,7 @@
       "line": 1,
       "title": "Approval hashing, approvals store and stale detection",
       "content_hash": "sha256:f5ffa5601287bbe3119aca9e445ffc4732e21b34bffc01a4b470a1a159231d36",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-025",
@@ -5218,7 +5218,7 @@
       "line": 1,
       "title": "Gate commands: show, approve, record; refusals and waivers",
       "content_hash": "sha256:b0f0fd9debc919447e630453fda3beb1079bd267909d6c4221b4a85b150dd60f",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-026",
@@ -5227,7 +5227,7 @@
       "line": 1,
       "title": "Tracking commands: task set, defect add/close/reopen",
       "content_hash": "sha256:96df9ea1d4c44843034423a82f5f7eef599bbe490b4a733237a529ebec9917e7",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-027",
@@ -5236,7 +5236,7 @@
       "line": 1,
       "title": "Fixture generator, determinism tests and CLI benchmarks",
       "content_hash": "sha256:1be3b9fdd819f819fe10d2fd2707eeb4fc05c65c6b778934702edac700cf40a1",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-028",
@@ -5245,7 +5245,7 @@
       "line": 1,
       "title": "Dogfood the CLI core on CHG-001",
       "content_hash": "sha256:0f59775b699a996b39389a027e114ae9103b4de995e743c5c3c4ee5969bf5574",
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "C001-T-029",
@@ -7701,13 +7701,13 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 60,
       "title": "phase skill identity",
-      "content_hash": "sha256:68a959ebf4e00adbb7e40a95eea821ed299b83d50985902ba8d90d108eab3143"
+      "content_hash": "sha256:bf0467122a6e06a6bd6691fb8db1c916ec83805338e1ff8ce2515dbf86bbec56"
     },
     {
       "id": "C001-TS-206",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 71,
+      "line": 72,
       "title": "round size limit",
       "content_hash": "sha256:e329103a3866a74510bcba031101ae55648ca0e4285927cc00d87c655ea432ac"
     },
@@ -7715,7 +7715,7 @@
       "id": "C001-TS-207",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 82,
+      "line": 83,
       "title": "option count and ordering",
       "content_hash": "sha256:f075e99b58de03a1dc76dd97cd2433db0f8295bd898209fba58802567b5d540a"
     },
@@ -7723,7 +7723,7 @@
       "id": "C001-TS-208",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 93,
+      "line": 94,
       "title": "options analysis behind a material question",
       "content_hash": "sha256:8a35c8de1f0c1211234f0c32f36a59259b7c54f0c4aec6bb6c82d543993fba2f"
     },
@@ -7731,7 +7731,7 @@
       "id": "C001-TS-209",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 104,
+      "line": 105,
       "title": "specialist cannot decide licensing preference",
       "content_hash": "sha256:06d51564e8636d72f8543c20248749e4f337c2d9d84e7fb79bd18de6367a45fa"
     },
@@ -7739,7 +7739,7 @@
       "id": "C001-TS-210",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 116,
+      "line": 117,
       "title": "merging questions from two specialists",
       "content_hash": "sha256:0a090d434b5208d31c35c7ae3e3e557faeadec025a209014732608e6a031cdef"
     },
@@ -7747,7 +7747,7 @@
       "id": "C001-TS-211",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 127,
+      "line": 128,
       "title": "free text answer logged verbatim",
       "content_hash": "sha256:bc241e5c790de3fc312836adf054d85667a4168741cfe18f47bbaeb9c63fb226"
     },
@@ -7755,7 +7755,7 @@
       "id": "C001-TS-212",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 137,
+      "line": 138,
       "title": "embedded instruction surfaced",
       "content_hash": "sha256:2076ee9a7caf74301b6534bab59cb17f3dc4ae96dd66d61fa285df74cc345b79"
     },
@@ -7763,7 +7763,7 @@
       "id": "C001-TS-213",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 146,
+      "line": 147,
       "title": "unattended drafting",
       "content_hash": "sha256:c21c20631ac04d099ea2c9d87e4d63f0cab4f85bcd4835356d50c16d57bef353"
     },
@@ -7771,7 +7771,7 @@
       "id": "C001-TS-214",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 158,
+      "line": 159,
       "title": "unattended mode never approves",
       "content_hash": "sha256:106fa09afc9b4522bdcb8e491af28bb0a9fab195fe9cb9112b6f596ccca96e75"
     },
@@ -7779,7 +7779,7 @@
       "id": "C001-TS-215",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 167,
+      "line": 168,
       "title": "blocking question interrupts unattended mode",
       "content_hash": "sha256:bb88f00d93ae7c03c784cb2421254083749c2a991cb14310300ed6efdb8520a8"
     },
@@ -7787,7 +7787,7 @@
       "id": "C001-TS-216",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 177,
+      "line": 178,
       "title": "dispatch brief fields",
       "content_hash": "sha256:fa8f021232c8c3430eb7999bbeca7e6f1c18ed0f8faa614632f1ed05665220c5"
     },
@@ -7795,7 +7795,7 @@
       "id": "C001-TS-217",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 186,
+      "line": 187,
       "title": "brief size discipline",
       "content_hash": "sha256:946e09066e730ef9c58004de5336544ed1d736547e1794249f63cc8cc5ca3c16"
     },
@@ -7803,7 +7803,7 @@
       "id": "C001-TS-218",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 195,
+      "line": 196,
       "title": "ideation fan-out",
       "content_hash": "sha256:6929a307ae0d265213e4c4f8cbb8eabbd0739a9646ab218a0911869d319d2b04"
     },
@@ -7811,7 +7811,7 @@
       "id": "C001-TS-219",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 205,
+      "line": 206,
       "title": "conductor spawn allowlist",
       "content_hash": "sha256:1caf2e96139c19e7ca9bba7b1675f131b4998e72ab48dbc110c18b892ddfb24c"
     },
@@ -7819,7 +7819,7 @@
       "id": "C001-TS-220",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 214,
+      "line": 215,
       "title": "no Agent tool in specialists",
       "content_hash": "sha256:e77f229116a20613920093695145b5b67ac85a5ea3c0d0a28e269fad63e2bb7d"
     },
@@ -7827,7 +7827,7 @@
       "id": "C001-TS-221",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 223,
+      "line": 224,
       "title": "visible phase plan",
       "content_hash": "sha256:9cd6b6c8278fd1d64e75ba0afe032a567b38ac7124f67407a8d9453136eab950"
     },
@@ -7835,7 +7835,7 @@
       "id": "C001-TS-222",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
-      "line": 233,
+      "line": 234,
       "title": "fatigue guard",
       "content_hash": "sha256:3f42041a90a7ca39ebc03f10ab8642f2ce3903410e49e45087f3bbbd37a7d2b9"
     },
@@ -8117,7 +8117,7 @@
       "file": "10-spec/20-capabilities/CAP-04-specification/acceptance.md",
       "line": 185,
       "title": "scenario step structure",
-      "content_hash": "sha256:d593507905bdf7a3523ab35c6e51d65b5850bb135242ae96d053f5b772ca3749"
+      "content_hash": "sha256:ce1c7b0d7afe49eb83a3d31f1d54d7c0f4e3c1ba537ebc6b8b7efb347e1292d4"
     },
     {
       "id": "C001-TS-416",
@@ -8637,7 +8637,7 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
       "line": 16,
       "title": "gate show",
-      "content_hash": "sha256:f7c8c6fefbbbdf7a1e804dd73519022105378659a036ba1ce3d1ac22cd5d89b0"
+      "content_hash": "sha256:36db6b88533023f904ab33f69c726a3e04b2e0abe58f7e65e3de0a1fd87fa7bd"
     },
     {
       "id": "C001-TS-802",
@@ -9301,13 +9301,13 @@
       "file": "10-spec/20-capabilities/CAP-01-workspace/stories.md",
       "line": 55,
       "title": "Registry stays consistent with the artifacts",
-      "content_hash": "sha256:b816a77aa4da0c5a7baa17b7e291149b58a395e74b675e225c64567c97d8aca4"
+      "content_hash": "sha256:f804d824d4bdfed89a8b5f653c56bcdb495b99c3fac7dac8b3f7bd950af0eb20"
     },
     {
       "id": "C001-US-106",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-01-workspace/stories.md",
-      "line": 64,
+      "line": 65,
       "title": "Establish a project constitution and toolchain record",
       "content_hash": "sha256:8b9ba5ac68a5dc14655b57b6e5dd55489c746cf3db2c08e992d340bc48c66194"
     },
@@ -9315,7 +9315,7 @@
       "id": "C001-US-107",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-01-workspace/stories.md",
-      "line": 74,
+      "line": 75,
       "title": "Lite profile for small changes",
       "content_hash": "sha256:a16c9b3ab1997297bbd72c09301b6541d1da5035c9c7f66f314a7579855d53c7"
     },
@@ -9323,7 +9323,7 @@
       "id": "C001-US-108",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-01-workspace/stories.md",
-      "line": 85,
+      "line": 86,
       "title": "Capability inventory for brownfield repositories",
       "content_hash": "sha256:3e1942dd97eb4a83ec17f49a3bb72e14bc951dc7046536fa39f12b82d4eb972d"
     },
@@ -9349,13 +9349,13 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
       "line": 33,
       "title": "Batched, option-based questions with a recommendation",
-      "content_hash": "sha256:8896a54b38504e9011e899b6843153a80fa4673a81fe81ecf2a18d2be6119df0"
+      "content_hash": "sha256:742e2f5b21136d33fa154d5d3721edb5890cf63ef43ae827326e2dfc616afdfa"
     },
     {
       "id": "C001-US-204",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 42,
+      "line": 43,
       "title": "Specialists surface questions instead of assuming",
       "content_hash": "sha256:e084a9b0dbed66eb35d43da9a2a30682cd7e4b559881d16ce7a857b3395373cc"
     },
@@ -9363,41 +9363,41 @@
       "id": "C001-US-205",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 52,
+      "line": 53,
       "title": "Free-text answers are read for embedded requests",
-      "content_hash": "sha256:112e9ebaf817a5e819f3ca2d4d65833fd31a09929290a81f54543e3bd89a5edc"
+      "content_hash": "sha256:f876f8d3a2d51712cb4b38923900b7fd3e4ed0dc0e6c7f0de4aa4d9c52a09b0d"
     },
     {
       "id": "C001-US-206",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 61,
+      "line": 63,
       "title": "Every question and answer is recorded",
-      "content_hash": "sha256:bc2c866ea23bba5fb5c8e51ab01a058db6bc99957b17da8e98851a30631c9c59"
+      "content_hash": "sha256:9757325d627d1ed5dc7be2b88f8e42192d389155f5a9e54f235632f98219d860"
     },
     {
       "id": "C001-US-207",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 70,
+      "line": 73,
       "title": "Unattended drafting up to the next gate",
-      "content_hash": "sha256:3a6dee010df27776912c70f0f330e94abd14ba50ca729b68a221a2954c9556a5"
+      "content_hash": "sha256:b59fc45428638227aa8be2f6b1dc86aa8aaaf8e1f0180d1d2e6084d6103bf536"
     },
     {
       "id": "C001-US-208",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 80,
+      "line": 84,
       "title": "Efficient, well-briefed delegation",
-      "content_hash": "sha256:c2f0b22be9f40d7ae88828638bf12f8d9c08629cdc5a9ea7cf21ff261f5faf10"
+      "content_hash": "sha256:1d38b4c840b734b7de9ff8e4483669a15b6868bbe372e5db55d35b71c3634886"
     },
     {
       "id": "C001-US-209",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-02-conductor/stories.md",
-      "line": 89,
+      "line": 94,
       "title": "Interviews that end",
-      "content_hash": "sha256:c2828fd1c5fa765dfe1a4b83f8ffe6ddb6741a7198e3ee2887cc7d2814aada71"
+      "content_hash": "sha256:4530f4863ba0ab01ac5c1c81b8073ac045e238a0097e4b126412268bc77185d2"
     },
     {
       "id": "C001-US-301",
@@ -9413,13 +9413,13 @@
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
       "line": 23,
       "title": "The right research tool for the question",
-      "content_hash": "sha256:4ef016cd4770bbac6b8b8a8f2f2652907d7f74238923d75a2e0a7cf162acdd58"
+      "content_hash": "sha256:f054030a2a4ba16701217e7ad057157d1c1ea9bebd5d1b187392395e189dcddf"
     },
     {
       "id": "C001-US-303",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 32,
+      "line": 33,
       "title": "Rigorous, reusable options analysis",
       "content_hash": "sha256:797d19538beb1f49039cae705bfa4d6af4aa2f5798c6bcd2a965e77b048bf44b"
     },
@@ -9427,41 +9427,41 @@
       "id": "C001-US-304",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 42,
+      "line": 43,
       "title": "Decision records",
-      "content_hash": "sha256:3980eac795b5d3f184c5c0a96a4261f7cec2b1e9b314494a0b4fad8c61528bc6"
+      "content_hash": "sha256:e4b4df2d3f3c8b5293c970cce7d40cf03dffa1625a2bb82ec87b627317036f22"
     },
     {
       "id": "C001-US-305",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 51,
+      "line": 53,
       "title": "Complete ideation document",
-      "content_hash": "sha256:4cc2e6be2d2caeeacda46df98c8bacbfd1fe1f64761b28911f5f6d2b651c02d2"
+      "content_hash": "sha256:2d7d1868356dad494741769542673d2fca81c3c0084fcca5db49e398c168d034"
     },
     {
       "id": "C001-US-306",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 60,
+      "line": 63,
       "title": "Brownfield feasibility evidence during ideation",
-      "content_hash": "sha256:0e9c209df0f9560162e4af786b2270e3afe1b47965e4bc031da67de439648aca"
+      "content_hash": "sha256:a3c41861b6aff5fb49688b26200dfa3f0022f4f64b190cd63645b28692520f28"
     },
     {
       "id": "C001-US-307",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 69,
+      "line": 73,
       "title": "Ad-hoc research and decisions",
-      "content_hash": "sha256:714a03d44c68ea845af023891138e7f62d8398852f8e648332b926e4cf6e950e"
+      "content_hash": "sha256:d690c4cee45073cfd4d9e3ce48479ea6024509495eafce929530ad63e310ba30"
     },
     {
       "id": "C001-US-308",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-03-ideation/stories.md",
-      "line": 78,
+      "line": 83,
       "title": "Ideation readiness verdict",
-      "content_hash": "sha256:e731529a65290532c68bae6128484eee695728605c3a45bf049daa5fd9a4da29"
+      "content_hash": "sha256:b0206412b6e6df9eaa4f032c885626b03c7391b74ec1eb9879a8d070f4c7c2a6"
     },
     {
       "id": "C001-US-401",
@@ -9477,63 +9477,63 @@
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
       "line": 26,
       "title": "Detailed user stories",
-      "content_hash": "sha256:8bd8040911dcd489b48f3477555d4d9011657c3e68ce1301764a7ccc01f40443"
+      "content_hash": "sha256:2d29ee518a96ee2846eef5d63ce4216e5ce8cb38161a32f0e381654e550c2d04"
     },
     {
       "id": "C001-US-403",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 35,
+      "line": 36,
       "title": "Unambiguous EARS requirements",
-      "content_hash": "sha256:2ac753276dc49ff500bf85982c459489a8ed712a9582d828296b967f0954ee91"
+      "content_hash": "sha256:a47bf0d6066e31ed28cd5963c1d7aa03fcd9d5985fee0cf69ad1af551d9cb4e1"
     },
     {
       "id": "C001-US-404",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 44,
+      "line": 46,
       "title": "Brownfield deltas backed by code evidence",
-      "content_hash": "sha256:04c31996fc30fdddfbfe42d1167f01308f22ad37ed420a5d1bcda926524baa34"
+      "content_hash": "sha256:a7c6cf767ec0e2caedd28d1fa77f513c399b993d291da3b10e11b6d2f569d706"
     },
     {
       "id": "C001-US-405",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 53,
+      "line": 56,
       "title": "Thorough acceptance scenarios",
-      "content_hash": "sha256:3b23af6ff342b23f8cf2653d41beb73ba3763534321caf61c4a37f4678d4b494"
+      "content_hash": "sha256:6f89dec55667bdffdfd08a4a36c22f5f4e68438d1b980741523cb944492066d2"
     },
     {
       "id": "C001-US-406",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 62,
+      "line": 66,
       "title": "Measurable non-functional requirements",
-      "content_hash": "sha256:e98d44c4e4bcd460c91b1645cd871d57a4aa7e25ddf0f5a60ca18ebd5975516a"
+      "content_hash": "sha256:4c09d761a7e56a035f6ab98cbb0a9fcf56f9ac2b1f9ddf3671d6caa44c5f3f8f"
     },
     {
       "id": "C001-US-407",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 71,
+      "line": 76,
       "title": "Domain model, invariants and state machines",
-      "content_hash": "sha256:ce37cfe8fcd36bfb0895c540cddd24d9d708a2d34492ed1ca1b443cf16be3c14"
+      "content_hash": "sha256:47f9f63041dd9418f0de26a977db74909f429e5af054c3acd2c415e9068c298c"
     },
     {
       "id": "C001-US-408",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 80,
+      "line": 86,
       "title": "Strong, evidence-based Definition of Done",
-      "content_hash": "sha256:efeb1b5791478894b021476d799abcdcac7cd4a2ee9f277ed39c107e21e2d4f7"
+      "content_hash": "sha256:f54e42a88ca6b77ad54e2217450baa8c3a0768f73c6dce055b3b8ac5c8aaeb1a"
     },
     {
       "id": "C001-US-409",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-04-specification/stories.md",
-      "line": 89,
+      "line": 96,
       "title": "Clarification markers instead of silent assumptions",
-      "content_hash": "sha256:defe7074d4c6765ae7a2eb17f701eb41a3e8687202933a43fb62ddd2afa5d37b"
+      "content_hash": "sha256:bbbc4d152963bf3b4f163e93fac458db6ed66163ef2d64130f2e97a23ffe3091"
     },
     {
       "id": "C001-US-501",
@@ -9541,55 +9541,55 @@
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
       "line": 13,
       "title": "A complete architecture description",
-      "content_hash": "sha256:d8c386a1575e280b1d01212f12fb6f467306c146dc9e7bb5a7e3927267a6effd"
+      "content_hash": "sha256:3f643b3016c5b8f5612bd4a30b810b8b3bcb70052b4a266d6be8123ae4da9e96"
     },
     {
       "id": "C001-US-502",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "Verified architecture diagrams",
-      "content_hash": "sha256:abf422d47202d569c2ae5e58a74b7d14035a5b4dfd54d77fd12474b0450223c1"
+      "content_hash": "sha256:a20014642fa79d4fb400773c0c94982321586e1de000de320100a44527f1d8b1"
     },
     {
       "id": "C001-US-503",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 31,
+      "line": 33,
       "title": "Diagrams without Archify",
-      "content_hash": "sha256:1d779fac87272c618654a854bb38186500b08dc337ce74d725c522e9f1068fff"
+      "content_hash": "sha256:0d0286460466ac69a536056726b969df1fd1719149ddab99c000467ed0170b29"
     },
     {
       "id": "C001-US-504",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 40,
+      "line": 43,
       "title": "As-is versus to-be for brownfield",
-      "content_hash": "sha256:48b73c2db1d2e6f20d0c94a9f0b82a2ef1efae1cf8c2f0402db0167faa3fcbb8"
+      "content_hash": "sha256:98468610ec6d4718fb952f1e033cce46c7e8810446b5f7c40189dfb1f9406230"
     },
     {
       "id": "C001-US-505",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 49,
+      "line": 53,
       "title": "Machine-readable interface contracts",
-      "content_hash": "sha256:9c13e84f2b08bbcbfcc0ffb8b468ff2f08e949cfca8e04efb85530b63e0cd989"
+      "content_hash": "sha256:7192098c0eaa5353352905ab7484d0105b58fa7e84043187d5c46da5651f0441"
     },
     {
       "id": "C001-US-506",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 58,
+      "line": 63,
       "title": "Explicit architecture constraints",
-      "content_hash": "sha256:18dfe9f78c70bb5ab0308adf8d0106d4d1819dd9b10cdcc1e324632c97d25237"
+      "content_hash": "sha256:4c65cd0f3c6e79cb85fb246afcc4db2849ebe20b13f71e27ce87729b65a81bfb"
     },
     {
       "id": "C001-US-507",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-architecture/stories.md",
-      "line": 67,
+      "line": 73,
       "title": "Technical decisions as ADRs",
-      "content_hash": "sha256:0faffc2866b1cf78d6be7952268784bb2496c41cc6add5b79a4e0c6b56583ad5"
+      "content_hash": "sha256:939379cfd6d567b98d0d8be5fdd27df33687f766463b562fb41e607fac90bfd3"
     },
     {
       "id": "C001-US-601",
@@ -9597,63 +9597,63 @@
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
       "line": 13,
       "title": "A sequenced strategy with milestones",
-      "content_hash": "sha256:44d591ec4cbb8824a2098bc32b4bb47a7ec073317d2faa90e29d8c4d31c41b16"
+      "content_hash": "sha256:3bbc6cf1dfe2cd18844852f3c142eb135a9cfe912d1d595d95336eb5b6ba7346"
     },
     {
       "id": "C001-US-602",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "Self-contained, test-anchored task files",
-      "content_hash": "sha256:58f20b5533e12bba5050ac7a97103369ec6ac246a939967e65faa8976e5f0d5a"
+      "content_hash": "sha256:c907807273fed1d2aa1268fb029912cb5f22cb413b66b21e5a42310445c1125c"
     },
     {
       "id": "C001-US-603",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 32,
+      "line": 34,
       "title": "A valid dependency graph",
-      "content_hash": "sha256:f1687d479c3b568ab41658af83be13139e3e8a63f76cde91d5ead7d28eb45220"
+      "content_hash": "sha256:b6510fc6483e86c35bf19936175562613c14c91abd4b92ab8d1838b2f20ef8cc"
     },
     {
       "id": "C001-US-604",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 41,
+      "line": 44,
       "title": "A test plan that covers every scenario",
-      "content_hash": "sha256:1fb1e367eae402d268a0ebd890c7a6e7b0fbd76d6bba6315e201fe4904b96665"
+      "content_hash": "sha256:204a7c579a8ff1284d90a20a0f31e6a116adc669930bd0019e9c421209167ae9"
     },
     {
       "id": "C001-US-605",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 50,
+      "line": 54,
       "title": "Impact analysis for brownfield plans",
-      "content_hash": "sha256:18ea9b25a33ab6846d0ecbfa351706955aa451ea58bf68f150abec6358c92842"
+      "content_hash": "sha256:271def32c64aaa13f3ab2a8029615fff155a8b27f324256774750d431b32a7e8"
     },
     {
       "id": "C001-US-606",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 59,
+      "line": 64,
       "title": "Risks, rollout, rollback and observability",
-      "content_hash": "sha256:17fc04ce737065c69048a44dc5fa68c1fedb5285a58706a9e8fcc15f3b2c7c39"
+      "content_hash": "sha256:3d9198fe429c16df5c600c4f208b2752ae94c7d3fcdc2cd61019038758a6ad80"
     },
     {
       "id": "C001-US-607",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 68,
+      "line": 74,
       "title": "A hand-off any implementer can follow",
-      "content_hash": "sha256:2525c078c6d3c3c6fed2204434c1410c06e18424509586f5f88672377a0d33c0"
+      "content_hash": "sha256:4e2e8c5c56bde5eb028c7823f01023065a0d2e6f662784cc8829ab18efc7ab79"
     },
     {
       "id": "C001-US-608",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-06-planning/stories.md",
-      "line": 77,
+      "line": 84,
       "title": "Lite plans",
-      "content_hash": "sha256:b04f148783bccfb447640fcf6ead234f1b0abbbe3d73400e5beac30942b0cdf2"
+      "content_hash": "sha256:a417cd19493eee8e77e740ead7c39305d6118ece94529c394bf6047288eabfe6"
     },
     {
       "id": "C001-US-701",
@@ -9661,39 +9661,39 @@
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
       "line": 16,
       "title": "One deterministic lint command",
-      "content_hash": "sha256:ed536febc08fe257dc7da8821878c797110e6912330a49f77ff89cafa3d996b0"
+      "content_hash": "sha256:7d6497994e8edbbc170271f62bcea47cde17838ab4416a23acef59003a55ca9b"
     },
     {
       "id": "C001-US-702",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
-      "line": 25,
+      "line": 26,
       "title": "Generated traceability matrix",
-      "content_hash": "sha256:08a69bed527862889adc3e768e010f172386617f30047dd977a709f0d27c5cd3"
+      "content_hash": "sha256:6326375264b6dea50ae0e6111f7c71b644ec4490e556dfaddef43023a33d74af"
     },
     {
       "id": "C001-US-703",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
-      "line": 34,
+      "line": 36,
       "title": "Independent adversarial critic",
-      "content_hash": "sha256:b7fc9ff5e9c45530a11ed2bcef6219b32f3ab4021e1dbbed9b3a4117853209f3"
+      "content_hash": "sha256:7ad993222fe2afc723c6f2185032cb51f5450d71f0159168b3644e5620a72b42"
     },
     {
       "id": "C001-US-704",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
-      "line": 43,
+      "line": 46,
       "title": "Mechanical bookkeeping on a cheap model",
-      "content_hash": "sha256:3feeac34df3868aacdf97ad30725b8c2b0b85740f94eebeefb06b71633eed0cb"
+      "content_hash": "sha256:87edfc15fddbfd8e78db97e22756928de1af22940da5885f790cd46898c5a750"
     },
     {
       "id": "C001-US-705",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-07-quality/stories.md",
-      "line": 52,
+      "line": 56,
       "title": "Clean generic rules",
-      "content_hash": "sha256:7a05a4e1e94c71b8a3882fdea42ca94c1f338da83592ae66f2331aba145f6912"
+      "content_hash": "sha256:894b725b4bb4539094f023d14a18483a296e4e394054861670f5fd1ddebd4580"
     },
     {
       "id": "C001-US-801",
@@ -9701,13 +9701,13 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
       "line": 13,
       "title": "A gate summary I can decide on",
-      "content_hash": "sha256:70a7288606bda36552afbd37eef5d5ef1a044513e578db15bed350f9642f3c2c"
+      "content_hash": "sha256:d2acf2b378df64e88404b7eccc51aeb58c39f8a58fc6dbf9f8f83904b11418f6"
     },
     {
       "id": "C001-US-802",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "Only I can approve, and the approval is pinned",
       "content_hash": "sha256:5260aba8e958ab82ac116103ad3eaedfffa5f2a67ec97b068811e7bddd4dea14"
     },
@@ -9715,33 +9715,33 @@
       "id": "C001-US-803",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
-      "line": 32,
+      "line": 33,
       "title": "Hard checks block approval unless explicitly waived",
-      "content_hash": "sha256:b28216f9ca71d5dc91aa87f09ee5b2b8e91bc68663f641dbba6e05809653e088"
+      "content_hash": "sha256:a41558fe75c473831be53cdddc18b31770828acf342e805927ac894c94bb7739"
     },
     {
       "id": "C001-US-804",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
-      "line": 41,
+      "line": 43,
       "title": "Detect artifacts changed after approval",
-      "content_hash": "sha256:2853ed93bf7e17b843492d9c441966f7ef427796a2f640f31522381a105e8664"
+      "content_hash": "sha256:4a863c34ef96e4125d3e4da42e68b6ececd63de058184e1f8c04546ac99890eb"
     },
     {
       "id": "C001-US-805",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
-      "line": 50,
+      "line": 53,
       "title": "Revise a phase with a focused impact list",
-      "content_hash": "sha256:1e43046cf08a693be290c47911612a87d63be138b259c3fc78c69628cce89045"
+      "content_hash": "sha256:ccfff0fde35c1ebdcd50dc4fa2be42a265471107477f61d51c8cdd718ecdd861"
     },
     {
       "id": "C001-US-806",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
-      "line": 59,
+      "line": 63,
       "title": "Stop a change cleanly",
-      "content_hash": "sha256:faac2bb421c8a5a4fe9166951262ada0532b3851f2880298a0fb429729cf0c1c"
+      "content_hash": "sha256:e6dc0d4c37f377921839b235cf828a310f46f45aa671d869fa2afbd39b749d7d"
     },
     {
       "id": "C001-US-901",
@@ -9749,47 +9749,47 @@
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
       "line": 13,
       "title": "Report task progress with one command",
-      "content_hash": "sha256:26d35d2b79acb78987432dcd1193b7104fd90ceb88a554db77e64cc8c03355a9"
+      "content_hash": "sha256:e522e16dfef331a415f0f67cf077b523f24301e94b72ad8aa5249204abdaeb7f"
     },
     {
       "id": "C001-US-902",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "Report progress without tooling",
-      "content_hash": "sha256:2867db2f17f45fe27c8b2c2b2a7d47e0fc464bd45a3bb78aed694d90780d7046"
+      "content_hash": "sha256:bcbde60e158efe336b2737302e9fdd62924244f11b0d49b5bcaac26b90fce156"
     },
     {
       "id": "C001-US-903",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
-      "line": 31,
+      "line": 33,
       "title": "Report spec defects instead of working around them",
-      "content_hash": "sha256:ae80d1d76538b8c4462bb08258191df6b6a0874c46e10155dfd4e007b038ed0d"
+      "content_hash": "sha256:a2107b1426e2af5d048916080e17493da49a7549a4928378dbe9ac26883f3eb0"
     },
     {
       "id": "C001-US-904",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
-      "line": 40,
+      "line": 43,
       "title": "Every session knows the workspace state",
-      "content_hash": "sha256:48c674d935f0b198808b1ce2fc2376807806c746409d2787315116b301da3de3"
+      "content_hash": "sha256:cfd1464ec67732f05486e7da4867d4fb4ccf1e45c823e4a0224e8fb6ccac66f5"
     },
     {
       "id": "C001-US-905",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
-      "line": 49,
+      "line": 53,
       "title": "Merge a finished change into the current-truth specs",
-      "content_hash": "sha256:62adde21df3cc95743a6fc3e44ff04251958ec8450485ca1a11adfc476e8c475"
+      "content_hash": "sha256:9cecc5dfd036306134c7a4fbdd590a33daba8bc7bee384a86c3fbe8ec53f1c2d"
     },
     {
       "id": "C001-US-906",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/stories.md",
-      "line": 58,
+      "line": 63,
       "title": "Archive only what is really finished, and preview it",
-      "content_hash": "sha256:67dfd85f4b1817fac99e9de35744d1595b611beaabeed4635026b36eb9529957"
+      "content_hash": "sha256:56dde65a3160f90a69fdf5002def1d2ae0330aad1ab45c401c427792a8b2dda2"
     },
     {
       "id": "C001-US-1001",
@@ -9797,39 +9797,39 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
       "line": 13,
       "title": "Cheapest sufficient tool, with honest fallback",
-      "content_hash": "sha256:893d661ed505322fce48cc25213be4c9b50de04ed3ba7bc9e403de488f0c6bd4"
+      "content_hash": "sha256:98bd541ecfa75f498e296a76e61291e919ed379ad3cced30426ee27e9b19baf1"
     },
     {
       "id": "C001-US-1002",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "ripwire as a budgeted CLI",
-      "content_hash": "sha256:57204da1849bf0594ee5dc3b3038f64b3fee9135a16b9f5f6a628aa37208add2"
+      "content_hash": "sha256:c479048d1808e8d7b3615a6e1e1b901abd837491e64e2c5f01189b8b62a7bcf0"
     },
     {
       "id": "C001-US-1003",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
-      "line": 31,
+      "line": 33,
       "title": "Serena strictly read-only and scoped",
-      "content_hash": "sha256:a5bedfdfde00ece257f9d642f715ff6d56c28b673363d46863b944dbb16530ee"
+      "content_hash": "sha256:e76c55df08c8f180c1bb85d8e8063faa72db339623d88dbf9b5fc72cc3da9935"
     },
     {
       "id": "C001-US-1004",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
-      "line": 40,
+      "line": 43,
       "title": "Structural evidence with ast-grep",
-      "content_hash": "sha256:2f14704b27de20e972be2f87a856c038f9b4b98a0b6791cab47f9df5233bc790"
+      "content_hash": "sha256:392cc6d92559be2133bcd2f624cdd7ade9b8e4665b062b69749611a68a3fcac8"
     },
     {
       "id": "C001-US-1005",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/stories.md",
-      "line": 49,
+      "line": 53,
       "title": "Uniform evidence and lean returns",
-      "content_hash": "sha256:c437271b07db2f1c84702da38b18448d09ad823a1092cb22f804b32cff02b8bd"
+      "content_hash": "sha256:f577acc74be1cac6656696825fdf55aaccdefd443ca0b79f9ed090eb04f00adb"
     },
     {
       "id": "C001-US-1101",
@@ -9837,71 +9837,71 @@
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
       "line": 13,
       "title": "Install from a local marketplace",
-      "content_hash": "sha256:93f1881c5ab3c151689457c14f987f595c686b2c14e384332913de9a70f463e4"
+      "content_hash": "sha256:7937d80e83d649cdd701a382d0687b54ed6e5f3c0153bd15bc0e53fb5def1a3e"
     },
     {
       "id": "C001-US-1102",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 22,
+      "line": 23,
       "title": "Spec agents physically cannot touch code",
-      "content_hash": "sha256:5ad4d09bb1269b538dc99cd4f31160bfb32ec38af6fb8b2e6c58533bdbba148a"
+      "content_hash": "sha256:c10282e99610535cc5b1e84559c65af037fc34928a38061ef701454a6eb8e900"
     },
     {
       "id": "C001-US-1103",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 31,
+      "line": 33,
       "title": "Shell access limited to read-only tools",
-      "content_hash": "sha256:10ded7b37deeec56a7f58a3908d3b15615c880e083b946285fba655c3f6cb24b"
+      "content_hash": "sha256:8c3e2c24a275d9b20d8bf445bd103643386c6113db8d9540dd5eca4defe25943"
     },
     {
       "id": "C001-US-1104",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 40,
+      "line": 43,
       "title": "Research and code MCP servers configured once, scoped per agent",
-      "content_hash": "sha256:7f9d9116dcc69923680f34fa966046faa74800126d686de2ddbac3159ed38f81"
+      "content_hash": "sha256:88ab8d797eb662bdba45b94f8666bb09d45c9cea929a81c6079fc53e58227553"
     },
     {
       "id": "C001-US-1105",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 49,
+      "line": 53,
       "title": "A doctor that tells me what's missing and how to fix it",
-      "content_hash": "sha256:d3876787794f1fa6a1b9abecb651efdad6b90a656c123c5cb3b4ccf7f3edc865"
+      "content_hash": "sha256:2a430c16b66eabb5b8c7a3c8a8c2c50b35896f31708f019911fbc8910a530d3c"
     },
     {
       "id": "C001-US-1106",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 58,
+      "line": 63,
       "title": "Shareable: license, notices, documentation, no machine-specific paths",
-      "content_hash": "sha256:e89d4a22362482be3198ed66e5b645142fd842dd12a5cee9195ef3a4a1fa1855"
+      "content_hash": "sha256:32e5fea3ae8d33bb241f9fca760d5cb48481e6f4b6806cbff97fec796acd46c6"
     },
     {
       "id": "C001-US-1107",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 67,
+      "line": 73,
       "title": "Measured delegation and validated plugin",
-      "content_hash": "sha256:ce4a0bf12095a43792d35619989fceb25ea3c36bf61ffbeaa20bf362d60fe975"
+      "content_hash": "sha256:ca17056b3f81d074cb0ef629a27f1ea359dbed94b9dae2aff889f9ae400bc78b"
     },
     {
       "id": "C001-US-1108",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 76,
+      "line": 83,
       "title": "Cross-platform CI prepared but dormant",
-      "content_hash": "sha256:c06e0fcf44e706bf172ccb370214db8f4a7994e644b48ef176664f47c3eb9f71"
+      "content_hash": "sha256:df7ebaa90e835a3c7ed556e26ae9157a7a18fd6c4931259d18ef7f8736d48e14"
     },
     {
       "id": "C001-US-1109",
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-11-packaging-safety/stories.md",
-      "line": 85,
+      "line": 93,
       "title": "A portable methodology core",
-      "content_hash": "sha256:3700b4d5828329dd25be2eab1bfd71c2bde1b7a3e4213c7275fb2ac71e6c6e7e"
+      "content_hash": "sha256:a4169254ac8aeb9ee3476bb125dd4b3532285589641b9145bcf0cb8fb34f5406"
     }
   ],
   "edges": [
@@ -11073,6 +11073,11 @@
     {
       "from": "C001-ADR-001",
       "to": "C001-COMP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-ADR-001",
+      "to": "C001-COMP-07",
       "relation": "references"
     },
     {
@@ -19702,6 +19707,11 @@
     },
     {
       "from": "C001-T-035",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-035",
       "to": "C001-M-3",
       "relation": "references"
     },
@@ -19892,6 +19902,11 @@
     },
     {
       "from": "C001-T-036",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-036",
       "to": "C001-M-3",
       "relation": "references"
     },
@@ -20038,6 +20053,16 @@
     {
       "from": "C001-T-037",
       "to": "C001-COMP-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-037",
+      "to": "C001-IF-04",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-037",
+      "to": "C001-IF-09",
       "relation": "references"
     },
     {
@@ -20272,6 +20297,11 @@
     },
     {
       "from": "C001-T-038",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-038",
       "to": "C001-M-3",
       "relation": "references"
     },
@@ -20398,6 +20428,16 @@
     {
       "from": "C001-T-039",
       "to": "C001-COMP-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-039",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-039",
+      "to": "C001-IF-11",
       "relation": "references"
     },
     {
@@ -20648,6 +20688,16 @@
     {
       "from": "C001-T-041",
       "to": "C001-COMP-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-041",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-041",
+      "to": "C001-IF-09",
       "relation": "references"
     },
     {
@@ -21022,6 +21072,11 @@
     },
     {
       "from": "C001-T-042",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-042",
       "to": "C001-IF-14",
       "relation": "references"
     },
@@ -21308,6 +21363,11 @@
     {
       "from": "C001-T-043",
       "to": "C001-COMP-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-043",
+      "to": "C001-IF-09",
       "relation": "references"
     },
     {
@@ -22932,6 +22992,16 @@
     },
     {
       "from": "C001-T-062",
+      "to": "C001-IF-08",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-062",
+      "to": "C001-IF-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-062",
       "to": "C001-M-6",
       "relation": "references"
     },
@@ -23003,6 +23073,11 @@
     {
       "from": "C001-T-063",
       "to": "C001-COMP-12",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-063",
+      "to": "C001-IF-09",
       "relation": "references"
     },
     {
@@ -26982,6 +27057,16 @@
     },
     {
       "from": "C001-US-105",
+      "to": "C001-CON-14",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-105",
+      "to": "C001-IF-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-105",
       "to": "C001-REQ-104",
       "relation": "traces-to"
     },
@@ -27132,6 +27217,11 @@
     },
     {
       "from": "C001-US-203",
+      "to": "C001-IF-05",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-203",
       "to": "C001-REQ-205",
       "relation": "traces-to"
     },
@@ -27212,6 +27302,11 @@
     },
     {
       "from": "C001-US-208",
+      "to": "C001-IF-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-208",
       "to": "C001-REQ-214",
       "relation": "traces-to"
     },
@@ -27287,6 +27382,11 @@
     },
     {
       "from": "C001-US-302",
+      "to": "C001-REQ-302",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-302",
       "to": "C001-REQ-303",
       "relation": "traces-to"
     },
@@ -27337,6 +27437,11 @@
     },
     {
       "from": "C001-US-304",
+      "to": "C001-IF-06",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-304",
       "to": "C001-REQ-312",
       "relation": "traces-to"
     },
@@ -27362,6 +27467,11 @@
     },
     {
       "from": "C001-US-306",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-306",
       "to": "C001-REQ-314",
       "relation": "traces-to"
     },
@@ -27383,6 +27493,11 @@
     {
       "from": "C001-US-308",
       "to": "C001-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-308",
+      "to": "C001-IF-11",
       "relation": "references"
     },
     {
@@ -27422,6 +27537,11 @@
     },
     {
       "from": "C001-US-402",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-402",
       "to": "C001-REQ-402",
       "relation": "traces-to"
     },
@@ -27438,6 +27558,11 @@
     {
       "from": "C001-US-403",
       "to": "C001-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-403",
+      "to": "C001-IF-04",
       "relation": "references"
     },
     {
@@ -27477,6 +27602,11 @@
     },
     {
       "from": "C001-US-404",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-404",
       "to": "C001-REQ-409",
       "relation": "traces-to"
     },
@@ -27498,6 +27628,11 @@
     {
       "from": "C001-US-405",
       "to": "C001-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-405",
+      "to": "C001-IF-03",
       "relation": "references"
     },
     {
@@ -27562,6 +27697,11 @@
     },
     {
       "from": "C001-US-408",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-408",
       "to": "C001-REQ-419",
       "relation": "traces-to"
     },
@@ -27581,6 +27721,11 @@
       "relation": "traces-to"
     },
     {
+      "from": "C001-US-409",
+      "to": "C001-REQ-720",
+      "relation": "references"
+    },
+    {
       "from": "C001-US-501",
       "to": "C001-CAP-05",
       "relation": "references"
@@ -27588,6 +27733,11 @@
     {
       "from": "C001-US-501",
       "to": "C001-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-501",
+      "to": "C001-IF-06",
       "relation": "references"
     },
     {
@@ -27662,6 +27812,11 @@
     },
     {
       "from": "C001-US-505",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-505",
       "to": "C001-REQ-510",
       "relation": "traces-to"
     },
@@ -27723,6 +27878,11 @@
     {
       "from": "C001-US-601",
       "to": "C001-REQ-608",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-601",
+      "to": "C001-REQ-608",
       "relation": "traces-to"
     },
     {
@@ -27738,6 +27898,11 @@
     {
       "from": "C001-US-602",
       "to": "C001-GOAL-07",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-602",
+      "to": "C001-IF-03",
       "relation": "references"
     },
     {
@@ -27892,6 +28057,21 @@
     },
     {
       "from": "C001-US-701",
+      "to": "C001-IF-11",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-701",
+      "to": "C001-NFR-102",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-701",
+      "to": "C001-NFR-302",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-701",
       "to": "C001-REQ-701",
       "relation": "traces-to"
     },
@@ -27932,6 +28112,11 @@
     },
     {
       "from": "C001-US-702",
+      "to": "C001-IF-12",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-702",
       "to": "C001-REQ-706",
       "relation": "traces-to"
     },
@@ -27964,6 +28149,11 @@
       "from": "C001-US-703",
       "to": "C001-REQ-711",
       "relation": "traces-to"
+    },
+    {
+      "from": "C001-US-703",
+      "to": "C001-REQ-712",
+      "relation": "references"
     },
     {
       "from": "C001-US-703",
@@ -28033,6 +28223,11 @@
     {
       "from": "C001-US-801",
       "to": "C001-CAP-08",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-801",
+      "to": "C001-IF-13",
       "relation": "references"
     },
     {
@@ -28108,11 +28303,21 @@
     {
       "from": "C001-US-803",
       "to": "C001-REQ-809",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-803",
+      "to": "C001-REQ-809",
       "relation": "traces-to"
     },
     {
       "from": "C001-US-804",
       "to": "C001-CAP-08",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-804",
+      "to": "C001-IF-13",
       "relation": "references"
     },
     {
@@ -28139,6 +28344,11 @@
       "from": "C001-US-805",
       "to": "C001-REQ-813",
       "relation": "traces-to"
+    },
+    {
+      "from": "C001-US-805",
+      "to": "C001-REQ-814",
+      "relation": "references"
     },
     {
       "from": "C001-US-806",
@@ -28238,11 +28448,21 @@
     {
       "from": "C001-US-903",
       "to": "C001-REQ-923",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-903",
+      "to": "C001-REQ-923",
       "relation": "traces-to"
     },
     {
       "from": "C001-US-904",
       "to": "C001-CAP-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-904",
+      "to": "C001-NFR-104",
       "relation": "references"
     },
     {
@@ -28268,6 +28488,11 @@
     {
       "from": "C001-US-905",
       "to": "C001-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-905",
+      "to": "C001-IF-03",
       "relation": "references"
     },
     {
@@ -28327,6 +28552,11 @@
     },
     {
       "from": "C001-US-1001",
+      "to": "C001-IF-03",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1001",
       "to": "C001-REQ-1001",
       "relation": "traces-to"
     },
@@ -28343,6 +28573,11 @@
     {
       "from": "C001-US-1002",
       "to": "C001-CAP-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1002",
+      "to": "C001-IF-14",
       "relation": "references"
     },
     {
@@ -28393,6 +28628,11 @@
     {
       "from": "C001-US-1003",
       "to": "C001-REQ-1013",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1003",
+      "to": "C001-REQ-1013",
       "relation": "traces-to"
     },
     {
@@ -28427,7 +28667,17 @@
     },
     {
       "from": "C001-US-1101",
+      "to": "C001-CON-16",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1101",
       "to": "C001-GOAL-08",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1101",
+      "to": "C001-IF-08",
       "relation": "references"
     },
     {
@@ -28457,6 +28707,11 @@
     },
     {
       "from": "C001-US-1102",
+      "to": "C001-IF-07",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1102",
       "to": "C001-REQ-1103",
       "relation": "traces-to"
     },
@@ -28477,6 +28732,11 @@
     },
     {
       "from": "C001-US-1103",
+      "to": "C001-IF-07",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1103",
       "to": "C001-REQ-1106",
       "relation": "traces-to"
     },
@@ -28488,6 +28748,11 @@
     {
       "from": "C001-US-1104",
       "to": "C001-CAP-11",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1104",
+      "to": "C001-CON-03",
       "relation": "references"
     },
     {
@@ -28507,6 +28772,11 @@
     },
     {
       "from": "C001-US-1105",
+      "to": "C001-IF-10",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1105",
       "to": "C001-REQ-1110",
       "relation": "traces-to"
     },
@@ -28514,6 +28784,11 @@
       "from": "C001-US-1105",
       "to": "C001-REQ-1111",
       "relation": "traces-to"
+    },
+    {
+      "from": "C001-US-1105",
+      "to": "C001-REQ-1123",
+      "relation": "references"
     },
     {
       "from": "C001-US-1105",
@@ -28528,6 +28803,11 @@
     {
       "from": "C001-US-1106",
       "to": "C001-CAP-11",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1106",
+      "to": "C001-CON-05",
       "relation": "references"
     },
     {
@@ -28593,6 +28873,11 @@
     {
       "from": "C001-US-1108",
       "to": "C001-CAP-11",
+      "relation": "references"
+    },
+    {
+      "from": "C001-US-1108",
+      "to": "C001-CON-06",
       "relation": "references"
     },
     {

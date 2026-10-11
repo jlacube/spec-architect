@@ -23,7 +23,7 @@ status: approved
 | Critic finding | `CR-<n>` (report-local) | `CR-3` |
 
 `<seq>` is a positive integer written with at least two digits (`01`) for GOAL, SC, NG, AS,
-CON, CAP, INV and M, and at least three digits (`012`) for the other types. Sequence
+CON, CAP, INV, M, COMP and IF, and at least three digits (`012`) for the other types. Sequence
 **blocks** per capability are allowed (e.g. CAP-01 uses 101–199). The ideation-era
 references `IDEA-§n`, `Q<n>`, `OQ-<n>`, `OA-<n>`, `D-<n>` (derived decisions) and `Spec-Q<n>`
 are citation labels, not workspace IDs; the lint resolves them against the approved ideation

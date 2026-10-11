@@ -16,6 +16,7 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **So that** I can approve, waive, ask for revision or stop with full information and little reading
 - **Value / outcome:** Q13; IDEA-§18.2
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-08
+- **Context & notes:** The summary format is C001-IF-13 §1; the conductor adds in plain words what approval commits to and asks through AskUserQuestion.
 - **Requirements:** C001-REQ-801, C001-REQ-802
 - **Traces to:** Q13, IDEA-§18.2
 
@@ -35,6 +36,7 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **So that** known gaps are conscious decisions, visible later
 - **Value / outcome:** IDEA-§18.2 "approve with waivers"
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-08
+- **Context & notes:** Waivers name the rule code, finding ID or question ID and carry the note; they are recorded in `change.md` and `registry.json` (C001-REQ-809).
 - **Requirements:** C001-REQ-807, C001-REQ-808, C001-REQ-809
 - **Traces to:** OA-07, IDEA-§18
 
@@ -44,6 +46,7 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **So that** nobody builds on an approval that no longer matches the text
 - **Value / outcome:** IDEA-P-08
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-08
+- **Context & notes:** Staleness is detected by recomputing the approval hash of C001-IF-13 §2 (frontmatter and whitespace excluded), so cosmetic edits do not stale a phase.
 - **Requirements:** C001-REQ-810, C001-REQ-811
 - **Traces to:** Q13, IDEA-§10.7
 
@@ -53,6 +56,7 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **So that** I re-review only what's affected instead of everything
 - **Value / outcome:** Q5 re-entry; IDEA-§10.7
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-08
+- **Context & notes:** The impact list compares per-ID content hashes stored at approval (C001-REQ-814) with the current ones, so only changed IDs and their dependants are re-reviewed.
 - **Requirements:** C001-REQ-812, C001-REQ-813
 - **Traces to:** Q5, IDEA-§10.7, §20.3
 
@@ -62,5 +66,6 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **So that** abandoned ideas are recorded as such and don't clutter the active list
 - **Value / outcome:** the "stop" verdict (C001-REQ-318) has a consequence
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-08
+- **Context & notes:** A stopped change stays in the workspace for reference; commands that would modify it are refused (ERR-CLI-014).
 - **Requirements:** C001-REQ-815
 - **Traces to:** IDEA-§18.2 option "Reject/stop"

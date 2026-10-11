@@ -189,7 +189,7 @@ Scenario Outline: C001-TS-415 — scenario step structure
   Examples:
     | givens | whens | thens | result           |
     | 1      | 1     | 1     | does not contain |
-    | 0      | 1     | 1     | contains         |
+    | 0      | 1     | 1     | does not contain |
     | 1      | 2     | 1     | contains         |
     | 2      | 1     | 0     | contains         |
 ```

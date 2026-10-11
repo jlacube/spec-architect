@@ -16,6 +16,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** I can install, update and later share it with standard plugin commands
 - **Value / outcome:** C001-GOAL-08; OA-02 option C; OQ-18
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
+- **Context & notes:** The plugin lives under `plugins/architect/` so development files are not installed (C001-CON-16); manifest fields per C001-IF-08, checked with `claude plugin validate`.
 - **Requirements:** C001-REQ-1101, C001-REQ-1102, C001-REQ-1121
 - **Traces to:** Q4, OA-02, OQ-18
 
@@ -25,6 +26,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** the "spec phases only" boundary holds even if an agent misbehaves or is prompt-injected
 - **Value / outcome:** C001-CON-01; D-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
+- **Context & notes:** Enforced by a PreToolUse hook that identifies the calling agent (`agent_type`, verified in spike S-04) and normalises paths before checking them (C001-IF-07).
 - **Requirements:** C001-REQ-1103, C001-REQ-1104
 - **Traces to:** Q2, IDEA-P-01, §17.2
 
@@ -34,6 +36,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** nothing mutates the repository or the machine through Bash
 - **Value / outcome:** C001-CON-01
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
+- **Context & notes:** The allowlist and the refusal of redirection, substitution and chained segments are defined in C001-IF-07 §3.
 - **Requirements:** C001-REQ-1106, C001-REQ-1107
 - **Traces to:** IDEA-§17.2, §17.3
 
@@ -43,6 +46,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** setup is automatic and other agents don't pay their schema cost
 - **Value / outcome:** Q11, OQ-04; IDEA-RK-07
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-11
+- **Context & notes:** MCP servers are declared once in the plugin's `.mcp.json`; per-agent access is set through the `tools` field because plugin agents ignore their own `mcpServers` (C001-CON-03).
 - **Requirements:** C001-REQ-1108, C001-REQ-1109
 - **Traces to:** Q11, OQ-04, D-03
 
@@ -52,6 +56,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** I get a working setup without reading the source
 - **Value / outcome:** C001-SC-09
 - **Priority:** Must · **Size hint:** S · **Capability:** C001-CAP-11
+- **Context & notes:** Each check prints its status, the fallback in use and the install command (C001-IF-10); the minimum Claude Code version is checked too (C001-REQ-1123).
 - **Requirements:** C001-REQ-1110, C001-REQ-1111, C001-REQ-1123
 - **Traces to:** IDEA-§16, §21
 
@@ -61,6 +66,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** I can legally use, install and adapt the suite
 - **Value / outcome:** C001-GOAL-08; Spec-Q2
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
+- **Context & notes:** Hard dependencies only under permissive licenses (C001-CON-05); the structure check rejects absolute machine paths in plugin files (PLG-PATH-001).
 - **Requirements:** C001-REQ-1112, C001-REQ-1113, C001-REQ-1114, C001-REQ-1115, C001-REQ-1120
 - **Traces to:** Q4, Spec-Q2, IDEA-RK-14
 
@@ -70,6 +76,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** regressions in agent descriptions or structure are caught before I rely on them
 - **Value / outcome:** C001-SC-05; IDEA-RK-12
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
+- **Context & notes:** The delegation evals run in the eval harness with the tiers of the test plan; `npm run check` is the single local entry point.
 - **Requirements:** C001-REQ-1116, C001-REQ-1117, C001-REQ-1118, C001-REQ-1122
 - **Traces to:** IDEA-§14.4, §25
 
@@ -79,6 +86,7 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** enabling cross-platform testing later is a switch, not a project
 - **Value / outcome:** Spec-Q4 ("2 will come fast, maybe prepare but don't run on remote servers yet")
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-11
+- **Context & notes:** Windows 11 is the tested platform at v1 (C001-CON-06); the workflows exist for later activation and are not triggered on any remote server.
 - **Requirements:** C001-REQ-1119
 - **Traces to:** Spec-Q4, C001-NG-07
 
@@ -88,5 +96,6 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **So that** they can be reused through AGENTS.md or another runtime's skill loader
 - **Value / outcome:** Q1 portable core; IDEA-P-12
 - **Priority:** Should · **Size hint:** S · **Capability:** C001-CAP-11
+- **Context & notes:** Portability is designed in, not delivered at v1 (IDEA-NG-05); PLG-PORT-001 checks that tool names appear only in "Claude Code wiring" sections.
 - **Requirements:** C001-REQ-1118
 - **Traces to:** Q1, IDEA-§15.2
