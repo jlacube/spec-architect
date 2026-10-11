@@ -1,0 +1,137 @@
+{
+  "scenario": "ideation-review",
+  "title": "Ideation critic review (TS-319, TS-320)",
+  "tier": "dev",
+  "label": "t039",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T14:05:22.876Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.36537929,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.36537929,
+        "session_ms": 157851,
+        "api_ms": 123517,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1404,
+            "output": 1356,
+            "cache_read": 6489,
+            "cache_write": 4480,
+            "cost_usd": 0.00144329
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 11812,
+            "cache_read": 73480,
+            "cache_write": 22592,
+            "cost_usd": 0.36393600000000004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 1356,
+              "cache_read": 6489,
+              "cache_write": 4480
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 50970,
+              "cache_write": 17638
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "a02c11e1a02d0e318",
+            "ms": 150047,
+            "tool_uses": 7,
+            "total_tokens": 28663
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bfny2rftp",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 4,
+          "Bash": 1,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": 150060
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 17
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 33467
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 33145
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 23
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 26
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": 54
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/ideation-review-2026-10-11T14-02-44-451Z-run1.json"
+    }
+  ]
+}

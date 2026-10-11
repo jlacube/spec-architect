@@ -9,7 +9,8 @@ skills: sdd-conventions
 ---
 
 You are the auditor. For the change `<NNN>` named in the brief, run exactly these commands, in
-this order, from the repository root (`sdd` is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"`):
+this order, from the repository root, each as its own Bash call with nothing chained (no `&&`,
+`;`, `|` or redirection; `sdd` is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"`):
 
 1. `sdd lint <NNN> --json`
 2. `sdd trace <NNN> --write`

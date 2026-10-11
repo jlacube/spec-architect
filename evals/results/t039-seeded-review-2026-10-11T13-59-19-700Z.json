@@ -1,0 +1,147 @@
+{
+  "scenario": "seeded-review",
+  "title": "Seeded-spec critic review (TS-710, TS-711, TS-713, calibration)",
+  "tier": "dev",
+  "label": "t039",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T14:02:44.446Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.55367038,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.55367038,
+        "session_ms": 202808,
+        "api_ms": 165101,
+        "turns": 1,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1442,
+            "output": 811,
+            "cache_read": 1663,
+            "cache_write": 3202,
+            "cost_usd": 0.0009665800000000001
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 17577,
+            "cache_read": 74394,
+            "cache_write": 37249,
+            "cost_usd": 0.5527038000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 811,
+              "cache_read": 1663,
+              "cache_write": 3202
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 53066,
+              "cache_write": 21328
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "a43e7379dc8b59d73",
+            "ms": 197190,
+            "tool_uses": 9,
+            "total_tokens": 38651
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bto1w6vf3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 6,
+          "Bash": 1,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": null
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 21
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 14
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 13
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 36103
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 129
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 16
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": 54
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/seeded-review-2026-10-11T13-59-19-700Z-run1.json"
+    }
+  ]
+}

@@ -21,12 +21,24 @@ export default {
     const { failures, check } = checker();
     const cmds = toolCalls(transcript, "Bash").filter((c) => c.agent !== null).map((c) => String(c.input?.command ?? ""));
     const order = [/\blint\b[^\n]*--json/, /\btrace\b/, /\bstale\s+check\b/, /\bstatus\b[^\n]*--write/];
-    const at = order.map((re) => cmds.findIndex((c) => re.test(c)));
+    // Position of each command: its call index, then its offset inside that call.
+    const at = order.map((re) => {
+      const i = cmds.findIndex((c) => re.test(c));
+      return i < 0 ? -1 : i * 1e6 + cmds[i].search(re);
+    });
     check(at.every((i) => i >= 0), `missing commands: ${order.filter((_, i) => at[i] < 0).map(String).join(", ")} (ran: ${cmds.join(" | ")})`);
-    check(at.every((v, i) => i === 0 || v > at[i - 1]), `commands out of order: ${at.join(", ")}`);
+    check(at.every((v, i) => i === 0 || v > at[i - 1]), `commands out of order (ran: ${cmds.join(" | ")})`);
+    check(cmds.every((c) => !/&&|;|\|\||>/.test(c)), `chained commands (Bash allowlist, C001-IF-07 §3): ${cmds.filter((c) => /&&|;|\|\||>/.test(c)).join(" | ")}`);
     const reply = handback(transcript, "sdd-auditor");
     check(/error/i.test(reply) && /warn/i.test(reply) && /info/i.test(reply), "reply lacks error/warning/info counts");
-    for (let n = 1; n <= 8; n++) check(new RegExp(`TR-0${n}`).test(reply), `reply lacks TR-0${n}`);
+    // TR-01 … TR-08 as far as `sdd trace` prints them (plan rules TR-06 … 08 only once the plan started).
+    const traceOut = transcript
+      .filter((r) => r.type === "sdk" && r.message.type === "user" && r.message.parent_tool_use_id)
+      .flatMap((r) => (r.message.message?.content ?? []).filter((b) => b.type === "tool_result").map((b) => (typeof b.content === "string" ? b.content : JSON.stringify(b.content))))
+      .find((c) => /TR-01 /.test(c)) ?? "";
+    const printed = [...new Set([...traceOut.matchAll(/\bTR-0[1-8]\b/g)].map((m) => m[0]))];
+    check(printed.length >= 5, `sdd trace output not found or incomplete: ${printed.join(", ")}`);
+    for (const code of printed) check(reply.includes(code), `reply lacks ${code}`);
     check(/stale/i.test(reply), "reply lacks the stale phases");
     return failures;
   },
