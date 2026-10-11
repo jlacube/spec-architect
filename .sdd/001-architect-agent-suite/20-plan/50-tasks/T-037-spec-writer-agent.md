@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-032, C001-T-019, C001-T-020]
 implements: [C001-REQ-401, C001-REQ-402, C001-REQ-404, C001-REQ-409, C001-REQ-414, C001-REQ-416, C001-REQ-417, C001-REQ-418, C001-REQ-421, C001-REQ-422]
 satisfies_ac: [C001-AC-401.1, C001-AC-402.1, C001-AC-404.1, C001-AC-409.1, C001-AC-414.1, C001-AC-416.1, C001-AC-417.1, C001-AC-418.1, C001-AC-421.1, C001-AC-422.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-401, C001-TS-402, C001-TS-404, C001-TS-411, C001-TS-416, C
 components: [C001-COMP-02, C001-COMP-10]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c5b7c50, completed_at: 2026-10-11, notes: "All 10 TCs pass (6 evals at dev tier, 4 integration); eval spend ~$2.49" }
 ---
 
 # C001-T-037 — Spec-writer agent and authoring skills
