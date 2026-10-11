@@ -12,6 +12,7 @@ owners: [jerome.lacube]
 defects:
   - { id: D-001, ref: C001-REQ-219, summary: "TodoWrite (granted to the conductor by C001-IF-09 A0 and assumed by C001-TS-221) is absent on Opus 5.x in Claude Code >= 2.1.268; TaskCreate/TaskUpdate/TaskList replace it and appear only when the session sets CLAUDE_CODE_ENABLE_TODO_TOOLS=1 (verified 2.1.295, C001-T-030)", reporter: implementer, date: 2026-10-11, status: closed, resolution: "C001-REQ-219, C001-TS-221, C001-IF-09 A0 and C001-IF-10 section 3 revised for the task tools (G2/G3 re-approved 2026-10-11)", closed_at: 2026-10-11 }
   - { id: D-002, ref: C001-REQ-206, summary: "C001-REQ-206/TS-207 require 2-3 options with the first labelled (Recommended) for every optioned question, but C001-REQ-802/TS-802 require the gate question to offer exactly Approve, Approve with waivers, Revise and Stop; the gate question needs an explicit exception (four fixed options, no recommendation) (found in C001-T-034)", reporter: implementer, date: 2026-10-11, status: open, resolution: null, closed_at: null }
+  - { id: D-003, ref: C001-REQ-602, summary: "C001-TS-602, 611, 615, 617, 619 and 620 say 'the lint checks/parses' plan artifacts (task file shape, TC fields, risk fields, rollout content, handoff headings, ordered task list) but C001-IF errors catalogue defines no rule codes for them; verified for now by structure checks in the integration tests (found in C001-T-043)", reporter: implementer, date: 2026-10-11, status: open, resolution: null, closed_at: null }
 ---
 # CHG-001 — Architect agent suite
 

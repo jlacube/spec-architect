@@ -17,7 +17,7 @@ test("phase-ideation step 6 names the twelve ideation sections in order", () => 
   assert.deepEqual(listed, IDEATION_SECTIONS);
 });
 
-for (const name of ["phase-ideation", "phase-spec"]) {
+for (const name of ["phase-ideation", "phase-spec", "phase-plan"]) {
   test(`${name} has eight numbered steps`, () => {
     const steps = [...skill(name).matchAll(/^## Step (\d+) — .+$/gm)].map((m) => Number(m[1]));
     assert.deepEqual(steps, [1, 2, 3, 4, 5, 6, 7, 8]);

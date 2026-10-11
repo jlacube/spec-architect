@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T17:10:23Z",
+  "generated_at": "2026-10-11T17:15:53Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -36,7 +36,7 @@
           "total": 57,
           "done": 39,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },
@@ -55,6 +55,16 @@
           "id": "D-002",
           "ref": "C001-REQ-206",
           "summary": "C001-REQ-206/TS-207 require 2-3 options with the first labelled (Recommended) for every optioned question, but C001-REQ-802/TS-802 require the gate question to offer exactly Approve, Approve with waivers, Revise and Stop; the gate question needs an explicit exception (four fixed options, no recommendation) (found in C001-T-034)",
+          "reporter": "implementer",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-003",
+          "ref": "C001-REQ-602",
+          "summary": "C001-TS-602, 611, 615, 617, 619 and 620 say 'the lint checks/parses' plan artifacts (task file shape, TC fields, risk fields, rollout content, handoff headings, ordered task list) but C001-IF errors catalogue defines no rule codes for them; verified for now by structure checks in the integration tests (found in C001-T-043)",
           "reporter": "implementer",
           "date": "2026-10-11",
           "status": "open",

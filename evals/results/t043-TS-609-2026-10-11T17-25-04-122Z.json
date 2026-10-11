@@ -1,0 +1,172 @@
+{
+  "scenario": "TS-609",
+  "title": "Work breakdown content",
+  "tier": "dev",
+  "label": "t043",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T17:26:57.122Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.25005220499999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "critical path step C004-T-002 → C004-T-003 is not a dependency chain",
+        "critical path step C004-T-004 → C004-T-004 is not a dependency chain",
+        "critical path step C004-T-011 → C004-T-007 is not a dependency chain",
+        "critical path step C004-T-007 → C004-T-006 is not a dependency chain",
+        "critical path step C004-T-010 → C004-T-012 is not a dependency chain",
+        "critical path step C004-T-012 → C004-T-004 is not a dependency chain",
+        "critical path step C004-T-011 → C004-T-008 is not a dependency chain",
+        "critical path step C004-T-009 → C004-T-007 is not a dependency chain",
+        "critical path step C004-T-010 → C004-T-004 is not a dependency chain"
+      ],
+      "metrics": {
+        "cost_usd": 0.25005220499999997,
+        "session_ms": 109664,
+        "api_ms": 60672,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1447,
+            "output": 2112,
+            "cache_read": 5433,
+            "cache_write": 7723,
+            "cost_usd": 0.002220405
+          },
+          "claude-opus-5-5": {
+            "input": 14,
+            "output": 5395,
+            "cache_read": 103479,
+            "cache_write": 23836,
+            "cost_usd": 0.2478318
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 2112,
+              "cache_read": 5433,
+              "cache_write": 7723
+            },
+            "output": "derived"
+          },
+          "architect:sdd-planner": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 81129,
+              "cache_write": 22350
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-planner",
+            "task_id": "a1a8970f2bfcc7f4b",
+            "ms": 97434,
+            "tool_uses": 10,
+            "total_tokens": 25299
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5i0na88a",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bdmwe8nlw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Glob": 1,
+          "Read": 2,
+          "Grep": 3,
+          "Bash": 2,
+          "Write": 1,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-planner",
+            "ms": 97443
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 126
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 24
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 169
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 14
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 32837
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-planner",
+            "ms": 57
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 47
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12524
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 157
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 163
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-609-2026-10-11T17-25-04-122Z-run1.json"
+    }
+  ]
+}

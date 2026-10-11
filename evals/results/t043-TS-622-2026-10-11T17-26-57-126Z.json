@@ -1,0 +1,284 @@
+{
+  "scenario": "TS-622",
+  "title": "Lite plan structure",
+  "tier": "dev",
+  "label": "t043",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T17:31:09.140Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.5199963799999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.5199963799999999,
+        "session_ms": 249363,
+        "api_ms": 145117,
+        "turns": 1,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1427,
+            "output": 407,
+            "cache_read": 1663,
+            "cache_write": 3750,
+            "cost_usd": 0.00083158
+          },
+          "claude-opus-5-5": {
+            "input": 28,
+            "output": 15177,
+            "cache_read": 326789,
+            "cache_write": 30031,
+            "cost_usd": 0.5191648
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 407,
+              "cache_read": 1663,
+              "cache_write": 3750
+            },
+            "output": "derived"
+          },
+          "architect:sdd-planner": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 0,
+              "cache_read": 292228,
+              "cache_write": 29378
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-planner",
+            "task_id": "a727a6f467383ea0b",
+            "ms": 243578,
+            "tool_uses": 28,
+            "total_tokens": 37187
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3h5rqmef",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5kdbpl5a",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "baejze9f8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxz4p4hn3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsvgikl42",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b68osi1x9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Glob": 2,
+          "Read": 10,
+          "Bash": 6,
+          "Write": 2,
+          "Grep": 1,
+          "Edit": 7
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-planner",
+            "ms": null
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 138
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 150
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 20
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 18
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 35905
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 16612
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 16
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-planner",
+            "ms": 57
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-planner",
+            "ms": 53
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12299
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 12
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 53
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12184
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 45
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 11991
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 53
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 44
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 47
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 42
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 11912
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-622-2026-10-11T17-26-57-126Z-run1.json"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
 
-const SKILLS = ["interview-protocol", "options-analysis", "sdd-conventions", "phase-ideation", "phase-spec", "gate-protocol", "research-protocol", "ears-requirements", "user-stories", "nfr-catalogue", "acceptance-scenarios", "dod-catalogue", "critique-rubrics", "code-discovery", "diagramming", "architecture-decisions"];
+const SKILLS = ["interview-protocol", "options-analysis", "sdd-conventions", "phase-ideation", "phase-spec", "gate-protocol", "research-protocol", "ears-requirements", "user-stories", "nfr-catalogue", "acceptance-scenarios", "dod-catalogue", "critique-rubrics", "code-discovery", "diagramming", "architecture-decisions", "planning", "phase-plan"];
 const TOOL = /AskUserQuestion|Agent\(|TodoWrite|mcp__/;
 
 for (const name of SKILLS) {
