@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-030]
 implements: [C001-REQ-205, C001-REQ-206, C001-REQ-207, C001-REQ-208, C001-REQ-209, C001-REQ-210, C001-REQ-211, C001-REQ-220]
 satisfies_ac: [C001-AC-205.1, C001-AC-206.1, C001-AC-207.1, C001-AC-208.1, C001-AC-209.1, C001-AC-210.1, C001-AC-211.1, C001-AC-220.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-206, C001-TS-207, C001-TS-208, C001-TS-209, C001-TS-210, C
 components: [C001-COMP-01, C001-COMP-02, C001-COMP-10]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 0dd7bf7, completed_at: 2026-10-11, notes: "7 of 8 evals pass at dev tier ($1.12); TC-209 runs with the researcher agent in T-035" }
 ---
 
 # C001-T-031 — Interview protocol and questions contract
