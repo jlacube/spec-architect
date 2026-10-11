@@ -2382,9 +2382,9 @@ var require_stringifyNumber = __commonJS({
     function stringifyNumber({ format, minFractionDigits, tag, value: value2 }) {
       if (typeof value2 === "bigint")
         return String(value2);
-      const num2 = typeof value2 === "number" ? value2 : Number(value2);
-      if (!isFinite(num2))
-        return isNaN(num2) ? ".nan" : num2 < 0 ? "-.inf" : ".inf";
+      const num3 = typeof value2 === "number" ? value2 : Number(value2);
+      if (!isFinite(num3))
+        return isNaN(num3) ? ".nan" : num3 < 0 ? "-.inf" : ".inf";
       let n = Object.is(value2, -0) ? "-0" : JSON.stringify(value2);
       if (!format && minFractionDigits && (!tag || tag === "tag:yaml.org,2002:float") && /^-?\d/.test(n) && !n.includes("e")) {
         let i = n.indexOf(".");
@@ -2424,8 +2424,8 @@ var require_float = __commonJS({
       test: /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)[eE][-+]?[0-9]+$/,
       resolve: (str3) => parseFloat(str3),
       stringify(node) {
-        const num2 = Number(node.value);
-        return isFinite(num2) ? num2.toExponential() : stringifyNumber.stringifyNumber(node);
+        const num3 = Number(node.value);
+        return isFinite(num3) ? num3.toExponential() : stringifyNumber.stringifyNumber(node);
       }
     };
     var float = {
@@ -2864,8 +2864,8 @@ var require_float2 = __commonJS({
       test: /^[-+]?(?:[0-9][0-9_]*)?(?:\.[0-9_]*)?[eE][-+]?[0-9]+$/,
       resolve: (str3) => parseFloat(str3.replace(/_/g, "")),
       stringify(node) {
-        const num2 = Number(node.value);
-        return isFinite(num2) ? num2.toExponential() : stringifyNumber.stringifyNumber(node);
+        const num3 = Number(node.value);
+        return isFinite(num3) ? num3.toExponential() : stringifyNumber.stringifyNumber(node);
       }
     };
     var float = {
@@ -3067,23 +3067,23 @@ var require_timestamp = __commonJS({
     function parseSexagesimal(str3, asBigInt) {
       const sign = str3[0];
       const parts = sign === "-" || sign === "+" ? str3.substring(1) : str3;
-      const num2 = (n) => asBigInt ? BigInt(n) : Number(n);
-      const res = parts.replace(/_/g, "").split(":").reduce((res2, p) => res2 * num2(60) + num2(p), num2(0));
-      return sign === "-" ? num2(-1) * res : res;
+      const num3 = (n) => asBigInt ? BigInt(n) : Number(n);
+      const res = parts.replace(/_/g, "").split(":").reduce((res2, p) => res2 * num3(60) + num3(p), num3(0));
+      return sign === "-" ? num3(-1) * res : res;
     }
     function stringifySexagesimal(node) {
       let { value: value2 } = node;
-      let num2 = (n) => n;
+      let num3 = (n) => n;
       if (typeof value2 === "bigint")
-        num2 = (n) => BigInt(n);
+        num3 = (n) => BigInt(n);
       else if (isNaN(value2) || !isFinite(value2))
         return stringifyNumber.stringifyNumber(node);
       let sign = "";
       if (value2 < 0) {
         sign = "-";
-        value2 *= num2(-1);
+        value2 *= num3(-1);
       }
-      const _60 = num2(60);
+      const _60 = num3(60);
       const parts = [value2 % _60];
       if (value2 < 60) {
         parts.unshift(0);
@@ -10769,9 +10769,6 @@ function upgradeToFull(dir2, tpl = {}) {
   return [...writes2.keys()].sort();
 }
 
-// src/hooks/guard-path.ts
-import { statSync as statSync8 } from "node:fs";
-
 // src/hooks/input.ts
 function parseHookInput(text) {
   try {
@@ -10785,7 +10782,203 @@ function isArchitectAgent(input) {
   return typeof input.agent_type === "string" && input.agent_type.startsWith("architect:sdd-");
 }
 
+// src/hooks/guard-bash.ts
+var RULE_ALLOWLIST = "GUARD-BASH-001";
+var RULE_COMPOUND = "GUARD-BASH-002";
+var ALLOWED2 = "node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes; head -n N, tail -n N, wc -l, sort, uniq only after |";
+function tokenise(cmd, dialect) {
+  const segments = [];
+  let words = [];
+  let raw = [];
+  let word = null;
+  let rawWord = "";
+  const push = () => {
+    if (word !== null) {
+      words.push(word);
+      raw.push(rawWord);
+    }
+    word = null;
+    rawWord = "";
+  };
+  const add = (s, r = s) => {
+    word = (word ?? "") + s;
+    rawWord += r;
+  };
+  let i = 0;
+  while (i < cmd.length) {
+    const c = cmd[i];
+    const next = cmd[i + 1];
+    if (c === "'") {
+      const end = cmd.indexOf("'", i + 1);
+      if (end < 0) return { error: "unterminated quote" };
+      add(cmd.slice(i + 1, end), cmd.slice(i, end + 1));
+      i = end + 1;
+      if (dialect === "powershell" && cmd[i] === "'") add("'", "");
+      continue;
+    }
+    if (c === '"') {
+      let j = i + 1;
+      let s = "";
+      for (; ; ) {
+        if (j >= cmd.length) return { error: "unterminated quote" };
+        const d = cmd[j];
+        if (d === '"') break;
+        if (d === "`") return { error: "command substitution (backtick)" };
+        if (d === "$" && cmd[j + 1] === "(") return { error: "command substitution ($()" };
+        if (dialect === "bash" && d === "\\" && j + 1 < cmd.length && '"\\$`'.includes(cmd[j + 1])) {
+          s += cmd[j + 1];
+          j += 2;
+          continue;
+        }
+        s += d;
+        j++;
+      }
+      add(s, cmd.slice(i, j + 1));
+      i = j + 1;
+      continue;
+    }
+    if (c === "`") return { error: "command substitution (backtick)" };
+    if (c === "$" && next === "(") return { error: "command substitution ($()" };
+    if (c === "\\" && dialect === "bash") {
+      if (next === void 0 || next === "\n" || next === "\r") return { error: "line continuation" };
+      add(next, c + next);
+      i += 2;
+      continue;
+    }
+    if (c === ";") return { error: "chained command (;)" };
+    if (c === "&") return { error: next === "&" ? "chained command (&&)" : "background or call operator (&)" };
+    if (c === ">") return { error: "output redirection (>)" };
+    if (c === "<") return { error: "input redirection (<)" };
+    if (c === "\n" || c === "\r") return { error: "line break" };
+    if (c === "(" || c === ")") return { error: "subshell or subexpression" };
+    if (dialect === "powershell" && (c === "{" || c === "}" || c === "@" && next === "(")) return { error: "script block or subexpression" };
+    if (c === "|") {
+      if (next === "|") return { error: "chained command (||)" };
+      if (dialect === "powershell") return { error: "pipe in PowerShell" };
+      push();
+      if (words.length === 0) return { error: "empty pipe segment" };
+      segments.push({ words, raw });
+      words = [];
+      raw = [];
+      i++;
+      continue;
+    }
+    if (c === " " || c === "	") {
+      push();
+      i++;
+      continue;
+    }
+    add(c);
+    i++;
+  }
+  push();
+  if (words.length === 0) return { error: segments.length > 0 ? "empty pipe segment" : "empty command" };
+  segments.push({ words, raw });
+  return { segments };
+}
+var exe = (w, name) => w !== void 0 && (w === name || w.toLowerCase() === `${name}.exe`);
+var num2 = (s) => s !== void 0 && /^\d+$/.test(s);
+function sddCli(words, raw, cwd) {
+  if (!exe(words[0], "node") || words.length < 2) return false;
+  const script = words[1];
+  if (/^"?\$\{CLAUDE_PLUGIN_ROOT\}\/scripts\/sdd\.mjs"?$/.test(raw[1])) return true;
+  if (/[$*?[\]]/.test(raw[1])) return false;
+  if (script.split(/[\\/]/).pop() !== "sdd.mjs") return false;
+  const repo = findWorkspace(normalisePath(cwd)) ?? cwd;
+  const sdd = pathKey(normalisePath(".sdd", { cwd: repo }));
+  const inside = (p) => pathKey(p) === sdd || pathKey(p).startsWith(sdd + "/");
+  const lexical = normalisePath(script, { cwd });
+  return !inside(lexical) && !inside(realPath(lexical)) && !pathKey(realPath(lexical)).startsWith(pathKey(realPath(sdd)) + "/");
+}
+var VERSION_PROBES = [["node", "-v"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
+function versionProbe(words) {
+  return VERSION_PROBES.some((p) => p.length === words.length && exe(words[0], p[0]) && words[1] === p[1]);
+}
+var RIPWIRE_VALUE_VERBS = ["--for", "--pack-task", "--callers", "--uses", "--impact", "--expand"];
+var RIPWIRE_FLAG_VERBS = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
+var RIPWIRE_BOUNDS = ["--token-budget", "--max-tokens", "--limit", "--offset", "--top-k"];
+function ripwire(words) {
+  if (!exe(words[0], "ripwire")) return false;
+  let verbs = 0;
+  let paths = 0;
+  for (const w of words.slice(1)) {
+    const eq = w.indexOf("=");
+    const name = eq < 0 ? w : w.slice(0, eq);
+    const value2 = eq < 0 ? void 0 : w.slice(eq + 1);
+    if (RIPWIRE_VALUE_VERBS.includes(name) && value2) verbs++;
+    else if (RIPWIRE_FLAG_VERBS.includes(w)) verbs++;
+    else if (RIPWIRE_BOUNDS.includes(name) && num2(value2)) continue;
+    else if (w === "--json") continue;
+    else if (!w.startsWith("-") && w !== "") paths++;
+    else return false;
+  }
+  return verbs === 1 && paths <= 1;
+}
+function astGrep(words) {
+  if (!exe(words[0], "ast-grep") || words[1] !== "run") return false;
+  let pattern = 0;
+  for (let i = 2; i < words.length; i++) {
+    const w = words[i];
+    if (w === "--pattern" || w === "-p") {
+      if (words[i + 1] === void 0) return false;
+      pattern++;
+      i++;
+    } else if (w.startsWith("--pattern=")) pattern++;
+    else if (w === "--lang" || w === "-l") {
+      if (words[i + 1] === void 0 || words[i + 1].startsWith("-")) return false;
+      i++;
+    } else if (w.startsWith("--lang=")) continue;
+    else if (w === "--json" || /^--json=(pretty|stream|compact)$/.test(w)) continue;
+    else if (w.startsWith("-")) return false;
+  }
+  return pattern === 1;
+}
+var GIT_READ = ["log", "show", "diff", "blame", "ls-files", "rev-parse", "status", "grep"];
+function gitRead(words) {
+  if (!exe(words[0], "git") || !GIT_READ.includes(words[1] ?? "")) return false;
+  return words.slice(2).every((w) => !(w === "-o" || w.startsWith("--output") || /^-O/.test(w) || w.startsWith("--open-files-in-pager") || w === "--ext-diff"));
+}
+function pipeOnly(words) {
+  const [cmd, ...args] = words;
+  if (cmd === "head" || cmd === "tail") {
+    if (args.length === 0) return true;
+    if (args.length === 1) return /^-n?\d+$/.test(args[0]);
+    return args.length === 2 && args[0] === "-n" && num2(args[1]);
+  }
+  if (cmd === "wc") return args.length === 1 && args[0] === "-l";
+  if (cmd === "sort") return args.every((a) => ["-r", "-n", "-u", "-f"].includes(a));
+  if (cmd === "uniq") return args.every((a) => ["-c", "-d", "-u"].includes(a));
+  return false;
+}
+function deny(rule, tool, cmd, reason) {
+  const shown = cmd.length > 200 ? cmd.slice(0, 200) + "…" : cmd;
+  return { allow: false, message: `${rule}: ${tool} on ${JSON.stringify(shown)} denied — ${reason}. Allowed: ${ALLOWED2}.` };
+}
+function decideBash(input) {
+  if (input === null) return deny(RULE_ALLOWLIST, "tool call", "", "the hook input is not a JSON object");
+  if (!isArchitectAgent(input)) return { allow: true };
+  const tool = input.tool_name;
+  if (tool !== "Bash" && tool !== "PowerShell") return { allow: true };
+  const cmd = input.tool_input?.["command"];
+  if (typeof cmd !== "string" || cmd.trim() === "") return deny(RULE_ALLOWLIST, tool, "", "the tool input has no command");
+  const cwd = typeof input.cwd === "string" && input.cwd !== "" ? input.cwd : null;
+  if (cwd === null) return deny(RULE_ALLOWLIST, tool, cmd, "the hook input has no cwd");
+  const dialect = tool === "PowerShell" ? "powershell" : "bash";
+  const t = tokenise(cmd.trim(), dialect);
+  if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
+  const [first, ...rest] = t.segments;
+  const allowed = dialect === "powershell" ? sddCli(first.words, first.raw, cwd) || versionProbe(first.words) : sddCli(first.words, first.raw, cwd) || versionProbe(first.words) || ripwire(first.words) || astGrep(first.words) || gitRead(first.words);
+  if (!allowed) {
+    const reason = pipeOnly(first.words) && rest.length === 0 ? `${first.words[0]} is allowed only after |` : `${first.words[0]} … is not on the allowlist`;
+    return deny(rest.length > 0 ? RULE_COMPOUND : RULE_ALLOWLIST, tool, cmd, reason);
+  }
+  const bad = rest.find((s) => !pipeOnly(s.words));
+  if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
+  return { allow: true };
+}
+
 // src/hooks/guard-path.ts
+import { statSync as statSync8 } from "node:fs";
 var RULE = "GUARD-PATH-001";
 var WRITE_TOOLS = /* @__PURE__ */ new Set(["Write", "Edit", "MultiEdit", "NotebookEdit"]);
 function below(dir2, target) {
@@ -10800,39 +10993,39 @@ function hardLinkCount(p) {
     return 0;
   }
 }
-function deny(tool, target, reason, sdd) {
+function deny2(tool, target, reason, sdd) {
   return {
     allow: false,
     message: `${RULE}: ${tool} on ${target} denied — ${reason}. Allowed: files under ${sdd}/ (Architect agents write only inside .sdd/).`
   };
 }
 function decidePath(input) {
-  if (input === null) return deny("tool call", "(unknown target)", "the hook input is not a JSON object", ".sdd");
+  if (input === null) return deny2("tool call", "(unknown target)", "the hook input is not a JSON object", ".sdd");
   if (!isArchitectAgent(input)) return { allow: true };
   const tool = typeof input.tool_name === "string" ? input.tool_name : "tool call";
   if (!WRITE_TOOLS.has(tool)) return { allow: true };
   const cwd = input.cwd;
-  if (typeof cwd !== "string" || cwd === "") return deny(tool, "(unknown target)", "the hook input has no cwd", ".sdd");
+  if (typeof cwd !== "string" || cwd === "") return deny2(tool, "(unknown target)", "the hook input has no cwd", ".sdd");
   const repo = normalisePath(findWorkspace(normalisePath(cwd)) ?? cwd);
   const sdd = normalisePath(".sdd", { cwd: repo });
   const ti = input.tool_input ?? {};
   const raw = typeof ti["file_path"] === "string" ? ti["file_path"] : ti["notebook_path"];
-  if (typeof raw !== "string" || raw.trim() === "") return deny(tool, "(no path)", "the tool input names no file", sdd);
-  if (raw.includes("\0")) return deny(tool, JSON.stringify(raw), "the path contains a NUL character", sdd);
+  if (typeof raw !== "string" || raw.trim() === "") return deny2(tool, "(no path)", "the tool input names no file", sdd);
+  if (raw.includes("\0")) return deny2(tool, JSON.stringify(raw), "the path contains a NUL character", sdd);
   const ambiguous = ambiguousWindowsPath(raw);
-  if (ambiguous) return deny(tool, raw, `ambiguous path (${ambiguous})`, sdd);
+  if (ambiguous) return deny2(tool, raw, `ambiguous path (${ambiguous})`, sdd);
   const lexical = normalisePath(raw, { cwd });
-  if (!below(sdd, lexical)) return deny(tool, lexical, "the path is outside .sdd/", sdd);
+  if (!below(sdd, lexical)) return deny2(tool, lexical, "the path is outside .sdd/", sdd);
   const realSdd = realPath(sdd);
   if (pathKey(realSdd) !== pathKey(normalisePath(".sdd", { cwd: realPath(repo) }))) {
-    return deny(tool, lexical, `.sdd/ is a link to ${realSdd}`, sdd);
+    return deny2(tool, lexical, `.sdd/ is a link to ${realSdd}`, sdd);
   }
   const real = realPath(lexical);
-  if (!below(realSdd, real)) return deny(tool, lexical, `the path resolves to ${real}, outside .sdd/`, sdd);
+  if (!below(realSdd, real)) return deny2(tool, lexical, `the path resolves to ${real}, outside .sdd/`, sdd);
   const physical = physicalPath(raw, cwd);
-  if (!below(realSdd, physical)) return deny(tool, lexical, `the path resolves to ${physical}, outside .sdd/`, sdd);
+  if (!below(realSdd, physical)) return deny2(tool, lexical, `the path resolves to ${physical}, outside .sdd/`, sdd);
   const links = hardLinkCount(real);
-  if (links > 1) return deny(tool, lexical, `the file has ${links} hard links and may be shared with a file outside .sdd/`, sdd);
+  if (links > 1) return deny2(tool, lexical, `the file has ${links} hard links and may be shared with a file outside .sdd/`, sdd);
   return { allow: true };
 }
 
@@ -11952,6 +12145,12 @@ function guardPath(ctx) {
   ctx.out.errorLine(d.message);
   return 2;
 }
+function guardBash(ctx) {
+  const d = decideBash(parseHookInput(ctx.stdin()));
+  if (d.allow) return 0;
+  ctx.out.errorLine(d.message);
+  return 2;
+}
 function version(ctx) {
   ctx.out.line(TOOL);
   return 0;
@@ -11978,7 +12177,7 @@ var COMMANDS = [
   { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
-  { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
+  { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },

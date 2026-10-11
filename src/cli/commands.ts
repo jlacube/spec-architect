@@ -13,6 +13,7 @@ import { nextId, tombstoneId } from "../workspace/ledger.ts";
 import { createChange, KINDS, PROFILES, type Kind } from "../workspace/change.ts";
 import { upgradeToFull } from "../workspace/upgrade.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
+import { decideBash } from "../hooks/guard-bash.ts";
 import { decidePath } from "../hooks/guard-path.ts";
 import { parseHookInput } from "../hooks/input.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
@@ -386,6 +387,14 @@ function guardPath(ctx: CommandContext): number {
   return 2;
 }
 
+/** PreToolUse hook on Bash and PowerShell: exit 0 allows, exit 2 denies with the reason on stderr (C001-IF-07 §2). */
+function guardBash(ctx: CommandContext): number {
+  const d = decideBash(parseHookInput(ctx.stdin()));
+  if (d.allow) return 0;
+  ctx.out.errorLine(d.message);
+  return 2;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
@@ -413,7 +422,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"] },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
-  { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [] },
+  { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [] },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
