@@ -1,0 +1,109 @@
+{
+  "scenario": "TS-211",
+  "title": "Free-text answer logged verbatim",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:07:25.813Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.14201160000000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "question 3 answer is not verbatim: \"about tools shapes the requirements of the booking service.\""
+      ],
+      "metrics": {
+        "cost_usd": 0.14201160000000002,
+        "session_ms": 92230,
+        "api_ms": 37845,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 197,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002252
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 3607,
+            "cache_read": 76532,
+            "cache_write": 10860,
+            "cost_usd": 0.1417864
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 3607,
+              "cache_read": 76532,
+              "cache_write": 10860
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bjuvpt6oe",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 2,
+          "Bash": 1,
+          "AskUserQuestion": 1,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 98
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 87
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 51516
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 87
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 61
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 112
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-211-2026-10-11T09-05-52-337Z-run1.json"
+    }
+  ]
+}

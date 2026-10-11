@@ -1,0 +1,98 @@
+{
+  "scenario": "TS-222",
+  "title": "Fatigue guard",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:08:36.797Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.160692,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.160692,
+        "session_ms": 46438,
+        "api_ms": 42557,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 211,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002322
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 4223,
+            "cache_read": 92259,
+            "cache_write": 11500,
+            "cost_usd": 0.16045979999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 4223,
+              "cache_read": 92259,
+              "cache_write": 11500
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 2,
+          "Glob": 1,
+          "AskUserQuestion": 1,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 112
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 200
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 365
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 78
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 77
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 128
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-222-2026-10-11T09-07-48-925Z-run1.json"
+    }
+  ]
+}

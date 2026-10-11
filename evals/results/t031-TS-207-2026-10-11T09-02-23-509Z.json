@@ -1,0 +1,108 @@
+{
+  "scenario": "TS-207",
+  "title": "Option count and ordering",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:03:03.409Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.15911749999999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.15911749999999997,
+        "session_ms": 38091,
+        "api_ms": 33023,
+        "turns": 10,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 194,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002237
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 2244,
+            "cache_read": 84004,
+            "cache_write": 19433,
+            "cost_usd": 0.15889379999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 2244,
+              "cache_read": 84004,
+              "cache_write": 19433
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 4,
+          "Glob": 1,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 122
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 176
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 125
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 156
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 361
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 218
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 80
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 252
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-207-2026-10-11T09-02-23-509Z-run1.json"
+    }
+  ]
+}

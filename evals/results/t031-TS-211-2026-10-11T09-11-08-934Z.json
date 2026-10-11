@@ -1,0 +1,115 @@
+{
+  "scenario": "TS-211",
+  "title": "Free-text answer logged verbatim",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:13:06.492Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.14179409999999998,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.14179409999999998,
+        "session_ms": 115892,
+        "api_ms": 37680,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 198,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.00022569999999999998
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 3437,
+            "cache_read": 77842,
+            "cache_write": 11444,
+            "cost_usd": 0.14156839999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 3437,
+              "cache_read": 77842,
+              "cache_write": 11444
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bbp30gcj1",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bw4xzvdqt",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 1,
+          "Bash": 2,
+          "AskUserQuestion": 1,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 124
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 225
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 48707
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 25324
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 81
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 205
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-211-2026-10-11T09-11-08-934Z-run1.json"
+    }
+  ]
+}

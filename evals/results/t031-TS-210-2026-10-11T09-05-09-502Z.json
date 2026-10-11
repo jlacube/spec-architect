@@ -1,0 +1,104 @@
+{
+  "scenario": "TS-210",
+  "title": "Merging questions from two specialists",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:05:52.331Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.12416579999999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.12416579999999999,
+        "session_ms": 41483,
+        "api_ms": 36949,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 163,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002082
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 2889,
+            "cache_read": 91873,
+            "cache_write": 9551,
+            "cost_usd": 0.1239576
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 2889,
+              "cache_read": 91873,
+              "cache_write": 9551
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 2,
+          "Glob": 1,
+          "Grep": 1,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 104
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 170
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 129
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 491
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 717
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 220
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-210-2026-10-11T09-05-09-502Z-run1.json"
+    }
+  ]
+}

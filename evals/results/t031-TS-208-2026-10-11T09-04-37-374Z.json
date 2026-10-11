@@ -1,0 +1,93 @@
+{
+  "scenario": "TS-208",
+  "title": "Options analysis behind a material question",
+  "tier": "dev",
+  "label": "t031",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T09:05:09.498Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1049984,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1049984,
+        "session_ms": 30425,
+        "api_ms": 26604,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 239,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002462
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 2386,
+            "cache_read": 71986,
+            "cache_write": 8519,
+            "cost_usd": 0.1047522
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 2386,
+              "cache_read": 71986,
+              "cache_write": 8519
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 1,
+          "Glob": 1,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 126
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 159
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 351
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 170
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-208-2026-10-11T09-04-37-374Z-run1.json"
+    }
+  ]
+}
