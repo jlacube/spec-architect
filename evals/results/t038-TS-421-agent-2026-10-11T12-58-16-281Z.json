@@ -1,0 +1,237 @@
+{
+  "scenario": "TS-421-agent",
+  "title": "Test-designer output: acceptance and DoD structure",
+  "tier": "dev",
+  "label": "t038",
+  "agent": "architect:eval-dispatcher",
+  "measured_at": "2026-10-11T13:01:50.827Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.4595896299999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.4595896299999999,
+        "session_ms": 211882,
+        "api_ms": 134524,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1679,
+            "output": 3039,
+            "cache_read": 4993,
+            "cache_write": 8268,
+            "cost_usd": 0.00277083
+          },
+          "claude-opus-5-5": {
+            "input": 18,
+            "output": 13817,
+            "cache_read": 159384,
+            "cache_write": 29706,
+            "cost_usd": 0.4568187999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 3039,
+              "cache_read": 4993,
+              "cache_write": 8268
+            },
+            "output": "derived"
+          },
+          "architect:sdd-test-designer": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 129969,
+              "cache_write": 29415
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-test-designer",
+            "task_id": "a035b2f5ba4b0b15a",
+            "ms": 198931,
+            "tool_uses": 22,
+            "total_tokens": 31983
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "baeypys32",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bg29irxx3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bbcl0ejue",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b9zfv4ji0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 5,
+          "Glob": 1,
+          "Bash": 4,
+          "Write": 3,
+          "Edit": 9
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-test-designer",
+            "ms": 198962
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 23
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 15
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-test-designer",
+            "ms": 194
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 13
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 17
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 33789
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15153
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-test-designer",
+            "ms": 52
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-test-designer",
+            "ms": 49
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-test-designer",
+            "ms": 63
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 43
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 12403
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 45
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 40
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 77
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 36
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 83
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 36
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 67
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 13468
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-421-agent-2026-10-11T12-58-16-281Z-run1.json"
+    }
+  ]
+}

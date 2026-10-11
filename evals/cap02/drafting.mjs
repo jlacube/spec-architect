@@ -8,7 +8,7 @@ import { ROOT } from "../harness/fixtures.mjs";
 import { edit, git, sdd, write } from "../harness/workspaces.mjs";
 
 export function constitution(root, status) {
-  write(root, ".sdd/_constitution/constitution.md", `---\nid: CONSTITUTION\nartifact: constitution\nstatus: ${status}\n---\n# Constitution\n\n## Quality bar\n\nEvery requirement is testable.\n`);
+  write(root, ".sdd/_constitution/constitution.md", `---\nid: CONSTITUTION\nartifact: constitution\nstatus: ${status}\n---\n# Constitution\n\n## Quality bar\n\nEvery requirement is testable.\n\n## Global DoD\n\n| ID | Statement | Evidence type |\n|---|---|---|\n| DOD-G-01 | All automated tests pass in CI | test-report |\n| DOD-G-02 | The change is reviewed by a second person | review-record |\n`);
 }
 
 /** Changes 001…nnn so the last one has the wanted number; returns its folder (".sdd/<nnn>-<slug>"). */
