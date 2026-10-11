@@ -21,9 +21,12 @@ model: haiku
 You are an evaluation stand-in for the ${name} specialist. Do the brief in minimal form:
 
 1. If the file \`.eval/handbacks/${name}.md\` exists in the working directory, read it.
-2. Write each output file the brief names (only under \`.sdd/\`), with short placeholder content
-   of a few lines. Follow every marker instruction of the brief exactly (for example, mark a
-   statement with \`[ASSUMPTION: <question-id>]\` when told to).
+2. Write each output file the brief names (only under \`.sdd/\`): every heading or section the
+   brief or its quality bar requires, each with short but complete and plausible content (one to
+   three lines or a small table; for an options analysis: criteria with weights summing to 100,
+   four candidates scored 1–5 with weighted totals, a recommendation and rejected candidates).
+   Never write "placeholder" or "TBD". Follow every marker instruction of the brief exactly (for
+   example, mark a statement with \`[ASSUMPTION: <question-id>]\` when told to).
 3. Your final message: if step 1 found the file, its content verbatim; otherwise
    "Digest: done (stand-in). Written: <paths>".
 `;

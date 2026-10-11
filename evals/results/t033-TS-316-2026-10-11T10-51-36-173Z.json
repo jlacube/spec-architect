@@ -1,0 +1,155 @@
+{
+  "scenario": "TS-316",
+  "title": "Research with explicit change",
+  "tier": "dev",
+  "label": "t033",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T10:52:57.517Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.095845295,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.095845295,
+        "session_ms": 80302,
+        "api_ms": 33004,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1507,
+            "cache_read": 74508,
+            "cache_write": 9699,
+            "cost_usd": 0.09357660000000001
+          },
+          "claude-haiku-5-5": {
+            "input": 8,
+            "output": 2700,
+            "cache_read": 23052,
+            "cache_write": 5499,
+            "cost_usd": 0.0022686950000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1507,
+              "cache_read": 74508,
+              "cache_write": 9699
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 15336,
+              "cache_write": 4034
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b9lmn7i7t",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvd0jbl3x",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a3ddc9a1e2f82d642",
+            "ms": 14255,
+            "tool_uses": 6,
+            "total_tokens": 9291
+          }
+        ],
+        "tool_calls": {
+          "Bash": 2,
+          "Agent": 1,
+          "Read": 5,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 32887
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12081
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 14265
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 13
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 17
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 16
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-researcher",
+            "ms": 136
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 21
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 65
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 40
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-316-2026-10-11T10-51-36-173Z-run1.json"
+    }
+  ]
+}

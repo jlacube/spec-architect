@@ -1,0 +1,120 @@
+{
+  "scenario": "TS-119",
+  "title": "Constitution drafted by init interview",
+  "tier": "dev",
+  "label": "t033",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T10:54:35.008Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1457638,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1457638,
+        "session_ms": 97385,
+        "api_ms": 38565,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 14,
+            "output": 3831,
+            "cache_read": 105139,
+            "cache_write": 9612,
+            "cost_usd": 0.1457638
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 3831,
+              "cache_read": 105139,
+              "cache_write": 9612
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b61uk6eja",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bqywax2nz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxrgj8ws7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 3,
+          "Read": 1,
+          "AskUserQuestion": 1,
+          "Write": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33225
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11694
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 12
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 55
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 63
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11963
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-119-2026-10-11T10-52-57-522Z-run1.json"
+    }
+  ]
+}

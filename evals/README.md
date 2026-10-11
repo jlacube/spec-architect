@@ -33,7 +33,9 @@ its runs fail with "Not logged in".
 
 ## Writing a scenario
 
-A scenario is an ES module (`evals/cap02/TS-206.eval.mjs`) whose default export holds:
+A scenario is an ES module (`evals/cap02/TS-206.eval.mjs`) whose default export holds the fields
+below. A Scenario Outline exports an array with one scenario per Examples row
+(`evals/cap03/TS-318.eval.mjs`); the runner runs each.
 
 | Field | Meaning |
 |---|---|

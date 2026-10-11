@@ -8,7 +8,7 @@ status: draft
 # {{CHANGE}} — Questions log
 
 ## Round 1 — {{DATE}}
-<!-- Guidance: one table row per question: ID (Q-ideation-nn), question, options presented (recommended first), answer verbatim, resulting DEC. -->
+<!-- Guidance: written by the conductor after each round (interview-protocol skill): one `### Q-<topic>-<nn> — <question>` entry per question with Blocking/Material, Why it matters, Options (recommended first), Rejected, Sources, Answer (verbatim) and Extracted instructions. -->
 
 | ID | Question | Options presented | Answer | Decision |
 |---|---|---|---|---|
