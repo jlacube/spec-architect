@@ -14,6 +14,10 @@ Arguments: `$ARGUMENTS` — the decision question in quotes, optional `--change 
    candidates, recommendation first.
 4. Record P-01's answer: when the change's current phase is `20-plan`, as an ADR
    `20-plan/20-decisions/ADR-<seq>-<slug>.md` (`sdd id next ADR`); otherwise as a decision record
-   `00-ideation/decisions/DEC-<seq>-<slug>.md` (`sdd id next DEC`), with P-01's words verbatim.
+   `00-ideation/decisions/DEC-<seq>-<slug>.md` (`sdd id next DEC`). Start from the plugin
+   template (`${CLAUDE_PLUGIN_ROOT}/templates/full/00-ideation/decisions/DEC-{{SEQ}}-{{SLUG}}.md`, or
+   `…/20-plan/20-decisions/ADR-{{SEQ}}-{{SLUG}}.md`) and keep its headings: for a DEC, Context,
+   Decision, Options considered (link the `OA-<seq>`), Consequences, Decided (date, decider and
+   P-01's answer verbatim).
    If the record lands in an approved phase, the new file makes that phase `stale` (and later phases with it):
    say so and propose re-approval with `/architect:gate <NNN>` (content accepted as is).
