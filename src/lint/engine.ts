@@ -3,7 +3,8 @@
 //
 // Scope (C001-REQ-701): a named change; or every non-archived change plus the workspace root files
 // (SDD.md, registry.json, _living/) when none is named; optionally restricted to one phase, where
-// cross-phase rules still see the whole graph and only findings under that phase are kept.
+// cross-phase rules still see the whole graph and only findings under that phase are kept, plus
+// every finding of the rules that belong to that phase (C001-TS-701 "plus cross-phase rules").
 // Quick mode (C001-REQ-705): only `file` rules, on one file, without the workspace-wide gathering.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -202,7 +203,8 @@ export function lintWorkspace(root: string, options: LintOptions): LintReport {
   const findings: Finding[] = [];
   for (const rule of rules) {
     for (const f of rule.check(ctx)) {
-      if (!inScope(f.path, ctx)) continue;
+      const crossPhase = ctx.phase !== null && rule.phase === ctx.phase && ctx.changes.some((c) => f.path.startsWith(`${c.folder}/`));
+      if (!inScope(f.path, ctx) && !crossPhase) continue;
       const finding: Finding = { code: rule.code, severity: rule.severity, path: f.path, message: f.message, fix: rule.fix };
       if (f.line !== undefined) finding.line = f.line;
       if (f.ids !== undefined) finding.ids = f.ids;

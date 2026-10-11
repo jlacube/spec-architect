@@ -249,3 +249,63 @@ export function sectionByName(doc: SpecDoc, name: string): { line: number; end: 
   const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
   return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
 }
+
+export interface TaskInfo {
+  id: string;
+  /** Change-relative path of the file holding the task. */
+  path: string;
+  line: number;
+  status: string;
+  dependsOn: string[];
+  implements: string[];
+  satisfiesAc: string[];
+  verifiedBy: string[];
+  components: string[];
+  commit: string;
+  /** Lite tasks live as sections of `20-plan/plan.md`. */
+  lite: boolean;
+  /** The task's text: the whole task file, or the lite section (1-based line range in `doc`). */
+  doc: SpecDoc | undefined;
+  from: number;
+  to: number;
+}
+
+function idList(value: unknown, change: string): string[] {
+  const text = Array.isArray(value) ? value.join(", ") : typeof value === "string" ? value : "";
+  return findIds(text, change).map((h) => h.id);
+}
+
+/** The change's tasks: `20-plan/50-tasks/T-*.md` files, or the task sections of a lite plan.md. */
+export function tasks(c: LintChange): TaskInfo[] {
+  const out: TaskInfo[] = [];
+  for (const n of c.graph.nodes) {
+    if (n.type !== "T") continue;
+    if (n.form === "frontmatter" && n.file.startsWith("20-plan/50-tasks/")) {
+      const fm = c.graph.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+      const report = (fm["report"] ?? {}) as Record<string, unknown>;
+      const doc = c.spec.docs.get(n.file);
+      out.push({
+        id: n.id, path: n.file, line: 1, status: typeof fm["status"] === "string" ? fm["status"] : "",
+        dependsOn: idList(fm["depends_on"], c.change), implements: idList(fm["implements"], c.change), satisfiesAc: idList(fm["satisfies_ac"], c.change),
+        verifiedBy: idList(fm["verified_by"], c.change), components: idList(fm["components"], c.change),
+        commit: report["commit"] === null || report["commit"] === undefined ? "" : String(report["commit"]).trim(),
+        lite: false, doc, from: 1, to: doc?.lines.length ?? 0,
+      });
+    } else if (n.form === "heading" && n.file === "20-plan/plan.md") {
+      const doc = c.spec.docs.get(n.file);
+      const field = (name: string) => n.fields.find((f) => f.name.toLowerCase() === name.toLowerCase())?.value ?? "";
+      out.push({
+        id: n.id, path: n.file, line: n.line, status: field("Status").toLowerCase(),
+        dependsOn: idList(field("Depends on"), c.change), implements: idList(field("Implements"), c.change), satisfiesAc: idList(field("Satisfies AC"), c.change),
+        verifiedBy: idList(field("Verified by"), c.change), components: idList(field("Components"), c.change), commit: field("Commit"),
+        lite: true, doc, from: n.line, to: doc ? doc.blocks.sectionEnd(n.line) : n.line,
+      });
+    }
+  }
+  return out;
+}
+
+/** The change's 20-plan Markdown files. */
+export function planDocs(c: LintChange): [string, SpecDoc][] {
+  return [...c.spec.docs].filter(([p]) => p.startsWith("20-plan/"));
+}

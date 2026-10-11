@@ -54,6 +54,8 @@ export interface SpecFacts {
   docs: ReadonlyMap<string, SpecDoc>;
   /** Files of `10-spec/50-interfaces/` by change-relative path; JSON/YAML contracts carry their text. */
   interfaces: ReadonlyMap<string, string | null>;
+  /** The plan phase has started (`phases.20-plan.status` other than `not-started`); plan rules run only then. */
+  planStarted: boolean;
 }
 
 export interface SpecDoc {
@@ -126,5 +128,10 @@ export interface LintRule {
   severity: Severity;
   fix: string;
   scope: RuleScope;
+  /**
+   * Phase of a cross-phase rule (C001-IF-04 §5): with `--phase` equal to it, the rule's findings are
+   * kept wherever they point (a plan rule reports an unplanned requirement at the requirement).
+   */
+  phase?: Phase;
   check(ctx: LintContext): RuleFinding[];
 }

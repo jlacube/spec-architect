@@ -5,6 +5,8 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import { knownSystem, systemName } from "../../../src/lint/ears.ts";
 import { gatherSpecFacts } from "../../../src/lint/spec-facts.ts";
+import { tasks } from "../../../src/lint/spec.ts";
+import type { LintChange } from "../../../src/lint/types.ts";
 import { buildChangeGraph } from "../../../src/model/graph.ts";
 import { repoRoot } from "../../helpers.ts";
 
@@ -29,4 +31,13 @@ test("every CHG-001 statement names a known system", () => {
     const name = systemName(n.fields.find((f) => f.name === "Statement")?.value ?? "");
     assert.ok(name !== null && knownSystem(name, facts.systems), `${n.id}: ${name}`);
   }
+});
+
+test("the CHG-001 plan is started and every task file is read", () => {
+  const change: LintChange = { change: "001", folder: ".sdd/001-architect-agent-suite", profile: "full", graph, spec: facts };
+  assert.equal(facts.planStarted, true);
+  const all = tasks(change);
+  assert.equal(all.length, 58);
+  assert.ok(all.every((t) => t.implements.length + t.satisfiesAc.length > 0 && t.doc !== undefined));
+  assert.ok(all.filter((t) => t.status === "done").every((t) => t.commit !== ""));
 });

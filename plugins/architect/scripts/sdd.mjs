@@ -7752,6 +7752,60 @@ function sectionByName(doc, name) {
   const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
   return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
 }
+function idList(value2, change) {
+  const text = Array.isArray(value2) ? value2.join(", ") : typeof value2 === "string" ? value2 : "";
+  return findIds(text, change).map((h) => h.id);
+}
+function tasks(c) {
+  const out = [];
+  for (const n of c.graph.nodes) {
+    if (n.type !== "T") continue;
+    if (n.form === "frontmatter" && n.file.startsWith("20-plan/50-tasks/")) {
+      const fm = c.graph.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+      const report = fm["report"] ?? {};
+      const doc = c.spec.docs.get(n.file);
+      out.push({
+        id: n.id,
+        path: n.file,
+        line: 1,
+        status: typeof fm["status"] === "string" ? fm["status"] : "",
+        dependsOn: idList(fm["depends_on"], c.change),
+        implements: idList(fm["implements"], c.change),
+        satisfiesAc: idList(fm["satisfies_ac"], c.change),
+        verifiedBy: idList(fm["verified_by"], c.change),
+        components: idList(fm["components"], c.change),
+        commit: report["commit"] === null || report["commit"] === void 0 ? "" : String(report["commit"]).trim(),
+        lite: false,
+        doc,
+        from: 1,
+        to: doc?.lines.length ?? 0
+      });
+    } else if (n.form === "heading" && n.file === "20-plan/plan.md") {
+      const doc = c.spec.docs.get(n.file);
+      const field = (name) => n.fields.find((f) => f.name.toLowerCase() === name.toLowerCase())?.value ?? "";
+      out.push({
+        id: n.id,
+        path: n.file,
+        line: n.line,
+        status: field("Status").toLowerCase(),
+        dependsOn: idList(field("Depends on"), c.change),
+        implements: idList(field("Implements"), c.change),
+        satisfiesAc: idList(field("Satisfies AC"), c.change),
+        verifiedBy: idList(field("Verified by"), c.change),
+        components: idList(field("Components"), c.change),
+        commit: field("Commit"),
+        lite: true,
+        doc,
+        from: n.line,
+        to: doc ? doc.blocks.sectionEnd(n.line) : n.line
+      });
+    }
+  }
+  return out;
+}
+function planDocs(c) {
+  return [...c.spec.docs].filter(([p]) => p.startsWith("20-plan/"));
+}
 
 // src/lint/rules/arch-003.ts
 var FIELDS = ["Name", "Responsibility", "Owned data", "Interfaces", "Depends on", "Realizes", "Status"];
@@ -8222,6 +8276,29 @@ var evd001 = {
   }
 };
 
+// src/lint/rules/gate-001.ts
+var gate001 = {
+  code: "LINT-GATE-001",
+  severity: "error",
+  fix: "Record usage or `unavailable`",
+  scope: "file",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get("change.md");
+      if (!doc) continue;
+      for (const t of tables(doc, "change.md")) {
+        if (!t.header.includes("gate") || !t.header.includes("usage")) continue;
+        for (const r of t.rows) {
+          const usage2 = r.raw.length >= t.header.length ? (r.raw[r.raw.length - 1] ?? "").trim() : "";
+          if (usage2 === "") out.push({ path: `${c.folder}/change.md`, line: r.line, message: `Gate-log row for ${(r.raw[1] ?? "").trim() || "a gate"} has no Usage cell` });
+        }
+      }
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/ide-001.ts
 var IDEATION_SECTIONS = [
   "Document control",
@@ -8495,6 +8572,67 @@ var oa001 = {
   }
 };
 
+// src/lint/rules/obs-001.ts
+var OBS = "20-plan/78-observability.md";
+var obs001 = {
+  code: "LINT-OBS-001",
+  severity: "error",
+  fix: "Map it in `78-observability.md`",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted || c.profile !== "full") continue;
+      const nfrs = c.graph.nodes.filter((n) => n.type === "NFR" && n.form === "heading");
+      if (nfrs.length === 0) continue;
+      const doc = c.spec.docs.get(OBS);
+      const mapped = /* @__PURE__ */ new Set();
+      if (doc)
+        for (const t of tables(doc, OBS))
+          for (const r of t.rows) {
+            const signal = (r.raw[1] ?? "").trim();
+            const task = r.raw.slice(2).some((cell) => findIds(cell, c.change).some((h) => h.id.includes("-T-")));
+            if (signal !== "" && task) for (const h of findIds(r.raw[0] ?? "", c.change)) mapped.add(h.id);
+          }
+      for (const n of nfrs)
+        if (!mapped.has(n.id))
+          out.push({ path: `${c.folder}/${doc ? OBS : n.file}`, line: doc ? 1 : n.line, ids: [n.id], message: `${n.id} has no observability signal with an implementing task` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/plan-001.ts
+var STRATEGY = "20-plan/10-strategy.md";
+var plan001 = {
+  code: "LINT-PLAN-001",
+  severity: "error",
+  fix: "Add goal, exit criterion, tasks",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(STRATEGY);
+      if (!c.spec.planStarted || !doc) continue;
+      for (const t of tables(doc, STRATEGY))
+        for (const r of t.rows) {
+          const id = findIds(r.raw[0] ?? "", c.change).find((h) => h.id.includes("-M-"))?.id;
+          if (!id) continue;
+          const cell = (name) => (r.cells.get(name) ?? "").trim();
+          const missing = [
+            ...cell("goal") === "" ? ["goal"] : [],
+            ...cell("exit criterion") === "" ? ["exit criterion"] : [],
+            ...findIds(cell("tasks"), c.change).some((h) => h.id.includes("-T-")) ? [] : ["task IDs"]
+          ];
+          if (missing.length > 0) out.push({ path: `${c.folder}/${STRATEGY}`, line: r.line, ids: [id], message: `${id} lacks ${missing.join(", ")}` });
+        }
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/reg-001.ts
 var show = (v) => v === void 0 ? "(absent)" : `\`${typeof v === "string" ? v : JSON.stringify(v)}\``;
 var reg001 = {
@@ -8631,6 +8769,85 @@ var sec001 = {
   }
 };
 
+// src/lint/rules/task-001.ts
+function emptySections(t) {
+  const doc = t.doc;
+  if (!doc) return [];
+  if (t.lite) {
+    const lines = doc.lines.slice(t.from - 1, t.to);
+    return ["Targets", "Verification", "Done when"].filter((name) => (fieldText(lines, name) ?? "") === "");
+  }
+  const section = (name) => {
+    const s = sectionByName(doc, name);
+    return s ? doc.lines.slice(s.line, s.end) : [];
+  };
+  const targets2 = sectionByName(doc, "targets");
+  const hasRow = targets2 !== null && tables(doc, t.path).some((tb) => tb.headerLine > targets2.line && tb.headerLine <= targets2.end && tb.rows.length > 0);
+  const step = section("verification").some((l) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(l));
+  const box = section("done when").some((l) => /^\s*[-*+] \[[ xX]\]\s+\S/.test(l));
+  return [...hasRow ? [] : ["Targets"], ...step ? [] : ["Verification"], ...box ? [] : ["Done when"]];
+}
+var task001 = {
+  code: "LINT-TASK-001",
+  severity: "error",
+  fix: "Fill Targets, Verification, Done when",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      for (const t of tasks(c)) {
+        const empty = emptySections(t);
+        if (empty.length > 0) out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: `${t.id} has an empty ${empty.join(", ")} section` });
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/task-002.ts
+var ALLOWED = /* @__PURE__ */ new Set(["shell", "sh", "bash", "powershell", "pwsh", "ps1", "console", "text", "txt"]);
+var task002 = {
+  code: "LINT-TASK-002",
+  severity: "warn",
+  fix: "Move signatures to 50-interfaces; remove bodies",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      for (const t of tasks(c))
+        for (const f of t.doc?.blocks.fences ?? []) {
+          if (f.start < t.from || f.start > t.to) continue;
+          const lang = f.info.split(/\s+/)[0]?.toLowerCase() ?? "";
+          const length = f.end - f.start - 1;
+          if (length > 5 && !ALLOWED.has(lang))
+            out.push({ path: `${c.folder}/${t.path}`, line: f.start, ids: [t.id], message: `${t.id} contains a ${lang || "plain"} code block of ${length} lines` });
+        }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/task-003.ts
+var task003 = {
+  code: "LINT-TASK-003",
+  severity: "warn",
+  fix: "Add `--commit`",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes)
+      for (const t of tasks(c))
+        if (t.status === "done" && (t.commit === "" || t.commit === "null"))
+          out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: `${t.id} is done but records no commit` });
+    return out;
+  }
+};
+
 // src/lint/rules/tr-01.ts
 var tr01 = {
   code: "TR-01",
@@ -8742,6 +8959,77 @@ var tr05 = {
   }
 };
 
+// src/lint/rules/tr-06.ts
+var tr06 = {
+  code: "TR-06",
+  severity: "error",
+  fix: "List the requirement in a task's implements",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      const planned = new Set(tasks(c).filter((t) => t.status !== "dropped").flatMap((t) => t.implements));
+      for (const n of c.graph.nodes)
+        if (n.type === "REQ" && n.form === "heading" && !planned.has(n.id))
+          out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} is implemented by no task` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-07.ts
+var has = (ids, ...types) => ids.some((id) => types.some((t) => id.includes(`-${t}-`)));
+var tr07 = {
+  code: "TR-07",
+  severity: "error",
+  fix: "Link the task to a REQ or AC and to a TS or TC",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      for (const t of tasks(c)) {
+        if (t.status === "dropped") continue;
+        const missing = [
+          ...has([...t.implements, ...t.satisfiesAc], "REQ", "AC") ? [] : ["no REQ or AC in implements or satisfies_ac"],
+          ...has(t.verifiedBy, "TS", "TC") ? [] : ["no TS or TC in verified_by"]
+        ];
+        if (missing.length > 0) out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: `${t.id} lists ${missing.join(" and ")}` });
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-08.ts
+var tr08 = {
+  code: "TR-08",
+  severity: "error",
+  fix: "Map the scenario to a TC in the test plan",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      const mapped = /* @__PURE__ */ new Set();
+      for (const [path, doc] of planDocs(c))
+        for (const t of tables(doc, path))
+          for (const r of t.rows) {
+            if (!findIds(r.raw[0] ?? "", c.change).some((h) => h.id.includes("-TC-"))) continue;
+            for (const cell of r.raw.slice(1)) for (const h of findIds(cell, c.change)) if (h.id.includes("-TS-")) mapped.add(h.id);
+          }
+      for (const n of c.graph.nodes)
+        if (n.type === "TS" && n.form === "scenario" && n.file.startsWith("10-spec/") && !mapped.has(n.id))
+          out.push({ path: `${c.folder}/${n.file}`, line: n.line, ids: [n.id], message: `${n.id} is mapped to no test case` });
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/tr-09.ts
 var tr09 = {
   code: "TR-09",
@@ -8786,6 +9074,58 @@ var tr10 = {
   }
 };
 
+// src/lint/rules/tr-11.ts
+var short = (id) => id.slice(id.indexOf("-") + 1);
+var tr11 = {
+  code: "TR-11",
+  severity: "error",
+  fix: "Remove the cycle or fix the dependency ID",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      const all = tasks(c);
+      const byId = new Map(all.map((t) => [t.id, t]));
+      for (const t of all)
+        for (const d of t.dependsOn)
+          if (!byId.has(d) && !ctx.tombstones.has(d))
+            out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id, d], message: `${t.id} depends on ${d}, which does not exist` });
+      const state = /* @__PURE__ */ new Map();
+      const seen = /* @__PURE__ */ new Set();
+      const stack = [];
+      const visit = (id) => {
+        state.set(id, "open");
+        stack.push(id);
+        for (const d of byId.get(id)?.dependsOn ?? []) {
+          if (!byId.has(d)) continue;
+          if (state.get(d) === "open") {
+            const cycle = stack.slice(stack.indexOf(d));
+            const start = cycle.indexOf([...cycle].sort()[0]);
+            const ordered = [...cycle.slice(start), ...cycle.slice(0, start)];
+            const key = ordered.join(" ");
+            if (!seen.has(key)) {
+              seen.add(key);
+              const first = byId.get(ordered[0]);
+              out.push({
+                path: `${c.folder}/${first.path}`,
+                line: first.line,
+                ids: ordered,
+                message: `Dependency cycle ${[...ordered, ordered[0]].map(short).join(" → ")}`
+              });
+            }
+          } else if (!state.has(d)) visit(d);
+        }
+        stack.pop();
+        state.set(id, "done");
+      };
+      for (const t of [...all].sort((a, b) => a.id.localeCompare(b.id))) if (!state.has(t.id)) visit(t.id);
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/tr-12.ts
 var tr12 = {
   code: "TR-12",
@@ -8811,6 +9151,85 @@ var tr13 = {
         out.push({ path: first.path, line: first.line, ids: [id], message: `${id} is defined ${locs.length} times: ${locs.map((l) => `${l.path}:${l.line}`).join(", ")}` });
       if (ctx.tombstones.has(id))
         out.push({ path: first.path, line: first.line, ids: [id], message: `${id} is tombstoned but defined again at ${locs.map((l) => `${l.path}:${l.line}`).join(", ")}` });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-14.ts
+function risks(c) {
+  const out = [];
+  for (const [path, doc] of planDocs(c))
+    for (const t of tables(doc, path)) {
+      if (!t.header.includes("impact") || !t.header.includes("mitigation")) continue;
+      for (const r of t.rows) {
+        const id = findIds(r.raw[0] ?? "", c.change).find((h) => h.id.includes("-RISK-"))?.id;
+        if (id) out.push({ id, path, line: r.line, impact: (r.cells.get("impact") ?? "").replace(/[*_`]/g, "").trim().toLowerCase(), mitigation: r.cells.get("mitigation") ?? "", text: r.raw.join(" | ") });
+      }
+    }
+  return out;
+}
+var tr14 = {
+  code: "TR-14",
+  severity: "warn",
+  fix: "Reference a mitigation task, or record the acceptance (accepted by P-01)",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      for (const r of risks(c)) {
+        if (r.impact !== "high") continue;
+        const task = findIds(r.mitigation, c.change).some((h) => h.id.includes("-T-"));
+        if (!task && !/\baccepted by P-\d+/i.test(r.mitigation))
+          out.push({ path: `${c.folder}/${r.path}`, line: r.line, ids: [r.id], message: `${r.id} has high impact but no mitigation task or recorded acceptance` });
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/tr-15.ts
+var HOTSPOTS = "20-plan/30-impact/hotspots.md";
+var clean = (s) => s.replace(/`/g, "").replace(/:\d+$/, "").replace(/^\.\//, "").trim();
+function targets(t) {
+  if (!t.doc) return [];
+  const out = [];
+  for (const tb of tables(t.doc, t.path)) {
+    if (tb.headerLine < t.from || tb.headerLine > t.to || !tb.header.includes("target")) continue;
+    for (const r of tb.rows) for (const part of (r.cells.get("target") ?? "").split(/[,;]/)) out.push(clean(part));
+  }
+  if (t.lite)
+    for (const l of t.doc.lines.slice(t.from - 1, t.to)) {
+      const m = /\*\*Targets:\*\*(.*)$/.exec(l);
+      if (m) for (const part of (m[1] ?? "").split(/[,;]/)) out.push(clean(part));
+    }
+  return out.filter(Boolean);
+}
+var tr15 = {
+  code: "TR-15",
+  severity: "warn",
+  fix: "Add a risk referencing the task or its component",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(HOTSPOTS);
+      if (!c.spec.planStarted || !doc) continue;
+      const hot = /* @__PURE__ */ new Set();
+      for (const t of tables(doc, HOTSPOTS)) {
+        const col = t.header.findIndex((h) => h === "file" || h === "path");
+        if (col >= 0) for (const r of t.rows) hot.add(clean(r.raw[col] ?? ""));
+      }
+      const referenced = new Set(risks(c).flatMap((r) => findIds(r.text, c.change).map((h) => h.id)));
+      for (const t of tasks(c)) {
+        if (t.status === "dropped") continue;
+        const touched = targets(t).filter((p) => hot.has(p));
+        if (touched.length === 0 || referenced.has(t.id) || t.components.some((x) => referenced.has(x))) continue;
+        out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: `${t.id} targets hotspot ${touched.join(", ")} but no risk references it or its components` });
+      }
     }
     return out;
   }
@@ -8973,10 +9392,16 @@ var RULES = [
   tr03,
   tr04,
   tr05,
+  tr06,
+  tr07,
+  tr08,
   tr09,
   tr10,
+  tr11,
   tr12,
   tr13,
+  tr14,
+  tr15,
   txt001,
   sec001,
   ws002,
@@ -9008,7 +9433,13 @@ var RULES = [
   if002,
   err001,
   con001,
-  evd001
+  evd001,
+  plan001,
+  task001,
+  task002,
+  task003,
+  obs001,
+  gate001
 ];
 
 // src/lint/engine.ts
@@ -9585,9 +10016,9 @@ function changeEntry(dir2, folder, archived) {
     if (entry.hash_scope === null) delete entry.hash_scope;
     phases[p] = entry;
   }
-  const tasks = taskStates(dir2);
-  const live = tasks.filter((t) => t.status !== "dropped");
-  const dates = tasks.map((t) => t.completedAt).filter((d) => d !== null).sort();
+  const tasks2 = taskStates(dir2);
+  const live = tasks2.filter((t) => t.status !== "dropped");
+  const dates = tasks2.map((t) => t.completedAt).filter((d) => d !== null).sort();
   const last = dates.at(-1);
   return {
     id: str2(fm["id"]) ?? `CHG-${folder.slice(0, 3)}`,
@@ -9599,7 +10030,7 @@ function changeEntry(dir2, folder, archived) {
     phase: str2(fm["phase"]) ?? "00-ideation",
     phases,
     implementation: {
-      status: deriveImplementation(tasks.map((t) => t.status)),
+      status: deriveImplementation(tasks2.map((t) => t.status)),
       tasks: {
         total: live.length,
         done: live.filter((t) => t.status === "done").length,
@@ -9749,7 +10180,10 @@ function gatherSpecFacts(sddDir, graph) {
   const constitution = readLines(join6(sddDir, "_constitution", "glossary.md"));
   if (constitution) systems.push(...systemNames(constitution.lines, constitution.first));
   for (const n of graph.nodes) if (n.type === "COMP" && n.title !== "") systems.push(n.title);
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces };
+  const phases = fm["phases"];
+  const planStatus = phases?.["20-plan"]?.status;
+  const planStarted = typeof planStatus === "string" ? planStatus !== "not-started" : [...docs.keys()].some((p) => p.startsWith("20-plan/"));
+  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces, planStarted };
 }
 
 // src/lint/engine.ts
@@ -9907,7 +10341,8 @@ function lintWorkspace(root, options) {
   const findings = [];
   for (const rule of rules) {
     for (const f of rule.check(ctx)) {
-      if (!inScope(f.path, ctx)) continue;
+      const crossPhase = ctx.phase !== null && rule.phase === ctx.phase && ctx.changes.some((c) => f.path.startsWith(`${c.folder}/`));
+      if (!inScope(f.path, ctx) && !crossPhase) continue;
       const finding = { code: rule.code, severity: rule.severity, path: f.path, message: f.message, fix: rule.fix };
       if (f.line !== void 0) finding.line = f.line;
       if (f.ids !== void 0) finding.ids = f.ids;

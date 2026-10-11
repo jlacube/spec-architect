@@ -70,5 +70,10 @@ export function gatherSpecFacts(sddDir: string, graph: ChangeGraph): SpecFacts {
   if (constitution) systems.push(...systemNames(constitution.lines, constitution.first));
   for (const n of graph.nodes) if (n.type === "COMP" && n.title !== "") systems.push(n.title);
 
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces };
+  // The plan phase has started when change.md says so, or (without phase data) when 20-plan has files.
+  const phases = fm["phases"] as Record<string, { status?: unknown } | undefined> | undefined;
+  const planStatus = phases?.["20-plan"]?.status;
+  const planStarted = typeof planStatus === "string" ? planStatus !== "not-started" : [...docs.keys()].some((p) => p.startsWith("20-plan/"));
+
+  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces, planStarted };
 }
