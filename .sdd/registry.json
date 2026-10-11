@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T20:26:14Z",
+  "generated_at": "2026-10-11T20:27:34Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -95,6 +95,16 @@
           "id": "D-006",
           "ref": "C001-IF-01",
           "summary": "IF-07 §2 wires SubagentStop to 'trace --quiet --write --active', but the IF-01 trace row is '<NNN> [--write] [--json]' (no --active, <NNN> required) and trace exits 1/2 on gaps or errors, while SubagentStop needs exit 0 (exit 2 blocks the subagent). T-052 implemented trace --active: every active change, always exit 0, silent outside a workspace. Proposed: add '--active' to the IF-01 trace row with that behaviour.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-007",
+          "ref": "C001-REQ-1103",
+          "summary": "The path guard denies the agent-memory writes of A1/A2 (memory: project, IF-09, OA-13): Claude Code saves them with Write into <repo>/.claude/agent-memory/architect-sdd-<agent>/, outside .sdd/ (live check, Claude Code 2.1.295, sdd-cartographer on haiku). Proposed: REQ-1103/IF-07 exception letting an Architect agent write only its own memory folder .claude/agent-memory/architect-sdd-<agent>/ (same normalisation), or drop memory from A1/A2.",
           "reporter": "jerome.lacube",
           "date": "2026-10-11",
           "status": "open",
