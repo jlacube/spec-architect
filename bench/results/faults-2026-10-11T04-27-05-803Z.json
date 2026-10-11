@@ -1,0 +1,45 @@
+{
+  "benchmark": "faults",
+  "measured_at": "2026-10-11T04:27:05.803Z",
+  "machine": {
+    "os": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+    "cores": 8,
+    "memory_gb": 16,
+    "node": "v22.13.0"
+  },
+  "nfr": "C001-NFR-301",
+  "threshold": "0 corrupted state files",
+  "runs": 1000,
+  "killed": 887,
+  "completed": 113,
+  "corrupted": [],
+  "leftover_temp_files": 16,
+  "by_command": {
+    "status --write": 334,
+    "task set": 333,
+    "gate approve": 333
+  },
+  "corrupted_count": 0,
+  "command_ms": {
+    "status --write": 235,
+    "task set": 263,
+    "gate approve": 469
+  },
+  "files_written": {
+    "status --write": [
+      ".sdd/registry.json"
+    ],
+    "task set": [
+      ".sdd/registry.json",
+      ".sdd/001-change-001/20-plan/50-tasks/T-001-work-1.md"
+    ],
+    "gate approve": [
+      ".sdd/registry.json",
+      ".sdd/001-change-001/change.md",
+      ".sdd/001-change-001/approvals.json"
+    ]
+  },
+  "pass": true,
+  "note": "kill delays are uniform over 0–1.2 × the command's uninterrupted duration; archive joins with C001-T-053"
+}

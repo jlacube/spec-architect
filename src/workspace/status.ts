@@ -2,10 +2,10 @@
 // render the SDD.md status block, derive implementation status (state-machines §5), and diff a
 // stored registry against the rebuild.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { writeFileAtomic, writeTextAtomic } from "../io/atomic.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
-import { buildChangeGraph } from "../model/graph.ts";
+import { parseArtifact } from "../model/graph.ts";
 import { adoptBootstrap } from "./adopt.ts";
 import { readStatusBlock, STATUS_BEGIN, STATUS_END } from "./sddmd.ts";
 
@@ -57,19 +57,24 @@ interface TaskState {
   completedAt: string | null;
 }
 
+/**
+ * Task statuses of a change: frontmatter of `20-plan/50-tasks/*.md`, plus the task sections of a lite
+ * `20-plan/plan.md`. Only those files are read (the session-start brief, C001-NFR-104).
+ */
 function taskStates(dir: string): TaskState[] {
-  const g = buildChangeGraph(dir);
   const out: TaskState[] = [];
-  for (const n of g.nodes) {
-    if (n.type !== "T") continue;
-    if (n.form === "frontmatter") {
-      const fm = g.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+  const tasksDir = join(dir, "20-plan", "50-tasks");
+  if (existsSync(tasksDir))
+    for (const name of readdirSync(tasksDir).filter((n) => n.endsWith(".md")).sort()) {
+      const fm = splitFrontmatter(readFileSync(join(tasksDir, name), "utf8")).data ?? {};
+      if (typeof fm["id"] !== "string" || !/-T-\d+$/.test(fm["id"])) continue;
       const report = (fm["report"] ?? {}) as Record<string, unknown>;
       out.push({ status: str(fm["status"]) ?? "todo", completedAt: str(report["completed_at"]) });
-    } else {
-      out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
     }
-  }
+  const plan = join(dir, "20-plan", "plan.md");
+  if (existsSync(plan))
+    for (const n of parseArtifact(plan, "20-plan/plan.md", basename(dir).slice(0, 3)).nodes)
+      if (n.type === "T" && n.form === "heading") out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
   return out;
 }
 

@@ -5,6 +5,7 @@ import { cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
+import { generateLarge } from "../../fixtures/gen-large.mjs";
 import { repoRoot } from "../../helpers.ts";
 import { makeWorkspace, runBundled } from "../cli/helpers.ts";
 import { changeMd, SDD_MD } from "../workspace-fixtures.ts";
@@ -42,6 +43,21 @@ test("status --write on a copy of this repository's workspace produces a schema-
     assert.ok(validateRegistry(reg), JSON.stringify(validateRegistry.errors));
     assert.equal(reg.changes[0]?.id, "CHG-001");
     assert.equal(reg.changes[0]?.implementation.tasks.total, 57, "58 tasks, C001-T-071 dropped");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("on fx-large (20 changes), a deleted registry is rebuilt, schema-valid, with every change", () => {
+  const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-fx-large-")));
+  try {
+    generateLarge(root);
+    assert.equal(existsSync(join(root, ".sdd", "registry.json")), false);
+    assert.equal(runBundled(["status", "--write"], { cwd: root }).code, 0);
+    const reg = JSON.parse(readFileSync(join(root, ".sdd", "registry.json"), "utf8")) as { changes: { id: string; phase: string }[] };
+    assert.ok(validateRegistry(reg), JSON.stringify(validateRegistry.errors));
+    assert.equal(reg.changes.length, 20);
+    assert.ok(reg.changes.every((c) => c.phase === "20-plan"));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

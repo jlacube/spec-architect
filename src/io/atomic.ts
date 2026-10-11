@@ -35,6 +35,17 @@ function faultAfterBytes(): number | undefined {
   return m?.[1] !== undefined ? Number(m[1]) : undefined;
 }
 
+/**
+ * `SDD_TEST_FAULT=atomic-write-fail-at=<k>` makes the k-th atomic write of the process fail after
+ * half of its bytes reached the temporary file (fault-injection tests of C001-NFR-301).
+ */
+let writes = 0;
+function failThisWrite(): boolean {
+  writes++;
+  const m = /(?:^|,)atomic-write-fail-at=(\d+)(?:,|$)/.exec(process.env["SDD_TEST_FAULT"] ?? "");
+  return m?.[1] !== undefined && Number(m[1]) === writes;
+}
+
 function writeAll(fd: number, data: Uint8Array): void {
   let off = 0;
   while (off < data.length) off += writeSync(fd, data, off, data.length - off);
@@ -81,7 +92,7 @@ export function writeFileAtomic(path: string, data: string | Uint8Array, options
   let fd: number | undefined;
   try {
     fd = openSync(temp, "wx");
-    const limit = faultAfterBytes();
+    const limit = failThisWrite() ? Math.floor(bytes.length / 2) : faultAfterBytes();
     if (limit !== undefined) {
       writeAll(fd, bytes.subarray(0, Math.min(limit, bytes.length)));
       throw new Error(`SDD_TEST_FAULT: temporary-file write failed after ${Math.min(limit, bytes.length)} bytes`);

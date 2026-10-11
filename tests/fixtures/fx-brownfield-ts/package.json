@@ -1,0 +1,6 @@
+{
+  "name": "fx-brownfield-ts",
+  "private": true,
+  "type": "module",
+  "description": "Brownfield fixture for the cartographer and architect (C001-T-027): small TypeScript service with churn history"
+}

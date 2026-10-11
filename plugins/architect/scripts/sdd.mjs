@@ -7391,6 +7391,12 @@ function faultAfterBytes() {
   const m = /(?:^|,)atomic-write-after-bytes=(\d+)(?:,|$)/.exec(process.env["SDD_TEST_FAULT"] ?? "");
   return m?.[1] !== void 0 ? Number(m[1]) : void 0;
 }
+var writes = 0;
+function failThisWrite() {
+  writes++;
+  const m = /(?:^|,)atomic-write-fail-at=(\d+)(?:,|$)/.exec(process.env["SDD_TEST_FAULT"] ?? "");
+  return m?.[1] !== void 0 && Number(m[1]) === writes;
+}
 function writeAll(fd, data) {
   let off = 0;
   while (off < data.length) off += writeSync(fd, data, off, data.length - off);
@@ -7427,7 +7433,7 @@ function writeFileAtomic(path, data, options = {}) {
   let fd;
   try {
     fd = openSync(temp, "wx");
-    const limit = faultAfterBytes();
+    const limit = failThisWrite() ? Math.floor(bytes.length / 2) : faultAfterBytes();
     if (limit !== void 0) {
       writeAll(fd, bytes.subarray(0, Math.min(limit, bytes.length)));
       throw new Error(`SDD_TEST_FAULT: temporary-file write failed after ${Math.min(limit, bytes.length)} bytes`);
@@ -7528,7 +7534,7 @@ function relativePath(root, target, options = {}) {
 
 // src/cli/commands.ts
 import { existsSync as existsSync14, readdirSync as readdirSync9, readFileSync as readFileSync17, statSync as statSync8 } from "node:fs";
-import { basename as basename7, join as join21 } from "node:path";
+import { basename as basename8, join as join21 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -9911,7 +9917,7 @@ function tombstoneId(dir2, id, reason, date = /* @__PURE__ */ new Date()) {
 
 // src/workspace/status.ts
 import { existsSync as existsSync2, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync2 } from "node:fs";
-import { join as join5 } from "node:path";
+import { basename as basename4, join as join5 } from "node:path";
 
 // src/workspace/adopt.ts
 import { readFileSync as readFileSync3 } from "node:fs";
@@ -9997,17 +10003,19 @@ function deriveImplementation(statuses2) {
 }
 var str2 = (v) => typeof v === "string" ? v : v instanceof Date ? v.toISOString().slice(0, 10) : null;
 function taskStates(dir2) {
-  const g = buildChangeGraph(dir2);
   const out = [];
-  for (const n of g.nodes) {
-    if (n.type !== "T") continue;
-    if (n.form === "frontmatter") {
-      const fm = g.files.find((f) => f.path === n.file)?.frontmatter ?? {};
+  const tasksDir = join5(dir2, "20-plan", "50-tasks");
+  if (existsSync2(tasksDir))
+    for (const name of readdirSync2(tasksDir).filter((n) => n.endsWith(".md")).sort()) {
+      const fm = splitFrontmatter(readFileSync4(join5(tasksDir, name), "utf8")).data ?? {};
+      if (typeof fm["id"] !== "string" || !/-T-\d+$/.test(fm["id"])) continue;
       const report = fm["report"] ?? {};
       out.push({ status: str2(fm["status"]) ?? "todo", completedAt: str2(report["completed_at"]) });
-    } else {
-      out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
     }
+  const plan = join5(dir2, "20-plan", "plan.md");
+  if (existsSync2(plan)) {
+    for (const n of parseArtifact(plan, "20-plan/plan.md", basename4(dir2).slice(0, 3)).nodes)
+      if (n.type === "T" && n.form === "heading") out.push({ status: n.fields.find((f) => f.name === "Status")?.value.trim() || "todo", completedAt: null });
   }
   return out;
 }
@@ -10521,7 +10529,7 @@ function createChange(sddDir, title, options) {
 
 // src/workspace/upgrade.ts
 import { existsSync as existsSync8, mkdirSync as mkdirSync3, readFileSync as readFileSync9, rmSync } from "node:fs";
-import { basename as basename4, dirname as dirname4, join as join11 } from "node:path";
+import { basename as basename5, dirname as dirname4, join as join11 } from "node:path";
 function readLite(path) {
   if (!existsSync8(path)) return null;
   const doc = splitFrontmatter(readFileSync9(path, "utf8"));
@@ -10596,20 +10604,20 @@ ${body}
 }
 function planUpgrade(dir2, tpl) {
   const nnn = changeNumber(dir2);
-  const slug = basename4(dir2).slice(4);
+  const slug = basename5(dir2).slice(4);
   const vars = { CHANGE: `CHG-${nnn}`, P: `C${nnn}`, NNN: nnn, NN: "01", B: "1", SLUG: slug, NAME: slug, TITLE: slug, DATE: "", KIND: "", PROFILE: "full", SEQ: "001" };
-  const writes = /* @__PURE__ */ new Map();
+  const writes2 = /* @__PURE__ */ new Map();
   const append = (rel, status2, chunk) => {
     const target = renderTemplate(rel, vars);
-    const existing = writes.get(target);
+    const existing = writes2.get(target);
     if (existing !== void 0) {
-      writes.set(target, `${existing}
+      writes2.set(target, `${existing}
 ${chunk}
 `);
       return;
     }
     const { fm, title } = frontmatterOf(renderTemplate(resolveTemplate("full", TEMPLATE_OF(rel), tpl).text, vars), status2);
-    writes.set(target, `${fm}
+    writes2.set(target, `${fm}
 ${title}
 
 ${chunk}
@@ -10649,7 +10657,7 @@ ${s.body}`)].filter(Boolean);
         starts.forEach((st, k) => {
           const block = lines.slice(st + 1, starts[k + 1] ?? lines.length);
           const t = taskFile(lines[st].replace(/^### /, ""), block, nnn);
-          writes.set(t.rel, t.text);
+          writes2.set(t.rel, t.text);
         });
         continue;
       }
@@ -10660,7 +10668,7 @@ ${s.body}`)].filter(Boolean);
 ${s.body}`);
     }
   }
-  return { writes, removes };
+  return { writes: writes2, removes };
 }
 function snapshot(g) {
   const texts = /* @__PURE__ */ new Map();
@@ -10670,16 +10678,16 @@ function snapshot(g) {
 }
 function upgradeToFull(dir2, tpl = {}) {
   const before = snapshot(buildChangeGraph(dir2));
-  const { writes, removes } = planUpgrade(dir2, tpl);
+  const { writes: writes2, removes } = planUpgrade(dir2, tpl);
   const originals = /* @__PURE__ */ new Map();
-  for (const rel of [...removes, ...writes.keys()]) {
+  for (const rel of [...removes, ...writes2.keys()]) {
     const p = join11(dir2, ...rel.split("/"));
     if (existsSync8(p)) originals.set(rel, readFileSync9(p, "utf8"));
   }
   const changeMd = join11(dir2, "change.md");
   const changeText = readFileSync9(changeMd, "utf8");
   try {
-    for (const [rel, text] of writes) {
+    for (const [rel, text] of writes2) {
       const p = join11(dir2, ...rel.split("/"));
       mkdirSync3(dirname4(p), { recursive: true });
       writeTextAtomic(p, text);
@@ -10696,16 +10704,16 @@ function upgradeToFull(dir2, tpl = {}) {
       throw new CliError("ERR-CLI-016", { detail });
     }
   } catch (e) {
-    for (const rel of writes.keys()) if (!originals.has(rel)) rmSync(join11(dir2, ...rel.split("/")), { force: true });
+    for (const rel of writes2.keys()) if (!originals.has(rel)) rmSync(join11(dir2, ...rel.split("/")), { force: true });
     for (const [rel, text] of originals) writeTextAtomic(join11(dir2, ...rel.split("/")), text);
     writeTextAtomic(changeMd, changeText);
     throw e;
   }
-  return [...writes.keys()].sort();
+  return [...writes2.keys()].sort();
 }
 
 // src/trace/model.ts
-import { basename as basename5, dirname as dirname5 } from "node:path";
+import { basename as basename6, dirname as dirname5 } from "node:path";
 import { readFileSync as readFileSync10, existsSync as existsSync9 } from "node:fs";
 import { join as join12 } from "node:path";
 var RELATIONS = {
@@ -10736,7 +10744,7 @@ function buildTrace(changeDir) {
   const spec = gatherSpecFacts(sddDir, graph);
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const profile = fm["profile"] === "lite" ? "lite" : "full";
-  const lint2 = { change: graph.change, folder: `.sdd/${basename5(changeDir)}`, profile, graph, spec };
+  const lint2 = { change: graph.change, folder: `.sdd/${basename6(changeDir)}`, profile, graph, spec };
   const defined = new Set(graph.nodes.map((n) => n.id));
   const nodes = [];
   const seen = /* @__PURE__ */ new Set();
@@ -11044,7 +11052,7 @@ function recordApproval(changeDir, phase, approvedAt) {
 // src/gate/gate.ts
 import { execFileSync } from "node:child_process";
 import { readFileSync as readFileSync13 } from "node:fs";
-import { basename as basename6, join as join17 } from "node:path";
+import { basename as basename7, join as join17 } from "node:path";
 
 // src/workspace/change-md.ts
 var import_yaml3 = __toESM(require_dist(), 1);
@@ -11185,7 +11193,7 @@ function readChange(changeDir) {
   const fm = splitFrontmatter(text).data ?? {};
   return { text, fm, phases: fm["phases"] ?? {} };
 }
-var nnnOf = (changeDir) => basename6(changeDir).slice(0, 3);
+var nnnOf = (changeDir) => basename7(changeDir).slice(0, 3);
 var phaseStatus = (s, phase) => String(s.phases[phase]?.["status"] ?? "not-started");
 function lintPhase(ctx) {
   return lintWorkspace(ctx.root, { change: nnnOf(ctx.changeDir), phase: ctx.phase, cwd: ctx.root, rules: ctx.rules, tool: ctx.tool }).findings;
@@ -11571,7 +11579,7 @@ function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
   const dir2 = /^C\d{3}-/.test(raw) ? changeOfId(ctx, raw) : resolveChange(ctx, void 0);
   if (!dir2) throw new CliError("ERR-CLI-002", { NNN: raw.slice(1, 4) });
-  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename7(dir2).slice(0, 3)}-${raw}`;
+  const id = /^C\d{3}-/.test(raw) ? raw : `C${basename8(dir2).slice(0, 3)}-${raw}`;
   const o = { status: ctx.values["status"] };
   for (const k of ["commit", "note", "reason"]) if (ctx.values[k] !== void 0) o[k] = ctx.values[k];
   const r = setTask(dir2, id, o);
@@ -11587,7 +11595,7 @@ function defectAdd(ctx) {
   if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
   const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
   refreshRegistry(ctx);
-  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename7(dir2).slice(0, 3)})`);
+  ctx.out.line(`${d.id}: open on ${ref} (CHG-${basename8(dir2).slice(0, 3)})`);
   return 0;
 }
 function defectClose(ctx) {

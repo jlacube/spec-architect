@@ -1,0 +1,13 @@
+{
+  "benchmark": "guards",
+  "measured_at": "2026-10-11T04:24:53.094Z",
+  "machine": {
+    "os": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+    "cores": 8,
+    "memory_gb": 16,
+    "node": "v22.13.0"
+  },
+  "nfr": "C001-NFR-103",
+  "skipped": "guard commands arrive with C001-T-050/T-051"
+}
