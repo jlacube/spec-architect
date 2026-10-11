@@ -17,6 +17,7 @@ status: draft
 - **Responsibility:**
 - **Realizes:**
 - **Interfaces:**
+- **Depends on:**
 - **Owned data:**
 
 ## 3. Runtime flows
