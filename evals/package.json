@@ -1,0 +1,10 @@
+{
+  "name": "architect-evals",
+  "private": true,
+  "type": "module",
+  "description": "Agent eval harness (C001-T-029, C001-ADR-007). Install with: npm install --omit=optional (the SDK's bundled Claude binary is not used; runs use the desktop-bundled Claude Code).",
+  "engines": { "node": ">=20.11" },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.296"
+  }
+}

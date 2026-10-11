@@ -1,0 +1,204 @@
+{
+  "scenario": "TS-206-stub",
+  "title": "Round size and option format (stub interviewer)",
+  "tier": "milestone",
+  "label": "m3-sample",
+  "agent": "stub:stub-interviewer",
+  "measured_at": "2026-10-11T06:32:29.845Z",
+  "runs": 3,
+  "passed": 3,
+  "pass_rule": "3 / 3 (2 / 3 triggers a 10-run check)",
+  "pass": true,
+  "cost_usd": 0.0041673149999999996,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.001414355,
+        "session_ms": 8435,
+        "api_ms": 7826,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 1329,
+            "cache_read": 16643,
+            "cache_write": 3725,
+            "cost_usd": 0.001414355
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1329,
+              "cache_read": 16643,
+              "cache_write": 3725
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 65
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 20
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 30
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-04-900Z-run1.json"
+    },
+    {
+      "run": 2,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0013536,
+        "session_ms": 8081,
+        "api_ms": 7502,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1321,
+            "cache_read": 11025,
+            "cache_write": 3722,
+            "cost_usd": 0.0013536
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1321,
+              "cache_read": 11025,
+              "cache_write": 3722
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 65
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 33
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-04-900Z-run2.json"
+    },
+    {
+      "run": 3,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00139936,
+        "session_ms": 8403,
+        "api_ms": 7603,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 1303,
+            "cache_read": 16631,
+            "cache_write": 3710,
+            "cost_usd": 0.00139936
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1303,
+              "cache_read": 16631,
+              "cache_write": 3710
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 87
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-04-900Z-run3.json"
+    }
+  ]
+}

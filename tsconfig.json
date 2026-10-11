@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "allowJs": true,
     "outDir": "build",
     "rootDir": "."
   },

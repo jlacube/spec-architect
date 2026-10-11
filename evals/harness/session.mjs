@@ -1,0 +1,58 @@
+// One eval session through the Agent SDK (C001-ADR-007): the plugin is loaded, a main-thread agent
+// is selected, AskUserQuestion is answered with scripted choices through canUseTool, and every SDK
+// message is recorded with its arrival time.
+import { query } from "@anthropic-ai/claude-agent-sdk";
+import { childEnv, claudeExecutable } from "./env.mjs";
+
+/** Default answer policy: the first option, which the interview protocol marks "(Recommended)". */
+export function firstOption(question) {
+  return question.options?.[0]?.label ?? "";
+}
+
+/**
+ * Runs one session and returns `{ transcript, answers, result, wallMs }`.
+ * - `agent`: main-thread agent, e.g. "architect:sdd-conductor"
+ * - `plugins`: plugin directories to load
+ * - `answer(question, call)`: returns the label (or labels) to answer each AskUserQuestion question
+ * - `allowTools`: tools approved without asking (others are denied, so a run cannot wander)
+ */
+export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model }) {
+  const transcript = [];
+  const answers = [];
+  const t0 = Date.now();
+  const stamp = (record) => transcript.push({ t: Date.now() - t0, ...record });
+  const options = {
+    cwd,
+    env: childEnv(),
+    pathToClaudeCodeExecutable: claudeExecutable(),
+    plugins: plugins.map((path) => ({ type: "local", path })),
+    settingSources: [],
+    // Without the Claude Code preset the selected agent's body is not applied (T-029 prototype).
+    systemPrompt: { type: "preset", preset: "claude_code" },
+    maxTurns,
+    maxBudgetUsd,
+    canUseTool: async (toolName, input, opts) => {
+      if (toolName === "AskUserQuestion") {
+        const given = {};
+        for (const q of input.questions ?? []) {
+          const a = answer(q, input);
+          given[q.question] = Array.isArray(a) ? a.join(", ") : a;
+        }
+        answers.push({ toolUseId: opts?.toolUseID ?? null, questions: input.questions ?? [], answers: given });
+        stamp({ type: "harness", event: "answer", questions: input.questions ?? [], answers: given });
+        return { behavior: "allow", updatedInput: { questions: input.questions, answers: given } };
+      }
+      if (allowTools.includes(toolName)) return { behavior: "allow", updatedInput: input };
+      stamp({ type: "harness", event: "denied", tool: toolName, input });
+      return { behavior: "deny", message: `${toolName} is not available in this evaluation` };
+    },
+  };
+  if (agent) options.agent = agent;
+  if (model) options.model = model;
+  let result = null;
+  for await (const message of query({ prompt, options })) {
+    stamp({ type: "sdk", message });
+    if (message.type === "result") result = message;
+  }
+  return { transcript, answers, result, wallMs: Date.now() - t0 };
+}

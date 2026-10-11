@@ -1,0 +1,83 @@
+{
+  "scenario": "delegation-stub",
+  "title": "Delegation to a subagent (stub delegator)",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "stub:stub-delegator",
+  "measured_at": "2026-10-11T06:32:04.585Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.00068075,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00068075,
+        "session_ms": 5266,
+        "api_ms": 3896,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 8,
+            "output": 250,
+            "cache_read": 6520,
+            "cache_write": 3918,
+            "cost_usd": 0.00068075
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 237,
+              "cache_read": 5144,
+              "cache_write": 3310
+            },
+            "output": "derived"
+          },
+          "stub:stub-echo": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 13,
+              "cache_read": 1376,
+              "cache_write": 608
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "stub:stub-echo",
+            "task_id": "a7264deebc03f5b2e",
+            "ms": 923,
+            "tool_uses": 0,
+            "total_tokens": 1999
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "stub:stub-echo",
+            "ms": 33
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/delegation-stub-2026-10-11T06-31-59-315Z-run1.json"
+    }
+  ]
+}

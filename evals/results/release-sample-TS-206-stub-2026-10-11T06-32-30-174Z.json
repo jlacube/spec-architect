@@ -1,0 +1,645 @@
+{
+  "scenario": "TS-206-stub",
+  "title": "Round size and option format (stub interviewer)",
+  "tier": "release",
+  "label": "release-sample",
+  "agent": "stub:stub-interviewer",
+  "measured_at": "2026-10-11T06:33:49.917Z",
+  "runs": 10,
+  "passed": 10,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.013915925,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.001376975,
+        "session_ms": 7835,
+        "api_ms": 7174,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1359,
+            "cache_read": 11025,
+            "cache_write": 3757,
+            "cost_usd": 0.001376975
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1359,
+              "cache_read": 11025,
+              "cache_write": 3757
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 64
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 31
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run1.json"
+    },
+    {
+      "run": 2,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00135711,
+        "session_ms": 7807,
+        "api_ms": 6979,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1326,
+            "cache_read": 11026,
+            "cache_write": 3730,
+            "cost_usd": 0.00135711
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1326,
+              "cache_read": 11026,
+              "cache_write": 3730
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 63
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 58
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run2.json"
+    },
+    {
+      "run": 3,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00146806,
+        "session_ms": 8550,
+        "api_ms": 7896,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 1414,
+            "cache_read": 16726,
+            "cache_write": 3808,
+            "cost_usd": 0.00146806
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1414,
+              "cache_read": 16726,
+              "cache_write": 3808
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 66
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 12
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run3.json"
+    },
+    {
+      "run": 4,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0013991100000000003,
+        "session_ms": 7890,
+        "api_ms": 7194,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1393,
+            "cache_read": 11026,
+            "cache_write": 3798,
+            "cost_usd": 0.0013991100000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1393,
+              "cache_read": 11026,
+              "cache_write": 3798
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 55
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 38
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run4.json"
+    },
+    {
+      "run": 5,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0015164150000000001,
+        "session_ms": 8708,
+        "api_ms": 7874,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1582,
+            "cache_read": 11019,
+            "cache_write": 3981,
+            "cost_usd": 0.0015164150000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1582,
+              "cache_read": 11019,
+              "cache_write": 3981
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 69
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 24
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 18
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run5.json"
+    },
+    {
+      "run": 6,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00139378,
+        "session_ms": 8227,
+        "api_ms": 7572,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 1295,
+            "cache_read": 16623,
+            "cache_write": 3698,
+            "cost_usd": 0.00139378
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1295,
+              "cache_read": 16623,
+              "cache_write": 3698
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 70
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 27
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run6.json"
+    },
+    {
+      "run": 7,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.001320945,
+        "session_ms": 7525,
+        "api_ms": 6819,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1269,
+            "cache_read": 11022,
+            "cache_write": 3669,
+            "cost_usd": 0.001320945
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1269,
+              "cache_read": 11022,
+              "cache_write": 3669
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 73
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run7.json"
+    },
+    {
+      "run": 8,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0013550049999999998,
+        "session_ms": 7814,
+        "api_ms": 6980,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1323,
+            "cache_read": 11028,
+            "cache_write": 3725,
+            "cost_usd": 0.0013550049999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1323,
+              "cache_read": 11028,
+              "cache_write": 3725
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 82
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 31
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run8.json"
+    },
+    {
+      "run": 9,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0014094850000000003,
+        "session_ms": 7975,
+        "api_ms": 7231,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1409,
+            "cache_read": 11026,
+            "cache_write": 3817,
+            "cost_usd": 0.0014094850000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1409,
+              "cache_read": 11026,
+              "cache_write": 3817
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 71
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run9.json"
+    },
+    {
+      "run": 10,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.00131904,
+        "session_ms": 7340,
+        "api_ms": 6704,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1266,
+            "cache_read": 11019,
+            "cache_write": 3666,
+            "cost_usd": 0.00131904
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1266,
+              "cache_read": 11019,
+              "cache_write": 3666
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 60
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 30
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 30
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-32-30-174Z-run10.json"
+    }
+  ]
+}

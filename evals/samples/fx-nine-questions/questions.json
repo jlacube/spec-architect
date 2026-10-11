@@ -1,0 +1,140 @@
+[
+  {
+    "header": "Scope",
+    "question": "Which platforms does v1 target?",
+    "options": [
+      {
+        "label": "Windows only (Recommended)",
+        "description": "Because windows only fits the stated constraints."
+      },
+      {
+        "label": "Windows and macOS",
+        "description": "Because windows and macos fits the stated constraints."
+      },
+      {
+        "label": "All three",
+        "description": "Because all three fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Storage",
+    "question": "Where is state kept?",
+    "options": [
+      {
+        "label": "Files in the repository (Recommended)",
+        "description": "Because files in the repository fits the stated constraints."
+      },
+      {
+        "label": "A local database",
+        "description": "Because a local database fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Gates",
+    "question": "How many gates per change?",
+    "options": [
+      {
+        "label": "Three (Recommended)",
+        "description": "Because three fits the stated constraints."
+      },
+      {
+        "label": "Four",
+        "description": "Because four fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Profile",
+    "question": "Which profile is the default?",
+    "options": [
+      {
+        "label": "Full (Recommended)",
+        "description": "Because full fits the stated constraints."
+      },
+      {
+        "label": "Lite",
+        "description": "Because lite fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Models",
+    "question": "Which model tier runs the critic?",
+    "options": [
+      {
+        "label": "Opus (Recommended)",
+        "description": "Because opus fits the stated constraints."
+      },
+      {
+        "label": "Sonnet",
+        "description": "Because sonnet fits the stated constraints."
+      },
+      {
+        "label": "Haiku",
+        "description": "Because haiku fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "IDs",
+    "question": "Which ID scheme?",
+    "options": [
+      {
+        "label": "Change-scoped prefix (Recommended)",
+        "description": "Because change-scoped prefix fits the stated constraints."
+      },
+      {
+        "label": "Global counter",
+        "description": "Because global counter fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Docs",
+    "question": "Which diagram format?",
+    "options": [
+      {
+        "label": "Mermaid (Recommended)",
+        "description": "Because mermaid fits the stated constraints."
+      },
+      {
+        "label": "Archify",
+        "description": "Because archify fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Research",
+    "question": "Which research source comes first?",
+    "options": [
+      {
+        "label": "Context7 (Recommended)",
+        "description": "Because context7 fits the stated constraints."
+      },
+      {
+        "label": "Web search",
+        "description": "Because web search fits the stated constraints."
+      }
+    ]
+  },
+  {
+    "header": "Budget",
+    "question": "Which eval budget per task?",
+    "options": [
+      {
+        "label": "$5 (Recommended)",
+        "description": "Because $5 fits the stated constraints."
+      },
+      {
+        "label": "$2",
+        "description": "Because $2 fits the stated constraints."
+      },
+      {
+        "label": "$15",
+        "description": "Because $15 fits the stated constraints."
+      }
+    ]
+  }
+]

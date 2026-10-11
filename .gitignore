@@ -4,3 +4,6 @@
 node_modules/
 build/
 coverage/
+# Eval transcripts (local paths, account details) and plugin-eval run folders
+evals/results/transcripts/
+**/evals/results/*/

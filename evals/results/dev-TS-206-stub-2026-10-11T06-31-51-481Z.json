@@ -1,0 +1,78 @@
+{
+  "scenario": "TS-206-stub",
+  "title": "Round size and option format (stub interviewer)",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "stub:stub-interviewer",
+  "measured_at": "2026-10-11T06:31:59.312Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.001696065,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.001696065,
+        "session_ms": 7818,
+        "api_ms": 7214,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1176,
+            "output": 1343,
+            "cache_read": 8159,
+            "cache_write": 6603,
+            "cost_usd": 0.001696065
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1343,
+              "cache_read": 8159,
+              "cache_write": 6603
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 1,
+          "AskUserQuestion": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 55
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 11
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-206-stub-2026-10-11T06-31-51-481Z-run1.json"
+    }
+  ]
+}

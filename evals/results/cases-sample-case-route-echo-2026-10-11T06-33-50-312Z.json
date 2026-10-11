@@ -1,0 +1,83 @@
+{
+  "scenario": "case-route-echo",
+  "title": "route-echo",
+  "tier": "dev",
+  "label": "cases-sample",
+  "agent": null,
+  "measured_at": "2026-10-11T06:33:55.990Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.0038956749999999995,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0038956749999999995,
+        "session_ms": 5670,
+        "api_ms": 5752,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1184,
+            "output": 210,
+            "cache_read": 49240,
+            "cache_write": 25439,
+            "cost_usd": 0.0038956749999999995
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 197,
+              "cache_read": 47864,
+              "cache_write": 24815
+            },
+            "output": "derived"
+          },
+          "stub:stub-echo": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 13,
+              "cache_read": 1376,
+              "cache_write": 624
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "stub:stub-echo",
+            "task_id": "a78a4fc269b8186b8",
+            "ms": 1158,
+            "tool_uses": 0,
+            "total_tokens": 2015
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "stub:stub-echo",
+            "ms": 39
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/case-route-echo-2026-10-11T06-33-50-312Z-run1.json"
+    }
+  ]
+}
