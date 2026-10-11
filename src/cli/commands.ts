@@ -18,6 +18,8 @@ import { rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "
 import { parseId } from "../model/ids.ts";
 import { percent } from "../trace/matrix.ts";
 import { trace } from "../trace/write.ts";
+import { phaseHash } from "../gate/hash.ts";
+import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
 
@@ -84,6 +86,41 @@ function lint(ctx: CommandContext): number {
     }
   }
   return report.summary.error > 0 ? 1 : 0;
+}
+
+/** `sdd hash <NNN> <phase>` (C001-REQ-806): prints the phase's approval hash. */
+function hashCmd(ctx: CommandContext): number {
+  const dir = resolveChange(ctx, ctx.args["NNN"]);
+  const phase = ctx.args["phase"]!;
+  const r = phaseHash(dir, phase);
+  if (ctx.values["json"]) ctx.out.json({ change: `CHG-${ctx.args["NNN"]}`, phase, hash: r.hash, files: r.files });
+  else ctx.out.line(r.hash);
+  return 0;
+}
+
+/**
+ * `sdd stale check [<NNN>]` (C001-REQ-810): recomputes the approved phases of the named change, or of
+ * every non-archived change, and marks stale phases in change.md (then refreshes registry.json and
+ * the SDD.md block when the workspace has them).
+ */
+function staleCmd(ctx: CommandContext): number {
+  const sdd = join(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== undefined ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders(ctx.root).map((f) => join(sdd, f));
+  const results: { change: string; phases: PhaseCheck[] }[] = [];
+  for (const dir of dirs) {
+    const fm = splitFrontmatter(readFileSync(join(dir, "change.md"), "utf8")).data ?? {};
+    if (fm["status"] === "archived") continue;
+    results.push({ change: String(fm["id"] ?? dir), phases: staleCheck(dir, true) });
+  }
+  const changed = results.some((r) => r.phases.some((p) => p.stale));
+  if (changed && existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
+  if (ctx.values["json"]) ctx.out.json({ changes: results });
+  else
+    for (const r of results)
+      for (const p of r.phases)
+        if (p.status === "approved")
+          ctx.out.line(`${r.change} ${p.phase}: ${p.stale ? `stale (${p.stale})` : p.approvedHash === null ? "approved (no approved_hash)" : "approved (hash matches)"}`);
+  return 0;
 }
 
 /**
@@ -223,8 +260,8 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
   { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
-  { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [] },
-  { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
+  { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
+  { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
   { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
   { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"] },
   { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"] },

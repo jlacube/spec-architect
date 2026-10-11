@@ -7368,8 +7368,8 @@ var require_dist = __commonJS({
 });
 
 // src/cli/run.ts
-import { existsSync as existsSync12, statSync as statSync8 } from "node:fs";
-import { dirname as dirname6, join as join16 } from "node:path";
+import { existsSync as existsSync13, statSync as statSync9 } from "node:fs";
+import { dirname as dirname6, join as join18 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/io/atomic.ts
@@ -7527,8 +7527,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { readdirSync as readdirSync7, readFileSync as readFileSync11, statSync as statSync7 } from "node:fs";
-import { join as join15 } from "node:path";
+import { existsSync as existsSync12, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync8 } from "node:fs";
+import { join as join17 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -9608,6 +9608,12 @@ function splitFrontmatter(text) {
   }
   return doc;
 }
+function normalizeForHash(text) {
+  let lines = toLines(text);
+  const end = frontmatterEnd(lines);
+  if (end >= 0) lines = lines.slice(end + 1);
+  return lines.map((l) => l.replace(/[ \t]+$/, "")).join("\n");
+}
 
 // src/model/graph.ts
 import { createHash } from "node:crypto";
@@ -10980,6 +10986,90 @@ function trace(changeDir, options) {
   return result;
 }
 
+// src/gate/hash.ts
+import { createHash as createHash2 } from "node:crypto";
+import { existsSync as existsSync11, readdirSync as readdirSync7, readFileSync as readFileSync11, statSync as statSync7 } from "node:fs";
+import { join as join15 } from "node:path";
+var GENERATED2 = /* @__PURE__ */ new Set(["80-traceability.md", "85-open-items.md"]);
+var PHASES2 = ["00-ideation", "10-spec", "20-plan"];
+var sha2562 = (text) => createHash2("sha256").update(text, "utf8").digest("hex");
+function phaseFiles(phaseDir) {
+  const out = [];
+  const walk = (dir2, prefix) => {
+    for (const name of readdirSync7(dir2)) {
+      const abs = join15(dir2, name);
+      const rel = prefix + name;
+      if (statSync7(abs).isDirectory()) walk(abs, rel + "/");
+      else if (!GENERATED2.has(rel)) out.push(rel);
+    }
+  };
+  if (existsSync11(phaseDir)) walk(phaseDir, "");
+  return out.sort((a, b) => Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8")));
+}
+function fileHash(abs) {
+  return sha2562(normalizeForHash(readFileSync11(abs, "utf8")));
+}
+function phaseHash(changeDir, phase) {
+  const dir2 = join15(changeDir, phase);
+  const files = phaseFiles(dir2);
+  const hashes = files.map((rel) => [rel, fileHash(join15(dir2, ...rel.split("/")))]);
+  if (hashes.length === 1) return { hash: `sha256:${hashes[0][1]}`, files: 1 };
+  return { hash: `sha256:${sha2562(hashes.map(([rel, h]) => `${rel}	${h}
+`).join(""))}`, files: hashes.length };
+}
+
+// src/gate/stale.ts
+import { readFileSync as readFileSync12 } from "node:fs";
+import { join as join16 } from "node:path";
+function setPhaseStatus(text, phase, status2) {
+  const lines = text.split("\n");
+  const end = lines.indexOf("---", 1);
+  const at = lines.findIndex((l, i) => i > 0 && i < end && new RegExp(`^\\s+${phase}:`).test(l));
+  if (at < 0) throw new Error(`change.md has no phase ${phase}`);
+  if (/\{/.test(lines[at])) {
+    lines[at] = lines[at].replace(/(\bstatus:\s*)[\w-]+/, `$1${status2}`);
+    return lines.join("\n");
+  }
+  const indent = /^(\s*)/.exec(lines[at])[1].length;
+  for (let i = at + 1; i < end; i++) {
+    const own = /^(\s*)/.exec(lines[i])[1].length;
+    if (own <= indent) break;
+    if (/^\s+status:/.test(lines[i])) {
+      lines[i] = lines[i].replace(/(status:\s*)[\w-]+/, `$1${status2}`);
+      return lines.join("\n");
+    }
+  }
+  throw new Error(`change.md phase ${phase} has no status`);
+}
+function staleCheck(changeDir, write) {
+  const path = join16(changeDir, "change.md");
+  const text = readFileSync12(path, "utf8");
+  const phases = splitFrontmatter(text).data?.["phases"] ?? {};
+  const checks = [];
+  let staleFrom = false;
+  for (const phase of PHASES2) {
+    const p = phases[phase];
+    const status2 = typeof p?.status === "string" ? p.status : "not-started";
+    const approvedHash = typeof p?.approved_hash === "string" ? p.approved_hash : null;
+    const check = { phase, status: status2, approvedHash, hash: null, stale: null };
+    if (status2 === "approved") {
+      if (approvedHash !== null) check.hash = phaseHash(changeDir, phase).hash;
+      if (staleFrom) check.stale = "earlier phase stale";
+      else if (approvedHash !== null && check.hash !== approvedHash) {
+        check.stale = "hash changed";
+        staleFrom = true;
+      }
+    }
+    checks.push(check);
+  }
+  if (write && checks.some((c) => c.stale)) {
+    let next = text;
+    for (const c of checks) if (c.stale) next = setPhaseStatus(next, c.phase, "stale");
+    writeTextAtomic(path, next);
+  }
+  return checks;
+}
+
 // src/cli/output.ts
 function formatFinding(f) {
   const where = f.line !== void 0 ? `${f.path}:${f.line}` : f.path;
@@ -11024,8 +11114,8 @@ var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join15(root, ".sdd");
-  return readdirSync7(sdd).filter((n) => /^\d{3}-/.test(n) && statSync7(join15(sdd, n)).isDirectory()).sort();
+  const sdd = join17(root, ".sdd");
+  return readdirSync8(sdd).filter((n) => /^\d{3}-/.test(n) && statSync8(join17(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -11042,6 +11132,33 @@ function lint(ctx) {
     }
   }
   return report.summary.error > 0 ? 1 : 0;
+}
+function hashCmd(ctx) {
+  const dir2 = resolveChange(ctx, ctx.args["NNN"]);
+  const phase = ctx.args["phase"];
+  const r = phaseHash(dir2, phase);
+  if (ctx.values["json"]) ctx.out.json({ change: `CHG-${ctx.args["NNN"]}`, phase, hash: r.hash, files: r.files });
+  else ctx.out.line(r.hash);
+  return 0;
+}
+function staleCmd(ctx) {
+  const sdd = join17(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join17(sdd, f));
+  const results = [];
+  for (const dir2 of dirs) {
+    const fm = splitFrontmatter(readFileSync13(join17(dir2, "change.md"), "utf8")).data ?? {};
+    if (fm["status"] === "archived") continue;
+    results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
+  }
+  const changed = results.some((r) => r.phases.some((p) => p.stale));
+  if (changed && existsSync12(join17(sdd, "registry.json"))) writeStatus(sdd);
+  if (ctx.values["json"]) ctx.out.json({ changes: results });
+  else
+    for (const r of results)
+      for (const p of r.phases)
+        if (p.status === "approved")
+          ctx.out.line(`${r.change} ${p.phase}: ${p.stale ? `stale (${p.stale})` : p.approvedHash === null ? "approved (no approved_hash)" : "approved (hash matches)"}`);
+  return 0;
 }
 function traceCmd(ctx) {
   const { out, values } = ctx;
@@ -11063,15 +11180,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join15(ctx.root, ".sdd", match[0]);
+    return join17(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join15(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join15(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join15(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join17(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join17(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join17(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join15(ctx.root, ".sdd");
+  const sdd = join17(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -11098,7 +11215,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join15(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join17(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -11106,7 +11223,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync11(join15(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync13(join17(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -11138,7 +11255,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join15(root, ".sdd");
+  const where = join17(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -11162,8 +11279,8 @@ var COMMANDS = [
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
   { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: R, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"] },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"] },
-  { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [] },
-  { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"] },
+  { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
+  { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
   { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"] },
   { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"] },
   { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"] },
@@ -11219,8 +11336,8 @@ function findCommand(argv) {
 function findWorkspace(start) {
   let dir2 = start;
   for (; ; ) {
-    const sdd = join16(dir2, ".sdd");
-    if (existsSync12(sdd) && statSync8(sdd).isDirectory()) return dir2;
+    const sdd = join18(dir2, ".sdd");
+    if (existsSync13(sdd) && statSync9(sdd).isDirectory()) return dir2;
     const parent = dirname6(dir2);
     if (parent === dir2) return null;
     dir2 = parent;
