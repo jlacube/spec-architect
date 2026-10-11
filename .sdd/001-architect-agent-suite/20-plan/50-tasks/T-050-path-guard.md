@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-5
-status: in-progress
+status: done
 depends_on: [C001-T-005, C001-T-012, C001-T-011]
 implements: [C001-REQ-1103, C001-REQ-1104]
 satisfies_ac: [C001-AC-1103.1, C001-AC-1103.2, C001-AC-1104.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1103, C001-TS-1104, C001-TS-1105, C001-TC-1103, C001-TC-11
 components: [C001-COMP-08]
 risk_refs: [C001-RISK-002]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3e2aa18, completed_at: 2026-10-11, notes: "236-case corpus 100% (0 false allow); guard p95 148 ms; no paid evals" }
 ---
 
 # C001-T-050 — Path guard (PreToolUse) with normalisation and fallback
