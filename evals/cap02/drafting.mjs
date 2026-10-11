@@ -77,29 +77,93 @@ export function specStart({ nnn = 1, profile = "lite", kind = "greenfield", brow
   };
 }
 
-const SECTIONS = ["Document control", "Problem statement", "Q&A decision record", "Goals and non-goals", "Scope boundary", "Research index", "Options and decisions index", "Design direction", "Risks", "Assumptions", "Open questions", "Sources"];
-const STORY = "- **As a** P-01 owner\n- **I want** to apply a coupon\n- **So that** the order is discounted\n- **Value / outcome:** campaigns without refunds\n- **Priority:** Must · **Size hint:** S · **Capability:** C004-CAP-01\n- **Context & notes:** none beyond the requirement\n";
-const COVERAGE = "| REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |\n|---|---|---|---|---|---|---|---|\n| C004-REQ-012 | TS-012 | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x | n/a: x |\n";
+const LITE_SPEC = `---
+id: C001-SPEC
+artifact: spec/lite
+change: CHG-001
+phase: 10-spec
+status: draft
+---
+# CHG-001 — Specification (lite)
 
-/** Full-profile change 004 whose spec is drafted and lint-clean (phase 10-spec draft). */
-export function specDrafted(root) {
-  git(root, "init", "-q");
-  sdd(root, "init");
-  constitution(root, "approved");
-  const dir = changes(root, 4, "Coupon codes", ["--profile", "full"]);
-  write(root, `${dir}/00-ideation/ideation.md`, `# Ideation — Coupon codes\n\n${SECTIONS.map((s, i) => `## ${i + 1}. ${s}\n\nSee the problem: customers cannot use promotional codes.\n`).join("\n")}`);
-  edit(root, `${dir}/change.md`, (t) => t.replace(/^( {2}00-ideation: \{ status: )not-started/m, "$1in-review"));
-  sdd(root, "gate", "approve", "004", "00-ideation", "--note", "Approve", "--by", "p01");
-  const S = `${dir}/10-spec`;
-  write(root, `${S}/10-context/stakeholders-and-personas.md`, "---\nid: C004-SPEC-CTX-04\nartifact: spec/context/personas\n---\n\n## P-01 — Owner\n\nOwns the spec.\n");
-  write(root, `${S}/40-domain/glossary-delta.md`, "---\nid: C004-SPEC-GLOSSARY\nartifact: spec/glossary-delta\n---\n\n## 2. System names\n\n| Name | Component |\n|---|---|\n| checkout | — |\n");
-  write(root, `${S}/20-capabilities/CAP-01-coupons/requirements.md`, "---\nid: C004-CAP-01\nartifact: spec/requirements\n---\n\n### C004-REQ-012 — Apply a coupon\n- **Pattern:** ubiquitous\n- **Statement:** THE checkout SHALL apply one valid percentage coupon to the order total before tax.\n- **Rationale:** campaigns\n- **Stories:** C004-US-001\n- **Priority:** Must\n- **Acceptance:** C004-AC-012.1\n");
-  write(root, `${S}/20-capabilities/CAP-01-coupons/stories.md`, `---\nid: C004-CAP-01\nartifact: spec/stories\n---\n\n### C004-US-001 — Apply a coupon\n${STORY}- **Requirements:** C004-REQ-012\n- **Traces to:** IDEA\n`);
-  write(root, `${S}/20-capabilities/CAP-01-coupons/acceptance.md`, `---\nid: C004-CAP-01\nartifact: spec/acceptance\n---\n\n#### C004-AC-012.1 — Discount applied\n\`\`\`gherkin\nScenario: C004-TS-012 — valid coupon\n  Given an order of 100 EUR and coupon "TEN" for 10 %\n  When the customer applies "TEN"\n  Then the total before tax is 90 EUR\n\`\`\`\n\n${COVERAGE}`);
-  write(root, `${S}/70-dod.md`, "---\nid: C004-SPEC-DOD\nartifact: spec/dod\n---\n\n| ID | Statement | Evidence type | Covers |\n|---|---|---|---|\n| C004-DOD-001 | Tests pass | test-report | C004-REQ-012 |\n");
-  edit(root, `${dir}/change.md`, (t) => t.replace(/^( {2}10-spec: \{ status: )not-started/m, "$1draft").replace(/^phase: 00-ideation$/m, "phase: 10-spec"));
-  sdd(root, "trace", "004", "--write");
+## Context
+
+Customers cannot use promotional codes at checkout (ideation, Problem statement). Persona: C001-P-01 customer.
+
+## Stories
+
+### C001-US-101 — Apply a coupon
+- **As a** customer
+- **I want** to enter a coupon code at checkout
+- **So that** my order is discounted
+- **Value / outcome:** campaigns without manual refunds
+- **Priority:** Must · **Size hint:** S · **Capability:** coupons (the single capability of this lite change)
+- **Context & notes:** one percentage coupon per order (ideation, Scope boundary)
+- **Requirements:** C001-REQ-101
+- **Traces to:** IDEA
+
+## Requirements
+
+### C001-REQ-101 — Apply a percentage coupon
+- **Pattern:** event-driven
+- **Statement:** WHEN a customer applies a valid coupon code at checkout, THE checkout SHALL reduce the order total before tax by the coupon's percentage.
+- **Rationale:** ideation Goals
+- **Stories:** C001-US-101
+- **Priority:** Must
+- **Acceptance:** C001-AC-101.1
+
+## Acceptance
+
+#### C001-AC-101.1 — Discount applied
+\`\`\`gherkin
+Scenario: C001-TS-101 — valid coupon
+  Given an order of 100 EUR and coupon "TEN" for 10 %
+  When the customer applies "TEN"
+  Then the total before tax is 90 EUR
+\`\`\`
+
+| REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
+|---|---|---|---|---|---|---|---|
+| C001-REQ-101 | TS-101 | n/a: one path | n/a: no limits in v1 | n/a: invalid codes are out of scope for v1 | n/a: no roles | n/a: single request | n/a: no abuse vector in v1 |
+
+## NFRs
+
+None for v1 beyond the constitution defaults.
+
+## Domain notes
+
+Coupon: code, percentage (1–100). Applied once per order.
+
+## Interfaces
+
+None new; the checkout form gains a coupon field.
+
+## Architecture notes
+
+The checkout module applies the discount before tax; no new component.
+`;
+
+const LITE_DOD = `---
+id: C001-SPEC-DOD
+artifact: spec/dod
+change: CHG-001
+phase: 10-spec
+---
+# CHG-001 — Definition of done
+
+| ID | Statement | Evidence type | Covers |
+|---|---|---|---|
+| C001-DOD-001 | Acceptance tests pass | test-report | C001-REQ-101 |
+`;
+
+/** Lite change 001 at 10-spec draft whose spec is complete and lint-clean (ideation approved). */
+export function liteSpecDrafted(root) {
+  specStart()(root);
+  write(root, ".sdd/001-coupon-codes/10-spec/spec.md", LITE_SPEC);
+  write(root, ".sdd/001-coupon-codes/10-spec/dod.md", LITE_DOD);
+  edit(root, ".sdd/001-coupon-codes/change.md", (t) => t.replace(/^( {2}10-spec: \{ status: )not-started/m, "$1draft").replace(/^phase: 00-ideation$/m, "phase: 10-spec"));
+  sdd(root, "trace", "001", "--write");
   sdd(root, "status", "--write");
   git(root, "add", "-A");
-  git(root, "commit", "-q", "-m", "fixture");
+  git(root, "commit", "-q", "-m", "draft");
 }

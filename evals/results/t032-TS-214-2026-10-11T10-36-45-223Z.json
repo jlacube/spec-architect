@@ -1,0 +1,274 @@
+{
+  "scenario": "TS-214",
+  "title": "Unattended mode never approves",
+  "tier": "dev",
+  "label": "t032",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T10:39:26.367Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.225926455,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.225926455,
+        "session_ms": 158986,
+        "api_ms": 62609,
+        "turns": 14,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1215,
+            "output": 3779,
+            "cache_read": 23528,
+            "cache_write": 9267,
+            "cost_usd": 0.0034046550000000004
+          },
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 4241,
+            "cache_read": 240919,
+            "cache_write": 17886,
+            "cost_usd": 0.22252180000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 22,
+              "output": 4241,
+              "cache_read": 240919,
+              "cache_write": 17886
+            },
+            "output": "derived"
+          },
+          "architect:sdd-auditor": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 3838,
+              "cache_read": 3084,
+              "cache_write": 1706
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 0,
+              "cache_read": 7932,
+              "cache_write": 4638
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bkoxbuyzv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bcauwqef5",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b1x8rrrap",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-auditor",
+            "task_id": "a32584f6699d84815",
+            "ms": 10761,
+            "tool_uses": 4,
+            "total_tokens": 8630
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpbjvkudp",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "a2dd845945f7cf8f8",
+            "ms": 7042,
+            "tool_uses": 7,
+            "total_tokens": 8665
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0vnowvzw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkas2r6ax",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 6,
+          "Skill": 1,
+          "Agent": 2,
+          "Read": 11,
+          "Write": 1,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33157
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12957
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12306
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-auditor",
+            "ms": 10772
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 16
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 20
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12717
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": 7054
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 7
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 6
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 21
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": 56
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12282
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 69
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12102
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 19
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-214-2026-10-11T10-36-45-223Z-run1.json"
+    }
+  ]
+}

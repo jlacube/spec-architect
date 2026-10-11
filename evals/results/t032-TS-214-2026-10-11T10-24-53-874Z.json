@@ -1,0 +1,268 @@
+{
+  "scenario": "TS-214",
+  "title": "Unattended mode never approves",
+  "tier": "dev",
+  "label": "t032",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T10:27:29.112Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.284174505,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "sdd gate show 001 10-spec was not run"
+      ],
+      "metrics": {
+        "cost_usd": 0.284174505,
+        "session_ms": 153062,
+        "api_ms": 61312,
+        "turns": 25,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1211,
+            "output": 738,
+            "cache_read": 10258,
+            "cache_write": 5797,
+            "cost_usd": 0.001317305
+          },
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 4622,
+            "cache_read": 240321,
+            "cache_write": 28453,
+            "cost_usd": 0.2828572
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 22,
+              "output": 4622,
+              "cache_read": 240321,
+              "cache_write": 28453
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 0,
+              "cache_read": 4900,
+              "cache_write": 5358
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bivw7tbyv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "blrddzl59",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "br3ofvsl2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bn9fhmh7n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "a7087ff81588c059c",
+            "ms": 4577,
+            "tool_uses": 2,
+            "total_tokens": 5877
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bhnc8x6zz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2vb5rwb0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 6,
+          "Skill": 1,
+          "TaskCreate": 5,
+          "TaskUpdate": 7,
+          "Agent": 1,
+          "Read": 2,
+          "Write": 1,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33311
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12548
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 12325
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12613
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11994
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11203
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10512
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 9920
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 9339
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12517
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 12080
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11705
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": 4590
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 18
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": 57
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 50
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12377
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11936
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11545
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 63
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12178
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 32
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-214-2026-10-11T10-24-53-874Z-run1.json"
+    }
+  ]
+}
