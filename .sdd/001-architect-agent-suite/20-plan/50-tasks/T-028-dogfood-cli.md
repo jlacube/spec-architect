@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: in-progress
+status: done
 depends_on: [C001-T-025, C001-T-026, C001-T-027, C001-T-014]
 implements: []
 satisfies_ac: [C001-AC-123.1, C001-AC-806.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-129, C001-TS-806, C001-TC-129, C001-TC-806]
 components: [C001-COMP-03, C001-COMP-04, C001-COMP-05]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: be78eb8, completed_at: 2026-10-11, notes: "M-2 exit met: sdd lint exits 0 on this repository (was 107 errors); G1-G3 re-approved by P-01 after the dogfood revision (decisions in the gate log and docs/dogfood.md); sdd stale check reports no stale phase; TS-129 and TS-806 pass (G1 baseline frozen as tests/fixtures/fx-bootstrap-g1); tools/prototypes deleted (5a74ef4)." }
 ---
 
 # C001-T-028 — Dogfood the CLI core on CHG-001
