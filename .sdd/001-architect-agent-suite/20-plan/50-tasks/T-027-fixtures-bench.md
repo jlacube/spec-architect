@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-2
-status: todo
+status: done
 depends_on: [C001-T-019, C001-T-020, C001-T-021, C001-T-022, C001-T-023]
 implements: []
 satisfies_ac: [C001-AC-705.1, C001-AC-104.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-705, C001-TS-105, C001-TC-705, C001-TC-105]
 components: [C001-COMP-12]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 81c1ffb, completed_at: 2026-10-11, notes: "Fixtures (fx-empty, fx-bootstrap, fx-brownfield-ts, fx-large generator), benchmarks and determinism/fault suites done; C001-TC-705 and 105 pass on fx-large. bench/results: lint p95 1.9 s, quick 373 ms, status --brief 360 ms, faults 1,000 runs with 0 corrupted files (16 orphan temporary files from hard kills, not state corruption). Guards benchmark skipped until C001-T-050/051; session-start measures status --brief until the hook (C001-T-052); archive joins the fault campaign with C001-T-053." }
 ---
 
 # C001-T-027 — Fixture generator, determinism tests and CLI benchmarks
