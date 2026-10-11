@@ -94,7 +94,7 @@ Verified in spikes S-02 and S-06 (Serena 1.7.0, Claude Code 2.1.295). Plugin `.m
 - `${CLAUDE_PLUGIN_DATA}` is the plugin's per-user data folder (`~/.claude/plugins/data/<plugin>-<marketplace>`).
   Serena keeps project data inside the repository (`<repo>/.serena/`) unless
   `${CLAUDE_PLUGIN_DATA}/serena/serena_config.yml` already sets `project_serena_folder_location`
-  elsewhere when Serena first starts; the doctor writes that file (C001-REQ-1013), pointing it to
+  elsewhere when Serena first starts; `sdd serena-config` writes that file when init or the doctor runs (C001-REQ-1013), pointing it to
   `${CLAUDE_PLUGIN_DATA}/serena/projects/$projectFolderName/.serena`, with `web_dashboard: False`.
 - Serena answers with 0-based `start_line`/`end_line`; evidence entries (C001-IF-03 §11) are 1-based.
 - Serena connects a few seconds after session start; until then `ToolSearch` reports it as still

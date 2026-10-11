@@ -25,7 +25,7 @@ test("CHG-001 specification definitions match the prototype counts", () => {
 });
 
 test("CHG-001 plan definitions are found in their defining files", () => {
-  assert.deepEqual(countByType("20-plan"), { T: 58, TC: 233, RISK: 13, M: 7, ADR: 7, RB: 4, OA: 2 });
+  assert.deepEqual(countByType("20-plan"), { T: 60, TC: 233, RISK: 13, M: 7, ADR: 7, RB: 4, OA: 2 });
 });
 
 test("no ID is defined twice in CHG-001", () => {

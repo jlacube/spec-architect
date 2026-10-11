@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-11T07:00:49.814Z",
+  "generated_at": "2026-10-11T19:23:32.564Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -320,7 +320,7 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 81,
       "title": "Options shape",
-      "content_hash": "sha256:533fd0fcf61260bc52c06f195b7171eca49a3cda80d22b88324ccac83a93fc98"
+      "content_hash": "sha256:d944d359aeadf624b9dc7d36ce2727cd5a9ad309b53f0f9d33b9fd90b79d64dd"
     },
     {
       "id": "C001-AC-207.1",
@@ -912,13 +912,13 @@
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
       "line": 24,
       "title": "Task file sections and frontmatter",
-      "content_hash": "sha256:283997467fdfc92c95f4b30a59b7ec44a061477b24b78e09d6d5d43b1c6b683e"
+      "content_hash": "sha256:4ccc94a19aa892c21d49bb7de3fc8c0084c88d84f3facf81a2eaebc211a230d7"
     },
     {
       "id": "C001-AC-603.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 35,
+      "line": 36,
       "title": "Empty sections flagged",
       "content_hash": "sha256:bc70a1de1af1a64590235e6838b795b160369e27bd394fd8ac2c2bffbc7b425d"
     },
@@ -926,7 +926,7 @@
       "id": "C001-AC-604.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 50,
+      "line": 51,
       "title": "Code bodies warned",
       "content_hash": "sha256:b9b670872292bc8871e10a85d06a708d3487f05022d71f821e49e5fc0afb161b"
     },
@@ -934,7 +934,7 @@
       "id": "C001-AC-605.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 66,
+      "line": 67,
       "title": "Unplanned requirement",
       "content_hash": "sha256:b13b38b31ddae2bc76a4ef1b9d568f10e5d9c6eedcbb0d66851603062c3c37ea"
     },
@@ -942,7 +942,7 @@
       "id": "C001-AC-606.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 76,
+      "line": 77,
       "title": "Unverifiable task",
       "content_hash": "sha256:b0ae6081454c37285750307c6455495750e6d881988651125c08abf78956efff"
     },
@@ -950,7 +950,7 @@
       "id": "C001-AC-607.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 91,
+      "line": 92,
       "title": "Cycle detected",
       "content_hash": "sha256:4625e9de96a29e7199a58124cbd9413219d837c78a11a952d21e09afec5775d1"
     },
@@ -958,7 +958,7 @@
       "id": "C001-AC-607.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 99,
+      "line": 100,
       "title": "Unresolved dependency",
       "content_hash": "sha256:debc2042085dbf0c669d3ed3053e2826ca2e7e44b77f648f77e6457d984002ca"
     },
@@ -966,7 +966,7 @@
       "id": "C001-AC-608.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 109,
+      "line": 110,
       "title": "Graph and critical path",
       "content_hash": "sha256:9fa12c89a1ca0f2277cf9cf6d7915d7873b633db89878fcf92f26813d795ac7d"
     },
@@ -974,7 +974,7 @@
       "id": "C001-AC-609.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 121,
+      "line": 122,
       "title": "Every TS mapped",
       "content_hash": "sha256:e433f480620fe1cc92a58f0b4246fd5d0115486ee5661edef715295ef524ba2b"
     },
@@ -982,15 +982,15 @@
       "id": "C001-AC-609.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 129,
+      "line": 130,
       "title": "TC fields",
-      "content_hash": "sha256:b7324b5b2a367f67a5b5199a040028ec7d8c076097b055d99c33af61084874f5"
+      "content_hash": "sha256:af09291d0a99b20fdb1c61faab9a267244b32336f2408c667768a54840410e69"
     },
     {
       "id": "C001-AC-610.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 139,
+      "line": 141,
       "title": "Regression set for brownfield",
       "content_hash": "sha256:ec5da4fb1a33fdeaf11c70c30f9f07ae670b6eda2e8291fc25b7666093e15f07"
     },
@@ -998,7 +998,7 @@
       "id": "C001-AC-611.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 149,
+      "line": 151,
       "title": "Blast radius entries",
       "content_hash": "sha256:19976d58bc3b3a14aa02f523f5661e2d6456df514f3ffbfc1656f5560532b804"
     },
@@ -1006,7 +1006,7 @@
       "id": "C001-AC-612.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 158,
+      "line": 160,
       "title": "Hotspot without risk",
       "content_hash": "sha256:39fb3bace89c098cf7e34504657316e675a33e4970fd8e1d9fa5ff10067529d2"
     },
@@ -1014,15 +1014,15 @@
       "id": "C001-AC-613.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 170,
+      "line": 172,
       "title": "Risk fields",
-      "content_hash": "sha256:fde207ffe20b26f177c5dd2490b46cc07ad1fd26a3aae1b0a678a22d362b4b40"
+      "content_hash": "sha256:264a00266ccabd1f1ece7e0064e2f4ffd4dcbfb02abd48fc8637fbf1b7889b7f"
     },
     {
       "id": "C001-AC-613.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 177,
+      "line": 180,
       "title": "High impact needs a mitigation task or explicit acceptance",
       "content_hash": "sha256:8ae726025df02e23c549bd8ae64c5be1d15f4b7e6eddf51661e150ce3045a825"
     },
@@ -1030,15 +1030,15 @@
       "id": "C001-AC-614.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 187,
+      "line": 190,
       "title": "Rollout content or explicit no-impact",
-      "content_hash": "sha256:e523df0a963ae68d58f0b84a3b3fc4a18fcc56aa1820003be0ab61bd30d29da3"
+      "content_hash": "sha256:958a43a1f91e19217917939190d824e0ae9dc178b388da1a862a9b1a936bc36d"
     },
     {
       "id": "C001-AC-615.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 201,
+      "line": 205,
       "title": "Every NFR has a signal",
       "content_hash": "sha256:88666d1d104847468bff1a08729da658a9121ae296c8b0e8540b1690907af615"
     },
@@ -1046,23 +1046,23 @@
       "id": "C001-AC-616.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 212,
+      "line": 216,
       "title": "Hand-off sections",
-      "content_hash": "sha256:182d8acd13f77a032503eeca9adddf97634fe3063b1074d312bf4f98dd4c2588"
+      "content_hash": "sha256:73cd59e0d6b2403d71e947d784e3bf7051c1ba6b3635c44b7b4887ddb23775e2"
     },
     {
       "id": "C001-AC-617.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 222,
+      "line": 227,
       "title": "Topological task list",
-      "content_hash": "sha256:d9206faa996ba11b7388b55d146b309932d68f4814b7b3a71da23c37353d3245"
+      "content_hash": "sha256:a1b8d26a55c224a5d2de2cb6e44e1af3855ef99831b6872f4e0fe3788ce84d4b"
     },
     {
       "id": "C001-AC-617.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 231,
+      "line": 237,
       "title": "Executable by a plan-execution tool",
       "content_hash": "sha256:3deba2c5a645a6093f40b9d9f86406633546fe4eb3dae827eb2556b18dd08e62"
     },
@@ -1070,7 +1070,7 @@
       "id": "C001-AC-618.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 241,
+      "line": 247,
       "title": "Lite plan sections",
       "content_hash": "sha256:f0c083f305a25473d0f433d0e4992f708df9770184fb7f9bb5076759f564c00a"
     },
@@ -2866,7 +2866,7 @@
       "file": "20-plan/10-strategy.md",
       "line": 47,
       "title": "Packaging and quality gates",
-      "content_hash": "sha256:6aa7877999b2006800d6bf42deae34846cb8a61e0e7ac90d7c15f1bd94db8eeb"
+      "content_hash": "sha256:f4efc627b202b18ab8eb655ff8a95d1851b5ea6a628332f10399ff4feaae99d9"
     },
     {
       "id": "C001-M-7",
@@ -3420,7 +3420,7 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/requirements.md",
       "line": 56,
       "title": "Option presentation",
-      "content_hash": "sha256:2240478bfde53ec4759b70aa76596240c7298163c2f69f1c34969fa287e6f9c1"
+      "content_hash": "sha256:a9279007053388baa29898eaf0f4120cd2a8f04854cc2fad94742a1d38532037"
     },
     {
       "id": "C001-REQ-207",
@@ -4660,7 +4660,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/requirements.md",
       "line": 112,
       "title": "Serena data outside the repository",
-      "content_hash": "sha256:f0701d6f687be8a4c2cd5f4284d85491bc48ccc6d08172253afa102cf44565f2"
+      "content_hash": "sha256:f50459c2bdcfbebb73dde8e507809995661655e9f8c249c4511dfde80491d69d"
     },
     {
       "id": "C001-REQ-1101",
@@ -5272,7 +5272,7 @@
       "line": 1,
       "title": "Conductor agent: definition, orientation, allowlist",
       "content_hash": "sha256:37e58c9c9049fd5e3a9d235e8e61d5cdea6d97b12a68da8439fb81fdf05d020b",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "C001-T-031",
@@ -5281,7 +5281,7 @@
       "line": 1,
       "title": "Interview protocol and questions contract",
       "content_hash": "sha256:abb3653fbb632e09c6d585bc9fc9c7c4a0ca9f24d50d293b5b4f680f0923f765",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-032",
@@ -5290,7 +5290,7 @@
       "line": 1,
       "title": "Phase skills (ideation, spec), delegation briefs, unattended mode",
       "content_hash": "sha256:d7194f0cb08617760fdc7eb49f3ad0ea2097c0cd3deb5d8817b1222c6995086b",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-033",
@@ -5299,7 +5299,7 @@
       "line": 1,
       "title": "Commands: init, new, ideate, specify, plan, status, lint, decide, research",
       "content_hash": "sha256:c2512b8d3495d1d790f954aee175ec201a672befeb13b128ec26b6d3bccbd614",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-034",
@@ -5308,7 +5308,7 @@
       "line": 1,
       "title": "Gate protocol skill and gate presentation",
       "content_hash": "sha256:a7089f937cf01cd7cd0dc38b45072f2f69539a12545226c4d91415564af9f896",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-035",
@@ -5317,7 +5317,7 @@
       "line": 1,
       "title": "Researcher agent and research-protocol skill",
       "content_hash": "sha256:a68084a3bc012934d684658d275e49d7570cb72d6fb9e4196dd9f0daa95b263d",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-036",
@@ -5326,7 +5326,7 @@
       "line": 1,
       "title": "Options-analyst agent",
       "content_hash": "sha256:d2bb17cbbf646fee28f1be4b6e1974325de18ac5993b6f49ac10481afe5c61e2",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-037",
@@ -5335,7 +5335,7 @@
       "line": 1,
       "title": "Spec-writer agent and authoring skills",
       "content_hash": "sha256:cb1228455f702292d755936884b30129f6e6917bc2970ad940c41ffe995b1951",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-038",
@@ -5344,7 +5344,7 @@
       "line": 1,
       "title": "Test-designer agent (acceptance and DoD)",
       "content_hash": "sha256:d1d304cb58d38ede29afc53f5977fa3b9368654f3e2f9c6d1a9c0a92f7b6a638",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-039",
@@ -5353,7 +5353,7 @@
       "line": 1,
       "title": "Critic and auditor agents",
       "content_hash": "sha256:6b2ec0606b7d23fc4478b8bf0d85a9bc84458316d671b8b06f7242ad396af53c",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-041",
@@ -5362,7 +5362,7 @@
       "line": 1,
       "title": "Cartographer agent and code-discovery skill",
       "content_hash": "sha256:f6879a36b7bb13c5013f670f8ac7da58bb5d32f4d7235d50e897a4a80d83b453",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-042",
@@ -5371,7 +5371,7 @@
       "line": 1,
       "title": "Architect agent, diagramming and architecture-decisions skills",
       "content_hash": "sha256:7235f95edb68316f5a36062db582ccc3f9052d6e78352b480b347c58438cc779",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-043",
@@ -5380,7 +5380,7 @@
       "line": 1,
       "title": "Planner agent, planning and phase-plan skills, test plan",
       "content_hash": "sha256:55b63418d3e3c658ff753ee8954c851b36b3d897e80a49705d50969659670184",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-044",
@@ -5389,7 +5389,7 @@
       "line": 1,
       "title": "Revise, stop and doctor commands",
       "content_hash": "sha256:ac115d7274d711df6daeed86650bd3bed13a73b15878de1a3ec26b424bdfbcb2",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-050",
@@ -5542,6 +5542,24 @@
       "line": 1,
       "title": "Archive CHG-001 into living specs",
       "content_hash": "sha256:6127a3d3f800a721c18b4953fe060b7530e50339d7e1406bf8836ab09442fd2a",
+      "status": "todo"
+    },
+    {
+      "id": "C001-T-076",
+      "type": "T",
+      "file": "20-plan/50-tasks/T-076-plan-lint-rules.md",
+      "line": 1,
+      "title": "Plan lint rules (task shape, TC fields, risks, rollout, hand-off)",
+      "content_hash": "sha256:cfd4c77e7fc781affcfd5cbdc9944ad11810eecfc06569b9482c9c96e213ade0",
+      "status": "todo"
+    },
+    {
+      "id": "C001-T-077",
+      "type": "T",
+      "file": "20-plan/50-tasks/T-077-serena-config-command.md",
+      "line": 1,
+      "title": "sdd serena-config command",
+      "content_hash": "sha256:7a1aec15669bba57df884f85c903e2f72cc4064aa48624fded591e058a006279",
       "status": "todo"
     },
     {
@@ -6454,7 +6472,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 199,
       "title": "C001-TS-602",
-      "content_hash": "sha256:42db96b2ed9690efb2f9f246fc2e94133ee5174aa841e3d4c9faee8239458e44"
+      "content_hash": "sha256:06acfbef68ae9294ae5d2bd9e3e86b06fd6ab269129d2b6e91485250c347075d"
     },
     {
       "id": "C001-TC-603",
@@ -6526,7 +6544,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 208,
       "title": "C001-TS-611",
-      "content_hash": "sha256:c63fc842cbae9edb4040efd835ac3acd42665540109d05c277e502c8673aaca8"
+      "content_hash": "sha256:eb5b2831ce0db707f1d9098bbede5930bcaee49dc056a0dd6767cb8003c9815b"
     },
     {
       "id": "C001-TC-612",
@@ -6558,7 +6576,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 212,
       "title": "C001-TS-615",
-      "content_hash": "sha256:6e963fbfbad115d9db84d1865f215e2acdc3a20b640a8962f473beb1654ea532"
+      "content_hash": "sha256:7da6fc20ee41b60f2f7c7981bbc634bedd1eaa2aea59a40e201da4129b035f86"
     },
     {
       "id": "C001-TC-616",
@@ -6574,7 +6592,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 214,
       "title": "C001-TS-617",
-      "content_hash": "sha256:08da447d2c362704380f67ed4dc7eb20e6ce5794d92595d2b8714f2778d8abbb"
+      "content_hash": "sha256:8e3e7158ea6234235c6f62beefe57e704348c89c6591695b8daec1ccb7835087"
     },
     {
       "id": "C001-TC-618",
@@ -6590,7 +6608,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 216,
       "title": "C001-TS-619",
-      "content_hash": "sha256:8f5b832c4de6efa5cbf6576d671c89cba7873c50d90bb6f528f7082f28559a1d"
+      "content_hash": "sha256:493cfd728f2ddb669fd5d6958addc49a64594db98f13ed905e41840a39bf6a12"
     },
     {
       "id": "C001-TC-620",
@@ -6598,7 +6616,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 217,
       "title": "C001-TS-620",
-      "content_hash": "sha256:1b834c889ae961f7785cd0c0647150a21dad000dd3a7930186dab7e7f49e4d09"
+      "content_hash": "sha256:734fff9b5b3eef7314077ff3b58f0ede41fa862aa7c49c08a786a2d021f4b38e"
     },
     {
       "id": "C001-TC-621",
@@ -7222,7 +7240,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 295,
       "title": "C001-TS-1015",
-      "content_hash": "sha256:c10657d835dc395ad691cc1ee91f42a42c3cc3d63335651f1ca52a919b8f0dd6"
+      "content_hash": "sha256:1486746997e8939baf5738b4085e938e7338cebf615bd2e605aa4c428ce8f6bc"
     },
     {
       "id": "C001-TC-1101",
@@ -7726,7 +7744,7 @@
       "file": "10-spec/20-capabilities/CAP-02-conductor/acceptance.md",
       "line": 83,
       "title": "option count and ordering",
-      "content_hash": "sha256:f075e99b58de03a1dc76dd97cd2433db0f8295bd898209fba58802567b5d540a"
+      "content_hash": "sha256:f79ed288bb1fad5d3236b1115b6cdfa696fd6a15a7c0a1d6a0583f74c1d5c2c3"
     },
     {
       "id": "C001-TS-208",
@@ -8318,13 +8336,13 @@
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
       "line": 26,
       "title": "task file shape",
-      "content_hash": "sha256:dd8892422eaf5bd2401717e08b02bd7b2154e682b6eecf561cfba1061cef94b6"
+      "content_hash": "sha256:ff5f066559390ef4fa72b6af1dbf0c7a00bdce37cecb28ad18d7e5ab0457b257"
     },
     {
       "id": "C001-TS-603",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 37,
+      "line": 38,
       "title": "minimum content",
       "content_hash": "sha256:9532894128f4e73af32d04d08458f752cb2954611f2511215b93ee27c8cd0ad2"
     },
@@ -8332,7 +8350,7 @@
       "id": "C001-TS-604",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 52,
+      "line": 53,
       "title": "code in task files",
       "content_hash": "sha256:1cb34cbe205b103d33165e5d1d4f9f1571ca3e72595d577ceee1c726438ec029"
     },
@@ -8340,7 +8358,7 @@
       "id": "C001-TS-605",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 68,
+      "line": 69,
       "title": "REQ without task",
       "content_hash": "sha256:f49cd836c5c1d7a4a3c41ae4f02d316140d4af612483ee0ee1b0913bd7c0f293"
     },
@@ -8348,7 +8366,7 @@
       "id": "C001-TS-606",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 78,
+      "line": 79,
       "title": "task links",
       "content_hash": "sha256:66ac97ac25f1513b3ab90546ee30849e79a3a071cd15b018410f25e4215d32cc"
     },
@@ -8356,7 +8374,7 @@
       "id": "C001-TS-607",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 93,
+      "line": 94,
       "title": "dependency cycle",
       "content_hash": "sha256:766bab364c6f1adaea4b2ff3143971d814e2f315b959fe60b83d373351a0455a"
     },
@@ -8364,7 +8382,7 @@
       "id": "C001-TS-608",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 101,
+      "line": 102,
       "title": "dangling depends_on",
       "content_hash": "sha256:250571d59e34f8893a096b69f37e4c5c013e5000bb778cd7392561bac23db8e6"
     },
@@ -8372,7 +8390,7 @@
       "id": "C001-TS-609",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 111,
+      "line": 112,
       "title": "work breakdown content",
       "content_hash": "sha256:54b2425c752629875e234c1b5f9afee4066d3a6057bdd1d359a8ed7f32bf34c2"
     },
@@ -8380,7 +8398,7 @@
       "id": "C001-TS-610",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 123,
+      "line": 124,
       "title": "TR-08 enforcement",
       "content_hash": "sha256:802b9053365c9577daab05a834dc20b3787bc84c0d284d7bbb09abfc04e0fc3f"
     },
@@ -8388,15 +8406,15 @@
       "id": "C001-TS-611",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 131,
+      "line": 132,
       "title": "test case fields",
-      "content_hash": "sha256:7cc0fb068ae3538c98c07347ee349b1ff66f26206a3a6f7b5a77fd1b02127129"
+      "content_hash": "sha256:793574a47e2346830bf4d395f08d1597ba462e9bc87a953b61e70cf83dde3781"
     },
     {
       "id": "C001-TS-612",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 141,
+      "line": 143,
       "title": "regression set content",
       "content_hash": "sha256:c3931d44df86db9792c5f93a36ba937cdb4e0100e6bd4815c711b967c8ead3f1"
     },
@@ -8404,7 +8422,7 @@
       "id": "C001-TS-613",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 151,
+      "line": 153,
       "title": "blast radius content",
       "content_hash": "sha256:273fa90062449bad2c50200c965bd6e556a8b49c51872fe37da2c93fea18252d"
     },
@@ -8412,7 +8430,7 @@
       "id": "C001-TS-614",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 160,
+      "line": 162,
       "title": "TR-15 warning",
       "content_hash": "sha256:649da54602d805b88487a7843fe6acc754850418ad117627665ab51e9d793657"
     },
@@ -8420,15 +8438,15 @@
       "id": "C001-TS-615",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 172,
+      "line": 174,
       "title": "risk entry structure",
-      "content_hash": "sha256:899894840afbcf2415a08527bdaf065050b0932fd83276792fb8f2102a99c57a"
+      "content_hash": "sha256:8a75c48a1da3edf0e1427f31452c836b7c950ee8645b65972b658fc9f9edf9b7"
     },
     {
       "id": "C001-TS-616",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 179,
+      "line": 182,
       "title": "TR-14 warning",
       "content_hash": "sha256:503acc643ae7b95b1cd986af41e72f32e340710686845b1f42f11ddb7d7a2cc1"
     },
@@ -8436,15 +8454,15 @@
       "id": "C001-TS-617",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 189,
+      "line": 192,
       "title": "rollout file",
-      "content_hash": "sha256:955628636be4ada46f1399f1c58432aaf320fff4833db305ed67713a527149d5"
+      "content_hash": "sha256:05626df5a61fab3bb5fa1a663c3f00cb0ba241d768776e1f66ff7caf41884ddc"
     },
     {
       "id": "C001-TS-618",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 203,
+      "line": 207,
       "title": "observability mapping",
       "content_hash": "sha256:3178a62ff93d1cd98ba21eb625dd84b88fd1f44b0d68dac65178869757b23065"
     },
@@ -8452,23 +8470,23 @@
       "id": "C001-TS-619",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 214,
+      "line": 218,
       "title": "handoff.md shape",
-      "content_hash": "sha256:5e4809507377fd40320cd7d0bf5f7fdc77ee87ecf55684f6c3258ee90b708d38"
+      "content_hash": "sha256:45a58eea62b2d84ce2040c6314bb242234a173c7a84e5589e1967ad09d0fd64b"
     },
     {
       "id": "C001-TS-620",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 224,
+      "line": 229,
       "title": "ordered list respects dependencies",
-      "content_hash": "sha256:67421b5c0f02d993378c351a4ec5b1c0e05e3700027c2d7ee324f5d498574fa4"
+      "content_hash": "sha256:e558854164db4ba74761be5f8b01ff92f09b12586fca89e78c64e33dae88dff1"
     },
     {
       "id": "C001-TS-621",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 233,
+      "line": 239,
       "title": "portability dogfood",
       "content_hash": "sha256:49ca4ea3ad27527cbd92d27ee33aa742711071d8f734e7e586477273d161b31d"
     },
@@ -8476,7 +8494,7 @@
       "id": "C001-TS-622",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-planning/acceptance.md",
-      "line": 243,
+      "line": 249,
       "title": "lite plan structure",
       "content_hash": "sha256:4c447ba5addd67f45726b3e4c45c22512822c904981a59fc0b3c96057b3e108f"
     },
@@ -12230,6 +12248,16 @@
       "relation": "references"
     },
     {
+      "from": "C001-M-6",
+      "to": "C001-T-076",
+      "relation": "references"
+    },
+    {
+      "from": "C001-M-6",
+      "to": "C001-T-077",
+      "relation": "references"
+    },
+    {
       "from": "C001-M-7",
       "to": "C001-T-070",
       "relation": "references"
@@ -12953,6 +12981,11 @@
       "from": "C001-REQ-206",
       "to": "C001-AC-206.1",
       "relation": "acceptance-of"
+    },
+    {
+      "from": "C001-REQ-206",
+      "to": "C001-REQ-802",
+      "relation": "references"
     },
     {
       "from": "C001-REQ-206",
@@ -23596,6 +23629,16 @@
     },
     {
       "from": "C001-T-072",
+      "to": "C001-T-076",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-072",
+      "to": "C001-T-077",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-072",
       "to": "C001-TC-1102",
       "relation": "references"
     },
@@ -23902,6 +23945,211 @@
     {
       "from": "C001-T-075",
       "to": "C001-TS-921",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-602.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-609.2",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-613.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-614.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-616.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-AC-617.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-COMP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-M-6",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-602",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-609",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-613",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-614",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-616",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-REQ-617",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-T-043",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-T-043",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-602",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-602",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-611",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-615",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-617",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-619",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TC-620",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-602",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-611",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-615",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-617",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-619",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-076",
+      "to": "C001-TS-620",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-AC-1013.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-COMP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-COMP-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-IF-01",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-M-6",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-REQ-1013",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-T-044",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-T-044",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-TC-1015",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-TC-1015",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-TS-1015",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-077",
+      "to": "C001-TS-1015",
       "relation": "verified-by"
     },
     {
@@ -25531,6 +25779,11 @@
     },
     {
       "from": "C001-TC-602",
+      "to": "C001-T-076",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-602",
       "to": "C001-TS-602",
       "relation": "references"
     },
@@ -25631,6 +25884,11 @@
     },
     {
       "from": "C001-TC-611",
+      "to": "C001-T-076",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-611",
       "to": "C001-TS-611",
       "relation": "references"
     },
@@ -25691,6 +25949,11 @@
     },
     {
       "from": "C001-TC-615",
+      "to": "C001-T-076",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-615",
       "to": "C001-TS-615",
       "relation": "references"
     },
@@ -25707,6 +25970,11 @@
     {
       "from": "C001-TC-617",
       "to": "C001-T-043",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-617",
+      "to": "C001-T-076",
       "relation": "references"
     },
     {
@@ -25731,12 +25999,22 @@
     },
     {
       "from": "C001-TC-619",
+      "to": "C001-T-076",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-619",
       "to": "C001-TS-619",
       "relation": "references"
     },
     {
       "from": "C001-TC-620",
       "to": "C001-T-043",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-620",
+      "to": "C001-T-076",
       "relation": "references"
     },
     {
@@ -26707,6 +26985,11 @@
     {
       "from": "C001-TC-1015",
       "to": "C001-T-044",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-1015",
+      "to": "C001-T-077",
       "relation": "references"
     },
     {

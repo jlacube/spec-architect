@@ -76,6 +76,12 @@ specifies it. Severity applies to lint/check rules; CLI errors exit with code 2 
 | LINT-TASK-001 | error | Task section empty | Fill Targets, Verification, Done when | C001-REQ-603 |
 | LINT-TASK-002 | warn | Production code in task | Move signatures to 50-interfaces; remove bodies | C001-REQ-604 |
 | LINT-TASK-003 | warn | Done task without commit | Add `--commit` | C001-REQ-906 |
+| LINT-TASK-004 | error | Task file shape wrong (frontmatter of C001-IF-03 §3 or body headings) | Add the field or heading, in order | C001-REQ-602 |
+| LINT-TC-001 | error | Test case field missing (level, location, test data, environment; executor of a manual case) | Add the field | C001-REQ-609 |
+| LINT-RISK-001 | error | Risk field missing or rating outside low, medium, high | Fix the risk row | C001-REQ-613 |
+| LINT-ROLL-001 | error | Rollout content missing | Add migration, flags with defaults, RB-IDs linked to T or M, communication — or "No rollout impact — <reason>" | C001-REQ-614 |
+| LINT-HAND-001 | error | Hand-off section missing or reporting protocol incomplete | Add the section, the `task set` and `defect add` commands and the frontmatter fallback | C001-REQ-616 |
+| LINT-HAND-002 | error | Ordered task list incomplete or out of dependency order | List every non-dropped task once, with its path, after its dependencies | C001-REQ-617 |
 | LINT-OBS-001 | error | NFR without observability signal | Map it in `78-observability.md` | C001-REQ-615 |
 | LINT-EVD-001 | error | Evidence entry field missing | Add path/symbol/layer/confidence/disclosures | C001-REQ-1002 |
 | LINT-TXT-001 | error | Placeholder text | Replace with real content | C001-REQ-719 |

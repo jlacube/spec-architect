@@ -133,12 +133,14 @@ their dependencies allow.
 | 50 | C001-T-063 | Delegation eval suite (claude plugin eval) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-063-delegation-evals.md` |
 | 51 | C001-T-064 | Dormant cross-platform CI workflows | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-064-dormant-ci.md` |
 | 52 | C001-T-065 | NFR measurements: performance, coverage, compatibility | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-065-nfr-measurements.md` |
-| 53 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
-| 54 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
-| 55 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |
-| 56 | C001-T-073 | Dogfood: greenfield change CHG-002 through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
-| 57 | C001-T-074 | Dogfood: brownfield change CHG-003 and Superpowers execution | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
-| 58 | C001-T-075 | Archive CHG-001 into living specs | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md` |
+| 53 | C001-T-076 | Plan lint rules (task shape, TC fields, risks, rollout, hand-off) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-076-plan-lint-rules.md` |
+| 54 | C001-T-077 | sdd serena-config command | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-077-serena-config-command.md` |
+| 55 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
+| 56 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
+| 57 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |
+| 58 | C001-T-073 | Dogfood: greenfield change CHG-002 through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
+| 59 | C001-T-074 | Dogfood: brownfield change CHG-003 and Superpowers execution | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
+| 60 | C001-T-075 | Archive CHG-001 into living specs | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md` |
 
 ## Defects (manual)
 

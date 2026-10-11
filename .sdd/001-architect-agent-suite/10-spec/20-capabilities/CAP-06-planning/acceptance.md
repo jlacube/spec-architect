@@ -28,6 +28,7 @@ Scenario: C001-TS-602 — task file shape
   When the lint checks it
   Then its frontmatter validates against C001-IF-03 §3
   And its body has the headings Intent, Targets, Preconditions, Step outline, Verification, Done when
+  And a missing field or heading raises "LINT-TASK-004"
 ```
 
 ## C001-REQ-603
@@ -132,6 +133,7 @@ Scenario: C001-TS-611 — test case fields
   When the lint parses "60-test-plan.md"
   Then every TC has a level among unit, integration, e2e, eval, manual, a location, test data and an environment
   And a TC with level "manual" also names who executes it
+  And a missing field raises "LINT-TC-001"
 ```
 
 ## C001-REQ-610
@@ -172,6 +174,7 @@ Scenario: C001-TS-614 — TR-15 warning
 Scenario: C001-TS-615 — risk entry structure
   When the lint parses "70-risks.md"
   Then every RISK has likelihood and impact in {low, medium, high}, a mitigation, a trigger, an owner and at least one T or COMP ID
+  And a missing field or another rating raises "LINT-RISK-001"
 ```
 
 #### C001-AC-613.2 — High impact needs a mitigation task or explicit acceptance
@@ -190,6 +193,7 @@ Scenario Outline: C001-TS-617 — rollout file
   Given a change whose deployment impact is "<impact>"
   When the lint checks "75-rollout.md"
   Then it requires "<content>"
+  And missing content raises "LINT-ROLL-001"
   Examples:
     | impact | content                                                                    |
     | yes    | migration steps, flags with defaults, RB-IDs linked to T or M, communication notes |
@@ -215,6 +219,7 @@ Scenario: C001-TS-619 — handoff.md shape
   When the lint checks "20-plan/handoff.md"
   Then it contains the headings Reading order, Rules, Ordered task list, Reporting protocol, Definition of change done
   And Reporting protocol contains the commands "task set", "defect add" and a frontmatter fallback paragraph
+  And a missing heading, command or fallback raises "LINT-HAND-001"
 ```
 
 ## C001-REQ-617
@@ -226,6 +231,7 @@ Scenario: C001-TS-620 — ordered list respects dependencies
   When the lint checks the Ordered task list
   Then every non-dropped task appears exactly once with its relative path
   And no task appears before any task it depends on
+  And a missing, repeated or misplaced task raises "LINT-HAND-002"
 ```
 
 #### C001-AC-617.2 — Executable by a plan-execution tool

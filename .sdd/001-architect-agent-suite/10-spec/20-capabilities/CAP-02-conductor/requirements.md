@@ -55,8 +55,8 @@ contract C001-IF-05.
 
 ### C001-REQ-206 — Option presentation
 - **Pattern:** event-driven
-- **Statement:** WHEN the conductor asks a question with options, THE conductor SHALL present two or three options, each with a one-sentence rationale, with the recommended option listed first and labelled "(Recommended)".
-- **Rationale:** Q14, Q15
+- **Statement:** WHEN the conductor asks a question with options other than the gate question of C001-REQ-802, THE conductor SHALL present two or three options, each with a one-sentence rationale, with the recommended option listed first and labelled "(Recommended)".
+- **Rationale:** Q14, Q15; the gate question keeps its four fixed choices without a recommendation so that approval stays P-01's unprompted decision (defect D-002)
 - **Stories:** C001-US-203
 - **Priority:** Must
 - **Acceptance:** C001-AC-206.1

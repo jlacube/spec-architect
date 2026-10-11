@@ -37,7 +37,7 @@ test("the CHG-001 plan is started and every task file is read", () => {
   const change: LintChange = { change: "001", folder: ".sdd/001-architect-agent-suite", profile: "full", graph, spec: facts };
   assert.equal(facts.planStarted, true);
   const all = tasks(change);
-  assert.equal(all.length, 58);
+  assert.equal(all.length, 60);
   assert.ok(all.every((t) => t.implements.length + t.satisfiesAc.length > 0 && t.doc !== undefined));
   assert.ok(all.filter((t) => t.status === "done").every((t) => t.commit !== ""));
 });

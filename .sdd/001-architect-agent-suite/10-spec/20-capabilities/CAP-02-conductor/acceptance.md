@@ -81,7 +81,7 @@ Scenario: C001-TS-206 — round size limit
 #### C001-AC-206.1 — Options shape
 ```gherkin
 Scenario: C001-TS-207 — option count and ordering
-  When the conductor asks any optioned question
+  When the conductor asks any optioned question other than a gate question
   Then each question has 2 or 3 options
   And exactly the first option's label ends with "(Recommended)"
   And every option has a non-empty description

@@ -48,6 +48,7 @@ for `init`). Global options: `--cwd <path>`, `--json` (where supported), `--quie
 | `guard-bash` | hook JSON on stdin | Allow/deny shell command (hook) | C001-REQ-1106, 1107 |
 | `hook session-start` | hook JSON on stdin | Print brief | C001-REQ-911, 912 |
 | `hook post-write` | hook JSON on stdin | Quick lint of the written `.sdd/` file; findings returned as hook feedback | C001-REQ-705 |
+| `serena-config` | `<plugin-data-dir>` | Create or update `<plugin-data-dir>/serena/serena_config.yml` (dashboard off, project folders inside the data folder, keys Serena requires); prints the path | C001-REQ-1013 |
 | `extract-features` | `<NNN>` | Write `.feature` files from gherkin blocks (optional, OQ-09) | — (Could, v1.x) |
 | `version` | — | Print `architect-plugin@<semver>` | C001-REQ-123 |
 

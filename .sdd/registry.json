@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T19:05:39Z",
+  "generated_at": "2026-10-11T19:30:44Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -19,13 +19,13 @@
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:5bbceb152be57d3879b37c11890a26e31a7ff63ba6d43bd6eb68043a2d12564c",
+          "approved_hash": "sha256:d5d23f29a8e4433ea822ffab408bea99f0d01d1ad94dc04a1911ddd08ba066af",
           "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
           "status": "approved",
-          "approved_hash": "sha256:adb86d74bcaea656732c6d6b25b125f65d8bc98f4461818bad7b25f1fde278e1",
+          "approved_hash": "sha256:41f862434da5ca86a3735bf69967fb651412940ebf8e6e9905ce1147fc7e9e41",
           "approved_at": "2026-10-11",
           "approved_by": "jerome.lacube"
         }
@@ -33,7 +33,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 57,
+          "total": 59,
           "done": 41,
           "blocked": 0,
           "in_progress": 0
@@ -57,9 +57,9 @@
           "summary": "C001-REQ-206/TS-207 require 2-3 options with the first labelled (Recommended) for every optioned question, but C001-REQ-802/TS-802 require the gate question to offer exactly Approve, Approve with waivers, Revise and Stop; the gate question needs an explicit exception (four fixed options, no recommendation) (found in C001-T-034)",
           "reporter": "implementer",
           "date": "2026-10-11",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "C001-REQ-206 and C001-TS-207 except the gate question of C001-REQ-802 (G2/G3 re-approved 2026-10-11)",
+          "closed_at": "2026-10-11"
         },
         {
           "id": "D-003",
@@ -67,9 +67,9 @@
           "summary": "C001-TS-602, 611, 615, 617, 619 and 620 say 'the lint checks/parses' plan artifacts (task file shape, TC fields, risk fields, rollout content, handoff headings, ordered task list) but C001-IF errors catalogue defines no rule codes for them; verified for now by structure checks in the integration tests (found in C001-T-043)",
           "reporter": "implementer",
           "date": "2026-10-11",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Codes LINT-TASK-004, LINT-TC-001, LINT-RISK-001, LINT-ROLL-001, LINT-HAND-001, LINT-HAND-002 added to the error catalogue and named in TS-602/611/615/617/619/620; implementation planned as C001-T-076 (G2/G3 re-approved 2026-10-11)",
+          "closed_at": "2026-10-11"
         },
         {
           "id": "D-004",
@@ -77,9 +77,9 @@
           "summary": "C001-REQ-1013 has the conductor write serena/serena_config.yml in ${CLAUDE_PLUGIN_DATA}, but the conductor's write scope and the path guard (C001-REQ-1101, GUARD-PATH-001) allow writes only under .sdd/; implemented as a named exception for that one file (found in C001-T-044)",
           "reporter": "implementer",
           "date": "2026-10-11",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "C001-REQ-1013 now runs sdd serena-config (C001-IF-01); implementation planned as C001-T-077 (G2/G3 re-approved 2026-10-11)",
+          "closed_at": "2026-10-11"
         },
         {
           "id": "D-005",
@@ -87,9 +87,9 @@
           "summary": "C001-REQ-813 needs the IDs added, modified and removed since the last approval and their downstream references, but C001-IF-01/IF-13 define no CLI output for it; implemented as an Impact block of sdd gate show for phases in revision (found in C001-T-044)",
           "reporter": "implementer",
           "date": "2026-10-11",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "C001-IF-13 section 1 documents the two impact lines of sdd gate show for a phase in revision (G2/G3 re-approved 2026-10-11)",
+          "closed_at": "2026-10-11"
         }
       ],
       "waivers": []

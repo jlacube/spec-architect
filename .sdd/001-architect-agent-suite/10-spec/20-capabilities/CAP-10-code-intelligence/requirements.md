@@ -111,7 +111,7 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 
 ### C001-REQ-1013 — Serena data outside the repository
 - **Pattern:** event-driven
-- **Statement:** WHEN `/architect:init` or `/architect:doctor` runs, THE conductor SHALL ensure that `serena/serena_config.yml` exists in the plugin's data folder (`${CLAUDE_PLUGIN_DATA}`) with `project_serena_folder_location` set to a folder inside that data folder and `web_dashboard` set to false.
+- **Statement:** WHEN `/architect:init` or `/architect:doctor` runs, THE conductor SHALL run `sdd serena-config "${CLAUDE_PLUGIN_DATA}"`, which ensures that `serena/serena_config.yml` exists in that data folder with `project_serena_folder_location` set to a folder inside it and `web_dashboard` set to false (agents themselves write only under `.sdd/`; defect D-004).
 - **Rationale:** C001-CON-01, C001-CON-08; spikes S-02 and S-06 (without this file Serena writes `<repo>/.serena/`; it must exist before Serena first starts, C001-IF-14 §4)
 - **Stories:** C001-US-1003
 - **Priority:** Must
