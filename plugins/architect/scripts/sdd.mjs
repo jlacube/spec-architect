@@ -10093,7 +10093,7 @@ function renderStatusBlock(reg) {
   const rows = reg.changes.filter((c) => c.status !== "archived").map((c) => {
     const t = c.implementation.tasks;
     const open = c.defects.filter((d) => d["status"] === "open").length;
-    const status2 = c.phases[c.phase]?.status ?? "not-started";
+    const status2 = c.status === "stopped" ? "stopped" : c.phases[c.phase]?.status ?? "not-started";
     return `| ${c.id.replace(/^CHG-/, "")} | ${c.title.replace(/\|/g, "\\|")} | ${c.phase} | ${status2} | ${t.done}/${t.total} | ${open} | ${updated(c)} |`;
   });
   return ["| Change | Title | Phase | Status | Tasks done | Open defects | Updated |", "|---|---|---|---|---|---|---|", ...rows].join("\n");
@@ -11188,6 +11188,27 @@ function criticFindings(changeDir, phase) {
   return out;
 }
 
+// src/gate/revise.ts
+var sorted = (xs) => [...xs].sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+function impact(changeDir, phase) {
+  const before = readApprovals(changeDir)[phase]?.ids;
+  if (!before) return null;
+  const now = idHashes(changeDir, phase);
+  const added = sorted(Object.keys(now).filter((id) => !(id in before)));
+  const removed = sorted(Object.keys(before).filter((id) => !(id in now)));
+  const modified = sorted(Object.keys(now).filter((id) => id in before && before[id] !== now[id]));
+  const changed = /* @__PURE__ */ new Set([...added, ...removed, ...modified]);
+  const graph = buildChangeGraph(changeDir);
+  const downstream = /* @__PURE__ */ new Set();
+  for (const e of graph.edges) if (e.context === "text" && changed.has(e.to) && !changed.has(e.from)) downstream.add(e.from);
+  return { added, modified, removed, downstream: sorted(downstream) };
+}
+function impactLines(i) {
+  const part = (label, ids2) => ids2.length > 0 ? [`${label} ${ids2.join(", ")}`] : [];
+  const changes = [...part("modified", i.modified), ...part("added", i.added), ...part("removed", i.removed)];
+  return [`Impact since last approval: ${changes.join(" · ") || "no ID changed"}`, `Downstream: ${i.downstream.join(", ") || "none"}`];
+}
+
 // src/gate/gate.ts
 function readChange(changeDir) {
   const text = readFileSync13(join17(changeDir, "change.md"), "utf8");
@@ -11204,6 +11225,10 @@ function coverageFor(changeDir, phase) {
   if (phase === "10-spec") return specCoverage(t);
   if (phase === "20-plan") return planCoverage(t).rows;
   return [];
+}
+function revisionImpact(ctx) {
+  const i = impact(ctx.changeDir, ctx.phase);
+  return i ? impactLines(i) : ["Impact since last approval: unknown (approvals.json has no per-ID hashes for this phase)"];
 }
 function gateSummary(ctx) {
   const s = readChange(ctx.changeDir);
@@ -11239,7 +11264,9 @@ function gateSummary(ctx) {
     `Critic: ${crit("blocker")} · ${crit("major")} · ${crit("minor")}`,
     `Open markers: ${markerText}`,
     `Stale: ${stale ? "yes" : "no"} · Previous approval: ${previous}`,
-    "Proposed waivers: (none)"
+    "Proposed waivers: (none)",
+    // A phase in revision also shows what changed since its last approval (C001-REQ-813).
+    ...status2 === "in-revision" ? revisionImpact(ctx) : []
   ].join("\n");
 }
 function gitUser(root) {
@@ -11558,6 +11585,21 @@ function gateApprove(ctx) {
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   return 0;
 }
+function changeRevise(ctx) {
+  const phase = ctx.args["phase"];
+  record(gateContext(ctx), "revise", ctx.values["reason"]);
+  refreshRegistry(ctx);
+  ctx.out.line(`revised: CHG-${ctx.args["NNN"]} ${phase} in-revision`);
+  return 0;
+}
+function changeStop(ctx) {
+  const changeDir = resolveChange(ctx, ctx.args["NNN"]);
+  const current = String(splitFrontmatter(readFileSync17(join21(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  record({ root: ctx.root, changeDir, phase: current, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"]);
+  refreshRegistry(ctx);
+  ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
+  return 0;
+}
 function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
@@ -11747,8 +11789,8 @@ var COMMANDS = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
-  { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
-  { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
+  { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"], run: changeRevise },
+  { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"], run: changeStop },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },

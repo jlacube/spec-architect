@@ -57,7 +57,9 @@ The CLI is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (written `sdd` below).
 
 # Hard rules
 
-- Write only under `.sdd/`. Use Bash only for `sdd`, read-only `git` and tool version checks.
+- Write only under `.sdd/`, plus the one file `${CLAUDE_PLUGIN_DATA}/serena/serena_config.yml` when
+  `/architect:init` or `/architect:doctor` sets up Serena. Use Bash only for `sdd`, read-only `git`
+  and tool version checks.
 - Ask P-01 only through AskUserQuestion rounds (interview-protocol). Never end your turn with
   questions written as plain text; end it after orientation (when no work was asked), at a gate,
   at a stop condition, or when P-01 stops.

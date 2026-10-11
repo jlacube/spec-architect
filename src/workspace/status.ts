@@ -161,7 +161,8 @@ export function renderStatusBlock(reg: Registry): string {
     .map((c) => {
       const t = c.implementation.tasks;
       const open = c.defects.filter((d) => d["status"] === "open").length;
-      const status = c.phases[c.phase as PhaseName]?.status ?? "not-started";
+      // A stopped change keeps its row (it is not archived) but no longer reads as active (C001-REQ-815).
+      const status = c.status === "stopped" ? "stopped" : (c.phases[c.phase as PhaseName]?.status ?? "not-started");
       return `| ${c.id.replace(/^CHG-/, "")} | ${c.title.replace(/\|/g, "\\|")} | ${c.phase} | ${status} | ${t.done}/${t.total} | ${open} | ${updated(c)} |`;
     });
   return ["| Change | Title | Phase | Status | Tasks done | Open defects | Updated |", "|---|---|---|---|---|---|---|", ...rows].join("\n");

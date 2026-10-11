@@ -2,7 +2,7 @@
 // real hashes, so edits can be checked against them.
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { phaseHash } from "../../../src/gate/hash.ts";
+import { phaseHash, recordApproval } from "../../../src/gate/hash.ts";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { makeWorkspace, minimalChange } from "../cli/helpers.ts";
 import { plan } from "../cap06/plan-fixture.ts";
@@ -27,6 +27,8 @@ export function approvedChange(approved: string[] = ["00-ideation", "10-spec", "
   const line = (p: string) =>
     approved.includes(p) ? `  ${p}: { status: approved, approved_hash: "${phaseHash(dir, p).hash}", approved_at: 2026-10-11, approved_by: p01 }` : `  ${p}: { status: draft }`;
   writeFileSync(join(dir, "change.md"), ["---", "id: CHG-004", "title: x", "profile: full", "status: active", "phases:", ...["00-ideation", "10-spec", "20-plan"].map(line), "---", "# CHG-004", ""].join("\n"));
+  // Per-ID hashes in approvals.json, as `sdd gate approve` records them (C001-REQ-814).
+  for (const p of approved) recordApproval(dir, p, "2026-10-11");
   return { root: ws.root, dir, cleanup: ws.cleanup };
 }
 

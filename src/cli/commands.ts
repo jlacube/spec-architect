@@ -124,6 +124,29 @@ function gateApprove(ctx: CommandContext): number {
   return 0;
 }
 
+/**
+ * `sdd change revise <NNN> <phase> --reason …` (C001-REQ-812): the phase goes in-revision, every
+ * later approved phase stale, and the Gate log records the reason (same transition as
+ * `gate record --decision revise`).
+ */
+function changeRevise(ctx: CommandContext): number {
+  const phase = ctx.args["phase"] as Phase;
+  record(gateContext(ctx), "revise", ctx.values["reason"] as string);
+  refreshRegistry(ctx);
+  ctx.out.line(`revised: CHG-${ctx.args["NNN"]} ${phase} in-revision`);
+  return 0;
+}
+
+/** `sdd change stop <NNN> --reason …` (C001-REQ-815): the change is stopped with the reason and date. */
+function changeStop(ctx: CommandContext): number {
+  const changeDir = resolveChange(ctx, ctx.args["NNN"]);
+  const current = String(splitFrontmatter(readFileSync(join(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  record({ root: ctx.root, changeDir, phase: current as Phase, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"] as string);
+  refreshRegistry(ctx);
+  ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
+  return 0;
+}
+
 /** `sdd gate record <NNN> <phase> --decision revise|stop --note …` (C001-REQ-812, 815). */
 function gateRecord(ctx: CommandContext): number {
   const decision = ctx.values["decision"] as string;
@@ -352,8 +375,8 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
-  { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"] },
-  { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"] },
+  { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"], run: changeRevise },
+  { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"], run: changeStop },
   { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },

@@ -82,8 +82,8 @@ export function evalSerenaHome() {
 
 const cache = new Map();
 
-function build(omitServers) {
-  const key = omitServers.join(",");
+function build(omitServers, urls = {}) {
+  const key = `${omitServers.join(",")}|${JSON.stringify(urls)}`;
   if (cache.has(key) && existsSync(cache.get(key))) return cache.get(key);
   const dir = join(mkdtempSync(join(tmpdir(), "sdd-eval-plugin-")), "architect");
   cpSync(join(ROOT, "plugins", "architect"), dir, { recursive: true });
@@ -97,6 +97,7 @@ function build(omitServers) {
   if (existsSync(mcp)) {
     const config = JSON.parse(readFileSync(mcp, "utf8"));
     for (const s of omitServers) delete config.mcpServers?.[s];
+    for (const [s, url] of Object.entries(urls)) if (config.mcpServers?.[s]) config.mcpServers[s].url = url;
     // Serena's home for evals: persistent, outside the fixture repository (C001-IF-14 §4).
     if (config.mcpServers?.serena?.env) config.mcpServers.serena.env.SERENA_HOME = evalSerenaHome();
     writeFileSync(mcp, JSON.stringify(config, null, 2) + "\n");
@@ -113,4 +114,9 @@ export function architectWithStubs() {
 /** A plugin-path function for an overlay without the named MCP servers (degraded-mode scenarios). */
 export function architectWithout(...servers) {
   return () => build(servers);
+}
+
+/** A plugin-path function for an overlay whose named remote MCP servers point to other URLs. */
+export function architectWithUrls(urls) {
+  return () => build([], urls);
 }

@@ -1,0 +1,271 @@
+{
+  "scenario": "doctor-no-ripwire",
+  "title": "Doctor on cfg-no-ripwire (TS-1111, TS-1015)",
+  "tier": "dev",
+  "label": "t044",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T18:33:02.333Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.25308780000000003,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.25308780000000003,
+        "session_ms": 212901,
+        "api_ms": 39672,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 1789,
+            "cache_read": 38523,
+            "cache_write": 21340,
+            "cost_usd": 0.1502086
+          },
+          "claude-sonnet-5-5": {
+            "input": 12,
+            "output": 2954,
+            "cache_read": 97626,
+            "cache_write": 21516,
+            "cost_usd": 0.1028792
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1789,
+              "cache_read": 38523,
+              "cache_write": 21340
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 0,
+              "cache_read": 76915,
+              "cache_write": 20711
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "byt20xuc7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a3c788771034b4af5",
+            "ms": 143452,
+            "tool_uses": 16,
+            "total_tokens": 22889
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bc0f09egh",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmkuj4qmo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b82i4nrnl",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "buay6v9nt",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brjapiswl",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bw3dr2b0d",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bw9x3z55q",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3by2vrzm",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bbzhf52w9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3h8ravu6",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 11,
+          "Write": 2,
+          "Agent": 1,
+          "ToolSearch": 5
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33086
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 143477
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12020
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 23878
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 35571
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 47103
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 64599
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 76351
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 76025
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 75773
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 6
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12016
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 23654
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 6
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 7
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12185
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12006
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 54
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/doctor-no-ripwire-2026-10-11T18-29-21-401Z-run1.json"
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "scenario": "TS-1112-node18",
+  "title": "Doctor outcome (cfg-node18 → failed: node ≥ 20 required)",
+  "tier": "dev",
+  "label": "t044",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T18:48:37.256Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.23317920000000003,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.23317920000000003,
+        "session_ms": 176479,
+        "api_ms": 37571,
+        "turns": 3,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 1876,
+            "cache_read": 50349,
+            "cache_write": 17554,
+            "cost_usd": 0.1353838
+          },
+          "claude-sonnet-5-5": {
+            "input": 12,
+            "output": 2496,
+            "cache_read": 97057,
+            "cache_write": 21360,
+            "cost_usd": 0.0977954
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1876,
+              "cache_read": 50349,
+              "cache_write": 17554
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 0,
+              "cache_read": 76666,
+              "cache_write": 20391
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bccen8ktr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a1a24ca421cfa3182",
+            "ms": 107985,
+            "tool_uses": 13,
+            "total_tokens": 22521
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bj4w43v5v",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bbje6ckdo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bdq98cejg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "begkeoby3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bctc9kiw2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0z0c0ega",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4e0sl9h2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 8,
+          "Agent": 1,
+          "ToolSearch": 3,
+          "Glob": 1,
+          "Read": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34000
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 107998
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12364
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 23976
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 36789
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 48441
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 65655
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 77129
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 76583
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 8
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 8
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 11876
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 144
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 25
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 55
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-1112-node18-2026-10-11T18-45-40-177Z-run1.json"
+    }
+  ]
+}

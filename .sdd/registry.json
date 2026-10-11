@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-11T17:32:52Z",
+  "generated_at": "2026-10-11T18:16:03Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -36,7 +36,7 @@
           "total": 57,
           "done": 40,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-11T00:00:00Z"
       },
@@ -65,6 +65,26 @@
           "id": "D-003",
           "ref": "C001-REQ-602",
           "summary": "C001-TS-602, 611, 615, 617, 619 and 620 say 'the lint checks/parses' plan artifacts (task file shape, TC fields, risk fields, rollout content, handoff headings, ordered task list) but C001-IF errors catalogue defines no rule codes for them; verified for now by structure checks in the integration tests (found in C001-T-043)",
+          "reporter": "implementer",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-004",
+          "ref": "C001-REQ-1013",
+          "summary": "C001-REQ-1013 has the conductor write serena/serena_config.yml in ${CLAUDE_PLUGIN_DATA}, but the conductor's write scope and the path guard (C001-REQ-1101, GUARD-PATH-001) allow writes only under .sdd/; implemented as a named exception for that one file (found in C001-T-044)",
+          "reporter": "implementer",
+          "date": "2026-10-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-005",
+          "ref": "C001-REQ-813",
+          "summary": "C001-REQ-813 needs the IDs added, modified and removed since the last approval and their downstream references, but C001-IF-01/IF-13 define no CLI output for it; implemented as an Impact block of sdd gate show for phases in revision (found in C001-T-044)",
           "reporter": "implementer",
           "date": "2026-10-11",
           "status": "open",

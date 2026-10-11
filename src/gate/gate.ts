@@ -16,6 +16,7 @@ import { appendGateLog, GATES, setPhase, setPhaseStatus, setTopLevel, waiversYam
 import { isoDate } from "../workspace/change.ts";
 import { criticFindings, type CriticFinding } from "./critic-parse.ts";
 import { PHASES, phaseFiles, phaseHash, recordApproval } from "./hash.ts";
+import { impact, impactLines } from "./revise.ts";
 
 export interface GateContext {
   root: string;
@@ -49,6 +50,11 @@ function coverageFor(changeDir: string, phase: string): CoverageRow[] {
   if (phase === "10-spec") return specCoverage(t);
   if (phase === "20-plan") return planCoverage(t).rows;
   return [];
+}
+
+function revisionImpact(ctx: GateContext): string[] {
+  const i = impact(ctx.changeDir, ctx.phase);
+  return i ? impactLines(i) : ["Impact since last approval: unknown (approvals.json has no per-ID hashes for this phase)"];
 }
 
 /** The C001-IF-13 §1 summary. */
@@ -90,6 +96,8 @@ export function gateSummary(ctx: GateContext): string {
     `Open markers: ${markerText}`,
     `Stale: ${stale ? "yes" : "no"} · Previous approval: ${previous}`,
     "Proposed waivers: (none)",
+    // A phase in revision also shows what changed since its last approval (C001-REQ-813).
+    ...(status === "in-revision" ? revisionImpact(ctx) : []),
   ].join("\n");
 }
 

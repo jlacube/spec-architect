@@ -9,7 +9,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import { ROOT } from "./fixtures.mjs";
-import { architectWithStubs, architectWithout } from "./overlay.mjs";
+import { architectWithStubs, architectWithout, architectWithUrls } from "./overlay.mjs";
 
 export const RIPWIRE_DIR = join(homedir(), ".local", "ripwire", "bin", "ripwire-0.6.5-windows-x64");
 const SHIMS = (name) => join(ROOT, "tests", "fixtures", name, "bin");
@@ -52,6 +52,12 @@ export function machine(cfg) {
       return { env: withPath(cfg, { prepend: [SHIMS("cfg-ripwire-crash")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-ripwire-exit4":
       return { env: { ...withPath(cfg, { prepend: [SHIMS("cfg-ripwire-exit4")], drop: NO_RIPWIRE }), RIPWIRE_REAL: RIPWIRE_DIR }, plugins: [architectWithStubs] };
+    case "cfg-old-claude":
+      return { env: withPath(cfg, { prepend: [SHIMS("cfg-old-claude")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+    case "cfg-node18":
+      return { env: { ...withPath(cfg, { prepend: [SHIMS("cfg-node18")], drop: NO_RIPWIRE }), NODE_REAL: process.execPath }, plugins: [architectWithStubs] };
+    case "cfg-deepwiki-down":
+      return { env: withPath(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithUrls({ deepwiki: "https://deepwiki-unreachable.invalid/mcp" })] };
     default:
       throw new Error(`unknown machine configuration ${cfg}`);
   }

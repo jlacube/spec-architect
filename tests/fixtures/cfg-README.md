@@ -9,3 +9,6 @@ Eval sessions get a PATH and a plugin overlay per configuration (`evals/harness/
 | cfg-bare | not on PATH | server removed from the overlay | removed from PATH |
 | cfg-ripwire-crash | shim `cfg-ripwire-crash/bin/ripwire`: queries exit 134 | yes | yes |
 | cfg-ripwire-exit4 | shim `cfg-ripwire-exit4/bin/ripwire`: real ripwire, `--test-gate` answers exit 4 | yes | yes |
+| cfg-old-claude | as cfg-no-ripwire, plus shim `cfg-old-claude/bin/claude` reporting `2.0.76 (Claude Code)` | yes | yes |
+| cfg-node18 | as cfg-no-ripwire, plus shim `cfg-node18/bin/node` reporting `v18.20.4` for `-v` (other calls run the real node) | yes | yes |
+| cfg-deepwiki-down | as cfg-no-ripwire, with the DeepWiki server URL pointing to an unreachable host | yes | yes |

@@ -1,0 +1,7 @@
+#!/bin/sh
+# Machine configuration with node 18 on PATH (C001-TC-1112): the version probe reports v18; every
+# other invocation runs the real node ($NODE_REAL), so the sdd CLI still works.
+case "$1" in
+  -v|--version) echo "v18.20.4"; exit 0 ;;
+esac
+exec "$NODE_REAL" "$@"
