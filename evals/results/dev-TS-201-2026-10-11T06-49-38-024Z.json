@@ -1,0 +1,91 @@
+{
+  "scenario": "TS-201",
+  "title": "Launch the conductor",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T06:50:43.666Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.0756626,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "tool TodoWrite not available"
+      ],
+      "metrics": {
+        "cost_usd": 0.0756626,
+        "session_ms": 65313,
+        "api_ms": 17195,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1244,
+            "cache_read": 51203,
+            "cache_write": 8102,
+            "cost_usd": 0.0756626
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1244,
+              "cache_read": 51203,
+              "cache_write": 8102
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "buzo98y4x",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bat6lkonl",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33169
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13031
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 30
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-201-2026-10-11T06-49-38-024Z-run1.json"
+    }
+  ]
+}

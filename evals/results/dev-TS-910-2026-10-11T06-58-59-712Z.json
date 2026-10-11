@@ -1,0 +1,99 @@
+{
+  "scenario": "TS-910",
+  "title": "Open defect at orientation",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T06:59:20.674Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.084092,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.084092,
+        "session_ms": 19777,
+        "api_ms": 17322,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1531,
+            "cache_read": 51875,
+            "cache_write": 8613,
+            "cost_usd": 0.084092
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1531,
+              "cache_read": 51875,
+              "cache_write": 8613
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Glob": 1,
+          "Read": 6,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 161
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 24
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 30
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 246
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-910-2026-10-11T06-58-59-712Z-run1.json"
+    }
+  ]
+}

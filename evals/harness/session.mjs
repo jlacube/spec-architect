@@ -15,15 +15,16 @@ export function firstOption(question) {
  * - `plugins`: plugin directories to load
  * - `answer(question, call)`: returns the label (or labels) to answer each AskUserQuestion question
  * - `allowTools`: tools approved without asking (others are denied, so a run cannot wander)
+ * - `env`: extra environment variables for the session (for example CLAUDE_CODE_ENABLE_TODO_TOOLS)
  */
-export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model }) {
+export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {} }) {
   const transcript = [];
   const answers = [];
   const t0 = Date.now();
   const stamp = (record) => transcript.push({ t: Date.now() - t0, ...record });
   const options = {
     cwd,
-    env: childEnv(),
+    env: childEnv(env),
     pathToClaudeCodeExecutable: claudeExecutable(),
     plugins: plugins.map((path) => ({ type: "local", path })),
     settingSources: [],

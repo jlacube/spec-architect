@@ -43,6 +43,7 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         maxTurns: scenario.maxTurns ?? 30,
         maxBudgetUsd: Math.min(scenario.maxBudgetUsd ?? 0.5, 0.5),
         model: scenario.model,
+        env: scenario.env ?? {},
       });
       const failures = [];
       try {

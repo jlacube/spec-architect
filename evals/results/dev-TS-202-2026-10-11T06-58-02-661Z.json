@@ -1,0 +1,83 @@
+{
+  "scenario": "TS-202",
+  "title": "Orientation on a workspace with two changes",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T06:58:19.545Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1246438,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1246438,
+        "session_ms": 16036,
+        "api_ms": 13718,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 1350,
+            "cache_read": 26024,
+            "cache_write": 18483,
+            "cost_usd": 0.1246438
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1350,
+              "cache_read": 26024,
+              "cache_write": 18483
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 185
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 49
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-202-2026-10-11T06-58-02-661Z-run1.json"
+    }
+  ]
+}

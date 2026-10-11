@@ -1,0 +1,97 @@
+{
+  "scenario": "TS-201",
+  "title": "Launch the conductor",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T06:58:02.658Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.13660440000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.13660440000000001,
+        "session_ms": 76137,
+        "api_ms": 15648,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1228,
+            "cache_read": 50037,
+            "cache_write": 20401,
+            "cost_usd": 0.13660440000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1228,
+              "cache_read": 50037,
+              "cache_write": 20401
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b32qgqed7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2ph62hyf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bf63slkx5",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33045
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13053
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12577
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-201-2026-10-11T06-56-46-202Z-run1.json"
+    }
+  ]
+}

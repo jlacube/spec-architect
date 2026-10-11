@@ -1,0 +1,78 @@
+{
+  "scenario": "TS-203",
+  "title": "No .sdd present",
+  "tier": "dev",
+  "label": "dev",
+  "agent": "architect:sdd-conductor",
+  "measured_at": "2026-10-11T06:58:59.709Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.026676899999999996,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.026676899999999996,
+        "session_ms": 40061,
+        "api_ms": 5517,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1171,
+            "output": 14,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001241
+          },
+          "claude-opus-5-5": {
+            "input": 4,
+            "output": 289,
+            "cache_read": 21259,
+            "cache_write": 3301,
+            "cost_usd": 0.026552799999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 289,
+              "cache_read": 21259,
+              "cache_write": 3301
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bv1s5obxn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34034
+          }
+        ]
+      },
+      "transcript": "evals/results/transcripts/TS-203-2026-10-11T06-58-19-547Z-run1.json"
+    }
+  ]
+}
