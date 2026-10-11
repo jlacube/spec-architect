@@ -71,9 +71,9 @@ export function unwrap(text) {
     .trim();
 }
 
-/** The researcher's hand-back: the result of the relay's Agent call (not the relay's own reply). */
-export function handback(transcript) {
-  const call = dispatches(transcript).find((d) => d.type.endsWith("sdd-researcher"));
+/** A specialist's hand-back: the result of the relay's Agent call (not the relay's own reply). */
+export function handback(transcript, agent = "sdd-researcher") {
+  const call = dispatches(transcript).find((d) => d.type.endsWith(agent));
   if (!call) return "";
   for (const r of transcript) {
     if (r.type !== "sdk" || r.message.type !== "user") continue;
