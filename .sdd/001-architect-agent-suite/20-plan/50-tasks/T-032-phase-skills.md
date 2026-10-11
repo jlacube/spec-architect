@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-3
-status: in-progress
+status: done
 depends_on: [C001-T-031]
 implements: [C001-REQ-212, C001-REQ-213, C001-REQ-214, C001-REQ-215, C001-REQ-216, C001-REQ-313, C001-REQ-811, C001-REQ-127]
 satisfies_ac: [C001-AC-212.1, C001-AC-213.1, C001-AC-213.2, C001-AC-214.1, C001-AC-215.1, C001-AC-216.1, C001-AC-313.1, C001-AC-811.1, C001-AC-127.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-213, C001-TS-214, C001-TS-215, C001-TS-216, C001-TS-217, C
 components: [C001-COMP-01, C001-COMP-10]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e2fe9f4, completed_at: 2026-10-11, notes: "All 9 TCs pass (7 evals at dev tier, TC-314/813 integration); eval spend ~$5.13 (P-01 approved up to ~$5.70); the ideation document sections are checked by the skill-structure test and LINT-IDE-001, not by a full toy ideation run" }
 ---
 
 # C001-T-032 — Phase skills (ideation, spec), delegation briefs, unattended mode
