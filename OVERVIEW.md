@@ -67,6 +67,7 @@ Details: [STATUS-AND-NEXT.md](STATUS-AND-NEXT.md).
 | [HOW-WE-BUILT-IT.md](HOW-WE-BUILT-IT.md) | the story: spikes, milestones, defects and decisions, with the reasons |
 | [STATUS-AND-NEXT.md](STATUS-AND-NEXT.md) | what is done, what was deferred and why, what comes next |
 | [GLOSSARY.md](GLOSSARY.md) | every term and abbreviation used in this repository |
+| [PORTING-STUDY.md](PORTING-STUDY.md) | feasibility of running Architect on GitHub Copilot and OpenCode |
 
 ## Repository map
 
