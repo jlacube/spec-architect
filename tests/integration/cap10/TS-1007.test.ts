@@ -19,17 +19,19 @@ test("the serena server is started with the read-only launch arguments and SEREN
   assert.ok(pair("--context", "claude-code"));
   assert.ok(pair("--mode", "planning"));
   assert.ok(pair("--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml"));
-  assert.ok(args.includes("--project-from-cwd"));
+  assert.ok(pair("--project", "."), "the working directory is the project, git or not (D-008)");
+  assert.ok(!args.includes("--project-from-cwd"));
   assert.ok(pair("--enable-web-dashboard", "False"));
   assert.ok(pair("--open-web-dashboard", "False"));
   assert.equal(s.env?.["SERENA_HOME"], "${CLAUDE_PLUGIN_DATA}/serena");
 });
 
-test("with the server running, every tool it lists is a read-only tool", { skip: !serenaInstalled() && "Serena is not installed", timeout: 120000 }, async (t) => {
+for (const git of [true, false]) test(`with the server running in a folder ${git ? "with" : "without"} git, every tool it lists is a read-only tool`, { skip: !serenaInstalled() && "Serena is not installed", timeout: 120000 }, async (t) => {
   const project = mkdtempSync(join(tmpdir(), "sdd-serena-proj-"));
   try {
     writeFileSync(join(project, "a.ts"), "export function f(): number {\n  return 1;\n}\n");
-    spawnSync("git", ["init", "-q"], { cwd: project }); // --project-from-cwd detects the repository root
+    // D-008: with --project-from-cwd a folder without git had no active project and no mode exclusions.
+    if (git) spawnSync("git", ["init", "-q"], { cwd: project });
     const tools = await serenaToolNames(project);
     t.diagnostic(`serena tools: ${tools.join(", ")}`);
     assert.ok(tools.length > 0, "the server lists tools");

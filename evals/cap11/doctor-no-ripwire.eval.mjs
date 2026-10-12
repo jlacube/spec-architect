@@ -28,7 +28,7 @@ function serenaLeavesNothing() {
   const repo = mkdtempSync(join(tmpdir(), "sdd-1015-"));
   cpSync(join(ROOT, "tests", "fixtures", "fx-brownfield-ts"), repo, { recursive: true });
   execFileSync("git", ["init", "-q"], { cwd: repo });
-  spawnSync("serena", ["start-mcp-server", "--context", "claude-code", "--mode", "planning", "--mode", join(ROOT, "plugins", "architect", "serena", "architect-read-only.yml"), "--project-from-cwd", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"], {
+  spawnSync("serena", ["start-mcp-server", "--context", "claude-code", "--mode", "planning", "--mode", join(ROOT, "plugins", "architect", "serena", "architect-read-only.yml"), "--project", ".", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"], {
     cwd: repo,
     env: { ...process.env, SERENA_HOME: join(PLUGIN_DATA, "serena") },
     input: "",

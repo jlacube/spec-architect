@@ -6,7 +6,7 @@
       "command": "serena",
       "args": ["start-mcp-server", "--context", "claude-code", "--mode", "planning",
                "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml",
-               "--project-from-cwd", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
+               "--project", ".", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
       "env": { "SERENA_HOME": "${CLAUDE_PLUGIN_DATA}/serena" }
     }
   }

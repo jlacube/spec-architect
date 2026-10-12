@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { finding, read, rel } from "./lib.mjs";
 
-const SERENA_ARGS = ["--context", "claude-code", "--mode", "planning", "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml"];
+const SERENA_ARGS = ["--context", "claude-code", "--mode", "planning", "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project", "."];
 
 export default {
   code: "PLG-MCP-001",

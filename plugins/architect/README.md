@@ -17,9 +17,6 @@ its agents may write only inside `.sdd/` (and the memory folder of the two agent
 | Node.js | 20 or later (LTS recommended) | `node -v` |
 | Git | any recent version | `git --version` |
 
-The repository you work in should be a git repository: the code-intelligence server (Serena) uses it
-to find the project root.
-
 ## Install (Windows 11)
 
 1. Get this repository (clone or download) to a folder of your choice.
@@ -167,7 +164,7 @@ IDs look like `C001-REQ-012` (change 001, requirement 12) and are never reused.
 | An agent reports `GUARD-BASH-001` or `002` | a command outside the read-only allowlist, or chaining/redirection | expected; the agent should use the `sdd` CLI or a read-only command instead |
 | Commands say to start the conductor | the command ran in another session | `claude --agent architect:sdd-conductor`, then run the command again |
 | No "SDD workspace" line at session start | the folder has no `.sdd/` (by design the plugin stays silent there) | `/architect:init` |
-| Serena lists editing tools or finds no symbols | the folder is not a git repository, so Serena activates no project | run `git init` in the repository (the agents can call only Serena's read tools in any case) |
+| Serena finds no symbols | its language server is still starting (first use installs it with npm) or uv/Node are not on PATH | wait a minute and retry; check `uv --version` and `node -v` in the terminal that starts Claude Code |
 | A gate is refused | lint errors, open `[NEEDS CLARIFICATION]` markers, critic blockers, or the previous phase is not approved | fix what `sdd gate show` lists, or approve with explicit waivers |
 | A phase shows `stale` | an approved file changed after approval | `/architect:gate <phase>` to re-approve, or `/architect:revise` |
 | Hooks fire twice / API error "tool_use ids must be unique" | an old Claude Code on PATH (2.0.x) | update Claude Code to 2.1.295 or later |
