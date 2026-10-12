@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-060]
 implements: [C001-REQ-1115]
 satisfies_ac: [C001-AC-1115.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1116, C001-TC-1116]
 components: [C001-COMP-11]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 6c5ac07, completed_at: 2026-10-12, notes: "TS-1116 passes; clean-profile timing (NFR-602) is the manual procedure tests/manual/TS-1102.md, to run by P-01 on a fresh Windows profile" }
 ---
 
 # C001-T-062 — README and user documentation
