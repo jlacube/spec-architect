@@ -78,7 +78,7 @@ Verified in spikes S-02 and S-06 (Serena 1.7.0, Claude Code 2.1.295). Plugin `.m
   "command": "serena",
   "args": ["start-mcp-server", "--context", "claude-code", "--mode", "planning",
            "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml",
-           "--project-from-cwd", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
+           "--project", ".", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
   "env": { "SERENA_HOME": "${CLAUDE_PLUGIN_DATA}/serena" }
 }
 ```
@@ -91,6 +91,10 @@ Verified in spikes S-02 and S-06 (Serena 1.7.0, Claude Code 2.1.295). Plugin `.m
   `read_memory`, `list_memories`, `onboarding`.
 - Tools exposed with this launch: `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`,
   `find_declaration`, `find_implementations`, `get_diagnostics_for_file`, `initial_instructions`.
+- `--project .` activates the working directory, where Claude Code starts MCP servers (the project
+  folder). `--project-from-cwd` is not used: in a folder without `.git` or `.serena/project.yml` it
+  activates no project, and Serena 1.7.0 then applies no mode exclusions (23 tools, editing ones
+  included; defect D-008, verified 2026-10-12).
 - `${CLAUDE_PLUGIN_DATA}` is the plugin's per-user data folder (`~/.claude/plugins/data/<plugin>-<marketplace>`).
   Serena keeps project data inside the repository (`<repo>/.serena/`) unless
   `${CLAUDE_PLUGIN_DATA}/serena/serena_config.yml` already sets `project_serena_folder_location`

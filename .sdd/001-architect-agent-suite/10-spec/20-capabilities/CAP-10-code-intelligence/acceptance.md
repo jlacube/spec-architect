@@ -90,9 +90,9 @@ Scenario: C001-TS-1006 — plugin MCP config
 ```gherkin
 Scenario: C001-TS-1007 — Serena read-only launch
   When the plugin's ".mcp.json" is parsed
-  Then the "serena" server arguments include "--context" "claude-code", "--mode" "planning", "--mode" "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project-from-cwd", "--enable-web-dashboard" "False" and "--open-web-dashboard" "False"
+  Then the "serena" server arguments include "--context" "claude-code", "--mode" "planning", "--mode" "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project" ".", "--enable-web-dashboard" "False" and "--open-web-dashboard" "False"
   And its environment sets "SERENA_HOME" to "${CLAUDE_PLUGIN_DATA}/serena"
-  And, with the server running, every tool it lists is one of find_symbol, get_symbols_overview, find_referencing_symbols, find_declaration, find_implementations, get_diagnostics_for_file, initial_instructions
+  And, with the server running, every tool it lists is one of find_symbol, get_symbols_overview, find_referencing_symbols, find_declaration, find_implementations, get_diagnostics_for_file, initial_instructions, also in a working directory that is not a git repository
 ```
 
 ## C001-REQ-1007

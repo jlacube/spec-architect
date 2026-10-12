@@ -55,7 +55,7 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 
 ### C001-REQ-1006 — Serena launched read-only
 - **Pattern:** ubiquitous
-- **Statement:** THE plugin's MCP configuration SHALL start Serena with the launch arguments and environment of C001-IF-14 §4 (context `claude-code`, modes `planning` and the plugin's read-only mode file, project taken from the working directory, web dashboard disabled), so that the server exposes only the read-only tools listed there.
+- **Statement:** THE plugin's MCP configuration SHALL start Serena with the launch arguments and environment of C001-IF-14 §4 (context `claude-code`, modes `planning` and the plugin's read-only mode file, project activated from the working directory whether or not it is a git repository, web dashboard disabled), so that the server exposes only the read-only tools listed there.
 - **Rationale:** C001-CON-08; IDEA-§7.3; spike S-02 (planning mode alone leaves file-changing and memory tools exposed)
 - **Stories:** C001-US-1003
 - **Priority:** Must
