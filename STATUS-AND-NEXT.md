@@ -1,4 +1,4 @@
-# Status and next steps (2026-10-12)
+# Status and next steps (2026-10-12, updated after T-062)
 
 ## 1. Milestones
 
@@ -9,11 +9,11 @@
 | M-3 | conductor, interview, phase skills, commands, gate protocol, ideation/spec specialists, eval harness | done — exit criteria at milestone tier **deferred to release** |
 | M-4 | cartographer, architect, planner, revise/stop/doctor | done — exit criteria at milestone tier **deferred to release** |
 | M-5 | path guard, shell guard, hooks, archive, security corpus | done — injection evals at milestone tier **deferred to release** |
-| M-6 | packaging and quality gates | next |
+| M-6 | packaging and quality gates | in progress — T-060, T-061, T-062 done |
 | M-7 | release v0.1.0 and dogfooding on two real changes | after M-6 |
 
-Tasks: **47 of 59 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
-11 to do. Defects: 7 found, 7 closed. Phases G1/G2/G3: approved, hashes match.
+Tasks: **50 of 59 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
+8 to do. Defects: 8 found, 7 closed; **D-008 open** (see §3a). Phases G1/G2/G3: approved, hashes match.
 
 ## 2. Deferred items (to be closed before release)
 
@@ -39,6 +39,15 @@ Recorded with P-01's words in `docs/milestone-log.md`; the release gate (T-072) 
 
 Plan: free tasks first (T-060, T-061, T-062, T-076, T-064), then ask P-01 for an M-6 eval budget
 before T-063 and the paid parts of T-065.
+
+## 3a. Open defect D-008 (needs P-01)
+
+Started as the plugin's `.mcp.json` says (`--project-from-cwd`), Serena activates no project in a
+folder without `.git` or `.serena/project.yml`, and then its read-only mode is not applied: it lists
+23 tools including editing ones. The agents still cannot call them (they are granted the five read
+tools by name), but the spec says the server itself exposes only read-only tools. Verified fix:
+`--project .` (Claude Code starts MCP servers in the project folder) gives the seven read-only tools
+with or without git. Needs a spec revision (REQ-1006, IF-14 §4, TS-1007) approved by P-01.
 
 ## 4. What M-7 contains
 
