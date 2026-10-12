@@ -4,6 +4,7 @@ import { build } from "esbuild";
 import { readFileSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { bundledPackages, disallowed, writeNotices } from "./licenses.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const { version } = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
@@ -15,7 +16,7 @@ for (const name of readdirSync(outdir)) {
   if (name !== "sdd.mjs") rmSync(join(outdir, name), { recursive: true, force: true });
 }
 
-await build({
+const result = await build({
   entryPoints: [join(root, "src", "cli.ts")],
   outfile,
   bundle: true,
@@ -35,6 +36,16 @@ await build({
     ].join("\n"),
   },
   logLevel: "warning",
+  metafile: true,
 });
+
+// C001-REQ-1114: only permissive licenses may be bundled; C001-REQ-1113: the notices list them all.
+const pkgs = bundledPackages(root, result.metafile);
+const bad = disallowed(pkgs);
+if (bad.length > 0) {
+  console.error(`build failed: bundled package license not allowed: ${bad.map((p) => `${p.name}@${p.version} (${p.license})`).join(", ")}`);
+  process.exit(1);
+}
+if (writeNotices(join(root, "plugins", "architect", "THIRD_PARTY_NOTICES.md"), pkgs)) console.log("updated plugins/architect/THIRD_PARTY_NOTICES.md");
 
 console.log(`built ${outfile.slice(root.length + 1).replaceAll("\\", "/")} (architect-plugin@${version})`);

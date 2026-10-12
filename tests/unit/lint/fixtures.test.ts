@@ -11,7 +11,8 @@ import { rebuildRegistry } from "../../../src/workspace/status.ts";
 import { repoRoot } from "../../helpers.ts";
 import { runInProcess } from "../../integration/cli/helpers.ts";
 
-const FIXTURES = join(repoRoot(), "tests", "lint-fixtures");
+// SDD_LINT_FIXTURES points the suite at another fixture folder (C001-TS-1118 alters a copy).
+const FIXTURES = process.env["SDD_LINT_FIXTURES"] ?? join(repoRoot(), "tests", "lint-fixtures");
 
 function runFixture(code: string, kind: "bad" | "good"): { code: string }[] {
   const root = realpathSync.native(mkdtempSync(join(tmpdir(), `sdd-fx-${code}-`)));

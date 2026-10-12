@@ -8,7 +8,7 @@
 // others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI and
 // the version probes, without pipes. When in doubt the guard denies (fail closed).
 import { findWorkspace } from "../workspace/find.ts";
-import { normalisePath, pathKey, realPath } from "../io/paths.ts";
+import { isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
 import { isArchitectAgent, type HookInput } from "./input.ts";
 
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
@@ -112,7 +112,7 @@ export function tokenise(cmd: string, dialect: Dialect): { segments: { words: st
   return { segments };
 }
 
-const exe = (w: string | undefined, name: string) => w !== undefined && (w === name || w.toLowerCase() === `${name}.exe`);
+const exe = isCommand;
 const num = (s: string | undefined) => s !== undefined && /^\d+$/.test(s);
 
 /** `node <path>/sdd.mjs …`; the script must not lie in the agent-writable `.sdd/` folder. */

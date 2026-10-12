@@ -125,6 +125,11 @@ export function ambiguousWindowsPath(p: string, platform: Platform = CURRENT): s
   return null;
 }
 
+/** True when a command word names `name`, also as the Windows executable `<name>.exe` (any case). */
+export function isCommand(word: string | undefined, name: string): boolean {
+  return word !== undefined && (word === name || word.toLowerCase() === `${name}.exe`);
+}
+
 export interface InsideOptions extends PathOptions {
   /** Resolve both paths through the file system first (current platform only). */
   real?: boolean;

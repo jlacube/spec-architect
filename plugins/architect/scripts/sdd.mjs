@@ -7574,6 +7574,9 @@ function ambiguousWindowsPath(p, platform = CURRENT) {
   }
   return null;
 }
+function isCommand(word, name) {
+  return word !== void 0 && (word === name || word.toLowerCase() === `${name}.exe`);
+}
 function isInside(root, target, options = {}) {
   const key = (p) => options.real ? pathKey(realPath(p)) : pathKey(p, options);
   const r = key(root);
@@ -11333,7 +11336,7 @@ function tokenise(cmd, dialect) {
   segments.push({ words, raw });
   return { segments };
 }
-var exe = (w, name) => w !== void 0 && (w === name || w.toLowerCase() === `${name}.exe`);
+var exe = isCommand;
 var num2 = (s) => s !== void 0 && /^\d+$/.test(s);
 function sddCli(words, raw, cwd) {
   if (!exe(words[0], "node") || words.length < 2) return false;

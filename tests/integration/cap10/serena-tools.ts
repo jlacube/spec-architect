@@ -17,6 +17,10 @@ export async function serenaToolNames(project: string, timeoutMs = 90000): Promi
   writeSerenaConfig(data);
   const subst = (s: string) => s.split("${CLAUDE_PLUGIN_ROOT}").join(PLUGIN).split("${CLAUDE_PLUGIN_DATA}").join(data);
   const env = { ...process.env, ...Object.fromEntries(Object.entries(cfg.env ?? {}).map(([k, v]) => [k, subst(v)])) };
+  // Serena is an external tool (it may install a language server with npm): the no-network preload of
+  // the test run (C001-NFR-202, which covers the sdd CLI) must not reach it.
+  delete env["NODE_OPTIONS"];
+  delete env["SDD_NO_NETWORK_LOG"];
   // No shell: on Windows a shell would re-parse the arguments (the mode file path).
   const child = spawn(cfg.command!, (cfg.args ?? []).map(subst), { cwd: project, env, stdio: ["pipe", "pipe", "pipe"] });
   const send = (msg: object) => child.stdin.write(JSON.stringify({ jsonrpc: "2.0", ...msg }) + "\n");

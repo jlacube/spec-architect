@@ -7,7 +7,7 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outdir = join(root, "build", "tests");
+const outdir = process.env.SDD_TEST_OUTDIR ?? join(root, "build", "tests");
 
 function findTests(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -47,10 +47,13 @@ const files = entries.map((e) => join(outdir, relative(join(root, "tests"), e)).
 console.log(`running ${files.length} test file(s): ${files.map((f) => relative(root, f).split(sep).join("/")).join(", ")}`);
 // C001-NFR-202: every Node process of the run (tests and the CLI they spawn) loads the no-network stubs;
 // any recorded attempt fails the run.
-const netLog = join(root, "build", "no-network.log");
+const netLog = join(outdir, "..", `${outdir.split(sep).pop()}-no-network.log`);
 rmSync(netLog, { force: true });
 const preload = `--import=${pathToFileURL(join(root, "tests", "no-network.mjs")).href}`;
 const env = { ...process.env, NODE_OPTIONS: [process.env.NODE_OPTIONS, preload].filter(Boolean).join(" "), SDD_NO_NETWORK_LOG: netLog };
+// A run started from inside a test (C001-TS-1118) must not inherit node:test's child marker, or it
+// reports to the outer runner instead of failing with its own exit code.
+delete env.NODE_TEST_CONTEXT;
 const res = spawnSync(process.execPath, ["--test", ...flags, ...files], { stdio: "inherit", cwd: root, env });
 const attempts = existsSync(netLog) ? readFileSync(netLog, "utf8").trim() : "";
 if (attempts) {
