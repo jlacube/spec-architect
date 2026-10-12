@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-060]
 implements: [C001-REQ-1113, C001-REQ-1114, C001-REQ-1117, C001-REQ-1118, C001-REQ-1120, C001-REQ-1122]
 satisfies_ac: [C001-AC-1113.1, C001-AC-1114.1, C001-AC-1117.1, C001-AC-1118.1, C001-AC-1120.1, C001-AC-1122.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1114, C001-TS-1115, C001-TS-1118, C001-TS-1119, C001-TS-11
 components: [C001-COMP-12]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: "1569904", completed_at: 2026-10-12, notes: "npm run check green on REF-WIN; structure checks 0 errors, 36 pending (owned by T-062/T-063/T-064/T-076)" }
 ---
 
 # C001-T-061 — Plugin structure checks, license check, npm run check
