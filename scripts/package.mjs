@@ -1,10 +1,11 @@
 // `npm run package`: a self-contained, installable copy of the plugin in dist/.
 //   dist/architect-<version>/        marketplace folder: .claude-plugin/marketplace.json, plugins/architect/, INSTALL.md
 //   dist/architect-<version>.zip     the same folder, zipped
+//   dist/architect-<version>-plugin.zip  the plugin alone (.claude-plugin/plugin.json at the root), for upload UIs
 // Steps: build (bundle, license allowlist, notices), plugin structure checks, `claude plugin validate`
 // on the staged plugin and marketplace (skipped when Claude Code is not found), then stage and zip.
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -77,17 +78,27 @@ writeFileSync(
 step("claude plugin validate (plugin)", claude, ["plugin", "validate", join(stage, "plugins", "architect")], { optional: true });
 step("claude plugin validate (marketplace)", claude, ["plugin", "validate", stage], { optional: true });
 
-console.log(`\n=== zip ===`);
-if (process.platform === "win32") {
-  // Windows' own bsdtar writes standard zip entries ("/" separators) and keeps dot-folders;
-  // Windows PowerShell's Compress-Archive writes "\" separators that other platforms mis-extract.
-  const tar = join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe");
-  step("zip (tar.exe)", tar, ["-a", "-c", "-f", zip, "."], { cwd: stage });
-} else {
-  step("zip", "zip", ["-qr", zip, "."], { cwd: stage });
+/** Zips the content of `dir` (entries relative to it, dot-folders included, "/" separators). */
+function zipDir(title, dir, out) {
+  const entries = readdirSync(dir);
+  if (process.platform === "win32") {
+    // Windows' own bsdtar writes standard zip entries; Windows PowerShell's Compress-Archive writes "\"
+    // separators that other tools mis-read.
+    const tar = join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe");
+    step(title, tar, ["-a", "-c", "-f", out, ...entries], { cwd: dir });
+  } else {
+    step(title, "zip", ["-qr", out, ...entries], { cwd: dir });
+  }
+  if (!existsSync(out)) {
+    console.error(`package failed: ${out} not produced`);
+    process.exit(1);
+  }
 }
-if (!existsSync(zip)) {
-  console.error("package failed: no zip produced");
-  process.exit(1);
-}
-console.log(`\npackaged: dist/${name}/ and dist/${name}.zip`);
+
+// Plugin archive for upload UIs: .claude-plugin/plugin.json at the archive root.
+const pluginZip = join(dist, `${name}-plugin.zip`);
+rmSync(pluginZip, { force: true });
+zipDir("zip plugin (upload)", join(stage, "plugins", "architect"), pluginZip);
+// Marketplace archive for `/plugin marketplace add <extracted folder>`.
+zipDir("zip marketplace", stage, zip);
+console.log(`\npackaged:\n  dist/${name}-plugin.zip   plugin archive (upload in Claude: .claude-plugin/plugin.json at its root)\n  dist/${name}.zip          marketplace archive (extract, then /plugin marketplace add <folder>)\n  dist/${name}/             the marketplace folder, unzipped`);
