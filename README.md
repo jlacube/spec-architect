@@ -66,6 +66,7 @@ Safety behaviour (guard denials) is explained in [SAFETY.md](SAFETY.md).
 npm install
 npm run check      # typecheck, claude plugin validate, build, tests, lint fixtures, structure checks
 npm run bench      # performance benchmarks
+npm run package    # build + checks + validate → dist/architect-<version>/ and dist/architect-<version>.zip
 ```
 
 Agent evaluations cost real model usage; see [TESTING-AND-EVALS.md](TESTING-AND-EVALS.md).

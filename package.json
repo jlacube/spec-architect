@@ -15,7 +15,8 @@
     "check": "node scripts/check.mjs",
     "bench": "node bench/run.mjs",
     "eval": "node evals/harness/run.mjs",
-    "eval:report": "node evals/harness/report.mjs"
+    "eval:report": "node evals/harness/report.mjs",
+    "package": "node scripts/package.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

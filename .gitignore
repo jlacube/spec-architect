@@ -3,6 +3,7 @@
 # Node toolchain output
 node_modules/
 build/
+dist/
 coverage/
 # Eval transcripts (local paths, account details) and plugin-eval run folders
 evals/results/transcripts/
