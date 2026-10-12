@@ -8,3 +8,5 @@ coverage/
 # Eval transcripts (local paths, account details) and plugin-eval run folders
 evals/results/transcripts/
 **/evals/results/*/
+# Serena project data (written by the plugin's Serena before its data folder is configured, D-010)
+.serena/
