@@ -22,11 +22,14 @@ import { postWriteFeedback } from "../hooks/post-write.ts";
 import { changeLine, sessionBrief } from "../hooks/session-start.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
+import { serenaLaunch } from "../workspace/serena-launch.ts";
 import type { Profile } from "../workspace/templates.ts";
 import { listChanges, rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
 import { percent } from "../trace/matrix.ts";
 import { trace } from "../trace/write.ts";
+import { commitApproval, commitPreconditions } from "../gate/commit.ts";
+import { GATES } from "../workspace/change-md.ts";
 import { phaseHash } from "../gate/hash.ts";
 import { approvalBlockers, approve, gateSummary, gitUser, record, type ApproveOptions, type GateContext } from "../gate/gate.ts";
 import { setTask, type TaskSetOptions } from "../tracking/task.ts";
@@ -58,6 +61,8 @@ export interface CommandContext {
   rules: readonly LintRule[];
   /** Standard input (hook commands). */
   stdin: () => string;
+  /** Arguments after `--` (commands with `rest`). */
+  rest: string[];
 }
 
 export interface CommandSpec {
@@ -70,6 +75,8 @@ export interface CommandSpec {
   workspace: boolean;
   /** Arguments that pass validation, used by the SDD_DEBUG test of every command. */
   sampleArgs: string[];
+  /** True when arguments after `--` are passed through to the command. */
+  rest?: boolean;
   run?: (ctx: CommandContext) => number;
 }
 
@@ -121,6 +128,9 @@ function gateShow(ctx: CommandContext): number {
 function gateApprove(ctx: CommandContext): number {
   const g = gateContext(ctx);
   const waive = (ctx.values["waive"] as string[] | undefined) ?? [];
+  const commit = ctx.values["commit"] === true;
+  // C001-REQ-817: git preconditions before anything is recorded.
+  if (commit) commitPreconditions(ctx.root);
   approvalBlockers(g, new Set(waive));
   const note = ctx.values["note"] as string | undefined;
   if (note === undefined || note.trim() === "") throw usage(ctx.name, "--note is required");
@@ -132,6 +142,11 @@ function gateApprove(ctx: CommandContext): number {
   if (existsSync(join(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
+  if (commit) {
+    // C001-REQ-816: only the change folder and the status files.
+    const sha = commitApproval(ctx.root, g.changeDir, `CHG-${ctx.args["NNN"]}: ${GATES[g.phase]} approved by ${r.approvedBy}`);
+    ctx.out.line(`committed: ${sha}`);
+  }
   return 0;
 }
 
@@ -450,6 +465,13 @@ function hookPostWrite(ctx: CommandContext): number {
   return 0;
 }
 
+/** `sdd serena-launch <plugin-data-dir> -- <args>` (C001-REQ-1013): config first, then Serena; stdout stays Serena's. */
+function serenaLaunchCmd(ctx: CommandContext): number {
+  const r = serenaLaunch(resolve(ctx.cwd, String(ctx.args["plugin-data-dir"])), ctx.rest);
+  if (r.error) ctx.out.errorLine(r.error);
+  return r.code;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
@@ -467,7 +489,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN", true)], options: { write: B, active: B }, workspace: false, sampleArgs: ["004"], run: traceCmd },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: gateShow },
-  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
+  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"] [--commit]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S, commit: B }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
@@ -480,6 +502,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookPostWrite },
+  { name: "serena-launch", usage: "<plugin-data-dir> -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },

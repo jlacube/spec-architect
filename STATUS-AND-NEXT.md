@@ -9,11 +9,12 @@
 | M-3 | conductor, interview, phase skills, commands, gate protocol, ideation/spec specialists, eval harness | done — exit criteria at milestone tier **deferred to release** |
 | M-4 | cartographer, architect, planner, revise/stop/doctor | done — exit criteria at milestone tier **deferred to release** |
 | M-5 | path guard, shell guard, hooks, archive, security corpus | done — injection evals at milestone tier **deferred to release** |
-| M-6 | packaging and quality gates | in progress — T-060, T-061, T-062 done |
+| M-6 | packaging and quality gates | in progress — T-060, T-061, T-062, T-078 done |
 | M-7 | release v0.1.0 and dogfooding on two real changes | after M-6 |
 
-Tasks: **50 of 59 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
-8 to do. Defects: 8 found, 8 closed (D-008 fixed 2026-10-12, see §3a). Phases G1/G2/G3: approved, hashes match.
+Tasks: **51 of 60 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
+8 to do. Defects: 10 found, 10 closed (D-008 fixed 2026-10-12, see §3a; D-009 opt-in `gate approve --commit`
+and D-010 Serena launched through `sdd serena-launch`, fixed 2026-10-13 by C001-T-078). Phases G1/G2/G3: approved, hashes match.
 
 ## 2. Deferred items (to be closed before release)
 

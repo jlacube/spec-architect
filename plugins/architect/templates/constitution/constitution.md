@@ -43,6 +43,16 @@ A change is proposed as **lite** when all of these hold; otherwise **full**:
 | Expected requirements | ≤ 10 |
 | Touched modules | ≤ 2 |
 
+## Version control
+
+| Setting | Value |
+|---|---|
+| Commit `.sdd/` at each gate approval | no |
+
+<!-- yes: the conductor approves with `sdd gate approve … --commit`, which commits only the change folder,
+`.sdd/SDD.md` and `.sdd/registry.json` (message "CHG-<NNN>: <gate> approved by <approver>"); refused when
+other changes are staged. no: you commit yourself. -->
+
 ## Language & conventions
 
 <!-- Spec language, naming conventions, code style references, glossary location. -->

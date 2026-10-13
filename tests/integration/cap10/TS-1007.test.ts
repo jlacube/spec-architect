@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { mcpConfig } from "../plugin-files.ts";
@@ -16,6 +16,9 @@ test("the serena server is started with the read-only launch arguments and SEREN
   const s = mcpConfig()["serena"]!;
   const args = s.args ?? [];
   const pair = (flag: string, value: string) => args.some((a, i) => a === flag && args[i + 1] === value);
+  // D-010: through the CLI launcher, which writes Serena's configuration first.
+  assert.equal(s.command, "node");
+  assert.deepEqual(args.slice(0, 5), ["${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs", "serena-launch", "${CLAUDE_PLUGIN_DATA}", "--", "start-mcp-server"]);
   assert.ok(pair("--context", "claude-code"));
   assert.ok(pair("--mode", "planning"));
   assert.ok(pair("--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml"));
@@ -36,6 +39,8 @@ for (const git of [true, false]) test(`with the server running in a folder ${git
     t.diagnostic(`serena tools: ${tools.join(", ")}`);
     assert.ok(tools.length > 0, "the server lists tools");
     assert.deepEqual(tools.filter((t) => !ALLOWED.includes(t)), [], `tools: ${tools.join(", ")}`);
+    // D-010 (C001-TS-1015): the launcher wrote the configuration first, so Serena wrote nothing here.
+    assert.ok(!existsSync(join(project, ".serena")), ".serena/ created in the project folder");
   } finally {
     try {
       rmSync(project, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });

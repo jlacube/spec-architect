@@ -1,13 +1,37 @@
 {
   "mcpServers": {
-    "context7": { "type": "http", "url": "https://mcp.context7.com/mcp" },
-    "deepwiki": { "type": "http", "url": "https://mcp.deepwiki.com/mcp" },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "deepwiki": {
+      "type": "http",
+      "url": "https://mcp.deepwiki.com/mcp"
+    },
     "serena": {
-      "command": "serena",
-      "args": ["start-mcp-server", "--context", "claude-code", "--mode", "planning",
-               "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml",
-               "--project", ".", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
-      "env": { "SERENA_HOME": "${CLAUDE_PLUGIN_DATA}/serena" }
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs",
+        "serena-launch",
+        "${CLAUDE_PLUGIN_DATA}",
+        "--",
+        "start-mcp-server",
+        "--context",
+        "claude-code",
+        "--mode",
+        "planning",
+        "--mode",
+        "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml",
+        "--project",
+        ".",
+        "--enable-web-dashboard",
+        "False",
+        "--open-web-dashboard",
+        "False"
+      ],
+      "env": {
+        "SERENA_HOME": "${CLAUDE_PLUGIN_DATA}/serena"
+      }
     }
   }
 }

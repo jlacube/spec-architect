@@ -4,7 +4,6 @@ import { spawn, spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeSerenaConfig } from "../../../src/workspace/serena-config.ts";
 import { mcpConfig, PLUGIN } from "../plugin-files.ts";
 
 export function serenaInstalled(): boolean {
@@ -14,7 +13,7 @@ export function serenaInstalled(): boolean {
 export async function serenaToolNames(project: string, timeoutMs = 90000): Promise<string[]> {
   const cfg = mcpConfig()["serena"]!;
   const data = mkdtempSync(join(tmpdir(), "sdd-serena-data-"));
-  writeSerenaConfig(data);
+  // No configuration is written here: `sdd serena-launch` must write it before Serena starts (D-010).
   const subst = (s: string) => s.split("${CLAUDE_PLUGIN_ROOT}").join(PLUGIN).split("${CLAUDE_PLUGIN_DATA}").join(data);
   const env = { ...process.env, ...Object.fromEntries(Object.entries(cfg.env ?? {}).map(([k, v]) => [k, subst(v)])) };
   // Serena is an external tool (it may install a language server with npm): the no-network preload of

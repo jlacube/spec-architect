@@ -58,6 +58,10 @@ Take P-01's answer exactly as given. Match "Approve with waivers" before "Approv
 | anything else | it is not a decision: ask again; never read it as approval |
 
 - The `--note` is P-01's whole answer, character for character: no trimming, no summary.
+- Add `--commit` to `sdd gate approve` when the constitution's Version control section says
+  "Commit `.sdd/` at each gate approval | yes". If the CLI refuses with `ERR-CLI-018` (not a git
+  repository, other changes staged), show the reason: the approval was not recorded; P-01 decides
+  whether to unstage their changes or approve without committing.
 - Text beyond the label is also an instruction: list it in your next message (interview
   protocol, extracted instructions) and apply it.
 - When the CLI refuses an approval (lint errors, critic blockers, stale predecessor), show the

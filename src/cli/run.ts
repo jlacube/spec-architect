@@ -121,7 +121,11 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     checkPositional(spec.name, p.name, v);
     args[p.name] = v;
   });
-  const extra = parsed.positionals[spec.positionals.length];
+  // Arguments after `--` go to commands that pass them through (serena-launch); elsewhere they are extra.
+  const dashdash = rest.indexOf("--");
+  const passed = spec.rest && dashdash >= 0 ? rest.slice(dashdash + 1) : [];
+  const own = parsed.positionals.slice(0, parsed.positionals.length - passed.length);
+  const extra = own[spec.positionals.length];
   if (extra !== undefined) throw usage(spec.name, `unexpected argument ${extra}`);
   for (const [k, o] of Object.entries(spec.options)) if (o.required && values[k] === undefined) throw usage(spec.name, `missing option --${k}`);
   checkOptions(spec, values);
@@ -135,5 +139,5 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     out.trace("workspace", { root });
   }
   if (!spec.run) throw usage(spec.name, `sdd ${spec.name} is not implemented yet`);
-  return spec.run({ name: spec.name, out, cwd, root, args, values, rules: io.rules ?? RULES, stdin: io.stdin ?? (() => "") });
+  return spec.run({ name: spec.name, out, cwd, root, args, values, rules: io.rules ?? RULES, stdin: io.stdin ?? (() => ""), rest: passed });
 }
