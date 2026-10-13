@@ -1,6 +1,6 @@
 ---
 id: C001-T-074
-title: "Dogfood: brownfield change CHG-003 and Superpowers execution"
+title: "Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution"
 change: CHG-001
 phase: 20-plan
 artifact: plan/task
@@ -16,7 +16,7 @@ estimate: L
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C001-T-074 — Dogfood: brownfield change CHG-003 and Superpowers execution
+# C001-T-074 — Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution
 
 ## Intent
 

@@ -82,8 +82,8 @@ flowchart TB
     T070["T-070 Constitution for this repository via /architect:init"]
     T071["T-071 Archify architecture outputs for CHG-001 (dropped)"]
     T072["T-072 Release gate v0.1.0"]
-    T073["T-073 Dogfood: greenfield change CHG-002 through G1–G3"]
-    T074["T-074 Dogfood: brownfield change CHG-003 and Superpowers execution"]
+    T073["T-073 Dogfood: greenfield change CHG-003 through G1–G3"]
+    T074["T-074 Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution"]
     T075["T-075 Archive CHG-001 into living specs"]
   end
   T001 --> T002
@@ -270,8 +270,8 @@ flowchart TB
 | C001-M-7 | C001-T-070 | Constitution for this repository via /architect:init | S | T-044, T-060 |
 | C001-M-7 | C001-T-071 | Archify architecture outputs for CHG-001 (dropped 2026-10-10, spike S-03) | S | — |
 | C001-M-7 | C001-T-072 | Release gate v0.1.0 | M | T-061, T-062, T-063, T-064, T-065, T-054, T-053, T-070, T-076, T-077, T-078 |
-| C001-M-7 | C001-T-073 | Dogfood: greenfield change CHG-002 through G1–G3 | M | T-072 |
-| C001-M-7 | C001-T-074 | Dogfood: brownfield change CHG-003 and Superpowers execution | L | T-072 |
+| C001-M-7 | C001-T-073 | Dogfood: greenfield change CHG-003 through G1–G3 | M | T-072 |
+| C001-M-7 | C001-T-074 | Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution | L | T-072 |
 | C001-M-7 | C001-T-075 | Archive CHG-001 into living specs | S | T-073, T-074, T-053 |
 
 ## Critical path
@@ -296,5 +296,5 @@ Weights S = 1, M = 2, L = 3; total weight 43.
 16. C001-T-061 — Plugin structure checks, license check, npm run check
 17. C001-T-065 — NFR measurements: performance, coverage, compatibility
 18. C001-T-072 — Release gate v0.1.0
-19. C001-T-074 — Dogfood: brownfield change CHG-003 and Superpowers execution
+19. C001-T-074 — Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution
 20. C001-T-075 — Archive CHG-001 into living specs

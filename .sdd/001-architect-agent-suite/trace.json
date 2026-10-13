@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-13T19:55:35.917Z",
+  "generated_at": "2026-10-13T21:28:29.812Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -5529,7 +5529,7 @@
       "line": 1,
       "title": "Constitution for this repository via /architect:init",
       "content_hash": "sha256:3f70a60f7181a91eef90e51a5261ceb32efa54685c30e6ca3f5890467b01b557",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-T-071",
@@ -5554,8 +5554,8 @@
       "type": "T",
       "file": "20-plan/50-tasks/T-073-dogfood-greenfield.md",
       "line": 1,
-      "title": "Dogfood: greenfield change CHG-002 through G1–G3",
-      "content_hash": "sha256:c0c04969dafd177d6d324ec488c02b5d6c12fe99b926ae5a4bf795bfe2d3234d",
+      "title": "Dogfood: greenfield change CHG-003 through G1–G3",
+      "content_hash": "sha256:dd006ef15c5dacd7dc3ced82d16cad53265355b7269bb7601a3dba50ac07edb8",
       "status": "todo"
     },
     {
@@ -5563,8 +5563,8 @@
       "type": "T",
       "file": "20-plan/50-tasks/T-074-dogfood-brownfield.md",
       "line": 1,
-      "title": "Dogfood: brownfield change CHG-003 and Superpowers execution",
-      "content_hash": "sha256:06a1960046f326801d1ffe2cdd226807653da3027883858831733e9f75250372",
+      "title": "Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution",
+      "content_hash": "sha256:81be4d22017ac370368f9235ad81eeceb476e5c6191d772a9bdb710600df5a07",
       "status": "todo"
     },
     {
@@ -5601,7 +5601,7 @@
       "line": 1,
       "title": "Opt-in commit at approval and Serena launcher",
       "content_hash": "sha256:4c0a08acde6a707c0062a97b461008d189b1390bbb6723a47f83196f00e9ec8a",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C001-TC-101",

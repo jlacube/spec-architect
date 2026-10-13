@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:a58bd1045285ce9215ebe90473f4c14f98b394f050a05c6a9cf9613b355ae6c1", approved_at: 2026-10-13, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:3ce10e77ac8fdc01ff76579e94e4c7efa04b4bde98e574e009271c1cdb8a2941", approved_at: 2026-10-13, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:c2bda82f3400cfb4d43dc1ade5886cc0180ce61a6c5726bafd98e1b3ff3637dd", approved_at: 2026-10-13, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -60,4 +60,6 @@ defects:
 | 2026-10-12 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-13 | G2 (spec) | **Revise** | "ok so let's close D-009 & D-010" | none | unavailable |
 | 2026-10-13 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-13 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-13 | G3 (plan) | **Revise** | "CHG-002 = T-074 dogfood (Recommended)" | none | unavailable |
 | 2026-10-13 | G3 (plan) | **Approved** | "Approve" | none | unavailable |

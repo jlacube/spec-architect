@@ -1,6 +1,6 @@
 ---
 id: C001-T-073
-title: "Dogfood: greenfield change CHG-002 through G1–G3"
+title: "Dogfood: greenfield change CHG-003 through G1–G3"
 change: CHG-001
 phase: 20-plan
 artifact: plan/task
@@ -16,7 +16,7 @@ estimate: M
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C001-T-073 — Dogfood: greenfield change CHG-002 through G1–G3
+# C001-T-073 — Dogfood: greenfield change CHG-003 through G1–G3
 
 ## Intent
 
