@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-13T19:58:13Z",
+  "generated_at": "2026-10-13T20:12:21Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -34,11 +34,11 @@
         "status": "in-progress",
         "tasks": {
           "total": 60,
-          "done": 50,
+          "done": 51,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
-        "last_report": "2026-10-12T00:00:00Z"
+        "last_report": "2026-10-13T00:00:00Z"
       },
       "defects": [
         {
@@ -127,9 +127,9 @@
           "summary": "Enhancement (P-01, 2026-10-13): agents never commit, so .sdd/ history depends on the user remembering. Add an opt-in flag to sdd gate approve (e.g. --commit) that, after a successful approval, commits only the .sdd/ files of the change and the workspace status files with a message naming the change, gate and approver ('CHG-NNN: G2 (spec) approved by <name>'); refuses with a clear error outside a git repository or when other staged changes exist. Done by the deterministic CLI, so the agents' read-only git allowlist stays unchanged; the conductor passes the flag only when P-01 opted in (constitution or per-gate answer). Needs REQ/AC/TS in CAP-08, IF-01 row, gate-protocol skill and the commands.",
           "reporter": "jerome.lacube",
           "date": "2026-10-13",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "REQ-816/817 (G2/G3 2026-10-13); sdd gate approve --commit (91f7bcf)",
+          "closed_at": "2026-10-13"
         },
         {
           "id": "D-010",
@@ -137,9 +137,9 @@
           "summary": "Serena writes .serena/ (project.yml, cache, memories) into any repository where a session starts with the plugin enabled, until sdd serena-config has run (only /architect:init and /architect:doctor run it): observed 2026-10-12 in this repository after installing the packaged plugin. REQ-1013 assumes init/doctor run before Serena's first start, but the MCP server starts with every session, also in unrelated repositories (spirit of REQ-912). Proposed: launch Serena through the CLI (.mcp.json command node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs serena-launch, which writes the config into ${CLAUDE_PLUGIN_DATA}/serena when missing and then runs serena with the IF-14 §4 arguments, stdio passed through), so the config always exists before Serena starts.",
           "reporter": "jerome.lacube",
           "date": "2026-10-13",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "REQ-1013 revised (G2/G3 2026-10-13); Serena started through sdd serena-launch (91f7bcf); TS-1015 passes",
+          "closed_at": "2026-10-13"
         }
       ],
       "waivers": []

@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-025, C001-T-077]
 implements: [C001-REQ-816, C001-REQ-817, C001-REQ-1013]
 satisfies_ac: [C001-AC-816.1, C001-AC-817.1, C001-AC-1013.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-818, C001-TS-819, C001-TS-1015, C001-TS-1007, C001-TC-818,
 components: [C001-COMP-02, C001-COMP-09]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 91f7bcf, completed_at: 2026-10-13, notes: "TS-818/819/1007 pass; TS-1015 dev tier pass ($0.09)" }
 ---
 
 # C001-T-078 — Opt-in commit at approval and Serena launcher
