@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
-status: in-progress
+status: done
 depends_on: [C001-T-044, C001-T-060]
 implements: []
 satisfies_ac: [C001-AC-114.1, C001-AC-127.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-119, C001-TS-133, C001-TC-119, C001-TC-133]
 components: [C001-COMP-01]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: dfec49a, completed_at: 2026-10-13, notes: "G0 approved 2026-10-13 (brought forward for CHG-002); DOD-G-01..07 carried" }
 ---
 
 # C001-T-070 — Constitution for this repository via /architect:init
