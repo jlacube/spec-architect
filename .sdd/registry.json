@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-13T21:29:15Z",
+  "generated_at": "2026-10-13T21:29:55Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -140,8 +140,59 @@
           "status": "closed",
           "resolution": "REQ-1013 revised (G2/G3 2026-10-13); Serena started through sdd serena-launch (91f7bcf); TS-1015 passes",
           "closed_at": "2026-10-13"
+        },
+        {
+          "id": "D-011",
+          "ref": "C001-REQ-1106",
+          "summary": "Dogfood finding (T-070, 2026-10-13): the Bash allowlist of IF-07 §3 accepts the version probe 'node -v' but not 'node --version', so the cartographer's toolchain record could not show Node's version (it tried --version, like every other probe). Proposed: accept both spellings for node (and '-v'/'--version' consistently for the other probes where the tool supports them).",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-13",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
+      "waivers": []
+    },
+    {
+      "id": "CHG-002",
+      "slug": "002-multi-platform-targets",
+      "title": "Multi-platform targets",
+      "kind": "brownfield",
+      "profile": "full",
+      "status": "active",
+      "phase": "00-ideation",
+      "phases": {
+        "00-ideation": {
+          "status": "draft",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "10-spec": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "20-plan": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        }
+      },
+      "implementation": {
+        "status": "not-started",
+        "tasks": {
+          "total": 0,
+          "done": 0,
+          "blocked": 0,
+          "in_progress": 0
+        },
+        "last_report": null
+      },
+      "defects": [],
       "waivers": []
     }
   ]
