@@ -2,7 +2,7 @@
 // `sdd status --write` (C001-T-017) calls adoptBootstrap(); until then adoption is exercised directly.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { adoptBootstrap } from "../../../src/workspace/adopt.ts";
@@ -67,14 +67,14 @@ test("init on a copy of this repository's workspace only adds the missing root f
       walk(dir, "");
       return out;
     };
+    const missingBefore = ["_archive", "_constitution", "_decisions", "_living", "_templates"].filter((d) => !existsSync(join(ws.root, ".sdd", d)));
     const before = snapshot(join(ws.root, ".sdd"));
     const r = runBundled(["init"], { cwd: join(ws.root, ".sdd", "001-architect-agent-suite") });
     assert.equal(r.code, 0, r.stderr);
     assert.deepEqual(snapshot(join(ws.root, ".sdd")), before);
-    assert.deepEqual(
-      r.stdout.split("\n").filter((l) => l.startsWith("created: ")).sort(),
-      ["created: _archive/", "created: _constitution/", "created: _decisions/", "created: _living/", "created: _templates/"],
-    );
+    // Exactly the root folders that were missing (git keeps no empty folders, so a fresh clone may
+    // lack some that a working copy has).
+    assert.deepEqual(r.stdout.split("\n").filter((l) => l.startsWith("created: ")).sort(), missingBefore.map((d) => `created: ${d}/`));
   } finally {
     ws.cleanup();
   }
