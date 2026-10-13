@@ -75,8 +75,9 @@ Verified in spikes S-02 and S-06 (Serena 1.7.0, Claude Code 2.1.295). Plugin `.m
 
 ```json
 "serena": {
-  "command": "serena",
-  "args": ["start-mcp-server", "--context", "claude-code", "--mode", "planning",
+  "command": "node",
+  "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs", "serena-launch", "${CLAUDE_PLUGIN_DATA}", "--",
+           "start-mcp-server", "--context", "claude-code", "--mode", "planning",
            "--mode", "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml",
            "--project", ".", "--enable-web-dashboard", "False", "--open-web-dashboard", "False"],
   "env": { "SERENA_HOME": "${CLAUDE_PLUGIN_DATA}/serena" }
@@ -91,6 +92,10 @@ Verified in spikes S-02 and S-06 (Serena 1.7.0, Claude Code 2.1.295). Plugin `.m
   `read_memory`, `list_memories`, `onboarding`.
 - Tools exposed with this launch: `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`,
   `find_declaration`, `find_implementations`, `get_diagnostics_for_file`, `initial_instructions`.
+- `sdd serena-launch <plugin-data-dir> -- <arguments>` writes the configuration below when it is missing
+  (as `sdd serena-config` does), then runs `serena <arguments>` with standard input and output passed
+  through, and exits with Serena's exit code (D-010: the server starts with every session, before any
+  init or doctor could write the file).
 - `--project .` activates the working directory, where Claude Code starts MCP servers (the project
   folder). `--project-from-cwd` is not used: in a folder without `.git` or `.serena/project.yml` it
   activates no project, and Serena 1.7.0 then applies no mode exclusions (23 tools, editing ones

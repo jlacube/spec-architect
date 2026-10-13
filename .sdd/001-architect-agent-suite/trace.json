@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-10-12T21:13:34.528Z",
+  "generated_at": "2026-10-13T19:55:35.917Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -1371,6 +1371,22 @@
       "content_hash": "sha256:4ef5d5d7cd199b99ec7b4728e4eab4c05079d69170136313fad3f0f4c790aaa2"
     },
     {
+      "id": "C001-AC-816.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
+      "line": 198,
+      "title": "Commit at approval, opt-in",
+      "content_hash": "sha256:5df2d8c3b86acda5cdab44bb1bbe14108c90f519eb5b11502dd6d3cd56860c2d"
+    },
+    {
+      "id": "C001-AC-817.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
+      "line": 211,
+      "title": "Commit refused before approving",
+      "content_hash": "sha256:a9249533d6f5456395e9278aecb518427385892339d92f8a48cc141406a049d4"
+    },
+    {
       "id": "C001-AC-901.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/acceptance.md",
@@ -1616,7 +1632,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/acceptance.md",
       "line": 89,
       "title": "Serena launch arguments",
-      "content_hash": "sha256:2d2879452b001bb02b8851e8f089083309decd8639807f86d026dca051b9a836"
+      "content_hash": "sha256:266a8267fa1547572369d47c4d3026ce98634ff6e00e775e3b65c71554ec8397"
     },
     {
       "id": "C001-AC-1007.1",
@@ -1672,7 +1688,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/acceptance.md",
       "line": 171,
       "title": "Serena configuration written before first use",
-      "content_hash": "sha256:a5d3e55b8dc9d8e2274d9275fcdb28b91385ba3b7a720dbf35c7d47e075b381a"
+      "content_hash": "sha256:29fb13ebc9c904760bdcca09233435bd0b45144c788e5674a2fe26b95cb7c4d3"
     },
     {
       "id": "C001-AC-1101.1",
@@ -2022,7 +2038,7 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
       "line": 1,
       "title": "Gates, approvals and revisions",
-      "content_hash": "sha256:8fa7441ce7820831faf28d4c24c4d30c09aa3a8609e033cfb49ceb06ba314a95",
+      "content_hash": "sha256:ab811f556d0488e8a8bdf3894e831dc98f4b717bd9e1ae473b62ea57f06e8798",
       "status": "approved"
     },
     {
@@ -2866,7 +2882,7 @@
       "file": "20-plan/10-strategy.md",
       "line": 47,
       "title": "Packaging and quality gates",
-      "content_hash": "sha256:f4efc627b202b18ab8eb655ff8a95d1851b5ea6a628332f10399ff4feaae99d9"
+      "content_hash": "sha256:a86b1df1d9d8f29c82dbc823887150960725be0d73976ca41e77ff3cb81fdcee"
     },
     {
       "id": "C001-M-7",
@@ -4375,6 +4391,22 @@
       "content_hash": "sha256:5227a7a8df3f63e847073bc1485d6254536f3d5a1fa912362f463914d27b1e50"
     },
     {
+      "id": "C001-REQ-816",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-08-gates/requirements.md",
+      "line": 137,
+      "title": "Opt-in commit at approval",
+      "content_hash": "sha256:2c6621b7e95d3e315853ff442376b5bf970ade306fb7f9687c4d420685413de3"
+    },
+    {
+      "id": "C001-REQ-817",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-08-gates/requirements.md",
+      "line": 145,
+      "title": "Commit preconditions",
+      "content_hash": "sha256:217353fd2c90ab7933b8863e00fa13b100eb17c201768e09dba15bb61c6426e4"
+    },
+    {
       "id": "C001-REQ-901",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/requirements.md",
@@ -4660,7 +4692,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/requirements.md",
       "line": 112,
       "title": "Serena data outside the repository",
-      "content_hash": "sha256:f50459c2bdcfbebb73dde8e507809995661655e9f8c249c4511dfde80491d69d"
+      "content_hash": "sha256:801302b9614825ef625797abce19ca8461b8c0d918956e6453ca9318127bb6a6"
     },
     {
       "id": "C001-REQ-1101",
@@ -5561,6 +5593,15 @@
       "title": "sdd serena-config command",
       "content_hash": "sha256:7a1aec15669bba57df884f85c903e2f72cc4064aa48624fded591e058a006279",
       "status": "done"
+    },
+    {
+      "id": "C001-T-078",
+      "type": "T",
+      "file": "20-plan/50-tasks/T-078-commit-and-serena-launch.md",
+      "line": 1,
+      "title": "Opt-in commit at approval and Serena launcher",
+      "content_hash": "sha256:4c0a08acde6a707c0062a97b461008d189b1390bbb6723a47f83196f00e9ec8a",
+      "status": "todo"
     },
     {
       "id": "C001-TC-101",
@@ -6931,10 +6972,26 @@
       "content_hash": "sha256:b67e636ad0fb2406b1e5d602579882a98dab0cc3b6ebc02978ec27d54da1b01c"
     },
     {
-      "id": "C001-TC-901",
+      "id": "C001-TC-818",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
       "line": 257,
+      "title": "C001-TS-818",
+      "content_hash": "sha256:6e4b5221b287f81f97a34e02c379abd04a416797c89615ffb6fffca47b0e7200"
+    },
+    {
+      "id": "C001-TC-819",
+      "type": "TC",
+      "file": "20-plan/60-test-plan.md",
+      "line": 258,
+      "title": "C001-TS-819",
+      "content_hash": "sha256:18f58ec06e37b464dd41b4aecdbc7a524ab235060d9836d91259fbe58895025f"
+    },
+    {
+      "id": "C001-TC-901",
+      "type": "TC",
+      "file": "20-plan/60-test-plan.md",
+      "line": 259,
       "title": "C001-TS-901",
       "content_hash": "sha256:c7a1539e4931002ae8423140d973aaf8c22e27196e860146fa93d4d20d2aab25"
     },
@@ -6942,7 +6999,7 @@
       "id": "C001-TC-902",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 258,
+      "line": 260,
       "title": "C001-TS-902",
       "content_hash": "sha256:b3e36008497791fe1178580612fda6aac79cfe6ed0e4d2b6099b8e81a44a2061"
     },
@@ -6950,7 +7007,7 @@
       "id": "C001-TC-903",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 259,
+      "line": 261,
       "title": "C001-TS-903",
       "content_hash": "sha256:6712b5aee3e23662b80b35228c437c40656563990a232e936b307461cab3b996"
     },
@@ -6958,7 +7015,7 @@
       "id": "C001-TC-904",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 260,
+      "line": 262,
       "title": "C001-TS-904",
       "content_hash": "sha256:df0e3b8d300d2cc8e980a6a04e10e29e05aa4d9b2c17844752fb0279fba5bc15"
     },
@@ -6966,7 +7023,7 @@
       "id": "C001-TC-905",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 261,
+      "line": 263,
       "title": "C001-TS-905",
       "content_hash": "sha256:44c743e66f793ecac26083c90d1b093795086003b47c09e0b7f10e564fad27f6"
     },
@@ -6974,7 +7031,7 @@
       "id": "C001-TC-906",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 262,
+      "line": 264,
       "title": "C001-TS-906",
       "content_hash": "sha256:d707fba3b968a8d1babc49d276e41b66b3c0d27b5c2e8ab7f22c919f044b902d"
     },
@@ -6982,7 +7039,7 @@
       "id": "C001-TC-907",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 263,
+      "line": 265,
       "title": "C001-TS-907",
       "content_hash": "sha256:e66aafb7a094478557263d7ffe0e10f807b3ab56e880c57bd1b23a98f8af8831"
     },
@@ -6990,7 +7047,7 @@
       "id": "C001-TC-908",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 264,
+      "line": 266,
       "title": "C001-TS-908",
       "content_hash": "sha256:7500fe5f059f8de6c920cb80330c8546adc627cf82b0d0d710b29b7974e2cad1"
     },
@@ -6998,7 +7055,7 @@
       "id": "C001-TC-909",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 265,
+      "line": 267,
       "title": "C001-TS-909",
       "content_hash": "sha256:83694c32bff52c236c0835320e37ac140b348501cc40eb49f7a69d5cbe9e7003"
     },
@@ -7006,7 +7063,7 @@
       "id": "C001-TC-910",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 266,
+      "line": 268,
       "title": "C001-TS-910",
       "content_hash": "sha256:bb9724ddaa87cfabced728974e1118567ed2f960a417de42cfd8a9d9fac9f3d9"
     },
@@ -7014,7 +7071,7 @@
       "id": "C001-TC-911",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 267,
+      "line": 269,
       "title": "C001-TS-911",
       "content_hash": "sha256:3049759217cddf12c6aaf4f070d3d4558a73779d776c9c274ececc9bd8d481c4"
     },
@@ -7022,7 +7079,7 @@
       "id": "C001-TC-912",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 268,
+      "line": 270,
       "title": "C001-TS-912",
       "content_hash": "sha256:481ae558eadb0f89ed72be774cca70ca53700ecb667fabb44a9f77a03778b57f"
     },
@@ -7030,7 +7087,7 @@
       "id": "C001-TC-913",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 269,
+      "line": 271,
       "title": "C001-TS-913",
       "content_hash": "sha256:5929e775c4f1739512fa96dcf8802329d1280abece467895c7998ababff3c062"
     },
@@ -7038,7 +7095,7 @@
       "id": "C001-TC-914",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 270,
+      "line": 272,
       "title": "C001-TS-914",
       "content_hash": "sha256:7c9621bfba2b4f811645013b4a3d2d20bde0d887dd0f0655b9216660d36fbeef"
     },
@@ -7046,7 +7103,7 @@
       "id": "C001-TC-915",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 271,
+      "line": 273,
       "title": "C001-TS-915",
       "content_hash": "sha256:74a45db1a8b856616c5e4be8fb4c09394f1d26b70d91af1fd318d3b9293e425c"
     },
@@ -7054,7 +7111,7 @@
       "id": "C001-TC-916",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 272,
+      "line": 274,
       "title": "C001-TS-916",
       "content_hash": "sha256:5ad4c8fa4452a8fb89d44c81ddddad331a6f045aa927a3cbda72b01c7007d5c0"
     },
@@ -7062,7 +7119,7 @@
       "id": "C001-TC-917",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 273,
+      "line": 275,
       "title": "C001-TS-917",
       "content_hash": "sha256:f5b5c46087acbec5b33cd85bee946bea2fcbf7356a4691485d89af8235ad98f8"
     },
@@ -7070,7 +7127,7 @@
       "id": "C001-TC-918",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 274,
+      "line": 276,
       "title": "C001-TS-918",
       "content_hash": "sha256:e1e579cf27e510eb7a2d7f593341cefc77a62a6ff2462618f4edd014a8f8ada1"
     },
@@ -7078,7 +7135,7 @@
       "id": "C001-TC-919",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 275,
+      "line": 277,
       "title": "C001-TS-919",
       "content_hash": "sha256:110012a2c2889f9288b8e5ed676ed83a41c20b9168a6e68212a26d7909339838"
     },
@@ -7086,7 +7143,7 @@
       "id": "C001-TC-920",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 276,
+      "line": 278,
       "title": "C001-TS-920",
       "content_hash": "sha256:b649f70820ebc0e6109a90ec575147072aff5e64c50b2883092bcf9bf751d0b9"
     },
@@ -7094,7 +7151,7 @@
       "id": "C001-TC-921",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 277,
+      "line": 279,
       "title": "C001-TS-921",
       "content_hash": "sha256:8c602e0145287f3a4cd6e128e2118bb2f47c086ba6ee63161520e4bde546169c"
     },
@@ -7102,7 +7159,7 @@
       "id": "C001-TC-922",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 278,
+      "line": 280,
       "title": "C001-TS-922",
       "content_hash": "sha256:7d24af6a2a64d2948220c1b9023fab16b21333498bfe4c5a76c3f794e1c8514f"
     },
@@ -7110,7 +7167,7 @@
       "id": "C001-TC-923",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 279,
+      "line": 281,
       "title": "C001-TS-923",
       "content_hash": "sha256:1120bb0f7502dc35cf7bdbe7842cc1e1abfae84bcb1a2a6f3876edae33d7201a"
     },
@@ -7118,7 +7175,7 @@
       "id": "C001-TC-924",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 280,
+      "line": 282,
       "title": "C001-TS-924",
       "content_hash": "sha256:ce10012d3fea08fc153ad0a9104c88f1dfe57a6cb8d96eb3334ff57915dbad1f"
     },
@@ -7126,7 +7183,7 @@
       "id": "C001-TC-1001",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 281,
+      "line": 283,
       "title": "C001-TS-1001",
       "content_hash": "sha256:9af61b698b9d075a17d8b2a74c78ea84501744f82516758903f46fc2cf15a256"
     },
@@ -7134,7 +7191,7 @@
       "id": "C001-TC-1002",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 282,
+      "line": 284,
       "title": "C001-TS-1002",
       "content_hash": "sha256:f673ec297fdbe531f321c55a5857804c946b68a6fce93163f120f56e629c5062"
     },
@@ -7142,7 +7199,7 @@
       "id": "C001-TC-1003",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 283,
+      "line": 285,
       "title": "C001-TS-1003",
       "content_hash": "sha256:9c8b1023b8445cfe5277f63d511c7c3d94276bf68d8973f09813a8f9ebbd757f"
     },
@@ -7150,7 +7207,7 @@
       "id": "C001-TC-1004",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 284,
+      "line": 286,
       "title": "C001-TS-1004",
       "content_hash": "sha256:6edcad0919338bbf6a15ba1a92a5d8d1e0e110bd5aa207638f4da79e46d9e16b"
     },
@@ -7158,7 +7215,7 @@
       "id": "C001-TC-1005",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 285,
+      "line": 287,
       "title": "C001-TS-1005",
       "content_hash": "sha256:59f6f647eb8b3870b55a9900aa66034c182165b8cd73233b9f3ab6f9a46232eb"
     },
@@ -7166,7 +7223,7 @@
       "id": "C001-TC-1006",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 286,
+      "line": 288,
       "title": "C001-TS-1006",
       "content_hash": "sha256:095447e1959e801ac11e32f0441443b61884f6b4287c8769efd0a02669771a4e"
     },
@@ -7174,15 +7231,15 @@
       "id": "C001-TC-1007",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 287,
+      "line": 289,
       "title": "C001-TS-1007",
-      "content_hash": "sha256:27a6c7ebb7a5da8b761b6ec7855b2978611ecccd1aa989b5cab26043b0f4d744"
+      "content_hash": "sha256:49799d630a1455ffaf257f9c3d994bed9f9dc7132dc6bbec51bd409ae20d079d"
     },
     {
       "id": "C001-TC-1008",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 288,
+      "line": 290,
       "title": "C001-TS-1008",
       "content_hash": "sha256:c8c6a0cc8be95b3634a441c5ba4b732a10d02827273147af92bd4d9e65fb47fb"
     },
@@ -7190,7 +7247,7 @@
       "id": "C001-TC-1009",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 289,
+      "line": 291,
       "title": "C001-TS-1009",
       "content_hash": "sha256:73009821d1dce9ba08780ce6dac9f501b513e687622dbfc34f02155036e2477f"
     },
@@ -7198,7 +7255,7 @@
       "id": "C001-TC-1010",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 290,
+      "line": 292,
       "title": "C001-TS-1010",
       "content_hash": "sha256:0f2671c6266a88b038ec144c44e63fd833f76d29434feffde867a13780960f32"
     },
@@ -7206,7 +7263,7 @@
       "id": "C001-TC-1011",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 291,
+      "line": 293,
       "title": "C001-TS-1011",
       "content_hash": "sha256:20c6d86b0d11de7478d3296d035251c34a59aa93cffebc172d582ef172f69b80"
     },
@@ -7214,7 +7271,7 @@
       "id": "C001-TC-1012",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 292,
+      "line": 294,
       "title": "C001-TS-1012",
       "content_hash": "sha256:7d68f846d555d274609a0602753621e2c63d21feed3e46a8fe1b96a04865ce98"
     },
@@ -7222,7 +7279,7 @@
       "id": "C001-TC-1013",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 293,
+      "line": 295,
       "title": "C001-TS-1013",
       "content_hash": "sha256:31f68ab5d5a08daf031907cf3c90fc47650c27f9a62290596c9759ed0d3a556a"
     },
@@ -7230,7 +7287,7 @@
       "id": "C001-TC-1014",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 294,
+      "line": 296,
       "title": "C001-TS-1014",
       "content_hash": "sha256:47946fc6bb1864c84cd84f8007f6c74e11cd07c9721c754a3956be299d11b0dc"
     },
@@ -7238,15 +7295,15 @@
       "id": "C001-TC-1015",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 295,
+      "line": 297,
       "title": "C001-TS-1015",
-      "content_hash": "sha256:1486746997e8939baf5738b4085e938e7338cebf615bd2e605aa4c428ce8f6bc"
+      "content_hash": "sha256:58798f6c02a20096574501aca0a0a9c625190b0e5d4e947a143b9f95cb56a83e"
     },
     {
       "id": "C001-TC-1101",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 296,
+      "line": 298,
       "title": "C001-TS-1101",
       "content_hash": "sha256:7447b5dcdbb9053b2b021f65b500fd59288de5a3606cd54c46bf4217c7a26f7e"
     },
@@ -7254,7 +7311,7 @@
       "id": "C001-TC-1102",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 297,
+      "line": 299,
       "title": "C001-TS-1102",
       "content_hash": "sha256:cb935a496773fa59c4c981f46b7d61d41b6ad4470e337b33635565895d043d5b"
     },
@@ -7262,7 +7319,7 @@
       "id": "C001-TC-1103",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 298,
+      "line": 300,
       "title": "C001-TS-1103",
       "content_hash": "sha256:ba43ccca0789099d2dad92c9013230debbe503043710280a44f0a20832042a55"
     },
@@ -7270,7 +7327,7 @@
       "id": "C001-TC-1104",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 299,
+      "line": 301,
       "title": "C001-TS-1104",
       "content_hash": "sha256:d99d2b2b532d8afe38dbf87cc4e8cd3b81590ec775e2ad72b2af30da83808f10"
     },
@@ -7278,7 +7335,7 @@
       "id": "C001-TC-1105",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 300,
+      "line": 302,
       "title": "C001-TS-1105",
       "content_hash": "sha256:6717e64892edc4fd12b2b7b51cbf388f4177c2e0836dba48719091862221119b"
     },
@@ -7286,7 +7343,7 @@
       "id": "C001-TC-1107",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 301,
+      "line": 303,
       "title": "C001-TS-1107",
       "content_hash": "sha256:dae1ca05f0b68606adc94dae7900cc192d5b7f62003302d5b6e27e7e2c618aa5"
     },
@@ -7294,7 +7351,7 @@
       "id": "C001-TC-1108",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 302,
+      "line": 304,
       "title": "C001-TS-1108",
       "content_hash": "sha256:641c7010fa98d06ebf51775204c363b76b5587e616176391da62b3bbdb5aa26e"
     },
@@ -7302,7 +7359,7 @@
       "id": "C001-TC-1109",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 303,
+      "line": 305,
       "title": "C001-TS-1109",
       "content_hash": "sha256:6099301e26fed0b2fa702724331e5859ff9f6fca87649f8001bb638034e46d7e"
     },
@@ -7310,7 +7367,7 @@
       "id": "C001-TC-1110",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 304,
+      "line": 306,
       "title": "C001-TS-1110",
       "content_hash": "sha256:27ad2857f65305685f908da8fd32023ba6255a236328016bdd8b889f88216242"
     },
@@ -7318,7 +7375,7 @@
       "id": "C001-TC-1111",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 305,
+      "line": 307,
       "title": "C001-TS-1111",
       "content_hash": "sha256:949304832bb4811e02b49e84127441c68b3fbc76f8bd402378d34bdc6bfaa6f6"
     },
@@ -7326,7 +7383,7 @@
       "id": "C001-TC-1112",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 306,
+      "line": 308,
       "title": "C001-TS-1112",
       "content_hash": "sha256:d160cd95a86139fca8a532d5f770ca6f349865422b9296f9206cba56745d6adf"
     },
@@ -7334,7 +7391,7 @@
       "id": "C001-TC-1113",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 307,
+      "line": 309,
       "title": "C001-TS-1113",
       "content_hash": "sha256:1b412f380677e09d945981b2a17f044a9980868ee0fddd5a246aa3cb77c44fa5"
     },
@@ -7342,7 +7399,7 @@
       "id": "C001-TC-1114",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 308,
+      "line": 310,
       "title": "C001-TS-1114",
       "content_hash": "sha256:4daa9647e845a77bba56ca41296c6b587e7e55cfa5648ab2fe7e493eed285ca5"
     },
@@ -7350,7 +7407,7 @@
       "id": "C001-TC-1115",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 309,
+      "line": 311,
       "title": "C001-TS-1115",
       "content_hash": "sha256:db15d484c8e585e0d8891f17737906903877ac748a6bf73213451cb7911c694f"
     },
@@ -7358,7 +7415,7 @@
       "id": "C001-TC-1116",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 310,
+      "line": 312,
       "title": "C001-TS-1116",
       "content_hash": "sha256:d9abdd3384f512c5d3718d1d2b6f101fdcf1300e11f44a9c4b29079ae6da98d8"
     },
@@ -7366,7 +7423,7 @@
       "id": "C001-TC-1117",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 311,
+      "line": 313,
       "title": "C001-TS-1117",
       "content_hash": "sha256:3e0e6075db3987975bb8748812a1242caa9bdcd6b2bcc4052a61f745179c525c"
     },
@@ -7374,7 +7431,7 @@
       "id": "C001-TC-1118",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 312,
+      "line": 314,
       "title": "C001-TS-1118",
       "content_hash": "sha256:ec4b9ed0f3d08753b29a3f4edf9f9d13952645b9951794f9df332c46dacc308d"
     },
@@ -7382,7 +7439,7 @@
       "id": "C001-TC-1119",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 313,
+      "line": 315,
       "title": "C001-TS-1119",
       "content_hash": "sha256:c4395e94a633a5707a66f1361ac95be08a0424ae81fde431c831ec2baf09014a"
     },
@@ -7390,7 +7447,7 @@
       "id": "C001-TC-1120",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 314,
+      "line": 316,
       "title": "C001-TS-1120",
       "content_hash": "sha256:3a595b3fa1810fdf75900c394a5c4117d5479e69da3db95bf2dfaaa6459ad4cc"
     },
@@ -7398,7 +7455,7 @@
       "id": "C001-TC-1121",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 315,
+      "line": 317,
       "title": "C001-TS-1121",
       "content_hash": "sha256:bc18c5e6c6cb6bf4ec084c605d0696d8457bd141964bbbd1c4509df40e24664e"
     },
@@ -7406,7 +7463,7 @@
       "id": "C001-TC-1122",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 316,
+      "line": 318,
       "title": "C001-TS-1122",
       "content_hash": "sha256:d8d3bc580e5a095ea6d56f0c5d4cfa71f2836eb343bc05120336de95e49b54fb"
     },
@@ -7414,7 +7471,7 @@
       "id": "C001-TC-1123",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 317,
+      "line": 319,
       "title": "C001-TS-1123",
       "content_hash": "sha256:5e800edd95a9c3cf181fcae3d27c39386c8c35cd60da1c04ecd9998fe24e02e4"
     },
@@ -7422,7 +7479,7 @@
       "id": "C001-TC-1124",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 318,
+      "line": 320,
       "title": "C001-TS-1124",
       "content_hash": "sha256:eabd88046d27b591a131410056af284e09db41d289ef02290ccfa3fcca1eed41"
     },
@@ -8795,6 +8852,22 @@
       "content_hash": "sha256:17f87d893383b9954393353a6dfe39fabde7c3348c8d1fd5a65be63196406d2d"
     },
     {
+      "id": "C001-TS-818",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
+      "line": 200,
+      "title": "approval committed",
+      "content_hash": "sha256:d1dc6cbb6c33970005b5a5d71435a4283d2b70d6c05b0174a9a1c00a81bf67de"
+    },
+    {
+      "id": "C001-TS-819",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-08-gates/acceptance.md",
+      "line": 213,
+      "title": "commit refused",
+      "content_hash": "sha256:d9d51a76823a7305b575b689ce13cbb76f417e42e5071a35071c80752cb9ddda"
+    },
+    {
       "id": "C001-TS-901",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-09-tracking-archive/acceptance.md",
@@ -9040,7 +9113,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/acceptance.md",
       "line": 91,
       "title": "Serena read-only launch",
-      "content_hash": "sha256:a418d28d7566a8b2ef7745f9e8ecaf9f337ebc4a4c6e2a69dd28ada36636d8f6"
+      "content_hash": "sha256:fbe9e234e7943fe78693c5acf865bb6774a0bcefbe0e246d704513cd3757b9bc"
     },
     {
       "id": "C001-TS-1008",
@@ -9104,7 +9177,7 @@
       "file": "10-spec/20-capabilities/CAP-10-code-intelligence/acceptance.md",
       "line": 173,
       "title": "Serena data kept outside the repository",
-      "content_hash": "sha256:61ba76be096eb1762c6617da2ceadc35f476e4659b4849b6af78dc3eeb8588b8"
+      "content_hash": "sha256:ac4488ea363c51f5468a36dfc350355d1a664969cdff78b74cec6a54c8fb7e97"
     },
     {
       "id": "C001-TS-1101",
@@ -9736,7 +9809,7 @@
       "file": "10-spec/20-capabilities/CAP-08-gates/stories.md",
       "line": 23,
       "title": "Only I can approve, and the approval is pinned",
-      "content_hash": "sha256:5260aba8e958ab82ac116103ad3eaedfffa5f2a67ec97b068811e7bddd4dea14"
+      "content_hash": "sha256:ab573599ca6bf14fa732cdd707ade4035191c1df11e37cca2c539feb4229ae08"
     },
     {
       "id": "C001-US-803",
@@ -10785,6 +10858,16 @@
     {
       "from": "C001-AC-815.1",
       "to": "C001-TS-817",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C001-AC-816.1",
+      "to": "C001-TS-818",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C001-AC-817.1",
+      "to": "C001-TS-819",
       "relation": "scenario-of"
     },
     {
@@ -12255,6 +12338,11 @@
     {
       "from": "C001-M-6",
       "to": "C001-T-077",
+      "relation": "references"
+    },
+    {
+      "from": "C001-M-6",
+      "to": "C001-T-078",
       "relation": "references"
     },
     {
@@ -14380,6 +14468,31 @@
     {
       "from": "C001-REQ-815",
       "to": "C001-US-806",
+      "relation": "story-of"
+    },
+    {
+      "from": "C001-REQ-816",
+      "to": "C001-AC-816.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C001-REQ-816",
+      "to": "C001-IF-07",
+      "relation": "references"
+    },
+    {
+      "from": "C001-REQ-816",
+      "to": "C001-US-802",
+      "relation": "story-of"
+    },
+    {
+      "from": "C001-REQ-817",
+      "to": "C001-AC-817.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C001-REQ-817",
+      "to": "C001-US-802",
       "relation": "story-of"
     },
     {
@@ -23649,6 +23762,11 @@
     },
     {
       "from": "C001-T-072",
+      "to": "C001-T-078",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-072",
       "to": "C001-TC-1102",
       "relation": "references"
     },
@@ -24159,6 +24277,126 @@
     },
     {
       "from": "C001-T-077",
+      "to": "C001-TS-1015",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-AC-816.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-AC-817.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-AC-1013.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-ADR-003",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-COMP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-COMP-09",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-M-6",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-REQ-816",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-REQ-817",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-REQ-1013",
+      "relation": "implements"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-T-025",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-T-025",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-T-077",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-T-077",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-818",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-818",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-819",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-1007",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-1015",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TC-1015",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TS-818",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TS-819",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
+      "to": "C001-TS-1007",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C001-T-078",
       "to": "C001-TS-1015",
       "relation": "verified-by"
     },
@@ -26543,6 +26781,26 @@
       "relation": "references"
     },
     {
+      "from": "C001-TC-818",
+      "to": "C001-T-078",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-818",
+      "to": "C001-TS-818",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-819",
+      "to": "C001-T-078",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-819",
+      "to": "C001-TS-819",
+      "relation": "references"
+    },
+    {
       "from": "C001-TC-901",
       "to": "C001-T-026",
       "relation": "references"
@@ -26879,6 +27137,11 @@
     },
     {
       "from": "C001-TC-1007",
+      "to": "C001-T-078",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-1007",
       "to": "C001-TS-1007",
       "relation": "references"
     },
@@ -27000,6 +27263,11 @@
     {
       "from": "C001-TC-1015",
       "to": "C001-T-077",
+      "relation": "references"
+    },
+    {
+      "from": "C001-TC-1015",
+      "to": "C001-T-078",
       "relation": "references"
     },
     {
@@ -28625,6 +28893,16 @@
     {
       "from": "C001-US-802",
       "to": "C001-REQ-814",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C001-US-802",
+      "to": "C001-REQ-816",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C001-US-802",
+      "to": "C001-REQ-817",
       "relation": "traces-to"
     },
     {

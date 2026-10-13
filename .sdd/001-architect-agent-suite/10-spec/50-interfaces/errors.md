@@ -32,6 +32,7 @@ specifies it. Severity applies to lint/check rules; CLI errors exit with code 2 
 | ERR-CLI-015 | Predecessor phase not approved at approval | `<phase>` requires approved `<predecessor>` | Approve the predecessor first | C001-INV-09 |
 | ERR-CLI-016 | Internal error (exit 3) | Internal error: `<detail>` | Re-run with `SDD_DEBUG=1` and report | C001-IF-01 |
 | ERR-CLI-017 | Atomic write failed (exit 3) | Could not write `<file>`; previous version kept | Check disk space and permissions | C001-REQ-126 |
+| ERR-CLI-018 | Commit at approval impossible | Cannot commit the approval: `<reason>` | Run inside a git repository with nothing else staged, or approve without `--commit` | C001-REQ-817 |
 
 ## 2. CLI warnings
 

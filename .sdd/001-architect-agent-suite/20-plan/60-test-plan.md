@@ -254,6 +254,8 @@ run before every task commit.
 | C001-TC-815 | C001-TS-815 | eval | `evals/cap08/TS-815.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044 |
 | C001-TC-816 | C001-TS-816 | integration | `tests/integration/cap08/TS-816.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-024 |
 | C001-TC-817 | C001-TS-817 | eval | `evals/cap08/TS-817.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044 |
+| C001-TC-818 | C001-TS-818 | integration | `tests/integration/cap08/TS-818.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-078 |
+| C001-TC-819 | C001-TS-819 | integration | `tests/integration/cap08/TS-819.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-078 |
 | C001-TC-901 | C001-TS-901 | integration | `tests/integration/cap09/TS-901.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-026 |
 | C001-TC-902 | C001-TS-902 | integration | `tests/integration/cap09/TS-902.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-026 |
 | C001-TC-903 | C001-TS-903 | integration | `tests/integration/cap09/TS-903.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-026 |
@@ -284,7 +286,7 @@ run before every task commit.
 | C001-TC-1004 | C001-TS-1004 | eval | `evals/cap10/TS-1004.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
 | C001-TC-1005 | C001-TS-1005 | eval | `evals/cap10/TS-1005.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
 | C001-TC-1006 | C001-TS-1006 | integration | `tests/integration/cap10/TS-1006.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
-| C001-TC-1007 | C001-TS-1007 | integration | `tests/integration/cap10/TS-1007.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
+| C001-TC-1007 | C001-TS-1007 | integration | `tests/integration/cap10/TS-1007.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060, C001-T-078 |
 | C001-TC-1008 | C001-TS-1008 | integration | `tests/integration/cap10/TS-1008.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-1009 | C001-TS-1009 | integration | `tests/integration/cap10/TS-1009.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-1010 | C001-TS-1010 | eval | `evals/cap10/TS-1010.eval.mjs` | fx-brownfield-ts | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
@@ -292,7 +294,7 @@ run before every task commit.
 | C001-TC-1012 | C001-TS-1012 | eval | `evals/cap10/TS-1012.eval.mjs` | fx-empty | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
 | C001-TC-1013 | C001-TS-1013 | eval | `evals/cap10/TS-1013.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-041 |
 | C001-TC-1014 | C001-TS-1014 | eval | `evals/cap10/TS-1014.eval.mjs` | fx-brownfield-ts | REF-WIN, cfg-full (ripwire shim exits 4 on `--test-gate`) | C001-T-041 |
-| C001-TC-1015 | C001-TS-1015 | eval | `evals/cap10/TS-1015.eval.mjs` | fx-brownfield-ts; empty plugin data folder | REF-WIN, cfg-full, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044, C001-T-077 |
+| C001-TC-1015 | C001-TS-1015 | eval | `evals/cap10/TS-1015.eval.mjs` | fx-brownfield-ts; empty plugin data folder | REF-WIN, cfg-full, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044, C001-T-077, C001-T-078 |
 | C001-TC-1101 | C001-TS-1101 | integration | `tests/integration/cap11/TS-1101.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-1102 | C001-TS-1102 | manual | `tests/manual/TS-1102.md` | inline fixture from scenario Given/Examples | REF-WIN fresh user profile | C001-T-060 |
 | C001-TC-1103 | C001-TS-1103 | integration | `tests/integration/cap11/TS-1103.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |

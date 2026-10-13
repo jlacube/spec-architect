@@ -44,7 +44,7 @@ The suite is built **from the deterministic core outwards** (C001-ADR-001):
 | C001-M-3 | Conductor and ideation/spec agents | Ideation and specification phases run end to end with interview, critic and gates | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2; eval metrics report (tokens by type, agent and model; timings by session, subagent and tool call) produced, and P-01 decides the release eval budget from it | C001-T-029 … C001-T-039 |
 | C001-M-4 | Code intelligence, architecture and planning agents | Brownfield grounding and the plan phase run end to end | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | C001-T-041 … C001-T-044 |
 | C001-M-5 | Hooks, guards and archive | The write/shell boundary is enforced and the archive loop works | Guard corpora 100%; injection evals 0 failures; archive test cases pass | C001-T-050 … C001-T-054 |
-| C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green; routing ≥ 90%; NFR results recorded | C001-T-060 … C001-T-065, C001-T-076, C001-T-077 |
+| C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green; routing ≥ 90%; NFR results recorded | C001-T-060 … C001-T-065, C001-T-076, C001-T-077, C001-T-078 |
 | C001-M-7 | Release and dogfood | v0.1.0 released locally and proven on two real changes | Release evidence complete; dogfood logs recorded; CHG-001 archived | C001-T-070 … C001-T-075 |
 
 Task numbers leave gaps between milestones (008–009, 040, 045–049, 055–059, 066–069) so the

@@ -133,3 +133,19 @@ All `Delta: ADDED`. Interfaces: gate summary and hash algorithm C001-IF-13, CLI 
 - **Stories:** C001-US-806
 - **Priority:** Should
 - **Acceptance:** C001-AC-815.1
+
+### C001-REQ-816 — Opt-in commit at approval
+- **Pattern:** optional-feature
+- **Statement:** WHERE `--commit` is passed to `sdd gate approve`, THE sdd CLI SHALL, after recording the approval, create one git commit that contains only the change folder and the workspace files `.sdd/SDD.md` and `.sdd/registry.json`, with the message `CHG-<NNN>: <gate> approved by <approver>`.
+- **Rationale:** defect D-009 (P-01, 2026-10-13): agents never commit (their git access is read-only, C001-IF-07 §3), so the approved state reaches the history only if P-01 remembers; the deterministic CLI commits on P-01's opt-in, recorded in the constitution (Version control) and passed by the conductor
+- **Stories:** C001-US-802
+- **Priority:** Should
+- **Acceptance:** C001-AC-816.1
+
+### C001-REQ-817 — Commit preconditions
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd gate approve --commit` is requested in a folder that is not a git repository or while other changes are staged, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-018` before recording the approval.
+- **Rationale:** defect D-009: the commit must never include P-01's unrelated staged work, and an approval without its commit would break the opt-in
+- **Stories:** C001-US-802
+- **Priority:** Should
+- **Acceptance:** C001-AC-817.1

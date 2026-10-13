@@ -27,7 +27,7 @@ id_block: { US: 801-899, REQ: 801-899, TS: 801-899 }
 - **Value / outcome:** IDEA-P-14; C001-GOAL-06
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-08
 - **Context & notes:** for CHG-001's G1, the hash was computed over the ideation body without frontmatter, LF-normalised, trailing whitespace stripped. The CLI must adopt a compatible algorithm (C001-REQ-806, C001-REQ-123).
-- **Requirements:** C001-REQ-803, C001-REQ-804, C001-REQ-805, C001-REQ-806, C001-REQ-814
+- **Requirements:** C001-REQ-803, C001-REQ-804, C001-REQ-805, C001-REQ-806, C001-REQ-814, C001-REQ-816, C001-REQ-817
 - **Traces to:** Q13, IDEA-§18.2, change.md gate log
 
 ### C001-US-803 — Hard checks block approval unless explicitly waived

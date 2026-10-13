@@ -90,7 +90,7 @@ Scenario: C001-TS-1006 — plugin MCP config
 ```gherkin
 Scenario: C001-TS-1007 — Serena read-only launch
   When the plugin's ".mcp.json" is parsed
-  Then the "serena" server arguments include "--context" "claude-code", "--mode" "planning", "--mode" "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project" ".", "--enable-web-dashboard" "False" and "--open-web-dashboard" "False"
+  Then the "serena" server is started with "node" "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs" "serena-launch" "${CLAUDE_PLUGIN_DATA}" "--", followed by arguments that include "--context" "claude-code", "--mode" "planning", "--mode" "${CLAUDE_PLUGIN_ROOT}/serena/architect-read-only.yml", "--project" ".", "--enable-web-dashboard" "False" and "--open-web-dashboard" "False"
   And its environment sets "SERENA_HOME" to "${CLAUDE_PLUGIN_DATA}/serena"
   And, with the server running, every tool it lists is one of find_symbol, get_symbols_overview, find_referencing_symbols, find_declaration, find_implementations, get_diagnostics_for_file, initial_instructions, also in a working directory that is not a git repository
 ```
@@ -172,7 +172,7 @@ Scenario: C001-TS-1013 — cartographer return size
 ```gherkin
 Scenario: C001-TS-1015 — Serena data kept outside the repository
   Given the plugin's data folder contains no "serena/serena_config.yml"
-  When P-01 runs "/architect:doctor"
+  When a session starts in "fx-brownfield-ts" with the plugin enabled, without "/architect:init" or "/architect:doctor"
   Then "serena/serena_config.yml" exists in the plugin's data folder with "project_serena_folder_location" inside that folder and "web_dashboard" false
   And after the cartographer's first Serena call in "fx-brownfield-ts", "git status --porcelain --ignored" lists no ".serena/" entry
 ```

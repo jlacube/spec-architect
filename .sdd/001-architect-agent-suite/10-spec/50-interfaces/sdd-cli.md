@@ -35,7 +35,7 @@ for `init`). Global options: `--cwd <path>`, `--json` (where supported), `--quie
 | `lint` | `[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]` | Run lint rules | CAP-07 and rule REQs |
 | `trace` | `<NNN> [--write] [--json]` or `--active [--write]` | Build trace graph; write matrix, open items, trace.json. `--active`: every active change (not archived, not stopped); always exit 0, nothing outside a workspace (SubagentStop hook, C001-IF-07 §2) | C001-REQ-706 … 709, 716 |
 | `gate show` | `<NNN> <phase>` | Print gate summary | C001-REQ-801 |
-| `gate approve` | `<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"]` | Approve phase | C001-REQ-805 … 809, 814, 720 |
+| `gate approve` | `<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"] [--commit]` | Approve phase; `--commit`: then commit the change folder and the status files (C001-REQ-816, 817) | C001-REQ-805 … 809, 814, 816, 817, 720 |
 | `gate record` | `<NNN> <phase> --decision revise\|stop --note "<text>"` | Log a non-approval decision | C001-REQ-812, 815 |
 | `stale check` | `[<NNN>]` | Recompute hashes; mark stale | C001-REQ-810 |
 | `hash` | `<NNN> <phase>` | Print the phase hash | C001-REQ-806 |
@@ -48,6 +48,7 @@ for `init`). Global options: `--cwd <path>`, `--json` (where supported), `--quie
 | `guard-bash` | hook JSON on stdin | Allow/deny shell command (hook) | C001-REQ-1106, 1107 |
 | `hook session-start` | hook JSON on stdin | Print brief | C001-REQ-911, 912 |
 | `hook post-write` | hook JSON on stdin | Quick lint of the written `.sdd/` file; findings returned as hook feedback | C001-REQ-705 |
+| `serena-launch` | `<plugin-data-dir> -- <serena arguments>` | Ensure the Serena configuration of `serena-config`, then run `serena` with the arguments, standard streams passed through; exit code of Serena (C001-IF-14 §4) | C001-REQ-1013 |
 | `serena-config` | `<plugin-data-dir>` | Create or update `<plugin-data-dir>/serena/serena_config.yml` (dashboard off, project folders inside the data folder, keys Serena requires); prints the path | C001-REQ-1013 |
 | `extract-features` | `<NNN>` | Write `.feature` files from gherkin blocks (optional, OQ-09) | — (Could, v1.x) |
 | `version` | — | Print `architect-plugin@<semver>` | C001-REQ-123 |

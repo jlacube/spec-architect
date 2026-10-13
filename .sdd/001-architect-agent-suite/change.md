@@ -5,8 +5,8 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:62e15646874c0105f3ec4e6de4f33d457bcdaaa940dd8c1e9a1fad36b6673b05", approved_at: 2026-10-12, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:41f862434da5ca86a3735bf69967fb651412940ebf8e6e9905ce1147fc7e9e41", approved_at: 2026-10-12, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:a58bd1045285ce9215ebe90473f4c14f98b394f050a05c6a9cf9613b355ae6c1", approved_at: 2026-10-13, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:3ce10e77ac8fdc01ff76579e94e4c7efa04b4bde98e574e009271c1cdb8a2941", approved_at: 2026-10-13, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -58,3 +58,6 @@ defects:
 | 2026-10-12 | G2 (spec) | **Revise** | "ok for fixing D-008" | none | unavailable |
 | 2026-10-12 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-12 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-13 | G2 (spec) | **Revise** | "ok so let's close D-009 & D-010" | none | unavailable |
+| 2026-10-13 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-13 | G3 (plan) | **Approved** | "Approve" | none | unavailable |

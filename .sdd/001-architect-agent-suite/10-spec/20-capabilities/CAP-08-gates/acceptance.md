@@ -193,6 +193,34 @@ Scenario: C001-TS-817 — stop at G1
   And "/architect:specify 005" is refused with a message naming the stopped status
 ```
 
+## C001-REQ-816
+
+#### C001-AC-816.1 — Commit at approval, opt-in
+```gherkin
+Scenario: C001-TS-818 — approval committed
+  Given a git repository whose change "004" is ready for G2 and nothing is staged
+  And the file "src/app.ts" is modified but not staged
+  When the user runs "$SDD gate approve 004 10-spec --note \"Approve\" --by p01 --commit"
+  Then the exit code is 0 and the last commit message is "CHG-004: G2 (spec) approved by p01"
+  And the commit contains only paths under ".sdd/004-" plus ".sdd/SDD.md" and ".sdd/registry.json"
+  And "src/app.ts" is still modified and not committed
+```
+
+## C001-REQ-817
+
+#### C001-AC-817.1 — Commit refused before approving
+```gherkin
+Scenario Outline: C001-TS-819 — commit refused
+  Given change "004" is ready for G2 in <repository>
+  When the user runs "$SDD gate approve 004 10-spec --note \"Approve\" --commit"
+  Then the exit code is 2 and standard error contains "ERR-CLI-018"
+  And "change.md" of "004" still shows "10-spec" as not approved
+  Examples:
+    | repository                                   |
+    | a folder that is not a git repository        |
+    | a git repository with "README.md" staged     |
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -212,6 +240,8 @@ Scenario: C001-TS-817 — stop at G1
 | C001-REQ-813 | TS-815 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-814 | TS-816 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-815 | TS-817 | n/a | n/a | TS-817 | n/a | n/a | n/a |
+| C001-REQ-816 | TS-818 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C001-REQ-817 | TS-819 | n/a | TS-819 | TS-819 | n/a | n/a | n/a |
 
 Per-column n/a reasons: as in CAP-05. Authorization here is the human-approval rule
 (only P-01 approves), covered by TS-804.

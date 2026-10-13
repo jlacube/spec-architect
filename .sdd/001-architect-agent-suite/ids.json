@@ -9,7 +9,7 @@
     { "type": "US|REQ|TS", "from": 501, "to": 599, "capability": "C001-CAP-05" },
     { "type": "US|REQ|TS", "from": 601, "to": 699, "capability": "C001-CAP-06" },
     { "type": "US|REQ|TS", "from": 701, "to": 799, "capability": "C001-CAP-07" },
-    { "type": "US|REQ|TS", "from": 801, "to": 899, "capability": "C001-CAP-08" },
+    { "type": "US|REQ|TS", "from": 801, "to": 899, "capability": "C001-CAP-08", "allocated": { "REQ": 817, "TS": 819 } },
     { "type": "US|REQ|TS", "from": 901, "to": 999, "capability": "C001-CAP-09" },
     { "type": "US|REQ|TS", "from": 1001, "to": 1099, "capability": "C001-CAP-10" },
     { "type": "US|REQ|TS", "from": 1101, "to": 1199, "capability": "C001-CAP-11" },

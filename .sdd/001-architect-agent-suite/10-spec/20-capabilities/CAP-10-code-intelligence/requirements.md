@@ -110,9 +110,9 @@ C001-IF-08, Bash allowlist C001-IF-07 §3, ripwire and Serena (external, C001-IF
 - **Acceptance:** C001-AC-1012.1
 
 ### C001-REQ-1013 — Serena data outside the repository
-- **Pattern:** event-driven
-- **Statement:** WHEN `/architect:init` or `/architect:doctor` runs, THE conductor SHALL run `sdd serena-config "${CLAUDE_PLUGIN_DATA}"`, which ensures that `serena/serena_config.yml` exists in that data folder with `project_serena_folder_location` set to a folder inside it and `web_dashboard` set to false (agents themselves write only under `.sdd/`; defect D-004).
-- **Rationale:** C001-CON-01, C001-CON-08; spikes S-02 and S-06 (without this file Serena writes `<repo>/.serena/`; it must exist before Serena first starts, C001-IF-14 §4)
+- **Pattern:** ubiquitous
+- **Statement:** THE plugin SHALL start Serena through `sdd serena-launch "${CLAUDE_PLUGIN_DATA}" -- <Serena arguments>`, which ensures that `serena/serena_config.yml` exists in that data folder, with `project_serena_folder_location` set to a folder inside it and `web_dashboard` set to false, before it starts Serena (`sdd serena-config` writes the same file when `/architect:init` or `/architect:doctor` runs; agents themselves write only under `.sdd/`).
+- **Rationale:** C001-CON-01, C001-CON-08; spikes S-02 and S-06 (without this file Serena writes `<repo>/.serena/`; it must exist before Serena first starts, C001-IF-14 §4); defect D-004; defect D-010 (the MCP server starts with every session, also in repositories where init never ran)
 - **Stories:** C001-US-1003
 - **Priority:** Must
 - **Acceptance:** C001-AC-1013.1
