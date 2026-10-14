@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:architect:c002:release-record:1",
+  "title": "Release record of a generated target (C002-IF-009)",
+  "description": "Written by the release check (C002-COMP-010) to docs/releases/<target>/<version>/release.json for every decision, allowed or refused. $defs also define the corpus replay report and the injection eval summary the release check reads (verification-records.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target", "package_version", "decided_on", "outcome", "enforcement_mode", "exception", "tested_versions", "evidence", "refusals"],
+  "properties": {
+    "target": { "enum": ["opencode", "copilot"] },
+    "package_version": { "$ref": "#/$defs/version" },
+    "decided_on": { "type": "string", "format": "date" },
+    "outcome": { "enum": ["released", "refused"] },
+    "enforcement_mode": { "enum": ["native-permissions", "sdd-mcp-server", "copilot-hooks"] },
+    "exception": {
+      "description": "Set when the Copilot target is released under the Copilot hooks fallback (C002-REQ-622); null otherwise.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decision", "reason"],
+          "properties": {
+            "decision": { "const": "C002-DEC-005" },
+            "reason": { "const": "copilot-hooks fallback: the boundary is off whenever hooks are disabled" }
+          }
+        }
+      ]
+    },
+    "tested_versions": { "$ref": "#/$defs/hostVersions" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["replay", "injection", "spike", "regeneration"],
+      "properties": {
+        "replay": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "mechanism", "differing"],
+            "properties": {
+              "path": { "type": "string" },
+              "mechanism": { "$ref": "#/$defs/mechanism" },
+              "host_versions": { "$ref": "#/$defs/hostVersions" },
+              "differing": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "injection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "host_versions", "cases", "acted_upon"],
+          "properties": {
+            "path": { "type": "string" },
+            "host_versions": { "$ref": "#/$defs/hostVersions" },
+            "cases": { "type": "integer", "minimum": 0 },
+            "acted_upon": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "checklist": {
+          "description": "Copilot VS Code only (C002-REQ-618).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "host_versions", "failed_steps"],
+              "properties": {
+                "path": { "type": "string" },
+                "host_versions": { "$ref": "#/$defs/hostVersions" },
+                "failed_steps": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          ]
+        },
+        "spike": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "enforcement_mode"],
+          "properties": {
+            "path": { "type": "string", "pattern": "^docs/spikes/S-0[78]-[a-z0-9-]+\\.md$" },
+            "enforcement_mode": { "enum": ["native-permissions", "sdd-mcp-server", "copilot-hooks", "deferred"] }
+          }
+        },
+        "regeneration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["identical", "differences"],
+          "properties": {
+            "identical": { "type": "boolean" },
+            "differences": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "refusals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^ERR-REL-\\d{3}$" },
+          "message": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "released" } } },
+      "then": { "properties": { "refusals": { "maxItems": 0 } } },
+      "else": { "properties": { "refusals": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "target": { "const": "copilot" }, "outcome": { "const": "released" } } },
+      "then": {
+        "properties": { "evidence": { "required": ["checklist"], "properties": { "checklist": { "type": "object" } } } }
+      }
+    },
+    {
+      "if": { "properties": { "enforcement_mode": { "const": "copilot-hooks" }, "outcome": { "const": "released" } } },
+      "then": { "properties": { "exception": { "type": "object" } } },
+      "else": { "properties": { "exception": { "type": "null" } } }
+    }
+  ],
+  "$defs": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "hostVersions": {
+      "type": "object",
+      "propertyNames": { "enum": ["opencode", "vscode", "copilot-chat", "copilot-cli"] },
+      "additionalProperties": { "$ref": "#/$defs/version" }
+    },
+    "mechanism": { "enum": ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"] },
+    "replayReport": {
+      "title": "Corpus replay report (C002-REQ-606)",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mechanism", "target", "package_version", "corpora", "cases", "differing"],
+      "properties": {
+        "mechanism": { "$ref": "#/$defs/mechanism" },
+        "target": { "enum": ["opencode", "copilot"] },
+        "package_version": { "$ref": "#/$defs/version" },
+        "host_versions": { "$ref": "#/$defs/hostVersions" },
+        "corpora": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "shell"],
+          "properties": {
+            "path": { "$ref": "#/$defs/corpusRef" },
+            "shell": { "$ref": "#/$defs/corpusRef" }
+          }
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "corpus", "expected", "actual"],
+            "properties": {
+              "id": { "type": "string" },
+              "corpus": { "enum": ["path", "shell"] },
+              "expected": { "enum": ["allow", "deny"] },
+              "actual": { "enum": ["allow", "deny", "error"] },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "differing": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "corpusRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "cases", "sha256"],
+      "properties": {
+        "file": { "type": "string" },
+        "cases": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "injectionSummary": {
+      "title": "Injection eval summary (C002-NFR-203)",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "tier", "host_versions", "cases"],
+      "properties": {
+        "target": { "enum": ["opencode", "copilot"] },
+        "tier": { "const": "dev" },
+        "source": { "enum": ["opencode-runner", "copilot-cli-runner", "manual-checklist"] },
+        "host_versions": { "$ref": "#/$defs/hostVersions" },
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "acted_upon"],
+            "properties": {
+              "id": { "type": "string" },
+              "acted_upon": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

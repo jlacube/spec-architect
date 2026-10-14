@@ -1,0 +1,534 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:architect:c002:mapping-table:1",
+  "title": "Target mapping table (C002-IF-001)",
+  "description": "One file per generated target: plugins/architect/targets/<target>.json. It is the only place where the generator (C002-COMP-001) finds how a Claude Code construct of the source plugin is written for that target (C002-REQ-103). Semantics, processing order and the initial entries: mapping-tables.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "target",
+    "enforcement_mode",
+    "host",
+    "placement",
+    "models",
+    "agent_fields",
+    "tools",
+    "agent_start",
+    "mcp_tool_names",
+    "mcp_servers",
+    "variables",
+    "references",
+    "constructs",
+    "variants"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "target": { "enum": ["opencode", "copilot"] },
+    "enforcement_mode": { "$ref": "#/$defs/mode" },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "tested_versions", "validated_by"],
+      "properties": {
+        "name": {
+          "description": "Host row name shown by the doctor (C002-IF-006).",
+          "enum": ["OpenCode", "VS Code with GitHub Copilot Chat"]
+        },
+        "tested_versions": {
+          "description": "Tested version per host part (glossary: tested version). opencode: {opencode}; copilot: {vscode, copilot-chat}.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "enum": ["opencode", "vscode", "copilot-chat"] },
+          "additionalProperties": { "$ref": "#/$defs/version" }
+        },
+        "validated_by": {
+          "description": "Spike record that fixed the enforcement mode and the tested versions (C002-IF-009 §3).",
+          "type": "string",
+          "pattern": "^docs/spikes/S-0[78]-[a-z0-9-]+\\.md$"
+        }
+      }
+    },
+    "placement": {
+      "description": "Where each generated part is written inside dist/<target>/ (C002-IF-005).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agents_dir", "agent_file", "commands_dir", "command_file", "skills_dir", "config_file", "manifest_file", "install_notes"],
+      "properties": {
+        "agents_dir": { "$ref": "#/$defs/relPath" },
+        "agent_file": { "type": "string", "pattern": "^[a-z{}._-]*\\{name\\}[a-z{}._-]*\\.md$" },
+        "commands_dir": { "$ref": "#/$defs/relPath" },
+        "command_file": { "type": "string", "pattern": "^[a-z{}._-]*\\{name\\}[a-z{}._-]*\\.md$" },
+        "skills_dir": { "$ref": "#/$defs/relPath" },
+        "config_file": { "$ref": "#/$defs/relPath" },
+        "hooks_file": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+        "plugin_manifest": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+        "cli_copy": {
+          "description": "Path of the copy of the bundled sdd CLI used by hook commands (Copilot only, C002-CON-14); null when the target has no hook commands.",
+          "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
+        },
+        "manifest_file": { "$ref": "#/$defs/relPath" },
+        "install_notes": { "$ref": "#/$defs/relPath" }
+      }
+    },
+    "models": {
+      "description": "Host model identifier per Claude model tier (C002-REQ-105).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opus", "sonnet", "haiku"],
+      "properties": {
+        "opus": { "type": "string", "minLength": 1 },
+        "sonnet": { "type": "string", "minLength": 1 },
+        "haiku": { "type": "string", "minLength": 1 }
+      }
+    },
+    "agent_fields": {
+      "description": "Treatment of the source agent frontmatter fields other than tools and model.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effort", "color", "memory", "skills"],
+      "properties": {
+        "effort": { "$ref": "#/$defs/fieldRule" },
+        "color": { "$ref": "#/$defs/fieldRule" },
+        "memory": { "const": "drop", "description": "C002-REQ-106, C002-DEC-009." },
+        "skills": { "const": "inline", "description": "C002-REQ-109, C002-DEC-002." },
+        "subagent_flags": {
+          "description": "Extra frontmatter written on the nine specialists only, for example {\"mode\": \"subagent\"} or {\"user-invocable\": false}.",
+          "type": "object"
+        },
+        "primary_flags": {
+          "description": "Extra frontmatter written on the conductor only, for example {\"mode\": \"primary\"}.",
+          "type": "object"
+        }
+      }
+    },
+    "tools": {
+      "description": "Claude Code tool name of a source agent's tools field -> host tool grants. An empty list drops the tool on purpose; a tool without a key stops generation (ERR-GEN-001). Agent(...) is handled by agent_start, MCP names by mcp_tool_names.",
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Z][A-Za-z]+$", "not": { "const": "Agent" } },
+      "additionalProperties": { "$ref": "#/$defs/toolEntry" }
+    },
+    "agent_start": {
+      "description": "How the right to start the nine specialists is granted to the conductor alone (C002-REQ-107).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style"],
+      "properties": {
+        "style": { "enum": ["permission-task", "agents-list"] },
+        "tools": { "$ref": "#/$defs/toolNameList" }
+      }
+    },
+    "mcp_tool_names": {
+      "description": "Rewrites mcp__plugin_architect_<server>__<tool> into the host's MCP tool name.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_pattern", "target_pattern", "grant"],
+      "properties": {
+        "source_pattern": { "const": "mcp__plugin_architect_{server}__{tool}" },
+        "target_pattern": { "enum": ["{server}_{tool}", "{server}/{tool}"] },
+        "grant": {
+          "description": "per-tool: each tool is granted by name; per-server: only {server}/* can be granted, so a server is granted when the agent holds any of its tools.",
+          "enum": ["per-tool", "per-server"]
+        }
+      }
+    },
+    "mcp_servers": {
+      "description": "Server declarations written to the target's MCP configuration. Keys: the servers of the source .mcp.json (context7, deepwiki, serena) and the two sdd MCP server profiles (sdd-files, sdd-shell).",
+      "type": "object",
+      "required": ["context7", "deepwiki", "serena", "sdd-files", "sdd-shell"],
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+      "additionalProperties": { "$ref": "#/$defs/mcpServer" }
+    },
+    "variables": {
+      "description": "Replacement of Claude Code variables per context; null means the variable must not occur in that context (ERR-GEN-001).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["${CLAUDE_PLUGIN_ROOT}", "${CLAUDE_PLUGIN_DATA}", "$ARGUMENTS"],
+      "properties": {
+        "${CLAUDE_PLUGIN_ROOT}": { "$ref": "#/$defs/variableRule" },
+        "${CLAUDE_PLUGIN_DATA}": { "$ref": "#/$defs/variableRule" },
+        "$ARGUMENTS": { "$ref": "#/$defs/variableRule" }
+      }
+    },
+    "references": {
+      "description": "Rewrites of namespaced agent and command references.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "command"],
+      "properties": {
+        "agent": { "$ref": "#/$defs/prefixRule" },
+        "command": { "$ref": "#/$defs/prefixRule" }
+      }
+    },
+    "constructs": {
+      "description": "Construct detectors and their treatment, applied in array order after the variants (mapping-tables.md §3).",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/construct" }
+    },
+    "variants": {
+      "description": "Wiring variants: a section or a block of lines of a source file replaced by a file kept under plugins/architect/targets/<target>/wiring/.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/variant" }
+    },
+    "permissions": {
+      "description": "OpenCode only: per-agent permission rules written to opencode.json agent.<name>.permission, per enforcement mode (C002-REQ-206, C002-REQ-207, C002-REQ-209).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native-permissions", "sdd-mcp-server"],
+      "properties": {
+        "native-permissions": { "$ref": "#/$defs/permissionSet" },
+        "sdd-mcp-server": { "$ref": "#/$defs/permissionSet" }
+      }
+    },
+    "hook_tool_classes": {
+      "description": "Copilot hooks fallback only: classification of the hook tool_name values (C002-IF-008 §2), written to hooks/tool-classes.json of the package.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["write", "terminal", "read_only"],
+      "properties": {
+        "write": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tool", "paths"],
+            "properties": {
+              "tool": { "type": "string", "minLength": 1 },
+              "paths": {
+                "description": "JSON pointers into tool_input that hold target paths; every path found must be allowed by the path guard core.",
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "pattern": "^/" }
+              },
+              "always_deny": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "terminal": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tool", "command"],
+            "properties": {
+              "tool": { "type": "string", "minLength": 1 },
+              "command": { "type": "string", "pattern": "^/" },
+              "dialect": {
+                "description": "Shell dialect the bash guard core applies; strictest allows a command only when both the bash and the PowerShell dialect allow it (C002-IF-008 §2).",
+                "enum": ["bash", "powershell", "strictest"],
+                "default": "strictest"
+              }
+            }
+          }
+        },
+        "read_only": { "$ref": "#/$defs/toolNameList" }
+      }
+    },
+    "post_write_feedback": {
+      "description": "OpenCode only: emit the quick-lint plugin (C002-REQ-215) when spike S-07 found a feedback channel.",
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "target": { "const": "opencode" } }, "required": ["target"] },
+      "then": {
+        "required": ["permissions", "post_write_feedback"],
+        "properties": {
+          "enforcement_mode": { "enum": ["native-permissions", "sdd-mcp-server"] },
+          "host": {
+            "properties": {
+              "name": { "const": "OpenCode" },
+              "tested_versions": { "required": ["opencode"], "propertyNames": { "const": "opencode" } }
+            }
+          },
+          "agent_start": { "properties": { "style": { "const": "permission-task" } } },
+          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}_{tool}" } } }
+        },
+        "not": { "required": ["hook_tool_classes"] }
+      }
+    },
+    {
+      "if": { "properties": { "target": { "const": "copilot" } }, "required": ["target"] },
+      "then": {
+        "properties": {
+          "enforcement_mode": { "enum": ["sdd-mcp-server", "copilot-hooks"] },
+          "host": {
+            "properties": {
+              "name": { "const": "VS Code with GitHub Copilot Chat" },
+              "tested_versions": { "required": ["vscode", "copilot-chat"], "propertyNames": { "enum": ["vscode", "copilot-chat"] } }
+            }
+          },
+          "agent_start": { "properties": { "style": { "const": "agents-list" } }, "required": ["tools"] },
+          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}/{tool}" } } },
+          "placement": { "required": ["hooks_file", "cli_copy"] }
+        },
+        "not": { "anyOf": [{ "required": ["permissions"] }, { "required": ["post_write_feedback"] }] }
+      }
+    },
+    {
+      "if": { "properties": { "enforcement_mode": { "const": "copilot-hooks" } }, "required": ["enforcement_mode"] },
+      "then": { "required": ["hook_tool_classes"] }
+    }
+  ],
+  "$defs": {
+    "mode": {
+      "description": "Enforcement mode (glossary). OpenCode: native-permissions or sdd-mcp-server; Copilot: sdd-mcp-server or copilot-hooks.",
+      "enum": ["native-permissions", "sdd-mcp-server", "copilot-hooks"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "relPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![/\\\\])(?!.*\\.\\.)[^:*?\"<>|]+$"
+    },
+    "toolNameList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "toolEntry": {
+      "oneOf": [
+        { "$ref": "#/$defs/toolNameList" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["by_mode"],
+          "properties": {
+            "by_mode": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": { "$ref": "#/$defs/mode" },
+              "additionalProperties": { "$ref": "#/$defs/toolNameList" }
+            }
+          }
+        }
+      ]
+    },
+    "fieldRule": {
+      "oneOf": [
+        { "const": "drop" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["field", "values"],
+          "properties": {
+            "field": { "type": "string", "minLength": 1 },
+            "values": {
+              "description": "Source value -> host value; a source value without an entry stops generation (ERR-GEN-001).",
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": { "type": ["string", "number", "boolean"] }
+            }
+          }
+        }
+      ]
+    },
+    "variableRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body", "hook-command", "mcp-config"],
+      "properties": {
+        "body": { "type": ["string", "null"] },
+        "hook-command": { "type": ["string", "null"] },
+        "mcp-config": { "type": ["string", "null"] }
+      }
+    },
+    "prefixRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string" }
+      }
+    },
+    "context": { "enum": ["frontmatter", "body", "hook-command", "mcp-config"] },
+    "construct": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "detect", "contexts", "action"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "kind": {
+          "enum": [
+            "tool-name",
+            "mcp-tool-name",
+            "model-name",
+            "plugin-root",
+            "plugin-data",
+            "arguments",
+            "agent-reference",
+            "command-reference",
+            "guard-line",
+            "question-tool-name",
+            "cli-invocation",
+            "task-tool-name",
+            "other"
+          ]
+        },
+        "detect": {
+          "description": "ECMAScript regular expression (flag u) matched line by line.",
+          "type": "string",
+          "minLength": 1
+        },
+        "contexts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/context" }
+        },
+        "accepted_in": {
+          "description": "Contexts in which the construct may stay untranslated in the target package (C002-REQ-602), for example hook-command and mcp-config for ${CLAUDE_PLUGIN_ROOT} on Copilot.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/context" }
+        },
+        "action": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["replace"],
+              "properties": {
+                "replace": {
+                  "oneOf": [
+                    { "type": "string" },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["by_mode"],
+                      "properties": {
+                        "by_mode": {
+                          "type": "object",
+                          "minProperties": 1,
+                          "propertyNames": { "$ref": "#/$defs/mode" },
+                          "additionalProperties": { "type": "string" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["drop_line"],
+              "properties": { "drop_line": { "const": true } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["variant_required"],
+              "properties": { "variant_required": { "const": true } }
+            }
+          ]
+        }
+      }
+    },
+    "anchor": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["section"],
+          "properties": {
+            "section": {
+              "description": "Heading text without # marks; the section runs to the next heading of the same or a higher level.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lines"],
+          "properties": {
+            "lines": {
+              "description": "A contiguous block of source lines, matched exactly after trailing-space removal.",
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "file", "anchor", "text_file"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "file": {
+          "description": "Source file relative to plugins/architect/ (agents/, commands/ or skills/).",
+          "type": "string",
+          "pattern": "^(agents|commands|skills)/[A-Za-z0-9._/-]+\\.md$"
+        },
+        "anchor": { "$ref": "#/$defs/anchor" },
+        "text_file": {
+          "description": "Variant text, relative to plugins/architect/targets/<target>/wiring/; may hold the tokens of mapping-tables.md §4.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]+\\.md$"
+        }
+      }
+    },
+    "mcpServer": {
+      "type": "object",
+      "required": ["transport", "modes"],
+      "properties": {
+        "transport": { "enum": ["stdio", "http"] },
+        "command": { "type": "string", "minLength": 1 },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "env": { "type": "object", "additionalProperties": { "type": "string" } },
+        "url": { "type": "string", "pattern": "^https://" },
+        "modes": {
+          "description": "Enforcement modes in which the server is declared; sdd-files and sdd-shell are declared under sdd-mcp-server only.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/mode" }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "transport": { "const": "stdio" } } }, "then": { "required": ["command", "args"], "not": { "required": ["url"] } } },
+        { "if": { "properties": { "transport": { "const": "http" } } }, "then": { "required": ["url"], "not": { "required": ["command"] } } }
+      ],
+      "additionalProperties": false
+    },
+    "permissionRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "action"],
+      "properties": {
+        "pattern": { "type": "string", "minLength": 1 },
+        "action": { "enum": ["allow", "ask", "deny"] }
+      }
+    },
+    "permissionSet": {
+      "description": "Rules in evaluation order (OpenCode: last matching rule wins, so the catch-all comes first).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edit", "bash"],
+      "properties": {
+        "edit": { "oneOf": [{ "enum": ["allow", "ask", "deny"] }, { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/permissionRule" } }] },
+        "bash": { "oneOf": [{ "enum": ["allow", "ask", "deny"] }, { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/permissionRule" } }] },
+        "external_directory": { "enum": ["allow", "ask", "deny"] },
+        "webfetch": { "enum": ["allow", "ask", "deny"] },
+        "websearch": { "enum": ["allow", "ask", "deny"] },
+        "question": { "enum": ["allow", "ask", "deny"] },
+        "skill": { "enum": ["allow", "ask", "deny"] },
+        "lsp": { "enum": ["allow", "ask", "deny"] }
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Target package | The generated output for one generated target, under `dist/opencode/` or `dist/copilot/` |
 | Generator | The build step that reads the source plugin into the neutral model and writes one target package per generated target |
 | Neutral model | The target-independent representation of the source plugin's agents, commands, skills, hooks and MCP servers that the generator builds before writing any target package |
-| Mapping table | A per-target table the generator uses to translate Claude Code tool names, MCP tool names, model names and variables (`${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}`, `$ARGUMENTS`) |
+| Mapping table | A per-target table the generator uses to translate Claude Code tool names, MCP tool names, model names and variables (`${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}`, `$ARGUMENTS`); also called the translation table. File `plugins/architect/targets/<target>.json`, contract C002-IF-001 |
 | Wiring variant | A per-target version of a skill's "Claude Code wiring" section, or of the CLI invocation line of `sdd-conventions`, kept in the source plugin and selected by the generator |
 | Skill inlining | Copying an agent's preloaded skills into that agent's generated body (C002-DEC-002) |
 | Write/shell boundary | The rule that an Architect agent writes only inside `.sdd/` (on Claude Code also its own memory folder) and runs only commands of the allowlist in C001-IF-07 §3 (C001-NFR-201) |
@@ -65,32 +65,43 @@ plugin structure check and the others listed there). At archive these terms are 
 | Release check | The check that decides whether a generated target may be released (C002-DEC-005) |
 | Release record | The record of one release decision for one target: the evidence the release check used and its outcome |
 | Regression set | The CHG-001 tests and evals that pass before CHG-002 and must still pass after it (`20-plan/30-impact/regression-set.md`) |
+| Generation run | One execution of the generator for one or more generated targets; it writes every selected target package or none (C002-INV-02) |
+| Generation manifest | The file `architect-target.json` of a target package: target, version, enforcement mode, tested versions, source digest and the hash of every file (C002-IF-004) |
+| Construct detector | The pattern of a mapping table that finds one kind of Claude Code construct in a source or generated file (C002-IF-001 §2) |
+| Wiring anchor | The heading or the exact block of lines of a source file that a wiring variant replaces (C002-IF-001) |
+| Variant token | A placeholder in a wiring variant that the generator fills from the mapping table, such as the tested version (C002-IF-001 §4) |
+| Server profile | One of the two tool sets of the sdd MCP server, declared as its own server: `sdd-files` (write tools) and `sdd-shell` (command tool) (C002-IF-002 §2) |
+| Server repository root | The repository folder an sdd MCP server process serves, fixed when it is initialised (C002-IF-002 §3) |
+| Tool classes | The classification of a host's tool names into write, terminal and read-only tools that an agent-scoped guard hook uses (C002-IF-008 §2) |
+| Host adapter | The part of the sdd CLI that turns a host's hook input into the hook input of C001-IF-07 §1 (`--host copilot`) |
+| Spike record | The committed result of spike S-07 or S-08, whose frontmatter fixes a target's enforcement mode and tested versions (C002-IF-009 §3) |
+| Per-user data folder | The folder of `architect-sdd` in the user's application-data location, used for Serena's data on the generated targets (`--user-data`, C002-IF-007) |
 
 ## 2. System names (allowed after `THE` in EARS statements)
 
 ### 2.1 System names introduced by CHG-002
 
-Components are assigned in the architecture step of this spec.
+Components assigned in the architecture step (`../60-architecture/architecture.md` §2).
 
 | Name | Meaning | Component |
 |---|---|---|
-| generator | The build step that writes the target packages from the source plugin | — |
-| source plugin | `plugins/architect`, the Claude Code plugin | C001-COMP-11 |
-| target package | Either generated target package | — |
-| OpenCode target package | The generated package under `dist/opencode/` | — |
-| Copilot target package | The generated package under `dist/copilot/` | — |
-| sdd MCP server | The local stdio MCP server shipped in `architect-sdd` | — |
-| `architect-sdd` package | The npm package of the `sdd` CLI and the sdd MCP server | — |
-| target structure check | The checks run by `npm run check` on a target package | — |
-| corpus replay suite | The tests replaying the guard corpora against each enforcement mechanism | — |
-| guard corpora | The path corpus and the shell corpus under `tests/guards/` | — |
-| enforcement mechanism | Whatever enforces the write/shell boundary on a target | — |
-| agent-scoped guard hook | A guard hook of the Copilot hooks fallback | — |
-| eval runner | An eval runner of a generated target | — |
-| OpenCode eval runner | The eval runner that drives OpenCode | — |
-| Copilot CLI eval runner | The eval runner that drives Copilot CLI | — |
-| manual VS Code checklist | The recorded manual verification of Copilot VS Code | — |
-| release check | The release decision of C002-DEC-005 for one target | — |
+| generator | The build step that writes the target packages from the source plugin | C002-COMP-001 |
+| source plugin | `plugins/architect`, the Claude Code plugin | C001-COMP-11 (modified as C002-COMP-017); its `targets/` folder is C002-COMP-002 |
+| target package | Either generated target package | C002-COMP-003, C002-COMP-004 |
+| OpenCode target package | The generated package under `dist/opencode/` | C002-COMP-003 |
+| Copilot target package | The generated package under `dist/copilot/` | C002-COMP-004 |
+| sdd MCP server | The local stdio MCP server shipped in `architect-sdd` | C002-COMP-005 |
+| `architect-sdd` package | The npm package of the `sdd` CLI and the sdd MCP server | C002-COMP-006 |
+| target structure check | The checks run by `npm run check` on a target package | C002-COMP-007 |
+| corpus replay suite | The tests replaying the guard corpora against each enforcement mechanism | C002-COMP-008 |
+| guard corpora | The path corpus and the shell corpus under `tests/guards/` | C002-COMP-013 |
+| enforcement mechanism | Whatever enforces the write/shell boundary on a target | C002-COMP-012 (Claude Code hooks, agent-scoped guard hooks), C002-COMP-003 (OpenCode permission rules), C002-COMP-005 (sdd MCP server) |
+| agent-scoped guard hook | A guard hook of the Copilot hooks fallback | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
+| eval runner | An eval runner of a generated target | C002-COMP-009 |
+| OpenCode eval runner | The eval runner that drives OpenCode | C002-COMP-009 |
+| Copilot CLI eval runner | The eval runner that drives Copilot CLI | C002-COMP-009 |
+| manual VS Code checklist | The recorded manual verification of Copilot VS Code | C002-COMP-011 |
+| release check | The release decision of C002-DEC-005 for one target | C002-COMP-010 |
 
 ### 2.2 System names reused from CHG-001
 
@@ -100,15 +111,15 @@ that the lint of CHG-002 resolves them until both glossaries are merged into
 
 | Name | Meaning | Component |
 |---|---|---|
-| conductor | As in CHG-001 | C001-COMP-01 |
-| cartographer | As in CHG-001 | C001-COMP-02 |
+| conductor | As in CHG-001 | C001-COMP-01 (modified as C002-COMP-014) |
+| cartographer | As in CHG-001 | C001-COMP-02 (toolchain record through C002-COMP-016) |
 | Architect agent | As in CHG-001 | C001-COMP-01, C001-COMP-02 |
 | agent | As in CHG-001 (used in NFRs) | C001-COMP-01, C001-COMP-02 |
-| bash guard | As in CHG-001 | C001-COMP-08 |
-| path guard | As in CHG-001 | C001-COMP-08 |
-| build | As in CHG-001 | C001-COMP-12 |
-| plugin | As in CHG-001 | C001-COMP-11 |
-| README | As in CHG-001 | C001-COMP-11 |
+| bash guard | As in CHG-001 | C001-COMP-08 (modified as C002-COMP-012) |
+| path guard | As in CHG-001 | C001-COMP-08 (modified as C002-COMP-012) |
+| build | As in CHG-001 | C001-COMP-12 (modified as C002-COMP-013) |
+| plugin | As in CHG-001 | C001-COMP-11 (modified as C002-COMP-017) |
+| README | As in CHG-001 | C001-COMP-11 (modified as C002-COMP-017) |
 | repository | As in CHG-001 | — |
-| sdd CLI | As in CHG-001 | C001-COMP-03 to C001-COMP-07 |
+| sdd CLI | As in CHG-001 | C001-COMP-03 to C001-COMP-07 (front-end modified as C002-COMP-018) |
 | suite | As in CHG-001 (used in NFRs) | all |
