@@ -8,9 +8,9 @@ capability: "CLI distribution, allowlist and doctor"
 ---
 # C002-CAP-05 — Requirements
 
-Brownfield change: every requirement carries a Delta. C002-REQ-503 is the only Claude Code behaviour
-CHG-002 changes (C002-GOAL-05); C002-REQ-504 to C002-REQ-507 make CHG-001's doctor requirements
-host-dependent and keep today's behaviour on Claude Code. LINT-DELTA-001 findings on the MODIFIED
+Brownfield change: every requirement carries a Delta. C002-REQ-503 and C002-REQ-517 are the only
+Claude Code behaviours CHG-002 changes (C002-GOAL-05, widened by Q-guards-04); C002-REQ-504 to
+C002-REQ-507 make CHG-001's doctor requirements host-dependent and keep today's behaviour on Claude Code. LINT-DELTA-001 findings on the MODIFIED
 entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 
 ### C002-REQ-501 — `sdd` executable from npm
@@ -95,8 +95,8 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-509 — sdd CLI of another version
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHILE the conductor runs on a generated target, IF the version of the reachable sdd CLI differs from the version of the target package [NEEDS CLARIFICATION: Q-cli-03], THEN THE conductor SHALL show the sdd CLI row with status `error` and the install command for the target package's version.
-- **Rationale:** edge case of C002-US-501 (target package and installed `architect-sdd` of different versions); the generated agent bodies and the sdd MCP server tools must match the CLI they call
+- **Statement:** WHILE the conductor runs on a generated target, IF the version of the reachable sdd CLI is not equal to the version of the target package in its major, minor and patch numbers, THEN THE conductor SHALL show the sdd CLI row with status `error` and the install command for the target package's version.
+- **Rationale:** Q-cli-03 (spec round 2, `../../questions-log.md`): "Exact match"; edge case of C002-US-501 (target package and installed `architect-sdd` of different versions); the generated agent bodies and the sdd MCP server tools must match the CLI they call
 - **Stories:** C002-US-501, C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-509.1
@@ -141,8 +141,8 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-514 — Unknown template refused
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF `sdd template show` names a template that exists neither under `.sdd/_templates/` nor among the templates shipped with the CLI, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-019` naming the profile and the path.
-- **Rationale:** C001-NFR-601 (actionable messages); `../../50-interfaces/errors.md` §5 (the fix lists the templates with `sdd template list <profile>`); C002-IF-007 exit codes
+- **Statement:** IF `sdd template show` names a path that resolves outside the profile's template folder after normalising `..` segments and links, or a template that exists neither under `.sdd/_templates/` nor among the templates shipped with the CLI, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-019` naming the profile and the path.
+- **Rationale:** C001-NFR-601 (actionable messages); `../../50-interfaces/errors.md` §5 (the fix lists the templates with `sdd template list <profile>`, C002-REQ-520); C002-IF-007 exit codes; a path such as `full/../../package.json` would otherwise print a file of the installed package (C002-TS-522)
 - **Stories:** C002-US-504
 - **Priority:** Must
 - **Acceptance:** C002-AC-514.1
@@ -151,16 +151,54 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN `sdd serena-config` or `sdd serena-launch` runs with the option `--user-data`, THE sdd CLI SHALL use the per-user data folder of `architect-sdd` as Serena's data folder.
-- **Rationale:** C001-REQ-1013 carried to the generated targets, which cannot rely on `${CLAUDE_PLUGIN_DATA}` (C002-R-001 A-09): Serena's configuration and project data stay outside the repository; the doctor and init commands pass `--user-data` there (C002-REQ-116, C002-IF-006 §4) and so does the Serena launch of the target packages (C002-REQ-114); the folder per operating system is fixed in C002-IF-007; on Claude Code the data-folder argument stays (current-state E-22)
+- **Rationale:** C001-REQ-1013 carried to the generated targets, which cannot rely on `${CLAUDE_PLUGIN_DATA}` (C002-R-001 A-09): Serena's configuration and project data stay outside the repository; the doctor and init commands pass `--user-data` there (C002-REQ-116, C002-IF-006 §4) and so does the Serena launch of the target packages (C002-REQ-114); the folder per operating system is fixed in C002-IF-007; a folder that is relative or inside the current repository is refused (C002-REQ-516); on Claude Code the data-folder argument stays (current-state E-22)
 - **Stories:** C002-US-505
 - **Priority:** Must
 - **Acceptance:** C002-AC-515.1
 
-### C002-REQ-516 — Per-user data folder not determinable
+### C002-REQ-516 — Per-user data folder not determinable, relative or inside the repository
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF the option `--user-data` is given and the per-user data folder cannot be determined, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-020` without writing a Serena configuration or starting Serena.
-- **Rationale:** without its configuration Serena writes `<repo>/.serena/` (C001-REQ-1013, spikes S-02 and S-06); C001-NFR-601; `../../50-interfaces/errors.md` §5
+- **Statement:** IF the option `--user-data` is given and the per-user data folder cannot be determined, is a relative path, or resolves inside the current repository, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-020` without writing a Serena configuration or starting Serena.
+- **Rationale:** without its configuration Serena writes `<repo>/.serena/` (C001-REQ-1013, spikes S-02 and S-06); a relative `XDG_DATA_HOME` (invalid under the XDG rules) or an environment variable that points into the repository would put Serena's data in the repository, against C002-US-505; C001-NFR-601; `../../50-interfaces/errors.md` §5
 - **Stories:** C002-US-505
 - **Priority:** Must
 - **Acceptance:** C002-AC-516.1
+
+### C002-REQ-517 — Serena commands confined to a data folder outside the repository
+- **Delta:** MODIFIED C001-REQ-1106
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF an Architect agent requests `sdd serena-config` or `sdd serena-launch`, as a bare `sdd` command or through `node <path>/sdd.mjs`, with a data-folder argument other than the option `--user-data` or a folder that resolves outside the current repository, THEN THE bash guard SHALL deny the command with rule `GUARD-BASH-001`.
+- **Rationale:** Q-guards-04 (spec round 2, `../../questions-log.md`): "Confine on every host" — the guard core allows these two subcommands only with `--user-data` or a folder outside the repository, and C002-GOAL-05 is widened to cover this Claude Code change. Today the sdd CLI entry of C001-IF-07 §3 accepts any subcommand, so `sdd serena-config src` passes every guard and writes `src/serena/serena_config.yml`, against C002-DEC-001 ("refuses anything outside `.sdd/`") and the ideation §9 risk "a command that writes files". The same guard core decides for the command tool of the sdd MCP server and for the agent-scoped guard hooks (C002-IF-008 §1); the OpenCode `bash` rules follow the allowlist (C002-REQ-207). Serena keeps its project data inside the data folder (C001-REQ-1013), so the data folder decides where `serena-launch` writes. The folder resolves as a write target does for the path guard (`..` segments, case, drive letters, links; C001-REQ-1104). Corpus cases: C002-REQ-607
+- **Stories:** C002-US-502, C002-US-505
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-517.1`)
+- **Evidence:** current-state E-5 — `src/hooks/guard-bash.ts:119` › `sddCli` (any subcommand after `node <path>/sdd.mjs` passes the sdd CLI entry; layer: serena); current-state E-22 — `src/cli/commands.ts:420` › `serenaConfig` (writes `serena/serena_config.yml` under its folder argument, resolved against the working directory at `src/cli/commands.ts:421`; `serenaLaunchCmd` does the same at `src/cli/commands.ts:470`; layer: serena + grep)
+- **Open items:** how the bash guard resolves the argument `"${CLAUDE_PLUGIN_DATA}"` that the Claude Code doctor and init commands pass (current-state E-22), whose Serena step must keep passing (C002-REQ-623), is fixed in C002-IF-008 §1.
+
+### C002-REQ-518 — CLI named as `sdd` in the templates of `architect-sdd`
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `npm run package` writes the `architect-sdd` package, THE build SHALL replace, in each template that the package ships, every invocation of the CLI through its plugin path (`node <plugin-root>/scripts/sdd.mjs …`) with the bare `sdd` command.
+- **Rationale:** the hand-off templates `templates/full/20-plan/handoff.md:20-23` and `templates/lite/20-plan/handoff.md:20-23` of the source plugin tell the implementer to run `node <plugin-root>/scripts/sdd.mjs task set …` and `… defect add …`, a path that does not exist on the generated targets (C002-GOAL-03, C002-GOAL-04); the plugin keeps its templates unchanged for Claude Code (C002-GOAL-05); templates shipped by C002-REQ-512 and read through C002-REQ-513
+- **Stories:** C002-US-504
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-518.1`)
+
+### C002-REQ-519 — Plugin path of the CLI in a shipped template reported
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF a template of the `architect-sdd` package names the CLI through a plugin path (`<plugin-root>/scripts/sdd.mjs` or `${CLAUDE_PLUGIN_ROOT}`), THEN THE build SHALL exit non-zero with a message naming the template, the line and the construct.
+- **Rationale:** no check scans the shipped templates today (the target structure checks scan agents, commands or prompt files, skills, configuration and hook files, C002-IF-005 §6); same reason as C002-REQ-602 for the target packages; C001-NFR-601
+- **Stories:** C002-US-504
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-519.1`)
+
+### C002-REQ-520 — Template list through the CLI
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd template list <profile>` runs, THE sdd CLI SHALL print, one per line in ascending code-point order and each once, every `<path>` for which `sdd template show <profile>/<path>` prints a template.
+- **Rationale:** the fix of ERR-CLI-019 lists the templates with this command (`../../50-interfaces/errors.md` §5; C002-REQ-514); command row in C002-IF-007
+- **Stories:** C002-US-504
+- **Priority:** Should
+- **Acceptance:** pending — test-designer (`C002-AC-520.1`)

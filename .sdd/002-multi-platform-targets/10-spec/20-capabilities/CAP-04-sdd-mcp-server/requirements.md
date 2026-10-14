@@ -52,7 +52,7 @@ capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN an agent calls the command tool of the sdd MCP server, THE sdd MCP server SHALL run the command only if the bash guard core allows it for an Architect agent, and refuse the call with the guard's rule (`GUARD-BASH-001` or `GUARD-BASH-002`) otherwise.
-- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9)
+- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503 and C002-REQ-517) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9), and `sdd serena-config` or `sdd serena-launch` with a folder inside the repository is refused (Q-guards-04)
 - **Stories:** C002-US-402
 - **Priority:** Must
 - **Acceptance:** C002-AC-405.1

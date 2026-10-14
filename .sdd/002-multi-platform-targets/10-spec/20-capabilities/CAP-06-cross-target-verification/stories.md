@@ -25,13 +25,13 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can show the same boundary on every target with the same cases
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
-- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, and the Windows shell (ideation §9). The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
-- **Requirements:** C002-REQ-606, C002-REQ-607
-- **Traces to:** C002-DEC-005; ideation §8, §9
+- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, commands that write files, and the Windows shell (ideation §9). Expectations per mechanism (Q-safety-02, spec round 2): memory cases expect deny on the generated targets (C002-DEC-009); identity cases run only where a non-Architect caller exists (OpenCode) and are listed as not applicable elsewhere; every other case keeps its corpus expectation. The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
+- **Requirements:** C002-REQ-606, C002-REQ-607, C002-REQ-625, C002-REQ-626, C002-REQ-627
+- **Traces to:** C002-DEC-005; ideation §8, §9; Q-safety-02, Q-guards-04
 
 ### C002-US-603 — Scripted evals on OpenCode
 - **As a** P-01 spec owner
-- **I want** an OpenCode eval runner that keeps the case API of the existing eval harness and runs agent routing, injection and, where OpenCode allows scripted answers, interview and gate scenarios
+- **I want** an OpenCode eval runner that keeps the case API of the existing eval harness and runs agent routing, injection and, where OpenCode allows scripted answers, interview, gate and revise scenarios
 - **So that** agent behaviour on OpenCode is measured the same way as on Claude Code
 - **Value / outcome:** C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
@@ -52,12 +52,12 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 
 ### C002-US-605 — Recorded manual VS Code checklist
 - **As a** P-01 spec owner
-- **I want** a manual checklist for VS Code that I run and record before each release: the sdd MCP server boundary, an interview and a gate through `vscode/askQuestions` (including a skipped answer), and one phase end to end on a toy change up to gate G1
+- **I want** a manual checklist for VS Code that I run and record before each release: the sdd MCP server boundary, an interview and a gate through `vscode/askQuestions` (including a skipped answer), one phase end to end on a toy change up to gate G1, and the revise scenarios on that toy change
 - **So that** what cannot be scripted in VS Code is still verified, with evidence
 - **Value / outcome:** C002-SC-02; C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-003 (the release check requires the manual record for the Copilot target). DOD-G-01 of the constitution accepts a manual scenario with an executed record. With the Copilot hooks fallback, the checklist also records the hooks state (C002-US-303). Re-run before each release because the VS Code features used are Preview or Experimental (ideation §9).
-- **Requirements:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-618
+- **Context & notes:** C002-DEC-003 (the release check requires the manual record for the Copilot target). DOD-G-01 of the constitution accepts a manual scenario with an executed record. With the Copilot hooks fallback, the checklist also records the hooks state (C002-US-303) and holds the Copilot injection cases run in VS Code with hooks enabled, because Copilot CLI results do not prove the VS Code hooks (C002-DEC-005 exception). Re-run before each release because the VS Code features used are Preview or Experimental (ideation §9).
+- **Requirements:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-618, C002-REQ-628
 - **Traces to:** C002-DEC-003, C002-DEC-005 (Consequences); Q-eval-01
 
 ### C002-US-606 — A target is released only with a proven boundary
@@ -66,9 +66,9 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** no target is released below the Claude Code safety bar; if the Copilot fallback fails too, Copilot is deferred and OpenCode is still released
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03). Injection evals run at the dev tier on each target (C002-GOAL-02).
-- **Requirements:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622
-- **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03
+- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03), and P-01 revises this spec to remove it (`../../10-context/scope.md` §1.1, Q-defer-01). Injection evals run at the dev tier on each target (C002-GOAL-02); under the Copilot hooks fallback the release needs evidence taken in VS Code with hooks enabled.
+- **Requirements:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629
+- **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03, Q-defer-01
 
 ### C002-US-607 — Claude Code unchanged
 - **As a** P-03 adopter on Claude Code
@@ -76,6 +76,6 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** adding targets costs me nothing
 - **Value / outcome:** C002-GOAL-05; C002-SC-05
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** The only accepted difference is the allowlist change (C002-US-502). Guard tests pinning today's behaviour: the guard corpora and the C001-CAP-11 integration tests `TS-1103` to `TS-1108` (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2). The regression set is written in the plan (`20-plan/30-impact/regression-set.md`).
+- **Context & notes:** The only accepted differences are the two allowlist changes of C002-US-502 (bare `sdd` and `node --version`; Serena commands confined to a data folder outside the repository, Q-guards-04). Guard tests pinning today's behaviour: the guard corpora and the C001-CAP-11 integration tests `TS-1103` to `TS-1108` (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2). The regression set is written in the plan (`20-plan/30-impact/regression-set.md`).
 - **Requirements:** C002-REQ-113, C002-REQ-623
 - **Traces to:** ideation §4.1 (G-5); C002-DEC-007

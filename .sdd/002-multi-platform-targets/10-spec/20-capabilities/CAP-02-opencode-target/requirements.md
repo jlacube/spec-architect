@@ -74,7 +74,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Delta:** ADDED
 - **Pattern:** optional-feature
 - **Statement:** WHERE the OpenCode target uses native permission enforcement, THE OpenCode target package SHALL give each Architect agent `bash` permission rules that allow only the commands of the allowlist in C001-IF-07 §3 and deny every other command.
-- **Rationale:** the boundary of C001-REQ-1106 (as changed by C002-REQ-503) and C001-REQ-1107; relies on C002-AS-01; the risks of ideation §9 (redirection inside an allowed command, PowerShell on Windows) are corpus cases (C002-REQ-607)
+- **Rationale:** the boundary of C001-REQ-1106 (as changed by C002-REQ-503 and C002-REQ-517) and C001-REQ-1107; relies on C002-AS-01; the risks of ideation §9 (redirection inside an allowed command, a command that writes files, PowerShell on Windows) are corpus cases (C002-REQ-607)
 - **Stories:** C002-US-202
 - **Priority:** Must
 - **Acceptance:** C002-AC-207.1

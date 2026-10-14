@@ -20,12 +20,21 @@ scope through the capabilities below, its "later" cells are listed in §2.
 | OpenCode target package: agents, commands, skills, `opencode.json` with per-agent permission blocks and MCP configuration; interviews and gates through the `question` tool; post-write quick lint when spike S-07 finds a feedback channel; the sdd MCP server as fallback | C002-CAP-02 |
 | Copilot VS Code target package: custom agents, prompt files, skills, MCP configuration; interviews and gates through `vscode/askQuestions`; session-start brief and SubagentStop trace hooks; the Copilot hooks fallback (C002-DEC-005 exception) | C002-CAP-03 |
 | sdd MCP server: guarded `.sdd/` writes, allowlisted commands, quick-lint findings with each write (C002-DEC-001) | C002-CAP-04 |
-| `architect-sdd` on npm (C002-DEC-007); the Bash allowlist accepting a bare `sdd` command and `node --version` (with D-011 of CHG-001); the doctor on every target | C002-CAP-05 |
+| `architect-sdd` on npm (C002-DEC-007); the Bash allowlist accepting a bare `sdd` command and `node --version` (with D-011 of CHG-001) and confining `sdd serena-config` and `sdd serena-launch` to a data folder outside the repository on every host (Q-guards-04); the doctor on every target | C002-CAP-05 |
 | Per-target structure checks; corpus replay against each enforcement mechanism; OpenCode and Copilot CLI eval runners; the manual VS Code checklist (C002-DEC-003); the release check per target (C002-DEC-005); the Claude Code regression set | C002-CAP-06 |
 | Per-target README sections and install notes | C002-CAP-02, C002-CAP-03 |
 
 Spikes S-07 (OpenCode) and S-08 (Copilot VS Code) come first in the plan (ideation §8, Verification);
 they settle the assumptions of §3 and are plan tasks, not capabilities.
+
+### 1.1 Copilot target deferred by spike S-08
+
+If the spike S-08 record gives the enforcement mode `deferred` (Copilot subagents not confined to their
+tool list and agent-scoped hooks not blocking a subagent's tool calls; C002-DEC-005, C002-AS-03), that
+record triggers a revision of this spec with P-01 (Q-defer-01, spec round 2, `../questions-log.md`).
+The revision removes C002-CAP-03, C002-SC-02 and the DoD items that cover the Copilot target, and
+reviews every other item that names the Copilot target; OpenCode still ships in CHG-002. Until that
+revision the release check refuses the Copilot target (C002-REQ-620).
 
 ## 2. Out of scope
 
@@ -35,7 +44,8 @@ they settle the assumptions of §3 and are plan tasks, not capabilities.
   quick lint when spike S-07 finds no feedback channel.
 - Other hosts (Codex, Cursor and others) once the generator exists; Agent Plugins 1.0 packaging if the
   targets converge on it (ideation §5, Later).
-- Any change of behaviour on Claude Code other than the allowlist change (C002-GOAL-05).
+- Any change of behaviour on Claude Code other than the two allowlist changes of C002-GOAL-05
+  (C002-REQ-503, C002-REQ-517).
 
 ## 3. Assumptions
 
@@ -46,7 +56,7 @@ Spikes S-07 and S-08 confirm or refute them.
 |---|---|---|
 | C002-AS-01 | [ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04) | The shell boundary on OpenCode moves to the sdd MCP server |
 | C002-AS-02 | [ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04) | OpenCode agents lose their edit and shell tools and use the sdd MCP server, as on Copilot VS Code (ideation §8) |
-| C002-AS-03 | [ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (C002-R-001 A-08, A-11) | Subagents not confined: the Copilot hooks fallback applies (C002-DEC-005 exception); if agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred to a later change and OpenCode still ships |
+| C002-AS-03 | [ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (C002-R-001 A-08, A-11) | Subagents not confined: the Copilot hooks fallback applies (C002-DEC-005 exception); if agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred to a later change and OpenCode still ships (§1.1) |
 | C002-AS-04 | [ASSUMPTION: R-001] Copilot CLI loads the Copilot target package and honours agent tool lists as VS Code does | Copilot evals cover the sdd MCP server in isolation; the Copilot injection cases move to the manual VS Code checklist |
 | C002-AS-05 | [ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to the npm registry is possible (name available, publishing account) | Agents on the generated targets use the bundled CLI through a per-target path (Q-cli-01 option 2) |
 

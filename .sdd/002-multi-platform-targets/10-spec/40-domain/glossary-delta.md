@@ -80,6 +80,15 @@ plugin structure check and the others listed there). At archive these terms are 
 | Per-user data folder | The folder of `architect-sdd` in the user's application-data location, used for Serena's data on the generated targets (`--user-data`, C002-IF-007) |
 | Serena read-only mode file | `plugins/architect/serena/architect-read-only.yml`, the Serena mode that leaves only the read-only tools of C001-IF-14 §4; also shipped in `architect-sdd` (C002-IF-003 §1) |
 | Template override | A template under `.sdd/_templates/<profile>/<path>` of a repository, which takes precedence over the template of the same path shipped with the plugin or with `architect-sdd` |
+| Case category | The `category` field of a case of the guard corpora. Memory-category cases (`memory`) test writes to an agent's memory folder; identity-category cases (`identity`) test decisions that depend on the calling agent's identity, such as a caller that is not an Architect agent |
+| Applicable case | A case of the guard corpora that the corpus replay runs against a given enforcement mechanism: every case, except the identity-category cases for the sdd MCP server and the agent-scoped guard hooks (C002-REQ-626, Q-safety-02) |
+| Expected decision for a mechanism | The decision a case of the guard corpora expects from one enforcement mechanism: `deny` for a memory-category case on a generated target (C002-REQ-625), otherwise the decision recorded in the corpus |
+| Replay report | The record of one corpus replay against one enforcement mechanism: each case with its expected and actual decision, and the cases not replayed (C002-REQ-627; C002-IF-009 §2) |
+| Adopter agent | An agent that P-03 defines on their host, as opposed to the ten Architect agents (C002-REQ-208) |
+| Revise scenario | A scenario in which P-01 chooses Revise at a gate and the gate is presented again after the rework, or runs the revise command on an approved phase, which puts that phase `in-revision` (C002-GOAL-03) |
+| Revise command | The command that reopens an approved phase: `/architect:revise` on Claude Code, and its generated command or prompt file on OpenCode and Copilot VS Code |
+| Writing `sdd` subcommand | An `sdd` subcommand that writes files, such as `change new`, `trace --write`, `task set`, `serena-config` and `serena-launch` (C002-REQ-607) |
+| Data-folder argument | The folder that `sdd serena-config` and `sdd serena-launch` write Serena's configuration and data into: a folder path or the option `--user-data` (C002-REQ-515, C002-REQ-517) |
 
 ## 2. System names (allowed after `THE` in EARS statements)
 

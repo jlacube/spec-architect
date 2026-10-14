@@ -19,15 +19,15 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **Requirements:** C002-REQ-501, C002-REQ-502, C002-REQ-509, C002-REQ-511
 - **Traces to:** C002-DEC-007; Q-cli-01; ideation §5
 
-### C002-US-502 — The allowlist accepts a bare `sdd` command and `node --version`
+### C002-US-502 — The allowlist accepts a bare `sdd` command and `node --version`, and confines the Serena commands
 - **As a** P-01 spec owner
-- **I want** the bash guard allowlist to accept a bare `sdd …` command and the probe `node --version`
-- **So that** agents and the sdd MCP server can call the npm CLI, and the doctor's Node probe is no longer denied (defect D-011 of CHG-001)
-- **Value / outcome:** C002-GOAL-04, C002-GOAL-05
+- **I want** the bash guard allowlist to accept a bare `sdd …` command and the probe `node --version`, and to allow `sdd serena-config` and `sdd serena-launch` only with a data folder outside the repository
+- **So that** agents and the sdd MCP server can call the npm CLI, the doctor's Node probe is no longer denied (defect D-011 of CHG-001), and no allowlisted `sdd` command writes outside `.sdd/` into the repository
+- **Value / outcome:** C002-GOAL-02, C002-GOAL-04, C002-GOAL-05
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
-- **Context & notes:** Today `sddCli` accepts only `node <path>/sdd.mjs` or the literal `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`, and `VERSION_PROBES` lists `node -v` but not `node --version` (current-state E-5, E-6). The change is a `MODIFIED` delta of C001-REQ-1106 under C002-CON-05; the "sdd CLI" and "tool versions" rows of C001-IF-07 §3, the `ALLOWED` message and the guard corpora follow (current-state §2 items 5 and 6). It is the only Claude Code behaviour CHG-002 changes (C002-GOAL-05); D-011 is closed when the implementing task is done. The probe fix covers `node --version` only, because the other probes already use `--version` (decided in C002-REQ-503; ideation §11). A bare `sdd` runs whatever `sdd` the PATH resolves, the same trust as the existing `git` and `ripwire` entries.
-- **Requirements:** C002-REQ-503, C002-REQ-607
-- **Traces to:** C002-DEC-007 (Consequences); ideation §4.1 (G-5), §5 (Dependencies); D-011 of CHG-001
+- **Context & notes:** Today `sddCli` accepts only `node <path>/sdd.mjs` or the literal `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`, with any subcommand, and `VERSION_PROBES` lists `node -v` but not `node --version` (current-state E-5, E-6). Both changes are `MODIFIED` deltas of C001-REQ-1106 under C002-CON-05; the "sdd CLI" and "tool versions" rows of C001-IF-07 §3, the `ALLOWED` message and the guard corpora follow (current-state §2 items 5 and 6). They are the only Claude Code behaviours CHG-002 changes (C002-GOAL-05, widened by Q-guards-04 in spec round 2); D-011 is closed when the implementing task is done. The probe fix covers `node --version` only, because the other probes already use `--version` (decided in C002-REQ-503; ideation §11). A bare `sdd` runs whatever `sdd` the PATH resolves, the same trust as the existing `git` and `ripwire` entries. `sdd serena-config <folder>` writes Serena's configuration under any folder it is given (current-state E-22), hence the confinement on every host (Q-guards-04).
+- **Requirements:** C002-REQ-503, C002-REQ-517, C002-REQ-607
+- **Traces to:** C002-DEC-007 (Consequences); ideation §4.1 (G-5), §5 (Dependencies), §9 (risk "a command that writes files"); D-011 of CHG-001; Q-guards-04
 
 ### C002-US-503 — Doctor on every target
 - **As a** P-03 adopter on any target
@@ -45,8 +45,8 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **So that** changes created on my host use the same templates as on Claude Code, without a plugin-root variable in agent and command bodies
 - **Value / outcome:** C002-GOAL-03, C002-GOAL-04
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
-- **Context & notes:** Bodies name templates as `${CLAUDE_PLUGIN_ROOT}/templates/…` (`agents/sdd-spec-writer.md:19`, `commands/decide.md:18`, `commands/init.md:25`), which neither generated host expands in bodies (C002-R-001 A-09). The CLI looks up templates beside its bundle when `CLAUDE_PLUGIN_ROOT` is unset (`src/workspace/templates.ts:33`; current-state E-7). Command and shipped files: C002-IF-007 (`template show`), C002-IF-003 §1.
-- **Requirements:** C002-REQ-115, C002-REQ-512, C002-REQ-513, C002-REQ-514
+- **Context & notes:** Bodies name templates as `${CLAUDE_PLUGIN_ROOT}/templates/…` (`agents/sdd-spec-writer.md:19`, `commands/decide.md:18`, `commands/init.md:25`), which neither generated host expands in bodies (C002-R-001 A-09). The CLI looks up templates beside its bundle when `CLAUDE_PLUGIN_ROOT` is unset (`src/workspace/templates.ts:33`; current-state E-7). The hand-off templates name the CLI as `node <plugin-root>/scripts/sdd.mjs` (`templates/full/20-plan/handoff.md:20-23`, same lines in `templates/lite/`), which the shipped copies must not keep. Command and shipped files: C002-IF-007 (`template show`, `template list`), C002-IF-003 §1.
+- **Requirements:** C002-REQ-115, C002-REQ-512, C002-REQ-513, C002-REQ-514, C002-REQ-518, C002-REQ-519, C002-REQ-520
 - **Traces to:** ideation §8 (One source, generated targets); C002-DEC-007
 
 ### C002-US-505 — Serena read-only and outside the repository on every target
@@ -56,5 +56,5 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **Value / outcome:** C002-GOAL-03, C002-GOAL-04
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
 - **Context & notes:** On Claude Code Serena starts through `sdd serena-launch "${CLAUDE_PLUGIN_DATA}"` with the plugin's read-only mode file (C001-REQ-1006, C001-REQ-1013; current-state E-10, E-22); the generated targets cannot rely on either plugin variable (C002-R-001 A-09; C002-IF-001 §2). Serena's context per host is fixed by spikes S-07 and S-08 (baseline survey §4 note 6). Options `--user-data` and `--read-only`: C002-IF-007.
-- **Requirements:** C002-REQ-114, C002-REQ-116, C002-REQ-512, C002-REQ-515, C002-REQ-516
+- **Requirements:** C002-REQ-114, C002-REQ-116, C002-REQ-512, C002-REQ-515, C002-REQ-516, C002-REQ-517
 - **Traces to:** ideation §8 (One source, generated targets); C002-DEC-007

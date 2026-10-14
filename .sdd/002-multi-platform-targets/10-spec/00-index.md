@@ -11,12 +11,12 @@ status: draft
 
 1. `10-context/` — problem and goals, personas, scope, current state
 2. `20-capabilities/` — CAP-01 … CAP-06, each read as stories → requirements → acceptance
-3. `30-nfr/nfr.md` (spec step 3 onwards)
-4. `40-domain/` — glossary delta; domain model and state machines when written
-5. `50-interfaces/` (when written)
-6. `60-architecture/` (when written)
-7. `70-dod.md` (when written)
-8. `80-traceability.md`, `85-open-items.md` (generated), `90-critic-report.md`
+3. `30-nfr/nfr.md`
+4. `40-domain/` — glossary delta, domain model, state machines
+5. `50-interfaces/` (index in `README.md`)
+6. `60-architecture/`
+7. `70-dod.md`
+8. `questions-log.md`, `80-traceability.md`, `85-open-items.md` (generated), `90-critic-report.md`
 
 ## Files
 
@@ -28,6 +28,7 @@ status: draft
 | `10-context/current-state.md` | Cartographer's evidence for the CHG-001 behaviour that the deltas change (E-1 … E-28) |
 | `20-capabilities/CAP-*/stories.md` | User stories (US) per capability |
 | `20-capabilities/CAP-*/requirements.md` | EARS requirements (REQ) per capability, with their Delta |
+| `20-capabilities/CAP-*/acceptance.md` | Acceptance criteria (AC) and scenarios (TS) per capability |
 | `30-nfr/nfr.md` | Non-functional requirements (NFR) of CHG-002 |
 | `40-domain/glossary-delta.md` | Terms introduced by CHG-002; EARS system names |
 | `40-domain/domain-model.md`, `40-domain/state-machines.md` | Entities with invariants (INV); lifecycles with transition tables |
@@ -42,16 +43,16 @@ status: draft
 
 | Capability | Folder | US | REQ | AC | TS |
 |---|---|---|---|---|---|
-| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 15 | 22 (block 101–199) |
-| C002-CAP-02 OpenCode target | `CAP-02-opencode-target` | 201–205 (5) | 201–216 (16) | 15 | 23 (block 201–299) |
-| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–305 (5) | 301–319 (19) | 16 | 26 (block 301–399) |
-| C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 14 | 19 (block 401–499) |
-| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–516 (16) | 10 | 16 (block 501–599) |
-| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623 (23) | 23 | 27 (block 601–699) |
-| **Total** | | **30** | **107** | **93** | **133** |
+| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 32 (block 101–199) |
+| C002-CAP-02 OpenCode target | `CAP-02-opencode-target` | 201–205 (5) | 201–216 (16) | 16 | 27 (block 201–299) |
+| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–305 (5) | 301–319 (19) | 19 | 35 (block 301–399) |
+| C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 22 (block 401–499) |
+| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–520 (20) | 16 | 26 (block 501–599) |
+| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–629 (28) | 23 | 27 (block 601–699) |
+| **Total** | | **30** | **116** | **109** | **169** |
 
-Requirements added in the step 3 rework without acceptance criteria yet: C002-REQ-114 … C002-REQ-118,
-C002-REQ-216, C002-REQ-317 … C002-REQ-319, C002-REQ-415, C002-REQ-511 … C002-REQ-516.
+Requirements of the spec step 7 fix round awaiting acceptance criteria: C002-REQ-517 … C002-REQ-520,
+C002-REQ-625 … C002-REQ-629.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·
 501 (1) · 601 (1) · 801 (1) — 16 in total.

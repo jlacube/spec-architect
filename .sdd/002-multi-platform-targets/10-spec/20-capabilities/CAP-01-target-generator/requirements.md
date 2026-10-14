@@ -16,11 +16,10 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN `npm run package` runs in the repository, THE generator SHALL write the OpenCode target package under `dist/opencode/` and the Copilot target package under `dist/copilot/`, both from the source plugin.
-- **Rationale:** C002-DEC-006; ideation §8 (One source, generated targets); current-state E-1 (today `npm run package` stages the Claude Code plugin only, which stays as it is, C002-GOAL-05)
+- **Rationale:** C002-DEC-006; ideation §8 (One source, generated targets); current-state E-1 (today `npm run package` stages the Claude Code plugin only, which stays as it is, C002-GOAL-05); a target whose release the release check refuses is still generated, and the release check alone decides publication (architecture §6.2, C002-REQ-619); a spike S-08 record that gives `deferred` leads instead to the spec revision of `../../10-context/scope.md` §1.1, which removes the Copilot target (Q-defer-01)
 - **Stories:** C002-US-101
 - **Priority:** Must
 - **Acceptance:** C002-AC-101.1
-- **Open items:** whether a target refused by C002-REQ-620 is still written is settled in the plan.
 
 ### C002-REQ-102 — Generation leaves the source plugin untouched
 - **Delta:** ADDED
@@ -118,8 +117,8 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 ### C002-REQ-112 — Missing wiring variant stops generation
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF an agent, a command or a skill of the source plugin has a "Claude Code wiring" section or a CLI invocation line without a variant for a generated target, THEN THE generator SHALL exit non-zero with a message naming the file, the line and the target.
-- **Rationale:** C002-US-104; same reason as C002-REQ-104
+- **Statement:** IF an agent, a command or a skill of the source plugin has a wiring anchor (a "Claude Code wiring" section, a CLI invocation line, or another wiring anchor of C002-REQ-111 such as the host rows of the doctor command or the toolchain section of the code-discovery skill) without a variant for a generated target, THEN THE generator SHALL exit non-zero with a message naming the file, the line and the target.
+- **Rationale:** C002-US-104; same reason as C002-REQ-104; without it a missing variant of the doctor host rows would leave Claude Code rows in the generated doctor without a build failure (C002-REQ-504, C002-REQ-507); every wiring anchor is a required anchor of the mapping tables (C002-IF-001 §3)
 - **Stories:** C002-US-104
 - **Priority:** Must
 - **Acceptance:** C002-AC-112.1

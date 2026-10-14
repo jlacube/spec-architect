@@ -36,7 +36,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **Value / outcome:** C002-GOAL-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-03
 - **Context & notes:** Conditional on spike S-08 (C002-AS-03 wrong). C002-DEC-005 exception: with hooks enabled, the guard corpora still pass 100% and the injection evals show 0 instructions acted upon; the boundary is off whenever hooks are disabled (`chat.useHooks`, Workspace Trust, organisation policy). The doctor reads the VS Code settings instead of relying on a hook, which could not report its own absence (C002-DEC-005, Consequences); how it detects each disabling source is an open research item for spike S-08 (ideation §11). A guard script must deny on its own internal errors, because a hook exit code other than 2 does not block (C002-R-001 A-03). The hook `tool_name` values for the VS Code edit and terminal tools are not documented and are captured by spike S-08 (C002-R-001 A-05). VS Code ignores hook matchers (C002-R-001 A-04), so the guard hooks see every tool call of their agent and need the read tools listed too. If agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred (C002-US-606).
-- **Requirements:** C002-REQ-308, C002-REQ-309, C002-REQ-310, C002-REQ-316, C002-REQ-318, C002-REQ-319, C002-REQ-510, C002-REQ-616, C002-REQ-622
+- **Requirements:** C002-REQ-308, C002-REQ-309, C002-REQ-310, C002-REQ-316, C002-REQ-318, C002-REQ-319, C002-REQ-510, C002-REQ-616, C002-REQ-622, C002-REQ-628, C002-REQ-629
 - **Traces to:** C002-DEC-001 (Fallback), C002-DEC-005; Q-guards-02, Q-guards-03
 
 ### C002-US-304 — Interviews and gates through `vscode/askQuestions`

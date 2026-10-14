@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T11:20:44.751Z",
+  "generated_at": "2026-10-14T12:10:34.479Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -878,7 +878,7 @@
       "id": "C002-AS-01",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
-      "line": 47,
+      "line": 57,
       "title": "[ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04)",
       "content_hash": "sha256:3d566dd934291335586cb4f3bedc248e2af04a23545c6224ded6808559c045c9"
     },
@@ -886,7 +886,7 @@
       "id": "C002-AS-02",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
-      "line": 48,
+      "line": 58,
       "title": "[ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04)",
       "content_hash": "sha256:c9032057750b6ab3400fd9d09f943117e1b9fc5f32f716ff34aaf219289951c1"
     },
@@ -894,15 +894,15 @@
       "id": "C002-AS-03",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
-      "line": 49,
+      "line": 59,
       "title": "[ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (C002-R-001 A-08, A-11)",
-      "content_hash": "sha256:65d8a4da18c84914e9b62bdf6b116f883eaac8e16f32f712f022c9b4de1d8a5e"
+      "content_hash": "sha256:652d45a39910feeb06d398a32b056ae2e6812ecc4a5cb5a74b2296d7e51e3797"
     },
     {
       "id": "C002-AS-04",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
-      "line": 50,
+      "line": 60,
       "title": "[ASSUMPTION: R-001] Copilot CLI loads the Copilot target package and honours agent tool lists as VS Code does",
       "content_hash": "sha256:d125fcbdb85298dfb1ad02a2b0aca3f01a233023790a3452d1fe2b8d441362de"
     },
@@ -910,7 +910,7 @@
       "id": "C002-AS-05",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
-      "line": 51,
+      "line": 61,
       "title": "[ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to the npm registry is possible (name available, publishing account)",
       "content_hash": "sha256:52889ab3096c12e8045a815154960252e2646321554ea277f8726390ce0a9411"
     },
@@ -938,7 +938,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 1,
       "title": "Copilot VS Code target",
-      "content_hash": "sha256:cb6b7eefbd55b9489a85016eb1b3c1c6ff7b9d31a0f77598d1e22e6fa853c12c",
+      "content_hash": "sha256:3536e4bd0b635d8ff868de42584c706d5fb62d140b7dad84214a167e34dc6f89",
       "status": "draft"
     },
     {
@@ -956,7 +956,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:662e79ed9c242c8069d34b1eaba26295cd671ee463d0e68ccd259dc50514846d",
+      "content_hash": "sha256:926ada339f0dbfd0991394d72e3d44e37f3f6292cc39c5b422a6b2f397591fff",
       "status": "draft"
     },
     {
@@ -965,7 +965,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 1,
       "title": "Cross-target verification",
-      "content_hash": "sha256:387561580992f2d6de119191862eb6603b396bae8e4dfc61cb377c0473ebe252",
+      "content_hash": "sha256:f76b6e7f380d31c2f1a093be4a99ceec9f1a6f1b880463cc1887cf836eee69fb",
       "status": "draft"
     },
     {
@@ -1116,7 +1116,7 @@
       "id": "C002-CON-01",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 61,
+      "line": 71,
       "title": "The source plugin is the only source of every target package; no target package is maintained by hand",
       "content_hash": "sha256:ea55b70f7e1201a72473baf271b1e2f04dc3dbcb2e9d603ec9f348180d107c77"
     },
@@ -1124,7 +1124,7 @@
       "id": "C002-CON-02",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 62,
+      "line": 72,
       "title": "Generated files are written outside `plugins/architect/agents/` and `plugins/architect/scripts/`",
       "content_hash": "sha256:ddcd1bb3acc6d89f2000f589fa85b2f90ca9055c73385a67cd1eff4216aa8861"
     },
@@ -1132,7 +1132,7 @@
       "id": "C002-CON-03",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 63,
+      "line": 73,
       "title": "A target is released only when its write/shell boundary is enforced by an enforcement mechanism; a boundary that relies on agent instructions alone is never released",
       "content_hash": "sha256:b9aa07013d5d9eb0e650db698b13f31dd469e45ab1447bc073d4872cac2111db"
     },
@@ -1140,7 +1140,7 @@
       "id": "C002-CON-04",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 64,
+      "line": 74,
       "title": "The sdd MCP server is a stdio process that the host starts with a session and stops with it; it is not a daemon and opens no network connection",
       "content_hash": "sha256:24a24975d94ba126201ea852da08ba136bd29b3c91028858b04855b8839aa6f0"
     },
@@ -1148,7 +1148,7 @@
       "id": "C002-CON-05",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 65,
+      "line": 75,
       "title": "Requirements that change CHG-001 behaviour are `MODIFIED` deltas citing the C001 requirement; their LINT-DELTA-001 findings are waived at G2 and G3 until C001-T-075 archives CHG-001",
       "content_hash": "sha256:c890f748413d68a95cec8efc442b8125a964183b3f45193fe953f9fdcf8a2cc9"
     },
@@ -1519,7 +1519,7 @@
       "file": "10-spec/10-context/problem-and-goals.md",
       "line": 34,
       "title": "The same safety level on every target",
-      "content_hash": "sha256:a5d75932634d55b9a8ed39077c187013bd4681943fb017a1f953b3eec2ed9334"
+      "content_hash": "sha256:5d6e141506df44750e73ddf14c686943ec0d8badc464ab294e66bc8246a9371f"
     },
     {
       "id": "C002-GOAL-03",
@@ -1542,8 +1542,8 @@
       "type": "GOAL",
       "file": "10-spec/10-context/problem-and-goals.md",
       "line": 37,
-      "title": "Claude Code behaviour unchanged, except the Bash allowlist accepting a bare `sdd` command",
-      "content_hash": "sha256:934eda7ade38d511d5fbd49b14962cd207014a0b08c6f10c4621f6c506562b25"
+      "title": "Claude Code behaviour unchanged, except two Bash allowlist changes: a bare `sdd` command is accepted, and `sdd serena-config` and `sdd serena-launch` are allowed only with a data folder outside the repository",
+      "content_hash": "sha256:fb5801a74d75a35c04c6273db5ed4c731be007dd86e4ddc0ff6e1fa084b3ecfc"
     },
     {
       "id": "C002-IF-001",
@@ -1727,7 +1727,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 19,
       "title": "sdd MCP server decision time",
-      "content_hash": "sha256:2fe9f4cd0482e143e93fd71c6ee1467fd014f0b284651239f182891335318f74"
+      "content_hash": "sha256:c3e48d715a7a050c7403386d45d57c82b1de5b4a8d9d84d0796837f3ebc7c11e"
     },
     {
       "id": "C002-NFR-102",
@@ -1735,7 +1735,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 29,
       "title": "Write with quick-lint findings",
-      "content_hash": "sha256:2579a6bd930a59e57b2ac6d87e9629207c7ad89bcd06fd2a250b4a3d7a330506"
+      "content_hash": "sha256:0efd60ade12324aaeec6a36adc1b4f4eda52d5d02944c353f9a6f8fcba748a08"
     },
     {
       "id": "C002-NFR-103",
@@ -1743,7 +1743,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 39,
       "title": "Target generation time",
-      "content_hash": "sha256:00937adaefbc9b2defec378cf06bc817e22df92aaf69f929a1d283c9fe2cc206"
+      "content_hash": "sha256:529a563b32d1a7316603528c5adacad70d048ee1c3cd89396e494f59dd27ca9a"
     },
     {
       "id": "C002-NFR-104",
@@ -1751,7 +1751,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 49,
       "title": "Inlined skill budget",
-      "content_hash": "sha256:55c9ba6c987826d366253f05b86d896a6789463532ab7d8564f7deb3c4afa98e"
+      "content_hash": "sha256:e14bae8c1929f963267fd234675e15f78b907ec43ffd691fe528788944417799"
     },
     {
       "id": "C002-NFR-105",
@@ -1759,7 +1759,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 59,
       "title": "Eval session caps",
-      "content_hash": "sha256:28f6d76a92df715c758a54216cedddb815ce8a96dbb32cfd9748b2009af03ecd"
+      "content_hash": "sha256:8f8411c45018553369285784d21d1eab295025d0395fe873cfb28cef4365ac5f"
     },
     {
       "id": "C002-NFR-201",
@@ -1767,7 +1767,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 72,
       "title": "Write boundary on every generated target",
-      "content_hash": "sha256:500f41f725dc83f3f50cb411b6aa8b3ed1d2ab366ab9a8d5e666c5d19d1e2708"
+      "content_hash": "sha256:ab611924174f75bdf658208e2fa11fdfa2b41da3511e33cc42b8e2385c8170af"
     },
     {
       "id": "C002-NFR-202",
@@ -1775,7 +1775,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 82,
       "title": "Shell boundary on every generated target",
-      "content_hash": "sha256:a54573fcbd2dc435b04cdbbb46776674c4dca8c389412b409d51069831345a97"
+      "content_hash": "sha256:0829e2fc777b8b4b1011d63dae9e5b42b87ae7f83f5b5dfa81bb41e33126fcf7"
     },
     {
       "id": "C002-NFR-203",
@@ -1783,7 +1783,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 92,
       "title": "Injection resistance on every generated target",
-      "content_hash": "sha256:fe2087aa4935532beed1dabfe36efe7fc3de7f7553532a54b5cdf275b3e2964d"
+      "content_hash": "sha256:c82785734529c80feaa113a9bce873a66c3f389833c8f2a8d749113376f79080"
     },
     {
       "id": "C002-NFR-204",
@@ -1791,7 +1791,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 102,
       "title": "Fail closed under faults",
-      "content_hash": "sha256:08108ffae6e5f3ead669f3c66e40dfb3936ddf4f9511d3d637a62f8ff945f541"
+      "content_hash": "sha256:d7695da4b360df0348f31f06d9b81fe48be00b54184eea5db137a87fa6ae61b1"
     },
     {
       "id": "C002-NFR-205",
@@ -1799,7 +1799,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 112,
       "title": "No network from the sdd MCP server",
-      "content_hash": "sha256:d7c1cdbb9a74f6572ebf245290d4d29df8718adaad2174c10a89351dee9a641c"
+      "content_hash": "sha256:3e0bacd4b20bfe667fd9ecad043ed98d61885ed6296e0ee56d25660682cfd8cc"
     },
     {
       "id": "C002-NFR-301",
@@ -1807,7 +1807,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 124,
       "title": "Deterministic generation",
-      "content_hash": "sha256:766e785649ad688dfe11cf3921f90459aae6d3c1a7c22e4d1049dd5ca9aed88b"
+      "content_hash": "sha256:44ba7cf3c2e732b75b3449526e1b5c214a89bfe27ca6067a5bad4127230c5de8"
     },
     {
       "id": "C002-NFR-401",
@@ -1815,7 +1815,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 136,
       "title": "Portability of the CLI package",
-      "content_hash": "sha256:eb0a1a1525f776fd001099d5bc380afbd2108c93dfe8e2ea36a6e87137b11db8"
+      "content_hash": "sha256:4d5bcc2fa27538fb2a5a67cd724ba06a033f6bab027618e77260d38689b55b7e"
     },
     {
       "id": "C002-NFR-402",
@@ -1823,7 +1823,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 146,
       "title": "No runtime dependencies in `architect-sdd`",
-      "content_hash": "sha256:0e8de58a782e6ec1a124dc7394ffaa90896009b44dc8053663fb25a2ef6ec1e7"
+      "content_hash": "sha256:0e3bb208ae4475b0bd578e38625c38f43748c51ec2a7a0680ee916c61c2c1ba3"
     },
     {
       "id": "C002-NFR-501",
@@ -1831,7 +1831,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 158,
       "title": "No drift from the source plugin",
-      "content_hash": "sha256:bf5397cc2319d3cb31e19573703f6ce5fe5ff53f23a526057d6b6d86ee0817eb"
+      "content_hash": "sha256:d0ddba73eda5e3ce3b89d51d66aea065688d96744deb3a68c9f262d6468c70a8"
     },
     {
       "id": "C002-NFR-601",
@@ -1839,7 +1839,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 170,
       "title": "Time to the first interview on a generated target",
-      "content_hash": "sha256:c9789571828695d2078adaf728ee8dc56a50502c4852da760314677ca4fb4ee5"
+      "content_hash": "sha256:4630e8112e1e4e59906352a199026b438d58d8d7acadf3cb20df392782819ddd"
     },
     {
       "id": "C002-NFR-801",
@@ -1847,7 +1847,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 182,
       "title": "License compliance of the distributed packages",
-      "content_hash": "sha256:72c5f6d0eed3c0102c91f6a22617f95964799f33d0db53a7d93c99a93deaa7c0"
+      "content_hash": "sha256:5e72a9c9cf8aacd04172138a6527fd280bb7c4ff3e8c00977b541a57850fab82"
     },
     {
       "id": "C002-NG-01",
@@ -1914,13 +1914,13 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 15,
       "title": "Packaging writes the generated target packages",
-      "content_hash": "sha256:476f3d854b60a81d3d559ed26160da73f16c0af790a8ada919a2f249607a4f29"
+      "content_hash": "sha256:8a5931790ea9e308b89ad215340a2b2767d1319b65caeb5784b72ddedd8a3927"
     },
     {
       "id": "C002-REQ-102",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 25,
+      "line": 24,
       "title": "Generation leaves the source plugin untouched",
       "content_hash": "sha256:cc19bfe9f38735e57d3a6d0f80cfbacd6dfbabf29116bdfe5626ab1494bcee1b"
     },
@@ -1928,7 +1928,7 @@
       "id": "C002-REQ-103",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 34,
+      "line": 33,
       "title": "Translation through one mapping table per target",
       "content_hash": "sha256:9c56f75c2118abaa2bb8c3a2520b984895efdfa14074519e77d4308e5f06d2c2"
     },
@@ -1936,7 +1936,7 @@
       "id": "C002-REQ-104",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 44,
+      "line": 43,
       "title": "Unmapped construct stops generation",
       "content_hash": "sha256:b00e2d1424d2c2b700af061f4e79c9d94d983bf0bb52e0a3f34e6a39e9a666e8"
     },
@@ -1944,7 +1944,7 @@
       "id": "C002-REQ-105",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 53,
+      "line": 52,
       "title": "Same Claude model tier on every target",
       "content_hash": "sha256:d76998bc325747db3bcdb3e81927f69d3a4280addd461e7b547bfb572ada6d16"
     },
@@ -1952,7 +1952,7 @@
       "id": "C002-REQ-106",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 63,
+      "line": 62,
       "title": "No agent memory on the generated targets",
       "content_hash": "sha256:e85a6798ac498f5b8b6dc8172e998ebdf22ee3577b6894d55a6ffb08d108fd49"
     },
@@ -1960,7 +1960,7 @@
       "id": "C002-REQ-107",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 72,
+      "line": 71,
       "title": "Only the conductor starts other agents",
       "content_hash": "sha256:d82f97ad37d4b3f24a4a18b00e7d4ca14697c14b469c0e494527cb810edd87ad"
     },
@@ -1968,7 +1968,7 @@
       "id": "C002-REQ-108",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 81,
+      "line": 80,
       "title": "Least-privilege tool grants",
       "content_hash": "sha256:5bc22748cf769a8460467227294cd09362de65aeab543194251808c80e476851"
     },
@@ -1976,7 +1976,7 @@
       "id": "C002-REQ-109",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 90,
+      "line": 89,
       "title": "Preloaded skills inlined into the agent body",
       "content_hash": "sha256:2023aa2a21b25ce9ef951e9de02d925e5ece12b2b3f58753c0a4a87ae0a42597"
     },
@@ -1984,7 +1984,7 @@
       "id": "C002-REQ-110",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 99,
+      "line": 98,
       "title": "Inlining budget enforced on generated agents",
       "content_hash": "sha256:c6cbce0afdbb8706e6ca511cc64f676a765498dca36c0bc041477d4eb64e6cab"
     },
@@ -1992,7 +1992,7 @@
       "id": "C002-REQ-111",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 109,
+      "line": 108,
       "title": "Wiring variant per target",
       "content_hash": "sha256:28d56adf4b2d1cba66bbdb15a55a86a190eec76b8d8e959efd610282d92a489d"
     },
@@ -2000,15 +2000,15 @@
       "id": "C002-REQ-112",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 118,
+      "line": 117,
       "title": "Missing wiring variant stops generation",
-      "content_hash": "sha256:e64c1278a69152fb9440265c8399f8b9a49c05d833819f6e8e4b0155382a6aec"
+      "content_hash": "sha256:176174505ab529fb84292a12fa42ff4f416daddcabcdfd7dbf4147c8b8a014b6"
     },
     {
       "id": "C002-REQ-113",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 127,
+      "line": 126,
       "title": "Variants kept out of the Claude Code skill bodies",
       "content_hash": "sha256:5534481fc62f99b77a4876414ae074116270ead298898cfa4774f1bb490bd0d6"
     },
@@ -2016,7 +2016,7 @@
       "id": "C002-REQ-114",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 136,
+      "line": 135,
       "title": "Serena read-only with per-user data on the generated targets",
       "content_hash": "sha256:1ebfb118dd1ce9084b20d218b18081d6abb991bace1079faea59c711f7f9be0e"
     },
@@ -2024,7 +2024,7 @@
       "id": "C002-REQ-115",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 146,
+      "line": 145,
       "title": "Templates named through the CLI",
       "content_hash": "sha256:aeb0d6d5ae7ab69578e24216346b695184bd703d974fe27e71918eb0d29da466"
     },
@@ -2032,7 +2032,7 @@
       "id": "C002-REQ-116",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 155,
+      "line": 154,
       "title": "Plugin data folder replaced by the per-user data folder",
       "content_hash": "sha256:a8b9e074978e151e01f98609cc60a38db71031b1221811d8e86c5b39cabc51db"
     },
@@ -2040,7 +2040,7 @@
       "id": "C002-REQ-117",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 164,
+      "line": 163,
       "title": "Server profiles granted by source tool",
       "content_hash": "sha256:6a64505a1890cd46452a979a053db8f997fca830129619c8e3052802988d3e47"
     },
@@ -2048,7 +2048,7 @@
       "id": "C002-REQ-118",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
-      "line": 173,
+      "line": 172,
       "title": "Host question tool named in agent and command bodies",
       "content_hash": "sha256:39229768cb266366beeb6f9187c0513adadc781fb28285b22b8543539379da4b"
     },
@@ -2106,7 +2106,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
       "line": 73,
       "title": "Shell commands confined to the allowlist by OpenCode permissions",
-      "content_hash": "sha256:c30e76df6ca163202c44dbf72c2e4a50ec07d56b591995fcaabe0564b2196d32"
+      "content_hash": "sha256:4f7249437ca2c2207c62660f8bbd843461cb5326c90706eda6bb393c65c83877"
     },
     {
       "id": "C002-REQ-208",
@@ -2184,7 +2184,7 @@
       "id": "C002-REQ-301",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 16,
+      "line": 17,
       "title": "Copilot target package contents",
       "content_hash": "sha256:6dbb7a3faeae41b16164ac31f7845fa2f94073771bc3e5fa1e48d3a870c928fb"
     },
@@ -2192,7 +2192,7 @@
       "id": "C002-REQ-302",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 26,
+      "line": 27,
       "title": "No plugin-level guard hook",
       "content_hash": "sha256:49cb69daa1d1b06c235fe4133f04d8bebfed67b43151f41abc9da6089e9cb7af"
     },
@@ -2200,7 +2200,7 @@
       "id": "C002-REQ-303",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 35,
+      "line": 36,
       "title": "Prompt files run in the conductor",
       "content_hash": "sha256:6168182dbaf4c5f0bbf85c1d0b887534b32ee9f31eb88a156c6734a7fb216214"
     },
@@ -2208,7 +2208,7 @@
       "id": "C002-REQ-304",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 44,
+      "line": 45,
       "title": "Install notes in the Copilot package",
       "content_hash": "sha256:4f91172f1241b06643327861adcac47accc0ebed6081c8eba3d8455de3532ca5"
     },
@@ -2216,7 +2216,7 @@
       "id": "C002-REQ-305",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 53,
+      "line": 54,
       "title": "README section for Copilot VS Code",
       "content_hash": "sha256:076f0b84bd46b7fac20424866c2fcc90c6de746394debb8ee1da23239fc6369e"
     },
@@ -2224,7 +2224,7 @@
       "id": "C002-REQ-306",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 62,
+      "line": 63,
       "title": "No generic edit or terminal tool",
       "content_hash": "sha256:051f667ebd260ccb693cc25a8c0146457d47b51786980e95bcce4a958b374b67"
     },
@@ -2232,7 +2232,7 @@
       "id": "C002-REQ-307",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 71,
+      "line": 72,
       "title": "Server mode: two server profiles declared",
       "content_hash": "sha256:ed61232d39f3988a97864b823529d35e554deab3ba44104c69cdec7a22a24a08"
     },
@@ -2240,7 +2240,7 @@
       "id": "C002-REQ-308",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 81,
+      "line": 82,
       "title": "Hooks fallback: agent-scoped guard hooks",
       "content_hash": "sha256:8b45b606e1718acd320d07792669cbfa6d03673efd4c0229a7875122d09d6ce9"
     },
@@ -2248,7 +2248,7 @@
       "id": "C002-REQ-309",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 91,
+      "line": 92,
       "title": "Guard hooks deny on their own faults",
       "content_hash": "sha256:a57c8a77741c9e76c7c150635961d483d31c819c0bf1355965f6e9e7256aa1e7"
     },
@@ -2256,7 +2256,7 @@
       "id": "C002-REQ-310",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 100,
+      "line": 101,
       "title": "README warning for the hooks fallback",
       "content_hash": "sha256:b16e13dbe38cd33dca245a017e531ee98e05a955613c2796cb8dcc9266f3e526"
     },
@@ -2264,7 +2264,7 @@
       "id": "C002-REQ-311",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 109,
+      "line": 110,
       "title": "No choice is neither answer nor approval",
       "content_hash": "sha256:9528bceb88e86ea957f50a71890b5341e44f468aa10e97550556ecca3f3e1674"
     },
@@ -2272,7 +2272,7 @@
       "id": "C002-REQ-312",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 118,
+      "line": 119,
       "title": "Question tool unavailable in VS Code",
       "content_hash": "sha256:bf323b232459697b8359a7a141329aefda8863531d817ae6d172b42d15eb21d4"
     },
@@ -2280,7 +2280,7 @@
       "id": "C002-REQ-313",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 127,
+      "line": 128,
       "title": "Session-start brief in VS Code",
       "content_hash": "sha256:22fc5714acced951e0a9f9a7c2cb880192c46681add44f03166be27dc8d540a7"
     },
@@ -2288,7 +2288,7 @@
       "id": "C002-REQ-314",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 136,
+      "line": 137,
       "title": "Silent session start without a workspace",
       "content_hash": "sha256:5288f81c03d7943e8df4db99a7cf1b62e9e044ded0ce0dd884f097fe8f9aac40"
     },
@@ -2296,7 +2296,7 @@
       "id": "C002-REQ-315",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 145,
+      "line": 146,
       "title": "Trace refresh after an author agent in VS Code",
       "content_hash": "sha256:dc29c0ebdd3195bba28b879e5112e310a30907e3bf5ad9d5cd5f1a0a18b6ba37"
     },
@@ -2304,7 +2304,7 @@
       "id": "C002-REQ-316",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 155,
+      "line": 156,
       "title": "Hook commands without shell syntax",
       "content_hash": "sha256:356917fe8ba2ebf304dd8fcc2e713921283dcbf83dea4ddfcb00042f0a785b44"
     },
@@ -2312,7 +2312,7 @@
       "id": "C002-REQ-317",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 164,
+      "line": 165,
       "title": "Copilot prompt file names",
       "content_hash": "sha256:486b5f6ef5d0b95d953e006ae2733349e759d13979940b62266e2854ede9798a"
     },
@@ -2320,7 +2320,7 @@
       "id": "C002-REQ-318",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 174,
+      "line": 175,
       "title": "Tool classes under the hooks fallback",
       "content_hash": "sha256:f287111d108856555ee7873864373884544ac74f8c703e91c8cb39b9615b46c5"
     },
@@ -2328,7 +2328,7 @@
       "id": "C002-REQ-319",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
-      "line": 183,
+      "line": 184,
       "title": "Read-only tool calls pass the guard hook",
       "content_hash": "sha256:78adf5b5cb0bcdc4b959a2b656dbdde8de91c5b1cf41a178ae8adfebbb7f06fd"
     },
@@ -2370,7 +2370,7 @@
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/requirements.md",
       "line": 51,
       "title": "Commands confined to the allowlist",
-      "content_hash": "sha256:847865028fd8cb3af493ca471d3c903f52e4683694e3b8153d6e571ff962ba20"
+      "content_hash": "sha256:b94385d4766c69c52317d5c2b027c51779fb28582948f532ff9c8ad73a26cf84"
     },
     {
       "id": "C002-REQ-406",
@@ -2522,7 +2522,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 95,
       "title": "sdd CLI of another version",
-      "content_hash": "sha256:1ed3270d1e9f9fdc115eb7b3dbca7586921bd8aa72248477127e55fa49fc7bb9"
+      "content_hash": "sha256:207676434df0beb1d3f9236473d40f031e6349555230a5656d00328d39a1cb8c"
     },
     {
       "id": "C002-REQ-510",
@@ -2562,7 +2562,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 141,
       "title": "Unknown template refused",
-      "content_hash": "sha256:30f7481a76a5422b872ee42cbcb4b210603ecf7f18942c1adcb03d86810cec1c"
+      "content_hash": "sha256:2de23d3d6a5fb192afcc1138d6c902790b060641e0e471ce8ff51f3787ccd339"
     },
     {
       "id": "C002-REQ-515",
@@ -2570,15 +2570,47 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 150,
       "title": "Serena data in the per-user data folder",
-      "content_hash": "sha256:d363f78c1f79a56c8ef42e9c28dd07132de8caaaff9cd08d29ca883cabcfefd7"
+      "content_hash": "sha256:2a5bf98942b414e7a6ebd098b2d8def8b30bfbd8d8b5c72e3bbdddf2b8539c9f"
     },
     {
       "id": "C002-REQ-516",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 159,
-      "title": "Per-user data folder not determinable",
-      "content_hash": "sha256:973b659339e86526f5be37a99f0017b8f4dd0362fcbde499ef6a92bbd529d260"
+      "title": "Per-user data folder not determinable, relative or inside the repository",
+      "content_hash": "sha256:1b39aeab8b4b89d9afe9c44d49e34eb0185f3907c06f0616a222036d8e6836e7"
+    },
+    {
+      "id": "C002-REQ-517",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 168,
+      "title": "Serena commands confined to a data folder outside the repository",
+      "content_hash": "sha256:27167e06ca648db158cfad5f060ff1ee90e6bf90723d291ea249960e00ea7192"
+    },
+    {
+      "id": "C002-REQ-518",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 179,
+      "title": "CLI named as `sdd` in the templates of `architect-sdd`",
+      "content_hash": "sha256:dab4cd15da6043d861136f5e5d19c4990a2d51839e43bac6f82d80f4a425b12b"
+    },
+    {
+      "id": "C002-REQ-519",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 188,
+      "title": "Plugin path of the CLI in a shipped template reported",
+      "content_hash": "sha256:95c156410ba0b532e567ba40a6ab56b43b26a205a5ac54f4ad9f2409d46c7586"
+    },
+    {
+      "id": "C002-REQ-520",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 197,
+      "title": "Template list through the CLI",
+      "content_hash": "sha256:f93fa08b2cc0459db8b7b6915437505c48bf94db4f08321441f281ebf0d53437"
     },
     {
       "id": "C002-REQ-601",
@@ -2626,7 +2658,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 63,
       "title": "Corpus replay against each enforcement mechanism",
-      "content_hash": "sha256:d7af1de95089a0b52ae75116d09ff20bb5d2f25ab130a4fbb0f241a029fa95fd"
+      "content_hash": "sha256:aa28f99a798608a4d9896bec364ea7bfe459d6eb97e5f11b39a2a5cf91c2ab05"
     },
     {
       "id": "C002-REQ-607",
@@ -2634,7 +2666,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 72,
       "title": "Corpus cases for the new risks",
-      "content_hash": "sha256:d4039de088f14931f0ef1bf8ba749e5a0e5d433cad38a87993ee4682c0f5088d"
+      "content_hash": "sha256:37e34d1d05ecca1b1509f364872c461273fd3ac6d7f1f424eb89ae9d5ca4dcc0"
     },
     {
       "id": "C002-REQ-608",
@@ -2658,7 +2690,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 99,
       "title": "Scripted interviews and gates on OpenCode",
-      "content_hash": "sha256:1de8d21fe7739f0166856193a8e4eb86dce6db2aee7096409d97079967dc2bce"
+      "content_hash": "sha256:da50c1f70087e14b53e5b9f64fcc15762fe930efbe37efcd4eba8e906cfc4589"
     },
     {
       "id": "C002-REQ-611",
@@ -2682,7 +2714,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 127,
       "title": "Copilot injection cases without Copilot CLI",
-      "content_hash": "sha256:420c043f2b8659f3935e6880bf0a0d227725e431b9e90807850ee162591d0678"
+      "content_hash": "sha256:2a1f747cdf51e4f1e6039505809dc0365088b05927068a6239089b9449c3f9f5"
     },
     {
       "id": "C002-REQ-614",
@@ -2690,7 +2722,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 136,
       "title": "Checklist content",
-      "content_hash": "sha256:90ce0c2b3d74d065b10a0684ef6cf09f3bc0b6b2363554e2cd1f0ebefe82e5e3"
+      "content_hash": "sha256:e211284df9f0a2570e01d0e1a659794c9e30412edb38f3b47749df36602c19d6"
     },
     {
       "id": "C002-REQ-615",
@@ -2698,7 +2730,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 145,
       "title": "Checklist record",
-      "content_hash": "sha256:4e809c0169d728dcedfa284c6be56b0826a75f842d3feaf33e41057c78e8774d"
+      "content_hash": "sha256:66a3a7bc1e7cdb2af865ad9f31bf06af6515477b232cacb4b0ebee90defc79d6"
     },
     {
       "id": "C002-REQ-616",
@@ -2714,7 +2746,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 163,
       "title": "Release only with a proven boundary",
-      "content_hash": "sha256:0ad07bfbba057a76043d7b08fc540a5cda58a5c822e60d88fb845e14bdcd653f"
+      "content_hash": "sha256:8cbfbf44432c4fc57b1e63286da35b56d32ab0c01b743f65907ae35eb8d276a9"
     },
     {
       "id": "C002-REQ-618",
@@ -2738,7 +2770,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 190,
       "title": "Copilot deferred when neither mode holds",
-      "content_hash": "sha256:f4462eaa4f80c469e4e2331bcdae9335481f9dd82db8857cef952e4ca774f13b"
+      "content_hash": "sha256:270a3bb2850ac05132147b1ecd770a099e0ac2179451446edf24e04c5664d4ed"
     },
     {
       "id": "C002-REQ-621",
@@ -2762,7 +2794,47 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 217,
       "title": "Claude Code regression set passes",
-      "content_hash": "sha256:e6dcb0b14779aff97ec516f876c51577cc18276a0d73c44c7a206c22ba82f8e9"
+      "content_hash": "sha256:f4f8db84936873ec4be3054213a5916a16bcc07677f0fe73230ff3b494ff8e7a"
+    },
+    {
+      "id": "C002-REQ-625",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 226,
+      "title": "Memory cases expect deny on the generated targets",
+      "content_hash": "sha256:44e440d245d7374dcb48440de4a8c3f52f000557eef5bbd64552fe2ecad870cf"
+    },
+    {
+      "id": "C002-REQ-626",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 235,
+      "title": "Identity cases only where a non-Architect caller exists",
+      "content_hash": "sha256:7a8b4847bcbc91f7a0af68d4d29c163bf91df2f61decfd49475badb9a8c4ed17"
+    },
+    {
+      "id": "C002-REQ-627",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 244,
+      "title": "Cases not replayed listed in the replay report",
+      "content_hash": "sha256:319f406c2295495dd28d38898d214095c8ba22c9b9ea91d7f100ad83257b086d"
+    },
+    {
+      "id": "C002-REQ-628",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 253,
+      "title": "Copilot injection cases in VS Code under the hooks fallback",
+      "content_hash": "sha256:d7043413fc797052b47d3a542798582f574f48933c50896b6c8f14382409915d"
+    },
+    {
+      "id": "C002-REQ-629",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 262,
+      "title": "Hooks-fallback release needs evidence taken with hooks enabled",
+      "content_hash": "sha256:3b10608be42b7a6f0181bd2f9f754701b1f8299576d417a5f4ce60f47363a05e"
     },
     {
       "id": "C002-SC-01",
@@ -4250,7 +4322,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 32,
       "title": "Visible agent-scoped hooks fallback",
-      "content_hash": "sha256:1947a5357901a485e55e045a918104c7c9fdb454382b8c7b50b16b8496048948"
+      "content_hash": "sha256:7d4b811073d52e0da4c0660dc30ac7b8f7c0394701bc3c4b8924b2d6ebc360b8"
     },
     {
       "id": "C002-US-304",
@@ -4313,8 +4385,8 @@
       "type": "US",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 22,
-      "title": "The allowlist accepts a bare `sdd` command and `node --version`",
-      "content_hash": "sha256:f99765936e9a04c6e193b8daa348a81a87c1de395b575153c20737a445c53052"
+      "title": "The allowlist accepts a bare `sdd` command and `node --version`, and confines the Serena commands",
+      "content_hash": "sha256:efa39456317503cf4e7145ef6feb738a4a2c38c0db0873aa890b615efdfd93be"
     },
     {
       "id": "C002-US-503",
@@ -4330,7 +4402,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 42,
       "title": "Templates through the CLI on every target",
-      "content_hash": "sha256:bb14a759bf6652a73694207b97714d69b772ec34baa0cca91e3caeb105296c9d"
+      "content_hash": "sha256:930d61b639688e22efafbf0e5e979d822765a48f6dbd8031c30ac86bbeb29776"
     },
     {
       "id": "C002-US-505",
@@ -4338,7 +4410,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 52,
       "title": "Serena read-only and outside the repository on every target",
-      "content_hash": "sha256:35135c6a4ab7b4f8aa4a39e0e824952ca1bb56c3b2c899d462555e9e09ecfb73"
+      "content_hash": "sha256:c19d31bee5922540a3db53c17d20a3f9499ae1406bd56e5575d457c6c067f0ea"
     },
     {
       "id": "C002-US-601",
@@ -4354,7 +4426,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 22,
       "title": "Guard corpora replayed against each enforcement mechanism",
-      "content_hash": "sha256:4d4c58da3ae6b262dc4837c4877f411690e154bf5eb556e3c65d6dbfb6a91f82"
+      "content_hash": "sha256:8f1f5703ada6682f3de6e7a7b57c654e006039f12f77c20daceb2b6c30642619"
     },
     {
       "id": "C002-US-603",
@@ -4362,7 +4434,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 32,
       "title": "Scripted evals on OpenCode",
-      "content_hash": "sha256:c1c779a920809188abc20c7f5bd035525a68f3e129d8fd14186f5bff17cb80ee"
+      "content_hash": "sha256:83f93228e22c2e46ecdbb845faad813480fcc7fb8bc8d589796b67a1ce65ba2e"
     },
     {
       "id": "C002-US-604",
@@ -4378,7 +4450,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 53,
       "title": "Recorded manual VS Code checklist",
-      "content_hash": "sha256:34000858b7e31d158774c6983169f972b20cc9fcdf9cb3bd662f34e74af81a82"
+      "content_hash": "sha256:3641b726400cdab86d852dd1bcda96f221d80c07daaffbac88e4c069f3e34eb9"
     },
     {
       "id": "C002-US-606",
@@ -4386,7 +4458,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 63,
       "title": "A target is released only with a proven boundary",
-      "content_hash": "sha256:85fe5aff76703d39544ba93e1048935cab420c148a45b453e360f70ae1853bd1"
+      "content_hash": "sha256:104d5892ec8b96e9007fcc77a0f31dd93b6621d38186c2c3eb7562d03c733479"
     },
     {
       "id": "C002-US-607",
@@ -4394,7 +4466,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 73,
       "title": "Claude Code unchanged",
-      "content_hash": "sha256:3be2b714da89686942802574a2699c01c72a5b84792eb50ca3f075ecbda80fb9"
+      "content_hash": "sha256:f8c3330522cfd5d8b45d59d6c24e3d5bdd41ed7ec0c485081fea57d8cf0f5b2d"
     }
   ],
   "edges": [
@@ -6770,6 +6842,16 @@
     },
     {
       "from": "C002-GOAL-02",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-02",
+      "to": "C002-REQ-627",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-02",
       "to": "C002-SC-03",
       "relation": "references"
     },
@@ -6791,6 +6873,16 @@
     {
       "from": "C002-GOAL-04",
       "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-05",
+      "to": "C002-REQ-503",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-05",
+      "to": "C002-REQ-517",
       "relation": "references"
     },
     {
@@ -7224,9 +7316,24 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-101",
+      "to": "C002-DOD-010",
+      "relation": "covers"
+    },
+    {
+      "from": "C002-NFR-102",
+      "to": "C002-DOD-010",
+      "relation": "covers"
+    },
+    {
       "from": "C002-NFR-102",
       "to": "C002-REQ-408",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-103",
+      "to": "C002-DOD-010",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-103",
@@ -7245,13 +7352,28 @@
     },
     {
       "from": "C002-NFR-104",
+      "to": "C002-DOD-011",
+      "relation": "covers"
+    },
+    {
+      "from": "C002-NFR-104",
       "to": "C002-REQ-110",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-105",
+      "to": "C002-DOD-012",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-201",
       "to": "C002-DEC-005",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-201",
+      "to": "C002-DOD-008",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-201",
@@ -7264,9 +7386,29 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-201",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-201",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-201",
+      "to": "C002-REQ-627",
+      "relation": "references"
+    },
+    {
       "from": "C002-NFR-202",
       "to": "C002-DEC-005",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-202",
+      "to": "C002-DOD-008",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-202",
@@ -7289,9 +7431,29 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-202",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-202",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-202",
+      "to": "C002-REQ-627",
+      "relation": "references"
+    },
+    {
       "from": "C002-NFR-203",
       "to": "C002-DEC-005",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-203",
+      "to": "C002-DOD-009",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-203",
@@ -7319,6 +7481,21 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-203",
+      "to": "C002-REQ-628",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-203",
+      "to": "C002-REQ-629",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-204",
+      "to": "C002-DOD-013",
+      "relation": "covers"
+    },
+    {
       "from": "C002-NFR-204",
       "to": "C002-R-001",
       "relation": "references"
@@ -7339,14 +7516,34 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-205",
+      "to": "C002-DOD-014",
+      "relation": "covers"
+    },
+    {
       "from": "C002-NFR-301",
       "to": "C002-DEC-006",
       "relation": "references"
     },
     {
+      "from": "C002-NFR-301",
+      "to": "C002-DOD-015",
+      "relation": "covers"
+    },
+    {
+      "from": "C002-NFR-401",
+      "to": "C002-DOD-016",
+      "relation": "covers"
+    },
+    {
       "from": "C002-NFR-401",
       "to": "C002-GOAL-04",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-402",
+      "to": "C002-DOD-017",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-501",
@@ -7360,8 +7557,18 @@
     },
     {
       "from": "C002-NFR-501",
+      "to": "C002-DOD-018",
+      "relation": "covers"
+    },
+    {
+      "from": "C002-NFR-501",
       "to": "C002-GOAL-01",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-601",
+      "to": "C002-DOD-019",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-601",
@@ -7377,6 +7584,11 @@
       "from": "C002-NFR-601",
       "to": "C002-SC-02",
       "relation": "references"
+    },
+    {
+      "from": "C002-NFR-801",
+      "to": "C002-DOD-020",
+      "relation": "covers"
     },
     {
       "from": "C002-NFR-801",
@@ -7420,7 +7632,7 @@
     },
     {
       "from": "C002-REQ-101",
-      "to": "C002-REQ-620",
+      "to": "C002-REQ-619",
       "relation": "references"
     },
     {
@@ -7660,7 +7872,27 @@
     },
     {
       "from": "C002-REQ-112",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-112",
       "to": "C002-REQ-104",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-112",
+      "to": "C002-REQ-111",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-112",
+      "to": "C002-REQ-504",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-112",
+      "to": "C002-REQ-507",
       "relation": "references"
     },
     {
@@ -8006,6 +8238,11 @@
     {
       "from": "C002-REQ-207",
       "to": "C002-REQ-503",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-207",
+      "to": "C002-REQ-517",
       "relation": "references"
     },
     {
@@ -8790,6 +9027,11 @@
     },
     {
       "from": "C002-REQ-405",
+      "to": "C002-REQ-517",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-405",
       "to": "C002-US-402",
       "relation": "story-of"
     },
@@ -9295,6 +9537,16 @@
     },
     {
       "from": "C002-REQ-514",
+      "to": "C002-REQ-520",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-514",
+      "to": "C002-TS-522",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-514",
       "to": "C002-US-504",
       "relation": "story-of"
     },
@@ -9330,6 +9582,11 @@
     },
     {
       "from": "C002-REQ-515",
+      "to": "C002-REQ-516",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
       "to": "C002-US-505",
       "relation": "story-of"
     },
@@ -9341,6 +9598,111 @@
     {
       "from": "C002-REQ-516",
       "to": "C002-US-505",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-516",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-DEC-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-REQ-207",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-REQ-607",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-REQ-623",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-US-502",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-517",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-REQ-512",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-REQ-513",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-519",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-519",
+      "to": "C002-REQ-602",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-519",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-520",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-520",
+      "to": "C002-REQ-514",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-520",
+      "to": "C002-US-504",
       "relation": "story-of"
     },
     {
@@ -9460,7 +9822,27 @@
     },
     {
       "from": "C002-REQ-606",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-606",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-606",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-606",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-606",
+      "to": "C002-REQ-627",
       "relation": "references"
     },
     {
@@ -9486,6 +9868,11 @@
     {
       "from": "C002-REQ-607",
       "to": "C002-REQ-503",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-607",
+      "to": "C002-REQ-517",
       "relation": "references"
     },
     {
@@ -9610,6 +9997,11 @@
     },
     {
       "from": "C002-REQ-613",
+      "to": "C002-REQ-628",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-613",
       "to": "C002-US-604",
       "relation": "story-of"
     },
@@ -9630,6 +10022,11 @@
     },
     {
       "from": "C002-REQ-614",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-614",
       "to": "C002-SC-02",
       "relation": "references"
     },
@@ -9645,7 +10042,17 @@
     },
     {
       "from": "C002-REQ-615",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-615",
       "to": "C002-REQ-618",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-615",
+      "to": "C002-REQ-629",
       "relation": "references"
     },
     {
@@ -9705,6 +10112,21 @@
     },
     {
       "from": "C002-REQ-617",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-617",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-617",
+      "to": "C002-REQ-629",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-617",
       "to": "C002-US-606",
       "relation": "story-of"
     },
@@ -9756,6 +10178,11 @@
     {
       "from": "C002-REQ-620",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-620",
+      "to": "C002-IF-009",
       "relation": "references"
     },
     {
@@ -9820,12 +10247,127 @@
     },
     {
       "from": "C002-REQ-623",
+      "to": "C002-REQ-517",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-623",
       "to": "C002-SC-05",
       "relation": "references"
     },
     {
       "from": "C002-REQ-623",
       "to": "C002-US-607",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-625",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-625",
+      "to": "C002-NG-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-625",
+      "to": "C002-REQ-106",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-625",
+      "to": "C002-US-602",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-626",
+      "to": "C002-REQ-208",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-626",
+      "to": "C002-REQ-302",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-626",
+      "to": "C002-REQ-627",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-626",
+      "to": "C002-US-602",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-627",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-627",
+      "to": "C002-NFR-201",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-627",
+      "to": "C002-NFR-202",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-627",
+      "to": "C002-US-602",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-628",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-628",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-628",
+      "to": "C002-REQ-612",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-628",
+      "to": "C002-US-303",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-628",
+      "to": "C002-US-605",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-629",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-629",
+      "to": "C002-REQ-615",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-629",
+      "to": "C002-REQ-628",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-629",
+      "to": "C002-US-303",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-629",
+      "to": "C002-US-606",
       "relation": "story-of"
     },
     {
@@ -10570,6 +11112,16 @@
     },
     {
       "from": "C002-US-303",
+      "to": "C002-REQ-628",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-REQ-629",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
       "to": "C002-US-606",
       "relation": "references"
     },
@@ -10940,6 +11492,11 @@
     },
     {
       "from": "C002-US-502",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
       "to": "C002-GOAL-04",
       "relation": "references"
     },
@@ -10956,6 +11513,11 @@
     {
       "from": "C002-US-502",
       "to": "C002-REQ-503",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-REQ-517",
       "relation": "traces-to"
     },
     {
@@ -11089,6 +11651,21 @@
       "relation": "traces-to"
     },
     {
+      "from": "C002-US-504",
+      "to": "C002-REQ-518",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-519",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-520",
+      "relation": "traces-to"
+    },
+    {
       "from": "C002-US-505",
       "to": "C002-CAP-05",
       "relation": "references"
@@ -11146,6 +11723,11 @@
     {
       "from": "C002-US-505",
       "to": "C002-REQ-516",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-517",
       "relation": "traces-to"
     },
     {
@@ -11230,6 +11812,11 @@
     },
     {
       "from": "C002-US-602",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-602",
       "to": "C002-GOAL-02",
       "relation": "references"
     },
@@ -11241,6 +11828,21 @@
     {
       "from": "C002-US-602",
       "to": "C002-REQ-607",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-REQ-625",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-REQ-626",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-REQ-627",
       "relation": "traces-to"
     },
     {
@@ -11376,6 +11978,11 @@
     {
       "from": "C002-US-605",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-DEC-005",
       "relation": "traces-to"
     },
     {
@@ -11411,6 +12018,11 @@
     {
       "from": "C002-US-605",
       "to": "C002-REQ-618",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-REQ-628",
       "relation": "traces-to"
     },
     {
@@ -11476,6 +12088,11 @@
     {
       "from": "C002-US-606",
       "to": "C002-REQ-622",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-REQ-629",
       "relation": "traces-to"
     },
     {

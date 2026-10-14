@@ -11,7 +11,8 @@ capability: "Copilot VS Code target"
 Brownfield change: every requirement carries a Delta. The question-tool requirements shared with
 OpenCode are C002-REQ-211 to C002-REQ-213 (CAP-02). The enforcement mode of the Copilot target is
 fixed by spike S-08 (glossary: enforcement mode); if neither mode holds, the target is refused by
-C002-REQ-620.
+C002-REQ-620 and P-01 revises this spec to remove this capability (`../../10-context/scope.md` §1.1,
+Q-defer-01).
 
 ### C002-REQ-301 — Copilot target package contents
 - **Delta:** ADDED

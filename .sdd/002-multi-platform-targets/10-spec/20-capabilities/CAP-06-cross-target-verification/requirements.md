@@ -63,8 +63,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-606 — Corpus replay against each enforcement mechanism
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every case of the guard corpora against the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the agent-scoped guard hooks, and report each decision that differs from the case's expected decision.
-- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks (baseline survey §3.2)
+- **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every applicable case of the guard corpora against each enforcement mechanism in use on a generated target (the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the agent-scoped guard hooks) and report each decision that differs from the case's expected decision for that mechanism.
+- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625; applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-606.1
@@ -72,8 +72,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-607 — Corpus cases for the new risks
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE guard corpora SHALL contain cases for a bare `sdd` command, `node --version`, a `..` segment that leaves `.sdd/`, a symbolic link from `.sdd/` to a folder outside it, output redirection inside an allowlisted command, and a PowerShell command line.
-- **Rationale:** ideation §9 (risks); C002-R-001 C-03, C-04; C002-REQ-503
+- **Statement:** THE guard corpora SHALL contain cases for a bare `sdd` command, `node --version`, a `..` segment that leaves `.sdd/`, a symbolic link from `.sdd/` to a folder outside it, output redirection inside an allowlisted command, a PowerShell command line, an allowlisted command whose option writes a file outside `.sdd/` (`git diff --output=<file>`), one case for each `sdd` subcommand that writes files, and, for each of `sdd serena-config` and `sdd serena-launch`, one case with the option `--user-data`, one with a folder outside the current repository and one with a folder inside it.
+- **Rationale:** ideation §9 (risks), including the risk "a command that writes files" whose mitigation is replay cases for writing commands; Q-guards-04 (spec round 2, `../../questions-log.md`): "one corpus case per writing subcommand"; the expected decisions of the Serena cases are those of C002-REQ-517; C002-R-001 C-03, C-04; C002-REQ-503
 - **Stories:** C002-US-602, C002-US-502
 - **Priority:** Must
 - **Acceptance:** C002-AC-607.1
@@ -99,8 +99,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-610 — Scripted interviews and gates on OpenCode
 - **Delta:** ADDED
 - **Pattern:** optional-feature
-- **Statement:** WHERE a script can answer OpenCode's `question` calls, THE OpenCode eval runner SHALL run the interview and gate scenarios with scripted answers.
-- **Rationale:** C002-GOAL-03; whether `opencode run` or the SDK can answer a `question` call is open for spike S-07 (ideation §11; C002-R-001 D-01, D-02)
+- **Statement:** WHERE a script can answer OpenCode's `question` calls, THE OpenCode eval runner SHALL run the interview, gate and revise scenarios with scripted answers.
+- **Rationale:** C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"); revise scenario: glossary; whether `opencode run` or the SDK can answer a `question` call is open for spike S-07 (ideation §11; C002-R-001 D-01, D-02)
 - **Stories:** C002-US-603
 - **Priority:** Must
 - **Acceptance:** C002-AC-610.1
@@ -128,7 +128,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** optional-feature
 - **Statement:** WHERE Copilot CLI cannot load the Copilot target package, THE manual VS Code checklist SHALL contain the Copilot injection cases.
-- **Rationale:** C002-AS-04 (If wrong); the sdd MCP server is then tested in isolation by the corpus replay suite (C002-REQ-606)
+- **Rationale:** C002-AS-04 (If wrong); the sdd MCP server is then tested in isolation by the corpus replay suite (C002-REQ-606); under the Copilot hooks fallback the checklist holds the Copilot injection cases in any case (C002-REQ-628)
 - **Stories:** C002-US-604, C002-US-605
 - **Priority:** Must
 - **Acceptance:** C002-AC-613.1
@@ -136,8 +136,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-614 — Checklist content
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE manual VS Code checklist SHALL contain steps for the sdd MCP server boundary, one interview round and one gate through `vscode/askQuestions` including a skipped answer, and one phase of a toy change from its creation to gate G1 on a fresh install.
-- **Rationale:** C002-DEC-003; C002-SC-02
+- **Statement:** THE manual VS Code checklist SHALL contain steps for the sdd MCP server boundary, one interview round and one gate through `vscode/askQuestions` including a skipped answer, one phase of a toy change from its creation to gate G1 on a fresh install, one Revise choice at gate G1 followed by the gate presented again, and one run of the revise command on the approved ideation phase of the toy change.
+- **Rationale:** C002-DEC-003; C002-SC-02; C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"; revise scenario: glossary)
 - **Stories:** C002-US-605
 - **Priority:** Must
 - **Acceptance:** C002-AC-614.1
@@ -145,8 +145,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-615 — Checklist record
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, the result of each step and P-01's name.
-- **Rationale:** DOD-G-01 of the constitution (manual scenario with an executed record); C002-REQ-618
+- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, under the Copilot hooks fallback the hooks state during the run, the result of each step and P-01's name.
+- **Rationale:** DOD-G-01 of the constitution (manual scenario with an executed record); C002-REQ-618; the hooks state is the condition of the C002-DEC-005 exception (C002-REQ-629)
 - **Stories:** C002-US-605
 - **Priority:** Must
 - **Acceptance:** C002-AC-615.1
@@ -163,8 +163,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-617 — Release only with a proven boundary
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless that target's corpus replay reports no differing decision and its injection evals show no instruction acted upon.
-- **Rationale:** C002-DEC-005; C002-CON-03; thresholds C002-NFR-201, C002-NFR-202, C002-NFR-203
+- **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless that target's corpus replay reports no differing decision over the applicable cases and its injection evals show no instruction acted upon.
+- **Rationale:** C002-DEC-005; C002-CON-03; thresholds C002-NFR-201, C002-NFR-202, C002-NFR-203; applicable cases and expected decisions per mechanism: C002-REQ-625, C002-REQ-626 (Q-safety-02); under the Copilot hooks fallback, the injection evidence of C002-REQ-629
 - **Stories:** C002-US-606
 - **Priority:** Must
 - **Acceptance:** C002-AC-617.1
@@ -191,7 +191,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF the spike S-08 record shows that Copilot subagents are not confined to their tool list and that agent-scoped hooks do not block a subagent's tool calls, THEN THE release check SHALL refuse the release of the Copilot VS Code target.
-- **Rationale:** C002-DEC-005 (round 4, Q-guards-03: "Defer Copilot (Recommended)"); C002-AS-03
+- **Rationale:** C002-DEC-005 (round 4, Q-guards-03: "Defer Copilot (Recommended)"); C002-AS-03; such a record also triggers the spec revision of `../../10-context/scope.md` §1.1 (Q-defer-01, spec round 2), which removes the Copilot target from CHG-002; until that revision this refusal keeps a Copilot package from being released (refusal ERR-REL-005, C002-IF-009 §5)
 - **Stories:** C002-US-606
 - **Priority:** Must
 - **Acceptance:** C002-AC-620.1
@@ -217,8 +217,53 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-623 — Claude Code regression set passes
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE plugin SHALL pass every test and eval of the regression set, with the corpus cases and deny-message texts changed by C002-REQ-503 as the only changed expectations.
-- **Rationale:** C002-GOAL-05, C002-SC-05; guard tests that pin today's behaviour (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2); the regression set is written in the plan (`20-plan/30-impact/regression-set.md`)
+- **Statement:** THE plugin SHALL pass every test and eval of the regression set, with the corpus cases and deny-message texts changed by C002-REQ-503 and C002-REQ-517 as the only changed expectations.
+- **Rationale:** C002-GOAL-05, C002-SC-05; guard tests that pin today's behaviour (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2); the regression set is written in the plan (`20-plan/30-impact/regression-set.md`); the doctor and init commands of Claude Code keep their Serena step under C002-REQ-517
 - **Stories:** C002-US-607
 - **Priority:** Must
 - **Acceptance:** C002-AC-623.1
+
+### C002-REQ-625 — Memory cases expect deny on the generated targets
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE corpus replay suite SHALL use `deny` as the expected decision of every memory-category case of the guard corpora on every enforcement mechanism of a generated target.
+- **Rationale:** Q-safety-02 (spec round 2, `../../questions-log.md`): "memory cases expect deny on the targets"; the generated agents have no memory folder (C002-DEC-009, C002-NG-04, C002-REQ-106), while the corpora keep `allow` for these cases on Claude Code (C001-REQ-1103), for example case PG-205 (`tests/guards/path-corpus.json:1870-1875`)
+- **Stories:** C002-US-602
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-625.1`)
+
+### C002-REQ-626 — Identity cases only where a non-Architect caller exists
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE corpus replay suite SHALL replay the identity-category cases of the guard corpora against the OpenCode permission rules only, with each caller that is not an Architect agent played by an adopter agent.
+- **Rationale:** Q-safety-02: "identity cases replay only where a non-Architect caller exists (OpenCode) and are not applicable for the MCP server and scoped hooks"; the sdd MCP server and the agent-scoped guard hooks decide only for Architect agents, so the property these cases test is covered there by C002-REQ-208 and C002-REQ-302; example case BG-258 (`tests/guards/bash-corpus.json:2217-2222`); the cases left out are listed by C002-REQ-627
+- **Stories:** C002-US-602
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-626.1`)
+
+### C002-REQ-627 — Cases not replayed listed in the replay report
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the corpus replay suite writes the replay report of an enforcement mechanism, THE corpus replay suite SHALL list in that report, as not applicable, the ID of every case of the guard corpora that it did not replay against that mechanism.
+- **Rationale:** Q-safety-02; the thresholds of C002-NFR-201 and C002-NFR-202 count the applicable cases only, so the excluded cases must be visible to the release check and to P-01; report format: C002-IF-009 §2
+- **Stories:** C002-US-602
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-627.1`)
+
+### C002-REQ-628 — Copilot injection cases in VS Code under the hooks fallback
+- **Delta:** ADDED
+- **Pattern:** optional-feature
+- **Statement:** WHERE the Copilot hooks fallback is used, THE manual VS Code checklist SHALL contain the Copilot injection cases, run in VS Code with hooks enabled.
+- **Rationale:** C002-DEC-005 (exception: "with hooks enabled, … the injection evals show 0 instructions acted upon"); under the fallback the boundary is the agent-scoped hooks of VS Code, and Copilot CLI is a separate implementation whose result does not prove the VS Code behaviour (C002-R-001; `../../../00-ideation/research/R-001-platform-facts.md:364-365`); runs through the Copilot CLI eval runner (C002-REQ-612) may add evidence but do not replace these cases
+- **Stories:** C002-US-605, C002-US-303
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-628.1`)
+
+### C002-REQ-629 — Hooks-fallback release needs evidence taken with hooks enabled
+- **Delta:** ADDED
+- **Pattern:** complex
+- **Statement:** WHERE the Copilot hooks fallback is used, WHEN the Copilot VS Code target is proposed for release, THE release check SHALL refuse the release unless the checklist record shows hooks enabled during the run and no instruction acted upon in any Copilot injection case of that run.
+- **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition
+- **Stories:** C002-US-606, C002-US-303
+- **Priority:** Must
+- **Acceptance:** pending — test-designer (`C002-AC-629.1`)
