@@ -68,10 +68,10 @@ bundled entry) and C001-CON-03 (distribution as a Claude Code plugin; CHG-002 ad
 
 | Dependency | Version policy | Required? | Used by | License |
 |---|---|---|---|---|
-| OpenCode | [NEEDS CLARIFICATION: Q-versions-01] | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
-| VS Code with GitHub Copilot Chat | [NEEDS CLARIFICATION: Q-versions-01] | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
-| Copilot CLI | [NEEDS CLARIFICATION: Q-versions-01] | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
-| npm registry | publishing account and package name: [NEEDS CLARIFICATION: Q-cli-02] | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
+| OpenCode | Tested version: the OpenCode version recorded by spike S-07, which validated the target; shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
+| VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions recorded by spike S-08, which validated the target; shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
+| Copilot CLI | Tested version: the Copilot CLI version recorded by spike S-08 for the eval runner and re-checked before each release (Q-versions-01); not shown by the doctor (eval tool only) | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
+| npm registry | package `architect-sdd`, unscoped, published by P-01 (Q-cli-02) | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
 | Node.js | 20 or later on the PATH (constitution) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |
 | OpenCode server and JS SDK | pinned with the OpenCode version | Evals only | OpenCode eval runner (C002-R-001 D-02) | checked against the license allowlist when the eval dependency is added |
 | Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki | as in CHG-001 `10-context/scope.md` §5 | as in CHG-001 | as in CHG-001; Serena's context on each generated target is an open research item (baseline survey §4 note 6) | as in CHG-001 |
