@@ -351,6 +351,20 @@ Scenario Outline: C002-TS-620 — boundary evidence at release
     | native permission enforcement   | 0     | no case                              | 1     | refused, naming the injection case acted upon        |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-648 — OpenCode release refused when spike S-07 does not show a closed agent tool set
+  Given "fx-release" where the OpenCode target package uses <mode> and the replay, injection and version evidence of OpenCode is clean
+  And its spike record "docs/spikes/S-07-opencode.md" <outcome>
+  When the release check runs for the OpenCode target
+  Then the release is refused with ERR-REL-013, naming "docs/spikes/S-07-opencode.md" and "agent_tools_closed <shown>"
+  And the release record has the outcome "refused" and lists ERR-REL-013 among its refusals
+  Examples:
+    | mode                          | outcome                                         | shown          |
+    | native permission enforcement | gives "agent_tools_closed: false"               | false          |
+    | sdd MCP server enforcement    | gives "agent_tools_closed: false"               | false          |
+    | native permission enforcement | gives the other S-07 outcomes but no "agent_tools_closed" | not recorded |
+```
+
 ## C002-REQ-618
 
 #### C002-AC-618.1 — Copilot release needs an all-passed checklist record
@@ -530,6 +544,9 @@ Scenario Outline: C002-TS-637 — incomplete replay report refused at release
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | does not list the memory case "PG-205"              | omits cases                                   | PG-205 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | lists the memory case "PG-205" as not applicable    | lists cases as not applicable without a rule  | PG-205 |
     | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the identity case "BG-258" as not applicable  | lists cases as not applicable without a rule  | BG-258 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | lists the identity case "BG-258" as a replayed case | replays cases that its mechanism excludes     | BG-258 |
+    | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the memory case "PG-205" with the expected decision "allow" and the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-205 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" without the capability "file-symlink" and lists "PG-163" with the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-163 |
 ```
 
 ## C002-REQ-628
@@ -573,6 +590,8 @@ Scenario Outline: C002-TS-643 — absent-field and missing-capability cases per 
   Then the replay report lists "PG-253" (no "cwd"), "PG-254" (empty "cwd"), "BG-277" (no "cwd"), "PG-256" (no tool name) and "PG-163" (requires "file-symlink") each as a replayed case with the expected decision "deny", the expected-decision source "C002-REQ-630" and the decision "deny"
   And it lists none of these five cases as not applicable
   And each of them was fed to the mechanism as the malformed call that C002-IF-009 §2 defines for <mechanism>
+  And the report records each of these five cases with "fed_as.malformed" true and a "fed_as.tool" that names the tool of that malformed call
+  And the report's "replay_host" gives the platform "win32" and capabilities that do not include "file-symlink"
   And "tests/guards/path-corpus.json" still records "allow" for "PG-256" and "deny" for "PG-253", "PG-254" and "PG-163", and "tests/guards/bash-corpus.json" still records "deny" for "BG-277"
   Examples:
     | mechanism                                                                                 |
@@ -650,7 +669,7 @@ Scenario: C002-TS-647 — OpenCode rules that also bind adopter agents are a dif
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-615 | TS-618 | TS-618 (hooks fallback: hooks state) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-616 | TS-619 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement) | TS-620 (1 difference, 1 instruction) | TS-620 | n/a | n/a | n/a |
+| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes) | TS-620 (1 difference, 1 instruction) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013) | TS-648 (Architect agents' tool set left open) | n/a | n/a |
 | C002-REQ-618 | TS-621 | n/a | n/a | TS-621 | n/a | n/a | n/a |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-620 | TS-623 | TS-623 (either mode holds) | n/a | TS-623 | n/a | n/a | n/a |
@@ -659,10 +678,10 @@ Scenario: C002-TS-647 — OpenCode rules that also bind adopter agents are a dif
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable) | n/a | n/a | TS-630 (adopter agent as non-Architect caller) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted or hidden as not applicable) |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement needs no hooks state) | n/a | TS-633 | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
-| C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name, missing capability) | TS-644 (`cwd` present but not the repository root: corpus expectation kept) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
+| C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name, missing capability; `fed_as.malformed`, `replay_host`), TS-637 (expectation of PG-163 against the `replay_host`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps

@@ -163,7 +163,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-617 — Release only with a proven boundary
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless that target's corpus replay reports no differing decision over the applicable cases and its injection evals show no instruction acted upon.
+- **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless that target's corpus replay reports no differing decision over the applicable cases its injection evals show no instruction acted upon, and, for the OpenCode target, its S-07 spike record states that the agents' tool sets are closed (`agent_tools_closed: true`).
 - **Rationale:** C002-DEC-005; C002-CON-03; thresholds C002-NFR-201, C002-NFR-202, C002-NFR-203; applicable cases and expected decisions per mechanism: C002-REQ-625, C002-REQ-626 (Q-safety-02), C002-REQ-630, C002-REQ-632 (Q-safety-04); under the Copilot hooks fallback, the injection evidence of C002-REQ-629
 - **Stories:** C002-US-606
 - **Priority:** Must
