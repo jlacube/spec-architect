@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T21:11:22.334Z",
+  "generated_at": "2026-10-14T21:11:46.217Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -2858,7 +2858,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 163,
       "title": "Release only with a proven boundary",
-      "content_hash": "sha256:9d71d51009f192ac23664333d3e3d02949b8244a2e54536f65ec3ac4b68d2597"
+      "content_hash": "sha256:9075a2b481bb74446c0bd29bd8fed00a5663eea1319bd6bfd31f88da61fd5427"
     },
     {
       "id": "C002-REQ-618",
