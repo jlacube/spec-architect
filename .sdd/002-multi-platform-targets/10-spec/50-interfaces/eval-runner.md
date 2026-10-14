@@ -51,5 +51,13 @@ AskUserQuestion with the host's answer or `null` for a skipped or dismissed call
 | Copilot CLI | `copilot -p <prompt> --agent <agent> --output-format json --no-ask-user` with the Copilot package installed in a temporary Copilot home (C002-R-001 D-03; C002-AS-04) | turns counted from the JSON events; the process is killed at a cap | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
 | Stub | a scripted host for the runner tests (C002-TS-614) | as the runner under test | scripted |
 
-Eval spend stays within the project budget: dev tier on both generated targets, milestone tier on
-Claude Code only (ideation §9).
+Eval spend stays within the project budget: dev tier on every target, milestone tier on Claude Code
+and on the first port only, the first generated target that is released (ideation §9, C002-US-603).
+
+**Release evidence by mode.** The injection summary of a runner is release evidence for OpenCode,
+and for Copilot VS Code under sdd MCP server enforcement when spike S-08 shows that Copilot CLI
+loads the package (C002-AS-04). Under the Copilot hooks fallback the boundary is the agent-scoped
+hooks of VS Code, which Copilot CLI does not exercise (a separate hook implementation, C002-R-001),
+so the Copilot CLI runner's injection results are recorded with `source: copilot-cli-runner` but not
+counted: the injection evidence is the checklist record's injection steps, run in VS Code with hooks
+enabled (C002-REQ-628, C002-REQ-629, C002-IF-009 §5).

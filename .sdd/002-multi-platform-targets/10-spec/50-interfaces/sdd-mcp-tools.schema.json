@@ -51,6 +51,11 @@
       "required": ["command"],
       "properties": {
         "command": { "type": "string", "minLength": 1, "maxLength": 8192 },
+        "dialect": {
+          "description": "Shell syntax the bash guard core applies to the command (sdd-mcp-server.md §5.2); the command runs without a shell in either case.",
+          "enum": ["bash", "powershell"],
+          "default": "bash"
+        },
         "timeout_ms": {
           "description": "Wall-clock limit; the process is killed when it is reached.",
           "type": "integer",

@@ -57,7 +57,7 @@ classDiagram
 - **Relationships:** one table per generated target; each table cites the spike record that fixed its mode and tested versions
 - **Owning component:** C002-COMP-002 (contract C002-IF-001)
 - **Invariants:**
-  - **C002-INV-04** A mapping table names exactly one enforcement mode: `native-permissions` or `sdd-mcp-server` for OpenCode, `sdd-mcp-server` or `copilot-hooks` for Copilot; a package proposed for release was generated with the table's mode.
+  - **C002-INV-04** A mapping table names exactly one enforcement mode: `native-permissions` or `sdd-mcp-server` for OpenCode, `sdd-mcp-server` or `copilot-hooks` for Copilot; a package proposed for release was generated with the table's mode. A `deferred` spike outcome is never a table mode (C002-IF-001 §1).
 
 ### 2.3 GenerationRun and Diagnostic
 - **Attributes:** GenerationRun: `targets[]`, `source_digest`, `mode` and `mode_source` (table, override) per target, `outcome` (succeeded, failed). Diagnostic: `severity`, `code` (ERR-GEN-*), `file`, `line`, `target`, `construct`, `message`, `fix`
@@ -87,15 +87,17 @@ classDiagram
   - **C002-INV-08** A command call starts a process only after the bash guard core allowed the whole command, and never through a shell.
 
 ### 2.6 ReplayReport, InjectionSummary, SpikeRecord, ChecklistRecord
-- **Attributes:** as in C002-IF-009 (`release-record.schema.json` `$defs`, `verification-records.md` §3–§4)
-- **Relationships:** each refers to one target and package version; the spike record fixes the enforcement mode and tested versions copied into the mapping table
-- **Owning component:** C002-COMP-008 (replay), C002-COMP-009 (injection summary), C002-COMP-011 (checklist and records); spike records are written by the plan's spike tasks
+- **Attributes:** as in C002-IF-009 (`release-record.schema.json` `$defs`, `verification-records.md` §2–§4). ReplayReport: replayed cases with their mapped input, expected decision and its source (corpus or C002-REQ-625), actual decision; not-applicable cases with their rule; `applicable`, `differing`. ChecklistRecord: steps, injection steps by case ID, and `hooks_state` under the Copilot hooks fallback. InjectionSummary: `source` (runner or manual checklist) and, from a checklist record, `hooks_state`
+- **Relationships:** each refers to one target and package version; the spike record fixes the enforcement mode and tested versions copied into the mapping table, except a `deferred` S-08 record, which triggers the spec revision of scope §1.1
+- **Owning component:** C002-COMP-008 (replay), C002-COMP-009 (injection summary), C002-COMP-011 (checklist and records); spike records are written by the implementer in the plan's spike tasks (C002-IF-009 §1)
+- **Invariants:**
+  - **C002-INV-14** A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision of its mechanism, or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).
 
 ### 2.7 ReleaseRecord
 - **Attributes:** `target`, `package_version`, `decided_on`, `outcome` (released, refused), `enforcement_mode`, `exception`, `tested_versions`, `evidence`, `refusals[{code, message}]`
 - **Owning component:** C002-COMP-010 (contract C002-IF-009)
 - **Invariants:**
-  - **C002-INV-10** A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions for every mechanism of the package's mode and an injection summary with no case acted upon; for Copilot VS Code also a checklist record with every step passed, and under the Copilot hooks fallback the exception of C002-DEC-005.
+  - **C002-INV-10** A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions over the applicable cases for every mechanism of the package's mode and an injection summary with no case acted upon; for Copilot VS Code also a checklist record with every step passed; and under the Copilot hooks fallback a checklist record with hooks enabled whose injection steps are the injection evidence, and the exception of C002-DEC-005.
 
 ### 2.8 QuestionCall and Answer
 - **Attributes:** QuestionCall: `host tool` (AskUserQuestion, `question`, `vscode/askQuestions`), `questions[1..4]`, `result` (choices, skipped, dismissed, empty). Answer: the verbatim choice or text per question (C001-INV-23 applies)

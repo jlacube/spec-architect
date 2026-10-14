@@ -41,15 +41,21 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 | Claude Code | `claude --version` | ≥ 2.1.295 | `error` below 2.1.295, on Claude Code only (C002-REQ-506) | `claude update`, or update the Claude desktop app |
 | OpenCode | `sdd host-version opencode` | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
 | VS Code with GitHub Copilot Chat | `sdd host-version vscode` | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
-| sdd CLI | `sdd --version` (C002-IF-007) | equals `{{package_version}}` | `missing` when not reachable; `error` when the version differs [NEEDS CLARIFICATION: Q-cli-03] (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
-| Copilot hooks | the `hooks` line of `sdd host-version vscode` | `enabled` | `error` when `disabled (<source>)` with the source `chat.useHooks`, Workspace Trust or organisation policy (C002-REQ-510) | `enable chat.useHooks and trust the workspace` |
+| sdd CLI | `sdd --version` (C002-IF-007, C002-REQ-511) | its major, minor and patch numbers equal those of `{{package_version}}` (exact match, Q-cli-03) | `missing` when not reachable; `error` when any of the three numbers differs, older or newer (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
+| Copilot hooks | the `hooks` line of `sdd host-version vscode` | `enabled` | `error` when `disabled (<source>)` with the source `chat.useHooks`, Workspace Trust or organisation policy, and `error` when `hooks unknown` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
 
 The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states.
 How each disabling source of the Copilot hooks row is read is open for spike S-08 (C002-REQ-510).
-`hooks unknown` (no source could be read) is shown as `error` with the fix "check chat.useHooks and
-Workspace Trust by hand": C002-REQ-510 states `ok` for every state other than disabled, which would
-report an unread state as safe; this gap is reported to the spec-writer with the recommendation
-`error` [ASSUMPTION: architecture step 5, an unknown hooks state is shown as error].
+A hooks state that the doctor cannot read (`hooks unknown`) is never shown as `ok` (C002-REQ-510,
+C002-TS-526).
+
+**Tools started through the sdd MCP server.** Under sdd MCP server enforcement the probes of the
+command-line tools run through the `sdd-shell` command tool, which does not start a `.cmd` or `.bat`
+shim (ERR-MCP-006, C002-IF-002 §5.2). A probe refused for that reason shows the tool with status
+`error`, version `—`, its fallback, and the fix `install a native executable of <tool>` followed by
+the remedies-table command of the server-mode variant, which names an installer that provides a
+native executable (for ast-grep, whose npm install gives only a `.cmd` shim). A probe refused
+because the executable is not found shows `missing`, as today.
 
 ## §3 Outcome line
 
@@ -67,5 +73,6 @@ When both failure conditions hold, the node line is printed.
 ## §4 Serena data folder
 
 Step 1 of the doctor (`sdd serena-config "${CLAUDE_PLUGIN_DATA}"`) becomes `sdd serena-config
---user-data` on the generated targets (C002-IF-001 §2, C002-IF-007): the per-user data folder of
-`architect-sdd`, never `.serena/` in the repository.
+--user-data` on the generated targets (C002-REQ-116, C002-IF-001 §2, C002-IF-007): the per-user
+data folder of `architect-sdd`, never `.serena/` in the repository. On Claude Code the step keeps its
+text and passes the bash guard by C002-IF-008 §1.1 (C002-REQ-517, C002-TS-528).

@@ -62,11 +62,19 @@ Run semantics:
 
 - Human (default): one line per diagnostic, sorted by source file, line and target, in the CLI human
   format of C001-IF-01: `error ERR-GEN-001 agents/sdd-critic.md:7 [copilot] — tool name "KillShell"
-  has no entry in the copilot mapping table. Fix: …` (C002-TS-108). Then one summary line per target:
-  `opencode: written dist/opencode/ (<n> files, mode native-permissions)` or
-  `copilot: not written (<n> errors)`.
-- `--json`: `{ "targets": [ { "target", "mode", "mode_source", "written", "files", "out" } ],
-  "diagnostics": [ { "severity", "code", "file", "line", "target", "construct", "message", "fix" } ] }`.
+  has no entry in the copilot mapping table. Fix: …` (C002-TS-108). Then one summary line per
+  selected target. A run without errors prints `<target>: written <out>/<target>/ (<n> files, mode
+  <mode>)` for each target. A run with any error writes no target (run semantics, step 2), so every
+  selected target prints `<target>: not written (<n> errors)`, where `<n>` counts that target's own
+  errors and may be 0 (for example `opencode: not written (0 errors)` beside `copilot: not written (2
+  errors)`).
+- `--json`: `{ "targets": [ { "target", "mode", "mode_source", "written", "errors", "files", "out" } ],
+  "diagnostics": [ { "severity", "code", "file", "line", "target", "construct", "message", "fix" } ] }`;
+  `written` is `false` for every target of a run with an error.
+- A target whose release the release check refuses is still generated; the release check alone
+  decides publication (C002-REQ-101, C002-REQ-619; architecture §6.2). A `deferred` spike S-08 record
+  does not stop generation; it leads to the spec revision of `../10-context/scope.md` §1.1
+  (C002-IF-001 §1).
 - Generation manifest written into each package as `architect-target.json`:
 
 ```json

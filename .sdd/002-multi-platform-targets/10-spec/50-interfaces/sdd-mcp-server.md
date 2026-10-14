@@ -101,16 +101,30 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
 ### §5.2 `run_command`
 
 1. Validate the arguments (ERR-MCP-001).
-2. Decide: hook input `{ "tool_name": "Bash", "tool_input": { "command": <command> }, "cwd":
-   <root>, "agent_type": "architect:sdd-mcp-server" }` to the bash guard core. Deny → refused with
-   the core's rule (GUARD-BASH-001 or GUARD-BASH-002) and message (C002-REQ-405).
+2. Decide: hook input `{ "tool_name": "Bash" or "PowerShell", "tool_input": { "command": <command> },
+   "cwd": <root>, "agent_type": "architect:sdd-mcp-server" }` to the bash guard core, with
+   `PowerShell` when the optional argument `dialect` is `powershell` and `Bash` otherwise (default).
+   The dialect only selects the guard's syntax rules and tokeniser; the command still runs without a
+   shell. Deny → refused with the core's rule (GUARD-BASH-001 or GUARD-BASH-002) and message
+   (C002-REQ-405). The core applies the allowlist of C002-IF-008 §1, including the Serena-command
+   confinement of §1.1 with `cwd` = root (C002-REQ-517); the server's environment has no
+   `CLAUDE_PLUGIN_DATA`, so only `--user-data` or a folder outside the repository passes. The
+   corpus replay feeds PowerShell cases with `dialect: powershell` (C002-IF-009 §2.2).
 3. Execute without a shell (C002-CON-07): take the words of each pipe segment from the guard core's
-   tokeniser; run the first segment as a child process with `shell: false`, working folder = root.
+   tokeniser of that dialect; run the first segment as a child process with `shell: false`, working
+   folder = root.
    - A first word `sdd` runs the CLI of the server's own package: the Node.js executable that runs
      the server, with `<package>/scripts/sdd.mjs` and the remaining words (C002-REQ-407,
      C002-TS-409); a PATH `sdd` is never used.
    - Any other executable is resolved on PATH; one that resolves only to a `.cmd` or `.bat` file is
-     not run (ERR-MCP-006), because running it needs a shell.
+     not run (ERR-MCP-006, reason `only a .cmd or .bat shim was found`), because running it needs a
+     shell. The allowlisted executables are expected as native executables on Windows: `node`,
+     `git` (Git for Windows), `uv` and `serena` (uv installs `.exe` launchers), `ripwire` (release
+     archive), and `ast-grep`, whose npm install (`npm install -g @ast-grep/cli`, C001-IF-10 §3)
+     gives only a `.cmd` shim. Under sdd MCP server enforcement the doctor therefore reports such a
+     tool as `error` with the fix to install a native executable (C002-IF-006 §2), and code
+     discovery falls back as for a failing layer (C001-REQ-1010). Spikes S-07 and S-08 record
+     the shims found on REF-WIN (`cmd_shims`, C002-IF-009 §3).
    - The pipe-only segments (`head -n N`, `tail -n N`, `wc -l`, `sort`, `uniq` with the flags of
      C001-IF-07 §3) are applied in-process to the standard output, line by line.
 4. Return `exit_code`, `stdout` and `stderr` (C002-REQ-406). A non-zero exit code is a normal

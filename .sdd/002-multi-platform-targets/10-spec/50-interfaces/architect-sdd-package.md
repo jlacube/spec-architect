@@ -21,7 +21,7 @@ package/                                  tarball root
 ├── scripts/sdd.mjs                       bundled sdd CLI (entry src/cli.ts), shebang line first
 ├── scripts/sdd-mcp.mjs                   bundled sdd MCP server (entry src/mcp/server.ts), shebang line first
 ├── templates/full/…, templates/lite/…,   copy of plugins/architect/templates/ (all profiles and the
-│   templates/constitution/…              constitution template)
+│   templates/constitution/…              constitution template), CLI lines translated (below)
 ├── serena/architect-read-only.yml        copy of plugins/architect/serena/architect-read-only.yml
 ├── LICENSE                               MIT license of the repository (C002-REQ-414)
 ├── THIRD_PARTY_NOTICES.md                every package bundled into either entry, with version and license
@@ -36,6 +36,15 @@ package/                                  tarball root
   Without it `sdd change new` and `sdd template show` fail on the generated targets.
 - `serena/architect-read-only.yml` is found the same way by `sdd serena-launch --read-only`
   (C002-IF-007).
+- **CLI lines in the templates** (C002-REQ-518, C002-REQ-519). While staging, the build copies each
+  template and replaces, on every line, each invocation of the CLI through its plugin path — the
+  word `node` followed by `<plugin-root>/scripts/sdd.mjs` or `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`,
+  quoted or not — by the bare word `sdd`; nothing else changes, so line numbers stay (for example
+  `templates/full/20-plan/handoff.md:20-23`, C002-TS-529). Then it scans every staged template for a
+  remaining plugin path of the CLI (any `<…>/scripts/sdd.mjs`, `scripts/sdd.mjs` after a variable, or
+  `${CLAUDE_PLUGIN_ROOT}`) and fails with ERR-BLD-002 naming the template, the line and the construct
+  (C002-TS-530). The source plugin's templates stay unchanged for Claude Code (C002-GOAL-05); the
+  templates the CLI reads on Claude Code are the plugin's own (`CLAUDE_PLUGIN_ROOT`).
 
 ## §2 Manifest
 
@@ -63,6 +72,8 @@ Rules checked on the packed tarball (C002-COMP-007 runs them in `npm run check`)
 | `LICENSE` holds the MIT license; `THIRD_PARTY_NOTICES.md` lists the union of the packages of both bundle metafiles | C002-REQ-414 |
 | Every bundled package of either entry has a license of the allowlist of C001-REQ-1114, else the build fails with ERR-BLD-001 | C002-REQ-413 |
 | `engines.node` is `>=20` | C002-NFR-401 |
+| `templates/` holds every file of `plugins/architect/templates/` and `serena/architect-read-only.yml` the source mode file, each byte-identical except the CLI lines translated by §1 | C002-REQ-512, C002-REQ-518 |
+| No shipped template names the CLI through a plugin path (the scan of §1; the build fails with ERR-BLD-002) | C002-REQ-519 |
 
 npm adds `LICENSE`, `README.md` and `package.json` to the tarball without a `files` entry.
 

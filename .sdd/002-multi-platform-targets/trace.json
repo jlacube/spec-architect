@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T12:21:40.206Z",
+  "generated_at": "2026-10-14T16:22:05.122Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1046,7 +1046,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 51,
       "title": "Target generator",
-      "content_hash": "sha256:ade4a72495cf6211a9a8ab9bf717428ee01c61862b1e546376988eb8909730f1"
+      "content_hash": "sha256:ddcf56b6e8dfb7f73613b6c55f7388c60cb5a7f023df625697db844dff55cd9c"
     },
     {
       "id": "C002-COMP-002",
@@ -1054,7 +1054,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 60,
       "title": "Mapping tables and wiring variants",
-      "content_hash": "sha256:f21ec849c3959b6b1ca294242bd99a5b20ccc8617948841c36d529a16d4e7bc6"
+      "content_hash": "sha256:c50728ef5a8afad33be1247438b55729c74dc87adbdab5cd018ca0e8bfd5bfed"
     },
     {
       "id": "C002-COMP-003",
@@ -1062,7 +1062,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 69,
       "title": "OpenCode target package",
-      "content_hash": "sha256:0c37c60f3b8a8293c233125a4dc15affba92b3347a75b882fa3b5ddfc14aa834"
+      "content_hash": "sha256:8d50e4a0c89a03f0301f5a7d8b717f56acdb43f4d683c445a82eb4d6266223eb"
     },
     {
       "id": "C002-COMP-004",
@@ -1070,7 +1070,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 78,
       "title": "Copilot target package",
-      "content_hash": "sha256:a7172eeb40e7797a95756300adc8b2c2f7b31ca04cd2a9d812a1e1753cba4134"
+      "content_hash": "sha256:05131e1ea9dd8a2bac1131576cb1d325f2eff59d48322ef6193843b17c0a6499"
     },
     {
       "id": "C002-COMP-005",
@@ -1078,7 +1078,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 87,
       "title": "sdd MCP server",
-      "content_hash": "sha256:7394ae832ba660d9ccf1fdae73ac5389172f0cb3dabc1957fbe3bd79480806ff"
+      "content_hash": "sha256:6726c463d09982a08825120348b4792ac9235510e724c6d6aebe3f9acb99e35c"
     },
     {
       "id": "C002-COMP-006",
@@ -1086,7 +1086,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 96,
       "title": "`architect-sdd` npm package",
-      "content_hash": "sha256:d4638e530aef6d0e4fdaf28bb50acf67905d6557bd755a5ab9b265fcb7292461"
+      "content_hash": "sha256:85dbe97efa3d77573afcef2a2065e0d76d4d72586e30931ca68beaceca9c198f"
     },
     {
       "id": "C002-COMP-007",
@@ -1094,7 +1094,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 105,
       "title": "Target structure checks",
-      "content_hash": "sha256:7f3b175b57b9ca5dbfe82e7becb7e40bf889bff76ef113803c8e7ae358c53d1c"
+      "content_hash": "sha256:62f56e089bdf37db45b65e5f76221262c52fa5d557b2593a0be806d5f86aa837"
     },
     {
       "id": "C002-COMP-008",
@@ -1102,7 +1102,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 114,
       "title": "Corpus replay suite",
-      "content_hash": "sha256:5c148699f3e523105f3a1bade8600d38b4daf27721ed099aa03a79f84e19b17d"
+      "content_hash": "sha256:4ceed87415dcb9898ca82ba3e2a1da191268e278469610e23b22bf00a05b750a"
     },
     {
       "id": "C002-COMP-009",
@@ -1118,7 +1118,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 132,
       "title": "Release check",
-      "content_hash": "sha256:a77425eced505ce5825a85713b3f87915e9aacdaf621dc3bca34f772318d19d7"
+      "content_hash": "sha256:f59890bca6a5be0fc82b4df27bea24c2e1778584f0ef15007b9a257d9fcb7e8f"
     },
     {
       "id": "C002-COMP-011",
@@ -1126,7 +1126,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 141,
       "title": "Manual VS Code checklist",
-      "content_hash": "sha256:100e3bc386a94ce060255ea35da024d4ca0be4b1619e8774da0e15e28f3b6d9c"
+      "content_hash": "sha256:6b862e7ba7bb25c4f7d94888e32c7b72e112e94dba6f0da64b2ae5bf2729112d"
     },
     {
       "id": "C002-COMP-012",
@@ -1134,7 +1134,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 150,
       "title": "Hooks and guards (modified)",
-      "content_hash": "sha256:3410f3ffa4be4903cb8f3d379b3d13d23f6b7fe4b6f790a41b16a0c0185147eb"
+      "content_hash": "sha256:a11b4977d5da67bb84a9299c6052cd02c18442c383cd1bace918544306c79274"
     },
     {
       "id": "C002-COMP-013",
@@ -1142,7 +1142,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 161,
       "title": "Build and check tooling (modified)",
-      "content_hash": "sha256:ba52fea69ae881d12abb30a0975e0ff2cd3e04bb6f52fddf86a9ab43f6f4911b"
+      "content_hash": "sha256:6b4ba01d714ad4ce9d44b6e4016f0f63ad261e0898f1cd8cee2496ca87f2eda3"
     },
     {
       "id": "C002-COMP-014",
@@ -1182,7 +1182,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 216,
       "title": "CLI front-end (modified)",
-      "content_hash": "sha256:07d8cb7211f108f9306aee877cc419af78009011bd11c204f38f4f73fc713d31"
+      "content_hash": "sha256:4604ff25330c28c93456b0793f2e19976ef5a5617573373a014611ea70bad567"
     },
     {
       "id": "C002-CON-01",
@@ -1229,8 +1229,8 @@
       "type": "CON",
       "file": "10-spec/60-architecture/constraints.md",
       "line": 17,
-      "title": "The path and bash guard cores are the only decision point for the write/shell boundary of the sdd MCP server and of the Copilot hooks fallback; no mechanism re-implements their rules, and the OpenCode permission rules are generated from the same allowlist (C002-IF-008 §1)",
-      "content_hash": "sha256:9f0a2a9a87e7b56480ad698feb732e8328b7adea4ebb242bdf3d3fad264b0244"
+      "title": "The path and bash guard cores are the only decision point for the write/shell boundary of the sdd MCP server, of the Copilot hooks fallback and of the Claude Code hooks; no mechanism re-implements their rules (the Serena-command confinement of C002-IF-008 §1.1 included), and the OpenCode permission rules are generated from the same allowlist with no `allow` rule wider than a guard entry (C002-IF-001 §6.3)",
+      "content_hash": "sha256:0ff00bf33be69104214128b09da04a57294e3d099f1415dcc0ddca6292253903"
     },
     {
       "id": "C002-CON-07",
@@ -1623,7 +1623,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 18,
       "title": "Target mapping table (translation table) and wiring variants",
-      "content_hash": "sha256:5fae087a602a0f9da908dadb6294cde51c8651f7b79461e345e09de571cd0aa1"
+      "content_hash": "sha256:b355128307590298dc70120617a0dded1d0c2c3584027bbe94758ed21b83ccbb"
     },
     {
       "id": "C002-IF-002",
@@ -1631,7 +1631,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 19,
       "title": "sdd MCP server: process, protocol and tools",
-      "content_hash": "sha256:c776e1ac2a7e6e80b9c1611c95497f3a8929ce1426f8d0cd430d680b8aef7de3"
+      "content_hash": "sha256:8afdf904e715939c7e719fae3257e4eea033f8ac5b8a3620f23365ee36634444"
     },
     {
       "id": "C002-IF-003",
@@ -1639,7 +1639,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 20,
       "title": "`architect-sdd` npm package",
-      "content_hash": "sha256:b0d766a68d0db7a6399e392c3ea96c0ba7c201086ed40c2431b7350f3609f5d4"
+      "content_hash": "sha256:3bfb983ca38adee0974ae1a3260ab7dd15b98068da043f92a3db968458c94568"
     },
     {
       "id": "C002-IF-004",
@@ -1655,7 +1655,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 22,
       "title": "Target package contracts (OpenCode, Copilot VS Code) and target structure checks",
-      "content_hash": "sha256:b6e970468069c5575ec8903d5dd4686e73df7bfb1aa9e5413f553e42edc75bad"
+      "content_hash": "sha256:1b1d530e505b6fbaf553f8c1e086cd8453cfafa8b7b9bb1f4eb3ff95dffe768d"
     },
     {
       "id": "C002-IF-006",
@@ -1663,7 +1663,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 23,
       "title": "Doctor host rows (extends C001-IF-10 §3)",
-      "content_hash": "sha256:d877a42e6d160e28ce543c2026f055bfd7523d7666561888e5c09d736717021a"
+      "content_hash": "sha256:109d4076c1d3e13a645f53f364cd0288e5a51e3452e222402c117ba34614af73"
     },
     {
       "id": "C002-IF-007",
@@ -1671,15 +1671,15 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 24,
       "title": "sdd CLI additions (delta to C001-IF-01)",
-      "content_hash": "sha256:d00ec9f683d556e6098b1f68c559a492fa5ce501125bbf8d4441d853c0690370"
+      "content_hash": "sha256:8d002a3bb22b8904f27164c59a015e046905f711718e56526180cc25d5044c63"
     },
     {
       "id": "C002-IF-008",
       "type": "IF",
       "file": "10-spec/50-interfaces/README.md",
       "line": 25,
-      "title": "Hooks contract delta: allowlist rows and Copilot hook input (delta to C001-IF-07)",
-      "content_hash": "sha256:279a63c7affc4779ddc0260fdba89c2535f7f40e72d6a4d4ea330aec5aec3eb9"
+      "title": "Hooks contract delta: allowlist rows, Serena-command confinement, writing subcommands and Copilot hook input (delta to C001-IF-07)",
+      "content_hash": "sha256:aca67b1ba6a4398dc705053bc759dbf4110480d2450519c54fb2d314adaa1094"
     },
     {
       "id": "C002-IF-009",
@@ -1687,7 +1687,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 26,
       "title": "Verification records: replay report, checklist record, spike record, release record",
-      "content_hash": "sha256:f44bfc639cfacd1efe6323db7fa5b9bd7657c6f589e02b51c7979859cdee66ad"
+      "content_hash": "sha256:2dc27cb741e42a64562373ec030f3151e547ecddb4e4d89ced2e95f3c20c2025"
     },
     {
       "id": "C002-IF-010",
@@ -1695,7 +1695,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 27,
       "title": "Eval runner contract (host back ends behind the case API)",
-      "content_hash": "sha256:f330f948fa51ed0ce02f8eb8ab510ec47180ecb8a28ef7bd3a1f85ab708e2146"
+      "content_hash": "sha256:aae8b379284f23a1653c06d6518d43ed72e72ddedbee3dd7eaf24e78e3142206"
     },
     {
       "id": "C002-INV-01",
@@ -1726,8 +1726,8 @@
       "type": "INV",
       "file": "10-spec/40-domain/domain-model.md",
       "line": 60,
-      "title": "A mapping table names exactly one enforcement mode: `native-permissions` or `sdd-mcp-server` for OpenCode, `sdd-mcp-server` or `copilot-hooks` for Copilot; a package proposed for release was generated with the table's mode.",
-      "content_hash": "sha256:aef2c7ee00a62353ab3758a9296c392a9fefa1f0c77ab15ebcc5ec68912129d7"
+      "title": "A mapping table names exactly one enforcement mode: `native-permissions` or `sdd-mcp-server` for OpenCode, `sdd-mcp-server` or `copilot-hooks` for Copilot; a package proposed for release was generated with the table's mode. A `deferred` spike outcome is never a table mode (C002-IF-001 §1).",
+      "content_hash": "sha256:77996c2feaebc87dabada3284044cb7d6618ad89a24c0c77e560ce33b5948599"
     },
     {
       "id": "C002-INV-05",
@@ -1765,7 +1765,7 @@
       "id": "C002-INV-09",
       "type": "INV",
       "file": "10-spec/40-domain/domain-model.md",
-      "line": 104,
+      "line": 106,
       "title": "A question-tool result without a choice of P-01 creates no answer in a questions log and no gate approval.",
       "content_hash": "sha256:b1430ea7bd56d0979f3f8d400cfebffc9f09e151119e4018ea9503575c24b157"
     },
@@ -1773,9 +1773,9 @@
       "id": "C002-INV-10",
       "type": "INV",
       "file": "10-spec/40-domain/domain-model.md",
-      "line": 98,
-      "title": "A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions for every mechanism of the package's mode and an injection summary with no case acted upon; for Copilot VS Code also a checklist record with every step passed, and under the Copilot hooks fallback the exception of C002-DEC-005.",
-      "content_hash": "sha256:f4bc4d6e43895ba522f425b4d38dbeb5fbf1abc7300cf2b54c110a2dc2e4f739"
+      "line": 100,
+      "title": "A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions over the applicable cases for every mechanism of the package's mode and an injection summary with no case acted upon; for Copilot VS Code also a checklist record with every step passed; and under the Copilot hooks fallback a checklist record with hooks enabled whose injection steps are the injection evidence, and the exception of C002-DEC-005.",
+      "content_hash": "sha256:3559c712cc871745d1debfd169a55875439cda26b58d709d16f010515fde37e5"
     },
     {
       "id": "C002-INV-11",
@@ -1792,6 +1792,14 @@
       "line": 69,
       "title": "No Claude Code construct reaches a target package untranslated outside the contexts its detector accepts; a run that cannot translate one fails.",
       "content_hash": "sha256:c579aa91854284e7ffa9d4625eb5297441ae5d061dd941e7b6c82e23f748ac76"
+    },
+    {
+      "id": "C002-INV-14",
+      "type": "INV",
+      "file": "10-spec/40-domain/domain-model.md",
+      "line": 94,
+      "title": "A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision of its mechanism, or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).",
+      "content_hash": "sha256:7e9c77cc39a1d0cf66c2c735b3ae4501e34c4cb95f8707c40197c80f72397f0e"
     },
     {
       "id": "C002-NFR-101",
@@ -5750,6 +5758,41 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-115",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-116",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-117",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-118",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-216",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-317",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-002",
       "to": "C002-IF-001",
       "relation": "references"
@@ -5781,6 +5824,26 @@
     },
     {
       "from": "C002-COMP-002",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-002",
+      "to": "C002-REQ-116",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-002",
+      "to": "C002-REQ-117",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-002",
+      "to": "C002-REQ-118",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-002",
       "to": "C002-REQ-508",
       "relation": "realizes"
     },
@@ -5803,6 +5866,11 @@
       "from": "C002-COMP-003",
       "to": "C002-IF-005",
       "relation": "references"
+    },
+    {
+      "from": "C002-COMP-003",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
     },
     {
       "from": "C002-COMP-003",
@@ -5855,6 +5923,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-003",
+      "to": "C002-REQ-216",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-004",
       "to": "C002-COMP-005",
       "relation": "depends-on"
@@ -5883,6 +5956,11 @@
       "from": "C002-COMP-004",
       "to": "C002-IF-008",
       "relation": "references"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
     },
     {
       "from": "C002-COMP-004",
@@ -5937,6 +6015,16 @@
     {
       "from": "C002-COMP-004",
       "to": "C002-REQ-316",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-REQ-317",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-REQ-318",
       "relation": "realizes"
     },
     {
@@ -6030,6 +6118,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-005",
+      "to": "C002-REQ-415",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-006",
       "to": "C002-COMP-005",
       "relation": "depends-on"
@@ -6085,6 +6178,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-006",
+      "to": "C002-REQ-512",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-007",
       "to": "C002-COMP-001",
       "relation": "depends-on"
@@ -6107,6 +6205,21 @@
     {
       "from": "C002-COMP-007",
       "to": "C002-REQ-110",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-007",
+      "to": "C002-REQ-113",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-007",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-007",
+      "to": "C002-REQ-318",
       "relation": "realizes"
     },
     {
@@ -6137,6 +6250,11 @@
     {
       "from": "C002-COMP-008",
       "to": "C002-COMP-003",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C002-COMP-008",
+      "to": "C002-COMP-004",
       "relation": "depends-on"
     },
     {
@@ -6177,6 +6295,21 @@
     {
       "from": "C002-COMP-008",
       "to": "C002-REQ-606",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-625",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-626",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-627",
       "relation": "realizes"
     },
     {
@@ -6310,6 +6443,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-010",
+      "to": "C002-REQ-629",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-011",
       "to": "C002-COMP-004",
       "relation": "depends-on"
@@ -6342,6 +6480,11 @@
     {
       "from": "C002-COMP-011",
       "to": "C002-REQ-616",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-011",
+      "to": "C002-REQ-628",
       "relation": "realizes"
     },
     {
@@ -6391,7 +6534,17 @@
     },
     {
       "from": "C002-COMP-012",
+      "to": "C002-REQ-319",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
       "to": "C002-REQ-503",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
+      "to": "C002-REQ-517",
       "relation": "realizes"
     },
     {
@@ -6426,6 +6579,11 @@
     },
     {
       "from": "C002-COMP-013",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-COMP-013",
       "to": "C002-NFR-801",
       "relation": "realizes"
     },
@@ -6442,6 +6600,16 @@
     {
       "from": "C002-COMP-013",
       "to": "C002-REQ-502",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-013",
+      "to": "C002-REQ-518",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-013",
+      "to": "C002-REQ-519",
       "relation": "realizes"
     },
     {
@@ -6651,6 +6819,11 @@
     },
     {
       "from": "C002-COMP-018",
+      "to": "C002-REQ-114",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
       "to": "C002-REQ-407",
       "relation": "realizes"
     },
@@ -6667,6 +6840,36 @@
     {
       "from": "C002-COMP-018",
       "to": "C002-REQ-509",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-511",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-513",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-514",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-515",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-516",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-520",
       "relation": "realizes"
     },
     {
@@ -6696,6 +6899,11 @@
     },
     {
       "from": "C002-CON-06",
+      "to": "C002-COMP-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-06",
       "to": "C002-COMP-002",
       "relation": "references"
     },
@@ -6717,6 +6925,11 @@
     {
       "from": "C002-CON-06",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-06",
+      "to": "C002-IF-001",
       "relation": "references"
     },
     {
@@ -7276,12 +7489,37 @@
     },
     {
       "from": "C002-IF-001",
-      "to": "C002-REQ-113",
+      "to": "C002-REQ-118",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-206",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-207",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-216",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-317",
       "relation": "references"
     },
     {
       "from": "C002-IF-001",
       "to": "C002-REQ-508",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-620",
       "relation": "references"
     },
     {
@@ -7330,6 +7568,16 @@
       "relation": "references"
     },
     {
+      "from": "C002-IF-002",
+      "to": "C002-REQ-415",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-002",
+      "to": "C002-REQ-517",
+      "relation": "references"
+    },
+    {
       "from": "C002-IF-003",
       "to": "C002-COMP-003",
       "relation": "references"
@@ -7362,6 +7610,21 @@
     {
       "from": "C002-IF-003",
       "to": "C002-REQ-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-003",
+      "to": "C002-REQ-512",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-003",
+      "to": "C002-REQ-518",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-003",
+      "to": "C002-REQ-519",
       "relation": "references"
     },
     {
@@ -7436,7 +7699,27 @@
     },
     {
       "from": "C002-IF-005",
+      "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
       "to": "C002-REQ-110",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-113",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-114",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-117",
       "relation": "references"
     },
     {
@@ -7447,6 +7730,11 @@
     {
       "from": "C002-IF-005",
       "to": "C002-REQ-210",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-216",
       "relation": "references"
     },
     {
@@ -7466,7 +7754,7 @@
     },
     {
       "from": "C002-IF-005",
-      "to": "C002-REQ-316",
+      "to": "C002-REQ-319",
       "relation": "references"
     },
     {
@@ -7487,6 +7775,11 @@
     {
       "from": "C002-IF-006",
       "to": "C002-COMP-016",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-006",
+      "to": "C002-REQ-116",
       "relation": "references"
     },
     {
@@ -7512,6 +7805,11 @@
     {
       "from": "C002-IF-007",
       "to": "C002-COMP-018",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-114",
       "relation": "references"
     },
     {
@@ -7542,6 +7840,21 @@
     {
       "from": "C002-IF-007",
       "to": "C002-REQ-509",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-511",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-517",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-520",
       "relation": "references"
     },
     {
@@ -7591,7 +7904,27 @@
     },
     {
       "from": "C002-IF-008",
+      "to": "C002-REQ-318",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-319",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
       "to": "C002-REQ-503",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-517",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-607",
       "relation": "references"
     },
     {
@@ -7621,17 +7954,22 @@
     },
     {
       "from": "C002-IF-009",
-      "to": "C002-REQ-615",
-      "relation": "references"
-    },
-    {
-      "from": "C002-IF-009",
-      "to": "C002-REQ-617",
+      "to": "C002-REQ-613",
       "relation": "references"
     },
     {
       "from": "C002-IF-009",
       "to": "C002-REQ-622",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-625",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-629",
       "relation": "references"
     },
     {
@@ -7655,8 +7993,23 @@
       "relation": "references"
     },
     {
+      "from": "C002-IF-010",
+      "to": "C002-REQ-628",
+      "relation": "references"
+    },
+    {
+      "from": "C002-INV-04",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
       "from": "C002-INV-10",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-INV-14",
+      "to": "C002-REQ-626",
       "relation": "references"
     },
     {

@@ -69,17 +69,25 @@ model: <models.opus>
   "tools": { "context7*": false, "deepwiki*": false, "serena*": false, "sdd-files*": false, "sdd-shell*": false },
   "agent": {
     "sdd-spec-writer": {
-      "tools": { "sdd-files*": true, "sdd-shell*": true },
+      "tools": { "*": false, "read": true, "list": true, "glob": true, "grep": true, "sdd-files*": true, "sdd-shell*": true },
       "permission": { "edit": "deny", "bash": "deny", "external_directory": "deny", "question": "deny", "skill": "deny" }
     }
   }
 }
 ```
 
+- Each Architect agent's `tools` map starts with the catch-all `"*": false` and then sets `true` only
+  for the tools the table derives from the source `tools` field (C002-IF-001 §6.1, closed tool set),
+  so a tool of an adopter's own MCP server or plugin is never available to an Architect agent
+  (C002-REQ-108, C002-TS-133). Listed order matters only if spike S-07 shows that OpenCode resolves
+  the map by order; the generator writes the catch-all first.
 - `sdd-files` and `sdd-shell` appear only under sdd MCP server enforcement (C002-REQ-210); under
   native permission enforcement each agent's `permission.edit` and `permission.bash` are the rule
-  lists of the table (C002-REQ-206, C002-REQ-207), and the agent's `tools` grant `write`, `edit`,
-  `bash` as its source tools allow.
+  lists of the table (C002-REQ-206, C002-REQ-207, C002-IF-001 §6.3), and the agent's `tools` grant
+  `write`, `edit`, `bash` as its source tools allow.
+- Command files are named `architect-<name>.md` after the source command (C002-REQ-216).
+- The `serena` entry runs `sdd serena-launch --user-data --read-only -- start-mcp-server …`
+  (C002-REQ-114, TGT-SERENA-001).
 - The top-level `tools` entry switches the Architect MCP servers off for every other agent; the file
   has no top-level `permission` key and `agent` entries for the ten Architect agents only
   (C002-REQ-208, C002-TS-210).
@@ -121,6 +129,9 @@ user-invocable: false
 
 - Conductor: `tools` adds `agent`, `vscode/askQuestions` and the todo tool; `agents` lists the nine
   specialists; no `user-invocable: false`.
+- The `serena` entry of `.mcp.json` runs `sdd serena-launch --user-data --read-only -- start-mcp-server …`
+  (C002-REQ-114, TGT-SERENA-001); with a `serena/*` grant, the read-only mode file is what keeps
+  Serena's editing and shell tools away from the agents.
 - Copilot hooks fallback: `tools` holds the generic edit and terminal tools the table maps Write,
   Edit and Bash to, no `sdd-files` or `sdd-shell`, and the frontmatter adds:
 
@@ -131,9 +142,15 @@ hooks:
       command: node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs" hook guard --host copilot --agent sdd-spec-writer --classes "${CLAUDE_PLUGIN_ROOT}/hooks/tool-classes.json"
 ```
 
-Prompt file (`prompts/plan.prompt.md`): frontmatter `description`, `argument-hint`,
-`agent: sdd-conductor` and `tools` equal to the conductor's list, because prompt-file tools take
-precedence over the agent's (C002-OA-001; C002-REQ-306).
+Prompt file (`prompts/plan.prompt.md`, named `<name>.prompt.md` after the source command,
+C002-REQ-317): frontmatter `description`, `argument-hint`, `agent: sdd-conductor` and `tools` equal
+to the conductor's list, because prompt-file tools take precedence over the agent's (C002-OA-001;
+C002-REQ-306). Agent and prompt-file `tools` lists are allowlists, so no tool of an adopter's MCP
+server is granted (C002-IF-001 §6.1).
+
+`hooks/tool-classes.json` (Copilot hooks fallback only): the table's `hook_tool_classes` (C002-IF-008
+§2), which assigns every tool granted to an agent or a prompt file of the package to exactly one of
+the classes `write`, `terminal` and `read_only` (C002-REQ-318, TGT-CLASS-001).
 
 `.mcp.json`:
 
@@ -195,19 +212,21 @@ finding is printed in the format of C001-IF-08 §3 with the target name.
 
 | Code | Check | Source REQ |
 |---|---|---|
-| TGT-LAYOUT-001 | The package has the files and folders of §2 or §3 (ten agents, 13 commands, every skill, manifest, install notes, MCP configuration) and nothing else | C002-REQ-201, C002-REQ-301, C002-REQ-603 |
-| TGT-PORT-001 | No Claude Code construct (detectors of C002-IF-001 §2) outside its `accepted_in` contexts, in agents, commands or prompt files, skills, configuration and hook files; the copied `scripts/sdd.mjs` is not scanned | C002-REQ-602 |
-| TGT-TOOLS-001 | Each agent's and prompt file's tool grants equal the grants the table derives from the source `tools` field | C002-REQ-108, C002-REQ-603 |
+| TGT-LAYOUT-001 | The package has the files and folders of §2 or §3 (ten agents, 13 commands named `architect-<name>.md` on OpenCode and `<name>.prompt.md` on Copilot, every skill, manifest, install notes, MCP configuration) and nothing else | C002-REQ-201, C002-REQ-216, C002-REQ-301, C002-REQ-317, C002-REQ-603 |
+| TGT-PORT-001 | No Claude Code construct (detectors of C002-IF-001 §2) outside its `accepted_in` contexts, in agents, commands or prompt files, skills, configuration and hook files; the copied `scripts/sdd.mjs` is not scanned (the templates of `architect-sdd` are scanned by the build, ERR-BLD-002, C002-IF-003 §1) | C002-REQ-602 |
+| TGT-TOOLS-001 | Each agent's and prompt file's tool grants equal the grants the table derives from the source `tools` field, server profiles included (an agent without Bash has no `sdd-shell`, C002-TS-130); on OpenCode each Architect agent's `tools` map also starts with the catch-all `"*": false` (§2). The finding names the file and each tool granted or missing | C002-REQ-108, C002-REQ-117, C002-REQ-603 |
 | TGT-MCP-001 | The MCP configuration declares exactly the servers of the table for the package's mode | C002-REQ-201, C002-REQ-301, C002-REQ-603 |
+| TGT-SERENA-001 | The `serena` entry of the MCP configuration runs `sdd` with the arguments `serena-launch`, `--user-data`, `--read-only`, `--`, `start-mcp-server`, in that order, followed by the table's Serena arguments, and holds no `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` or `SERENA_HOME`. The finding names the configuration file (`opencode.json` or `.mcp.json`), `serena` and each missing, misplaced or extra argument (for example `--read-only`) | C002-REQ-114 (C002-TS-124, C002-TS-126) |
 | TGT-GRANT-001 | Under sdd MCP server enforcement no agent or prompt file grants a generic edit or terminal tool, by name or through a tool set that contains one | C002-REQ-209, C002-REQ-306, C002-REQ-604 |
-| TGT-SIZE-001 | Each inlined skill ≤ 24,000 characters and all inlined skills of one agent ≤ 64,000 characters | C002-REQ-110, C002-NFR-104 |
+| TGT-CLASS-001 | Copilot hooks fallback: `hooks/tool-classes.json` exists and assigns every tool granted by any agent or prompt file to exactly one of `write`, `terminal` and `read_only`, with the tools the table maps Read, Glob and Grep to in `read_only`, the terminal tool in `terminal` and the terminal dialect of the table; the finding names `tool-classes.json`, the tool and every agent or prompt file that grants it. sdd MCP server enforcement: the package has no `tool-classes.json` | C002-REQ-318, C002-REQ-319 (C002-TS-330, C002-TS-331, C002-TS-332) |
+| TGT-SIZE-001 | Each inlined skill ≤ 24,000 characters and all inlined skills of one agent ≤ 64,000 characters, references excluded. One finding per budget exceeded, naming the target, the agent, the budget (24,000 per skill or 64,000 per agent), the measured size and the skills concerned: the skill over the per-skill budget, or every inlined skill with its size when the per-agent total is over | C002-REQ-110, C002-NFR-104 (C002-TS-116) |
 | TGT-HOOK-001 | Hook commands invoke the CLI with arguments only (no `&&`, `\|\|`, `;`, `\|`, `>`, `<`, `$(`, backtick); no PreToolUse hook outside agent frontmatter | C002-REQ-302, C002-REQ-316 |
 | TGT-PERM-001 | OpenCode: no top-level `permission`; `agent` entries for the ten agents only; `edit` and `bash` rules as the table's mode requires | C002-REQ-206 … C002-REQ-209 |
 | TGT-AGENT-001 | Only the conductor holds an agent-start grant, admitting exactly the nine specialists | C002-REQ-107 |
 | TGT-MODE-001 | Conductor primary, specialists subagent; every command or prompt file bound to the conductor | C002-REQ-202, C002-REQ-203, C002-REQ-303 |
 | TGT-MEM-001 | No agent has a `memory` field | C002-REQ-106 |
-| TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2 | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502 |
-| PLG-VAR-001 | On the source plugin: no `SKILL.md` body holds a wiring variant of a generated target or a host question-tool name (`vscode/askQuestions`) | C002-REQ-113 |
+| TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2, the shipped templates included | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519 |
+| PLG-VAR-001 | On the source plugin: no agent file (`agents/*.md`), command file (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`vscode/askQuestions`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is not in the source text its anchor replaces. The finding names the file, the line and the name or the variant file found | C002-REQ-113 (C002-TS-121, C002-TS-122) |
 
 PLG-VAR-001 extends the plugin structure checks of C001-IF-08 §3; the 14 existing checks are
 unchanged (C002-REQ-601).

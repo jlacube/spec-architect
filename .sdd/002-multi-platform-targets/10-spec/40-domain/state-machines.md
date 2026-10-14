@@ -51,7 +51,7 @@ stateDiagram-v2
   native_permissions --> undetermined : new tested version
   sdd_mcp_server --> undetermined : new tested version
   copilot_hooks --> undetermined : new tested version
-  deferred --> [*]
+  deferred --> [*] : spec revision removes the Copilot target
 ```
 
 | From | Event | Guard | To | Effect |
@@ -60,7 +60,7 @@ stateDiagram-v2
 | undetermined | S-07 record | any corpus case decided otherwise | sdd_mcp_server | OpenCode table mode `sdd-mcp-server` (C002-REQ-209) |
 | undetermined | S-08 record | Copilot subagents confined to their tool list (C002-AS-03) | sdd_mcp_server | Copilot table mode `sdd-mcp-server` |
 | undetermined | S-08 record | not confined; agent-scoped hooks block a subagent's tool calls | copilot_hooks | Copilot table mode `copilot-hooks`; release flagged (C002-REQ-622) |
-| undetermined | S-08 record | not confined; hooks do not block | deferred | Copilot release refused (C002-REQ-620, ERR-REL-005); OpenCode unaffected (C002-REQ-619) |
+| undetermined | S-08 record | not confined; hooks do not block | deferred | not copied into the Copilot table (C002-IF-001 §1); triggers the spec revision of `../10-context/scope.md` §1.1 that removes the Copilot target (Q-defer-01); until then the Copilot release is refused (C002-REQ-620, ERR-REL-005); OpenCode unaffected (C002-REQ-619) |
 | any determined mode | tested version changes | — | undetermined | spike re-run before the next release (C002-REQ-621) |
 
 ## 3. sdd MCP server process
@@ -92,7 +92,7 @@ stateDiagram-v2
   [*] --> received
   received --> failed : arguments invalid (ERR-MCP-001)
   received --> decided : arguments valid
-  decided --> refused : guard deny, or span count not 1, or file missing
+  decided --> refused : guard deny, or span count not 1, or file missing (ERR-MCP-004, ERR-MCP-005)
   decided --> failed : exception in a guard core (ERR-MCP-002)
   decided --> committing : write allowed
   committing --> failed : I/O error, previous content kept (ERR-MCP-003)
@@ -111,13 +111,18 @@ stateDiagram-v2
 
 | From | Event | Guard | To | Effect |
 |---|---|---|---|---|
-| received | validation | input schema of the tool | decided / failed | — |
+| received | validation | input schema of the tool | decided / failed | failed: ERR-MCP-001, nothing changed |
 | decided | path or bash guard core | allow | committing (write) / running (command) | — |
 | decided | path or bash guard core | deny | refused | error result with the core's rule and message; nothing changed (C002-INV-07, C002-INV-08) |
+| decided | path or bash guard core | the core throws | failed | ERR-MCP-002; the call is refused, nothing changed (C002-CON-08) |
+| decided | file read (`replace_text`) | the file does not exist | refused | ERR-MCP-005; nothing changed |
 | decided | span count (`replace_text`) | count ≠ 1 | refused | ERR-MCP-004 with the count |
+| committing | write of the temporary file or rename | I/O error | failed | ERR-MCP-003; the temporary file is removed and the target keeps its previous content (C002-REQ-402, C002-INV-07) |
 | committing | rename | — | linting | file holds the new content |
 | linting | quick lint | runs or throws | written | result with findings or WARN-MCP-001; the write stands (C002-REQ-409) |
+| running | process start | executable not found, or found only as a `.cmd` or `.bat` file | failed | ERR-MCP-006; no process started |
 | running | process exit | — | completed | exit code, standard output and standard error returned; non-zero is not an error result |
+| running | `timeout_ms` reached | — | timed_out | process tree killed; `status: timed_out`, `exit_code: null`, output up to that point returned |
 
 ## 5. Release of a generated target
 
