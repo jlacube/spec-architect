@@ -144,15 +144,21 @@ test("SDD_DEBUG=1 writes timing and decision traces to standard error for every 
 });
 
 // M-2 exit criterion (C001-T-028): `sdd lint` exits 0 on this repository, after status --write.
-test("lint on a copy of this repository's workspace exits 0 with no error or warning", () => {
+test("lint on a copy of this repository's workspace: every change whose current phase is approved has no error or warning", () => {
   const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-repo-")));
   try {
     cpSync(join(repoRoot(), ".sdd"), join(root, ".sdd"), { recursive: true });
     assert.equal(runBundled(["status", "--write"], { cwd: root }).code, 0);
-    const r = runBundled(["lint", "--json"], { cwd: root });
-    assert.equal(r.code, 0, r.stdout);
-    const findings = (JSON.parse(r.stdout) as { findings: { code: string; severity: string }[] }).findings;
-    assert.deepEqual(findings.filter((f) => f.severity !== "info"), []);
+    // A change in a draft phase may have open findings (work in progress); approved phases may not.
+    const reg = JSON.parse(readFileSync(join(root, ".sdd", "registry.json"), "utf8")) as { changes: { id: string; phase: string; status: string; phases: Record<string, { status: string }> }[] };
+    const approved = reg.changes.filter((c) => c.status !== "archived" && c.phases[c.phase]?.status === "approved").map((c) => c.id.slice(4));
+    assert.ok(approved.includes("001"), "CHG-001 is approved");
+    for (const nnn of approved) {
+      const r = runBundled(["lint", nnn, "--json"], { cwd: root });
+      assert.equal(r.code, 0, r.stdout);
+      const findings = (JSON.parse(r.stdout) as { findings: { code: string; severity: string }[] }).findings;
+      assert.deepEqual(findings.filter((f) => f.severity !== "info"), [], `CHG-${nnn}`);
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

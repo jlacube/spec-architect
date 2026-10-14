@@ -3,7 +3,7 @@
 // hashes recorded at the G2/G3 approvals (C001-IF-13 §2 step 5).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { buildChangeGraph, loadWorkspace } from "../../../src/model/graph.ts";
 import { repoRoot } from "../../helpers.ts";
@@ -93,5 +93,7 @@ test("generated files contribute neither definitions nor edges", () => {
 
 test("loadWorkspace finds the change folders of .sdd/", () => {
   const ws = loadWorkspace(join(repoRoot(), ".sdd"));
-  assert.deepEqual(ws.changes.map((c) => c.change), ["001"]);
+  const folders = readdirSync(join(repoRoot(), ".sdd")).filter((n) => /^\d{3}-/.test(n)).map((n) => n.slice(0, 3)).sort();
+  assert.ok(folders.includes("001"));
+  assert.deepEqual(ws.changes.map((c) => c.change).sort(), folders);
 });
