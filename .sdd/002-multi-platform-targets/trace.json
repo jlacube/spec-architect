@@ -1,0 +1,87 @@
+{
+  "change": "CHG-002",
+  "generated_at": "2026-10-14T00:07:17.865Z",
+  "nodes": [
+    {
+      "id": "C002-DEC-001",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-001-copilot-guards.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:c085f7ca55d415339ea5a2121becc592ba927ca8d866652a6a8c586f2daad454",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-002",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-002-skill-delivery.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:bc1ba48968dc7bbcd99fa30cbf814586507ed2ca64874f3c410e7a443ee31830",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-003",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-003-copilot-evals.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:106e4c8cb610450837fb2737759e43bbd9084cef5382916daed30c06147f3dc8",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-OA-001",
+      "type": "OA",
+      "file": "00-ideation/options/OA-001-copilot-guards.md",
+      "line": 1,
+      "title": "Write/shell boundary on Copilot in VS Code",
+      "content_hash": "sha256:d9dc2e25f4ef4aea849c0527c819536e1296da8c6794ae32f5802df8f39b40ab",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-002",
+      "type": "OA",
+      "file": "00-ideation/options/OA-002-skill-delivery.md",
+      "line": 1,
+      "title": "Skill delivery on targets without skill preloading",
+      "content_hash": "sha256:4fd3cfbf358c15ae86b02b37100173756833829beccee5c02212656f98b5541d",
+      "status": "draft"
+    },
+    {
+      "id": "C002-R-001",
+      "type": "R",
+      "file": "00-ideation/research/R-001-platform-facts.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:71dd3ae4d001219a9964850e49ece1195d1bbce467369fa4648e56fd295cda27",
+      "status": "draft"
+    }
+  ],
+  "edges": [
+    {
+      "from": "C002-DEC-001",
+      "to": "C002-OA-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-001",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-002",
+      "to": "C002-OA-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-003",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-001",
+      "to": "C002-OA-002",
+      "relation": "references"
+    }
+  ]
+}

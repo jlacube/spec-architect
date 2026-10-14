@@ -1,6 +1,10 @@
 {
   "change": "CHG-002",
-  "allocated": {},
+  "allocated": { "OA": 4, "R": 2, "DEC": 9, "GOAL": 5, "NG": 3, "SC": 5 },
   "blocks": [],
-  "tombstones": []
+  "tombstones": [
+    { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
+    { "id": "C002-OA-004", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
+    { "id": "C002-R-002", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" }
+  ]
 }
