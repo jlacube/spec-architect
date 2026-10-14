@@ -226,8 +226,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-625 — Memory cases expect deny on the generated targets
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE corpus replay suite SHALL use `deny` as the expected decision of every memory-category case of the guard corpora on every enforcement mechanism of a generated target.
-- **Rationale:** Q-safety-02 (spec round 2, `../../questions-log.md`): "memory cases expect deny on the targets"; the generated agents have no memory folder (C002-DEC-009, C002-NG-04, C002-REQ-106), while the corpora keep `allow` for these cases on Claude Code (C001-REQ-1103), for example case PG-205 (`tests/guards/path-corpus.json:1870-1875`)
+- **Statement:** THE corpus replay suite SHALL use `deny` as the expected decision of every memory-category case of the guard corpora on every enforcement mechanism of a generated target, including a memory-category case whose caller is not an Architect agent, which the suite replays as a write by an Architect agent.
+- **Rationale:** the replay of a non-Architect memory case (for example PG-224) follows C002-IF-009 §2.2; Q-safety-02 (spec round 2, `../../questions-log.md`): "memory cases expect deny on the targets"; the generated agents have no memory folder (C002-DEC-009, C002-NG-04, C002-REQ-106), while the corpora keep `allow` for these cases on Claude Code (C001-REQ-1103), for example case PG-205 (`tests/guards/path-corpus.json:1870-1875`)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** `C002-AC-625.1`

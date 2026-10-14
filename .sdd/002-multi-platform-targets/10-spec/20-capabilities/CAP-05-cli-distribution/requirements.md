@@ -174,7 +174,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Priority:** Must
 - **Acceptance:** `C002-AC-517.1`
 - **Evidence:** current-state E-5 — `src/hooks/guard-bash.ts:119` › `sddCli` (any subcommand after `node <path>/sdd.mjs` passes the sdd CLI entry; layer: serena); current-state E-22 — `src/cli/commands.ts:420` › `serenaConfig` (writes `serena/serena_config.yml` under its folder argument, resolved against the working directory at `src/cli/commands.ts:421`; `serenaLaunchCmd` does the same at `src/cli/commands.ts:470`; layer: serena + grep)
-- **Open items:** how the bash guard resolves the argument `"${CLAUDE_PLUGIN_DATA}"` that the Claude Code doctor and init commands pass (current-state E-22), whose Serena step must keep passing (C002-REQ-623), is fixed in C002-IF-008 §1.
+- **Open items:** none — how the bash guard resolves the argument `"${CLAUDE_PLUGIN_DATA}"` that the Claude Code doctor and init commands pass (current-state E-22), whose Serena step must keep passing (C002-REQ-623), is settled by C002-IF-008 §1.1.
 
 ### C002-REQ-518 — CLI named as `sdd` in the templates of `architect-sdd`
 - **Delta:** ADDED

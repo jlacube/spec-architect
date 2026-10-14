@@ -69,3 +69,14 @@ Questions from the spec-writer's step 3 hand-back (Q-cli-03, Q-perf-01) and the 
 - **Rejected:** ≤ 1 s at p95 (no measurement supports it); no threshold (TR-04)
 - **Answer:** ≤ 5 s p95 (Recommended)
 - **Extracted instructions:** none
+
+## Round 3 — 2026-10-14
+
+Question from the architect's critic-fix hand-back (C002-IF-001 §6.3).
+
+### Q-safety-03 — Should OpenCode decisions that are stricter than the guard, for command forms the generated agents never send, count as differences in the corpus replay?
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 4
+- **Options:** 1. Keep 0 differences; OpenCode likely runs under sdd MCP server enforcement (Recommended) · 2. Accept stricter OpenCode decisions for a fixed list of forms
+- **Rejected:** mixed mode (native edit rules + sdd MCP server for shell); OpenCode rules generated per repository at install time (C002-CON-01)
+- **Answer:** Keep 0 differences (Recommended) — no spec change; the S-07 replay decides whether OpenCode runs native or under the sdd MCP server.
+- **Extracted instructions:** none
