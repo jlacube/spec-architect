@@ -25,9 +25,9 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can show the same boundary on every target with the same cases
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
-- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, commands that write files, and the Windows shell (ideation §9). Expectations per mechanism (Q-safety-02, spec round 2): memory cases expect deny on the generated targets (C002-DEC-009); identity cases run only where a non-Architect caller exists (OpenCode) and are listed as not applicable elsewhere; every other case keeps its corpus expectation. The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
-- **Requirements:** C002-REQ-606, C002-REQ-607, C002-REQ-625, C002-REQ-626, C002-REQ-627
-- **Traces to:** C002-DEC-005; ideation §8, §9; Q-safety-02, Q-guards-04
+- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, commands that write files, and the Windows shell (ideation §9). Expectations per mechanism (Q-safety-02, spec round 2): memory cases expect deny on the generated targets (C002-DEC-009); identity cases run only where a non-Architect caller exists (OpenCode) and are listed as not applicable elsewhere. Expectations for hook inputs the generated mechanisms lack (Q-safety-04, spec round 4): a case without a `cwd` or a tool name expects deny, sent as a malformed call; an unknown `architect:sdd-*` caller expects allow on OpenCode. Every other case keeps its corpus expectation. The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
+- **Requirements:** C002-REQ-606, C002-REQ-607, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632
+- **Traces to:** C002-DEC-005; ideation §8, §9; Q-safety-02, Q-guards-04, Q-safety-04, Q-guards-05
 
 ### C002-US-603 — Scripted evals on OpenCode
 - **As a** P-01 spec owner

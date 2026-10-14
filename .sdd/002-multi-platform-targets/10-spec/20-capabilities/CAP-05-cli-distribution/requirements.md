@@ -8,10 +8,13 @@ capability: "CLI distribution, allowlist and doctor"
 ---
 # C002-CAP-05 — Requirements
 
-Brownfield change: every requirement carries a Delta. C002-REQ-503 and C002-REQ-517 are the only
-Claude Code behaviours CHG-002 changes (C002-GOAL-05, widened by Q-guards-04); C002-REQ-504 to
-C002-REQ-507 make CHG-001's doctor requirements host-dependent and keep today's behaviour on Claude Code. LINT-DELTA-001 findings on the MODIFIED
-entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
+Brownfield change: every requirement carries a Delta. C002-REQ-503, C002-REQ-517 and C002-REQ-521
+are the only Claude Code behaviours CHG-002 changes (C002-GOAL-05, widened by Q-guards-04 and
+Q-guards-05). C002-REQ-503 is the single MODIFIED delta of C001-REQ-1106; C002-REQ-517 and
+C002-REQ-521 are ADDED bash guard rules beside it, so that `sdd archive` applies one replacement of
+C001-REQ-1106. C002-REQ-504 to C002-REQ-507 make CHG-001's doctor requirements host-dependent and
+keep today's behaviour on Claude Code. LINT-DELTA-001 findings on the MODIFIED entries are expected
+until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 
 ### C002-REQ-501 — `sdd` executable from npm
 - **Delta:** ADDED
@@ -166,13 +169,13 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Acceptance:** C002-AC-516.1
 
 ### C002-REQ-517 — Serena commands confined to a data folder outside the repository
-- **Delta:** MODIFIED C001-REQ-1106
+- **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF an Architect agent requests `sdd serena-config` or `sdd serena-launch`, as a bare `sdd` command or through `node <path>/sdd.mjs`, with a data-folder argument other than the option `--user-data` or a folder that resolves outside the current repository, THEN THE bash guard SHALL deny the command with rule `GUARD-BASH-001`.
-- **Rationale:** Q-guards-04 (spec round 2, `../../questions-log.md`): "Confine on every host" — the guard core allows these two subcommands only with `--user-data` or a folder outside the repository, and C002-GOAL-05 is widened to cover this Claude Code change. Today the sdd CLI entry of C001-IF-07 §3 accepts any subcommand, so `sdd serena-config src` passes every guard and writes `src/serena/serena_config.yml`, against C002-DEC-001 ("refuses anything outside `.sdd/`") and the ideation §9 risk "a command that writes files". The same guard core decides for the command tool of the sdd MCP server and for the agent-scoped guard hooks (C002-IF-008 §1); the OpenCode `bash` rules follow the allowlist (C002-REQ-207). Serena keeps its project data inside the data folder (C001-REQ-1013), so the data folder decides where `serena-launch` writes. The folder resolves as a write target does for the path guard (`..` segments, case, drive letters, links; C001-REQ-1104). Corpus cases: C002-REQ-607
+- **Rationale:** Q-guards-04 (spec round 2, `../../questions-log.md`): "Confine on every host" — the guard core allows these two subcommands only with `--user-data` or a folder outside the repository, and C002-GOAL-05 is widened to cover this Claude Code change. The delta is ADDED: the rule narrows the sdd CLI entry of C001-REQ-1106 without restating it, and C002-REQ-503 is the single MODIFIED delta of C001-REQ-1106, which `sdd archive` replaces once (critic CR-24). Today the sdd CLI entry of C001-IF-07 §3 accepts any subcommand, so `sdd serena-config src` passes every guard and writes `src/serena/serena_config.yml`, against C002-DEC-001 ("refuses anything outside `.sdd/`") and the ideation §9 risk "a command that writes files". The same guard core decides for the command tool of the sdd MCP server and for the agent-scoped guard hooks (C002-IF-008 §1); the OpenCode `bash` rules follow the allowlist (C002-REQ-207). Serena keeps its project data inside the data folder (C001-REQ-1013), so the data folder decides where `serena-launch` writes. The folder resolves as a write target does for the path guard (`..` segments, case, drive letters, links; C001-REQ-1104). Corpus cases: C002-REQ-607
 - **Stories:** C002-US-502, C002-US-505
 - **Priority:** Must
-- **Acceptance:** `C002-AC-517.1`
+- **Acceptance:** C002-AC-517.1
 - **Evidence:** current-state E-5 — `src/hooks/guard-bash.ts:119` › `sddCli` (any subcommand after `node <path>/sdd.mjs` passes the sdd CLI entry; layer: serena); current-state E-22 — `src/cli/commands.ts:420` › `serenaConfig` (writes `serena/serena_config.yml` under its folder argument, resolved against the working directory at `src/cli/commands.ts:421`; `serenaLaunchCmd` does the same at `src/cli/commands.ts:470`; layer: serena + grep)
 - **Open items:** none — how the bash guard resolves the argument `"${CLAUDE_PLUGIN_DATA}"` that the Claude Code doctor and init commands pass (current-state E-22), whose Serena step must keep passing (C002-REQ-623), is settled by C002-IF-008 §1.1.
 
@@ -183,7 +186,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** the hand-off templates `templates/full/20-plan/handoff.md:20-23` and `templates/lite/20-plan/handoff.md:20-23` of the source plugin tell the implementer to run `node <plugin-root>/scripts/sdd.mjs task set …` and `… defect add …`, a path that does not exist on the generated targets (C002-GOAL-03, C002-GOAL-04); the plugin keeps its templates unchanged for Claude Code (C002-GOAL-05); templates shipped by C002-REQ-512 and read through C002-REQ-513
 - **Stories:** C002-US-504
 - **Priority:** Must
-- **Acceptance:** `C002-AC-518.1`
+- **Acceptance:** C002-AC-518.1
 
 ### C002-REQ-519 — Plugin path of the CLI in a shipped template reported
 - **Delta:** ADDED
@@ -192,7 +195,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** no check scans the shipped templates today (the target structure checks scan agents, commands or prompt files, skills, configuration and hook files, C002-IF-005 §6); same reason as C002-REQ-602 for the target packages; C001-NFR-601
 - **Stories:** C002-US-504
 - **Priority:** Must
-- **Acceptance:** `C002-AC-519.1`
+- **Acceptance:** C002-AC-519.1
 
 ### C002-REQ-520 — Template list through the CLI
 - **Delta:** ADDED
@@ -201,4 +204,13 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** the fix of ERR-CLI-019 lists the templates with this command (`../../50-interfaces/errors.md` §5; C002-REQ-514); command row in C002-IF-007
 - **Stories:** C002-US-504
 - **Priority:** Should
-- **Acceptance:** `C002-AC-520.1`
+- **Acceptance:** C002-AC-520.1
+
+### C002-REQ-521 — `--cwd` of a writing `sdd` subcommand confined to the repository
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF an Architect agent requests a writing `sdd` subcommand, as a bare `sdd` command or through `node <path>/sdd.mjs`, with the option `--cwd` naming a folder that resolves neither to the repository root nor to a folder under it, THEN THE bash guard SHALL deny the command with rule `GUARD-BASH-001`.
+- **Rationale:** Q-guards-05 (spec round 4, `../../questions-log.md`): "Restrict on every host" — "writing commands may use --cwd only when the folder resolves inside the repository root of C002-IF-008 §1.1", which widens C002-GOAL-05 again. `--cwd` is a global option of every subcommand (`src/cli/run.ts:133`), so today `sdd change stop 001 --reason x --cwd <other repository>` or `sdd init --cwd <home folder>` passes the sdd CLI entry of C001-IF-07 §3 and writes another folder's `.sdd/`, a write the path guard refuses when made directly (PG-082, `tests/guards/path-corpus.json:706-708`), against C002-DEC-001 and the ideation §9 risk "a command that writes files" (critic CR-25). The writing subcommands are the rows of C002-IF-008 §1.2; the repository root and the resolution of the folder (`..` segments, case, drive letters, links, as for a write target of the path guard, C001-REQ-1104) are those of C002-IF-008 §1.1. Subcommands that write no file keep `--cwd` unrestricted (BG-019, `tests/guards/bash-corpus.json:157-162`). The same guard core decides for the command tool of the sdd MCP server and for the agent-scoped guard hooks (C002-IF-008 §1); the OpenCode `bash` rules follow the allowlist (C002-REQ-207). The delta is ADDED beside C002-REQ-503, the single MODIFIED delta of C001-REQ-1106. Corpus cases: C002-REQ-607
+- **Stories:** C002-US-502
+- **Priority:** Must
+- **Acceptance:** C002-AC-521.1

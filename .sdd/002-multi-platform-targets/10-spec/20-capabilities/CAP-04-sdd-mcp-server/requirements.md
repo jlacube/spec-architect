@@ -9,7 +9,8 @@ capability: "sdd MCP server"
 # C002-CAP-04 — Requirements
 
 Brownfield change: every requirement carries a Delta. The server is new (C002-DEC-001), so this
-capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-GOAL-05).
+capability is `ADDED` throughout; the guard cores it calls are those of C002-COMP-012, as changed by
+C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-GOAL-05).
 
 ### C002-REQ-401 — Writes confined to `.sdd/`
 - **Delta:** ADDED
@@ -52,7 +53,7 @@ capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN an agent calls the command tool of the sdd MCP server, THE sdd MCP server SHALL run the command only if the bash guard core allows it for an Architect agent, and refuse the call with the guard's rule (`GUARD-BASH-001` or `GUARD-BASH-002`) otherwise.
-- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503 and C002-REQ-517) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9), and `sdd serena-config` or `sdd serena-launch` with a folder inside the repository is refused (Q-guards-04)
+- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9), `sdd serena-config` or `sdd serena-launch` with a folder inside the repository is refused (Q-guards-04), and so is a writing `sdd` subcommand whose `--cwd` folder lies outside the repository root (Q-guards-05)
 - **Stories:** C002-US-402
 - **Priority:** Must
 - **Acceptance:** C002-AC-405.1

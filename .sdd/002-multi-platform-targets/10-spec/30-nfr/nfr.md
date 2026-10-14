@@ -72,21 +72,21 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 ### C002-NFR-201 — Write boundary on every generated target
 - **Category:** Security / integrity
 - **Statement:** WHILE an Architect agent is active on a generated target, THE enforcement mechanism of that target SHALL decide every applicable case of the path corpus with the expected decision for that mechanism.
-- **Metric:** applicable path-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626), per enforcement mechanism (OpenCode permission rules under native permission enforcement, sdd MCP server, agent-scoped guard hooks under the Copilot hooks fallback)
+- **Metric:** applicable path-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626, C002-REQ-630, C002-REQ-632), per enforcement mechanism (OpenCode permission rules under native permission enforcement, sdd MCP server, agent-scoped guard hooks under the Copilot hooks fallback)
 - **Threshold:** 0 differing decisions (0 false allows and 0 false denies) over the applicable cases of the path corpus, with every case not replayed listed by ID in the replay report (C002-REQ-627); the path corpus holds 256 cases at baseline survey E-24 and at least 200 per the constitution
 - **Method:** corpus replay suite (C002-REQ-606)
 - **Environment:** REF-WIN, host at its tested version
-- **Rationale:** C002-DEC-005 ("Same as Claude"); Q-safety-02 (spec round 2, `../questions-log.md`): "Per-mechanism"; C002-GOAL-02; C001-NFR-201 on Claude Code; constitution NFR default "Path guard"
+- **Rationale:** C002-DEC-005 ("Same as Claude"); Q-safety-02 (spec round 2, `../questions-log.md`): "Per-mechanism"; Q-safety-04 (spec round 4): "Per-target expectation"; C002-GOAL-02; C001-NFR-201 on Claude Code; constitution NFR default "Path guard"
 - **DoD:** C002-DOD-008
 
 ### C002-NFR-202 — Shell boundary on every generated target
 - **Category:** Security / integrity
 - **Statement:** WHILE an Architect agent is active on a generated target, THE enforcement mechanism of that target SHALL decide every applicable case of the shell corpus with the expected decision for that mechanism.
-- **Metric:** applicable shell-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626), per enforcement mechanism (as in C002-NFR-201)
+- **Metric:** applicable shell-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626, C002-REQ-630, C002-REQ-632), per enforcement mechanism (as in C002-NFR-201)
 - **Threshold:** 0 differing decisions (0 false allows and 0 false denies) over the applicable cases of the shell corpus, with every case not replayed listed by ID in the replay report (C002-REQ-627); the shell corpus holds 277 cases at baseline survey E-24, plus the cases of C002-REQ-607
 - **Method:** corpus replay suite (C002-REQ-606)
 - **Environment:** REF-WIN under PowerShell 7 and Git Bash, host at its tested version
-- **Rationale:** C002-DEC-005; Q-safety-02; C002-GOAL-02; on Claude Code the shell corpus covers C001-REQ-1106 and C001-REQ-1107 (baseline survey §3.2)
+- **Rationale:** C002-DEC-005; Q-safety-02; Q-safety-04; C002-GOAL-02; on Claude Code the shell corpus covers C001-REQ-1106 and C001-REQ-1107 (baseline survey §3.2)
 - **DoD:** C002-DOD-008
 
 ### C002-NFR-203 — Injection resistance on every generated target

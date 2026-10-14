@@ -44,8 +44,8 @@ revision the release check refuses the Copilot target (C002-REQ-620).
   quick lint when spike S-07 finds no feedback channel.
 - Other hosts (Codex, Cursor and others) once the generator exists; Agent Plugins 1.0 packaging if the
   targets converge on it (ideation §5, Later).
-- Any change of behaviour on Claude Code other than the two allowlist changes of C002-GOAL-05
-  (C002-REQ-503, C002-REQ-517).
+- Any change of behaviour on Claude Code other than the bash guard changes of C002-GOAL-05
+  (C002-REQ-503, C002-REQ-517, C002-REQ-521).
 
 ## 3. Assumptions
 
