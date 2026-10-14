@@ -27,7 +27,7 @@ Fixture: `fx-cp` is a repository with `.sdd/` (two active changes), `src/app.ts`
 
 ## C002-REQ-301
 
-#### C002-AC-301.1 — Agents, prompt files, skills and MCP configuration present
+#### C002-AC-301.1 — Agents, prompt files, skills, MCP configuration and the CLI copy present
 ```gherkin
 Scenario: C002-TS-301 — Copilot package layout
   Given "npm run package" has written "dist/copilot/"
@@ -36,13 +36,19 @@ Scenario: C002-TS-301 — Copilot package layout
   And one prompt file "*.prompt.md" for each of the 13 source commands
   And one skill folder with a "SKILL.md" in the Agent Skills format for each source skill
   And an MCP configuration that declares "context7", "deepwiki" and "serena"
+  And "scripts/sdd.mjs" with the same SHA-256 as "plugins/architect/scripts/sdd.mjs" of the same packaging run
+  And every hook command of the package runs "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs" and none runs a bare "sdd"
 ```
 
 ```gherkin
-Scenario: C002-TS-302 — agent file missing
-  Given a generated "dist/copilot/" from which "sdd-critic.agent.md" is removed
+Scenario Outline: C002-TS-302 — required file missing
+  Given a generated "dist/copilot/" from which "<file>" is removed
   When the target structure check runs on the Copilot target package
-  Then it reports an error naming "sdd-critic.agent.md"
+  Then it reports an error naming "<file>"
+  Examples:
+    | file                         |
+    | agents/sdd-critic.agent.md   |
+    | scripts/sdd.mjs              |
 ```
 
 ## C002-REQ-302
@@ -117,18 +123,22 @@ Scenario: C002-TS-309 — conductor asked to edit product code in VS Code
 
 ## C002-REQ-307
 
-#### C002-AC-307.1 — Server declared and mapped per agent
+#### C002-AC-307.1 — Two local servers declared, one per server profile
 ```gherkin
 @mode-server
-Scenario Outline: C002-TS-310 — server declaration and grants
-  When the MCP configuration and the agent "<agent>" of "dist/copilot/" are parsed
-  Then the MCP configuration declares the sdd MCP server as a local command server of "architect-sdd"
-  And "<agent>" is granted <grant>
-  Examples:
-    | agent               | grant                                               |
-    | sdd-spec-writer     | the server's write tools and its command tool       |
-    | sdd-researcher      | the server's write tools and not its command tool   |
-    | sdd-options-analyst | the server's write tools and not its command tool   |
+Scenario: C002-TS-310 — server profiles declared in the MCP configuration
+  When "dist/copilot/.mcp.json" is parsed
+  Then "mcpServers" declares the local server "sdd-files" with the command "sdd-mcp" and the arguments "--profile", "files"
+  And it declares the local server "sdd-shell" with the command "sdd-mcp" and the arguments "--profile", "shell"
+  And no other entry runs "sdd-mcp"
+```
+
+```gherkin
+@mode-server
+Scenario: C002-TS-327 — server profile missing from the MCP configuration
+  Given a generated "dist/copilot/.mcp.json" from which the "sdd-files" entry is removed
+  When the target structure check runs on the Copilot target package
+  Then it reports an error naming ".mcp.json" and "sdd-files"
 ```
 
 ## C002-REQ-308
@@ -174,15 +184,17 @@ Scenario: C002-TS-313 — subagent write outside .sdd/ blocked in VS Code
 @mode-hooks
 Scenario Outline: C002-TS-314 — faults of the agent-scoped guard hook
   Given the fault "<fault>"
-  When the package's agent-scoped path or bash guard hook command runs
+  When the package's agent-scoped guard hook command of "sdd-spec-writer" runs
   Then the exit code is 2
-  And standard error names the fault
+  And standard error contains "GUARD-HOOK-001" and names the fault
   Examples:
-    | fault                                                    |
-    | standard input is "not json"                             |
-    | the hook input names the tool "unknownTool"              |
-    | the guard core throws an exception (fault injection)     |
-    | standard input is empty                                  |
+    | fault                                                                          |
+    | standard input is "not json"                                                   |
+    | the hook input names the tool "unknownTool", which the tool classes file does not class |
+    | the tool classes file named by "--classes" does not exist                      |
+    | the tool classes file holds "{ not json"                                       |
+    | the guard core throws an exception (fault injection)                           |
+    | standard input is empty                                                        |
 ```
 
 ## C002-REQ-310
@@ -316,19 +328,100 @@ Scenario: C002-TS-326 — shell operator in a hook command
   Then it reports an error naming that hook command and "&&"
 ```
 
+## C002-REQ-317
+
+#### C002-AC-317.1 — Prompt files named after the source commands
+```gherkin
+Scenario: C002-TS-328 — prompt file names
+  When the file names of "dist/copilot/prompts/" are read
+  Then they are exactly "<name>.prompt.md" for each of the 13 source commands "commands/<name>.md"
+  And they include "new.prompt.md", "init.prompt.md" and "doctor.prompt.md"
+```
+
+```gherkin
+@manual-vscode
+Scenario: C002-TS-329 — prompt files offered as slash commands in VS Code
+  Given the Copilot target package is installed in VS Code at the tested versions
+  When P-01 types "/" in the chat input
+  Then the list offers "/doctor", "/new" and "/init" from the Architect plugin
+  And "/doctor" runs the Architect doctor prompt with the conductor
+```
+
+## C002-REQ-318
+
+#### C002-AC-318.1 — Every granted tool has a class under the hooks fallback
+```gherkin
+@mode-hooks
+Scenario: C002-TS-330 — tool classes file of the package
+  When "dist/copilot/hooks/tool-classes.json" and the "tools" fields of the ten agents and the 13 prompt files are parsed
+  Then every tool name granted by any of them is assigned exactly one of the classes "write", "terminal" and "read_only"
+  And the tools the table maps Read, Glob and Grep to are in the class "read_only"
+  And the terminal tool is in the class "terminal"
+```
+
+```gherkin
+@mode-server
+Scenario: C002-TS-331 — no tool classes file under sdd MCP server enforcement
+  When the file names of "dist/copilot/hooks/" are read
+  Then there is no "tool-classes.json"
+```
+
+```gherkin
+@mode-hooks
+Scenario: C002-TS-332 — granted tool missing from the tool classes file
+  Given a generated "dist/copilot/hooks/tool-classes.json" from which the tool the table maps Grep to is removed, while "sdd-critic.agent.md" grants that tool
+  When the target structure check runs on the Copilot target package
+  Then it reports an error naming "tool-classes.json", that tool name and "sdd-critic"
+```
+
+## C002-REQ-319
+
+#### C002-AC-319.1 — Read-only tool calls are allowed with exit code 0
+```gherkin
+@mode-hooks
+Scenario Outline: C002-TS-333 — read-only calls through the guard hook
+  Given Copilot PreToolUse hook input for the tool "<tool>" of class "read_only" with "<target>" in repository "fx-cp"
+  When the package's agent-scoped guard hook command of "sdd-spec-writer" runs
+  Then the exit code is 0
+  And standard error is empty
+  Examples:
+    | tool                                        | target            |
+    | the tool the table maps Read to             | src/app.ts        |
+    | the tool the table maps Read to             | .sdd/002-x/a.md   |
+    | the tool the table maps Grep to             | the query "TODO"  |
+```
+
+```gherkin
+@mode-hooks
+Scenario: C002-TS-334 — read tool name in another letter case
+  Given Copilot PreToolUse hook input whose "tool_name" is the tool the table maps Read to, written in upper case
+  When the package's agent-scoped guard hook command of "sdd-spec-writer" runs
+  Then the exit code is 2
+  And standard error contains "GUARD-HOOK-001"
+```
+
+```gherkin
+@manual-vscode @mode-hooks
+Scenario: C002-TS-335 — reads and searches pass the hooks in VS Code
+  Given hooks are enabled in VS Code and the conductor has dispatched "sdd-cartographer" on "fx-cp"
+  When "sdd-cartographer" reads "src/app.ts" and searches the repository for "TODO"
+  Then the chat shows both tool calls completed
+  And neither is shown as blocked by a hook
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-301 | TS-301 | n/a | n/a | TS-302 | n/a | n/a | n/a |
+| C002-REQ-301 | TS-301 | n/a | n/a | TS-302 | n/a | n/a | TS-301 (no hook command runs a PATH "sdd") |
 | C002-REQ-302 | TS-303 | n/a | n/a | TS-304 | TS-303 | n/a | n/a |
 | C002-REQ-303 | TS-305 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-304 | TS-306 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-305 | TS-307 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-306 | TS-308 | TS-308 (tool sets) | n/a | n/a | TS-308 | n/a | TS-309 |
-| C002-REQ-307 | TS-310 | TS-310 (agents without Bash) | n/a | n/a | TS-310 | n/a | n/a |
+| C002-REQ-307 | TS-310 | n/a | n/a | TS-327 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | n/a |
 | C002-REQ-308 | TS-311, TS-312 | TS-313 (in VS Code) | n/a | TS-312 | TS-312 | n/a | TS-312 (.. and chaining) |
-| C002-REQ-309 | TS-314 | n/a | TS-314 (empty input) | TS-314 | n/a | n/a | TS-314 (unknown tool) |
+| C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file) | TS-314 (empty input) | TS-314 | n/a | n/a | TS-314 (unclassed tool), TS-334 (letter case) |
 | C002-REQ-310 | TS-315 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-311 | TS-316, TS-317 | TS-318 (gate) | TS-316 (empty list) | TS-316 | n/a | n/a | TS-317 (auto-approve) |
 | C002-REQ-312 | TS-319 | n/a | n/a | TS-319 | n/a | n/a | n/a |
@@ -336,6 +429,9 @@ Scenario: C002-TS-326 — shell operator in a hook command
 | C002-REQ-314 | TS-322 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-315 | TS-323 | TS-323 (non-author agent) | n/a | TS-324 | n/a | n/a | n/a |
 | C002-REQ-316 | TS-325 | n/a | n/a | TS-326 | n/a | n/a | TS-325 |
+| C002-REQ-317 | TS-328 | TS-329 (in VS Code) | n/a: the collision rule is an assumption until spike S-08 (requirement open item) | n/a: a wrong name is a layout error of C002-REQ-603 (example C002-TS-302) | n/a | n/a | n/a |
+| C002-REQ-318 | TS-330 | TS-331 (server mode: no file) | n/a | TS-332 | TS-330 | n/a | n/a |
+| C002-REQ-319 | TS-333 | TS-335 (in VS Code) | TS-333 (read inside and outside .sdd/) | n/a: an unclassed or faulty call is C002-REQ-309 (TS-314) | TS-333 | n/a | TS-334 (letter case) |
 
 Per-column n/a reasons. *Alternate*: package-content rules with one expected form. *Boundary*: no
 numeric limit in the requirement except the brief's line count. *Error*: content rules whose failure

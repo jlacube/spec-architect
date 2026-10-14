@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T11:09:58.463Z",
+  "generated_at": "2026-10-14T11:20:44.751Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -40,13 +40,13 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
       "line": 70,
       "title": "Each construct is replaced by its mapping-table entry",
-      "content_hash": "sha256:59df2ed3fd7c51b807f59485480eeeabda08d8b2855283b174c2ecd359db81da"
+      "content_hash": "sha256:8c4e5fa65c3bca3866f296dc552f05a52994ae2e970e9fcdbcef6990941d1aff"
     },
     {
       "id": "C002-AC-104.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 103,
+      "line": 106,
       "title": "Unmapped construct named with file, line and target",
       "content_hash": "sha256:8bbce9e7d2b60af424900fd90c18628ef4dd522f7a98ccea374fe4e65cadecbc"
     },
@@ -54,7 +54,7 @@
       "id": "C002-AC-105.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 116,
+      "line": 119,
       "title": "The source tier selects the host model",
       "content_hash": "sha256:cce5f5eaa154a02f01c0a40ae040da8851f98700a1a903e0ae1461693e770f09"
     },
@@ -62,7 +62,7 @@
       "id": "C002-AC-106.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 142,
+      "line": 145,
       "title": "The memory field is absent from every generated agent",
       "content_hash": "sha256:1afe2e9cc60e8e447b01a91f6da1125637c67a2c53cc9a06860b192a9cbd9091"
     },
@@ -70,7 +70,7 @@
       "id": "C002-AC-107.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 152,
+      "line": 155,
       "title": "The conductor alone may start the nine specialists",
       "content_hash": "sha256:c426db18b52d6077fc59af1c8cd1e7ea498bd0633115356e4414c646b1a89cf9"
     },
@@ -78,7 +78,7 @@
       "id": "C002-AC-108.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 175,
+      "line": 178,
       "title": "Grants follow the source tools field and nothing more",
       "content_hash": "sha256:ce49b4c7991a8eea3a5577e2fb01868cb2604bb604f41426715a2ef130947b28"
     },
@@ -86,7 +86,7 @@
       "id": "C002-AC-109.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 194,
+      "line": 197,
       "title": "Preloaded skills are part of the generated agent body",
       "content_hash": "sha256:ea7e63dc24213ee5b21ebc78b8498bdd536f0b1bab84e76b98abcbc8e671598d"
     },
@@ -94,33 +94,73 @@
       "id": "C002-AC-110.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 209,
-      "title": "Over-budget inlining is an error with sizes and budget",
-      "content_hash": "sha256:4fd112eeaf1449f66ca44a1281a60d9adceae5a28a78c42d58951e7e18cf1062"
+      "line": 212,
+      "title": "Over-budget inlining is an error with budget, size and the skills concerned",
+      "content_hash": "sha256:b6057a91216a3a32f1c439d4c4a9b018f55f129f1f68c272f25d1c87613adb58"
     },
     {
       "id": "C002-AC-111.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 224,
-      "title": "Wiring sections and the CLI line carry the target variant",
-      "content_hash": "sha256:cfb684e123adc9182e3b835a0b6209c616fda596ffe7cf719759524f98d3d5cb"
+      "line": 227,
+      "title": "Wiring sections, CLI lines and other wiring anchors carry the target variant",
+      "content_hash": "sha256:9b4a5cc1cd36cbb462a44489fad660a59209ba1f5b47ecd7f01c81ec6c244052"
     },
     {
       "id": "C002-AC-112.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 252,
-      "title": "Missing variant named with skill and target",
-      "content_hash": "sha256:5fabb3b9fe226fb806fadfc454d6040d0f51700d1084b52cf99e0715557d217e"
+      "line": 272,
+      "title": "Missing variant named with file, line and target",
+      "content_hash": "sha256:e9ac8390085ea1df52415fbfcdb5cbddf7db4732c8446839f1f570d68837bbec"
     },
     {
       "id": "C002-AC-113.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 271,
-      "title": "Claude Code skill bodies hold no variant of a generated target",
-      "content_hash": "sha256:8204a3270173118c77d283f177a494182f8464abcc1259dfc778fb227f16d0a0"
+      "line": 297,
+      "title": "Claude Code agent, command and skill files hold no variant of a generated target",
+      "content_hash": "sha256:2da58ee7253506675a5d3c836da16ca451f75169ad7e35850afb1c2c97a7cb53"
+    },
+    {
+      "id": "C002-AC-114.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 322,
+      "title": "Serena declared read-only through `sdd serena-launch` with per-user data",
+      "content_hash": "sha256:eb3d56ef7d9b1e337de5dbbe84376fea318eba6f95b1c51219d76ed78fd99417"
+    },
+    {
+      "id": "C002-AC-115.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 352,
+      "title": "Template paths in agent and command bodies become `sdd template show`",
+      "content_hash": "sha256:339b09830029c47dadd02fc9dc75bae6a7f72305819ca1fc82d81b95b156d211"
+    },
+    {
+      "id": "C002-AC-116.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 369,
+      "title": "The plugin data argument becomes `--user-data`",
+      "content_hash": "sha256:b19d0b37413d2ece8fb7e6f9db1bd90e6c28ce1deb50855e1587cb9cd0a097a8"
+    },
+    {
+      "id": "C002-AC-117.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 386,
+      "title": "Each agent receives the server profiles of its source write and shell tools",
+      "content_hash": "sha256:2ac30d71c41c6e1e1298312e4394030f158113bd27ff316f82b80ad09ed242b1"
+    },
+    {
+      "id": "C002-AC-118.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 412,
+      "title": "AskUserQuestion in agent and command bodies becomes the host's question tool",
+      "content_hash": "sha256:23a74b88b30c7dcdaf3d37125ba911d903a2fb9b28d26e36d62a0b27a557de02"
     },
     {
       "id": "C002-AC-201.1",
@@ -199,14 +239,14 @@
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
       "line": 179,
-      "title": "Write and command tools are those of the sdd MCP server",
-      "content_hash": "sha256:70ad158fe33c08d996fff48180812a38f88e079ff0adf9c123d465263d25227b"
+      "title": "Two local servers declared, one per server profile",
+      "content_hash": "sha256:6025e5202356b9fe9ef134fba423c7cb682af2ee71830d44374f54622969a7a1"
     },
     {
       "id": "C002-AC-211.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 195,
+      "line": 199,
       "title": "Rounds of at most four questions on each host's tool",
       "content_hash": "sha256:5d18db8e8357022c88c07d129345c928e5ca8e371ddb06d2303656e3b727d390"
     },
@@ -214,7 +254,7 @@
       "id": "C002-AC-212.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 221,
+      "line": 225,
       "title": "Gate summary, commitment statement and the four choices",
       "content_hash": "sha256:46b1da4f6ee7356a863fca3dd179a7cc8838dab65ac38668857a92c68dc75e57"
     },
@@ -222,7 +262,7 @@
       "id": "C002-AC-213.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 246,
+      "line": 250,
       "title": "Profile confirmed through the host's tool before the change exists",
       "content_hash": "sha256:4f8907e200dade727d804fb79ede586a7afb9e1eba9342d7f852e35155fce070"
     },
@@ -230,7 +270,7 @@
       "id": "C002-AC-214.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 271,
+      "line": 275,
       "title": "Header length and option descriptions on OpenCode",
       "content_hash": "sha256:38d72b51071b86be9e8624fb2de339a175918af284268bf9f09ee5f3bf61e55e"
     },
@@ -238,23 +278,31 @@
       "id": "C002-AC-215.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 283,
+      "line": 287,
       "title": "Findings returned after an `.sdd/` write on OpenCode",
       "content_hash": "sha256:f3c4879eaff13bc66463d87707db96dc9b08532812c8f1cd7b51a06e7bafaf99"
+    },
+    {
+      "id": "C002-AC-216.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
+      "line": 308,
+      "title": "Commands named `architect-<name>`",
+      "content_hash": "sha256:98880820f2ac1bd5f400879e5decd225c2a238ff8ef2f06087e42872f46607c6"
     },
     {
       "id": "C002-AC-301.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 30,
-      "title": "Agents, prompt files, skills and MCP configuration present",
-      "content_hash": "sha256:7359816de586bb0a9c56b637fbead87823f334ccef3aa39a73a0846e1c883b75"
+      "title": "Agents, prompt files, skills, MCP configuration and the CLI copy present",
+      "content_hash": "sha256:6c9a86d40071f2a7d0ea3ccfdbff8ef3ba1db5b8c8c0fb9d34db319a861cb81b"
     },
     {
       "id": "C002-AC-302.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 50,
+      "line": 56,
       "title": "PreToolUse hooks only in agent frontmatter",
       "content_hash": "sha256:a834432e7e8504f97aa39b84faee94b7ee33302012419133217590d03f4c85c8"
     },
@@ -262,7 +310,7 @@
       "id": "C002-AC-303.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 67,
+      "line": 73,
       "title": "Every prompt file names the conductor",
       "content_hash": "sha256:9ebf25c828a7ca88b34ed91b4d0b8b51e3f2d2d35e844723434b051e7f4c3321"
     },
@@ -270,7 +318,7 @@
       "id": "C002-AC-304.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 77,
+      "line": 83,
       "title": "Install notes name prerequisites, install, settings and start",
       "content_hash": "sha256:66703712fc2580633646855a95af659f8b5f4bbc529ccb04f4d10d485734b16d"
     },
@@ -278,7 +326,7 @@
       "id": "C002-AC-305.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 89,
+      "line": 95,
       "title": "README section links the notes and names the enforcement mode",
       "content_hash": "sha256:f6e8cd4c8897fbe41657b5b8e665bcac23e81efcfa7c82102e08c6f0328887db"
     },
@@ -286,7 +334,7 @@
       "id": "C002-AC-306.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 100,
+      "line": 106,
       "title": "No generic edit or terminal tool in agents and prompt files",
       "content_hash": "sha256:1a323faa7dab9694b4ec035a361f459230b78643e352b2290ba4e91ae913c3e0"
     },
@@ -294,15 +342,15 @@
       "id": "C002-AC-307.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 120,
-      "title": "Server declared and mapped per agent",
-      "content_hash": "sha256:556b2bbc9ce075581235397befee16805fdc76cdb8a018d53e0ac7e871b24f84"
+      "line": 126,
+      "title": "Two local servers declared, one per server profile",
+      "content_hash": "sha256:3d5cb09f28321765a074d5be09139de7a50b4b8fe47c254b744b872348b7956d"
     },
     {
       "id": "C002-AC-308.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 136,
+      "line": 146,
       "title": "Every agent carries path and bash guard hooks",
       "content_hash": "sha256:9396fa6fde412d5215bfbe89b57ddc3dc7fa6461d77a6d31559b14f80f03b5c2"
     },
@@ -310,15 +358,15 @@
       "id": "C002-AC-309.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 172,
+      "line": 182,
       "title": "A guard hook that cannot decide denies with exit code 2",
-      "content_hash": "sha256:39375eeb5391b6378b7e1307a9279f898f479ab0aa354bf24bbde5a8983eb70a"
+      "content_hash": "sha256:1525b3db76e9be27a1644e35d0bcf1ad91b7b7602a553e256626723a467edefd"
     },
     {
       "id": "C002-AC-310.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 190,
+      "line": 202,
       "title": "README warns that disabled hooks switch the boundary off",
       "content_hash": "sha256:e67be9c4aadadcf1e22afdb728c7bef7a0dceb92fffa4f3d20301bebb59b3a9f"
     },
@@ -326,7 +374,7 @@
       "id": "C002-AC-311.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 201,
+      "line": 213,
       "title": "A result without a choice records nothing",
       "content_hash": "sha256:65fb62a5fc184941e1dde1e6aa5efc48b227e7685c097c8c96ea9c726b98a9b9"
     },
@@ -334,7 +382,7 @@
       "id": "C002-AC-312.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 236,
+      "line": 248,
       "title": "No question tool: no question, instruction to enable it",
       "content_hash": "sha256:e1e21ec72374a4c07885c56e87e123045fa78a95d46524eb2c3b9627cb6bf774"
     },
@@ -342,7 +390,7 @@
       "id": "C002-AC-313.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 249,
+      "line": 261,
       "title": "Session-start hook emits the status brief",
       "content_hash": "sha256:196215be608d5c07fb6796794a759cdb809d49053ad88a76701afbcaf51b384f"
     },
@@ -350,7 +398,7 @@
       "id": "C002-AC-314.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 268,
+      "line": 280,
       "title": "No `.sdd/`, no output",
       "content_hash": "sha256:cf11c22fc695f69acb4d72009792afaa6a2a7e5d53d5d4366c74fead5fe27c73"
     },
@@ -358,7 +406,7 @@
       "id": "C002-AC-315.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 279,
+      "line": 291,
       "title": "Trace refreshed after an author agent, exit code 0",
       "content_hash": "sha256:acb419f1a5168dc5f73e79c031c460dca20dec0244f7a9e373b1974f068dc53c"
     },
@@ -366,103 +414,127 @@
       "id": "C002-AC-316.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 304,
+      "line": 316,
       "title": "Hook commands call the sdd CLI with arguments only",
       "content_hash": "sha256:4f0683df3c8c5aa0b4544b3b7e2baa963ddb22824aff1e8d08ac9226a0e0b034"
+    },
+    {
+      "id": "C002-AC-317.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 333,
+      "title": "Prompt files named after the source commands",
+      "content_hash": "sha256:3737aa99f5be26deb5104c7c256a98972875f4c89b2095250ea2c026e157163c"
+    },
+    {
+      "id": "C002-AC-318.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 352,
+      "title": "Every granted tool has a class under the hooks fallback",
+      "content_hash": "sha256:049c38b334fb56d545c2ad686bd38407e38bd4dd2389045ac0a8b86040c8b056"
+    },
+    {
+      "id": "C002-AC-319.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 379,
+      "title": "Read-only tool calls are allowed with exit code 0",
+      "content_hash": "sha256:c1bfab98241cd4f5935919f009340e33069cdcf63eb69cdecf4fbc74c03a3aa1"
     },
     {
       "id": "C002-AC-401.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 22,
+      "line": 24,
       "title": "Writes inside `.sdd/` only, otherwise GUARD-PATH-001",
-      "content_hash": "sha256:cdf3de28eb936383f99e8d3ae2a0bc56bbaaad4d84fde476d38613e0c8641e01"
+      "content_hash": "sha256:beb9b74ba1eee18edc2509c31a808aab9e8db81ce7aafbd2ae1e03294645c317"
     },
     {
       "id": "C002-AC-402.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 42,
+      "line": 44,
       "title": "A failed write leaves the previous content",
-      "content_hash": "sha256:9b799479eb4a5dbd46f45caeeaf56de5655bc6a79970cb27e5a691ff3cf647fe"
+      "content_hash": "sha256:731323bfbafc8fa820db435d575526ae79199e0a0375525cf5b03c9c5bdb9582"
     },
     {
       "id": "C002-AC-403.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 58,
+      "line": 60,
       "title": "One whole-file write tool and one span-replace tool",
-      "content_hash": "sha256:8fb27f168ef88c6beb9dfa83f90c1a0b0defe7ec1ebb4500f78e1bb9d5613800"
+      "content_hash": "sha256:8bd24cbe2e242c52243361d2572cc774044c63d4ccfd3b07350e37790094aea8"
     },
     {
       "id": "C002-AC-404.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 77,
+      "line": 80,
       "title": "A span found zero times or more than once is refused with its count",
-      "content_hash": "sha256:34dbcdbc71772ea0957b6dce4bec7c2a96215ff2070fb67fb72bd445870b5b86"
+      "content_hash": "sha256:91ce02ae998ca3506149d6088adbe7dbde539b4c9a57aadce353975e5e66e382"
     },
     {
       "id": "C002-AC-405.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 93,
+      "line": 97,
       "title": "Commands run only when the bash guard core allows them",
-      "content_hash": "sha256:bbc3c32976e5dcbc1d3ba2cdfc5c04627c82bd891f819356b8375c61e8bec815"
+      "content_hash": "sha256:190d319db6e50d57be92d9ce27814658d4b640c083019f0d98a0a2b6d40d70e2"
     },
     {
       "id": "C002-AC-406.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 113,
+      "line": 117,
       "title": "Exit code, standard output and standard error returned",
-      "content_hash": "sha256:5db96c41ec60fa1ddecc4e3327b4fffde9507b11eb427063f846c318e8183048"
+      "content_hash": "sha256:50af16fc016601d27ff88a2a8b9f0c1cfdec019bb3b957accf5c32431f64a174"
     },
     {
       "id": "C002-AC-407.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 131,
+      "line": 135,
       "title": "The server runs its own package's CLI",
-      "content_hash": "sha256:9da4fbd526cc4199116d3d4aff38472accdf56731ecff162d01618e322099d8e"
+      "content_hash": "sha256:c4631808305b20f8f9683034ecd4cd6532557bee7818bcc4af77998646da9caf"
     },
     {
       "id": "C002-AC-408.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 142,
+      "line": 146,
       "title": "Write result carries the quick-lint findings",
-      "content_hash": "sha256:1ff1b5f527fbbe23aaee894b36008768513d5bf3375e2386da8a185373a9c5d7"
+      "content_hash": "sha256:eac36bbf706964ee0d9b6b6d7690624a8e591e136b1d8d3637c54030d3c8d164"
     },
     {
       "id": "C002-AC-409.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 169,
+      "line": 173,
       "title": "Lint failure after a write keeps the write",
-      "content_hash": "sha256:2917671acbde391588da8eacdccc5e6705948ac851b4df83f5b99fb056cfc007"
+      "content_hash": "sha256:151bf844b2c4122a2d69bcfcb6b5c9f8e9c82a98b6d48c24b20809d2b6afd287"
     },
     {
       "id": "C002-AC-410.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 180,
+      "line": 184,
       "title": "MCP messages on standard input and output only",
-      "content_hash": "sha256:461263c3ef0221d1ae7a688a4594c01a7b7de935b1d9facaf2f8bcf43d8cb870"
+      "content_hash": "sha256:03124becbc4b82e344eb1d5883db036c55dbae4baabcf88ca1d641c53c46d83f"
     },
     {
       "id": "C002-AC-411.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 191,
+      "line": 199,
       "title": "Closing standard input ends the server",
-      "content_hash": "sha256:147778b1462bca67d53d99977aa86537f6d60e29d70c9b058f7714c33c25a7ee"
+      "content_hash": "sha256:61a4b81f0024cba936ad2d3dc7acb3ae6b7cc825d347f83dab381669b23f0a84"
     },
     {
       "id": "C002-AC-412.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 208,
+      "line": 220,
       "title": "The server is a bundled entry next to `sdd`",
       "content_hash": "sha256:019df806b044dd20f340d307e96c3c34e320630e9378b6ae65b75699b76a81f9"
     },
@@ -470,7 +542,7 @@
       "id": "C002-AC-413.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 219,
+      "line": 231,
       "title": "A bundled package outside the allowlist fails the build",
       "content_hash": "sha256:2d9937cc4106943fca8a16cf30a1922fbbf289cc153385705bfc37cbf63a2e96"
     },
@@ -478,15 +550,23 @@
       "id": "C002-AC-414.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 234,
+      "line": 246,
       "title": "License and notices in the npm package",
       "content_hash": "sha256:9e05f45816511980e20d5166a22aa659ea9f985f30dc679e97c7e614e979ec26"
+    },
+    {
+      "id": "C002-AC-415.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
+      "line": 257,
+      "title": "Each server profile lists only its own tools",
+      "content_hash": "sha256:8917d4cd7eacc8c8e2d1ab73b9500a4d54f1b0fea793d615d15cc87afc49bc04"
     },
     {
       "id": "C002-AC-501.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 30,
+      "line": 34,
       "title": "npm `sdd` is the same CLI as the bundled one",
       "content_hash": "sha256:65d7c4eb37350516b5c9501efa5dcfab58e9255b444378fc0de2008dba079a44"
     },
@@ -494,7 +574,7 @@
       "id": "C002-AC-502.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 48,
+      "line": 52,
       "title": "Packaging writes the unscoped tarball at the plugin version",
       "content_hash": "sha256:c4734d515dc05d1f6a4db80c6ad20a837fb555b88810ce914e4fb7082b0aa508"
     },
@@ -502,7 +582,7 @@
       "id": "C002-AC-503.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 59,
+      "line": 63,
       "title": "Bare `sdd` and `node --version` allowed, the rest unchanged",
       "content_hash": "sha256:1aff18f6fbcb4b8dda773b56b60c09379cd57e2d5c568952528384c638094727"
     },
@@ -510,15 +590,15 @@
       "id": "C002-AC-504.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 92,
+      "line": 96,
       "title": "Doctor rows depend on the host",
-      "content_hash": "sha256:286d04369a09b544c64d8fb047bf4ad11733fee4049cb68edb19efd0a6b0eeed"
+      "content_hash": "sha256:9db2e764d2a768a8fc87004d5c4e2bfea4e66e8be9336225e90de02249024c7e"
     },
     {
       "id": "C002-AC-505.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 125,
+      "line": 130,
       "title": "Only node and an unreachable sdd CLI fail the run",
       "content_hash": "sha256:a14c30ed6bcb39a0890324d4ddf063a9c428d7c767f6ee0e6be980322ea50559"
     },
@@ -526,7 +606,7 @@
       "id": "C002-AC-506.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 144,
+      "line": 149,
       "title": "Claude Code version checked on Claude Code only",
       "content_hash": "sha256:5334e098e1932e8d5a71db24fb9a1214a5bcfc5a78c5b6b7a0a668aa3e9cc602"
     },
@@ -534,7 +614,7 @@
       "id": "C002-AC-507.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 160,
+      "line": 165,
       "title": "Toolchain record rows match the host",
       "content_hash": "sha256:d1e555f6de7d8bb035bf8b1517310e0ee5d197d818eb32f5aca500a2c5df6a2c"
     },
@@ -542,15 +622,15 @@
       "id": "C002-AC-508.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 184,
+      "line": 189,
       "title": "A host version other than the tested one is `untested`",
-      "content_hash": "sha256:0e128d8836726cd18672dff9f319f9407f8fd62e84e3fdb1836e925331625898"
+      "content_hash": "sha256:0e2e640d500fc8ac603f8590c8e8f7cfe582701dfbe10ceef02ca19f229fc37a"
     },
     {
       "id": "C002-AC-509.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 209,
+      "line": 218,
       "title": "An sdd CLI of another version is an error with the install command",
       "content_hash": "sha256:5c7748dc7c658fb237165f2ef1f741bc58c93b6fa6f25ccb62c0a4a731723ece"
     },
@@ -558,9 +638,57 @@
       "id": "C002-AC-510.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 221,
-      "title": "Copilot hooks row reports disabled hooks",
-      "content_hash": "sha256:b8c8feb4c8edc9662178eee4ce8f4c7edcdbb0635c0d19e669ff550483976159"
+      "line": 230,
+      "title": "Copilot hooks row is `ok` only when hooks are read as enabled",
+      "content_hash": "sha256:9f46e130b79d8481acd1770a6dd9a753eff421598119ccbc3eae9c798e9ad805"
+    },
+    {
+      "id": "C002-AC-511.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 256,
+      "title": "`sdd --version` prints the bare version",
+      "content_hash": "sha256:b5e99e2954335a17092f5d46305d4fab254186a342d7747dce955c0d26d2ed57"
+    },
+    {
+      "id": "C002-AC-512.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 279,
+      "title": "The tarball ships every template and the read-only mode file",
+      "content_hash": "sha256:ba570ed6d6324e4a8ddeb272d59447b84db2565d92bf4e848d22867e2c039520"
+    },
+    {
+      "id": "C002-AC-513.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 290,
+      "title": "`sdd template show` prefers the repository template, else the shipped one",
+      "content_hash": "sha256:852968e8a9ef49af50c037c409981a63e698a14b432ca753ad5d7734b41e3757"
+    },
+    {
+      "id": "C002-AC-514.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 306,
+      "title": "A template that exists nowhere is refused with ERR-CLI-019",
+      "content_hash": "sha256:c88f4fbbc28f092640872075f082dd761455e2a60288fef028951832332645e6"
+    },
+    {
+      "id": "C002-AC-515.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 335,
+      "title": "`--user-data` puts Serena's data in the per-user data folder",
+      "content_hash": "sha256:b27f1d7f8d73cea1402a8913ac81de6395db74fbd32589af02bb0631ee341d61"
+    },
+    {
+      "id": "C002-AC-516.1",
+      "type": "AC",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 365,
+      "title": "No per-user data folder: ERR-CLI-020, nothing written, Serena not started",
+      "content_hash": "sha256:3839e1130e8ad6635feb4350eee53b0dd6224196c9199aa5afebc4210de6c8e7"
     },
     {
       "id": "C002-AC-601.1",
@@ -1223,7 +1351,7 @@
       "file": "10-spec/70-dod.md",
       "line": 25,
       "title": "A checklist record of one run of the manual VS Code checklist, made on the tested VS Code and GitHub Copilot Chat versions, shows every step passed, including one step for each `@manual-vscode` scenario of C002-CAP-02, C002-CAP-03 and C002-CAP-05 and a toy change taken from its creation to gate G1 on a fresh install",
-      "content_hash": "sha256:cf73e37ebf1d02c27175568ba50253edad0bc49f915e1f757ad24f3eb616625a"
+      "content_hash": "sha256:96968efd85d53138c442be0c7f005f8587db82d1f8ec59ce68233bb33ca9c42e"
     },
     {
       "id": "C002-DOD-005",
@@ -1238,8 +1366,8 @@
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 27,
-      "title": "Every scenario of C002-CAP-05's `acceptance.md` passes: npm and allowlist scenarios in the integration suite, `@eval` doctor scenarios in at least 9 of 10 runs on Claude Code and on OpenCode, `@manual-vscode` scenarios through C002-DOD-004",
-      "content_hash": "sha256:70a29d98037be3762b901f4079a68d71b0eaa605392106c4a260034fdd56c1a1"
+      "title": "Every scenario of C002-CAP-05's `acceptance.md` passes: npm and allowlist scenarios in the integration suite, `@eval` doctor scenarios in at least 9 of 10 runs on Claude Code and on OpenCode, and for the Copilot target package through the Copilot CLI eval runner, `@manual-vscode` scenarios through C002-DOD-004",
+      "content_hash": "sha256:fd806a8aaa46d897782b3491992dd2a0f12cec41941b1cccdca20cf25100c843"
     },
     {
       "id": "C002-DOD-007",
@@ -2730,13 +2858,13 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
       "line": 84,
       "title": "every construct kind of the source plugin is translated",
-      "content_hash": "sha256:b7854eb9a1d6986f981473f4058443e098514bd59dd8f5b9e49edfb17ebe4417"
+      "content_hash": "sha256:2cd031bee935c66eb62969181d97f33413797fc43d1b88e79a299c99c97fb3c4"
     },
     {
       "id": "C002-TS-108",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 105,
+      "line": 108,
       "title": "tool without a Copilot mapping entry",
       "content_hash": "sha256:322c1622474e47c9b3b72d663efd0ab441cddbcdcd99ffd1e461563eb92f0bed"
     },
@@ -2744,7 +2872,7 @@
       "id": "C002-TS-109",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 118,
+      "line": 121,
       "title": "model tier per generated agent",
       "content_hash": "sha256:4cfbfd4d935b10426b3bd23bfd2047eb54298e9c05ca67a1c13fc29d34880cb2"
     },
@@ -2752,7 +2880,7 @@
       "id": "C002-TS-110",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 133,
+      "line": 136,
       "title": "model value outside the three tiers",
       "content_hash": "sha256:dccf926c2a7d3574bc3c2baec498960304309df876db269f18b0e599ec005d8d"
     },
@@ -2760,7 +2888,7 @@
       "id": "C002-TS-111",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 144,
+      "line": 147,
       "title": "agents with memory in the source",
       "content_hash": "sha256:0bdbcf7a837b99c17f1915ac5cdb299107c5a27f11ea6a14af1ec5ed2b86037e"
     },
@@ -2768,7 +2896,7 @@
       "id": "C002-TS-112",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 154,
+      "line": 157,
       "title": "agent-start grants per target",
       "content_hash": "sha256:e21b5065bba9987af8e43dae2dbc667fca4a5d492ea206580169254ccdf56fa1"
     },
@@ -2776,7 +2904,7 @@
       "id": "C002-TS-113",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 166,
+      "line": 169,
       "title": "planted instruction to start another agent",
       "content_hash": "sha256:84a62fba91248a0a18fe8e844c66664dd1b1c68b8e2875b3741fa347d7dcac32"
     },
@@ -2784,7 +2912,7 @@
       "id": "C002-TS-114",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 177,
+      "line": 180,
       "title": "least-privilege grants per agent",
       "content_hash": "sha256:69964fac8764b9112c25d1a06c02b7a5392d917a8de8637e0695066ae514ee7c"
     },
@@ -2792,7 +2920,7 @@
       "id": "C002-TS-115",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 196,
+      "line": 199,
       "title": "skill bodies inlined",
       "content_hash": "sha256:3aaef6403a8e0b80c1ab706d46d738e7503672cb430aa74315f6ce4f63b9d46c"
     },
@@ -2800,15 +2928,15 @@
       "id": "C002-TS-116",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 211,
+      "line": 214,
       "title": "inlining budget limits",
-      "content_hash": "sha256:af4f54d3ecbbb4548818f64a253d1ebaa2ba339437ac6b8ec3b0fdc19ba1abba"
+      "content_hash": "sha256:2fd40b2750fb7c69e25ae2436071eb3f985485dc1d769420be4471279d2c7519"
     },
     {
       "id": "C002-TS-117",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 226,
+      "line": 229,
       "title": "interview wiring per target",
       "content_hash": "sha256:edd68e45228d15547e8c3fe2913ebe411b3223c6c29c9f36e0027fae859f9cc7"
     },
@@ -2816,41 +2944,121 @@
       "id": "C002-TS-118",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 239,
-      "title": "sdd CLI invocation line per target",
-      "content_hash": "sha256:2f66c6e3d90d24dc8a931a09817e5666687a37c373fe9a66362479e82a12da34"
+      "line": 242,
+      "title": "sdd CLI invocation lines per target",
+      "content_hash": "sha256:a4a9f59d4f737e097c7e143351833330a4539033082a181b3b87ef6e387a703e"
     },
     {
       "id": "C002-TS-119",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 254,
+      "line": 274,
       "title": "gate wiring without a Copilot variant",
-      "content_hash": "sha256:03e8fa8bf972ae2539d8eac8f7b9f3c6cbb24843b85cab677600ac817846fc24"
+      "content_hash": "sha256:8e2b9d4545be5cf489f517f7a2d25e570269904a895adadd512a0e8bea69c512"
     },
     {
       "id": "C002-TS-120",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 262,
-      "title": "CLI invocation line without an OpenCode variant",
-      "content_hash": "sha256:4f0188963173f962b6bc67c75e7ba54833456e545230913dd5e465812bb2dd56"
+      "line": 283,
+      "title": "CLI invocation line or command wiring without a variant",
+      "content_hash": "sha256:be1668468ff3597efc469609e1899d60a71abebc4b2c010677ca67e647f6b152"
     },
     {
       "id": "C002-TS-121",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 273,
-      "title": "SKILL.md bodies after the variants are added",
-      "content_hash": "sha256:de1d84e97f36f75c74e3f5f2bf082a6877f4d79f4fcaa7683fcd0169292b4a27"
+      "line": 299,
+      "title": "Claude Code files after the variants are added",
+      "content_hash": "sha256:74cc47cbfdec030af1fc8cda62f5eac2b34d7a2570aa01e676822521ba401c31"
     },
     {
       "id": "C002-TS-122",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
-      "line": 281,
-      "title": "a variant pasted into a SKILL.md body",
-      "content_hash": "sha256:6ea34e71dda41960793b6b351103a3529de4838713fe2d4d8c90a0dc7fe2d401"
+      "line": 308,
+      "title": "a variant pasted into a Claude Code file",
+      "content_hash": "sha256:6389900afaf623ceaf13d42f8084e608932c016502d5d766c0bc12444022dddf"
+    },
+    {
+      "id": "C002-TS-123",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 258,
+      "title": "doctor host rows per target",
+      "content_hash": "sha256:eb00c67d48d558a4cfd251cbebefb9ada54c1aa43d9e241410f8f17788125871"
+    },
+    {
+      "id": "C002-TS-124",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 324,
+      "title": "Serena declaration of each target package",
+      "content_hash": "sha256:25e2de95f32bc92217adf7f1021d430f434178b1a568e58913b67e8c808632ac"
+    },
+    {
+      "id": "C002-TS-125",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 335,
+      "title": "Serena started from the OpenCode declaration",
+      "content_hash": "sha256:d09989ef718a21777fff54eb67d98b6cb6f7eee7251a4e72105134ec927f2191"
+    },
+    {
+      "id": "C002-TS-126",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 344,
+      "title": "Serena declaration without the read-only option",
+      "content_hash": "sha256:f9e53804b4f56da3b2c93624dfe0544801304c9978ded527df6a720f8aed3d85"
+    },
+    {
+      "id": "C002-TS-127",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 354,
+      "title": "template references per target",
+      "content_hash": "sha256:15c579a20572fd2191f0416aa6d96808ed78ed0f59946d68edc10ba65b564c33"
+    },
+    {
+      "id": "C002-TS-128",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 371,
+      "title": "Serena configuration call in generated commands",
+      "content_hash": "sha256:95e31f5adf1baf74b38ffedd6ddd64b62ed57445480a29582b4b38fcdde46eb2"
+    },
+    {
+      "id": "C002-TS-129",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 388,
+      "title": "server profiles per agent under sdd MCP server enforcement",
+      "content_hash": "sha256:7e29b6ce96959144121f2219879fcf65dcd59473dfb9e6feb7926de2958f7dce"
+    },
+    {
+      "id": "C002-TS-130",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 404,
+      "title": "command tool granted to an agent without Bash",
+      "content_hash": "sha256:b34b7f09ab0943648db235c94cb6a9cab9d089ce41bc3116f2622e97773dfbc1"
+    },
+    {
+      "id": "C002-TS-131",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 414,
+      "title": "question tool named in generated bodies",
+      "content_hash": "sha256:6434c5df03ee26bfb811b2fe913d9b43ff6648fd5fbe5f5dfafee6d6afbc0ef2"
+    },
+    {
+      "id": "C002-TS-132",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/acceptance.md",
+      "line": 429,
+      "title": "archive confirmation through the OpenCode question tool",
+      "content_hash": "sha256:d85b8e5b8b06d215415081714405c62b274e6e0927bae2fde739b8f993c00e37"
     },
     {
       "id": "C002-TS-201",
@@ -2961,14 +3169,14 @@
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
       "line": 182,
-      "title": "server declaration and grants",
-      "content_hash": "sha256:60b8eb03767301ca0761ae09819860a2c4903a8fbdb82d0438ecd3238b32f474"
+      "title": "server profiles declared in opencode.json",
+      "content_hash": "sha256:f9e2bf3207af980b1f1d0c3f3889da51232546952d13fdd2fe260d4e195e7715"
     },
     {
       "id": "C002-TS-215",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 198,
+      "line": 202,
       "title": "round size on Claude Code and OpenCode",
       "content_hash": "sha256:ecf160de41ab2bd02df1c70ac22669afed451893eb6438cc267f84a3311168ca"
     },
@@ -2976,7 +3184,7 @@
       "id": "C002-TS-216",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 212,
+      "line": 216,
       "title": "round size in VS Code",
       "content_hash": "sha256:f3024c833ef04e36582c015927260863c00f04dd1a2d810933aa70cc38204cf7"
     },
@@ -2984,7 +3192,7 @@
       "id": "C002-TS-217",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 224,
+      "line": 228,
       "title": "gate question on Claude Code and OpenCode",
       "content_hash": "sha256:839a094d88a614d03d4fbe94d3334371e7225b0b55976b7ca84d110897425ef4"
     },
@@ -2992,7 +3200,7 @@
       "id": "C002-TS-218",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 237,
+      "line": 241,
       "title": "gate question in VS Code",
       "content_hash": "sha256:23769c6ad055f6a44841bfb6ef57b8f69aae460cd1e0cd0414656db19e928ac2"
     },
@@ -3000,7 +3208,7 @@
       "id": "C002-TS-219",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 249,
+      "line": 253,
       "title": "profile round on Claude Code and OpenCode",
       "content_hash": "sha256:a9aec8df1d9cf11ba5e9d5cd98a5d26722103bf3552d4d251301d322f4c2c1f6"
     },
@@ -3008,7 +3216,7 @@
       "id": "C002-TS-220",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 262,
+      "line": 266,
       "title": "profile round in VS Code",
       "content_hash": "sha256:48acb2f3b3acb164a5e2ab539a261ff6d189f1a694e0c91f6a8165b0d4f883d8"
     },
@@ -3016,7 +3224,7 @@
       "id": "C002-TS-221",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 274,
+      "line": 278,
       "title": "long topic on the question tool",
       "content_hash": "sha256:ac58115d74954e796c8dc56fd428ab7473b6dd1203d82bc08959a02de2c2d968"
     },
@@ -3024,7 +3232,7 @@
       "id": "C002-TS-222",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 286,
+      "line": 290,
       "title": "requirement with two SHALL",
       "content_hash": "sha256:4c19d8f6e48be6b434cdd5574f504b43247fde4a100107909ae468dba3dc337a"
     },
@@ -3032,9 +3240,41 @@
       "id": "C002-TS-223",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
-      "line": 295,
+      "line": 299,
       "title": "clean file gives no finding",
       "content_hash": "sha256:6543955cd6a3a977c6f8060733ebb2663558b46c4fb39b35bd5660fbab9e08e8"
+    },
+    {
+      "id": "C002-TS-224",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
+      "line": 191,
+      "title": "server profile missing from opencode.json",
+      "content_hash": "sha256:b68535997fd756b674e3f94a3fceae8039145af15a1f1ce7a4b007f660366284"
+    },
+    {
+      "id": "C002-TS-225",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
+      "line": 310,
+      "title": "command file names",
+      "content_hash": "sha256:7cfd809a75541849b7fe51d895952725837895d4bfd678ab08f78f1c21eee191"
+    },
+    {
+      "id": "C002-TS-226",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
+      "line": 318,
+      "title": "built-in commands kept beside the Architect commands",
+      "content_hash": "sha256:d9f26337a25cfccd41b07239655bbc9f7512570af4c9b2439afd55d9dc93d8f6"
+    },
+    {
+      "id": "C002-TS-227",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/acceptance.md",
+      "line": 326,
+      "title": "command file without the prefix",
+      "content_hash": "sha256:ecbc7657defd7088c61e364319a0800f517428c6f40f4fd4ffa220596491680f"
     },
     {
       "id": "C002-TS-301",
@@ -3042,21 +3282,21 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 32,
       "title": "Copilot package layout",
-      "content_hash": "sha256:2d01b0b3fd47190b8c37877f00fa405f051c4363296ea357c2bcb59a80dccaec"
+      "content_hash": "sha256:de0bc72b00114ce9a9f2b8216a9f4c8ada7c65b70fdd60d5f25b612581bf7216"
     },
     {
       "id": "C002-TS-302",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 42,
-      "title": "agent file missing",
-      "content_hash": "sha256:484358c64fbfd0c367fbe19af02db684e8b2b54f293c92aa8320983b7ae3e283"
+      "line": 44,
+      "title": "required file missing",
+      "content_hash": "sha256:5b0c8ac7e7be109d126fe26c27e3bbf1d44cf9d3d8dc8a3b1ed06ceb08ab099f"
     },
     {
       "id": "C002-TS-303",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 52,
+      "line": 58,
       "title": "hook declarations of the package",
       "content_hash": "sha256:f0495309c71019f620783e85f6d7357b722888caa84a70eafec7566e66345933"
     },
@@ -3064,7 +3304,7 @@
       "id": "C002-TS-304",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 59,
+      "line": 65,
       "title": "Claude hooks file copied into the package",
       "content_hash": "sha256:04be2e82b7d1bf8ff20f230a1ad4ce16080261e5fa0f1f2621ee9f82b25d14e5"
     },
@@ -3072,7 +3312,7 @@
       "id": "C002-TS-305",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 69,
+      "line": 75,
       "title": "prompt file agent field",
       "content_hash": "sha256:515bc13542561a88aa453057e1a91730d648b5ca72b4b7cc8cc63a1f7c70f7aa"
     },
@@ -3080,7 +3320,7 @@
       "id": "C002-TS-306",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 79,
+      "line": 85,
       "title": "Copilot install notes",
       "content_hash": "sha256:028bf6b7c94a44ffbb85b425a469b270049dbf334c895b798986a737d9eb0eab"
     },
@@ -3088,7 +3328,7 @@
       "id": "C002-TS-307",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 91,
+      "line": 97,
       "title": "README Copilot VS Code section",
       "content_hash": "sha256:c68dd79fa13186f2cda37b60f8efe79a7e1733d351d12e7505b9595804774e3c"
     },
@@ -3096,7 +3336,7 @@
       "id": "C002-TS-308",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 103,
+      "line": 109,
       "title": "tool lists of the Copilot package",
       "content_hash": "sha256:a32955180c2df4211eecbcc10be121d0622bcc89e31afa23ee300b093d983b7d"
     },
@@ -3104,7 +3344,7 @@
       "id": "C002-TS-309",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 111,
+      "line": 117,
       "title": "conductor asked to edit product code in VS Code",
       "content_hash": "sha256:86d0ed47ea776943246f6f459f51da88fe5c7d2e7f32eae53a75a731797b9039"
     },
@@ -3112,15 +3352,15 @@
       "id": "C002-TS-310",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 123,
-      "title": "server declaration and grants",
-      "content_hash": "sha256:da795eb7abdce47f2dd331daa8b9754cf845ba6a138c20022fa40774d3e3d15f"
+      "line": 129,
+      "title": "server profiles declared in the MCP configuration",
+      "content_hash": "sha256:b57557d9979765655659c9c78bf5f3a5d7c5d207e034392cd0f27de68135eeb6"
     },
     {
       "id": "C002-TS-311",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 139,
+      "line": 149,
       "title": "agent-scoped hooks in the frontmatter",
       "content_hash": "sha256:73c973ad929088466727e20248a25019bf417d24da88e433e0424172d27318dc"
     },
@@ -3128,7 +3368,7 @@
       "id": "C002-TS-312",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 147,
+      "line": 157,
       "title": "hook decisions on Copilot hook input",
       "content_hash": "sha256:0deb2a5622d52df812c8ab30020a42d5fa65b9ee5625ff1fcbd545b8a8124eaa"
     },
@@ -3136,7 +3376,7 @@
       "id": "C002-TS-313",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 163,
+      "line": 173,
       "title": "subagent write outside .sdd/ blocked in VS Code",
       "content_hash": "sha256:c6a936adcfe91ab4640be6c1a3fea8085a437ee5386f859e59a433c6c3db8c0a"
     },
@@ -3144,15 +3384,15 @@
       "id": "C002-TS-314",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 175,
+      "line": 185,
       "title": "faults of the agent-scoped guard hook",
-      "content_hash": "sha256:a4501f7525f876a9a8a3e7dd3b0092ef73d93abd667335140a8ee666ec241b8b"
+      "content_hash": "sha256:1b2c5fd44bd10a5b3718ed40ebfa18a90d9324363821890698ff31f99535a915"
     },
     {
       "id": "C002-TS-315",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 193,
+      "line": 205,
       "title": "hooks fallback warning",
       "content_hash": "sha256:3e47acaaeecde5ca110e5b82c03fe3d98cb6c179845466655eef71ce239a402f"
     },
@@ -3160,7 +3400,7 @@
       "id": "C002-TS-316",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 204,
+      "line": 216,
       "title": "no choice on OpenCode",
       "content_hash": "sha256:c7f561c846d3cb1cf1ab3e739d8b22207f9f431152844a1922db06ced8fab2ae"
     },
@@ -3168,7 +3408,7 @@
       "id": "C002-TS-317",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 218,
+      "line": 230,
       "title": "skipped answer in VS Code",
       "content_hash": "sha256:eb2af2f1644139e05b3c4074dd9154713b1887399d0de06864f21dbf4a7a65a0"
     },
@@ -3176,7 +3416,7 @@
       "id": "C002-TS-318",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 227,
+      "line": 239,
       "title": "skipped gate question in VS Code",
       "content_hash": "sha256:cd0a1262fa67acae9762e9bfe8b5c28987086256c4c8ac74734ee0ad91e83656"
     },
@@ -3184,7 +3424,7 @@
       "id": "C002-TS-319",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 239,
+      "line": 251,
       "title": "askQuestions disabled",
       "content_hash": "sha256:20dbc0d3e258fdda63b69d36d9140a96e8df4ccb15bc8923858801deccc70248"
     },
@@ -3192,7 +3432,7 @@
       "id": "C002-TS-320",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 251,
+      "line": 263,
       "title": "brief on a workspace with two active changes",
       "content_hash": "sha256:94a2c3f0951ad82ad2daf722c788772a19ef1820e13934840ecce27b3a6d650b"
     },
@@ -3200,7 +3440,7 @@
       "id": "C002-TS-321",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 260,
+      "line": 272,
       "title": "brief available to the conductor in VS Code",
       "content_hash": "sha256:dfffef091e63f52d2664a1bcf932181ab365fce539dd791fceccf822c4ae3bed"
     },
@@ -3208,7 +3448,7 @@
       "id": "C002-TS-322",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 270,
+      "line": 282,
       "title": "repository without a workspace",
       "content_hash": "sha256:1ca195be00801a01700f77c981e700df5b40616c2224efd3ec2cbca63ff1a96f"
     },
@@ -3216,7 +3456,7 @@
       "id": "C002-TS-323",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 281,
+      "line": 293,
       "title": "SubagentStop by agent",
       "content_hash": "sha256:2193581d9dcc4e41f21aeb5989f4aa55e5514c48208e907f2568a509fd9f94c6"
     },
@@ -3224,7 +3464,7 @@
       "id": "C002-TS-324",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 296,
+      "line": 308,
       "title": "trace refresh fails",
       "content_hash": "sha256:1f4b4efc926f214675c537f442a18214d150d71e959232b2ed76af59a6290a70"
     },
@@ -3232,7 +3472,7 @@
       "id": "C002-TS-325",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 306,
+      "line": 318,
       "title": "hook command form",
       "content_hash": "sha256:7ed63108ee0b5d6c2ee218695626832a9fe11e89ea7feb0969e7a86be2217458"
     },
@@ -3240,143 +3480,215 @@
       "id": "C002-TS-326",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 313,
+      "line": 325,
       "title": "shell operator in a hook command",
       "content_hash": "sha256:2980852d421e6429067a3cdd96eab9a593db0a05a003f5844b5e2f4c6387a139"
+    },
+    {
+      "id": "C002-TS-327",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 138,
+      "title": "server profile missing from the MCP configuration",
+      "content_hash": "sha256:f21ea57c8f1001fee0fd7854c4ea967daf8b10982f520179bbcd954b6bc7c38e"
+    },
+    {
+      "id": "C002-TS-328",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 335,
+      "title": "prompt file names",
+      "content_hash": "sha256:2f320a983a760fc557a702d876f4051eea7403a697022f98145b3f3c4b9113aa"
+    },
+    {
+      "id": "C002-TS-329",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 343,
+      "title": "prompt files offered as slash commands in VS Code",
+      "content_hash": "sha256:caedb106b2c1df21ea3cd9e039034ef39bb9099b48a4b4a7b76a252f25166259"
+    },
+    {
+      "id": "C002-TS-330",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 355,
+      "title": "tool classes file of the package",
+      "content_hash": "sha256:bb7d4efece9b99190828937f27860ed2ab593a8d5be047e3be82eb3a3dd234ce"
+    },
+    {
+      "id": "C002-TS-331",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 364,
+      "title": "no tool classes file under sdd MCP server enforcement",
+      "content_hash": "sha256:88c3cd7197fc076b04d58ce344fd15779a44460194a06356933e9821b509f83c"
+    },
+    {
+      "id": "C002-TS-332",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 371,
+      "title": "granted tool missing from the tool classes file",
+      "content_hash": "sha256:b170d5fb6c5859ae5159dfdae7b207f539436334539a8859438a0f16f72a0e4e"
+    },
+    {
+      "id": "C002-TS-333",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 382,
+      "title": "read-only calls through the guard hook",
+      "content_hash": "sha256:9516763af4105d54f484d3376167a74be44d43e482719073658c690507093768"
+    },
+    {
+      "id": "C002-TS-334",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 396,
+      "title": "read tool name in another letter case",
+      "content_hash": "sha256:6ab5c9bf177d4d9c3d626791e90d068a7fc1a60b48eee3855e7b2a3a185debaa"
+    },
+    {
+      "id": "C002-TS-335",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
+      "line": 405,
+      "title": "reads and searches pass the hooks in VS Code",
+      "content_hash": "sha256:f8ccb909a195e512db8a33990e8b6add306d80b80bd482d6e98f947eeec179b9"
     },
     {
       "id": "C002-TS-401",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 24,
+      "line": 26,
       "title": "write decisions",
-      "content_hash": "sha256:c6cdf79cc4d21e43edb6aba6bbc5b295642e67108807eac04ee51f271f5b0d45"
+      "content_hash": "sha256:054e926295641e735e49ec61c8ceb09c0fcade706be9d005dfc232549b5b9de7"
     },
     {
       "id": "C002-TS-402",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 44,
+      "line": 46,
       "title": "faults during a write call",
-      "content_hash": "sha256:92932140fa061af4c3a32a5d5a278ea484b513acaddf07bb35c25c9347252162"
+      "content_hash": "sha256:1b7beef3ae20169ea7fa8534c11af4cdb1d9729cdb9f012e4fd4acabad6ec334"
     },
     {
       "id": "C002-TS-403",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 60,
-      "title": "tool list of the server",
-      "content_hash": "sha256:9fac977cb8958fbdc850e0250043e37110f53891080ca1fd703e1b704979ce56"
+      "line": 62,
+      "title": "write tools of the server",
+      "content_hash": "sha256:3ef92d0680dbafe3f8ddde891e74fafe84bcba8be62c02bbfa63785f39c46078"
     },
     {
       "id": "C002-TS-404",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 68,
+      "line": 71,
       "title": "span replacement",
-      "content_hash": "sha256:10f6f14eedf02cfbde41523d2be30b06e00d22ff3ba31c136e6e45bd5ed2a1ae"
+      "content_hash": "sha256:5c719e19a475b89f2783b29051aaf46bb8474cb51262b7d55111000555ef5e5c"
     },
     {
       "id": "C002-TS-405",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 79,
+      "line": 82,
       "title": "occurrences of the span",
-      "content_hash": "sha256:abd581d4f223956c342193a03244a25a0f8a55e6ea594aaef4469fea94fb23b9"
+      "content_hash": "sha256:13652d7bfbe8ff937939121f5155b43e6012c9d1dc9f321733079fc750136744"
     },
     {
       "id": "C002-TS-406",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 95,
+      "line": 99,
       "title": "command decisions",
-      "content_hash": "sha256:8b925898216f6db11e4988263885c1b696ffe0671351564bffa3976a31ea6d2d"
+      "content_hash": "sha256:559a91bce4e69c30cda2309487f09b48e9a71467625c7ee78112f2368cf05f97"
     },
     {
       "id": "C002-TS-407",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 115,
+      "line": 119,
       "title": "successful command",
-      "content_hash": "sha256:4cb6cb328b5b5c846c3f3ff9fb6d59e1ed9f9d69178fc135225ebcdb9dab1796"
+      "content_hash": "sha256:e4f808212781bae0bac3a2ece93263ba4ce6e0f18d62f6bbb915018b7769cbe8"
     },
     {
       "id": "C002-TS-408",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 122,
+      "line": 126,
       "title": "failing command",
-      "content_hash": "sha256:3edfc6d230a565feed132cf137527e00d1d5905cea240bdd06a334c28424abcb"
+      "content_hash": "sha256:3073937c5f5fc9d6295a9d8231e09ba509da46a48c0e7b622a160bfe1423945e"
     },
     {
       "id": "C002-TS-409",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 133,
+      "line": 137,
       "title": "another sdd on PATH",
-      "content_hash": "sha256:29a7cb7eacc98839c28db4dec4402bffdd41b406fb9f68a2151071d37cbbde56"
+      "content_hash": "sha256:e317f45da35f6cdd9673f8fffe9b5e535b3f7153361e8f324c29c16a4644a094"
     },
     {
       "id": "C002-TS-410",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 144,
+      "line": 148,
       "title": "requirement with two SHALL",
-      "content_hash": "sha256:5b19eb5874f0eae4e3d55af1b74cdd8fd08077e98d806702b8fd044e009c5f3b"
+      "content_hash": "sha256:21300bda101198c828d621d6f2e85998c4166a9d39a625acf57f281424a5041a"
     },
     {
       "id": "C002-TS-411",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 152,
+      "line": 156,
       "title": "more findings than the feedback limit",
-      "content_hash": "sha256:6b4221f3db491c7e6940acc110b934ca752cdc6480e96d9f00586f384926ce77"
+      "content_hash": "sha256:c8e9eaeeeff2ecb905499de868e3bca133d4413686d193a7abb6f24a87977a8c"
     },
     {
       "id": "C002-TS-412",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 160,
+      "line": 164,
       "title": "clean file",
-      "content_hash": "sha256:672f2bdc37c1b1fa785468c23566a1a9a88a727f93e490206a512c84934205ef"
+      "content_hash": "sha256:1fc36c7beaa04c4ac529facdb41f2b87f635dc5e50f4fda7d252c5cc63fdec88"
     },
     {
       "id": "C002-TS-413",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 171,
+      "line": 175,
       "title": "quick lint cannot run",
-      "content_hash": "sha256:dc536bca9fe54a7a38ddb186d08e941f437d44e5c1c0ffa50d2501827b98729d"
+      "content_hash": "sha256:c90cda3027a1704f9e2367d4858552438f1673941f266279b27f4bf65398fe68"
     },
     {
       "id": "C002-TS-414",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 182,
+      "line": 186,
       "title": "one session over stdio",
-      "content_hash": "sha256:ba35cffc159798f09d36d16fd4272ea23df1204984b0c35f0dec9410b126791f"
+      "content_hash": "sha256:fab5be742e716dff23dced035cc63fcbeb3ad96a144737feadfc9720186b1dd0"
     },
     {
       "id": "C002-TS-415",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 193,
+      "line": 201,
       "title": "host closes the session",
-      "content_hash": "sha256:237d1d2be394709b36ff4bd6e342c9ba3b530cc07f08094978f11e7be19ce3e9"
+      "content_hash": "sha256:6ece869c8da94dfbc8bdc1c8802514e9e9edfca7fe17df492c62710f03ab273d"
     },
     {
       "id": "C002-TS-416",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 200,
+      "line": 212,
       "title": "input closed before initialisation",
-      "content_hash": "sha256:5a6d1bfda967c8d5a8a35c9cd01a634e9064e090051c0b0be755b27322f1287a"
+      "content_hash": "sha256:72538d7d2801b2aef5292aa01a80096cb53b87a7aaf7d9f04b5e13206753c269"
     },
     {
       "id": "C002-TS-417",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 210,
+      "line": 222,
       "title": "tarball entries",
       "content_hash": "sha256:94897d5528a164185b2f525912156a1a3b5ede50cfb44c942188a136e1784ef7"
     },
@@ -3384,7 +3696,7 @@
       "id": "C002-TS-418",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 221,
+      "line": 233,
       "title": "GPL dependency in an entry",
       "content_hash": "sha256:76ef87314f0edd9f2b8986e7ea9f02b11d7308487124877a783cd0151778d00e"
     },
@@ -3392,15 +3704,39 @@
       "id": "C002-TS-419",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
-      "line": 236,
+      "line": 248,
       "title": "LICENSE and THIRD_PARTY_NOTICES.md",
       "content_hash": "sha256:5e921be60f991942d47beea827c7b8b4b3b593baf8ec372d73eab2e14022f656"
+    },
+    {
+      "id": "C002-TS-420",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
+      "line": 259,
+      "title": "tool list per profile",
+      "content_hash": "sha256:ed6fa64c7cbc027d06538ca0b3e985956b5c7b1cafb2d08344d79791d5965ca6"
+    },
+    {
+      "id": "C002-TS-421",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
+      "line": 270,
+      "title": "tool of the other profile called by name",
+      "content_hash": "sha256:33a14c26f19549b8b6323e7162bbf3d1821eabe41c2c4d35acd0ae95762b5b8e"
+    },
+    {
+      "id": "C002-TS-422",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/acceptance.md",
+      "line": 282,
+      "title": "missing or unknown profile",
+      "content_hash": "sha256:fb59838f5f6008faa344835fe7531c7790ef3ddda3627cc3e19368d9c2860415"
     },
     {
       "id": "C002-TS-501",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 32,
+      "line": 36,
       "title": "version of the installed executable",
       "content_hash": "sha256:4a62a1beb904b0bd8ac38017bb08f45597920e2f89aada90108fd64cbcb1b3db"
     },
@@ -3408,7 +3744,7 @@
       "id": "C002-TS-502",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 39,
+      "line": 43,
       "title": "same behaviour as the bundled CLI",
       "content_hash": "sha256:b48692460c11d2a8c5211d6593582408d8163ef8eac5111130878aa1045f72f2"
     },
@@ -3416,7 +3752,7 @@
       "id": "C002-TS-503",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 50,
+      "line": 54,
       "title": "npm package written by npm run package",
       "content_hash": "sha256:661943ece487b5315e32eee64f7c3baced8efb474b47831fb5d5cc2ee41d5ab1"
     },
@@ -3424,7 +3760,7 @@
       "id": "C002-TS-504",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 61,
+      "line": 65,
       "title": "bash guard decisions after the allowlist change",
       "content_hash": "sha256:cfd7942f597a2db09c412404f8b3e19965b5828f9f58daf1ad4d5905190c26c7"
     },
@@ -3432,7 +3768,7 @@
       "id": "C002-TS-505",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 83,
+      "line": 87,
       "title": "deny message names the new entries",
       "content_hash": "sha256:501a0c1a2e06f0fee0da5d8aff84e9c3947ee029eb6c9f58d38adf72c383ee92"
     },
@@ -3440,7 +3776,7 @@
       "id": "C002-TS-506",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 95,
+      "line": 99,
       "title": "doctor table on Claude Code and OpenCode",
       "content_hash": "sha256:390ad17a01b22cc7c911f09bc16c529ff0e61728da49625a7de4ec7de35ebf69"
     },
@@ -3448,7 +3784,7 @@
       "id": "C002-TS-507",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 108,
+      "line": 112,
       "title": "missing tool on OpenCode",
       "content_hash": "sha256:ce852fe1def361e07f744fa47316e5bf7df47b9f7f1d95eb0adb45d22d659af0"
     },
@@ -3456,15 +3792,15 @@
       "id": "C002-TS-508",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 116,
+      "line": 120,
       "title": "doctor table in VS Code",
-      "content_hash": "sha256:f642657c0e08115236736145e19d9cef75b49743fcc865a9f1594d8707ed2438"
+      "content_hash": "sha256:acdd3bb90e1b5273520b550b077bf85caf57edd31345067121d9ec78e8c6e01e"
     },
     {
       "id": "C002-TS-509",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 128,
+      "line": 133,
       "title": "doctor outcome per situation",
       "content_hash": "sha256:95cbb6d6c30fd647a9cbe5cf0c3bbfde6fc0b2f28dfa449a08b116dfeadd9743"
     },
@@ -3472,7 +3808,7 @@
       "id": "C002-TS-510",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 147,
+      "line": 152,
       "title": "Claude Code version on each host",
       "content_hash": "sha256:9abd7c9c2b749375f9aac987fec558c2880e594528194059c280a038124958cc"
     },
@@ -3480,7 +3816,7 @@
       "id": "C002-TS-511",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 163,
+      "line": 168,
       "title": "toolchain.md per host",
       "content_hash": "sha256:9be18e6ddee3ef2bf7cb4f5272254c6052fb5e79c8818997a6bb8c49356e3961"
     },
@@ -3488,7 +3824,7 @@
       "id": "C002-TS-512",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 176,
+      "line": 181,
       "title": "toolchain record written by init on OpenCode",
       "content_hash": "sha256:31d8096bd85d1324daf01e1dc60a5822b5dd6cb94a46035f4774637b29ac99b4"
     },
@@ -3496,15 +3832,15 @@
       "id": "C002-TS-513",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 187,
-      "title": "OpenCode version against the tested version",
-      "content_hash": "sha256:71b0bc1c4c1aa274ee38609ce1cc567913b4e018b8d434d857298f5fd3dbd8f2"
+      "line": 192,
+      "title": "host versions against the tested versions",
+      "content_hash": "sha256:d986e1fa132ae87570b0e000bf9359e278d62d92edb9f998625916f3f250a1d0"
     },
     {
       "id": "C002-TS-514",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 201,
+      "line": 210,
       "title": "untested is a warning",
       "content_hash": "sha256:0f92952d7136896d96c24c97015c740ea4197f07e16271e8ae8bfa7a746c3137"
     },
@@ -3512,7 +3848,7 @@
       "id": "C002-TS-515",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 212,
+      "line": 221,
       "title": "CLI older than the target package",
       "content_hash": "sha256:bfa6c6f8d2b8e544f5437bcf7835c2a379130d44128f861a0dc6022ca26cb50a"
     },
@@ -3520,9 +3856,89 @@
       "id": "C002-TS-516",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 224,
+      "line": 233,
       "title": "hooks state in the VS Code doctor",
       "content_hash": "sha256:5831144ff286104107a091232eb35aa7232979049abfe293c6d472bdcc4c881c"
+    },
+    {
+      "id": "C002-TS-517",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 258,
+      "title": "bare version from each CLI",
+      "content_hash": "sha256:a21ea3ceb927eca6f7348c55f70d7d4a1ea8e6ec7037a18af15dd555c88cae45"
+    },
+    {
+      "id": "C002-TS-518",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 271,
+      "title": "the version command keeps its form",
+      "content_hash": "sha256:2ed21db0c0cf80599206f3a9eff29dc4015376da4164b5ae1e845a428c41ba77"
+    },
+    {
+      "id": "C002-TS-519",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 281,
+      "title": "templates and mode file in the tarball",
+      "content_hash": "sha256:a393985474be1b993cdfaa4d03431dc0a5523ff595958de7205c7bd718c68b02"
+    },
+    {
+      "id": "C002-TS-520",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 292,
+      "title": "template lookup",
+      "content_hash": "sha256:f7fc55f20a9be4732826a83f7ee8977d5b522652393f332ce202efceb42294d7"
+    },
+    {
+      "id": "C002-TS-521",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 308,
+      "title": "unknown template",
+      "content_hash": "sha256:811d561a8d3415116e76c7d7d989fea7724e548f52639adf01558d9d14197fe7"
+    },
+    {
+      "id": "C002-TS-522",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 321,
+      "title": "path that leaves the template folders",
+      "content_hash": "sha256:8d5205c542b69eca969a0bf33142b3c2a74695ef16343db0ffc4b457b6d6fcc7"
+    },
+    {
+      "id": "C002-TS-523",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 337,
+      "title": "Serena configuration per platform",
+      "content_hash": "sha256:4538fc4819619741140655d8cb9b1819e4bb87e822e4412b42a0d955e926731a"
+    },
+    {
+      "id": "C002-TS-524",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 353,
+      "title": "Serena started with the per-user data folder",
+      "content_hash": "sha256:20b3b57923cbac81a69ada9f50967ed78d35b3b7ec756a1bd47f2a9c2377fc31"
+    },
+    {
+      "id": "C002-TS-525",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 367,
+      "title": "per-user data folder not determinable",
+      "content_hash": "sha256:fcd32573bfcd38dcdda8cd82b5a120033fb8aaf1cd0f3bc17f79c05247aa29ac"
+    },
+    {
+      "id": "C002-TS-526",
+      "type": "TS",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
+      "line": 246,
+      "title": "hooks state that cannot be read",
+      "content_hash": "sha256:3c0996f26a1025b1d585802caf4f206ba8f5d31c28d11e8b6ef08cd3e74cb895"
     },
     {
       "id": "C002-TS-601",
@@ -4073,6 +4489,11 @@
       "relation": "scenario-of"
     },
     {
+      "from": "C002-AC-111.1",
+      "to": "C002-TS-123",
+      "relation": "scenario-of"
+    },
+    {
       "from": "C002-AC-112.1",
       "to": "C002-TS-119",
       "relation": "scenario-of"
@@ -4090,6 +4511,51 @@
     {
       "from": "C002-AC-113.1",
       "to": "C002-TS-122",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-114.1",
+      "to": "C002-TS-124",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-114.1",
+      "to": "C002-TS-125",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-114.1",
+      "to": "C002-TS-126",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-115.1",
+      "to": "C002-TS-127",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-116.1",
+      "to": "C002-TS-128",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-117.1",
+      "to": "C002-TS-129",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-117.1",
+      "to": "C002-TS-130",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-118.1",
+      "to": "C002-TS-131",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-118.1",
+      "to": "C002-TS-132",
       "relation": "scenario-of"
     },
     {
@@ -4163,6 +4629,11 @@
       "relation": "scenario-of"
     },
     {
+      "from": "C002-AC-210.1",
+      "to": "C002-TS-224",
+      "relation": "scenario-of"
+    },
+    {
       "from": "C002-AC-211.1",
       "to": "C002-TS-215",
       "relation": "scenario-of"
@@ -4205,6 +4676,21 @@
     {
       "from": "C002-AC-215.1",
       "to": "C002-TS-223",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-216.1",
+      "to": "C002-TS-225",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-216.1",
+      "to": "C002-TS-226",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-216.1",
+      "to": "C002-TS-227",
       "relation": "scenario-of"
     },
     {
@@ -4255,6 +4741,11 @@
     {
       "from": "C002-AC-307.1",
       "to": "C002-TS-310",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-307.1",
+      "to": "C002-TS-327",
       "relation": "scenario-of"
     },
     {
@@ -4335,6 +4826,46 @@
     {
       "from": "C002-AC-316.1",
       "to": "C002-TS-326",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-317.1",
+      "to": "C002-TS-328",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-317.1",
+      "to": "C002-TS-329",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-318.1",
+      "to": "C002-TS-330",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-318.1",
+      "to": "C002-TS-331",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-318.1",
+      "to": "C002-TS-332",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-319.1",
+      "to": "C002-TS-333",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-319.1",
+      "to": "C002-TS-334",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-319.1",
+      "to": "C002-TS-335",
       "relation": "scenario-of"
     },
     {
@@ -4433,6 +4964,21 @@
       "relation": "scenario-of"
     },
     {
+      "from": "C002-AC-415.1",
+      "to": "C002-TS-420",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-415.1",
+      "to": "C002-TS-421",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-415.1",
+      "to": "C002-TS-422",
+      "relation": "scenario-of"
+    },
+    {
       "from": "C002-AC-501.1",
       "to": "C002-TS-501",
       "relation": "scenario-of"
@@ -4510,6 +5056,56 @@
     {
       "from": "C002-AC-510.1",
       "to": "C002-TS-516",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-510.1",
+      "to": "C002-TS-526",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-511.1",
+      "to": "C002-TS-517",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-511.1",
+      "to": "C002-TS-518",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-512.1",
+      "to": "C002-TS-519",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-513.1",
+      "to": "C002-TS-520",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-514.1",
+      "to": "C002-TS-521",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-514.1",
+      "to": "C002-TS-522",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-515.1",
+      "to": "C002-TS-523",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-515.1",
+      "to": "C002-TS-524",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C002-AC-516.1",
+      "to": "C002-TS-525",
       "relation": "scenario-of"
     },
     {
@@ -7114,6 +7710,11 @@
     },
     {
       "from": "C002-REQ-114",
+      "to": "C002-AC-114.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-114",
       "to": "C002-IF-001",
       "relation": "references"
     },
@@ -7144,6 +7745,11 @@
     },
     {
       "from": "C002-REQ-115",
+      "to": "C002-AC-115.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-115",
       "to": "C002-IF-001",
       "relation": "references"
     },
@@ -7164,6 +7770,11 @@
     },
     {
       "from": "C002-REQ-116",
+      "to": "C002-AC-116.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-116",
       "to": "C002-IF-001",
       "relation": "references"
     },
@@ -7181,6 +7792,11 @@
       "from": "C002-REQ-116",
       "to": "C002-US-505",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-AC-117.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-117",
@@ -7231,6 +7847,11 @@
       "from": "C002-REQ-117",
       "to": "C002-US-302",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-AC-118.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-118",
@@ -7586,6 +8207,11 @@
       "from": "C002-REQ-215",
       "to": "C002-US-205",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-216",
+      "to": "C002-AC-216.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-216",
@@ -7979,6 +8605,11 @@
     },
     {
       "from": "C002-REQ-317",
+      "to": "C002-AC-317.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-317",
       "to": "C002-IF-001",
       "relation": "references"
     },
@@ -8004,6 +8635,11 @@
     },
     {
       "from": "C002-REQ-318",
+      "to": "C002-AC-318.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-318",
       "to": "C002-IF-005",
       "relation": "references"
     },
@@ -8026,6 +8662,11 @@
       "from": "C002-REQ-318",
       "to": "C002-US-303",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-AC-319.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-319",
@@ -8271,6 +8912,11 @@
       "from": "C002-REQ-414",
       "to": "C002-US-404",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-AC-415.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-415",
@@ -8534,6 +9180,11 @@
     },
     {
       "from": "C002-REQ-511",
+      "to": "C002-AC-511.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-511",
       "to": "C002-IF-006",
       "relation": "references"
     },
@@ -8566,6 +9217,11 @@
       "from": "C002-REQ-511",
       "to": "C002-US-501",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-AC-512.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-512",
@@ -8609,6 +9265,11 @@
     },
     {
       "from": "C002-REQ-513",
+      "to": "C002-AC-513.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-513",
       "to": "C002-IF-007",
       "relation": "references"
     },
@@ -8624,6 +9285,11 @@
     },
     {
       "from": "C002-REQ-514",
+      "to": "C002-AC-514.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C002-REQ-514",
       "to": "C002-IF-007",
       "relation": "references"
     },
@@ -8631,6 +9297,11 @@
       "from": "C002-REQ-514",
       "to": "C002-US-504",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-AC-515.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-515",
@@ -8661,6 +9332,11 @@
       "from": "C002-REQ-515",
       "to": "C002-US-505",
       "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-516",
+      "to": "C002-AC-516.1",
+      "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-516",

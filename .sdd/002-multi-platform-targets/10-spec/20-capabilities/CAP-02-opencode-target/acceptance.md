@@ -176,18 +176,22 @@ Scenario: C002-TS-213 — built-in edit refused even inside .sdd/
 
 ## C002-REQ-210
 
-#### C002-AC-210.1 — Write and command tools are those of the sdd MCP server
+#### C002-AC-210.1 — Two local servers declared, one per server profile
 ```gherkin
 @mode-server
-Scenario Outline: C002-TS-214 — server declaration and grants
-  When "dist/opencode/opencode.json" and the agent "<agent>" are parsed
-  Then "opencode.json" declares the sdd MCP server as a local command server of "architect-sdd"
-  And "<agent>" is granted <grant>
-  Examples:
-    | agent           | grant                                                    |
-    | sdd-spec-writer | the server's write tools and its command tool            |
-    | sdd-researcher  | the server's write tools and not its command tool        |
-    | sdd-options-analyst | the server's write tools and not its command tool    |
+Scenario: C002-TS-214 — server profiles declared in opencode.json
+  When "dist/opencode/opencode.json" is parsed
+  Then its "mcp" key declares the local server "sdd-files" with the command "sdd-mcp", "--profile", "files"
+  And it declares the local server "sdd-shell" with the command "sdd-mcp", "--profile", "shell"
+  And no other "mcp" entry runs "sdd-mcp"
+```
+
+```gherkin
+@mode-server
+Scenario: C002-TS-224 — server profile missing from opencode.json
+  Given a generated "dist/opencode/opencode.json" from which the "sdd-shell" entry is removed
+  When the target structure check runs on the OpenCode target package
+  Then it reports an error naming "opencode.json" and "sdd-shell"
 ```
 
 ## C002-REQ-211
@@ -299,6 +303,32 @@ Scenario: C002-TS-223 — clean file gives no finding
   Then the result returned to "sdd-spec-writer" contains no finding line
 ```
 
+## C002-REQ-216
+
+#### C002-AC-216.1 — Commands named `architect-<name>`
+```gherkin
+Scenario: C002-TS-225 — command file names
+  When the file names of "dist/opencode/.opencode/commands/" are read
+  Then they are exactly "architect-<name>.md" for each of the 13 source commands "commands/<name>.md"
+  And they include "architect-new.md" and "architect-init.md"
+  And there is no file "new.md" or "init.md"
+```
+
+```gherkin
+Scenario: C002-TS-226 — built-in commands kept beside the Architect commands
+  Given an OpenCode session at the tested version on "fx-oc" with the OpenCode target package
+  When the session's command list is read through the OpenCode server API
+  Then it lists the 13 commands "architect-<name>", each bound to the agent "sdd-conductor"
+  And the built-in commands "init" and "new" are listed with OpenCode's own descriptions
+```
+
+```gherkin
+Scenario: C002-TS-227 — command file without the prefix
+  Given a generated "dist/opencode/" in which ".opencode/commands/architect-new.md" is renamed "new.md"
+  When the target structure check runs on the OpenCode target package
+  Then it reports an error naming "new.md"
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -312,12 +342,13 @@ Scenario: C002-TS-223 — clean file gives no finding
 | C002-REQ-207 | TS-209 | TS-209 (PowerShell) | n/a | TS-209 | TS-209 | n/a | TS-209 (chain, redirect) |
 | C002-REQ-208 | TS-210 | TS-211 | n/a | n/a | TS-211 | n/a | n/a |
 | C002-REQ-209 | TS-212 | n/a | TS-213 (inside .sdd/) | TS-213 | TS-212 | n/a | TS-213 |
-| C002-REQ-210 | TS-214 | TS-214 (agent without Bash) | n/a | n/a | TS-214 | n/a | n/a |
+| C002-REQ-210 | TS-214 | n/a | n/a | TS-224 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | n/a |
 | C002-REQ-211 | TS-215, TS-216 | TS-215 (Claude Code) | TS-215 (4 and 5 questions) | n/a | n/a | n/a | n/a |
 | C002-REQ-212 | TS-217, TS-218 | TS-217 (Claude Code) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-213 | TS-219, TS-220 | TS-219 (Claude Code) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-214 | TS-221 | n/a | TS-221 (50-character topic) | n/a | n/a | n/a | n/a |
 | C002-REQ-215 | TS-222 | TS-223 (no finding) | n/a | n/a: C002-REQ-215 states no failure path; the server counterpart is C002-REQ-409 | n/a | n/a | n/a |
+| C002-REQ-216 | TS-225 | TS-226 (in an OpenCode session) | n/a | TS-227 | n/a | n/a | TS-226 (collision with the built-in "/new" and "/init") |
 
 Per-column n/a reasons. *Alternate*: package-content rules with one expected form. *Boundary*: no
 numeric limit in the requirement. *Error*: content rules whose failure is a target structure check

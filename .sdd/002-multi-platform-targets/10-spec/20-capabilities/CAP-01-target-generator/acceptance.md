@@ -96,6 +96,9 @@ Scenario Outline: C002-TS-107 — every construct kind of the source plugin is t
     | architect: agent reference   | agents/sdd-conductor.md    |
     | claude --agent guard line    | commands/specify.md        |
     | AskUserQuestion              | agents/sdd-conductor.md    |
+    | AskUserQuestion              | commands/archive.md        |
+    | ${CLAUDE_PLUGIN_ROOT}/templates/ | commands/decide.md     |
+    | CLI invocation line          | agents/sdd-auditor.md      |
 ```
 
 ## C002-REQ-104
@@ -206,22 +209,22 @@ Scenario Outline: C002-TS-115 — skill bodies inlined
 
 ## C002-REQ-110
 
-#### C002-AC-110.1 — Over-budget inlining is an error with sizes and budget
+#### C002-AC-110.1 — Over-budget inlining is an error with budget, size and the skills concerned
 ```gherkin
 Scenario Outline: C002-TS-116 — inlining budget limits
-  Given a generated OpenCode agent "sdd-conductor" whose largest inlined skill has <skill> characters and whose inlined skills total <total> characters
-  When the target structure check runs on the OpenCode target package
+  Given the fixture "fx-plugin-budget" whose generated OpenCode agent "sdd-conductor" inlines seven skills, the largest being "gate-protocol" with <skill> characters, <total> characters in total
+  When the target structure check runs on the OpenCode target package of that fixture
   Then it reports <result>
   Examples:
-    | skill  | total  | result                                                                    |
-    | 24,000 | 64,000 | no budget error                                                           |
-    | 24,001 | 40,000 | an error naming "opencode", "sdd-conductor", 24,001 and 24,000            |
-    | 20,000 | 64,001 | an error naming "opencode", "sdd-conductor", 64,001 and 64,000            |
+    | skill  | total  | result                                                                                                                                  |
+    | 24,000 | 64,000 | no budget error                                                                                                                         |
+    | 24,001 | 40,000 | one error naming "opencode", "sdd-conductor", the per-skill budget 24,000, the size 24,001 and the skill "gate-protocol" only           |
+    | 20,000 | 64,001 | one error naming "opencode", "sdd-conductor", the per-agent budget 64,000, the size 64,001 and each of the seven inlined skills with its size |
 ```
 
 ## C002-REQ-111
 
-#### C002-AC-111.1 — Wiring sections and the CLI line carry the target variant
+#### C002-AC-111.1 — Wiring sections, CLI lines and other wiring anchors carry the target variant
 ```gherkin
 Scenario Outline: C002-TS-117 — interview wiring per target
   Given "skills/interview-protocol/SKILL.md" has a section "Claude Code wiring" naming AskUserQuestion
@@ -236,53 +239,198 @@ Scenario Outline: C002-TS-117 — interview wiring per target
 ```
 
 ```gherkin
-Scenario Outline: C002-TS-118 — sdd CLI invocation line per target
-  Given "skills/sdd-conventions/SKILL.md" holds the CLI invocation line with "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"
+Scenario Outline: C002-TS-118 — sdd CLI invocation lines per target
+  Given line <line> of "<file>" holds a CLI invocation line with "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"
   When the generator writes the <target> target package
-  Then the generated "sdd-conventions" skill holds the <target> variant of the CLI invocation line
-  And the generated "sdd-conventions" skill does not contain "scripts/sdd.mjs"
+  Then <generated> holds the <target> variant of that line in its place
+  And none of them contains "scripts/sdd.mjs"
   Examples:
-    | target   |
-    | OpenCode |
-    | Copilot  |
+    | file                            | line | target   | generated                                                              |
+    | skills/sdd-conventions/SKILL.md | 13   | OpenCode | the generated "sdd-conventions" skill and every agent body that inlines it |
+    | skills/sdd-conventions/SKILL.md | 13   | Copilot  | the generated "sdd-conventions" skill and every agent body that inlines it |
+    | agents/sdd-conductor.md         | 19   | OpenCode | the generated "sdd-conductor" agent                                    |
+    | agents/sdd-conductor.md         | 19   | Copilot  | the generated "sdd-conductor" agent                                    |
+    | agents/sdd-auditor.md           | 13   | OpenCode | the generated "sdd-auditor" agent                                      |
+    | agents/sdd-auditor.md           | 13   | Copilot  | the generated "sdd-auditor" agent                                      |
+```
+
+```gherkin
+Scenario Outline: C002-TS-123 — doctor host rows per target
+  Given "commands/doctor.md" holds the Claude Code host rows ("Claude Code" in the probe list and the remedies-table row "claude --version") as a wiring anchor
+  And the source plugin keeps a <target> variant of that anchor
+  When the generator writes the <target> target package
+  Then the generated doctor command holds the <target> variant in place of that anchor, with the host row "<host row>" and the row "sdd CLI"
+  And it contains neither "claude --version" nor a "Claude Code" row
+  Examples:
+    | target   | host row                         |
+    | OpenCode | OpenCode                         |
+    | Copilot  | VS Code with GitHub Copilot Chat |
 ```
 
 ## C002-REQ-112
 
-#### C002-AC-112.1 — Missing variant named with skill and target
+#### C002-AC-112.1 — Missing variant named with file, line and target
 ```gherkin
 Scenario: C002-TS-119 — gate wiring without a Copilot variant
-  Given the fixture "fx-plugin-novariant" in which the "Claude Code wiring" section of "gate-protocol" has an OpenCode variant and no Copilot variant
+  Given the fixture "fx-plugin-novariant" in which the "Claude Code wiring" section of "skills/gate-protocol/SKILL.md", whose heading is on line 87, has an OpenCode variant and no Copilot variant
   When the generator runs on that fixture
   Then the exit code is non-zero
-  And the message names "gate-protocol" and the target "copilot"
+  And the message names "skills/gate-protocol/SKILL.md", line 87 and the target "copilot"
+  And the message does not name the target "opencode"
 ```
 
 ```gherkin
-Scenario: C002-TS-120 — CLI invocation line without an OpenCode variant
-  Given the fixture "fx-plugin-novariant-cli" in which the CLI invocation line of "sdd-conventions" has a Copilot variant and no OpenCode variant
+Scenario Outline: C002-TS-120 — CLI invocation line or command wiring without a variant
+  Given the fixture "<fixture>" in which the <anchor> on line <line> of "<file>" has a <present> variant and no <missing> variant
   When the generator runs on that fixture
   Then the exit code is non-zero
-  And the message names "sdd-conventions" and the target "opencode"
+  And the message names "<file>", line <line> and the target "<missing>"
+  Examples:
+    | fixture                   | anchor                          | file                            | line | present  | missing  |
+    | fx-plugin-novariant-cli   | CLI invocation line             | skills/sdd-conventions/SKILL.md | 13   | copilot  | opencode |
+    | fx-plugin-novariant-agent | CLI invocation line             | agents/sdd-auditor.md           | 13   | opencode | copilot  |
+    | fx-plugin-novariant-cmd   | "Claude Code wiring" heading    | commands/archive.md             | 20   | opencode | copilot  |
 ```
 
 ## C002-REQ-113
 
-#### C002-AC-113.1 — Claude Code skill bodies hold no variant of a generated target
+#### C002-AC-113.1 — Claude Code agent, command and skill files hold no variant of a generated target
 ```gherkin
-Scenario: C002-TS-121 — SKILL.md bodies after the variants are added
-  Given the source plugin keeps the OpenCode and Copilot wiring variants of every wiring section and of the CLI invocation line
+Scenario: C002-TS-121 — Claude Code files after the variants are added
+  Given the source plugin keeps the OpenCode and Copilot variants of every wiring section, every CLI invocation line and the doctor host rows
   When the plugin structure checks run on "plugins/architect/"
-  Then no "SKILL.md" body contains an OpenCode or Copilot wiring variant, nor the name "vscode/askQuestions"
+  Then no file under "agents/", "commands/" or "skills/" contains an OpenCode or Copilot wiring variant, nor the name "vscode/askQuestions"
+  And every variant file lies under "plugins/architect/targets/"
   And PLG-SIZE-001 reports no finding for any Claude Code agent
 ```
 
 ```gherkin
-Scenario: C002-TS-122 — a variant pasted into a SKILL.md body
-  Given the Copilot variant of the gate wiring is pasted into "skills/gate-protocol/SKILL.md"
+Scenario Outline: C002-TS-122 — a variant pasted into a Claude Code file
+  Given <variant> is pasted into "<file>"
   When "npm run check" runs
   Then the exit code is non-zero
-  And the output names "skills/gate-protocol/SKILL.md"
+  And the output names "<file>"
+  Examples:
+    | variant                                         | file                          |
+    | the Copilot variant of the gate wiring          | skills/gate-protocol/SKILL.md |
+    | the OpenCode variant of the CLI invocation line | agents/sdd-conductor.md       |
+    | the line "Confirm in one vscode/askQuestions round" | commands/archive.md       |
+```
+
+## C002-REQ-114
+
+#### C002-AC-114.1 — Serena declared read-only through `sdd serena-launch` with per-user data
+```gherkin
+Scenario Outline: C002-TS-124 — Serena declaration of each target package
+  When the generator writes the <target> target package
+  Then the "serena" entry of "<config>" runs "sdd" with the arguments "serena-launch", "--user-data", "--read-only", "--", "start-mcp-server", in that order, followed by the Serena arguments of the mapping table
+  And that entry contains neither "${CLAUDE_PLUGIN_ROOT}", "${CLAUDE_PLUGIN_DATA}" nor "SERENA_HOME"
+  Examples:
+    | target   | config        |
+    | OpenCode | opencode.json |
+    | Copilot  | .mcp.json     |
+```
+
+```gherkin
+Scenario: C002-TS-125 — Serena started from the OpenCode declaration
+  Given Serena 1.7.x is installed, the packed "architect-sdd" tarball is installed globally into a clean prefix, and "LOCALAPPDATA" is "C:/fx-home/AppData/Local"
+  When an MCP client starts the "serena" server of "dist/opencode/opencode.json" with its command and arguments in "fx-oc" and sends "tools/list"
+  Then the list holds no tool of Serena's editing set ("create_text_file", "replace_symbol_body", "insert_after_symbol", "execute_shell_command")
+  And "C:/fx-home/AppData/Local/architect-sdd/serena/serena_config.yml" exists
+  And "fx-oc" has no ".serena/" folder after the client closes the session
+```
+
+```gherkin
+Scenario: C002-TS-126 — Serena declaration without the read-only option
+  Given a generated "dist/copilot/.mcp.json" whose "serena" entry lacks the argument "--read-only"
+  When the target structure check runs on the Copilot target package
+  Then it reports an error naming ".mcp.json", "serena" and "--read-only"
+```
+
+## C002-REQ-115
+
+#### C002-AC-115.1 — Template paths in agent and command bodies become `sdd template show`
+```gherkin
+Scenario Outline: C002-TS-127 — template references per target
+  Given line <line> of "<file>" names the template "<source path>"
+  When the generator writes the <target> target package
+  Then the file generated from "<file>" contains "<command>" in its place
+  And it does not contain "${CLAUDE_PLUGIN_ROOT}"
+  Examples:
+    | file                      | line | source path                                                                 | target   | command                                                               |
+    | commands/decide.md        | 18   | ${CLAUDE_PLUGIN_ROOT}/templates/full/00-ideation/decisions/DEC-{{SEQ}}-{{SLUG}}.md | OpenCode | sdd template show full/00-ideation/decisions/DEC-{{SEQ}}-{{SLUG}}.md |
+    | commands/init.md          | 25   | ${CLAUDE_PLUGIN_ROOT}/templates/constitution/constitution.md                | Copilot  | sdd template show constitution/constitution.md                        |
+    | agents/sdd-spec-writer.md | 19   | ${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…                                 | OpenCode | sdd template show <profile>/…                                         |
+    | agents/sdd-spec-writer.md | 19   | ${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…                                 | Copilot  | sdd template show <profile>/…                                         |
+```
+
+## C002-REQ-116
+
+#### C002-AC-116.1 — The plugin data argument becomes `--user-data`
+```gherkin
+Scenario Outline: C002-TS-128 — Serena configuration call in generated commands
+  Given line <line> of "commands/<command>.md" runs `sdd serena-config "${CLAUDE_PLUGIN_DATA}"`
+  When the generator writes the <target> target package
+  Then the generated <command> command runs "sdd serena-config --user-data" in its place
+  And it does not contain "CLAUDE_PLUGIN_DATA"
+  Examples:
+    | command | line | target   |
+    | doctor  | 8    | OpenCode |
+    | doctor  | 8    | Copilot  |
+    | init    | 9    | OpenCode |
+    | init    | 9    | Copilot  |
+```
+
+## C002-REQ-117
+
+#### C002-AC-117.1 — Each agent receives the server profiles of its source write and shell tools
+```gherkin
+Scenario Outline: C002-TS-129 — server profiles per agent under sdd MCP server enforcement
+  Given the source agent "<agent>" whose "tools" field holds, of Write, Edit and Bash, only <source tools>
+  When the generator writes the <target> target package with "--mode <target>=sdd-mcp-server"
+  Then the generated "<agent>" agent is granted tools of exactly the server profiles <profiles>
+  And it is granted no generic edit or terminal tool
+  Examples:
+    | agent               | source tools     | target   | profiles                  |
+    | sdd-conductor       | Write, Edit, Bash | opencode | "sdd-files" and "sdd-shell" |
+    | sdd-conductor       | Write, Edit, Bash | copilot  | "sdd-files" and "sdd-shell" |
+    | sdd-auditor         | Write, Bash       | copilot  | "sdd-files" and "sdd-shell" |
+    | sdd-researcher      | Write             | opencode | "sdd-files"               |
+    | sdd-researcher      | Write             | copilot  | "sdd-files"               |
+    | sdd-options-analyst | Write             | copilot  | "sdd-files"               |
+```
+
+```gherkin
+Scenario: C002-TS-130 — command tool granted to an agent without Bash
+  Given a Copilot target package generated with "--mode copilot=sdd-mcp-server" in which "sdd-researcher.agent.md" lists "sdd-shell/*" in its "tools" field
+  When the target structure check runs on that package
+  Then it reports an error naming "sdd-researcher" and "sdd-shell"
+```
+
+## C002-REQ-118
+
+#### C002-AC-118.1 — AskUserQuestion in agent and command bodies becomes the host's question tool
+```gherkin
+Scenario Outline: C002-TS-131 — question tool named in generated bodies
+  Given "<file>" names AskUserQuestion on line(s) <lines>
+  When the generator writes the <target> target package
+  Then the file generated from "<file>" names the <target> mapping-table entry of the construct "ask-user-question" at each of those places
+  And it does not contain "AskUserQuestion"
+  Examples:
+    | file                    | lines  | target   |
+    | agents/sdd-conductor.md | 61, 66 | OpenCode |
+    | agents/sdd-conductor.md | 61, 66 | Copilot  |
+    | commands/archive.md     | 15     | OpenCode |
+    | commands/archive.md     | 15     | Copilot  |
+```
+
+```gherkin
+@eval
+Scenario: C002-TS-132 — archive confirmation through the OpenCode question tool
+  Given an OpenCode session at the tested version with the OpenCode target package, on the fixture "fx-archive" whose change "002" passes "sdd archive 002 --dry-run"
+  When P-01 runs "/architect-archive 002"
+  Then the transcript shows one "question" call asking "Apply the archive of CHG-002?" with the options "Apply (Recommended)" and "Cancel"
+  And no "sdd archive 002" command without "--dry-run" runs before that call is answered
 ```
 
 ## Coverage table
@@ -298,15 +446,20 @@ Scenario: C002-TS-122 — a variant pasted into a SKILL.md body
 | C002-REQ-107 | TS-112 | TS-112 (two targets) | n/a | n/a | TS-112 | n/a | TS-113 |
 | C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | n/a | n/a | TS-114 | n/a | n/a |
 | C002-REQ-109 | TS-115 | TS-115 (two targets) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-110 | TS-116 | n/a | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
-| C002-REQ-111 | TS-117, TS-118 | TS-117 (inlined copies) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
-| C002-REQ-112 | TS-119 | TS-120 (CLI line) | n/a | TS-119, TS-120 | n/a | n/a | n/a |
-| C002-REQ-113 | TS-121 | n/a | n/a | TS-122 | n/a | n/a | n/a |
+| C002-REQ-110 | TS-116 | TS-116 (per-skill and per-agent budget) | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
+| C002-REQ-111 | TS-117, TS-118, TS-123 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
+| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring) | n/a | TS-119, TS-120 | n/a | n/a | n/a |
+| C002-REQ-113 | TS-121 | TS-122 (agent, command, skill) | n/a | TS-122 | n/a | n/a | n/a |
+| C002-REQ-114 | TS-124 | TS-124 (two targets) | n/a | TS-126 | TS-125 (read-only tool list) | n/a | TS-125 (no `.serena/` in the repository) |
+| C002-REQ-115 | TS-127 | TS-127 (agent and commands, two targets) | n/a | n/a: a template the CLI does not ship is refused at run time (C002-REQ-514, C002-TS-521) | n/a | n/a | n/a |
+| C002-REQ-116 | TS-128 | TS-128 (doctor and init, two targets) | n/a | n/a: a `${CLAUDE_PLUGIN_DATA}` left elsewhere is an untranslated construct (C002-REQ-104, C002-REQ-602) | n/a | n/a | n/a |
+| C002-REQ-117 | TS-129 | TS-129 (two targets) | TS-129 (Write only, no Edit or Bash) | TS-130 | TS-129, TS-130 | n/a | TS-130 (command tool for an agent without Bash) |
+| C002-REQ-118 | TS-131 | TS-132 (archive confirmation on OpenCode) | n/a | n/a: a mention left untranslated is an untranslated construct (C002-REQ-104, C002-REQ-602) | n/a | n/a | n/a |
 
 Per-column n/a reasons. *Alternate*: single-path build rules. *Boundary*: no numeric limit except the
 inlining budget (C002-REQ-110). *Error*: rules about content written on success; their failure paths
 are the generator errors of C002-REQ-104 and C002-REQ-112. *Authorization*: the generator is a local
 build step run by the maintainer; agent grants are tested where the requirement is about grants
-(C002-REQ-107, C002-REQ-108). *Concurrency/idempotency*: one build at a time on one checkout;
+(C002-REQ-107, C002-REQ-108, C002-REQ-117). *Concurrency/idempotency*: one build at a time on one checkout;
 repeated runs are C002-TS-103 and C002-NFR-301. *Abuse*: inputs are the maintainer's own source
 plugin; the generated boundary is tested in C002-CAP-02, C002-CAP-03 and C002-CAP-06.
