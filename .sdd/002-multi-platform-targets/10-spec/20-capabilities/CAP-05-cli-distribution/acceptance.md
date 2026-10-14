@@ -454,6 +454,21 @@ Scenario: C002-TS-528 — the Serena step of the Claude Code doctor stays allowe
   And standard error is empty
 ```
 
+```gherkin
+@eval
+Scenario Outline: C002-TS-537 — the Serena step passes on the real Claude Code host
+  Given machine configuration "cfg-full" on Claude Code at its tested version, with the plugin installed from its marketplace and "CLAUDE_PLUGIN_DATA" set by no test step
+  And <workspace>
+  When P-01 runs the <command> command
+  Then the session transcript holds the "serena-config" command line of "plugins/architect/commands/<command>.md" with no "GUARD-BASH-001" or "GUARD-BASH-002" denial for it
+  And "serena/serena_config.yml" exists under the plugin data folder of the session
+  And the repository holds no "serena/" folder
+  Examples:
+    | command | workspace                                   |
+    | doctor  | a copy of "fx-bootstrap" as the repository  |
+    | init    | an empty git repository "C:/fx-work/fresh"  |
+```
+
 ## C002-REQ-518
 
 #### C002-AC-518.1 — Shipped templates call the CLI as `sdd`
@@ -524,6 +539,37 @@ Scenario: C002-TS-532 — repository templates merged, each path once
   And for every printed line "<path>", "sdd template show lite/<path>" exits with code 0
 ```
 
+## C002-REQ-521
+
+#### C002-AC-521.1 — `--cwd` on a writing `sdd` subcommand allowed only with a folder inside the repository root
+```gherkin
+Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
+  Given the repository root "C:/repo" with a nested workspace "C:/repo/pkg/.sdd/", the workspace "C:/other-repo/.sdd/" outside it, and the symbolic link "C:/repo/link-out" to "C:/other-repo"
+  And hook input for tool "<tool>" by agent "architect:sdd-conductor" with the working directory "C:/repo" and the command "<command>"
+  When the bash guard evaluates it
+  Then the exit code is <code>
+  And standard error <stderr>
+  Examples:
+    | tool       | command                                                        | code | stderr                    |
+    | Bash       | sdd change stop 001 --reason x --cwd C:/other-repo             | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd archive 001 --cwd C:/other-repo                            | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd init --cwd C:/Users/fx                                     | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd init --cwd=C:/Users/fx                                     | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd status --write --cwd C:/other-repo                         | 2    | contains "GUARD-BASH-001" |
+    | Bash       | node C:/p/scripts/sdd.mjs task set C002-T-001 --status done --cwd C:/other-repo | 2 | contains "GUARD-BASH-001" |
+    | PowerShell | sdd gate approve 001 G1 --cwd C:/other-repo                    | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd trace 001 --write --cwd ../other-repo                      | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd trace 001 --write --cwd C:/repo/../other-repo              | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd trace 001 --write --cwd C:/repo-data                       | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd trace 001 --write --cwd C:/repo/link-out                   | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd trace 001 --write --cwd C:/repo                            | 0    | is empty                  |
+    | Bash       | sdd trace 001 --write --cwd C:/repo/pkg                        | 0    | is empty                  |
+    | Bash       | sdd id next TS --change 001 --cwd pkg                          | 0    | is empty                  |
+    | PowerShell | sdd change new "Export" --profile lite --cwd c:/REPO/pkg       | 0    | is empty                  |
+    | Bash       | node C:/p/scripts/sdd.mjs lint 001 --cwd C:/Users/x/repo       | 0    | is empty                  |
+    | Bash       | sdd status --cwd C:/other-repo                                 | 0    | is empty                  |
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -544,10 +590,11 @@ Scenario: C002-TS-532 — repository templates merged, each path once
 | C002-REQ-514 | TS-521 | TS-521 (unknown profile) | TS-522 (`..` that stays inside the profile folder) | TS-521, TS-522 | n/a | n/a | TS-522 (`..` segments and a link leaving the profile's template folder) |
 | C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged) | TS-523 (XDG_DATA_HOME unset) | n/a: a folder that cannot be determined, is relative or lies inside the repository is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository) |
 | C002-REQ-516 | TS-525 | TS-525 (serena-config and serena-launch, four platforms) | TS-525 (case-different path inside the repository), TS-533 (folder beside the repository sharing its name prefix) | TS-525 | n/a | n/a | TS-525 (environment variable pointing into the repository, relative value) |
-| C002-REQ-517 | TS-527 | TS-527 (`--user-data`, script form, PowerShell), TS-528 (Claude Code doctor step) | TS-527 (`..` leaving and re-entering the repository, sibling folder `C:/repo-data`) | TS-527 | TS-527 | n/a | TS-527 (folder inside the repository through a relative path, a case change, `..` or a link) |
+| C002-REQ-517 | TS-527 | TS-527 (`--user-data`, script form, PowerShell), TS-528 (Claude Code doctor step), TS-537 (doctor and init on the real Claude Code host, variable set by the host) | TS-527 (`..` leaving and re-entering the repository, sibling folder `C:/repo-data`) | TS-527 | TS-527 | n/a | TS-527 (folder inside the repository through a relative path, a case change, `..` or a link) |
 | C002-REQ-518 | TS-529 | TS-529 (both profiles, `task set` and `defect add`), TS-534 (read through `sdd template show`) | n/a | n/a: a plugin path left in a shipped template is C002-REQ-519 (TS-530) | n/a | n/a | n/a |
 | C002-REQ-519 | TS-530 | TS-535 (no plugin path left) | n/a | TS-530 | n/a | n/a | n/a |
 | C002-REQ-520 | TS-531 | TS-532 (repository templates merged) | TS-532 (path in both places listed once; upper case before lower case) | n/a: the requirement states no failure path; an unknown profile prints no line | n/a | n/a | n/a |
+| C002-REQ-521 | TS-536 | TS-536 (script form, PowerShell, `--cwd=` spelling, relative folder inside; `lint` and `status` without `--write` keep `--cwd` unrestricted) | TS-536 (the root itself, a nested workspace, a case change, sibling folder `C:/repo-data`) | TS-536 | TS-536 | n/a | TS-536 (another repository's or the home folder's `.sdd/` through an absolute path, a relative path, `..` or a link) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit in the
 requirement. *Error*: packaging and record rules fail through the build or the doctor outcome tested

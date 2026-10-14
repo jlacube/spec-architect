@@ -117,6 +117,7 @@ Scenario Outline: C002-TS-608 — replay per enforcement mechanism
   When the corpus replay suite runs against <mechanism>
   Then the replay report lists every applicable case of the path corpus and the shell corpus with the mechanism's decision and the expected decision for that mechanism
   And each case of the tools "Write", "Edit", "NotebookEdit", "Bash" and "PowerShell" was fed to the mechanism as the input that C002-IF-009 §2 maps it to
+  And each case without a "cwd", with an empty "cwd" or without a tool name was fed as a malformed call and expects "deny" (C002-REQ-630)
   And the report lists <not applicable> as not applicable
   And it reports 0 differing decisions
   Examples:
@@ -161,12 +162,15 @@ Scenario Outline: C002-TS-610 — new corpus cases
     | shell  | serena-launch with --user-data             | sdd serena-launch --user-data -- start-mcp-server | allow |
     | shell  | serena-launch with a folder outside the repository | sdd serena-launch C:/fx-data -- start-mcp-server | allow |
     | shell  | serena-launch with a folder inside the repository  | sdd serena-launch src -- start-mcp-server | deny |
+    | shell  | writing sdd subcommand with --cwd outside the repository root | sdd change stop 001 --reason x --cwd C:/other-repo | deny |
+    | shell  | writing sdd subcommand with --cwd inside the repository root  | sdd trace 001 --write --cwd C:/repo/pkg | allow |
 ```
 
 ```gherkin
 Scenario Outline: C002-TS-636 — one corpus case per writing sdd subcommand
   When the guard corpora under "tests/guards/" are parsed
   Then the shell corpus holds at least one case whose command runs the sdd subcommand "<subcommand>"
+  And it holds at least one case whose command runs "<subcommand>" with the option "--cwd" naming a folder outside the repository root and that expects "deny" with rule "GUARD-BASH-001"
   Examples:
     | subcommand       |
     | init             |
@@ -420,14 +424,14 @@ Scenario Outline: C002-TS-625 — release record by Copilot enforcement mode
 
 ## C002-REQ-623
 
-#### C002-AC-623.1 — Regression set passes with the two allowlist changes as the only changed expectations
+#### C002-AC-623.1 — Regression set passes with the three bash guard changes as the only changed expectations
 ```gherkin
 Scenario: C002-TS-626 — regression set after CHG-002
   Given the regression set of "20-plan/30-impact/regression-set.md"
   When it runs on the implementation of CHG-002
   Then every test and eval of the set passes
-  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503 and C002-REQ-517
-  And every changed corpus case is a case of a bare "sdd" command, of "node --version", or of "sdd serena-config" or "sdd serena-launch"
+  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521
+  And every changed corpus case is a case of a bare "sdd" command, of "node --version", of "sdd serena-config" or "sdd serena-launch", or of a writing "sdd" subcommand with the option "--cwd"
 ```
 
 ```gherkin
@@ -506,6 +510,7 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
   When the corpus replay suite writes the replay report of <mechanism>
   Then every case ID of "tests/guards/path-corpus.json" and "tests/guards/bash-corpus.json" appears exactly once in the report, either as a replayed case or as not applicable
   And the not-applicable list holds exactly <not applicable>
+  And it lists as replayed cases, not as not applicable, the cases without a "cwd", with an empty "cwd" or without a tool name ("PG-253", "PG-254", "BG-277", "PG-256") and, on a replay host that cannot create file symbolic links, "PG-163" (C002-REQ-630)
   Examples:
     | mechanism                                                                                 | not applicable                                             |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | no case                                                    |
@@ -558,6 +563,73 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
     | sdd MCP server enforcement   | no hooks state and no Copilot injection case step                                         | allowed                                                                                                   |
 ```
 
+## C002-REQ-630
+
+#### C002-AC-630.1 — Cases without a cwd or a tool name, or needing a capability the replay host lacks, are replayed as malformed calls expecting `deny` on every mechanism of a generated target
+```gherkin
+Scenario Outline: C002-TS-643 — absent-field and missing-capability cases per mechanism
+  Given the guard corpora of the release commit, replayed on REF-WIN without Developer Mode, so that the replay host cannot create file symbolic links
+  When the corpus replay suite runs against <mechanism>
+  Then the replay report lists "PG-253" (no "cwd"), "PG-254" (empty "cwd"), "BG-277" (no "cwd"), "PG-256" (no tool name) and "PG-163" (requires "file-symlink") each as a replayed case with the expected decision "deny", the expected-decision source "C002-REQ-630" and the decision "deny"
+  And it lists none of these five cases as not applicable
+  And each of them was fed to the mechanism as the malformed call that C002-IF-009 §2 defines for <mechanism>
+  And "tests/guards/path-corpus.json" still records "allow" for "PG-256" and "deny" for "PG-253", "PG-254" and "PG-163", and "tests/guards/bash-corpus.json" still records "deny" for "BG-277"
+  Examples:
+    | mechanism                                                                                 |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
+    | the sdd MCP server                                                                        |
+    | the agent-scoped guard hooks (@mode-hooks)                                                |
+```
+
+```gherkin
+Scenario Outline: C002-TS-644 — a case with a cwd other than the repository root keeps its corpus expectation
+  Given the path corpus case "PG-134" of category "cwd", with the "cwd" "{repo}/src", the path ".sdd/a.md" and the corpus expectation "deny"
+  When the corpus replay suite runs against <mechanism>
+  Then the replay report lists "PG-134" with the expected decision "deny", the expected-decision source "corpus" and the decision "deny"
+  And "PG-134" was fed as C002-IF-009 §2 feeds a case whose "cwd" differs from the repository root, not as a malformed call
+  Examples:
+    | mechanism                                                                                 |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
+    | the sdd MCP server                                                                        |
+    | the agent-scoped guard hooks (@mode-hooks)                                                |
+```
+
+```gherkin
+Scenario: C002-TS-645 — a malformed call allowed on a generated target is a difference
+  Given a build of the sdd MCP server seeded to allow a "write_file" call whose required arguments are missing
+  When the corpus replay suite runs against that server
+  Then the replay report names "PG-253" and "PG-256" each with the expected decision "deny" and the decision "allow"
+  And it counts at least 2 differing decisions
+  And the suite exits non-zero
+```
+
+## C002-REQ-632
+
+#### C002-AC-632.1 — An unknown `architect:sdd-*` caller expects `allow` on the OpenCode permission rules
+```gherkin
+@mode-native
+Scenario Outline: C002-TS-646 — unknown architect:sdd-* caller on OpenCode
+  Given the path corpus case "<case>" of category "identity", whose caller is "<caller>", a "Write" to "{repo}/src/app.ts" with the corpus expectation "deny"
+  When the corpus replay suite runs against the OpenCode permission rules, evaluated by OpenCode at its tested version
+  Then the case ran as a call of an adopter agent of the replay fixture that is none of the ten Architect agents
+  And the replay report lists "<case>" with the expected decision "allow", the expected-decision source "C002-REQ-632" and the decision "allow"
+  And "tests/guards/path-corpus.json" still records "deny" for "<case>"
+  Examples:
+    | case   | caller                |
+    | PG-237 | architect:sdd-unknown |
+    | PG-238 | architect:sdd-        |
+```
+
+```gherkin
+@mode-native
+Scenario: C002-TS-647 — OpenCode rules that also bind adopter agents are a difference
+  Given an OpenCode target package seeded so that its permission rules deny writes outside ".sdd/" for every agent of the project, adopter agents included
+  When the corpus replay suite runs against the OpenCode permission rules of that package, evaluated by OpenCode at its tested version
+  Then the replay report names "PG-237" with the expected decision "allow" and the decision "deny"
+  And it counts at least 1 differing decision
+  And the suite exits non-zero
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -567,8 +639,8 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
 | C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | n/a |
 | C002-REQ-604 | TS-606 | TS-606 (prompt file, tool set) | n/a | TS-606 | TS-606 | n/a | TS-606 (tool set) |
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations and not-applicable cases) | n/a | TS-609 | TS-608 | n/a | TS-608 (corpus abuse cases) |
-| C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository), TS-636 (writing subcommands) |
+| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases) | n/a | TS-609 | TS-608 | n/a | TS-608 (corpus abuse cases) |
+| C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root), TS-636 (writing subcommands, each with an outside `--cwd`) |
 | C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
@@ -587,9 +659,11 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable) | n/a | n/a | TS-630 (adopter agent as non-Architect caller) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once) | TS-637 | n/a | n/a | TS-637 (case omitted or hidden as not applicable) |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted or hidden as not applicable) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement needs no hooks state) | n/a | TS-633 | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
+| C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name, missing capability) | TS-644 (`cwd` present but not the repository root: corpus expectation kept) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
+| C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on
