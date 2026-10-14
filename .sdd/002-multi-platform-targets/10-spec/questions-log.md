@@ -80,3 +80,21 @@ Question from the architect's critic-fix hand-back (C002-IF-001 §6.3).
 - **Rejected:** mixed mode (native edit rules + sdd MCP server for shell); OpenCode rules generated per repository at install time (C002-CON-01)
 - **Answer:** Keep 0 differences (Recommended) — no spec change; the S-07 replay decides whether OpenCode runs native or under the sdd MCP server.
 - **Extracted instructions:** none
+
+## Round 4 — 2026-10-14
+
+Questions from the critic's re-review (`90-critic-report.md`, CR-23, CR-25).
+
+### Q-safety-04 — How do corpus cases that depend on Claude Code hook inputs the targets lack (no or empty cwd, no tool name, unknown architect:sdd-* caller) count in the 0-difference replay?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 4 (CR-23)
+- **Options:** 1. Per-target expectation, as for memory cases (Recommended) · 2. Second not-applicable rule
+- **Rejected:** keep the corpus expectations (can never pass); delete or rewrite these corpus cases (breaks the Claude Code guard tests, C002-GOAL-05)
+- **Answer:** Per-target expectation (Recommended) — on the generated targets these cases expect deny and are sent as malformed calls (fail-closed, C002-CON-08); an unknown architect:sdd-* caller on OpenCode expects allow (the rules bind only the generated agents, C002-REQ-208); every case is still replayed and the not-applicable list stays limited to identity cases.
+- **Extracted instructions:** none
+
+### Q-guards-05 — The global option --cwd lets any allowed writing sdd command write another folder's .sdd/. Close it, and where?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 5 (CR-25)
+- **Options:** 1. Restrict --cwd in the guard core on every host (Recommended) · 2. Accept the same behaviour as Claude Code · 3. Restrict on the generated targets only
+- **Rejected:** deny --cwd on every command (breaks read-only uses such as BG-019); rely on agent instructions (C002-CON-03)
+- **Answer:** Restrict on every host (Recommended) — writing commands may use --cwd only when the folder resolves inside the repository root of C002-IF-008 §1.1; one corpus case per writing command with an outside --cwd; widens the C002-GOAL-05 exception again.
+- **Extracted instructions:** none
