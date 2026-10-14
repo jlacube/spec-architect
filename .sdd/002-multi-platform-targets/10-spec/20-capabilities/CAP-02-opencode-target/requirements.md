@@ -114,7 +114,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-211.1
-- **Evidence:** baseline survey E-6 — `plugins/architect/skills/interview-protocol/SKILL.md:119` › - (wiring section naming AskUserQuestion; layer: grep); baseline survey E-1 — `plugins/architect/agents/sdd-conductor.md:7` › - (conductor `tools` with AskUserQuestion; layer: grep)
+- **Evidence:** current-state E-26 — `plugins/architect/skills/interview-protocol/SKILL.md:119` › `Claude Code wiring` (one AskUserQuestion call, 1–4 questions; layer: grep); current-state E-24 — `plugins/architect/agents/sdd-conductor.md:7` › `tools` (AskUserQuestion granted to the conductor; layer: grep); baseline survey E-1 and E-6 (same files, counts)
 
 ### C002-REQ-212 — Gate question on the host's question tool
 - **Delta:** MODIFIED C001-REQ-802
@@ -124,7 +124,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-212.1
-- **Evidence:** baseline survey E-6 — `plugins/architect/skills/interview-protocol/SKILL.md:119` › - (the wiring sections, `gate-protocol:87` among them; layer: grep)
+- **Evidence:** current-state E-27 — `plugins/architect/skills/gate-protocol/SKILL.md:87` › `Claude Code wiring` (gate question with the four choices; layer: grep); current-state E-25 — `plugins/architect/agents/sdd-conductor.md:61` › `Hard rules` (approval only after the AskUserQuestion answer; layer: grep)
 
 ### C002-REQ-213 — Profile confirmation on the host's question tool
 - **Delta:** MODIFIED C001-REQ-116
@@ -134,7 +134,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-213.1
-- **Evidence:** baseline survey E-1 — `plugins/architect/agents/sdd-conductor.md:7` › - (conductor `tools` with AskUserQuestion; layer: grep)
+- **Evidence:** current-state E-28 — `plugins/architect/commands/new.md:14` › `step 3` (one profile round, recommended profile first, no change folder before the answer; layer: grep); current-state E-24 — `plugins/architect/agents/sdd-conductor.md:7` › `tools` (AskUserQuestion; layer: grep)
 
 ### C002-REQ-214 — Question shape on OpenCode
 - **Delta:** ADDED

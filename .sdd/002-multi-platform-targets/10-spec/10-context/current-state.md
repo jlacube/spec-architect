@@ -106,3 +106,75 @@ carries `ripwire failed: exit 127`. LSP and ast-grep were not needed.
   - layer: grep (file read) · confidence: high
   - commit: 8623d49 · pattern: -
   - disclosures: ripwire failed: exit 127
+
+### Doctor and toolchain record (C002-REQ-504 to C002-REQ-507)
+
+Entries E-14 to E-28 were taken at `d15c684` (`git diff --stat 8623d49 HEAD` over `src`, `plugins`, `scripts`
+and `evals` is empty, so the files cited here are identical to those of E-1 to E-13). The doctor and the
+toolchain record are **prompts** (`plugins/architect/commands/*.md`, the cartographer and the code-discovery
+skill), not code: a search of `src/` for `doctor` and `toolchain` finds only `RIPWIRE_FLAG_VERBS` (E-23);
+the one CLI command the doctor and `init` call is `sdd serena-config` (E-22).
+
+- **E-14** `plugins/architect/commands/doctor.md:17` › `Report` (step 3) — the table has the columns Tool, Status, Version, Fallback, Fix, one row per tool "in the order above" (node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki: the eight tools of l.2 and l.13-14). Status values: `ok`, `missing`, `unreachable` (remote servers), `error` (present but unusable or too old). Fix: the remedies-table command for every non-ok row. No host row other than Claude Code, no row for the sdd CLI, no status `untested`.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-15** `plugins/architect/commands/doctor.md:29` › `Install / fix command` (remedies table, l.29-39) — nine rows: node, git, Claude Code, ripwire, Serena, ast-grep, Task tools, Context7, DeepWiki; Detection and Install / fix columns. It reproduces C001-IF-10 §3 (`.sdd/001-architect-agent-suite/10-spec/50-interfaces/commands.md:36-48`) with a shorter Task tools row. The Task tools row is not in the step 3 row list of E-14 nor in C001-REQ-1110's list of eight tools. Every Detection command is Claude Code's or a generic tool's; none reads an OpenCode or VS Code version.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-16** `plugins/architect/commands/doctor.md:24` › `Outcome` (step 4) — the last line of the reply is exactly one of `Doctor: failed: node ≥ 20 required` (node missing or older than 20), `Doctor: completed with warnings` (any other row not `ok`), `Doctor: completed` (every row `ok`). Only node can fail the run; a Claude Code row at `error` (E-17) gives `completed with warnings`. No condition on the sdd CLI.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-17** `plugins/architect/commands/doctor.md:21` › `Claude Code` (step 3 bullet) — `error` below 2.1.295, detected with `claude --version`; the remedies row (l.33) gives `claude update`, or updating the Claude desktop app. The row exists unconditionally: the doctor does not test which host it runs on.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-18** `src/` › - — a text search of `src/`, `scripts/`, `plugins/` and `evals/` for `2.1.295` finds the doctor (`doctor.md:21`, `:33`), `plugins/architect/README.md:16`, `:156`, `:170`, `scripts/package.mjs:47` (the generated INSTALL.md text) and `evals/harness/env.mjs:9`, and no file under `src/`: the minimum Claude Code version is enforced by the doctor prompt alone, never by code.
+  - layer: grep · confidence: medium (absence of matches checked over the four folders only)
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-19** `plugins/architect/commands/doctor.md:11` › `Probe` (step 2) — dispatches `sdd-cartographer` to write `.sdd/_constitution/toolchain.md` (code-discovery skill, toolchain record): "one row each for node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki with detected, version, path or endpoint, fallback". Probes are `--version` for command-line tools (ripwire: `ripwire --version`, never `--doctor`); Context7 and DeepWiki by loading one tool and making one small call. Without `.sdd/` the probes run and the file is skipped.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-20** `plugins/architect/commands/init.md:13` › `step 3` (cartographer dispatch) — `/architect:init` dispatches `sdd-cartographer` for "the toolchain record `.sdd/_constitution/toolchain.md` (always)" and, when the repository has code, the baseline survey and the living-spec stubs. The command does not list the rows of the record; they come from the code-discovery skill (E-21).
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-21** `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` — "a table with one row per node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki — detected (yes/no), version, path or endpoint, fallback in use"; probe with `--version`; Context7 and DeepWiki detected when their tools load. The same eight rows as the doctor (E-14); no host-dependent row and no sdd CLI row.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-22** `src/cli/commands.ts:420` › `serenaConfig()` — the only `src/` code in the doctor and init flows: `sdd serena-config <plugin-data-dir>` (C001-REQ-1013) calls `writeSerenaConfig` (`src/workspace/serena-config.ts`) and prints `<outcome>: <path>`; registered as `serena-config` at l.506 (the single reference, Serena `find_referencing_symbols`: the `COMMANDS` table). `doctor.md:8` and `init.md:8-9` call it with `"${CLAUDE_PLUGIN_DATA}"`. Nothing under `src/` writes, reads or validates `toolchain.md`.
+  - layer: serena (find_symbol, find_referencing_symbols) + grep · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-23** `src/hooks/guard-bash.ts:133` › `VERSION_PROBES` and `RIPWIRE_FLAG_VERBS` (l.139) — every Claude Code doctor probe passes the bash guard today: `node -v`, `git --version`, `claude --version`, `serena --version`, `ast-grep --version` by `VERSION_PROBES`; `ripwire --version` and `ripwire --doctor` by `RIPWIRE_FLAG_VERBS` (`--version`, `--doctor`, l.139). `node --version` is not allowed (E-6), nor is any probe of `opencode`, `code` or a bare `sdd`; the open item of C002-REQ-508 (reading host versions without widening the allowlist) starts from this list.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+
+### Question tool (C002-REQ-211 to C002-REQ-213)
+
+- **E-24** `plugins/architect/agents/sdd-conductor.md:7` › `tools` — the conductor's `tools` field lists `AskUserQuestion` (with `Agent(...)` for the nine specialists, Read, Glob, Grep, Write, Edit, Bash, TaskCreate, TaskUpdate, TaskList, Skill). It equals the A0 row of C001-IF-09 (`.sdd/001-architect-agent-suite/10-spec/50-interfaces/agents.md`). No other agent lists it.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-25** `plugins/architect/agents/sdd-conductor.md:61` › `Hard rules` — "Ask P-01 only through AskUserQuestion rounds (interview-protocol)" and never end a turn with plain-text questions (l.61-63); `sdd gate approve` runs "only after P-01 chose Approve (or Approve with waivers) through AskUserQuestion in this session", with P-01's complete answer as `--note` (l.64-66).
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-26** `plugins/architect/skills/interview-protocol/SKILL.md:119` › `Claude Code wiring` — one `AskUserQuestion` call per round; `questions` holds 1–4 items, each with `question`, `header` (≤ 12 characters), `multiSelect` and `options` (2–3 items of `label` and `description`); the answer maps each question text to the chosen label or free text and is logged verbatim (l.121-126). Specialists cannot call the tool and return `questions` blocks (l.127-128). This is the only place the four-question limit is stated.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-27** `plugins/architect/skills/gate-protocol/SKILL.md:87` › `Claude Code wiring` — the gate question carries the presentation: its `question` text is the `sdd gate show` output, a blank line, the "Approving means …" sentence, the points to look at and "What is your decision?"; header `Gate G<n>`; four options `Approve`, `Approve with waivers`, `Revise`, `Stop` with descriptions; `multiSelect: false` (l.89-94). The tool is not named in the section; "the question dialog" (l.89) is the AskUserQuestion dialog of E-26. The answer goes to the CLI unchanged (l.95-96).
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127
+- **E-28** `plugins/architect/commands/new.md:14` › `step 3` (profile round) — "Ask **one** interview round (interview-protocol skill)" whose question offers the proposed profile first, labelled "(Recommended)", with the estimate and the thresholds in its description; the kind is asked in the same round when `--kind` is missing. Step 4 runs `sdd change new "<title>" --profile <lite|full> --kind <kind>` "only after P-01 answers"; "no change folder exists before the answer". The command names no tool: AskUserQuestion comes through E-26. The same command-file pattern: `archive.md:15` names `AskUserQuestion` directly.
+  - layer: grep (file read) · confidence: high
+  - commit: d15c684 · pattern: -
+  - disclosures: ripwire failed: exit 127

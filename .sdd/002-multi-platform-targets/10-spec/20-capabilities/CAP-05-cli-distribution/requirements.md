@@ -50,7 +50,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-504.1
-- **Evidence:** missing — no cartographer entry covers the doctor (`plugins/architect/commands/doctor.md`); to be added to `../../10-context/current-state.md`
+- **Evidence:** current-state E-14 — `plugins/architect/commands/doctor.md:17` › `Report` (columns Tool, Status, Version, Fallback, Fix; eight tools; no host or sdd CLI row; layer: grep); current-state E-15 — `plugins/architect/commands/doctor.md:29` › `Install / fix command` (remedies table; layer: grep); current-state E-23 — `src/hooks/guard-bash.ts:133` › `VERSION_PROBES` (probes the Claude Code doctor needs; layer: grep)
 
 ### C002-REQ-505 — Doctor failure conditions
 - **Delta:** MODIFIED C001-REQ-1111
@@ -60,7 +60,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-505.1
-- **Evidence:** missing — no cartographer entry covers the doctor's outcome line (`plugins/architect/commands/doctor.md`); to be added to `../../10-context/current-state.md`
+- **Evidence:** current-state E-16 — `plugins/architect/commands/doctor.md:24` › `Outcome` (failure only when node is missing or older than 20; three outcome lines; no sdd CLI condition; layer: grep)
 
 ### C002-REQ-506 — Minimum Claude Code version on Claude Code only
 - **Delta:** MODIFIED C001-REQ-1123
@@ -70,7 +70,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-506.1
-- **Evidence:** missing — no cartographer entry covers the doctor's Claude Code check (`plugins/architect/commands/doctor.md`); to be added to `../../10-context/current-state.md`
+- **Evidence:** current-state E-17 — `plugins/architect/commands/doctor.md:21` › `Claude Code` (`error` below 2.1.295 from `claude --version`, unconditional today; layer: grep); current-state E-18 — `src/` › - (no code enforces the version, the prompt alone does; layer: grep)
 
 ### C002-REQ-507 — Toolchain record per host
 - **Delta:** MODIFIED C001-REQ-115
@@ -80,7 +80,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-507.1
-- **Evidence:** missing — no cartographer entry covers the toolchain record (`plugins/architect/commands/doctor.md` step 2, `plugins/architect/commands/init.md`); to be added to `../../10-context/current-state.md`
+- **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (cartographer writes `toolchain.md`, eight rows; layer: grep); current-state E-20 — `plugins/architect/commands/init.md:13` › `step 3` (toolchain record always written; layer: grep); current-state E-21 — `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` (row set and columns; layer: grep)
 
 ### C002-REQ-508 — Untested host version
 - **Delta:** ADDED
