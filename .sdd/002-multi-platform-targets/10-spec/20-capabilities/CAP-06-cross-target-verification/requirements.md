@@ -230,7 +230,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Rationale:** Q-safety-02 (spec round 2, `../../questions-log.md`): "memory cases expect deny on the targets"; the generated agents have no memory folder (C002-DEC-009, C002-NG-04, C002-REQ-106), while the corpora keep `allow` for these cases on Claude Code (C001-REQ-1103), for example case PG-205 (`tests/guards/path-corpus.json:1870-1875`)
 - **Stories:** C002-US-602
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-625.1`)
+- **Acceptance:** `C002-AC-625.1`
 
 ### C002-REQ-626 — Identity cases only where a non-Architect caller exists
 - **Delta:** ADDED
@@ -239,7 +239,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Rationale:** Q-safety-02: "identity cases replay only where a non-Architect caller exists (OpenCode) and are not applicable for the MCP server and scoped hooks"; the sdd MCP server and the agent-scoped guard hooks decide only for Architect agents, so the property these cases test is covered there by C002-REQ-208 and C002-REQ-302; example case BG-258 (`tests/guards/bash-corpus.json:2217-2222`); the cases left out are listed by C002-REQ-627
 - **Stories:** C002-US-602
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-626.1`)
+- **Acceptance:** `C002-AC-626.1`
 
 ### C002-REQ-627 — Cases not replayed listed in the replay report
 - **Delta:** ADDED
@@ -248,7 +248,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Rationale:** Q-safety-02; the thresholds of C002-NFR-201 and C002-NFR-202 count the applicable cases only, so the excluded cases must be visible to the release check and to P-01; report format: C002-IF-009 §2
 - **Stories:** C002-US-602
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-627.1`)
+- **Acceptance:** `C002-AC-627.1`
 
 ### C002-REQ-628 — Copilot injection cases in VS Code under the hooks fallback
 - **Delta:** ADDED
@@ -257,7 +257,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Rationale:** C002-DEC-005 (exception: "with hooks enabled, … the injection evals show 0 instructions acted upon"); under the fallback the boundary is the agent-scoped hooks of VS Code, and Copilot CLI is a separate implementation whose result does not prove the VS Code behaviour (C002-R-001; `../../../00-ideation/research/R-001-platform-facts.md:364-365`); runs through the Copilot CLI eval runner (C002-REQ-612) may add evidence but do not replace these cases
 - **Stories:** C002-US-605, C002-US-303
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-628.1`)
+- **Acceptance:** `C002-AC-628.1`
 
 ### C002-REQ-629 — Hooks-fallback release needs evidence taken with hooks enabled
 - **Delta:** ADDED
@@ -266,4 +266,4 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition
 - **Stories:** C002-US-606, C002-US-303
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-629.1`)
+- **Acceptance:** `C002-AC-629.1`

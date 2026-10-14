@@ -13,8 +13,9 @@ Verification: scenarios without a tag are integration tests (`node:test`) that r
 the source plugin, or on a fixture copy of it named in the scenario (`fx-plugin-*`, built by the test
 plan), and inspect the files written under `dist/`. Mapping-table entries and wiring variants are
 fixed in the architecture step; where a scenario names "the mapping-table entry", the test reads the
-expected value from that table, never from a copy. Tags: `@eval` marks agent behaviour run through an
-eval runner of a generated target (DOD-G-01: 9 of 10 runs).
+expected value from that table, never from a copy. C002-TS-133 drives OpenCode at its tested version
+headless on the fixture `fx-oc` of C002-CAP-02, in either enforcement mode. Tags: `@eval` marks agent
+behaviour run through an eval runner of a generated target (DOD-G-01: 9 of 10 runs).
 
 ## C002-REQ-101
 
@@ -192,6 +193,15 @@ Scenario Outline: C002-TS-114 — least-privilege grants per agent
     | sdd-auditor     | mcp__plugin_architect_serena__*      | Copilot  | Serena, Context7 or DeepWiki tool          |
 ```
 
+```gherkin
+Scenario: C002-TS-133 — adopter MCP server tool not available to an Architect agent on OpenCode
+  Given an OpenCode session at the tested version on "fx-oc" with the OpenCode target package
+  And the adopter's own "opencode.json" declares, outside the Architect agents' entries, the local MCP server "fx-fs" whose tool "write_file" writes any path
+  When the agent "sdd-spec-writer" calls the tool "write_file" of "fx-fs" with the path "src/app.ts"
+  Then the server "fx-fs" receives no "write_file" call from that session
+  And "src/app.ts" is unchanged
+```
+
 ## C002-REQ-109
 
 #### C002-AC-109.1 — Preloaded skills are part of the generated agent body
@@ -280,16 +290,17 @@ Scenario: C002-TS-119 — gate wiring without a Copilot variant
 ```
 
 ```gherkin
-Scenario Outline: C002-TS-120 — CLI invocation line or command wiring without a variant
+Scenario Outline: C002-TS-120 — CLI invocation line, command wiring or doctor host rows without a variant
   Given the fixture "<fixture>" in which the <anchor> on line <line> of "<file>" has a <present> variant and no <missing> variant
   When the generator runs on that fixture
   Then the exit code is non-zero
   And the message names "<file>", line <line> and the target "<missing>"
   Examples:
-    | fixture                   | anchor                          | file                            | line | present  | missing  |
-    | fx-plugin-novariant-cli   | CLI invocation line             | skills/sdd-conventions/SKILL.md | 13   | copilot  | opencode |
-    | fx-plugin-novariant-agent | CLI invocation line             | agents/sdd-auditor.md           | 13   | opencode | copilot  |
-    | fx-plugin-novariant-cmd   | "Claude Code wiring" heading    | commands/archive.md             | 20   | opencode | copilot  |
+    | fixture                    | anchor                                                    | file                            | line | present  | missing  |
+    | fx-plugin-novariant-cli    | CLI invocation line                                       | skills/sdd-conventions/SKILL.md | 13   | copilot  | opencode |
+    | fx-plugin-novariant-agent  | CLI invocation line                                       | agents/sdd-auditor.md           | 13   | opencode | copilot  |
+    | fx-plugin-novariant-cmd    | "Claude Code wiring" heading                              | commands/archive.md             | 20   | opencode | copilot  |
+    | fx-plugin-novariant-doctor | doctor host rows (remedies-table row "claude --version")  | commands/doctor.md              | 33   | opencode | copilot  |
 ```
 
 ## C002-REQ-113
@@ -444,11 +455,11 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 | C002-REQ-105 | TS-109 | TS-109 (three tiers, two targets) | n/a | TS-110 | n/a | n/a | n/a |
 | C002-REQ-106 | TS-111 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-107 | TS-112 | TS-112 (two targets) | n/a | n/a | TS-112 | n/a | TS-113 |
-| C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | n/a | n/a | TS-114 | n/a | n/a |
+| C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | n/a | n/a | TS-114, TS-133 | n/a | TS-133 (adopter MCP server with a write tool) |
 | C002-REQ-109 | TS-115 | TS-115 (two targets) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-110 | TS-116 | TS-116 (per-skill and per-agent budget) | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
 | C002-REQ-111 | TS-117, TS-118, TS-123 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
-| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring) | n/a | TS-119, TS-120 | n/a | n/a | n/a |
+| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring, doctor host rows) | n/a | TS-119, TS-120 | n/a | n/a | n/a |
 | C002-REQ-113 | TS-121 | TS-122 (agent, command, skill) | n/a | TS-122 | n/a | n/a | n/a |
 | C002-REQ-114 | TS-124 | TS-124 (two targets) | n/a | TS-126 | TS-125 (read-only tool list) | n/a | TS-125 (no `.serena/` in the repository) |
 | C002-REQ-115 | TS-127 | TS-127 (agent and commands, two targets) | n/a | n/a: a template the CLI does not ship is refused at run time (C002-REQ-514, C002-TS-521) | n/a | n/a | n/a |
@@ -462,4 +473,7 @@ are the generator errors of C002-REQ-104 and C002-REQ-112. *Authorization*: the 
 build step run by the maintainer; agent grants are tested where the requirement is about grants
 (C002-REQ-107, C002-REQ-108, C002-REQ-117). *Concurrency/idempotency*: one build at a time on one checkout;
 repeated runs are C002-TS-103 and C002-NFR-301. *Abuse*: inputs are the maintainer's own source
-plugin; the generated boundary is tested in C002-CAP-02, C002-CAP-03 and C002-CAP-06.
+plugin; the generated boundary is tested in C002-CAP-02, C002-CAP-03 and C002-CAP-06, except the
+tools an adopter adds to their own host configuration (C002-TS-133). On Copilot VS Code an agent's
+`tools` list is an allowlist, so a tool of an adopter's MCP server is not granted unless the list
+names it (C002-TS-114, C002-TS-605).

@@ -215,14 +215,21 @@ Scenario: C002-TS-514 — untested is a warning
 
 ## C002-REQ-509
 
-#### C002-AC-509.1 — An sdd CLI of another version is an error with the install command
+#### C002-AC-509.1 — An sdd CLI that does not match major, minor and patch is an error with the install command
 ```gherkin
 @eval
-Scenario: C002-TS-515 — CLI older than the target package
-  Given the OpenCode target package of version "0.3.0" and "sdd --version" reporting "0.2.0"
+Scenario Outline: C002-TS-515 — CLI version against the target package version
+  Given the OpenCode target package of version "0.3.0" and "sdd --version" reporting "<cli>"
   When P-01 runs the doctor command on OpenCode
-  Then the sdd CLI row shows status "error"
-  And its Fix column holds the npm command that installs "architect-sdd" version "0.3.0"
+  Then the sdd CLI row shows status "<status>"
+  And <fix>
+  Examples:
+    | cli   | status | fix                                                                         |
+    | 0.3.0 | ok     | its Fix column is empty                                                     |
+    | 0.2.0 | error  | its Fix column holds the npm command that installs "architect-sdd" version "0.3.0" |
+    | 0.3.1 | error  | its Fix column holds the npm command that installs "architect-sdd" version "0.3.0" |
+    | 0.4.0 | error  | its Fix column holds the npm command that installs "architect-sdd" version "0.3.0" |
+    | 1.3.0 | error  | its Fix column holds the npm command that installs "architect-sdd" version "0.3.0" |
 ```
 
 ## C002-REQ-510
@@ -281,7 +288,8 @@ Scenario: C002-TS-518 — the version command keeps its form
 Scenario: C002-TS-519 — templates and mode file in the tarball
   Given "npm run package" has written "dist/architect-sdd-0.3.0.tgz"
   When the tarball's file list is compared with "plugins/architect/templates/" and "plugins/architect/serena/architect-read-only.yml"
-  Then for every file "plugins/architect/templates/<path>" the tarball holds "package/templates/<path>" with the same SHA-256
+  Then for every file "plugins/architect/templates/<path>" the tarball holds "package/templates/<path>"
+  And each such file has the same SHA-256 as its source file, except the templates whose CLI invocations C002-REQ-518 rewrites (C002-TS-529)
   And it holds "package/serena/architect-read-only.yml" with the same SHA-256 as the source file
 ```
 
@@ -303,7 +311,7 @@ Scenario Outline: C002-TS-520 — template lookup
 
 ## C002-REQ-514
 
-#### C002-AC-514.1 — A template that exists nowhere is refused with ERR-CLI-019
+#### C002-AC-514.1 — A template that exists nowhere, or a path that leaves the profile's template folder, is refused with ERR-CLI-019
 ```gherkin
 Scenario Outline: C002-TS-521 — unknown template
   Given a copy of "fx-bootstrap" without ".sdd/_templates/"
@@ -318,16 +326,18 @@ Scenario Outline: C002-TS-521 — unknown template
 ```
 
 ```gherkin
-Scenario Outline: C002-TS-522 — path that leaves the template folders
-  Given a copy of "fx-bootstrap" whose ".sdd/_templates/full/" exists
+Scenario Outline: C002-TS-522 — path that leaves the profile's template folder
+  Given a copy of "fx-bootstrap" whose ".sdd/_templates/full/" holds "10-spec/70-dod.md" and the symbolic link "link-out" to the root of that copy
   When P-01 runs "sdd template show <argument>" in it
-  Then the exit code is 2
-  And standard error starts with "ERR-CLI-019"
-  And standard output does not contain any line of the file the argument points to
+  Then the exit code is <code>
+  And <outcome>
   Examples:
-    | argument                         |
-    | full/../../package.json          |
-    | full/../../../.sdd/registry.json |
+    | argument                              | code | outcome                                                                                                   |
+    | full/../../package.json               | 2    | standard error starts with "ERR-CLI-019" and names the profile "full", and standard output is empty       |
+    | full/../../../.sdd/registry.json      | 2    | standard error starts with "ERR-CLI-019" and names the profile "full", and standard output is empty       |
+    | full/../lite/10-spec/spec.md          | 2    | standard error starts with "ERR-CLI-019" and names the profile "full", and standard output is empty       |
+    | full/link-out/package.json            | 2    | standard error starts with "ERR-CLI-019" and names the profile "full", and standard output is empty       |
+    | full/10-spec/../10-spec/70-dod.md     | 0    | standard output is byte-identical to ".sdd/_templates/full/10-spec/70-dod.md" of the copy                 |
 ```
 
 ## C002-REQ-515
@@ -362,21 +372,145 @@ Scenario: C002-TS-524 — Serena started with the per-user data folder
 
 ## C002-REQ-516
 
-#### C002-AC-516.1 — No per-user data folder: ERR-CLI-020, nothing written, Serena not started
+#### C002-AC-516.1 — Per-user data folder not determinable, relative or inside the repository: ERR-CLI-020, nothing written, Serena not started
 ```gherkin
-Scenario Outline: C002-TS-525 — per-user data folder not determinable
-  Given a <platform> user profile with <environment>
+Scenario Outline: C002-TS-525 — per-user data folder refused
+  Given a copy of "fx-bootstrap" at "<copy>"
+  And a <platform> user profile with <environment>
   And a stub "serena" executable on PATH that records each start
-  When P-01 runs "<command>" in a copy of "fx-bootstrap"
+  When P-01 runs "<command>" in that copy
   Then the exit code is 2
   And standard error starts with "ERR-CLI-020"
   And no file "serena_config.yml" was written anywhere under the temporary user profile or the copy of "fx-bootstrap"
   And the stub records no start
   Examples:
-    | platform | environment                                       | command                                                  |
-    | Windows  | "LOCALAPPDATA" unset                              | sdd serena-config --user-data                            |
-    | Windows  | "LOCALAPPDATA" unset                              | sdd serena-launch --user-data -- start-mcp-server        |
-    | Linux    | "XDG_DATA_HOME" and "HOME" unset                  | sdd serena-launch --user-data -- start-mcp-server        |
+    | platform | copy             | environment                                                | command                                                  |
+    | Windows  | C:/fx-work/repo  | "LOCALAPPDATA" unset                                       | sdd serena-config --user-data                            |
+    | Windows  | C:/fx-work/repo  | "LOCALAPPDATA" unset                                       | sdd serena-launch --user-data -- start-mcp-server        |
+    | Linux    | /fx-work/repo    | "XDG_DATA_HOME" and "HOME" unset                           | sdd serena-launch --user-data -- start-mcp-server        |
+    | Linux    | /fx-work/repo    | "XDG_DATA_HOME" = "data" (relative)                        | sdd serena-config --user-data                            |
+    | Windows  | C:/fx-work/repo  | "LOCALAPPDATA" = "C:/fx-work/repo/AppData"                 | sdd serena-config --user-data                            |
+    | Windows  | C:/fx-work/repo  | "LOCALAPPDATA" = "c:/FX-WORK/repo/AppData"                 | sdd serena-launch --user-data -- start-mcp-server        |
+    | Linux    | /fx-work/repo    | "XDG_DATA_HOME" = "/fx-work/repo/.data"                    | sdd serena-launch --user-data -- start-mcp-server        |
+    | macOS    | /fx-work/repo    | "HOME" = "/fx-work/repo"                                   | sdd serena-config --user-data                            |
+```
+
+```gherkin
+Scenario: C002-TS-533 — per-user data folder beside the repository is accepted
+  Given a copy of "fx-bootstrap" at "C:/fx-work/repo"
+  And a Windows user profile with "LOCALAPPDATA" = "C:/fx-work/repo-data"
+  When P-01 runs "sdd serena-config --user-data" in that copy
+  Then the exit code is 0
+  And "C:/fx-work/repo-data/architect-sdd/serena/serena_config.yml" exists
+```
+
+## C002-REQ-517
+
+#### C002-AC-517.1 — Serena commands allowed only with `--user-data` or a data folder outside the repository
+```gherkin
+Scenario Outline: C002-TS-527 — bash guard decisions on the Serena commands
+  Given the repository root "C:/repo", the folder "C:/fx-data" outside it, and the symbolic link "C:/repo-link" to "C:/repo"
+  And hook input for tool "<tool>" by agent "architect:sdd-planner" with the working directory "C:/repo" and the command "<command>"
+  When the bash guard evaluates it
+  Then the exit code is <code>
+  And standard error <stderr>
+  Examples:
+    | tool       | command                                                             | code | stderr                    |
+    | Bash       | sdd serena-config --user-data                                       | 0    | is empty                  |
+    | Bash       | sdd serena-launch --user-data --read-only -- start-mcp-server       | 0    | is empty                  |
+    | Bash       | sdd serena-config C:/fx-data                                        | 0    | is empty                  |
+    | Bash       | node C:/p/scripts/sdd.mjs serena-launch C:/fx-data -- start-mcp-server | 0 | is empty                  |
+    | PowerShell | sdd serena-config C:/fx-data                                        | 0    | is empty                  |
+    | Bash       | sdd serena-config C:/repo/../fx-data                                | 0    | is empty                  |
+    | Bash       | sdd serena-config C:/repo-data                                      | 0    | is empty                  |
+    | Bash       | sdd serena-config src                                               | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-config .                                                 | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-config C:/repo/src                                       | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-config c:/REPO/src                                       | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-config C:/fx-data/../repo/src                            | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-config C:/repo-link/src                                  | 2    | contains "GUARD-BASH-001" |
+    | Bash       | sdd serena-launch C:/repo/.sdd -- start-mcp-server                  | 2    | contains "GUARD-BASH-001" |
+    | Bash       | node C:/p/scripts/sdd.mjs serena-config C:/repo/src                 | 2    | contains "GUARD-BASH-001" |
+    | PowerShell | sdd serena-launch src -- start-mcp-server                           | 2    | contains "GUARD-BASH-001" |
+```
+
+```gherkin
+Scenario: C002-TS-528 — the Serena step of the Claude Code doctor stays allowed
+  Given "CLAUDE_PLUGIN_DATA" is "C:/Users/fx/.claude/plugins/data/architect-inline" in the environment of the bash guard
+  And hook input for tool "Bash" by agent "architect:sdd-conductor" with the working directory "C:/repo" and the Serena command line of step 1 of "plugins/architect/commands/doctor.md", in the form the conductor sends it on Claude Code (C002-IF-008 §1)
+  When the bash guard evaluates it
+  Then the exit code is 0
+  And standard error is empty
+```
+
+## C002-REQ-518
+
+#### C002-AC-518.1 — Shipped templates call the CLI as `sdd`
+```gherkin
+Scenario Outline: C002-TS-529 — hand-off template in the tarball
+  Given line <line> of "plugins/architect/templates/<profile>/20-plan/handoff.md" reads "node <plugin-root>/scripts/sdd.mjs <arguments>"
+  When "npm run package" writes "dist/architect-sdd-0.3.0.tgz"
+  Then line <line> of "package/templates/<profile>/20-plan/handoff.md" in the tarball reads "sdd <arguments>"
+  And that file contains neither "scripts/sdd.mjs" nor "<plugin-root>"
+  And the source file "plugins/architect/templates/<profile>/20-plan/handoff.md" has the SHA-256 it had before the run
+  Examples:
+    | profile | line | arguments                                                             |
+    | full    | 20   | task set <task-id> --status in-progress                               |
+    | full    | 23   | defect add --ref <ID> --summary "<what is wrong>"                     |
+    | lite    | 21   | task set <task-id> --status done --commit <sha> --note "<summary>"    |
+    | lite    | 22   | task set <task-id> --status blocked --reason "<why>"                  |
+```
+
+```gherkin
+Scenario: C002-TS-534 — shipped hand-off template read through the CLI
+  Given the "architect-sdd" tarball of version "0.3.0" is installed globally into a clean prefix and a copy of "fx-bootstrap" has no ".sdd/_templates/"
+  When P-01 runs "sdd template show full/20-plan/handoff.md" in that copy
+  Then standard output holds the line "sdd task set <task-id> --status in-progress"
+  And it does not contain "scripts/sdd.mjs"
+```
+
+## C002-REQ-519
+
+#### C002-AC-519.1 — A plugin path of the CLI left in a shipped template stops the build
+```gherkin
+Scenario Outline: C002-TS-530 — plugin path in a template of the package
+  Given the fixture "fx-plugin-tmpl" whose template "templates/<file>" holds "<text>" on line <line>
+  When "npm run package" runs on that fixture
+  Then the exit code is non-zero
+  And the message names the template "<file>" and line <line>, and contains "<construct>"
+  Examples:
+    | file                    | line | text                                                        | construct                   |
+    | full/20-plan/plan.md    | 12   | The CLI lives at <plugin-root>/scripts/sdd.mjs.             | <plugin-root>/scripts/sdd.mjs |
+    | lite/10-spec/spec.md    | 7    | Run ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs with "lint".      | ${CLAUDE_PLUGIN_ROOT}       |
+```
+
+```gherkin
+Scenario: C002-TS-535 — templates without a plugin path pass
+  Given the source plugin's templates hold no plugin path of the CLI other than the invocation lines that C002-REQ-518 rewrites
+  When P-01 runs "npm run package"
+  Then the exit code is 0
+  And the output holds no message naming a template
+```
+
+## C002-REQ-520
+
+#### C002-AC-520.1 — `sdd template list` prints every showable template path once, in code-point order
+```gherkin
+Scenario: C002-TS-531 — shipped templates only
+  Given a copy of "fx-bootstrap" without ".sdd/_templates/"
+  When P-01 runs "sdd template list lite" in it
+  Then the exit code is 0
+  And standard output has one line for each file under "plugins/architect/templates/lite/", giving its path relative to that folder with "/" as separator
+  And the lines are in ascending code-point order, so that "00-ideation/ideation.md" is the first line and "ids.json" the last for the templates of plugin version "0.3.0"
+```
+
+```gherkin
+Scenario: C002-TS-532 — repository templates merged, each path once
+  Given a copy of "fx-bootstrap" whose ".sdd/_templates/lite/" holds "10-spec/spec.md" and "10-spec/Notes.md"
+  When P-01 runs "sdd template list lite" in it
+  Then standard output lists "10-spec/spec.md" exactly once
+  And it lists "10-spec/Notes.md" on the line before "10-spec/dod.md"
+  And for every printed line "<path>", "sdd template show lite/<path>" exits with code 0
 ```
 
 ## Coverage table
@@ -391,14 +525,18 @@ Scenario Outline: C002-TS-525 — per-user data folder not determinable
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
-| C002-REQ-509 | TS-515 | n/a | n/a: which version differences count is open (Q-cli-03 in the requirement) | TS-515 | n/a | n/a | n/a |
+| C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
 | C002-REQ-510 | TS-516 | TS-516 (two disabling sources) | TS-526 (state not readable) | TS-516, TS-526 | n/a | n/a | TS-526 (unread state never reported ok) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | n/a |
-| C002-REQ-514 | TS-521 | TS-521 (unknown profile) | n/a | TS-521 | n/a | n/a | TS-522 (path leaving the template folders) |
-| C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged) | TS-523 (XDG_DATA_HOME unset) | n/a: a folder that cannot be determined is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository) |
-| C002-REQ-516 | TS-525 | TS-525 (serena-config and serena-launch) | n/a | TS-525 | n/a | n/a | n/a |
+| C002-REQ-514 | TS-521 | TS-521 (unknown profile) | TS-522 (`..` that stays inside the profile folder) | TS-521, TS-522 | n/a | n/a | TS-522 (`..` segments and a link leaving the profile's template folder) |
+| C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged) | TS-523 (XDG_DATA_HOME unset) | n/a: a folder that cannot be determined, is relative or lies inside the repository is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository) |
+| C002-REQ-516 | TS-525 | TS-525 (serena-config and serena-launch, four platforms) | TS-525 (case-different path inside the repository), TS-533 (folder beside the repository sharing its name prefix) | TS-525 | n/a | n/a | TS-525 (environment variable pointing into the repository, relative value) |
+| C002-REQ-517 | TS-527 | TS-527 (`--user-data`, script form, PowerShell), TS-528 (Claude Code doctor step) | TS-527 (`..` leaving and re-entering the repository, sibling folder `C:/repo-data`) | TS-527 | TS-527 | n/a | TS-527 (folder inside the repository through a relative path, a case change, `..` or a link) |
+| C002-REQ-518 | TS-529 | TS-529 (both profiles, `task set` and `defect add`), TS-534 (read through `sdd template show`) | n/a | n/a: a plugin path left in a shipped template is C002-REQ-519 (TS-530) | n/a | n/a | n/a |
+| C002-REQ-519 | TS-530 | TS-535 (no plugin path left) | n/a | TS-530 | n/a | n/a | n/a |
+| C002-REQ-520 | TS-531 | TS-532 (repository templates merged) | TS-532 (path in both places listed once; upper case before lower case) | n/a: the requirement states no failure path; an unknown profile prints no line | n/a | n/a | n/a |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit in the
 requirement. *Error*: packaging and record rules fail through the build or the doctor outcome tested

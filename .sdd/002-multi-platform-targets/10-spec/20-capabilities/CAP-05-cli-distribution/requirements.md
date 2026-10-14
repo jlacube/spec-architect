@@ -172,7 +172,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** Q-guards-04 (spec round 2, `../../questions-log.md`): "Confine on every host" — the guard core allows these two subcommands only with `--user-data` or a folder outside the repository, and C002-GOAL-05 is widened to cover this Claude Code change. Today the sdd CLI entry of C001-IF-07 §3 accepts any subcommand, so `sdd serena-config src` passes every guard and writes `src/serena/serena_config.yml`, against C002-DEC-001 ("refuses anything outside `.sdd/`") and the ideation §9 risk "a command that writes files". The same guard core decides for the command tool of the sdd MCP server and for the agent-scoped guard hooks (C002-IF-008 §1); the OpenCode `bash` rules follow the allowlist (C002-REQ-207). Serena keeps its project data inside the data folder (C001-REQ-1013), so the data folder decides where `serena-launch` writes. The folder resolves as a write target does for the path guard (`..` segments, case, drive letters, links; C001-REQ-1104). Corpus cases: C002-REQ-607
 - **Stories:** C002-US-502, C002-US-505
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-517.1`)
+- **Acceptance:** `C002-AC-517.1`
 - **Evidence:** current-state E-5 — `src/hooks/guard-bash.ts:119` › `sddCli` (any subcommand after `node <path>/sdd.mjs` passes the sdd CLI entry; layer: serena); current-state E-22 — `src/cli/commands.ts:420` › `serenaConfig` (writes `serena/serena_config.yml` under its folder argument, resolved against the working directory at `src/cli/commands.ts:421`; `serenaLaunchCmd` does the same at `src/cli/commands.ts:470`; layer: serena + grep)
 - **Open items:** how the bash guard resolves the argument `"${CLAUDE_PLUGIN_DATA}"` that the Claude Code doctor and init commands pass (current-state E-22), whose Serena step must keep passing (C002-REQ-623), is fixed in C002-IF-008 §1.
 
@@ -183,7 +183,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** the hand-off templates `templates/full/20-plan/handoff.md:20-23` and `templates/lite/20-plan/handoff.md:20-23` of the source plugin tell the implementer to run `node <plugin-root>/scripts/sdd.mjs task set …` and `… defect add …`, a path that does not exist on the generated targets (C002-GOAL-03, C002-GOAL-04); the plugin keeps its templates unchanged for Claude Code (C002-GOAL-05); templates shipped by C002-REQ-512 and read through C002-REQ-513
 - **Stories:** C002-US-504
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-518.1`)
+- **Acceptance:** `C002-AC-518.1`
 
 ### C002-REQ-519 — Plugin path of the CLI in a shipped template reported
 - **Delta:** ADDED
@@ -192,7 +192,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** no check scans the shipped templates today (the target structure checks scan agents, commands or prompt files, skills, configuration and hook files, C002-IF-005 §6); same reason as C002-REQ-602 for the target packages; C001-NFR-601
 - **Stories:** C002-US-504
 - **Priority:** Must
-- **Acceptance:** pending — test-designer (`C002-AC-519.1`)
+- **Acceptance:** `C002-AC-519.1`
 
 ### C002-REQ-520 — Template list through the CLI
 - **Delta:** ADDED
@@ -201,4 +201,4 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Rationale:** the fix of ERR-CLI-019 lists the templates with this command (`../../50-interfaces/errors.md` §5; C002-REQ-514); command row in C002-IF-007
 - **Stories:** C002-US-504
 - **Priority:** Should
-- **Acceptance:** pending — test-designer (`C002-AC-520.1`)
+- **Acceptance:** `C002-AC-520.1`

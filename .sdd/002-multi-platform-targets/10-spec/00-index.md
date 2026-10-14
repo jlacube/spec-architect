@@ -43,16 +43,15 @@ status: draft
 
 | Capability | Folder | US | REQ | AC | TS |
 |---|---|---|---|---|---|
-| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 32 (block 101–199) |
+| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 33 (block 101–199) |
 | C002-CAP-02 OpenCode target | `CAP-02-opencode-target` | 201–205 (5) | 201–216 (16) | 16 | 27 (block 201–299) |
 | C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–305 (5) | 301–319 (19) | 19 | 35 (block 301–399) |
 | C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 22 (block 401–499) |
-| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–520 (20) | 16 | 26 (block 501–599) |
-| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–629 (28) | 23 | 27 (block 601–699) |
-| **Total** | | **30** | **116** | **109** | **169** |
+| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–520 (20) | 20 | 35 (block 501–599) |
+| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–629 (28) | 28 | 36 (block 601–699) |
+| **Total** | | **30** | **116** | **118** | **188** |
 
-Requirements of the spec step 7 fix round awaiting acceptance criteria: C002-REQ-517 … C002-REQ-520,
-C002-REQ-625 … C002-REQ-629.
+Every requirement has acceptance criteria; none is awaiting the test-designer.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·
 501 (1) · 601 (1) · 801 (1) — 16 in total.
