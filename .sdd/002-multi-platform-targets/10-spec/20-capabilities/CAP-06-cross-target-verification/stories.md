@@ -1,0 +1,81 @@
+---
+id: C002-CAP-06
+artifact: spec/stories
+change: CHG-002
+phase: 10-spec
+status: draft
+capability: "Cross-target verification"
+id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
+---
+# C002-CAP-06 — Cross-target verification: user stories
+
+### C002-US-601 — Structure checks on every target package
+- **As a** P-01 spec owner and maintainer
+- **I want** `npm run check` to run structure checks on each generated target package, next to the 14 existing checks of the Claude Code plugin
+- **So that** a broken or leaking target package fails the local check before it is released
+- **Value / outcome:** C002-SC-04, C002-SC-05; C002-GOAL-01
+- **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-06
+- **Context & notes:** `npm run check` is C001-REQ-1117 (a `MODIFIED` candidate). Today every check reads only `plugins/architect/` and `check.mjs` has no step for generated outputs (current-state E-8; baseline survey §2.1). Per-target checks cover at least the package layout, agent tool lists, MCP configuration, the skill budgets on generated bodies (C002-US-103), the absence of untranslated Claude constructs (C002-US-102), and on Copilot VS Code the absence of edit and terminal tools in agents (C002-US-302). New checks must not read CHG-001 folders by fixed path, the hazard PLG-TOOLS-001 has when CHG-001 is archived (baseline survey §4 note 7).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** C002-DEC-006 (Consequences); ideation §5, §8 (Verification)
+
+### C002-US-602 — Guard corpora replayed against each enforcement mechanism
+- **As a** P-01 spec owner
+- **I want** the path and shell corpora replayed against the OpenCode permission engine, the sdd MCP server and, when used, the Copilot agent-scoped hooks, with every decision equal to the expected one
+- **So that** I can show the same boundary on every target with the same cases
+- **Value / outcome:** C002-GOAL-02; C002-SC-03
+- **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
+- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, and the Windows shell (ideation §9). The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** C002-DEC-005; ideation §8, §9
+
+### C002-US-603 — Scripted evals on OpenCode
+- **As a** P-01 spec owner
+- **I want** an OpenCode eval runner that keeps the case API of the existing eval harness and runs agent routing, injection and, where OpenCode allows scripted answers, interview and gate scenarios
+- **So that** agent behaviour on OpenCode is measured the same way as on Claude Code
+- **Value / outcome:** C002-GOAL-02, C002-GOAL-03
+- **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
+- **Context & notes:** The harness has no CHG-001 requirement of its own, so runners are `ADDED` (current-state §2 item 2, E-9); 104 files under `evals/` use `harness/`, so the case API stays stable (baseline survey §3.3). OpenCode can be driven through `opencode serve` and the SDK (C002-R-001 D-01, D-02); whether a `question` call can be answered by script is open for spike S-07. Eval tiers: dev tier on every target; milestone tier on Claude Code and the first port only (ideation §9). Each run keeps a spend cap, as `runSession` does today (current-state E-9).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** ideation §8 (Verification), §9; C002-DEC-003 (Consequences)
+
+### C002-US-604 — Scripted evals through Copilot CLI
+- **As a** P-01 spec owner
+- **I want** a Copilot CLI eval runner that runs agent routing, guard behaviour through the sdd MCP server and non-interactive scenarios against the Copilot target package
+- **So that** the Copilot target is tested by script although VS Code has no headless chat mode
+- **Value / outcome:** C002-GOAL-02, C002-GOAL-03
+- **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-06
+- **Context & notes:** C002-DEC-003. Copilot CLI runs headless with `-p`, `--agent` and JSON output; unattended runs use `--no-ask-user`, so interviews and gates are not exercised here (C002-R-001 D-03). Relies on C002-AS-04; if Copilot CLI does not load the package, the server is tested in isolation and the Copilot injection cases move to the manual checklist (C002-US-605). Copilot CLI is an eval tool only (C002-NG-01).
+- **Out of scope:** VS Code automation through an extension host or UI automation (not documented, C002-R-001 D-04).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** C002-DEC-003; Q-eval-01
+
+### C002-US-605 — Recorded manual VS Code checklist
+- **As a** P-01 spec owner
+- **I want** a manual checklist for VS Code that I run and record before each release: the sdd MCP server boundary, an interview and a gate through `vscode/askQuestions` (including a skipped answer), and one phase end to end on a toy change up to gate G1
+- **So that** what cannot be scripted in VS Code is still verified, with evidence
+- **Value / outcome:** C002-SC-02; C002-GOAL-02, C002-GOAL-03
+- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
+- **Context & notes:** C002-DEC-003 (the release check requires the manual record for the Copilot target). DOD-G-01 of the constitution accepts a manual scenario with an executed record. With the Copilot hooks fallback, the checklist also records the hooks state (C002-US-303). Re-run before each release because the VS Code features used are Preview or Experimental (ideation §9).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** C002-DEC-003, C002-DEC-005 (Consequences); Q-eval-01
+
+### C002-US-606 — A target is released only with a proven boundary
+- **As a** P-01 spec owner
+- **I want** the release of each generated target to require its corpus replay at 100%, its injection evals at 0 instructions acted upon and, for Copilot VS Code, the manual checklist record, with the Copilot hooks fallback flagged when used
+- **So that** no target is released below the Claude Code safety bar; if the Copilot fallback fails too, Copilot is deferred and OpenCode is still released
+- **Value / outcome:** C002-GOAL-02; C002-SC-03
+- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
+- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03). Injection evals run at the dev tier on each target (C002-GOAL-02).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03
+
+### C002-US-607 — Claude Code unchanged
+- **As a** P-03 adopter on Claude Code
+- **I want** every CHG-001 test and eval that passes today to still pass after CHG-002
+- **So that** adding targets costs me nothing
+- **Value / outcome:** C002-GOAL-05; C002-SC-05
+- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
+- **Context & notes:** The only accepted difference is the allowlist change (C002-US-502). Guard tests pinning today's behaviour: the guard corpora and the C001-CAP-11 integration tests `TS-1103` to `TS-1108` (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2). The regression set is written in the plan (`20-plan/30-impact/regression-set.md`).
+- **Requirements:** pending — written in spec step 3
+- **Traces to:** ideation §4.1 (G-5); C002-DEC-007

@@ -1,0 +1,85 @@
+---
+id: C002-SPEC-CTX-03
+artifact: spec/context/scope
+change: CHG-002
+phase: 10-spec
+status: draft
+traces_to: [ideation §5, ideation §8, ideation §10]
+---
+# Scope, assumptions, constraints and dependencies
+
+## 1. In scope
+
+Source: [ideation §5](../../00-ideation/ideation.md) (scope boundary) and §8 (design direction).
+The hook coverage per target is the table "Hooks per target" of ideation §5; its "in" cells are in
+scope through the capabilities below, its "later" cells are listed in §2.
+
+| Item | Capability |
+|---|---|
+| Generator: neutral model, mapping tables, skill inlining, wiring variants, target packages written by `npm run package` | C002-CAP-01 |
+| OpenCode target package: agents, commands, skills, `opencode.json` with per-agent permission blocks and MCP configuration; interviews and gates through the `question` tool; post-write quick lint when spike S-07 finds a feedback channel; the sdd MCP server as fallback | C002-CAP-02 |
+| Copilot VS Code target package: custom agents, prompt files, skills, MCP configuration; interviews and gates through `vscode/askQuestions`; session-start brief and SubagentStop trace hooks; the Copilot hooks fallback (C002-DEC-005 exception) | C002-CAP-03 |
+| sdd MCP server: guarded `.sdd/` writes, allowlisted commands, quick-lint findings with each write (C002-DEC-001) | C002-CAP-04 |
+| `architect-sdd` on npm (C002-DEC-007); the Bash allowlist accepting a bare `sdd` command and `node --version` (with D-011 of CHG-001); the doctor on every target | C002-CAP-05 |
+| Per-target structure checks; corpus replay against each enforcement mechanism; OpenCode and Copilot CLI eval runners; the manual VS Code checklist (C002-DEC-003); the release check per target (C002-DEC-005); the Claude Code regression set | C002-CAP-06 |
+| Per-target README sections and install notes | C002-CAP-02, C002-CAP-03 |
+
+Spikes S-07 (OpenCode) and S-08 (Copilot VS Code) come first in the plan (ideation §8, Verification);
+they settle the assumptions of §3 and are plan tasks, not capabilities.
+
+## 2. Out of scope
+
+- C002-NG-01 … C002-NG-04 (`problem-and-goals.md` §4).
+- On OpenCode, "later" in the ideation §5 hook table: the session-start brief (no documented context
+  injection), the SubagentStop trace (the auditor runs the trace at gates instead), and the post-write
+  quick lint when spike S-07 finds no feedback channel.
+- Other hosts (Codex, Cursor and others) once the generator exists; Agent Plugins 1.0 packaging if the
+  targets converge on it (ideation §5, Later).
+- Any change of behaviour on Claude Code other than the allowlist change (C002-GOAL-05).
+
+## 3. Assumptions
+
+Carried from ideation §10, plus the OpenCode condition of ideation §8 (Enforcement per target).
+Spikes S-07 and S-08 confirm or refute them.
+
+| ID | Assumption | If wrong |
+|---|---|---|
+| C002-AS-01 | [ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04) | The shell boundary on OpenCode moves to the sdd MCP server |
+| C002-AS-02 | [ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04) | OpenCode agents lose their edit and shell tools and use the sdd MCP server, as on Copilot VS Code (ideation §8) |
+| C002-AS-03 | [ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (C002-R-001 A-08, A-11) | Subagents not confined: the Copilot hooks fallback applies (C002-DEC-005 exception); if agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred to a later change and OpenCode still ships |
+| C002-AS-04 | [ASSUMPTION: R-001] Copilot CLI loads the Copilot target package and honours agent tool lists as VS Code does | Copilot evals cover the sdd MCP server in isolation; the Copilot injection cases move to the manual VS Code checklist |
+| C002-AS-05 | [ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to the npm registry is possible (name available, publishing account) | Agents on the generated targets use the bundled CLI through a per-target path (Q-cli-01 option 2) |
+
+## 4. Constraints
+
+CHG-001's constraints (C001-CON-01 … 16) apply unchanged unless a CHG-002 requirement modifies them;
+the architecture step of this spec reviews C001-CON-02 (one bundled file; the sdd MCP server adds a
+bundled entry) and C001-CON-03 (distribution as a Claude Code plugin; CHG-002 adds generated packages).
+
+| ID | Constraint | Source |
+|---|---|---|
+| C002-CON-01 | The source plugin is the only source of every target package; no target package is maintained by hand | C002-DEC-006 |
+| C002-CON-02 | Generated files are written outside `plugins/architect/agents/` and `plugins/architect/scripts/` | C002-DEC-006; current-state E-2, E-13 |
+| C002-CON-03 | A target is released only when its write/shell boundary is enforced by an enforcement mechanism; a boundary that relies on agent instructions alone is never released | C002-DEC-005 |
+| C002-CON-04 | The sdd MCP server is a stdio process that the host starts with a session and stops with it; it is not a daemon and opens no network connection | C002-DEC-001; constitution, forbidden technologies; C001-CON-12 |
+| C002-CON-05 | Requirements that change CHG-001 behaviour are `MODIFIED` deltas citing the C001 requirement; their LINT-DELTA-001 findings are waived at G2 and G3 until C001-T-075 archives CHG-001 | C002-DEC-008 |
+
+## 5. External dependencies
+
+| Dependency | Version policy | Required? | Used by | License |
+|---|---|---|---|---|
+| OpenCode | [NEEDS CLARIFICATION: Q-versions-01] | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
+| VS Code with GitHub Copilot Chat | [NEEDS CLARIFICATION: Q-versions-01] | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
+| Copilot CLI | [NEEDS CLARIFICATION: Q-versions-01] | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
+| npm registry | publishing account and package name: [NEEDS CLARIFICATION: Q-cli-02] | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
+| Node.js | 20 or later on the PATH (constitution) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |
+| OpenCode server and JS SDK | pinned with the OpenCode version | Evals only | OpenCode eval runner (C002-R-001 D-02) | checked against the license allowlist when the eval dependency is added |
+| Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki | as in CHG-001 `10-context/scope.md` §5 | as in CHG-001 | as in CHG-001; Serena's context on each generated target is an open research item (baseline survey §4 note 6) | as in CHG-001 |
+
+## 6. Change dependencies
+
+- CHG-001 is not archived. CHG-002's deltas cite CHG-001 requirements under C002-CON-05; C001-T-075
+  (archive CHG-001) must precede CHG-002's archive (C002-DEC-008).
+- Defect D-011 of CHG-001 (`node --version` denied) overlaps the allowlist change and stays open until
+  the CHG-002 task that implements it is done; CHG-001's archive waits for that task (ideation §5).
+- Evidence for the current behaviour that the deltas change: `current-state.md` (cartographer).

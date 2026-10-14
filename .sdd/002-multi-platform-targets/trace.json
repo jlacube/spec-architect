@@ -1,7 +1,141 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T00:59:36.137Z",
+  "generated_at": "2026-10-14T04:31:47.874Z",
   "nodes": [
+    {
+      "id": "C002-AS-01",
+      "type": "AS",
+      "file": "10-spec/10-context/scope.md",
+      "line": 47,
+      "title": "[ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04)",
+      "content_hash": "sha256:3d566dd934291335586cb4f3bedc248e2af04a23545c6224ded6808559c045c9"
+    },
+    {
+      "id": "C002-AS-02",
+      "type": "AS",
+      "file": "10-spec/10-context/scope.md",
+      "line": 48,
+      "title": "[ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04)",
+      "content_hash": "sha256:c9032057750b6ab3400fd9d09f943117e1b9fc5f32f716ff34aaf219289951c1"
+    },
+    {
+      "id": "C002-AS-03",
+      "type": "AS",
+      "file": "10-spec/10-context/scope.md",
+      "line": 49,
+      "title": "[ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (C002-R-001 A-08, A-11)",
+      "content_hash": "sha256:65d8a4da18c84914e9b62bdf6b116f883eaac8e16f32f712f022c9b4de1d8a5e"
+    },
+    {
+      "id": "C002-AS-04",
+      "type": "AS",
+      "file": "10-spec/10-context/scope.md",
+      "line": 50,
+      "title": "[ASSUMPTION: R-001] Copilot CLI loads the Copilot target package and honours agent tool lists as VS Code does",
+      "content_hash": "sha256:d125fcbdb85298dfb1ad02a2b0aca3f01a233023790a3452d1fe2b8d441362de"
+    },
+    {
+      "id": "C002-AS-05",
+      "type": "AS",
+      "file": "10-spec/10-context/scope.md",
+      "line": 51,
+      "title": "[ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to the npm registry is possible (name available, publishing account)",
+      "content_hash": "sha256:52889ab3096c12e8045a815154960252e2646321554ea277f8726390ce0a9411"
+    },
+    {
+      "id": "C002-CAP-01",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
+      "line": 1,
+      "title": "Target generation",
+      "content_hash": "sha256:29adce853a93adfd89a2700a58fc03826ea539cba8852730a288d3d97977ef07",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CAP-02",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 1,
+      "title": "OpenCode target",
+      "content_hash": "sha256:5ccd26842c06bb6e8764831cbe126262e07b0710fa52c8042271596d59d64123",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CAP-03",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 1,
+      "title": "Copilot VS Code target",
+      "content_hash": "sha256:18a839fa3b5ca63e9b9996d6acd7923291905f61608f616d2430c260463df433",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CAP-04",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
+      "line": 1,
+      "title": "sdd MCP server",
+      "content_hash": "sha256:a9fdf8f9aa39fec439e68cdbdc770d45f0889373a62e4dc7384722093bcd67fa",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CAP-05",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 1,
+      "title": "CLI distribution, allowlist and doctor",
+      "content_hash": "sha256:ead486d35dae4bc5830f6001f57a8c4c6f212e9b4a689b2b968a8bcfe647900b",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CAP-06",
+      "type": "CAP",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 1,
+      "title": "Cross-target verification",
+      "content_hash": "sha256:34506389c0ae611440cf888fd61e35dc377b69af17a3bbf060f13c82047c1953",
+      "status": "draft"
+    },
+    {
+      "id": "C002-CON-01",
+      "type": "CON",
+      "file": "10-spec/10-context/scope.md",
+      "line": 61,
+      "title": "The source plugin is the only source of every target package; no target package is maintained by hand",
+      "content_hash": "sha256:ea55b70f7e1201a72473baf271b1e2f04dc3dbcb2e9d603ec9f348180d107c77"
+    },
+    {
+      "id": "C002-CON-02",
+      "type": "CON",
+      "file": "10-spec/10-context/scope.md",
+      "line": 62,
+      "title": "Generated files are written outside `plugins/architect/agents/` and `plugins/architect/scripts/`",
+      "content_hash": "sha256:ddcd1bb3acc6d89f2000f589fa85b2f90ca9055c73385a67cd1eff4216aa8861"
+    },
+    {
+      "id": "C002-CON-03",
+      "type": "CON",
+      "file": "10-spec/10-context/scope.md",
+      "line": 63,
+      "title": "A target is released only when its write/shell boundary is enforced by an enforcement mechanism; a boundary that relies on agent instructions alone is never released",
+      "content_hash": "sha256:b9aa07013d5d9eb0e650db698b13f31dd469e45ab1447bc073d4872cac2111db"
+    },
+    {
+      "id": "C002-CON-04",
+      "type": "CON",
+      "file": "10-spec/10-context/scope.md",
+      "line": 64,
+      "title": "The sdd MCP server is a stdio process that the host starts with a session and stops with it; it is not a daemon and opens no network connection",
+      "content_hash": "sha256:24a24975d94ba126201ea852da08ba136bd29b3c91028858b04855b8839aa6f0"
+    },
+    {
+      "id": "C002-CON-05",
+      "type": "CON",
+      "file": "10-spec/10-context/scope.md",
+      "line": 65,
+      "title": "Requirements that change CHG-001 behaviour are `MODIFIED` deltas citing the C001 requirement; their LINT-DELTA-001 findings are waived at G2 and G3 until C001-T-075 archives CHG-001",
+      "content_hash": "sha256:c890f748413d68a95cec8efc442b8125a964183b3f45193fe953f9fdcf8a2cc9"
+    },
     {
       "id": "C002-DEC-001",
       "type": "DEC",
@@ -84,6 +218,78 @@
       "status": "accepted"
     },
     {
+      "id": "C002-GOAL-01",
+      "type": "GOAL",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 33,
+      "title": "One build produces installable OpenCode and Copilot VS Code packages from the source plugin",
+      "content_hash": "sha256:e17e01b0044ec2779447247d50a78e5c20af8a4cf37fe7d8cbb8c06f504ac257"
+    },
+    {
+      "id": "C002-GOAL-02",
+      "type": "GOAL",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 34,
+      "title": "The same safety level on every target",
+      "content_hash": "sha256:a5d75932634d55b9a8ed39077c187013bd4681943fb017a1f953b3eec2ed9334"
+    },
+    {
+      "id": "C002-GOAL-03",
+      "type": "GOAL",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 35,
+      "title": "The same workflow on every target: interviews, gates with P-01's verbatim words, traceability",
+      "content_hash": "sha256:c0ec775602b1c62a88ca119b9810e931dbb62b6477f049fd97da4e80506d94f5"
+    },
+    {
+      "id": "C002-GOAL-04",
+      "type": "GOAL",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 36,
+      "title": "The `sdd` CLI is reachable on every target without a plugin-root variable",
+      "content_hash": "sha256:cc748cad8fcaa92b693378aa85bc7f05b680195e09fe7bb3406be2eb45f24b5b"
+    },
+    {
+      "id": "C002-GOAL-05",
+      "type": "GOAL",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 37,
+      "title": "Claude Code behaviour unchanged, except the Bash allowlist accepting a bare `sdd` command",
+      "content_hash": "sha256:934eda7ade38d511d5fbd49b14962cd207014a0b08c6f10c4621f6c506562b25"
+    },
+    {
+      "id": "C002-NG-01",
+      "type": "NG",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 55,
+      "title": "Copilot CLI and the Copilot cloud agent as supported targets (the cloud agent cannot hold a gate); Copilot CLI is used only to run evals (C002-DEC-004, C002-DEC-003).",
+      "content_hash": "sha256:e48d158fed3039bd7387017885f8740d266bd0f24547e1043b63543a0d30ebb2"
+    },
+    {
+      "id": "C002-NG-02",
+      "type": "NG",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 56,
+      "title": "Host-specific features beyond parity: no capability that only one target has.",
+      "content_hash": "sha256:3db6fd543e1046699e0ac1bf711fd498706357264d361710abb8dc3eb63627b0"
+    },
+    {
+      "id": "C002-NG-03",
+      "type": "NG",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 57,
+      "title": "Changes to the SDD method, the `.sdd/` format or the ID scheme.",
+      "content_hash": "sha256:bb63b64d2f2d7694ffcfcfd3b4d4de20cbcf4197208759e1f08913c864ec54d4"
+    },
+    {
+      "id": "C002-NG-04",
+      "type": "NG",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 58,
+      "title": "Agent memory (`memory: project`) on OpenCode and Copilot VS Code (C002-DEC-009).",
+      "content_hash": "sha256:b73af47e263cb8a953dfdce289a2021c363bb9a4733645a42b2c62d746a13d98"
+    },
+    {
       "id": "C002-OA-001",
       "type": "OA",
       "file": "00-ideation/options/OA-001-copilot-guards.md",
@@ -109,9 +315,323 @@
       "title": "",
       "content_hash": "sha256:71dd3ae4d001219a9964850e49ece1195d1bbce467369fa4648e56fd295cda27",
       "status": "draft"
+    },
+    {
+      "id": "C002-SC-01",
+      "type": "SC",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 45,
+      "title": "A fresh OpenCode install reaches gate G1 of a toy change with the generated package",
+      "content_hash": "sha256:e1e57818a64340c98ed9101d2850ffa5a591ccb3b1457085f380f64ab24773ff"
+    },
+    {
+      "id": "C002-SC-02",
+      "type": "SC",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 46,
+      "title": "A fresh VS Code with Copilot install reaches gate G1 of a toy change with the generated package (recorded manual run)",
+      "content_hash": "sha256:efff85f60de29c0df21f8ba558cbcb680e0affd85b1d31293dea454dbfe04221"
+    },
+    {
+      "id": "C002-SC-03",
+      "type": "SC",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 47,
+      "title": "On both generated targets, an Architect agent cannot write outside `.sdd/` or run a command outside the allowlist (guard corpora replayed against each target's enforcement mechanism)",
+      "content_hash": "sha256:59c0524636cf3eab1b23d0d33a581562a91acc0ed81c3d8d6f09f9e7b9b7bb2a"
+    },
+    {
+      "id": "C002-SC-04",
+      "type": "SC",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 48,
+      "title": "A change to the source plugin reaches all targets through one `npm run package`, with structure checks run on every target package",
+      "content_hash": "sha256:65bd0399b746be3a45222a81f678b0c9acb7a56d147bc5ad4a8101d05fdcb8c8"
+    },
+    {
+      "id": "C002-SC-05",
+      "type": "SC",
+      "file": "10-spec/10-context/problem-and-goals.md",
+      "line": 49,
+      "title": "`npm run check` stays green, including the new per-target checks",
+      "content_hash": "sha256:d4e96e15a1e168d04273808e252c5e9c768dca6242c726405cb398158f1287a0"
+    },
+    {
+      "id": "C002-US-101",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
+      "line": 12,
+      "title": "One build emits every target package",
+      "content_hash": "sha256:856b2e00a2223f0ccc2ccf272ac89764071e531c96b022f5731982e622cbea7a"
+    },
+    {
+      "id": "C002-US-102",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
+      "line": 22,
+      "title": "Claude constructs translated by mapping tables",
+      "content_hash": "sha256:a177892b90a69d886271d1ffd9bd512b73cf55fc3990e2546dccd089ec32bd4e"
+    },
+    {
+      "id": "C002-US-103",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
+      "line": 32,
+      "title": "Procedure skills in context on every target",
+      "content_hash": "sha256:a310e8c8370bbd3ab37ec8af86e769877f6ed601555c877606ce84202c39c647"
+    },
+    {
+      "id": "C002-US-104",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
+      "line": 42,
+      "title": "Per-target wiring variants",
+      "content_hash": "sha256:ed9175ddead8f7cc9a85c8e6a533fa0be5ed937cc0b73bc9712cfacde0f8b9e4"
+    },
+    {
+      "id": "C002-US-201",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 12,
+      "title": "Install Architect on OpenCode and reach gate G1",
+      "content_hash": "sha256:b8ec0f14c865da4804678003893f16c5ffe973c1d3b46074d1fc7acde69ca7b6"
+    },
+    {
+      "id": "C002-US-202",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 22,
+      "title": "Write/shell boundary through OpenCode permissions",
+      "content_hash": "sha256:58de9d8db7c5864d2d2e8c1ce608da6296c9d0878b379e6a6dd1f6e857705d7c"
+    },
+    {
+      "id": "C002-US-203",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 32,
+      "title": "sdd MCP server as the OpenCode fallback",
+      "content_hash": "sha256:77dfc5faef2bc951b10223e3198ae77ae66746dcedd90c3bb2e493b35faefa65"
+    },
+    {
+      "id": "C002-US-204",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 42,
+      "title": "Interviews and gates through OpenCode's question tool",
+      "content_hash": "sha256:be6d77f36dc0e07e8c47f76e95402edc16a82838884208787292ebf10dfa6a22"
+    },
+    {
+      "id": "C002-US-205",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
+      "line": 52,
+      "title": "Quick-lint feedback after writes on OpenCode",
+      "content_hash": "sha256:d1ffce76031bf42d483dc172d04bd44513c13b4ea3527c83539558a2c815aef4"
+    },
+    {
+      "id": "C002-US-301",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 12,
+      "title": "Install Architect in VS Code with Copilot and reach gate G1",
+      "content_hash": "sha256:2fd45dc1b161f34adce3e81c40960140fd02cda5cbcee38ad0863fd644f5ba28"
+    },
+    {
+      "id": "C002-US-302",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 22,
+      "title": "Write/shell boundary through the sdd MCP server",
+      "content_hash": "sha256:43d9d959701509df565c3825343ee69ca46ff67a9717c137724cf69f955c189a"
+    },
+    {
+      "id": "C002-US-303",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 32,
+      "title": "Visible agent-scoped hooks fallback",
+      "content_hash": "sha256:0ef5c454d96fd66c94d086e4fbe397e76fac926117af2058982ea5b99ee7aee7"
+    },
+    {
+      "id": "C002-US-304",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 42,
+      "title": "Interviews and gates through `vscode/askQuestions`",
+      "content_hash": "sha256:c1b1f5bb699866c65b24bd0307dc4d786c6996bb7ae8c42ab7bb2e2c2df485fd"
+    },
+    {
+      "id": "C002-US-305",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
+      "line": 52,
+      "title": "Session-start brief and SubagentStop trace in VS Code",
+      "content_hash": "sha256:6105bb40753ff078da857003409d645822bc59c953eb53b4a300baba1446714c"
+    },
+    {
+      "id": "C002-US-401",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
+      "line": 12,
+      "title": "Guarded `.sdd/` writes through the server",
+      "content_hash": "sha256:9336e54d94f8da6f1c11e42ec41dd7d0728f6a8f516ad84914db521e1489b3b5"
+    },
+    {
+      "id": "C002-US-402",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
+      "line": 22,
+      "title": "Allowlisted commands through the server",
+      "content_hash": "sha256:81c2752a7bb643b0ac38adf0ae2eba3bb7409dcae497df56c97d81c5c9de490c"
+    },
+    {
+      "id": "C002-US-403",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
+      "line": 32,
+      "title": "Quick-lint findings with each write",
+      "content_hash": "sha256:1be8c1417fa28b1b394143bf164b30095dae9458e4861c4ffeac5744c29c383d"
+    },
+    {
+      "id": "C002-US-404",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
+      "line": 42,
+      "title": "A per-session stdio process shipped with the CLI",
+      "content_hash": "sha256:1fe5408a33cd732545c6020f0fde4075b8c46311ca6c6809a56f4a90dd7f6810"
+    },
+    {
+      "id": "C002-US-501",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 12,
+      "title": "Install the CLI from npm as `sdd`",
+      "content_hash": "sha256:9a2e4cbbb6a575ab312013c841e581d8ca2a18bde6ab1eb9f9f3706135330852"
+    },
+    {
+      "id": "C002-US-502",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 22,
+      "title": "The allowlist accepts a bare `sdd` command and `node --version`",
+      "content_hash": "sha256:6bbcf9cb4c1f0dd900828122f00c3e0bf40bcf9b52c42a9ce2cc89016736ffa0"
+    },
+    {
+      "id": "C002-US-503",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 32,
+      "title": "Doctor on every target",
+      "content_hash": "sha256:e9cbcdc383d1f657f716b0d9c340202c703c89786acbc0daa7f84c9e86b2bd6c"
+    },
+    {
+      "id": "C002-US-601",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 12,
+      "title": "Structure checks on every target package",
+      "content_hash": "sha256:f64086f35fe6791be420e3e8fd283f3d370e0ef3648682ce32177447bd48d473"
+    },
+    {
+      "id": "C002-US-602",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 22,
+      "title": "Guard corpora replayed against each enforcement mechanism",
+      "content_hash": "sha256:baf2d80ddc69a1d69c1a3cfef771a7d6cb1b441e4af45e40ed9ad1a2b01f1816"
+    },
+    {
+      "id": "C002-US-603",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 32,
+      "title": "Scripted evals on OpenCode",
+      "content_hash": "sha256:67f383d73e96dfd4c5deba8b8444c9f9d2c1bb0ab2326cd573b7fb31fc9aba99"
+    },
+    {
+      "id": "C002-US-604",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 42,
+      "title": "Scripted evals through Copilot CLI",
+      "content_hash": "sha256:897f3ffebdecb0ec84f7d203c3ce282ef31692d7332f6ad07be1ca1d9213178b"
+    },
+    {
+      "id": "C002-US-605",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 53,
+      "title": "Recorded manual VS Code checklist",
+      "content_hash": "sha256:a55f7de6c25b6e316484a9199205556655a02119c7ac6a101477037094b04351"
+    },
+    {
+      "id": "C002-US-606",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 63,
+      "title": "A target is released only with a proven boundary",
+      "content_hash": "sha256:38454ca659eb1a3eb3c67d3035867b0775fe9f763bfeb4eb40a7f08a08175372"
+    },
+    {
+      "id": "C002-US-607",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
+      "line": 73,
+      "title": "Claude Code unchanged",
+      "content_hash": "sha256:12d741a4916a29c43465cfd264f8fa7da65150dc901b69565cb29abd85e1539f"
     }
   ],
   "edges": [
+    {
+      "from": "C002-AS-01",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-AS-02",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-AS-03",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-AS-03",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-AS-04",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-01",
+      "to": "C002-DEC-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-02",
+      "to": "C002-DEC-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-03",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-04",
+      "to": "C002-DEC-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-05",
+      "to": "C002-DEC-008",
+      "relation": "references"
+    },
     {
       "from": "C002-DEC-001",
       "to": "C002-DEC-005",
@@ -153,8 +673,1023 @@
       "relation": "references"
     },
     {
+      "from": "C002-GOAL-01",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-01",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-01",
+      "to": "C002-SC-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-02",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-02",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-03",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-03",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-04",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-04",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-GOAL-05",
+      "to": "C002-SC-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NG-01",
+      "to": "C002-DEC-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NG-01",
+      "to": "C002-DEC-004",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NG-04",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
       "from": "C002-OA-001",
       "to": "C002-OA-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-01",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-01",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-01",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-02",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-02",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-02",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-03",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-04",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-05",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-SC-05",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-CAP-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-CON-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-DEC-006",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-SC-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-101",
+      "to": "C002-US-606",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-CAP-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-DEC-006",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-DEC-009",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-NG-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-102",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-CAP-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-DEC-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-DEC-002",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-OA-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-103",
+      "to": "C002-US-601",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-CAP-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-DEC-002",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-US-204",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-US-302",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-US-304",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-DEC-004",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-DEC-006",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-US-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-AS-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-AS-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-NG-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-202",
+      "to": "C002-US-602",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-AS-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-CAP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-US-403",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-R-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-205",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-205",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-205",
+      "to": "C002-US-403",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-DEC-004",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-DEC-006",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-301",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-AS-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-DEC-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-OA-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-AS-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-US-606",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-304",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-304",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-304",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-304",
+      "to": "C002-R-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-304",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-305",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-305",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-305",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-CAP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-DEC-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-401",
+      "to": "C002-US-602",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-CAP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-US-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-US-602",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-403",
+      "to": "C002-CAP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-403",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-403",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-404",
+      "to": "C002-CAP-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-404",
+      "to": "C002-CON-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-404",
+      "to": "C002-DEC-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-404",
+      "to": "C002-DEC-001",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-404",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-AS-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-CAP-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-DEC-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-501",
+      "to": "C002-US-404",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-CAP-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-CON-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-CAP-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-SC-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-US-303",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-DEC-006",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-GOAL-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-SC-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-SC-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-US-102",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-US-103",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-601",
+      "to": "C002-US-302",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-602",
+      "to": "C002-US-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-603",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-603",
+      "to": "C002-DEC-003",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-603",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-603",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-603",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-AS-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-DEC-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-DEC-003",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-NG-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-604",
+      "to": "C002-US-605",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-DEC-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-DEC-003",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-SC-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-605",
+      "to": "C002-US-303",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-CON-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-DEC-005",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-GOAL-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-SC-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-607",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-607",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-607",
+      "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-607",
+      "to": "C002-SC-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-607",
+      "to": "C002-US-502",
       "relation": "references"
     }
   ]
