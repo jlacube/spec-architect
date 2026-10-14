@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-14T03:26:17Z",
+  "generated_at": "2026-10-14T04:07:37Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -161,7 +161,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "00-ideation",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -170,7 +170,7 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "not-started",
+          "status": "draft",
           "approved_hash": null,
           "approved_at": null,
           "approved_by": null
