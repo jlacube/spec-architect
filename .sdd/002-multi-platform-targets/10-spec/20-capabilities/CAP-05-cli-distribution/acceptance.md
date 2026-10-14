@@ -116,6 +116,17 @@ Scenario: C002-TS-507 — missing tool on OpenCode
 ```
 
 ```gherkin
+@eval
+Scenario: C002-TS-639 — tool found only as a `.cmd` shim under sdd MCP server enforcement
+  Given machine configuration "cfg-full" on OpenCode on REF-WIN with the OpenCode target package generated with "--mode opencode=sdd-mcp-server"
+  And ast-grep installed only by "npm install -g @ast-grep/cli", so that PATH holds "ast-grep.cmd" and no native "ast-grep" executable
+  When P-01 runs the doctor command
+  Then the ast-grep row shows status "error", version "—" and its fallback
+  And its Fix column starts with "install a native executable of ast-grep", followed by the install command of the sdd MCP server variant of the doctor remedies table
+  And the doctor run reports "completed with warnings"
+```
+
+```gherkin
 @manual-vscode
 Scenario: C002-TS-508 — doctor table in VS Code
   Given the toy change repository in VS Code with "architect-sdd" installed
@@ -477,7 +488,7 @@ Scenario Outline: C002-TS-530 — plugin path in a template of the package
   Given the fixture "fx-plugin-tmpl" whose template "templates/<file>" holds "<text>" on line <line>
   When "npm run package" runs on that fixture
   Then the exit code is non-zero
-  And the message names the template "<file>" and line <line>, and contains "<construct>"
+  And the output holds the error ERR-BLD-002 naming the template "<file>" and line <line>, and containing "<construct>"
   Examples:
     | file                    | line | text                                                        | construct                   |
     | full/20-plan/plan.md    | 12   | The CLI lives at <plugin-root>/scripts/sdd.mjs.             | <plugin-root>/scripts/sdd.mjs |
@@ -520,7 +531,7 @@ Scenario: C002-TS-532 — repository templates merged, each path once
 | C002-REQ-501 | TS-501, TS-502 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-502 | TS-503 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-503 | TS-504 | TS-504 (PowerShell, node -v) | TS-504 (extra word) | TS-504, TS-505 | TS-504 | n/a | TS-504 (npx, sddx, chaining, redirection) |
-| C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions) | n/a | TS-507 | n/a | n/a | n/a |
+| C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639 | n/a | n/a | n/a |
 | C002-REQ-505 | TS-509 | TS-509 (Claude Code) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |

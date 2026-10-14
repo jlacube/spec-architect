@@ -202,6 +202,19 @@ Scenario: C002-TS-133 — adopter MCP server tool not available to an Architect 
   And "src/app.ts" is unchanged
 ```
 
+```gherkin
+Scenario Outline: C002-TS-640 — OpenCode agent tool map that is not closed
+  Given a generated "dist/opencode/opencode.json" in which the "tools" map of the agent "sdd-spec-writer" <tools map>
+  When the target structure check runs on the OpenCode target package
+  Then it reports <result>
+  Examples:
+    | tools map                                                                          | result                                                                    |
+    | starts with the catch-all entry "*": false, followed by the tools the table derives | no TGT-TOOLS-001 finding for "sdd-spec-writer"                            |
+    | has no catch-all entry "*"                                                          | the error TGT-TOOLS-001 naming "opencode.json", "sdd-spec-writer" and "*" |
+    | starts with the catch-all entry "*": true                                           | the error TGT-TOOLS-001 naming "opencode.json", "sdd-spec-writer" and "*" |
+    | holds the catch-all entry "*": false after the tools the table derives              | the error TGT-TOOLS-001 naming "opencode.json", "sdd-spec-writer" and "*" |
+```
+
 ## C002-REQ-109
 
 #### C002-AC-109.1 — Preloaded skills are part of the generated agent body
@@ -355,7 +368,7 @@ Scenario: C002-TS-125 — Serena started from the OpenCode declaration
 Scenario: C002-TS-126 — Serena declaration without the read-only option
   Given a generated "dist/copilot/.mcp.json" whose "serena" entry lacks the argument "--read-only"
   When the target structure check runs on the Copilot target package
-  Then it reports an error naming ".mcp.json", "serena" and "--read-only"
+  Then it reports the error TGT-SERENA-001 naming ".mcp.json", "serena" and "--read-only"
 ```
 
 ## C002-REQ-115
@@ -415,7 +428,7 @@ Scenario Outline: C002-TS-129 — server profiles per agent under sdd MCP server
 Scenario: C002-TS-130 — command tool granted to an agent without Bash
   Given a Copilot target package generated with "--mode copilot=sdd-mcp-server" in which "sdd-researcher.agent.md" lists "sdd-shell/*" in its "tools" field
   When the target structure check runs on that package
-  Then it reports an error naming "sdd-researcher" and "sdd-shell"
+  Then it reports the error TGT-TOOLS-001 naming "sdd-researcher.agent.md" and "sdd-shell/*"
 ```
 
 ## C002-REQ-118
@@ -455,7 +468,7 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 | C002-REQ-105 | TS-109 | TS-109 (three tiers, two targets) | n/a | TS-110 | n/a | n/a | n/a |
 | C002-REQ-106 | TS-111 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-107 | TS-112 | TS-112 (two targets) | n/a | n/a | TS-112 | n/a | TS-113 |
-| C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | n/a | n/a | TS-114, TS-133 | n/a | TS-133 (adopter MCP server with a write tool) |
+| C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | TS-640 (catch-all entry first, missing, `true` or last) | TS-640 | TS-114, TS-133, TS-640 | n/a | TS-133 (adopter MCP server with a write tool) |
 | C002-REQ-109 | TS-115 | TS-115 (two targets) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-110 | TS-116 | TS-116 (per-skill and per-agent budget) | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
 | C002-REQ-111 | TS-117, TS-118, TS-123 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |

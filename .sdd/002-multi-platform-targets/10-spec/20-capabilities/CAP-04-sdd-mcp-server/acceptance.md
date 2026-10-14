@@ -112,6 +112,36 @@ Scenario Outline: C002-TS-406 — command decisions
     | echo $(cat src/app.ts)                    | refused with GUARD-BASH-002  |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-641 — command decisions with the dialect argument
+  Given the server instance "sdd-shell" runs in "fx-srv", whose environment has no "CLAUDE_PLUGIN_DATA"
+  When an agent calls the command tool with "<command>" and the argument "dialect" set to "<dialect>"
+  Then the result is <result>
+  And "src/app.ts" is unchanged and "src/marker.txt" does not exist
+  Examples:
+    | dialect    | command                           | result                       |
+    | powershell | sdd status                        | the command's result         |
+    | powershell | Remove-Item -Recurse src          | refused with GUARD-BASH-001  |
+    | powershell | sdd status > src/marker.txt       | refused with GUARD-BASH-002  |
+    | powershell | sdd serena-launch src -- start-mcp-server | refused with GUARD-BASH-001 |
+    | bash       | sdd serena-config src             | refused with GUARD-BASH-001  |
+    | bash       | sdd serena-config C:/repo/.sdd    | refused with GUARD-BASH-001  |
+    | zsh        | sdd status                        | refused with ERR-MCP-001     |
+```
+
+```gherkin
+Scenario Outline: C002-TS-642 — allowed command whose executable cannot be started without a shell
+  Given the server instance "sdd-shell" runs in "fx-srv" on REF-WIN with a PATH on which <executables>
+  When an agent calls the command tool with "ast-grep --version"
+  Then the result is an error result with ERR-MCP-006 and the reason "<reason>"
+  And the result holds no exit code
+  And <after>
+  Examples:
+    | executables                                                                     | reason                              | after                               |
+    | "ast-grep" exists only as "ast-grep.cmd", a stub that records each start        | only a .cmd or .bat shim was found  | the stub "ast-grep.cmd" records no start |
+    | no file named "ast-grep" with any extension exists                              | not found on PATH                   | "src/marker.txt" does not exist     |
+```
+
 ## C002-REQ-406
 
 #### C002-AC-406.1 — Exit code, standard output and standard error returned
@@ -298,7 +328,7 @@ Scenario Outline: C002-TS-422 — missing or unknown profile
 | C002-REQ-402 | TS-402 | n/a | n/a | TS-402 | n/a | n/a | TS-402 (missing argument) |
 | C002-REQ-403 | TS-403, TS-404 | n/a | n/a | n/a: refused spans are C002-REQ-404 | n/a | n/a | n/a |
 | C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405 | n/a | n/a | n/a |
-| C002-REQ-405 | TS-406 | n/a | n/a | TS-406 | TS-406 | n/a | TS-406 (redirection, substitution) |
+| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH) | TS-406, TS-641 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository) |
 | C002-REQ-406 | TS-407 | TS-408 (failing command) | n/a | TS-408 | n/a | n/a | n/a |
 | C002-REQ-407 | TS-409 | n/a | n/a | n/a | n/a | n/a | TS-409 (PATH shadowing) |
 | C002-REQ-408 | TS-410 | TS-412 (no finding) | TS-411 (15 of 20) | n/a: C002-REQ-409 | n/a | n/a | n/a |

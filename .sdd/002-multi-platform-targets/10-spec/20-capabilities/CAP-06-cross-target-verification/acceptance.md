@@ -467,6 +467,21 @@ Scenario: C002-TS-629 — a memory write allowed on a generated target is a diff
   And the suite exits non-zero
 ```
 
+```gherkin
+Scenario Outline: C002-TS-638 — memory case of a non-Architect caller replayed as an Architect write
+  Given the path corpus case "PG-224" of category "memory", whose corpus caller is "general-purpose" and whose corpus expectation is "allow" for a "Write" to ".claude/agent-memory/architect-sdd-cartographer/MEMORY.md"
+  When the corpus replay suite runs against <mechanism>
+  Then the replay report lists "PG-224" as a replayed case with the expected decision "deny", the expected-decision source "C002-REQ-625" and the decision "deny"
+  And the report does not list "PG-224" as not applicable
+  And <caller>
+  And ".claude/agent-memory/architect-sdd-cartographer/MEMORY.md" does not exist in the replay fixture afterwards
+  Examples:
+    | mechanism                                                                                 | caller                                                                                         |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | the "write" call for "PG-224" was made by the generated Architect agent "sdd-conductor"        |
+    | the sdd MCP server                                                                        | "PG-224" was fed to the "sdd-files" server instance as a "write_file" call                    |
+    | the agent-scoped guard hooks (@mode-hooks)                                                | "PG-224" was fed to the agent-scoped guard hook command of the Architect agent "sdd-conductor" |
+```
+
 ## C002-REQ-626
 
 #### C002-AC-626.1 — Identity-category cases replayed against the OpenCode permission rules only, with an adopter agent as non-Architect caller
@@ -498,6 +513,20 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
     | the agent-scoped guard hooks (@mode-hooks)                                                | the IDs of the identity-category cases of both corpora     |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-637 — incomplete replay report refused at release
+  Given "fx-release" where the OpenCode target package uses <mode> and every other piece of OpenCode evidence is clean
+  And its replay report "<report>" reports 0 differing decisions and <defect>
+  When the release check runs for the OpenCode target
+  Then the release is refused with ERR-REL-012, naming "<report>", "<mechanism>", "<message part>" and "<case>"
+  And the release record has the outcome "refused" and lists ERR-REL-012 among its refusals
+  Examples:
+    | mode                          | report                           | mechanism            | defect                                              | message part                                  | case   |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | does not list the memory case "PG-205"              | omits cases                                   | PG-205 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | lists the memory case "PG-205" as not applicable    | lists cases as not applicable without a rule  | PG-205 |
+    | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the identity case "BG-258" as not applicable  | lists cases as not applicable without a rule  | BG-258 |
+```
+
 ## C002-REQ-628
 
 #### C002-AC-628.1 — Under the hooks fallback the checklist holds the Copilot injection cases, run in VS Code with hooks enabled
@@ -520,13 +549,13 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
   When the release check runs for the Copilot VS Code target
   Then the release is <outcome>
   Examples:
-    | mode                         | record                                                                                    | outcome                                                    |
-    | the Copilot hooks fallback   | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                    |
-    | the Copilot hooks fallback   | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused, naming the checklist record and its hooks state   |
-    | the Copilot hooks fallback   | no hooks state                                                                            | refused, naming the checklist record and its hooks state   |
-    | the Copilot hooks fallback   | hooks "enabled" and the Copilot injection case "INJ-07" acted upon (its step failed)      | refused, naming "INJ-07"                                   |
-    | the Copilot hooks fallback   | hooks "enabled" and no Copilot injection case step                                        | refused, naming the missing Copilot injection cases        |
-    | sdd MCP server enforcement   | no hooks state and no Copilot injection case step                                         | allowed                                                    |
+    | mode                         | record                                                                                    | outcome                                                                                                   |
+    | the Copilot hooks fallback   | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
+    | the Copilot hooks fallback   | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
+    | the Copilot hooks fallback   | no hooks state                                                                            | refused with ERR-REL-010, naming the checklist record and the hooks state "not recorded"                  |
+    | the Copilot hooks fallback   | hooks "enabled" and the Copilot injection case "INJ-07" acted upon (its step failed)      | refused with ERR-REL-002 naming "INJ-07" and with ERR-REL-004 naming the failed step                      |
+    | the Copilot hooks fallback   | hooks "enabled" and no Copilot injection case step                                        | refused with ERR-REL-011, naming the checklist record and the missing Copilot injection cases            |
+    | sdd MCP server enforcement   | no hooks state and no Copilot injection case step                                         | allowed                                                                                                   |
 ```
 
 ## Coverage table
@@ -556,16 +585,16 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
 | C002-REQ-621 | TS-624 | TS-624 (Copilot versions) | TS-624 (older and newer) | TS-624 | n/a | n/a | n/a |
 | C002-REQ-622 | TS-625 | TS-625 (server enforcement) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
-| C002-REQ-625 | TS-628 | TS-628 (three mechanisms) | n/a | TS-629 | n/a | n/a | TS-629 (memory write allowed) |
+| C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable) | n/a | n/a | TS-630 (adopter agent as non-Architect caller) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once) | n/a | n/a | n/a | n/a |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once) | TS-637 | n/a | n/a | TS-637 (case omitted or hidden as not applicable) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement needs no hooks state) | n/a | TS-633 | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on
 the content of a checklist, a corpus, a runner or a replay report have no failure path of their own;
-their absence fails the release check (C002-TS-621, C002-TS-633) or the review. *Authorization*: verification tooling runs for
+their absence fails the release check (C002-TS-621, C002-TS-633, C002-TS-637) or the review. *Authorization*: verification tooling runs for
 the maintainer; grant and boundary cases are covered where the requirement checks grants.
 *Concurrency/idempotency*: checks and suites run once per invocation on their own copies; the only
 repeat hazard, stale packages, is C002-TS-603. *Abuse*: the corpus and injection cases are the abuse

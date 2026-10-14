@@ -353,17 +353,21 @@ Scenario: C002-TS-329 — prompt files offered as slash commands in VS Code
 ```gherkin
 @mode-hooks
 Scenario: C002-TS-330 — tool classes file of the package
-  When "dist/copilot/hooks/tool-classes.json" and the "tools" fields of the ten agents and the 13 prompt files are parsed
-  Then every tool name granted by any of them is assigned exactly one of the classes "write", "terminal" and "read_only"
+  Given the Copilot target package generated for the Copilot hooks fallback
+  When the target structure check runs on that package
+  Then it reports no TGT-CLASS-001 finding
+  And "dist/copilot/hooks/tool-classes.json" assigns every tool name granted by any of the ten agents and the 13 prompt files exactly one of the classes "write", "terminal" and "read_only"
   And the tools the table maps Read, Glob and Grep to are in the class "read_only"
-  And the terminal tool is in the class "terminal"
+  And the terminal tool is in the class "terminal" with the terminal dialect of the Copilot mapping table
 ```
 
 ```gherkin
 @mode-server
 Scenario: C002-TS-331 — no tool classes file under sdd MCP server enforcement
-  When the file names of "dist/copilot/hooks/" are read
-  Then there is no "tool-classes.json"
+  Given the Copilot target package generated for sdd MCP server enforcement
+  When the target structure check runs on that package
+  Then it reports no TGT-CLASS-001 finding
+  And "dist/copilot/hooks/" holds no "tool-classes.json"
 ```
 
 ```gherkin
@@ -371,7 +375,7 @@ Scenario: C002-TS-331 — no tool classes file under sdd MCP server enforcement
 Scenario: C002-TS-332 — granted tool missing from the tool classes file
   Given a generated "dist/copilot/hooks/tool-classes.json" from which the tool the table maps Grep to is removed, while "sdd-critic.agent.md" grants that tool
   When the target structure check runs on the Copilot target package
-  Then it reports an error naming "tool-classes.json", that tool name and "sdd-critic"
+  Then it reports the error TGT-CLASS-001 naming "tool-classes.json", that tool name and "sdd-critic.agent.md"
 ```
 
 ## C002-REQ-319
