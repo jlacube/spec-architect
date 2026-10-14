@@ -101,7 +101,7 @@ Labels G-n, NG-n and SC-n become C002-GOAL, C002-NG and C002-SC IDs in the spec 
   packaging if the targets converge on it.
 - **Dependencies:** CHG-001 is not archived: CHG-002's deltas cite CHG-001 requirements under a
   temporary LINT-DELTA-001 waiver (C002-DEC-008); C001-T-075 (archive CHG-001) must precede CHG-002's
-  archive. Defect D-011 (CHG-001) overlaps the allowlist change.
+  archive. Defect D-011 (CHG-001) overlaps the allowlist change and stays open until CHG-002 implements it, so CHG-001's archive (which refuses open defects) waits for that CHG-002 task.
 - **Hand-over:** implemented in this repository like CHG-001 (task IDs in commits, progress via
   `sdd task set`).
 
@@ -167,7 +167,7 @@ Labels G-n, NG-n and SC-n become C002-GOAL, C002-NG and C002-SC IDs in the spec 
 | Assumption | If wrong |
 |---|---|
 | [ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` | the shell boundary on OpenCode moves to the MCP server |
-| [ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and lets an agent be limited to that server's tools | the Copilot target uses the agent-scoped hooks fallback (C002-DEC-005 exception) |
+| [ASSUMPTION: R-001] VS Code Copilot loads a plugin's `.mcp.json` and confines a subagent to its tool list (that server's tools) | if subagents are not confined to their tool list, the Copilot target uses the agent-scoped hooks fallback (C002-DEC-005 exception); if hooks do not block either, Copilot is deferred |
 | [ASSUMPTION: R-001] Copilot CLI loads the generated Copilot package and honours agent tool lists like VS Code | Copilot evals cover the MCP server in isolation; Copilot injection cases move to the manual checklist |
 | [ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to npm is acceptable (account, name) | agents use the bundled copy through a per-target path |
 
@@ -182,6 +182,8 @@ Labels G-n, NG-n and SC-n become C002-GOAL, C002-NG and C002-SC IDs in the spec 
 | Does Copilot CLI load the generated package (assumption above)? | researcher (spike S-08) | plan | deferred |
 | Supported (tested) versions of OpenCode, VS Code and the Copilot extension, recorded by the doctor | P-01 with researcher | spec | deferred |
 | Does VS Code ask P-01 to approve every `sdd` MCP tool call, and can the plugin pre-approve its own server? | researcher (spike S-08) | plan | deferred |
+| How the doctor detects disabled hooks (settings, organisation policy, per-folder workspace trust) on Copilot | researcher (spike S-08) | spec | deferred |
+| Scope of the version-probe fix of D-011 (`--version` for every probe or `node` only) | spec-writer | spec | deferred |
 
 ## 12. Sources
 - [C002-R-001](research/R-001-platform-facts.md) — its source list (official VS Code, GitHub Copilot and OpenCode documentation, retrieved 2026-10-14).

@@ -17,7 +17,7 @@ A target ships only when the write/shell boundary is enforced: the path and shel
 
 ## Options considered
 
-Presented: Same as Claude (recommended); Ship with a warning.
+Presented in round 1: Same as Claude (recommended); Ship with a warning. Round 3 (Q-guards-02): Defer Copilot (recommended); Ship with agent-scoped hooks — chosen. Round 4 (Q-guards-03): Defer Copilot (recommended) — chosen; Ship instructions-only + warning.
 
 ## Consequences
 

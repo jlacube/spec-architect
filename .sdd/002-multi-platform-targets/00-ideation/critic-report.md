@@ -15,15 +15,23 @@ C002-DEC-003, C002-OA-001 and C002-R-001 (unchanged).
 In CR-1…CR-15, line numbers refer to the first review (ideation v0.1.0). Re-review evidence refers
 to v0.2.0. `sdd lint 002 --phase 00-ideation --json`: 0 errors, 0 warnings, 0 info.
 
+**Confirmation (2026-10-14, step 7) of ideation v0.3.0.** Scope: CR-9, CR-12, CR-16 and CR-17
+only. They were checked against `ideation.md` v0.3.0, `questions-log.md` round 4, C002-DEC-001,
+C002-DEC-003 and C002-DEC-005, plus `DEC-007-cli-npm.md:24`, which CR-9's evidence cites. Nothing
+else was re-reviewed. "Confirmation" evidence refers to v0.3.0. `sdd lint 002 --phase 00-ideation
+--json`: 0 errors, 0 warnings, 0 info.
+
 ## Summary
-Open findings after the re-review:
+Open findings after the confirmation:
 
 | blocker | major | minor |
 |---|---|---|
-| 0 | 1 | 3 |
+| 0 | 0 | 0 |
 
-Resolved: CR-1, CR-2, CR-3, CR-4, CR-5, CR-6, CR-7, CR-8, CR-10, CR-11, CR-13, CR-14, CR-15.
-Still open: CR-9 and CR-12 (both minor, partly resolved). New: CR-16 (major) and CR-17 (minor).
+Resolved: CR-1 … CR-17. The re-review resolved CR-1…CR-8, CR-10, CR-11 and CR-13…CR-15, and the
+confirmation resolved CR-9, CR-12, CR-16 and CR-17. Still open: none. The notes recorded under
+CR-9, CR-16 and CR-17 are record corrections for the conductor and the spec writer. They are not
+findings and need no decision from P-01.
 
 ## Findings
 
@@ -98,7 +106,10 @@ Still open: CR-9 and CR-12 (both minor, partly resolved). New: CR-16 (major) and
 - **Re-review:** "the allowlist change is specified with defect D-011" — `00-ideation/ideation.md:62`; "merge with defect D-011" — `00-ideation/decisions/DEC-007-cli-npm.md:24`; "CHG-002's spec cites the CHG-001 requirements it changes as MODIFIED deltas" — `00-ideation/decisions/DEC-008-delta-sequencing.md:16`
 - **Why it matters:** G-5 is now worded correctly. But "specified with D-011" and "merge" leave open which change owns the bare-`sdd` requirement. It could be CHG-001's D-011 revision, in which case CHG-001 gains a CHG-002 feature and CHG-002 has no delta for it. Or it could be a CHG-002 MODIFIED delta of C001-REQ-1106 under C002-DEC-008, after D-011 lands. The spec writer needs to know which.
 - **Suggested fix:** In G-5, §5 and DEC-007, name the owning change. For example: "D-011's CHG-001 revision specifies `node --version` only; CHG-002 adds bare `sdd` as a MODIFIED delta of C001-REQ-1106 after D-011 closes".
-- **Status:** open — the G-5 wording is fixed (`ideation.md:62`), but which change specifies the bare-`sdd` allowlist is still ambiguous.
+- **Confirmation:** "the allowlist change (bare `sdd …`, and `node --version` from defect D-011) is specified in CHG-002, and D-011 is closed when CHG-002 implements it" — `00-ideation/ideation.md:64`. This agrees with "allowlist accepting `sdd …` (with D-011)" — `ideation.md:87` and with "merge with defect D-011" — `DEC-007-cli-npm.md:24`. Two notes, neither a decision for P-01:
+  - The CLI refuses to archive a change with an open defect: "for (const d of fm["defects"] ?? []) if (d["status"] === "open") out.push" — `sdd.mjs:11059`. C001-T-075 therefore also waits for the CHG-002 task that closes D-011, but §5 says only "C001-T-075 (archive CHG-001) must precede CHG-002's" — `ideation.md:103`.
+  - D-011 also proposes "(and '-v'/'--version' consistently for the other probes where the tool supports them)" — `.sdd/001-architect-agent-suite/change.md:23`, which G-5 does not mention. The spec should say whether the other probes are in scope.
+- **Status:** resolved — G-5 (`ideation.md:64`) names CHG-002 as the owner of both allowlist changes and says when D-011 closes.
 
 ### CR-10 — The problem statement overstates how target-neutral the CLI and skills are
 - **Severity:** minor
@@ -123,7 +134,8 @@ Still open: CR-9 and CR-12 (both minor, partly resolved). New: CR-16 (major) and
 - **Re-review:** "| Platforms change fast (hooks, plugins, tools are Preview) | high | medium | pin tested versions in the doctor; re-run spikes before each release |" — `00-ideation/ideation.md:160`. The open-questions table (`ideation.md:173-180`) has no row on the supported versions and none on per-call MCP approval.
 - **Why it matters:** The classification and the model baseline are now in place. Two items are still missing. Without supported versions there is nothing to pin in the doctor. And if VS Code asks P-01 to approve every MCP call, every `.sdd/` write on Copilot is interrupted, which is a workflow-fidelity risk that S-08 should measure.
 - **Suggested fix:** Add two deferred rows: supported OpenCode and VS Code/Copilot Chat versions (researcher, S-07/S-08, plan) and per-call approval of the `sdd` MCP tools in VS Code (researcher, S-08, plan).
-- **Status:** open — the Blocking column and the model-baseline question were added (`ideation.md:173-176`), but the version-baseline and MCP-approval questions are still missing.
+- **Confirmation:** "| Supported (tested) versions of OpenCode, VS Code and the Copilot extension, recorded by the doctor | P-01 with researcher | spec | deferred |" — `00-ideation/ideation.md:183`; "| Does VS Code ask P-01 to approve every `sdd` MCP tool call, and can the plugin pre-approve its own server? | researcher (spike S-08) | plan | deferred |" — `ideation.md:184`
+- **Status:** resolved — both missing rows are present, classified deferred, each with an owner and a phase (`ideation.md:183-184`).
 
 ### CR-13 — Questions-log entries lack protocol fields, and §3's "Answer (P-01)" column paraphrases
 - **Severity:** minor
@@ -163,7 +175,16 @@ Still open: CR-9 and CR-12 (both minor, partly resolved). New: CR-16 (major) and
   - Record what happens if S-08 shows that agent-scoped hooks do not block a subagent's calls (P-01: `Q-guards-03`).
   - Use Q-guards-02's trigger wording.
   - Replace the SessionStart check with a detection that does not depend on hooks, for example the heartbeat noted under OA-001 candidate A, checked by the CLI on the conductor's first `sdd` call.
-- **Status:** open
+- **Confirmation:**
+  1. Condition: "on condition that, with hooks enabled, the path and shell corpora still pass 100% and the injection evals show 0 instructions acted upon" — `DEC-005-safety-bar.md:16`. DEC-001 links to it rather than restating it ("which C002-DEC-005 records as an exception" — `DEC-001-copilot-guards.md:28`).
+  2. Chain end: "**Answer:** Defer Copilot (Recommended)" — `questions-log.md:159`, recorded as "the Copilot target is deferred to a later change; OpenCode still ships in CHG-002" — `DEC-005-safety-bar.md:16`.
+  3. Trigger: "if spike S-08 shows that Copilot subagents are not confined to their tool list" — `DEC-005-safety-bar.md:16`, with the same wording at `DEC-001-copilot-guards.md:28`.
+  4. Detection: "the doctor reads the VS Code settings (`chat.useHooks`, workspace trust) and reports hooks disabled — not a hook" — `DEC-005-safety-bar.md:25`.
+
+  Two nits remain, neither a decision for P-01:
+  - The assumption in §10 still sends a wider failure to the fallback. "VS Code Copilot loads a plugin's `.mcp.json` and lets an agent be limited to that server's tools | the Copilot target uses the agent-scoped hooks fallback (C002-DEC-005 exception)" — `ideation.md:170`. Only the confinement half matches P-01's trigger.
+  - DEC-005 lists "organisation policy" as one way hooks can be disabled (`DEC-005-safety-bar.md:16`), but the doctor reads only "(`chat.useHooks`, workspace trust)" (`:25`). The spec must give a check for policy and per-folder trust that can be carried out.
+- **Status:** resolved — DEC-005 now states the ship condition, the end of the chain (Q-guards-03), P-01's trigger wording and a detection that does not depend on hooks.
 
 ### CR-17 — DEC records carry round-3 content without a Decided row, and two stale statements remain
 - **Severity:** minor
@@ -174,17 +195,23 @@ Still open: CR-9 and CR-12 (both minor, partly resolved). New: CR-16 (major) and
   - Add a 2026-10-14 Decided row with P-01's words "Ship with agent-scoped hooks" to DEC-001 and DEC-005.
   - Change DEC-001 to "the same corpora as the other targets and the same guard cores as Claude Code".
   - Drop "(non-material)" from DEC-003.
-- **Status:** open
+- **Confirmation:**
+  - Decided rows: "| 2026-10-14 | P-01 (jerome.lacube) | "Ship with agent-scoped hooks" (Q-guards-02, fallback) |" — `DEC-001-copilot-guards.md:35`, and "| 2026-10-14 | P-01 (jerome.lacube) | "Ship with agent-scoped hooks" (Q-guards-02, the exception) |" — `DEC-005-safety-bar.md:31`. The Q-guards-03 rows are at `DEC-001-copilot-guards.md:36` and `DEC-005-safety-bar.md:32`. Their words match the log (`questions-log.md:122`, `:159`).
+  - DEC-001 now reads "using the CLI guard cores (`guard-path`, `guard-bash`) and the shared corpora. Claude Code keeps its PreToolUse hooks over the same cores; OpenCode uses its own permission engine, verified against the same corpora (spike S-07)." — `DEC-001-copilot-guards.md:16`.
+  - DEC-003 now reads "Question Q-eval-01 (material: it sets a release-gate condition)." — `DEC-003-copilot-evals.md:12`.
+
+  Nit, not a decision for P-01: "Presented: Same as Claude (recommended); Ship with a warning." — `DEC-005-safety-bar.md:20`. This lists only Q-safety-01's options. The Decided rows at `:31-32` come from Q-guards-02 and Q-guards-03, whose options are at `questions-log.md:117-119` and `:154-157`.
+- **Status:** resolved — the Decided rows are added with P-01's verbatim words and dates, the OpenCode statement is corrected, and DEC-003's label matches the log.
 
 ## Rubric
 | Rubric | Item | Result |
 |---|---|---|
 | ideation | I1 Problem stated and evidenced | pass (CR-10 resolved; `ideation.md:23-32` cites the baseline survey and C002-R-001) |
 | ideation | I2 Goals measurable | pass (CR-6 and CR-8 resolved; each goal G-1…G-5 has a measure, `ideation.md:58-62`) |
-| ideation | I3 Non-goals and scope boundary explicit | CR-9 (NG-4, hooks per target and Dependencies added; the owner of the allowlist change is still ambiguous) |
-| ideation | I4 Every material decision has a DEC with ≥ 2 presented options | CR-17 (C002-DEC-001…C002-DEC-009 each present ≥ 2 options; Decided rows and stale statements open) |
-| ideation | I5 Open questions classified with an owner | CR-12 (all rows classified "deferred" with owner and phase; two questions missing; none blocks G1) |
-| ideation | I6 Key risks and assumptions listed | CR-16 (CR-5 resolved; the hooks exception lacks its condition, its chain end and a working detection) |
+| ideation | I3 Non-goals and scope boundary explicit | pass (CR-9 resolved at confirmation; G-5 names CHG-002 as the owner of the allowlist change, `ideation.md:64`) |
+| ideation | I4 Every material decision has a DEC with ≥ 2 presented options | pass (CR-17 resolved at confirmation; C002-DEC-001…C002-DEC-009 each present ≥ 2 options, with Decided rows for rounds 3–4) |
+| ideation | I5 Open questions classified with an owner | pass (CR-12 resolved at confirmation; every row in `ideation.md:175-184` is classified "deferred" with an owner and a phase; none blocks G1) |
+| ideation | I6 Key risks and assumptions listed | pass (CR-16 resolved at confirmation; C002-DEC-005 states the condition, the chain end and a detection that does not depend on hooks) |
 | ideation | I7 Brownfield: baseline survey exists and is cited | pass (`ideation.md:29`, `:110`, `:185` at commit 74fe494) |
 | ideation | I8 Sources cited for external claims | pass (platform claims trace to C002-R-001; Copilot CLI loading is now an assumption, `ideation.md:169`) |
 | ideation | I9 Q&A answers logged verbatim, incl. embedded instructions | pass (CR-13 resolved; answers in rounds 1–3 match the DEC Decided words; "Extracted instructions: none" throughout) |
@@ -195,6 +222,16 @@ Stories, requirements, NFR, acceptance, domain/interfaces/architecture, DoD/inde
 ## Verdict
 **go**
 
-- No blocker, and none of the first review's findings were blockers. The revision resolves 13 of the 15 findings, including all seven majors. C002-DEC-004…C002-DEC-009 record P-01's answers verbatim, and every open question is classified with an owner and a phase. Lint is clean.
-- One major remains, CR-16. The hooks exception must state that it still passes the corpora with hooks on, must state what happens if S-08 also refutes agent-scoped hooks (`Q-guards-03`), and needs a detection that does not depend on hooks. It is not a G1 blocker, because the fallback only applies after S-08 in the plan, but the spec cannot write Copilot's ship requirement without it. Fix it before G1 or present it at the gate.
-- Minors CR-9, CR-12 and CR-17 are record corrections that the conductor can make without P-01.
+- No finding is open at any severity. Ideation v0.3.0 resolves the four findings that the
+  re-review left open. CR-16's end of chain rests on P-01's round-4 answer "Defer Copilot
+  (Recommended)" (`questions-log.md:159`), recorded in C002-DEC-005 and C002-DEC-001. Lint is
+  clean.
+- Notes for the conductor and the spec writer, none of which needs P-01:
+  1. C001-T-075 must follow the CHG-002 task that closes D-011, because archive refuses open
+     defects (CR-9).
+  2. D-011's other probes need a scope line in the spec (CR-9).
+  3. The Copilot assumption in §10 routes a wider failure to the fallback than P-01's trigger
+     (CR-16).
+  4. The doctor's checks for policy and per-folder trust need a method that can be carried out
+     (CR-16).
+  5. DEC-005 "Options considered" omits the options of rounds 3 and 4 (CR-17).

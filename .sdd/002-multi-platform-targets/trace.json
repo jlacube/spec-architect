@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T00:07:17.865Z",
+  "generated_at": "2026-10-14T00:59:36.137Z",
   "nodes": [
     {
       "id": "C002-DEC-001",
@@ -8,7 +8,7 @@
       "file": "00-ideation/decisions/DEC-001-copilot-guards.md",
       "line": 1,
       "title": "",
-      "content_hash": "sha256:c085f7ca55d415339ea5a2121becc592ba927ca8d866652a6a8c586f2daad454",
+      "content_hash": "sha256:ac97ee2504d169d5239c020664b57b550aca25fe37e14e41640187f3b2990eb4",
       "status": "accepted"
     },
     {
@@ -26,7 +26,61 @@
       "file": "00-ideation/decisions/DEC-003-copilot-evals.md",
       "line": 1,
       "title": "",
-      "content_hash": "sha256:106e4c8cb610450837fb2737759e43bbd9084cef5382916daed30c06147f3dc8",
+      "content_hash": "sha256:3dd3f95d9aba9113b72e6b7f705f2504f792930745376b9d86c00d9610d06385",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-004",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-004-targets.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:57033cbe0ed64c6f5cc99a7f091494e5681dde9396a602926348f163bfea72d5",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-005",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-005-safety-bar.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:defd58dc2d4c82b6860e61f0f45fb638ee0debc24b4d380264fa2e65cd06a226",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-006",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-006-generated-packages.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:7f91d0f6508e9638f3f39de05b522376998ad506d2a11838ca72a4ada4cca08a",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-007",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-007-cli-npm.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:b359f0823f7fb53f5cb11992a9b69d852d1ffa5737b3ed864998e7942c21e416",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-008",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-008-delta-sequencing.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:4acc1dd06e6d36b521a88bd1d0a62d708dabb51a7779fe6549d685d34434ad8f",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-DEC-009",
+      "type": "DEC",
+      "file": "00-ideation/decisions/DEC-009-agent-memory.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:9011abef932f309339a7e5184e90f772f02d347c93e052f80c78caf77b7bbd3c",
       "status": "accepted"
     },
     {
@@ -60,6 +114,16 @@
   "edges": [
     {
       "from": "C002-DEC-001",
+      "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-001",
+      "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-001",
       "to": "C002-OA-001",
       "relation": "references"
     },
@@ -75,6 +139,16 @@
     },
     {
       "from": "C002-DEC-003",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-004",
+      "to": "C002-DEC-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-DEC-007",
       "to": "C002-R-001",
       "relation": "references"
     },
