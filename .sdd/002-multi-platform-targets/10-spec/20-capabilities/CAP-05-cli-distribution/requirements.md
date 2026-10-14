@@ -17,7 +17,7 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE `architect-sdd` package SHALL install an executable named `sdd` that runs the sdd CLI built from the same source and version as the bundled `scripts/sdd.mjs`.
-- **Rationale:** C002-DEC-007; C002-GOAL-04; today `package.json` is private and has no `bin` (current-state E-3); the Claude Code plugin keeps its bundled copy
+- **Rationale:** C002-DEC-007; C002-GOAL-04; today `package.json` is private and has no `bin` (current-state E-3); the Claude Code plugin keeps its bundled copy; the files the CLI reads beside its bundle are shipped by C002-REQ-512
 - **Stories:** C002-US-501
 - **Priority:** Must
 - **Acceptance:** C002-AC-501.1
@@ -45,8 +45,8 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-504 — Doctor table per host
 - **Delta:** MODIFIED C001-REQ-1110
 - **Pattern:** event-driven
-- **Statement:** WHEN the doctor command runs, THE conductor SHALL print a table with, for each of node, git, the host it runs on (Claude Code, OpenCode, or VS Code with GitHub Copilot Chat), ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI, its status (ok, missing, unreachable, error or untested), version, fallback and, for rows other than ok, the install or fix command from the doctor remedies table (C001-IF-10 §3).
-- **Rationale:** C002-US-503; on Claude Code the rows are those of today (C002-GOAL-05); status `untested`: C002-REQ-508
+- **Statement:** WHEN the doctor command runs, THE conductor SHALL print a table with, for each of node, git, the host it runs on (Claude Code, OpenCode, or VS Code with GitHub Copilot Chat), ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI, its status (ok, missing, unreachable, error or untested), version (for VS Code with GitHub Copilot Chat: the VS Code version and the GitHub Copilot Chat version), fallback and, for rows other than ok, the install or fix command from the doctor remedies table (C001-IF-10 §3).
+- **Rationale:** C002-US-503; on Claude Code the rows are those of today (C002-GOAL-05); status `untested`: C002-REQ-508; both versions are pinned for Copilot VS Code (glossary: tested version), so the host row shows both (C002-IF-006 §2)
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-504.1
@@ -85,12 +85,12 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-508 — Untested host version
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHILE the conductor runs on a generated target, IF the detected host version differs from the tested version recorded for that target in the doctor remedies table, THEN THE conductor SHALL show the host row with status `untested` and the tested version in its fix column.
-- **Rationale:** Q-versions-01 (spec round 1): "Pin spike-tested versions" — the tested version is the host version recorded by the spike that validated the target, shown by the doctor and re-checked before each release (C002-REQ-621); `untested` is a warning, not a failure (C002-REQ-505)
+- **Statement:** WHILE the conductor runs on a generated target, IF a detected host version (the OpenCode version; in VS Code, the VS Code version or the GitHub Copilot Chat version) differs from its tested version recorded for that target in the doctor remedies table, THEN THE conductor SHALL show the host row with status `untested` and the tested versions in its fix column.
+- **Rationale:** Q-versions-01 (spec round 1): "Pin spike-tested versions" — the tested version is the host version recorded by the spike that validated the target, shown by the doctor and re-checked before each release (C002-REQ-621); for Copilot VS Code both versions are pinned, so a difference in either one is untested; `untested` is a warning, not a failure (C002-REQ-505)
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-508.1
-- **Open items:** how the doctor reads the OpenCode, VS Code and GitHub Copilot Chat versions without widening the Claude Code allowlist beyond C002-REQ-503 is settled in the architecture step.
+- **Open items:** settled in C002-IF-006 §2: the doctor reads the OpenCode, VS Code and GitHub Copilot Chat versions through the sdd CLI (C002-IF-007, `host-version`), so the allowlist stays as C002-REQ-503 sets it.
 
 ### C002-REQ-509 — sdd CLI of another version
 - **Delta:** ADDED
@@ -104,9 +104,63 @@ entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-510 — Disabled hooks reported under the hooks fallback
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHERE the Copilot hooks fallback is used, WHEN the doctor command runs in VS Code, THE conductor SHALL show a Copilot hooks row with status `error` when hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy, and status `ok` otherwise.
-- **Rationale:** C002-DEC-005 (Consequences: the doctor reads the VS Code settings, not a hook, which could not report its own absence)
+- **Statement:** WHERE the Copilot hooks fallback is used, WHEN the doctor command runs in VS Code, THE conductor SHALL show a Copilot hooks row with status `ok` only when it reads that hooks are enabled, and with status `error` when hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy or when it cannot read the hooks state.
+- **Rationale:** C002-DEC-005 (Consequences: the doctor reads the VS Code settings, not a hook, which could not report its own absence); a hooks state the doctor cannot read is shown as `error`, never as `ok`, so an unread state is not reported as protected (C002-IF-006 §2, `hooks unknown`)
 - **Stories:** C002-US-503, C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-510.1
 - **Open items:** how the doctor detects each disabling source is open for spike S-08 (ideation §11).
+
+### C002-REQ-511 — Bare version from `sdd --version`
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd --version` runs, THE sdd CLI SHALL print its version as a bare semantic version (`<major>.<minor>.<patch>`) on one line and exit with code 0.
+- **Rationale:** the doctor compares the reachable CLI with the target package version (C002-REQ-509, C002-IF-006 §2), the server test tells its own CLI from a PATH `sdd` by this output (C002-TS-409), and the install test compares both executables (C002-TS-501); C002-TS-515 relies on it as well; today only `sdd version` exists and prints `architect-plugin@<semver>`, which stays (`src/cli/commands.ts:508`; C001-IF-01); contract C002-IF-007
+- **Stories:** C002-US-501
+- **Priority:** Must
+- **Acceptance:** C002-AC-511.1
+
+### C002-REQ-512 — Templates and the Serena read-only mode file in `architect-sdd`
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE `architect-sdd` package SHALL contain every template of the source plugin's `templates/` folder and the source plugin's Serena read-only mode file.
+- **Rationale:** without `CLAUDE_PLUGIN_ROOT` the CLI looks up templates in the folder above its bundle (`src/workspace/templates.ts:33`; current-state E-7), so `sdd change new` (C002-TS-502) and `sdd template show` fail on the generated targets without them (C002-IF-003 §1); `sdd serena-launch` takes the read-only mode file from beside the CLI (C002-IF-007; C002-REQ-114); C002-REQ-412 and C002-REQ-501 cover the executables only
+- **Stories:** C002-US-504, C002-US-505
+- **Priority:** Must
+- **Acceptance:** C002-AC-512.1
+
+### C002-REQ-513 — Template lookup through the CLI
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd template show <profile>/<path>` runs, THE sdd CLI SHALL print the repository's template `.sdd/_templates/<profile>/<path>` if that file exists, and otherwise the template `<profile>/<path>` shipped with the CLI.
+- **Rationale:** the generated bodies name templates through this command (C002-REQ-115); the repository override keeps its precedence, as for `sdd change new` (`src/workspace/templates.ts:58`; C001-COMP-13); `<profile>` is `full`, `lite` or `constitution` (C002-IF-007)
+- **Stories:** C002-US-504
+- **Priority:** Must
+- **Acceptance:** C002-AC-513.1
+
+### C002-REQ-514 — Unknown template refused
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd template show` names a template that exists neither under `.sdd/_templates/` nor among the templates shipped with the CLI, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-019` naming the profile and the path.
+- **Rationale:** C001-NFR-601 (actionable messages); `../../50-interfaces/errors.md` §5 (the fix lists the templates with `sdd template list <profile>`); C002-IF-007 exit codes
+- **Stories:** C002-US-504
+- **Priority:** Must
+- **Acceptance:** C002-AC-514.1
+
+### C002-REQ-515 — Serena data in the per-user data folder
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd serena-config` or `sdd serena-launch` runs with the option `--user-data`, THE sdd CLI SHALL use the per-user data folder of `architect-sdd` as Serena's data folder.
+- **Rationale:** C001-REQ-1013 carried to the generated targets, which cannot rely on `${CLAUDE_PLUGIN_DATA}` (C002-R-001 A-09): Serena's configuration and project data stay outside the repository; the doctor and init commands pass `--user-data` there (C002-REQ-116, C002-IF-006 §4) and so does the Serena launch of the target packages (C002-REQ-114); the folder per operating system is fixed in C002-IF-007; on Claude Code the data-folder argument stays (current-state E-22)
+- **Stories:** C002-US-505
+- **Priority:** Must
+- **Acceptance:** C002-AC-515.1
+
+### C002-REQ-516 — Per-user data folder not determinable
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the option `--user-data` is given and the per-user data folder cannot be determined, THEN THE sdd CLI SHALL exit with code 2 and error `ERR-CLI-020` without writing a Serena configuration or starting Serena.
+- **Rationale:** without its configuration Serena writes `<repo>/.serena/` (C001-REQ-1013, spikes S-02 and S-06); C001-NFR-601; `../../50-interfaces/errors.md` §5
+- **Stories:** C002-US-505
+- **Priority:** Must
+- **Acceptance:** C002-AC-516.1

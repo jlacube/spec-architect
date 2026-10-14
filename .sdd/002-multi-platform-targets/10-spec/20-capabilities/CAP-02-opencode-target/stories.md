@@ -15,8 +15,8 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** I can start the conductor in OpenCode and take a change through ideation to gate G1
 - **Value / outcome:** C002-SC-01; C002-GOAL-01, C002-GOAL-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-02
-- **Context & notes:** Agents go to `.opencode/agents/`, commands to `.opencode/commands/`, skills to `.opencode/skills/` (ideation §8; C002-R-001 C-07, C-08). The conductor is the primary agent; the nine specialists are subagents that only the conductor starts (OpenCode `permission.task`, C002-R-001 C-08). OpenCode commands keep `$ARGUMENTS`. The MCP servers of the source plugin (Context7, DeepWiki, Serena) are declared in `opencode.json` and their tools are named `<server>_<tool>` (C002-R-001 C-09); Serena's context on OpenCode is an open research item (baseline survey §4 note 6). Agents call the CLI as a bare `sdd` command from `architect-sdd` (C002-US-501). The install notes replace today's Claude-only `INSTALL.md` for this package (current-state E-1).
-- **Requirements:** C002-REQ-201, C002-REQ-202, C002-REQ-203, C002-REQ-204, C002-REQ-205
+- **Context & notes:** Agents go to `.opencode/agents/`, commands to `.opencode/commands/`, skills to `.opencode/skills/` (ideation §8; C002-R-001 C-07, C-08). The conductor is the primary agent; the nine specialists are subagents that only the conductor starts (OpenCode `permission.task`, C002-R-001 C-08). OpenCode commands keep `$ARGUMENTS` and are named `architect-<name>`, clear of OpenCode's built-in `/new` and `/init` (C002-IF-001 §2). The MCP servers of the source plugin (Context7, DeepWiki, Serena) are declared in `opencode.json` and their tools are named `<server>_<tool>` (C002-R-001 C-09); Serena's context on OpenCode is an open research item (baseline survey §4 note 6). Agents call the CLI as a bare `sdd` command from `architect-sdd` (C002-US-501). The install notes replace today's Claude-only `INSTALL.md` for this package (current-state E-1).
+- **Requirements:** C002-REQ-201, C002-REQ-202, C002-REQ-203, C002-REQ-204, C002-REQ-205, C002-REQ-216
 - **Traces to:** ideation §5, §8; C002-DEC-004, C002-DEC-006, C002-DEC-007
 
 ### C002-US-202 — Write/shell boundary through OpenCode permissions
@@ -36,7 +36,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **Value / outcome:** C002-GOAL-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-02
 - **Context & notes:** Conditional on the outcome of spike S-07 (C002-AS-02 wrong). The server is the one of C002-CAP-04. The fallback is the server and not an OpenCode plugin on `tool.execute.before`, because that hook carries no agent identity (ideation §9; C002-R-001 C-06). With the fallback, the post-write quick lint comes with each write (C002-US-403).
-- **Requirements:** C002-REQ-209, C002-REQ-210
+- **Requirements:** C002-REQ-209, C002-REQ-210, C002-REQ-117
 - **Traces to:** ideation §8, §9; C002-DEC-001 (Consequences)
 
 ### C002-US-204 — Interviews and gates through OpenCode's question tool

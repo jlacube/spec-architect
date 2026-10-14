@@ -1,11 +1,12 @@
 {
   "change": "CHG-002",
-  "allocated": { "OA": 4, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 12 },
+  "allocated": { "OA": 4, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 12, "REQ": 624 },
   "blocks": [],
   "tombstones": [
     { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
     { "id": "C002-OA-004", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
     { "id": "C002-R-002", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
-    { "id": "C002-US-001", "reason": "allocated without a capability block (ledger has no blocks; --block ignored); stories use block numbering US-101 onwards (unused)", "date": "2026-10-14" }
+    { "id": "C002-US-001", "reason": "allocated without a capability block (ledger has no blocks; --block ignored); stories use block numbering US-101 onwards (unused)", "date": "2026-10-14" },
+    { "id": "C002-REQ-624", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during spec step 3 rework; new requirements use block numbering (unused)", "date": "2026-10-14" }
   ]
 }

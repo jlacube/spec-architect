@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T07:33:49.762Z",
+  "generated_at": "2026-10-14T11:09:58.463Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -792,7 +792,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
       "line": 1,
       "title": "Target generation",
-      "content_hash": "sha256:d6be1dddb29e958056143038f4490e2345c95961c04696f6153ffe8a6f5837ff",
+      "content_hash": "sha256:7aae04ccdea55293f868aa94f7582bf8b28fc5150d955d1515b1f99bb6c30b1e",
       "status": "draft"
     },
     {
@@ -801,7 +801,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
       "line": 1,
       "title": "OpenCode target",
-      "content_hash": "sha256:00d550689dccde45841f59cdade22829dd43c9c1f055273b259065d90127566d",
+      "content_hash": "sha256:108cab316dde6e74d5f29dd01bd33e2ebb55f5b5bd60d4746a4413f10fbb0e54",
       "status": "draft"
     },
     {
@@ -810,7 +810,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 1,
       "title": "Copilot VS Code target",
-      "content_hash": "sha256:276e369079e2a3b00fb0e092cd0748167b13ac5ff305246b58d3b88805ace3e0",
+      "content_hash": "sha256:cb6b7eefbd55b9489a85016eb1b3c1c6ff7b9d31a0f77598d1e22e6fa853c12c",
       "status": "draft"
     },
     {
@@ -819,7 +819,7 @@
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
       "line": 1,
       "title": "sdd MCP server",
-      "content_hash": "sha256:6850712ee2a10cf3d9ae93bee192526dc5086f897eed120fd13ae38f8aa7a8e7",
+      "content_hash": "sha256:e08f322a01a4a3d1df69465cc7ceced4d2e659c60c497046e1f68194ca4f360a",
       "status": "draft"
     },
     {
@@ -828,7 +828,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:1a0f6dbd982a02a91a1ff133970127dc9c078f9a0063fd95b1cac6bca027452d",
+      "content_hash": "sha256:662e79ed9c242c8069d34b1eaba26295cd671ee463d0e68ccd259dc50514846d",
       "status": "draft"
     },
     {
@@ -1842,7 +1842,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 81,
       "title": "Least-privilege tool grants",
-      "content_hash": "sha256:93445e400b4531ec64321080c8a7ec8d4d63811c2db518a5752af0f04f0e929a"
+      "content_hash": "sha256:5bc22748cf769a8460467227294cd09362de65aeab543194251808c80e476851"
     },
     {
       "id": "C002-REQ-109",
@@ -1858,7 +1858,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 99,
       "title": "Inlining budget enforced on generated agents",
-      "content_hash": "sha256:f984543a04afbf234778a4667f2abfbd6c255316cad2a27c14c2e368a686c4e0"
+      "content_hash": "sha256:c6cbce0afdbb8706e6ca511cc64f676a765498dca36c0bc041477d4eb64e6cab"
     },
     {
       "id": "C002-REQ-111",
@@ -1866,7 +1866,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 109,
       "title": "Wiring variant per target",
-      "content_hash": "sha256:84a3da1fdbaaded78da8a7198dae8401bb0cae43b6cec29f290830d1f4771519"
+      "content_hash": "sha256:28d56adf4b2d1cba66bbdb15a55a86a190eec76b8d8e959efd610282d92a489d"
     },
     {
       "id": "C002-REQ-112",
@@ -1874,7 +1874,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 118,
       "title": "Missing wiring variant stops generation",
-      "content_hash": "sha256:ede3fa47bf0b78c235af722ae0a6ea84549f8232b56c6eadd41fe264490d767f"
+      "content_hash": "sha256:e64c1278a69152fb9440265c8399f8b9a49c05d833819f6e8e4b0155382a6aec"
     },
     {
       "id": "C002-REQ-113",
@@ -1882,7 +1882,47 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
       "line": 127,
       "title": "Variants kept out of the Claude Code skill bodies",
-      "content_hash": "sha256:45f247933cf482e6d4ed2d39dc8a4359ac1dfd82230aae5b8ceb89ee566e78e5"
+      "content_hash": "sha256:5534481fc62f99b77a4876414ae074116270ead298898cfa4774f1bb490bd0d6"
+    },
+    {
+      "id": "C002-REQ-114",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
+      "line": 136,
+      "title": "Serena read-only with per-user data on the generated targets",
+      "content_hash": "sha256:1ebfb118dd1ce9084b20d218b18081d6abb991bace1079faea59c711f7f9be0e"
+    },
+    {
+      "id": "C002-REQ-115",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
+      "line": 146,
+      "title": "Templates named through the CLI",
+      "content_hash": "sha256:aeb0d6d5ae7ab69578e24216346b695184bd703d974fe27e71918eb0d29da466"
+    },
+    {
+      "id": "C002-REQ-116",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
+      "line": 155,
+      "title": "Plugin data folder replaced by the per-user data folder",
+      "content_hash": "sha256:a8b9e074978e151e01f98609cc60a38db71031b1221811d8e86c5b39cabc51db"
+    },
+    {
+      "id": "C002-REQ-117",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
+      "line": 164,
+      "title": "Server profiles granted by source tool",
+      "content_hash": "sha256:6a64505a1890cd46452a979a053db8f997fca830129619c8e3052802988d3e47"
+    },
+    {
+      "id": "C002-REQ-118",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-01-target-generator/requirements.md",
+      "line": 173,
+      "title": "Host question tool named in agent and command bodies",
+      "content_hash": "sha256:39229768cb266366beeb6f9187c0513adadc781fb28285b22b8543539379da4b"
     },
     {
       "id": "C002-REQ-201",
@@ -1890,7 +1930,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
       "line": 17,
       "title": "OpenCode target package contents",
-      "content_hash": "sha256:c9a84a9589c507e96b7116bbdc70de4ed2dc4d0d34561ff3c86558bc7590fbb2"
+      "content_hash": "sha256:7bfa5d5ab33534f89fe44b3735f5d32a27538713e24b0149eb3e561c821418b2"
     },
     {
       "id": "C002-REQ-202",
@@ -1961,8 +2001,8 @@
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
       "line": 100,
-      "title": "Server fallback: write and command tools through the server",
-      "content_hash": "sha256:93f0b2285f6c357a435ad82cf19a30521051b9d2defe524a09b7c15be118c654"
+      "title": "Server fallback: two server profiles declared",
+      "content_hash": "sha256:2bb803346503b1498a28a4f50ad96b434c82b786dfd07d2339ee43373799c0a9"
     },
     {
       "id": "C002-REQ-211",
@@ -1970,7 +2010,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
       "line": 109,
       "title": "Round size on the host's question tool",
-      "content_hash": "sha256:0d7700b4932031b02243f57e06207c98bab7d1c54c289480d4b8b456cbe2d4a8"
+      "content_hash": "sha256:af6b0bc9d89aeece6136a897b55631037ae718108666ae1e0d232dbd0c3a9b43"
     },
     {
       "id": "C002-REQ-212",
@@ -2005,12 +2045,20 @@
       "content_hash": "sha256:2c219116f66262c1dfe80c32bcfa4b46f9061cc866cd41845419ce52b0ab62f6"
     },
     {
+      "id": "C002-REQ-216",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
+      "line": 157,
+      "title": "OpenCode command names",
+      "content_hash": "sha256:a63719586d2a06071df8907d070bc1f82a720554b89c32a483487ffa35ef34d3"
+    },
+    {
       "id": "C002-REQ-301",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 16,
       "title": "Copilot target package contents",
-      "content_hash": "sha256:e4d1f81f108207174862ab583d29078b69cf2eb38ceb8cd5a3c3f28da2ab0efd"
+      "content_hash": "sha256:6dbb7a3faeae41b16164ac31f7845fa2f94073771bc3e5fa1e48d3a870c928fb"
     },
     {
       "id": "C002-REQ-302",
@@ -2057,8 +2105,8 @@
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 71,
-      "title": "Write and command tools through the server",
-      "content_hash": "sha256:1fd841de00dc9b6f1441d56556501e4b8e1f54ad45d3dcbc96936431a3461c9b"
+      "title": "Server mode: two server profiles declared",
+      "content_hash": "sha256:ed61232d39f3988a97864b823529d35e554deab3ba44104c69cdec7a22a24a08"
     },
     {
       "id": "C002-REQ-308",
@@ -2074,7 +2122,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 91,
       "title": "Guard hooks deny on their own faults",
-      "content_hash": "sha256:b9e715933fa92a05c4f1f4faec175b9df0379d5c9607c89fd4dd4cf7461dada0"
+      "content_hash": "sha256:a57c8a77741c9e76c7c150635961d483d31c819c0bf1355965f6e9e7256aa1e7"
     },
     {
       "id": "C002-REQ-310",
@@ -2133,12 +2181,36 @@
       "content_hash": "sha256:356917fe8ba2ebf304dd8fcc2e713921283dcbf83dea4ddfcb00042f0a785b44"
     },
     {
+      "id": "C002-REQ-317",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
+      "line": 164,
+      "title": "Copilot prompt file names",
+      "content_hash": "sha256:486b5f6ef5d0b95d953e006ae2733349e759d13979940b62266e2854ede9798a"
+    },
+    {
+      "id": "C002-REQ-318",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
+      "line": 174,
+      "title": "Tool classes under the hooks fallback",
+      "content_hash": "sha256:f287111d108856555ee7873864373884544ac74f8c703e91c8cb39b9615b46c5"
+    },
+    {
+      "id": "C002-REQ-319",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
+      "line": 183,
+      "title": "Read-only tool calls pass the guard hook",
+      "content_hash": "sha256:78adf5b5cb0bcdc4b959a2b656dbdde8de91c5b1cf41a178ae8adfebbb7f06fd"
+    },
+    {
       "id": "C002-REQ-401",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/requirements.md",
       "line": 14,
       "title": "Writes confined to `.sdd/`",
-      "content_hash": "sha256:11d3452bbec9606d97e88b0216b7be51c722ff70eb0f9528f65c1b815097b432"
+      "content_hash": "sha256:97777b6b0a22ea13ca2e9de02446b1fc2274a98ec6871a7d8df114c31dabe01f"
     },
     {
       "id": "C002-REQ-402",
@@ -2226,7 +2298,7 @@
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/requirements.md",
       "line": 114,
       "title": "Shipped in `architect-sdd`",
-      "content_hash": "sha256:6ebcfa206cd5deedef719f56e2c012dcf483d4fae7e7271c7c7bbf9e4d650c43"
+      "content_hash": "sha256:a1add8581374ec4f6b8cf011ce674fa1f5e0f89bb2540885881d5b914ca26ea9"
     },
     {
       "id": "C002-REQ-413",
@@ -2245,12 +2317,20 @@
       "content_hash": "sha256:f8eb6f5afbbf4e8b1a8f7f164702a280f614aea1f573199327653e7f058c3ed6"
     },
     {
+      "id": "C002-REQ-415",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/requirements.md",
+      "line": 141,
+      "title": "One tool set per server profile",
+      "content_hash": "sha256:0714bc4868e63fb8810e861c0296f29ea4b9d15431d04b3affca30a40203ad3f"
+    },
+    {
       "id": "C002-REQ-501",
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 16,
       "title": "`sdd` executable from npm",
-      "content_hash": "sha256:172c2e4c4b7205cffa7c68dbe3b489f8039bf47a51593aa1d63aa2d136665450"
+      "content_hash": "sha256:27b2b0777fc2f72995c41987494713412111ecea837abc772fc595c825c903cf"
     },
     {
       "id": "C002-REQ-502",
@@ -2274,7 +2354,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 45,
       "title": "Doctor table per host",
-      "content_hash": "sha256:8185b30fb561838a0d9e54b45835b1e8a55e6e63f196f06e512b52052cd2d42b"
+      "content_hash": "sha256:d3df0c058429bd8e716163766bb8ca6f9ac668f1dd5b616f16b9f572f4a5df9a"
     },
     {
       "id": "C002-REQ-505",
@@ -2306,7 +2386,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 85,
       "title": "Untested host version",
-      "content_hash": "sha256:42f3ba8402ecd9aa8253e52032df2a8539f1863b92a19a8a321fe9705da030c3"
+      "content_hash": "sha256:80cbb50f41ee962312ab836676da7d7e201b7f1206a274080c25e4a53b60a5a1"
     },
     {
       "id": "C002-REQ-509",
@@ -2322,7 +2402,55 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 104,
       "title": "Disabled hooks reported under the hooks fallback",
-      "content_hash": "sha256:a18917589a967558f18850a0415b14c0ef4c23423cca1e53e375daa0887c4b39"
+      "content_hash": "sha256:ea278e932bcd5ec27e959aba8143e249fbdddacacea95bf589dc0bc781657507"
+    },
+    {
+      "id": "C002-REQ-511",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 114,
+      "title": "Bare version from `sdd --version`",
+      "content_hash": "sha256:277d7d3d89581e0c796666a2302411e42870f16b862bfe573eb2ad90f905c298"
+    },
+    {
+      "id": "C002-REQ-512",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 123,
+      "title": "Templates and the Serena read-only mode file in `architect-sdd`",
+      "content_hash": "sha256:28932c9a407f0e6104e35ddded806d201a4baa16e2ce1d70b64c925b7e126962"
+    },
+    {
+      "id": "C002-REQ-513",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 132,
+      "title": "Template lookup through the CLI",
+      "content_hash": "sha256:d54cad9238a81b0f8be5d801cc1239f758c42bffd61e9476c2b3a8df93a0146c"
+    },
+    {
+      "id": "C002-REQ-514",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 141,
+      "title": "Unknown template refused",
+      "content_hash": "sha256:30f7481a76a5422b872ee42cbcb4b210603ecf7f18942c1adcb03d86810cec1c"
+    },
+    {
+      "id": "C002-REQ-515",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 150,
+      "title": "Serena data in the per-user data folder",
+      "content_hash": "sha256:d363f78c1f79a56c8ef42e9c28dd07132de8caaaff9cd08d29ca883cabcfefd7"
+    },
+    {
+      "id": "C002-REQ-516",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
+      "line": 159,
+      "title": "Per-user data folder not determinable",
+      "content_hash": "sha256:973b659339e86526f5be37a99f0017b8f4dd0362fcbde499ef6a92bbd529d260"
     },
     {
       "id": "C002-REQ-601",
@@ -3642,7 +3770,7 @@
       "file": "10-spec/20-capabilities/CAP-01-target-generator/stories.md",
       "line": 42,
       "title": "Per-target wiring variants",
-      "content_hash": "sha256:6d1a45a343f918f49ba559b27f628670b587712603238f9541f2d483403a2dce"
+      "content_hash": "sha256:c052afefa7cd6d87e1da6bbd0475004f7ce47831955cb9d07b2bb4f5432eac3d"
     },
     {
       "id": "C002-US-201",
@@ -3650,7 +3778,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
       "line": 12,
       "title": "Install Architect on OpenCode and reach gate G1",
-      "content_hash": "sha256:67636890b7f236a04cc5da2e87fcce7a71bffbabeaf8a551f6a70834410640db"
+      "content_hash": "sha256:8b6e08f69e956ccc81b798432b69ba611a81f4015e671c0d0babce2019ea929c"
     },
     {
       "id": "C002-US-202",
@@ -3666,7 +3794,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
       "line": 32,
       "title": "sdd MCP server as the OpenCode fallback",
-      "content_hash": "sha256:e7e2986ba92cd7a780714262818e52ea5b8bd06aae0faca3fe1f03dd2481f3ba"
+      "content_hash": "sha256:bf75f8c1e22c44477e5e7bf4ef4e466bdc878db7d2f7aff7448e605e758e1a70"
     },
     {
       "id": "C002-US-204",
@@ -3690,7 +3818,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 12,
       "title": "Install Architect in VS Code with Copilot and reach gate G1",
-      "content_hash": "sha256:18eb7e096fdd70de3d8f01fd87d678b25551cbcebc18ede38c77116fecebed8f"
+      "content_hash": "sha256:8b277ac0d8139bd55d27d41eeada7252663cfe38e22e45774f80f8990935091f"
     },
     {
       "id": "C002-US-302",
@@ -3698,7 +3826,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 22,
       "title": "Write/shell boundary through the sdd MCP server",
-      "content_hash": "sha256:a1e84e5e87bb8b7a6d54c76420dc7aec631006e602bbbc3d711c996934db86bb"
+      "content_hash": "sha256:51c02e6b699ec60c881866424f05b2b70df1c746e5fdfb3102d0eb5dbf3c1859"
     },
     {
       "id": "C002-US-303",
@@ -3706,7 +3834,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 32,
       "title": "Visible agent-scoped hooks fallback",
-      "content_hash": "sha256:eb4dc992ed1a8d85b7cd672d91be10a120bcec9dd4bcd531941825282bcc219a"
+      "content_hash": "sha256:1947a5357901a485e55e045a918104c7c9fdb454382b8c7b50b16b8496048948"
     },
     {
       "id": "C002-US-304",
@@ -3730,7 +3858,7 @@
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
       "line": 12,
       "title": "Guarded `.sdd/` writes through the server",
-      "content_hash": "sha256:eef3a1a102753e429d3cc709b6c11c912a1f399b05b5b38db84b6cf065434c7a"
+      "content_hash": "sha256:00b4534ab7ad22479068c3e843e6c5b5d1a752967b1f6c51aea69d3055fd86be"
     },
     {
       "id": "C002-US-402",
@@ -3738,7 +3866,7 @@
       "file": "10-spec/20-capabilities/CAP-04-sdd-mcp-server/stories.md",
       "line": 22,
       "title": "Allowlisted commands through the server",
-      "content_hash": "sha256:4808f227c25df22f03f32341858241d37ab512ff0467ad768676184cbcb6d742"
+      "content_hash": "sha256:2dffa4eb0f132c2557c5ed4160975f7c85d1b3679bfb1ceccb5bdfbca28663cf"
     },
     {
       "id": "C002-US-403",
@@ -3762,7 +3890,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 12,
       "title": "Install the CLI from npm as `sdd`",
-      "content_hash": "sha256:c661f0936f5f70c7b120a304de41fc5c09913faaafb2e5bfe16d1235eeba6588"
+      "content_hash": "sha256:6012d48adf6e84e4e841f0fe8d6b6809d390adf930d6c67f550fcb36500ac882"
     },
     {
       "id": "C002-US-502",
@@ -3779,6 +3907,22 @@
       "line": 32,
       "title": "Doctor on every target",
       "content_hash": "sha256:6088832bca630309ed17c7962b560202fa850eeb10154dc8da157f8464f072ec"
+    },
+    {
+      "id": "C002-US-504",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 42,
+      "title": "Templates through the CLI on every target",
+      "content_hash": "sha256:bb14a759bf6652a73694207b97714d69b772ec34baa0cca91e3caeb105296c9d"
+    },
+    {
+      "id": "C002-US-505",
+      "type": "US",
+      "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
+      "line": 52,
+      "title": "Serena read-only and outside the repository on every target",
+      "content_hash": "sha256:35135c6a4ab7b4f8aa4a39e0e824952ca1bb56c3b2c899d462555e9e09ecfb73"
     },
     {
       "id": "C002-US-601",
@@ -6800,6 +6944,11 @@
     },
     {
       "from": "C002-REQ-108",
+      "to": "C002-REQ-117",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-108",
       "to": "C002-REQ-206",
       "relation": "references"
     },
@@ -6880,6 +7029,26 @@
     },
     {
       "from": "C002-REQ-111",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-111",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-111",
+      "to": "C002-REQ-504",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-111",
+      "to": "C002-REQ-507",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-111",
       "to": "C002-US-104",
       "relation": "references"
     },
@@ -6915,7 +7084,22 @@
     },
     {
       "from": "C002-REQ-113",
+      "to": "C002-CON-10",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-113",
       "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-113",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-113",
+      "to": "C002-REQ-111",
       "relation": "references"
     },
     {
@@ -6929,13 +7113,168 @@
       "relation": "story-of"
     },
     {
+      "from": "C002-REQ-114",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-114",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-114",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-114",
+      "to": "C002-REQ-512",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-114",
+      "to": "C002-REQ-515",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-114",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-115",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-115",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-115",
+      "to": "C002-REQ-513",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-115",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-116",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-116",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-116",
+      "to": "C002-REQ-515",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-116",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-OA-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-REQ-210",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-REQ-307",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-REQ-415",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-US-203",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-117",
+      "to": "C002-US-302",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-REQ-211",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-REQ-311",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-118",
+      "to": "C002-US-104",
+      "relation": "story-of"
+    },
+    {
       "from": "C002-REQ-201",
       "to": "C002-AC-201.1",
       "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-201",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-201",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-201",
+      "to": "C002-REQ-114",
       "relation": "references"
     },
     {
@@ -7115,7 +7454,27 @@
     },
     {
       "from": "C002-REQ-210",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-210",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-210",
       "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-210",
+      "to": "C002-REQ-117",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-210",
+      "to": "C002-REQ-415",
       "relation": "references"
     },
     {
@@ -7141,6 +7500,11 @@
     {
       "from": "C002-REQ-211",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-211",
+      "to": "C002-REQ-118",
       "relation": "references"
     },
     {
@@ -7224,13 +7588,68 @@
       "relation": "story-of"
     },
     {
+      "from": "C002-REQ-216",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-216",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-216",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-216",
+      "to": "C002-REQ-103",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-216",
+      "to": "C002-US-201",
+      "relation": "story-of"
+    },
+    {
       "from": "C002-REQ-301",
       "to": "C002-AC-301.1",
       "relation": "acceptance-of"
     },
     {
       "from": "C002-REQ-301",
+      "to": "C002-CON-14",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
+      "to": "C002-NFR-204",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-301",
+      "to": "C002-REQ-114",
       "relation": "references"
     },
     {
@@ -7345,12 +7764,32 @@
     },
     {
       "from": "C002-REQ-307",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-307",
       "to": "C002-OA-001",
       "relation": "references"
     },
     {
       "from": "C002-REQ-307",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-307",
       "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-307",
+      "to": "C002-REQ-117",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-307",
+      "to": "C002-REQ-415",
       "relation": "references"
     },
     {
@@ -7400,7 +7839,17 @@
     },
     {
       "from": "C002-REQ-309",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-309",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-309",
+      "to": "C002-REQ-318",
       "relation": "references"
     },
     {
@@ -7529,6 +7978,81 @@
       "relation": "story-of"
     },
     {
+      "from": "C002-REQ-317",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-317",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-317",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-317",
+      "to": "C002-REQ-216",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-317",
+      "to": "C002-US-301",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-318",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-318",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-318",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-318",
+      "to": "C002-REQ-309",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-318",
+      "to": "C002-US-303",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-REQ-318",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-US-302",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-US-303",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-319",
+      "to": "C002-US-303",
+      "relation": "story-of"
+    },
+    {
       "from": "C002-REQ-401",
       "to": "C002-AC-401.1",
       "relation": "acceptance-of"
@@ -7541,6 +8065,16 @@
     {
       "from": "C002-REQ-401",
       "to": "C002-DEC-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-401",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-401",
+      "to": "C002-REQ-117",
       "relation": "references"
     },
     {
@@ -7710,6 +8244,11 @@
     },
     {
       "from": "C002-REQ-412",
+      "to": "C002-REQ-512",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-412",
       "to": "C002-US-404",
       "relation": "story-of"
     },
@@ -7734,6 +8273,41 @@
       "relation": "story-of"
     },
     {
+      "from": "C002-REQ-415",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-OA-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-REQ-117",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-REQ-210",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-REQ-307",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-US-401",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-415",
+      "to": "C002-US-402",
+      "relation": "story-of"
+    },
+    {
       "from": "C002-REQ-501",
       "to": "C002-AC-501.1",
       "relation": "acceptance-of"
@@ -7746,6 +8320,11 @@
     {
       "from": "C002-REQ-501",
       "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-501",
+      "to": "C002-REQ-512",
       "relation": "references"
     },
     {
@@ -7801,6 +8380,11 @@
     {
       "from": "C002-REQ-504",
       "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-504",
+      "to": "C002-IF-006",
       "relation": "references"
     },
     {
@@ -7875,6 +8459,16 @@
     },
     {
       "from": "C002-REQ-508",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-508",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-508",
       "to": "C002-REQ-503",
       "relation": "references"
     },
@@ -7925,12 +8519,152 @@
     },
     {
       "from": "C002-REQ-510",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-510",
       "to": "C002-US-303",
       "relation": "story-of"
     },
     {
       "from": "C002-REQ-510",
       "to": "C002-US-503",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-REQ-509",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-TS-409",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-TS-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-TS-515",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-511",
+      "to": "C002-US-501",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-REQ-114",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-REQ-412",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-REQ-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-TS-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-512",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-513",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-513",
+      "to": "C002-REQ-115",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-513",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-514",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-514",
+      "to": "C002-US-504",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-REQ-114",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-REQ-116",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-515",
+      "to": "C002-US-505",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-516",
+      "to": "C002-US-505",
       "relation": "story-of"
     },
     {
@@ -8650,6 +9384,11 @@
     },
     {
       "from": "C002-US-104",
+      "to": "C002-IF-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-104",
       "to": "C002-REQ-111",
       "relation": "traces-to"
     },
@@ -8661,6 +9400,11 @@
     {
       "from": "C002-US-104",
       "to": "C002-REQ-113",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-104",
+      "to": "C002-REQ-118",
       "relation": "traces-to"
     },
     {
@@ -8710,6 +9454,11 @@
     },
     {
       "from": "C002-US-201",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-201",
       "to": "C002-R-001",
       "relation": "references"
     },
@@ -8736,6 +9485,11 @@
     {
       "from": "C002-US-201",
       "to": "C002-REQ-205",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-201",
+      "to": "C002-REQ-216",
       "relation": "traces-to"
     },
     {
@@ -8837,6 +9591,11 @@
       "from": "C002-US-203",
       "to": "C002-R-001",
       "relation": "references"
+    },
+    {
+      "from": "C002-US-203",
+      "to": "C002-REQ-117",
+      "relation": "traces-to"
     },
     {
       "from": "C002-US-203",
@@ -8980,6 +9739,11 @@
     },
     {
       "from": "C002-US-301",
+      "to": "C002-REQ-317",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-301",
       "to": "C002-SC-02",
       "relation": "references"
     },
@@ -9017,6 +9781,11 @@
       "from": "C002-US-302",
       "to": "C002-R-001",
       "relation": "references"
+    },
+    {
+      "from": "C002-US-302",
+      "to": "C002-REQ-117",
+      "relation": "traces-to"
     },
     {
       "from": "C002-US-302",
@@ -9096,6 +9865,16 @@
     {
       "from": "C002-US-303",
       "to": "C002-REQ-316",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-REQ-318",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-303",
+      "to": "C002-REQ-319",
       "relation": "traces-to"
     },
     {
@@ -9260,6 +10039,11 @@
     },
     {
       "from": "C002-US-401",
+      "to": "C002-REQ-415",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-401",
       "to": "C002-SC-03",
       "relation": "references"
     },
@@ -9290,6 +10074,11 @@
     },
     {
       "from": "C002-US-402",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-402",
       "to": "C002-REQ-405",
       "relation": "traces-to"
     },
@@ -9301,6 +10090,11 @@
     {
       "from": "C002-US-402",
       "to": "C002-REQ-407",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-402",
+      "to": "C002-REQ-415",
       "relation": "traces-to"
     },
     {
@@ -9435,6 +10229,11 @@
     },
     {
       "from": "C002-US-501",
+      "to": "C002-REQ-511",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-501",
       "to": "C002-SC-01",
       "relation": "references"
     },
@@ -9557,6 +10356,121 @@
       "from": "C002-US-503",
       "to": "C002-US-303",
       "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-CAP-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-115",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-512",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-513",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-504",
+      "to": "C002-REQ-514",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-CAP-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-DEC-007",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-GOAL-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-GOAL-04",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-114",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-116",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-512",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-515",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-505",
+      "to": "C002-REQ-516",
+      "relation": "traces-to"
     },
     {
       "from": "C002-US-601",

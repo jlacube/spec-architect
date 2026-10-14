@@ -82,7 +82,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes an agent for a generated target, THE generator SHALL grant that agent only the tools that the target's mapping table derives from the source agent's `tools` field.
-- **Rationale:** C001-NFR-204 carried to the targets; an agent without AskUserQuestion gets no question tool, so specialists keep returning questions (C001-REQ-208); the write and shell tools map per enforcement mode (C002-REQ-206, C002-REQ-209, C002-REQ-306)
+- **Rationale:** C001-NFR-204 carried to the targets; an agent without AskUserQuestion gets no question tool, so specialists keep returning questions (C001-REQ-208); the write and shell tools map per enforcement mode (C002-REQ-206, C002-REQ-209, C002-REQ-306), and under sdd MCP server enforcement by server profile (C002-REQ-117)
 - **Stories:** C002-US-102
 - **Priority:** Must
 - **Acceptance:** C002-AC-108.1
@@ -99,8 +99,8 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 ### C002-REQ-110 — Inlining budget enforced on generated agents
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF the skills inlined into a generated agent body exceed the budget of C002-NFR-104, THEN THE target structure check SHALL report an error naming the target, the agent, its inlined size and the budget.
-- **Rationale:** C002-DEC-002 (an agent over the budget fails the structure check; the conductor is estimated at 46,000–51,000 characters); constitution NFR defaults (skill size)
+- **Statement:** IF the skills inlined into a generated agent body exceed a budget of C002-NFR-104, THEN THE target structure check SHALL report an error naming the target, the agent, the budget exceeded, the measured size and the skills concerned (the skill over the per-skill budget, or every inlined skill with its size when the per-agent total is over).
+- **Rationale:** C002-DEC-002 (an agent over the budget fails the structure check; the conductor is estimated at 46,000–51,000 characters); constitution NFR defaults (skill size); the skill names tell the maintainer which body to shorten or to deliver by the hybrid fallback
 - **Stories:** C002-US-103, C002-US-601
 - **Priority:** Must
 - **Acceptance:** C002-AC-110.1
@@ -109,8 +109,8 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 ### C002-REQ-111 — Wiring variant per target
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN the generator writes a skill or an inlined skill for a generated target, THE generator SHALL replace each "Claude Code wiring" section and the CLI invocation line of `sdd-conventions` with that target's variant kept in the source plugin.
-- **Rationale:** ideation §8 (Skills); four wiring sections and the `sdd-conventions` line (baseline survey §1.2, E-6, E-7); the variants name each host's question tool and, under sdd MCP server enforcement, the server's tools (C002-US-104)
+- **Statement:** WHEN the generator writes an agent, a command, a skill or an inlined skill for a generated target, THE generator SHALL replace each "Claude Code wiring" section, each CLI invocation line and each other wiring anchor of that file with that target's wiring variant kept in the source plugin.
+- **Rationale:** ideation §8 (Skills); four wiring sections (baseline survey §1.2, E-6, E-7); CLI invocation lines in `skills/sdd-conventions/SKILL.md:13`, `agents/sdd-conductor.md:19` and `agents/sdd-auditor.md:13`; other wiring anchors are the host-dependent rows of `commands/doctor.md` and of the code-discovery toolchain section (C002-REQ-504, C002-REQ-507, C002-IF-006); anchors and processing order: C002-IF-001 §2, §3; the variants name each host's question tool and, under sdd MCP server enforcement, the server's tools (C002-US-104)
 - **Stories:** C002-US-104
 - **Priority:** Must
 - **Acceptance:** C002-AC-111.1
@@ -118,7 +118,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 ### C002-REQ-112 — Missing wiring variant stops generation
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF a skill of the source plugin has a "Claude Code wiring" section or the CLI invocation line without a variant for a generated target, THEN THE generator SHALL exit non-zero with a message naming the skill and the target.
+- **Statement:** IF an agent, a command or a skill of the source plugin has a "Claude Code wiring" section or a CLI invocation line without a variant for a generated target, THEN THE generator SHALL exit non-zero with a message naming the file, the line and the target.
 - **Rationale:** C002-US-104; same reason as C002-REQ-104
 - **Stories:** C002-US-104
 - **Priority:** Must
@@ -127,8 +127,54 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 ### C002-REQ-113 — Variants kept out of the Claude Code skill bodies
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE source plugin SHALL keep the wiring variants of the generated targets outside the `SKILL.md` bodies that Claude Code agents preload.
-- **Rationale:** C002-GOAL-05: Claude Code agents keep today's skill text and their preloaded size under C001-NFR-105
+- **Statement:** THE source plugin SHALL keep the wiring variants of the generated targets outside the agent, command and `SKILL.md` files that Claude Code loads.
+- **Rationale:** C002-GOAL-05: Claude Code agents and commands keep today's text, and preloaded skills their size under C001-NFR-105; the variants of agents and commands (C002-REQ-111) live with the others under `plugins/architect/targets/` (C002-IF-001 §1, C002-CON-10)
 - **Stories:** C002-US-104, C002-US-607
 - **Priority:** Must
 - **Acceptance:** C002-AC-113.1
+
+### C002-REQ-114 — Serena read-only with per-user data on the generated targets
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE target package SHALL declare Serena with a launch command that runs `sdd serena-launch` of `architect-sdd` with Serena's data in the per-user data folder and with the Serena read-only mode file shipped in `architect-sdd`.
+- **Rationale:** C001-REQ-1006 and C001-REQ-1013 carried to the generated targets (Serena exposes only the read-only tools of C001-IF-14 §4 and writes nothing into the repository); the Claude Code launch passes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` (current-state E-10), on which the generated targets cannot rely (C002-R-001 A-09; C002-IF-001 §2); CLI side: C002-REQ-512, C002-REQ-515; launch command: C002-IF-001 §6.2, C002-IF-005 §2, §3
+- **Stories:** C002-US-505
+- **Priority:** Must
+- **Acceptance:** C002-AC-114.1
+- **Open items:** Serena's context on each host is fixed by spikes S-07 and S-08 (C002-IF-001 §6.2).
+
+### C002-REQ-115 — Templates named through the CLI
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the generator writes an agent or a command for a generated target, THE generator SHALL replace each template path under `${CLAUDE_PLUGIN_ROOT}/templates/` in its body with the command `sdd template show <profile>/<path>` for that template.
+- **Rationale:** template paths in `agents/sdd-spec-writer.md:19`, `commands/decide.md:18` and `commands/init.md:25`; neither generated host expands `${CLAUDE_PLUGIN_ROOT}` in bodies (C002-R-001 A-09); construct `plugin-root-templates` of C002-IF-001 §2; the CLI side is C002-REQ-513
+- **Stories:** C002-US-504
+- **Priority:** Must
+- **Acceptance:** C002-AC-115.1
+
+### C002-REQ-116 — Plugin data folder replaced by the per-user data folder
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the generator writes a command for a generated target, THE generator SHALL replace each `${CLAUDE_PLUGIN_DATA}` argument of an sdd CLI command in its body with the option `--user-data`.
+- **Rationale:** `commands/doctor.md:8` and `commands/init.md:9` run `sdd serena-config "${CLAUDE_PLUGIN_DATA}"` (current-state E-22); variable rule of C002-IF-001 §2; C002-IF-006 §4; the CLI side is C002-REQ-515
+- **Stories:** C002-US-505
+- **Priority:** Must
+- **Acceptance:** C002-AC-116.1
+
+### C002-REQ-117 — Server profiles granted by source tool
+- **Delta:** ADDED
+- **Pattern:** complex
+- **Statement:** WHERE a generated target uses sdd MCP server enforcement, WHEN the generator writes an agent for that target, THE generator SHALL grant that agent exactly the server profiles that replace its source tools: `sdd-files` for Write or Edit and `sdd-shell` for Bash.
+- **Rationale:** C002-REQ-108 with the two server profiles of the architecture (C002-IF-002 §2; architecture §6.2): Copilot documents only whole-server grants (`<server>/*`, C002-OA-001; C002-R-001 A-11), so the command tool is a server of its own and an agent without Bash (researcher, options-analyst) never receives it (C002-IF-005 §4); declarations: C002-REQ-210, C002-REQ-307; tools per profile: C002-REQ-415
+- **Stories:** C002-US-203, C002-US-302
+- **Priority:** Must
+- **Acceptance:** C002-AC-117.1
+
+### C002-REQ-118 — Host question tool named in agent and command bodies
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the generator writes an agent or a command for a generated target, THE generator SHALL replace each mention of AskUserQuestion in its body with the name of that target's question tool.
+- **Rationale:** outside the wiring sections AskUserQuestion is named in `agents/sdd-conductor.md:61` and `:66` (current-state E-25) and in `commands/archive.md:15` (current-state E-28); the archive confirmation is a round of C002-REQ-211, and its unanswered case falls under C002-REQ-311; construct `ask-user-question` of C002-IF-001 §2; the agent `tools` field is translated by C002-REQ-108
+- **Stories:** C002-US-104
+- **Priority:** Must
+- **Acceptance:** C002-AC-118.1

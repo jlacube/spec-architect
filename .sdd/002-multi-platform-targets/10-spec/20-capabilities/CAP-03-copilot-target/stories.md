@@ -15,8 +15,8 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** I can start the conductor in Copilot Chat and take a change through ideation to gate G1
 - **Value / outcome:** C002-SC-02; C002-GOAL-01, C002-GOAL-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-03
-- **Context & notes:** Agents are `*.agent.md` files with `tools` and `agents` lists; commands become prompt files; skills keep the Agent Skills format (ideation §8; C002-R-001 A-10, A-11). VS Code needs `chat.plugins.enabled` and registers local plugins through `chat.pluginLocations` (C002-R-001 A-08); the install notes name every setting the package needs. `${CLAUDE_PLUGIN_ROOT}` is expanded in hook and MCP fields but must be treated as not expanded in agent, prompt and skill bodies (C002-R-001 A-09). The package must not carry the Claude Code `hooks/hooks.json` unchanged: VS Code ignores its matchers and its guards would see no agent identity (C002-R-001 A-03, A-04, Implications). Only the conductor may start other agents (`agents` list).
-- **Requirements:** C002-REQ-301, C002-REQ-302, C002-REQ-303, C002-REQ-304, C002-REQ-305
+- **Context & notes:** Agents are `*.agent.md` files with `tools` and `agents` lists; commands become prompt files; skills keep the Agent Skills format (ideation §8; C002-R-001 A-10, A-11). VS Code needs `chat.plugins.enabled` and registers local plugins through `chat.pluginLocations` (C002-R-001 A-08); the install notes name every setting the package needs. `${CLAUDE_PLUGIN_ROOT}` is expanded in hook and MCP fields but must be treated as not expanded in agent, prompt and skill bodies (C002-R-001 A-09). The package must not carry the Claude Code `hooks/hooks.json` unchanged: VS Code ignores its matchers and its guards would see no agent identity (C002-R-001 A-03, A-04, Implications). Only the conductor may start other agents (`agents` list). The package carries its own copy of the sdd CLI for its hook commands, because a hook command that is not found blocks nothing (C002-R-001 A-03). Prompt file names follow the source command names, as spike S-08 confirms.
+- **Requirements:** C002-REQ-301, C002-REQ-302, C002-REQ-303, C002-REQ-304, C002-REQ-305, C002-REQ-317
 - **Traces to:** ideation §5, §8; C002-DEC-004, C002-DEC-006
 
 ### C002-US-302 — Write/shell boundary through the sdd MCP server
@@ -26,7 +26,7 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-03
 - **Context & notes:** C002-DEC-001 (C002-OA-001, option B: fails closed). Relies on C002-AS-03 (subagents confined to their tool list), which spike S-08 checks. Read and search tools stay available to the agents; MCP tools are granted as `<server>/*` or by name (C002-R-001 A-11). The server's tools are designed for the agents' actual write operations, because agents without generic Edit and Bash may work less well (ideation §9). Whether VS Code asks P-01 to approve each sdd MCP server call, and whether the package can pre-approve its own server, is open for spike S-08 (ideation §11).
-- **Requirements:** C002-REQ-302, C002-REQ-306, C002-REQ-307, C002-REQ-604
+- **Requirements:** C002-REQ-302, C002-REQ-306, C002-REQ-307, C002-REQ-604, C002-REQ-117
 - **Traces to:** C002-DEC-001; Q-guards-01; ideation §8 (Enforcement per target)
 
 ### C002-US-303 — Visible agent-scoped hooks fallback
@@ -35,8 +35,8 @@ id_block: { US: 301-399, REQ: 301-399, TS: 301-399 }
 - **So that** Copilot still ships with an enforced boundary while hooks are on, and nobody mistakes a disabled-hooks setup for a protected one
 - **Value / outcome:** C002-GOAL-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-03
-- **Context & notes:** Conditional on spike S-08 (C002-AS-03 wrong). C002-DEC-005 exception: with hooks enabled, the guard corpora still pass 100% and the injection evals show 0 instructions acted upon; the boundary is off whenever hooks are disabled (`chat.useHooks`, Workspace Trust, organisation policy). The doctor reads the VS Code settings instead of relying on a hook, which could not report its own absence (C002-DEC-005, Consequences); how it detects each disabling source is an open research item for spike S-08 (ideation §11). A guard script must deny on its own internal errors, because a hook exit code other than 2 does not block (C002-R-001 A-03). The hook `tool_name` values for the VS Code edit and terminal tools are not documented and are captured by spike S-08 (C002-R-001 A-05). If agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred (C002-US-606).
-- **Requirements:** C002-REQ-308, C002-REQ-309, C002-REQ-310, C002-REQ-316, C002-REQ-510, C002-REQ-616, C002-REQ-622
+- **Context & notes:** Conditional on spike S-08 (C002-AS-03 wrong). C002-DEC-005 exception: with hooks enabled, the guard corpora still pass 100% and the injection evals show 0 instructions acted upon; the boundary is off whenever hooks are disabled (`chat.useHooks`, Workspace Trust, organisation policy). The doctor reads the VS Code settings instead of relying on a hook, which could not report its own absence (C002-DEC-005, Consequences); how it detects each disabling source is an open research item for spike S-08 (ideation §11). A guard script must deny on its own internal errors, because a hook exit code other than 2 does not block (C002-R-001 A-03). The hook `tool_name` values for the VS Code edit and terminal tools are not documented and are captured by spike S-08 (C002-R-001 A-05). VS Code ignores hook matchers (C002-R-001 A-04), so the guard hooks see every tool call of their agent and need the read tools listed too. If agent-scoped hooks do not block a subagent's tool calls either, the Copilot target is deferred (C002-US-606).
+- **Requirements:** C002-REQ-308, C002-REQ-309, C002-REQ-310, C002-REQ-316, C002-REQ-318, C002-REQ-319, C002-REQ-510, C002-REQ-616, C002-REQ-622
 - **Traces to:** C002-DEC-001 (Fallback), C002-DEC-005; Q-guards-02, Q-guards-03
 
 ### C002-US-304 — Interviews and gates through `vscode/askQuestions`

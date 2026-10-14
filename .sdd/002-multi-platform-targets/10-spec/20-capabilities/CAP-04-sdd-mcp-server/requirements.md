@@ -15,11 +15,11 @@ capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN an agent calls a write tool of the sdd MCP server, THE sdd MCP server SHALL write the file only if the path guard core allows the target path for an Architect agent without a memory folder, and refuse the call with rule `GUARD-PATH-001` otherwise.
-- **Rationale:** C002-DEC-001; the decision and its normalisation are those of C001-REQ-1103 and C001-REQ-1104 (current-state §1, path guard row); no memory folder on the generated targets (C002-DEC-009); no agent identity needed, because only Architect agents are granted the server's tools (C002-REQ-210, C002-REQ-307)
+- **Rationale:** C002-DEC-001; the decision and its normalisation are those of C001-REQ-1103 and C001-REQ-1104 (current-state §1, path guard row); no memory folder on the generated targets (C002-DEC-009); no agent identity needed, because only Architect agents are granted the server's tools (C002-REQ-117, C002-REQ-210, C002-REQ-307)
 - **Stories:** C002-US-401
 - **Priority:** Must
 - **Acceptance:** C002-AC-401.1
-- **Open items:** `.sdd/` is the one of the folder in which the host starts the server; the rule for multi-root VS Code workspaces is settled in the architecture step.
+- **Open items:** the `.sdd/` meant is the one under the server repository root; how that root is fixed, multi-root VS Code workspaces included, is settled in C002-IF-002 §3.
 
 ### C002-REQ-402 — Faults leave the file unchanged
 - **Delta:** ADDED
@@ -115,7 +115,7 @@ capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE `architect-sdd` package SHALL contain the sdd MCP server as a bundled entry of its own, next to the `sdd` executable.
-- **Rationale:** C002-DEC-001 (Constitution check); not under `plugins/architect/scripts/`, which `build.mjs` keeps for `sdd.mjs` only (current-state E-2); C001-CON-02 is reviewed in the architecture step (`../../10-context/scope.md` §4)
+- **Rationale:** C002-DEC-001 (Constitution check); not under `plugins/architect/scripts/`, which `build.mjs` keeps for `sdd.mjs` only (current-state E-2); C001-CON-02 is reviewed in the architecture step (`../../10-context/scope.md` §4); the templates and the Serena read-only mode file the CLI needs are shipped by C002-REQ-512
 - **Stories:** C002-US-404
 - **Priority:** Must
 - **Acceptance:** C002-AC-412.1
@@ -137,3 +137,12 @@ capability is `ADDED` throughout; the guard cores it calls stay unchanged (C002-
 - **Stories:** C002-US-404
 - **Priority:** Must
 - **Acceptance:** C002-AC-414.1
+
+### C002-REQ-415 — One tool set per server profile
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the host starts the sdd MCP server with a server profile, THE sdd MCP server SHALL list only the tools of that profile: the write tools for the profile `files` and the command tool for the profile `shell`.
+- **Rationale:** a host that grants whole servers only (`<server>/*` on Copilot, C002-OA-001) can then grant the command tool apart from the write tools (C002-REQ-117, C002-REQ-210, C002-REQ-307); one program, two declared servers (C002-IF-002 §1, §2; architecture §6.2)
+- **Stories:** C002-US-401, C002-US-402
+- **Priority:** Must
+- **Acceptance:** C002-AC-415.1

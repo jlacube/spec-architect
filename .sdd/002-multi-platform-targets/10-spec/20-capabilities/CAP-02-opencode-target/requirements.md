@@ -22,7 +22,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-201
 - **Priority:** Must
 - **Acceptance:** C002-AC-201.1
-- **Open items:** Serena's context and data folder on OpenCode are an open research item (baseline survey §4 note 6; current-state §1, Serena launch row).
+- **Open items:** Serena's context on OpenCode is fixed by spike S-07 (baseline survey §4 note 6; C002-IF-001 §6.2); its data folder and read-only launch: C002-REQ-114.
 
 ### C002-REQ-202 — Conductor as the primary agent
 - **Delta:** ADDED
@@ -97,11 +97,11 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Priority:** Must
 - **Acceptance:** C002-AC-209.1
 
-### C002-REQ-210 — Server fallback: write and command tools through the server
+### C002-REQ-210 — Server fallback: two server profiles declared
 - **Delta:** ADDED
 - **Pattern:** optional-feature
-- **Statement:** WHERE the OpenCode target uses sdd MCP server enforcement, THE OpenCode target package SHALL declare the sdd MCP server in `opencode.json` and map each Architect agent's write tools to the server's write tools and its shell tool to the server's command tool.
-- **Rationale:** C002-US-203; the server of C002-CAP-04; least privilege per C002-REQ-108
+- **Statement:** WHERE the OpenCode target uses sdd MCP server enforcement, THE OpenCode target package SHALL declare in `opencode.json` two local MCP servers that run the sdd MCP server of `architect-sdd`: `sdd-files` with the server profile of the write tools and `sdd-shell` with the server profile of the command tool.
+- **Rationale:** C002-US-203; the server of C002-CAP-04; two server profiles so that the write tools and the command tool are granted apart (C002-IF-002 §2, C002-REQ-415), and an agent without Bash never gets the command tool (C002-REQ-117, least privilege per C002-REQ-108); contract C002-IF-005 §2
 - **Stories:** C002-US-203
 - **Priority:** Must
 - **Acceptance:** C002-AC-210.1
@@ -110,7 +110,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Delta:** MODIFIED C001-REQ-205
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use the question tool of its host (AskUserQuestion on Claude Code, `question` on OpenCode, `vscode/askQuestions` on Copilot VS Code) with at most four questions per call.
-- **Rationale:** C002-GOAL-03; ideation §8 (Interviews and gates); neither host documents a limit, so the four-question round stays Architect's own rule (C002-R-001 C-05, A-06, Implications); unchanged on Claude Code
+- **Rationale:** C002-GOAL-03; ideation §8 (Interviews and gates); neither host documents a limit, so the four-question round stays Architect's own rule (C002-R-001 C-05, A-06, Implications); every round counts, the archive confirmation of `commands/archive.md:15` included (current-state E-28; tool name in bodies: C002-REQ-118); unchanged on Claude Code
 - **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-211.1
@@ -153,3 +153,12 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-205
 - **Priority:** Should
 - **Acceptance:** C002-AC-215.1
+
+### C002-REQ-216 — OpenCode command names
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE OpenCode target package SHALL name each command `architect-<name>`, where `<name>` is the file name of the source command without its extension.
+- **Rationale:** OpenCode has built-in `/new` and `/init` commands, with which the source commands `new` and `init` would collide (C002-IF-001 §2, row `/architect:<name>`); the prefix keeps the `architect` namespace of the Claude Code names `/architect:<name>`; references in bodies follow the same mapping (C002-REQ-103); placement `.opencode/commands/architect-<command>.md` (C002-IF-005 §2; command files: C002-R-001 C-08)
+- **Stories:** C002-US-201
+- **Priority:** Must
+- **Acceptance:** C002-AC-216.1

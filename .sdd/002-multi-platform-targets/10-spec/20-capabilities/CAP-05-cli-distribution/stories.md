@@ -15,8 +15,8 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **So that** agents on my host reach the CLI without a plugin-root variable, which only Claude Code provides
 - **Value / outcome:** C002-GOAL-04; C002-SC-01, C002-SC-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-05
-- **Context & notes:** C002-DEC-007: npm package `architect-sdd` with the executable `sdd`; the package also carries the sdd MCP server entry (C002-US-404). Name `architect-sdd`, unscoped, published by P-01 (Q-cli-02, spec round 1); the name's availability stays C002-AS-05. The repository's `package.json` is private with no `bin` today (current-state E-3). Bundled, with no runtime npm dependency (constitution, forbidden technologies). The Claude Code plugin keeps its bundled `scripts/sdd.mjs` and its hook commands (C001-REQ-1121) unchanged, so P-03 on Claude Code needs no npm install (C002-GOAL-05). Edge case for the requirements: a target package and an installed `architect-sdd` of different versions.
-- **Requirements:** C002-REQ-501, C002-REQ-502, C002-REQ-509
+- **Context & notes:** C002-DEC-007: npm package `architect-sdd` with the executable `sdd`; the package also carries the sdd MCP server entry (C002-US-404). Name `architect-sdd`, unscoped, published by P-01 (Q-cli-02, spec round 1); the name's availability stays C002-AS-05. The repository's `package.json` is private with no `bin` today (current-state E-3). Bundled, with no runtime npm dependency (constitution, forbidden technologies). The Claude Code plugin keeps its bundled `scripts/sdd.mjs` and its hook commands (C001-REQ-1121) unchanged, so P-03 on Claude Code needs no npm install (C002-GOAL-05). Edge case for the requirements: a target package and an installed `architect-sdd` of different versions, told apart by `sdd --version`.
+- **Requirements:** C002-REQ-501, C002-REQ-502, C002-REQ-509, C002-REQ-511
 - **Traces to:** C002-DEC-007; Q-cli-01; ideation §5
 
 ### C002-US-502 — The allowlist accepts a bare `sdd` command and `node --version`
@@ -38,3 +38,23 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **Context & notes:** Today the doctor reports Claude Code and checks its minimum version (C001-REQ-1110, C001-REQ-1123); on the generated targets the host rows differ, so these are `MODIFIED` candidates. Tested versions are recorded by the doctor and re-checked before each release (ideation §9, platforms change fast): the tested version of a target is the host version recorded by the spike that validated it (Q-versions-01, spec round 1). On Copilot VS Code the doctor also reports disabled hooks when the Copilot hooks fallback is in use (C002-US-303). A missing optional tool still never fails the doctor (C001-REQ-1111).
 - **Requirements:** C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510, C002-REQ-621
 - **Traces to:** ideation §9, §11; C002-DEC-005 (Consequences)
+
+### C002-US-504 — Templates through the CLI on every target
+- **As a** P-03 adopter on OpenCode or Copilot VS Code
+- **I want** the agents to read the artifact templates through `sdd`, from my repository's `.sdd/_templates/` or from the templates installed with `architect-sdd`
+- **So that** changes created on my host use the same templates as on Claude Code, without a plugin-root variable in agent and command bodies
+- **Value / outcome:** C002-GOAL-03, C002-GOAL-04
+- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
+- **Context & notes:** Bodies name templates as `${CLAUDE_PLUGIN_ROOT}/templates/…` (`agents/sdd-spec-writer.md:19`, `commands/decide.md:18`, `commands/init.md:25`), which neither generated host expands in bodies (C002-R-001 A-09). The CLI looks up templates beside its bundle when `CLAUDE_PLUGIN_ROOT` is unset (`src/workspace/templates.ts:33`; current-state E-7). Command and shipped files: C002-IF-007 (`template show`), C002-IF-003 §1.
+- **Requirements:** C002-REQ-115, C002-REQ-512, C002-REQ-513, C002-REQ-514
+- **Traces to:** ideation §8 (One source, generated targets); C002-DEC-007
+
+### C002-US-505 — Serena read-only and outside the repository on every target
+- **As a** P-03 adopter on OpenCode or Copilot VS Code
+- **I want** Serena to start read-only, with its data in a per-user folder of `architect-sdd`
+- **So that** code intelligence works on my host as on Claude Code and leaves no Serena files in my repository
+- **Value / outcome:** C002-GOAL-03, C002-GOAL-04
+- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
+- **Context & notes:** On Claude Code Serena starts through `sdd serena-launch "${CLAUDE_PLUGIN_DATA}"` with the plugin's read-only mode file (C001-REQ-1006, C001-REQ-1013; current-state E-10, E-22); the generated targets cannot rely on either plugin variable (C002-R-001 A-09; C002-IF-001 §2). Serena's context per host is fixed by spikes S-07 and S-08 (baseline survey §4 note 6). Options `--user-data` and `--read-only`: C002-IF-007.
+- **Requirements:** C002-REQ-114, C002-REQ-116, C002-REQ-512, C002-REQ-515, C002-REQ-516
+- **Traces to:** ideation §8 (One source, generated targets); C002-DEC-007

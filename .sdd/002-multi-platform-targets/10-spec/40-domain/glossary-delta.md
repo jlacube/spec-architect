@@ -25,7 +25,8 @@ plugin structure check and the others listed there). At archive these terms are 
 | Generator | The build step that reads the source plugin into the neutral model and writes one target package per generated target |
 | Neutral model | The target-independent representation of the source plugin's agents, commands, skills, hooks and MCP servers that the generator builds before writing any target package |
 | Mapping table | A per-target table the generator uses to translate Claude Code tool names, MCP tool names, model names and variables (`${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}`, `$ARGUMENTS`); also called the translation table. File `plugins/architect/targets/<target>.json`, contract C002-IF-001 |
-| Wiring variant | A per-target version of a skill's "Claude Code wiring" section, or of the CLI invocation line of `sdd-conventions`, kept in the source plugin and selected by the generator |
+| Wiring variant | A per-target version of a skill's "Claude Code wiring" section, of a CLI invocation line, or of another wiring anchor of an agent, command or skill (such as the host rows of the doctor command), kept in the source plugin under `targets/` and selected by the generator |
+| CLI invocation line | A line of an agent, command or skill body that defines `sdd` as `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (`skills/sdd-conventions/SKILL.md:13`, `agents/sdd-conductor.md:19`, `agents/sdd-auditor.md:13`) |
 | Skill inlining | Copying an agent's preloaded skills into that agent's generated body (C002-DEC-002) |
 | Write/shell boundary | The rule that an Architect agent writes only inside `.sdd/` (on Claude Code also its own memory folder) and runs only commands of the allowlist in C001-IF-07 §3 (C001-NFR-201) |
 | Enforcement mechanism | What enforces the write/shell boundary on a target: Claude Code hooks, the OpenCode permission engine, the sdd MCP server, or Copilot agent-scoped hooks |
@@ -73,9 +74,12 @@ plugin structure check and the others listed there). At archive these terms are 
 | Server profile | One of the two tool sets of the sdd MCP server, declared as its own server: `sdd-files` (write tools) and `sdd-shell` (command tool) (C002-IF-002 §2) |
 | Server repository root | The repository folder an sdd MCP server process serves, fixed when it is initialised (C002-IF-002 §3) |
 | Tool classes | The classification of a host's tool names into write, terminal and read-only tools that an agent-scoped guard hook uses (C002-IF-008 §2) |
+| Tool classes file | The file `hooks/tool-classes.json` of the Copilot target package under the Copilot hooks fallback, which assigns every granted tool to one of the tool classes `write`, `terminal` and `read_only` |
 | Host adapter | The part of the sdd CLI that turns a host's hook input into the hook input of C001-IF-07 §1 (`--host copilot`) |
 | Spike record | The committed result of spike S-07 or S-08, whose frontmatter fixes a target's enforcement mode and tested versions (C002-IF-009 §3) |
 | Per-user data folder | The folder of `architect-sdd` in the user's application-data location, used for Serena's data on the generated targets (`--user-data`, C002-IF-007) |
+| Serena read-only mode file | `plugins/architect/serena/architect-read-only.yml`, the Serena mode that leaves only the read-only tools of C001-IF-14 §4; also shipped in `architect-sdd` (C002-IF-003 §1) |
+| Template override | A template under `.sdd/_templates/<profile>/<path>` of a repository, which takes precedence over the template of the same path shipped with the plugin or with `architect-sdd` |
 
 ## 2. System names (allowed after `THE` in EARS statements)
 

@@ -41,10 +41,10 @@ id_block: { US: 101-199, REQ: 101-199, TS: 101-199 }
 
 ### C002-US-104 — Per-target wiring variants
 - **As a** P-01 spec owner and maintainer
-- **I want** to keep a per-target variant of each "Claude Code wiring" section and of the CLI invocation line of `sdd-conventions` in the source plugin, and the generator to put the target's variant into each target package
+- **I want** to keep a per-target variant of each "Claude Code wiring" section and of each CLI invocation line of the agents, commands and skills in the source plugin, and the generator to put the target's variant into each target package
 - **So that** agents on each target are told the tools and the CLI spelling that exist on that host
 - **Value / outcome:** C002-GOAL-03, C002-GOAL-04
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-01
-- **Context & notes:** Four skills have a wiring section (`interview-protocol`, `research-protocol`, `code-discovery`, `gate-protocol`); `sdd-conventions` defines `sdd` with `${CLAUDE_PLUGIN_ROOT}` outside a wiring section (baseline survey §1.2, E-6, E-7). The variants name the question tool of each host (C002-US-204, C002-US-304) and, on Copilot VS Code, the sdd MCP server tools instead of Bash (C002-US-302). The Claude Code variant is today's text, so the Claude Code plugin does not change (C002-GOAL-05).
-- **Requirements:** C002-REQ-111, C002-REQ-112, C002-REQ-113
+- **Context & notes:** Four skills have a wiring section (`interview-protocol`, `research-protocol`, `code-discovery`, `gate-protocol`); `sdd-conventions` defines `sdd` with `${CLAUDE_PLUGIN_ROOT}` outside a wiring section (baseline survey §1.2, E-6, E-7), and so do `agents/sdd-conductor.md:19` and `agents/sdd-auditor.md:13`. The doctor command's host rows are variants of the same kind (C002-IF-006). The variants name the question tool of each host (C002-US-204, C002-US-304) and, on Copilot VS Code, the sdd MCP server tools instead of Bash (C002-US-302); AskUserQuestion named in agent and command bodies (`commands/archive.md:15`) becomes the host's question tool too. The Claude Code variant is today's text, so the Claude Code plugin does not change (C002-GOAL-05).
+- **Requirements:** C002-REQ-111, C002-REQ-112, C002-REQ-113, C002-REQ-118
 - **Traces to:** ideation §8 (Skills); C002-DEC-002
