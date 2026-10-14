@@ -32,7 +32,7 @@ package (sdd CLI and sdd MCP server) and the verification records under `docs/`.
 |---|---|---|
 | P-01 spec owner | Runs packaging, checks, the manual VS Code checklist and the release check; publishes `architect-sdd`; answers interviews and gates on any host | trusted (sole approver) |
 | P-03 adopter | Installs a package and `architect-sdd`, runs the conductor on Claude Code, OpenCode or VS Code | trusted user; its own agents and settings are outside Architect |
-| Claude Code | Source target, unchanged except the allowlist rows (C002-REQ-503) and the Serena-command confinement of the bash guard (C002-REQ-517) | platform |
+| Claude Code | Source target, unchanged except the allowlist rows (C002-REQ-503), the Serena-command confinement (C002-REQ-517) and the `--cwd` confinement of the writing `sdd` subcommands (C002-REQ-521) of the bash guard | platform |
 | OpenCode (tested version) | Loads the OpenCode package; enforces `permission` rules under native permission enforcement; starts the sdd MCP server under sdd MCP server enforcement | platform; permission engine verified by corpus replay (C002-AS-01, C002-AS-02) |
 | VS Code with GitHub Copilot Chat (tested versions) | Loads the Copilot package as a plugin; confines agents to their tool lists (C002-AS-03); starts MCP servers; runs hooks | platform; tool-list confinement verified by spike S-08 |
 | Copilot CLI | Eval runner host only (C002-NG-01) | tool |
@@ -114,8 +114,8 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 ### C002-COMP-008 — Corpus replay suite
 - **Name:** `tests/replay/` with one adapter per mechanism (OpenCode permission rules, sdd MCP server, agent-scoped guard hooks)
 - **Status:** new
-- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to, with the expectation of that mechanism (memory cases `deny`; identity cases on OpenCode only), report the decisions that differ, and list the cases not replayed
-- **Realizes:** C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627; C002-NFR-201, C002-NFR-202
+- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to (a case with a `cwd` other than the repository root through its own `cwd`), with the expectation of that mechanism (cases without a `cwd` or a tool name, or needing a capability the replay host lacks, fed as malformed calls and `deny`; unknown `architect:sdd-*` callers `allow` on OpenCode; memory cases `deny`; identity cases on OpenCode only), report the decisions that differ, record the replay host, and list the cases not replayed
+- **Realizes:** C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632; C002-NFR-201, C002-NFR-202
 - **Interfaces:** C002-IF-009 §2 (replay report)
 - **Depends on:** C002-COMP-013 (corpora), C002-COMP-005, C002-COMP-012, C002-COMP-003, C002-COMP-004, C002-COMP-006
 - **Owned data:** replay reports
@@ -132,7 +132,7 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 ### C002-COMP-010 — Release check
 - **Name:** `scripts/release-check.mjs` and release records under `docs/releases/`
 - **Status:** new
-- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (completeness of the not-applicable list included), injection, checklist (hooks state and injection steps under the hooks fallback) and spike evidence at the tested versions, and write the release record
+- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (completeness of the not-applicable list and the expected decision of every case included), injection, checklist (hooks state and injection steps under the hooks fallback) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record
 - **Realizes:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629; C002-NFR-501
 - **Interfaces:** C002-IF-009 §5
 - **Depends on:** C002-COMP-001, C002-COMP-002, C002-COMP-008, C002-COMP-009, C002-COMP-011
@@ -151,12 +151,12 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 - **Name:** `src/hooks/` (guard-path, guard-bash, session-start, post-write, new host adapter) and `hooks/hooks.json`
 - **Status:** modified
 - **Modifies:** C001-COMP-08
-- **Responsibility:** as in CHG-001, plus: the bash guard accepts a bare `sdd …` and `node --version` and confines `sdd serena-config` and `sdd serena-launch` to `--user-data` or a data folder outside the repository on every host (C002-IF-008 §1.1); the path guard core takes a memory-folder option (off for the generated targets); a Copilot host adapter turns Copilot hook input into guard decisions (read-only tools allowed, unclassed tools denied), briefs and trace refreshes, failing closed
-- **Realizes:** C002-REQ-503, C002-REQ-517, C002-REQ-308, C002-REQ-309, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-319; C002-NFR-201, C002-NFR-202, C002-NFR-204
+- **Responsibility:** as in CHG-001, plus: the bash guard accepts a bare `sdd …` and `node --version`, confines `sdd serena-config` and `sdd serena-launch` to `--user-data` or a data folder outside the repository on every host (C002-IF-008 §1.1), and allows `--cwd` on a writing `sdd` subcommand only with a folder at or under the repository root on every host (C002-IF-008 §1.2); the path guard core takes a memory-folder option (off for the generated targets); a Copilot host adapter turns Copilot hook input into guard decisions (read-only tools allowed, unclassed tools denied), briefs and trace refreshes, failing closed
+- **Realizes:** C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-308, C002-REQ-309, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-319; C002-NFR-201, C002-NFR-202, C002-NFR-204
 - **Interfaces:** C002-IF-008; C001-IF-07
 - **Depends on:** C001-COMP-03, C001-COMP-04
 - **Owned data:** none
-- **Evidence:** current-state E-5 (`src/hooks/guard-bash.ts:119` › `sddCli()`, layer: serena: a bare `sdd` is denied with GUARD-BASH-001, and any subcommand after `node <path>/sdd.mjs` passes); current-state E-22 (`src/cli/commands.ts:420` › `serenaConfig()`, layer: serena: the data folder is written as given, so `sdd serena-config src` writes into the repository); current-state E-6 (`src/hooks/guard-bash.ts:133` › `VERSION_PROBES`, layer: grep: `node -v` only); current-state E-4 (`src/hooks/guard-path.ts:18` › `WRITE_TOOLS`, layer: serena: memory folder at l.56); baseline E-13 (`src/cli/commands.ts:427` › `guardPath()`, layer: serena: the four hook entry points)
+- **Evidence:** current-state E-5 (`src/hooks/guard-bash.ts:119` › `sddCli()`, layer: serena: a bare `sdd` is denied with GUARD-BASH-001, and any subcommand after `node <path>/sdd.mjs` passes); current-state E-22 (`src/cli/commands.ts:420` › `serenaConfig()`, layer: serena: the data folder is written as given, so `sdd serena-config src` writes into the repository); current-state E-6 (`src/hooks/guard-bash.ts:133` › `VERSION_PROBES`, layer: grep: `node -v` only); current-state E-4 (`src/hooks/guard-path.ts:18` › `WRITE_TOOLS`, layer: serena: memory folder at l.56); baseline E-13 (`src/cli/commands.ts:427` › `guardPath()`, layer: serena: the four hook entry points); critic CR-25 evidence, re-read for C002-REQ-521 (`src/cli/run.ts:133` › `execute()`, layer: read: the global `--cwd` of every subcommand is resolved against the CLI's working folder; `src/cli/run.ts:33` › `findCommand()`: the subcommand is the first word, or the first two for a group)
 
 ### C002-COMP-013 — Build and check tooling (modified)
 - **Name:** `package.json` scripts, `scripts/build.mjs`, `scripts/package.mjs`, `scripts/check.mjs` and `scripts/check/`, `tests/` (including the guard corpora), `evals/`, `bench/`
@@ -238,8 +238,8 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 | F8 | Doctor on a generated target | C002-REQ-504, C002-REQ-505, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516 |
 | F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633 |
 | F10 | `npm run check` with the target structure checks | C002-REQ-601 … C002-REQ-605; C002-TS-601, C002-TS-602, C002-TS-603, C002-TS-604, C002-TS-605 |
-| F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631 |
-| F12 | Serena command decided by the bash guard core on every host, then run by the sdd CLI | C002-REQ-517, C002-REQ-515, C002-REQ-516; C002-TS-525, C002-TS-527, C002-TS-528 |
+| F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd` and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
+| F12 | Serena command, or writing `sdd` subcommand with `--cwd`, decided by the bash guard core on every host, then run by the sdd CLI | C002-REQ-517, C002-REQ-521, C002-REQ-515, C002-REQ-516; C002-TS-525, C002-TS-527, C002-TS-528, C002-TS-536, C002-TS-537 |
 
 ## 4. Data view
 
@@ -300,10 +300,13 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Templates through `sdd template show`, Serena data through `--user-data` | `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` have no counterpart in OpenCode and VS Code bodies (C002-R-001 A-09) | a templates copy per package with a host-specific path |
 | Copilot hook commands use a CLI copy in the package | C002-NFR-204 (a PATH miss would exit with a non-blocking code) | the npm `sdd` on PATH |
 | Generator runs every target; the release check decides publication; a `deferred` S-08 record leads to the spec revision of scope §1.1, not to a table mode | C002-REQ-101, C002-REQ-619, Q-defer-01 | skip a refused target at generation |
-| Serena commands confined in the bash guard core from the resolved data folder; the literal `${CLAUDE_PLUGIN_DATA}` resolved from the guard's own environment (C002-IF-008 §1.1) | C002-REQ-517 (Q-guards-04), C002-REQ-623 (the Claude Code doctor keeps its Serena step) | a dedicated allowlist entry per Serena form |
+| Serena commands confined in the bash guard core from the resolved data folder; the literal `${CLAUDE_PLUGIN_DATA}` resolved from the guard's own environment, an assumption checked on the real host by C002-TS-537 (C002-IF-008 §1.1) | C002-REQ-517 (Q-guards-04), C002-REQ-623 (the Claude Code doctor keeps its Serena step) | a dedicated allowlist entry per Serena form |
+| Writing commands recognised by their first words (the rows of C002-IF-008 §1.2, `status` and `trace` with `--write`, `archive` without `--dry-run`); every `--cwd` of such a command resolved like a write target and compared with the repository root | C002-REQ-521 (Q-guards-05); the CLI reads its subcommand from the first words only (`src/cli/run.ts:33`) | deny `--cwd` on every subcommand (rejected by P-01: breaks read-only uses such as BG-019) |
+| Replay expectations by ordered rules (applicability, then C002-REQ-630, C002-REQ-632, C002-REQ-625, corpus), each case recording its `expected_source`; the report records its replay host so that the release check recomputes them (C002-IF-009 §2.1) | C002-REQ-630, C002-REQ-632 (Q-safety-04), C002-REQ-617 | let the report state expectations unchecked (the implementer would choose them, critic CR-23) |
+| An S-07 record with `agent_tools_closed: false` refuses the OpenCode release (ERR-REL-013) and triggers a spec revision with P-01, as a `deferred` S-08 record does | C002-REQ-108; Q-defer-01 as precedent | release under the sdd MCP server mode alone (rejected: the catch-all decides in both modes) |
 | `run_command` takes an optional `dialect` (`bash` default, `powershell`) that selects the guard's syntax rules; the command still runs without a shell | C002-REQ-606 with C002-REQ-626: PowerShell corpus cases are applicable to the server and must be decided in their own dialect | decide PowerShell cases in the Bash dialect (gives false allows such as `git log` and false denies such as backslash paths) |
 | Replay input mapping and decision reading per mechanism, fixed in C002-IF-009 §2.2–§2.3 | C002-REQ-606, C002-NFR-201, C002-NFR-202 | leave the mapping to the implementer (rejected: it is the safety measurement P-01 decided, Q-safety-02) |
-| OpenCode `bash` rules never wider than a guard entry; entries a glob cannot express are left to the S-07 replay, which then selects `sdd-mcp-server` (C002-IF-001 §6.3) | C002-CON-06, C002-NFR-202 | wider glob rules (false allows) |
+| OpenCode `bash` rules no wider than the forms the generated agents send need; a guard rule a glob cannot follow is a replay difference, so the S-07 replay selects `sdd-mcp-server` when any remains (C002-IF-001 §6.3; Q-safety-03) | C002-CON-06, C002-NFR-202 | wider glob rules (false allows) |
 | Templates of `architect-sdd` get their CLI lines translated at packaging and scanned (ERR-BLD-002) | C002-REQ-518, C002-REQ-519 | rewriting at `sdd template show` time (would need the host at run time) |
 | Under the sdd MCP server, `.cmd` shims are not run; the doctor reports `error` with a native-install fix | C002-CON-07 | run shims through `cmd.exe` (a shell, and `%`/`^` expansion of agent text) |
 
@@ -696,11 +699,11 @@ sequenceDiagram
   C002_COMP_013-->>P01: exit 0, or non-zero naming the target and the file
 ```
 
-### 8.12 F11 — Corpus replay of one enforcement mechanism (realizes C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631)
+### 8.12 F11 — Corpus replay of one enforcement mechanism (realizes C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647)
 
 ```mermaid
 sequenceDiagram
-  %% F11 corpus replay with per-mechanism expectations. Realizes C002-TS-608 C002-TS-609 C002-TS-628 C002-TS-629 C002-TS-630 C002-TS-631
+  %% F11 corpus replay with per-mechanism expectations. Realizes C002-TS-608 C002-TS-609 C002-TS-628 C002-TS-629 C002-TS-630 C002-TS-631 C002-TS-643 C002-TS-644 C002-TS-645 C002-TS-646 C002-TS-647
   actor P01 as P-01
   participant C002_COMP_008 as Corpus replay suite
   participant C002_COMP_013 as Guard corpora in tests
@@ -709,12 +712,21 @@ sequenceDiagram
   participant C002_COMP_012 as hook guard of the Copilot package
   P01->>C002_COMP_008: replay a target package for one mechanism
   C002_COMP_008->>C002_COMP_013: read the path and shell corpora and their SHA-256
+  C002_COMP_008->>C002_COMP_008: build the fixture, record platform and capabilities as replay host
   loop every case of both corpora
     alt identity case and the mechanism is not the OpenCode rules
       C002_COMP_008->>C002_COMP_008: list the case as not applicable, rule C002-REQ-626
     else applicable case
-      C002_COMP_008->>C002_COMP_008: expected deny for a memory case, else the corpus expectation
-      C002_COMP_008->>C002_COMP_008: map tool, caller and dialect to the mechanism input
+      alt no cwd, empty cwd, no tool name, or a requires capability the host lacks
+        C002_COMP_008->>C002_COMP_008: malformed call of the mapped tool, expected deny, source C002-REQ-630
+      else unknown architect sdd caller on the OpenCode rules
+        C002_COMP_008->>C002_COMP_008: played by the adopter agent, expected allow, source C002-REQ-632
+      else memory case
+        C002_COMP_008->>C002_COMP_008: expected deny, source C002-REQ-625
+      else any other case
+        C002_COMP_008->>C002_COMP_008: corpus expectation, source corpus
+      end
+      C002_COMP_008->>C002_COMP_008: map tool, caller, dialect and the case cwd to the mechanism input
       alt OpenCode permission rules
         C002_COMP_008->>C002_COMP_003: tool call by the generated agent or the adopter agent
         C002_COMP_003-->>C002_COMP_008: refused by a rule, or tool ran
@@ -731,34 +743,38 @@ sequenceDiagram
   C002_COMP_008-->>P01: replay report with applicable, differing and not-applicable cases, non-zero exit when any case differs
 ```
 
-### 8.13 F12 — Serena command decided by the bash guard core (realizes C002-TS-525, C002-TS-527, C002-TS-528)
+### 8.13 F12 — Serena command or writing command with `--cwd` decided by the bash guard core (realizes C002-TS-525, C002-TS-527, C002-TS-528, C002-TS-536, C002-TS-537)
 
 ```mermaid
 sequenceDiagram
-  %% F12 Serena command confinement on every host. Realizes C002-TS-525 C002-TS-527 C002-TS-528
-  participant C002_COMP_014 as Conductor running the doctor or init step
+  %% F12 Serena command and --cwd confinement on every host. Realizes C002-TS-525 C002-TS-527 C002-TS-528 C002-TS-536 C002-TS-537
+  participant C002_COMP_014 as Conductor running the doctor or init step, or a writing sdd command
   participant HOST as Claude Code hook, sdd MCP server or Copilot guard hook
   participant C002_COMP_012 as Bash guard core
   participant C002_COMP_018 as sdd CLI
-  C002_COMP_014->>HOST: sdd serena-config with a data-folder argument
+  C002_COMP_014->>HOST: sdd serena-config with a data-folder argument, or a writing sdd command with --cwd
   HOST->>C002_COMP_012: decide the command with cwd
-  C002_COMP_012->>C002_COMP_012: Serena command, shape check, then the data-folder argument
-  alt user-data option
-    C002_COMP_012->>C002_COMP_012: allow, the CLI checks the per-user folder
-  else literal CLAUDE_PLUGIN_DATA
-    C002_COMP_012->>C002_COMP_012: value from the guard environment, deny when unset, then as a folder
-  else folder
-    C002_COMP_012->>C002_COMP_012: resolve against cwd with links and case, compare with the repository root
+  alt Serena command
+    C002_COMP_012->>C002_COMP_012: shape check, any --cwd denies, then the data-folder argument
+    alt user-data option
+      C002_COMP_012->>C002_COMP_012: allow, the CLI checks the per-user folder
+    else literal CLAUDE_PLUGIN_DATA
+      C002_COMP_012->>C002_COMP_012: value from the guard environment, deny when unset, then as a folder
+    else folder
+      C002_COMP_012->>C002_COMP_012: resolve against cwd with links and case, allow only outside the repository root
+    end
+  else writing command with --cwd
+    C002_COMP_012->>C002_COMP_012: resolve every --cwd folder against cwd with links and case, allow only at or under the repository root
   end
   alt allowed
     C002_COMP_012-->>HOST: allow
-    HOST->>C002_COMP_018: run serena-config
-    alt user-data folder not determinable, relative or inside the repository
+    HOST->>C002_COMP_018: run the command
+    alt serena-config with a user-data folder not determinable, relative or inside the repository
       C002_COMP_018-->>C002_COMP_014: exit 2, ERR-CLI-020, nothing written
     else usable folder
-      C002_COMP_018-->>C002_COMP_014: created, updated or unchanged
+      C002_COMP_018-->>C002_COMP_014: created, updated or unchanged, or the writing command's result inside the repository
     end
-  else folder inside the repository or not resolvable
+  else Serena folder inside the repository, --cwd outside the repository root, or a word not resolvable
     C002_COMP_012-->>HOST: deny GUARD-BASH-001 with the reason
     HOST-->>C002_COMP_014: command denied, guard message
   end
@@ -800,8 +816,8 @@ flowchart LR
 
 | Component | As-is (CHG-001) | To-be (CHG-002) | Evidence |
 |---|---|---|---|
-| C002-COMP-012 (C001-COMP-08) | Bash allowlist accepts only `node <path>/sdd.mjs`, with any subcommand and any Serena data folder; probes lack `node --version`; path guard allows the memory folder; Claude hook input only | Bare `sdd …` and `node --version` accepted (C002-REQ-503); `serena-config` and `serena-launch` only with `--user-data` or a data folder outside the repository, on every host (C002-REQ-517); `memoryFolder` option; Copilot host adapter (`hook guard`, `session-start`, `subagent-stop`); cores otherwise unchanged | current-state E-4, E-5, E-6, E-22; baseline E-13 |
-| C002-COMP-013 (C001-COMP-12) | One bundle; Claude-only staging and INSTALL.md; six check steps over `plugins/architect/` | Two more bundles with license check; generator in package and check; npm staging with the template CLI-line translation and scan, and pack; target checks step; corpora extended (one case per writing sdd subcommand); `targets/` excluded from the Claude Code staging | current-state E-1, E-2, E-3, E-8 |
+| C002-COMP-012 (C001-COMP-08) | Bash allowlist accepts only `node <path>/sdd.mjs`, with any subcommand, any Serena data folder and any `--cwd`; probes lack `node --version`; path guard allows the memory folder; Claude hook input only | Bare `sdd …` and `node --version` accepted (C002-REQ-503); `serena-config` and `serena-launch` only with `--user-data` or a data folder outside the repository, on every host (C002-REQ-517); `--cwd` of a writing subcommand only at or under the repository root, on every host (C002-REQ-521); `memoryFolder` option; Copilot host adapter (`hook guard`, `session-start`, `subagent-stop`); cores otherwise unchanged | current-state E-4, E-5, E-6, E-22; baseline E-13 |
+| C002-COMP-013 (C001-COMP-12) | One bundle; Claude-only staging and INSTALL.md; six check steps over `plugins/architect/` | Two more bundles with license check; generator in package and check; npm staging with the template CLI-line translation and scan, and pack; target checks step; corpora extended (one case per writing sdd subcommand, and one per writing subcommand with an outside `--cwd`); `targets/` excluded from the Claude Code staging | current-state E-1, E-2, E-3, E-8 |
 | C002-COMP-014 (C001-COMP-01) | AskUserQuestion only; doctor rows fixed to Claude Code | Host question tool per wiring variant; no-choice handling; doctor host rows (Claude Code text unchanged) | current-state E-24, E-25 |
 | C002-COMP-015 (C001-COMP-09) | Doctor with eight rows and Claude Code probe; commands name `claude --agent` | Doctor host rows and sdd CLI row through variants; guard line and `$ARGUMENTS` translated per target | current-state E-14, E-16, E-17, E-28 |
 | C002-COMP-016 (C001-COMP-10) | Four "Claude Code wiring" sections; toolchain record of eight rows | Same Claude Code text; variants kept in `targets/`; toolchain record host rows through a variant | current-state E-21, E-26, E-27 |

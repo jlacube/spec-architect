@@ -33,23 +33,36 @@ the actual decision, or under `not_applicable` with the rule that excludes it (C
 C002-INV-14).
 `differing` counts the replayed cases whose decisions differ, an `error` counting as differing
 (C002-REQ-606); `applicable` counts the replayed cases. The corpora are identified by file and
-SHA-256 so that a release cannot cite a replay of other cases. Mechanisms: `opencode-permissions`
+SHA-256 so that a release cannot cite a replay of other cases, and the replay host by its platform
+and the fixture capabilities it could create (`replay_host`, for example `file-symlink`), so that
+the release check can recompute every expected decision (§2.1). Mechanisms: `opencode-permissions`
 (evaluated by OpenCode at its tested version through a headless session or its SDK, `host_versions`
 required), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
 `copilot-hooks` (`sdd hook guard --host copilot` of the Copilot package, fed with Copilot-shaped
 input).
 
-### §2.1 Applicability and expected decision per mechanism (Q-safety-02)
+### §2.1 Applicability and expected decision per mechanism (Q-safety-02, Q-safety-04)
 
-| Case category | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` | Rule |
+Applicability first: a case is not applicable only by the first row. Every other case is replayed,
+and the first of the following rows that matches it gives its expected decision and its
+`expected_source`.
+
+| Case | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` | Rule (`expected_source`) |
 |---|---|---|---|---|
-| `memory` | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C002-REQ-625: the generated agents have no memory folder (C002-DEC-009); the corpus keeps `allow` for Claude Code |
-| `identity` | replayed, expected as in the corpus | not applicable | not applicable | C002-REQ-626: only OpenCode has a caller that is not an Architect agent; the server and the scoped hooks decide for Architect agents only (C002-REQ-208, C002-REQ-302) |
-| every other category | replayed, expected as in the corpus | replayed, expected as in the corpus | replayed, expected as in the corpus | 0 differences (C002-NFR-201, C002-NFR-202) |
+| category `identity` | replayed (rows below) | not applicable | not applicable | C002-REQ-626: only OpenCode has a caller that is not an Architect agent; the server and the scoped hooks decide for Architect agents only (C002-REQ-208, C002-REQ-302) |
+| hook input without a `cwd` (`"cwd": null`), with an empty `cwd` (`""`) or without a tool name (`"tool": null`), for example PG-253, PG-254, BG-277, PG-256 | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | C002-REQ-630: no generated mechanism receives such a call except as a malformed one, and every fault refuses (C002-CON-08); the corpus keeps its expectation for Claude Code (`allow` for PG-256) |
+| `requires` names a capability missing from the report's `replay_host.capabilities` (for example PG-163 on REF-WIN without Developer Mode) | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | C002-REQ-630: the fixture the case needs cannot be built on the replay host; with the capability present the case falls to the rows below |
+| category `identity`, caller an `architect:sdd-*` name that is none of the ten Architect agents (PG-237, PG-238) | replayed, expected `allow` | (not applicable, first row) | (not applicable, first row) | C002-REQ-632: the OpenCode rules bind only the generated agents, so the fixture's adopter agent that plays the case is not confined; the corpus keeps `deny` for Claude Code |
+| category `memory` | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C002-REQ-625: the generated agents have no memory folder (C002-DEC-009); the corpus keeps `allow` for Claude Code |
+| every other case | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | 0 differences (C002-NFR-201, C002-NFR-202) |
 
-A case with a per-platform expectation takes the value of the platform it runs on; cases limited by
-`platforms` or `requires` run as the existing corpus tests run them (`tests/guards/*.test.ts`). Each
-replayed case records `expected_source`: `corpus`, or `C002-REQ-625` for a memory case.
+`expected_source` is the rule's requirement ID (`C002-REQ-625`, `C002-REQ-630` or `C002-REQ-632`),
+or `corpus` for the last row. A corpus expectation given per platform takes the value of the
+report's `replay_host.platform`. A case limited by `platforms` to platforms other than the replay
+host's has no expectation there and would be omitted, which the release check refuses (ERR-REL-012);
+every `platforms` list of the present corpora names `win32`, so the release replays run on REF-WIN.
+A case with `requires` is never skipped: it runs as in the corpus when the replay host has the
+capability, and by the third row otherwise.
 
 ### §2.2 Caller and input per mechanism
 
@@ -60,7 +73,18 @@ is always played by an Architect agent (its own, else the conductor), since C002
 expectation for Architect agents (for example PG-224, whose corpus caller is `general-purpose`). An
 identity case on OpenCode is played by the replay fixture's adopter agent, an agent of the fixture's
 own `opencode.json` that is none of the ten Architect agents and has no rule of the target package
-(C002-REQ-626).
+(C002-REQ-626); a case whose caller is an unknown `architect:sdd-*` name is played by the same
+adopter agent, since no generated agent bears that name (C002-REQ-632).
+
+**Working folder.** A case without a `cwd` key runs with `{repo}`, as in the existing corpus tests
+(`tests/guards/fixture.ts:118`). A case whose `cwd` is set and differs from `{repo}` (category
+`cwd`, for example PG-129 … PG-138) is not a C002-REQ-630 case: it keeps its corpus expectation and
+is fed with its own `cwd`. `opencode-permissions` and `sdd-mcp-server` take no working folder per
+call (the OpenCode session and the server run at `{repo}`), so they receive the case's path joined
+to the case's `cwd` without normalisation (an absolute case path is used as it is): PG-134 (`cwd`
+`{repo}/src`, path `.sdd/a.md`) is fed as `{repo}/src/.sdd/a.md` and stays `deny`, PG-129 (`../.sdd/a.md`)
+as `{repo}/src/../.sdd/a.md` and stays `allow` (C002-TS-644). `copilot-hooks` receives the case's
+`cwd` in the hook input's `cwd` field and the path as written.
 
 | Corpus tool | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` |
 |---|---|---|---|
@@ -71,9 +95,12 @@ own `opencode.json` that is none of the ten Architect agents and has no rule of 
 | Bash (shell corpus) | `bash` call with the command | `run_command` with the command, `dialect: bash` | hook input of the terminal tool with the command, decided in the `bash` dialect |
 | PowerShell (shell corpus) | `bash` call with the command (OpenCode has one shell tool; C002-IF-001 §6.3) | `run_command` with the command, `dialect: powershell` | hook input of the terminal tool with the command, decided in the `powershell` dialect |
 | raw `stdin` (category `malformed`) | the tool call with its required arguments missing | the tool call with `{}` as arguments | the case's standard input unchanged |
+| C002-REQ-630 case (no or empty `cwd`, no tool name, or a `requires` capability the replay host lacks): the **malformed call** | the call of the tool the case maps to (`write`; `edit` for Edit; `bash` for the shell corpus; `write` when the case has no tool name) with its required arguments missing | the tool the case maps to (`write_file`; `replace_text` for Edit; `run_command` for the shell corpus; `write_file` when the case has no tool name) with `{}` as arguments | the Copilot hook input of the tool the case maps to, with the field the case leaves out also left out or empty (no `cwd`, `cwd` `""`, no `tool_name`); for a missing capability, `tool_input` `{}` |
 
-Placeholders (`{repo}`, `{outside}`, `{sdd}`, …) resolve against the replay fixture as in the
-existing corpus tests. The `copilot-hooks` adapter writes, per case, a classes file whose terminal
+A case fed as a malformed call (the last two rows) records `fed_as.malformed: true`, with
+`fed_as.tool` naming the tool of the call; a malformed call that a generated mechanism allows is a
+differing decision (C002-TS-645). Placeholders (`{repo}`, `{outside}`, `{sdd}`, …) resolve against
+the replay fixture as in the existing corpus tests. The `copilot-hooks` adapter writes, per case, a classes file whose terminal
 entry names the dialect of the case's tool, so that each case is decided in its own dialect; the
 dialect of the packaged classes file is checked by TGT-CLASS-001 against the table. The
 `sdd-mcp-server` adapter runs the server in a disposable copy of the fixture, with stub executables
@@ -118,6 +145,13 @@ are the corpus replay of the generated rules (§2) with 0 differences. Rule of S
 else `deferred` (C002-REQ-620). A `deferred` record is not copied into the Copilot table: it
 triggers the spec revision of `../10-context/scope.md` §1.1 (Q-defer-01), and until that revision
 the release check refuses the Copilot target (ERR-REL-005; C002-IF-001 §1).
+
+`agent_tools_closed` is required in an S-07 record. `false` means that OpenCode ignores the
+catch-all tool entry (adopter MCP and plugin tools stay on for the Architect agents) or that a named
+entry cannot override it (the agents lose every tool); neither enforcement mode closes the tool set
+then (C002-REQ-108). Such a record is copied into the OpenCode table with its mode, triggers a
+revision of this spec with P-01 as a `deferred` S-08 record does, and until that revision the
+release check refuses the OpenCode target (ERR-REL-013; C002-IF-001 §6.1).
 
 ## §4 Checklist and checklist record
 
@@ -168,7 +202,8 @@ cumulative; each is an ERR-REL code of `errors.md` §3:
 | Check | Refusal |
 |---|---|
 | a replay report exists for every mechanism of the package's mode, `differing` is 0 over the applicable cases | ERR-REL-001, ERR-REL-009 |
-| each replay report lists every case of the cited corpora exactly once, and under `not_applicable` exactly the cases that §2.1 excludes for its mechanism (none for `opencode-permissions`, the identity-category cases for the other two) | ERR-REL-012 |
+| each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism (none for `opencode-permissions`, the identity-category cases for the other two); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host` (a C002-REQ-630 case never as not applicable) | ERR-REL-012 |
+| OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
 | the injection summary has at least 20 cases and none acted upon | ERR-REL-002, ERR-REL-009 |
 | Copilot: a checklist record of this version exists and every step passed | ERR-REL-003, ERR-REL-004 |
 | Copilot hooks fallback: the checklist record shows `hooks_state: enabled` | ERR-REL-010 |

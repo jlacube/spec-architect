@@ -152,8 +152,12 @@ OpenCode allows most tools by default, including the tools of the adopter's own 
 plugins, which `permission.edit` does not govern (C002-R-001 C-01). The OpenCode agent entry of each
 Architect agent therefore starts its tool map with a catch-all entry that turns every tool off
 (`"*": false`) and then turns on only the derived tools (C002-IF-005 §2; C002-REQ-108, C002-TS-133);
-TGT-TOOLS-001 checks it and spike S-07 confirms that a named entry overrides the catch-all
-(`agent_tools_closed`, C002-IF-009 §3).
+TGT-TOOLS-001 checks it.
+[ASSUMPTION: S-07 — OpenCode honours the catch-all tool entry for every tool, adopter MCP and plugin tools included, and a named entry overrides it (outcome agent_tools_closed)]
+Spike S-07 records the outcome (C002-IF-009 §3). The catch-all decides in both enforcement modes, so a record with
+`agent_tools_closed: false` leaves the tool set open whichever mode the replay selects: it triggers
+a revision of this spec with P-01, and until that revision the release check refuses the OpenCode
+target with ERR-REL-013 (C002-IF-009 §3, §5).
 
 ### §6.2 MCP servers
 
@@ -185,16 +189,18 @@ bash guard core of C002-IF-008 §1 also decides on arguments, which a pattern ca
 | script form `node <path>/sdd.mjs` (no `sdd.mjs` under `.sdd/`, no expansion characters, no node options before the script) | none: the generated agents call bare `sdd` (C002-GOAL-04) | allowed script-form cases are denied (false denies) |
 | Serena data folder outside the repository (C002-REQ-517, C002-IF-008 §1.1) | `sdd serena-config *` and `sdd serena-launch *` denied, then `sdd serena-config --user-data` and `sdd serena-launch --user-data *` allowed | the repository is unknown when the package is generated, so a positional folder outside it is denied (false denies) |
 | git output options (`-o`, `--output…`, `-O…`, `--open-files-in-pager`, `--ext-diff`) | `git * -o *`, `git * --output*`, `git * -O*`, `git * --open-files-in-pager*`, `git * --ext-diff*` denied | spellings a pattern misses are false allows that the replay finds |
+| `--cwd` of a writing `sdd` subcommand only with a folder at or under the repository root (C002-REQ-521, C002-IF-008 §1.2) | `sdd *--cwd*` denied, written after every `allow` rule of an `sdd` form, the Serena `--user-data` rules included (the last matching rule wins) | the repository root is unknown when the package is generated, so every `sdd` command with `--cwd` is denied, also with a folder inside the root and for subcommands that write no file (false denies; for example the inside-root `--cwd` case of C002-REQ-607); no false allow |
 | ripwire: one read verb, bounded flags only (C001-IF-14 §2) | one `allow` rule per read verb (`ripwire *--for=*`, `ripwire *--situ*`, …); any other ripwire command falls to the catch-all deny | a command with two read verbs or another flag still matches an `allow` rule (false allows the replay finds) |
 | ast-grep `run --pattern` without rewrite flags | `ast-grep run *` allowed, then `ast-grep * --rewrite*`, `ast-grep * -r *`, `ast-grep * -U*` denied | as for git |
 | PowerShell dialect (C001-IF-07 §3 PowerShell rows) | none: OpenCode has one shell tool, and the rules follow the Bash rows | PowerShell-only decisions (for example `git log` denied in PowerShell) are not reproduced |
 
-The generator writes these rules; it never writes an `allow` rule wider than a guard entry needs for
-the forms the generated agents send. Every gap counts in the corpus replay as a differing decision
-(C002-NFR-202 allows neither false allows nor false denies), so the S-07 replay of these rules
+The generator writes these rules with no `allow` rule wider than the forms the generated agents send
+need; a guard rule that a glob cannot follow is a replay difference, whether it shows as a false
+allow or as a false deny (C002-NFR-202 allows neither). The S-07 replay of these rules therefore
 decides the OpenCode mode: `native-permissions` only with 0 differences, otherwise
 `sdd-mcp-server`, under which the guard cores decide exactly (C002-REQ-209, C002-REQ-210). With the
-present corpus the script-form allow cases (for example BG-001) and the Serena cases with a folder
-outside the repository are expected to differ, so `sdd-mcp-server` is the expected OpenCode mode
-unless P-01 accepts stricter OpenCode decisions for command forms the generated agents never send
-(question Q-safety-03).
+present corpus the script-form allow cases (for example BG-001), the Serena cases with a folder
+outside the repository and the inside-root `--cwd` case are expected to differ, so `sdd-mcp-server`
+is the expected OpenCode mode. P-01 keeps 0 differences for these forms too (Q-safety-03, spec
+round 3): no OpenCode decision stricter than the guard is accepted, and the replay alone selects
+the mode.

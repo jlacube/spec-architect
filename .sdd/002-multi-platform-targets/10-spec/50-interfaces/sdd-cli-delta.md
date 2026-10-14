@@ -44,7 +44,7 @@ on Claude Code; both are the same program (C002-REQ-501).
 | `hook guard` | `--host copilot`, `--agent <agent>` (an Architect agent name), `--classes <file>` | Agent-scoped guard of the Copilot hooks fallback: read Copilot PreToolUse input on standard input, classify the tool with the classes file and run the path or bash guard core for that agent with the memory folder off (C002-IF-008 §2, §5). Exit 0 allow; exit 2 deny with the guard message, or GUARD-HOOK-001 on any fault | C002-REQ-308, C002-REQ-309 |
 | `hook session-start` | `--host copilot` | The status brief of C001-IF-07 §4 from Copilot SessionStart input; nothing without `.sdd/`; always exit 0. Without `--host` (Claude Code) unchanged | C002-REQ-313, C002-REQ-314 |
 | `hook subagent-stop` | `--host copilot`, `--agents <list>` | When the input's `agent_type`, with any `architect:` prefix removed, is in the list, run `trace --quiet --write --active`; otherwise do nothing. Always exit 0, also when the trace fails | C002-REQ-315 |
-| `guard-bash` | unchanged arguments | Allowlist rows of C002-IF-008 §1 (bare `sdd …`, `node --version`) and the Serena-command confinement of C002-IF-008 §1.1, which reads `CLAUDE_PLUGIN_DATA` from its own environment | C002-REQ-503, C002-REQ-517 |
+| `guard-bash` | unchanged arguments | Allowlist rows of C002-IF-008 §1 (bare `sdd …`, `node --version`), the Serena-command confinement of C002-IF-008 §1.1, which reads `CLAUDE_PLUGIN_DATA` from its own environment, and the `--cwd` confinement of the writing subcommands of C002-IF-008 §1.2 | C002-REQ-503, C002-REQ-517, C002-REQ-521 |
 
 ## Exit codes
 

@@ -9,16 +9,17 @@ status: draft
 
 # C002-IF-008 — Hooks contract delta (delta to C001-IF-07)
 
-C001-IF-07 stays in force for Claude Code. This delta changes two allowlist rows and confines the
-two Serena subcommands of the sdd CLI entry (the only Claude Code behaviours CHG-002 changes,
-C002-REQ-503 and C002-REQ-517, C002-GOAL-05 as widened by Q-guards-04), and adds the Copilot hook
-input used by the Copilot hooks fallback and the Copilot session hooks. Owner: C002-COMP-012.
+C001-IF-07 stays in force for Claude Code. This delta changes two allowlist rows, confines the two
+Serena subcommands of the sdd CLI entry and confines the option `--cwd` of its writing subcommands
+(the only Claude Code behaviours CHG-002 changes, C002-REQ-503, C002-REQ-517 and C002-REQ-521,
+C002-GOAL-05 as widened by Q-guards-04 and Q-guards-05), and adds the Copilot hook input used by the
+Copilot hooks fallback and the Copilot session hooks. Owner: C002-COMP-012.
 
 ## §1 Allowlist rows changed (C001-IF-07 §3)
 
 | Entry | Allowed form (CHG-002) | Notes |
 |---|---|---|
-| sdd CLI | `node <path>/sdd.mjs <any subcommand>` or `sdd <any subcommand>`, except `serena-config` and `serena-launch`, which §1.1 confines | `sdd` must be the whole first word: `npx sdd …` and `sddx …` stay denied with GUARD-BASH-001 (C002-TS-504). A bare `sdd` runs the `sdd` that PATH resolves, the same trust as the `git` and `ripwire` entries. The script form keeps its rule (no `sdd.mjs` inside `.sdd/`) |
+| sdd CLI | `node <path>/sdd.mjs <any subcommand>` or `sdd <any subcommand>`, except `serena-config` and `serena-launch`, which §1.1 confines, and the option `--cwd` of a writing subcommand, which §1.2 confines | `sdd` must be the whole first word: `npx sdd …` and `sddx …` stay denied with GUARD-BASH-001 (C002-TS-504). A bare `sdd` runs the `sdd` that PATH resolves, the same trust as the `git` and `ripwire` entries. The script form keeps its rule (no `sdd.mjs` inside `.sdd/`) |
 | tool versions | `node -v`, `node --version`, `git --version`, `claude --version`, `serena --version`, `ast-grep --version`, `uv --version` | exact word count: `node --version --eval 1` stays denied |
 
 PowerShell commands from Architect agents: `node <path>/sdd.mjs …`, `sdd …` and the version probes,
@@ -28,7 +29,7 @@ stays GUARD-BASH-002.
 Deny message summary (`Allowed:` part of C001-IF-07 §4), CHG-002 text:
 
 ```text
-sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |
+sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |
 ```
 
 The same allowlist is the source of the OpenCode `bash` rules under native permission enforcement
@@ -47,7 +48,8 @@ guard cannot resolve (<word>)`:
 1. **Shape.** Before the first `--`, the words after the CLI prefix (`sdd`, or `node <path>/sdd.mjs`
    as the script form allows) are exactly the subcommand, one data-folder argument and, for
    `serena-launch` only, `--read-only`, in any order. Any other word there (another option such as
-   `--cwd`, a second folder) denies the command. The words after `--` are Serena's arguments and are
+   `--cwd` or `--cwd=<dir>`, a second folder) denies the command, so a Serena command never takes
+   the `--cwd` that §1.2 allows inside the repository root. The words after `--` are Serena's arguments and are
    not checked: Serena keeps its project data in the data folder (C001-REQ-1013), so the data folder
    decides where the command writes.
 2. **Data-folder argument.** One of:
@@ -58,6 +60,13 @@ guard cannot resolve (<word>)`:
      process and decides that folder as below; an unset or empty variable denies the command. This
      is the spelling of step 1 of `commands/doctor.md` and of `commands/init.md:9` when Claude Code
      has not substituted the variable in the command text (current-state E-22).
+     [ASSUMPTION: C002-TS-537 — Claude Code at its tested version substitutes CLAUDE_PLUGIN_DATA in the command text before the PreToolUse hook runs, or sets it in the environment of the hook process]
+     The only host evidence so far is the variable's expansion in `.mcp.json`
+     (`docs/spikes/S-06-skills-mcp.md:138`). C002-TS-528 stubs the variable; C002-TS-537 checks it
+     on the real host under C002-DOD-022. If C002-TS-537 finds
+     neither, the guard still does not allow the unresolved literal: the Serena step of
+     the Claude Code doctor and init commands would be denied, against C002-REQ-623, so the
+     implementing task stops and raises a spec defect against C002-REQ-517 for a revision with P-01.
    - any other word that starts with `~` or holds `$`, `%`, `` ` ``, `*`, `?`, `[` or `]`: denied,
      because the guard cannot resolve a shell expansion.
    - a folder: resolved against the hook input's `cwd` as the path guard resolves a write target
@@ -83,28 +92,59 @@ the literal by rule 2 (environment variable). The generated targets pass `--user
 ### §1.2 Writing sdd subcommands
 
 The subcommands of the sdd CLI that write files (C001-IF-01 and C002-IF-007, `src/cli/commands.ts:481-508`).
-Every other subcommand writes no file. The guard corpora hold one case per row (C002-REQ-607,
-C002-TS-636); the expected decision is `allow` except for the Serena rows, which §1.1 decides.
+Every other subcommand writes no file. The guard corpora hold one case per row and, for every row
+but the Serena rows, one case with a `--cwd` folder outside the repository root (C002-REQ-607,
+C002-TS-636); the expected decision is `allow`, subject to the `--cwd` rule below, except for the
+Serena rows, which §1.1 decides.
 
 | Subcommand | Writes | Bash guard decision |
 |---|---|---|
-| `init` | `.sdd/` in the working folder | allow |
-| `change new`, `change profile`, `change revise`, `change stop` | the change folder, `.sdd/registry.json`, `.sdd/SDD.md` | allow |
-| `id next`, `id tombstone` | `ids.json` of the change | allow |
-| `status --write` | `.sdd/registry.json`, the status block of `.sdd/SDD.md` | allow |
-| `trace --write` (also run by `hook subagent-stop`) | `trace.json`, `80-traceability.md`, `85-open-items.md` of the change | allow |
-| `gate approve`, `gate record` | `change.md`, `approvals.json`; with `--commit`, also a git commit of the change folder, `.sdd/SDD.md` and `.sdd/registry.json` only (`src/gate/commit.ts:26`) | allow |
-| `stale check` | `change.md` of the changes it marks | allow |
-| `task set` | the task file | allow |
-| `defect add`, `defect close`, `defect reopen` | `change.md` of the change | allow |
-| `archive` (without `--dry-run`) | `.sdd/_living/`, `.sdd/_archive/` | allow |
-| `extract-features` | `.feature` files from the change's gherkin blocks (C001-IF-01, Could). Not implemented at baseline (no handler at `src/cli/commands.ts:507`), so it writes nothing today; the change that implements it fixes its output folder, and a folder outside `.sdd/` then needs a guard rule like §1.1 | allow |
-| `serena-config` | `<data folder>/serena/serena_config.yml` | §1.1 |
-| `serena-launch` | as `serena-config`, then Serena's own data under `<data folder>/serena/` | §1.1 |
+| `init` | `.sdd/` in the working folder | allow; `--cwd` as below |
+| `change new`, `change profile`, `change revise`, `change stop` | the change folder, `.sdd/registry.json`, `.sdd/SDD.md` | allow; `--cwd` as below |
+| `id next`, `id tombstone` | `ids.json` of the change | allow; `--cwd` as below |
+| `status --write` | `.sdd/registry.json`, the status block of `.sdd/SDD.md` | allow; `--cwd` as below |
+| `trace --write` (also run by `hook subagent-stop`) | `trace.json`, `80-traceability.md`, `85-open-items.md` of the change | allow; `--cwd` as below |
+| `gate approve`, `gate record` | `change.md`, `approvals.json`; with `--commit`, also a git commit of the change folder, `.sdd/SDD.md` and `.sdd/registry.json` only (`src/gate/commit.ts:26`) | allow; `--cwd` as below |
+| `stale check` | `change.md` of the changes it marks | allow; `--cwd` as below |
+| `task set` | the task file | allow; `--cwd` as below |
+| `defect add`, `defect close`, `defect reopen` | `change.md` of the change | allow; `--cwd` as below |
+| `archive` (without `--dry-run`) | `.sdd/_living/`, `.sdd/_archive/` | allow; `--cwd` as below |
+| `extract-features` | `.feature` files from the change's gherkin blocks (C001-IF-01, Could). Not implemented at baseline (no handler at `src/cli/commands.ts:507`), so it writes nothing today; the change that implements it fixes its output folder, and a folder outside `.sdd/` then needs a guard rule like §1.1 | allow; `--cwd` as below |
+| `serena-config` | `<data folder>/serena/serena_config.yml` | §1.1 (no `--cwd`) |
+| `serena-launch` | as `serena-config`, then Serena's own data under `<data folder>/serena/` | §1.1 (no `--cwd`) |
 
-Every other row writes only inside the `.sdd/` folder of the workspace that the CLI finds from its
-working folder (C001-IF-01), and `gate approve --commit` adds a git commit of those `.sdd/` files
-only, so the allowlist needs no rule for them.
+**Writing command.** A command of the sdd CLI entry is a writing command when the first word after
+the CLI prefix (`sdd`, or `node <path>/sdd.mjs` as the script form allows), together with the second
+word for the groups `change`, `id`, `gate`, `stale`, `task`, `defect` and `hook`, names a row of the
+table above, `hook subagent-stop` included (it runs the trace refresh, C002-IF-007). `status` and
+`trace` are writing commands only when one of their words before the first `--` is `--write`;
+`archive` is one unless one of those words is `--dry-run`. The CLI takes its subcommand from these
+first words only (`src/cli/run.ts:33-45`).
+
+**`--cwd` rule (C002-REQ-521).** `--cwd` is a global option of every subcommand, and the CLI resolves
+it against its own working folder (`src/cli/run.ts:133`). The bash guard core allows a writing
+command that carries `--cwd` only when every `--cwd` folder among its words before the first `--`,
+written `--cwd <dir>` (the next word) or `--cwd=<dir>`, resolves to the repository root of §1.1
+rule 3 or to a folder under it:
+
+1. The folder is resolved against the hook input's `cwd` as §1.1 rule 2 resolves a data folder (`..`
+   segments, letter case, drive letters, 8.3 short names, links through the real path of the longest
+   existing prefix; C001-REQ-1104). It must lie inside the root both as written and after link
+   resolution; the comparison is per path segment, so `C:/repo-data` lies outside `C:/repo`.
+2. A `--cwd` with no folder word after it, or a folder word that starts with `~` or holds `$`, `%`,
+   `` ` ``, `*`, `?`, `[` or `]`, cannot be resolved and denies the command.
+3. Otherwise the command is denied with GUARD-BASH-001 and the reason `sdd <subcommand> with --cwd
+   outside the repository (<resolved folder>)` or `sdd <subcommand> with a --cwd the guard cannot
+   resolve (<word>)`.
+
+On Claude Code and under the Copilot hooks fallback the hook input's `cwd` is the folder the command
+runs in; on the sdd MCP server it is the server's root, which is also the working folder of the
+command (C002-IF-002 §5.2), so the guard decides the folder the CLI will use. A command that writes
+no file (for example `lint`, `status` without `--write`, `gate show`) keeps `--cwd` unrestricted
+(BG-019). A folder under the root may hold a nested workspace (`<root>/pkg/.sdd/`), which the rule
+allows (Q-guards-05). With this rule a writing command other than the Serena rows writes only inside
+the `.sdd/` folder of the workspace that the CLI finds from a folder at or under the repository root
+(C001-IF-01), and `gate approve --commit` adds a git commit of those `.sdd/` files only.
 
 ## §2 Copilot PreToolUse input (Copilot hooks fallback)
 
@@ -127,8 +167,10 @@ maps it to the hook input of C001-IF-07 §1:
 | any other tool name | deny GUARD-HOOK-001 (C002-REQ-309) |
 
 Exit code 0 allows; exit 2 denies, with the guard message on standard error, which VS Code returns
-to the model (C002-R-001 A-02). Empty or non-JSON input, an unreadable classes file and every
-exception also exit 2 with GUARD-HOOK-001 (C002-REQ-309, C002-CON-08). The tool names and input
+to the model (C002-R-001 A-02). Empty or non-JSON input, an input without `cwd`, with an empty
+`cwd` or without `tool_name`, an unreadable classes file and every exception also exit 2 with
+GUARD-HOOK-001 (C002-REQ-309, C002-CON-08); the corpus replay feeds such inputs as malformed calls
+(C002-REQ-630, C002-IF-009 §2.2). The tool names and input
 fields of the VS Code edit and terminal tools are captured by spike S-08 (C002-R-001 A-05) and
 written to the table, not to the code.
 

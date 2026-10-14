@@ -63,6 +63,11 @@ stateDiagram-v2
 | undetermined | S-08 record | not confined; hooks do not block | deferred | not copied into the Copilot table (C002-IF-001 §1); triggers the spec revision of `../10-context/scope.md` §1.1 that removes the Copilot target (Q-defer-01); until then the Copilot release is refused (C002-REQ-620, ERR-REL-005); OpenCode unaffected (C002-REQ-619) |
 | any determined mode | tested version changes | — | undetermined | spike re-run before the next release (C002-REQ-621) |
 
+The S-07 outcome `agent_tools_closed` does not select a mode: the catch-all tool entry applies in
+both OpenCode modes. An S-07 record with `agent_tools_closed: false` sets the mode as above and, in
+addition, triggers a revision of this spec with P-01; until then the OpenCode release is refused
+(ERR-REL-013, C002-IF-009 §3); Copilot unaffected (C002-REQ-619).
+
 ## 3. sdd MCP server process
 
 ```mermaid

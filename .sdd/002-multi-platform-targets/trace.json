@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T20:04:30.467Z",
+  "generated_at": "2026-10-14T21:08:00.523Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1126,7 +1126,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 114,
       "title": "Corpus replay suite",
-      "content_hash": "sha256:4ceed87415dcb9898ca82ba3e2a1da191268e278469610e23b22bf00a05b750a"
+      "content_hash": "sha256:60c9157fd9b935a1a082bb503530c3676c508ace6cd01fb9b51df6636a54a5f4"
     },
     {
       "id": "C002-COMP-009",
@@ -1142,7 +1142,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 132,
       "title": "Release check",
-      "content_hash": "sha256:f59890bca6a5be0fc82b4df27bea24c2e1778584f0ef15007b9a257d9fcb7e8f"
+      "content_hash": "sha256:b15b8aaaa9e6957c257f34d4d54996b39624dc63c851fb9dfbdf2dcd06631331"
     },
     {
       "id": "C002-COMP-011",
@@ -1158,7 +1158,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 150,
       "title": "Hooks and guards (modified)",
-      "content_hash": "sha256:a11b4977d5da67bb84a9299c6052cd02c18442c383cd1bace918544306c79274"
+      "content_hash": "sha256:8294d0e9fddbbba4a674f0a135ec59a57fe1d690e28d3b8ff1ab72f95d2f02fa"
     },
     {
       "id": "C002-COMP-013",
@@ -1253,8 +1253,8 @@
       "type": "CON",
       "file": "10-spec/60-architecture/constraints.md",
       "line": 17,
-      "title": "The path and bash guard cores are the only decision point for the write/shell boundary of the sdd MCP server, of the Copilot hooks fallback and of the Claude Code hooks; no mechanism re-implements their rules (the Serena-command confinement of C002-IF-008 §1.1 included), and the OpenCode permission rules are generated from the same allowlist with no `allow` rule wider than a guard entry (C002-IF-001 §6.3)",
-      "content_hash": "sha256:0ff00bf33be69104214128b09da04a57294e3d099f1415dcc0ddca6292253903"
+      "title": "The path and bash guard cores are the only decision point for the write/shell boundary of the sdd MCP server, of the Copilot hooks fallback and of the Claude Code hooks; no mechanism re-implements their rules (the Serena-command confinement of C002-IF-008 §1.1 and the `--cwd` confinement of §1.2 included), and the OpenCode permission rules are generated from the same allowlist with no `allow` rule wider than the forms the generated agents send need; a guard rule that a glob cannot follow is a replay difference (C002-IF-001 §6.3)",
+      "content_hash": "sha256:8d20a9e19ba33c1ec85e59d57214495ab5c0d2fcc73a411d71dedd5be442f4f1"
     },
     {
       "id": "C002-CON-07",
@@ -1702,8 +1702,8 @@
       "type": "IF",
       "file": "10-spec/50-interfaces/README.md",
       "line": 25,
-      "title": "Hooks contract delta: allowlist rows, Serena-command confinement, writing subcommands and Copilot hook input (delta to C001-IF-07)",
-      "content_hash": "sha256:aca67b1ba6a4398dc705053bc759dbf4110480d2450519c54fb2d314adaa1094"
+      "title": "Hooks contract delta: allowlist rows, Serena-command confinement, writing subcommands and their `--cwd` confinement, and Copilot hook input (delta to C001-IF-07)",
+      "content_hash": "sha256:254733234ba83df343ccc942d44e4b626c3e634177c2459f3f264bfd187dc45a"
     },
     {
       "id": "C002-IF-009",
@@ -1711,7 +1711,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 26,
       "title": "Verification records: replay report, checklist record, spike record, release record",
-      "content_hash": "sha256:2dc27cb741e42a64562373ec030f3151e547ecddb4e4d89ced2e95f3c20c2025"
+      "content_hash": "sha256:327ba53365d2552a5f81bd534febdb2d3e406025747fca8497376f009ff3ffd9"
     },
     {
       "id": "C002-IF-010",
@@ -1822,8 +1822,8 @@
       "type": "INV",
       "file": "10-spec/40-domain/domain-model.md",
       "line": 94,
-      "title": "A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision of its mechanism, or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).",
-      "content_hash": "sha256:7e9c77cc39a1d0cf66c2c735b3ae4501e34c4cb95f8707c40197c80f72397f0e"
+      "title": "A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision and source that C002-IF-009 §2.1 gives for its mechanism and replay host (a case without a `cwd` or a tool name, or needing a capability the host lacks, always replayed as a malformed call, C002-REQ-630), or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).",
+      "content_hash": "sha256:2dccd0777207491767450a283cffbf4d8d82cf843fe7c1addd36ba8496433e6c"
     },
     {
       "id": "C002-NFR-101",
@@ -6530,6 +6530,16 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-630",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-632",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-009",
       "to": "C002-COMP-002",
       "relation": "depends-on"
@@ -6763,6 +6773,16 @@
       "from": "C002-COMP-012",
       "to": "C002-REQ-517",
       "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
+      "to": "C002-REQ-521",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
+      "to": "C002-REQ-521",
+      "relation": "references"
     },
     {
       "from": "C002-COMP-013",
@@ -8176,6 +8196,11 @@
     },
     {
       "from": "C002-IF-008",
+      "to": "C002-REQ-521",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
       "to": "C002-REQ-607",
       "relation": "references"
     },
@@ -8201,6 +8226,11 @@
     },
     {
       "from": "C002-IF-009",
+      "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
       "to": "C002-REQ-606",
       "relation": "references"
     },
@@ -8222,6 +8252,16 @@
     {
       "from": "C002-IF-009",
       "to": "C002-REQ-629",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-630",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-632",
       "relation": "references"
     },
     {
@@ -8261,7 +8301,17 @@
     },
     {
       "from": "C002-INV-14",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-INV-14",
       "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-INV-14",
+      "to": "C002-REQ-630",
       "relation": "references"
     },
     {

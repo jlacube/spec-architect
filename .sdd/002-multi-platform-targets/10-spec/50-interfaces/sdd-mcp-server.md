@@ -107,7 +107,8 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
    The dialect only selects the guard's syntax rules and tokeniser; the command still runs without a
    shell. Deny → refused with the core's rule (GUARD-BASH-001 or GUARD-BASH-002) and message
    (C002-REQ-405). The core applies the allowlist of C002-IF-008 §1, including the Serena-command
-   confinement of §1.1 with `cwd` = root (C002-REQ-517); the server's environment has no
+   confinement of §1.1 and the `--cwd` confinement of the writing subcommands of §1.2, with `cwd` =
+   root (C002-REQ-517, C002-REQ-521); the server's environment has no
    `CLAUDE_PLUGIN_DATA`, so only `--user-data` or a folder outside the repository passes. The
    corpus replay feeds PowerShell cases with `dialect: powershell` (C002-IF-009 §2.2).
 3. Execute without a shell (C002-CON-07): take the words of each pipe segment from the guard core's

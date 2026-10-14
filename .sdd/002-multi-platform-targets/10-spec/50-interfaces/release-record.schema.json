@@ -155,16 +155,26 @@
     "mechanism": { "enum": ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"] },
     "injectionSource": { "enum": ["opencode-runner", "copilot-cli-runner", "manual-checklist"] },
     "replayReport": {
-      "title": "Corpus replay report (C002-REQ-606, C002-REQ-625 … C002-REQ-627)",
+      "title": "Corpus replay report (C002-REQ-606, C002-REQ-625 … C002-REQ-627, C002-REQ-630, C002-REQ-632)",
       "description": "Every case of both corpora appears exactly once, under cases or under not_applicable (verification-records.md §2).",
       "type": "object",
       "additionalProperties": false,
-      "required": ["mechanism", "target", "package_version", "corpora", "cases", "not_applicable", "applicable", "differing"],
+      "required": ["mechanism", "target", "package_version", "corpora", "replay_host", "cases", "not_applicable", "applicable", "differing"],
       "properties": {
         "mechanism": { "$ref": "#/$defs/mechanism" },
         "target": { "enum": ["opencode", "copilot"] },
         "package_version": { "$ref": "#/$defs/version" },
         "host_versions": { "$ref": "#/$defs/hostVersions" },
+        "replay_host": {
+          "description": "Platform of the replay host and the fixture capabilities it could create; the release check recomputes per-platform expectations and the C002-REQ-630 cases from it (verification-records.md §2.1).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["platform", "capabilities"],
+          "properties": {
+            "platform": { "enum": ["win32", "posix"] },
+            "capabilities": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+          }
+        },
         "corpora": {
           "type": "object",
           "additionalProperties": false,
@@ -192,14 +202,43 @@
                 "properties": {
                   "tool": { "description": "Host tool or server tool name, for example write_file, bash, or the Copilot edit tool.", "type": "string", "minLength": 1 },
                   "caller": { "description": "Generated agent that played the case, or adopter-agent.", "type": "string", "minLength": 1 },
-                  "dialect": { "enum": ["bash", "powershell"] }
+                  "dialect": { "enum": ["bash", "powershell"] },
+                  "malformed": { "description": "True when the case was fed as a malformed call: a raw-stdin case or a C002-REQ-630 case (verification-records.md §2.2).", "type": "boolean" }
                 }
               },
               "expected": { "enum": ["allow", "deny"] },
-              "expected_source": { "enum": ["corpus", "C002-REQ-625"] },
+              "expected_source": {
+                "description": "The rule of verification-records.md §2.1 that gave the expected decision.",
+                "enum": ["corpus", "C002-REQ-625", "C002-REQ-630", "C002-REQ-632"]
+              },
               "actual": { "enum": ["allow", "deny", "error"] },
               "detail": { "type": "string" }
-            }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-625" } }, "required": ["expected_source"] },
+                "then": { "properties": { "expected": { "const": "deny" } } }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-630" } }, "required": ["expected_source"] },
+                "then": {
+                  "properties": {
+                    "expected": { "const": "deny" },
+                    "fed_as": { "required": ["malformed"], "properties": { "malformed": { "const": true } } }
+                  }
+                }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-632" } }, "required": ["expected_source"] },
+                "then": {
+                  "properties": {
+                    "expected": { "const": "allow" },
+                    "category": { "const": "identity" },
+                    "fed_as": { "properties": { "caller": { "const": "adopter-agent" } } }
+                  }
+                }
+              }
+            ]
           }
         },
         "not_applicable": {
@@ -218,7 +257,10 @@
         },
         "applicable": { "type": "integer", "minimum": 0 },
         "differing": { "type": "integer", "minimum": 0 }
-      }
+      },
+      "if": { "properties": { "mechanism": { "const": "opencode-permissions" } }, "required": ["mechanism"] },
+      "then": { "properties": { "not_applicable": { "maxItems": 0 } } },
+      "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "const": "C002-REQ-632" } } } } } } }
     },
     "corpusRef": {
       "type": "object",
