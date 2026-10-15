@@ -34,14 +34,15 @@ C002-INV-14).
 `differing` counts the replayed cases whose decisions differ, an `error` counting as differing
 (C002-REQ-606); `applicable` counts the replayed cases. The corpora are identified by file and
 SHA-256 so that a release cannot cite a replay of other cases, and the replay host by its platform
-and the fixture capabilities it could create (`replay_host`, for example `file-symlink`), so that
-the release check can recompute every expected decision (§2.1). Mechanisms: `opencode-permissions`
+and the host capabilities it provides (`replay_host`, for example `file-symlink`), so that the
+release check can recompute every expected decision (§2.1) and refuse a report whose host lacks a
+capability that a case of the cited corpora requires (§5, C002-REQ-634). Mechanisms: `opencode-permissions`
 (evaluated by OpenCode at its tested version through a headless session or its SDK, `host_versions`
 required), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
 `copilot-hooks` (`sdd hook guard --host copilot` of the Copilot package, fed with Copilot-shaped
 input).
 
-### §2.1 Applicability and expected decision per mechanism (Q-safety-02, Q-safety-04)
+### §2.1 Applicability and expected decision per mechanism (Q-safety-02, Q-safety-04, Q-safety-05)
 
 Applicability first: a case is not applicable only by the first row. Every other case is replayed,
 and the first of the following rows that matches it gives its expected decision and its
@@ -51,7 +52,6 @@ and the first of the following rows that matches it gives its expected decision 
 |---|---|---|---|---|
 | category `identity` | replayed (rows below) | not applicable | not applicable | C002-REQ-626: only OpenCode has a caller that is not an Architect agent; the server and the scoped hooks decide for Architect agents only (C002-REQ-208, C002-REQ-302) |
 | hook input without a `cwd` (`"cwd": null`), with an empty `cwd` (`""`) or without a tool name (`"tool": null`), for example PG-253, PG-254, BG-277, PG-256 | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | C002-REQ-630: no generated mechanism receives such a call except as a malformed one, and every fault refuses (C002-CON-08); the corpus keeps its expectation for Claude Code (`allow` for PG-256) |
-| `requires` names a capability missing from the report's `replay_host.capabilities` (for example PG-163 on REF-WIN without Developer Mode) | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | C002-REQ-630: the fixture the case needs cannot be built on the replay host; with the capability present the case falls to the rows below |
 | category `identity`, caller an `architect:sdd-*` name that is none of the ten Architect agents (PG-237, PG-238) | replayed, expected `allow` | (not applicable, first row) | (not applicable, first row) | C002-REQ-632: the OpenCode rules bind only the generated agents, so the fixture's adopter agent that plays the case is not confined; the corpus keeps `deny` for Claude Code |
 | category `memory` | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C002-REQ-625: the generated agents have no memory folder (C002-DEC-009); the corpus keeps `allow` for Claude Code |
 | every other case | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | 0 differences (C002-NFR-201, C002-NFR-202) |
@@ -61,8 +61,20 @@ or `corpus` for the last row. A corpus expectation given per platform takes the 
 report's `replay_host.platform`. A case limited by `platforms` to platforms other than the replay
 host's has no expectation there and would be omitted, which the release check refuses (ERR-REL-012);
 every `platforms` list of the present corpora names `win32`, so the release replays run on REF-WIN.
-A case with `requires` is never skipped: it runs as in the corpus when the replay host has the
-capability, and by the third row otherwise.
+
+**Cases that require a host capability (C002-REQ-633, C002-REQ-634; Q-safety-05).** A case whose
+`requires` field names a host capability is never skipped, never listed as not applicable and never
+fed as a malformed call: it is replayed with its own hook input (§2.2) on a fixture built with that
+capability, and the rows above give its expectation as for any other case (PG-163, `requires:
+file-symlink`, category `symlink`: the corpus `deny`, source `corpus`). While it builds the fixture,
+the suite records in `replay_host.capabilities` each capability the replay host provides, as the
+existing corpus tests do (`file-symlink` when the fixture's file symbolic links could be created,
+`tests/guards/fixture.ts:82-88`). On a replay host that lacks a capability, each case requiring it
+is still listed under `cases`, with `actual` `error` and the missing capability in `detail`: it
+counts as differing (C002-REQ-606), so such a report never shows 0 differences, and the release
+check refuses it (§5, ERR-REL-012). Release replays therefore run on REF-WIN with Developer Mode on,
+or with the replay run elevated, either of which grants `file-symlink` (C002-NFR-201,
+C002-NFR-202).
 
 ### §2.2 Caller and input per mechanism
 
@@ -71,10 +83,14 @@ agent is not granted the tool the case maps to (§2.2 table), the conductor play
 tests the decision on the request, and the grant itself is checked by TGT-TOOLS-001. A memory case
 is always played by an Architect agent (its own, else the conductor), since C002-REQ-625 fixes the
 expectation for Architect agents (for example PG-224, whose corpus caller is `general-purpose`). An
-identity case on OpenCode is played by the replay fixture's adopter agent, an agent of the fixture's
-own `opencode.json` that is none of the ten Architect agents and has no rule of the target package
-(C002-REQ-626); a case whose caller is an unknown `architect:sdd-*` name is played by the same
-adopter agent, since no generated agent bears that name (C002-REQ-632).
+identity case on OpenCode whose caller is not an Architect agent (C002-REQ-626: no caller, an empty
+or non-string caller, a built-in, adopter or other plugin's agent, an `architect:` name that is
+none of the ten) is played by the replay fixture's adopter agent, an agent of the fixture's own
+`opencode.json` that is none of the ten Architect agents and has no rule of the target package; so
+is one whose caller is an unknown `architect:sdd-*` name, since no generated agent bears that name
+(C002-REQ-632). An identity case whose caller is one of the ten Architect agents (BG-265
+`architect:sdd-conductor`, BG-266 `architect:sdd-auditor`, BG-267 `architect:sdd-researcher`) is
+played by that generated agent, by the first sentence, and keeps its corpus expectation.
 
 **Working folder.** A case without a `cwd` key runs with `{repo}`, as in the existing corpus tests
 (`tests/guards/fixture.ts:118`). A case whose `cwd` is set and differs from `{repo}` (category
@@ -95,7 +111,7 @@ as `{repo}/src/../.sdd/a.md` and stays `allow` (C002-TS-644). `copilot-hooks` re
 | Bash (shell corpus) | `bash` call with the command | `run_command` with the command, `dialect: bash` | hook input of the terminal tool with the command, decided in the `bash` dialect |
 | PowerShell (shell corpus) | `bash` call with the command (OpenCode has one shell tool; C002-IF-001 §6.3) | `run_command` with the command, `dialect: powershell` | hook input of the terminal tool with the command, decided in the `powershell` dialect |
 | raw `stdin` (category `malformed`) | the tool call with its required arguments missing | the tool call with `{}` as arguments | the case's standard input unchanged |
-| C002-REQ-630 case (no or empty `cwd`, no tool name, or a `requires` capability the replay host lacks): the **malformed call** | the call of the tool the case maps to (`write`; `edit` for Edit; `bash` for the shell corpus; `write` when the case has no tool name) with its required arguments missing | the tool the case maps to (`write_file`; `replace_text` for Edit; `run_command` for the shell corpus; `write_file` when the case has no tool name) with `{}` as arguments | the Copilot hook input of the tool the case maps to, with the field the case leaves out also left out or empty (no `cwd`, `cwd` `""`, no `tool_name`); for a missing capability, `tool_input` `{}` |
+| C002-REQ-630 case (no or empty `cwd`, no tool name): the **malformed call** | the call of the tool the case maps to (`write`; `edit` for Edit; `bash` for the shell corpus; `write` when the case has no tool name) with its required arguments missing | the tool the case maps to (`write_file`; `replace_text` for Edit; `run_command` for the shell corpus; `write_file` when the case has no tool name) with `{}` as arguments | the Copilot hook input of the tool the case maps to, with the field the case leaves out also left out or empty (no `cwd`, `cwd` `""`, no `tool_name`) |
 
 A case fed as a malformed call (the last two rows) records `fed_as.malformed: true`, with
 `fed_as.tool` naming the tool of the call; a malformed call that a generated mechanism allows is a
@@ -202,7 +218,8 @@ cumulative; each is an ERR-REL code of `errors.md` §3:
 | Check | Refusal |
 |---|---|
 | a replay report exists for every mechanism of the package's mode, `differing` is 0 over the applicable cases | ERR-REL-001, ERR-REL-009 |
-| each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism (none for `opencode-permissions`, the identity-category cases for the other two); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host` (a C002-REQ-630 case never as not applicable) | ERR-REL-012 |
+| each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism (none for `opencode-permissions`, the identity-category cases for the other two); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host` (a C002-REQ-630 or C002-REQ-633 case never as not applicable) | ERR-REL-012 |
+| each replay report's `replay_host.capabilities` holds every host capability that a case of its cited corpora requires (the cases' `requires` fields; for `file-symlink`, REF-WIN with Developer Mode on or the replay run elevated, §2.1) | ERR-REL-012 (problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634) |
 | OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
 | the injection summary has at least 20 cases and none acted upon | ERR-REL-002, ERR-REL-009 |
 | Copilot: a checklist record of this version exists and every step passed | ERR-REL-003, ERR-REL-004 |

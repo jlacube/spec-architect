@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-15T19:55:06.785Z",
+  "generated_at": "2026-10-15T20:02:45.944Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1052,7 +1052,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:bb0d5bbb187007d1365ff69e6b55faff093b73d8b44e36836364c5845efeaf62",
+      "content_hash": "sha256:d28eb6728a176f237f7634396b1277d0d98855c34424d48377e09aba8fe37fc5",
       "status": "draft"
     },
     {
@@ -1126,7 +1126,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 114,
       "title": "Corpus replay suite",
-      "content_hash": "sha256:60c9157fd9b935a1a082bb503530c3676c508ace6cd01fb9b51df6636a54a5f4"
+      "content_hash": "sha256:2f814c16a512fab7071a23d41b81656a362e2a035cbc92fda6bad7323c7ae907"
     },
     {
       "id": "C002-COMP-009",
@@ -1142,7 +1142,7 @@
       "file": "10-spec/60-architecture/architecture.md",
       "line": 132,
       "title": "Release check",
-      "content_hash": "sha256:b15b8aaaa9e6957c257f34d4d54996b39624dc63c851fb9dfbdf2dcd06631331"
+      "content_hash": "sha256:ec785ed7af8fc7f06f34b12c4c7ee0685000da84f501c934dfb439995dffa061"
     },
     {
       "id": "C002-COMP-011",
@@ -1711,7 +1711,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 26,
       "title": "Verification records: replay report, checklist record, spike record, release record",
-      "content_hash": "sha256:327ba53365d2552a5f81bd534febdb2d3e406025747fca8497376f009ff3ffd9"
+      "content_hash": "sha256:ad3bd372d34e13e7bc259c2cee7512f6af519f90db21f765f068a552f2c3b64f"
     },
     {
       "id": "C002-IF-010",
@@ -1822,8 +1822,8 @@
       "type": "INV",
       "file": "10-spec/40-domain/domain-model.md",
       "line": 94,
-      "title": "A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision and source that C002-IF-009 §2.1 gives for its mechanism and replay host (a case without a `cwd` or a tool name, or needing a capability the host lacks, always replayed as a malformed call, C002-REQ-630), or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).",
-      "content_hash": "sha256:2dccd0777207491767450a283cffbf4d8d82cf843fe7c1addd36ba8496433e6c"
+      "title": "A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision and source that C002-IF-009 §2.1 gives for its mechanism and replay host (a case without a `cwd` or a tool name always as a malformed call, C002-REQ-630; a case that requires a host capability always with its own hook input on a fixture built with that capability, or with `actual` `error` on a replay host that lacks it, C002-REQ-633), or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).",
+      "content_hash": "sha256:6163290e42eb64f6f624bc56b1e795a2c8c11389c1f3b22b943810f6a6f5485b"
     },
     {
       "id": "C002-NFR-101",
@@ -4794,7 +4794,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 22,
       "title": "The allowlist accepts a bare `sdd` command and `node --version`, and confines the Serena commands",
-      "content_hash": "sha256:ce4e7e627286443e5d3457890e1fce3066c10a2056fbcf820d16ac743c1c3cc1"
+      "content_hash": "sha256:7dd1f6bdb8dae4d785506fd1b786a1addddc87382a14d2706f68673b91c8e6d2"
     },
     {
       "id": "C002-US-503",
@@ -6569,6 +6569,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-008",
+      "to": "C002-REQ-633",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-009",
       "to": "C002-COMP-002",
       "relation": "depends-on"
@@ -6701,6 +6706,11 @@
     {
       "from": "C002-COMP-010",
       "to": "C002-REQ-629",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-010",
+      "to": "C002-REQ-634",
       "relation": "realizes"
     },
     {
@@ -8294,6 +8304,16 @@
       "relation": "references"
     },
     {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-633",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-009",
+      "to": "C002-REQ-634",
+      "relation": "references"
+    },
+    {
       "from": "C002-IF-010",
       "to": "C002-COMP-009",
       "relation": "references"
@@ -8341,6 +8361,11 @@
     {
       "from": "C002-INV-14",
       "to": "C002-REQ-630",
+      "relation": "references"
+    },
+    {
+      "from": "C002-INV-14",
+      "to": "C002-REQ-633",
       "relation": "references"
     },
     {

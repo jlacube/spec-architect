@@ -92,18 +92,22 @@ the literal by rule 2 (environment variable). The generated targets pass `--user
 ### §1.2 Writing sdd subcommands
 
 The subcommands of the sdd CLI that write files (C001-IF-01 and C002-IF-007, `src/cli/commands.ts:481-508`).
-Every other subcommand writes no file. The guard corpora hold one case per row and, for every row
-but the Serena rows, one case with a `--cwd` folder outside the repository root (C002-REQ-607,
-C002-TS-636); the expected decision is `allow`, subject to the `--cwd` rule below, except for the
-Serena rows, which §1.1 decides.
+Every other subcommand writes no file. The guard corpora hold, for every row (the Serena rows and
+`hook subagent-stop` included), one case and one case with a `--cwd` folder outside the repository
+root, and one writing command with a `--cwd` folder inside the root (C002-REQ-607, C002-TS-636).
+The case without `--cwd` expects `allow`, except for the Serena rows, which §1.1 decides; a case with
+a `--cwd` outside the root expects `deny` with GUARD-BASH-001, by the `--cwd` rule below and, for the
+Serena rows, by §1.1 rule 1 (any `--cwd` word denies a Serena command); the case inside the root
+expects `allow`.
 
 | Subcommand | Writes | Bash guard decision |
 |---|---|---|
-| `init` | `.sdd/` in the working folder | allow; `--cwd` as below |
+| `init` | `.sdd/` in the nearest folder, the starting folder included, that holds `.sdd/`, else in the nearest that holds `.git/`, else in the starting folder (`src/workspace/init.ts:22-33`) | allow; `--cwd` as below |
 | `change new`, `change profile`, `change revise`, `change stop` | the change folder, `.sdd/registry.json`, `.sdd/SDD.md` | allow; `--cwd` as below |
 | `id next`, `id tombstone` | `ids.json` of the change | allow; `--cwd` as below |
 | `status --write` | `.sdd/registry.json`, the status block of `.sdd/SDD.md` | allow; `--cwd` as below |
-| `trace --write` (also run by `hook subagent-stop`) | `trace.json`, `80-traceability.md`, `85-open-items.md` of the change | allow; `--cwd` as below |
+| `trace --write` | `trace.json`, `80-traceability.md`, `85-open-items.md` of the change | allow; `--cwd` as below |
+| `hook subagent-stop` | as `trace --write`, for the active changes, when the input's agent is in its `--agents` list (it runs `trace --quiet --write --active`, C002-IF-007, C002-REQ-315) | allow; `--cwd` as below |
 | `gate approve`, `gate record` | `change.md`, `approvals.json`; with `--commit`, also a git commit of the change folder, `.sdd/SDD.md` and `.sdd/registry.json` only (`src/gate/commit.ts:26`) | allow; `--cwd` as below |
 | `stale check` | `change.md` of the changes it marks | allow; `--cwd` as below |
 | `task set` | the task file | allow; `--cwd` as below |
@@ -116,7 +120,7 @@ Serena rows, which §1.1 decides.
 **Writing command.** A command of the sdd CLI entry is a writing command when the first word after
 the CLI prefix (`sdd`, or `node <path>/sdd.mjs` as the script form allows), together with the second
 word for the groups `change`, `id`, `gate`, `stale`, `task`, `defect` and `hook`, names a row of the
-table above, `hook subagent-stop` included (it runs the trace refresh, C002-IF-007). `status` and
+table above. `status` and
 `trace` are writing commands only when one of their words before the first `--` is `--write`;
 `archive` is one unless one of those words is `--dry-run`. The CLI takes its subcommand from these
 first words only (`src/cli/run.ts:33-45`).
@@ -142,9 +146,21 @@ runs in; on the sdd MCP server it is the server's root, which is also the workin
 command (C002-IF-002 §5.2), so the guard decides the folder the CLI will use. A command that writes
 no file (for example `lint`, `status` without `--write`, `gate show`) keeps `--cwd` unrestricted
 (BG-019). A folder under the root may hold a nested workspace (`<root>/pkg/.sdd/`), which the rule
-allows (Q-guards-05). With this rule a writing command other than the Serena rows writes only inside
-the `.sdd/` folder of the workspace that the CLI finds from a folder at or under the repository root
-(C001-IF-01), and `gate approve --commit` adds a git commit of those `.sdd/` files only.
+allows (Q-guards-05).
+
+**Workspace reached (critic CR-36).** With this rule a writing command other than the Serena rows
+starts from a folder at or under the repository root of §1.1 rule 3, and writes only inside the
+`.sdd/` of the workspace that the CLI finds upward from there: the nearest folder that holds `.sdd/`
+(C001-IF-01, `src/workspace/find.ts:5-15`); for `init`, that folder, else the nearest that holds
+`.git/`, which lies at or under the repository root, else the starting folder (`init` row above).
+`gate approve --commit` adds a git commit of those `.sdd/` files only. When the repository holds no
+`.sdd/`, the nearest `.sdd/` upward can lie above the repository root (for example `C:/Users/me/.sdd/`
+above the repository `C:/Users/me/proj/`). The path guard takes the same workspace
+(`src/hooks/guard-path.ts:52-53`) and so does the sdd MCP server (C002-IF-002 §3), so Claude Code,
+the server and the agent-scoped guard hooks agree, as in CHG-001. C002-REQ-521 therefore confines
+the folder the CLI starts from, not the workspace it finds. Stopping workspace discovery at the git
+root would change C001-IF-01 and C001-REQ-1103 on every host, beyond C002-GOAL-05; it is an idea for
+a later change.
 
 ## §2 Copilot PreToolUse input (Copilot hooks fallback)
 

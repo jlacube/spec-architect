@@ -155,7 +155,7 @@
     "mechanism": { "enum": ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"] },
     "injectionSource": { "enum": ["opencode-runner", "copilot-cli-runner", "manual-checklist"] },
     "replayReport": {
-      "title": "Corpus replay report (C002-REQ-606, C002-REQ-625 … C002-REQ-627, C002-REQ-630, C002-REQ-632)",
+      "title": "Corpus replay report (C002-REQ-606, C002-REQ-625 … C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633)",
       "description": "Every case of both corpora appears exactly once, under cases or under not_applicable (verification-records.md §2).",
       "type": "object",
       "additionalProperties": false,
@@ -166,7 +166,7 @@
         "package_version": { "$ref": "#/$defs/version" },
         "host_versions": { "$ref": "#/$defs/hostVersions" },
         "replay_host": {
-          "description": "Platform of the replay host and the fixture capabilities it could create; the release check recomputes per-platform expectations and the C002-REQ-630 cases from it (verification-records.md §2.1).",
+          "description": "Platform of the replay host and the host capabilities it provides, recorded while the fixture is built (file-symlink when file symbolic links could be created). The release check recomputes per-platform expectations from it and refuses the report when a case of the cited corpora requires a capability missing here (C002-REQ-633, C002-REQ-634; verification-records.md §2.1, §5).",
           "type": "object",
           "additionalProperties": false,
           "required": ["platform", "capabilities"],
@@ -212,7 +212,7 @@
                 "enum": ["corpus", "C002-REQ-625", "C002-REQ-630", "C002-REQ-632"]
               },
               "actual": { "enum": ["allow", "deny", "error"] },
-              "detail": { "type": "string" }
+              "detail": { "description": "Free text; for an error, its cause, for example the host capability the replay host lacks (verification-records.md §2.1).", "type": "string" }
             },
             "allOf": [
               {

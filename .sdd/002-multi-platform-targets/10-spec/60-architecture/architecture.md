@@ -114,8 +114,8 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 ### C002-COMP-008 — Corpus replay suite
 - **Name:** `tests/replay/` with one adapter per mechanism (OpenCode permission rules, sdd MCP server, agent-scoped guard hooks)
 - **Status:** new
-- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to (a case with a `cwd` other than the repository root through its own `cwd`), with the expectation of that mechanism (cases without a `cwd` or a tool name, or needing a capability the replay host lacks, fed as malformed calls and `deny`; unknown `architect:sdd-*` callers `allow` on OpenCode; memory cases `deny`; identity cases on OpenCode only), report the decisions that differ, record the replay host, and list the cases not replayed
-- **Realizes:** C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632; C002-NFR-201, C002-NFR-202
+- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to (a case with a `cwd` other than the repository root through its own `cwd`), with the expectation of that mechanism (cases without a `cwd` or a tool name fed as malformed calls and `deny`; unknown `architect:sdd-*` callers `allow` on OpenCode; memory cases `deny`; identity cases on OpenCode only), replay a case that requires a host capability with its own input on a fixture built with that capability (`error` on a replay host that lacks it), report the decisions that differ, record the replay host with its capabilities, and list the cases not replayed
+- **Realizes:** C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-NFR-201, C002-NFR-202
 - **Interfaces:** C002-IF-009 §2 (replay report)
 - **Depends on:** C002-COMP-013 (corpora), C002-COMP-005, C002-COMP-012, C002-COMP-003, C002-COMP-004, C002-COMP-006
 - **Owned data:** replay reports
@@ -132,8 +132,8 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 ### C002-COMP-010 — Release check
 - **Name:** `scripts/release-check.mjs` and release records under `docs/releases/`
 - **Status:** new
-- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (completeness of the not-applicable list and the expected decision of every case included), injection, checklist (hooks state and injection steps under the hooks fallback) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record
-- **Realizes:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629; C002-NFR-501
+- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (completeness of the not-applicable list, the expected decision of every case, and a replay host with every capability the corpora's cases require), injection, checklist (hooks state and injection steps under the hooks fallback) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record
+- **Realizes:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-NFR-501
 - **Interfaces:** C002-IF-009 §5
 - **Depends on:** C002-COMP-001, C002-COMP-002, C002-COMP-008, C002-COMP-009, C002-COMP-011
 - **Owned data:** release records
@@ -236,9 +236,9 @@ other agents (C002-REQ-208) and the Copilot package declares no plugin-level Pre
 | F6 | Copilot session-start brief and SubagentStop trace refresh | C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316; C002-TS-320, C002-TS-322, C002-TS-323, C002-TS-324, C002-TS-325 |
 | F7 | Gate through the host question tool on a generated target | C002-REQ-211, C002-REQ-212, C002-REQ-311, C002-REQ-312; C002-TS-217, C002-TS-218, C002-TS-316, C002-TS-318, C002-TS-319 |
 | F8 | Doctor on a generated target | C002-REQ-504, C002-REQ-505, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516 |
-| F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633 |
+| F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633 |
 | F10 | `npm run check` with the target structure checks | C002-REQ-601 … C002-REQ-605; C002-TS-601, C002-TS-602, C002-TS-603, C002-TS-604, C002-TS-605 |
-| F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd` and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
+| F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd`, cases that require a host capability, and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
 | F12 | Serena command, or writing `sdd` subcommand with `--cwd`, decided by the bash guard core on every host, then run by the sdd CLI | C002-REQ-517, C002-REQ-521, C002-REQ-515, C002-REQ-516; C002-TS-525, C002-TS-527, C002-TS-528, C002-TS-536, C002-TS-537 |
 
 ## 4. Data view
@@ -262,7 +262,7 @@ packages. Generated files are rebuildable at any commit (C002-NFR-301).
 
 | Node | Runs | Started by | Lifetime |
 |---|---|---|---|
-| Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check | P-01 (`npm run …`) | per command |
+| Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check; a corpus replay for a release runs with Developer Mode on or elevated, so that the `file-symlink` capability is present (C002-REQ-634, C002-IF-009 §2.1) | P-01 (`npm run …`) | per command |
 | Adopter machine, Claude Code | plugin as today; hooks call `node <plugin-root>/scripts/sdd.mjs` | Claude Code | per session; per hook call |
 | Adopter machine, OpenCode | `.opencode/` and `opencode.json` of the OpenCode package (project or global placement); `sdd` from `architect-sdd`; under server mode one `sdd-mcp --profile files` and one `--profile shell` process per session; `sdd serena-launch` for Serena | OpenCode | per session (C002-CON-04) |
 | Adopter machine, VS Code | the Copilot package as a local plugin (`chat.pluginLocations`); `sdd-mcp` processes under server mode; hook commands `node <plugin>/scripts/sdd.mjs …` | VS Code | per chat session; per hook call |
@@ -303,6 +303,7 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Serena commands confined in the bash guard core from the resolved data folder; the literal `${CLAUDE_PLUGIN_DATA}` resolved from the guard's own environment, an assumption checked on the real host by C002-TS-537 (C002-IF-008 §1.1) | C002-REQ-517 (Q-guards-04), C002-REQ-623 (the Claude Code doctor keeps its Serena step) | a dedicated allowlist entry per Serena form |
 | Writing commands recognised by their first words (the rows of C002-IF-008 §1.2, `status` and `trace` with `--write`, `archive` without `--dry-run`); every `--cwd` of such a command resolved like a write target and compared with the repository root | C002-REQ-521 (Q-guards-05); the CLI reads its subcommand from the first words only (`src/cli/run.ts:33`) | deny `--cwd` on every subcommand (rejected by P-01: breaks read-only uses such as BG-019) |
 | Replay expectations by ordered rules (applicability, then C002-REQ-630, C002-REQ-632, C002-REQ-625, corpus), each case recording its `expected_source`; the report records its replay host so that the release check recomputes them (C002-IF-009 §2.1) | C002-REQ-630, C002-REQ-632 (Q-safety-04), C002-REQ-617 | let the report state expectations unchecked (the implementer would choose them, critic CR-23) |
+| A case that requires a host capability is replayed with its own input on a fixture built with it; on a replay host without the capability the case is recorded as `error` (a differing decision), and the release check refuses a report whose `replay_host.capabilities` lacks a capability the cited corpora require (ERR-REL-012, problem `replay host lacks <capability>`); release replays run on REF-WIN with Developer Mode on or elevated (C002-IF-009 §2.1, §5) | C002-REQ-633, C002-REQ-634 (Q-safety-05) | feed such a case as a malformed call, or list it as not replayed (rejected by P-01: the first passes by construction, critic CR-32; the second widens the not-applicable list beyond identity cases) |
 | An S-07 record with `agent_tools_closed: false` refuses the OpenCode release (ERR-REL-013) and triggers a spec revision with P-01, as a `deferred` S-08 record does | C002-REQ-108; Q-defer-01 as precedent | release under the sdd MCP server mode alone (rejected: the catch-all decides in both modes) |
 | `run_command` takes an optional `dialect` (`bash` default, `powershell`) that selects the guard's syntax rules; the command still runs without a shell | C002-REQ-606 with C002-REQ-626: PowerShell corpus cases are applicable to the server and must be decided in their own dialect | decide PowerShell cases in the Bash dialect (gives false allows such as `git log` and false denies such as backslash paths) |
 | Replay input mapping and decision reading per mechanism, fixed in C002-IF-009 §2.2–§2.3 | C002-REQ-606, C002-NFR-201, C002-NFR-202 | leave the mapping to the implementer (rejected: it is the safety measurement P-01 decided, Q-safety-02) |
@@ -663,7 +664,8 @@ sequenceDiagram
   P01->>C002_COMP_010: release-check, target copilot
   C002_COMP_010->>C002_COMP_001: regenerate at the release commit and compare with dist/copilot
   C002_COMP_010->>C002_COMP_002: enforcement mode, tested versions, S-08 outcome
-  C002_COMP_010->>C002_COMP_008: differing decisions over the applicable cases, not-applicable list, host versions per mechanism
+  C002_COMP_010->>C002_COMP_008: differing decisions over the applicable cases, not-applicable list, expectations, host versions per mechanism
+  C002_COMP_010->>C002_COMP_008: replay host capabilities against the requires fields of the cited corpora, C002-REQ-634
   C002_COMP_010->>C002_COMP_011: checklist record of the version, failed steps, host versions
   alt Copilot hooks fallback
     C002_COMP_010->>C002_COMP_011: hooks state of the run and one injection step per Copilot injection case
@@ -712,12 +714,12 @@ sequenceDiagram
   participant C002_COMP_012 as hook guard of the Copilot package
   P01->>C002_COMP_008: replay a target package for one mechanism
   C002_COMP_008->>C002_COMP_013: read the path and shell corpora and their SHA-256
-  C002_COMP_008->>C002_COMP_008: build the fixture, record platform and capabilities as replay host
+  C002_COMP_008->>C002_COMP_008: build the fixture, record platform and the host capabilities it provides as replay host
   loop every case of both corpora
     alt identity case and the mechanism is not the OpenCode rules
       C002_COMP_008->>C002_COMP_008: list the case as not applicable, rule C002-REQ-626
     else applicable case
-      alt no cwd, empty cwd, no tool name, or a requires capability the host lacks
+      alt no cwd, empty cwd or no tool name
         C002_COMP_008->>C002_COMP_008: malformed call of the mapped tool, expected deny, source C002-REQ-630
       else unknown architect sdd caller on the OpenCode rules
         C002_COMP_008->>C002_COMP_008: played by the adopter agent, expected allow, source C002-REQ-632
@@ -727,6 +729,9 @@ sequenceDiagram
         C002_COMP_008->>C002_COMP_008: corpus expectation, source corpus
       end
       C002_COMP_008->>C002_COMP_008: map tool, caller, dialect and the case cwd to the mechanism input
+      opt the case requires a host capability, C002-REQ-633
+        C002_COMP_008->>C002_COMP_008: own input on the fixture built with the capability, actual error with the capability named when the replay host lacks it
+      end
       alt OpenCode permission rules
         C002_COMP_008->>C002_COMP_003: tool call by the generated agent or the adopter agent
         C002_COMP_003-->>C002_COMP_008: refused by a rule, or tool ran
