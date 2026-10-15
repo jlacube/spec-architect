@@ -182,6 +182,7 @@ Scenario Outline: C002-TS-636 — one corpus case per writing sdd subcommand
     | id tombstone     |
     | status --write   |
     | trace --write    |
+    | hook subagent-stop |
     | gate approve     |
     | gate record      |
     | stale check      |
@@ -515,6 +516,16 @@ Scenario Outline: C002-TS-630 — identity case per mechanism
     | the agent-scoped guard hooks (@mode-hooks)                                                | the hooks received no input for "BG-258", and the report lists "BG-258" as not applicable                                |
 ```
 
+```gherkin
+@mode-native
+Scenario: C002-TS-652 — identity case of an Architect caller played by that generated agent on OpenCode
+  Given the shell corpus case "BG-265" of category "identity", whose caller is "architect:sdd-conductor", with the command "rm -rf src" and the corpus expectation "deny"
+  When the corpus replay suite runs against the OpenCode permission rules, evaluated by OpenCode at its tested version
+  Then the case ran as a call of the generated agent "sdd-conductor", not of the replay fixture's adopter agent
+  And the replay report lists "BG-265" with the expected decision "deny", the expected-decision source "corpus" and the decision "deny"
+  And the folder "{repo}/src" still exists
+```
+
 ## C002-REQ-627
 
 #### C002-AC-627.1 — Every case not replayed is listed as not applicable in the replay report
@@ -524,7 +535,7 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
   When the corpus replay suite writes the replay report of <mechanism>
   Then every case ID of "tests/guards/path-corpus.json" and "tests/guards/bash-corpus.json" appears exactly once in the report, either as a replayed case or as not applicable
   And the not-applicable list holds exactly <not applicable>
-  And it lists as replayed cases, not as not applicable, the cases without a "cwd", with an empty "cwd" or without a tool name ("PG-253", "PG-254", "BG-277", "PG-256") and, on a replay host that cannot create file symbolic links, "PG-163" (C002-REQ-630)
+  And it lists as replayed cases, not as not applicable, the cases without a "cwd", with an empty "cwd" or without a tool name ("PG-253", "PG-254", "BG-277", "PG-256"; C002-REQ-630) and the case "PG-163", which requires the host capability "file-symlink", whether or not the replay host provides it (C002-REQ-633)
   Examples:
     | mechanism                                                                                 | not applicable                                             |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | no case                                                    |
@@ -546,7 +557,8 @@ Scenario Outline: C002-TS-637 — incomplete replay report refused at release
     | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the identity case "BG-258" as not applicable  | lists cases as not applicable without a rule  | BG-258 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | lists the identity case "BG-258" as a replayed case | replays cases that its mechanism excludes     | BG-258 |
     | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the memory case "PG-205" with the expected decision "allow" and the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-205 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" without the capability "file-symlink" and lists "PG-163" with the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-163 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" capabilities "file-symlink" and lists "PG-163" with "fed_as.malformed" true and the expected-decision source "C002-REQ-630" | records expectations other than C002-IF-009 §2.1 | PG-163 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" with capabilities that do not include "file-symlink", and lists "PG-163" with the decision "deny" | replay host lacks file-symlink                | PG-163 |
 ```
 
 ## C002-REQ-628
@@ -582,17 +594,17 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
 
 ## C002-REQ-630
 
-#### C002-AC-630.1 — Cases without a cwd or a tool name, or needing a capability the replay host lacks, are replayed as malformed calls expecting `deny` on every mechanism of a generated target
+#### C002-AC-630.1 — Cases without a cwd or a tool name are replayed as malformed calls expecting `deny` on every mechanism of a generated target
 ```gherkin
-Scenario Outline: C002-TS-643 — absent-field and missing-capability cases per mechanism
-  Given the guard corpora of the release commit, replayed on REF-WIN without Developer Mode, so that the replay host cannot create file symbolic links
+Scenario Outline: C002-TS-643 — absent-field cases per mechanism
+  Given the guard corpora of the release commit
   When the corpus replay suite runs against <mechanism>
-  Then the replay report lists "PG-253" (no "cwd"), "PG-254" (empty "cwd"), "BG-277" (no "cwd"), "PG-256" (no tool name) and "PG-163" (requires "file-symlink") each as a replayed case with the expected decision "deny", the expected-decision source "C002-REQ-630" and the decision "deny"
-  And it lists none of these five cases as not applicable
+  Then the replay report lists "PG-253" (no "cwd"), "PG-254" (empty "cwd"), "BG-277" (no "cwd") and "PG-256" (no tool name) each as a replayed case with the expected decision "deny", the expected-decision source "C002-REQ-630" and the decision "deny"
+  And it lists none of these four cases as not applicable
   And each of them was fed to the mechanism as the malformed call that C002-IF-009 §2 defines for <mechanism>
-  And the report records each of these five cases with "fed_as.malformed" true and a "fed_as.tool" that names the tool of that malformed call
-  And the report's "replay_host" gives the platform "win32" and capabilities that do not include "file-symlink"
-  And "tests/guards/path-corpus.json" still records "allow" for "PG-256" and "deny" for "PG-253", "PG-254" and "PG-163", and "tests/guards/bash-corpus.json" still records "deny" for "BG-277"
+  And the report records each of these four cases with "fed_as.malformed" true and a "fed_as.tool" that names the tool of that malformed call
+  And it records "PG-163", which requires the host capability "file-symlink", with "fed_as.malformed" false (C002-REQ-633)
+  And "tests/guards/path-corpus.json" still records "allow" for "PG-256" and "deny" for "PG-253" and "PG-254", and "tests/guards/bash-corpus.json" still records "deny" for "BG-277"
   Examples:
     | mechanism                                                                                 |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
@@ -649,6 +661,55 @@ Scenario: C002-TS-647 — OpenCode rules that also bind adopter agents are a dif
   And the suite exits non-zero
 ```
 
+## C002-REQ-633
+
+#### C002-AC-633.1 — A case that requires a host capability is replayed with its own input and its corpus expectation, and is an error on a host without the capability
+```gherkin
+Scenario Outline: C002-TS-649 — PG-163 replayed on a host with file-symlink
+  Given the path corpus case "PG-163" of category "symlink", requiring "file-symlink", a "Write" by "architect:sdd-spec-writer" to "{repo}/.sdd/file-link.md" with the corpus expectation "deny"
+  And the replay runs on REF-WIN with Developer Mode on, so that the fixture's file symbolic link "{repo}/.sdd/file-link.md" is created
+  When the corpus replay suite runs against <mechanism>
+  Then "PG-163" was fed to the mechanism as its own "Write" to "{repo}/.sdd/file-link.md", with "fed_as.malformed" false
+  And the replay report lists "PG-163" as a replayed case with the expected decision "deny", the expected-decision source "corpus" and the decision "deny"
+  And it does not list "PG-163" as not applicable
+  And the report's "replay_host" gives the platform "win32" and capabilities that include "file-symlink"
+  Examples:
+    | mechanism                                                                                 |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
+    | the sdd MCP server                                                                        |
+    | the agent-scoped guard hooks (@mode-hooks)                                                |
+```
+
+```gherkin
+Scenario: C002-TS-650 — PG-163 on a host without file-symlink is an error that counts as differing
+  Given the guard corpora of the release commit
+  And the replay runs on REF-WIN with Developer Mode off and without elevation, so that the fixture's file symbolic link cannot be created
+  When the corpus replay suite runs against the sdd MCP server
+  Then the replay report lists "PG-163" as a replayed case with the expected decision "deny", the expected-decision source "corpus", the decision "error" and a "detail" that names "file-symlink"
+  And it does not list "PG-163" as not applicable
+  And the server received no malformed call for "PG-163"
+  And the report's "replay_host" capabilities do not include "file-symlink"
+  And the report counts at least 1 differing decision
+  And the suite exits non-zero
+```
+
+## C002-REQ-634
+
+#### C002-AC-634.1 — The release check refuses a replay report whose replay host lacks a required capability
+```gherkin
+Scenario Outline: C002-TS-651 — replay host capabilities at release
+  Given "fx-release" where the <target> target package is generated for <mode> and every other piece of its evidence is clean
+  And its replay report "<report>" cites corpora in which "PG-163" requires "file-symlink", and gives the "replay_host" platform "win32" with <capabilities>
+  And the report lists "PG-163" with <PG-163 result>
+  When the release check runs for the <target> target
+  Then <outcome>
+  Examples:
+    | target             | mode                       | report                       | capabilities                           | PG-163 result                   | outcome |
+    | OpenCode           | sdd MCP server enforcement | replay-sdd-mcp-server.json   | the capabilities "file-symlink"        | the decision "deny"             | the release check reports no ERR-REL-012 for "replay-sdd-mcp-server.json" and the release is allowed |
+    | OpenCode           | sdd MCP server enforcement | replay-sdd-mcp-server.json   | no capability                          | the decision "error"            | the release is refused with ERR-REL-012 with the problem "replay host lacks file-symlink" naming "PG-163", and with ERR-REL-001 naming "PG-163"; the release record has the outcome "refused" |
+    | Copilot VS Code    | the Copilot hooks fallback (@mode-hooks) | replay-copilot-hooks.json    | no capability                          | the decision "error"            | the release is refused with ERR-REL-012 with the problem "replay host lacks file-symlink" naming "PG-163", and with ERR-REL-001 naming "PG-163"; the release record has the outcome "refused" |
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -677,12 +738,14 @@ Scenario: C002-TS-647 — OpenCode rules that also bind adopter agents are a dif
 | C002-REQ-622 | TS-625 | TS-625 (server enforcement) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
-| C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable) | n/a | n/a | TS-630 (adopter agent as non-Architect caller) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1) |
+| C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement needs no hooks state) | n/a | TS-633 | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
-| C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name, missing capability; `fed_as.malformed`, `replay_host`), TS-637 (expectation of PG-163 against the `replay_host`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
+| C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name; `fed_as.malformed`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept), TS-643 (PG-163 not a malformed call) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
+| C002-REQ-633 | TS-649 | TS-649 (three mechanisms) | TS-650 (replay host without `file-symlink`: `error`, counted as differing) | TS-650 | n/a | n/a | TS-637 (PG-163 recorded as a malformed call with the source C002-REQ-630), TS-643 (PG-163 not fed as a malformed call) |
+| C002-REQ-634 | TS-651 | TS-651 (OpenCode and Copilot VS Code reports) | n/a | TS-651 (ERR-REL-012 `replay host lacks file-symlink`) | n/a | n/a | TS-637 (report showing `deny` for PG-163 on a host without `file-symlink`) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on
