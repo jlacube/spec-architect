@@ -98,3 +98,14 @@ Questions from the critic's re-review (`90-critic-report.md`, CR-23, CR-25).
 - **Rejected:** deny --cwd on every command (breaks read-only uses such as BG-019); rely on agent instructions (C002-CON-03)
 - **Answer:** Restrict on every host (Recommended) — writing commands may use --cwd only when the folder resolves inside the repository root of C002-IF-008 §1.1; one corpus case per writing command with an outside --cwd; widens the C002-GOAL-05 exception again.
 - **Extracted instructions:** none
+
+## Round 5 — 2026-10-15
+
+Question from the critic's second re-review (`90-critic-report.md`, CR-32).
+
+### Q-safety-05 — How does the release replay handle corpus cases that need a host capability the reference machine lacks (PG-163, file symbolic link)?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 5 (CR-32)
+- **Options:** 1. Require the capability on the replay host (Recommended) · 2. List such cases as not replayed
+- **Rejected:** keep the malformed-call rule (passes by construction); run release replays on a POSIX host (expectations and PowerShell cases need win32); rewrite PG-163 as a directory junction (changes a CHG-001 corpus case)
+- **Answer:** Require it on the host (Recommended) — release replays run on REF-WIN with Developer Mode on (or an elevated replay run); the release check refuses a report whose host lacks a capability a corpus case needs; every case is really replayed.
+- **Extracted instructions:** none
