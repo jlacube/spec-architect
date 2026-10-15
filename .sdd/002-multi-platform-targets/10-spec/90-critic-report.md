@@ -20,21 +20,23 @@ are not findings. The seven gaps the conductor had already queued for a fix roun
 
 The initial review (base 05d1506) found CR-1 … CR-22. Re-review 1 (step 7, at c7f4fc7) follows the
 initial review: per-finding status of CR-1 … CR-22, new findings CR-23 … CR-31, rubric and verdict.
-Re-review 2 (step 7, second pass, at 1b7c54c) is at the end of this report: status of CR-23 … CR-31,
-new findings CR-32 … CR-36, rubric and verdict; its reviewed IDs are listed in its scope.
+Re-review 2 (step 7, second pass, at 1b7c54c) follows: status of CR-23 … CR-31, new findings
+CR-32 … CR-36, rubric and verdict; its reviewed IDs are listed in its scope. Re-review 3 (step 7,
+third pass, at a28156e) is at the end of this report: status of CR-29 and CR-32 … CR-36, consistency
+of the fixes, rubric and verdict; its reviewed IDs are listed in its scope.
 
 ## Summary
 
-Open findings after re-review 2:
+Open findings after re-review 3:
 
 | blocker | major | minor |
 |---|---|---|
-| 0 | 1 | 4 |
+| 0 | 0 | 0 |
 
 Initial review: 1 blocker, 10 major, 11 minor. Re-review 1: 20 resolved, 2 partially resolved (the
 remainders are carried as CR-23 and CR-29), 9 new findings (CR-23 … CR-31). Re-review 2: 8 of
 CR-23 … CR-31 resolved, CR-29 partially resolved (remainder carried as CR-35), 5 new findings
-(CR-32 major, CR-33 … CR-36 minor).
+(CR-32 major, CR-33 … CR-36 minor). Re-review 3: CR-29 and CR-32 … CR-36 resolved, no new finding.
 
 ## Findings (initial review)
 
@@ -404,7 +406,7 @@ P-01's answers (Q-safety-02, Q-defer-01, Q-guards-04).
 - **Why it matters:** navigation at G2 shows wrong counts and block ranges; a reader looking for C002-TS-640 under CAP-06 by its number will not find it.
 - **Suggested fix:** update the TS column (34, 24, 36, 38; total 194) and note the out-of-block IDs in the index; IDs are not renumbered.
 - **Owner:** spec-writer (index)
-- **Status:** partially resolved (re-review 2) — CAP-01, CAP-04 and CAP-05 counts and the out-of-block IDs fixed; the CAP-06 count, the total and a note on missing ACs are stale again, carried as CR-35
+- **Status:** resolved (re-review 3) — CAP-01, CAP-04 and CAP-05 counts and the out-of-block IDs fixed in re-review 2; the CAP-06 count, the total and the note on missing ACs, carried as CR-35, fixed in re-review 3
 
 #### CR-30 — The nine new requirements cite their acceptance criteria in backticks, which lint does not check
 - **Severity:** minor
@@ -538,7 +540,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 - **Why it matters:** a call without arguments is refused by every mechanism whatever its link handling, so on a replay host without file symbolic links PG-163 is reported as a replayed case with decision `deny`, although the file-link escape (a write to `.sdd/file-link.md` that lands outside `.sdd/`) was never put to the mechanism. Symbolic-link handling of OpenCode's permission patterns is exactly what R-001 leaves to the S-07 replay, so the S-07 replay could select `native-permissions`, and the release check pass C002-NFR-201's 0 differences, without that evidence (the directory-junction cases still run, which limits the gap to file links). The NFR's environment is REF-WIN, where the existing tests already skip PG-163 (`tests/guards/fixture.ts:87`), so this is the normal case, not an edge case. Q-safety-04 did not cover `requires` cases: the rule extends P-01's answer, and it would also absorb any file-link case added to the corpora later (C002-REQ-607).
 - **Suggested fix:** remove the `requires` clause from C002-REQ-630, §2.1 row 3, the last row of the §2.2 table, C002-INV-14, the glossary row, C002-DOD-008, C002-TS-643, C002-TS-631 (PG-163 part) and the PG-163 row of C002-TS-637. State instead that a release replay runs on a host that provides every capability the corpora name (REF-WIN with Developer Mode on for the replay run, or the replay run elevated), and add to §5 and ERR-REL-012 a refusal when `replay_host.capabilities` lacks a capability a corpus case requires (problem "replay host lacks <capability>"), with a C002-TS-637 row. The alternative, listing such cases as not replayed by ID with the missing capability, widens the not-applicable list beyond identity cases and needs P-01 (question Q-safety-05 in the hand-back).
 - **Owner:** spec-writer (C002-REQ-630, glossary), architect (C002-IF-009 §2.1, §2.2, §5, schema, ERR-REL-012, C002-INV-14), test-designer (C002-TS-643, C002-TS-631, C002-TS-637, C002-DOD-008)
-- **Status:** open
+- **Status:** resolved (re-review 3)
 
 #### CR-33 — C002-IF-009 §2.2 has every identity case on OpenCode played by the adopter agent, including the cases whose caller is an Architect agent
 - **Severity:** minor
@@ -547,7 +549,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 - **Why it matters:** read as written, §2.2 has BG-265 … BG-267 played by an agent that no rule binds, so OpenCode runs `rm -rf src` and `curl http://x | sh` against the corpus `deny`: three false differences that rule out native permission enforcement for a reason unrelated to its rules, while the generated conductor, auditor and researcher are never tested on these cases. C002-REQ-626 and the first sentence of the paragraph give the other reading. The result fails closed (server mode), hence minor.
 - **Suggested fix:** "An identity case on OpenCode whose caller is not an Architect agent (C002-REQ-626) or is an unknown `architect:sdd-*` name (C002-REQ-632) is played by the replay fixture's adopter agent; one whose caller is one of the ten Architect agents (BG-265 … BG-267) is played by that generated agent."
 - **Owner:** architect
-- **Status:** open
+- **Status:** resolved (re-review 3)
 
 #### CR-34 — The `--cwd` corpus cases: C002-IF-008 §1.2 excludes the Serena rows that C002-REQ-607 and C002-TS-636 include, and `hook subagent-stop` has no case
 - **Severity:** minor
@@ -556,7 +558,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 - **Why it matters:** the interface and the requirement disagree on which corpus cases exist, and one command the guard treats as writing has no case, so an implementer following §1.2 fails C002-TS-636. The guard decisions are not affected (a Serena command with `--cwd` is denied by §1.1 rule 1), hence minor.
 - **Suggested fix:** in §1.2 write "for every row, one case with a `--cwd` folder outside the repository root (the Serena rows are denied by §1.1 rule 1)"; add `hook subagent-stop` to C002-TS-636, or state in §1.2 and C002-REQ-607 that its case is covered by `trace --write`.
 - **Owner:** architect (C002-IF-008 §1.2), test-designer (C002-TS-636)
-- **Status:** open
+- **Status:** resolved (re-review 3)
 
 #### CR-35 — Index stale again after ca73916 (remainder of CR-29)
 - **Severity:** minor
@@ -565,7 +567,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 - **Why it matters:** the G2 reader is told that three requirements lack acceptance criteria and gets a wrong scenario count.
 - **Suggested fix:** set the CAP-06 TS count to 44 and the total to 202; delete the "await their acceptance criteria" sentence.
 - **Owner:** spec-writer (index)
-- **Status:** open
+- **Status:** resolved (re-review 3)
 
 #### CR-36 — Writing commands reach a `.sdd/` above the repository root; the spec now uses two meanings of "repository" (architect's point)
 - **Severity:** minor
@@ -574,7 +576,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 - **Why it matters:** in a git repository without `.sdd/` that lies under a folder with one (for example `C:/Users/me/.sdd/` above `C:/Users/me/proj/`), `sdd change new`, `sdd status --write` or `sdd trace --write`, with no `--cwd` or with an inside-root `--cwd`, write `C:/Users/me/.sdd/`, outside the repository root that C002-REQ-521 confines. This is not a guard bypass and not new: the path guard takes the same workspace and allows a direct write there, the sdd MCP server takes it as its root, and `init` stops at `.git/`, so Claude Code, the server and the scoped hooks agree, as in CHG-001. What the fix round adds is a second meaning of "repository" (git first for C002-REQ-517/521, `.sdd/` first for the path guard and the CLI) and a story outcome that promises more than C002-REQ-521 delivers. Closing the case would change workspace discovery for the CLI and every hook (C001-IF-01, C001-REQ-1103), beyond C002-GOAL-05; nothing in CHG-002 requires it, so P-01 does not need to decide it for G2.
 - **Suggested fix:** in C002-IF-008 §1.2 (last paragraph) state that the workspace is the first `.sdd/` found upward (C001-IF-01), which can lie above the repository root when the repository has none, as for the path guard and the sdd MCP server (C002-IF-002 §3), so that C002-REQ-521 confines the folder the CLI starts from, not the workspace it finds; reword the outcome of C002-US-502 to "… or into the `.sdd/` of a workspace other than the one found from the repository". Optionally note "stop workspace discovery at the git root" as an idea for a later change.
 - **Owner:** architect (C002-IF-008 §1.2), spec-writer (C002-US-502)
-- **Status:** open
+- **Status:** resolved (re-review 3)
 
 ### Rubric (re-review 2, applied to the reviewed IDs of this pass)
 
@@ -620,7 +622,7 @@ C002-IF-009 §2, C002-REQ-517, C002-IF-008 §1.1 and §1.2, C002-REQ-607 and the
 | plan | P1 … P7 | n/a: spec phase |
 | ideation | I1 … I10 | n/a: spec phase (G1 approved 2026-10-14; ideation not stale) |
 
-## Verdict
+## Re-review 2 verdict
 
 **needs-revision** — no blocker remains. The fix round resolved eight of the nine re-review 1
 findings, and CR-29 partially. P-01's round 4 answers are applied faithfully:
@@ -642,3 +644,154 @@ The four minor findings (CR-33 … CR-36) can go in the same short round. The ar
 (CR-36) is minor and needs no P-01 decision. A further re-review can be limited to C002-REQ-630,
 C002-IF-009 §2.1, §2.2 and §5, C002-INV-14, C002-TS-631, C002-TS-637, C002-TS-643, C002-DOD-008,
 C002-IF-008 §1.2, C002-TS-636, C002-US-502 and the index.
+
+## Re-review 3 — step 7, third pass (2026-10-15)
+
+### Scope and mechanical state
+
+- Reviewed: `git diff a472748 a28156e -- .sdd/002-multi-platform-targets/10-spec` (18 files; commits
+  7700f2a, bf4dd53, 4a19d3a, a28156e) and P-01's round 5 answer (Q-safety-05,
+  `10-spec/questions-log.md:106-111`), checked against the artifact text. The pass is limited to the
+  fixes of CR-29 and CR-32 … CR-36 and to contradictions they could introduce between the
+  requirements, C002-IF-009 with `errors.md`, and the scenarios.
+- Reviewed IDs of this pass (changed IDs and the IDs linked to them): C002-REQ-606, 617, 630, 633,
+  634; C002-AC-630.1, 633.1, 634.1; C002-TS-630, 631, 636, 637, 643, 649, 650, 651, 652;
+  C002-NFR-201, 202; C002-DOD-008; C002-US-502, 602, 606; the P-01 row of
+  `10-context/stakeholders-and-personas.md`; C002-INV-14; the glossary rows "Expected decision for a
+  mechanism", "Malformed call", "Replay host" and "Host capability"; C002-IF-008 §1.2; C002-IF-009
+  §2, §2.1, §2.2, §5 and `release-record.schema.json` (`replay_host`, `cases`); ERR-REL-012;
+  C002-COMP-008, 010; architecture §3 rows F9 and F11, the maintainer-machine deployment row, the
+  new §6.2 row and the F9 and F11 sequence diagrams; the C002-IF-009 row of `50-interfaces/README.md`;
+  the index. Linked and read without change: C002-REQ-521, 607, 626, 627, 632; C002-IF-008 §1.1;
+  C002-IF-002 §3; ERR-REL-001.
+- `sdd lint 002 --phase 10-spec --json`: 9 LINT-DELTA-001 errors only (C002-REQ-211, 212, 213,
+  503 … 507, 601), waived at G2 under C002-DEC-008 — not findings.
+- `sdd trace 002`: TR-01 30/30, TR-02 121/121, TR-03 123/123, TR-04 16/16, TR-05 121/121 and 16/16;
+  14 open items (unchanged since re-review 2).
+- Code read as evidence: `src/workspace/init.ts:21-33`, `src/workspace/find.ts:5-15`,
+  `tests/guards/fixture.ts:82-88`. Scenario definitions counted per acceptance file: 34, 27, 35, 24,
+  38 and 48 (206 in total).
+
+### Status of CR-29 and CR-32 … CR-36
+
+| ID | Severity | Status | Evidence of the fix |
+|---|---|---|---|
+| CR-29 | minor | resolved | remainder fixed with CR-35 (row below); the re-review 2 part stays fixed — `00-index.md:46-50, 54-56` |
+| CR-32 | major | resolved | C002-REQ-630 without the `requires` clause: "… whose hook input has no `cwd`, an empty `cwd` or no tool name against each enforcement mechanism of a generated target as a malformed call with `deny` as its expected decision." — `CAP-06-cross-target-verification/requirements.md:274`; C002-REQ-633: "… with the case's own hook input, on a fixture built with that capability, and with the case's expected decision for that mechanism." — `:292`; C002-REQ-634: "… SHALL refuse the release unless the replay host of every corpus replay report of that target has every host capability that a case of the corpora cited by that report requires." — `:301`; the §2.1 `requires` row removed, and a case with `requires` "is never skipped, never listed as not applicable and never fed as a malformed call", with `actual` `error` on a host without the capability — `50-interfaces/verification-records.md:65-77`; malformed-call row limited to "(no or empty `cwd`, no tool name)" — `:114`; release-check row "(problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634)" — `:222`; ERR-REL-012 condition, problem and action — `errors.md:75`; C002-INV-14 — `40-domain/domain-model.md:94`; glossary — `40-domain/glossary-delta.md:85, 90, 91`; C002-NFR-201, 202 environments — `30-nfr/nfr.md:78, 88`; C002-DOD-008 — `70-dod.md:32`; P-01 environment — `10-context/stakeholders-and-personas.md:21`; maintainer node — `60-architecture/architecture.md:265`; "it records "PG-163", which requires the host capability "file-symlink", with "fed_as.malformed" false (C002-REQ-633)" — `CAP-06-…/acceptance.md:606`; C002-TS-649, C002-TS-650, C002-TS-651 — `:668, 684, 700`; two C002-TS-637 rows — `:560-561`; C002-TS-631 — `:538`. Matches Q-safety-05: "release replays run on REF-WIN with Developer Mode on (or an elevated replay run); the release check refuses a report whose host lacks a capability a corpus case needs; every case is really replayed." (`questions-log.md:110`) |
+| CR-33 | minor | resolved | "identity case on OpenCode whose caller is not an Architect agent (C002-REQ-626: …) is played by the replay fixture's adopter agent …; so is one whose caller is an unknown `architect:sdd-*` name …. An identity case whose caller is one of the ten Architect agents (BG-265 `architect:sdd-conductor`, BG-266 `architect:sdd-auditor`, BG-267 `architect:sdd-researcher`) is played by that generated agent" — `verification-records.md:85-93`; C002-TS-652 — `CAP-06-…/acceptance.md:521-526`; coverage row of C002-REQ-626 |
+| CR-34 | minor | resolved | "The guard corpora hold, for every row (the Serena rows and `hook subagent-stop` included), one case and one case with a `--cwd` folder outside the repository root, and one writing command with a `--cwd` folder inside the root" and "for the Serena rows, by §1.1 rule 1 (any `--cwd` word denies a Serena command)" — `50-interfaces/hooks-contract-delta.md:95-101`; `hook subagent-stop` table row — `:110`; C002-TS-636 example row `hook subagent-stop` — `CAP-06-…/acceptance.md:185`; agrees with C002-REQ-607 (`requirements.md:75`) and §1.1 rule 1 (`hooks-contract-delta.md:50-52`) |
+| CR-35 | minor | resolved | CAP-06 row "601–623, 625–630, 632–634 (32) \| 32 \| 48 (block 601–699)" and "\| **Total** \| \| **30** \| **121** \| **123** \| **206** \|" — `00-index.md:51-52`, equal to the scenarios defined (48 in CAP-06, 206 in all) and to TR-02 121, TR-03 123; the "await their acceptance criteria" sentence removed — `:54-56` |
+| CR-36 | minor | resolved | "**Workspace reached (critic CR-36).**" … "C002-REQ-521 therefore confines the folder the CLI starts from, not the workspace it finds." — `hooks-contract-delta.md:151-163`; `init` row "`.sdd/` in the nearest folder, the starting folder included, that holds `.sdd/`, else in the nearest that holds `.git/`, else in the starting folder" — `:105`, as the code does: "nearest folder with `.sdd/`, else nearest with `.git`, else `start`" — `src/workspace/init.ts:21`; C002-US-502 outcome "… a writing `sdd` command starts from a folder at or under the repository root and therefore writes only the workspace found upward from there …, never one that `--cwd` names elsewhere" — `CAP-05-cli-distribution/stories.md:25`, with "Workspace discovery itself is unchanged (C001-IF-01)" — `:28` |
+
+### Consistency of the fixes (requirements, C002-IF-009 and `errors.md`, scenarios)
+
+| Rule | Requirements | Interface and errors | Scenarios | Result |
+|---|---|---|---|---|
+| Malformed calls only for no or empty `cwd` and no tool name | C002-REQ-630 | §2.1 second row, §2.2 last row, glossary "Malformed call", C002-INV-14, C002-COMP-008, F11 diagram | C002-TS-643 (four cases), C002-TS-645 | consistent; no text left that feeds a `requires` case as a malformed call (searched `10-spec/` for "capability the replay host lacks", "missing capability", "needing a capability", "without Developer Mode") |
+| A `requires` case replayed with its own input and its §2.1 expectation | C002-REQ-633 | §2.1 paragraph (PG-163: `corpus`, `deny`), schema `expected_source` enum, glossary "Expected decision for a mechanism" and "Host capability" | C002-TS-649 (three mechanisms), C002-TS-643 (`fed_as.malformed` false) | consistent |
+| Host without the capability: `actual` `error`, counted as differing | C002-REQ-606, C002-REQ-633 | §2 ("an `error` counting as differing"), §2.1, C002-INV-14, C002-COMP-008, schema `detail` | C002-TS-650 | consistent |
+| Release refused when a replay host lacks a required capability | C002-REQ-634 (with C002-REQ-617) | §5 row, ERR-REL-012 condition, problem and action; ERR-REL-001 for the `error` (`errors.md:64` names the cases) | C002-TS-651 (ERR-REL-012 and ERR-REL-001), C002-TS-637 (a report with 0 differences showing `deny` for PG-163 on a host without `file-symlink`) | consistent |
+| Not-applicable list stays identity-only | C002-REQ-626, 627; C002-REQ-633 rationale | §5 "(a C002-REQ-630 or C002-REQ-633 case never as not applicable)", schema `rule` constant | C002-TS-631 ("whether or not the replay host provides it") | consistent |
+| Release replay environment | C002-NFR-201, 202 | §2.1, ERR-REL-012 action, P-01 row, maintainer node | C002-DOD-008 | all say Developer Mode on or the replay run elevated |
+| Identity callers on OpenCode | C002-REQ-626, 632 | §2.2 caller paragraph, schema (`adopter-agent` only for C002-REQ-632) | C002-TS-630, 646, 652 | consistent |
+| `--cwd` corpus cases | C002-REQ-607, 521 | §1.2 opening paragraph and table, §1.1 rule 1 | C002-TS-636 | consistent |
+| Workspace reached by a writing command | C002-REQ-521, C002-US-502 | §1.2 "Workspace reached", C002-IF-002 §3 | — | consistent with `src/workspace/find.ts:5-15` and `src/workspace/init.ts:21-33` |
+
+### New findings
+
+None.
+
+### Rubric (re-review 3, applied to the reviewed IDs of this pass)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass |
+| stories | S2 Value / outcome stated | pass (C002-US-502 outcome reworded, CR-36) |
+| stories | S3 INVEST | pass |
+| stories | S4 Every story has ≥ 1 requirement | pass (C002-US-602 lists C002-REQ-633; C002-US-606 lists C002-REQ-634; TR-01 30/30) |
+| stories | S5 Out of scope stated where a neighbour exists | pass (C002-US-502 keeps workspace discovery unchanged and leaves stopping it at the git root to a later change) |
+| stories | S6 Traces to the ideation | pass (Q-safety-05 in C002-US-602 and C002-US-606) |
+| requirements | R1 Singular outcome | pass (C002-REQ-633 one replay outcome; C002-REQ-634 one refusal) |
+| requirements | R2 Testable | pass (C002-TS-649 … C002-TS-651) |
+| requirements | R3 Unambiguous | pass (glossary "Replay host", "Host capability") |
+| requirements | R4 Correct EARS pattern | pass (C002-REQ-633 ubiquitous as C002-REQ-630; C002-REQ-634 event-driven as C002-REQ-617) |
+| requirements | R5 Implementation-free | pass |
+| requirements | R6 Complete | pass (host without the capability: §2.1 and C002-TS-650; refusal: ERR-REL-012) |
+| requirements | R7 Consistent | pass (consistency table above; CR-32 … CR-34 and CR-36 resolved) |
+| requirements | R8 Feasible | pass (REF-WIN with Developer Mode on or an elevated run, Q-safety-05) |
+| requirements | R9 Necessary | pass (C002-REQ-633, 634 apply Q-safety-05; the clause beyond Q-safety-04 removed from C002-REQ-630) |
+| requirements | R10 Measurable values with units and limits | pass |
+| requirements | R11 Delta and evidence | pass (C002-REQ-633, 634 ADDED; 9 LINT-DELTA-001 waived under C002-DEC-008) |
+| requirements | R12 Priority set and consistent | pass (Must, as C002-US-602 and C002-US-606) |
+| NFRs | N1 ISO 25010 category | pass |
+| NFRs | N2 Metric with unit | pass |
+| NFRs | N3 Threshold set or marker | pass |
+| NFRs | N4 Feasible method and environment | pass (environment names the capability REF-WIN must provide; CR-32 resolved) |
+| NFRs | N5 Covered by a DoD item | pass (C002-DOD-008) |
+| acceptance | A1 Every REQ has an AC, every AC a TS | pass (TR-02 121/121, TR-03 123/123) |
+| acceptance | A2 Scenarios observable and concrete | pass |
+| acceptance | A3 One behaviour per scenario | pass |
+| acceptance | A4 Error and abuse cases present | pass (C002-TS-650, C002-TS-651 rows 2–3, C002-TS-637 rows 6–7) |
+| acceptance | A5 n/a cells justified | pass (C002-REQ-633, 634 rows use the per-column n/a reasons below the coverage table) |
+| domain, interfaces, architecture | D1 Entities with attributes, relationships, owner, invariants | pass (C002-INV-14, ReplayReport attributes) |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states: diagram and complete table | n/a: no lifecycle changed in this pass |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass (ERR-REL-012 problem `replay host lacks <capability>`) |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements served | pass (C002-COMP-008 realizes C002-REQ-633; C002-COMP-010 realizes C002-REQ-634) |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | pass (new architecture §6.2 row with both rejected alternatives) |
+| DoD and index | O1 Every REQ and NFR covered | pass (TR-05 121/121, 16/16) |
+| DoD and index | O2 Evidence types fit the statements | pass (C002-DOD-008 test-report) |
+| DoD and index | O3 Global items referenced | pass |
+| DoD and index | X1 Index is navigation only | pass (CR-35 resolved) |
+| plan | P1 … P7 | n/a: spec phase |
+| ideation | I1 … I10 | n/a: spec phase (G1 approved 2026-10-14; ideation not stale) |
+
+### Why no further findings
+
+**Stories.** C002-US-502, 602 and 606 were checked for the new links: C002-REQ-633 is listed by
+C002-US-602 and C002-REQ-634 by C002-US-606, both stories trace to Q-safety-05, and the reworded
+outcome of C002-US-502 promises no more than C002-REQ-521 and C002-IF-008 §1.2 deliver (the `.sdd/`
+found upward from a folder at or under the root, never a folder that `--cwd` names outside it).
+
+**Requirements.** C002-REQ-630, 633 and 634 each have one SHALL and one outcome, a pattern that
+matches their siblings, a Must priority as their stories, and an error case specified (C002-TS-650,
+ERR-REL-012). C002-REQ-630's rationale now excludes `requires` cases explicitly, so the expectation
+rules do not overlap. A case that both requires a capability and lacks a `cwd`, or an identity case
+that requires one, would meet two rules; no such case exists (PG-163, category `symlink`, is the only
+`requires` case), so this is not a finding. The title of C002-AC-633.1 says "its corpus expectation"
+where C002-REQ-633 says "the case's expected decision for that mechanism"; both are `corpus` `deny`
+for PG-163, so the meaning is the same.
+
+**NFRs.** C002-NFR-201 and 202 now name an environment REF-WIN can provide (Developer Mode on or an
+elevated replay run), which was the N4 point of CR-32; metric, threshold, method and DoD item are
+unchanged.
+
+**Acceptance.** Every new AC has scenarios (TR-03 123/123), with happy (C002-TS-649), error
+(C002-TS-650; C002-TS-651 rows 2–3) and abuse cases (C002-TS-637 rows 6–7), and concrete IDs, paths
+and capability names. The ERR-REL-001 expectation of C002-TS-651 matches its message, which names the
+differing cases (`errors.md:64`).
+
+**Domain, interfaces, architecture.** C002-INV-14, the glossary, the schema, the §5 table,
+ERR-REL-012 and C002-COMP-008 and 010 agree (consistency table above), and the new §6.2 row records
+both alternatives P-01 rejected. Two observations are not findings. First, §1.2 writes `.git/` where
+§1.1 rule 3 writes `.git`; `initRoot` tests the name with `existsSync` (`src/workspace/init.ts:26`),
+the row cites that code, and `init` is unchanged CHG-001 behaviour, so there is one reading. Second,
+the scenario lists of flows F9 and F11 do not name C002-TS-649 … C002-TS-652; these lists were a
+selection before this pass (F9 omits C002-TS-637 and C002-TS-648, F11 omits C002-TS-638), and their
+REQ columns include C002-REQ-633 and C002-REQ-634. A note for the plan: the sdd MCP server adapter runs
+"in a disposable copy of the fixture" (`verification-records.md:122-123`). That copy must keep the
+file link of PG-163, otherwise C002-TS-649 fails on the server. This fails closed (the release is
+refused), and the scenario detects it.
+
+**DoD and index.** C002-DOD-008 covers C002-REQ-633 and 634 with test-report evidence (TR-05
+121/121), and the index counts match the acceptance files and the trace.
+
+## Verdict
+
+**go** — no finding is open (0 blocker, 0 major, 0 minor). The fix round applies P-01's round 5
+answer faithfully: a case that requires a host capability is replayed with its own input on a fixture
+that has the capability (C002-REQ-633); a host without it yields `error` and a differing decision; and
+the release check refuses a report whose replay host lacks a required capability (C002-REQ-634,
+ERR-REL-012). Release replays therefore run on REF-WIN with Developer Mode on or elevated. CR-33 …
+CR-36 and the remainder of CR-29 are fixed, and the fixes introduce no contradiction between the
+requirements, C002-IF-009 with `errors.md`, and the scenarios. G2 can be presented. The 9
+LINT-DELTA-001 errors need the C002-DEC-008 waiver recorded at the gate. No question for P-01.
