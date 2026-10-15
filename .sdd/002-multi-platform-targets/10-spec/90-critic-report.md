@@ -47,7 +47,7 @@ CR-23 … CR-31 resolved, CR-29 partially resolved (remainder carried as CR-35),
 - **Why it matters:** with the memory folder off (C002-DEC-009) and a fixed Architect identity, the sdd MCP server and the scoped hooks must deny the memory and identity cases that expect `allow`, so every replay reports differences and C002-REQ-617 refuses every release: the safety gate of C002-DEC-005 is unsatisfiable as written. An implementer will have to invent which cases count and with which expectation, which is exactly the safety decision the spec must fix. The same applies to OpenCode (memory cases; corpus tool names Write/Edit/NotebookEdit/PowerShell and caller agents such as `general-purpose` have no defined OpenCode equivalent).
 - **Suggested fix:** add to C002-REQ-606 and C002-IF-009 §2 a per-mechanism expectation rule: memory-category cases expect `deny` on every generated target (C002-DEC-009); identity-category cases are replayed only where the mechanism can see a non-Architect caller (OpenCode, with an adopter agent, tying to C002-REQ-208) and are recorded `not-applicable` for the server and the scoped hooks (property covered by C002-REQ-208/C002-REQ-302); define how corpus tool names map to each mechanism. Restate C002-NFR-201/202 thresholds as "0 differing decisions over the applicable cases, with the excluded case IDs listed in the replay report". P-01 question Q-safety-02 (digest).
 - **Owner:** spec-writer (C002-REQ-606, C002-NFR-201/202), architect (C002-IF-009 §2), test-designer (C002-TS-608)
-- **Status:** partially resolved (re-review 1) — memory, identity and tool-name mapping done; cases resting on other hook-input fields remain, carried as CR-23
+- **Status:** resolved (re-review 3: remainder carried as CR-23, resolved in re-review 2; this line updated by the conductor) — partially resolved at re-review 1 — memory, identity and tool-name mapping done; cases resting on other hook-input fields remain, carried as CR-23
 
 ### CR-2 — The Copilot deferral branch of C002-DEC-005 cannot be executed as specified
 - **Severity:** major
@@ -173,7 +173,7 @@ CR-23 … CR-31 resolved, CR-29 partially resolved (remainder carried as CR-35),
 - **Why it matters:** navigation shows a state two steps old; readers at G2 get wrong counts and believe ACs are missing.
 - **Suggested fix:** update the counts per capability, delete the "without acceptance criteria" sentence and the "(when written)" notes, and set each NFR's DoD line to its C002-DOD ID.
 - **Owner:** spec-writer (index, NFR)
-- **Status:** partially resolved (re-review 1) — notes, AC counts and NFR links fixed; the TS column is stale again after c7f4fc7, carried as CR-29
+- **Status:** resolved (re-review 3: remainder carried as CR-29, resolved in re-review 3; this line updated by the conductor) — partially resolved at re-review 1 — notes, AC counts and NFR links fixed; the TS column is stale again after c7f4fc7, carried as CR-29
 
 ### CR-16 — Generator run semantics contradict its output format; C002-REQ-101's open item is stale
 - **Severity:** minor
