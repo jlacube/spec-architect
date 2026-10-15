@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-15T20:07:45.403Z",
+  "generated_at": "2026-10-15T21:06:25.161Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -985,6 +985,51 @@
       "line": 698,
       "title": "The release check refuses a replay report whose replay host lacks a required capability",
       "content_hash": "sha256:230d1e648cf0776c25da3329e5207dde351366254ccc081c3280557f6adfc39f"
+    },
+    {
+      "id": "C002-ADR-001",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-001-mcp-protocol-binding.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:ec03d6ea01e596113b628fe7f875a985e58cbdf13aee433f50e16329589a91d2",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-ADR-002",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-002-schema-validation.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:f291b91076ff0c987e5ca9849f8a6473bd9b247d6bac8e2532ceeb69b9858c97",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-ADR-003",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-003-build-tool-implementation.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:2a9f7b755be97e180b99764e760003b8d06181f9d339124ccd600a85f31b1267",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-ADR-004",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-004-npm-build-and-pack.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:f5e466a1020af3f4c57fea9a60bc66e7fbdbb12a12bc363a1ccbe0a35a33890b",
+      "status": "accepted"
+    },
+    {
+      "id": "C002-ADR-005",
+      "type": "ADR",
+      "file": "20-plan/20-decisions/ADR-005-opencode-replay-driver.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:132f78ba3229d6b152238e0bcc1661f235e64d75d53995fecc73d3db7b134fea",
+      "status": "accepted"
     },
     {
       "id": "C002-AS-01",
@@ -2017,6 +2062,51 @@
       "line": 1,
       "title": "Skill delivery on targets without skill preloading",
       "content_hash": "sha256:4fd3cfbf358c15ae86b02b37100173756833829beccee5c02212656f98b5541d",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-005",
+      "type": "OA",
+      "file": "20-plan/20-decisions/OA-005-mcp-protocol-binding.md",
+      "line": 1,
+      "title": "Protocol binding of the sdd MCP server",
+      "content_hash": "sha256:e9dcff03c59e5b90ed54807b628473c6d823ef98b5ec5ba3231538fbdca4d007",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-006",
+      "type": "OA",
+      "file": "20-plan/20-decisions/OA-006-schema-validation.md",
+      "line": 1,
+      "title": "Validation against the JSON Schema contracts",
+      "content_hash": "sha256:0cb15379411f2723805c5d75745afa426dc474ae075159dfbd9367c566591607",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-007",
+      "type": "OA",
+      "file": "20-plan/20-decisions/OA-007-build-tool-implementation.md",
+      "line": 1,
+      "title": "Implementation and invocation of the generator and the release check",
+      "content_hash": "sha256:f81a40dcd4698602a50b7a960726be91431ab92de7fd8b69b34020a9b1a633fb",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-008",
+      "type": "OA",
+      "file": "20-plan/20-decisions/OA-008-npm-build-and-pack.md",
+      "line": 1,
+      "title": "Building, staging and packing architect-sdd",
+      "content_hash": "sha256:4b93f27c61cfcd6c1a646355ce8369692ce082596a541559beae25c9006153f9",
+      "status": "draft"
+    },
+    {
+      "id": "C002-OA-009",
+      "type": "OA",
+      "file": "20-plan/20-decisions/OA-009-opencode-replay-driver.md",
+      "line": 1,
+      "title": "How the corpus replay obtains OpenCode's permission decisions",
+      "content_hash": "sha256:9c7f42a252ae7abf2f6b8a682e283aace3656591816a9e89c1933929d862dc36",
       "status": "draft"
     },
     {
@@ -5957,6 +6047,451 @@
       "relation": "scenario-of"
     },
     {
+      "from": "C002-ADR-001",
+      "to": "C002-ADR-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-COMP-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-COMP-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-COMP-013",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-07",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-08",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-12",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-CON-15",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-NFR-101",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-NFR-102",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-NFR-402",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-OA-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-REQ-410",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-REQ-411",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-REQ-414",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-REQ-415",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-TS-401",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-001",
+      "to": "C002-TS-416",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-ADR-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-COMP-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-CON-10",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-CON-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-OA-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-REQ-402",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-REQ-414",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-002",
+      "to": "C002-REQ-605",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-ADR-004",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-COMP-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-COMP-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-COMP-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-COMP-013",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-CON-09",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-CON-10",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-CON-12",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-CON-16",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-IF-004",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-NFR-103",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-NFR-301",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-NFR-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-OA-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-TS-103",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-003",
+      "to": "C002-TS-603",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-COMP-004",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-COMP-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-COMP-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-COMP-013",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-COMP-018",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-CON-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-CON-12",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-CON-14",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-CON-16",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-OA-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-REQ-414",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-REQ-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-REQ-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-REQ-509",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-TS-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-004",
+      "to": "C002-TS-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-COMP-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-COMP-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-COMP-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-COMP-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-CON-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-IF-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-NFR-201",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-NFR-202",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-OA-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-REQ-632",
+      "relation": "references"
+    },
+    {
+      "from": "C002-ADR-005",
+      "to": "C002-REQ-634",
+      "relation": "references"
+    },
+    {
       "from": "C002-AS-01",
       "to": "C002-R-001",
       "relation": "references"
@@ -8774,6 +9309,316 @@
     {
       "from": "C002-OA-001",
       "to": "C002-OA-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-AS-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-AS-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-COMP-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-COMP-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-CON-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-NFR-101",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-NFR-102",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-NFR-402",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-OA-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-OA-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-REQ-410",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-REQ-411",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-005",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-COMP-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-CON-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-IF-002",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-NFR-101",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-NFR-102",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-REQ-402",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-REQ-413",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-006",
+      "to": "C002-REQ-605",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-CAP-01",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-CAP-02",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-CAP-03",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-CAP-06",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-COMP-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-COMP-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-COMP-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-CON-09",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-IF-004",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-NFR-103",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-REQ-101",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-REQ-601",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-007",
+      "to": "C002-TS-603",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-COMP-006",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-CON-12",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-CON-16",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-IF-003",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-INV-11",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-REQ-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-REQ-502",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-008",
+      "to": "C002-TS-501",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-COMP-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-COMP-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-IF-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-NFR-104",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-NFR-105",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-NFR-201",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-NFR-202",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-REQ-607",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-REQ-617",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-REQ-620",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-OA-009",
+      "to": "C002-REQ-632",
       "relation": "references"
     },
     {
