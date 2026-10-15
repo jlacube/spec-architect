@@ -48,13 +48,12 @@ status: draft
 | C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–305 (5) | 301–319 (19) | 19 | 35 (block 301–399) |
 | C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 24 (block 401–499, plus C002-TS-641, C002-TS-642) |
 | C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–521 (21) | 21 | 38 (block 501–599, plus C002-TS-639) |
-| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–630, 632 (30) | 30 | 43 (block 601–699) |
-| **Total** | | **30** | **119** | **121** | **201** |
+| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–630, 632–634 (32) | 30 | 44 (block 601–699) |
+| **Total** | | **30** | **121** | **121** | **202** |
 
 Scenarios C002-TS-639 … C002-TS-642 were numbered in the 601–699 block during the step-7 rework and
-are defined in the capability named in the TS column. C002-REQ-521, C002-REQ-630 and C002-REQ-632
-(fix round 2) await their acceptance criteria and scenarios from the test-designer; the AC and TS
-columns count the criteria and scenarios written.
+are defined in the capability named in the TS column. The AC and TS columns count the criteria and
+scenarios written.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·
 501 (1) · 601 (1) · 801 (1) — 16 in total.

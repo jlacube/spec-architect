@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "allocated": { "OA": 4, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 632, "TS": 648 },
+  "allocated": { "OA": 4, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 636, "TS": 648 },
   "blocks": [],
   "tombstones": [
     { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
@@ -9,6 +9,8 @@
     { "id": "C002-US-001", "reason": "allocated without a capability block (ledger has no blocks; --block ignored); stories use block numbering US-101 onwards (unused)", "date": "2026-10-14" },
     { "id": "C002-REQ-624", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during spec step 3 rework; new requirements use block numbering (unused)", "date": "2026-10-14" },
     { "id": "C002-INV-13", "reason": "skipped by the allocator because the architect's draft already used the number before allocation; the invariant is C002-INV-14 (unused)", "date": "2026-10-14" },
-    { "id": "C002-REQ-631", "reason": "allocated without a capability block (ledger has no blocks; --block 05 ignored) during spec step 7 fix round 2; the CAP-05 requirement uses block numbering C002-REQ-521 (unused)", "date": "2026-10-14" }
+    { "id": "C002-REQ-631", "reason": "allocated without a capability block (ledger has no blocks; --block 05 ignored) during spec step 7 fix round 2; the CAP-05 requirement uses block numbering C002-REQ-521 (unused)", "date": "2026-10-14" },
+    { "id": "C002-REQ-635", "reason": "allocated by mistake while registering REQ-633/634, which the ledger already counted from the files (unused)", "date": "2026-10-15" },
+    { "id": "C002-REQ-636", "reason": "allocated by mistake while registering REQ-633/634, which the ledger already counted from the files (unused)", "date": "2026-10-15" }
   ]
 }

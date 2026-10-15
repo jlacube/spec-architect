@@ -25,9 +25,9 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** I can show the same boundary on every target with the same cases
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
-- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, commands that write files, and the Windows shell (ideation §9). Expectations per mechanism (Q-safety-02, spec round 2): memory cases expect deny on the generated targets (C002-DEC-009); identity cases run only where a non-Architect caller exists (OpenCode) and are listed as not applicable elsewhere. Expectations for hook inputs the generated mechanisms lack (Q-safety-04, spec round 4): a case without a `cwd` or a tool name expects deny, sent as a malformed call; an unknown `architect:sdd-*` caller expects allow on OpenCode. Every other case keeps its corpus expectation. The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
-- **Requirements:** C002-REQ-606, C002-REQ-607, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632
-- **Traces to:** C002-DEC-005; ideation §8, §9; Q-safety-02, Q-guards-04, Q-safety-04, Q-guards-05
+- **Context & notes:** Corpora: 256 path cases and 277 shell cases today (baseline survey E-24), replayed against the Claude Code hooks by the existing tests. New cases: bare `sdd` and `node --version` (C002-US-502), `..` through `.sdd/`, links, redirection inside an allowed command, commands that write files, and the Windows shell (ideation §9). Expectations per mechanism (Q-safety-02, spec round 2): memory cases expect deny on the generated targets (C002-DEC-009); identity cases run only where a non-Architect caller exists (OpenCode) and are listed as not applicable elsewhere. Expectations for hook inputs the generated mechanisms lack (Q-safety-04, spec round 4): a case without a `cwd` or a tool name expects deny, sent as a malformed call; an unknown `architect:sdd-*` caller expects allow on OpenCode. A case that requires a host capability (PG-163, file symbolic link) is replayed with its own input on a replay host that has the capability (Q-safety-05, spec round 5). Every other case keeps its corpus expectation. The OpenCode replay runs through a headless OpenCode session or its SDK (ideation §8). Constitution NFR default: 0 false allows on the path corpus.
+- **Requirements:** C002-REQ-606, C002-REQ-607, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633
+- **Traces to:** C002-DEC-005; ideation §8, §9; Q-safety-02, Q-guards-04, Q-safety-04, Q-guards-05, Q-safety-05
 
 ### C002-US-603 — Scripted evals on OpenCode
 - **As a** P-01 spec owner
@@ -66,9 +66,9 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** no target is released below the Claude Code safety bar; if the Copilot fallback fails too, Copilot is deferred and OpenCode is still released
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03), and P-01 revises this spec to remove it (`../../10-context/scope.md` §1.1, Q-defer-01). Injection evals run at the dev tier on each target (C002-GOAL-02); under the Copilot hooks fallback the release needs evidence taken in VS Code with hooks enabled.
-- **Requirements:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629
-- **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03, Q-defer-01
+- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03), and P-01 revises this spec to remove it (`../../10-context/scope.md` §1.1, Q-defer-01). Injection evals run at the dev tier on each target (C002-GOAL-02); under the Copilot hooks fallback the release needs evidence taken in VS Code with hooks enabled. A corpus replay counts for a release only when its replay host has every host capability the corpora's cases require (Q-safety-05).
+- **Requirements:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634
+- **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03, Q-defer-01, Q-safety-05
 
 ### C002-US-607 — Claude Code unchanged
 - **As a** P-03 adopter on Claude Code

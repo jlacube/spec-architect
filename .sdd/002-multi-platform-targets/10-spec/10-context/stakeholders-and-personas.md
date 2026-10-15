@@ -18,7 +18,7 @@ base description stays in the CHG-001 file. Terms are defined in `../40-domain/g
 |---|---|
 | Base | CHG-001 P-01 (spec owner; sole approver of gates, waivers, profile and scope) |
 | Added role | Maintains the source plugin and runs `npm run package`, `npm run check` and the evals; publishes `architect-sdd`; runs and records the manual VS Code checklist before each release |
-| Environment | REF-WIN (Windows 11). In addition to Claude Code: OpenCode, VS Code with GitHub Copilot Chat, and Copilot CLI for evals |
+| Environment | REF-WIN (Windows 11). In addition to Claude Code: OpenCode, VS Code with GitHub Copilot Chat, and Copilot CLI for evals. Corpus replays for a release run with Developer Mode on or elevated, so that file symbolic links can be created (C002-REQ-634, Q-safety-05) |
 | Goals in CHG-002 | Write the plugin once and ship it to every target; hold gates on any target with the same guarantees; keep eval spend under control when three hosts are tested |
 | Pain points | Per-target copies that drift; a boundary that looks enforced but is not (Copilot hooks without agent identity); hosts whose agent features are Preview or Experimental and change between releases |
 | Authority | Unchanged: only P-01 approves gates, on every target. A skipped answer of a question tool is never an approval |

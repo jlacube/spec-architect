@@ -64,7 +64,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every applicable case of the guard corpora against each enforcement mechanism in use on a generated target (the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the agent-scoped guard hooks) and report each decision that differs from the case's expected decision for that mechanism.
-- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625, and for cases resting on hook inputs the generated mechanisms lack, C002-REQ-630 and C002-REQ-632 (Q-safety-04, spec round 4); applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
+- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625, and for cases resting on hook inputs the generated mechanisms lack, C002-REQ-630 and C002-REQ-632 (Q-safety-04, spec round 4); cases that require a host capability: C002-REQ-633 (Q-safety-05, spec round 5); applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-606.1
@@ -164,7 +164,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless that target's corpus replay reports no differing decision over the applicable cases, its injection evals show no instruction acted upon, and, for the OpenCode target, its S-07 spike record states that the agents' tool sets are closed (`agent_tools_closed: true`).
-- **Rationale:** C002-DEC-005; C002-CON-03; thresholds C002-NFR-201, C002-NFR-202, C002-NFR-203; applicable cases and expected decisions per mechanism: C002-REQ-625, C002-REQ-626 (Q-safety-02), C002-REQ-630, C002-REQ-632 (Q-safety-04); under the Copilot hooks fallback, the injection evidence of C002-REQ-629
+- **Rationale:** C002-DEC-005; C002-CON-03; thresholds C002-NFR-201, C002-NFR-202, C002-NFR-203; applicable cases and expected decisions per mechanism: C002-REQ-625, C002-REQ-626 (Q-safety-02), C002-REQ-630, C002-REQ-632 (Q-safety-04); the replay host's capabilities: C002-REQ-634 (Q-safety-05); under the Copilot hooks fallback, the injection evidence of C002-REQ-629
 - **Stories:** C002-US-606
 - **Priority:** Must
 - **Acceptance:** C002-AC-617.1
@@ -271,8 +271,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-630 — Cases without a cwd or a tool name expect deny on the generated targets
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE corpus replay suite SHALL replay every applicable case of the guard corpora whose hook input has no `cwd`, an empty `cwd` or no tool name, or that needs a capability (`requires`) the replay host lacks, against each enforcement mechanism of a generated target as a malformed call with `deny` as its expected decision.
-- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "Per-target expectation" — "on the generated targets these cases expect deny and are sent as malformed calls (fail-closed, C002-CON-08)", and "every case is still replayed and the not-applicable list stays limited to identity cases" (C002-REQ-626, C002-REQ-627). A generated mechanism receives no call without a `cwd` or a tool name: the sdd MCP server decides every call with its server repository root as `cwd` (C002-IF-002), and a tool the agent-scoped guard hooks cannot class is denied (C002-REQ-309). Examples: PG-253, PG-254 and BG-277 (no or empty `cwd`); PG-256 (no tool name, `allow` on Claude Code because such a call is not a write); PG-163 (`requires: file-symlink`, a fixture that Windows without Developer Mode cannot create, `tests/guards/fixture.ts:87`). The corpora keep their expectations for Claude Code (C002-GOAL-05). The form of a malformed call per mechanism and the expected source recorded in the replay report are in C002-IF-009 §2. A case whose `cwd` is present but differs from the repository root (category `cwd`, for example PG-134) is not in this set: C002-IF-009 §2.2 fixes how its `cwd` is fed, and it keeps its corpus expectation
+- **Statement:** THE corpus replay suite SHALL replay every applicable case of the guard corpora whose hook input has no `cwd`, an empty `cwd` or no tool name against each enforcement mechanism of a generated target as a malformed call with `deny` as its expected decision.
+- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "Per-target expectation" — "on the generated targets these cases expect deny and are sent as malformed calls (fail-closed, C002-CON-08)", and "every case is still replayed and the not-applicable list stays limited to identity cases" (C002-REQ-626, C002-REQ-627). A generated mechanism receives no call without a `cwd` or a tool name: the sdd MCP server decides every call with its server repository root as `cwd` (C002-IF-002), and a tool the agent-scoped guard hooks cannot class is denied (C002-REQ-309). Examples: PG-253, PG-254 and BG-277 (no or empty `cwd`); PG-256 (no tool name, `allow` on Claude Code because such a call is not a write). The corpora keep their expectations for Claude Code (C002-GOAL-05). The form of a malformed call per mechanism and the expected source recorded in the replay report are in C002-IF-009 §2. A case whose `cwd` is present but differs from the repository root (category `cwd`, for example PG-134) is not in this set: C002-IF-009 §2.2 fixes how its `cwd` is fed, and it keeps its corpus expectation. Nor is a case that requires a host capability: it is replayed with its own hook input on a host that has the capability (C002-REQ-633, C002-REQ-634; Q-safety-05, spec round 5, critic CR-32)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-630.1
@@ -285,3 +285,21 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-632.1
+
+### C002-REQ-633 — Cases that require a host capability replayed with their own input
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE corpus replay suite SHALL replay every applicable case of the guard corpora that requires a host capability against each enforcement mechanism of a generated target with the case's own hook input, on a fixture built with that capability, and with the case's expected decision for that mechanism.
+- **Rationale:** Q-safety-05 (spec round 5, `../../questions-log.md`): "Require it on the host (Recommended)" — "every case is really replayed". A call without arguments is refused by every mechanism whatever its link handling, so a capability-dependent case sent as a malformed call passes by construction and leaves untested what C002-R-001 leaves to the S-07 replay (whether symbolic links are resolved before matching, `../../../00-ideation/research/R-001-platform-facts.md:195-198`; critic CR-32). The capability is named by the case's `requires` field; today only PG-163 requires one (`file-symlink`, `tests/guards/path-corpus.json:1416-1422`), whose fixture the existing tests skip when Windows cannot create a file symbolic link (`tests/guards/fixture.ts:83-88`). Its expected decision is the corpus `deny` (glossary "Expected decision for a mechanism"). Such a case is never listed as not applicable: that list holds the identity-category cases of C002-REQ-626 only (Q-safety-04). A replay host without the capability cannot serve a release: C002-REQ-634
+- **Stories:** C002-US-602
+- **Priority:** Must
+- **Acceptance:** C002-AC-633.1
+
+### C002-REQ-634 — Release replays on a host with every required capability
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless the replay host of every corpus replay report of that target has every host capability that a case of the corpora cited by that report requires.
+- **Rationale:** Q-safety-05 (spec round 5, `../../questions-log.md`): "release replays run on REF-WIN with Developer Mode on (or an elevated replay run); the release check refuses a report whose host lacks a capability a corpus case needs" (environment of C002-NFR-201 and C002-NFR-202). The report records its replay host's platform and capabilities (`replay_host`, C002-IF-009 §2) and cites its corpora by SHA-256, so the check compares the `requires` fields of those corpora with the recorded capabilities; the refusal and its error are in C002-IF-009 §5. The other release conditions: C002-REQ-617
+- **Stories:** C002-US-606
+- **Priority:** Must
+- **Acceptance:** C002-AC-634.1

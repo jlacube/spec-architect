@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-14T21:11:46.217Z",
+  "generated_at": "2026-10-15T19:55:06.785Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1052,7 +1052,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:1825dcbe6fb2003681e34e55fbbd19cd0675a50027091a14193aeae8057c3306",
+      "content_hash": "sha256:bb0d5bbb187007d1365ff69e6b55faff093b73d8b44e36836364c5845efeaf62",
       "status": "draft"
     },
     {
@@ -1061,7 +1061,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 1,
       "title": "Cross-target verification",
-      "content_hash": "sha256:b5af49194c9cd24cb2e1caf9e886dd5725f62ba145ba00422a9502a5ccd3b5e0",
+      "content_hash": "sha256:348212d08f8abfc88a459449b78b69f3eec24d701d7b697f11a60f354deed58c",
       "status": "draft"
     },
     {
@@ -1871,7 +1871,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 72,
       "title": "Write boundary on every generated target",
-      "content_hash": "sha256:e46e57dd34ce91b29d7a85b2ddb5adc44335476a601cc8b534fed2259acc87fe"
+      "content_hash": "sha256:ef44a2dae5b59a0639313577cf965a85d8ee6494d172277a9d98bc17e3374d8b"
     },
     {
       "id": "C002-NFR-202",
@@ -1879,7 +1879,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 82,
       "title": "Shell boundary on every generated target",
-      "content_hash": "sha256:8894fc48248532c71769276833a223efac3b0114f2ac820e52d4d90c98ab4aab"
+      "content_hash": "sha256:c4eea21219875cd532797357ee1472ede92503c46de3d2f1ecb86da9ce6bb077"
     },
     {
       "id": "C002-NFR-203",
@@ -2770,7 +2770,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 63,
       "title": "Corpus replay against each enforcement mechanism",
-      "content_hash": "sha256:04d24a4ce7298482f8f245aa0700f20dff7f27d9275b6c10a57d8fb3d2896078"
+      "content_hash": "sha256:72ec0347008fc306fad0964738d5f15c21e60a239102e17696a38ffe200d6f9e"
     },
     {
       "id": "C002-REQ-607",
@@ -2858,7 +2858,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 163,
       "title": "Release only with a proven boundary",
-      "content_hash": "sha256:9075a2b481bb74446c0bd29bd8fed00a5663eea1319bd6bfd31f88da61fd5427"
+      "content_hash": "sha256:21b4a2d46a9239b2917278b8d69aebb6600375626f1e2c772946dfe59d5611c9"
     },
     {
       "id": "C002-REQ-618",
@@ -2954,7 +2954,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 271,
       "title": "Cases without a cwd or a tool name expect deny on the generated targets",
-      "content_hash": "sha256:b808dbc52052a6c2e68566b9eea14a0c14be2a9b932f8fc706640715191ff93a"
+      "content_hash": "sha256:9fbec22ccd5085e65c3337222e48ff095b865cf8a28ef81409d08be21561b452"
     },
     {
       "id": "C002-REQ-632",
@@ -2963,6 +2963,22 @@
       "line": 280,
       "title": "Unknown `architect:sdd-*` callers expect allow on OpenCode",
       "content_hash": "sha256:c05861af7ed7e0bb07ea9cb05500ed386698fbbab47270ac0bb28403d9bb1c77"
+    },
+    {
+      "id": "C002-REQ-633",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 289,
+      "title": "Cases that require a host capability replayed with their own input",
+      "content_hash": "sha256:7eb6e285f08117d6099d2624090e9ccda446f89ff3f704a8f16e7c51abeaad73"
+    },
+    {
+      "id": "C002-REQ-634",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
+      "line": 298,
+      "title": "Release replays on a host with every required capability",
+      "content_hash": "sha256:38219e633e883b78b79f5c7c7c3488607ac991fae4f04f0ca6b4ec0a9721963e"
     },
     {
       "id": "C002-SC-01",
@@ -4778,7 +4794,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 22,
       "title": "The allowlist accepts a bare `sdd` command and `node --version`, and confines the Serena commands",
-      "content_hash": "sha256:e368c174b047493777b3f86f2219fa753eeb826f494b2c765293b4e0f870fc32"
+      "content_hash": "sha256:ce4e7e627286443e5d3457890e1fce3066c10a2056fbcf820d16ac743c1c3cc1"
     },
     {
       "id": "C002-US-503",
@@ -4818,7 +4834,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 22,
       "title": "Guard corpora replayed against each enforcement mechanism",
-      "content_hash": "sha256:7b9f89705dc0259b21d689de6707ae8ed3e474c381b808f40174d141d5f53dec"
+      "content_hash": "sha256:919150f2b1221317bd5c0125ee37639e7383c088f70eeac2426ff9574abe4d9c"
     },
     {
       "id": "C002-US-603",
@@ -4850,7 +4866,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/stories.md",
       "line": 63,
       "title": "A target is released only with a proven boundary",
-      "content_hash": "sha256:104d5892ec8b96e9007fcc77a0f31dd93b6621d38186c2c3eb7562d03c733479"
+      "content_hash": "sha256:9233be484def1359ce4d4b3eefa2e16f1adce8cbad98da82e0fea9200dfad5a2"
     },
     {
       "id": "C002-US-607",
@@ -8423,6 +8439,11 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-201",
+      "to": "C002-REQ-634",
+      "relation": "references"
+    },
+    {
       "from": "C002-NFR-202",
       "to": "C002-DEC-005",
       "relation": "references"
@@ -8475,6 +8496,11 @@
     {
       "from": "C002-NFR-202",
       "to": "C002-REQ-632",
+      "relation": "references"
+    },
+    {
+      "from": "C002-NFR-202",
+      "to": "C002-REQ-634",
       "relation": "references"
     },
     {
@@ -10964,6 +10990,11 @@
     },
     {
       "from": "C002-REQ-606",
+      "to": "C002-REQ-633",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-606",
       "to": "C002-SC-03",
       "relation": "references"
     },
@@ -11260,6 +11291,11 @@
     {
       "from": "C002-REQ-617",
       "to": "C002-REQ-632",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-617",
+      "to": "C002-REQ-634",
       "relation": "references"
     },
     {
@@ -11579,6 +11615,16 @@
     },
     {
       "from": "C002-REQ-630",
+      "to": "C002-REQ-633",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-630",
+      "to": "C002-REQ-634",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-630",
       "to": "C002-US-602",
       "relation": "story-of"
     },
@@ -11595,6 +11641,51 @@
     {
       "from": "C002-REQ-632",
       "to": "C002-US-602",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-633",
+      "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-633",
+      "to": "C002-REQ-626",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-633",
+      "to": "C002-REQ-634",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-633",
+      "to": "C002-US-602",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-634",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-634",
+      "to": "C002-NFR-201",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-634",
+      "to": "C002-NFR-202",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-634",
+      "to": "C002-REQ-617",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-634",
+      "to": "C002-US-606",
       "relation": "story-of"
     },
     {
@@ -12734,6 +12825,11 @@
     },
     {
       "from": "C002-US-502",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-502",
       "to": "C002-REQ-503",
       "relation": "references"
     },
@@ -13099,6 +13195,11 @@
     },
     {
       "from": "C002-US-602",
+      "to": "C002-REQ-633",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-602",
       "to": "C002-SC-03",
       "relation": "references"
     },
@@ -13345,6 +13446,11 @@
     {
       "from": "C002-US-606",
       "to": "C002-REQ-629",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-606",
+      "to": "C002-REQ-634",
       "relation": "traces-to"
     },
     {
