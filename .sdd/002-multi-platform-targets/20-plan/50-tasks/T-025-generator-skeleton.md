@@ -34,7 +34,7 @@ byte-deterministic (C002-NFR-301).
 | add | `scripts/generate/main.ts`, `reader.ts`, `model.ts`, `writer.ts`, `diagnostics.ts` | options `--out`, `--target`; ERR-GEN codes; staging folder, rename on success; manifest with `source_digest` and file hashes |
 | modify | `tsconfig.json` | `include` adds `scripts/generate` and `scripts/release` |
 | modify | `package.json` | `generate` script |
-| add | `tests/integration/cap01/generator-frame.test.ts` | source tree unchanged (hash before and after), all-or-nothing on a planted error, stable file order, LF line endings |
+| add | `tests/integration/cap01/generator-frame.test.ts` | source tree unchanged (hash before and after); all-or-nothing on a planted diagnostic and on a planted write error during the second target's rename, each starting from an earlier `dist/<target>` that must be gone afterwards; stable file order, LF line endings |
 
 ## Preconditions
 
@@ -44,7 +44,11 @@ byte-deterministic (C002-NFR-301).
 
 1. Import the `src/` frontmatter parser and hashing; never copy them.
 2. Read agents, commands, skills, hooks and MCP servers into the model. Never open a source file for writing.
-3. Write to `dist/.staging-<target>` and rename over `dist/<target>` only when no diagnostic exists.
+3. Stage every selected target in `dist/.staging-<target>` first. Only when every selected target is
+   staged with no diagnostic, replace the old `dist/<target>` folders with the staged ones. On any
+   diagnostic, and on a write or rename error at any point (including the second target's rename),
+   remove every selected `dist/<target>` and every staging folder, so that no selected output folder
+   exists after a failed run (C002-INV-02, ERR-GEN-010; C002-T-034 step 2 relies on this).
 4. Sort files and keys and use LF line endings, so two runs produce identical bytes.
 
 ## Verification
@@ -55,4 +59,5 @@ byte-deterministic (C002-NFR-301).
 ## Done when
 
 - [ ] C002-TS-104 and C002-TS-105 pass; source hash unchanged after a run
+- [ ] After a failed run (diagnostic or write error) no selected `dist/<target>` folder and no staging folder exists
 - [ ] Progress reported: `sdd task set C002-T-025 --status done --commit <sha>`

@@ -36,19 +36,28 @@ of C002-IF-009.
 | modify | `evals/harness/session.mjs` | host selection without changing the `runSession` signature (three importers) |
 | modify | `evals/harness/env.mjs` | `CLAUDE_CODE_EXECPATH` required for the Claude Code host only |
 | add | `tests/integration/cap06/runner-caps.test.ts` | caps end the stub session at 30 turns and at $0.50 |
+| add | `evals/targets/gate/TS-613.eval.mjs`, `TS-634.eval.mjs`, `TS-635.eval.mjs` | case files of C002-TC-613, 634 and 635 on fx-gate (C002-T-037), with scripted `question` answers; C002-TC-613 also reuses the existing C001-CAP-02 interview and gate cases unchanged; run by C002-T-056 |
+| modify | `evals/results/spend-chg002.json` | the spend of the smoke run |
 
 ## Preconditions
 
-- C002-T-037 (case files) and C002-T-042 (driver) done.
+- C002-T-037 (case files, fx-gate) and C002-T-042 (driver) done. C002-T-042 delivers
+  `evals/harness/opencode/driver.mjs` in both S-07 branches (`10-strategy.md` §4).
+- For step 5: the ledger check of test plan §4.1 allows the session.
 
 ## Step outline (no production code)
 
-1. Select the host by option or environment. With no option, the default stays Claude Code.
-2. Answer `question` calls from the case's scripted answers.
+1. Select the host by option or environment. With no option, the default stays Claude Code, and the
+   `runSession` signature is unchanged (C002-RISK-009).
+2. Answer `question` calls from the case's scripted answers. If S-07 recorded
+   `question_answerable_by_script: false`, the scripted-answer cases are reported not applicable with
+   the record cited, and the spec defect of `10-strategy.md` §4 is open.
 3. Read spend from the host's usage report. Where the host reports none, the turn cap alone applies,
    and the result says so.
-4. Keep the paid runs inside the API-key budget: one dev-tier run here as a smoke; the release runs
-   are C002-T-049.
+4. Write the three gate case files.
+5. **Paid smoke run:** one dev-tier routing case on E-OCE, checked against the ledger before the
+   session and added to it after. The carried OpenCode rows run in C002-T-056; the release rows
+   (C002-TC-612) in C002-T-049.
 
 ## Verification
 
@@ -57,5 +66,6 @@ of C002-IF-009.
 
 ## Done when
 
-- [ ] Case files unchanged; cap tests pass; smoke run recorded
+- [ ] Case API unchanged (existing case files unchanged); cap tests pass; smoke run recorded in the ledger
+- [ ] C002-TC-612, 613, 634 and 635 listed in the task report as carried (C002-TC-612 to C002-T-049, the others to C002-T-056)
 - [ ] Progress reported: `sdd task set C002-T-044 --status done --commit <sha>`

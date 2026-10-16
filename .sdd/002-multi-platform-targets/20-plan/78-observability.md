@@ -25,17 +25,17 @@ smoke test of the packed tarball), **replay** (`npm run replay`, reports under
 | C002-NFR-102 | p95 of `bench/mcp-writes.mjs` in `bench/results/` | metric | bench | ≤ 800 ms p95 over 20 writes | C002-T-020 |
 | C002-NFR-103 | p95 of `bench/generate.mjs` in `bench/results/` | metric | bench | ≤ 5 s p95 over 10 runs | C002-T-036 |
 | C002-NFR-104 | Inlining-budget findings of the target structure check, per skill and per agent | log | check | ≤ 24,000 characters per skill, ≤ 64,000 per agent | C002-T-028, C002-T-035 |
-| C002-NFR-105 | Turns and spend per session in each eval result; stub-host cap test report; CHG-002 running spend total (test plan §4.1) | metric | test, eval | ≤ 30 turns and ≤ 0.50 USD per session | C002-T-044, C002-T-045 |
-| C002-NFR-201 | Path-corpus replay report per enforcement mechanism: differing decisions and the IDs of cases not replayed | log | replay | 0 differing decisions; every case not replayed listed | C002-T-040, C002-T-041, C002-T-042, C002-T-049 |
-| C002-NFR-202 | Shell-corpus replay report per enforcement mechanism, under PowerShell 7 and Git Bash | log | replay | 0 differing decisions; every case not replayed listed | C002-T-040, C002-T-041, C002-T-042, C002-T-049 |
-| C002-NFR-203 | Injection summary `injection.json` per target; under the hooks fallback, the injection rows of the VS Code checklist record | metric | eval, manual | 0 of at least 20 injection cases per target | C002-T-044, C002-T-045, C002-T-049, C002-T-050 |
+| C002-NFR-105 | Turns and spend per session in each eval result; stub-host cap test report; CHG-002 spend ledger `evals/results/spend-chg002.json`, checked before every paid session against the 40 USD budget and its release-evidence reserve (test plan §4.1, Q-evalbudget-03) | metric | test, eval | ≤ 30 turns and ≤ 0.50 USD per session | C002-T-001 (ledger), C002-T-044, C002-T-045 |
+| C002-NFR-201 | Path-corpus replay report per enforcement mechanism: differing decisions and the IDs of cases not replayed | log | replay | 0 differing decisions; every case not replayed listed | C002-T-040, C002-T-041, C002-T-042, C002-T-049, C002-T-054 |
+| C002-NFR-202 | Shell-corpus replay report per enforcement mechanism, under PowerShell 7 and Git Bash | log | replay | 0 differing decisions; every case not replayed listed | C002-T-040, C002-T-041, C002-T-042, C002-T-049, C002-T-054 |
+| C002-NFR-203 | Injection summary `injection.json` per target; under the hooks fallback or `copilot_cli_loads_package: false`, the injection rows of the VS Code checklist record | metric | eval, manual | 0 of at least 20 injection cases per target | C002-T-044, C002-T-045, C002-T-049, C002-T-054, C002-T-050 |
 | C002-NFR-204 | Fault-injection test report for every tool of the sdd MCP server and every agent-scoped guard hook | log | test | 0 allowed calls per fault class | C002-T-020, C002-T-032 |
 | C002-NFR-205 | Outbound-connection log of `tests/no-network.mjs` during the server tests | metric | test | 0 connections | C002-T-016 |
 | C002-NFR-301 | Determinism test report (two generations compared byte by byte) under PowerShell 7 and Git Bash | log | test | 0 differing bytes and file names | C002-T-025, C002-T-036 |
 | C002-NFR-401 | Install smoke results for the 4 shell and Node.js combinations in `bench/results/` | log | smoke | 4 of 4 pass | C002-T-023 |
 | C002-NFR-402 | Manifest check output on the packed tarball (`scripts/check/tarball.mjs`) | log | check | 0 `dependencies`, 0 unbundled runtime imports | C002-T-023 |
-| C002-NFR-501 | Regeneration diff of the release check, stored in the release record | log | release | 0 files missing, extra or different | C002-T-047 |
-| C002-NFR-601 | Timed clean-profile runs in `docs/releases/clean-profile-runs.md` | metric | manual | ≤ 15 minutes per target | C002-T-051 |
+| C002-NFR-501 | Regeneration diff of the release check against `dist/<target>/` and the target zip, stored in the release record | log | release | 0 files missing, extra or different | C002-T-047 |
+| C002-NFR-601 | Timed clean-profile runs in `docs/releases/clean-profile-runs.md` | metric | manual | ≤ 15 minutes per target | C002-T-051, C002-T-057 |
 | C002-NFR-801 | Build licence check over both metafiles (ERR-BLD-001) and the SPDX header scan of the packed outputs | log | check | 0 files or packages outside the allowlist | C002-T-021, C002-T-023 |
 
 Alerting is not applicable (no running service). The release check (C002-T-047) reads the replay,

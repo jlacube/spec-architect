@@ -34,6 +34,7 @@ S-07 found a feedback channel (C002-REQ-215).
 | add | `scripts/generate/emit/opencode-permissions.ts` | rule generation from the allowlist data of `guard-bash.ts` and C002-IF-001 §6.3; both modes |
 | add | `scripts/generate/emit/opencode-quicklint.ts` | the optional plugin running `sdd lint --quick` on the written `.sdd/` file |
 | add | `tests/integration/cap02/permissions.test.ts` | the listed `@mode-*` scenarios; generated rules for both modes from fixture tables |
+| modify | `tests/replay/scenarios/opencode-host.test.ts` | adds the expectations of C002-TC-207, 209, 211, 213, 222 and 223 (file added by C002-T-026) |
 
 ## Preconditions
 
@@ -51,7 +52,9 @@ S-07 found a feedback channel (C002-REQ-215).
 - C002-TC-207, C002-TC-209, C002-TC-211, C002-TC-213, C002-TC-222 and C002-TC-223 need an OpenCode
   host: write their expectations in `tests/replay/scenarios/opencode-host.test.ts`; they run under
   `npm run replay -- opencode-host` once C002-T-042 exists, not under `npm test`. Until then, list them in
-  the task report as carried to C002-T-042 (C002-TC-207 and C002-TC-209 also to C002-T-043).
+  the task report as carried to C002-T-042 (C002-TC-207 and C002-TC-209 also to C002-T-043). Under
+  the infeasible-driver branch of `10-strategy.md` §4, C002-TC-211, 222 and 223 are carried to
+  C002-T-056 instead.
 
 ## Done when
 

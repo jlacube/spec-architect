@@ -31,6 +31,7 @@ Accept a bare `sdd …` command, with `sdd` as the whole first word, and the exa
 | modify | `tests/guards/bash-corpus.json` | new cases first: bare `sdd` allow; `npx sdd`, `sddx` deny; `node --version` allow; `node --version --eval=x` stays deny |
 | modify | `src/hooks/guard-bash.ts` | bare-`sdd` branch beside `sddCli`; `["node", "--version"]` in `VERSION_PROBES`; `ALLOWED` text and deny summary as C002-IF-008 §1 words them |
 | modify | `bench/guards.mjs` | one recorded input with a bare `sdd` command |
+| add | `tests/integration/cli/guard-message.test.ts` | C002-TC-505: the deny message and `Allowed:` summary text of C002-IF-008 §1 through the bundled CLI |
 
 ## Preconditions
 
@@ -47,7 +48,7 @@ Accept a bare `sdd …` command, with `sdd` as the whole first word, and the exa
 
 ## Verification
 
-- `npm test -- tests/guards` and `npm test -- cap11`
+- `npm test -- tests/guards`, `npm test -- cli/guard-message` and `npm test -- cap11`
 - `npm run bench` (guard p95 ≤ 300 ms)
 
 ## Done when

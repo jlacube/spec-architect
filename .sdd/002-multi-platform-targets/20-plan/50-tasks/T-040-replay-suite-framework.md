@@ -36,6 +36,7 @@ C002-T-041 and C002-T-042.
 | modify | `scripts/test.mjs` | `findTests` leaves out `tests/replay/` |
 | modify | `package.json` | `replay` script: runs the suite **without** the `tests/no-network.mjs` preload, so the OpenCode adapter's loopback stub can listen |
 | add | `tests/unit/replay/expect.test.ts` | the rule order on synthetic cases; capability present and absent (`error`) |
+| add | `tests/replay/scenarios/suite.test.ts` | the suite scenarios C002-TC-609, 628, 629, 631, 638, 643, 644, 645, 649 and 650 against the stub adapter and corpus fixtures; the mechanism rows of C002-TC-628 that need a real adapter run once C002-T-041 and C002-T-042 exist |
 
 ## Preconditions
 
@@ -52,9 +53,10 @@ C002-T-041 and C002-T-042.
 ## Verification
 
 - `npm test -- unit/replay`
-- `npm run replay -- --mechanism stub` (stub adapter used by the unit tests)
+- `npm run replay -- --mechanism stub` (stub adapter used by the unit tests) and `npm run replay -- suite`
 
 ## Done when
 
 - [ ] Every case appears once, under `cases` or `not_applicable`; reports validate against the schema
+- [ ] `suite.test.ts` passes on the stub adapter; mechanism rows and C002-TC-608 listed in the task report as carried to C002-T-041, C002-T-042 and C002-T-049; C002-TC-637 (release-check refusal) carried to C002-T-047
 - [ ] Progress reported: `sdd task set C002-T-040 --status done --commit <sha>`

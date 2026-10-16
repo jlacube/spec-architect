@@ -31,7 +31,9 @@ server enforcement each agent gets exactly the server profiles that replace its 
 | Kind | Target | Change |
 |---|---|---|
 | add | `scripts/generate/translate/frontmatter.ts` | tier → model id; memory omitted; delegation list; tool derivation per mode; `sdd-files` and `sdd-shell` grants; `effort` and `color` as the table says |
-| add | `tests/integration/cap01/frontmatter.test.ts` | the listed scenarios on fixture plugins and on the real source plugin |
+| add | `tests/integration/cap01/frontmatter.test.ts` | the listed integration scenarios on fixture plugins and on the real source plugin |
+| add | `evals/targets/generator/TS-113.eval.mjs` | case file of C002-TC-113 (fx-oc with the planted `notes.md`) through the existing case API; run by C002-T-056 |
+| add | `tests/replay/scenarios/opencode-host.test.ts` | the file of the OpenCode-host replay scenarios, with the expectation of C002-TC-133 (adopter MCP tool `fx-fs` not available to `sdd-spec-writer`); C002-T-029 and C002-T-030 add their scenarios to it; it runs under `npm run replay -- opencode-host` from C002-T-042 on |
 
 ## Preconditions
 
@@ -50,5 +52,6 @@ server enforcement each agent gets exactly the server profiles that replace its 
 
 ## Done when
 
-- [ ] All listed scenarios pass for both targets
+- [ ] The listed integration scenarios pass for both targets
+- [ ] Carried cases listed in the task report: C002-TC-113 (eval) to C002-T-056; C002-TC-133 (replay) to C002-T-042, or to C002-T-056 under the infeasible-driver branch of `10-strategy.md` §4; C002-TC-640 (target structure check TGT-TOOLS-001) to C002-T-035
 - [ ] Progress reported: `sdd task set C002-T-026 --status done --commit <sha>`

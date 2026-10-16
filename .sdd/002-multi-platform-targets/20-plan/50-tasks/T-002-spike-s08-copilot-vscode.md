@@ -36,6 +36,11 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
 
 - REF-WIN with VS Code, GitHub Copilot Chat and Copilot CLI installed; P-01 names the versions.
 - Settings `chat.plugins.enabled`, `chat.pluginLocations` and `chat.askQuestions.enabled` on.
+- **P-01 precondition: the GitHub Copilot subscription.** P-01 names the Copilot plan, confirms that
+  the Claude models of the three tiers of C002-REQ-105 are enabled in it, and confirms that its
+  request allowance covers about 10 S-08 probe sessions here plus about 45 Copilot CLI sessions in
+  C002-T-045 and C002-T-049 (test plan §4.2, E-CPC; C002-RISK-026). These sessions are not billed to
+  the prepaid API key.
 
 ## Step outline (no production code)
 
@@ -48,7 +53,10 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
    and the tool classes of C002-REQ-318.
 4. **MCP grants**: check whether only whole-server grants (`<server>/*`) work or also per-tool grants
    (architecture §6.2 alternative). Check that the plugin's `.mcp.json` servers start.
-5. `copilot_cli_loads_package`: load the probe plugin in Copilot CLI non-interactive mode.
+5. `copilot_cli_loads_package`: load the probe plugin in Copilot CLI non-interactive mode. If it does
+   not load, record `false` and which probes Copilot CLI can still run without the package (the sdd
+   MCP server configured directly, non-interactive mode); the Copilot CLI rows then move as
+   `10-strategy.md` §4 lists.
 6. Record `terminal_dialect`, `cmd_shims`, the model identifier per tier (C002-REQ-105), Serena's
    context for VS Code (C002-REQ-114), and the `vscode/askQuestions` result for a skipped answer and
    a dismissed call (C002-REQ-311), and its absence when the setting is off (C002-REQ-312).
@@ -66,4 +74,6 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
 
 - [ ] Record committed with P-01's sign-off
 - [ ] Defer branch decided: mode recorded, or the spec defect raised and the revision scheduled with P-01
+- [ ] Copilot subscription (plan, Claude models, allowance) recorded in the record body
+- [ ] C002-TC-623 (release-check integration case that reads this record) listed in the task report as carried to C002-T-047
 - [ ] Progress reported: `sdd task set C002-T-002 --status done --commit <sha>`

@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
 status: todo
-depends_on: []
+depends_on: [C002-T-053]
 implements: []
 satisfies_ac: [C002-AC-623.1]
 verified_by: [C002-TS-626, C002-TS-627, C002-TC-626, C002-TC-627]
@@ -37,7 +37,7 @@ their spec contracts. This task adds one locator for both, and it keeps finding 
 
 ## Preconditions
 
-- None.
+- C002-T-053 done (the approved-phase lint loop in the same file honours waivers).
 
 ## Step outline (no production code)
 
@@ -47,8 +47,8 @@ their spec contracts. This task adds one locator for both, and it keeps finding 
    key order and whitespace ignored.
 3. Re-point the three `frontend.test.ts` assertions to the locator. Each later CLI task adds the
    `sampleArgs` of its new `COMMANDS` row, and those rows must not hang or read a real stdin.
-4. Check that the approved-phase lint loop (`frontend.test.ts:147-165`) still passes once CHG-002's
-   plan is approved, with the LINT-DELTA-001 waiver in effect (regression-set §4.2).
+4. Keep the waiver filter of C002-T-053 in the approved-phase lint loop when re-pointing the file to
+   the locator; the loop must still pass with CHG-002 in an approved phase (regression-set §4.2).
 
 ## Verification
 
@@ -59,4 +59,5 @@ their spec contracts. This task adds one locator for both, and it keeps finding 
 
 - [ ] No test under `tests/` names `.sdd/001-architect-agent-suite/` directly, except through the locator
 - [ ] The `_living/` fallback is covered by a test
+- [ ] C002-TC-627 (`claude-behaviour.test.ts`) listed in the task report as carried to C002-T-048, which writes it once the doctor Serena test of C002-T-010 exists
 - [ ] Progress reported: `sdd task set C002-T-006 --status done --commit <sha>`

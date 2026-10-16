@@ -57,4 +57,5 @@ check.
 ## Done when
 
 - [ ] Both tables validate; every value traces to a spike record line
+- [ ] Fixture tables fx-tables written; C002-TC-106, 109 and 110 (translator tests that read them) listed in the task report as carried to C002-T-026 and C002-T-027
 - [ ] Progress reported: `sdd task set C002-T-024 --status done --commit <sha>`

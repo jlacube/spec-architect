@@ -48,4 +48,5 @@ default, memory folder on, so the 256-case path corpus does not change.
 ## Done when
 
 - [ ] Path corpus unchanged and green; memory-off run green
+- [ ] Carried cases listed in the task report: C002-TC-401 (needs the server and tarball) to C002-T-017; C002-TC-628 (replay) to C002-T-040
 - [ ] Progress reported: `sdd task set C002-T-011 --status done --commit <sha>`

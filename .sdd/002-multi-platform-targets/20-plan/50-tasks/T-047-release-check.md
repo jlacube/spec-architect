@@ -33,7 +33,7 @@ fallback (C002-REQ-622).
 |---|---|---|
 | add | `scripts/release-check.mjs` | thin entry bundling `scripts/release/main.ts` (C002-ADR-003) |
 | add | `scripts/release/*.ts` | regeneration diff, replay recomputation, evidence readers, ERR-REL-001 … ERR-REL-013, record writer validated by `docs/releases/release-record.schema.json` |
-| add | `tests/integration/cap06/release-check.test.ts` | the listed scenarios on fixture evidence folders |
+| add | `tests/integration/cap06/release-check.test.ts` | the listed scenarios on fixture evidence folders; plus a test that a target zip whose content differs from the regenerated package is refused |
 
 ## Preconditions
 
@@ -44,6 +44,10 @@ fallback (C002-REQ-622).
 1. Import the generator modules and the replay expectation rules; never copy them.
 2. Read spike records by their frontmatter only (C002-IF-009 §3).
 3. Refuse with every applicable ERR-REL code listed, not only the first.
+4. Compare the regenerated package with the target zip that P-01 will release
+   (`dist/architect-<target>-<version>.zip`, C002-T-034; Q-release-01), not only with the
+   `dist/<target>/` folder: a missing, extra or different file in the zip is a regeneration
+   difference under the existing ERR-REL code for it (C002-NFR-501).
 
 ## Verification
 

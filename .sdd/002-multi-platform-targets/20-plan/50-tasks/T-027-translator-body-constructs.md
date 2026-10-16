@@ -31,7 +31,8 @@ Replace each Claude Code construct in agent, command and skill bodies with the t
 | Kind | Target | Change |
 |---|---|---|
 | add | `scripts/generate/translate/constructs.ts` | detectors from the table; replacement; MCP tool-name forms (`x_y` on OpenCode, `x/y` on Copilot); unmapped construct → ERR-GEN with file, line, construct, target |
-| add | `tests/integration/cap01/constructs.test.ts` | the listed scenarios; a planted unmapped construct stops generation with no package written |
+| add | `tests/integration/cap01/constructs.test.ts` | the listed integration scenarios; a planted unmapped construct stops generation with no package written |
+| add | `evals/targets/generator/TS-132.eval.mjs` | case file of C002-TC-132 on fx-gate (ready to archive; fixture builder of C002-T-037) through the existing case API; run by C002-T-056 |
 
 ## Preconditions
 
@@ -49,5 +50,6 @@ Replace each Claude Code construct in agent, command and skill bodies with the t
 
 ## Done when
 
-- [ ] The listed scenarios pass; the real source plugin generates with 0 unmapped constructs once C002-T-028 is done
+- [ ] The listed integration scenarios pass; the real source plugin generates with 0 unmapped constructs once C002-T-028 is done
+- [ ] C002-TC-132 (eval) listed in the task report as carried to C002-T-056
 - [ ] Progress reported: `sdd task set C002-T-027 --status done --commit <sha>`

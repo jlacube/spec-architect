@@ -42,11 +42,18 @@ driver.
 
 ## Step outline (no production code)
 
-1. If S-07 recorded the stub-model driver as feasible, build it as above.
-2. If S-07 recorded it as infeasible, stop. Raise the new ADR that supersedes C002-ADR-005 with P-01's
+1. Build the session driver `evals/harness/opencode/driver.mjs` in **both** branches: it starts the
+   tested `opencode` server, opens a session through the SDK, follows the event stream and answers
+   permission requests. The eval runner of C002-T-044 uses it against the real provider, and
+   C002-TC-226 reads the command list through it without a model call.
+2. If S-07 recorded the stub-model driver as feasible, build the loopback stub model and the
+   `opencode-permissions` adapter on the driver as above.
+3. If S-07 recorded it as infeasible, stop. Raise the new ADR that supersedes C002-ADR-005 with P-01's
    answer to Q-replay-01, then build the fallback adapter: evaluate OpenCode's permission module from
-   its source at the tested tag.
-3. Record `host_versions.opencode` in every report; refuse to run on another version.
+   its source at the tested tag. The permission-decision scenarios and the corpus replay run through
+   it. C002-TC-133, 211, 222 and 223 then move to the OpenCode eval runner (C002-T-056) as the
+   `10-strategy.md` §4 row says; list them as carried in the task report.
+4. Record `host_versions.opencode` in every report; refuse to run on another version.
 
 ## Verification
 
@@ -55,5 +62,7 @@ driver.
 
 ## Done when
 
+- [ ] `evals/harness/opencode/driver.mjs` delivered (both branches)
 - [ ] Reports written for both shells; identity and unknown-caller cases replayed as specified
+- [ ] The `opencode-host` replay scenarios written by C002-T-029 and C002-T-030 run under `npm run replay -- opencode-host`, or are listed as moved to C002-T-056 (infeasible branch)
 - [ ] Progress reported: `sdd task set C002-T-042 --status done --commit <sha>`

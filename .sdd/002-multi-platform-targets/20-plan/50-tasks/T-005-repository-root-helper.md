@@ -53,4 +53,5 @@ working folder. `findWorkspace` stays the workspace rule of `decidePath` (blast-
 
 - [ ] One module holds the root rule; no other module re-implements it
 - [ ] `tests/unit/io/paths.test.ts` unchanged and green
+- [ ] C002-TC-525, 527 and 536 (the rules that use the helper) listed in the task report as carried to C002-T-013, C002-T-010 and C002-T-009
 - [ ] Progress reported: `sdd task set C002-T-005 --status done --commit <sha>`

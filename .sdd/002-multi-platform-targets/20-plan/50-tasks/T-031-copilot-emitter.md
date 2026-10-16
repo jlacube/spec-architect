@@ -52,5 +52,6 @@ terminal tool is granted (C002-REQ-306), and no plugin-level PreToolUse hook exi
 
 ## Done when
 
-- [ ] Listed scenarios pass; the package loads as a local plugin in VS Code at its tested version (manual smoke noted)
+- [ ] The listed integration and structure scenarios pass; the package loads as a local plugin in VS Code at its tested version (manual smoke noted)
+- [ ] Carried cases listed in the task report: C002-TC-309 and C002-TC-329 (manual) to C002-T-050; C002-TC-306 timing to C002-T-057; C002-TC-125 and C002-TC-126 to C002-T-029 and C002-T-035 (ownership move of critic CR-5, test plan)
 - [ ] Progress reported: `sdd task set C002-T-031 --status done --commit <sha>`

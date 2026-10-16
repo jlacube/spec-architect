@@ -53,4 +53,5 @@ defect, not something the implementer may rename around.
 
 - [ ] P-01 has confirmed the account and the name, or a defect is raised
 - [ ] No credential appears in the repository
+- [ ] C002-TC-503 (staging test of the package name) listed in the task report as carried to C002-T-022
 - [ ] Progress reported: `sdd task set C002-T-003 --status done --commit <sha>`

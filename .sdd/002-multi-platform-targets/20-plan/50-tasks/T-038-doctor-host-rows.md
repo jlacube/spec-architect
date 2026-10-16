@@ -33,27 +33,36 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 |---|---|---|
 | modify | `plugins/architect/targets/{opencode,copilot}/wiring/doctor-*.md` | final host rows, probes (`sdd host-version`, `sdd --version`), outcome and remedies with the tested versions from the tables |
 | modify | `plugins/architect/targets/{opencode,copilot}/wiring/code-discovery-toolchain.md` | toolchain record with the host and the sdd CLI rows (C002-REQ-507) |
-| add | `evals/targets/doctor/*.eval.mjs` | `@eval` doctor cases with fake host shims (`tests/fixtures/cfg-*` pattern) |
+| add | `evals/targets/doctor/TS-506.eval.mjs`, `TS-507`, `TS-509` … `TS-515`, `TS-526`, `TS-639` (`.eval.mjs` each) | `@eval` doctor cases with fake host shims (`tests/fixtures/cfg-*` pattern), beside `TS-537.eval.mjs` of C002-T-010; the Claude Code rows run in step 4, the OpenCode rows in C002-T-056, the Copilot CLI rows in C002-T-045 |
 | add | `tests/integration/cap05/doctor-variants.test.ts` | generated doctor bodies per target; the Claude Code doctor unchanged |
+| modify | `evals/results/spend-chg002.json` | the spend of step 4 |
 
 ## Preconditions
 
 - C002-T-013, C002-T-014 and C002-T-028 done.
+- For step 4: the ledger check of test plan §4.1 allows the sessions.
 
 ## Step outline (no production code)
 
 1. Write the remedies rows with the install command for the package's own `architect-sdd` version
    (C002-REQ-509).
 2. Report a `.cmd`-only tool as `error` with a native-install fix under server mode (C002-IF-006 §2).
-3. Run the Claude Code doctor evals of regression-set §5 once at the end of the milestone. If no source
-   text changed, only the first row is needed.
+3. Write the case files; the integration test must be green before any paid run.
+4. **Paid runs on E-CC at the C002-M-05 exit:** the Claude Code rows of C002-TC-506, 509, 510 and
+   511, and the doctor eval of regression-set §5 row 1 (`evals/cap11/doctor-no-ripwire.eval.mjs`),
+   one run each, at most one rerun after a failure. The other §5 rows run only if a source agent,
+   command or skill text changed (it should not, C002-CON-10). Check the ledger before every session
+   and add each session's spend after it. The OpenCode rows are carried to C002-T-056 and the
+   Copilot CLI rows of C002-TC-513 and C002-TC-526 to C002-T-045; the `@manual-vscode` cases to the
+   checklist.
 
 ## Verification
 
 - `npm test -- cap05` and `npm test -- cap11` (`TS-1116.test.ts`)
-- One milestone run of `evals/cap11/doctor-no-ripwire.eval.mjs`
+- `node evals/harness/run.mjs --tier dev` with the Claude Code doctor cases of step 4
 
 ## Done when
 
 - [ ] Generated doctor variants pass the integration test; Claude Code doctor text byte-unchanged
+- [ ] The sessions of step 4 pass and their spend is in the ledger; carried rows listed in the task report with their carrying task
 - [ ] Progress reported: `sdd task set C002-T-038 --status done --commit <sha>`

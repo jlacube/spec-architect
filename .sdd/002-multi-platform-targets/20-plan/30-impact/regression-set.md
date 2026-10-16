@@ -24,9 +24,10 @@ them. The evidence of this file continues the numbering at `E-21`.
   the selection.
 - Tests that run the bundled CLI (`runBundled`, 66 test files, 141 calls) reach every CLI symbol
   transitively. They are not listed one by one; they are covered by `npm test` (section 2).
-- Evals are paid (the project memory records the API-key budget: about $0.50 per run, $5 per M-3 task,
-  stop and discuss at $10 spent of the $20 top-up). The plan runs the named evals once per milestone,
-  not per task.
+- Evals are paid, at most 0.50 USD per session. The spend rule for CHG-002 is that of
+  `60-test-plan.md` §4.1 (CHG-002 eval budget 40 USD with a reserve for the release evidence,
+  Q-evalbudget-03); the paid runs of the named evals belong to the task steps listed in
+  `10-strategy.md` §3a, never repeated per task.
 
 ## 2. Commands
 
@@ -61,7 +62,7 @@ C002-GOAL-05). A failure in any of them is a regression of the change, not an up
 | `tests/integration/cap10/TS-1006`, `TS-1007`, `TS-1008`, `TS-1009`, `serena-tools.ts`, `serena-config.test.ts`; `tests/integration/cap11/TS-1109` | `.mcp.json` servers, `serena-launch ${CLAUDE_PLUGIN_DATA} -- start-mcp-server …`, read-only launch, Serena tool grants, `sdd serena-config data` creates and updates the config | BR-7 | grep + serena | `serena-config <folder>` with a positional folder keeps today's behaviour (C002-IF-007) |
 | `tests/integration/cap02/TS-204`, `TS-205`, `TS-219`, `TS-220`, `agents-if09.test.ts`, `skills-portability.test.ts` | command inventory, PLG-DUP-001, conductor `Agent(` allowlist, no `Agent` in specialists, agent rows of C001-IF-09, skills name Claude tools only inside a wiring section | BR-15 | grep | source plugin text is unchanged (C002-CON-10); any prompt edit lands here |
 | `tests/integration/cap11/TS-1116.test.ts` | README troubleshooting covers every doctor remedy (≥ 9 rows) | BR-15 | grep | stays green if `commands/doctor.md` is not edited; the new README sections must keep `readme.check` empty |
-| `tests/unit/workspace/templates.test.ts`, `tests/integration/cap01/TS-123.test.ts` | every template of the two profiles resolves, renders and parses; the lite scaffold; `.sdd/_templates` override | BR-8 | serena | green if the `template` confinement is added beside `resolveTemplate`; see section 4 if it is inside |
+| `tests/unit/workspace/templates.test.ts`, `tests/integration/cap01/TS-123.test.ts` | every template of the two profiles resolves, renders and parses; the lite scaffold; `.sdd/_templates` override | BR-8 | serena | C002-T-012 puts the `template` confinement inside `resolveTemplate`; these tests stay green without edits under the conditions of section 4.5 |
 | `tests/unit/io/paths.test.ts` | `normalisePath`, `pathKey`, `realPath`, 8.3 names, links | BR-1, BR-3 | serena | the guards' resolution code; the repository-root helper should be tested next to it |
 | `tests/integration/cap11/TS-1118.test.ts` | `npm run check --steps validate,fixtures,structure` fails on a broken lint fixture and reports each step | BR-11 | grep | independent of a new step if the new step is not part of `structure` |
 | `tests/security/secrets.test.ts`, `tests/integration/faults.test.ts`, `tests/integration/determinism.test.ts` | secret scan, fault handling, deterministic output of the bundled CLI | BR-6 | grep | reach the bundle; green with an unchanged core |
@@ -69,6 +70,25 @@ C002-GOAL-05). A failure in any of them is a regression of the change, not an up
 | `bench/guards.mjs` | guard p95 ≤ 300 ms | BR-1, BR-3 | grep | re-run after the guard tasks |
 
 ## 4. Expected to change
+
+**Reading of C002-REQ-623 (Q-regression-01, `questions-log.md` round 4).** P-01 decided that test
+edits which extend an existing mirror are **additions**, not changed expectations. Every planned edit
+in sections 4.1 to 4.5 is classified below:
+
+- **Addition**: new tests, cases, rows, fixtures and harness options or helpers; and edits that make an
+  existing mirror also read the CHG-002 tables or the new version source while keeping every
+  existing assertion: the `frontend.test.ts` command names (`host-version`, `template show`,
+  `template list`, `hook guard`, `hook subagent-stop`) and the ERR-CLI-019 and ERR-CLI-020 catalogue
+  rows, the `smoke.test.ts` version comparison with `plugin.json`, the `TS-1115` build-input copy, the
+  `frontend.test.ts` waiver filter of C002-T-053, and the `scripts/test.mjs` exclusion of
+  `tests/replay/`.
+- **Changed expectation**: an existing case or assertion that expects a different decision, text or
+  value for the same input. The only planned ones are the deny-message and `Allowed:` summary texts of
+  C002-REQ-503, C002-REQ-517 and C002-REQ-521; no existing corpus case changes its expectation
+  (section 4.1).
+
+C002-T-048 step 2 lists every test edit with this classification; an edit that fits neither is a
+regression or a spec defect against C002-REQ-623.
 
 ### 4.1 Guard corpora and their tests (C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-607)
 
@@ -99,7 +119,7 @@ What changes is **additions and the test harness**:
 | `tests/integration/cli/frontend.test.ts:17-27` ("the catalogue mirrors every ERR-CLI and WARN-CLI row of errors.md") | `deepEqual` between `CATALOGUE` in `src/cli/errors.ts` and the `ERR-CLI`/`WARN-CLI` rows of the **CHG-001** `errors.md` (code, condition, message, fix), and the exit code derived from the condition text | ERR-CLI-019 and ERR-CLI-020 (C002-REQ-514, C002-REQ-516) must enter `CATALOGUE`; the CHG-001 file is approved and is not edited by CHG-002, so the test has to read the CHG-002 `errors.md` rows as well (E-31) |
 | `tests/integration/cli/frontend.test.ts:41-45` ("every command of C001-IF-01 is dispatched") | compares `COMMANDS` names with the table of `.sdd/001-architect-agent-suite/10-spec/50-interfaces/sdd-cli.md` by `deepEqual`; adding `host-version`, `template show`, `template list`, `hook guard`, `hook subagent-stop` fails it | the spec delta (C002-IF-007) lives in another file; the test must read both tables or take the new names from C002-IF-007. The same file moves at the CHG-001 archive (baseline §4 note 7) |
 | `tests/integration/cli/frontend.test.ts:129-144` | loops over `COMMANDS` with each row's `sampleArgs` under `SDD_DEBUG=1` and asserts a `command=` trace and an `exit=` trace | every new row needs `sampleArgs` that run without hanging or reading real stdin (`hook guard` reads stdin; `host-version` calls external programs; `serena-launch` spawns Serena — its current sample is `data -- --version`) |
-| `tests/integration/cli/frontend.test.ts:147-165` | copies this repository's `.sdd`, runs `status --write`, and lints every change whose **current phase is approved** with zero errors or warnings | once CHG-002's 20-plan phase is approved, CHG-002 is linted by this test: its artifacts must lint clean (LINT-DELTA-001 is waived at G2/G3, C002-DEC-008, so the waiver must be effective in this run) |
+| `tests/integration/cli/frontend.test.ts:147-165` | copies this repository's `.sdd`, runs `status --write`, and lints every change whose **current phase is approved** with zero errors or warnings; `sdd lint 002` exits 1 on the 9 LINT-DELTA-001 findings waived under C002-DEC-008, so the loop fails as soon as CHG-002's current phase is approved | C002-T-053 (edit made by the conductor before G3): the loop excludes every finding whose `code` or any of whose `ids` equals the `item` of a waiver in that change's `change.md`, accepts exit 1 only when every error finding is waived, and still fails on any unwaived finding. Classified as an addition (section 4 reading) |
 | new tests | `sdd --version` prints the bare version, `sdd version` is unchanged; `template show`/`list` confinement and ordering (C002-TS-522, C002-TS-531, C002-TS-532); `--user-data` platform rules and ERR-CLI-020 (C002-REQ-516); `host-version` with fake `opencode`/`code` shims (`tests/fixtures/cfg-*/bin` is the existing pattern) | new commands |
 
 ### 4.3 Build, package and version tests
@@ -120,6 +140,13 @@ What changes is **additions and the test harness**:
 (`.mcp.json`, `hooks.json`, agent `tools`) are unchanged (PLG-MCP-001, PLG-HOOK-001, PLG-TOOLS-001).
 New checks (TGT-*, PLG-VAR-001) are additions and have no existing test.
 
+### 4.5 Template resolution (C002-T-012, hotspot rank 20)
+
+| Test | Change | Why |
+|---|---|---|
+| `tests/unit/workspace/templates.test.ts`, `tests/integration/cap01/TS-123.test.ts` | none: they must stay green without edits | C002-T-012 puts the path confinement inside `resolveTemplate`, so `change new` and `upgrade` inherit it. Their callers pass constant template names, and the confinement allows the profile folder and the `.sdd/_templates` override exactly as today, refusing only `..` and links out of them. A failure of either test is a regression (C002-RISK-028), not an update |
+| `tests/integration/cli/template.test.ts` (new) | addition: the `template show`/`list` cases, including the `.sdd/_templates` override (C002-TC-532) | new commands |
+
 ## 5. Evals that exercise the changed code
 
 Claude Code sessions run the shipped bundle through `hooks.json`, so a guard defect shows in any eval
@@ -134,8 +161,9 @@ task:
 | `evals/injection/injection.eval.mjs` | injection resistance through the guards | grep |
 | the 20 other `evals/cap*/TS-*.eval.mjs` that mention Bash or guards | conductor and specialist behaviour | grep |
 
-Re-run only the first row at the milestone that implements C002-REQ-517, and the rest only if the plan
-edits a source agent, command or skill (it should not, C002-CON-10).
+Run only the first row, at the task steps of `10-strategy.md` §3a (C002-T-010 step 5, C002-T-038 step 4,
+C002-T-048 step 4), and the rest only if the plan edits a source agent, command or skill (it should not,
+C002-CON-10).
 
 ## Evidence
 

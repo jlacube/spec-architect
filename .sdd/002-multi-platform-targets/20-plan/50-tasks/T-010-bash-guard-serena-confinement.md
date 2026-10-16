@@ -34,10 +34,19 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
 | modify | `src/hooks/guard-bash.ts` | Serena-command detection; data-folder resolution per C002-IF-008 §1.1 with the C002-T-005 helper; `CLAUDE_PLUGIN_DATA` read from the guard's environment |
 | modify | `tests/integration/cli/helpers.ts` | an optional environment stub for `runBundled`, additive only (hotspot rank 3) |
 | modify | `bench/guards.mjs` | recorded inputs for a Serena command |
+| add | `evals/targets/doctor/TS-537.eval.mjs` | C002-TC-537 (2 Examples rows) on E-CC; C002-T-038 later adds the other doctor cases beside it and C002-T-048 re-runs it |
+| modify | `evals/results/spend-chg002.json` | the spend of this task's 5 paid sessions (step 5); created here if C002-T-001 has not created it yet |
 
 ## Preconditions
 
 - C002-T-005 and C002-T-009 done (same file, serialised).
+- Before the paid runs of step 5: P-01's top-up of C002-T-001 step 1 is done, so the prepaid key holds
+  at least 40 USD minus the ledger total of `evals/results/spend-chg002.json` (on 2026-10-16 the key
+  held about 4.77 USD: top-up at least about 35.23 USD; Q-evalbudget-03). M-02 runs in parallel with
+  M-01, so if C002-T-001 has not reached that step, P-01 does the top-up now. These runs use the caps that
+  `evals/harness/run.mjs` sets for Claude Code today (`maxTurns` 30, `maxBudgetUsd` 0.50); the SDK
+  cap can be overrun (one CHG-001 session cost 0.62 USD), so the ledger check counts the highest
+  observed session cost, not the cap.
 
 ## Step outline (no production code)
 
@@ -47,16 +56,22 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
    cannot be resolved is denied.
 3. Deny when the resolved folder is inside the repository root.
 4. Document in the guard header that the function now depends on its environment.
-5. At the end of the milestone, run the doctor eval of regression-set §5 row 1 once, within the
-   $0.50 cap. That run checks the C002-TS-537 assumption on the real host.
+5. **Paid runs at the C002-M-02 exit (5 sessions on E-CC):** the 3 cases of regression-set §5 row 1
+   (`evals/cap11/doctor-no-ripwire.eval.mjs`, `evals/cap10/TS-1015.eval.mjs`,
+   `evals/cap11/TS-1111.eval.mjs`) and the 2 rows of C002-TC-537, one run each, at most one rerun
+   after a failure. Before every session, check the ledger against the budget by the stop rule of
+   test plan §4.1 and stop for P-01 when it says stop; after every session, add its `cost_usd` to the
+   ledger. These runs check the C002-TS-537 assumption on the real host.
 
 ## Verification
 
 - `npm test -- tests/guards`, `npm test -- cap10` and `npm test -- cap11`
 - `npm run bench` (p95 ≤ 300 ms with the new file-system work)
-- The milestone eval run: `evals/cap11/doctor-no-ripwire.eval.mjs` (one run)
+- The milestone eval runs of step 5: `node evals/harness/run.mjs --host claude --tier dev` with the
+  three regression-set §5 row 1 files and `evals/targets/doctor/TS-537.eval.mjs`
 
 ## Done when
 
 - [ ] Claude Code `.mcp.json` Serena launch and the doctor/init steps still allowed (C002-TS-537)
+- [ ] The 5 sessions of step 5 pass and their spend is in the ledger
 - [ ] Progress reported: `sdd task set C002-T-010 --status done --commit <sha>`

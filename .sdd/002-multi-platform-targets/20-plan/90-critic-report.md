@@ -234,7 +234,7 @@ under C002-DEC-008; `sdd trace 002` reports TR-01 … TR-11 at 100 % and a cycle
 - **Refs:** C002-T-025, C002-T-034, C002-INV-02, ERR-GEN-010, C002-TS-104
 - **Evidence:**
   - "3. Write to `dist/.staging-<target>` and rename over `dist/<target>` only when no diagnostic exists." — `20-plan/50-tasks/T-025-generator-skeleton.md:47`
-  - "**C002-INV-02** After a generation run, the output folder of each selected target holds exactly the files of that run, or does not exist when the run found an error." — `10-spec/40-domain/domain-model.md:67`
+  - "`C002-INV-02` After a generation run, the output folder of each selected target holds exactly the files of that run, or does not exist when the run found an error." — `10-spec/40-domain/domain-model.md:67`
   - "2. A generator failure leaves no `dist/opencode` and no `dist/copilot`, and no tarball is packed." — `20-plan/50-tasks/T-034-packaging-runs-generator.md:42`
 - **Why it matters:** Read literally, step 3 keeps the previous `dist/<target>` when a diagnostic exists, and a write error on the second rename keeps the first target's new package. C002-INV-02, ERR-GEN-010 ("no target package was kept") and C002-T-034 require that neither folder exists after a failed run.
 - **Suggested fix:** Reword step 3: stage every selected target, then replace the old folders; on any diagnostic or write error remove every selected `dist/<target>`. Cover both cases in `generator-frame.test.ts`.

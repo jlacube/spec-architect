@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
 status: todo
-depends_on: [C002-T-026, C002-T-028]
+depends_on: [C002-T-022, C002-T-026, C002-T-028]
 implements: [C002-REQ-114, C002-REQ-201, C002-REQ-202, C002-REQ-203, C002-REQ-204, C002-REQ-216]
 satisfies_ac: [C002-AC-114.1, C002-AC-201.1, C002-AC-202.1, C002-AC-203.1, C002-AC-204.1, C002-AC-216.1]
 verified_by: [C002-TS-124, C002-TS-201, C002-TS-202, C002-TS-203, C002-TS-204, C002-TS-205, C002-TS-225, C002-TS-226, C002-TS-227, C002-TC-124, C002-TC-201, C002-TC-202, C002-TC-203, C002-TC-204, C002-TC-205, C002-TC-225, C002-TC-226, C002-TC-227]
@@ -34,10 +34,12 @@ data (C002-REQ-114). Each agent's tool set is closed by the catch-all entry (C00
 | add | `scripts/generate/emit/opencode.ts` | layout, frontmatter shape, command naming, `opencode.json` servers, catch-all tool entry, install notes from `targets/opencode/install.md` |
 | add | `plugins/architect/targets/opencode/install.md` | install-notes source: Node.js 20+, OpenCode tested version, Claude models, `architect-sdd` install, placement, conductor start |
 | add | `tests/integration/cap02/package.test.ts` | the listed scenarios on the generated package |
+| modify | `tests/replay/scenarios/opencode-host.test.ts` | adds the expectation of C002-TC-226 (file added by C002-T-026) |
+| add | `tests/integration/cap01/serena-launch.test.ts` | C002-TC-125: Serena started from the OpenCode declaration of `opencode.json` through the packed `architect-sdd` (fx-tgz) with `LOCALAPPDATA` set, on E-SER; the scenario's ownership moves to this task with the test plan (critic CR-5) |
 
 ## Preconditions
 
-- C002-T-026 and C002-T-028 done.
+- C002-T-026 and C002-T-028 done; C002-T-022 done (packed tarball fx-tgz for `serena-launch.test.ts`).
 
 ## Step outline (no production code)
 
@@ -50,6 +52,7 @@ data (C002-REQ-114). Each agent's tool set is closed by the catch-all entry (C00
 
 - `npm test -- cap02/package` (C002-TC-201 … C002-TC-205, C002-TC-225, C002-TC-227) and
   `npm run generate -- --target opencode --out <tmp>`
+- `npm test -- cap01/serena-launch` on E-SER (Serena 1.7.x installed)
 - C002-TC-226 needs an OpenCode host: write its expectation in
   `tests/replay/scenarios/opencode-host.test.ts`; it runs under `npm run replay -- opencode-host` once
   C002-T-042 exists, not under `npm test`. Until then, list it in the task report as carried to C002-T-042.
