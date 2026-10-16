@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "PreToolUse": [{ "type": "command", "command": "node ${PLUGIN_ROOT}/hooks/audit.mjs PreToolUse", "timeout": 15 }],
+    "SubagentStart": [{ "type": "command", "command": "node ${PLUGIN_ROOT}/hooks/audit.mjs SubagentStart", "timeout": 15 }],
+    "SubagentStop": [{ "type": "command", "command": "node ${PLUGIN_ROOT}/hooks/audit.mjs SubagentStop", "timeout": 15 }]
+  }
+}

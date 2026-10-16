@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "probe-stub": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/mcp/stub.mjs"]
+    }
+  }
+}
