@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-16T07:41:00.166Z",
+  "generated_at": "2026-10-16T07:42:12.316Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -3963,7 +3963,7 @@
       "file": "20-plan/50-tasks/T-056-opencode-carried-eval-runs.md",
       "line": 1,
       "title": "OpenCode dev-tier runs of the carried eval rows",
-      "content_hash": "sha256:3aae8376a506298964df10edc94ae006a3c2d48df8c1436eca3b2a19ccdf7211",
+      "content_hash": "sha256:de686ee1e12356853ddceb1bc52d9ffeabdef2ab09b3db1f516dd9b01a6b0476",
       "status": "todo"
     },
     {

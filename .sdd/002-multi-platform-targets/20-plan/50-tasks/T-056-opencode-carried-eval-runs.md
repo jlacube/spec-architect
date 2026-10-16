@@ -32,6 +32,7 @@ They run on the prepaid API key outside the reserve for the release evidence (Q-
 |---|---|---|
 | add | `evals/results/t056-*.json` | one result per session (host, host version, model IDs, tokens, spend, transcript path) |
 | modify | `evals/results/spend-chg002.json` | the spend of every session |
+| add | `evals/targets/opencode-host/TS-{133,211,222,223}.eval.mjs` | only under the S-07 infeasible-driver branch (`10-strategy.md` §4): the session scenarios re-levelled to eval (test plan §8.1) |
 | modify | `evals/targets/**/*.eval.mjs` | only to fix a case defect found here, never to weaken an assertion (case files of C002-T-026, C002-T-027, C002-T-037, C002-T-038, C002-T-044); a product defect reopens the owning task instead |
 
 ## Preconditions

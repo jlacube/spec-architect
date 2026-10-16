@@ -82,7 +82,7 @@ session's `cost_usd` is added.
 | Claude Code rows of C002-TC-215, 217, 219 | workflow on every host (part) | prepaid key | C002-T-037 step 4 |
 | Claude Code rows of C002-TC-506, 509, 510, 511 and the doctor eval of regression-set §5 row 1 | workflow on every host (rest) | prepaid key | C002-T-038 step 4 |
 | OpenCode runner smoke | verification tooling (part) | prepaid key | C002-T-044 step 5 |
-| Carried OpenCode rows: C002-TC-113, 132, the OpenCode rows of 215, 217, 219, 221, 316, 506, 507, 509 … 515, 639, and C002-TC-613 with the C001-CAP-02 interview and gate cases, 634, 635 | verification tooling (rest) | prepaid key | C002-T-056 steps 2 … 4 |
+| Carried OpenCode rows: C002-TC-113, 132, the OpenCode rows of 215, 217, 219, 221, 316, 506, 507, 509 … 515, 639, and C002-TC-613 with the C001-CAP-02 interview and gate cases, 634, 635 | verification tooling (rest) | prepaid key | C002-T-056 steps 2 and 3 (step 4 only under the infeasible-driver branch) |
 | Copilot CLI runner smoke and carried Copilot CLI rows (Copilot rows of C002-TC-513, C002-TC-526) | verification tooling, Copilot column | Copilot subscription | C002-T-045 steps 3 and 4 |
 | OpenCode release evidence: C002-TC-612 routing and at least 20 injection cases | release evidence, reserve | prepaid key | C002-T-049 step 3 |
 | Claude Code regression run | release evidence, reserve | prepaid key | C002-T-048 step 4 |
