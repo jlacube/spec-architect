@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:7ffa1bc10d53793563db83fd0790cf25d34f51ee6ed78eb52fe9d2d398d7c8e1", approved_at: 2026-10-16, approved_by: jerome.lacube }
-  20-plan: { status: in-review, approved_hash: null, approved_at: null, approved_by: null }
+  20-plan: { status: approved, approved_hash: "sha256:24b6c0a5ef0c7fe9f446584438d0768ff4beaa0a85e7c70ac13dbc29b465b954", approved_at: 2026-10-16, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -62,3 +62,4 @@ waivers:
 | 2026-10-16 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, DOD-G-01 | unavailable |
 | 2026-10-16 | G2 (spec) | **Revise** | "D-002: the DoD names a 25 USD eval budget; P-01 set 40 USD in Q-evalbudget-03; point the DoD at the plan's budget (20-plan/60-test-plan.md §4.1)" | none | unavailable |
 | 2026-10-16 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, DOD-G-01 | unavailable |
+| 2026-10-16 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
