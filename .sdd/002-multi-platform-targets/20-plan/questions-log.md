@@ -75,3 +75,17 @@ Question from the critic's plan re-review (`90-critic-report.md`, CR-18).
 - **Rejected:** none
 - **Answer:** Key, M-07 reserve (Recommended)
 - **Extracted instructions:** none
+
+## Round 6 — 2026-10-16
+
+P-01's statements after G3 (chat, with a screenshot of the GitHub Copilot usage page).
+
+### Q-copilot-01 — How is P-01's Copilot usage billed, and which spike runs first?
+- **Blocking:** no · **Material:** yes · **Candidates considered:** n/a (P-01 statement)
+- **Answer:** P-01: "premium requests doesn't exist anymore, now it's AI Credits, which is similar to per token"; the usage page shows 1,500 included AI credits and additional usage enabled with a 50 USD budget. P-01: "yes, do the updates on the test plan. do first the GitHub Copilot tests."
+- **Extracted instructions:** record the AI-Credit estimate (test plan §4.4); run C002-T-002 (S-08) before C002-T-001.
+
+### Q-opencode-01 — OpenCode model inference (open)
+- **Blocking:** yes for C002-T-001 · **Material:** yes
+- **Statement:** P-01: "for OpenCode, let's discuss afterwards, as we might need to adjust some stuffs, as I actually use only OpenRouter on OpenCode for model inference". The plan bills OpenCode eval sessions to the prepaid Anthropic API key; with OpenRouter they bill P-01's OpenRouter account. To discuss before C002-T-001.
+- **Answer:** pending

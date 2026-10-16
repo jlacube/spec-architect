@@ -64,8 +64,8 @@ change level in a branch are listed in §8.1; the counts above are those of the 
 | E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network; `opencode` at its S-07 tested version on PATH and `@opencode-ai/sdk` pinned to it for OpenCode rows. Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
 | E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; billed to the prepaid API key |
 | E-OCE | OpenCode at its tested version with the Claude model tiers of C002-REQ-105 through the provider of the S-07 record; billed to the prepaid API key (`30-impact/blast-radius.md`, eval cost note) |
-| E-CPC | Copilot CLI at its S-08 tested version, non-interactive with `--no-ask-user`; billed to the Copilot subscription that P-01 names in C002-T-002 (about 76 sessions together with E-VSC, §4.2; C002-RISK-026), not to the prepaid API key |
-| E-VSC | VS Code and GitHub Copilot Chat at the S-08 tested versions, P-01 at the keyboard, hooks state as the mode requires; billed to the same Copilot subscription (C002-T-050, C002-T-057; §4.2), not to the prepaid API key |
+| E-CPC | Copilot CLI at its S-08 tested version, non-interactive with `--no-ask-user`; billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 76 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
+| E-VSC | VS Code and GitHub Copilot Chat at the S-08 tested versions, P-01 at the keyboard, hooks state as the mode requires; billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
 
 ## 4. Eval execution and spend
 
@@ -88,7 +88,7 @@ change level in a branch are listed in §8.1; the counts above are those of the 
   run to G1 in C002-T-051 step 3 (C002-DOD-021; Q-evalbudget-04, `questions-log.md` round 5); every
   other paid session on the prepaid key draws on the **general pool** of 30 USD, including a re-run of
   C002-T-049 rows after a fix (C002-T-049 step 4). Sizes and room for reruns: §4.3. Copilot CLI,
-  VS Code and S-08 sessions are billed to the Copilot subscription and are not part of the budget.
+  VS Code and S-08 sessions are billed in AI Credits to P-01's Copilot plan and are not part of the budget (§4.4).
 - **Top-up precondition** (C002-T-001 step 1): before the first paid session of CHG-002, P-01 tops up
   the prepaid key so that it holds at least 40 USD minus the ledger total. The key held about 4.77 USD
   on 2026-10-16, so the top-up is at least about 35.23 USD. C002-T-010 checks the same precondition,
@@ -200,6 +200,31 @@ session count times 0.65 USD. It is not a cap, and the stop rule of §4.1 is wha
 - Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 20 % more than
   the planning rates. The upper bounds (72.80 USD) show that the stop rule, not the estimate, keeps
   CHG-002 within 40 USD.
+
+### 4.4 Copilot AI Credits
+
+Copilot bills chat, agent and CLI use in **AI Credits**: 1 credit = 0.01 USD, charged per token
+(input, output and cache) at the model's API rate. Copilot sessions therefore cost about what the same
+work costs on the API key. P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16).
+
+| Measure | Source | Value |
+|---|---|---|
+| Tokens per session | 162 CHG-001 dev-tier sessions in `evals/results/` (`tokens_by_model`) | input about 7,200, output about 9,000, cache read about 170,000, cache write about 28,000 |
+| Cost per session | the same sessions; §4.2 rates; §4.2 upper bound | 0.21 USD mean; 0.29 USD weighted; 0.65 USD upper |
+| Copilot sessions | §4.2 (S-08 probes, C002-T-045, C002-T-054, C002-T-050, C002-T-057) | about 76 |
+| Estimate | sessions × 0.21 … 0.29 USD | about 16 … 22 USD = 1,600 … 2,200 credits |
+| Upper bound | sessions × 0.65 USD | about 49 USD = 4,900 credits |
+| Plan capacity | 1,500 included credits per month + 50 USD additional budget | 6,500 credits in one month |
+
+- The estimate fits the plan: the included credits plus about 1 … 7 USD of additional usage; the upper
+  bound fits the 50 USD additional budget. Work spread over two months draws more on included credits.
+- Unmeasured: Copilot's own agent loop and the inlined skills (C002-DEC-002) can use more tokens per
+  session than Claude Code. C002-T-002 records the credits its S-08 probes used, from GitHub's usage
+  view, and the per-session figure replaces the 0.21 … 0.29 USD rate for C002-T-045, C002-T-054,
+  C002-T-050 and C002-T-057. When that figure puts the remaining Copilot runs above the plan capacity,
+  P-01 decides before they start (C002-RISK-026).
+- Per-model credit rates follow GitHub's Copilot models-and-pricing page; P-01's billing view is the
+  authority.
 
 ## 5. Regression set
 

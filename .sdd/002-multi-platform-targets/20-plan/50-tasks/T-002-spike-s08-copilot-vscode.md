@@ -36,9 +36,7 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
 
 - REF-WIN with VS Code, GitHub Copilot Chat and Copilot CLI installed; P-01 names the versions.
 - Settings `chat.plugins.enabled`, `chat.pluginLocations` and `chat.askQuestions.enabled` on.
-- **P-01 precondition: the GitHub Copilot subscription.** P-01 names the Copilot plan, confirms that
-  the Claude models of the three tiers of C002-REQ-105 are enabled in it, and confirms that its
-  request allowance covers about 76 sessions: about 10 S-08 probe sessions here, about 45 Copilot CLI
+- **P-01 precondition: the GitHub Copilot plan.** Known on 2026-10-16: (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16); Copilot bills AI Credits per token (test plan §4.4). P-01 confirms that the Claude models of the three tiers of C002-REQ-105 are enabled in it. The plan covers about 76 sessions (estimate 1,600 … 2,200 credits, upper bound 4,900): about 10 S-08 probe sessions here, about 45 Copilot CLI
   sessions in C002-T-045 and C002-T-054, and about 21 VS Code sessions in C002-T-050 (two checklist
   runs) and C002-T-057 (test plan §4.2, E-CPC, E-VSC; C002-RISK-026). These sessions are not billed to
   the prepaid API key.
@@ -75,6 +73,6 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
 
 - [ ] Record committed with P-01's sign-off
 - [ ] Defer branch decided: mode recorded, or the spec defect raised and the revision scheduled with P-01
-- [ ] Copilot subscription (plan, Claude models, allowance) recorded in the record body
+- [ ] Copilot plan (included credits, additional budget, Claude models) and the AI Credits the S-08 probes used (GitHub usage view) recorded in the record body; the per-session credit figure replaces the planning rate of test plan §4.4
 - [ ] C002-TC-623 (release-check integration case that reads this record) listed in the task report as carried to C002-T-047
 - [ ] Progress reported: `sdd task set C002-T-002 --status done --commit <sha>`
