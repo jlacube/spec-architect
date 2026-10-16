@@ -2,10 +2,11 @@
 // codes, SDD_DEBUG traces (C001-NFR-702) and the error catalogue mirror of errors.md.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { cpSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
+import { cpSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { splitCells } from "../../../src/model/blocks.ts";
+import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { CATALOGUE, formatError, CliError } from "../../../src/cli/errors.ts";
 import { COMMANDS } from "../../../src/cli/commands.ts";
 import { repoRoot } from "../../helpers.ts";
@@ -144,7 +145,7 @@ test("SDD_DEBUG=1 writes timing and decision traces to standard error for every 
 });
 
 // M-2 exit criterion (C001-T-028): `sdd lint` exits 0 on this repository, after status --write.
-test("lint on a copy of this repository's workspace: every change whose current phase is approved has no error or warning", () => {
+test("lint on a copy of this repository's workspace: every change whose current phase is approved has no error or warning that its gates did not waive", () => {
   const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-repo-")));
   try {
     cpSync(join(repoRoot(), ".sdd"), join(root, ".sdd"), { recursive: true });
@@ -154,10 +155,17 @@ test("lint on a copy of this repository's workspace: every change whose current 
     const approved = reg.changes.filter((c) => c.status !== "archived" && c.phases[c.phase]?.status === "approved").map((c) => c.id.slice(4));
     assert.ok(approved.includes("001"), "CHG-001 is approved");
     for (const nnn of approved) {
+      // Findings waived at a gate (`waivers` of change.md, by code or by ID) are accepted (C002-T-053);
+      // lint still reports them, so its exit code is 1 when a waived error remains.
+      const folder = readdirSync(join(root, ".sdd")).find((n) => n.startsWith(`${nnn}-`))!;
+      const fm = splitFrontmatter(readFileSync(join(root, ".sdd", folder, "change.md"), "utf8")).data ?? {};
+      const waived = new Set(((fm["waivers"] ?? []) as { item: string }[]).map((w) => String(w.item)));
       const r = runBundled(["lint", nnn, "--json"], { cwd: root });
-      assert.equal(r.code, 0, r.stdout);
-      const findings = (JSON.parse(r.stdout) as { findings: { code: string; severity: string }[] }).findings;
-      assert.deepEqual(findings.filter((f) => f.severity !== "info"), [], `CHG-${nnn}`);
+      assert.ok(r.code === 0 || r.code === 1, r.stdout);
+      const findings = (JSON.parse(r.stdout) as { findings: { code: string; severity: string; ids?: string[] }[] }).findings;
+      const open = findings.filter((f) => f.severity !== "info" && !waived.has(f.code) && !(f.ids ?? []).some((id) => waived.has(id)));
+      assert.deepEqual(open, [], `CHG-${nnn}`);
+      if (open.length === 0 && findings.every((f) => f.severity === "info")) assert.equal(r.code, 0, r.stdout);
     }
   } finally {
     rmSync(root, { recursive: true, force: true });
