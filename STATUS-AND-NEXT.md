@@ -1,4 +1,4 @@
-# Status and next steps (2026-10-12, updated after T-062)
+# Status and next steps (2026-10-16, updated after CHG-002 gate G3)
 
 ## 1. Milestones
 
@@ -9,12 +9,34 @@
 | M-3 | conductor, interview, phase skills, commands, gate protocol, ideation/spec specialists, eval harness | done — exit criteria at milestone tier **deferred to release** |
 | M-4 | cartographer, architect, planner, revise/stop/doctor | done — exit criteria at milestone tier **deferred to release** |
 | M-5 | path guard, shell guard, hooks, archive, security corpus | done — injection evals at milestone tier **deferred to release** |
-| M-6 | packaging and quality gates | in progress — T-060, T-061, T-062, T-078 done |
+| M-6 | packaging and quality gates | in progress — T-060, T-061, T-062, T-078 done (T-070 of M-7 done early) |
 | M-7 | release v0.1.0 and dogfooding on two real changes | after M-6 |
 
-Tasks: **51 of 60 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
+Tasks: **52 of 60 done**, one dropped (T-071, Archify — fallback only on Windows per spike S-03),
 8 to do. Defects: 10 found, 10 closed (D-008 fixed 2026-10-12, see §3a; D-009 opt-in `gate approve --commit`
 and D-010 Serena launched through `sdd serena-launch`, fixed 2026-10-13 by C001-T-078). Phases G1/G2/G3: approved, hashes match.
+
+## 1a. CHG-002 "Multi-platform targets" (OpenCode + Copilot VS Code) — planned
+
+CHG-002 is also CHG-001's brownfield dogfood (C001-T-074). Folder: `.sdd/002-multi-platform-targets/`.
+
+| Gate | State |
+|---|---|
+| G1 ideation | approved 2026-10-14 (DEC-001…009) |
+| G2 spec | approved with waivers 2026-10-15, re-approved after revisions D-001 and D-002 on 2026-10-16 (121 requirements, 16 NFRs, 123 AC, 206 scenarios) |
+| G3 plan | approved 2026-10-16: 7 milestones, 57 tasks, 5 ADRs, 29 risks, rollout, observability, hand-off |
+
+- **Waivers in force:** 9 LINT-DELTA-001 findings (CHG-002 modifies CHG-001 requirements that reach
+  `_living/` only when CHG-001 is archived, C002-DEC-008) and DOD-G-01's "9 of 10 runs" clause for
+  CHG-002 (evals pass at the dev tier, P-01 Q-evalbudget-01/02).
+- **Eval budget:** 40 USD on the prepaid API key — a 30 USD general pool and a 10 USD reserve for the
+  M-07 release evidence; estimate 32.80 USD; spend checked before every paid session
+  (`20-plan/60-test-plan.md` §4). Copilot sessions bill P-01's Copilot subscription.
+- **Next:** P-01 tops up the prepaid key by at least about 35.23 USD (it holds about 4.77 USD), then
+  implementation starts with C002-T-001 (spike S-07, OpenCode) and C002-T-002 (spike S-08, Copilot VS
+  Code); their results decide the enforcement modes and whether Copilot is deferred (spec revision).
+- C002-T-053 (approved-phase lint test accepts gate-waived findings) is already done (9565f2f).
+- Release channel: per-target zips in `dist/` (Q-release-01).
 
 ## 2. Deferred items (to be closed before release)
 
@@ -59,15 +81,17 @@ into the living specs with its own `sdd archive`.
 
 ## 5. Budgets
 
-- **Plan usage:** work pauses near 90% of the 5-hour window and resumes after the reset (a
-  session timer is set for 01:37 local on 2026-10-12).
-- **API key for evals:** about $15.15 of the $20 top-up used; M-5 used ≈ $4.25 of its $5 budget.
+- **Plan usage:** a specialist dispatch starts only if usage + about 15% stays at or below about
+  82% of the 5-hour window; then work pauses and a timer resumes it after the reset. Work pauses if
+  weekly usage reaches 99%.
+- **API key for evals:** about $15.23 of the $20 top-up used (about $4.77 left on 2026-10-16); M-5 used ≈ $4.25 of its $5 budget. CHG-002 needs a top-up first (§1a).
 
 ## 6. How to check the state yourself
 
 ```bash
 node plugins/architect/scripts/sdd.mjs status
 node plugins/architect/scripts/sdd.mjs stale check 001
+node plugins/architect/scripts/sdd.mjs stale check 002
 node plugins/architect/scripts/sdd.mjs lint
 npm run check
 ```

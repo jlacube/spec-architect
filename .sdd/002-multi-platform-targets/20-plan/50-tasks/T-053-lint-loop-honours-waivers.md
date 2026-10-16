@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-623.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-626, C002-TC-626]
 components: [C002-COMP-013]
 risk_refs: [C002-RISK-004]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 9565f2f, completed_at: 2026-10-16, notes: "Done before G3 by the conductor (plan critic CR-10); frontend lint loop passes with CHG-002 approved (11/11)" }
 ---
 
 # C002-T-053 — Approved-phase lint loop of frontend.test.ts excludes waived findings
