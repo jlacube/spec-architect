@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-16T07:08:10Z",
+  "generated_at": "2026-10-16T12:48:35Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -176,7 +176,7 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "draft",
+          "status": "in-review",
           "approved_hash": null,
           "approved_at": null,
           "approved_by": null
@@ -185,7 +185,7 @@
       "implementation": {
         "status": "not-started",
         "tasks": {
-          "total": 52,
+          "total": 57,
           "done": 0,
           "blocked": 0,
           "in_progress": 0

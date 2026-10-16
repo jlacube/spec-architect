@@ -121,8 +121,10 @@ change level in a branch are listed in §8.1; the counts above are those of the 
      P-01 decides; they never draw on the reserve.
   6. **C002-T-051 step 3** is driven by hand, outside the harness caps, as one run of about 4 agent
      sessions: rule 3 is checked once before the run, with the run's §4.2 estimate (1.40 USD) added to
-     T, and P-01 pauses the run for a decision when the reserve total plus the run's spend so far, read
-     from the provider's usage view, reaches 10 USD. The run is one ledger entry.
+     T, and before each interview round and before the gate P-01 checks rule 3's reserve condition with
+     rule 2's T plus the run's spend so far (read from the provider's usage view) and H; otherwise the
+     run pauses for a decision. The run is one ledger entry with its session count; for later sessions,
+     H is that entry's spend divided by its session count (CR-22).
 - **Checkpoint per owning step:** each owning task reports its steps' spend against their §4.2
   estimate. When the C002-T-044 smoke session costs more than 0.30 USD (twice the routing rate), the
   conductor re-estimates C002-T-056 with the measured OpenCode rate and shows it to P-01 before

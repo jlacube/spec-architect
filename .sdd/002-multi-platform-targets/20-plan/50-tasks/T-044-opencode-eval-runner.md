@@ -73,7 +73,7 @@ of C002-IF-009.
 
 - `npm test -- cap06` (stub host, no spend; includes the option cases of step 2)
 - `node evals/harness/run.mjs --filter evals/does-not-exist --tier dev` exits non-zero without a session
-- `node evals/harness/run.mjs --host opencode --tier dev --filter routing --only <one routing case ID>`
+- `node evals/harness/run.mjs --host opencode --tier dev <one routing case file under evals/targets/opencode-host/> --only <its row>`
   (one paid smoke run, ≤ $0.50)
 
 ## Done when

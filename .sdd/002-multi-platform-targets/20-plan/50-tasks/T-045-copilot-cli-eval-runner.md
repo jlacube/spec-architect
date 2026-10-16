@@ -54,7 +54,7 @@ C002-T-046).
 ## Verification
 
 - `npm test -- cap06`
-- `node evals/harness/run.mjs --host copilot-cli --tier dev --filter routing --only <one routing case ID>`
+- `node evals/harness/run.mjs --host copilot-cli --tier dev <one routing case file under evals/targets/copilot-cli/> --only <its row>`
   (one smoke run; `--host` and `--filter` of C002-T-044 step 2)
 - `node evals/harness/run.mjs --host copilot-cli --tier dev` with `evals/targets/doctor/TS-513.eval.mjs` and `TS-526.eval.mjs`
 

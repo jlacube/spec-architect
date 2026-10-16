@@ -8,7 +8,7 @@ phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: in-revision, approved_hash: "sha256:1912a280080e0aa13f50d7a19fb659d961de6912f56a7f2336fd312732007e64", approved_at: 2026-10-16, approved_by: jerome.lacube }
-  20-plan: { status: draft, approved_hash: null, approved_at: null, approved_by: null }
+  20-plan: { status: in-review, approved_hash: null, approved_at: null, approved_by: null }
 implementation: { status: not-started }
 stopped: null
 owners: []

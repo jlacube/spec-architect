@@ -53,9 +53,12 @@ not wait for it.
 3. **P-01 step — paid, reserve (about 4 agent sessions on E-OCE, test plan §4.2):** continue the toy
    change to G1 and link the transcript. The run is driven by hand, outside the harness caps of
    C002-T-044: P-01 reads the provider's usage view at each interview round and at the gate, and
-   pauses for a decision when the reserve total plus the run's spend so far reaches 10 USD. After the
-   run, its spend goes into the ledger (one entry, pool `reserve`, with the usage reading), before any
-   other paid session starts. A failed run is repeated only after the stop rule allows it again.
+   before each interview round and before the gate checks the reserve condition of the stop rule (test
+   plan §4.1): reserve total + the outstanding estimates of C002-T-048 step 4 and C002-T-049 step 3 (a
+   step in progress counts its estimate minus its spend so far, not below 0) + the run's spend so far
+   + H ≤ 10 USD; otherwise the run pauses and P-01 decides. After the run, its spend goes into the
+   ledger (one entry, pool `reserve`, with the usage reading and the session count), before any other
+   paid session starts; H for later sessions is that entry's spend divided by its session count. A failed run is repeated only after the stop rule allows it again.
 
 ## Verification
 

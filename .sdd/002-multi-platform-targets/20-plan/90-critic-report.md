@@ -19,11 +19,11 @@ under C002-DEC-008; `sdd trace 002` reports TR-01 … TR-11 at 100 % and a cycle
 ## Summary
 | blocker | major | minor |
 |---|---|---|
-| 1 | 11 | 9 |
+| 1 | 11 | 11 |
 
 Round 1 raised CR-1 … CR-16 (1 blocker, 9 major, 6 minor); re-review 1 resolved all of them and
-raised CR-17 … CR-21 (2 major, 3 minor). Open after re-review 1: 0 blocker, 2 major (CR-17, CR-18),
-3 minor (CR-19, CR-20, CR-21).
+raised CR-17 … CR-21 (2 major, 3 minor); re-review 2 resolved CR-17 … CR-21 and raised CR-22 and
+CR-23 (2 minor). Open after re-review 2: 0 blocker, 0 major, 2 minor (CR-22, CR-23); both fixed by the conductor afterwards, open: none.
 
 ## Findings
 
@@ -280,7 +280,7 @@ raised CR-17 … CR-21 (2 major, 3 minor). Open after re-review 1: 0 blocker, 2 
 
 ## Verdict
 
-Round 1 (superseded by the verdict of "Re-review 1"):
+Round 1 (superseded by the verdicts of "Re-review 1" and "Re-review 2"):
 
 **needs-clarification.** The plan is not approvable at G3 as it stands. CR-1 is a blocker that only
 P-01 can resolve: the budget decision of Q-evalbudget-01 rests on an estimate that the CHG-001
@@ -377,7 +377,7 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 - **Why it matters:** No path in the task graph puts C002-T-040 before C002-T-026, C002-T-029 or C002-T-030 (C002-T-026 needs only C002-T-025; C002-T-040 needs C002-T-006 and C002-T-007), and the hand-off's ordered list puts C002-T-026 fourteen places before C002-T-040. Until C002-T-040's edit, `npm test` bundles and runs `opencode-host.test.ts`, which needs the replay framework of C002-T-040 and the driver of C002-T-042 and opens a loopback socket that `tests/no-network.mjs` fails. `npm test`, and with it `npm run check`, is then red from C002-T-026 onward, so the tasks between C002-T-026 and C002-T-040 cannot be reported done under the plan's own rule, unless the implementer edits `scripts/test.mjs` (hotspot rank 4, C002-RISK-005) outside any task.
 - **Suggested fix:** Either add C002-T-040 to the `depends_on` of C002-T-026 and reorder the hand-off list (C002-T-040 finishes at 6 and C002-T-025 at 8, so the critical path does not move), or move the `scripts/test.mjs` exclusion of `tests/replay/` into C002-T-026 and keep C002-T-040's step "Keep `npm test` free of the replay tests" as a check. Update regression-set §4.3 and the test plan §5 row that names C002-T-040 for the exclusion.
 - **Owner:** sdd-planner
-- **Status:** open
+- **Status:** resolved — re-review 2 (evidence in "Re-review 2")
 
 ### CR-18 — P-01's OpenCode run to G1 in C002-T-051 is a paid session outside §3a, §4.2 and the ledger
 - **Severity:** major
@@ -392,7 +392,7 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 - **Why it matters:** C002-T-051 drives the OpenCode conductor through an interview and gate G1 with the Claude tiers of C002-REQ-105: several agent sessions of the interview and gate family, which the CHG-001 files put at 0.36 USD per session (test plan §4.2). Neither §3a nor §4.2 lists the run, C002-T-051 has no ledger target and no stop-rule precondition, and no text names the account that pays. So the run either bypasses the stop rule that the plan now applies to every paid session on the prepaid key, or the rule stops it: C002-T-051 runs at the end of the change, when the general pool keeps 4.95 USD for all reruns and the reserve is closed to everything except C002-T-048 step 4 and C002-T-049 step 3. The run is release-blocking OpenCode evidence (C002-DOD-019, C002-DOD-021). The Copilot side has the same gap on a smaller scale: the VS Code runs of C002-T-050 (repeated after every failed step, its step 3) and C002-T-057 use the Copilot allowance but are not among the about 55 sessions of C002-RISK-026 and C002-T-002.
 - **Suggested fix:** Add a §3a row and a §4.2 row for C002-T-051 step 3 (session estimate, account, pool). As C002-M-07 release evidence it fits the reserve of Q-evalbudget-03. Give C002-T-051 the ledger target and the stop-rule precondition that C002-T-049 has, then recompute §4.3. Add the VS Code checklist and clean-profile runs to the Copilot session count of C002-T-002 and C002-RISK-026. If P-01 bills the run to another account, state that account (question Q-evalbudget-04 of this hand-back).
 - **Owner:** sdd-test-designer (§4.2, §4.3); sdd-planner (§3a, C002-T-051, C002-T-002, C002-RISK-026); P-01 (account for the run)
-- **Status:** open
+- **Status:** resolved — re-review 2 (evidence in "Re-review 2"); the in-run check of the by-hand run is raised as CR-22
 
 ### CR-19 — The `run.mjs` options used by the plan's eval commands have no owning task, and `--host claude` differs from C002-IF-010 §1
 - **Severity:** minor
@@ -406,7 +406,7 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 - **Why it matters:** Today `run.mjs` takes case files as positional arguments and drops the word that follows any `--` flag. C002-T-037's C002-M-05 command `--filter evals/targets/question-tool` therefore selects no case, prints a total of 0 USD and exits 0. That is a vacuous pass of a step budgeted at 1.05 USD; only the done-check, which asks for passing rows in the ledger, would catch it. No task adds `--host` or `--filter` to `run.mjs`: C002-T-044's "Select the host by option or environment" names only `session.mjs`. The plan also writes `--host claude` (test plan §5, C002-T-010, C002-T-048) where C002-IF-010 §1 says `claude-code`.
 - **Suggested fix:** Add `evals/harness/run.mjs` (and the `eval` script, if the spec's `npm run eval -- --host` form is the entry point) to C002-T-044's Targets. Give it `--host claude-code|opencode|copilot-cli` as C002-IF-010 §1 defines, and a `--filter <path>` that selects the case files under a folder and fails when nothing matches. Until C002-T-044 exists, write the commands of C002-T-010, C002-T-037, C002-T-038 and C002-T-048 with positional case files and without `--host`. Elsewhere, replace `--host claude` with `--host claude-code`.
 - **Owner:** sdd-planner; sdd-test-designer (test plan commands)
-- **Status:** open
+- **Status:** resolved — re-review 2 (evidence in "Re-review 2"); the smoke commands' `--filter routing` is raised as CR-23
 
 ### CR-20 — The stop rule mixes the two pools, and the reserve does not cover the re-run that C002-T-049 prescribes after a fix
 - **Severity:** minor
@@ -420,7 +420,7 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 - **Why it matters:** (1) T includes the reserve spend, and the task graph lets C002-T-048 step 4 (1.25 USD estimate) run while C002-T-056 is still running. The general pool then stops at about 28.75 USD of general spend instead of the 30 USD of §4.3, and its rerun room drops from 4.95 to about 3.70 USD. The rule never overspends, but the pool sizes the plan reports do not hold. (2) "This task from step 1" includes the 30 paid sessions of step 3 (6.50 USD estimate) against 2.25 USD of reserve room. The first product fix found in the OpenCode release evidence therefore runs into the stop rule, and the plan does not say which paid rows a fix actually requires to re-run.
 - **Suggested fix:** Define T per pool: a general-pool session compares the general-pool total with 30 USD, and a reserve session compares the ledger total with 40 USD. Or make C002-T-048 step 4 wait for C002-T-056. In C002-T-049 step 4, name the rows that are re-run after a fix (for example, the replay and the release check always, and the paid rows only when their case exercises a changed file), and state that the stop rule applies, so P-01 decides before the reserve is exceeded.
 - **Owner:** sdd-test-designer (§4.1); sdd-planner (C002-T-048, C002-T-049)
-- **Status:** open
+- **Status:** resolved — re-review 2 (evidence in "Re-review 2")
 
 ### CR-21 — Six statements that the fixes left inconsistent
 - **Severity:** minor
@@ -435,7 +435,7 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 - **Why it matters:** Each statement contradicts another artifact or the task graph. Item 1 has P-01 check the Copilot allowance against the OpenCode task. Item 2 reads as C002-T-054 waiting for the checklist record, which with C002-T-050's dependency would be a cycle. Item 3 overstates the decoupling that `40-work-breakdown.md` itself qualifies: C002-T-033, C002-T-045 and C002-T-046 are Copilot tasks upstream of the OpenCode release, and they are the ones that grow under the hooks fallback (C002-RISK-014). Items 4 to 6 misstate the cadence of the regression evals and the cap.
 - **Suggested fix:** (1) Name C002-T-045 and C002-T-054. (2) Write "the release check reads the Copilot injection evidence from that record". (3) Write "no Copilot evidence or release task holds back the OpenCode release; the shared tooling of `40-work-breakdown.md` still does". (4) State that C002-M-05 runs only the doctor eval of row 1. (5) Write "capped at 0.50 USD per session; the cap can be overrun (test plan §4.1)". (6) Write "each case once per owning step".
 - **Owner:** sdd-planner (items 1–3 and 6); sdd-test-designer (item 4); sdd-cartographer (item 5)
-- **Status:** open
+- **Status:** resolved — re-review 2 (evidence in "Re-review 2")
 
 ### Rubric (re-review 1, applied to the re-reviewed set)
 | Rubric | Item | Result |
@@ -454,6 +454,8 @@ of C002-INV-02, so the form stays; edits to this report belong to the critic onl
 
 ### Verdict (re-review 1)
 
+Superseded by the verdict of "Re-review 2".
+
 **needs-revision.** No blocker remains. CR-1 … CR-16 are resolved, P-01's answers of rounds 3 and 4
 are applied, and the budget arithmetic, rates and critical path check out. Two major findings remain
 and need a short planner and test-designer pass before G3: CR-17, a missing dependency that turns
@@ -462,3 +464,168 @@ outside the budget and the ledger. CR-19 … CR-21 are minor and can be fixed in
 choice of account for the C002-T-051 run (Q-evalbudget-04) does not block the fix: the plan can take
 the recommended option as an assumption. A confirmation pass on CR-17 … CR-21 only is enough after
 the fixes.
+
+## Re-review 2
+
+Date 2026-10-16. Confirmation pass before G3. Scope (brief): CR-17 … CR-21 only, checked against
+`git diff 21bb57d d96517f -- .sdd/002-multi-platform-targets/20-plan` (commits 9d6e0dd and d96517f,
+24 files) and `questions-log.md` round 5, whose answer is "- **Answer:** Key, M-07 reserve
+(Recommended)" — `20-plan/questions-log.md:76` (Q-evalbudget-04, `:72`). The rest of the plan is not
+re-reviewed. Accepted by design per the brief, so not findings: the reserve keeps only about 0.85 USD
+for reruns, and when a pool's stop rule halts the runs, P-01 decides.
+
+Re-reviewed set: C002-T-026 and C002-T-040 with `40-work-breakdown.md` (graph, critical-path note,
+table row), the hand-off's ordered list, regression-set §4.3 and test plan §5 (CR-17); C002-T-051,
+C002-T-048 step 4, C002-T-049 steps 3 and 4, C002-T-056, C002-T-001 (ledger target), C002-T-002,
+C002-T-050, C002-T-057, C002-RISK-015, C002-RISK-026, strategy §2 and §3a, test plan §3 (E-CPC,
+E-VSC) and §4.1–§4.3, the C002-NFR-105 row of `78-observability.md` and the hand-off's budget bullet
+(CR-18, CR-20); C002-T-044, C002-T-010, C002-T-037, C002-T-038, C002-T-045, C002-T-048 verification,
+the test plan's eval command lines (§1, §5, §8) and the TC rows that name `--host` (CR-19); the six
+statements of CR-21 (C002-T-002, strategy §2 and §4, rollout §1, test plan §5, regression-set §1 and
+§5).
+
+Tool state: `sdd lint 002 --json` reports exactly the 9 waived LINT-DELTA-001 errors and nothing
+else; `sdd trace 002` reports TR-01 … TR-11 at 100 % (TR-07 57/57, TR-08 206/206, TR-11 acyclic with
+the new C002-T-040 → C002-T-026 edge).
+
+### Status of CR-17 … CR-21
+
+- **CR-17 — resolved.** "depends_on: [C002-T-025, C002-T-040]" — `20-plan/50-tasks/T-026-translator-frontmatter.md:9`;
+  "- C002-T-040 done: `scripts/test.mjs` already leaves out `tests/replay/`, so the new" — `:41`;
+  step 4 "so the file must not import it" — `:53`; "- `npm run check` (green: `tests/replay/` is outside
+  `npm test`)" — `:59`; "C002_T_040 --> C002_T_026" — `20-plan/40-work-breakdown.md:121`, with the
+  table row `:290` and the note `:253-255`; "| 26 | C002-T-040 |" and "| 27 | C002-T-026 |" —
+  `20-plan/handoff.md:147-148`; "C002-T-040 makes the exclusion; C002-T-026, which adds the first other
+  file under `tests/replay/`, depends on C002-T-040" — `20-plan/30-impact/regression-set.md:133`; test
+  plan §5 — `20-plan/60-test-plan.md:211`. Recomputed: C002-T-053 ends at 1, C002-T-006 at 3,
+  C002-T-007 at 2, C002-T-040 (L) at 6, before C002-T-025 at 8, so the critical path does not move.
+  The other files added under `tests/replay/` before C002-T-042 come from C002-T-029 and C002-T-030
+  (both after C002-T-026) and from C002-T-041 (after C002-T-040). The `tests/replay/adapter.ts` that
+  step 4 relies on is a C002-T-040 target (`20-plan/50-tasks/T-040-replay-suite-framework.md:34`).
+- **CR-18 — resolved.** §3a row "P-01's OpenCode toy change to G1 (C002-TC-902, C002-DOD-021)" with
+  "prepaid key (Q-evalbudget-04)" and "C002-T-051 step 3 (P-01)" — `20-plan/10-strategy.md:89`; §4.2 row
+  "C002-T-051 step 3 (P-01, by hand)" with "1.40 USD" and "2.60 USD" — `20-plan/60-test-plan.md:166`;
+  §4.3 reserve "10.00 USD", "39", "9.15 USD", "0.85 USD" — `:177`; C002-T-051 `risk_refs: [C002-RISK-015]`
+  — `20-plan/50-tasks/T-051-clean-profile-runs.md:14`, ledger target `:34`, stop-rule precondition
+  "**Before step 3:** the reserve's stop rule of test plan §4.1 allows the run." — `:41`, step 3 `:53-58`,
+  done-check `:68`. Copilot side: "request allowance covers about 76 sessions" —
+  `20-plan/50-tasks/T-002-spike-s08-copilot-vscode.md:41`; C002-RISK-026 "the about 76 Copilot
+  sessions" — `20-plan/70-risks.md:49`; preconditions of `20-plan/50-tasks/T-050-vscode-checklist-run.md:39-41`
+  and `20-plan/50-tasks/T-057-copilot-clean-profile-run.md:38-39`; E-VSC "billed to the same Copilot
+  subscription" — `20-plan/60-test-plan.md:68`; §4.2 rows `:168-169`. P-01's answer (reserve) is applied
+  in §4.1 (`:86-88`), §3a, C002-T-051, C002-RISK-015 (`20-plan/70-risks.md:47`) and the hand-off
+  (`20-plan/handoff.md:52-55`). Arithmetic: 108 + 4 = 112 sessions (116 in the branch); 31.40 + 1.40 =
+  32.80 USD (34.20); 112 × 0.65 = 72.80 and 116 × 0.65 = 75.40 USD; reserve 35 + 4 = 39 sessions,
+  7.75 + 1.40 = 9.15 USD, room 0.85 USD (about 3 reruns, one in thirteen); budget 116 sessions,
+  34.20 USD, room 5.80 USD; weighted rate 32.80 / 112 = 0.29 USD; "7.75 USD + 2.60 USD = 10.35 USD" —
+  `:184` is correct; Copilot 10 + 5 + 40 + 20 + 1 = 76. The in-run check of the by-hand run is a new
+  issue: CR-22.
+- **CR-19 — resolved.** C002-T-044 Targets: "options `--host claude-code\|opencode\|copilot-cli`
+  (default `claude-code`, C002-IF-010 §1) and `--filter <path>`" — `20-plan/50-tasks/T-044-opencode-eval-runner.md:37`;
+  step 2 "**Runner options** (critic CR-19)" with "the runner prints the reason and exits non-zero before
+  any session" — `:53-60`; stub tests of the options `:39`; verification "exits non-zero without a
+  session" `:75`; done-check `:82`. Commands before C002-T-044 are positional: C002-T-010
+  `20-plan/50-tasks/T-010-bash-guard-serena-confinement.md:70-73`, C002-T-037
+  `20-plan/50-tasks/T-037-conductor-question-variants.md:62-64` ("a total of 0 cases is a failure"),
+  C002-T-038 `20-plan/50-tasks/T-038-doctor-host-rows.md:62-65`; C002-T-048 uses `--host claude-code`
+  — `20-plan/50-tasks/T-048-claude-regression-run.md:75-76` and depends on C002-T-044 (`:9`); test plan
+  §8 note — `20-plan/60-test-plan.md:265-269`. A search for `--host claude` not followed by `-code` in
+  `20-plan/` finds only this report. The runner already has `--only`: "[--max-total-usd X] [--label
+  NAME] [--only ID,ID…]" — `evals/harness/run.mjs:3`; `npm run eval` calls the file: "\"eval\": \"node
+  evals/harness/run.mjs\"," — `package.json:17`. Residual in the two smoke commands: CR-23.
+- **CR-20 — resolved.** "T = the ledger total **of that pool only**" — `20-plan/60-test-plan.md:104-105`;
+  "L = 30 USD for a general-pool session; L = 10 USD for a reserve session." — `:110`; rule 5 "they never
+  draw on the reserve." — `:119-121`; §4.3 "general-pool sessions at 30 USD of general spend, whatever
+  the reserve has spent," — `:196`; C002-T-049 step 4 lists the unpaid re-runs ("always, unpaid") and
+  the paid rows a fix can change ("paid, only the step 3 rows that the fix can change") and makes them
+  "**general-pool** sessions" — `20-plan/50-tasks/T-049-release-evidence-runs.md:55-66`, ledger target
+  `:35`, done-check `:76`; C002-T-048 step 4 "by the reserve's stop rule" and "with pool `reserve`" —
+  `20-plan/50-tasks/T-048-claude-regression-run.md:67-68`; C002-T-056 "reserve spend does not count
+  against it" — `20-plan/50-tasks/T-056-opencode-carried-eval-runs.md:43-44`, step 5 `:59-61`,
+  verification `:66`; strategy §3a `20-plan/10-strategy.md:90` and `:95-98`. With per-pool totals,
+  C002-T-048 step 4 running next to C002-T-056 no longer shrinks the general pool, and a re-run after a
+  fix has a named pool and a defined stop.
+- **CR-21 — resolved.** (1) "about 45 Copilot CLI sessions in C002-T-045 and C002-T-054" —
+  `20-plan/50-tasks/T-002-spike-s08-copilot-vscode.md:41-42`; (2) "the release check reads the Copilot
+  injection evidence from that record" — `20-plan/10-strategy.md:111`; (3) "so no Copilot evidence or
+  release task holds back the OpenCode release; the shared tooling named in `40-work-breakdown.md`
+  ("Critical path") still does." — `20-plan/75-rollout.md:25-26` (heading "## Critical path" —
+  `20-plan/40-work-breakdown.md:217`); (4) "at C002-M-05 only `doctor-no-ripwire.eval.mjs` (C002-T-038
+  step 4), not C002-TC-537" — `20-plan/60-test-plan.md:213`, matching
+  `20-plan/30-impact/regression-set.md:165-167`; (5) "Evals are paid, capped at 0.50 USD per session;
+  the cap is checked after a turn and can be overrun" — `20-plan/30-impact/regression-set.md:27`;
+  (6) "Paid evals only at named task steps, each case once per owning step" — `20-plan/10-strategy.md:54`.
+
+### CR-22 — The by-hand C002-T-051 run is checked against the reserve by a looser rule than every other reserve session
+- **Severity:** minor
+- **Refs:** C002-T-051, C002-T-048, C002-T-049, C002-RISK-015, C002-DOD-009, C002-DOD-021, Q-evalbudget-04, `20-plan/60-test-plan.md` §4.1 (rules 1, 2, 3, 6) and §4.3
+- **Evidence:**
+  - "6. **C002-T-051 step 3** is driven by hand, outside the harness caps, as one run of about 4 agent sessions: rule 3 is checked once before the run, with the run's §4.2 estimate (1.40 USD) added to T, and P-01 pauses the run for a decision when the reserve total plus the run's spend so far, read from the provider's usage view, reaches 10 USD. The run is one ledger entry." — `20-plan/60-test-plan.md:122-125`
+  - "For a reserve session of C002-T-051 step 3, T also counts the §4.2 estimate of each of C002-T-048 step 4 and C002-T-049 step 3 that has not run yet, so the release evidence keeps its share." — `20-plan/60-test-plan.md:110-112`
+  - "3. The session starts only if T + H ≤ L." and "A pool never spends the other pool's room, so the ledger total stays within 40 USD." — `20-plan/60-test-plan.md:113` and `:115-116`
+  - "H = the highest session cost seen so far in either pool, at least 0.65 USD" — `20-plan/60-test-plan.md:105-106`; the ledger holds "one entry per paid session on the prepaid key" — `:98`
+  - "P-01 reads the provider's usage view at each interview round and at the gate, and pauses for a decision when the reserve total plus the run's spend so far reaches 10 USD." — `20-plan/50-tasks/T-051-clean-profile-runs.md:55-56`
+  - "C002-T-051 does not depend on either task and may run first;" — `20-plan/60-test-plan.md:194`
+- **Why it matters:** (1) During the run, the pause comes when the reserve has already reached 10 USD. Every other reserve session keeps H as headroom (rule 3) and, for C002-T-051, the outstanding release-evidence estimates (rule 2). P-01 reads the usage only at round boundaries, so the reserve can pass 10 USD by the spend of one round, against "the ledger total stays within 40 USD". When C002-T-051 runs first, which §4.3 allows, the pre-run check keeps 7.75 USD for C002-T-048 step 4 and C002-T-049 step 3. The in-run pause does not keep it: a run above 2.25 USD (upper bound 2.60 USD, with no harness caps) takes part of the share that rule 2 promises, and C002-T-049 step 3 then stops part-way. (2) The run is "one ledger entry" for about 4 sessions, but H is "the highest session cost seen so far" and the ledger is otherwise one entry per session. A runner that takes H from the ledger entries reads the run's total as one session cost: 1.40 USD at estimate. With H = 1.40, C002-T-049 step 3 sessions stop once the reserve total passes 8.60 USD. At the planning estimates (1.25 + 1.40 + 6.50 = 9.15 USD), that halts the last sessions of the C002-DOD-009 evidence with no overrun at all, and it tightens the general pool's rule 5 re-runs the same way. The halt-and-decide behaviour itself is accepted (brief). The finding is that rule 6 and the H definition make the rule halt too late in (1) and for no budget reason in (2).
+- **Suggested fix:** In rule 6 and C002-T-051 step 3, check before each interview round and before the gate the same condition as rule 3, with rule 2's T: reserve total + outstanding estimates of C002-T-048 step 4 and C002-T-049 step 3 (a step in progress counts its estimate minus its spend so far, not below 0) + the run's spend so far + H ≤ 10 USD. Record the run's session count in its ledger entry and state that this entry does not set H (or that it sets H to its spend divided by its session count).
+- **Owner:** sdd-test-designer (§4.1); sdd-planner (C002-T-051 step 3)
+- **Status:** resolved — fixed by the conductor after re-review 2 (this line updated by the conductor): C002-T-051 step 3 and test plan §4.1 rule 6 check rule 3's reserve condition before each interview round and before the gate, with the run's spend so far and H; the ledger entry records its session count and sets H as spend per session
+
+### CR-23 — The smoke commands' `--filter routing` selects no case under the filter rule that C002-T-044 defines
+- **Severity:** minor
+- **Refs:** C002-T-044, C002-T-045, C002-TC-612, C002-REQ-609, C002-IF-010, `20-plan/60-test-plan.md` §8
+- **Evidence:**
+  - "`--filter <path>`: it selects every `*.eval.mjs` file under the given folder, or whose path relative to the repository root contains the given text" and "the runner prints the reason and exits non-zero before any session" — `20-plan/50-tasks/T-044-opencode-eval-runner.md:56-57` and `:58-59`
+  - "- `node evals/harness/run.mjs --host opencode --tier dev --filter routing --only <one routing case ID>`" — `20-plan/50-tasks/T-044-opencode-eval-runner.md:76`
+  - "- `node evals/harness/run.mjs --host copilot-cli --tier dev --filter routing --only <one routing case ID>`" — `20-plan/50-tasks/T-045-copilot-cli-eval-runner.md:57`
+  - "title: \"Library question routing\"," — `evals/cap03/TS-304.eval.mjs:11` and "title: \"Repository internals routing\"," — `evals/cap03/TS-305.eval.mjs:9`: the routing cases in the repository have no `routing` in their paths, and no `*.eval.mjs` path under `evals/` contains it. The plan names "routing cases and `evals/injection/injection.eval.mjs`" without a routing path — `20-plan/60-test-plan.md:444`.
+- **Why it matters:** By C002-T-044's own rule, the paid smoke steps (C002-T-044 step 6, C002-T-045 step 3) exit non-zero before any session, so both verifications fail as written. The failure is loud and costs nothing, which is what CR-19 asked for. But each implementer has to work out which file is "the routing case", and two can pick different cases for the same 0.15 USD smoke budget.
+- **Suggested fix:** Name the routing smoke case file in both commands as a positional argument (with `--only` for its row), or have `--filter` also match the case `title` and say so in C002-T-044 step 2.
+- **Owner:** sdd-planner
+- **Status:** resolved — fixed by the conductor after re-review 2 (this line updated by the conductor): the T-044 and T-045 smoke commands name one routing case file as a positional argument with `--only <its row>`
+
+### Why no further findings (re-review 2)
+
+**Plan rubric, applied to the re-reviewed set.** P1: the diff changes no `implements` list (TR-06
+121/121). P2: C002-T-026, C002-T-044, C002-T-049, C002-T-051, C002-T-056 gained the targets,
+preconditions, steps and done-checks that CR-17 … CR-20 asked for. The only gaps left are the rule 6
+check (CR-22) and the smoke filter (CR-23). P3: the one new edge keeps the graph acyclic (TR-11), the
+hand-off list is still topological, and the critical path is unchanged. The new edge runs from an
+M-06 task into an M-04 task, which the work breakdown states openly (`40-work-breakdown.md:253-255`).
+No milestone exit criterion depends on the other milestone, so that is not a contradiction. P4: TR-08
+206/206; every TC row that names a Claude Code host now says `claude-code`. P5: C002-RISK-015 and
+C002-RISK-026 now cover the new paid and Copilot sessions, and C002-T-051 references C002-RISK-015.
+P6: the rollout wording of CR-21 item 3 now matches the work breakdown. P7: no new technical decision.
+The runner options follow C002-IF-010 §1.
+
+**Brief focus.** The answer to Q-evalbudget-04 is the recommended option. It is applied in every
+artifact that names the reserve (strategy §2 and §3a, test plan §4.1–§4.3, C002-T-051,
+C002-RISK-015, `78-observability.md`, hand-off). No plan file still says the reserve is spent by
+C002-T-048 and C002-T-049 alone. The round-5 entry has no extracted instruction, and its answer is a
+choice of the offered option. The reserve's 0.85 USD room and the halts it implies are accepted by
+design. The rule that a re-run after a fix never draws on the reserve (rule 5) is applied
+consistently in C002-T-049, §3a and §4.3.
+
+### Rubric (re-review 2, applied to the re-reviewed set)
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 121/121; no `implements` change in the diff |
+| plan | P2 Each task has targets, verification and done-checks | CR-22, CR-23; otherwise pass (CR-17 … CR-20 fixes in place) |
+| plan | P3 Dependency graph acyclic, milestones coherent | pass: C002-T-040 → C002-T-026 added, TR-11 acyclic, critical path unchanged, hand-off topological |
+| plan | P4 Every scenario maps to a planned test | pass: TR-08 206/206; `--host claude-code` in every Claude Code TC row; CR-23 for the smoke command |
+| plan | P5 Risks cover the hotspots touched | pass: C002-RISK-015 and C002-RISK-026 extended; C002-T-051 `risk_refs` set |
+| plan | P6 Rollout and rollback stated | pass: rollout §1 wording fixed (CR-21 item 3) |
+| plan | P7 ADRs for every remaining technical decision | n/a: the diff adds no technical decision; the runner options follow C002-IF-010 §1 |
+| brief focus | CR-17 … CR-21 confirmed with evidence | pass: all five resolved (list above) |
+| brief focus | Round 5 (Q-evalbudget-04) applied | pass |
+| brief focus | New contradictions introduced by the diff | CR-22, CR-23 |
+| ideation, stories, requirements, NFRs, acceptance, domain, DoD and index | all items | n/a: approved phases, outside this confirmation pass |
+
+### Verdict (re-review 2)
+
+**go.** CR-17 … CR-21 are resolved, and P-01's answer to Q-evalbudget-04 is applied throughout. No
+blocker or major finding is open. Two new minor findings come from the diff. CR-22: the by-hand
+C002-T-051 run has a looser in-run reserve check, and its single ledger entry can inflate H. CR-23:
+the routing smoke filter matches no file. Neither needs P-01. Both can be fixed in a short
+test-designer and planner pass, or carried into implementation as open minor findings, without
+blocking G3.
