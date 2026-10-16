@@ -1,7 +1,7 @@
 ---
 name: ws-mcp
 description: S-08 probe subagent with only read tools and the probe-stub MCP server (whole-server grant).
-tools: ['read', 'probe-stub/*']
+tools: ['read', 'probe-stub/*', 'probe-stub/stub_read', 'probe-stub-stub_read', 'probe-stub-stub_write', 'stub_read', 'stub_write']
 ---
 
 You are a probe. Call the MCP tool `stub_read` with note `mcp-subagent`, then the MCP tool

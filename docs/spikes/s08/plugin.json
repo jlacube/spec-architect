@@ -1,6 +1,6 @@
 {
   "name": "architect-s08-probe",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Throwaway probe plugin for spike S-08 (C002-T-002): subagent tool-list confinement, agent-scoped hooks, MCP grants. Never shipped.",
   "commands": "commands"
 }
