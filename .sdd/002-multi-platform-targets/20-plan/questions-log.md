@@ -46,3 +46,21 @@ Question from the planner's step 6 hand-back.
 - **Rejected:** none
 - **Answer:** Zips in dist/ (Recommended)
 - **Extracted instructions:** none
+
+## Round 4 — 2026-10-16
+
+Questions from the critic's plan review (`90-critic-report.md`, CR-1, CR-8).
+
+### Q-evalbudget-03 — CHG-001 dev-tier sessions cost 0.20–0.52 USD (one at 0.62 USD), not 0.15 USD; the 108 planned sessions cost about 27–32 USD before reruns. How is CHG-002's eval spend bounded?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 5 (CR-1)
+- **Options:** 1. Raise the budget to 40 USD with a ring-fenced reserve for the C002-M-07 release evidence (Recommended) · 2. Keep 25 USD, M-07 release evidence first · 3. Keep 25 USD, stop at the budget and decide then
+- **Rejected:** cheapest model tier for every eval; stub-host tests instead of real-host evals (both rejected in Q-evalbudget-01)
+- **Answer:** $40 with M-07 reserve (Recommended) — CHG-002 eval budget 40 USD on the prepaid API key with a reserve for the C002-M-07 release evidence; P-01 tops up at least about 35.23 USD before the first paid run.
+- **Extracted instructions:** none
+
+### Q-regression-01 — Do the planned test edits that extend existing mirrors (frontend.test.ts command names and ERR-CLI-019/020; smoke.test.ts plugin.json version source) count as changed expectations under C002-REQ-623?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2 (CR-8)
+- **Options:** 1. No: additions that extend a mirror are not changed expectations (Recommended) · 2. Yes: raise a spec defect against C002-REQ-623
+- **Rejected:** none
+- **Answer:** No, additions only (Recommended) — record this reading in regression-set §4 and C002-T-048.
+- **Extracted instructions:** none

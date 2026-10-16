@@ -48,7 +48,7 @@ revision of `10-context/scope.md` §1.1 (Q-defer-01).
 
 ## Inherited global items
 
-- **DOD-G-01** — applies to every scenario of the six capabilities, except its clause "pass in at least 9 of 10 runs", which is waived for CHG-002 (P-01, Q-evalbudget-01 in `20-plan/questions-log.md`): `@eval` scenarios pass at the dev tier, one passing run per Examples row with at most one rerun after a failure, within a CHG-002 eval budget of 25 USD; `@eval` scenarios run on the
+- **DOD-G-01** — applies to every scenario of the six capabilities, except its clause "pass in at least 9 of 10 runs", which is waived for CHG-002 (P-01, Q-evalbudget-01 in `20-plan/questions-log.md`): `@eval` scenarios pass at the dev tier, one passing run per Examples row with at most one rerun after a failure, within the CHG-002 eval budget set by P-01 in the plan (`20-plan/60-test-plan.md` §4.1); `@eval` scenarios run on the
   Claude model tiers of C002-REQ-105 on the generated targets, and `@manual-vscode` scenarios count as
   manual scenarios with the executed record of C002-DOD-004.
 - **DOD-G-02** — applies with the target structure checks of C002-REQ-601 added to `npm run check`.
