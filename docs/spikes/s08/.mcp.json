@@ -3,7 +3,7 @@
     "probe-stub": {
       "type": "stdio",
       "command": "node",
-      "args": ["${PLUGIN_ROOT}/mcp/stub.mjs"]
+      "args": ["C:/Sandbox/ClaudeCode/Architect/docs/spikes/s08/mcp/stub.mjs"]
     }
   }
 }

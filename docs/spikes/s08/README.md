@@ -32,3 +32,16 @@ Evidence lands in `logs/hooks.jsonl`, `logs/mcp.jsonl` and `sandbox/` (both git-
 5. Turn `chat.askQuestions.enabled` off, reload, run `/probe-ask` again, copy the reply; turn it back on.
 6. Open the model picker and note the exact names of the Claude Opus, Sonnet and Haiku models.
 7. Note the AI Credits used (GitHub → Settings → Billing → Copilot usage) before step 2 and after step 5.
+
+## Version 0.0.2 (2026-10-16)
+
+The first VS Code Insiders run (1.142.0-insider) went through the **Copilot CLI agent host**
+(session provider `copilotcli`); VS Code copied the plugin to
+`%APPDATA%\Code - Insiders\agentPlugins\…`, and every hook ended as "hook errored" before our scripts
+ran (no log line anywhere), so every tool call was denied (fail-closed). 0.0.2 uses absolute paths for
+the blocking hooks and the MCP server, and a `SessionStart` hook that runs the logger once through
+`${PLUGIN_ROOT}` and once through an absolute path, to show which one fails. Logs land in this
+folder's `logs/` (absolute path), not in the copy.
+
+Run the probe twice if the agent picker offers a choice of harness: once in the **Copilot CLI**
+session type and once in the **Local** (VS Code) session type; note which one each run used.

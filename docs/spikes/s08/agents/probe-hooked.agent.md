@@ -6,7 +6,7 @@ user-invocable: false
 hooks:
   PreToolUse:
     - type: command
-      command: "node ${PLUGIN_ROOT}/hooks/deny.mjs"
+      command: 'node "C:/Sandbox/ClaudeCode/Architect/docs/spikes/s08/hooks/deny.mjs"'
       timeout: 15
 ---
 
