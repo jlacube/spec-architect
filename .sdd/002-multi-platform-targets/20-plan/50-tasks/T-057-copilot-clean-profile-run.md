@@ -35,6 +35,8 @@ run is part of C002-T-050. Split from C002-T-051 so that the OpenCode release do
 
 - C002-T-023 (tarball installs), C002-T-034 (target zip) and C002-T-039 (README) done; VS Code and
   Copilot Chat at the S-08 tested versions; REF-WIN set up as `handoff.md` "Reference machine" lists.
+- The Copilot subscription named in C002-T-002 has allowance for the 1 VS Code session of step 2
+  (test plan §4.2, C002-RISK-026); it is not billed to the prepaid API key.
 
 ## Step outline (no production code)
 

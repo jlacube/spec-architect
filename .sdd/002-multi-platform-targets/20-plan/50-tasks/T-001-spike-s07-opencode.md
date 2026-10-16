@@ -30,7 +30,7 @@ spike writes the spike record of C002-IF-009 §3, which decides the OpenCode enf
 |---|---|---|
 | add | `docs/spikes/S-07-opencode.md` | spike record: frontmatter of C002-IF-009 §3 (S-07 keys); body with method, versions, one result row per item below, verdict |
 | add | `docs/spikes/s07/` | throwaway probe package (hand-written agents, permission rules, a sample of corpus cases); never shipped |
-| add | `evals/results/spend-chg002.json` | running CHG-002 eval spend ledger (test plan §4.1): every paid session on the prepaid key adds its `cost_usd`; checked before every paid session against the 40 USD CHG-002 eval budget and its C002-M-07 reserve (Q-evalbudget-03); created by the first paid run of CHG-002 (this task or C002-T-010, whichever runs first) |
+| add | `evals/results/spend-chg002.json` | running CHG-002 eval spend ledger (test plan §4.1): every paid session on the prepaid key adds its `cost_usd`; each entry names its pool, and every paid session is checked before it starts against its pool's limit, 30 USD general pool or 10 USD C002-M-07 reserve, of the 40 USD CHG-002 eval budget (Q-evalbudget-03); the S-07 probes are general-pool sessions; created by the first paid run of CHG-002 (this task or C002-T-010, whichever runs first) |
 
 ## Preconditions
 

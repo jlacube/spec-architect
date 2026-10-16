@@ -36,6 +36,9 @@ wait for it.
 ## Preconditions
 
 - C002-T-046 and C002-T-054 done; the release candidate packed at the commit of C002-T-054.
+- The Copilot subscription named in C002-T-002 has allowance for about 10 VS Code sessions per
+  checklist run, about 20 with the repeat of step 3 (test plan §4.2, C002-RISK-026). These sessions
+  are not billed to the prepaid API key.
 
 ## Step outline (no production code)
 

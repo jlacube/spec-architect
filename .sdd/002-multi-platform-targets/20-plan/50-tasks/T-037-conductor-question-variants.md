@@ -50,15 +50,18 @@ enable (C002-REQ-312). The Claude Code text stays unchanged.
 2. Keep the verbatim-words rule of the gate unchanged (C001-REQ-802 as modified by C002-REQ-212).
 3. Run the generated-body test now.
 4. **Paid runs on E-CC (the Claude Code rows of C002-TC-215, 217 and 219):** once the integration
-   test is green, run each Claude Code Examples row once with the existing harness (`--host claude`
-   is the default), at most one rerun after a failure. Check the ledger before every session and add
+   test is green, run each Claude Code Examples row once with the existing harness, which runs Claude
+   Code only (`--host` and `--filter` arrive later, with C002-T-044 step 2), at most one rerun after a
+   failure. Check the ledger before every session and add
    each session's spend after it. The OpenCode rows of these cases and C002-TC-221 and C002-TC-316
    are carried to C002-T-056; the `@manual-vscode` cases to the checklist (C002-T-046, C002-T-050).
 
 ## Verification
 
 - `npm test -- cap02` and `npm run generate -- --out <tmp>`
-- `node evals/harness/run.mjs --tier dev --filter evals/targets/question-tool` (Claude Code rows)
+- `node evals/harness/run.mjs evals/targets/question-tool/TS-215.eval.mjs evals/targets/question-tool/TS-217.eval.mjs evals/targets/question-tool/TS-219.eval.mjs --tier dev`
+  (positional case files; `--only` with the IDs of the Claude Code Examples rows where a file also
+  holds rows of another host). The run must report at least one case; a total of 0 cases is a failure.
 
 ## Done when
 

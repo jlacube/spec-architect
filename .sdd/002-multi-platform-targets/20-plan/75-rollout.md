@@ -22,7 +22,8 @@ Three deliverables leave `npm run package` at one commit and carry the version o
 
 The two targets are decided independently: a refused target is not released and its refusal stays
 recorded; the other target still ships. Each target has its own evidence, clean-profile and release
-tasks (`10-strategy.md` §2), so a slipping Copilot task does not hold back the OpenCode release.
+tasks (`10-strategy.md` §2), so no Copilot evidence or release task holds back the OpenCode release;
+the shared tooling named in `40-work-breakdown.md` ("Critical path") still does.
 
 **Retention of released zips.** P-01 keeps every released zip, unchanged, where P-01 shares it, and
 the release record folder holds its SHA-256 (`zip.sha256`). A lost zip is rebuilt at the release

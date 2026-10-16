@@ -24,7 +24,8 @@ them. The evidence of this file continues the numbering at `E-21`.
   the selection.
 - Tests that run the bundled CLI (`runBundled`, 66 test files, 141 calls) reach every CLI symbol
   transitively. They are not listed one by one; they are covered by `npm test` (section 2).
-- Evals are paid, at most 0.50 USD per session. The spend rule for CHG-002 is that of
+- Evals are paid, capped at 0.50 USD per session; the cap is checked after a turn and can be overrun
+  (`60-test-plan.md` §4.1). The spend rule for CHG-002 is that of
   `60-test-plan.md` §4.1 (CHG-002 eval budget 40 USD with a reserve for the release evidence,
   Q-evalbudget-03); the paid runs of the named evals belong to the task steps listed in
   `10-strategy.md` §3a, never repeated per task.
@@ -129,7 +130,7 @@ What changes is **additions and the test harness**:
 | `tests/integration/cap11/TS-1115.test.ts` | the temporary build tree copies `scripts/`, `src/`, `package.json` and the notices file only; once `build.mjs` reads `plugins/architect/.claude-plugin/plugin.json` (C002-ADR-004) and bundles `src/mcp/server.ts`, the fake-GPL build fails for another reason and the stderr assertion on `gpl-thing@1.2.3 (GPL-3.0)` no longer matches | add `plugin.json` (and any other build input) to the copy |
 | `tests/smoke.test.ts` | pins `plugins/architect/scripts` to exactly `["sdd.mjs"]` (keeps the second bundle out of the plugin), `sdd version` equal to `package.json`, and `plugin.json` version equal to `package.json` | C002-ADR-004 makes `plugin.json` the version source; keep the equality (it is the guard the ADR asks for) or move it into the structure check |
 | `tests/integration/cap11/TS-1114.test.ts` | bundles `src/cli.ts` only and compares the notices | unchanged; add the equivalent for the `architect-sdd` notices (union of both bundles, C002-REQ-414) |
-| `scripts/test.mjs` | `__SDD_VERSION__` is read from `package.json`; follow the single version source; `findTests` would pick up `tests/replay/*.test.ts` | replay tests need a loopback server and the OpenCode binary; they must run in their own command or be excluded here |
+| `scripts/test.mjs` | `__SDD_VERSION__` is read from `package.json`; follow the single version source; `findTests` would pick up `tests/replay/*.test.ts` | replay tests need a loopback server and the OpenCode binary; they must run in their own command or be excluded here. C002-T-040 makes the exclusion; C002-T-026, which adds the first other file under `tests/replay/`, depends on C002-T-040, so `npm test` never bundles a replay test |
 | `tests/no-network.mjs` (preload, inherited by every child process) | any test that starts a loopback stub (ADR-005), connects to a local server or runs a Node child that opens a socket trips the stubs and fails the whole run | the sdd MCP server is stdio only and is fine; the OpenCode replay driver is not |
 | `tsconfig.json` | `include` adds `scripts/generate`, `scripts/release` | C002-ADR-003 |
 
@@ -161,9 +162,9 @@ task:
 | `evals/injection/injection.eval.mjs` | injection resistance through the guards | grep |
 | the 20 other `evals/cap*/TS-*.eval.mjs` that mention Bash or guards | conductor and specialist behaviour | grep |
 
-Run only the first row, at the task steps of `10-strategy.md` §3a (C002-T-010 step 5, C002-T-038 step 4,
-C002-T-048 step 4), and the rest only if the plan edits a source agent, command or skill (it should not,
-C002-CON-10).
+Run only the first row, at the task steps of `10-strategy.md` §3a: its three files at C002-T-010 step 5
+and C002-T-048 step 4, and only `evals/cap11/doctor-no-ripwire.eval.mjs` at C002-T-038 step 4. Run the
+rest only if the plan edits a source agent, command or skill (it should not, C002-CON-10).
 
 ## Evidence
 

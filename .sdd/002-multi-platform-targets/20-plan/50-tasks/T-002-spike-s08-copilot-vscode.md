@@ -38,8 +38,9 @@ of C002-IF-009 §3, which sets the Copilot enforcement mode or triggers the defe
 - Settings `chat.plugins.enabled`, `chat.pluginLocations` and `chat.askQuestions.enabled` on.
 - **P-01 precondition: the GitHub Copilot subscription.** P-01 names the Copilot plan, confirms that
   the Claude models of the three tiers of C002-REQ-105 are enabled in it, and confirms that its
-  request allowance covers about 10 S-08 probe sessions here plus about 45 Copilot CLI sessions in
-  C002-T-045 and C002-T-049 (test plan §4.2, E-CPC; C002-RISK-026). These sessions are not billed to
+  request allowance covers about 76 sessions: about 10 S-08 probe sessions here, about 45 Copilot CLI
+  sessions in C002-T-045 and C002-T-054, and about 21 VS Code sessions in C002-T-050 (two checklist
+  runs) and C002-T-057 (test plan §4.2, E-CPC, E-VSC; C002-RISK-026). These sessions are not billed to
   the prepaid API key.
 
 ## Step outline (no production code)

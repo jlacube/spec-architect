@@ -118,6 +118,7 @@ flowchart TB
   C002_T_004 --> C002_T_025
   C002_T_024 --> C002_T_025
   C002_T_025 --> C002_T_026
+  C002_T_040 --> C002_T_026
   C002_T_025 --> C002_T_027
   C002_T_027 --> C002_T_028
   C002_T_022 --> C002_T_029
@@ -249,6 +250,9 @@ defer branch these dependencies are removed (`75-rollout.md` §5) and the OpenCo
 
 C002-T-002 (S-08) has the same weight as C002-T-001 and is equally critical: C002-T-024 waits for both
 spike records. C002-T-053 (finishing at 1) and C002-T-006 (at 3) finish together with the spikes.
+C002-T-026 (C002-M-04) also waits for C002-T-040 (C002-M-06), so that `scripts/test.mjs` leaves out
+`tests/replay/` before the first replay test file lands (critic CR-17); C002-T-040 finishes at 6,
+before C002-T-025 at 8, so the critical path does not move.
 Slack: C002-T-021 finishes at 8 and C002-T-031 starts at 13; C002-T-022 finishes at 11 and C002-T-029
 starts at 13 (C002-T-034 at 16); C002-T-020 finishes at 12 and C002-T-041 starts at 18. The guard, CLI
 and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units without moving the end date.
@@ -283,7 +287,7 @@ and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units witho
 | C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022 |
 | C002-M-04 | C002-T-024 | Mapping tables, their schema copy and loader | M | T-001, T-002, T-006, T-015 |
 | C002-M-04 | C002-T-025 | Generator: entry, source reader, writer and manifest | L | T-004, T-024 |
-| C002-M-04 | C002-T-026 | Translator: agent frontmatter | M | T-025 |
+| C002-M-04 | C002-T-026 | Translator: agent frontmatter | M | T-025, T-040 |
 | C002-M-04 | C002-T-027 | Translator: body constructs, templates, plugin data and question tool | M | T-025 |
 | C002-M-04 | C002-T-028 | Wiring variants, anchors and skill inlining | L | T-027 |
 | C002-M-04 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | L | T-022, T-026, T-028 |

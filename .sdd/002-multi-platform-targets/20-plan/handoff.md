@@ -49,9 +49,11 @@ the DoD's eval-budget figure) must be approved before G3.
   session starts before P-01's top-up (C002-T-001 step 1: at least about 35.23 USD, so that the key
   holds at least 40 USD minus the ledger total). Check the ledger `evals/results/spend-chg002.json`
   **before every paid session** by the stop rule of test plan §4.1 and add the session's spend after
-  it. The CHG-002 eval budget is 40 USD with a reserve for the release evidence that only C002-T-048
-  step 4 and C002-T-049 step 3 may spend (Q-evalbudget-03); at the stop, pause and let P-01 decide.
-  Copilot sessions bill P-01's Copilot subscription, not the key (C002-T-002 preconditions).
+  it. The CHG-002 eval budget is 40 USD in two pools: a 30 USD general pool and a 10 USD reserve for
+  the release evidence that only C002-T-048 step 4, C002-T-049 step 3 and P-01's OpenCode run to G1
+  (C002-T-051 step 3) may spend (Q-evalbudget-03, Q-evalbudget-04); each pool has its own stop; at the
+  stop, pause and let P-01 decide. Copilot sessions, in Copilot CLI and in VS Code, bill P-01's Copilot
+  subscription, not the key (C002-T-002 preconditions).
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
   defer branch of `75-rollout.md` §5.
@@ -107,8 +109,9 @@ allowed read-only filters).
 
 ## Ordered task list
 
-Topological order of `depends_on` (not numeric order: C002-T-053 comes first, and the tasks added in
-plan round 4 sit after their dependencies). Tasks may run in another order when their dependencies
+Topological order of `depends_on` (not numeric order: C002-T-053 comes first, C002-T-040 comes before
+C002-T-026 because it takes `tests/replay/` out of `npm test` before the first replay test file lands,
+and the tasks added in plan round 4 sit after their dependencies). Tasks may run in another order when their dependencies
 allow; C002-M-02 and C002-M-03 run in parallel with C002-M-01. After C002-T-048, the OpenCode tasks
 (C002-T-049, C002-T-051, C002-T-052) and the Copilot tasks (C002-T-054, C002-T-050, C002-T-057,
 C002-T-055) are independent of each other.
@@ -141,21 +144,21 @@ C002-T-055) are independent of each other.
 | 23 | C002-T-023 | architect-sdd: install smoke test and manifest check | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-023-npm-install-smoke.md` |
 | 24 | C002-T-024 | Mapping tables, their schema copy and loader | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-024-mapping-tables.md` |
 | 25 | C002-T-025 | Generator: entry, source reader, writer and manifest | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-025-generator-skeleton.md` |
-| 26 | C002-T-026 | Translator: agent frontmatter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-026-translator-frontmatter.md` |
-| 27 | C002-T-027 | Translator: body constructs, templates, plugin data and question tool | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-027-translator-body-constructs.md` |
-| 28 | C002-T-028 | Wiring variants, anchors and skill inlining | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-028-wiring-variants-and-inlining.md` |
-| 29 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-029-opencode-emitter.md` |
-| 30 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-030-opencode-permissions.md` |
-| 31 | C002-T-031 | Copilot emitter: agents, prompt files, skills, MCP configuration and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-031-copilot-emitter.md` |
-| 32 | C002-T-032 | CLI: Copilot hook adapter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-032-copilot-hook-adapter.md` |
-| 33 | C002-T-033 | Copilot package: hooks.json, agent-scoped guard hooks and tool classes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-033-copilot-package-hooks.md` |
-| 34 | C002-T-034 | npm run package runs the generator and zips each target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-034-packaging-runs-generator.md` |
-| 35 | C002-T-035 | Target structure checks and the npm run check step | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-035-target-structure-checks.md` |
-| 36 | C002-T-036 | Generation determinism test and generation benchmark | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-036-generation-determinism-bench.md` |
-| 37 | C002-T-037 | Conductor: interview and gate variants for the host question tools | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-037-conductor-question-variants.md` |
-| 38 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-038-doctor-host-rows.md` |
-| 39 | C002-T-039 | README sections for OpenCode and Copilot VS Code | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-039-readme-target-sections.md` |
-| 40 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-040-replay-suite-framework.md` |
+| 26 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-040-replay-suite-framework.md` |
+| 27 | C002-T-026 | Translator: agent frontmatter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-026-translator-frontmatter.md` |
+| 28 | C002-T-027 | Translator: body constructs, templates, plugin data and question tool | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-027-translator-body-constructs.md` |
+| 29 | C002-T-028 | Wiring variants, anchors and skill inlining | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-028-wiring-variants-and-inlining.md` |
+| 30 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-029-opencode-emitter.md` |
+| 31 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-030-opencode-permissions.md` |
+| 32 | C002-T-031 | Copilot emitter: agents, prompt files, skills, MCP configuration and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-031-copilot-emitter.md` |
+| 33 | C002-T-032 | CLI: Copilot hook adapter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-032-copilot-hook-adapter.md` |
+| 34 | C002-T-033 | Copilot package: hooks.json, agent-scoped guard hooks and tool classes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-033-copilot-package-hooks.md` |
+| 35 | C002-T-034 | npm run package runs the generator and zips each target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-034-packaging-runs-generator.md` |
+| 36 | C002-T-035 | Target structure checks and the npm run check step | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-035-target-structure-checks.md` |
+| 37 | C002-T-036 | Generation determinism test and generation benchmark | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-036-generation-determinism-bench.md` |
+| 38 | C002-T-037 | Conductor: interview and gate variants for the host question tools | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-037-conductor-question-variants.md` |
+| 39 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-038-doctor-host-rows.md` |
+| 40 | C002-T-039 | README sections for OpenCode and Copilot VS Code | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-039-readme-target-sections.md` |
 | 41 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-041-replay-adapters-server-hooks.md` |
 | 42 | C002-T-042 | OpenCode session driver and the opencode-permissions replay adapter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-042-opencode-driver-replay-adapter.md` |
 | 43 | C002-T-043 | S-07 record: final replay outcomes and the OpenCode enforcement mode | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-043-spike-s07-final-replay.md` |

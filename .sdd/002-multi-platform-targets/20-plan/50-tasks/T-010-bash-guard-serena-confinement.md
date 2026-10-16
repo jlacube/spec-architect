@@ -67,8 +67,10 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
 
 - `npm test -- tests/guards`, `npm test -- cap10` and `npm test -- cap11`
 - `npm run bench` (p95 ≤ 300 ms with the new file-system work)
-- The milestone eval runs of step 5: `node evals/harness/run.mjs --host claude --tier dev` with the
-  three regression-set §5 row 1 files and `evals/targets/doctor/TS-537.eval.mjs`
+- The milestone eval runs of step 5: `node evals/harness/run.mjs evals/cap11/doctor-no-ripwire.eval.mjs
+  evals/cap10/TS-1015.eval.mjs evals/cap11/TS-1111.eval.mjs evals/targets/doctor/TS-537.eval.mjs --tier dev`
+  (positional case files, no `--host`: the existing runner runs Claude Code only; `--host` and
+  `--filter` arrive with C002-T-044 step 2)
 
 ## Done when
 

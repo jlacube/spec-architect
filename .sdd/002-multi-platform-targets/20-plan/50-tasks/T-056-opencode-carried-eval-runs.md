@@ -40,7 +40,8 @@ They run on the prepaid API key outside the reserve for the release evidence (Q-
 - C002-T-038 (doctor case files) and C002-T-044 (runner, gate case files) done; C002-T-026,
   C002-T-027 and C002-T-037 done through them.
 - OpenCode at its tested version with the Claude model tiers of the S-07 record.
-- The ledger check of test plan §4.1 allows the next session without reaching into the reserve.
+- The general pool's stop rule of test plan §4.1 allows the next session (general-pool total plus H
+  within 30 USD; reserve spend does not count against it).
 
 ## Step outline (no production code)
 
@@ -55,13 +56,14 @@ They run on the prepaid API key outside the reserve for the release evidence (Q-
    report the scripted-answer rows not applicable with the S-07 record cited.
 4. Under the infeasible-driver branch of `10-strategy.md` §4, also run C002-TC-133, 211, 222 and 223
    as real-model eval cases (about 4 sessions, as re-levelled in the test plan).
-5. Before every session check the ledger by the stop rule of test plan §4.1 and add the session's
-   spend after it. At the stop, pause and let P-01 decide; never spend the reserve here.
+5. Before every session check the ledger by the general pool's stop rule of test plan §4.1 and add the
+   session's spend after it, with pool `general`. At the stop, pause and let P-01 decide; never spend
+   the reserve here.
 
 ## Verification
 
 - `node evals/harness/run.mjs --host opencode --tier dev` with the case files of steps 2 to 4
-- The ledger total stays below the budget minus the reserve
+- The general-pool total of the ledger stays within 30 USD
 
 ## Done when
 

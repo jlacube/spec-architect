@@ -64,16 +64,16 @@ C002-T-049 and C002-T-054 package.
 4. **Paid runs (5 sessions on E-CC):** the 3 cases of regression-set §5 row 1 and the 2 rows of
    C002-TC-537, one run each, at most one rerun after a failure. Run the other §5 rows only if a
    source agent, command or skill changed (C002-CON-10). These sessions draw on the C002-M-07 reserve.
-   Before every session, check the ledger by the stop rule of test plan §4.1; after it, add its
-   `cost_usd` to the ledger.
+   Before every session, check the ledger by the reserve's stop rule of test plan §4.1; after it, add
+   its `cost_usd` to the ledger with pool `reserve`.
 5. If a later fix changes a source, harness or root file before C002-T-049 or C002-T-054 packages the
    release candidate, re-run steps 1 to 3 at the new commit and update the report.
 
 ## Verification
 
 - `npm run check`, `npm run bench`, `npm test -- contracts/claude-behaviour`
-- `node evals/harness/run.mjs --host claude --tier dev` with the three regression-set §5 row 1 files and
-  `evals/targets/doctor/TS-537.eval.mjs`
+- `node evals/harness/run.mjs --host claude-code --tier dev` with the three regression-set §5 row 1 files
+  and `evals/targets/doctor/TS-537.eval.mjs` as positional case files (`--host` from C002-T-044 step 2)
 
 ## Done when
 

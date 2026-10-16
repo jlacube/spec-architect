@@ -59,7 +59,10 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 ## Verification
 
 - `npm test -- cap05` and `npm test -- cap11` (`TS-1116.test.ts`)
-- `node evals/harness/run.mjs --tier dev` with the Claude Code doctor cases of step 4
+- `node evals/harness/run.mjs <case files> --tier dev` with the Claude Code doctor cases of step 4 as
+  positional case files (`evals/targets/doctor/TS-506.eval.mjs`, `TS-509`, `TS-510`, `TS-511` and
+  `evals/cap11/doctor-no-ripwire.eval.mjs`; `--only` for the Claude Code Examples rows), no `--host`:
+  C002-T-038 does not wait for C002-T-044, which adds `--host` and `--filter`
 
 ## Done when
 

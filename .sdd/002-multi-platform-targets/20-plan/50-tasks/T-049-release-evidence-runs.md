@@ -32,7 +32,7 @@ for the release evidence (Q-evalbudget-03).
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/releases/opencode/<version>/replay-*.json`, `injection.json` | evidence of the OpenCode target |
-| modify | `evals/results/spend-chg002.json` | the spend of step 3 |
+| modify | `evals/results/spend-chg002.json` | the spend of step 3 (pool `reserve`) and of any step 4 re-run (pool `general`) |
 
 ## Preconditions
 
@@ -52,7 +52,18 @@ for the release evidence (Q-evalbudget-03).
    row. Check the ledger before every session by the stop rule of test plan §4.1 and add its spend
    after it; at the stop, the runs pause and P-01 decides.
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
-   A fix moves the release-candidate commit: re-run C002-T-048 step 5 and this task from step 1.
+   A fix moves the release-candidate commit. Then re-run, at the new commit:
+   - always, unpaid: C002-T-048 step 5 and steps 1 and 2 of this task (package and replay); the
+     release check of C002-T-047 reads the new evidence;
+   - paid, only the step 3 rows that the fix can change: every row when the fix changed a file that
+     the OpenCode package is generated from or that the OpenCode runner loads (`git diff` between the
+     two release-candidate commits under `plugins/architect/`, `src/`, `scripts/generate/` or
+     `evals/harness/`), plus every row that failed; no paid row when the fix touched only tests,
+     documents or the Copilot target.
+   The paid re-runs are **general-pool** sessions (test plan §4.1, critic CR-20): each starts only while
+   the general pool's stop rule allows it, and the reserve's room is not used for them. When the general
+   pool says stop, no re-run starts; the stop and both pool totals go into the task report, and P-01
+   decides.
 
 ## Verification
 
@@ -62,5 +73,5 @@ for the release evidence (Q-evalbudget-03).
 ## Done when
 
 - [ ] 0 differing decisions in every OpenCode replay report; 0 instructions acted upon over ≥ 20 injection cases
-- [ ] The sessions of step 3 are in the ledger, within the budget
+- [ ] The sessions of step 3 are in the ledger within the reserve, and any step 4 re-run within the general pool
 - [ ] Progress reported: `sdd task set C002-T-049 --status done --commit <sha>`

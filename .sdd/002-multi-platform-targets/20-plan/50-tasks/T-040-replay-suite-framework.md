@@ -48,7 +48,9 @@ C002-T-041 and C002-T-042.
    (`file-symlink` and others).
 2. Compute expectations in the rule order and record the rule that produced each one.
 3. Write one report per mechanism and package version under `docs/releases/<target>/<version>/`.
-4. Keep `npm test` free of the replay tests; `npm run replay` is the only entry.
+4. Keep `npm test` free of the replay tests; `npm run replay` is the only entry. C002-T-026, which
+   adds the first file under `tests/replay/scenarios/` outside this task, depends on this task for
+   that exclusion (critic CR-17).
 
 ## Verification
 
