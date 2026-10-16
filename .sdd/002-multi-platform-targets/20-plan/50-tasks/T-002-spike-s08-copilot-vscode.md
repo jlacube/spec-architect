@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-01
-status: todo
+status: in-progress
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-306.1, C002-AC-308.1, C002-AC-620.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-623, C002-TC-623]
 components: [C002-COMP-002, C002-COMP-004]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "Started 2026-10-16 (P-01: Copilot first). Host: VS Code 1.108.0, Copilot 1.388.0, Copilot Chat 0.35.3, Copilot CLI 1.0.98 installed; Copilot plan 1,500 AI credits/month + 50 USD additional; Claude Opus/Sonnet/Haiku enabled (P-01)" }
 ---
 
 # C002-T-002 — Spike S-08: GitHub Copilot in VS Code and Copilot CLI
