@@ -9,7 +9,7 @@ status: todo
 depends_on: [C002-T-006]
 implements: [C002-REQ-508]
 satisfies_ac: [C002-AC-508.1]
-verified_by: [C002-TS-513, C002-TS-514]
+verified_by: [C002-TS-513, C002-TS-514, C002-TC-513, C002-TC-514]
 components: [C002-COMP-018]
 risk_refs: []
 estimate: S

@@ -1,0 +1,360 @@
+---
+id: C002-PLAN-TEST
+artifact: plan/test-plan
+change: CHG-002
+phase: 20-plan
+status: draft
+---
+
+# CHG-002 — Test plan
+
+## 1. Scope and levels
+
+Every acceptance scenario of the approved spec maps to one test case with the same number
+(`C002-TS-n` → `C002-TC-n`), as in CHG-001, so TR-08 stays mechanically checkable. Three more manual
+cases (`C002-TC-901` … `C002-TC-903`) are the P-01 runs of C002-T-050 and C002-T-051; each names the
+one scenario whose evidence it produces. Inside a test
+file, each case is one `test()` whose name starts with its TS ID.
+
+| Level | Meaning | Count | Runner |
+|---|---|---|---|
+| integration | CLI, guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host | 98 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
+| structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 47 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
+| replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 | 23 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
+| eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone) | 24 | `node evals/harness/run.mjs --host <claude\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
+| manual | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 17 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
+| unit | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
+
+Mode-tagged scenarios: integration and structure cases tagged `@mode-native`, `@mode-server` or
+`@mode-hooks` run for both modes of their target from the fixture tables. Replay, eval and manual
+cases run for the mode that the spike records fix (C002-IF-009 §3); a case for a mode not in use is
+reported "not applicable" and cites the spike record. The contingencies of `10-strategy.md` §4 apply:
+a deferred S-08 drops every Copilot case; `post_write_feedback_channel: false` makes C002-TC-222 and
+C002-TC-223 not applicable; C002-TC-613, C002-TC-634 and C002-TC-635 need the S-07 finding that a
+script can answer `question` calls (their Given).
+
+## 2. Fixtures
+
+| Fixture | Content | Built by |
+|---|---|---|
+| fx-src | Copy of the repository at the commit under test: source plugin, `plugins/architect/targets/` mapping tables | C002-T-025 |
+| fx-tables | Fixture mapping tables under `tests/fixtures/targets/`, one per mode, with deliberate gaps for the error rows | C002-T-024 |
+| fx-dist | Both target packages generated into a temporary folder, per mode (native, server, hooks) | C002-T-034 |
+| fx-dist-bad | fx-dist with one planted defect per Examples row (missing file, renamed command, pasted variant, oversize skill, open tool map, shell operator, missing profile) | C002-T-035 and the owning task |
+| fx-tgz | Packed `architect-sdd` tarball installed into a clean temporary prefix with an isolated npm cache | C002-T-022, C002-T-023 |
+| fx-repo | Temporary repository with `.git` and `.sdd/` so the repository-root rule is deterministic (regression-set §4.1) | C002-T-007 |
+| corpora | `tests/guards/path-corpus.json`, `tests/guards/bash-corpus.json` with the replay fields of C002-IF-009 §2 | C002-T-007 … C002-T-011 |
+| fx-cp | Copilot fixture repository with 2 active changes, plus Copilot hook input samples (SessionStart, SubagentStop, PreToolUse) | C002-T-032 |
+| fx-oc | OpenCode replay fixture of C002-ADR-005: generated package, adopter agent `my-build`, adopter MCP server `fx-fs`, auto-update and sharing off | C002-T-042 |
+| fx-gate | Change 002 with phase 10-spec in review; variant with 00-ideation approved; variant ready to archive | C002-T-037 (from the CHG-001 gate helpers) |
+| fx-bootstrap | CHG-001 fixture (copy of `.sdd/` at its G2) | CHG-001 |
+| fx-release | Release-check fixture: spike records, replay reports, injection summaries, checklist records and versions per Examples row | C002-T-047 |
+| cfg-* | PATH shims: CHG-001 `cfg-full`, `cfg-no-ripwire`, `cfg-bare`, `cfg-node18`, `cfg-old-claude`; new `opencode`, `code`, `sdd` and `ast-grep.cmd` shims per version row | C002-T-014, C002-T-038 |
+| stub-host | Stub OpenCode and Copilot CLI hosts that never end a session and report a fixed spend | C002-T-044, C002-T-045 |
+| toy | Toy change repository for the VS Code checklist, fresh install | C002-T-046 |
+| inline | Data from the scenario's Given and Examples | owning task |
+
+## 3. Environments
+
+| Code | Environment |
+|---|---|
+| E-W | REF-WIN (Windows 11 reference machine), Node 20 and 22, `npm test` with the no-network preload |
+| E-W4 | REF-WIN, PowerShell 7 and Git Bash, each with Node.js 20 LTS and 22 LTS (C002-DOD-015, C002-DOD-016) |
+| E-SER | E-W with Serena 1.7.x installed |
+| E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network; `opencode` at its S-07 tested version on PATH and `@opencode-ai/sdk` pinned to it for OpenCode rows. Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
+| E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; billed to the prepaid API key |
+| E-OCE | OpenCode at its tested version with the Claude model tiers of C002-REQ-105 through the provider of the S-07 record; billed to the prepaid API key (`30-impact/blast-radius.md`, eval cost note) |
+| E-CPC | Copilot CLI at its S-08 tested version, non-interactive with `--no-ask-user`; billed to P-01's Copilot subscription |
+| E-VSC | VS Code and GitHub Copilot Chat at the S-08 tested versions, P-01 at the keyboard, hooks state as the mode requires |
+
+## 4. Eval execution and spend
+
+### 4.1 Policy
+
+- **Dev tier** (C001-ADR-003): one run per Examples row, turn cap 30 and spend cap 0.50 USD per
+  session (C002-NFR-105, enforced by `evals/harness/caps.mjs`). Each result records host, host version,
+  model IDs, tokens, spend and transcript path under `evals/results/`.
+- Paid evals run once per milestone, at the exit of the milestone that owns them (`10-strategy.md` §2),
+  never per task. An eval case whose runner does not exist yet is carried to the milestone of the
+  runner: OpenCode cases to C002-T-044, Copilot CLI cases to C002-T-045.
+- Every eval run adds its spend to a running total in `evals/results/spend-chg002.json`. Before a
+  milestone's runs, the runner compares the total plus the milestone estimate with P-01's stop at 10 USD
+  on the prepaid key; at or above it, the runs stop and P-01 decides.
+- Milestone and release tiers: the DoD asks for `@eval` scenarios to pass in at least 9 of 10 runs
+  (C002-DOD-001, C002-DOD-002, C002-DOD-003, C002-DOD-006, C002-DOD-007). At the estimate below this is
+  about 130 USD on the prepaid key [NEEDS CLARIFICATION: Q-evalbudget-01].
+
+### 4.2 Estimated spend per milestone (dev tier)
+
+Planning rate 0.15 USD per session: the CHG-001 dev-tier results in `evals/results/` cost 0.08 to
+0.39 USD per session. The upper bound uses the 0.50 USD cap.
+
+| Milestone | API-key sessions | Estimate | Upper bound | Copilot subscription sessions |
+|---|---|---|---|---|
+| C002-M-01 | about 10 S-07 probe sessions (C002-T-001) | 1.50 USD | 5.00 USD | about 10 S-08 probes (C002-T-002) |
+| C002-M-02 | 5 on E-CC: C002-TC-537 (2 rows) and regression-set §5 row 1 (3 cases) at C002-T-010 | 0.75 USD | 2.50 USD | 0 |
+| C002-M-03 | 0 (the sdd MCP server is tested without a host) | 0 | 0 | 0 |
+| C002-M-04 | 0 (C002-TC-113 and C002-TC-132 carried to C002-M-06) | 0 | 0 | 0 |
+| C002-M-05 | 10 on E-CC: the Claude Code rows of C002-TC-215, 217, 219, 506, 509, 510, 511 (9) and the doctor eval of regression-set §5 row 1 (1) | 1.50 USD | 5.00 USD | 0 |
+| C002-M-06 | 48 on E-OCE: the 28 carried OpenCode rows of C002-TC-113 … C002-TC-639, C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634, C002-TC-635 and the C002-T-044 smoke | 7.20 USD | 24.00 USD | about 5: the Copilot rows of C002-TC-513 (3), C002-TC-526, the C002-T-045 smoke |
+| C002-M-07 | 35: C002-TC-612 (about 10 routing and 20 injection cases on E-OCE) and C002-T-048 (5 on E-CC) | 5.25 USD | 17.50 USD | about 40: C002-TC-615 |
+| **Total** | about 108 | **16.20 USD** | 54.00 USD | about 55 |
+
+The running total crosses the 10 USD stop during C002-M-06 (about 3.75 USD after C002-M-05). The
+total excludes reruns after a failure and any spend already on the key before CHG-002.
+
+## 5. Regression set
+
+The set is `30-impact/regression-set.md`; this section assigns it to cases and tasks.
+
+| Group | Source | Command | Cases | Tasks | When |
+|---|---|---|---|---|---|
+| Must stay green without edits | regression-set §3 | `npm run check`, `npm run bench` | C002-TC-626, C002-TC-627 | C002-T-006 (coupled tests), C002-T-048 (final run) | before every task commit (as CHG-001 from M-2 on) and at the exit of C002-M-02 and C002-M-07 |
+| Guard corpora and their tests (additions only, no flipped case) | regression-set §4.1 | `npm test -- tests/guards`, `npm run bench` | C002-TC-504, C002-TC-527, C002-TC-536, C002-TC-610, C002-TC-636 | C002-T-007 … C002-T-011 | after each guard task |
+| CLI tests coupled to CHG-001 files (`frontend.test.ts`) | regression-set §4.2 | `npm test -- integration/cli` | C002-TC-626 | C002-T-006; `sampleArgs` rows by C002-T-012, C002-T-013, C002-T-014, C002-T-032 | with each new command |
+| Build, package and version tests (`TS-1115`, `smoke.test.ts`, `scripts/test.mjs`, `tsconfig.json`) | regression-set §4.3 | `npm test -- cap11`, `npm test -- smoke`, `npm run typecheck` | C002-TC-418, C002-TC-517 | C002-T-004, C002-T-021, C002-T-025, C002-T-040 (replay excluded from `npm test`) | with each task |
+| Plugin structure checks reading the plugin | regression-set §4.4 | `node scripts/check/run.mjs` | C002-TC-121, C002-TC-122 | C002-T-015, C002-T-035 | with each task |
+| Claude Code evals on the changed code | regression-set §5 | `node evals/harness/run.mjs --host claude --tier dev` with `evals/cap11/doctor-no-ripwire.eval.mjs`, C001-TC-1015, C001-TC-1111 | C002-TC-537 | C002-T-010, C002-T-038, C002-T-048 | once at C002-M-02, C002-M-05 and C002-M-07; the other §5 rows only if a source agent, command or skill changes (C002-CON-10) |
+
+## 6. Entry and exit criteria
+
+- **Entry (task)**: dependencies done; the task's fixtures exist; for replay cases the C002-T-042
+  driver, for OpenCode eval cases the C002-T-044 runner, for Copilot CLI cases the C002-T-045 runner.
+- **Exit (task)**: the integration and structure cases of its `verified_by` pass on E-W. Its replay and
+  eval cases that wait for a later runner are listed in the task report as carried, with the carrying
+  task. C002-T-030 writes the expectations of C002-TC-207, 209, 211, 213, 222 and 223, and C002-T-029
+  those of C002-TC-226; they run under `npm run replay` from C002-T-042 on, not under `npm test -- cap02`
+  as the task bodies' Verification sections state.
+- **Exit (milestone)**: all cases of the milestone's tasks pass, carried cases excepted; paid evals at
+  the dev tier within the spend rule of §4.1.
+- **Exit (release)**: every case passes on the tested host versions; replay reports with 0 differing
+  decisions (C002-DOD-008); injection evals with 0 instructions acted upon (C002-DOD-009); the checklist
+  record (C002-DOD-004); the timed runs (C002-DOD-019, C002-DOD-021); the regression set
+  (C002-DOD-022); benchmarks (C002-DOD-010).
+
+## 7. Manual cases
+
+P-01 executes every manual case. The `@manual-vscode` cases are steps of
+`docs/checklists/vscode-copilot.md`; C002-TC-901 is the run that executes them, and its record under
+`docs/checklists/records/` is the evidence of C002-DOD-004. C002-TC-618 is the review of that record.
+C002-TC-902 and C002-TC-903 are timed clean-profile runs recorded in
+`docs/releases/clean-profile-runs.md` (C002-DOD-019; C002-DOD-021 for the OpenCode toy change to G1).
+The `@review` cases (C002-TC-616, 617, 619, 632) are automated checks of the checklist file plus the
+review entry of C002-DOD-007.
+
+## 8. Test cases
+
+Commands: `npm test -- <path substring>`; `npm run replay -- <filter>`; evals
+`node evals/harness/run.mjs --host <host> --tier dev --filter <case path>`.
+
+| TC | Verifies | Level | Location | Command | Fixture | Environment | Task |
+|---|---|---|---|---|---|---|---|
+| C002-TC-101 | C002-TS-101 | integration | `tests/integration/cap01/package-flow.test.ts` | `npm test -- cap01/package-flow` | fx-src (clean checkout) | E-W | C002-T-034, C002-T-036 |
+| C002-TC-102 | C002-TS-102 | integration | `tests/integration/cap01/package-flow.test.ts` | `npm test -- cap01/package-flow` | fx-src with a planted generator error | E-W | C002-T-034 |
+| C002-TC-103 | C002-TS-103 | integration | `tests/integration/cap01/package-flow.test.ts` | `npm test -- cap01/package-flow` | fx-dist of an earlier run | E-W | C002-T-034 |
+| C002-TC-104 | C002-TS-104 | integration | `tests/integration/cap01/generator-frame.test.ts` | `npm test -- cap01/generator-frame` | fx-src | E-W | C002-T-025 |
+| C002-TC-105 | C002-TS-105 | integration | `tests/integration/cap01/generator-frame.test.ts` | `npm test -- cap01/generator-frame` | fx-src with an invalid table | E-W | C002-T-025 |
+| C002-TC-106 | C002-TS-106 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-tables | E-W | C002-T-027, C002-T-024 |
+| C002-TC-107 | C002-TS-107 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src | E-W | C002-T-027 |
+| C002-TC-108 | C002-TS-108 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-tables without the tool entry | E-W | C002-T-027 |
+| C002-TC-109 | C002-TS-109 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | fx-tables | E-W | C002-T-026, C002-T-024 |
+| C002-TC-110 | C002-TS-110 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | inline | E-W | C002-T-026, C002-T-024 |
+| C002-TC-111 | C002-TS-111 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | fx-src | E-W | C002-T-026 |
+| C002-TC-112 | C002-TS-112 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | fx-tables | E-W | C002-T-026 |
+| C002-TC-113 | C002-TS-113 | eval | `evals/targets/generator/TS-113.eval.mjs` | `run.mjs --host opencode` | fx-oc with the planted `notes.md` | E-OCE | C002-T-026 |
+| C002-TC-114 | C002-TS-114 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | fx-src | E-W | C002-T-026 |
+| C002-TC-115 | C002-TS-115 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
+| C002-TC-116 | C002-TS-116 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (oversize skill) | E-W | C002-T-035 |
+| C002-TC-117 | C002-TS-117 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
+| C002-TC-118 | C002-TS-118 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
+| C002-TC-119 | C002-TS-119 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
+| C002-TC-120 | C002-TS-120 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
+| C002-TC-121 | C002-TS-121 | integration | `tests/integration/build/package-staging.test.ts` | `npm test -- build/package-staging` | fx-src | E-W | C002-T-015, C002-T-028, C002-T-035 |
+| C002-TC-122 | C002-TS-122 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-src with a pasted variant | E-W | C002-T-028, C002-T-035 |
+| C002-TC-123 | C002-TS-123 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
+| C002-TC-124 | C002-TS-124 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
+| C002-TC-125 | C002-TS-125 | integration | `tests/integration/cap01/serena-launch.test.ts` | `npm test -- cap01/serena-launch` | fx-tgz, fx-oc copy, `LOCALAPPDATA` = `C:/fx-home/AppData/Local` | E-SER | C002-T-031 |
+| C002-TC-126 | C002-TS-126 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-031 |
+| C002-TC-127 | C002-TS-127 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src | E-W | C002-T-027 |
+| C002-TC-128 | C002-TS-128 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src | E-W | C002-T-027 |
+| C002-TC-129 | C002-TS-129 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | fx-tables (server mode) | E-W | C002-T-026 |
+| C002-TC-130 | C002-TS-130 | integration | `tests/integration/cap01/frontmatter.test.ts` | `npm test -- cap01/frontmatter` | inline | E-W | C002-T-026 |
+| C002-TC-131 | C002-TS-131 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src | E-W | C002-T-027 |
+| C002-TC-132 | C002-TS-132 | eval | `evals/targets/generator/TS-132.eval.mjs` | `run.mjs --host opencode` | fx-gate (ready to archive) | E-OCE | C002-T-027 |
+| C002-TC-133 | C002-TS-133 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc with `fx-fs` | E-OC | C002-T-026 |
+| C002-TC-640 | C002-TS-640 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (tool map rows) | E-W | C002-T-026 |
+| C002-TC-201 | C002-TS-201 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
+| C002-TC-202 | C002-TS-202 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist-bad | E-W | C002-T-029 |
+| C002-TC-203 | C002-TS-203 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
+| C002-TC-204 | C002-TS-204 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
+| C002-TC-205 | C002-TS-205 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029, C002-T-051 |
+| C002-TC-206 | C002-TS-206 | structure | `tests/integration/cap02/readme-targets.test.ts` | `npm test -- cap02/readme-targets` | `README.md` | E-W | C002-T-039 |
+| C002-TC-207 | C002-TS-207 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (native) | E-OC | C002-T-030, C002-T-043 |
+| C002-TC-208 | C002-TS-208 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist (native) | E-W | C002-T-030 |
+| C002-TC-209 | C002-TS-209 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (native) | E-OC | C002-T-030, C002-T-043 |
+| C002-TC-210 | C002-TS-210 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist | E-W | C002-T-030 |
+| C002-TC-211 | C002-TS-211 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc with `my-build` | E-OC | C002-T-030 |
+| C002-TC-212 | C002-TS-212 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist (server) | E-W | C002-T-030 |
+| C002-TC-213 | C002-TS-213 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (server) | E-OC | C002-T-030 |
+| C002-TC-214 | C002-TS-214 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist (server) | E-W | C002-T-030 |
+| C002-TC-215 | C002-TS-215 | eval | `evals/targets/question-tool/TS-215.eval.mjs` | `run.mjs --host claude`, `--host opencode` | fx-bootstrap | E-CC, E-OCE | C002-T-037 |
+| C002-TC-216 | C002-TS-216 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-217 | C002-TS-217 | eval | `evals/targets/question-tool/TS-217.eval.mjs` | `run.mjs --host claude`, `--host opencode` | fx-gate | E-CC, E-OCE | C002-T-037 |
+| C002-TC-218 | C002-TS-218 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-219 | C002-TS-219 | eval | `evals/targets/question-tool/TS-219.eval.mjs` | `run.mjs --host claude`, `--host opencode` | fx-bootstrap | E-CC, E-OCE | C002-T-037 |
+| C002-TC-220 | C002-TS-220 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-221 | C002-TS-221 | eval | `evals/targets/question-tool/TS-221.eval.mjs` | `run.mjs --host opencode` | fx-bootstrap | E-OCE | C002-T-037 |
+| C002-TC-222 | C002-TS-222 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (quick-lint plugin) | E-OC | C002-T-030 |
+| C002-TC-223 | C002-TS-223 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (quick-lint plugin) | E-OC | C002-T-030 |
+| C002-TC-224 | C002-TS-224 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist-bad | E-W | C002-T-030 |
+| C002-TC-225 | C002-TS-225 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
+| C002-TC-226 | C002-TS-226 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc | E-OC | C002-T-029 |
+| C002-TC-227 | C002-TS-227 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist-bad | E-W | C002-T-029 |
+| C002-TC-301 | C002-TS-301 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031 |
+| C002-TC-302 | C002-TS-302 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist-bad | E-W | C002-T-031 |
+| C002-TC-303 | C002-TS-303 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031 |
+| C002-TC-304 | C002-TS-304 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist-bad | E-W | C002-T-031 |
+| C002-TC-305 | C002-TS-305 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031 |
+| C002-TC-306 | C002-TS-306 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031, C002-T-051 |
+| C002-TC-307 | C002-TS-307 | structure | `tests/integration/cap02/readme-targets.test.ts` | `npm test -- cap02/readme-targets` | `README.md` | E-W | C002-T-039 |
+| C002-TC-308 | C002-TS-308 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist (server) | E-W | C002-T-031 |
+| C002-TC-309 | C002-TS-309 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-031 |
+| C002-TC-310 | C002-TS-310 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist (server) | E-W | C002-T-031 |
+| C002-TC-311 | C002-TS-311 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist (hooks) | E-W | C002-T-033, C002-T-032 |
+| C002-TC-312 | C002-TS-312 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs | E-W | C002-T-032 |
+| C002-TC-313 | C002-TS-313 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-032 |
+| C002-TC-314 | C002-TS-314 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp with injected faults | E-W | C002-T-032 |
+| C002-TC-315 | C002-TS-315 | structure | `tests/integration/cap02/readme-targets.test.ts` | `npm test -- cap02/readme-targets` | `README.md` | E-W | C002-T-039 |
+| C002-TC-316 | C002-TS-316 | eval | `evals/targets/question-tool/TS-316.eval.mjs` | `run.mjs --host opencode` | fx-gate | E-OCE | C002-T-037 |
+| C002-TC-317 | C002-TS-317 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-318 | C002-TS-318 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-319 | C002-TS-319 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-037 |
+| C002-TC-320 | C002-TS-320 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp | E-W | C002-T-032 |
+| C002-TC-321 | C002-TS-321 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-032 |
+| C002-TC-322 | C002-TS-322 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | inline (repository without `.sdd/`) | E-W | C002-T-032 |
+| C002-TC-323 | C002-TS-323 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp | E-W | C002-T-032 |
+| C002-TC-324 | C002-TS-324 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp with a broken `registry.json` | E-W | C002-T-032 |
+| C002-TC-325 | C002-TS-325 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist | E-W | C002-T-033 |
+| C002-TC-326 | C002-TS-326 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist-bad | E-W | C002-T-033 |
+| C002-TC-327 | C002-TS-327 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist-bad | E-W | C002-T-031 |
+| C002-TC-328 | C002-TS-328 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031 |
+| C002-TC-329 | C002-TS-329 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-031 |
+| C002-TC-330 | C002-TS-330 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist (hooks) | E-W | C002-T-033 |
+| C002-TC-331 | C002-TS-331 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist (server) | E-W | C002-T-033 |
+| C002-TC-332 | C002-TS-332 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist-bad | E-W | C002-T-033 |
+| C002-TC-333 | C002-TS-333 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs | E-W | C002-T-032 |
+| C002-TC-334 | C002-TS-334 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs | E-W | C002-T-032 |
+| C002-TC-335 | C002-TS-335 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy | E-VSC | C002-T-032 |
+| C002-TC-401 | C002-TS-401 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz, fx-repo | E-W | C002-T-017, C002-T-011 |
+| C002-TC-402 | C002-TS-402 | integration | `tests/integration/mcp/faults.test.ts` | `npm test -- mcp/faults` | fx-tgz, fx-repo | E-W | C002-T-020, C002-T-017 |
+| C002-TC-403 | C002-TS-403 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz | E-W | C002-T-017 |
+| C002-TC-404 | C002-TS-404 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz, fx-repo | E-W | C002-T-017 |
+| C002-TC-405 | C002-TS-405 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz, fx-repo | E-W | C002-T-017, C002-T-020 |
+| C002-TC-406 | C002-TS-406 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
+| C002-TC-407 | C002-TS-407 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
+| C002-TC-408 | C002-TS-408 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
+| C002-TC-409 | C002-TS-409 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, cfg shim with another `sdd` on PATH | E-W | C002-T-019 |
+| C002-TC-410 | C002-TS-410 | integration | `tests/integration/mcp/quick-lint.test.ts` | `npm test -- mcp/quick-lint` | fx-tgz, fx-repo | E-W | C002-T-018 |
+| C002-TC-411 | C002-TS-411 | integration | `tests/integration/mcp/quick-lint.test.ts` | `npm test -- mcp/quick-lint` | fx-tgz, fx-repo | E-W | C002-T-018 |
+| C002-TC-412 | C002-TS-412 | integration | `tests/integration/mcp/quick-lint.test.ts` | `npm test -- mcp/quick-lint` | fx-tgz, fx-repo | E-W | C002-T-018 |
+| C002-TC-413 | C002-TS-413 | integration | `tests/integration/mcp/quick-lint.test.ts` | `npm test -- mcp/quick-lint` | fx-tgz, fx-repo with a broken workspace | E-W | C002-T-018 |
+| C002-TC-414 | C002-TS-414 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-415 | C002-TS-415 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-416 | C002-TS-416 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-417 | C002-TS-417 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022, C002-T-023 |
+| C002-TC-418 | C002-TS-418 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-src with an injected GPL package | E-W | C002-T-021 |
+| C002-TC-419 | C002-TS-419 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-tgz | E-W | C002-T-021 |
+| C002-TC-420 | C002-TS-420 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-421 | C002-TS-421 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-422 | C002-TS-422 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-641 | C002-TS-641 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
+| C002-TC-642 | C002-TS-642 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, cfg shim with a `.cmd`-only executable | E-W | C002-T-019 |
+| C002-TC-501 | C002-TS-501 | integration | `scripts/smoke-npm.mjs` | `npm run smoke:npm` | fx-tgz (clean prefix) | E-W4 | C002-T-023, C002-T-022 |
+| C002-TC-502 | C002-TS-502 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz, fx-bootstrap | E-W | C002-T-022 |
+| C002-TC-503 | C002-TS-503 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022, C002-T-003, C002-T-052 |
+| C002-TC-504 | C002-TS-504 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-008 |
+| C002-TC-505 | C002-TS-505 | integration | `tests/integration/cli/guard-message.test.ts` | `npm test -- cli/guard-message` | inline | E-W | C002-T-008 |
+| C002-TC-506 | C002-TS-506 | eval | `evals/targets/doctor/TS-506.eval.mjs` | `run.mjs --host claude`, `--host opencode` | cfg-full | E-CC, E-OCE | C002-T-038 |
+| C002-TC-507 | C002-TS-507 | eval | `evals/targets/doctor/TS-507.eval.mjs` | `run.mjs --host opencode` | cfg-no-ripwire | E-OCE | C002-T-038 |
+| C002-TC-508 | C002-TS-508 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy with `architect-sdd` installed | E-VSC | C002-T-038 |
+| C002-TC-509 | C002-TS-509 | eval | `evals/targets/doctor/TS-509.eval.mjs` | `run.mjs --host claude`, `--host opencode` | cfg-* per row | E-CC, E-OCE | C002-T-038 |
+| C002-TC-510 | C002-TS-510 | eval | `evals/targets/doctor/TS-510.eval.mjs` | `run.mjs --host claude`, `--host opencode` | cfg-old-claude, cfg-full with a `claude` shim per row | E-CC, E-OCE | C002-T-038 |
+| C002-TC-511 | C002-TS-511 | eval | `evals/targets/doctor/TS-511.eval.mjs` | `run.mjs --host claude`, `--host opencode` | cfg-full, workspace with `.sdd/` | E-CC, E-OCE | C002-T-038 |
+| C002-TC-512 | C002-TS-512 | eval | `evals/targets/doctor/TS-512.eval.mjs` | `run.mjs --host opencode` | cfg-full, repository without `.sdd/` | E-OCE | C002-T-038 |
+| C002-TC-513 | C002-TS-513 | eval | `evals/targets/doctor/TS-513.eval.mjs` | `run.mjs --host opencode`, `--host copilot-cli` | `opencode` and `code` version shims per row | E-OCE, E-CPC | C002-T-038, C002-T-014 |
+| C002-TC-514 | C002-TS-514 | eval | `evals/targets/doctor/TS-514.eval.mjs` | `run.mjs --host opencode` | `opencode` shim reporting 1.5.0 | E-OCE | C002-T-038, C002-T-014 |
+| C002-TC-515 | C002-TS-515 | eval | `evals/targets/doctor/TS-515.eval.mjs` | `run.mjs --host opencode` | `sdd` version shims per row | E-OCE | C002-T-038 |
+| C002-TC-516 | C002-TS-516 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy, hooks states per row | E-VSC | C002-T-038 |
+| C002-TC-517 | C002-TS-517 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | fx-tgz | E-W | C002-T-004 |
+| C002-TC-518 | C002-TS-518 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | inline | E-W | C002-T-004 |
+| C002-TC-519 | C002-TS-519 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-520 | C002-TS-520 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
+| C002-TC-521 | C002-TS-521 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
+| C002-TC-522 | C002-TS-522 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
+| C002-TC-523 | C002-TS-523 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | inline (platform environment per row) | E-W | C002-T-013 |
+| C002-TC-524 | C002-TS-524 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | Serena shim | E-W | C002-T-013 |
+| C002-TC-525 | C002-TS-525 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | fx-repo | E-W | C002-T-013, C002-T-005 |
+| C002-TC-526 | C002-TS-526 | eval | `evals/targets/doctor/TS-526.eval.mjs` | `run.mjs --host copilot-cli` | user profile without VS Code settings | E-CPC | C002-T-038 |
+| C002-TC-527 | C002-TS-527 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-010, C002-T-005 |
+| C002-TC-528 | C002-TS-528 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-010 |
+| C002-TC-529 | C002-TS-529 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-530 | C002-TS-530 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src with a plugin path planted in a template | E-W | C002-T-022 |
+| C002-TC-531 | C002-TS-531 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
+| C002-TC-532 | C002-TS-532 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline with `.sdd/_templates` | E-W | C002-T-012 |
+| C002-TC-533 | C002-TS-533 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | fx-repo | E-W | C002-T-013 |
+| C002-TC-534 | C002-TS-534 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-535 | C002-TS-535 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022 |
+| C002-TC-536 | C002-TS-536 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-009, C002-T-005 |
+| C002-TC-537 | C002-TS-537 | eval | `evals/targets/doctor/TS-537.eval.mjs` | `run.mjs --host claude` | cfg-full; fx-bootstrap copy; empty git repository `C:/fx-work/fresh` | E-CC | C002-T-010, C002-T-048 |
+| C002-TC-639 | C002-TS-639 | eval | `evals/targets/doctor/TS-639.eval.mjs` | `run.mjs --host opencode` | cfg-full with `ast-grep.cmd` only; fx-dist (server) | E-OCE | C002-T-038 |
+| C002-TC-601 | C002-TS-601 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks`; `npm run check` | fx-src (clean checkout) | E-W | C002-T-035 |
+| C002-TC-602 | C002-TS-602 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
+| C002-TC-603 | C002-TS-603 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist of an earlier run | E-W | C002-T-035 |
+| C002-TC-604 | C002-TS-604 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
+| C002-TC-605 | C002-TS-605 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
+| C002-TC-606 | C002-TS-606 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (server) | E-W | C002-T-035 |
+| C002-TC-607 | C002-TS-607 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-src with CHG-001 moved to `_archive/` | E-W | C002-T-035 |
+| C002-TC-608 | C002-TS-608 | replay | `tests/replay/run.mjs` | `npm run replay -- --all` | corpora, fx-dist per mode in use, fx-oc | E-OC (release: PowerShell 7 and Git Bash, `file-symlink`) | C002-T-040, C002-T-041, C002-T-049 |
+| C002-TC-609 | C002-TS-609 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpus fixture with a planted expectation | E-OC | C002-T-040, C002-T-041, C002-T-049 |
+| C002-TC-610 | C002-TS-610 | integration | `tests/guards/corpus-format.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-007, C002-T-008, C002-T-009, C002-T-010 |
+| C002-TC-611 | C002-TS-611 | integration | `tests/integration/cap06/runner-caps.test.ts` | `npm test -- cap06/runner-caps` | stub-host, SHA-256 of `evals/` case files | E-W | C002-T-044 |
+| C002-TC-612 | C002-TS-612 | eval | routing cases and `evals/injection/injection.eval.mjs` | `run.mjs --host opencode --tier dev` | case fixtures | E-OCE | C002-T-044, C002-T-049 |
+| C002-TC-613 | C002-TS-613 | eval | `evals/targets/gate/TS-613.eval.mjs` and the C001-CAP-02 interview and gate cases | `run.mjs --host opencode` | fx-gate | E-OCE | C002-T-044 |
+| C002-TC-614 | C002-TS-614 | integration | `tests/integration/cap06/runner-caps.test.ts`, `tests/integration/cap06/copilot-runner.test.ts` | `npm test -- cap06/runner-caps`, `npm test -- cap06/copilot-runner` | stub-host | E-W | C002-T-044, C002-T-045 |
+| C002-TC-615 | C002-TS-615 | eval | routing, injection, sdd MCP server guard and non-interactive cases | `run.mjs --host copilot-cli --tier dev` | case fixtures | E-CPC | C002-T-045, C002-T-049 |
+| C002-TC-616 | C002-TS-616 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | checklist, S-08 record with `copilot_cli_loads_package: false` | E-W | C002-T-046 |
+| C002-TC-617 | C002-TS-617 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046, C002-T-050 |
+| C002-TC-618 | C002-TS-618 | manual | review of `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | review entry (C002-DOD-007) | record of C002-TC-901 | E-VSC | C002-T-046, C002-T-050 |
+| C002-TC-619 | C002-TS-619 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046 |
+| C002-TC-620 | C002-TS-620 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-001, C002-T-043, C002-T-052 |
+| C002-TC-621 | C002-TS-621 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-050 |
+| C002-TC-622 | C002-TS-622 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-052 |
+| C002-TC-623 | C002-TS-623 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (S-08 record per row) | E-W | C002-T-047, C002-T-002 |
+| C002-TC-624 | C002-TS-624 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (versions per row) | E-W | C002-T-047 |
+| C002-TC-625 | C002-TS-625 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047 |
+| C002-TC-626 | C002-TS-626 | integration | regression set (`30-impact/regression-set.md` §3) | `npm run check`; `npm run bench` | the repository at the commit under test | E-W | C002-T-006, C002-T-048 |
+| C002-TC-627 | C002-TS-627 | integration | `tests/integration/contracts/claude-behaviour.test.ts` | `npm test -- contracts/claude-behaviour` | fx-src with a planted Claude Code behaviour change per row | E-W | C002-T-006, C002-T-048 |
+| C002-TC-628 | C002-TS-628 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (memory cases) | E-OC | C002-T-040, C002-T-011 |
+| C002-TC-629 | C002-TS-629 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpus fixture | E-OC | C002-T-040 |
+| C002-TC-630 | C002-TS-630 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
+| C002-TC-631 | C002-TS-631 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora | E-OC | C002-T-040 |
+| C002-TC-632 | C002-TS-632 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046 |
+| C002-TC-633 | C002-TS-633 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (checklist records per row) | E-W | C002-T-047 |
+| C002-TC-634 | C002-TS-634 | eval | `evals/targets/gate/TS-634.eval.mjs` | `run.mjs --host opencode` | fx-gate | E-OCE | C002-T-044 |
+| C002-TC-635 | C002-TS-635 | eval | `evals/targets/gate/TS-635.eval.mjs` | `run.mjs --host opencode` | fx-gate (00-ideation approved) | E-OCE | C002-T-044 |
+| C002-TC-636 | C002-TS-636 | integration | `tests/guards/writing-commands.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-009 |
+| C002-TC-637 | C002-TS-637 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release with incomplete replay reports | E-W | C002-T-040 |
+| C002-TC-638 | C002-TS-638 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (memory cases) | E-OC | C002-T-040 |
+| C002-TC-643 | C002-TS-643 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (absent-field cases) | E-OC | C002-T-040 |
+| C002-TC-644 | C002-TS-644 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (cases with own `cwd`) | E-OC | C002-T-040 |
+| C002-TC-645 | C002-TS-645 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpus fixture | E-OC | C002-T-040 |
+| C002-TC-646 | C002-TS-646 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc | E-OC | C002-T-042 |
+| C002-TC-647 | C002-TS-647 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc | E-OC | C002-T-042 |
+| C002-TC-648 | C002-TS-648 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (S-07 record per row) | E-W | C002-T-047, C002-T-001 |
+| C002-TC-649 | C002-TS-649 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (PG-163) | E-OC with `file-symlink` (Developer Mode on) | C002-T-040, C002-T-007 |
+| C002-TC-650 | C002-TS-650 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (PG-163), capability probe stubbed to absent | E-OC | C002-T-040 |
+| C002-TC-651 | C002-TS-651 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (host capabilities per row) | E-W | C002-T-047 |
+| C002-TC-652 | C002-TS-652 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
+| C002-TC-901 | C002-TS-618 | manual | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step, including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 508 and 516 | toy (fresh install) | E-VSC | C002-T-050 |
+| C002-TC-902 | C002-TS-205 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/opencode/` install notes | REF-WIN, OpenCode tested version | C002-T-051 |
+| C002-TC-903 | C002-TS-306 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile to the first interview question | fresh Windows user profile, `dist/copilot/` install notes | E-VSC | C002-T-051 |
