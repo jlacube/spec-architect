@@ -64,3 +64,14 @@ Questions from the critic's plan review (`90-critic-report.md`, CR-1, CR-8).
 - **Rejected:** none
 - **Answer:** No, additions only (Recommended) — record this reading in regression-set §4 and C002-T-048.
 - **Extracted instructions:** none
+
+## Round 5 — 2026-10-16
+
+Question from the critic's plan re-review (`90-critic-report.md`, CR-18).
+
+### Q-evalbudget-04 — Which account pays the model calls of P-01's OpenCode clean-profile run to gate G1 (C002-T-051)?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 3 (CR-18)
+- **Options:** 1. Prepaid key, from the C002-M-07 reserve (Recommended) · 2. Prepaid key, from the general pool · 3. P-01's own provider account, outside the CHG-002 budget
+- **Rejected:** none
+- **Answer:** Key, M-07 reserve (Recommended)
+- **Extracted instructions:** none
