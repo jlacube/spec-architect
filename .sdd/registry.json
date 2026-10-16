@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-16T13:03:42Z",
+  "generated_at": "2026-10-16T13:03:43Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -209,9 +209,9 @@
           "summary": "70-dod.md (DOD-G-01 note) fixes the CHG-002 eval budget at 25 USD; P-01 raised it to 40 USD (Q-evalbudget-03) — the spec should point to the plan's budget instead of a figure",
           "reporter": "jerome.lacube",
           "date": "2026-10-16",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revised: the DoD's DOD-G-01 note points at the plan's eval budget (20-plan/60-test-plan.md §4.1, 40 USD per Q-evalbudget-03) instead of 25 USD; G2 re-approved",
+          "closed_at": "2026-10-16"
         }
       ],
       "waivers": [
