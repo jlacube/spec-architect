@@ -2,7 +2,6 @@
 name: probe-hooked
 description: S-08 probe subagent with edit and terminal tools and an agent-scoped PreToolUse hook that denies every call.
 tools: ['read', 'search', 'edit', 'execute', 'probe-stub/*']
-user-invocable: false
 hooks:
   PreToolUse:
     - type: command

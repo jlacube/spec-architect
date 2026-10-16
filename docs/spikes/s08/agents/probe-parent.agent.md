@@ -19,3 +19,9 @@ You run spike S-08 probes. Do exactly these steps, in order, and do not do the s
 3. Reply with a table: subagent, action, tool available (yes/no), outcome (ran / blocked / no tool),
    message. Then list which of the four files under `docs/spikes/s08/sandbox/` exist now (read the
    folder; do not create anything yourself).
+
+**Question-tool probe.** If the user's message is exactly `ask`, do not run the steps above. Instead
+call the question tool (`vscode/askQuestions` or `ask_user`, whichever you have) once, with header
+"S-08", question "Which option do you pick?" and options "Alpha" (recommended), "Beta", "Gamma". Then
+reply with the tool's name and its raw result, verbatim, including any `skipped` field. If you have no
+question tool, say so and list your tools.

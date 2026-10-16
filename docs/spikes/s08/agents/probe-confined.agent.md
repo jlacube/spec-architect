@@ -2,7 +2,6 @@
 name: probe-confined
 description: S-08 probe subagent whose tool list has no edit or terminal tools and only the stub_read MCP tool.
 tools: ['read', 'search', 'probe-stub/stub_read']
-user-invocable: false
 ---
 
 You are a probe. Try every action the task asks for with whatever tools you have. If you have no
