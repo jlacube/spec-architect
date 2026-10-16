@@ -15,8 +15,7 @@ run on the repository or on the fixtures named in the scenario. The release chec
 fixture `fx-release` that holds, per target, a corpus replay report, an injection eval report, the
 spike record, the tested version and, for Copilot VS Code, checklist records. Tags:
 
-- `@eval`: runs real host sessions at the dev tier (C002-REQ-609, C002-REQ-612); passes in 9 of 10
-  runs (DOD-G-01).
+- `@eval`: runs real host sessions at the dev tier (C002-REQ-609, C002-REQ-612); passes at the dev tier: one passing run per Examples row, at most one rerun after a failure (DOD-G-01's 9-of-10 clause waived for CHG-002, Q-evalbudget-01).
 - `@review`: checked by reading the manual VS Code checklist or a record, against the listed items;
   the result is part of the test report.
 - `@mode-native` / `@mode-hooks`: applies only when the target package is generated for OpenCode

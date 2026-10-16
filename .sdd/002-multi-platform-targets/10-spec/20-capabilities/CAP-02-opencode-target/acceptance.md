@@ -15,7 +15,7 @@ headless (`opencode run` or its server and SDK) on the fixture repository named 
 Tags:
 
 - `@eval`: agent behaviour, run by the OpenCode eval runner (C002-REQ-608) or, for Claude Code, by
-  the existing harness; passes in 9 of 10 runs (DOD-G-01).
+  the existing harness; passes at the dev tier: one passing run per Examples row, at most one rerun after a failure (DOD-G-01's 9-of-10 clause waived for CHG-002, Q-evalbudget-01).
 - `@manual-vscode`: a step of the manual VS Code checklist (C002-REQ-614, C002-DEC-003), passed by
   its checklist record (C002-REQ-615); used where the behaviour is checkable only in VS Code.
 - `@mode-native` / `@mode-server`: the scenario applies only when the OpenCode target package is

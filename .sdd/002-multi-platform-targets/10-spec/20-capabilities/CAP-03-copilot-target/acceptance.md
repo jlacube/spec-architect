@@ -15,7 +15,7 @@ tests on the generated `dist/copilot/` or integration tests that feed Copilot-fo
 stdin and check the exit code, standard output and standard error. Tags:
 
 - `@eval`: agent behaviour run by the Copilot CLI eval runner (C002-REQ-612) or the OpenCode eval
-  runner (C002-REQ-608); passes in 9 of 10 runs (DOD-G-01).
+  runner (C002-REQ-608); passes at the dev tier: one passing run per Examples row, at most one rerun after a failure (DOD-G-01's 9-of-10 clause waived for CHG-002, Q-evalbudget-01).
 - `@manual-vscode`: a step of the manual VS Code checklist (C002-REQ-614), passed by its checklist
   record (C002-REQ-615) on the tested VS Code and GitHub Copilot Chat versions. These are the
   behaviours that can be checked only in VS Code.

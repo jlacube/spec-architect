@@ -17,8 +17,7 @@ record are prompts, so their scenarios are agent behaviour. Tags:
 - `@eval`: run by the existing harness on Claude Code and by the OpenCode eval runner on OpenCode, on
   the machine configurations of C001-CAP-10 extended with the fixtures named here; scenarios that name
   the Copilot target package run its doctor prompt through the Copilot CLI eval runner
-  (C002-REQ-612), with stub `code` executables that report the fixture versions; passes in 9 of 10
-  runs (DOD-G-01).
+  (C002-REQ-612), with stub `code` executables that report the fixture versions; passes at the dev tier: one passing run per Examples row, at most one rerun after a failure (DOD-G-01's 9-of-10 clause waived for CHG-002, Q-evalbudget-01).
 - `@manual-vscode`: a step of the manual VS Code checklist (C002-REQ-614), passed by its checklist
   record (C002-REQ-615); the doctor in VS Code runs in Copilot Chat, which no script drives.
 - `@mode-hooks`: applies only when the Copilot target package is generated for the Copilot hooks

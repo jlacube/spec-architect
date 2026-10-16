@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-15T20:49:07Z",
+  "generated_at": "2026-10-16T04:08:40Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -161,7 +161,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "20-plan",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -170,7 +170,7 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:5159d9b5063f0011fb54473f4e34f62515446ae5a68cb177f2a916b446ba5838",
           "approved_at": "2026-10-15",
           "approved_by": "jerome.lacube"
@@ -185,14 +185,25 @@
       "implementation": {
         "status": "not-started",
         "tasks": {
-          "total": 0,
+          "total": 52,
           "done": 0,
           "blocked": 0,
           "in_progress": 0
         },
         "last_report": null
       },
-      "defects": [],
+      "defects": [
+        {
+          "id": "D-001",
+          "ref": "C002-DOD-001",
+          "summary": "DoD items C002-DOD-001, 002, 003, 006, 007 require @eval scenarios to pass 9 of 10 runs (~880 paid sessions, ~$130), beyond the eval budget; P-01 chose dev tier only with a $25 budget (Q-evalbudget-01)",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-16",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        }
+      ],
       "waivers": [
         {
           "item": "C002-REQ-211",

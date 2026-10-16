@@ -79,10 +79,11 @@ script can answer `question` calls (their Given).
   runner: OpenCode cases to C002-T-044, Copilot CLI cases to C002-T-045.
 - Every eval run adds its spend to a running total in `evals/results/spend-chg002.json`. Before a
   milestone's runs, the runner compares the total plus the milestone estimate with P-01's stop at 10 USD
-  on the prepaid key; at or above it, the runs stop and P-01 decides.
-- Milestone and release tiers: the DoD asks for `@eval` scenarios to pass in at least 9 of 10 runs
-  (C002-DOD-001, C002-DOD-002, C002-DOD-003, C002-DOD-006, C002-DOD-007). At the estimate below this is
-  about 130 USD on the prepaid key [NEEDS CLARIFICATION: Q-evalbudget-01].
+  on the prepaid key, replaced for CHG-002 by a CHG-002 eval budget of 25 USD (Q-evalbudget-01, `questions-log.md` round 2); at or above it, the runs stop and P-01 decides. The key held about 4.77 USD on 2026-10-16, so P-01 tops it up before the first paid run (C002-T-001).
+- Milestone and release tiers: not used for CHG-002. P-01 waived the 9-of-10-runs clause of DOD-G-01
+  for this change (Q-evalbudget-01, Q-evalbudget-02): every `@eval` case passes at the dev tier, one
+  passing run per Examples row with at most one rerun after a failure (C002-DOD-001, 002, 003, 006,
+  007, 022).
 
 ### 4.2 Estimated spend per milestone (dev tier)
 
@@ -100,7 +101,7 @@ Planning rate 0.15 USD per session: the CHG-001 dev-tier results in `evals/resul
 | C002-M-07 | 35: C002-TC-612 (about 10 routing and 20 injection cases on E-OCE) and C002-T-048 (5 on E-CC) | 5.25 USD | 17.50 USD | about 40: C002-TC-615 |
 | **Total** | about 108 | **16.20 USD** | 54.00 USD | about 55 |
 
-The running total crosses the 10 USD stop during C002-M-06 (about 3.75 USD after C002-M-05). The
+The estimate stays within the 25 USD budget with room for reruns (about 3.75 USD after C002-M-05). The
 total excludes reruns after a failure and any spend already on the key before CHG-002.
 
 ## 5. Regression set

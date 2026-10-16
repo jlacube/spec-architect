@@ -15,7 +15,7 @@ plan), and inspect the files written under `dist/`. Mapping-table entries and wi
 fixed in the architecture step; where a scenario names "the mapping-table entry", the test reads the
 expected value from that table, never from a copy. C002-TS-133 drives OpenCode at its tested version
 headless on the fixture `fx-oc` of C002-CAP-02, in either enforcement mode. Tags: `@eval` marks agent
-behaviour run through an eval runner of a generated target (DOD-G-01: 9 of 10 runs).
+behaviour run through an eval runner of a generated target (at the dev tier: one passing run per Examples row, at most one rerun after a failure (DOD-G-01's 9-of-10 clause waived for CHG-002, Q-evalbudget-01)).
 
 ## C002-REQ-101
 

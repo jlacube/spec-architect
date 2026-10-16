@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-16T00:59:03.124Z",
+  "generated_at": "2026-10-16T06:22:17.447Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -566,7 +566,7 @@
       "id": "C002-AC-501.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 34,
+      "line": 33,
       "title": "npm `sdd` is the same CLI as the bundled one",
       "content_hash": "sha256:65d7c4eb37350516b5c9501efa5dcfab58e9255b444378fc0de2008dba079a44"
     },
@@ -574,7 +574,7 @@
       "id": "C002-AC-502.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 52,
+      "line": 51,
       "title": "Packaging writes the unscoped tarball at the plugin version",
       "content_hash": "sha256:c4734d515dc05d1f6a4db80c6ad20a837fb555b88810ce914e4fb7082b0aa508"
     },
@@ -582,7 +582,7 @@
       "id": "C002-AC-503.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 63,
+      "line": 62,
       "title": "Bare `sdd` and `node --version` allowed, the rest unchanged",
       "content_hash": "sha256:1aff18f6fbcb4b8dda773b56b60c09379cd57e2d5c568952528384c638094727"
     },
@@ -590,7 +590,7 @@
       "id": "C002-AC-504.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 96,
+      "line": 95,
       "title": "Doctor rows depend on the host",
       "content_hash": "sha256:556e05b4be8dcd053e442f6f992ab481e9f927531d476b83a6e0e721c46f4ff2"
     },
@@ -598,7 +598,7 @@
       "id": "C002-AC-505.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 141,
+      "line": 140,
       "title": "Only node and an unreachable sdd CLI fail the run",
       "content_hash": "sha256:a14c30ed6bcb39a0890324d4ddf063a9c428d7c767f6ee0e6be980322ea50559"
     },
@@ -606,7 +606,7 @@
       "id": "C002-AC-506.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 160,
+      "line": 159,
       "title": "Claude Code version checked on Claude Code only",
       "content_hash": "sha256:5334e098e1932e8d5a71db24fb9a1214a5bcfc5a78c5b6b7a0a668aa3e9cc602"
     },
@@ -614,7 +614,7 @@
       "id": "C002-AC-507.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 176,
+      "line": 175,
       "title": "Toolchain record rows match the host",
       "content_hash": "sha256:d1e555f6de7d8bb035bf8b1517310e0ee5d197d818eb32f5aca500a2c5df6a2c"
     },
@@ -622,7 +622,7 @@
       "id": "C002-AC-508.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 200,
+      "line": 199,
       "title": "A host version other than the tested one is `untested`",
       "content_hash": "sha256:0e2e640d500fc8ac603f8590c8e8f7cfe582701dfbe10ceef02ca19f229fc37a"
     },
@@ -630,7 +630,7 @@
       "id": "C002-AC-509.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 229,
+      "line": 228,
       "title": "An sdd CLI that does not match major, minor and patch is an error with the install command",
       "content_hash": "sha256:fa8d5c76d68ffb4753c90ea588655ae8a030741f372fa8bb8480d89b2f8ff673"
     },
@@ -638,7 +638,7 @@
       "id": "C002-AC-510.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 248,
+      "line": 247,
       "title": "Copilot hooks row is `ok` only when hooks are read as enabled",
       "content_hash": "sha256:9f46e130b79d8481acd1770a6dd9a753eff421598119ccbc3eae9c798e9ad805"
     },
@@ -646,7 +646,7 @@
       "id": "C002-AC-511.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 274,
+      "line": 273,
       "title": "`sdd --version` prints the bare version",
       "content_hash": "sha256:b5e99e2954335a17092f5d46305d4fab254186a342d7747dce955c0d26d2ed57"
     },
@@ -654,7 +654,7 @@
       "id": "C002-AC-512.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 297,
+      "line": 296,
       "title": "The tarball ships every template and the read-only mode file",
       "content_hash": "sha256:a42fe739fd5f3525599ca0131a6adfe3ecb0822e0f7d9061fa97b81d6ec54489"
     },
@@ -662,7 +662,7 @@
       "id": "C002-AC-513.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 309,
+      "line": 308,
       "title": "`sdd template show` prefers the repository template, else the shipped one",
       "content_hash": "sha256:852968e8a9ef49af50c037c409981a63e698a14b432ca753ad5d7734b41e3757"
     },
@@ -670,7 +670,7 @@
       "id": "C002-AC-514.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 325,
+      "line": 324,
       "title": "A template that exists nowhere, or a path that leaves the profile's template folder, is refused with ERR-CLI-019",
       "content_hash": "sha256:9c1ef98887873f1a663c68c38eb635c735f39fc81d6850f20bef8991c7f291db"
     },
@@ -678,7 +678,7 @@
       "id": "C002-AC-515.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 356,
+      "line": 355,
       "title": "`--user-data` puts Serena's data in the per-user data folder",
       "content_hash": "sha256:b27f1d7f8d73cea1402a8913ac81de6395db74fbd32589af02bb0631ee341d61"
     },
@@ -686,7 +686,7 @@
       "id": "C002-AC-516.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 386,
+      "line": 385,
       "title": "Per-user data folder not determinable, relative or inside the repository: ERR-CLI-020, nothing written, Serena not started",
       "content_hash": "sha256:9a7a469ab80158c008f0423494675aca1a971ca053d61646ad78257c2b4cdf9f"
     },
@@ -694,7 +694,7 @@
       "id": "C002-AC-517.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 420,
+      "line": 419,
       "title": "Serena commands allowed only with `--user-data` or a data folder outside the repository",
       "content_hash": "sha256:bb89a6268dd227d603719050cac35c3ceaf533a97d71fffdd47b2f4c3fec0c15"
     },
@@ -702,7 +702,7 @@
       "id": "C002-AC-518.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 474,
+      "line": 473,
       "title": "Shipped templates call the CLI as `sdd`",
       "content_hash": "sha256:f6e7f9fb47039dcaf0a8590bd3f1a62c5d20a70b8bb255317bd670a408abc5df"
     },
@@ -710,7 +710,7 @@
       "id": "C002-AC-519.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 500,
+      "line": 499,
       "title": "A plugin path of the CLI left in a shipped template stops the build",
       "content_hash": "sha256:84edd5d13610873e71b04a7bf0228ecddedcc7b2f4ce8c9f89acf95f5bc2e1e7"
     },
@@ -718,7 +718,7 @@
       "id": "C002-AC-520.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 523,
+      "line": 522,
       "title": "`sdd template list` prints every showable template path once, in code-point order",
       "content_hash": "sha256:1fed7eea05eb32dabf0747705a47bc2bc03f1977ea3c3aea7b859204b3a9620e"
     },
@@ -726,7 +726,7 @@
       "id": "C002-AC-521.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 544,
+      "line": 543,
       "title": "`--cwd` on a writing `sdd` subcommand allowed only with a folder inside the repository root",
       "content_hash": "sha256:bf01faa6d5a061bfbd1ed5f3fb4ab69dcf8b8ead3da379240cd601f32733b92d"
     },
@@ -734,7 +734,7 @@
       "id": "C002-AC-601.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 27,
+      "line": 26,
       "title": "npm run check includes the target structure checks",
       "content_hash": "sha256:e8829518e85c8a560151b3cc356190717352c3501e21502fdcd761fdcc0fa466"
     },
@@ -742,7 +742,7 @@
       "id": "C002-AC-602.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 54,
+      "line": 53,
       "title": "Untranslated constructs reported outside accepted fields",
       "content_hash": "sha256:42efa276339dffc46f026db221ab2f53363db383ae1bc3abf9962a4ea6dca79b"
     },
@@ -750,7 +750,7 @@
       "id": "C002-AC-603.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 71,
+      "line": 70,
       "title": "Differences from the target package contract are errors",
       "content_hash": "sha256:26787d7a9bf45eeeea047f3cebc9a4bbfe8bacee28205e2a5787dd1f261edfdb"
     },
@@ -758,7 +758,7 @@
       "id": "C002-AC-604.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 87,
+      "line": 86,
       "title": "Edit or terminal grant on Copilot is an error",
       "content_hash": "sha256:10a77c38b4dd92c74cc1bfcbc8c58fd3e6adbafc434fd2fc59eb633b48ac84fa"
     },
@@ -766,7 +766,7 @@
       "id": "C002-AC-605.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 102,
+      "line": 101,
       "title": "The check does not depend on change-folder paths",
       "content_hash": "sha256:f237c0288626d28835dd07ab82e8283553c5ef859a76f9d7270ff113480ad986"
     },
@@ -774,7 +774,7 @@
       "id": "C002-AC-606.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 113,
+      "line": 112,
       "title": "Every applicable corpus case replayed against every mechanism in use, with that mechanism's expectation",
       "content_hash": "sha256:e9e5b0527fe01ad24c475b432a969891ed1ac4052713858e9fcbe4c19aa06bee"
     },
@@ -782,7 +782,7 @@
       "id": "C002-AC-607.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 145,
+      "line": 144,
       "title": "Corpora hold the cases of the new risks",
       "content_hash": "sha256:40ac1b66e8aa6e7b8c6435524209908dcfa9b1ec7e372fe532268b547a57fea5"
     },
@@ -790,7 +790,7 @@
       "id": "C002-AC-608.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 201,
+      "line": 200,
       "title": "OpenCode runner uses the existing case API",
       "content_hash": "sha256:3eb36a41b316d5df3b1d1538172088da9aa0034bd55d3d04e0907d23007c45fc"
     },
@@ -798,7 +798,7 @@
       "id": "C002-AC-609.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 212,
+      "line": 211,
       "title": "Dev tier on OpenCode runs routing and injection cases",
       "content_hash": "sha256:42d271d542fd3260b44446fe92eb0b979917334024cfa539f13f6a9da5f64a6e"
     },
@@ -806,7 +806,7 @@
       "id": "C002-AC-610.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 223,
+      "line": 222,
       "title": "Interviews, gates and revise scenarios scripted on OpenCode when possible",
       "content_hash": "sha256:a821b2ffb9282baffd37246050de3bc798672c80d8d918157c05ae9fb2d254a6"
     },
@@ -814,7 +814,7 @@
       "id": "C002-AC-611.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 257,
+      "line": 256,
       "title": "Sessions end at the turn cap or the spend cap",
       "content_hash": "sha256:591ab8ff27b544aa7f3c421b992227b23f2dd8bc647484d68d7427b42920fa69"
     },
@@ -822,7 +822,7 @@
       "id": "C002-AC-612.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 273,
+      "line": 272,
       "title": "Copilot CLI runner covers the non-interactive cases",
       "content_hash": "sha256:b6f489ce92af38978bd81c6fc659739def719c66ab8890db702b10939bf6126d"
     },
@@ -830,7 +830,7 @@
       "id": "C002-AC-613.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 285,
+      "line": 284,
       "title": "Injection cases move to the checklist when Copilot CLI cannot load the package",
       "content_hash": "sha256:9c9b9a7f72e91115d0732d5ee5f9af34b2c89846752b20a441ac4156bf2cf871"
     },
@@ -838,7 +838,7 @@
       "id": "C002-AC-614.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 296,
+      "line": 295,
       "title": "Checklist covers boundary, interview, gate, the toy change and the revise scenarios",
       "content_hash": "sha256:85c2e66be9553c8112bfdfc249416827197298a8d05ecba6366938a328550125"
     },
@@ -846,7 +846,7 @@
       "id": "C002-AC-615.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 311,
+      "line": 310,
       "title": "Each completed run leaves a record with its fields",
       "content_hash": "sha256:4d95469b97f6f8ee725c0798335460735838370069a66b4f0e72124f84ce0ef2"
     },
@@ -854,7 +854,7 @@
       "id": "C002-AC-616.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 327,
+      "line": 326,
       "title": "Checklist records the hooks state and a guard denial",
       "content_hash": "sha256:37dd37709fee850dd249dac1e2822688eb1cea8887bbb2aeb02caef54b8be692"
     },
@@ -862,7 +862,7 @@
       "id": "C002-AC-617.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 338,
+      "line": 337,
       "title": "Release refused without a clean replay and clean injection evals",
       "content_hash": "sha256:25f414fdf1004755f826393273e6673b7aa06520a5763b26d046f7242cf41852"
     },
@@ -870,7 +870,7 @@
       "id": "C002-AC-618.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 371,
+      "line": 370,
       "title": "Copilot release needs an all-passed checklist record",
       "content_hash": "sha256:71e67191613b274a7c94880ad343a5826e8ba346f2237d12e492ca203adb787a"
     },
@@ -878,7 +878,7 @@
       "id": "C002-AC-619.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 386,
+      "line": 385,
       "title": "One target's refusal does not block the other",
       "content_hash": "sha256:3d831cd067b2acef008fea8642a4634cb4c756f8ebddc014e89888a3ae4213b5"
     },
@@ -886,7 +886,7 @@
       "id": "C002-AC-620.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 397,
+      "line": 396,
       "title": "Copilot refused when neither enforcement mode holds",
       "content_hash": "sha256:bb4f2314f44d527b6c7b514cc5a23db47fc092cd35b08a4f642c04f1bb344a67"
     },
@@ -894,7 +894,7 @@
       "id": "C002-AC-621.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 412,
+      "line": 411,
       "title": "Release evidence must come from the tested version",
       "content_hash": "sha256:0c57c19bc04e0b1f7c9a2f60c1062ab44a029a457c8c0dea1a1e97a7ddbdef38"
     },
@@ -902,7 +902,7 @@
       "id": "C002-AC-622.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 428,
+      "line": 427,
       "title": "Hooks fallback marked in the release record",
       "content_hash": "sha256:f182f3192dbb813b3f18a8d06fc952925e700666905195d596c7c2185ad436ad"
     },
@@ -910,7 +910,7 @@
       "id": "C002-AC-623.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 442,
+      "line": 441,
       "title": "Regression set passes with the three bash guard changes as the only changed expectations",
       "content_hash": "sha256:f14ca4c3d922d8fcfc839684091048e6c5095461d9a97937600c7ef7b5bbbe79"
     },
@@ -918,7 +918,7 @@
       "id": "C002-AC-625.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 466,
+      "line": 465,
       "title": "Memory-category cases expect `deny` on every mechanism of a generated target",
       "content_hash": "sha256:701756fddd4dbb59e482350404b449323716ea483538c5d2003e38e8c2378ef1"
     },
@@ -926,7 +926,7 @@
       "id": "C002-AC-626.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 506,
+      "line": 505,
       "title": "Identity-category cases replayed against the OpenCode permission rules only, with an adopter agent as non-Architect caller",
       "content_hash": "sha256:6f61257294b3f37b4233d98cb710b9fdfe903a8e0382283c3241f74449c4d27d"
     },
@@ -934,7 +934,7 @@
       "id": "C002-AC-627.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 531,
+      "line": 530,
       "title": "Every case not replayed is listed as not applicable in the replay report",
       "content_hash": "sha256:503b1ed2c238698b9abf716c180ef7f22fbed40dcc26bc898bee949d2b7c4e43"
     },
@@ -942,7 +942,7 @@
       "id": "C002-AC-628.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 566,
+      "line": 565,
       "title": "Under the hooks fallback the checklist holds the Copilot injection cases, run in VS Code with hooks enabled",
       "content_hash": "sha256:fdd704ba71b0eb17e6335c565f08d3bf15428bfc74b7cf9fad6f1872790d680a"
     },
@@ -950,7 +950,7 @@
       "id": "C002-AC-629.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 578,
+      "line": 577,
       "title": "Hooks-fallback release refused without injection evidence taken in VS Code with hooks enabled",
       "content_hash": "sha256:c19ac41e79cbfbc5b1045756225c4d634252a15f8efd051e64239e1a43e36efd"
     },
@@ -958,7 +958,7 @@
       "id": "C002-AC-630.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 597,
+      "line": 596,
       "title": "Cases without a cwd or a tool name are replayed as malformed calls expecting `deny` on every mechanism of a generated target",
       "content_hash": "sha256:d82b967979cd247cba1a21b11275dbb4c4b2b94d3128e39696639212dbce6ba7"
     },
@@ -966,7 +966,7 @@
       "id": "C002-AC-632.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 639,
+      "line": 638,
       "title": "An unknown `architect:sdd-*` caller expects `allow` on the OpenCode permission rules",
       "content_hash": "sha256:2fc31535bfc059717faaa78895c268a6af1564c3a745136ce72ce30c54847ace"
     },
@@ -974,7 +974,7 @@
       "id": "C002-AC-633.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 666,
+      "line": 665,
       "title": "A case that requires a host capability is replayed with its own input and its corpus expectation, and is an error on a host without the capability",
       "content_hash": "sha256:045e8adc9590ef69d65f93ea180f531ac0663973ffffcdcb99c7e3b31101c2b1"
     },
@@ -982,7 +982,7 @@
       "id": "C002-AC-634.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 698,
+      "line": 697,
       "title": "The release check refuses a replay report whose replay host lacks a required capability",
       "content_hash": "sha256:230d1e648cf0776c25da3329e5207dde351366254ccc081c3280557f6adfc39f"
     },
@@ -1483,24 +1483,24 @@
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 25,
-      "title": "Every scenario of C002-CAP-01's `acceptance.md` passes in the integration suite on REF-WIN; `@eval` scenarios pass in at least 9 of 10 runs on OpenCode at its tested version",
-      "content_hash": "sha256:8a6c1b576b8d1bfc2915a4a40204012f3b6e6203472675229f2286624898d23a"
+      "title": "Every scenario of C002-CAP-01's `acceptance.md` passes in the integration suite on REF-WIN; `@eval` scenarios pass at the dev tier (one passing run per Examples row, at most one rerun after a failure) on OpenCode at its tested version",
+      "content_hash": "sha256:838240ed3f3aff94471c34cf5b80d66db833c4877e5abe5d79281f4eb1389892"
     },
     {
       "id": "C002-DOD-002",
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 26,
-      "title": "Every scenario of C002-CAP-02's `acceptance.md` passes: untagged and `@mode-*` scenarios in the integration suite against OpenCode at its tested version, `@eval` scenarios in at least 9 of 10 runs on OpenCode and on Claude Code, `@manual-vscode` scenarios through C002-DOD-004",
-      "content_hash": "sha256:5f13d07917766cb348bfa09b22b1ab6933547d0346a181850b1167651fd89b56"
+      "title": "Every scenario of C002-CAP-02's `acceptance.md` passes: untagged and `@mode-*` scenarios in the integration suite against OpenCode at its tested version, `@eval` scenarios at the dev tier (one passing run per Examples row, at most one rerun after a failure) on OpenCode and on Claude Code, `@manual-vscode` scenarios through C002-DOD-004",
+      "content_hash": "sha256:d3121b3f76b4c997dabdfe14c55e198072c55a99906872495c240969a75de8bb"
     },
     {
       "id": "C002-DOD-003",
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 27,
-      "title": "Every scenario of C002-CAP-03's `acceptance.md` passes: untagged and `@mode-*` scenarios in the integration suite, `@eval` scenarios in at least 9 of 10 runs through the Copilot CLI eval runner or the OpenCode eval runner, `@manual-vscode` scenarios through C002-DOD-004",
-      "content_hash": "sha256:387159526353bab4d198a77bc776501af2f4e12f222f1f971bb2cdf581f62e1f"
+      "title": "Every scenario of C002-CAP-03's `acceptance.md` passes: untagged and `@mode-*` scenarios in the integration suite, `@eval` scenarios at the dev tier (one passing run per Examples row, at most one rerun after a failure) through the Copilot CLI eval runner or the OpenCode eval runner, `@manual-vscode` scenarios through C002-DOD-004",
+      "content_hash": "sha256:06f42c68cf762daa9728674ce6c0503c0e9e713154e7dc25c339c6e4be5fd203"
     },
     {
       "id": "C002-DOD-004",
@@ -1523,16 +1523,16 @@
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 30,
-      "title": "Every scenario of C002-CAP-05's `acceptance.md` passes: npm and allowlist scenarios in the integration suite, `@eval` doctor scenarios in at least 9 of 10 runs on Claude Code and on OpenCode, and for the Copilot target package through the Copilot CLI eval runner, `@manual-vscode` scenarios through C002-DOD-004",
-      "content_hash": "sha256:fd806a8aaa46d897782b3491992dd2a0f12cec41941b1cccdca20cf25100c843"
+      "title": "Every scenario of C002-CAP-05's `acceptance.md` passes: npm and allowlist scenarios in the integration suite, `@eval` doctor scenarios at the dev tier (one passing run per Examples row, at most one rerun after a failure) on Claude Code and on OpenCode, and for the Copilot target package through the Copilot CLI eval runner, `@manual-vscode` scenarios through C002-DOD-004",
+      "content_hash": "sha256:7ba01c1d2a9631ed300d9c1213bd7ecbc2326709d2f597b943fed85e391ddbf1"
     },
     {
       "id": "C002-DOD-007",
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 31,
-      "title": "Every scenario of C002-CAP-06's `acceptance.md` passes: untagged scenarios in the integration suite, `@eval` scenarios at the dev tier in at least 9 of 10 runs, `@review` scenarios with a review entry in the test report naming the reviewer and the reviewed file",
-      "content_hash": "sha256:8cf6e0fa00f6b8e5890c3baea4418faa211bac6ddf6c52952361fbc1138a3a40"
+      "title": "Every scenario of C002-CAP-06's `acceptance.md` passes: untagged scenarios in the integration suite, `@eval` scenarios at the dev tier (one passing run per Examples row, at most one rerun after a failure), `@review` scenarios with a review entry in the test report naming the reviewer and the reviewed file",
+      "content_hash": "sha256:7c51ac2c6986999a10bd64a09f292a018b17f2046691026ca875ebb1cf8da615"
     },
     {
       "id": "C002-DOD-008",
@@ -1651,8 +1651,8 @@
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 46,
-      "title": "The regression set (`20-plan/30-impact/regression-set.md`) passes on the implementation of CHG-002, with the corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521 as the only changed expectations; the Serena step of the Claude Code doctor and init commands is allowed by the bash guard on Claude Code at its tested version, with `CLAUDE_PLUGIN_DATA` set by the host and by no test step (C002-TS-537, in at least 9 of 10 runs)",
-      "content_hash": "sha256:984655314a4734c47e7f4e48fdb8965a08275654f526f6775d8682a0c9edd9f2"
+      "title": "The regression set (`20-plan/30-impact/regression-set.md`) passes on the implementation of CHG-002, with the corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521 as the only changed expectations; the Serena step of the Claude Code doctor and init commands is allowed by the bash guard on Claude Code at its tested version, with `CLAUDE_PLUGIN_DATA` set by the host and by no test step (C002-TS-537, at the dev tier: one passing run, at most one rerun after a failure)",
+      "content_hash": "sha256:5b1c1bf54da4317ce01750caf32f1c0f7b37b60c19b8f6bcd1b5baf837f7fab3"
     },
     {
       "id": "C002-DOD-023",
@@ -3654,7 +3654,7 @@
       "id": "C002-TC-101",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 152,
+      "line": 153,
       "title": "C002-TS-101",
       "content_hash": "sha256:bb3c1701827d9199305aba1aa0bdc1d42819d172bf803379791be05fe373695f"
     },
@@ -3662,7 +3662,7 @@
       "id": "C002-TC-102",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 153,
+      "line": 154,
       "title": "C002-TS-102",
       "content_hash": "sha256:0090c09f473acb6030472253d899eb0410fcef8b4cca180eececdd6ec786fce6"
     },
@@ -3670,7 +3670,7 @@
       "id": "C002-TC-103",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 154,
+      "line": 155,
       "title": "C002-TS-103",
       "content_hash": "sha256:49a86eb877002dc3bc3694f81d4209e5f944f452726080586c11c6509ba33c3a"
     },
@@ -3678,7 +3678,7 @@
       "id": "C002-TC-104",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 155,
+      "line": 156,
       "title": "C002-TS-104",
       "content_hash": "sha256:3c4c5aced51f2a729cebd13e0335ee5aa78834df521168851bcfa85616aab403"
     },
@@ -3686,7 +3686,7 @@
       "id": "C002-TC-105",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 156,
+      "line": 157,
       "title": "C002-TS-105",
       "content_hash": "sha256:8f624ea40477d4bd02b805ce486678deff507520e0392fcc7e29b20a37997cde"
     },
@@ -3694,7 +3694,7 @@
       "id": "C002-TC-106",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 157,
+      "line": 158,
       "title": "C002-TS-106",
       "content_hash": "sha256:e44b8775d91653568e29c966e8af3030db6ff2103b771fabb9be3394eedba4c5"
     },
@@ -3702,7 +3702,7 @@
       "id": "C002-TC-107",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 158,
+      "line": 159,
       "title": "C002-TS-107",
       "content_hash": "sha256:d7a9a266ffd6ba6536d748d00a9d8beaf5a8d1cbfbbb87295e38518df303214f"
     },
@@ -3710,7 +3710,7 @@
       "id": "C002-TC-108",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 159,
+      "line": 160,
       "title": "C002-TS-108",
       "content_hash": "sha256:661e697daad3cff1c15ff7f7320555aef983920d894969bdb080cb0c102e238d"
     },
@@ -3718,7 +3718,7 @@
       "id": "C002-TC-109",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 160,
+      "line": 161,
       "title": "C002-TS-109",
       "content_hash": "sha256:8d4a957fa640b68a87b9d4e0de300f1ebd9dc7675cea829d5f6f64e1ef1b2334"
     },
@@ -3726,7 +3726,7 @@
       "id": "C002-TC-110",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 161,
+      "line": 162,
       "title": "C002-TS-110",
       "content_hash": "sha256:1e3f31ea7386b73579657d7cf68455958659d6de6d5929facd8ca9d824ac9032"
     },
@@ -3734,7 +3734,7 @@
       "id": "C002-TC-111",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 162,
+      "line": 163,
       "title": "C002-TS-111",
       "content_hash": "sha256:bde171e11161709ac92d4096b5adb151359998c50098a70ad9c3c65f81520d14"
     },
@@ -3742,7 +3742,7 @@
       "id": "C002-TC-112",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 163,
+      "line": 164,
       "title": "C002-TS-112",
       "content_hash": "sha256:e3943ae8ac2c51ec4ec9c78eba597beb4c03fa33294d1d246de2425a360f4740"
     },
@@ -3750,7 +3750,7 @@
       "id": "C002-TC-113",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 164,
+      "line": 165,
       "title": "C002-TS-113",
       "content_hash": "sha256:8ccba2da3b751e931ec11c9e84514c89aa30370f93c8347fdeea9e1a4ddcb786"
     },
@@ -3758,7 +3758,7 @@
       "id": "C002-TC-114",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 165,
+      "line": 166,
       "title": "C002-TS-114",
       "content_hash": "sha256:61a4a79456a814f99a30071b8799289c05fae32c375ab7271f04e1d534108c98"
     },
@@ -3766,7 +3766,7 @@
       "id": "C002-TC-115",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 166,
+      "line": 167,
       "title": "C002-TS-115",
       "content_hash": "sha256:8650f6b02f6a26c1f4056c38cb196e64fdec7f45270b3a6efa024f6124b30f28"
     },
@@ -3774,7 +3774,7 @@
       "id": "C002-TC-116",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 167,
+      "line": 168,
       "title": "C002-TS-116",
       "content_hash": "sha256:3c452d505008eaa0daf24fdee1b688a9a7074ef7cb698da7744e25aa514ce668"
     },
@@ -3782,7 +3782,7 @@
       "id": "C002-TC-117",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 168,
+      "line": 169,
       "title": "C002-TS-117",
       "content_hash": "sha256:9bf3d80a62aead8bc1aeb39784a887a2be37ee22b531e6223818e53a100686e1"
     },
@@ -3790,7 +3790,7 @@
       "id": "C002-TC-118",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 169,
+      "line": 170,
       "title": "C002-TS-118",
       "content_hash": "sha256:9d429279e00cb78c7467b52a0f5df8ea3260c17ef1b5232950cf5e1374d2fa9d"
     },
@@ -3798,7 +3798,7 @@
       "id": "C002-TC-119",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 170,
+      "line": 171,
       "title": "C002-TS-119",
       "content_hash": "sha256:74a5a40b379448ef77bd441262ab78708fbd20fabd0254d32badcf06ebf36303"
     },
@@ -3806,7 +3806,7 @@
       "id": "C002-TC-120",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 171,
+      "line": 172,
       "title": "C002-TS-120",
       "content_hash": "sha256:526ceea5d2dbe1fa933d3fa9f386aaf72bd421db27323348ab4328ca1c84d83f"
     },
@@ -3814,7 +3814,7 @@
       "id": "C002-TC-121",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 172,
+      "line": 173,
       "title": "C002-TS-121",
       "content_hash": "sha256:d9912a80976e0f80afc71940fa307d87f51877fceb3ff449c085109491037d22"
     },
@@ -3822,7 +3822,7 @@
       "id": "C002-TC-122",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 173,
+      "line": 174,
       "title": "C002-TS-122",
       "content_hash": "sha256:7360ab1d18e02964455dec52faa4764c1d0833b3ada64a1383ad870df4a55055"
     },
@@ -3830,7 +3830,7 @@
       "id": "C002-TC-123",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 174,
+      "line": 175,
       "title": "C002-TS-123",
       "content_hash": "sha256:828ea7298ccca63edb9d03d892106a3ae451a8ecf2846cb74a3ec0a3ac57176b"
     },
@@ -3838,7 +3838,7 @@
       "id": "C002-TC-124",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 175,
+      "line": 176,
       "title": "C002-TS-124",
       "content_hash": "sha256:b4d55c30de26cdefb7c8155c0dacc10085af60e2e9060141a7827628a333b578"
     },
@@ -3846,7 +3846,7 @@
       "id": "C002-TC-125",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 176,
+      "line": 177,
       "title": "C002-TS-125",
       "content_hash": "sha256:210d3906333ab2b57ff1b46ea2580bb48414c225b730e7dbb170f0c9333f083d"
     },
@@ -3854,7 +3854,7 @@
       "id": "C002-TC-126",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 177,
+      "line": 178,
       "title": "C002-TS-126",
       "content_hash": "sha256:a7a8468fedf3357e2a41bd78ba1175b9eee1568c382ec565fee2d42aef10a1f1"
     },
@@ -3862,7 +3862,7 @@
       "id": "C002-TC-127",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 178,
+      "line": 179,
       "title": "C002-TS-127",
       "content_hash": "sha256:946e258b1036b13982ec6c3a8ac490218e3941d750c83d8ad1d07cf4830ceb81"
     },
@@ -3870,7 +3870,7 @@
       "id": "C002-TC-128",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 179,
+      "line": 180,
       "title": "C002-TS-128",
       "content_hash": "sha256:9f7fd7985092ebaaa791d40163483c13c63feedb1eb10047b0610b0b9079c9e0"
     },
@@ -3878,7 +3878,7 @@
       "id": "C002-TC-129",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 180,
+      "line": 181,
       "title": "C002-TS-129",
       "content_hash": "sha256:360540d32a4eb7067d68b8108f026f93dee5b38b37b45f423783ff09e6c4ce94"
     },
@@ -3886,7 +3886,7 @@
       "id": "C002-TC-130",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 181,
+      "line": 182,
       "title": "C002-TS-130",
       "content_hash": "sha256:44fba4deb1eeb4e03845bbdd5a118eb749b06517a25de6ff62adb232baf374e7"
     },
@@ -3894,7 +3894,7 @@
       "id": "C002-TC-131",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 182,
+      "line": 183,
       "title": "C002-TS-131",
       "content_hash": "sha256:81fab8ae4f038fc19f001c9c0fefede09bf48680a517b02401f396611860e55c"
     },
@@ -3902,7 +3902,7 @@
       "id": "C002-TC-132",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 183,
+      "line": 184,
       "title": "C002-TS-132",
       "content_hash": "sha256:67e1392c7e9c16123784289230fcda609524c7c7b643b77a5986c72eedf5b4df"
     },
@@ -3910,7 +3910,7 @@
       "id": "C002-TC-133",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 184,
+      "line": 185,
       "title": "C002-TS-133",
       "content_hash": "sha256:582dfdd2a3f0d2023c7ca0b96d07591a2f1604bf0c2eb1bf06cbe4ea1a93439d"
     },
@@ -3918,7 +3918,7 @@
       "id": "C002-TC-201",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 186,
+      "line": 187,
       "title": "C002-TS-201",
       "content_hash": "sha256:67fb229e6985664d1cbb07b3f6b8975bd0fa6db90a4b94e6717b17087cece887"
     },
@@ -3926,7 +3926,7 @@
       "id": "C002-TC-202",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 187,
+      "line": 188,
       "title": "C002-TS-202",
       "content_hash": "sha256:c41f400320820a35a6e968eb255fe0fab169763c5f9c1375f90165558129629e"
     },
@@ -3934,7 +3934,7 @@
       "id": "C002-TC-203",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 188,
+      "line": 189,
       "title": "C002-TS-203",
       "content_hash": "sha256:595b411942af1e55803d17ff878db2a40c6e3eed8fbfb6fab8766d7131ddc3a2"
     },
@@ -3942,7 +3942,7 @@
       "id": "C002-TC-204",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 189,
+      "line": 190,
       "title": "C002-TS-204",
       "content_hash": "sha256:a83c24c210d14d86336b8a55818e600352b3736611dc7e97c57feee52f3a7c3a"
     },
@@ -3950,7 +3950,7 @@
       "id": "C002-TC-205",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 190,
+      "line": 191,
       "title": "C002-TS-205",
       "content_hash": "sha256:5e092e107ccd61038a87ef5f693c8b54c14df2a9e5183b3504e0ff79de0954f8"
     },
@@ -3958,7 +3958,7 @@
       "id": "C002-TC-206",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 191,
+      "line": 192,
       "title": "C002-TS-206",
       "content_hash": "sha256:811da8dfa79a1702f1ae28588748d4069f3ba7973e1e29f7cb0feac3262f8ad4"
     },
@@ -3966,7 +3966,7 @@
       "id": "C002-TC-207",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 192,
+      "line": 193,
       "title": "C002-TS-207",
       "content_hash": "sha256:0b20be3021abcc485143ae9108935cb324ce90a3e83e52a96208540b5a269b63"
     },
@@ -3974,7 +3974,7 @@
       "id": "C002-TC-208",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 193,
+      "line": 194,
       "title": "C002-TS-208",
       "content_hash": "sha256:c86347146d0d5792cc7b7b23e226f0ac7f394fdbbbd3fbaae04612185bdcc9f7"
     },
@@ -3982,7 +3982,7 @@
       "id": "C002-TC-209",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 194,
+      "line": 195,
       "title": "C002-TS-209",
       "content_hash": "sha256:18803a32ae0056925a7c12cd723fdd51eff502aa6a495b6c2ef5b6f6abd523c0"
     },
@@ -3990,7 +3990,7 @@
       "id": "C002-TC-210",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 195,
+      "line": 196,
       "title": "C002-TS-210",
       "content_hash": "sha256:546c76c8566923f45786c1cfbf77521435f94b499746f0fced740c62305e6aa8"
     },
@@ -3998,7 +3998,7 @@
       "id": "C002-TC-211",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 196,
+      "line": 197,
       "title": "C002-TS-211",
       "content_hash": "sha256:e4a5c2a667275d6d797ba4804ff9dd23b2309d7150e73280154c8daf79b4de71"
     },
@@ -4006,7 +4006,7 @@
       "id": "C002-TC-212",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 197,
+      "line": 198,
       "title": "C002-TS-212",
       "content_hash": "sha256:06ed77fc30b883e05e1d4ffd9f0a21595be36887f36889dc5c4dacff02e872af"
     },
@@ -4014,7 +4014,7 @@
       "id": "C002-TC-213",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 198,
+      "line": 199,
       "title": "C002-TS-213",
       "content_hash": "sha256:8a4a655934e1ee06d14c4a69fa41f1dd354b8db11f09bc564d58b1c1ec1e8a65"
     },
@@ -4022,7 +4022,7 @@
       "id": "C002-TC-214",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 199,
+      "line": 200,
       "title": "C002-TS-214",
       "content_hash": "sha256:98d08208cf229a9bf14e239334e2a061961dc9f3121061f4522885ee2c611f62"
     },
@@ -4030,7 +4030,7 @@
       "id": "C002-TC-215",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 200,
+      "line": 201,
       "title": "C002-TS-215",
       "content_hash": "sha256:eb3b1d81276442028282c016c7bdb5b993bba77d0bb3db14a31d293225ad3938"
     },
@@ -4038,7 +4038,7 @@
       "id": "C002-TC-216",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 201,
+      "line": 202,
       "title": "C002-TS-216",
       "content_hash": "sha256:7d71f341220343ea3741287d3cf73b651c5a3abec68e09ca69c5d057055c235a"
     },
@@ -4046,7 +4046,7 @@
       "id": "C002-TC-217",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 202,
+      "line": 203,
       "title": "C002-TS-217",
       "content_hash": "sha256:9e3ee94f2b0c0a15a7f19c30c64002545460e9d9e7b1ed4e07daa373bd39681f"
     },
@@ -4054,7 +4054,7 @@
       "id": "C002-TC-218",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 203,
+      "line": 204,
       "title": "C002-TS-218",
       "content_hash": "sha256:e4d57e871885351b76daa7fce82bd2387d45cb0003fb737246996ac44aecfea3"
     },
@@ -4062,7 +4062,7 @@
       "id": "C002-TC-219",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 204,
+      "line": 205,
       "title": "C002-TS-219",
       "content_hash": "sha256:901e1bb9372ac0745ce592307a8a603ab4b18ae69fe0bca20aeb46255a57d145"
     },
@@ -4070,7 +4070,7 @@
       "id": "C002-TC-220",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 205,
+      "line": 206,
       "title": "C002-TS-220",
       "content_hash": "sha256:68ee450ad5f5dc45735a273eca4fa8ecdfe6272b78e1ca5849809050139a4a11"
     },
@@ -4078,7 +4078,7 @@
       "id": "C002-TC-221",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 206,
+      "line": 207,
       "title": "C002-TS-221",
       "content_hash": "sha256:b4d897e203bdb4be4abb0fb51cad9b54c1199626f17c125278b0cc4c0eb86539"
     },
@@ -4086,7 +4086,7 @@
       "id": "C002-TC-222",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 207,
+      "line": 208,
       "title": "C002-TS-222",
       "content_hash": "sha256:dd1687cf4cffb39c999f8d73b77edb283b08913260ccf3e20e33b7ea9d3e819c"
     },
@@ -4094,7 +4094,7 @@
       "id": "C002-TC-223",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 208,
+      "line": 209,
       "title": "C002-TS-223",
       "content_hash": "sha256:56bd19a69a4ed143c35fd55f9743cca97d4d2b79a90aa4c3b5dd5da7b577dd43"
     },
@@ -4102,7 +4102,7 @@
       "id": "C002-TC-224",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 209,
+      "line": 210,
       "title": "C002-TS-224",
       "content_hash": "sha256:f2bedb07b2ff035fae1591b4b200d240cf3ce314b202fbf3dd5579212d2160ee"
     },
@@ -4110,7 +4110,7 @@
       "id": "C002-TC-225",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 210,
+      "line": 211,
       "title": "C002-TS-225",
       "content_hash": "sha256:aa5dac9e93f291b110bd3db3f0ce40b391b4028c79f676dccc572e70c5cc6d4a"
     },
@@ -4118,7 +4118,7 @@
       "id": "C002-TC-226",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 211,
+      "line": 212,
       "title": "C002-TS-226",
       "content_hash": "sha256:222e2007a68325a37a0468ce18eba433b7e4812c53495959f142d26d6ea7d2ad"
     },
@@ -4126,7 +4126,7 @@
       "id": "C002-TC-227",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 212,
+      "line": 213,
       "title": "C002-TS-227",
       "content_hash": "sha256:28e7589f91fff7d89e8daaca62054dc7c00120ee05f49982505694dbccc9a43e"
     },
@@ -4134,7 +4134,7 @@
       "id": "C002-TC-301",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 213,
+      "line": 214,
       "title": "C002-TS-301",
       "content_hash": "sha256:e6133c510dc38397fb8b30d551f2c799206582e4e98ec502c700710f95d40899"
     },
@@ -4142,7 +4142,7 @@
       "id": "C002-TC-302",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 214,
+      "line": 215,
       "title": "C002-TS-302",
       "content_hash": "sha256:9ba920fdd620014761a72b653618a5129b2d67fe4bf1daedf73b803daab82e28"
     },
@@ -4150,7 +4150,7 @@
       "id": "C002-TC-303",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 215,
+      "line": 216,
       "title": "C002-TS-303",
       "content_hash": "sha256:7120f72742a56cfeba3dc812b63e6500e2fa701cc6e299becd1672d367899fc7"
     },
@@ -4158,7 +4158,7 @@
       "id": "C002-TC-304",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 216,
+      "line": 217,
       "title": "C002-TS-304",
       "content_hash": "sha256:149737242feb5253d889cf4d3324c20eebec365950716314fd75adcc6d00cb70"
     },
@@ -4166,7 +4166,7 @@
       "id": "C002-TC-305",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 217,
+      "line": 218,
       "title": "C002-TS-305",
       "content_hash": "sha256:2557f284f46f3d0bf551e34c5b51343696349fc0c9c246289262c281d3ab7161"
     },
@@ -4174,7 +4174,7 @@
       "id": "C002-TC-306",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 218,
+      "line": 219,
       "title": "C002-TS-306",
       "content_hash": "sha256:902200d97957768ff88f887abbd0112bbf33bce6ed4a965b80e166a1e9953c32"
     },
@@ -4182,7 +4182,7 @@
       "id": "C002-TC-307",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 219,
+      "line": 220,
       "title": "C002-TS-307",
       "content_hash": "sha256:641c977154615b7b765b71c785143779416da19d223421bd19a40f52db3979bc"
     },
@@ -4190,7 +4190,7 @@
       "id": "C002-TC-308",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 220,
+      "line": 221,
       "title": "C002-TS-308",
       "content_hash": "sha256:075ffd89aecc838dbc1acd7128bbde40ee17ae63c1360301b2dd17a665ac1449"
     },
@@ -4198,7 +4198,7 @@
       "id": "C002-TC-309",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 221,
+      "line": 222,
       "title": "C002-TS-309",
       "content_hash": "sha256:91e884671d39ca1fea0060f4d4e1b165b29f05be8e984d0cd191b27a39668556"
     },
@@ -4206,7 +4206,7 @@
       "id": "C002-TC-310",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 222,
+      "line": 223,
       "title": "C002-TS-310",
       "content_hash": "sha256:bd7ac3d529ffbdadc4974fb6921e154a52440687ec6fc02ac97a81cb663c220a"
     },
@@ -4214,7 +4214,7 @@
       "id": "C002-TC-311",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 223,
+      "line": 224,
       "title": "C002-TS-311",
       "content_hash": "sha256:a90e8499cb76ddc01e6b66063807a870e691450e86f3810978356fe09842437b"
     },
@@ -4222,7 +4222,7 @@
       "id": "C002-TC-312",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 224,
+      "line": 225,
       "title": "C002-TS-312",
       "content_hash": "sha256:9ab5e7fc339cd5ac679f55da6287bbe33f3328d08cddeea3b0185a7287ea70e3"
     },
@@ -4230,7 +4230,7 @@
       "id": "C002-TC-313",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 225,
+      "line": 226,
       "title": "C002-TS-313",
       "content_hash": "sha256:d2c64e8196c161f4bee5457f8734b3fb71b9d7cd5a571dd9c840dcf9fd70cc4c"
     },
@@ -4238,7 +4238,7 @@
       "id": "C002-TC-314",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 226,
+      "line": 227,
       "title": "C002-TS-314",
       "content_hash": "sha256:c1a86438442208c206a4f155014052e1aca7fc89f86b36e5b87d4eb536e66536"
     },
@@ -4246,7 +4246,7 @@
       "id": "C002-TC-315",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 227,
+      "line": 228,
       "title": "C002-TS-315",
       "content_hash": "sha256:529ab58db32b55cacb0df1801dabfdfbef028e9dd990d94c24a938a6e2771703"
     },
@@ -4254,7 +4254,7 @@
       "id": "C002-TC-316",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 228,
+      "line": 229,
       "title": "C002-TS-316",
       "content_hash": "sha256:0bafb1706855de26ad2ca31a17a799a14737c6b382839195ace5c6f4bd6364ff"
     },
@@ -4262,7 +4262,7 @@
       "id": "C002-TC-317",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 229,
+      "line": 230,
       "title": "C002-TS-317",
       "content_hash": "sha256:1572e98e92d995fbfa8ba2fe7b71404ba6d6cf9eb480f9511bcf9aa8c4bfd9ab"
     },
@@ -4270,7 +4270,7 @@
       "id": "C002-TC-318",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 230,
+      "line": 231,
       "title": "C002-TS-318",
       "content_hash": "sha256:4f10c35018cf9496837b0c727e155a900c3625b2b0a069e4c8901e66a8bb62d9"
     },
@@ -4278,7 +4278,7 @@
       "id": "C002-TC-319",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 231,
+      "line": 232,
       "title": "C002-TS-319",
       "content_hash": "sha256:c36a75487a0484398c8de58d9206c875952b918d9d551a8263e279f967140871"
     },
@@ -4286,7 +4286,7 @@
       "id": "C002-TC-320",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 232,
+      "line": 233,
       "title": "C002-TS-320",
       "content_hash": "sha256:c8f14984047c3d92165ca2f41eb441e9546bcb0d30cff187a3282e59362e5761"
     },
@@ -4294,7 +4294,7 @@
       "id": "C002-TC-321",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 233,
+      "line": 234,
       "title": "C002-TS-321",
       "content_hash": "sha256:3434cf43bb8543e83c12ad82cd1c28a87d606783f9c682923b3341ea4cd2ade4"
     },
@@ -4302,7 +4302,7 @@
       "id": "C002-TC-322",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 234,
+      "line": 235,
       "title": "C002-TS-322",
       "content_hash": "sha256:ca8dc010b0412d5302343fe6dc0df5fcbf0d9176220f66bfb6056af5f8827d90"
     },
@@ -4310,7 +4310,7 @@
       "id": "C002-TC-323",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 235,
+      "line": 236,
       "title": "C002-TS-323",
       "content_hash": "sha256:6c1d64aa61004f09978c30967f2405e8021c49bbafbb6e1ae388308ee5f5cca5"
     },
@@ -4318,7 +4318,7 @@
       "id": "C002-TC-324",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 236,
+      "line": 237,
       "title": "C002-TS-324",
       "content_hash": "sha256:6c6f70d6177c817849b4b39fc57b4d2f28b661d132ae162c90f822e36af3d8e4"
     },
@@ -4326,7 +4326,7 @@
       "id": "C002-TC-325",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 237,
+      "line": 238,
       "title": "C002-TS-325",
       "content_hash": "sha256:25eccbe1663dfc055c6aef60ad61b39b1d5073c17e4616210774d4f27e1f1c54"
     },
@@ -4334,7 +4334,7 @@
       "id": "C002-TC-326",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 238,
+      "line": 239,
       "title": "C002-TS-326",
       "content_hash": "sha256:34adb45fcf93585db5f6cc9fffc91934b3bd05cba7e91408dacfba0b5ab375b4"
     },
@@ -4342,7 +4342,7 @@
       "id": "C002-TC-327",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 239,
+      "line": 240,
       "title": "C002-TS-327",
       "content_hash": "sha256:0b74a740b14305797636587304f6246d72a7268a330700e07c784574bde34fe2"
     },
@@ -4350,7 +4350,7 @@
       "id": "C002-TC-328",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 240,
+      "line": 241,
       "title": "C002-TS-328",
       "content_hash": "sha256:1fcc7fcc0790d4f2e67ee17cbaa818a1e1a049709a7b4d8f1f7dcacd965c0577"
     },
@@ -4358,7 +4358,7 @@
       "id": "C002-TC-329",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 241,
+      "line": 242,
       "title": "C002-TS-329",
       "content_hash": "sha256:fbf97d56b38098127fbd835bdc332e2a1baa950cbf8fd21aedffa446fcf0583a"
     },
@@ -4366,7 +4366,7 @@
       "id": "C002-TC-330",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 242,
+      "line": 243,
       "title": "C002-TS-330",
       "content_hash": "sha256:523f0d3be37cbc88dfd106c7742d8dfcb23ecf31ff4c485fc4b11075191e5f4a"
     },
@@ -4374,7 +4374,7 @@
       "id": "C002-TC-331",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 243,
+      "line": 244,
       "title": "C002-TS-331",
       "content_hash": "sha256:abc81d6a16af8d858bcd2ab3e40a321369072dd08704e2ac09e840f8edf71231"
     },
@@ -4382,7 +4382,7 @@
       "id": "C002-TC-332",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 244,
+      "line": 245,
       "title": "C002-TS-332",
       "content_hash": "sha256:c5fe9ce4c566f25f0e6ae9193e573801064bca2822ef468c7a5a5d1b04461a25"
     },
@@ -4390,7 +4390,7 @@
       "id": "C002-TC-333",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 245,
+      "line": 246,
       "title": "C002-TS-333",
       "content_hash": "sha256:67f43be969219d87f95e5e72715c006530651d25701622e81297ebbfbd225f70"
     },
@@ -4398,7 +4398,7 @@
       "id": "C002-TC-334",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 246,
+      "line": 247,
       "title": "C002-TS-334",
       "content_hash": "sha256:14df8a944a45b5eda315fad5f192cd840702e1b166470457bad41bf6d7a0408e"
     },
@@ -4406,7 +4406,7 @@
       "id": "C002-TC-335",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 247,
+      "line": 248,
       "title": "C002-TS-335",
       "content_hash": "sha256:53a7a73fd02a0970747ddb44bea7dc62d137f8af1f76a158b1925fc991c0aa48"
     },
@@ -4414,7 +4414,7 @@
       "id": "C002-TC-401",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 248,
+      "line": 249,
       "title": "C002-TS-401",
       "content_hash": "sha256:a110df4a015641f53abd1e6e534efb6ecaeaf057d0cc3fc320e4b7483ae10ae9"
     },
@@ -4422,7 +4422,7 @@
       "id": "C002-TC-402",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 249,
+      "line": 250,
       "title": "C002-TS-402",
       "content_hash": "sha256:ef2247483126f905db6b4af58abd4cbf8c3f78ffe04c50fc5fc9c619d9fb21a5"
     },
@@ -4430,7 +4430,7 @@
       "id": "C002-TC-403",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 250,
+      "line": 251,
       "title": "C002-TS-403",
       "content_hash": "sha256:85aa4e841a579a15e38e493b38afb12ab3a555e81c8ecc03d9a0e83431e3a6de"
     },
@@ -4438,7 +4438,7 @@
       "id": "C002-TC-404",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 251,
+      "line": 252,
       "title": "C002-TS-404",
       "content_hash": "sha256:3c8b63480ce13f374b367d21cf60e7eb8dba0d37b4d38aaa8cde1b1d715be91a"
     },
@@ -4446,7 +4446,7 @@
       "id": "C002-TC-405",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 252,
+      "line": 253,
       "title": "C002-TS-405",
       "content_hash": "sha256:8e7a167b05a46dc5d0b885fda350bf50d45fc0d4a51263c51fd7bedd873d2c8e"
     },
@@ -4454,7 +4454,7 @@
       "id": "C002-TC-406",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 253,
+      "line": 254,
       "title": "C002-TS-406",
       "content_hash": "sha256:5144844733e770bf98b58d70412351b74a0f38a7e5e9ace6cadbc8a0ad924f3a"
     },
@@ -4462,7 +4462,7 @@
       "id": "C002-TC-407",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 254,
+      "line": 255,
       "title": "C002-TS-407",
       "content_hash": "sha256:acd8303b26c9f85f5d4cf19265381708961b9050a416c763a8d62faf3af1ce5a"
     },
@@ -4470,7 +4470,7 @@
       "id": "C002-TC-408",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 255,
+      "line": 256,
       "title": "C002-TS-408",
       "content_hash": "sha256:02bd4e025aec5e4c4c6f51b87518e4e28e47d6780ea0e2c78b10e3e9fa5d4816"
     },
@@ -4478,7 +4478,7 @@
       "id": "C002-TC-409",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 256,
+      "line": 257,
       "title": "C002-TS-409",
       "content_hash": "sha256:9c2e486d8b76a8144a3d03018c0db82ebefd33706c49651f315be31b7b371b45"
     },
@@ -4486,7 +4486,7 @@
       "id": "C002-TC-410",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 257,
+      "line": 258,
       "title": "C002-TS-410",
       "content_hash": "sha256:77be2cb1d3217ae10576d103bb103708804e2aa60468895b783504228efad1eb"
     },
@@ -4494,7 +4494,7 @@
       "id": "C002-TC-411",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 258,
+      "line": 259,
       "title": "C002-TS-411",
       "content_hash": "sha256:b53ba18c28dd0b166c2d3633a8905fc5d1b997f78289393d32a868d503da4560"
     },
@@ -4502,7 +4502,7 @@
       "id": "C002-TC-412",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 259,
+      "line": 260,
       "title": "C002-TS-412",
       "content_hash": "sha256:ddc560981c7c6aea024a2c81f474c00823795fe49083ed2f24b28b04a95f9135"
     },
@@ -4510,7 +4510,7 @@
       "id": "C002-TC-413",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 260,
+      "line": 261,
       "title": "C002-TS-413",
       "content_hash": "sha256:7695bb0acb3687a9a9d4b9ba2b7d62d0f117bdac3fc50806dc1297f38730e063"
     },
@@ -4518,7 +4518,7 @@
       "id": "C002-TC-414",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 261,
+      "line": 262,
       "title": "C002-TS-414",
       "content_hash": "sha256:650c7936c067ff74e5b2f2083ba48a042dc85696a2d6cc691a45c64334c42d81"
     },
@@ -4526,7 +4526,7 @@
       "id": "C002-TC-415",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 262,
+      "line": 263,
       "title": "C002-TS-415",
       "content_hash": "sha256:f841754cc79223fa63cbe6c883a8271f15f84f15847d71949593f1eb440498a9"
     },
@@ -4534,7 +4534,7 @@
       "id": "C002-TC-416",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 263,
+      "line": 264,
       "title": "C002-TS-416",
       "content_hash": "sha256:d33f332be44eb7dc88350b0d655c5acd78eebc52c422bb0c6328f5708b6e9c8f"
     },
@@ -4542,7 +4542,7 @@
       "id": "C002-TC-417",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 264,
+      "line": 265,
       "title": "C002-TS-417",
       "content_hash": "sha256:9adf5bd51533c21f3286b6b595a7457ae219ae1896689fad2587aa80ac11492a"
     },
@@ -4550,7 +4550,7 @@
       "id": "C002-TC-418",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 265,
+      "line": 266,
       "title": "C002-TS-418",
       "content_hash": "sha256:ddfca7614def0de5f8ee5437253e0d970e850bd583e318ca0de25c9eeb9c8487"
     },
@@ -4558,7 +4558,7 @@
       "id": "C002-TC-419",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 266,
+      "line": 267,
       "title": "C002-TS-419",
       "content_hash": "sha256:8abccc12254a3cf64f30777df9e66dcceb39f25a3f12f08ab433f35b5cff135e"
     },
@@ -4566,7 +4566,7 @@
       "id": "C002-TC-420",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 267,
+      "line": 268,
       "title": "C002-TS-420",
       "content_hash": "sha256:aab33eb64614ffffc847d72ceca7a782912f19984f7b679d7d3dd10b80da4a5d"
     },
@@ -4574,7 +4574,7 @@
       "id": "C002-TC-421",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 268,
+      "line": 269,
       "title": "C002-TS-421",
       "content_hash": "sha256:26e2108431dc5af86c95f175270cb7ca48cc6d9e097a1070fc43ef01721abad1"
     },
@@ -4582,7 +4582,7 @@
       "id": "C002-TC-422",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 269,
+      "line": 270,
       "title": "C002-TS-422",
       "content_hash": "sha256:0f7e3404b548a2e4425c0ad2d2bf51060edf8d23f10d572077890122182a78e5"
     },
@@ -4590,7 +4590,7 @@
       "id": "C002-TC-501",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 272,
+      "line": 273,
       "title": "C002-TS-501",
       "content_hash": "sha256:c32fdc161f5050e57ea0141964c2fba7de5ba59635e44805bfa23af8c7fc1b7c"
     },
@@ -4598,7 +4598,7 @@
       "id": "C002-TC-502",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 273,
+      "line": 274,
       "title": "C002-TS-502",
       "content_hash": "sha256:e26071050a6af5824fcedc6545cf092ebe7134f4ae7b3471ea2df9620e839b86"
     },
@@ -4606,7 +4606,7 @@
       "id": "C002-TC-503",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 274,
+      "line": 275,
       "title": "C002-TS-503",
       "content_hash": "sha256:3d5a21954e859b643eeeba9f74c753912e9abe4f4ac015c3d608c8b621004679"
     },
@@ -4614,7 +4614,7 @@
       "id": "C002-TC-504",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 275,
+      "line": 276,
       "title": "C002-TS-504",
       "content_hash": "sha256:232d8196ce66655008c36cb40e7b9749b60aa41bd377b5a588ad15a7b1db5b2a"
     },
@@ -4622,7 +4622,7 @@
       "id": "C002-TC-505",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 276,
+      "line": 277,
       "title": "C002-TS-505",
       "content_hash": "sha256:0412f81ad88a48bfded90744b946ebf2df7634398c1045ecaabb44740a184a5b"
     },
@@ -4630,7 +4630,7 @@
       "id": "C002-TC-506",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 277,
+      "line": 278,
       "title": "C002-TS-506",
       "content_hash": "sha256:11ff9f41708eb014c043e0cc67d026e3f05be62717321f95b6f73cd51acb3545"
     },
@@ -4638,7 +4638,7 @@
       "id": "C002-TC-507",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 278,
+      "line": 279,
       "title": "C002-TS-507",
       "content_hash": "sha256:d436dc7946915164b06dae0ed90645fc8371b7efa964b6b0cb65ec65d042ccbe"
     },
@@ -4646,7 +4646,7 @@
       "id": "C002-TC-508",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 279,
+      "line": 280,
       "title": "C002-TS-508",
       "content_hash": "sha256:66332686e6ab799f4300264aa1a532ed5afb4365389b0151d5fe0920868e3b0c"
     },
@@ -4654,7 +4654,7 @@
       "id": "C002-TC-509",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 280,
+      "line": 281,
       "title": "C002-TS-509",
       "content_hash": "sha256:e223ddf8c2f4f955be85fce94cea309380651099c150255062441f1cb6dd1dee"
     },
@@ -4662,7 +4662,7 @@
       "id": "C002-TC-510",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 281,
+      "line": 282,
       "title": "C002-TS-510",
       "content_hash": "sha256:a33e9e11fce23e5f10db7e0d2ef9b4a6d6d6bcd7d71bb20b860c743b4c2acda0"
     },
@@ -4670,7 +4670,7 @@
       "id": "C002-TC-511",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 282,
+      "line": 283,
       "title": "C002-TS-511",
       "content_hash": "sha256:ac6b10871b4fc2f14f66b6526f8a9f70e956860466d2945caabe7d5dcd0267b7"
     },
@@ -4678,7 +4678,7 @@
       "id": "C002-TC-512",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 283,
+      "line": 284,
       "title": "C002-TS-512",
       "content_hash": "sha256:d59dc72978dd7148de25e3554a0272a0ac8732ac368733ff3d39ea3336205344"
     },
@@ -4686,7 +4686,7 @@
       "id": "C002-TC-513",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 284,
+      "line": 285,
       "title": "C002-TS-513",
       "content_hash": "sha256:2601d699ad6aaaf95c3ac57c6c8669b716e8e0b2eb8c689d3997bcce75caa4e9"
     },
@@ -4694,7 +4694,7 @@
       "id": "C002-TC-514",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 285,
+      "line": 286,
       "title": "C002-TS-514",
       "content_hash": "sha256:f15fc9e8b5956bec6dd75f1e401bb4c7e8fccea9ac9dcca5843ffdd29be4c421"
     },
@@ -4702,7 +4702,7 @@
       "id": "C002-TC-515",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 286,
+      "line": 287,
       "title": "C002-TS-515",
       "content_hash": "sha256:67cb49cd830751793e7a7c6e8c88731e55c81f9880bd6c5fc24ecaa5689a5e52"
     },
@@ -4710,7 +4710,7 @@
       "id": "C002-TC-516",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 287,
+      "line": 288,
       "title": "C002-TS-516",
       "content_hash": "sha256:d559856994c1e65125908c949988d69aaa8f7b3a3f0db6a26180cbb241d62fab"
     },
@@ -4718,7 +4718,7 @@
       "id": "C002-TC-517",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 288,
+      "line": 289,
       "title": "C002-TS-517",
       "content_hash": "sha256:b8a954898f7940f6f00871e86a2e300dae16d92a411fc4d9e66e1689e981c115"
     },
@@ -4726,7 +4726,7 @@
       "id": "C002-TC-518",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 289,
+      "line": 290,
       "title": "C002-TS-518",
       "content_hash": "sha256:b0ddc1f059ad5fa28562885122c3023cd94578cd5fd1ae524bcc56215785d512"
     },
@@ -4734,7 +4734,7 @@
       "id": "C002-TC-519",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 290,
+      "line": 291,
       "title": "C002-TS-519",
       "content_hash": "sha256:8c43648d48a650e84468a3fae5f7ba4b61a646e132e31e3fdf7b4b6ae583fc3f"
     },
@@ -4742,7 +4742,7 @@
       "id": "C002-TC-520",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 291,
+      "line": 292,
       "title": "C002-TS-520",
       "content_hash": "sha256:f51d767e59e90e3b0b92755874d69c883fa37d6527b92310aa0fe7f14bdebbbb"
     },
@@ -4750,7 +4750,7 @@
       "id": "C002-TC-521",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 292,
+      "line": 293,
       "title": "C002-TS-521",
       "content_hash": "sha256:248531bb8a8d392f679257124ec8d27872ca43676f8e4ced9770aa3f9d8e6798"
     },
@@ -4758,7 +4758,7 @@
       "id": "C002-TC-522",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 293,
+      "line": 294,
       "title": "C002-TS-522",
       "content_hash": "sha256:52ffc0a79d8e1084329d8844da1f43558c094a20e4a2bf1eaf58224943ee5c9a"
     },
@@ -4766,7 +4766,7 @@
       "id": "C002-TC-523",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 294,
+      "line": 295,
       "title": "C002-TS-523",
       "content_hash": "sha256:1c8808b3c34d48d442da495b48fda96bfcc35cf631a9954568064ae58615b61b"
     },
@@ -4774,7 +4774,7 @@
       "id": "C002-TC-524",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 295,
+      "line": 296,
       "title": "C002-TS-524",
       "content_hash": "sha256:26fec7f6634e8a3233932133089f79225d85e57090702fa5322eb32e5381d0ad"
     },
@@ -4782,7 +4782,7 @@
       "id": "C002-TC-525",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 296,
+      "line": 297,
       "title": "C002-TS-525",
       "content_hash": "sha256:06361bb75df67ab2a00af8409b8ff3da37399b9dad10b36af5cb7e44ccd6e6e3"
     },
@@ -4790,7 +4790,7 @@
       "id": "C002-TC-526",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 297,
+      "line": 298,
       "title": "C002-TS-526",
       "content_hash": "sha256:7c536dff12e2fafa9f9b8ba489be4a9c727dabd1641211415a6a16dd3a72c6a5"
     },
@@ -4798,7 +4798,7 @@
       "id": "C002-TC-527",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 298,
+      "line": 299,
       "title": "C002-TS-527",
       "content_hash": "sha256:1448b44957b5127a8488ba71c3d1740ab05f61b7369e7a7f9bcbfa0685451be4"
     },
@@ -4806,7 +4806,7 @@
       "id": "C002-TC-528",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 299,
+      "line": 300,
       "title": "C002-TS-528",
       "content_hash": "sha256:a9974c0ba112a89e9183e45b495a0080bb60bf0cec505861510b48e595757329"
     },
@@ -4814,7 +4814,7 @@
       "id": "C002-TC-529",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 300,
+      "line": 301,
       "title": "C002-TS-529",
       "content_hash": "sha256:43d47e97a5deca4b68e1c79c4cca12a871901a7b8ebf4f3a367cbd9621537963"
     },
@@ -4822,7 +4822,7 @@
       "id": "C002-TC-530",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 301,
+      "line": 302,
       "title": "C002-TS-530",
       "content_hash": "sha256:2a74ef9ac915ccf1611f36b4bd167e298596d7831a7396e852e8863b25fce399"
     },
@@ -4830,7 +4830,7 @@
       "id": "C002-TC-531",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 302,
+      "line": 303,
       "title": "C002-TS-531",
       "content_hash": "sha256:01b43e1ab0ecdcdd8c2e0b2025b9fadcf5a6f2b5d9184730e3ae60fb68b8da65"
     },
@@ -4838,7 +4838,7 @@
       "id": "C002-TC-532",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 303,
+      "line": 304,
       "title": "C002-TS-532",
       "content_hash": "sha256:d441af72b0214786229d30a939801c7ca793a6e8e14d68fec52af9bec4a68508"
     },
@@ -4846,7 +4846,7 @@
       "id": "C002-TC-533",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 304,
+      "line": 305,
       "title": "C002-TS-533",
       "content_hash": "sha256:3967bd274e7dfc954d41cd3f79852898a20cb95d4dcbabc4daf98d5d02c285a6"
     },
@@ -4854,7 +4854,7 @@
       "id": "C002-TC-534",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 305,
+      "line": 306,
       "title": "C002-TS-534",
       "content_hash": "sha256:9b385a7c2bbefca3170c4f417da737ca8ef6dd516d5449328e62ad2d7199573a"
     },
@@ -4862,7 +4862,7 @@
       "id": "C002-TC-535",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 306,
+      "line": 307,
       "title": "C002-TS-535",
       "content_hash": "sha256:20c19f29da2bd7f6b713b414e748a82d040f6f3feb59363c694df13bb798a5fa"
     },
@@ -4870,7 +4870,7 @@
       "id": "C002-TC-536",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 307,
+      "line": 308,
       "title": "C002-TS-536",
       "content_hash": "sha256:45b2e7097db2744b9e60dc0a471d92ceedc6916309158035c708aa77ad620eaf"
     },
@@ -4878,7 +4878,7 @@
       "id": "C002-TC-537",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 308,
+      "line": 309,
       "title": "C002-TS-537",
       "content_hash": "sha256:8a05dafb4e0ab8cf3a76f52454c1de944765a7e3dfa9c757000d9c4bc85a92d6"
     },
@@ -4886,7 +4886,7 @@
       "id": "C002-TC-601",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 310,
+      "line": 311,
       "title": "C002-TS-601",
       "content_hash": "sha256:5f2b4efea7d075ba213be2525e2624349e5aa86319298e899a11100c1520b616"
     },
@@ -4894,7 +4894,7 @@
       "id": "C002-TC-602",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 311,
+      "line": 312,
       "title": "C002-TS-602",
       "content_hash": "sha256:e9cd58029262f1cc6ca25904d70ef5d51c472e2920cc30cd091e58a4981b2525"
     },
@@ -4902,7 +4902,7 @@
       "id": "C002-TC-603",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 312,
+      "line": 313,
       "title": "C002-TS-603",
       "content_hash": "sha256:e452907e7584f79847bb983c11c45ed0b71ba77bb87c78ea19406de15dc16aad"
     },
@@ -4910,7 +4910,7 @@
       "id": "C002-TC-604",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 313,
+      "line": 314,
       "title": "C002-TS-604",
       "content_hash": "sha256:d669011a7aa795005583bc63009c56eae82a56f9a29ea83ba91a0dd9ec95caa5"
     },
@@ -4918,7 +4918,7 @@
       "id": "C002-TC-605",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 314,
+      "line": 315,
       "title": "C002-TS-605",
       "content_hash": "sha256:9b560c0797ef4b0f4b00ca1ac0a33f0bebd45ceb687a40621b9fd98886f4de73"
     },
@@ -4926,7 +4926,7 @@
       "id": "C002-TC-606",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 315,
+      "line": 316,
       "title": "C002-TS-606",
       "content_hash": "sha256:57077f29ee59a3d18b90c3b7da6126f930c561753759140495cb1761e31d726f"
     },
@@ -4934,7 +4934,7 @@
       "id": "C002-TC-607",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 316,
+      "line": 317,
       "title": "C002-TS-607",
       "content_hash": "sha256:8804dbf12797c90ee9854d7427aba524e4e3df81a9108b0dab9faa0192d60c32"
     },
@@ -4942,7 +4942,7 @@
       "id": "C002-TC-608",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 317,
+      "line": 318,
       "title": "C002-TS-608",
       "content_hash": "sha256:88e896593b9a656a1ca0173403d7790f99337a83ceb5a7be3ad919d0f93fc2a8"
     },
@@ -4950,7 +4950,7 @@
       "id": "C002-TC-609",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 318,
+      "line": 319,
       "title": "C002-TS-609",
       "content_hash": "sha256:1baa58ab63039d1033d740be0284866a6848c412369b4369365582d14163a9cd"
     },
@@ -4958,7 +4958,7 @@
       "id": "C002-TC-610",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 319,
+      "line": 320,
       "title": "C002-TS-610",
       "content_hash": "sha256:856e26b9fc351d07e9983399b1b58ab15ae0d89213aaaf7a64c9af41c05a9ce2"
     },
@@ -4966,7 +4966,7 @@
       "id": "C002-TC-611",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 320,
+      "line": 321,
       "title": "C002-TS-611",
       "content_hash": "sha256:1d489ffadef26f5ffc15175f3702969e1b8586e141018e9fa4a9d92f7ed46517"
     },
@@ -4974,7 +4974,7 @@
       "id": "C002-TC-612",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 321,
+      "line": 322,
       "title": "C002-TS-612",
       "content_hash": "sha256:5a74776b1a5843a822b3da86194f7bbc011d56adcb9b85a7617432b1c25cbbbe"
     },
@@ -4982,7 +4982,7 @@
       "id": "C002-TC-613",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 322,
+      "line": 323,
       "title": "C002-TS-613",
       "content_hash": "sha256:ae988ca61954abb228b071643d52f4e0ad529508b1177cab703829dd4f78ba97"
     },
@@ -4990,7 +4990,7 @@
       "id": "C002-TC-614",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 323,
+      "line": 324,
       "title": "C002-TS-614",
       "content_hash": "sha256:c895ada71fbe759ba3e2df759797f2027dae37506f79ffa4b4cdecf4c7e79157"
     },
@@ -4998,7 +4998,7 @@
       "id": "C002-TC-615",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 324,
+      "line": 325,
       "title": "C002-TS-615",
       "content_hash": "sha256:0d397007396be7e5d551742ede8c5f604c546dcca8d73853118c39e1d7185d7f"
     },
@@ -5006,7 +5006,7 @@
       "id": "C002-TC-616",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 325,
+      "line": 326,
       "title": "C002-TS-616",
       "content_hash": "sha256:ffa0a11fa72d15879e31c4d3ae68ef9ff7b3c28e645703ed3c6a45e379c94b26"
     },
@@ -5014,7 +5014,7 @@
       "id": "C002-TC-617",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 326,
+      "line": 327,
       "title": "C002-TS-617",
       "content_hash": "sha256:0249b7dc83e7d5ae274a273b86ceca6298938264258bf3f4a4655d6fd4ad284c"
     },
@@ -5022,7 +5022,7 @@
       "id": "C002-TC-618",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 327,
+      "line": 328,
       "title": "C002-TS-618",
       "content_hash": "sha256:d7632d2dbc85e5adaeeadbe94a06c202b96aaf6731d6f992dfcace2383aaf0ed"
     },
@@ -5030,7 +5030,7 @@
       "id": "C002-TC-619",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 328,
+      "line": 329,
       "title": "C002-TS-619",
       "content_hash": "sha256:36faee8a5e15b791f0813e79d6e841462986916e87ef6722552514de439d9262"
     },
@@ -5038,7 +5038,7 @@
       "id": "C002-TC-620",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 329,
+      "line": 330,
       "title": "C002-TS-620",
       "content_hash": "sha256:19f1775d5295034360f70172fa53013d5aee30fea06ac51be5b7b9f9967eaf18"
     },
@@ -5046,7 +5046,7 @@
       "id": "C002-TC-621",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 330,
+      "line": 331,
       "title": "C002-TS-621",
       "content_hash": "sha256:b609fbb06bdd8e5053e98abd1253210ddba34b982c1bb2356943f29bb8c9a8d1"
     },
@@ -5054,7 +5054,7 @@
       "id": "C002-TC-622",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 331,
+      "line": 332,
       "title": "C002-TS-622",
       "content_hash": "sha256:937e59dc8a9384543041ceae95d1e8490203063cddb3e68f75aa5e34b144d22c"
     },
@@ -5062,7 +5062,7 @@
       "id": "C002-TC-623",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 332,
+      "line": 333,
       "title": "C002-TS-623",
       "content_hash": "sha256:e8311c46ced81044d7acfa54be2c7d2fc89b21b6d10faeaa6ba14e1d1ec923c1"
     },
@@ -5070,7 +5070,7 @@
       "id": "C002-TC-624",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 333,
+      "line": 334,
       "title": "C002-TS-624",
       "content_hash": "sha256:37e4a1e9c0d60aefd7567a59c09e4e82efa0d5c5e245d70778bf82524549adc6"
     },
@@ -5078,7 +5078,7 @@
       "id": "C002-TC-625",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 334,
+      "line": 335,
       "title": "C002-TS-625",
       "content_hash": "sha256:ef5666a850a92b6403961f25929b3eeb37daa9db1be1d1081f818217cb0be88a"
     },
@@ -5086,7 +5086,7 @@
       "id": "C002-TC-626",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 335,
+      "line": 336,
       "title": "C002-TS-626",
       "content_hash": "sha256:e1ba5031ad7f6107107003527ad5b0b9667211ce9b1405b188d7e9941f1e9997"
     },
@@ -5094,7 +5094,7 @@
       "id": "C002-TC-627",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 336,
+      "line": 337,
       "title": "C002-TS-627",
       "content_hash": "sha256:39bca95c644db4be367d4ceb69b804a8435a656991f4dd0ca86ebce05208d27c"
     },
@@ -5102,7 +5102,7 @@
       "id": "C002-TC-628",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 337,
+      "line": 338,
       "title": "C002-TS-628",
       "content_hash": "sha256:80dbff89c0a500e84476459ef325ec332e6ef3d27ceaa0bedc89c6b3645f88e6"
     },
@@ -5110,7 +5110,7 @@
       "id": "C002-TC-629",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 338,
+      "line": 339,
       "title": "C002-TS-629",
       "content_hash": "sha256:a829c157a3aa9ffde4c9c76f2e4580efaa06872e3370e2ed52d142b9723e74ae"
     },
@@ -5118,7 +5118,7 @@
       "id": "C002-TC-630",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 339,
+      "line": 340,
       "title": "C002-TS-630",
       "content_hash": "sha256:12088078a762f8144639f696c2e643138a0d57a335ab5cbd28ef05fd41debac1"
     },
@@ -5126,7 +5126,7 @@
       "id": "C002-TC-631",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 340,
+      "line": 341,
       "title": "C002-TS-631",
       "content_hash": "sha256:234485b256ca90a2e3f115918e40af9eef9155445f5d284cb54fd5badcc27a20"
     },
@@ -5134,7 +5134,7 @@
       "id": "C002-TC-632",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 341,
+      "line": 342,
       "title": "C002-TS-632",
       "content_hash": "sha256:3447020112ebf394265fc3df334c9e98b63722a5b5b337f961a5e30c8ea50bab"
     },
@@ -5142,7 +5142,7 @@
       "id": "C002-TC-633",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 342,
+      "line": 343,
       "title": "C002-TS-633",
       "content_hash": "sha256:704779901e921eb30e1fc8b764f5927f5ff9e707fcea50b0a113bc2476c4bc9b"
     },
@@ -5150,7 +5150,7 @@
       "id": "C002-TC-634",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 343,
+      "line": 344,
       "title": "C002-TS-634",
       "content_hash": "sha256:981f6c5dd717b8effdb7a065bb5223b2284f8c0cab6ee9065ab5fed3895a3498"
     },
@@ -5158,7 +5158,7 @@
       "id": "C002-TC-635",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 344,
+      "line": 345,
       "title": "C002-TS-635",
       "content_hash": "sha256:c73777dcc4d9eee06c7d7d498897ba6bc7b00eccde8866775591e5787e5b1176"
     },
@@ -5166,7 +5166,7 @@
       "id": "C002-TC-636",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 345,
+      "line": 346,
       "title": "C002-TS-636",
       "content_hash": "sha256:7fab7dadf386cdc9f86182b28dc46556f6f98367b3fff0e80604686c10f8154a"
     },
@@ -5174,7 +5174,7 @@
       "id": "C002-TC-637",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 346,
+      "line": 347,
       "title": "C002-TS-637",
       "content_hash": "sha256:f1463458b58b9796851faccd79e81dd402fe9c0de204a1bc311b029a539db2b9"
     },
@@ -5182,7 +5182,7 @@
       "id": "C002-TC-638",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 347,
+      "line": 348,
       "title": "C002-TS-638",
       "content_hash": "sha256:5f38e2847d7768f5536a800737e2785be40e815eaa82e188bf058c714fb46c24"
     },
@@ -5190,7 +5190,7 @@
       "id": "C002-TC-639",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 309,
+      "line": 310,
       "title": "C002-TS-639",
       "content_hash": "sha256:3044992b2622a586981d17662ed864028da49cdaab3920b91e58e5f9fa4e670d"
     },
@@ -5198,7 +5198,7 @@
       "id": "C002-TC-640",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 185,
+      "line": 186,
       "title": "C002-TS-640",
       "content_hash": "sha256:b77a2d9b2d89a4176ccf9b7a055650e25914cb49202496f9c6035d2ab97a9950"
     },
@@ -5206,7 +5206,7 @@
       "id": "C002-TC-641",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 270,
+      "line": 271,
       "title": "C002-TS-641",
       "content_hash": "sha256:e50ef2400584681137ab76959151c78e2573cae2e9009535a50ed0ebfeef9fd0"
     },
@@ -5214,7 +5214,7 @@
       "id": "C002-TC-642",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 271,
+      "line": 272,
       "title": "C002-TS-642",
       "content_hash": "sha256:8f78d76ba6711f22d6aaa9ee23790ad799a1b68f2ede7128cabaeebc3d86323a"
     },
@@ -5222,7 +5222,7 @@
       "id": "C002-TC-643",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 348,
+      "line": 349,
       "title": "C002-TS-643",
       "content_hash": "sha256:24b7d99173a8b950cd260d84d56213d0169e01d626382fd6141a494b0355cfe5"
     },
@@ -5230,7 +5230,7 @@
       "id": "C002-TC-644",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 349,
+      "line": 350,
       "title": "C002-TS-644",
       "content_hash": "sha256:822934debdbc1be62e12a99d617dcb6a98f49026157b63ac8d9d9ab211a4eeeb"
     },
@@ -5238,7 +5238,7 @@
       "id": "C002-TC-645",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 350,
+      "line": 351,
       "title": "C002-TS-645",
       "content_hash": "sha256:832e0272c2f769e69cf296beee7ffae47dab86dcd67ffd73f931faef59a59aa8"
     },
@@ -5246,7 +5246,7 @@
       "id": "C002-TC-646",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 351,
+      "line": 352,
       "title": "C002-TS-646",
       "content_hash": "sha256:f66910da9fb1f172f3114673737167b542a20227c905e2769ab943bdddacbb02"
     },
@@ -5254,7 +5254,7 @@
       "id": "C002-TC-647",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 352,
+      "line": 353,
       "title": "C002-TS-647",
       "content_hash": "sha256:6ff29288c0c40c48ba583cd09652049d8832cdb88b8960209319f617c14f61aa"
     },
@@ -5262,7 +5262,7 @@
       "id": "C002-TC-648",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 353,
+      "line": 354,
       "title": "C002-TS-648",
       "content_hash": "sha256:feac09585609d71b2700abefd51295a08e2c79e8e0b5ef3a99311641192bc649"
     },
@@ -5270,7 +5270,7 @@
       "id": "C002-TC-649",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 354,
+      "line": 355,
       "title": "C002-TS-649",
       "content_hash": "sha256:c001f4f6e2ea4d8666358a1bb4c9773dd4b2a9ecf2679f61aa6f10fbadcd2b96"
     },
@@ -5278,7 +5278,7 @@
       "id": "C002-TC-650",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 355,
+      "line": 356,
       "title": "C002-TS-650",
       "content_hash": "sha256:e803513768ed874f27563ffb22635f09206b048659639a203abc215200b74d08"
     },
@@ -5286,7 +5286,7 @@
       "id": "C002-TC-651",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 356,
+      "line": 357,
       "title": "C002-TS-651",
       "content_hash": "sha256:bfd8eda4d9f909c2a322a4541d8fa3a676423dd3cdf150f5adf757109260de83"
     },
@@ -5294,7 +5294,7 @@
       "id": "C002-TC-652",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 357,
+      "line": 358,
       "title": "C002-TS-652",
       "content_hash": "sha256:c2fe61e97ce3d9dcd5de66441a006f718c24803d2f92560ca068337f9169b9cd"
     },
@@ -5302,7 +5302,7 @@
       "id": "C002-TC-901",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 358,
+      "line": 359,
       "title": "C002-TS-618",
       "content_hash": "sha256:d4e06fdb3172c4c449d2ebf4f4ed8a6c4bb4815b310fd3de24573f04a229c612"
     },
@@ -5310,7 +5310,7 @@
       "id": "C002-TC-902",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 359,
+      "line": 360,
       "title": "C002-TS-205",
       "content_hash": "sha256:3a2e9a32a1e28416a23722d63d5bbc323cb16f2250167dd0b7f30783a307b2aa"
     },
@@ -5318,7 +5318,7 @@
       "id": "C002-TC-903",
       "type": "TC",
       "file": "20-plan/60-test-plan.md",
-      "line": 360,
+      "line": 361,
       "title": "C002-TS-306",
       "content_hash": "sha256:a6f83c77f3a5e5b0ed357bf9d51760b3bb8fb2d91371973db943c9303fdde03b"
     },
@@ -6262,7 +6262,7 @@
       "id": "C002-TS-501",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 36,
+      "line": 35,
       "title": "version of the installed executable",
       "content_hash": "sha256:4a62a1beb904b0bd8ac38017bb08f45597920e2f89aada90108fd64cbcb1b3db"
     },
@@ -6270,7 +6270,7 @@
       "id": "C002-TS-502",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 43,
+      "line": 42,
       "title": "same behaviour as the bundled CLI",
       "content_hash": "sha256:b48692460c11d2a8c5211d6593582408d8163ef8eac5111130878aa1045f72f2"
     },
@@ -6278,7 +6278,7 @@
       "id": "C002-TS-503",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 54,
+      "line": 53,
       "title": "npm package written by npm run package",
       "content_hash": "sha256:661943ece487b5315e32eee64f7c3baced8efb474b47831fb5d5cc2ee41d5ab1"
     },
@@ -6286,7 +6286,7 @@
       "id": "C002-TS-504",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 65,
+      "line": 64,
       "title": "bash guard decisions after the allowlist change",
       "content_hash": "sha256:cfd7942f597a2db09c412404f8b3e19965b5828f9f58daf1ad4d5905190c26c7"
     },
@@ -6294,7 +6294,7 @@
       "id": "C002-TS-505",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 87,
+      "line": 86,
       "title": "deny message names the new entries",
       "content_hash": "sha256:501a0c1a2e06f0fee0da5d8aff84e9c3947ee029eb6c9f58d38adf72c383ee92"
     },
@@ -6302,7 +6302,7 @@
       "id": "C002-TS-506",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 99,
+      "line": 98,
       "title": "doctor table on Claude Code and OpenCode",
       "content_hash": "sha256:390ad17a01b22cc7c911f09bc16c529ff0e61728da49625a7de4ec7de35ebf69"
     },
@@ -6310,7 +6310,7 @@
       "id": "C002-TS-507",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 112,
+      "line": 111,
       "title": "missing tool on OpenCode",
       "content_hash": "sha256:ce852fe1def361e07f744fa47316e5bf7df47b9f7f1d95eb0adb45d22d659af0"
     },
@@ -6318,7 +6318,7 @@
       "id": "C002-TS-508",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 131,
+      "line": 130,
       "title": "doctor table in VS Code",
       "content_hash": "sha256:acdd3bb90e1b5273520b550b077bf85caf57edd31345067121d9ec78e8c6e01e"
     },
@@ -6326,7 +6326,7 @@
       "id": "C002-TS-509",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 144,
+      "line": 143,
       "title": "doctor outcome per situation",
       "content_hash": "sha256:95cbb6d6c30fd647a9cbe5cf0c3bbfde6fc0b2f28dfa449a08b116dfeadd9743"
     },
@@ -6334,7 +6334,7 @@
       "id": "C002-TS-510",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 163,
+      "line": 162,
       "title": "Claude Code version on each host",
       "content_hash": "sha256:9abd7c9c2b749375f9aac987fec558c2880e594528194059c280a038124958cc"
     },
@@ -6342,7 +6342,7 @@
       "id": "C002-TS-511",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 179,
+      "line": 178,
       "title": "toolchain.md per host",
       "content_hash": "sha256:9be18e6ddee3ef2bf7cb4f5272254c6052fb5e79c8818997a6bb8c49356e3961"
     },
@@ -6350,7 +6350,7 @@
       "id": "C002-TS-512",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 192,
+      "line": 191,
       "title": "toolchain record written by init on OpenCode",
       "content_hash": "sha256:31d8096bd85d1324daf01e1dc60a5822b5dd6cb94a46035f4774637b29ac99b4"
     },
@@ -6358,7 +6358,7 @@
       "id": "C002-TS-513",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 203,
+      "line": 202,
       "title": "host versions against the tested versions",
       "content_hash": "sha256:d986e1fa132ae87570b0e000bf9359e278d62d92edb9f998625916f3f250a1d0"
     },
@@ -6366,7 +6366,7 @@
       "id": "C002-TS-514",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 221,
+      "line": 220,
       "title": "untested is a warning",
       "content_hash": "sha256:0f92952d7136896d96c24c97015c740ea4197f07e16271e8ae8bfa7a746c3137"
     },
@@ -6374,7 +6374,7 @@
       "id": "C002-TS-515",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 232,
+      "line": 231,
       "title": "CLI version against the target package version",
       "content_hash": "sha256:a05956b129bf3a1e38a55635051a77a27363e4284abc3cbe90a9a958a03106cf"
     },
@@ -6382,7 +6382,7 @@
       "id": "C002-TS-516",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 251,
+      "line": 250,
       "title": "hooks state in the VS Code doctor",
       "content_hash": "sha256:5831144ff286104107a091232eb35aa7232979049abfe293c6d472bdcc4c881c"
     },
@@ -6390,7 +6390,7 @@
       "id": "C002-TS-517",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 276,
+      "line": 275,
       "title": "bare version from each CLI",
       "content_hash": "sha256:a21ea3ceb927eca6f7348c55f70d7d4a1ea8e6ec7037a18af15dd555c88cae45"
     },
@@ -6398,7 +6398,7 @@
       "id": "C002-TS-518",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 289,
+      "line": 288,
       "title": "the version command keeps its form",
       "content_hash": "sha256:2ed21db0c0cf80599206f3a9eff29dc4015376da4164b5ae1e845a428c41ba77"
     },
@@ -6406,7 +6406,7 @@
       "id": "C002-TS-519",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 299,
+      "line": 298,
       "title": "templates and mode file in the tarball",
       "content_hash": "sha256:2399d507ae88f34a7d773c669c1f041cd8325f97b8f1333247a7ee1738dc675c"
     },
@@ -6414,7 +6414,7 @@
       "id": "C002-TS-520",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 311,
+      "line": 310,
       "title": "template lookup",
       "content_hash": "sha256:f7fc55f20a9be4732826a83f7ee8977d5b522652393f332ce202efceb42294d7"
     },
@@ -6422,7 +6422,7 @@
       "id": "C002-TS-521",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 327,
+      "line": 326,
       "title": "unknown template",
       "content_hash": "sha256:811d561a8d3415116e76c7d7d989fea7724e548f52639adf01558d9d14197fe7"
     },
@@ -6430,7 +6430,7 @@
       "id": "C002-TS-522",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 340,
+      "line": 339,
       "title": "path that leaves the profile's template folder",
       "content_hash": "sha256:8b06ca3a6c1dd59f09ae6aba0c30f3f1bc294a101209c8ac43ea3bd1e0a47540"
     },
@@ -6438,7 +6438,7 @@
       "id": "C002-TS-523",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 358,
+      "line": 357,
       "title": "Serena configuration per platform",
       "content_hash": "sha256:4538fc4819619741140655d8cb9b1819e4bb87e822e4412b42a0d955e926731a"
     },
@@ -6446,7 +6446,7 @@
       "id": "C002-TS-524",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 374,
+      "line": 373,
       "title": "Serena started with the per-user data folder",
       "content_hash": "sha256:20b3b57923cbac81a69ada9f50967ed78d35b3b7ec756a1bd47f2a9c2377fc31"
     },
@@ -6454,7 +6454,7 @@
       "id": "C002-TS-525",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 388,
+      "line": 387,
       "title": "per-user data folder refused",
       "content_hash": "sha256:9ed9dbb22718459eb399411c4e46bb558d0a24606e183f73327af2c9cce42f82"
     },
@@ -6462,7 +6462,7 @@
       "id": "C002-TS-526",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 264,
+      "line": 263,
       "title": "hooks state that cannot be read",
       "content_hash": "sha256:3c0996f26a1025b1d585802caf4f206ba8f5d31c28d11e8b6ef08cd3e74cb895"
     },
@@ -6470,7 +6470,7 @@
       "id": "C002-TS-527",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 422,
+      "line": 421,
       "title": "bash guard decisions on the Serena commands",
       "content_hash": "sha256:4676b305f900dd32d461abe0be5857944508f07c9259e1fda1c9d75daa5da872"
     },
@@ -6478,7 +6478,7 @@
       "id": "C002-TS-528",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 449,
+      "line": 448,
       "title": "the Serena step of the Claude Code doctor stays allowed",
       "content_hash": "sha256:a34577c9b5325e56fe590f0052d6e738ee3e0eccac1fb38df5da3c122e4c86db"
     },
@@ -6486,7 +6486,7 @@
       "id": "C002-TS-529",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 476,
+      "line": 475,
       "title": "hand-off template in the tarball",
       "content_hash": "sha256:62b7ef210574b67566f33d55b9dced3a680357675a7d2a8f37accb4e6029a50e"
     },
@@ -6494,7 +6494,7 @@
       "id": "C002-TS-530",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 502,
+      "line": 501,
       "title": "plugin path in a template of the package",
       "content_hash": "sha256:7277819c58cd42042f9380ce5ab47d8e69c5b87192edbd2430abedc1c756a0d8"
     },
@@ -6502,7 +6502,7 @@
       "id": "C002-TS-531",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 525,
+      "line": 524,
       "title": "shipped templates only",
       "content_hash": "sha256:378c11c175d1ce8e395cef759d6485e1eb03d9d578b8cc495668e84f24b4bf82"
     },
@@ -6510,7 +6510,7 @@
       "id": "C002-TS-532",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 534,
+      "line": 533,
       "title": "repository templates merged, each path once",
       "content_hash": "sha256:824f884f383a6ef50f10fad21285c9ce1c0aee220d80a74b8040004ca1d326b5"
     },
@@ -6518,7 +6518,7 @@
       "id": "C002-TS-533",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 410,
+      "line": 409,
       "title": "per-user data folder beside the repository is accepted",
       "content_hash": "sha256:7f244000d7919f0923e0437fa88e944c0d65c4f0856220257b856ab9287cfcd7"
     },
@@ -6526,7 +6526,7 @@
       "id": "C002-TS-534",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 491,
+      "line": 490,
       "title": "shipped hand-off template read through the CLI",
       "content_hash": "sha256:335da261d516b4ca33e26446911663f407c3ea2438df9c0155f0d4cfe7b858d8"
     },
@@ -6534,7 +6534,7 @@
       "id": "C002-TS-535",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 514,
+      "line": 513,
       "title": "templates without a plugin path pass",
       "content_hash": "sha256:38e6765c9f0cbd89694ea3e5f8f3bee4e8ca1a0817cc6dc751b1d8e127f06bf2"
     },
@@ -6542,7 +6542,7 @@
       "id": "C002-TS-536",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 546,
+      "line": 545,
       "title": "bash guard decisions on `--cwd`",
       "content_hash": "sha256:a2bef2a52de86237ee78dfe9cd6248af8c7ef016c3c9f8942230323703fd7a15"
     },
@@ -6550,7 +6550,7 @@
       "id": "C002-TS-537",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 459,
+      "line": 458,
       "title": "the Serena step passes on the real Claude Code host",
       "content_hash": "sha256:817f59d9b6e99938efffde1f254e028717f8f74fdf9e67f0773077f6319b7e3e"
     },
@@ -6558,7 +6558,7 @@
       "id": "C002-TS-601",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 29,
+      "line": 28,
       "title": "clean checkout",
       "content_hash": "sha256:b6b44724288de03d8160c0dfe12018fb243806b08ea7d20c1d6972dec34a7fb5"
     },
@@ -6566,7 +6566,7 @@
       "id": "C002-TS-602",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 37,
+      "line": 36,
       "title": "a target check fails",
       "content_hash": "sha256:42aa17e955d7086aba309480f2c89687c70b59c82c1577c410971be72229e893"
     },
@@ -6574,7 +6574,7 @@
       "id": "C002-TS-603",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 45,
+      "line": 44,
       "title": "packages of an earlier run are not the ones checked",
       "content_hash": "sha256:7b110fd19096216c980c721ea8c6ed9819db3a3b583e810b5f402705737ea6b8"
     },
@@ -6582,7 +6582,7 @@
       "id": "C002-TS-604",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 56,
+      "line": 55,
       "title": "construct placement in a target package",
       "content_hash": "sha256:1574de9d77805d3535955dbe59b380ada8fc7075817b4961006256599830c7b7"
     },
@@ -6590,7 +6590,7 @@
       "id": "C002-TS-605",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 73,
+      "line": 72,
       "title": "contract differences",
       "content_hash": "sha256:1d4fc8633d7428c2ec32359fba2ed49f0dc11a8a2528b7d744cbdfb4bf950407"
     },
@@ -6598,7 +6598,7 @@
       "id": "C002-TS-606",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 89,
+      "line": 88,
       "title": "generic tool granted under server enforcement",
       "content_hash": "sha256:617a1d330514620bc735183e062982d347cddf78b9f3af1f90afbe8fd7d8da9f"
     },
@@ -6606,7 +6606,7 @@
       "id": "C002-TS-607",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 104,
+      "line": 103,
       "title": "CHG-001 archived",
       "content_hash": "sha256:ad162227cfee9aad480876d964fc73b291b5591d6dc5e5224692080569ca3f40"
     },
@@ -6614,7 +6614,7 @@
       "id": "C002-TS-608",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 115,
+      "line": 114,
       "title": "replay per enforcement mechanism",
       "content_hash": "sha256:a0718e8302b643072b399f235105cd06ac871b1670622d0e334800fc00004a94"
     },
@@ -6622,7 +6622,7 @@
       "id": "C002-TS-609",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 131,
+      "line": 130,
       "title": "a differing decision is reported",
       "content_hash": "sha256:305f298c3f5f0783832bea23dc4746a25d8ddbff593ecd533f1d8e83a7969e70"
     },
@@ -6630,7 +6630,7 @@
       "id": "C002-TS-610",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 147,
+      "line": 146,
       "title": "new corpus cases",
       "content_hash": "sha256:082d770c5b2f1af498a271710a60df09f381af4278a1d1da131d3455d10f4590"
     },
@@ -6638,7 +6638,7 @@
       "id": "C002-TS-611",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 203,
+      "line": 202,
       "title": "case files untouched",
       "content_hash": "sha256:3bc120dc2c21ce63d9d8aab26a99dc5ccd2591c07df7575d0886639aae79add8"
     },
@@ -6646,7 +6646,7 @@
       "id": "C002-TS-612",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 215,
+      "line": 214,
       "title": "OpenCode dev tier",
       "content_hash": "sha256:5f63eb849a2cfd6ac39cd1f0c791a34a831adf60a0e8adfea126e98c62bf19b1"
     },
@@ -6654,7 +6654,7 @@
       "id": "C002-TS-613",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 226,
+      "line": 225,
       "title": "scripted gate approval on OpenCode",
       "content_hash": "sha256:e6f951035d1e0a71a211128cd681521bfe73dbc33efd1f90601c29f9df7bc12f"
     },
@@ -6662,7 +6662,7 @@
       "id": "C002-TS-614",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 259,
+      "line": 258,
       "title": "caps with a stub host",
       "content_hash": "sha256:3e106bd51676dba525444a0ef928a66d5345c2e7616ee73945bf2605c8db59a4"
     },
@@ -6670,7 +6670,7 @@
       "id": "C002-TS-615",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 276,
+      "line": 275,
       "title": "Copilot CLI dev tier",
       "content_hash": "sha256:3d078ccf192d5eca1437bc0e3c7b669b35f85e71c1f4b9b8fe00c96eed4c7cf4"
     },
@@ -6678,7 +6678,7 @@
       "id": "C002-TS-616",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 288,
+      "line": 287,
       "title": "S-08 shows Copilot CLI cannot load the package",
       "content_hash": "sha256:ffa78e59e71da7e524e26c690884b27d8d9198efec494a40a3079ae5a1918b24"
     },
@@ -6686,7 +6686,7 @@
       "id": "C002-TS-617",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 299,
+      "line": 298,
       "title": "checklist content",
       "content_hash": "sha256:c24aca7dc949810a38de859e411dd45553820a303a9cc0a7c6cc7f5c695699c4"
     },
@@ -6694,7 +6694,7 @@
       "id": "C002-TS-618",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 314,
+      "line": 313,
       "title": "record of a checklist run",
       "content_hash": "sha256:86eadd197813a1811af3606b767ec4a33635841de7ec85df803522acc0bf7718"
     },
@@ -6702,7 +6702,7 @@
       "id": "C002-TS-619",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 330,
+      "line": 329,
       "title": "hooks fallback steps",
       "content_hash": "sha256:ec77bdb5f57ae695448231d790e006be0409bf02fe8bc70c2b706c3346a12918"
     },
@@ -6710,7 +6710,7 @@
       "id": "C002-TS-620",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 340,
+      "line": 339,
       "title": "boundary evidence at release",
       "content_hash": "sha256:0c70a3ce43511e6a472a56ce751e91e0e5ffa2e38092c41ff6aaf02ab9de451a"
     },
@@ -6718,7 +6718,7 @@
       "id": "C002-TS-621",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 373,
+      "line": 372,
       "title": "checklist record at release",
       "content_hash": "sha256:f603bda8b11fff39f4c6022a8b045624303c32d8716eebf457f5d98de2996507"
     },
@@ -6726,7 +6726,7 @@
       "id": "C002-TS-622",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 388,
+      "line": 387,
       "title": "Copilot refused, OpenCode clean",
       "content_hash": "sha256:0407360f19dcd6428bb2416dd839d78e524784ff639fe1c1294c69f91453e0a0"
     },
@@ -6734,7 +6734,7 @@
       "id": "C002-TS-623",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 399,
+      "line": 398,
       "title": "spike S-08 outcomes",
       "content_hash": "sha256:9076488dc79c838e9b30548905bb81d671a7fae2a75610294bb805a9f12bd71b"
     },
@@ -6742,7 +6742,7 @@
       "id": "C002-TS-624",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 414,
+      "line": 413,
       "title": "host version of the evidence",
       "content_hash": "sha256:2498b1b2cdba8c91ba56251d9b34f3003ea24bf547bf2167cc72812c73b8da04"
     },
@@ -6750,7 +6750,7 @@
       "id": "C002-TS-625",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 430,
+      "line": 429,
       "title": "release record by Copilot enforcement mode",
       "content_hash": "sha256:a9cc1a674a11044dfe1b6b2a686bf767dbb97c4ec6e2efe08184c3fda495fa9a"
     },
@@ -6758,7 +6758,7 @@
       "id": "C002-TS-626",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 444,
+      "line": 443,
       "title": "regression set after CHG-002",
       "content_hash": "sha256:b5bd68205e685b80811e2149d7b6fcedf8e9e6558a9780dbdf423261ca377516"
     },
@@ -6766,7 +6766,7 @@
       "id": "C002-TS-627",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 453,
+      "line": 452,
       "title": "a Claude Code behaviour change is caught",
       "content_hash": "sha256:fcdd5d6344f674b32f1136ccfc4e6a89225c0bf5ad237f4454f2e28d508c2719"
     },
@@ -6774,7 +6774,7 @@
       "id": "C002-TS-628",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 468,
+      "line": 467,
       "title": "memory case expectation per mechanism",
       "content_hash": "sha256:733120e2aeff02d64dfc6d4d1886d0b3f395a4bfa2c930e94a8b07e105f70e59"
     },
@@ -6782,7 +6782,7 @@
       "id": "C002-TS-629",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 481,
+      "line": 480,
       "title": "a memory write allowed on a generated target is a difference",
       "content_hash": "sha256:c57c7b5df97d82b6f52d234f680009ec46606c149e854efde5189252755cad98"
     },
@@ -6790,7 +6790,7 @@
       "id": "C002-TS-630",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 508,
+      "line": 507,
       "title": "identity case per mechanism",
       "content_hash": "sha256:11b6f7191bedf0b5c6e58c98e509765b8b91cebe3d8022a589cb8f1916d46372"
     },
@@ -6798,7 +6798,7 @@
       "id": "C002-TS-631",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 533,
+      "line": 532,
       "title": "completeness of the replay report",
       "content_hash": "sha256:100180623b7c4f793a2df58e48286eebd072d18a4fab3ac2bfb16232fc0adbac"
     },
@@ -6806,7 +6806,7 @@
       "id": "C002-TS-632",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 569,
+      "line": 568,
       "title": "injection steps in the checklist under the hooks fallback",
       "content_hash": "sha256:8dbbde829bf5f9268e1c54c9062a5494a402e1af965af394f20b8b3d6a5b2075"
     },
@@ -6814,7 +6814,7 @@
       "id": "C002-TS-633",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 580,
+      "line": 579,
       "title": "hooks state and injection results of the checklist record at release",
       "content_hash": "sha256:464669346640414fa32158e6ce2b207fe1ded5924b9f936d21ae9eb1a85c59c7"
     },
@@ -6822,7 +6822,7 @@
       "id": "C002-TS-634",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 236,
+      "line": 235,
       "title": "scripted Revise at a gate on OpenCode",
       "content_hash": "sha256:c628b5363318f4f02dca20a3918092fee707bcddae11b27779bc1c23487c569f"
     },
@@ -6830,7 +6830,7 @@
       "id": "C002-TS-635",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 247,
+      "line": 246,
       "title": "revise command on OpenCode",
       "content_hash": "sha256:914012894e340f1fb44ddabc35357e63e2322c43817ed3855c0ce49107c41133"
     },
@@ -6838,7 +6838,7 @@
       "id": "C002-TS-636",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 170,
+      "line": 169,
       "title": "one corpus case per writing sdd subcommand",
       "content_hash": "sha256:ff095a595c6db0408c45b264c92c106d7161dae6ea900e0cafdcb2d020d21cca"
     },
@@ -6846,7 +6846,7 @@
       "id": "C002-TS-637",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 547,
+      "line": 546,
       "title": "incomplete replay report refused at release",
       "content_hash": "sha256:6a52d14d57243bb72e2e256e979c291a71f45e82dde0ae068014c5128729de57"
     },
@@ -6854,7 +6854,7 @@
       "id": "C002-TS-638",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 490,
+      "line": 489,
       "title": "memory case of a non-Architect caller replayed as an Architect write",
       "content_hash": "sha256:61adce9755000ebd3f802cbe319259f448a5197442bac369b547049d6f01534a"
     },
@@ -6862,7 +6862,7 @@
       "id": "C002-TS-639",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md",
-      "line": 120,
+      "line": 119,
       "title": "tool found only as a `.cmd` shim under sdd MCP server enforcement",
       "content_hash": "sha256:2c8bb348ec0f33efbde8484114bf4637fe82b018e4f645600a590c58518d07e5"
     },
@@ -6894,7 +6894,7 @@
       "id": "C002-TS-643",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 599,
+      "line": 598,
       "title": "absent-field cases per mechanism",
       "content_hash": "sha256:5424217d9f877f490e5bca7eb47c9c62021a30d7850a132d174cf5a78bb80f63"
     },
@@ -6902,7 +6902,7 @@
       "id": "C002-TS-644",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 616,
+      "line": 615,
       "title": "a case with a cwd other than the repository root keeps its corpus expectation",
       "content_hash": "sha256:cc26910db2dfa35181644be26b5a3186a12bff47e44bdc106539395afae9d596"
     },
@@ -6910,7 +6910,7 @@
       "id": "C002-TS-645",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 629,
+      "line": 628,
       "title": "a malformed call allowed on a generated target is a difference",
       "content_hash": "sha256:af301799492c9c2a3df7ad37886a5affa67268328c8678f9b650f60d842fd27b"
     },
@@ -6918,7 +6918,7 @@
       "id": "C002-TS-646",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 642,
+      "line": 641,
       "title": "unknown architect:sdd-* caller on OpenCode",
       "content_hash": "sha256:ebdfaa5569a289dafad326d88c94d22d094bd7f97a455cb241399b757bb9d559"
     },
@@ -6926,7 +6926,7 @@
       "id": "C002-TS-647",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 656,
+      "line": 655,
       "title": "OpenCode rules that also bind adopter agents are a difference",
       "content_hash": "sha256:b4abb3263c13579e8f55fb2d77bb0a87a8cb44e91dbd362fd901b502fc2d70f0"
     },
@@ -6934,7 +6934,7 @@
       "id": "C002-TS-648",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 356,
+      "line": 355,
       "title": "OpenCode release refused when spike S-07 does not show a closed agent tool set",
       "content_hash": "sha256:6fab3fe2eeee1e72d6350149342c9eb805a20c8b113d23a2eb3a3c75af204502"
     },
@@ -6942,7 +6942,7 @@
       "id": "C002-TS-649",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 668,
+      "line": 667,
       "title": "PG-163 replayed on a host with file-symlink",
       "content_hash": "sha256:9c008d1452a021d2413f5bb57eae711124a463305093cec3e30582a74a5af032"
     },
@@ -6950,7 +6950,7 @@
       "id": "C002-TS-650",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 684,
+      "line": 683,
       "title": "PG-163 on a host without file-symlink is an error that counts as differing",
       "content_hash": "sha256:c6f90ed5705feafc24eb620d52dce35af0aae6e2666257da1c48e8602a02d108"
     },
@@ -6958,7 +6958,7 @@
       "id": "C002-TS-651",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 700,
+      "line": 699,
       "title": "replay host capabilities at release",
       "content_hash": "sha256:6ccdccad393c4eae0e6a7df8d5269c55023090b3e961b6bd086ea10fb80a1d67"
     },
@@ -6966,7 +6966,7 @@
       "id": "C002-TS-652",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 521,
+      "line": 520,
       "title": "identity case of an Architect caller played by that generated agent on OpenCode",
       "content_hash": "sha256:a74f302ac55f82e59062e28166a2f6d3bd45a59c0804cba5bde0e6883d25c1da"
     },
