@@ -119,8 +119,34 @@ Sonnet 5.5 (P-01).
   `architect-s08-probe:probe-confined`).
 - **Hooks run** once the commands use absolute paths: plugin-level `PreToolUse` fired for `Agent` and
   `Glob` calls of the parent (no agent identity on the parent's own calls, as on Copilot CLI).
-- Pending: workspace agents as subagents (`docs/spikes/s08/workspace/`, `.github/agents/ws-*`), the
-  question tool (`ask`), stable VS Code 1.108.0 with its extension-based harness.
+- The plugin agents do appear in the chat's **agent picker** (P-01 screenshot, 2026-10-16) — they can
+  be selected as the session agent, but not started as subagents.
+
+### 3.1 Workspace agents as subagents (2026-10-16 22:04 UTC, Local session)
+
+Workspace `docs/spikes/s08/workspace/` with `.github/agents/ws-parent|ws-confined|ws-hooked.agent.md`
+(same frontmatter and bodies as the probe agents, absolute sandbox paths); the probe plugin stayed
+loaded, so its audit hook logged.
+
+| Subagent | Action | Outcome |
+|---|---|---|
+| ws-confined | create `confined-edit.txt` | no tool (file absent) |
+| ws-confined | `node -e …` command | no tool (file absent) |
+| ws-confined | MCP `stub_read` | **not reached**: listed as deferred, `tool_search_tool` found nothing |
+| ws-confined | MCP `stub_write` | no tool |
+| ws-hooked | create `hooked-edit.txt` | **ran** (file exists) |
+| ws-hooked | `node -e …` command | **ran** (file exists) |
+
+- **Tool-list confinement holds:** `ws-confined` had `view`, `grep`, `glob`, `tool_search_tool`;
+  `ws-hooked` had those plus `create`, `edit` and four PowerShell tools.
+- **The agent-scoped hook of `ws-hooked` never ran** (no `agent-scoped` log line), so its calls were
+  not blocked → `agent_hooks_block_subagent_calls: false` in this host.
+- **Plugin-level hooks fire for subagent tool calls and carry the agent identity:** `PreToolUse`
+  `Write` and `Bash` with `agent_type: ws-hooked`, `tool_search_tool` with `agent_type: ws-confined`;
+  `SubagentStart` / `SubagentStop` for both. Same shape as Copilot CLI (§2.3).
+- **MCP from a subagent is unproven:** the stub server started once (plugin config) but no call
+  reached it. Whether a subagent can call an MCP tool at all in this host decides whether
+  `sdd-mcp-server` mode is workable; probe 0.0.4 tests it.
 
 ## 4. Enforcement mode (pending)
 

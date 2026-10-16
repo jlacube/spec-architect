@@ -1,5 +1,0 @@
-{
-  "servers": {
-    "probe-stub": { "type": "stdio", "command": "node", "args": ["C:/Sandbox/ClaudeCode/Architect/docs/spikes/s08/mcp/stub.mjs"] }
-  }
-}
