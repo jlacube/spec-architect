@@ -2,7 +2,7 @@
 spike: S-08
 target: copilot
 date: 2026-10-16
-host_versions: { vscode: "1.108.0", copilot: "1.388.0", copilot-chat: "0.35.3", copilot-cli: "1.0.98" }
+host_versions: { vscode-insiders: "1.142.0-insider", vscode: "1.108.0", copilot: "1.388.0", copilot-chat: "0.35.3", copilot-cli: "1.0.98" }
 outcomes:
   subagent_tool_list_confined: pending      # VS Code run pending; Copilot CLI: true (§2.1)
   agent_hooks_block_subagent_calls: pending # VS Code run pending; Copilot CLI: true, fail-closed (§2.2)
@@ -95,11 +95,32 @@ not offered (architecture §6.2 alternative to whole-server grants).
   (0.09 USD)**, 69.3k input tokens (42.4k cached, 26.8k written) and 1.9k output tokens — well below
   the 0.21 … 0.29 USD planning rate per session of test plan §4.4.
 
-## 3. Results — VS Code (pending)
+## 3. Results — VS Code Insiders 1.142.0-insider (2026-10-16, partial)
 
-To be filled from P-01's run (README steps 1–7): confinement and hook results in the Local harness,
-hook input fields (agent identity or not), `vscode/askQuestions` raw results (answered, skipped,
-setting off), terminal dialect, model names per tier, AI Credits used.
+P-01 ran the probes in **VS Code Insiders 1.142.0-insider** (not stable 1.108.0). Model used: Claude
+Sonnet 5.5 (P-01).
+
+- **Session types.** The Copilot CLI session type does not offer the plugin's agents in its picker
+  (P-01: a local plugin needs a marketplace there). The **Local** session type runs the chat through
+  the "Copilot SDK agent running in the local agent host process" (agent host log: session
+  `provider: copilotcli`).
+- **Plugin copy.** VS Code copies the plugin to `%APPDATA%\Code - Insiders\agentPlugins\<id>\<nonce>\`
+  and loads its agents, hooks and MCP server from the copy (log: `load: loaded`, three agent children).
+- **`${PLUGIN_ROOT}` in hook commands is not expanded on Windows** (0.0.2 diagnostic): of the two
+  `SessionStart` hooks, only the absolute-path one logged; the `${PLUGIN_ROOT}` one never ran. The
+  hook process does have the `PLUGIN_ROOT` environment variable. With 0.0.1 every hook used the token,
+  every hook "errored" before our script ran, and **every tool call was denied — fail-closed**
+  (including the subagent launches and a folder read). Run cost: 36.7 AI Credits.
+- **Plugin agents are not available as subagents** (0.0.3 run): the task tool offered only `explore`,
+  `task`, `general-purpose`, `rubber-duck`, `code-review`, `research`, `security-review` and the
+  selected agent `probe-parent`, and refused `probe-confined` / `probe-hooked` with `Unknown
+  agent_type`, although the log lists both as loaded plugin agents. With 0.0.2 the same happened while
+  they were `user-invocable: false`. Copilot CLI 1.0.98 standalone does offer them (as
+  `architect-s08-probe:probe-confined`).
+- **Hooks run** once the commands use absolute paths: plugin-level `PreToolUse` fired for `Agent` and
+  `Glob` calls of the parent (no agent identity on the parent's own calls, as on Copilot CLI).
+- Pending: workspace agents as subagents (`docs/spikes/s08/workspace/`, `.github/agents/ws-*`), the
+  question tool (`ask`), stable VS Code 1.108.0 with its extension-based harness.
 
 ## 4. Enforcement mode (pending)
 
