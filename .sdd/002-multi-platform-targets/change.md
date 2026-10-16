@@ -13,7 +13,7 @@ implementation: { status: not-started }
 stopped: null
 owners: []
 defects:
-  - { id: D-001, ref: C002-DOD-001, summary: "DoD items C002-DOD-001, 002, 003, 006, 007 require @eval scenarios to pass 9 of 10 runs (~880 paid sessions, ~$130), beyond the eval budget; P-01 chose dev tier only with a $25 budget (Q-evalbudget-01)", reporter: jerome.lacube, date: 2026-10-16, status: open, resolution: null, closed_at: null }
+  - { id: D-001, ref: C002-DOD-001, summary: "DoD items C002-DOD-001, 002, 003, 006, 007 require @eval scenarios to pass 9 of 10 runs (~880 paid sessions, ~$130), beyond the eval budget; P-01 chose dev tier only with a $25 budget (Q-evalbudget-01)", reporter: jerome.lacube, date: 2026-10-16, status: closed, resolution: "Revised: dev-tier eval rule in C002-DOD-001/002/003/006/007/022; DOD-G-01 9-of-10 clause waived for CHG-002 (Q-evalbudget-01/02); G2 re-approved 08d6356", closed_at: 2026-10-16 }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }

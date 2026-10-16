@@ -35,3 +35,14 @@ needs a top-up.
 - **Rejected:** none beyond the options
 - **Answer:** Waive for CHG-002 (Recommended) — waiver of DOD-G-01's 9-of-10 clause for CHG-002 only, recorded at the G2 re-approval and at G3; the constitution stays as is.
 - **Extracted instructions:** none
+
+## Round 3 — 2026-10-16
+
+Question from the planner's step 6 hand-back.
+
+### Q-release-01 — Through which channel does P-01 release the OpenCode and Copilot target packages once the release check passes?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. Zip per target in dist/, shared like the Claude Code zips today (Recommended) · 2. A git tag with the dist/ zips attached as release assets
+- **Rejected:** none
+- **Answer:** Zips in dist/ (Recommended)
+- **Extracted instructions:** none
