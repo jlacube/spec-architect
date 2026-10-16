@@ -41,7 +41,7 @@ tested host versions (C002-DOD-009, C002-NFR-203).
 1. Build the release candidate with `npm run package` at one commit.
 2. Run `npm run replay` for every mechanism in use, under both shells.
 3. Run the dev-tier evals per target. Track spend against the API-key budget and stop and discuss at
-   $10 spent.
+   the $25 CHG-002 eval budget (Q-evalbudget-01).
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
 
 ## Verification

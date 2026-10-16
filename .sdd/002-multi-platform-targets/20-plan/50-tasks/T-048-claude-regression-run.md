@@ -43,7 +43,7 @@ and deny texts of C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-REQ-623). Wi
 2. Diff the expectations of §4 against the base commit (`git diff 85bee21 -- tests/`). List each
    change with the REQ it implements.
 3. Run the evals of regression-set §5, row 1 once. Run the other rows only if a source agent, command or
-   skill changed. Stay within the API-key budget, and stop and discuss with P-01 at $10 spent.
+   skill changed. Stay within the API-key budget, and stop and discuss with P-01 at the $25 CHG-002 eval budget (Q-evalbudget-01).
 
 ## Verification
 

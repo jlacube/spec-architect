@@ -47,9 +47,13 @@ S-07 found a feedback channel (C002-REQ-215).
 
 ## Verification
 
-- `npm test -- cap02`
+- `npm test -- cap02/permissions` (C002-TC-208, C002-TC-210, C002-TC-212, C002-TC-214, C002-TC-224)
+- C002-TC-207, C002-TC-209, C002-TC-211, C002-TC-213, C002-TC-222 and C002-TC-223 need an OpenCode
+  host: write their expectations in `tests/replay/scenarios/opencode-host.test.ts`; they run under
+  `npm run replay -- opencode-host` once C002-T-042 exists, not under `npm test`. Until then, list them in
+  the task report as carried to C002-T-042 (C002-TC-207 and C002-TC-209 also to C002-T-043).
 
 ## Done when
 
-- [ ] Listed scenarios pass in both modes; the list of glob gaps is written to the generator diagnostics
+- [ ] Listed structure scenarios pass in both modes, and the replay scenarios are written and listed as carried; the list of glob gaps is written to the generator diagnostics
 - [ ] Progress reported: `sdd task set C002-T-030 --status done --commit <sha>`

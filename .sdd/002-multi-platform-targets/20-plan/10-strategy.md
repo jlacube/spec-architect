@@ -50,7 +50,7 @@ that every host runs, then the packages, and the release evidence last:
 | MCP server before the generator | The server is the fallback of both targets and the mode of Copilot. Its tests need no host, so its risk retires early | C002-DEC-001; C002-ADR-001 |
 | Replay suite before the final S-07 replay | The S-07 outcomes `edit_rules_match_path_corpus` and `bash_rules_match_shell_corpus` are the corpus replay of the generated rules (C002-IF-009 §3). S-07 records provisional values from a sample in M-01; C002-T-043 records the final values | C002-IF-009 §3; architecture §6.2 (OpenCode `bash` rules) |
 | Replay in its own command | The OpenCode replay starts a loopback stub (C002-ADR-005), and `tests/no-network.mjs` fails any test that opens a socket | regression-set §4.3 |
-| Paid evals once per milestone, not per task | API-key budget: $0.50 per run, stop and discuss at $10 spent | regression-set §1, §5 |
+| Paid evals once per milestone, not per task | API-key budget: $0.50 per run, CHG-002 eval budget $25 (Q-evalbudget-01), stop and discuss with P-01 at the budget | regression-set §1, §5 |
 
 ## 3. Milestones
 

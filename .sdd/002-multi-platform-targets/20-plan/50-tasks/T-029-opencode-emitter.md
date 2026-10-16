@@ -48,9 +48,13 @@ data (C002-REQ-114). Each agent's tool set is closed by the catch-all entry (C00
 
 ## Verification
 
-- `npm test -- cap02` and `npm run generate -- --target opencode --out <tmp>`
+- `npm test -- cap02/package` (C002-TC-201 … C002-TC-205, C002-TC-225, C002-TC-227) and
+  `npm run generate -- --target opencode --out <tmp>`
+- C002-TC-226 needs an OpenCode host: write its expectation in
+  `tests/replay/scenarios/opencode-host.test.ts`; it runs under `npm run replay -- opencode-host` once
+  C002-T-042 exists, not under `npm test`. Until then, list it in the task report as carried to C002-T-042.
 
 ## Done when
 
-- [ ] Listed scenarios pass; the package loads in OpenCode at its tested version (manual smoke noted in the report)
+- [ ] Listed structure scenarios pass, and C002-TC-226 is written and listed as carried to C002-T-042; the package loads in OpenCode at its tested version (manual smoke noted in the report)
 - [ ] Progress reported: `sdd task set C002-T-029 --status done --commit <sha>`
