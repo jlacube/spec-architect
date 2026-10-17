@@ -16,7 +16,9 @@ requirements of the Copilot hooks fallback stay as the conditional fallback of C
 later tested version whose spike record shows subagents not confined; if neither mode holds, the
 target is refused by C002-REQ-620 and P-01 revises this spec to remove this capability
 (`../../10-context/scope.md` §1.1, Q-defer-01). Revised for defect D-003 (spike facts F-1 … F-7,
-`docs/spikes/S-08-copilot-vscode.md §5`).
+`docs/spikes/S-08-copilot-vscode.md §5`), and after the critic's D-003 review for the host built-in
+agents that the conductor can start, in both enforcement modes (Q-safety-06; C002-REQ-327 …
+C002-REQ-330).
 
 ### C002-REQ-301 — Copilot target package contents
 - **Delta:** ADDED
@@ -28,11 +30,11 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 - **Acceptance:** C002-AC-301.1
 - **Open items:** Serena's context on Copilot VS Code is not in the S-08 record (baseline survey §4 note 6; C002-IF-001 §6.2); its data folder and read-only launch: C002-REQ-114.
 
-### C002-REQ-302 — No PreToolUse hook under server enforcement
+### C002-REQ-302 — Only the subagent guard hook under server enforcement
 - **Delta:** ADDED
 - **Pattern:** optional-feature
-- **Statement:** WHERE the Copilot target uses sdd MCP server enforcement, THE Copilot target package SHALL declare no PreToolUse hook.
-- **Rationale:** the boundary is the agents' tool lists, which the local agent host and Copilot CLI confine (`docs/spikes/S-08-copilot-vscode.md §2.1`, §3.1, §3.2); a plugin-level PreToolUse hook runs for every tool call of every agent, the adopter's own chats included (§2.2, §3), and a hook that errors denies every call (§3), so in this mode a guard hook would add no protection and would add a way to block P-03's chats; agent-scoped hooks do not run for subagent calls (§3.1, fact F-4); the guard hooks of the hooks fallback: C002-REQ-308
+- **Statement:** WHERE the Copilot target uses sdd MCP server enforcement, THE Copilot target package SHALL declare no PreToolUse hook other than the Copilot subagent guard hook.
+- **Rationale:** the Architect agents' boundary is their tool lists, which the local agent host and Copilot CLI confine (`docs/spikes/S-08-copilot-vscode.md §2.1`, §3.1, §3.2); these lists do not confine the host built-in agents that the local agent host offers to a parent beside the agents of its `agents` list (§3), so the Copilot subagent guard hook denies their write and terminal calls (C002-REQ-327; Q-safety-06, `../../questions-log.md` round 6); a plugin-level PreToolUse hook runs for every tool call of every agent, the adopter's own chats included (§2.2, §3), and a hook that errors denies every call (§3), so in this mode no PreToolUse hook runs a guard core on the Architect agents' calls, which would add no protection and would add a way to block P-03's chats, and the subagent guard hook passes those calls and the session agent's calls (C002-REQ-330); agent-scoped hooks do not run for subagent calls (§3.1, fact F-4); the guard hooks of the hooks fallback: C002-REQ-308
 - **Stories:** C002-US-302
 - **Priority:** Must
 - **Acceptance:** C002-AC-302.1
@@ -49,8 +51,8 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 ### C002-REQ-304 — Install notes in the Copilot package
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE Copilot target package SHALL contain install notes that state the prerequisites (Node.js 20 or later, VS Code and GitHub Copilot Chat at their tested versions, access to the Claude models of C002-REQ-105), the installation of `architect-sdd`, the run of the Copilot install command in the adopter's repository, the VS Code settings the package needs (`chat.plugins.enabled`, `chat.pluginLocations`, `chat.askQuestions.enabled`), the Local session type, the selection of the conductor as the session agent, and that the workspace MCP servers start only after the first message of a session.
-- **Rationale:** C002-R-001 A-06, A-08; C002-SC-02; the Copilot CLI session type of VS Code does not offer the package's agents, the Local session type does (`docs/spikes/S-08-copilot-vscode.md §3`); a workspace MCP server cannot start before the session's first message (§3.2, fact F-2); install command: C002-REQ-322, C002-REQ-323
+- **Statement:** THE Copilot target package SHALL contain install notes that state the prerequisites (Node.js 20 or later, VS Code and GitHub Copilot Chat at their tested versions, access to the Claude models of C002-REQ-105), the installation of `architect-sdd`, the run of the Copilot install command in the adopter's repository, the VS Code settings the package needs (`chat.plugins.enabled`, `chat.pluginLocations`, `chat.askQuestions.enabled`), the Local session type, the selection of the conductor as the session agent, that the workspace MCP servers start only after the first message of a session, and that in a repository that contains `.sdd/` every subagent that is not an Architect agent, the host built-in agents and the adopter's own agents included, can call only the read-only tools of the tool classes file while hooks are enabled.
+- **Rationale:** C002-R-001 A-06, A-08; C002-SC-02; the Copilot CLI session type of VS Code does not offer the package's agents, the Local session type does (`docs/spikes/S-08-copilot-vscode.md §3`); a workspace MCP server cannot start before the session's first message (§3.2, fact F-2); install command: C002-REQ-322, C002-REQ-323; the restriction on non-Architect subagents is the cost that P-01 accepted for the Copilot subagent guard hook (Q-safety-06, `../../questions-log.md` round 6; C002-REQ-327, C002-REQ-328, C002-REQ-329), and the guard does not run while hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy (C002-REQ-310 for the hooks fallback)
 - **Stories:** C002-US-301, C002-US-306
 - **Priority:** Must
 - **Acceptance:** C002-AC-304.1
@@ -177,12 +179,12 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 - **Acceptance:** C002-AC-317.1
 - **Open items:** [ASSUMPTION: S-08 — the S-08 record does not cover prompt files; the manual VS Code checklist confirms these names; if a source command name collides with a VS Code built-in slash command, every prompt file takes the prefix architect- as on OpenCode (C002-REQ-216, C002-IF-001 §2)]
 
-### C002-REQ-318 — Tool classes under the hooks fallback
+### C002-REQ-318 — Tool classes file of the Copilot package
 - **Delta:** ADDED
-- **Pattern:** optional-feature
-- **Statement:** WHERE the Copilot hooks fallback is used, THE Copilot target package SHALL contain a tool classes file that assigns every tool the host offers to an Architect agent other than the conductor (its granted tools and the tools the host adds, such as `tool_search_tool`) to one of the classes `write`, `terminal` and `read_only` of C002-IF-008 §2.
-- **Rationale:** a plugin-level hook runs for every tool call of every agent, reads included (`docs/spikes/S-08-copilot-vscode.md §2.2`); the host adds `tool_search_tool` to an agent whose `tools` list omits it (§3.2); a tool the file does not class is denied (C002-REQ-309), so a read tool missing from the file would block the agent; the conductor's calls carry no `agent_type` and pass the hooks (C002-REQ-320, C002-REQ-321); hook tool names: §2.3, §3.1; file `hooks/tool-classes.json` (C002-IF-005 §3)
-- **Stories:** C002-US-303
+- **Pattern:** ubiquitous
+- **Statement:** THE Copilot target package SHALL contain a tool classes file that assigns to one of the classes `write`, `terminal` and `read_only` of C002-IF-008 §2 every tool the host offers to an Architect agent other than the conductor (its granted tools and the tools the host adds, such as `tool_search_tool`) and every generic edit or terminal tool of the host whose hook tool name the spike record gives.
+- **Rationale:** a plugin-level hook runs for every tool call of every agent, reads included (`docs/spikes/S-08-copilot-vscode.md §2.2`); the host adds `tool_search_tool` to an agent whose `tools` list omits it (§3.2); a tool the file does not class is denied (C002-REQ-309, C002-REQ-328), so a read tool missing from the file would block the agent; the Copilot subagent guard hook classes the calls of non-Architect subagents with this file in both enforcement modes (C002-REQ-327, C002-REQ-329), so the file is present in both; the recorded hook names of generic tools are `Write` (create tool) and `Bash` (terminal tool), and the hook name of the `edit` tool is not in the record (§2.3, §3.1; C002-REQ-308 open item); the conductor's calls carry no `agent_type` and pass the hooks (C002-REQ-320, C002-REQ-321, C002-REQ-330); hook tool names: §2.3, §3.1; file `hooks/tool-classes.json` (C002-IF-005 §3)
+- **Stories:** C002-US-303, C002-US-307
 - **Priority:** Must
 - **Acceptance:** C002-AC-318.1
 
@@ -195,11 +197,11 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 - **Priority:** Must
 - **Acceptance:** C002-AC-319.1
 
-### C002-REQ-320 — Calls outside Architect agents pass the guard hook
+### C002-REQ-320 — Session agent's calls pass the guard hook
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHERE the Copilot hooks fallback is used, WHEN a Copilot guard hook receives readable hook input whose `agent_type` is absent or names no Architect agent, THE Copilot guard hook SHALL allow the call with exit code 0.
-- **Rationale:** a plugin-level hook runs for every tool call of every agent (`docs/spikes/S-08-copilot-vscode.md §2.2`, §3), and the session agent's own calls carry no `agent_type` (§2.3, §3, fact F-4), so a guard that decided these calls would act on P-03's own chats (the reason of C002-REQ-302); the Architect calls without `agent_type` are those of the conductor and its prompt files, which hold no generic edit or terminal tool (C002-REQ-321); the identity property is tested here, not by the corpus replay (C002-REQ-626)
+- **Statement:** WHERE the Copilot hooks fallback is used, WHEN a Copilot guard hook receives readable hook input whose `agent_type` is absent, THE Copilot guard hook SHALL allow the call with exit code 0.
+- **Rationale:** a plugin-level hook runs for every tool call of every agent (`docs/spikes/S-08-copilot-vscode.md §2.2`, §3), and the session agent's own calls carry no `agent_type` (§2.3, §3, fact F-4), so a guard that decided these calls would act on P-03's own chats (the reason of C002-REQ-302); the Architect calls without `agent_type` are those of the conductor and its prompt files, which hold no generic edit or terminal tool (C002-REQ-321); a call whose `agent_type` is present and names no Architect agent, a host built-in agent's or an adopter agent's started as a subagent, is decided by the Copilot subagent guard hook (C002-REQ-327, C002-REQ-328, C002-REQ-329; Q-safety-06), not passed; the identity property is tested here, not by the corpus replay (C002-REQ-626)
 - **Stories:** C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-320.1
@@ -216,8 +218,8 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 ### C002-REQ-322 — Copilot install command writes the workspace agents
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN P-03 runs the Copilot install command in a repository, THE sdd CLI SHALL write the ten agents of the Copilot target package as `.github/agents/<agent>.agent.md` files of that repository.
-- **Rationale:** the local agent host does not start plugin agents as subagents (`Unknown agent_type`) and starts workspace agents as subagents with their tool lists confined (`docs/spikes/S-08-copilot-vscode.md §3`, §3.1, fact F-1); the conductor starts the specialists (C002-REQ-107), so all ten are workspace agents; command name, options and how it finds the package: C002-IF-007
+- **Statement:** WHEN P-03 runs the Copilot install command in a repository, THE sdd CLI SHALL write the ten agents of the Copilot target package as `.github/agents/<agent name>.agent.md` files of that repository, where `<agent name>` is the name of the source agent, such as `sdd-conductor`.
+- **Rationale:** an agent name is `sdd-` followed by the agent's role (`sdd-critic`), the file name form of C002-IF-005 §3 and `ERR-CLI-021` (C002-TS-341: `sdd-conductor.agent.md`); the local agent host does not start plugin agents as subagents (`Unknown agent_type`) and starts workspace agents as subagents with their tool lists confined (`docs/spikes/S-08-copilot-vscode.md §3`, §3.1, fact F-1); the conductor starts the specialists (C002-REQ-107), so all ten are workspace agents; command name, options and how it finds the package: C002-IF-007
 - **Stories:** C002-US-306
 - **Priority:** Must
 - **Acceptance:** C002-AC-322.1
@@ -257,3 +259,40 @@ target is refused by C002-REQ-620 and P-01 revises this spec to remove this capa
 - **Stories:** C002-US-305, C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-326.1
+
+### C002-REQ-327 — Write and terminal calls of non-Architect subagents denied
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF a non-Architect subagent calls a tool of the class `write` or `terminal` of the tool classes file in a repository that contains `.sdd/`, THEN THE Copilot subagent guard hook SHALL deny the call with a deny decision on standard output and a non-zero exit code.
+- **Rationale:** the local agent host offered its host built-in agents (`explore`, `task`, `general-purpose`, `rubber-duck`, `code-review`, `research`, `security-review`) to a parent whose `agents` list named two other agents (`docs/spikes/S-08-copilot-vscode.md §3`), and an agent without a `tools` list of the package runs with the host's tools (§3.2), so neither the conductor's grant (C002-REQ-107) nor the tool lists (C002-REQ-306) keep an instruction planted in an artifact from delegating an edit or a command to such an agent (C002-NFR-203); on Claude Code the conductor can start only the nine specialists (C001-REQ-217, C001-REQ-218), so without this guard the bar of C002-DEC-005 does not hold in either Copilot mode; plugin-level PreToolUse hooks run for subagent tool calls and carry `agent_type` in Copilot CLI and in VS Code (§2.3, §3.1); P-01 chose a plugin-level deny hook in both enforcement modes, limited to repositories that contain `.sdd/` (Q-safety-06, `../../questions-log.md` round 6); an `agent_type` that is present but is not the name of an Architect agent, a non-string value included, names no Architect agent (name forms `sdd-critic` in VS Code and `architect:sdd-critic` on Copilot CLI: C002-IF-008 §2); the session agent's calls carry no `agent_type` and are outside this guard, and the conductor holds no generic edit or terminal tool (C002-REQ-306, C002-REQ-321); deny output and exit code as C002-REQ-309, because Copilot CLI reports exit code 2 as code 1 and fails closed (§2.2, fact F-6); cost accepted by P-01: in such a repository the adopter's own subagents cannot edit files or run commands, which the install notes state (C002-REQ-304)
+- **Stories:** C002-US-307
+- **Priority:** Must
+- **Acceptance:** C002-AC-327.1
+- **Open items:** [ASSUMPTION: S-08 — the record shows `agent_type` on the PreToolUse input of workspace agents started as subagents in VS Code (§3.1) and of plugin agents started as subagents in Copilot CLI (§2.3), not of a host built-in agent; the manual VS Code checklist and the Copilot CLI eval runner confirm that a host built-in agent's tool calls carry it; if they carry none, Q-safety-06 returns to P-01]
+
+### C002-REQ-328 — Copilot subagent guard hook denies on its own faults
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the Copilot subagent guard hook cannot reach a decision on a call (unreadable hook input; for a call of a non-Architect subagent in a repository that contains `.sdd/`, a tool name that the tool classes file does not class or an unreadable tool classes file; or an internal error), THEN THE Copilot subagent guard hook SHALL deny the call with a deny decision on standard output and a non-zero exit code.
+- **Rationale:** fail closed (C002-DEC-005, C002-CON-08), as C002-REQ-309 and C002-NFR-204 require of the Copilot guard hook; a host built-in agent holds tools that no Architect agent holds, such as the PowerShell, `create` and `edit` tools (`docs/spikes/S-08-copilot-vscode.md §3.2`), and the hook name of the `edit` tool is not in the record (C002-REQ-308 open item), so a tool that the file does not class is denied rather than allowed; the resulting cost, a non-Architect subagent in a repository with `.sdd/` calls only tools of the class `read_only` (C002-REQ-329), is stated in the install notes (C002-REQ-304); a hook that errors denies every call of the session (§3), which the CLI copy, the shell-free hook commands and the absence of a root token guard against (C002-REQ-301, C002-REQ-316, C002-REQ-326)
+- **Stories:** C002-US-307
+- **Priority:** Must
+- **Acceptance:** C002-AC-328.1
+
+### C002-REQ-329 — Read-only calls and calls outside Architect repositories pass
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the Copilot subagent guard hook receives readable hook input of a non-Architect subagent's call in a repository without `.sdd/`, or of its call to a tool of the class `read_only` of the tool classes file, THE Copilot subagent guard hook SHALL allow the call with exit code 0.
+- **Rationale:** the guard is limited to repositories that contain `.sdd/` (Q-safety-06), and a plugin-level hook runs for every tool call in every repository that the adopter opens while the plugin is enabled (`docs/spikes/S-08-copilot-vscode.md §2.2`, §3); read and search tools stay available to every subagent, as to the Architect agents (C002-REQ-319)
+- **Stories:** C002-US-307
+- **Priority:** Must
+- **Acceptance:** C002-AC-329.1
+
+### C002-REQ-330 — Session agent and Architect agent calls pass under server enforcement
+- **Delta:** ADDED
+- **Pattern:** complex
+- **Statement:** WHERE the Copilot target uses sdd MCP server enforcement, WHEN the Copilot subagent guard hook receives readable hook input whose `agent_type` is absent or names an Architect agent, THE Copilot subagent guard hook SHALL allow the call with exit code 0.
+- **Rationale:** in this mode the Architect agents are confined by their tool lists (C002-REQ-306; `docs/spikes/S-08-copilot-vscode.md §2.1`, §3.1) and the session agent's calls carry no `agent_type` (§2.3, §3), so deciding these calls would add no protection and would act on P-03's own chats (C002-REQ-302); under the Copilot hooks fallback these calls are decided by the Copilot guard hook (C002-REQ-308, C002-REQ-319, C002-REQ-320)
+- **Stories:** C002-US-307
+- **Priority:** Must
+- **Acceptance:** C002-AC-330.1

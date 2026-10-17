@@ -72,7 +72,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes the agents of a target package, THE generator SHALL grant the right to start other agents to the conductor alone, limited to the nine specialists.
-- **Rationale:** C001-REQ-217 and C001-REQ-218 carried to the targets: OpenCode `permission.task` (C002-R-001 C-08), Copilot `agents` list (C002-R-001 A-11); in VS Code the specialists are workspace agents named by their file names (C002-REQ-322; `docs/spikes/S-08-copilot-vscode.md §3.1`), on Copilot CLI a plugin's agents are named `<plugin>:<agent>` (§2.3)
+- **Rationale:** C001-REQ-217 and C001-REQ-218 carried to the targets: OpenCode `permission.task` (C002-R-001 C-08), Copilot `agents` list (C002-R-001 A-11); in VS Code the specialists are workspace agents named by their file names (C002-REQ-322; `docs/spikes/S-08-copilot-vscode.md §3.1`), on Copilot CLI a plugin's agents are named `<plugin>:<agent>` (§2.3); the local agent host also offers its host built-in agents beside the `agents` list (§3), so on Copilot this grant does not keep the conductor from starting them, and their write and terminal calls are denied by C002-REQ-327
 - **Stories:** C002-US-102
 - **Priority:** Must
 - **Acceptance:** C002-AC-107.1

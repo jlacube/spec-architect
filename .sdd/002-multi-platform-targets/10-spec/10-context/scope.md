@@ -18,7 +18,7 @@ scope through the capabilities below, its "later" cells are listed in §2.
 |---|---|
 | Generator: neutral model, mapping tables, skill inlining, wiring variants, target packages written by `npm run package` | C002-CAP-01 |
 | OpenCode target package: agents, commands, skills, `opencode.json` with per-agent permission blocks and MCP configuration; interviews and gates through the `question` tool; post-write quick lint when spike S-07 finds a feedback channel; the sdd MCP server as fallback | C002-CAP-02 |
-| Copilot VS Code target package: custom agents, prompt files, skills, workspace MCP configuration, and the Copilot install command that writes the workspace agents and MCP servers into the adopter's repository; interviews and gates through `ask_user`; session-start brief and SubagentStop trace hooks; the Copilot hooks fallback with Copilot guard hooks (C002-DEC-005 exception) | C002-CAP-03 |
+| Copilot VS Code target package: custom agents, prompt files, skills, workspace MCP configuration, and the Copilot install command that writes the workspace agents and MCP servers into the adopter's repository; interviews and gates through `ask_user`; session-start brief and SubagentStop trace hooks; the Copilot subagent guard hook in both enforcement modes (Q-safety-06); the Copilot hooks fallback with Copilot guard hooks (C002-DEC-005 exception) | C002-CAP-03 |
 | sdd MCP server: guarded `.sdd/` writes, allowlisted commands, quick-lint findings with each write (C002-DEC-001) | C002-CAP-04 |
 | `architect-sdd` on npm (C002-DEC-007); the Bash allowlist accepting a bare `sdd` command and `node --version` (with D-011 of CHG-001) and confining `sdd serena-config` and `sdd serena-launch` to a data folder outside the repository on every host (Q-guards-04); the doctor on every target | C002-CAP-05 |
 | Per-target structure checks; corpus replay against each enforcement mechanism; OpenCode and Copilot CLI eval runners; the manual VS Code checklist (C002-DEC-003); the release check per target (C002-DEC-005); the Claude Code regression set | C002-CAP-06 |
@@ -67,9 +67,10 @@ Spikes S-07 and S-08 confirm or refute them.
 Spike S-08 was signed off by P-01 on 2026-10-17 with enforcement mode `sdd-mcp-server`
 (`docs/spikes/S-08-copilot-vscode.md §4`; frontmatter `host_versions`). The hosts it tested are:
 
-- **VS Code Insiders 1.142.0-insider**, Local session type, whose chat runs in the local agent host
-  (Copilot SDK agent host; §3). The Copilot CLI session type of VS Code was not used: it does not
-  offer the package's agents (§3).
+- **VS Code Insiders 1.142.0-insider with GitHub Copilot Chat 0.35.3**, Local session type, whose
+  chat runs in the local agent host (Copilot SDK agent host; §3). The Copilot Chat version is the one
+  P-01 confirmed for the tested build (Q-versions-02, `../../20-plan/questions-log.md` round 7). The
+  Copilot CLI session type of VS Code was not used: it does not offer the package's agents (§3).
 - **Copilot CLI 1.0.98**, standalone (§2).
 
 The facts of the record that contradict the earlier platform assumptions (F-1 … F-7, §5) are taken
@@ -95,7 +96,7 @@ bundled entry) and C001-CON-03 (distribution as a Claude Code plugin; CHG-002 ad
 | Dependency | Version policy | Required? | Used by | License |
 |---|---|---|---|---|
 | OpenCode | Tested version: the OpenCode version recorded by spike S-07, which validated the target; shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
-| VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions recorded by spike S-08, which validated the target (VS Code Insiders 1.142.0-insider, Local session type; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
+| VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions recorded by spike S-08, which validated the target (VS Code Insiders 1.142.0-insider with GitHub Copilot Chat 0.35.3, Local session type; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
 | Copilot CLI | Tested version: the Copilot CLI version recorded by spike S-08 for the eval runner (1.0.98; §3.1) and re-checked before each release (Q-versions-01); not shown by the doctor (eval tool only) | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
 | npm registry | package `architect-sdd`, unscoped, published by P-01 (Q-cli-02) | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
 | Node.js | 20 or later on the PATH (constitution) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |
