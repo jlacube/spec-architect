@@ -109,3 +109,14 @@ Question from the critic's second re-review (`90-critic-report.md`, CR-32).
 - **Rejected:** keep the malformed-call rule (passes by construction); run release replays on a POSIX host (expectations and PowerShell cases need win32); rewrite PG-163 as a directory junction (changes a CHG-001 corpus case)
 - **Answer:** Require it on the host (Recommended) — release replays run on REF-WIN with Developer Mode on (or an elevated replay run); the release check refuses a report whose host lacks a capability a corpus case needs; every case is really replayed.
 - **Extracted instructions:** none
+
+## Round 6 — 2026-10-17
+
+Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
+
+### Q-safety-06 — On Copilot the host lets the conductor start its built-in subagents (general-purpose, task, explore, …), which run outside the Architect tool lists. What does the spec require?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 5 (CR-37)
+- **Options:** 1. Verify, and refuse the release if the gap is real (critic's recommendation) · 2. Add a deny hook for built-in subagents in Architect repositories · 3. Accept as a flagged residual risk
+- **Rejected:** remove the agent tool from the conductor (C002-REQ-107); rely on the conductor's prompt (C001-NFR-201)
+- **Answer:** P-01: "I lean also for option 2" — a plugin-level PreToolUse hook, in both Copilot enforcement modes, denies edit and terminal calls whose `agent_type` is a host built-in agent when the repository contains `.sdd/` (plugin-level hooks carry `agent_type` on subagent calls, S-08 §2.3, §3.1); the adopter's own use of built-in subagents for edits and commands in such a repository is blocked, accepted as the cost.
+- **Extracted instructions:** none
