@@ -1,22 +1,21 @@
 ---
 spike: S-08
 target: copilot
-date: 2026-10-16
+date: 2026-10-17
 host_versions: { vscode-insiders: "1.142.0-insider", vscode: "1.108.0", copilot: "1.388.0", copilot-chat: "0.35.3", copilot-cli: "1.0.98" }
 outcomes:
-  subagent_tool_list_confined: pending      # VS Code run pending; Copilot CLI: true (§2.1)
-  agent_hooks_block_subagent_calls: pending # VS Code run pending; Copilot CLI: true, fail-closed (§2.2)
+  subagent_tool_list_confined: true
+  agent_hooks_block_subagent_calls: false
   copilot_cli_loads_package: true
-  terminal_dialect: pending                 # VS Code terminal tool; Copilot CLI uses PowerShell
+  terminal_dialect: powershell
 cmd_shims: []
-enforcement_mode: pending                   # set by the S-08 rule once the VS Code run is in
+enforcement_mode: sdd-mcp-server
 ---
 
 # S-08 — GitHub Copilot in VS Code and Copilot CLI (C002-T-002)
 
-**Status:** draft. The Copilot CLI part ran on 2026-10-16. The VS Code part (P-01 at the keyboard,
-`docs/spikes/s08/README.md` steps 1–7) is pending; the frontmatter outcomes that concern VS Code stay
-`pending` until then, and P-01 signs off the record after it.
+**Status:** complete, awaiting P-01's sign-off (2026-10-17). Copilot CLI ran on 2026-10-16; VS Code
+Insiders runs on 2026-10-16 and 2026-10-17 (P-01 at the keyboard, probe versions 0.0.1 … 0.0.5).
 
 ## 1. Method
 
@@ -144,12 +143,47 @@ loaded, so its audit hook logged.
 - **Plugin-level hooks fire for subagent tool calls and carry the agent identity:** `PreToolUse`
   `Write` and `Bash` with `agent_type: ws-hooked`, `tool_search_tool` with `agent_type: ws-confined`;
   `SubagentStart` / `SubagentStop` for both. Same shape as Copilot CLI (§2.3).
-- **MCP from a subagent is unproven:** the stub server started once (plugin config) but no call
-  reached it. Whether a subagent can call an MCP tool at all in this host decides whether
-  `sdd-mcp-server` mode is workable; probe 0.0.4 tests it.
+- MCP from a subagent: not reached in this run (duplicate server name); settled in §3.2.
 
-## 4. Enforcement mode (pending)
+### 3.2 MCP from the session agent and from a subagent (2026-10-17, probe 0.0.5)
+
+- **Plugin MCP servers are not started by the Local agent host:** every session logs
+  `MCP server 'probe-stub' not_configured (stopped)` with `mcpSource: plugin`. A workspace server
+  (`.vscode/mcp.json`, renamed `ws-stub` to avoid the duplicate name) starts with the session — and
+  only after the first message ("Cannot start an MCP server before the session runtime has been
+  created. Send a message first.").
+- MCP tools are named `<server>-<tool>` (`ws-stub-stub_read`) and are **deferred**: an agent loads
+  them with `tool_search_tool`, which the host adds even to an agent whose `tools:` list omits it.
+- **A tool-restricted subagent reaches MCP tools:** `ws-mcp` (tools `read` + `ws-stub/*`) called
+  `ws-stub-stub_read` and `ws-stub-stub_write`; both reached the stub server (`logs/mcp.jsonl`,
+  12:54 UTC). Its tools were `view`, `tool_search_tool` and the two stub tools — no edit or terminal
+  tool. The session agent `ws-mcp-parent` called `ws-stub-stub_read` too.
+- An agent without `tools:` gets the full set (PowerShell, `create`/`edit`, web, GitHub MCP,
+  `task`, …); the question tool of this host is **`ask_user`** (not `vscode/askQuestions`).
+- The audit hook tagged every subagent call with `agent_type: ws-mcp`.
+
+## 4. Enforcement mode: `sdd-mcp-server`
 
 S-08 rule (C002-IF-009 §3): `sdd-mcp-server` when subagents are confined; else `copilot-hooks` when
-agent-scoped hooks block; else `deferred`. On Copilot CLI both hold, which would give
-`sdd-mcp-server`; the record's mode is set from the VS Code result, since VS Code is the target.
+agent-scoped hooks block; else `deferred`. VS Code Insiders confines subagents (§3.1) and a confined
+subagent reaches the MCP tools (§3.2), so the mode is **`sdd-mcp-server`**. Copilot CLI agrees (§2).
+
+## 5. Facts that contradict the approved spec (to triage with P-01, C002-T-002 step 7)
+
+| # | Fact (host) | Spec assumption affected |
+|---|---|---|
+| F-1 | Plugin agents cannot be started as subagents; workspace agents (`.github/agents/`) can (VS Code) | the Copilot target ships the specialists inside the plugin package (C002-REQ-301, C002-IF-005) |
+| F-2 | Plugin MCP servers are not started; workspace/user servers are (VS Code) | the sdd MCP server ships in the package's MCP config (C002-REQ-210, C002-REQ-307, C002-IF-002) |
+| F-3 | `${PLUGIN_ROOT}` is not expanded in hook commands on Windows; the env variable is set (VS Code) | hook commands use the root token (C002-IF-008, C002-REQ-301 CLI copy) |
+| F-4 | Agent-scoped hooks do not run (VS Code); plugin-level hooks run and carry `agent_type` on subagent calls (VS Code and Copilot CLI) | the hooks fallback uses agent-scoped hooks without identity (C002-DEC-001, C002-REQ-309, R-001 A-03) |
+| F-5 | Question tool is `ask_user` in the Local agent host | C002-REQ-311, C002-REQ-312 name `vscode/askQuestions` |
+| F-6 | Copilot CLI reports a hook's exit 2 as code 1 and fails closed; agent IDs are `<plugin>:<agent>` | C002-IF-008 §2 exit-code semantics; agent references in the Copilot CLI eval runner |
+| F-7 | MCP tools are deferred and named `<server>-<tool>` | mapping table name form `x/y` (ideation §8) |
+
+## 6. AI Credits
+
+| Run | Credits |
+|---|---|
+| Copilot CLI probe (2026-10-16) | 9.03 |
+| VS Code Insiders, first run (0.0.1) | 36.7 |
+| Later VS Code runs (0.0.2 … 0.0.5) | to be read from P-01's billing view |
