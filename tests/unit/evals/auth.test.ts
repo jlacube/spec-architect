@@ -66,8 +66,10 @@ test("subscription mode without a token is refused with the setup instruction", 
   });
 });
 
-test("key source check: subscription accepts only oauth; api-key accepts any stored login", () => {
+test("key source check: subscription accepts oauth or no key; api-key accepts any stored login", () => {
   assert.doesNotThrow(() => checkKeySource("subscription", "oauth"));
+  assert.doesNotThrow(() => checkKeySource("subscription", "none"));
+  assert.throws(() => checkKeySource("subscription", "apiKeyHelper"), /not the subscription/);
   assert.throws(() => checkKeySource("subscription", "/login managed key"), /not the subscription/);
   assert.throws(() => checkKeySource("subscription", "ANTHROPIC_API_KEY"), /not the subscription/);
   assert.doesNotThrow(() => checkKeySource("api-key", "/login managed key"));

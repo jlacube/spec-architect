@@ -11,8 +11,14 @@ import { join } from "node:path";
  */
 export const AUTH_MODES = ["api-key", "subscription"];
 
-/** The SDK's `apiKeySource` values each mode accepts (init message of the session). */
-export const ACCEPTED_KEY_SOURCES = { "api-key": null, subscription: ["oauth"] };
+/**
+ * The SDK's `apiKeySource` values each mode accepts (init message of the session). The field names
+ * the API key in use: with `CLAUDE_CODE_OAUTH_TOKEN` and the isolated config folder there is none, so
+ * Claude Code 2.1.299 reports "none" (smoke run of 2026-10-18); any source that names a key
+ * ("/login managed key", "ANTHROPIC_API_KEY", "apiKeyHelper", "user", "project", "org", "temporary")
+ * is refused in subscription mode.
+ */
+export const ACCEPTED_KEY_SOURCES = { "api-key": null, subscription: ["oauth", "none"] };
 
 const evalHome = () => join(homedir(), ".architect-evals");
 
@@ -26,7 +32,9 @@ export function resolveAuth(mode = process.env.EVAL_AUTH) {
 /** Environment variables that select the billing route of a child Claude Code process. */
 export function authEnv(mode = resolveAuth()) {
   if (resolveAuth(mode) === "api-key") return {};
-  const tokenFile = process.env.EVAL_CLAUDE_OAUTH_TOKEN_FILE ?? join(evalHome(), "claude-oauth-token");
+  // Notepad saves `claude-oauth-token` as `claude-oauth-token.txt`; both names are accepted.
+  const defaults = [join(evalHome(), "claude-oauth-token"), join(evalHome(), "claude-oauth-token.txt")];
+  const tokenFile = process.env.EVAL_CLAUDE_OAUTH_TOKEN_FILE ?? defaults.find((f) => existsSync(f)) ?? defaults[0];
   const token = (process.env.EVAL_CLAUDE_OAUTH_TOKEN ?? (existsSync(tokenFile) ? readFileSync(tokenFile, "utf8") : "")).trim();
   if (!token) {
     throw new Error(
