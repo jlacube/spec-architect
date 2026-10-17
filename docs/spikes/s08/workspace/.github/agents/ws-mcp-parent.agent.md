@@ -1,7 +1,7 @@
 ---
 name: ws-mcp-parent
 description: S-08 probe — MCP reachability from the session agent and from a subagent.
-tools: ['agent', 'read', 'probe-stub/*', 'probe-stub/stub_read', 'probe-stub-stub_read', 'probe-stub-stub_write', 'stub_read', 'stub_write']
+tools: ['agent', 'read', 'ws-stub/*', 'ws-stub/stub_read', 'ws-stub-stub_read', 'ws-stub-stub_write', 'stub_read', 'stub_write']
 agents: ['ws-mcp']
 ---
 
