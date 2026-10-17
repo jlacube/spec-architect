@@ -120,3 +120,10 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Rejected:** remove the agent tool from the conductor (C002-REQ-107); rely on the conductor's prompt (C001-NFR-201)
 - **Answer:** P-01: "I lean also for option 2" — a plugin-level PreToolUse hook, in both Copilot enforcement modes, denies edit and terminal calls whose `agent_type` is a host built-in agent when the repository contains `.sdd/` (plugin-level hooks carry `agent_type` on subagent calls, S-08 §2.3, §3.1); the adopter's own use of built-in subagents for edits and commands in such a repository is blocked, accepted as the cost.
 - **Extracted instructions:** none
+
+### Q-safety-07 — Scope of the Copilot subagent guard hook (C002-REQ-327, C002-REQ-328)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. Accept: in a repository with `.sdd/`, every subagent whose `agent_type` is not one of the ten Architect agents (host built-ins and the adopter's own agents) is denied edit and terminal calls; unclassified tools are denied (fail-closed), so such subagents keep read-only tools only (Recommended) · 2. Built-ins only: deny a fixed list of host built-in agent names
+- **Rejected:** none beyond the options
+- **Answer:** Accept (Recommended)
+- **Extracted instructions:** none
