@@ -23,20 +23,24 @@ initial review: per-finding status of CR-1 … CR-22, new findings CR-23 … CR-
 Re-review 2 (step 7, second pass, at 1b7c54c) follows: status of CR-23 … CR-31, new findings
 CR-32 … CR-36, rubric and verdict; its reviewed IDs are listed in its scope. Re-review 3 (step 7,
 third pass, at a28156e) is at the end of this report: status of CR-29 and CR-32 … CR-36, consistency
-of the fixes, rubric and verdict; its reviewed IDs are listed in its scope.
+of the fixes, rubric and verdict; its reviewed IDs are listed in its scope. The D-003 review (revision
+after spike S-08, at 4c93af5) follows re-review 3: scope, facts F-1 … F-7 across the spec, safety
+parity, the new assumption markers, new findings CR-37 … CR-39, rubric and verdict; its reviewed IDs
+are listed in its scope.
 
 ## Summary
 
-Open findings after re-review 3:
+Open findings after the D-003 review (2026-10-17):
 
 | blocker | major | minor |
 |---|---|---|
-| 0 | 0 | 0 |
+| 1 | 1 | 1 |
 
 Initial review: 1 blocker, 10 major, 11 minor. Re-review 1: 20 resolved, 2 partially resolved (the
 remainders are carried as CR-23 and CR-29), 9 new findings (CR-23 … CR-31). Re-review 2: 8 of
 CR-23 … CR-31 resolved, CR-29 partially resolved (remainder carried as CR-35), 5 new findings
 (CR-32 major, CR-33 … CR-36 minor). Re-review 3: CR-29 and CR-32 … CR-36 resolved, no new finding.
+D-003 review: 3 new findings (CR-37 blocker, CR-38 major, CR-39 minor), all open.
 
 ## Findings (initial review)
 
@@ -795,3 +799,235 @@ ERR-REL-012). Release replays therefore run on REF-WIN with Developer Mode on or
 CR-36 and the remainder of CR-29 are fixed, and the fixes introduce no contradiction between the
 requirements, C002-IF-009 with `errors.md`, and the scenarios. G2 can be presented. The 9
 LINT-DELTA-001 errors need the C002-DEC-008 waiver recorded at the gate. No question for P-01.
+
+## D-003 review — spec revision after spike S-08 (2026-10-17)
+
+### Scope and mechanical state
+
+- Reviewed: `git diff ce32129 HEAD -- .sdd/002-multi-platform-targets/10-spec` (33 files; commits
+  cda3b11 spec-writer, 5fb8df5 architect, 0b71c96 test-designer, d81917f). The diff was checked
+  against the signed-off spike record `docs/spikes/S-08-copilot-vscode.md` §2–§5 (facts F-1 … F-7,
+  `:171-181`) and the probe files under `docs/spikes/s08/`. It was also checked against P-01's answers
+  in `20-plan/questions-log.md` rounds 6–7: Q-copilot-01 `:83-86`; Q-opencode-01 `:88-91`, open and
+  outside the spec; Q-versions-02 `:97-101`; Q-serena-ctx-01 `:103-107`. Parts the diff does not
+  touch were not re-reviewed.
+- Reviewed IDs (changed IDs and the IDs linked to them): C002-REQ-103, 107, 111, 117, 211, 301 … 326,
+  602, 604, 606, 612, 614, 620, 623, 626, 628, 630, 632; C002-AC-301.1 … 326.1 and C002-TS-301 … 356
+  (CAP-03), C002-TS-112, C002-TS-604; C002-US-301 … 306; C002-NFR-105, 201, 204; C002-DOD-008, 009,
+  013; C002-AS-03, C002-AS-04; scope §1.1, §3.1; the glossary rows changed by D-003; C002-INV-14; the
+  enforcement-mode and question-call machines of `40-domain/state-machines.md`; domain §2.8;
+  C002-IF-001 §2, §4, §5, §6.1, §6.2; C002-IF-002 §1 … §3; C002-IF-005 §3 … §6; C002-IF-007
+  (synopsis, `host-version`, `hook guard`, `hook subagent-stop`, §Install, exit codes, output);
+  C002-IF-008 §1, §1.2, §2 … §4; C002-IF-009 §2.1 … §2.3, §3, §4; C002-IF-010 §1, §2, §4;
+  ERR-REL-005, ERR-CLI-021, ERR-CLI-022, GUARD-PATH-001, GUARD-BASH-001, GUARD-HOOK-001;
+  C002-CON-08, C002-CON-14; architecture §3 rows F3, F5, F6, F7, F13, the §4 data row and the new §6.2
+  rows; the index. Linked and read without change: C002-TS-308, C002-TS-309; C002-DEC-001,
+  C002-DEC-005; the Claude Code conductor's agent grant (`plugins/architect/agents/sdd-conductor.md:7`,
+  C001-REQ-217, C001-REQ-218).
+- `sdd lint 002`: 9 LINT-DELTA-001 errors only (C002-REQ-211, 212, 213, 503 … 507, 601), waived under
+  C002-DEC-008 — not findings.
+- `sdd trace 002`: TR-01 31/31, TR-02 128/128, TR-03 130/130, TR-04 16/16, TR-05 128/128 and 16/16,
+  TR-06 128/128, TR-08 228/228; 18 open items.
+
+### Facts F-1 … F-7 across the spec
+
+| Fact (S-08 §5) | Requirements | Interfaces and errors | Architecture, domain, glossary | Scenarios | Result |
+|---|---|---|---|---|---|
+| F-1 workspace agents start as subagents, plugin agents do not | C002-REQ-301, 322, 304; C002-REQ-107 rationale | C002-IF-005 §3 (plugin part and install sources, same-name assumption), C002-IF-007 §Install, ERR-CLI-021, ERR-CLI-022 | §6.2 package-split row, F13, §4 data row; "Workspace agent", "Plugin agent" | C002-TS-301, 341 … 345 | consistent; the agents the conductor can start: CR-37; the file-name placeholder: CR-39 item 3 |
+| F-2 workspace MCP servers start, plugin ones do not | C002-REQ-301, 307, 323, 304 (first message) | C002-IF-002 §1 (start after the first message, no write tool before), C002-IF-005 §3 `install/mcp.json`, C002-IF-001 §6.2, C002-IF-010 §4 (servers file), TGT-MCP-001 | F3, §6.2 rows; C002-AS-03 records the refuted part | C002-TS-310, 327, 346 … 348 | consistent |
+| F-3 `${PLUGIN_ROOT}` not expanded in hook commands on Windows | C002-REQ-326, 316, 602 | C002-IF-008 §4 (`@CLI_COPY@`, absolute path), C002-IF-005 §3, the C002-IF-001 variables row, ERR-CLI-022, TGT-PORT-001, TGT-HOOK-001 | C002-CON-14, §6.2 row, F6 | C002-TS-325, 354 … 356, the C002-TS-604 rows | consistent; the stale plugin copy after a later install is handled by install notes step 3 |
+| F-4 agent-scoped hooks do not run; plugin-level hooks carry `agent_type` | C002-REQ-302 (none under server enforcement), 308, 309, 318 … 321, 626 | C002-IF-008 §2 decision order, C002-IF-005 §3, C002-IF-007 `hook guard`, C002-IF-009 §2.2, §2.3, §3 (`guard_hooks_block_subagent_calls`), ERR-REL-005, GUARD-HOOK-001 | C002-CON-08, F5, §6.2 row, enforcement-mode transitions, glossary | C002-TS-303, 304, 311 … 314, 333 … 340 | consistent for the session agent's calls; built-in subagents: CR-37; the fallback without the package's hooks: CR-38 |
+| F-5 question tool `ask_user` | C002-REQ-211 rationale, 304 (marker), 311, 312, 614 | C002-IF-001 §2 and §6.1 (marker), C002-IF-005 §3, §4, PLG-VAR-001 | question-call machine, domain §2.8, glossary "Question tool" | C002-TS-316 … 319 | consistent; the glossary example: CR-39 item 4 |
+| F-6 exit 2 reported as 1 and fail-closed on Copilot CLI; `<plugin>:<agent>` | C002-REQ-309, 612, 315 open item | C002-IF-008 §2 "Allow and deny" (deny decision on standard output plus exit 2), C002-IF-007 exit codes, C002-IF-009 §2.3, C002-IF-010 §1, §4, GUARD-HOOK-001 | C002-CON-08, §6.2 row | C002-TS-312 (`architect:` row), 314, 323, 336 | consistent |
+| F-7 MCP tools deferred, named `<server>-<tool>` | C002-REQ-103, 111, 117 rationale | C002-IF-001 §2, §4, §5 (`target_pattern`, `grant_pattern`, `deferred`), C002-IF-002 §2 table, C002-IF-005 §3, C002-IF-010 §2 name mapping | glossary "Deferred MCP tool" | C002-TS-310, 333 | consistent |
+
+### Safety parity (C002-DEC-005)
+
+- **sdd MCP server enforcement, Architect agents.** The boundary fails closed for the Architect
+  agents themselves. No file declares a PreToolUse hook (C002-REQ-302, TGT-HOOK-001). No agent or
+  prompt file grants a generic edit or terminal tool, and every agent has a `tools` list (C002-REQ-306,
+  C002-REQ-604, TGT-GRANT-001); an agent without one would get every host tool (S-08 §3.2). Before the
+  session's first message the workspace servers are not running, so no write or command tool exists
+  (C002-IF-002 §1). The install command is denied to agents on every mechanism (C002-REQ-325;
+  C002-TS-312, 351, 352). The conductor, as session agent, is held by its own `tools` list, which
+  C002-TS-309 checks in VS Code.
+- **The session agent's calls without `agent_type`.** Under the fallback, rule 2 of C002-IF-008 §2
+  allows them (C002-REQ-320; C002-TS-337, 338). C002-REQ-321 keeps the conductor and the prompt files
+  on the server profiles (C002-TS-339, 340, TGT-GRANT-001). So no Architect call that passes the hook
+  unchecked holds a generic edit or terminal tool. Unreadable input is denied whoever calls (rule 1,
+  C002-TS-314), as C002-CON-08 requires.
+- **Not covered.** Agents that the conductor can start and that are not Architect agents (CR-37), and
+  specialists present without the package's guard hook under the fallback (CR-38).
+
+### `[ASSUMPTION]` markers added by D-003
+
+| Marker | Where | Settled by (spec) | Result |
+|---|---|---|---|
+| `ask_user` without `chat.askQuestions.enabled` | C002-REQ-304 open item (`CAP-03-copilot-target/requirements.md:57`) | manual VS Code checklist (C002-REQ-614) | pass |
+| prompt-file names and slash commands | C002-REQ-317 open item (`requirements.md:178`) | checklist, C002-TS-329 | pass |
+| Copilot CLI per-session MCP option | C002-IF-010 (`50-interfaces/eval-runner.md:54`) | the runner task, with stated alternatives | pass |
+| `ask_user` grant name, input shape, result without a choice | C002-IF-001 §6.1 (`50-interfaces/mapping-tables.md:155`) | checklist interview and gate steps | pass |
+| VS Code offers workspace folders as MCP roots | C002-IF-002 §3 (`50-interfaces/sdd-mcp-server.md:70`) | checklist fresh-install step (C002-IF-009 §4, `verification-records.md:195`) | pass in the spec; no plan step names it (plan CR-26) |
+| `copilot-chat` 0.35.3 of the tested Insiders build | C002-IF-009 §3 (`verification-records.md:162`) | P-01 | answered by Q-versions-02; marker stale (CR-39 item 1) |
+| a `user-invocable: false` workspace agent still starts as a subagent | C002-IF-005 §3 (`target-packages.md:163`) | checklist fresh-install step | pass |
+| workspace and plugin agents of the same names | C002-IF-005 §3 (`target-packages.md:172`) | checklist fresh-install step, with a stated fallback layout | pass |
+
+### New findings
+
+#### CR-37 — On Copilot the conductor can start the host's built-in subagents, which no Architect tool list or hook confines
+- **Severity:** blocker
+- **Refs:** C002-REQ-107, C002-AC-107.1, C002-TS-112, C002-TS-309, C002-REQ-302, C002-REQ-306, C002-REQ-320, C002-US-302, C002-IF-005 §3, C002-IF-001 §2, C002-IF-008 §2, C002-NFR-203, C002-DEC-005, C001-REQ-217, C001-REQ-218
+- **Evidence:**
+  - "**Plugin agents are not available as subagents** (0.0.3 run): the task tool offered only `explore`, `task`, `general-purpose`, `rubber-duck`, `code-review`, `research`, `security-review` and the selected agent `probe-parent`" — `docs/spikes/S-08-copilot-vscode.md:113-115`, for a parent declared with "tools: ['agent', 'read', 'search', 'edit', 'execute', 'vscode/askQuestions']" and "agents: ['probe-confined', 'probe-hooked']" — `docs/spikes/s08/agents/probe-parent.agent.md:4-5`
+  - "An agent without `tools:` gets the full set (PowerShell, `create`/`edit`, web, GitHub MCP, `task`, …)" — `docs/spikes/S-08-copilot-vscode.md:161`
+  - "`agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`)" — `10-spec/50-interfaces/mapping-tables.md:48`; "Conductor: `tools` adds `agent`, `ask_user` and the todo tool; `agents` lists the nine" — `10-spec/50-interfaces/target-packages.md:168`
+  - "THE generator SHALL grant the right to start other agents to the conductor alone, limited to the nine specialists." — `10-spec/20-capabilities/CAP-01-target-generator/requirements.md:74`, verified on the package only: "Then the generated conductor's <grant> admits exactly the nine specialists" with the row "| Copilot  | "agents" list |" — `10-spec/20-capabilities/CAP-01-target-generator/acceptance.md:174, 179`
+  - "the boundary is the agents' tool lists, which the local agent host and Copilot CLI confine" — `10-spec/20-capabilities/CAP-03-copilot-target/requirements.md:35`; "So that the boundary holds in VS Code through the agents' tool lists, whatever agent identity the hook input carries" — `CAP-03-copilot-target/stories.md:28`
+  - under the fallback: "`agent_type` absent, not a string, or, with any `architect:` prefix removed, not a name of `--agents` → allow, exit 0" — `10-spec/50-interfaces/hooks-contract-delta.md:198-199`
+  - on Claude Code: "tools: Agent(architect:sdd-researcher, architect:sdd-cartographer, architect:sdd-options-analyst, architect:sdd-spec-writer, architect:sdd-test-designer, architect:sdd-architect, architect:sdd-planner, architect:sdd-critic, architect:sdd-auditor), …" — `plugins/architect/agents/sdd-conductor.md:7`
+- **Why it matters:** S-08 shows the local agent host offering its built-in agents to a parent whose
+  `agents` list names two other agents. So the `agents` list does not limit the conductor's starts to
+  the nine specialists. A built-in subagent runs with the host's tool set, not with a `tools` list of
+  the package. The record does not give its tools, but `general-purpose` and `task` are the obvious
+  candidates for edit and terminal tools. Under sdd MCP server enforcement the package then has no
+  second line, because C002-REQ-302 removes every PreToolUse hook. Under the fallback, rule 2 of
+  C002-IF-008 §2 allows the call, because its `agent_type` is no Architect name. One instruction
+  planted in an artifact the conductor reads ("delegate this edit to general-purpose") is then enough
+  to write outside `.sdd/` or to run any command, which is the injection threat of C002-NFR-203. On
+  Claude Code the conductor's `Agent(...)` grant admits only the nine specialists (C001-REQ-217,
+  C001-REQ-218), so the same-as-Claude bar of C002-DEC-005 does not hold in the default Copilot mode.
+  No requirement or scenario covers the case: C002-TS-112 inspects the package, and C002-TS-309 asks
+  the conductor to edit by itself. The revision's claim that the tool lists are the boundary
+  (C002-REQ-302 rationale, C002-US-302) is therefore incomplete, and the record it relies on shows it.
+- **Suggested fix:**
+  1. Spec-writer: add an unwanted-behaviour requirement for Copilot in both modes. When the conductor
+     is asked to start an agent other than the nine specialists, including a built-in agent of the
+     host, no file outside `.sdd/` changes and no command outside the allowlist runs. Correct the
+     C002-REQ-302 rationale and the outcome of C002-US-302.
+  2. Architect: record the S-08 §3 observation in C002-IF-005 §3 and C002-IF-001 §2. Mark
+     `[ASSUMPTION: S-08]` on two points that §3.1 does not record: whether the built-in agents are also
+     offered when the specialists are workspace agents, and which of their tools edit files or run
+     commands. State the fail-closed response that P-01 chooses (Q-safety-06).
+  3. Test-designer: add a `@manual-vscode @mode-server` scenario and an `@eval` Copilot CLI injection
+     scenario, each with a planted instruction to delegate a product-code edit to `general-purpose`,
+     and count both as release evidence (C002-REQ-617).
+- **Owner:** sdd-spec-writer (new requirement, C002-REQ-302 rationale, C002-US-302); sdd-architect (C002-IF-005 §3, C002-IF-001 §2, architecture §6.2); sdd-test-designer (scenarios, DoD coverage); P-01 (Q-safety-06)
+- **Status:** open
+
+#### CR-38 — Hooks fallback: the specialists' generic tools and their guard hook are installed in different places, so the specialists run unguarded when the package's hooks are not loaded
+- **Severity:** major
+- **Refs:** C002-REQ-308, C002-REQ-310, C002-REQ-322, C002-IF-005 §3, §5, C002-IF-008 §2, §4, C002-CON-08, C002-DEC-005, architecture §6.2
+- **Evidence:**
+  - "Copilot hooks fallback: each specialist's `tools` holds the generic edit and terminal tools the table maps Write, Edit and Bash to" — `10-spec/50-interfaces/target-packages.md:176-177`, written into the repository as "`<repo>/.github/agents/sdd-<agent>.agent.md` | byte copy" — `target-packages.md:137`
+  - "**Where the hook is declared.** Once, as a plugin-level PreToolUse entry of the package's hooks file (C002-IF-005 §3), not in agent frontmatter" — `10-spec/50-interfaces/hooks-contract-delta.md:173`
+  - "Before that install, the plugin part runs no hook; the boundary does not depend on hooks under sdd MCP server enforcement, and under the hooks fallback the conductor holds no generic edit or terminal tool (C002-REQ-321)." — `target-packages.md:129-131`
+  - "Step 2 comes first, so that the plugin is loaded with its `hooks.json`; after a later install that changes `hooks.json`, reload the window, because VS Code loads the plugin from a copy (S-08 §3)." — `target-packages.md:274-275`; "VS Code copies the plugin to `%APPDATA%\Code - Insiders\agentPlugins\<id>\<nonce>\` and loads its agents, hooks and MCP server from the copy" — `docs/spikes/S-08-copilot-vscode.md:106-107`
+  - the README warning covers disabled hooks only: "the write/shell boundary is off whenever hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy." — `10-spec/20-capabilities/CAP-03-copilot-target/requirements.md:109`; the alternative kept open: "a workspace-level hook written by the install command" — `10-spec/60-architecture/architecture.md:313`
+- **Why it matters:** Under the fallback, the specialists' boundary is the guard hook in
+  `<package>/hooks.json`. The specialists themselves, with generic edit and terminal tools, are
+  workspace files in `.github/agents/`, which are committed and read by every VS Code that opens the
+  repository. The two can get out of step without any fault that the hook could fail closed on:
+  - a collaborator opens the repository without the plugin, or with the plugin disabled;
+  - P-03 installs while VS Code already holds a copy of the plugin without `hooks.json`, a case the
+    spec answers only with a reload instruction;
+  - the package is moved after the install.
+  In each case the specialists start with generic edit and terminal tools and no guard runs. That is
+  fail-open, against C002-CON-08 and C002-DEC-005. It was not possible before D-003, when each agent
+  file carried its own hooks. Severity is major, not blocker, because the signed-off record selects sdd
+  MCP server enforcement and the fallback applies only to a later record (scope §1.1). It remains the
+  specified exception of C002-DEC-005, and the plan builds and tests it in both modes.
+- **Suggested fix:** Make the guard travel with the specialists, in one of two ways. Either the
+  install command writes the fallback's Copilot guard hook at workspace level beside the agents:
+  C002-REQ-308 already allows "workspace-level", architecture §6.2 lists this alternative, and a
+  missing CLI copy then errors and denies, so the hook fails closed. Or the specialists also keep the
+  server profiles under the fallback, so that no workspace file grants a generic tool. Then add an abuse
+  scenario in which `.github/agents/` is installed, the package's hooks are not loaded, and a
+  specialist's write to `src/app.ts` is refused or impossible. Extend or replace the C002-REQ-310
+  warning to match.
+- **Owner:** sdd-architect (C002-IF-005 §3 and §5, C002-IF-008 §2 placement, architecture §6.2); sdd-spec-writer (C002-REQ-308, C002-REQ-310); sdd-test-designer (abuse scenario)
+- **Status:** open
+
+#### CR-39 — Stale or inconsistent text after the D-003 revision and the round-7 answers
+- **Severity:** minor
+- **Refs:** C002-IF-009 §3, Q-versions-02, architecture §3 F13, C002-REQ-322, C002-IF-005 §3, ERR-CLI-021, glossary "Skipped answer", 00-index
+- **Evidence:**
+  1. "[ASSUMPTION: S-08 — the record's copilot-chat 0.35.3 is the Copilot Chat version of the tested VS Code Insiders build; P-01 confirms it from the record's run before the table is written]" — `10-spec/50-interfaces/verification-records.md:162`, answered by "0.35.3 is fine (Recommended) — the tested pair is VS Code Insiders 1.142.0-insider with Copilot Chat 0.35.3." — `20-plan/questions-log.md:100`
+  2. "C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-325, C002-REQ-326; scenarios for these requirements: test-designer, D-003 revision" — `10-spec/60-architecture/architecture.md:248`, while C002-TS-341 … C002-TS-356 exist (`CAP-03-copilot-target/acceptance.md:542-740`)
+  3. "THE sdd CLI SHALL write the ten agents of the Copilot target package as `.github/agents/<agent>.agent.md` files" — `CAP-03-copilot-target/requirements.md:219`, versus "`<repo>/.github/agents/sdd-<agent>.agent.md`" — `10-spec/50-interfaces/target-packages.md:137` and "an existing `.github/agents/sdd-<agent>.agent.md`" — `10-spec/50-interfaces/errors.md:93`
+  4. "| Skipped answer | A question-tool result that carries no choice of P-01, such as the `{"skipped": true}` result of `vscode/askQuestions` (C002-R-001 A-07) |" — `10-spec/40-domain/glossary-delta.md:50`, below the row "| Question tool | … `ask_user` (Copilot VS Code, local agent host; …) |" — `glossary-delta.md:49`
+  5. "| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–306 (6) | 301–326 (26) | 19 | 35 (block 301–399) |" and the total row "| **31** | **128** | **123** | **206** |" — `10-spec/00-index.md:48, 52`, while CAP-03 defines C002-AC-301.1 … C002-AC-326.1 and 56 scenarios (C002-TS-301 … C002-TS-356), and `sdd trace 002` reports TR-03 130/130 and TR-08 228/228
+- **Why it matters:**
+  1. An open marker remains that P-01 has answered. `85-open-items.md` still lists it, and C002-T-024
+     waits for it (plan CR-25).
+  2. A reader of F13 looks for scenarios that are already written.
+  3. In the requirement `<agent>` reads as the agent name (`sdd-critic`); in the interface and the
+     error it reads as the role (`critic`). These are two readings of the file name that C002-REQ-322
+     fixes. C002-TS-341 settles it as `sdd-conductor.agent.md`, so the meaning can be recovered.
+  4. The example names a tool that the Copilot target no longer uses, and the no-choice result of
+     `ask_user` is still unknown (C002-REQ-311 rationale).
+  5. The index shows 19 ACs and 35 scenarios for CAP-03, and wrong totals.
+- **Suggested fix:**
+  1. Remove the marker and cite Q-versions-02.
+  2. List C002-TS-341 … C002-TS-356, or a selection, in F13.
+  3. Use one form, `.github/agents/<agent name>.agent.md` or `sdd-<role>.agent.md`, in C002-REQ-322,
+     C002-IF-005 §3 and ERR-CLI-021.
+  4. Make the glossary example tool-neutral, or mark it as the R-001 finding for
+     `vscode/askQuestions`.
+  5. Set CAP-03 to AC 26 and TS 56, and the totals to 130 and 228.
+- **Owner:** sdd-architect (items 1, 2; item 3 in C002-IF-005 and `errors.md`); sdd-spec-writer (item 3 in C002-REQ-322; items 4, 5)
+- **Status:** open
+
+### Rubric (D-003 review, applied to the reviewed IDs of this pass)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass (C002-US-306: P-03) |
+| stories | S2 Value / outcome stated | pass |
+| stories | S3 INVEST | pass (C002-US-306 small and testable through C002-TS-341 … 350) |
+| stories | S4 Every story has ≥ 1 requirement | pass (TR-01 31/31) |
+| stories | S5 Out of scope stated where a neighbour exists | pass (C002-US-306 leaves the command to P-03 and refers to C002-REQ-325) |
+| stories | S6 Traces to the ideation | pass (D-003, S-08 §5, ideation §8) |
+| requirements | R1 Singular outcome | pass (C002-REQ-324 one refusal with its conditions; C002-REQ-309 one deny outcome) |
+| requirements | R2 Testable | pass (C002-REQ-320 … 326 each with concrete scenarios, C002-TS-337 … 356) |
+| requirements | R3 Unambiguous | CR-39 (item 3) |
+| requirements | R4 Correct EARS pattern | pass (C002-REQ-320 complex, C002-REQ-302 optional-feature, C002-REQ-324 and 325 unwanted-behaviour) |
+| requirements | R5 Implementation-free | pass (`.github/agents/`, `.vscode/mcp.json` and the root tokens are host-defined names at the boundary) |
+| requirements | R6 Complete | CR-37, CR-38 |
+| requirements | R7 Consistent | CR-37 (C002-REQ-302 rationale and C002-US-302 against S-08 §3), CR-39 |
+| requirements | R8 Feasible | pass (each new requirement rests on an S-08 observation) |
+| requirements | R9 Necessary | pass (each traces to a fact F-1 … F-7) |
+| requirements | R10 Measurable values with units and limits | pass |
+| requirements | R11 Delta and evidence | pass (all D-003 requirements ADDED; 9 LINT-DELTA-001 waived under C002-DEC-008) |
+| requirements | R12 Priority set and consistent | pass (Must, as C002-US-302, 303, 305, 306) |
+| NFRs | N1 … N5 | pass (C002-NFR-105, 201 and 204 changed in wording and rationale only, citing S-08 §2.2 and §2.4; metric, threshold, method and DoD unchanged) |
+| acceptance | A1 Every REQ has an AC, every AC a TS | pass (TR-02 128/128, TR-03 130/130) |
+| acceptance | A2 Scenarios observable and concrete | pass (paths, versions and messages, for example C002-TS-346, 349) |
+| acceptance | A3 One behaviour per scenario | pass |
+| acceptance | A4 Error and abuse cases present | CR-37 (no case for a built-in subagent), CR-38 (no case for agents installed without the guard); otherwise present (C002-TS-345, 349, 350, 351, 356) |
+| acceptance | A5 n/a cells justified | pass (coverage rows of C002-REQ-317, 320, 322, 323) |
+| domain, interfaces, architecture | D1 Entities with attributes, relationships, owner, invariants | pass (domain §2.8 `ask_user`; C002-INV-14 wording) |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states: diagram and complete table | pass (enforcement-mode and question-call machines updated in diagram and table) |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass (ERR-CLI-021, ERR-CLI-022, GUARD-HOOK-001, the GUARD-BASH-001 install reason) |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements served | pass (C002-COMP-018 install command; C002-COMP-004, 012) |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | pass (the new §6.2 rows, each with its alternative) |
+| DoD and index | O1 Every REQ and NFR covered | pass (TR-05 128/128, 16/16) |
+| DoD and index | O2 Evidence types fit the statements | pass |
+| DoD and index | O3 Global items referenced | pass |
+| DoD and index | X1 Index is navigation only | CR-39 (item 5) |
+| plan | P1 … P7 | n/a: spec phase (plan findings in `20-plan/90-critic-report.md`, D-003 review) |
+| ideation | I1 … I10 | n/a: spec phase (ideation not stale) |
+
+### D-003 verdict
+
+**needs-revision** — the revision carries F-1 … F-7 consistently through the requirements, IF-001,
+002, 005, 007, 008, 009, 010, `errors.md`, the architecture and the scenarios. REQ-320 … 326 are
+testable, and the session agent's calls without `agent_type` are handled. G2 cannot be re-approved
+yet, for one reason:
+
+- CR-37 (blocker): the S-08 record itself shows that the conductor's `agents` list does not keep it
+  from starting the host's built-in subagents. In sdd-mcp-server mode no hook stands behind the tool
+  lists, so the Copilot boundary is not at Claude Code's level. P-01 must choose the response
+  (Q-safety-06).
+
+CR-38 (major, conditional fallback) and CR-39 (minor) can go in the same revision. A further review
+can be limited to the IDs these three findings change.

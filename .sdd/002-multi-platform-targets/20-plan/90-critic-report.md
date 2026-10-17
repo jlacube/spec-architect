@@ -19,11 +19,13 @@ under C002-DEC-008; `sdd trace 002` reports TR-01 … TR-11 at 100 % and a cycle
 ## Summary
 | blocker | major | minor |
 |---|---|---|
-| 1 | 11 | 11 |
+| 1 | 12 | 13 |
 
 Round 1 raised CR-1 … CR-16 (1 blocker, 9 major, 6 minor); re-review 1 resolved all of them and
 raised CR-17 … CR-21 (2 major, 3 minor); re-review 2 resolved CR-17 … CR-21 and raised CR-22 and
 CR-23 (2 minor). Open after re-review 2: 0 blocker, 0 major, 2 minor (CR-22, CR-23); both fixed by the conductor afterwards, open: none.
+The D-003 review (2026-10-17, at the end of this report) raised CR-24 … CR-26 (1 major, 2 minor).
+Open after the D-003 review: 0 blocker, 1 major, 2 minor (CR-24 … CR-26).
 
 ## Findings
 
@@ -629,3 +631,144 @@ C002-T-051 run has a looser in-run reserve check, and its single ledger entry ca
 the routing smoke filter matches no file. Neither needs P-01. Both can be fixed in a short
 test-designer and planner pass, or carried into implementation as open minor findings, without
 blocking G3.
+
+## D-003 review — plan update after spike S-08 (2026-10-17)
+
+Scope: `git diff ce32129 HEAD -- .sdd/002-multi-platform-targets/20-plan` (33 files): the commits of
+C002-T-002 up to b0589d5, the D-003 plan update 3dc627c and the round-7 commit 4c93af5. The diff was
+checked against the revised spec, whose findings are in the D-003 review of
+`10-spec/90-critic-report.md` (CR-37 … CR-39), and against `questions-log.md` rounds 6–7
+(`:79-107`). Unchanged parts of the plan were not re-reviewed.
+
+Re-reviewed set:
+- read in full: C002-T-058 and C002-T-059 (new);
+- read in their full diff: C002-T-019, 024, 032, 033 and 045;
+- read in intent and targets: C002-T-046;
+- checked through their links in `sdd trace 002`: the other changed tasks (C002-T-002, 007, 009,
+  014, 027, 031, 035, 037, 038, 041, 047, 050, 054, 055, 057);
+- `10-strategy.md` §4 (S-08 outcome, open assumptions); `70-risks.md` C002-RISK-001, 003, 013, 014,
+  030 and 031; `75-rollout.md` MIG-5, C002-RB-006 and §5; `handoff.md` "Open points";
+  `30-impact/regression-set.md` §3 and §4.1; `questions-log.md` round 7.
+
+Tool state: `sdd lint 002` reports exactly the 9 waived LINT-DELTA-001 errors; `sdd trace 002`
+reports TR-06 128/128, TR-07 59/59, TR-08 228/228 and TR-11 acyclic.
+
+### Checked without finding
+
+- **Ownership of C002-REQ-320 … 326.** C002-REQ-320 is owned by C002-T-032; C002-REQ-321 by
+  C002-T-031 and C002-T-035; C002-REQ-322 … 324 by C002-T-058; C002-REQ-325 by C002-T-059; and
+  C002-REQ-326 by C002-T-033, C002-T-035 and C002-T-058. Scenario owners:
+  - C002-TS-337 and 338: C002-T-032;
+  - C002-TS-339: C002-T-031;
+  - C002-TS-340: C002-T-035; C002-TS-355: C002-T-033 and C002-T-035;
+  - C002-TS-341 … 350, 354 and 356: C002-T-058;
+  - C002-TS-351 and 353: C002-T-059; C002-TS-352: C002-T-019;
+  - C002-TS-336: C002-T-045, reported not applicable under the signed-off record.
+- **Order of the guard edits.** C002-T-059 follows C002-T-010 on `src/hooks/guard-bash.ts`
+  (C002-RISK-001), and C002-T-019 and C002-T-032 depend on it. C002-T-058 follows C002-T-033, and so
+  C002-T-032 and C002-T-059, on `src/cli/commands.ts` (C002-RISK-003). C002-T-045 depends on
+  C002-T-058, which its runner preparation needs.
+- **S-08 outcome applied.** The strategy §4 branches are marked "not taken" and come back only with
+  a later record. C002-RISK-013 and C002-RISK-014 are lowered to "low" and marked "not realised".
+  C002-TC-336 is reported not applicable with the record cited (C002-T-045 step 6). Rollout §5 drops
+  C002-T-058 in the defer branch.
+- **New risks and rollout.** C002-RISK-030 (the install command writes outside `.sdd/`) maps its
+  mitigations to C002-REQ-324, C002-TS-348 … 350, C002-T-058, C002-T-059, C002-T-019 and C002-RB-006.
+  C002-RISK-031 (drift of the Insiders build) maps to C002-T-014, C002-T-038 and C002-T-047. MIG-5 and
+  C002-RB-006 add the per-repository install and its removal through the install record.
+- **Round 6** (AI-Credit estimate, Copilot spike first) was applied before this diff; C002-T-002 is
+  done.
+
+### New findings
+
+#### CR-24 — The plan inherits spec CR-37: no task step, test case or risk covers the conductor starting a built-in subagent on Copilot
+- **Severity:** major
+- **Refs:** spec CR-37 (`10-spec/90-critic-report.md`, D-003 review), C002-T-031, C002-T-045, C002-T-046, C002-T-047, C002-T-050, C002-T-054, C002-RISK-026, `60-test-plan.md` §4.4
+- **Evidence:**
+  - "the task tool offered only `explore`, `task`, `general-purpose`, `rubber-duck`, `code-review`, `research`, `security-review` and the selected agent `probe-parent`" — `docs/spikes/S-08-copilot-vscode.md:114-115`
+  - "It covers the sdd MCP server boundary; one interview round through `ask_user`" — `20-plan/50-tasks/T-046-vscode-checklist.md:24-25`; "Run the routing cases, the injection cases, the sdd MCP server guard cases and the non-interactive scenarios against the Copilot target package" — `20-plan/50-tasks/T-045-copilot-cli-eval-runner.md:23-24`
+  - a search of `20-plan/` for "general-purpose", "built-in agent" and "built-in subagent" finds nothing; no risk row of `70-risks.md` names agents that the conductor can start outside the nine specialists
+- **Why it matters:** The checklist, the Copilot CLI injection runs and the risk register test the
+  boundary only through the Architect agents' own tool lists. A built-in subagent started by the
+  conductor bypasses them in both modes (spec CR-37). Once the spec adds the requirement, the plan
+  needs:
+  - an owning task step for the chosen response, either a generator or emitter change (C002-T-031) or
+    a release-check refusal (C002-T-047);
+  - a checklist step (C002-T-046, C002-T-050);
+  - a Copilot CLI eval case (C002-T-045, C002-T-054), counted in the AI-Credit estimate of test plan
+    §4.4 and in C002-RISK-026;
+  - a risk row.
+
+  Until then, G3 would approve Copilot release evidence that cannot show the gap.
+- **Suggested fix:** After the spec fix of CR-37, add the TC rows and their owning steps, and count
+  the extra sessions in the Copilot allowance. Add a risk row: likelihood medium, impact high, owner
+  the implementer with P-01, triggered when a checklist step or eval shows a built-in subagent editing
+  a file or running a command.
+- **Owner:** sdd-planner; sdd-test-designer (TC rows, §4.4), after the spec fix of CR-37
+- **Status:** open
+
+#### CR-25 — P-01's round-7 answers are logged but not applied: the hand-off, the strategy and C002-T-024 still wait for them
+- **Severity:** minor
+- **Refs:** Q-versions-02, Q-serena-ctx-01, C002-T-024, C002-T-050, `handoff.md` "Open points", `10-strategy.md` §4, `30-impact/regression-set.md` §3
+- **Evidence:**
+  - "- **Answer:** 0.35.3 is fine (Recommended)" — `20-plan/questions-log.md:100`; "- **Answer:** Decide in T-024 (Recommended)" — `:106`, for the option "C002-T-024 takes it from Serena's context list at the tested Serena version and records it; C002-T-050 confirms Serena starts (Recommended)" — `:105`
+  - "| Q-serena-ctx-01: the Serena `--context` of the Copilot table (not in the S-08 record; C002-IF-001 §6.2) | C002-T-024 step 3 | open: P-01 decides at G3 |" and "| P-01 confirms that Copilot Chat 0.35.3 of the S-08 record is the Copilot Chat of the tested Insiders build (C002-IF-009 §3) | C002-T-024 step 3 | open |" — `20-plan/handoff.md:113-114`
+  - "| `copilot-chat` 0.35.3 is the Copilot Chat of the tested Insiders build | C002-IF-009 §3 | P-01's confirmation before C002-T-024 writes the table |" and "| Serena `--context` for Copilot VS Code (not in the record) | C002-IF-001 §6.2, C002-REQ-301 | P-01's answer to Q-serena-ctx-01 (`handoff.md` "Open points") before C002-T-024; the checklist confirms Serena starts |" — `20-plan/10-strategy.md:139-140`
+  - "after P-01 has confirmed that `0.35.3` is" and "write it as `handoff.md` "Open points" records P-01's answer (planner question Q-serena-ctx-01, G3)." — `20-plan/50-tasks/T-024-mapping-tables.md:51, 59-60`
+  - "Until that impact file is updated, C002-T-059 and C002-T-048 take the C002-REQ-623 list as the source | C002-T-059, C002-T-048 | open: impact-file update for the conductor |" — `handoff.md:115`, while "C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325 (`sdd install` deny cases and the "not install;" summary of the deny message, D-003)" — `20-plan/30-impact/regression-set.md:88`
+- **Why it matters:** Commit 4c93af5 logged both answers, but the hand-off, which the implementer
+  reads first (`10-strategy.md` §5), still lists them as open. C002-T-024 step 3 tells the
+  implementer to wait for an answer that has already been given. The Serena answer also moves the
+  decision into C002-T-024, but the task has no step that picks the context from Serena's context list
+  at the tested Serena version and records it. The third open point is already done.
+- **Suggested fix:** Mark the three hand-off rows settled and cite their sources. Cite Q-versions-02
+  and Q-serena-ctx-01 in the strategy §4 rows. Rewrite C002-T-024 step 3: take `copilot-chat` 0.35.3
+  per Q-versions-02; take the Serena `--context` from Serena's context list at the tested Serena
+  version and record it in the task report; C002-T-050 then confirms that Serena starts.
+- **Owner:** sdd-planner
+- **Status:** open
+
+#### CR-26 — The C002-IF-002 §3 assumption on MCP roots in VS Code has no named settling step
+- **Severity:** minor
+- **Refs:** C002-IF-002 §3, C002-IF-009 §4, C002-REQ-614, C002-CON-15, C002-T-046, C002-T-050, `10-strategy.md` §4
+- **Evidence:**
+  - "[ASSUMPTION: S-08 — VS Code offers its workspace folders as roots, first folder first; the S-08 record does not show it, and the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that a write lands in the open repository's .sdd/]" — `10-spec/50-interfaces/sdd-mcp-server.md:70`; "(which includes `sdd install copilot`, C002-IF-005 §5, and confirms the assumptions of C002-IF-005 §3 and C002-IF-002 §3)" — `10-spec/50-interfaces/verification-records.md:194-195`
+  - "The fresh-install steps confirm the assumptions the spec leaves to this checklist (C002-IF-005 §3, C002-IF-001 §6.1, C002-REQ-304, C002-REQ-317)" — `20-plan/50-tasks/T-046-vscode-checklist.md:29-31`
+  - "**Open assumptions the spec leaves to the plan** (marked `ASSUMPTION: S-08` in the spec), each with the task that settles it" — `20-plan/10-strategy.md:129-130`, followed by a table (`:132-140`) with no row for C002-IF-002 §3
+- **Why it matters:** This is the only S-08 marker of the revision with no row in the strategy table,
+  and C002-T-046 does not list it either. The checklist may therefore lack a step that records which
+  `.sdd/` a write lands in. That matters in a multi-root workspace, because the server fixes its root
+  at initialisation (C002-CON-15). It is minor because a toy change taken to G1 would show a misplaced
+  write.
+- **Suggested fix:** Add the row to strategy §4. Add C002-IF-002 §3 to the C002-T-046 list, with a
+  checklist step that names the expected `.sdd/` path.
+- **Owner:** sdd-planner
+- **Status:** open
+
+### Rubric (D-003 review, applied to the re-reviewed set)
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 128/128; C002-REQ-320 … 326 owned (above) |
+| plan | P2 Each task has targets, verification and done-checks | CR-25 (C002-T-024 step 3), CR-26 (C002-T-046); C002-T-058 and C002-T-059 have targets, preconditions, steps, verification and done-checks |
+| plan | P3 Dependency graph acyclic, milestones coherent | pass: TR-11 acyclic; C002-T-059 (M-02) before C002-T-019 (M-03) and C002-T-032 (M-04); C002-T-058 after C002-T-033; C002-T-045 after C002-T-058 |
+| plan | P4 Every scenario maps to a planned test | CR-24 for the case the spec still lacks; otherwise pass (TR-08 228/228, 22 new TCs) |
+| plan | P5 Risks cover the hotspots touched | CR-24; C002-RISK-030 and C002-RISK-031 added, C002-RISK-001 and 003 extended to C002-T-059 and C002-T-058 |
+| plan | P6 Rollout and rollback stated | pass: MIG-5 per-repository install, C002-RB-006 removal through the install record, §5 defer branch drops C002-T-058 |
+| plan | P7 ADRs for every remaining technical decision | pass: the D-003 design choices are architecture §6.2 rows (spec); the plan adds no technical decision |
+| brief focus | C002-REQ-320 … 326 testable and owned by tasks | pass (testability: spec D-003 review) |
+| brief focus | New `[ASSUMPTION]` markers each with a settling task | CR-25 (answered markers still awaited), CR-26 (no step for C002-IF-002 §3) |
+| brief focus | P-01 rounds 6–7 applied | CR-25 |
+| brief focus | Safety parity | CR-24 (inherits spec CR-37) |
+| ideation, stories, requirements, NFRs, acceptance, domain, DoD and index | all items | n/a: the spec rubric is applied in `10-spec/90-critic-report.md`, D-003 review |
+
+### Verdict (D-003 review)
+
+**needs-revision.** The plan update follows the D-003 spec revision closely:
+- C002-T-058 and C002-T-059 are added with correct ownership and dependencies;
+- the Copilot tasks are revised for workspace agents, the install command, the guard hook keyed by
+  `agent_type`, and `<plugin>:<agent>` naming;
+- C002-RISK-030 and C002-RISK-031 are added;
+- the S-08 outcome is recorded in the strategy, the risks and the rollout.
+
+CR-24 (major) waits for the spec fix of CR-37 and P-01's answer to Q-safety-06. CR-25 and CR-26 are
+minor planner fixes. G3 can be re-approved after G2.
