@@ -11,7 +11,7 @@ implements: []
 satisfies_ac: [C002-AC-614.1, C002-AC-615.1, C002-AC-618.1]
 verified_by: [C002-TS-617, C002-TS-618, C002-TS-621, C002-TC-617, C002-TC-618, C002-TC-621, C002-TC-901]
 components: [C002-COMP-011]
-risk_refs: []
+risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031]
 estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -20,12 +20,16 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-**P-01 executes this task.** P-01 runs the checklist on the Copilot release candidate in VS Code at the
-tested versions, on a fresh install, and records the run (C002-DOD-004). This covers C002-SC-02 (a toy
-change reaches G1). Under the hooks fallback, or when Copilot CLI cannot load the package
-(C002-REQ-613), the run includes the injection cases; under the hooks fallback with hooks enabled
-(C002-REQ-629). This task serves the Copilot release only (C002-T-055); the OpenCode release does not
-wait for it.
+**P-01 executes this task.** P-01 runs the checklist on the Copilot release candidate in VS Code
+Insiders at the S-08 tested version (`1.142.0-insider`, Local session type; tested hosts of scope
+§3.1), on a fresh install, and records the run (C002-DOD-004). This covers C002-SC-02 (a toy change
+reaches G1) and settles the assumptions the spec leaves to the checklist (C002-T-046: workspace and
+plugin agents of the same names, `user-invocable: false` subagents, prompt-file binding and names,
+`ask_user` input shape, no-choice result and setting, Serena context). Under the signed-off S-08 record
+(`sdd-mcp-server`, `copilot_cli_loads_package: true`) the injection cases run on Copilot CLI
+(C002-T-054), not here; they join this run only under the hooks fallback with hooks enabled
+(C002-REQ-629) or when a later record shows that Copilot CLI cannot load the package (C002-REQ-613).
+This task serves the Copilot release only (C002-T-055); the OpenCode release does not wait for it.
 
 ## Targets
 
@@ -43,9 +47,15 @@ wait for it.
 ## Step outline (no production code)
 
 1. **P-01 step:** install the Copilot package from `dist/architect-copilot-<version>.zip` and
-   `architect-sdd` from the local tarball on a fresh VS Code profile, following `INSTALL.md` only.
-2. **P-01 step:** run every step of the checklist and record each result and the versions.
-3. A failed step reopens the owning task; the run is repeated after the fix.
+   `architect-sdd` from the local tarball on a fresh VS Code Insiders profile, following `INSTALL.md`
+   only: unpack outside the toy repository, run `sdd install copilot --package <folder>` in P-01's own
+   terminal, set the three settings, open a Local chat with `sdd-conductor` selected.
+2. **P-01 step:** run every step of the checklist and record each result, the versions and the
+   outcome of each assumption step.
+3. A failed step reopens the owning task; the run is repeated after the fix. A refuted assumption is
+   a spec defect (`sdd defect add`), not a fix in place; the same-name assumption has the fallback
+   layout of C002-IF-005 §3 (agents under `install/agents/`), which then needs a plan revision of
+   C002-T-031, C002-T-045 and C002-T-058.
 
 ## Verification
 

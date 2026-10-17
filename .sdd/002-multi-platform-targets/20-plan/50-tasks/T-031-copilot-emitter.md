@@ -1,57 +1,70 @@
 ---
 id: C002-T-031
-title: "Copilot emitter: agents, prompt files, skills, MCP configuration and install notes"
+title: "Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes"
 change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
 status: todo
 depends_on: [C002-T-021, C002-T-026, C002-T-028]
-implements: [C002-REQ-114, C002-REQ-301, C002-REQ-302, C002-REQ-303, C002-REQ-304, C002-REQ-306, C002-REQ-307, C002-REQ-317]
-satisfies_ac: [C002-AC-114.1, C002-AC-301.1, C002-AC-302.1, C002-AC-303.1, C002-AC-304.1, C002-AC-306.1, C002-AC-307.1, C002-AC-317.1]
-verified_by: [C002-TS-301, C002-TS-302, C002-TS-303, C002-TS-304, C002-TS-305, C002-TS-306, C002-TS-308, C002-TS-309, C002-TS-310, C002-TS-327, C002-TS-328, C002-TS-329, C002-TC-301, C002-TC-302, C002-TC-303, C002-TC-304, C002-TC-305, C002-TC-306, C002-TC-308, C002-TC-309, C002-TC-310, C002-TC-327, C002-TC-328, C002-TC-329]
+implements: [C002-REQ-114, C002-REQ-301, C002-REQ-303, C002-REQ-304, C002-REQ-306, C002-REQ-307, C002-REQ-317, C002-REQ-321]
+satisfies_ac: [C002-AC-114.1, C002-AC-301.1, C002-AC-303.1, C002-AC-304.1, C002-AC-306.1, C002-AC-307.1, C002-AC-317.1, C002-AC-321.1]
+verified_by: [C002-TS-301, C002-TS-302, C002-TS-305, C002-TS-306, C002-TS-308, C002-TS-309, C002-TS-310, C002-TS-327, C002-TS-328, C002-TS-329, C002-TS-339, C002-TC-301, C002-TC-302, C002-TC-305, C002-TC-306, C002-TC-308, C002-TC-309, C002-TC-310, C002-TC-327, C002-TC-328, C002-TC-329, C002-TC-339]
 components: [C002-COMP-001, C002-COMP-004]
-risk_refs: []
+risk_refs: [C002-RISK-031]
 estimate: L
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C002-T-031 — Copilot emitter: agents, prompt files, skills, MCP configuration and install notes
+# C002-T-031 — Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes
 
 ## Intent
 
-Write `dist/copilot/` as the contract of C002-IF-005 §3 defines it (C002-REQ-301). The package holds
-`*.agent.md` agents, `<name>.prompt.md` prompt files that run in the conductor (C002-REQ-303,
-C002-REQ-317), skills in the Agent Skills format, and `.mcp.json` with `sdd-files` and `sdd-shell`
-(C002-REQ-307) and Serena read-only on per-user data (C002-REQ-114). It also holds a byte copy of the
-CLI under `scripts/sdd.mjs` and `INSTALL.md` (C002-REQ-304). Under server mode no generic edit or
-terminal tool is granted (C002-REQ-306), and no plugin-level PreToolUse hook exists (C002-REQ-302).
+Write `dist/copilot/` as C002-IF-005 §3 (revised for defect D-003) defines it (C002-REQ-301): the
+plugin part (`plugin.json` named `architect`, `agents/sdd-<agent>.agent.md`, `prompts/<name>.prompt.md`
+bound to the conductor, skills in the Agent Skills format) and the install sources that the install
+command of C002-T-058 writes into the adopter's repository (`install/mcp.json` in the VS Code
+`servers` form). The package also holds the byte copy `scripts/sdd.mjs`, `architect-target.json` and
+`INSTALL.md` (C002-REQ-304), and no `.mcp.json` and no `hooks.json` (C002-REQ-307). Every agent has a
+`tools` list; under server mode none grants a generic edit or terminal tool (C002-REQ-306), and under
+the hooks fallback the conductor and every prompt file still hold the server profiles instead
+(C002-REQ-321).
 
 ## Targets
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `scripts/generate/emit/copilot.ts` | layout, agent and prompt frontmatter, skills, `.mcp.json`, CLI copy, install notes from `targets/copilot/install.md` |
-| add | `plugins/architect/targets/copilot/install.md` | install-notes source: Node.js 20+, VS Code and Copilot Chat tested versions, Claude models, `architect-sdd`, the three VS Code settings, conductor start |
-| add | `tests/integration/cap03/package.test.ts` | the listed scenarios on the generated package |
+| add | `scripts/generate/emit/copilot.ts` | layout of C002-IF-005 §3 (`placement.plugin_manifest`, `config_file` = `install/mcp.json`, `cli_copy`); agent frontmatter (`name` = file name, `tools` always present, `agents` of the conductor by bare name, `user-invocable: false` on the nine specialists, `ask_user` and the todo tool on the conductor); prompt-file frontmatter (`agent: sdd-conductor`, `tools`); skills; `install/mcp.json` with `servers` entries in sorted key order (`type: stdio` for the local servers); CLI copy; install notes |
+| add | `plugins/architect/targets/copilot/install.md` | install-notes source in the order of C002-IF-005 §5: unpack outside the repository; `sdd install copilot --package <folder>` in P-03's own terminal, again per repository and after a move or update; the three VS Code settings after the install step; the Local session type with `sdd-conductor` selected; workspace MCP servers start after the first message |
+| add | `tests/integration/cap03/package.test.ts` | the listed structure scenarios on the generated package, both modes |
 
 ## Preconditions
 
-- C002-T-021 (plugin bundle), C002-T-026 and C002-T-028 done; S-08 not `deferred`.
+- C002-T-021 (plugin bundle), C002-T-026 and C002-T-028 done; the Copilot table of C002-T-024 holds
+  the signed-off S-08 values (`enforcement_mode: sdd-mcp-server`).
 
 ## Step outline (no production code)
 
-1. Emit from the translated model with the Copilot table.
-2. Copy `plugins/architect/scripts/sdd.mjs` byte for byte (C002-ADR-004).
-3. Hooks are C002-T-033; this task writes no `hooks/` folder content except an empty placeholder if the
-   contract requires one.
+1. Emit from the translated model with the Copilot table. MCP tool names in bodies are already in the
+   `<server>-<tool>` call form (C002-T-027); `tools` lists use the grant form `<server>/*`.
+2. Under `copilot-hooks`, give the nine specialists the table's generic edit and terminal tools and
+   give the conductor and every prompt file the `sdd-mcp-server` mapping of Write, Edit and Bash
+   (C002-IF-001 §5; C002-REQ-321). `sdd-files` and `sdd-shell` stay in `install/mcp.json` in both modes.
+3. Copy `plugins/architect/scripts/sdd.mjs` byte for byte (C002-ADR-004).
+4. Hooks and the tool classes file are C002-T-033; this task writes no hook declaration.
+5. Keep the agent files under `agents/`. The fallback location `install/agents/` of C002-IF-005 §3
+   is used only if the fresh-install step of the checklist (C002-T-050) refutes the same-name
+   assumption; that is a plan change, not a choice of this task.
 
 ## Verification
 
-- `npm test -- cap03` and `npm run generate -- --target copilot --out <tmp>`
+- `npm test -- cap03/package` and `npm run generate -- --target copilot --out <tmp>`
 
 ## Done when
 
-- [ ] The listed integration and structure scenarios pass; the package loads as a local plugin in VS Code at its tested version (manual smoke noted)
-- [ ] Carried cases listed in the task report: C002-TC-309 and C002-TC-329 (manual) to C002-T-050; C002-TC-306 timing to C002-T-057; C002-TC-125 and C002-TC-126 to C002-T-029 and C002-T-035 (ownership move of critic CR-5, test plan)
+- [ ] The listed structure scenarios pass in both modes
+- [ ] Carried cases listed in the task report: C002-TC-309 and C002-TC-329 (manual) to C002-T-050;
+      C002-TC-306 timing to C002-T-057; the TGT-GRANT-001 clause of C002-TC-339 to C002-T-035; the
+      `install/hooks.template.json` clauses and rows of C002-TC-301 and C002-TC-302 to C002-T-033;
+      C002-TC-125 and C002-TC-126 to C002-T-029 and C002-T-035 (ownership move of critic CR-5, test plan)
 - [ ] Progress reported: `sdd task set C002-T-031 --status done --commit <sha>`

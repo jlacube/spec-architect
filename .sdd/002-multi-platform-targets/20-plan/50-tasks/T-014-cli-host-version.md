@@ -28,9 +28,9 @@ the versions with the tested versions are C002-T-038.
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `src/cli/host-version.ts` | `host-version opencode` and `host-version vscode` (VS Code and Copilot Chat versions) as C002-IF-007 defines them; fixed command lines only |
+| add | `src/cli/host-version.ts` | `host-version opencode`, `host-version vscode` and `host-version vscode-insiders` (VS Code or VS Code Insiders through `code-insiders`, and the Copilot Chat version) as C002-IF-007 defines them; fixed command lines only |
 | modify | `src/cli/commands.ts` | one `COMMANDS` row, with `sampleArgs` that do not call a real host |
-| add | `tests/integration/cli/host-version.test.ts` | fake `opencode` and `code` shims under `tests/fixtures/cfg-*/bin`, missing host, `.cmd` shim on Windows |
+| add | `tests/integration/cli/host-version.test.ts` | fake `opencode`, `code` and `code-insiders` shims under `tests/fixtures/cfg-*/bin`, missing host, `.cmd` shim on Windows |
 
 ## Preconditions
 

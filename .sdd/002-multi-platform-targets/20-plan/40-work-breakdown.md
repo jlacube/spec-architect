@@ -31,6 +31,7 @@ flowchart TB
     C002_T_013["T-013 Serena --user-data and --read-only"]
     C002_T_014["T-014 host-version"]
     C002_T_015["T-015 Claude staging leaves out targets"]
+    C002_T_059["T-059 sdd install denied in every form"]
   end
   subgraph M03["C002-M-03 sdd MCP server and architect-sdd"]
     C002_T_016["T-016 MCP binding and profiles"]
@@ -51,11 +52,12 @@ flowchart TB
     C002_T_029["T-029 OpenCode emitter"]
     C002_T_030["T-030 OpenCode permissions"]
     C002_T_031["T-031 Copilot emitter"]
-    C002_T_032["T-032 Copilot hook adapter"]
-    C002_T_033["T-033 Copilot package hooks"]
+    C002_T_032["T-032 Copilot hook adapter (agent_type)"]
+    C002_T_033["T-033 Copilot hook template and tool classes"]
     C002_T_034["T-034 Packaging runs the generator, target zips"]
     C002_T_035["T-035 Target structure checks"]
     C002_T_036["T-036 Determinism and benchmark"]
+    C002_T_058["T-058 sdd install copilot"]
   end
   subgraph M05["C002-M-05 Workflow on every host"]
     C002_T_037["T-037 Question-tool variants"]
@@ -102,6 +104,9 @@ flowchart TB
   C002_T_008 --> C002_T_019
   C002_T_010 --> C002_T_019
   C002_T_016 --> C002_T_019
+  C002_T_059 --> C002_T_019
+  C002_T_009 --> C002_T_059
+  C002_T_010 --> C002_T_059
   C002_T_018 --> C002_T_020
   C002_T_019 --> C002_T_020
   C002_T_004 --> C002_T_021
@@ -134,8 +139,13 @@ flowchart TB
   C002_T_006 --> C002_T_032
   C002_T_010 --> C002_T_032
   C002_T_011 --> C002_T_032
+  C002_T_059 --> C002_T_032
   C002_T_031 --> C002_T_033
   C002_T_032 --> C002_T_033
+  C002_T_005 --> C002_T_058
+  C002_T_009 --> C002_T_058
+  C002_T_031 --> C002_T_058
+  C002_T_033 --> C002_T_058
   C002_T_022 --> C002_T_034
   C002_T_029 --> C002_T_034
   C002_T_031 --> C002_T_034
@@ -162,11 +172,12 @@ flowchart TB
   C002_T_037 --> C002_T_044
   C002_T_042 --> C002_T_044
   C002_T_002 --> C002_T_045
-  C002_T_033 --> C002_T_045
   C002_T_044 --> C002_T_045
+  C002_T_058 --> C002_T_045
   C002_T_033 --> C002_T_046
   C002_T_037 --> C002_T_046
   C002_T_038 --> C002_T_046
+  C002_T_058 --> C002_T_046
   C002_T_034 --> C002_T_047
   C002_T_040 --> C002_T_047
   C002_T_046 --> C002_T_047
@@ -205,6 +216,7 @@ flowchart TB
   C002_T_023 --> C002_T_057
   C002_T_034 --> C002_T_057
   C002_T_039 --> C002_T_057
+  C002_T_058 --> C002_T_057
   C002_T_003 --> C002_T_055
   C002_T_023 --> C002_T_055
   C002_T_047 --> C002_T_055
@@ -216,8 +228,9 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 57 tasks weigh 115 in total (16 S, 24 M, 17 L). The longest chain
-weighs 33 and ends with the Copilot release; the OpenCode release ends one unit earlier, at 32, and
+Weights S = 1, M = 2, L = 3. The 59 tasks weigh 119 in total (17 S, 24 M, 18 L). The longest chain
+weighs 33 and ends with the Copilot release (unchanged by the D-003 plan update: C002-T-058 finishes
+at 21, four units before C002-T-044, so C002-T-045 still starts at 25); the OpenCode release ends one unit earlier, at 32, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
 **Overall (to C002-T-055, weight 33):**
@@ -244,9 +257,11 @@ against C002-T-048 (finishing at 29).
 
 The remaining Copilot coupling of the OpenCode chain is shared tooling, not a release decision:
 C002-T-048 waits for C002-T-045 (shared `evals/harness/session.mjs`, critic CR-7), C002-T-047 for the
-checklist template of C002-T-046, and C002-T-039 and C002-T-041 for C002-T-033. Under the Copilot
-defer branch these dependencies are removed (`75-rollout.md` §5) and the OpenCode chain ends at 31
-(through C002-T-044, C002-T-056, C002-T-049 and C002-T-052).
+checklist template of C002-T-046 (which now waits for C002-T-058 and finishes at 23; C002-T-047 at
+26, one unit before C002-T-045), and C002-T-039 and C002-T-041 for C002-T-033. The Copilot defer
+branch is not taken (signed-off S-08 record, `10-strategy.md` §4); only a later record would remove
+these dependencies (`75-rollout.md` §5), and the OpenCode chain would then end at 31 (through
+C002-T-044, C002-T-056, C002-T-049 and C002-T-052).
 
 C002-T-002 (S-08) has the same weight as C002-T-001 and is equally critical: C002-T-024 waits for both
 spike records. C002-T-053 (finishing at 1) and C002-T-006 (at 3) finish together with the spikes.
@@ -254,8 +269,9 @@ C002-T-026 (C002-M-04) also waits for C002-T-040 (C002-M-06), so that `scripts/t
 `tests/replay/` before the first replay test file lands (critic CR-17); C002-T-040 finishes at 6,
 before C002-T-025 at 8, so the critical path does not move.
 Slack: C002-T-021 finishes at 8 and C002-T-031 starts at 13; C002-T-022 finishes at 11 and C002-T-029
-starts at 13 (C002-T-034 at 16); C002-T-020 finishes at 12 and C002-T-041 starts at 18. The guard, CLI
-and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units without moving the end date.
+starts at 13 (C002-T-034 at 16); C002-T-059 finishes at 8, so C002-T-019 finishes at 11 and
+C002-T-020 at 13, and C002-T-041 starts at 18. The guard, CLI and MCP work of C002-M-02 and C002-M-03
+can therefore slip by 2 to 5 units without moving the end date.
 
 ## Tasks by milestone
 
@@ -277,10 +293,11 @@ and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units witho
 | C002-M-02 | C002-T-013 | CLI: --user-data and --read-only for the Serena commands | M | T-005, T-006 |
 | C002-M-02 | C002-T-014 | CLI: host-version command | S | T-006 |
 | C002-M-02 | C002-T-015 | Claude Code staging leaves out plugins/architect/targets/ | S | — |
+| C002-M-02 | C002-T-059 | Bash guard: sdd install denied in every form | S | T-009, T-010 |
 | C002-M-03 | C002-T-016 | sdd MCP server: protocol binding, profiles and standard-output discipline | L | T-004, T-006 |
 | C002-M-03 | C002-T-017 | sdd MCP server: write_file and replace_text | M | T-011, T-016 |
 | C002-M-03 | C002-T-018 | sdd MCP server: quick-lint findings with each write | S | T-017 |
-| C002-M-03 | C002-T-019 | sdd MCP server: run_command without a shell | L | T-008, T-010, T-016 |
+| C002-M-03 | C002-T-019 | sdd MCP server: run_command without a shell | L | T-008, T-010, T-016, T-059 |
 | C002-M-03 | C002-T-020 | sdd MCP server: fault injection and benchmarks | M | T-018, T-019 |
 | C002-M-03 | C002-T-021 | Build: two bundles and the licence check over both | M | T-004, T-016 |
 | C002-M-03 | C002-T-022 | architect-sdd: staging, template CLI lines and npm pack | L | T-003, T-012, T-013, T-021 |
@@ -292,12 +309,13 @@ and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units witho
 | C002-M-04 | C002-T-028 | Wiring variants, anchors and skill inlining | L | T-027 |
 | C002-M-04 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | L | T-022, T-026, T-028 |
 | C002-M-04 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | L | T-009, T-010, T-029 |
-| C002-M-04 | C002-T-031 | Copilot emitter: agents, prompt files, skills, MCP configuration and install notes | L | T-021, T-026, T-028 |
-| C002-M-04 | C002-T-032 | CLI: Copilot hook adapter | M | T-002, T-006, T-010, T-011 |
-| C002-M-04 | C002-T-033 | Copilot package: hooks.json, agent-scoped guard hooks and tool classes | M | T-031, T-032 |
+| C002-M-04 | C002-T-031 | Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes | L | T-021, T-026, T-028 |
+| C002-M-04 | C002-T-032 | CLI: Copilot hook adapter (hook guard by agent_type, session start, subagent stop) | M | T-002, T-006, T-010, T-011, T-059 |
+| C002-M-04 | C002-T-033 | Copilot package: hook template, Copilot guard hook and tool classes | M | T-031, T-032 |
 | C002-M-04 | C002-T-034 | npm run package runs the generator and zips each target | S | T-022, T-029, T-031 |
 | C002-M-04 | C002-T-035 | Target structure checks and the npm run check step | L | T-022, T-030, T-033 |
 | C002-M-04 | C002-T-036 | Generation determinism test and generation benchmark | S | T-034 |
+| C002-M-04 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | L | T-005, T-009, T-031, T-033 |
 | C002-M-05 | C002-T-037 | Conductor: interview and gate variants for the host question tools | M | T-028 |
 | C002-M-05 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | L | T-013, T-014, T-028 |
 | C002-M-05 | C002-T-039 | README sections for OpenCode and Copilot VS Code | S | T-030, T-033 |
@@ -306,8 +324,8 @@ and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units witho
 | C002-M-06 | C002-T-042 | OpenCode session driver and the opencode-permissions replay adapter | L | T-001, T-030, T-040 |
 | C002-M-06 | C002-T-043 | S-07 record: final replay outcomes and the OpenCode enforcement mode | S | T-042 |
 | C002-M-06 | C002-T-044 | OpenCode eval runner behind the existing case API | L | T-037, T-042 |
-| C002-M-06 | C002-T-045 | Copilot CLI eval runner | M | T-002, T-033, T-044 |
-| C002-M-06 | C002-T-046 | Manual VS Code checklist and its record template | M | T-033, T-037, T-038 |
+| C002-M-06 | C002-T-045 | Copilot CLI eval runner | M | T-002, T-044, T-058 |
+| C002-M-06 | C002-T-046 | Manual VS Code checklist and its record template | M | T-033, T-037, T-038, T-058 |
 | C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046 |
 | C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047 |
@@ -316,5 +334,5 @@ and MCP work of C002-M-02 and C002-M-03 can therefore slip by 2 to 6 units witho
 | C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048 |
 | C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054 |
-| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039 |
+| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058 |
 | C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057 |

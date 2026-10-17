@@ -85,13 +85,13 @@ in sections 4.1 to 4.5 is classified below:
   `tests/replay/`.
 - **Changed expectation**: an existing case or assertion that expects a different decision, text or
   value for the same input. The only planned ones are the deny-message and `Allowed:` summary texts of
-  C002-REQ-503, C002-REQ-517 and C002-REQ-521; no existing corpus case changes its expectation
+  C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325 (`sdd install` deny cases and the "not install;" summary of the deny message, D-003); no existing corpus case changes its expectation
   (section 4.1).
 
 C002-T-048 step 2 lists every test edit with this classification; an edit that fits neither is a
 regression or a spec defect against C002-REQ-623.
 
-### 4.1 Guard corpora and their tests (C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-607)
+### 4.1 Guard corpora and their tests (C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-325, C002-REQ-607)
 
 No existing bash-corpus case changes its expectation. Checked against the rules of C002-IF-008 §1:
 

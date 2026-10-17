@@ -11,7 +11,7 @@ implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
 components: [C002-COMP-006, C002-COMP-010]
-risk_refs: []
+risk_refs: [C002-RISK-031]
 estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -36,8 +36,11 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 ## Preconditions
 
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
-- The S-08 record is not `deferred` (else the defer branch of `75-rollout.md` §5 applies and this task
-  is dropped through a plan revision).
+- The S-08 record of the tested versions is not `deferred`: the signed-off record gives
+  `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could
+  bring the defer branch of `75-rollout.md` §5 back, and with it a plan revision that drops this task.
+- The release record names the tested hosts of scope §3.1 (VS Code Insiders `1.142.0-insider`,
+  Copilot CLI `1.0.98`).
 
 ## Step outline (no production code)
 

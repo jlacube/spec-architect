@@ -6,12 +6,12 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
 status: todo
-depends_on: [C002-T-008, C002-T-010, C002-T-016]
+depends_on: [C002-T-008, C002-T-010, C002-T-016, C002-T-059]
 implements: [C002-REQ-405, C002-REQ-406, C002-REQ-407]
-satisfies_ac: [C002-AC-405.1, C002-AC-406.1, C002-AC-407.1]
-verified_by: [C002-TS-406, C002-TS-407, C002-TS-408, C002-TS-409, C002-TS-641, C002-TS-642, C002-TC-406, C002-TC-407, C002-TC-408, C002-TC-409, C002-TC-641, C002-TC-642]
+satisfies_ac: [C002-AC-405.1, C002-AC-406.1, C002-AC-407.1, C002-AC-325.1]
+verified_by: [C002-TS-406, C002-TS-407, C002-TS-408, C002-TS-409, C002-TS-641, C002-TS-642, C002-TS-352, C002-TC-406, C002-TC-407, C002-TC-408, C002-TC-409, C002-TC-641, C002-TC-642, C002-TC-352]
 components: [C002-COMP-005, C002-COMP-012]
-risk_refs: []
+risk_refs: [C002-RISK-001]
 estimate: L
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -32,11 +32,11 @@ package CLI (C002-REQ-407), and the result returns the exit code, standard outpu
 |---|---|---|
 | add | `src/mcp/tools/shell.ts` | decision, word list from `tokenise`, spawn without shell, pipe-only filters in process, output caps, timeout |
 | modify | `src/hooks/guard-bash.ts` | export the dialect selection used by `decideBash`, if not already reachable; no rule change |
-| add | `tests/integration/mcp/shell.test.ts` | allowed, refused (GUARD-BASH-001 and GUARD-BASH-002), non-zero exit not an error, `.cmd` refused (ERR-MCP-006), own CLI version, PowerShell dialect |
+| add | `tests/integration/mcp/shell.test.ts` | allowed, refused (GUARD-BASH-001 and GUARD-BASH-002), non-zero exit not an error, `.cmd` refused (ERR-MCP-006), own CLI version, PowerShell dialect, `sdd install copilot` refused with no process started (C002-TS-352, on the fixture repository `fx-cp-install` of test plan §2, built here) |
 
 ## Preconditions
 
-- C002-T-008 and C002-T-010 (guard rules final for this change) and C002-T-016 done.
+- C002-T-008, C002-T-010 and C002-T-059 (guard rules final for this change) and C002-T-016 done.
 
 ## Step outline (no production code)
 

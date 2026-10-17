@@ -29,11 +29,11 @@ that, three lists could drift (hotspots §3 item 4).
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `src/cli/writing-commands.ts` | data only, no imports: the writing subcommands of C002-IF-008 §1.2, including the forms that write only with a flag (`status --write`, `trace --write`, `archive` without `--dry-run`) |
+| add | `src/cli/writing-commands.ts` | data only, no imports: the writing subcommands of C002-IF-008 §1.2, including the forms that write only with a flag (`status --write`, `trace --write`, `archive` without `--dry-run`) and the `install copilot` row (C002-REQ-325), which this task lists and C002-T-059 decides |
 | modify | `src/cli/commands.ts` | each `COMMANDS` row takes its "writes" property from the table; no second list |
 | modify | `src/hooks/guard-bash.ts` | recognise a writing subcommand by its first words, as `findCommand` does; resolve each `--cwd` like a write target with the C002-T-005 helper |
-| modify | `tests/guards/bash-corpus.json` | for each writing subcommand: one case with `--cwd` outside the root (deny) and one inside (allow); BG-019 stays allow |
-| add | `tests/guards/writing-commands.test.ts` | the table equals the rows of C002-IF-008 §1.2 (read through the C002-T-006 locator); every table entry names a `COMMANDS` row; `sdd --cwd x status --write` is a usage error of the CLI, not a bypass |
+| modify | `tests/guards/bash-corpus.json` | for each writing subcommand: one case with `--cwd` outside the root (deny) and one inside (allow); BG-019 stays allow; the `install copilot` cases, `deny` in every form, are C002-T-059's |
+| add | `tests/guards/writing-commands.test.ts` | the table equals the rows of C002-IF-008 §1.2 (read through the C002-T-006 locator); every table entry names a `COMMANDS` row, except the `install copilot` row until C002-T-058 registers that command (its deny rule is C002-T-059); `sdd --cwd x status --write` is a usage error of the CLI, not a bypass |
 
 ## Preconditions
 

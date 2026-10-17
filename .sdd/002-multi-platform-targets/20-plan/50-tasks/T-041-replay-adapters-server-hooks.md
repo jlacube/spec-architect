@@ -30,7 +30,7 @@ replay in their own dialect.
 | Kind | Target | Change |
 |---|---|---|
 | add | `tests/replay/adapters/sdd-mcp-server.ts` | starts `sdd-mcp` from an install of the tarball; one session per profile; `dialect` per case |
-| add | `tests/replay/adapters/copilot-hooks.ts` | Copilot-shaped input from the S-08 record; exit code as the decision |
+| add | `tests/replay/adapters/copilot-hooks.ts` | Copilot-shaped input from the S-08 record, with the playing generated agent in `agent_type` as VS Code reports it (`sdd-spec-writer`) and the hook `tool_name` of the case's class (C002-IF-009 §2.2); decision per §2.3: exit 2 with the deny decision on standard output is a deny, exit 0 with empty standard output an allow, anything else no decision. Used only under `copilot-hooks`; the signed-off S-08 record gives `sdd-mcp-server`, so its release replay is not applicable at the tested versions |
 | add | `tests/unit/replay/adapters.test.ts` | a sample of cases per adapter on a fixture |
 
 ## Preconditions

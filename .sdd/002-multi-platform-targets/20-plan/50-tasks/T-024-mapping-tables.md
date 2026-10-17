@@ -46,7 +46,18 @@ check.
 1. Copy the schema and register the pair in the equality test.
 2. Fill each table from its spike record. A value that the record does not give is a defect against
    the record, not a guess.
-3. If S-08 gave `deferred`, do not create `copilot.json`; follow `10-strategy.md` §4.
+3. Copilot table from the signed-off S-08 record (`enforcement_mode: sdd-mcp-server`; `10-strategy.md`
+   §4) and C002-IF-001 as revised for defect D-003: `tested_versions.vscode` from `vscode-insiders`
+   (`1.142.0-insider`) and `copilot-chat` from the record, after P-01 has confirmed that `0.35.3` is
+   the Copilot Chat of the tested Insiders build (assumption of C002-IF-009 §3);
+   `mcp_tool_names` `{server}-{tool}` with `grant_pattern` `{server}/{tool}`, `grant` per-server and
+   `deferred` true; `placement` with `plugin_manifest` `plugin.json`, `config_file`
+   `install/mcp.json`, `hooks_file` `install/hooks.template.json` and `cli_copy` `scripts/sdd.mjs`;
+   `ask_user` as the question tool; `plugin-root` (`${CLAUDE_PLUGIN_ROOT}` and `${PLUGIN_ROOT}`)
+   accepted in no context; `sdd-files` and `sdd-shell` declared in both Copilot modes; terminal
+   dialect `powershell` and `cmd_shims` empty. The Serena `--context` for Copilot is not in the S-08
+   record: write it as `handoff.md` "Open points" records P-01's answer (planner question
+   Q-serena-ctx-01, G3).
 4. Check that PLG-PATH-001 passes: no machine path in any table.
 
 ## Verification

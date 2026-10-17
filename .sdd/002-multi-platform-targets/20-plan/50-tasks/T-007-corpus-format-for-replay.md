@@ -41,7 +41,9 @@ and both corpus tests before any new case is added. Every existing case keeps it
 
 1. Add the optional fields. A case without them behaves exactly as today.
 2. Create `.git` in the fixture repository, next to `.sdd`.
-3. Run both corpora: 256 path cases and 277 shell cases, with no expectation changed.
+3. Run both corpora: 256 path cases and 277 shell cases, with no expectation changed. The new shell
+   cases of C002-TS-610 (Serena, `--cwd` and `sdd install copilot` rows) are added by C002-T-008,
+   C002-T-009, C002-T-010 and C002-T-059 in the format this task defines.
 4. Describe the fields in a header comment of each corpus test. The replay suite (C002-T-040) reads
    the same fields.
 

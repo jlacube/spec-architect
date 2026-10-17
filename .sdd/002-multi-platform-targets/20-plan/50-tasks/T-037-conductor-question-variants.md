@@ -24,8 +24,11 @@ Complete the interview-protocol and gate-protocol wiring variants of both target
 conductor asks through the host's question tool in rounds of at most four (C002-REQ-211, C002-REQ-212,
 C002-REQ-213). On OpenCode the conductor keeps headers within 30 characters and gives every option a
 description (C002-REQ-214). It treats a result without a choice as no answer and no approval
-(C002-REQ-311), and in VS Code without `vscode/askQuestions` it asks nothing and names the setting to
-enable (C002-REQ-312). The Claude Code text stays unchanged.
+(C002-REQ-311), and in VS Code without `ask_user` it asks nothing and names the missing tool and the
+step of `INSTALL.md` that makes it available (C002-REQ-312). The Copilot question tool is `ask_user`
+(S-08 fact F-5); its input shape and its result without a choice are not in the S-08 record, so the
+Copilot variants follow the shape of C002-IF-001 §6.1 (assumption S-08) and the checklist run of
+C002-T-050 confirms both. The Claude Code text stays unchanged.
 
 ## Targets
 
@@ -45,8 +48,8 @@ enable (C002-REQ-312). The Claude Code text stays unchanged.
 
 ## Step outline (no production code)
 
-1. Write each variant to the result shapes recorded by S-07 and S-08 (skipped, dismissed and empty
-   results).
+1. Write each variant to the result shapes recorded by S-07 (skipped, dismissed and empty results);
+   on Copilot treat any `ask_user` result without a choice as no answer (C002-REQ-311).
 2. Keep the verbatim-words rule of the gate unchanged (C001-REQ-802 as modified by C002-REQ-212).
 3. Run the generated-body test now.
 4. **Paid runs on E-CC (the Claude Code rows of C002-TC-215, 217 and 219):** once the integration

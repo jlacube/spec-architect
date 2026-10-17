@@ -31,7 +31,7 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 
 | Kind | Target | Change |
 |---|---|---|
-| modify | `plugins/architect/targets/{opencode,copilot}/wiring/doctor-*.md` | final host rows, probes (`sdd host-version`, `sdd --version`), outcome and remedies with the tested versions from the tables |
+| modify | `plugins/architect/targets/{opencode,copilot}/wiring/doctor-*.md` | final host rows, probes (`sdd host-version`, `sdd --version`), outcome and remedies with the tested versions from the tables; the Copilot variant probes `sdd host-version vscode-insiders` while the table's tested VS Code version ends in `-insider` (the S-08 tested build, C002-IF-007), else `vscode` |
 | modify | `plugins/architect/targets/{opencode,copilot}/wiring/code-discovery-toolchain.md` | toolchain record with the host and the sdd CLI rows (C002-REQ-507) |
 | add | `evals/targets/doctor/TS-506.eval.mjs`, `TS-507`, `TS-509` … `TS-515`, `TS-526`, `TS-639` (`.eval.mjs` each) | `@eval` doctor cases with fake host shims (`tests/fixtures/cfg-*` pattern), beside `TS-537.eval.mjs` of C002-T-010; the Claude Code rows run in step 4, the OpenCode rows in C002-T-056, the Copilot CLI rows in C002-T-045 |
 | add | `tests/integration/cap05/doctor-variants.test.ts` | generated doctor bodies per target; the Claude Code doctor unchanged |

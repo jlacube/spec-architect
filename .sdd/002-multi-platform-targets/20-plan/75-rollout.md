@@ -38,7 +38,7 @@ generation manifest of the record; the zip container itself is not byte-identica
 | MIG-2 | Claude Code staging leaves out `plugins/architect/targets/` before the first mapping table exists | C002-T-015 |
 | MIG-3 | Guard corpora gain the replay fields; existing cases keep their expectations (regression-set §4.1) | C002-T-007 |
 | MIG-4 | Claude Code adopters: no migration. Serena keeps its per-user data folder (C002-IF-007); `sdd serena-config <folder>` keeps today's behaviour | C002-T-010, C002-T-013 |
-| MIG-5 | OpenCode and Copilot adopters: new installs only, following the install notes of each package; no earlier release exists | C002-T-029, C002-T-031, C002-T-039 |
+| MIG-5 | OpenCode and Copilot adopters: new installs only, following the install notes of each package; no earlier release exists. Copilot adopters run `sdd install copilot --package <folder>` once per repository, and again after the package moves or changes version (C002-IF-005 §5); a later install replaces only the files and server entries its install record recognises (C002-REQ-324) | C002-T-029, C002-T-031, C002-T-039, C002-T-058 |
 
 ## 3. Feature flags
 
@@ -55,11 +55,15 @@ flag. Changing it means regenerating and passing the release check again (C002-R
 | C002-RB-003 | A released Copilot target package misbehaves | As C002-RB-002 for `architect-copilot-<version>.zip`, with C002-T-055 for the new release; under the hooks fallback P-01 also re-runs the checklist (C002-T-050) before a new release | C002-T-033, C002-T-050, C002-T-055 |
 | C002-RB-004 | The shared guard or CLI changes of C002-M-02 break Claude Code work | Reinstall the previous plugin version as in C001-RB-001 (previous commit of `plugins/architect`, rebuild, reinstall from the local marketplace). Revert the guard task's commit and reopen the task with `sdd task set <T-ID> --status in-progress`. If C002-T-008 is reverted, D-011 of CHG-001 is reopened (`sdd defect reopen`) | C002-M-02, C002-T-008, C002-T-009, C002-T-010 |
 | C002-RB-005 | After release, the OpenCode permission rules turn out not to follow a guard rule (C002-T-043's glob-gap list grows) | Switch the OpenCode mapping table to `sdd-mcp-server` (architecture §6.2; Q-safety-03), regenerate, re-run the replay for that mechanism, pass the release check and release a new version | C002-T-030, C002-T-043, C002-T-047 |
-| C002-RB-006 | An adopter must remove a generated target | Reverse the placement step of the package's install notes: remove the package's `.opencode/` files and its `opencode.json` entries (OpenCode), or its `chat.pluginLocations` entry (VS Code); then `npm uninstall -g architect-sdd` if no other target uses it. Per-user Serena data stays outside the repository (C002-IF-007) | C002-T-029, C002-T-031, C002-T-039 |
+| C002-RB-006 | An adopter must remove a generated target | Reverse the placement step of the package's install notes: remove the package's `.opencode/` files and its `opencode.json` entries (OpenCode); or (VS Code) remove its `chat.pluginLocations` entry and, in each repository, the files and `.vscode/mcp.json` server entries that `.github/architect-install.json` lists with their present SHA-256 (an entry edited since the install is the adopter's and stays), then the install record itself; then `npm uninstall -g architect-sdd` if no other target uses it. Per-user Serena data stays outside the repository (C002-IF-007) | C002-T-029, C002-T-031, C002-T-039, C002-T-058 |
 
 ## 5. Copilot defer branch
 
-If the S-08 record (C002-T-002) gives `enforcement_mode: deferred`:
+Not taken: the signed-off S-08 record (C002-T-002, 2026-10-17) gives `enforcement_mode:
+sdd-mcp-server` on the tested hosts of scope §3.1. This branch applies only if a later S-08 record
+for a new tested version (C002-REQ-621) gives `deferred`; step 3 then also drops C002-T-058.
+
+If an S-08 record gives `enforcement_mode: deferred`:
 
 1. The implementer raises a spec defect (`sdd defect add --ref C002-CAP-03 --summary "…"`) that cites
    the record. Work on tasks that need no Copilot value continues (`10-strategy.md` §1).

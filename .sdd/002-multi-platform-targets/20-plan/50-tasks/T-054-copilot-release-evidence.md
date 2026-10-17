@@ -22,11 +22,13 @@ report: { commit: null, completed_at: null, notes: null }
 
 Produce the Copilot evidence that the release check reads, independently of the OpenCode target
 (C002-T-049), so that a slipping Copilot task never holds back the OpenCode release (`75-rollout.md`
-§1). For each mechanism in use on the Copilot target (the sdd MCP server, and the agent-scoped guard
-hooks under the hooks fallback), a corpus replay runs under PowerShell 7 and Git Bash with Developer
-Mode on (C002-DOD-008). The Copilot CLI dev tier runs the routing, injection, sdd MCP server guard
-and non-interactive cases of C002-TC-615 (C002-REQ-612, C002-DOD-009). The VS Code part of the
-evidence is the checklist record of C002-T-050.
+§1). For each mechanism in use on the Copilot target (the sdd MCP server under the signed-off S-08
+record; the Copilot guard hooks only under the hooks fallback), a corpus replay runs under
+PowerShell 7 and Git Bash with Developer Mode on (C002-DOD-008). The Copilot CLI dev tier runs the
+routing, injection, sdd MCP server guard and non-interactive cases of C002-TC-615 on Copilot CLI
+1.0.98, each session prepared by the runner of C002-T-045 (`sdd install copilot` into the case
+workspace, `--agent architect:<agent>`; C002-REQ-612, C002-DOD-009). The VS Code part of the evidence
+is the checklist record of C002-T-050.
 
 ## Targets
 
@@ -36,8 +38,8 @@ evidence is the checklist record of C002-T-050.
 
 ## Preconditions
 
-- C002-T-036, C002-T-041, C002-T-045 and C002-T-048 done; VS Code, Copilot Chat and Copilot CLI at
-  their S-08 tested versions.
+- C002-T-036, C002-T-041, C002-T-045 and C002-T-048 done; VS Code Insiders, Copilot Chat and
+  Copilot CLI at their S-08 tested versions (scope §3.1).
 - The release-candidate commit is the commit recorded by C002-T-048 (re-run its step 5 first if a
   source, harness or root file changed since).
 - The Copilot subscription named in C002-T-002 has allowance for about 40 sessions (test plan §4.2,
@@ -47,13 +49,11 @@ evidence is the checklist record of C002-T-050.
 
 1. Build the release candidate with `npm run package` at the release-candidate commit; this writes
    `dist/copilot/` and `dist/architect-copilot-<version>.zip` (C002-T-034).
-2. Run `npm run replay` for every Copilot mechanism in use, under both shells.
+2. Run `npm run replay` for every Copilot mechanism in use, under both shells: `sdd-mcp-server`; the
+   `copilot-hooks` reports are not applicable under the signed-off record.
 3. **Sessions on E-CPC (C002-TC-615):** the routing, injection (at least 20), sdd MCP server guard and
-   non-interactive cases, one run each, at most one rerun after a failure. Under
-   `copilot_cli_loads_package: false`, follow the row of `10-strategy.md` §4: the injection cases are
-   checklist steps whose evidence is the checklist record of C002-T-050, which the release check reads
-   directly (this task does not wait for it); the server guard cases are covered by the replay of
-   step 2; the other rows are reported not applicable with the S-08 record cited.
+   non-interactive cases, one run each, at most one rerun after a failure. C002-TC-336 (`@mode-hooks`)
+   is reported not applicable with the S-08 record cited.
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
 
 ## Verification
@@ -63,5 +63,5 @@ evidence is the checklist record of C002-T-050.
 
 ## Done when
 
-- [ ] 0 differing decisions in every Copilot replay report; 0 instructions acted upon over ≥ 20 Copilot CLI injection cases (or, under step 3's branch, the injection cases recorded as moved to the checklist)
+- [ ] 0 differing decisions in every Copilot replay report; 0 instructions acted upon over ≥ 20 Copilot CLI injection cases
 - [ ] Progress reported: `sdd task set C002-T-054 --status done --commit <sha>`

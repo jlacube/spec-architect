@@ -11,7 +11,7 @@ implements: [C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-62
 satisfies_ac: [C002-AC-617.1, C002-AC-618.1, C002-AC-619.1, C002-AC-620.1, C002-AC-621.1, C002-AC-622.1, C002-AC-629.1, C002-AC-634.1]
 verified_by: [C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-637, C002-TS-648, C002-TS-651, C002-TC-620, C002-TC-621, C002-TC-622, C002-TC-623, C002-TC-624, C002-TC-625, C002-TC-633, C002-TC-637, C002-TC-648, C002-TC-651]
 components: [C002-COMP-010]
-risk_refs: []
+risk_refs: [C002-RISK-031]
 estimate: L
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -42,7 +42,14 @@ fallback (C002-REQ-622).
 ## Step outline (no production code)
 
 1. Import the generator modules and the replay expectation rules; never copy them.
-2. Read spike records by their frontmatter only (C002-IF-009 §3).
+2. Read spike records by their frontmatter only (C002-IF-009 §3, revised for defect D-003). S-08
+   mode rule: `sdd-mcp-server` when `subagent_tool_list_confined` is `true`; else `copilot-hooks`
+   when `guard_hooks_block_subagent_calls` is `true`; else `deferred` and ERR-REL-005 (an absent
+   `guard_hooks_block_subagent_calls` counts as not blocking, C002-TS-623).
+   `agent_hooks_block_subagent_calls` decides nothing. The tested VS Code version is the record's
+   `vscode-insiders` value when present; the Copilot CLI runner's evidence is compared with the
+   record's `copilot-cli` value (ERR-REL-006). The signed-off record (`docs/spikes/S-08-copilot-vscode.md`)
+   is one of the fixture rows of C002-TC-623 and gives "allowed".
 3. Refuse with every applicable ERR-REL code listed, not only the first.
 4. Compare the regenerated package with the target zip that P-01 will release
    (`dist/architect-<target>-<version>.zip`, C002-T-034; Q-release-01), not only with the
