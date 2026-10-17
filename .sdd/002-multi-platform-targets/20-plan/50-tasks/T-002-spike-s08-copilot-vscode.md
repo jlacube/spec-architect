@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-01
-status: in-progress
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-306.1, C002-AC-308.1, C002-AC-620.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-623, C002-TC-623]
 components: [C002-COMP-002, C002-COMP-004]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: "Started 2026-10-16 (P-01: Copilot first). Host: VS Code 1.108.0, Copilot 1.388.0, Copilot Chat 0.35.3, Copilot CLI 1.0.98 installed; Copilot plan 1,500 AI credits/month + 50 USD additional; Claude Opus/Sonnet/Haiku enabled (P-01)" }
+report: { commit: "549e276", completed_at: 2026-10-17, notes: "S-08 signed off 2026-10-17: enforcement_mode sdd-mcp-server (VS Code Insiders 1.142.0 Local + Copilot CLI 1.0.98); defect D-003 (F-1…F-7) to be revised in one spec revision (P-01); TC-623 carried to T-047; AI Credits: CLI 9.03, VS Code first run 36.7, later runs from P-01's billing view" }
 ---
 
 # C002-T-002 — Spike S-08: GitHub Copilot in VS Code and Copilot CLI
