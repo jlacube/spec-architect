@@ -78,7 +78,7 @@ Scenario Outline: C002-TS-106 — construct translation per target
   Examples:
     | target  | construct                                   | translation          |
     | OpenCode | mcp__plugin_architect_serena__find_symbol  | serena_find_symbol   |
-    | Copilot  | mcp__plugin_architect_serena__find_symbol  | serena/find_symbol   |
+    | Copilot  | mcp__plugin_architect_serena__find_symbol  | serena/*             |
 ```
 
 ```gherkin
@@ -100,6 +100,20 @@ Scenario Outline: C002-TS-107 — every construct kind of the source plugin is t
     | AskUserQuestion              | commands/archive.md        |
     | ${CLAUDE_PLUGIN_ROOT}/templates/ | commands/decide.md     |
     | CLI invocation line          | agents/sdd-auditor.md      |
+    | MCP tool name in a body      | skills/research-protocol/SKILL.md |
+    | ToolSearch in a body         | agents/sdd-architect.md    |
+```
+
+```gherkin
+Scenario Outline: C002-TS-134 — Copilot MCP tool names in bodies
+  Given the body of "<file>" names the MCP tool "<construct>"
+  When the generator writes the Copilot target package
+  Then the file generated from "<file>", and every agent body that inlines it, holds "<call form>" in that place
+  And none of them holds "<construct>" or "<grant form>" in that place
+  Examples:
+    | file                              | construct                                  | call form           | grant form          |
+    | skills/research-protocol/SKILL.md | mcp__plugin_architect_context7__query-docs | context7-query-docs | context7/query-docs |
+    | skills/code-discovery/SKILL.md    | mcp__plugin_architect_serena__find_symbol  | serena-find_symbol  | serena/find_symbol  |
 ```
 
 ## C002-REQ-104
@@ -186,9 +200,9 @@ Scenario Outline: C002-TS-114 — least-privilege grants per agent
   Examples:
     | agent           | source tool                          | target   | host tool                                  |
     | sdd-researcher  | Bash                                 | OpenCode | "bash" tool                                |
-    | sdd-researcher  | Bash                                 | Copilot  | terminal tool and no sdd MCP command tool  |
+    | sdd-researcher  | Bash                                 | Copilot  | "execute" tool and no "sdd-shell/*"        |
     | sdd-critic      | AskUserQuestion                      | OpenCode | "question" tool                            |
-    | sdd-critic      | AskUserQuestion                      | Copilot  | "vscode/askQuestions" tool                 |
+    | sdd-critic      | AskUserQuestion                      | Copilot  | "ask_user" tool                            |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | OpenCode | Serena, Context7 or DeepWiki tool          |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | Copilot  | Serena, Context7 or DeepWiki tool          |
 ```
@@ -267,6 +281,7 @@ Scenario Outline: C002-TS-118 — sdd CLI invocation lines per target
   When the generator writes the <target> target package
   Then <generated> holds the <target> variant of that line in its place
   And none of them contains "scripts/sdd.mjs"
+  And where that variant names the command tool of the sdd MCP server, it names it by the <target> value of the token "{{server_shell}}" (OpenCode "sdd-shell_run_command", Copilot "sdd-shell-run_command", never "sdd-shell/run_command")
   Examples:
     | file                            | line | target   | generated                                                              |
     | skills/sdd-conventions/SKILL.md | 13   | OpenCode | the generated "sdd-conventions" skill and every agent body that inlines it |
@@ -323,7 +338,7 @@ Scenario Outline: C002-TS-120 — CLI invocation line, command wiring or doctor 
 Scenario: C002-TS-121 — Claude Code files after the variants are added
   Given the source plugin keeps the OpenCode and Copilot variants of every wiring section, every CLI invocation line and the doctor host rows
   When the plugin structure checks run on "plugins/architect/"
-  Then no file under "agents/", "commands/" or "skills/" contains an OpenCode or Copilot wiring variant, nor the name "vscode/askQuestions"
+  Then no file under "agents/", "commands/" or "skills/" contains an OpenCode or Copilot wiring variant, nor the name "ask_user" or "tool_search_tool"
   And every variant file lies under "plugins/architect/targets/"
   And PLG-SIZE-001 reports no finding for any Claude Code agent
 ```
@@ -338,7 +353,8 @@ Scenario Outline: C002-TS-122 — a variant pasted into a Claude Code file
     | variant                                         | file                          |
     | the Copilot variant of the gate wiring          | skills/gate-protocol/SKILL.md |
     | the OpenCode variant of the CLI invocation line | agents/sdd-conductor.md       |
-    | the line "Confirm in one vscode/askQuestions round" | commands/archive.md       |
+    | the line "Confirm in one ask_user round"        | commands/archive.md           |
+    | the line "Load sdd-files-write_file through tool_search_tool first" | agents/sdd-spec-writer.md |
 ```
 
 ## C002-REQ-114
@@ -352,7 +368,7 @@ Scenario Outline: C002-TS-124 — Serena declaration of each target package
   Examples:
     | target   | config        |
     | OpenCode | opencode.json |
-    | Copilot  | .mcp.json     |
+    | Copilot  | install/mcp.json |
 ```
 
 ```gherkin
@@ -366,9 +382,9 @@ Scenario: C002-TS-125 — Serena started from the OpenCode declaration
 
 ```gherkin
 Scenario: C002-TS-126 — Serena declaration without the read-only option
-  Given a generated "dist/copilot/.mcp.json" whose "serena" entry lacks the argument "--read-only"
+  Given a generated "dist/copilot/install/mcp.json" whose "serena" entry of "servers" lacks the argument "--read-only"
   When the target structure check runs on the Copilot target package
-  Then it reports the error TGT-SERENA-001 naming ".mcp.json", "serena" and "--read-only"
+  Then it reports the error TGT-SERENA-001 naming "install/mcp.json", "serena" and "--read-only"
 ```
 
 ## C002-REQ-115
@@ -463,7 +479,7 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 |---|---|---|---|---|---|---|---|
 | C002-REQ-101 | TS-101 | n/a | n/a | TS-102 | n/a | TS-103 | n/a |
 | C002-REQ-102 | TS-104 | TS-105 (failed run) | n/a | TS-105 | n/a | TS-104 | n/a |
-| C002-REQ-103 | TS-106, TS-107 | TS-106 (two targets) | n/a | n/a: an unmapped construct is C002-REQ-104 (TS-108) | n/a | n/a | n/a |
+| C002-REQ-103 | TS-106, TS-107 | TS-106 (two targets), TS-134 (Copilot call form in bodies, grant form in `tools`) | n/a | n/a: an unmapped construct is C002-REQ-104 (TS-108) | n/a | n/a | n/a |
 | C002-REQ-104 | TS-108 | TS-108 (one target of two) | n/a | TS-108 | n/a | n/a | n/a |
 | C002-REQ-105 | TS-109 | TS-109 (three tiers, two targets) | n/a | TS-110 | n/a | n/a | n/a |
 | C002-REQ-106 | TS-111 | n/a | n/a | n/a | n/a | n/a | n/a |

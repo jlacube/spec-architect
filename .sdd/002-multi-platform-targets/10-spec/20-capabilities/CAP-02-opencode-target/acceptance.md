@@ -216,8 +216,8 @@ Scenario Outline: C002-TS-215 — round size on Claude Code and OpenCode
 Scenario: C002-TS-216 — round size in VS Code
   Given the conductor in VS Code needs answers to 5 questions of one interview topic
   When the conductor asks P-01 for them
-  Then each question dialog comes from "vscode/askQuestions"
-  And no dialog shows more than 4 questions
+  Then each question dialog comes from an "ask_user" call of the conductor
+  And no "ask_user" call shows more than 4 questions
 ```
 
 ## C002-REQ-212
@@ -242,7 +242,7 @@ Scenario: C002-TS-218 — gate question in VS Code
   Given a toy change with phase "00-ideation" in review in VS Code
   When the conductor presents gate G1
   Then the chat shows the gate summary and the statement of what approval commits to
-  And a "vscode/askQuestions" dialog offers exactly "Approve", "Approve with waivers", "Revise" and "Stop"
+  And one "ask_user" dialog offers exactly "Approve", "Approve with waivers", "Revise" and "Stop"
 ```
 
 ## C002-REQ-213
@@ -266,7 +266,7 @@ Scenario Outline: C002-TS-219 — profile round on Claude Code and OpenCode
 Scenario: C002-TS-220 — profile round in VS Code
   Given a fresh repository with an initialised ".sdd/" in VS Code
   When P-01 runs the new-change prompt with the title "Toy change"
-  Then a "vscode/askQuestions" dialog proposes "lite" or "full" with its size estimate
+  Then an "ask_user" dialog proposes "lite" or "full" with its size estimate
   And no change folder exists until P-01 answers
 ```
 

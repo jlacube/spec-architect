@@ -61,8 +61,10 @@ Scenario Outline: C002-TS-604 — construct placement in a target package
     | .opencode/agents/sdd-auditor.md              | ${CLAUDE_PLUGIN_ROOT}  | 13   | the agent body               | an error naming the file, line 13 and the construct      |
     | sdd-critic.agent.md                          | AskUserQuestion        | 9    | the agent body               | an error naming the file, line 9 and the construct       |
     | sdd-planner.agent.md                         | architect:sdd-critic   | 21   | the agent body               | an error naming the file, line 21 and the construct      |
-    | the Copilot MCP configuration                | ${CLAUDE_PLUGIN_ROOT}  | 4    | a server command field       | no error                                                 |
-    | sdd-conductor.agent.md                       | ${CLAUDE_PLUGIN_ROOT}  | 6    | a hook command field         | no error                                                 |
+    | install/mcp.json                             | ${CLAUDE_PLUGIN_ROOT}  | 4    | a server command field       | an error naming the file, line 4 and the construct       |
+    | install/hooks.template.json                  | ${CLAUDE_PLUGIN_ROOT}  | 3    | a hook command               | an error naming the file, line 3 and the construct       |
+    | install/hooks.template.json                  | ${PLUGIN_ROOT}         | 3    | a hook command               | an error naming the file, line 3 and the construct       |
+    | .opencode/commands/architect-new.md          | $ARGUMENTS             | 9    | the command body             | no error                                                 |
 ```
 
 ## C002-REQ-603
@@ -78,22 +80,24 @@ Scenario Outline: C002-TS-605 — contract differences
     | OpenCode | no difference from its target package contract                | no error                                                |
     | OpenCode | the agent file "sdd-critic.md" missing                        | an error naming "sdd-critic.md"                         |
     | Copilot  | the tool "web/fetch" added to "sdd-auditor.agent.md"          | an error naming "sdd-auditor.agent.md" and "web/fetch"  |
-    | Copilot  | the server "serena" missing from the MCP configuration        | an error naming the MCP configuration and "serena"      |
+    | Copilot  | the server "serena" missing from "servers" of "install/mcp.json" | an error naming "install/mcp.json" and "serena"       |
+    | Copilot  | a file ".mcp.json" at the package root that declares "sdd-files" | an error naming ".mcp.json" and "sdd-files"           |
 ```
 
 ## C002-REQ-604
 
 #### C002-AC-604.1 — Edit or terminal grant on Copilot is an error
 ```gherkin
-Scenario Outline: C002-TS-606 — generic tool granted under server enforcement
-  Given a Copilot target package generated for sdd MCP server enforcement in which "<file>" grants "<tool>"
+Scenario Outline: C002-TS-606 — generic tool granted, or no tools list, under server enforcement
+  Given a Copilot target package generated for sdd MCP server enforcement in which "<file>" <grant>
   When the target structure check runs on that package
-  Then it reports an error naming "<file>" and "<tool>"
+  Then it reports the error TGT-GRANT-001 naming "<file>" and <named>
   Examples:
-    | file                     | tool                                      |
-    | sdd-conductor.agent.md   | the VS Code built-in edit tool            |
-    | plan.prompt.md           | the VS Code terminal tool                 |
-    | sdd-planner.agent.md     | a tool set that contains the edit tool    |
+    | file                     | grant                                                  | named                       |
+    | sdd-conductor.agent.md   | grants "edit"                                          | "edit"                      |
+    | plan.prompt.md           | grants "execute"                                       | "execute"                   |
+    | sdd-planner.agent.md     | grants a tool set that contains the host tool "create" | that tool set               |
+    | sdd-critic.agent.md      | has no "tools" field in its frontmatter                | the missing "tools" list    |
 ```
 
 ## C002-REQ-605
@@ -117,13 +121,14 @@ Scenario Outline: C002-TS-608 — replay per enforcement mechanism
   Then the replay report lists every applicable case of the path corpus and the shell corpus with the mechanism's decision and the expected decision for that mechanism
   And each case of the tools "Write", "Edit", "NotebookEdit", "Bash" and "PowerShell" was fed to the mechanism as the input that C002-IF-009 §2 maps it to
   And each case without a "cwd", with an empty "cwd" or without a tool name was fed as a malformed call and expects "deny" (C002-REQ-630)
+  And each replayed case carried its caller <caller>
   And the report lists <not applicable> as not applicable
   And it reports 0 differing decisions
   Examples:
-    | mechanism                                                                                   | not applicable                       |
-    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native)   | no case                              |
-    | the sdd MCP server                                                                          | the identity-category cases only     |
-    | the agent-scoped guard hooks (@mode-hooks)                                                  | the identity-category cases only     |
+    | mechanism                                                                                   | caller                                                                                                    | not applicable                       |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native)   | as the agent of the OpenCode session that C002-IF-009 §2 plays it with                                     | no case                              |
+    | the sdd MCP server                                                                          | as the server instance of C002-IF-009 §2                                                                   | the identity-category cases only     |
+    | the Copilot guard hooks (@mode-hooks)                                                       | in the hook input's "agent_type", as VS Code reports the playing generated agent (such as "sdd-spec-writer"), with the hook "tool_name" of the class the case maps to | the identity-category cases only     |
 ```
 
 ```gherkin
@@ -163,6 +168,9 @@ Scenario Outline: C002-TS-610 — new corpus cases
     | shell  | serena-launch with a folder inside the repository  | sdd serena-launch src -- start-mcp-server | deny |
     | shell  | writing sdd subcommand with --cwd outside the repository root | sdd change stop 001 --reason x --cwd C:/other-repo | deny |
     | shell  | writing sdd subcommand with --cwd inside the repository root  | sdd trace 001 --write --cwd C:/repo/pkg | allow |
+    | shell  | Copilot install command, bare form          | sdd install copilot                        | deny     |
+    | shell  | Copilot install command, script form        | node C:/pkg/scripts/sdd.mjs install copilot --package C:/pkg | deny |
+    | shell  | Copilot install command with --cwd inside the repository root | sdd install copilot --cwd C:/repo/pkg | deny |
 ```
 
 ```gherkin
@@ -193,6 +201,7 @@ Scenario Outline: C002-TS-636 — one corpus case per writing sdd subcommand
     | extract-features |
     | serena-config    |
     | serena-launch    |
+    | install copilot  |
 ```
 
 ## C002-REQ-608
@@ -273,10 +282,13 @@ Scenario Outline: C002-TS-614 — caps with a stub host
 ```gherkin
 @eval
 Scenario: C002-TS-615 — Copilot CLI dev tier
-  Given Copilot CLI at its tested version loads the Copilot target package
+  Given Copilot CLI at its tested version loads the Copilot target package with "--plugin-dir"
+  And each session's temporary workspace was prepared by "sdd install copilot --package <package copy>"
   When the Copilot CLI eval runner runs the dev tier
   Then the results hold the agent routing cases, the injection cases, the sdd MCP server guard cases and the non-interactive scenarios, each with the target "copilot"
   And every session was started in non-interactive mode with "--no-ask-user"
+  And every session named its agent as "--agent architect:<agent>", none by a bare agent name
+  And every agent start in the results is reported as "architect:<agent>"
 ```
 
 ## C002-REQ-613
@@ -298,9 +310,9 @@ Scenario: C002-TS-616 — S-08 shows Copilot CLI cannot load the package
 Scenario: C002-TS-617 — checklist content
   When the manual VS Code checklist is reviewed
   Then it holds a step for the sdd MCP server boundary, with a write outside ".sdd/" and a command outside the allowlist
-  And a step for one interview round through "vscode/askQuestions"
-  And a step for one gate through "vscode/askQuestions" that includes a skipped answer
-  And steps that take a toy change from its creation to gate G1 on a fresh install
+  And a step for one interview round through "ask_user" that records the input shape of the "ask_user" call
+  And a step for one gate through "ask_user" that includes a skipped answer and records the result "ask_user" returns without a choice
+  And steps that take a toy change from its creation to gate G1 on a fresh install, the run of "sdd install copilot" in P-03's terminal included
   And a step that chooses "Revise" at gate G1 of the toy change and expects the Gate log row "revise" and gate G1 presented again after the rework
   And a step that runs the revise prompt on the approved ideation phase of the toy change and expects "sdd status" to show that phase "in-revision"
 ```
@@ -396,14 +408,15 @@ Scenario: C002-TS-622 — Copilot refused, OpenCode clean
 #### C002-AC-620.1 — Copilot refused when neither enforcement mode holds
 ```gherkin
 Scenario Outline: C002-TS-623 — spike S-08 outcomes
-  Given "fx-release" with clean Copilot evidence and a spike S-08 record in which subagents <confined> confined and agent-scoped hooks <block> a subagent's tool calls
+  Given "fx-release" with clean Copilot evidence and a spike S-08 record whose frontmatter gives "subagent_tool_list_confined: <confined>", <guard hooks> and "agent_hooks_block_subagent_calls: false"
   When the release check runs for the Copilot VS Code target
   Then the release is <outcome>
   Examples:
-    | confined | block       | outcome                                        |
-    | are not  | do not block | refused, citing the spike S-08 record          |
-    | are      | do not block | allowed                                        |
-    | are not  | block        | allowed                                        |
+    | confined | guard hooks                                    | outcome                                                                   |
+    | false    | "guard_hooks_block_subagent_calls: false"      | refused with ERR-REL-005, citing the path of the spike S-08 record        |
+    | false    | no "guard_hooks_block_subagent_calls"          | refused with ERR-REL-005, citing the path of the spike S-08 record        |
+    | true     | no "guard_hooks_block_subagent_calls"          | allowed (the signed-off record: "enforcement_mode: sdd-mcp-server")       |
+    | false    | "guard_hooks_block_subagent_calls: true"       | allowed (enforcement mode "copilot-hooks")                                |
 ```
 
 ## C002-REQ-621
@@ -473,7 +486,7 @@ Scenario Outline: C002-TS-628 — memory case expectation per mechanism
     | mechanism                                                                                 |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
     | the sdd MCP server                                                                        |
-    | the agent-scoped guard hooks (@mode-hooks)                                                |
+    | the Copilot guard hooks (@mode-hooks)                                                      |
 ```
 
 ```gherkin
@@ -497,7 +510,7 @@ Scenario Outline: C002-TS-638 — memory case of a non-Architect caller replayed
     | mechanism                                                                                 | caller                                                                                         |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | the "write" call for "PG-224" was made by the generated Architect agent "sdd-conductor"        |
     | the sdd MCP server                                                                        | "PG-224" was fed to the "sdd-files" server instance as a "write_file" call                    |
-    | the agent-scoped guard hooks (@mode-hooks)                                                | "PG-224" was fed to the agent-scoped guard hook command of the Architect agent "sdd-conductor" |
+    | the Copilot guard hooks (@mode-hooks)                                                      | "PG-224" was fed to the Copilot guard hook command as hook input whose "agent_type" is "sdd-conductor" |
 ```
 
 ## C002-REQ-626
@@ -512,7 +525,7 @@ Scenario Outline: C002-TS-630 — identity case per mechanism
     | mechanism                                                                                 | result                                                                                                                    |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | the case ran as a call of an adopter agent that is none of the ten Architect agents, and the report lists "BG-258" with the expected decision "allow" and the decision "allow" |
     | the sdd MCP server                                                                        | the server received no call for "BG-258", and the report lists "BG-258" as not applicable                                |
-    | the agent-scoped guard hooks (@mode-hooks)                                                | the hooks received no input for "BG-258", and the report lists "BG-258" as not applicable                                |
+    | the Copilot guard hooks (@mode-hooks)                                                      | the hooks received no input for "BG-258", and the report lists "BG-258" as not applicable                                |
 ```
 
 ```gherkin
@@ -539,7 +552,7 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
     | mechanism                                                                                 | not applicable                                             |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | no case                                                    |
     | the sdd MCP server                                                                        | the IDs of the identity-category cases of both corpora     |
-    | the agent-scoped guard hooks (@mode-hooks)                                                | the IDs of the identity-category cases of both corpora     |
+    | the Copilot guard hooks (@mode-hooks)                                                      | the IDs of the identity-category cases of both corpora     |
 ```
 
 ```gherkin
@@ -608,7 +621,7 @@ Scenario Outline: C002-TS-643 — absent-field cases per mechanism
     | mechanism                                                                                 |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
     | the sdd MCP server                                                                        |
-    | the agent-scoped guard hooks (@mode-hooks)                                                |
+    | the Copilot guard hooks (@mode-hooks)                                                      |
 ```
 
 ```gherkin
@@ -621,7 +634,7 @@ Scenario Outline: C002-TS-644 — a case with a cwd other than the repository ro
     | mechanism                                                                                 |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
     | the sdd MCP server                                                                        |
-    | the agent-scoped guard hooks (@mode-hooks)                                                |
+    | the Copilot guard hooks (@mode-hooks)                                                      |
 ```
 
 ```gherkin
@@ -676,7 +689,7 @@ Scenario Outline: C002-TS-649 — PG-163 replayed on a host with file-symlink
     | mechanism                                                                                 |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) |
     | the sdd MCP server                                                                        |
-    | the agent-scoped guard hooks (@mode-hooks)                                                |
+    | the Copilot guard hooks (@mode-hooks)                                                      |
 ```
 
 ```gherkin
@@ -714,25 +727,25 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
 | C002-REQ-601 | TS-601 | n/a | n/a | TS-602 | n/a | TS-603 | n/a |
-| C002-REQ-602 | TS-604 | TS-604 (accepted fields) | n/a | TS-604 | n/a | n/a | n/a |
-| C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | n/a |
-| C002-REQ-604 | TS-606 | TS-606 (prompt file, tool set) | n/a | TS-606 | TS-606 | n/a | TS-606 (tool set) |
+| C002-REQ-602 | TS-604 | TS-604 (accepted field: `$ARGUMENTS` in an OpenCode command body) | n/a | TS-604 | n/a | n/a | TS-604 (`${PLUGIN_ROOT}` in a Copilot hook command) |
+| C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | TS-605 (plugin MCP configuration beside `install/mcp.json`) |
+| C002-REQ-604 | TS-606 | TS-606 (prompt file, tool set, agent without `tools`) | n/a | TS-606 | TS-606 | n/a | TS-606 (tool set, missing `tools` list) |
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases) | n/a | TS-609 | TS-608 | n/a | TS-608 (corpus abuse cases) |
-| C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root), TS-636 (writing subcommands, each with an outside `--cwd`) |
+| C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root, `sdd install copilot` in the bare and the script form and with an inside `--cwd`), TS-636 (writing subcommands, each with an outside `--cwd`) |
 | C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-611 | TS-614 | TS-614 (two runners) | TS-614 (30 turns, 0.50 USD) | TS-614 | n/a | n/a | n/a |
-| C002-REQ-612 | TS-615 | n/a | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
+| C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt) | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-615 | TS-618 | TS-618 (hooks fallback: hooks state) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-616 | TS-619 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes) | TS-620 (1 difference, 1 instruction) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013) | TS-648 (Architect agents' tool set left open) | n/a | n/a |
 | C002-REQ-618 | TS-621 | n/a | n/a | TS-621 | n/a | n/a | n/a |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-620 | TS-623 | TS-623 (either mode holds) | n/a | TS-623 | n/a | n/a | n/a |
+| C002-REQ-620 | TS-623 | TS-623 (either mode holds) | TS-623 (guard-hook outcome absent from a record whose subagents are not confined) | TS-623 | n/a | n/a | n/a |
 | C002-REQ-621 | TS-624 | TS-624 (Copilot versions) | TS-624 (older and newer) | TS-624 | n/a | n/a | n/a |
 | C002-REQ-622 | TS-625 | TS-625 (server enforcement) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
