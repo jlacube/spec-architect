@@ -1,0 +1,58 @@
+{
+  "scenario": "auth-smoke",
+  "title": "Eval auth switch smoke session",
+  "tier": "dev",
+  "label": "auth-smoke",
+  "agent": null,
+  "auth": "api-key",
+  "api_key_source": "/login managed key",
+  "measured_at": "2026-10-17T23:29:23.875Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.002992325,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.002992325,
+        "session_ms": 3874,
+        "api_ms": 1023,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 2,
+            "output": 4,
+            "cache_read": 0,
+            "cache_write": 23921,
+            "cost_usd": 0.002992325
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 4,
+              "cache_read": 0,
+              "cache_write": 23921
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": []
+      },
+      "auth": "api-key",
+      "api_key_source": "/login managed key",
+      "transcript": "evals/results/transcripts/auth-smoke-2026-10-17T23-29-19-996Z-run1.json"
+    }
+  ]
+}

@@ -1,13 +1,17 @@
 // Eval runner (C001-T-029, C001-ADR-003, C001-ADR-007). Usage:
 //   node evals/harness/run.mjs <scenario.eval.mjs>… [--tier dev|milestone|release] [--runs N]
 //                              [--max-total-usd X] [--label NAME] [--only ID,ID…]
+//                              [--auth api-key|subscription]   (default: EVAL_AUTH, else api-key)
 // Each run copies the scenario's fixture into a temporary directory, runs the session through the
 // Agent SDK, applies the scenario's assertions and records metrics. Results go to
 // evals/results/<label>-<scenario>-<time>.json (transcripts to evals/results/transcripts/, not
 // committed). Exit code 1 when a scenario misses the tier's pass rule or the budget is exhausted.
+// --auth subscription bills the P-01's Claude subscription instead of the prepaid API key (env.mjs);
+// its sessions record a notional cost_usd and do not count against --max-total-usd.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { resolveAuth } from "./env.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
 import { runSession } from "./session.mjs";
@@ -21,8 +25,10 @@ export const TIERS = {
 export const RESULTS = join(ROOT, "evals", "results");
 
 /** Runs one scenario `runs` times; returns the result document (also written to evals/results/). */
-export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log } = {}) {
+export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log, auth } = {}) {
   const n = runs ?? TIERS[tier].runs;
+  const mode = resolveAuth(auth);
+  let apiKeySource = null;
   const records = [];
   const time = new Date().toISOString().replace(/[:.]/g, "-");
   for (let i = 0; i < n; i++) {
@@ -45,7 +51,9 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         model: scenario.model,
         env: scenario.env ?? {},
         startDelayMs: scenario.startDelayMs ?? 0,
+        auth: mode,
       });
+      apiKeySource = session.apiKeySource;
       const failures = [];
       try {
         const r = await scenario.assert({ ...session, root: ws.root });
@@ -54,11 +62,11 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         failures.push(`assertion threw: ${e instanceof Error ? e.message : String(e)}`);
       }
       const metrics = runMetrics(session.transcript, session.result, session.wallMs);
-      budget.spent += metrics.cost_usd;
+      if (mode === "api-key") budget.spent += metrics.cost_usd;
       const transcriptFile = join(RESULTS, "transcripts", `${scenario.id}-${time}-run${i + 1}.json`);
       mkdirSync(join(RESULTS, "transcripts"), { recursive: true });
       writeFileSync(transcriptFile, JSON.stringify(session.transcript, null, 1) + "\n");
-      records.push({ run: i + 1, pass: failures.length === 0, failures, metrics, transcript: `evals/results/transcripts/${basename(transcriptFile)}` });
+      records.push({ run: i + 1, pass: failures.length === 0, failures, metrics, auth: mode, api_key_source: session.apiKeySource, transcript: `evals/results/transcripts/${basename(transcriptFile)}` });
       log(`${scenario.id} run ${i + 1}/${n}: ${failures.length === 0 ? "pass" : `FAIL (${failures.join("; ")})`} · $${metrics.cost_usd.toFixed(4)} · ${(metrics.session_ms / 1000).toFixed(1)} s`);
     } finally {
       ws.cleanup();
@@ -71,6 +79,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
     tier,
     label: label ?? tier,
     agent: scenario.agent ?? null,
+    auth: mode,
+    api_key_source: apiKeySource,
     measured_at: new Date().toISOString(),
     runs: records.length,
     passed,
@@ -95,18 +105,20 @@ async function main(argv) {
   const runs = opt("runs") ? Number(opt("runs")) : undefined;
   const budget = { spent: 0, limit: Number(opt("max-total-usd", "5")) };
   const only = opt("only")?.split(",");
+  const auth = resolveAuth(opt("auth"));
+  console.log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}`);
   let ok = true;
   for (const f of files) {
     // A scenario outline exports an array: one scenario per Examples row.
     const exported = (await import(pathToFileURL(resolve(f)).href)).default;
     for (const scenario of Array.isArray(exported) ? exported : [exported]) {
       if (only && !only.includes(scenario.id)) continue;
-      const doc = await runScenario(scenario, { tier, runs, label: opt("label"), budget });
+      const doc = await runScenario(scenario, { tier, runs, label: opt("label"), budget, auth });
       console.log(`${doc.scenario}: ${doc.passed}/${doc.runs} passed (rule ${doc.pass_rule}) → ${doc.pass ? "PASS" : "FAIL"} · $${doc.cost_usd.toFixed(4)}`);
       ok &&= doc.pass;
     }
   }
-  console.log(`total cost $${budget.spent.toFixed(4)} (limit $${budget.limit})`);
+  console.log(`total API-key cost $${budget.spent.toFixed(4)} (limit $${budget.limit})${auth === "subscription" ? "; subscription sessions are not counted" : ""}`);
   process.exitCode = ok ? 0 : 1;
 }
 

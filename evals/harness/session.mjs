@@ -2,7 +2,7 @@
 // is selected, AskUserQuestion is answered with scripted choices through canUseTool, and every SDK
 // message is recorded with its arrival time.
 import { query } from "@anthropic-ai/claude-agent-sdk";
-import { childEnv, claudeExecutable } from "./env.mjs";
+import { checkKeySource, childEnv, claudeExecutable, resolveAuth } from "./env.mjs";
 
 /** Default answer policy: the first option, which the interview protocol marks "(Recommended)". */
 export function firstOption(question) {
@@ -10,7 +10,9 @@ export function firstOption(question) {
 }
 
 /**
- * Runs one session and returns `{ transcript, answers, result, wallMs }`.
+ * Runs one session and returns `{ transcript, answers, result, wallMs, auth, apiKeySource }`.
+ * - `auth`: billing route, `api-key` or `subscription` (env.mjs); a subscription session whose
+ *   init message reports another key source is aborted before its first turn
  * - `agent`: main-thread agent, e.g. "architect:sdd-conductor"
  * - `plugins`: plugin directories to load
  * - `answer(question, call)`: returns the label (or labels) to answer each AskUserQuestion question
@@ -18,14 +20,19 @@ export function firstOption(question) {
  * - `env`: extra environment variables for the session (for example CLAUDE_CODE_ENABLE_TODO_TOOLS)
  * - `startDelayMs`: send the prompt only after this delay (MCP servers connect first)
  */
-export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0 }) {
+export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0, auth }) {
+  const mode = resolveAuth(auth);
+  const abortController = new AbortController();
+  let apiKeySource = null;
+  let authError = null;
   const transcript = [];
   const answers = [];
   const t0 = Date.now();
   const stamp = (record) => transcript.push({ t: Date.now() - t0, ...record });
   const options = {
     cwd,
-    env: childEnv(env),
+    env: childEnv(env, mode),
+    abortController,
     pathToClaudeCodeExecutable: claudeExecutable(),
     plugins: plugins.map((path) => ({ type: "local", path })),
     settingSources: [],
@@ -59,15 +66,26 @@ export async function runSession({ cwd, prompt, agent, plugins = [], answer = fi
     const input = startDelayMs > 0 ? delayedPrompt(prompt, startDelayMs) : prompt;
     for await (const message of query({ prompt: input, options })) {
       stamp({ type: "sdk", message });
+      if (message.type === "system" && message.subtype === "init") {
+        apiKeySource = message.apiKeySource ?? null;
+        try {
+          checkKeySource(mode, apiKeySource);
+        } catch (e) {
+          authError = e;
+          abortController.abort();
+          break;
+        }
+      }
       if (message.type === "result") result = message;
     }
   } catch (e) {
     // An error result (for example the turn limit) ends the iteration with an exception after the
     // result message; the transcript up to there is still graded and its cost still counted.
     stamp({ type: "harness", event: "error", message: e instanceof Error ? e.message : String(e) });
-    if (!result) throw e;
+    if (!result && !authError) throw e;
   }
-  return { transcript, answers, result, wallMs: Date.now() - t0 };
+  if (authError) throw authError;
+  return { transcript, answers, result, wallMs: Date.now() - t0, auth: mode, apiKeySource };
 }
 
 async function* delayedPrompt(text, ms) {
