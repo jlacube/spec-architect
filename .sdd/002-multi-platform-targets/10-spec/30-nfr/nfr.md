@@ -65,14 +65,14 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 - **Environment:** REF-WIN, dev-tier eval runs
 - **Rationale:** the defaults of `runSession` on Claude Code (current-state E-9: `maxTurns` 30, `maxBudgetUsd` 0.5); three harnesses multiply eval cost (ideation §9)
 - **DoD:** C002-DOD-012
-- **Open items:** whether OpenCode and Copilot CLI report the spend of one session is checked by spikes S-07 and S-08.
+- **Open items:** whether OpenCode reports the spend of one session is checked by spike S-07; Copilot CLI reports the AI Credits and tokens of a run (`docs/spikes/S-08-copilot-vscode.md §2.4`: 9.03 credits, 0.09 USD).
 
 ## 2. Security and safety
 
 ### C002-NFR-201 — Write boundary on every generated target
 - **Category:** Security / integrity
 - **Statement:** WHILE an Architect agent is active on a generated target, THE enforcement mechanism of that target SHALL decide every applicable case of the path corpus with the expected decision for that mechanism.
-- **Metric:** applicable path-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626, C002-REQ-630, C002-REQ-632), per enforcement mechanism (OpenCode permission rules under native permission enforcement, sdd MCP server, agent-scoped guard hooks under the Copilot hooks fallback)
+- **Metric:** applicable path-corpus cases whose decision differs from the expected decision for the mechanism (C002-REQ-625, C002-REQ-626, C002-REQ-630, C002-REQ-632), per enforcement mechanism (OpenCode permission rules under native permission enforcement, sdd MCP server, Copilot guard hooks under the Copilot hooks fallback)
 - **Threshold:** 0 differing decisions (0 false allows and 0 false denies) over the applicable cases of the path corpus, with every case not replayed listed by ID in the replay report (C002-REQ-627); the path corpus holds 256 cases at baseline survey E-24 and at least 200 per the constitution
 - **Method:** corpus replay suite (C002-REQ-606)
 - **Environment:** REF-WIN with every host capability that a case of the path corpus requires (Windows Developer Mode on, or the replay run elevated, for `file-symlink`; C002-REQ-634), host at its tested version
@@ -101,12 +101,12 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 
 ### C002-NFR-204 — Fail closed under faults
 - **Category:** Security / integrity
-- **Statement:** IF the sdd MCP server or an agent-scoped guard hook meets an internal fault, THEN THE enforcement mechanism SHALL refuse the call.
+- **Statement:** IF the sdd MCP server or a Copilot guard hook meets an internal fault, THEN THE enforcement mechanism SHALL refuse the call.
 - **Metric:** calls allowed while a fault is injected (malformed input, unknown tool name, exception in a guard core, I/O error)
 - **Threshold:** 0 allowed calls, with every fault class injected into every tool or hook of the mechanism
 - **Method:** fault-injection tests in the unit and integration suites
 - **Environment:** REF-WIN
-- **Rationale:** C002-REQ-309, C002-REQ-402; only exit code 2 blocks in VS Code (C002-R-001 A-03)
+- **Rationale:** C002-REQ-309, C002-REQ-402; a hook that errors fails closed in the local agent host and in Copilot CLI, and Copilot CLI reports exit code 2 as code 1 (`docs/spikes/S-08-copilot-vscode.md §2.2`, §3, fact F-6), so a refusal must not depend on exit code 2 being passed through
 - **DoD:** C002-DOD-013
 
 ### C002-NFR-205 — No network from the sdd MCP server

@@ -27,7 +27,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF a file of a target package contains a Claude Code construct outside the fields in which that target accepts it, THEN THE target structure check SHALL report an error naming the file, the line and the construct.
-- **Rationale:** C002-US-102 (no leak); PLG-PORT-001 scans neither agents nor commands nor `${CLAUDE_PLUGIN_ROOT}` (baseline survey §2.1, §4 note 4); Copilot accepts `${CLAUDE_PLUGIN_ROOT}` in hook and MCP fields only (C002-R-001 A-09)
+- **Rationale:** C002-US-102 (no leak); PLG-PORT-001 scans neither agents nor commands nor `${CLAUDE_PLUGIN_ROOT}` (baseline survey §2.1, §4 note 4); the Copilot target package accepts `${CLAUDE_PLUGIN_ROOT}` and `${PLUGIN_ROOT}` in no field: not in bodies (C002-R-001 A-09), not in hook commands (C002-REQ-326; `docs/spikes/S-08-copilot-vscode.md §3`, fact F-3), and its MCP servers are workspace MCP configuration entries of the adopter's repository (C002-REQ-307; §3.2)
 - **Stories:** C002-US-601, C002-US-102
 - **Priority:** Must
 - **Acceptance:** C002-AC-602.1
@@ -45,8 +45,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-604 — Edit or terminal grant reported on Copilot
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF an agent or a prompt file of a Copilot target package generated for sdd MCP server enforcement grants a generic edit or terminal tool, THEN THE target structure check SHALL report an error naming the file and the tool.
-- **Rationale:** C002-REQ-306; C002-US-302
+- **Statement:** IF an agent or a prompt file of a Copilot target package generated for sdd MCP server enforcement grants a generic edit or terminal tool, or an agent of that package has no `tools` list, THEN THE target structure check SHALL report an error naming the file and the tool or the missing list.
+- **Rationale:** C002-REQ-306; C002-US-302; an agent without a `tools` list gets every tool of the host, edit and terminal tools included (`docs/spikes/S-08-copilot-vscode.md §3.2`)
 - **Stories:** C002-US-601, C002-US-302
 - **Priority:** Must
 - **Acceptance:** C002-AC-604.1
@@ -63,7 +63,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-606 — Corpus replay against each enforcement mechanism
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every applicable case of the guard corpora against each enforcement mechanism in use on a generated target (the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the agent-scoped guard hooks) and report each decision that differs from the case's expected decision for that mechanism.
+- **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every applicable case of the guard corpora against each enforcement mechanism in use on a generated target (the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the Copilot guard hooks) and report each decision that differs from the case's expected decision for that mechanism.
 - **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625, and for cases resting on hook inputs the generated mechanisms lack, C002-REQ-630 and C002-REQ-632 (Q-safety-04, spec round 4); cases that require a host capability: C002-REQ-633 (Q-safety-05, spec round 5); applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
 - **Stories:** C002-US-602
 - **Priority:** Must
@@ -118,8 +118,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-612 — Evals through Copilot CLI
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN the Copilot CLI eval runner runs the dev tier, THE Copilot CLI eval runner SHALL run the agent routing cases, the injection cases, the sdd MCP server guard cases and the non-interactive scenarios against the Copilot target package through Copilot CLI in non-interactive mode.
-- **Rationale:** C002-DEC-003; C002-R-001 D-03 (`-p`, `--agent`, JSON output, `--no-ask-user`); Copilot CLI is an eval tool only (C002-NG-01); relies on C002-AS-04
+- **Statement:** WHEN the Copilot CLI eval runner runs the dev tier, THE Copilot CLI eval runner SHALL run the agent routing cases, the injection cases, the sdd MCP server guard cases and the non-interactive scenarios against the Copilot target package through Copilot CLI in non-interactive mode, naming each agent in the form `<plugin>:<agent>`.
+- **Rationale:** C002-DEC-003; C002-R-001 D-03 (`-p`, `--agent`, JSON output, `--no-ask-user`); Copilot CLI is an eval tool only (C002-NG-01); C002-AS-04 settled: Copilot CLI 1.0.98 loads the package with `--plugin-dir`, confines subagents and refuses a bare agent name (`docs/spikes/S-08-copilot-vscode.md §2.1`, §2.3, §2.4, fact F-6); the sdd MCP servers are workspace MCP configuration entries, not plugin MCP configuration (C002-REQ-307), so the runner gives them to Copilot CLI itself (C002-IF-010)
 - **Stories:** C002-US-604
 - **Priority:** Must
 - **Acceptance:** C002-AC-612.1
@@ -136,8 +136,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-614 — Checklist content
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE manual VS Code checklist SHALL contain steps for the sdd MCP server boundary, one interview round and one gate through `vscode/askQuestions` including a skipped answer, one phase of a toy change from its creation to gate G1 on a fresh install, one Revise choice at gate G1 followed by the gate presented again, and one run of the revise command on the approved ideation phase of the toy change.
-- **Rationale:** C002-DEC-003; C002-SC-02; C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"; revise scenario: glossary)
+- **Statement:** THE manual VS Code checklist SHALL contain steps for the sdd MCP server boundary, one interview round and one gate through `ask_user` including a skipped answer, one phase of a toy change from its creation to gate G1 on a fresh install, one Revise choice at gate G1 followed by the gate presented again, and one run of the revise command on the approved ideation phase of the toy change.
+- **Rationale:** C002-DEC-003; C002-SC-02; C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"; revise scenario: glossary); `ask_user` is the question tool of the local agent host (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-5), and its input shape and its result without a choice are not in the S-08 record, so these steps also confirm them (C002-REQ-311)
 - **Stories:** C002-US-605
 - **Priority:** Must
 - **Acceptance:** C002-AC-614.1
@@ -190,8 +190,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-620 — Copilot deferred when neither mode holds
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF the spike S-08 record shows that Copilot subagents are not confined to their tool list and that agent-scoped hooks do not block a subagent's tool calls, THEN THE release check SHALL refuse the release of the Copilot VS Code target.
-- **Rationale:** C002-DEC-005 (round 4, Q-guards-03: "Defer Copilot (Recommended)"); C002-AS-03; such a record also triggers the spec revision of `../../10-context/scope.md` §1.1 (Q-defer-01, spec round 2), which removes the Copilot target from CHG-002; until that revision this refusal keeps a Copilot package from being released (refusal ERR-REL-005, C002-IF-009 §5)
+- **Statement:** IF the spike S-08 record shows that Copilot subagents are not confined to their tool list and that Copilot guard hooks do not block a subagent's tool calls, THEN THE release check SHALL refuse the release of the Copilot VS Code target.
+- **Rationale:** C002-DEC-005 (round 4, Q-guards-03: "Defer Copilot (Recommended)"); C002-AS-03; agent-scoped hooks are no longer the fallback (C002-REQ-308; `docs/spikes/S-08-copilot-vscode.md §3.1`, fact F-4); the signed-off record shows subagents confined (§4), so this refusal does not apply at the tested versions; such a record also triggers the spec revision of `../../10-context/scope.md` §1.1 (Q-defer-01, spec round 2), which removes the Copilot target from CHG-002; until that revision this refusal keeps a Copilot package from being released (refusal ERR-REL-005, C002-IF-009 §5)
 - **Stories:** C002-US-606
 - **Priority:** Must
 - **Acceptance:** C002-AC-620.1
@@ -236,7 +236,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE corpus replay suite SHALL replay the identity-category cases of the guard corpora against the OpenCode permission rules only, with each caller that is not an Architect agent played by an adopter agent.
-- **Rationale:** Q-safety-02: "identity cases replay only where a non-Architect caller exists (OpenCode) and are not applicable for the MCP server and scoped hooks"; the sdd MCP server and the agent-scoped guard hooks decide only for Architect agents, so the property these cases test is covered there by C002-REQ-208 and C002-REQ-302; example case BG-258 (`tests/guards/bash-corpus.json:2217-2222`); the cases left out are listed by C002-REQ-627
+- **Rationale:** Q-safety-02: "identity cases replay only where a non-Architect caller exists (OpenCode) and are not applicable for the MCP server and scoped hooks"; the sdd MCP server and the Copilot guard hooks decide only for Architect agents, so the property these cases test is covered there by C002-REQ-208, C002-REQ-302 and, for the Copilot guard hooks, which see every agent's calls but pass those without an Architect `agent_type`, by C002-REQ-320 (`docs/spikes/S-08-copilot-vscode.md §2.2`, §3.1); example case BG-258 (`tests/guards/bash-corpus.json:2217-2222`); the cases left out are listed by C002-REQ-627
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-626.1
@@ -254,7 +254,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** optional-feature
 - **Statement:** WHERE the Copilot hooks fallback is used, THE manual VS Code checklist SHALL contain the Copilot injection cases, run in VS Code with hooks enabled.
-- **Rationale:** C002-DEC-005 (exception: "with hooks enabled, … the injection evals show 0 instructions acted upon"); under the fallback the boundary is the agent-scoped hooks of VS Code, and Copilot CLI is a separate implementation whose result does not prove the VS Code behaviour (C002-R-001; `../../../00-ideation/research/R-001-platform-facts.md:364-365`); runs through the Copilot CLI eval runner (C002-REQ-612) may add evidence but do not replace these cases
+- **Rationale:** C002-DEC-005 (exception: "with hooks enabled, … the injection evals show 0 instructions acted upon"); under the fallback the boundary is the Copilot guard hooks in VS Code, and Copilot CLI is a separate implementation whose result does not prove the VS Code behaviour (C002-R-001; `../../../00-ideation/research/R-001-platform-facts.md:364-365`); runs through the Copilot CLI eval runner (C002-REQ-612) may add evidence but do not replace these cases
 - **Stories:** C002-US-605, C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-628.1
@@ -272,7 +272,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE corpus replay suite SHALL replay every applicable case of the guard corpora whose hook input has no `cwd`, an empty `cwd` or no tool name against each enforcement mechanism of a generated target as a malformed call with `deny` as its expected decision.
-- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "Per-target expectation" — "on the generated targets these cases expect deny and are sent as malformed calls (fail-closed, C002-CON-08)", and "every case is still replayed and the not-applicable list stays limited to identity cases" (C002-REQ-626, C002-REQ-627). A generated mechanism receives no call without a `cwd` or a tool name: the sdd MCP server decides every call with its server repository root as `cwd` (C002-IF-002), and a tool the agent-scoped guard hooks cannot class is denied (C002-REQ-309). Examples: PG-253, PG-254 and BG-277 (no or empty `cwd`); PG-256 (no tool name, `allow` on Claude Code because such a call is not a write). The corpora keep their expectations for Claude Code (C002-GOAL-05). The form of a malformed call per mechanism and the expected source recorded in the replay report are in C002-IF-009 §2. A case whose `cwd` is present but differs from the repository root (category `cwd`, for example PG-134) is not in this set: C002-IF-009 §2.2 fixes how its `cwd` is fed, and it keeps its corpus expectation. Nor is a case that requires a host capability: it is replayed with its own hook input on a host that has the capability (C002-REQ-633, C002-REQ-634; Q-safety-05, spec round 5, critic CR-32)
+- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "Per-target expectation" — "on the generated targets these cases expect deny and are sent as malformed calls (fail-closed, C002-CON-08)", and "every case is still replayed and the not-applicable list stays limited to identity cases" (C002-REQ-626, C002-REQ-627). A generated mechanism receives no call without a `cwd` or a tool name: the sdd MCP server decides every call with its server repository root as `cwd` (C002-IF-002), and a tool of an Architect agent that the Copilot guard hooks cannot class is denied (C002-REQ-309). Examples: PG-253, PG-254 and BG-277 (no or empty `cwd`); PG-256 (no tool name, `allow` on Claude Code because such a call is not a write). The corpora keep their expectations for Claude Code (C002-GOAL-05). The form of a malformed call per mechanism and the expected source recorded in the replay report are in C002-IF-009 §2. A case whose `cwd` is present but differs from the repository root (category `cwd`, for example PG-134) is not in this set: C002-IF-009 §2.2 fixes how its `cwd` is fed, and it keeps its corpus expectation. Nor is a case that requires a host capability: it is replayed with its own hook input on a host that has the capability (C002-REQ-633, C002-REQ-634; Q-safety-05, spec round 5, critic CR-32)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-630.1
@@ -281,7 +281,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE corpus replay suite SHALL use `allow` as the expected decision against the OpenCode permission rules of every identity-category case whose caller is an `architect:sdd-*` name that is none of the ten Architect agents.
-- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "an unknown architect:sdd-* caller on OpenCode expects allow (the rules bind only the generated agents, C002-REQ-208)"; C002-REQ-626 plays such a caller with the replay fixture's adopter agent; the corpora keep `deny` for Claude Code, whose hooks guard every `architect:sdd-*` name (PG-237 "any architect:sdd-* agent is guarded", `tests/guards/path-corpus.json:2142-2149`; PG-238, `:2150-2157`); on the sdd MCP server and the agent-scoped guard hooks these cases are not applicable (C002-REQ-626)
+- **Rationale:** Q-safety-04 (spec round 4, `../../questions-log.md`): "an unknown architect:sdd-* caller on OpenCode expects allow (the rules bind only the generated agents, C002-REQ-208)"; C002-REQ-626 plays such a caller with the replay fixture's adopter agent; the corpora keep `deny` for Claude Code, whose hooks guard every `architect:sdd-*` name (PG-237 "any architect:sdd-* agent is guarded", `tests/guards/path-corpus.json:2142-2149`; PG-238, `:2150-2157`); on the sdd MCP server and the Copilot guard hooks these cases are not applicable (C002-REQ-626)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-632.1

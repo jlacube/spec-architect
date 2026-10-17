@@ -109,8 +109,8 @@ fixed by spike S-07 (glossary: enforcement mode).
 ### C002-REQ-211 — Round size on the host's question tool
 - **Delta:** MODIFIED C001-REQ-205
 - **Pattern:** event-driven
-- **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use the question tool of its host (AskUserQuestion on Claude Code, `question` on OpenCode, `vscode/askQuestions` on Copilot VS Code) with at most four questions per call.
-- **Rationale:** C002-GOAL-03; ideation §8 (Interviews and gates); neither host documents a limit, so the four-question round stays Architect's own rule (C002-R-001 C-05, A-06, Implications); every round counts, the archive confirmation of `commands/archive.md:15` included (current-state E-28; tool name in bodies: C002-REQ-118); unchanged on Claude Code
+- **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use the question tool of its host (AskUserQuestion on Claude Code, `question` on OpenCode, `ask_user` on Copilot VS Code) with at most four questions per call.
+- **Rationale:** C002-GOAL-03; ideation §8 (Interviews and gates); `ask_user` is the question tool of the local agent host that spike S-08 tested, not `vscode/askQuestions` (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-5); no host documents a limit, so the four-question round stays Architect's own rule (C002-R-001 C-05, A-06, Implications); every round counts, the archive confirmation of `commands/archive.md:15` included (current-state E-28; tool name in bodies: C002-REQ-118); unchanged on Claude Code
 - **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-211.1

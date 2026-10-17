@@ -143,7 +143,7 @@ C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-GOAL-05).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the host starts the sdd MCP server with a server profile, THE sdd MCP server SHALL list only the tools of that profile: the write tools for the profile `files` and the command tool for the profile `shell`.
-- **Rationale:** a host that grants whole servers only (`<server>/*` on Copilot, C002-OA-001) can then grant the command tool apart from the write tools (C002-REQ-117, C002-REQ-210, C002-REQ-307); one program, two declared servers (C002-IF-002 §1, §2; architecture §6.2)
+- **Rationale:** a host that grants whole servers only (`<server>/*` on Copilot, C002-OA-001; the grant form tested in VS Code, `docs/spikes/S-08-copilot-vscode.md §3.2`) can then grant the command tool apart from the write tools (C002-REQ-117, C002-REQ-210, C002-REQ-307); one program, two declared servers (C002-IF-002 §1, §2; architecture §6.2)
 - **Stories:** C002-US-401, C002-US-402
 - **Priority:** Must
 - **Acceptance:** C002-AC-415.1

@@ -34,7 +34,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes a target package, THE generator SHALL replace each Claude Code construct of the source plugin with the entry for that construct in the target's mapping table.
-- **Rationale:** C002-DEC-006 (Consequences); the constructs to translate and their locations: baseline survey §1 and §4 note 4 (agents, commands and `sdd-conventions` carry constructs outside the wiring sections); MCP tool names become `x_y` on OpenCode and `x/y` on Copilot (ideation §8); Copilot has no `$ARGUMENTS` (C002-R-001 A-10)
+- **Rationale:** C002-DEC-006 (Consequences); the constructs to translate and their locations: baseline survey §1 and §4 note 4 (agents, commands and `sdd-conventions` carry constructs outside the wiring sections); MCP tool names become `x_y` on OpenCode (ideation §8); on Copilot an agent calls an MCP tool as `<server>-<tool>`, while its `tools` list grants it as `<server>/*` or `<server>/<tool>` (`docs/spikes/S-08-copilot-vscode.md §2.1`, §3.2, fact F-7; this replaces the `x/y` form of ideation §8); Copilot has no `$ARGUMENTS` (C002-R-001 A-10)
 - **Stories:** C002-US-102
 - **Priority:** Must
 - **Acceptance:** C002-AC-103.1
@@ -72,7 +72,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes the agents of a target package, THE generator SHALL grant the right to start other agents to the conductor alone, limited to the nine specialists.
-- **Rationale:** C001-REQ-217 and C001-REQ-218 carried to the targets: OpenCode `permission.task` (C002-R-001 C-08), Copilot `agents` list (C002-R-001 A-11)
+- **Rationale:** C001-REQ-217 and C001-REQ-218 carried to the targets: OpenCode `permission.task` (C002-R-001 C-08), Copilot `agents` list (C002-R-001 A-11); in VS Code the specialists are workspace agents named by their file names (C002-REQ-322; `docs/spikes/S-08-copilot-vscode.md §3.1`), on Copilot CLI a plugin's agents are named `<plugin>:<agent>` (§2.3)
 - **Stories:** C002-US-102
 - **Priority:** Must
 - **Acceptance:** C002-AC-107.1
@@ -109,7 +109,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes an agent, a command, a skill or an inlined skill for a generated target, THE generator SHALL replace each "Claude Code wiring" section, each CLI invocation line and each other wiring anchor of that file with that target's wiring variant kept in the source plugin.
-- **Rationale:** ideation §8 (Skills); four wiring sections (baseline survey §1.2, E-6, E-7); CLI invocation lines in `skills/sdd-conventions/SKILL.md:13`, `agents/sdd-conductor.md:19` and `agents/sdd-auditor.md:13`; other wiring anchors are the host-dependent rows of `commands/doctor.md` and of the code-discovery toolchain section (C002-REQ-504, C002-REQ-507, C002-IF-006); anchors and processing order: C002-IF-001 §2, §3; the variants name each host's question tool and, under sdd MCP server enforcement, the server's tools (C002-US-104)
+- **Rationale:** ideation §8 (Skills); four wiring sections (baseline survey §1.2, E-6, E-7); CLI invocation lines in `skills/sdd-conventions/SKILL.md:13`, `agents/sdd-conductor.md:19` and `agents/sdd-auditor.md:13`; other wiring anchors are the host-dependent rows of `commands/doctor.md` and of the code-discovery toolchain section (C002-REQ-504, C002-REQ-507, C002-IF-006); anchors and processing order: C002-IF-001 §2, §3; the variants name each host's question tool and, under sdd MCP server enforcement, the server's tools (C002-US-104); on Copilot the question tool is `ask_user` and the server's tools are deferred MCP tools named `<server>-<tool>`, loaded through the host's `tool_search_tool` (`docs/spikes/S-08-copilot-vscode.md §3.2`, facts F-5, F-7)
 - **Stories:** C002-US-104
 - **Priority:** Must
 - **Acceptance:** C002-AC-111.1
@@ -164,7 +164,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** complex
 - **Statement:** WHERE a generated target uses sdd MCP server enforcement, WHEN the generator writes an agent for that target, THE generator SHALL grant that agent exactly the server profiles that replace its source tools: `sdd-files` for Write or Edit and `sdd-shell` for Bash.
-- **Rationale:** C002-REQ-108 with the two server profiles of the architecture (C002-IF-002 §2; architecture §6.2): Copilot documents only whole-server grants (`<server>/*`, C002-OA-001; C002-R-001 A-11), so the command tool is a server of its own and an agent without Bash (researcher, options-analyst) never receives it (C002-IF-005 §4); declarations: C002-REQ-210, C002-REQ-307; tools per profile: C002-REQ-415
+- **Rationale:** C002-REQ-108 with the two server profiles of the architecture (C002-IF-002 §2; architecture §6.2): Copilot documents only whole-server grants (`<server>/*`, C002-OA-001; C002-R-001 A-11), which spike S-08 tested in VS Code (`docs/spikes/S-08-copilot-vscode.md §3.2`; per-tool grants were shown on Copilot CLI only, §2.1), so the command tool is a server of its own and an agent without Bash (researcher, options-analyst) never receives it (C002-IF-005 §4); declarations: C002-REQ-210, C002-REQ-307; tools per profile: C002-REQ-415
 - **Stories:** C002-US-203, C002-US-302
 - **Priority:** Must
 - **Acceptance:** C002-AC-117.1

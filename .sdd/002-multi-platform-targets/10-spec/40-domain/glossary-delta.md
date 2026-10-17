@@ -19,7 +19,14 @@ plugin structure check and the others listed there). At archive these terms are 
 | Host | An agent application that runs the Architect agents for P-01: Claude Code, OpenCode, or GitHub Copilot in VS Code |
 | Target | A host for which a build ships an Architect package. Claude Code is the source target; OpenCode and Copilot VS Code are the generated targets (C002-DEC-004) |
 | Generated target | OpenCode or Copilot VS Code: a target whose package the generator writes from the source plugin |
-| Copilot VS Code | GitHub Copilot Chat in Visual Studio Code, using its local agent harness. Copilot CLI and the Copilot cloud agent are not targets (C002-NG-01) |
+| Copilot VS Code | GitHub Copilot Chat in Visual Studio Code, in the Local session type, which runs the chat in the local agent host (`docs/spikes/S-08-copilot-vscode.md §3`). Copilot CLI and the Copilot cloud agent are not targets (C002-NG-01) |
+| Local agent host | The process in which VS Code's Local session type runs the chat: the Copilot SDK agent host (agent host log `provider: copilotcli`; `docs/spikes/S-08-copilot-vscode.md §3`) |
+| Session agent | The agent that P-01 or P-03 selects in the chat's agent picker and that runs the chat; its own tool calls carry no `agent_type` in the hook input (`docs/spikes/S-08-copilot-vscode.md §2.3`, §3) |
+| Workspace agent | A Copilot custom agent defined in `.github/agents/<name>.agent.md` of the open repository; the local agent host starts it as a subagent (`docs/spikes/S-08-copilot-vscode.md §3.1`) |
+| Plugin agent | A Copilot custom agent shipped in a plugin; the local agent host offers it as a session agent but does not start it as a subagent (`docs/spikes/S-08-copilot-vscode.md §3`) |
+| Workspace MCP configuration | The MCP server entries of the open repository's `.vscode/mcp.json`; the local agent host starts these servers after the first message of a session, and does not start the MCP servers of a plugin (`docs/spikes/S-08-copilot-vscode.md §3.2`) |
+| Deferred MCP tool | An MCP tool that the host lists by name and that an agent loads only through the host's tool search tool (`tool_search_tool`); on Copilot its name has the form `<server>-<tool>` (`docs/spikes/S-08-copilot-vscode.md §3.2`) |
+| Copilot install command | The sdd CLI subcommand that P-03 runs once in a repository to write the workspace files of the Copilot target package: the workspace agents under `.github/agents/` and the workspace MCP configuration entries in `.vscode/mcp.json` (C002-REQ-322, C002-REQ-323); name and options in C002-IF-007 |
 | Source plugin | `plugins/architect`, the Claude Code plugin; the only source of every target package (C002-DEC-006) |
 | Target package | The generated output for one generated target, under `dist/opencode/` or `dist/copilot/` |
 | Generator | The build step that reads the source plugin into the neutral model and writes one target package per generated target |
@@ -29,17 +36,18 @@ plugin structure check and the others listed there). At archive these terms are 
 | CLI invocation line | A line of an agent, command or skill body that defines `sdd` as `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (`skills/sdd-conventions/SKILL.md:13`, `agents/sdd-conductor.md:19`, `agents/sdd-auditor.md:13`) |
 | Skill inlining | Copying an agent's preloaded skills into that agent's generated body (C002-DEC-002) |
 | Write/shell boundary | The rule that an Architect agent writes only inside `.sdd/` (on Claude Code also its own memory folder) and runs only commands of the allowlist in C001-IF-07 §3 (C001-NFR-201) |
-| Enforcement mechanism | What enforces the write/shell boundary on a target: Claude Code hooks, the OpenCode permission engine, the sdd MCP server, or Copilot agent-scoped hooks |
+| Enforcement mechanism | What enforces the write/shell boundary on a target: Claude Code hooks, the OpenCode permission engine, the sdd MCP server, or the Copilot guard hooks |
 | Guard core | The decision functions behind `sdd guard-path` and `sdd guard-bash`, shared by every enforcement mechanism that runs the `sdd` CLI code |
 | Guard corpora | The path corpus and the shell corpus: the recorded allow/deny cases under `tests/guards/` (current-state §2 item 6) |
 | Corpus replay | Running every case of the guard corpora against one enforcement mechanism and comparing each decision with the expected one |
 | sdd MCP server | A local MCP server shipped in the CLI package; it writes `.sdd/` files and runs allowlisted commands for agents that have no edit or terminal tool (C002-DEC-001) |
-| Agent-scoped hooks | Hooks declared in a Copilot custom agent's frontmatter that run only while that agent is active (Preview; C002-R-001 A-01) |
-| Copilot hooks fallback | The exception of C002-DEC-005: Copilot agents carry agent-scoped hooks running the guard cores when spike S-08 shows that subagents are not confined to their tool list |
+| Agent-scoped hooks | Hooks declared in a Copilot custom agent's frontmatter that run only while that agent is active (Preview; C002-R-001 A-01); in the local agent host they do not run for a subagent's tool calls (`docs/spikes/S-08-copilot-vscode.md §3.1`), so CHG-002 uses none |
+| Copilot hooks fallback | The exception of C002-DEC-005: the Copilot target package carries Copilot guard hooks running the guard cores, used only when a spike record shows that subagents are not confined to their tool list; the S-08 record gives sdd MCP server enforcement instead (`docs/spikes/S-08-copilot-vscode.md §4`) |
+| Copilot guard hook | A plugin-level or workspace-level PreToolUse hook of the Copilot hooks fallback that identifies the calling Architect agent from the hook input's `agent_type` and runs the path guard core or the bash guard core (C002-REQ-308) |
 | `architect-sdd` | The npm package that publishes the `sdd` CLI with the executable name `sdd` (C002-DEC-007) |
 | Bare `sdd` command | A shell command whose first word is `sdd` (the npm executable), as opposed to `node <path>/sdd.mjs` |
-| Question tool | The host tool that shows an interview round or a gate to P-01: AskUserQuestion (Claude Code), `question` (OpenCode), `vscode/askQuestions` (Copilot VS Code) |
-| Skipped answer | A question-tool result that carries no choice of P-01, such as VS Code's `{"skipped": true}` (C002-R-001 A-07) |
+| Question tool | The host tool that shows an interview round or a gate to P-01: AskUserQuestion (Claude Code), `question` (OpenCode), `ask_user` (Copilot VS Code, local agent host; `docs/spikes/S-08-copilot-vscode.md §3.2`) |
+| Skipped answer | A question-tool result that carries no choice of P-01, such as the `{"skipped": true}` result of `vscode/askQuestions` (C002-R-001 A-07) |
 | Spike S-07, spike S-08 | Plan-phase experiments on OpenCode (S-07) and Copilot VS Code (S-08) that settle the assumptions of `10-context/scope.md` §3 before the targets are built |
 | Eval runner | A back end of the eval harness that executes eval cases on one host while keeping the case API of `evals/harness/` |
 | Injection eval | An eval case whose input carries planted instructions; it passes when the agent acts on none of them |
@@ -53,7 +61,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | sdd MCP server enforcement | The enforcement mode in which Architect agents have no generic edit or terminal tool and write `.sdd/` files and run allowlisted commands through the sdd MCP server (C002-DEC-001) |
 | Generic edit or terminal tool | A host tool that writes any file (VS Code: its built-in edit tools; OpenCode: `edit`) or runs any shell command (VS Code: its terminal tool; OpenCode: `bash`) |
 | Write tool, command tool | The sdd MCP server tools that write a file under `.sdd/` (write tools) and run one allowlisted command (command tool) |
-| Agent-scoped guard hook | An agent-scoped PreToolUse hook of the Copilot hooks fallback that runs the path guard core or the bash guard core |
+| Agent-scoped guard hook | Former name of the Copilot guard hook (defect D-003); still used in `50-interfaces/` and `60-architecture/` until they are revised |
 | Path guard core, bash guard core | The guard core behind `sdd guard-path` (C001-REQ-1103, C001-REQ-1104) and behind `sdd guard-bash` (C001-REQ-1106, C001-REQ-1107) |
 | Quick-lint findings | The findings of `sdd lint --quick --file <path>` for one written file, in the post-write feedback format of C001-IF-07 §4 |
 | Post-write feedback channel | A host hook that returns text to the agent after one of its tool calls (on OpenCode `tool.execute.after`, if spike S-07 confirms it) |
@@ -73,15 +81,15 @@ plugin structure check and the others listed there). At archive these terms are 
 | Variant token | A placeholder in a wiring variant that the generator fills from the mapping table, such as the tested version (C002-IF-001 §4) |
 | Server profile | One of the two tool sets of the sdd MCP server, declared as its own server: `sdd-files` (write tools) and `sdd-shell` (command tool) (C002-IF-002 §2) |
 | Server repository root | The repository folder an sdd MCP server process serves, fixed when it is initialised (C002-IF-002 §3) |
-| Tool classes | The classification of a host's tool names into write, terminal and read-only tools that an agent-scoped guard hook uses (C002-IF-008 §2) |
-| Tool classes file | The file `hooks/tool-classes.json` of the Copilot target package under the Copilot hooks fallback, which assigns every granted tool to one of the tool classes `write`, `terminal` and `read_only` |
+| Tool classes | The classification of a host's tool names into write, terminal and read-only tools that a Copilot guard hook uses (C002-IF-008 §2) |
+| Tool classes file | The file `hooks/tool-classes.json` of the Copilot target package under the Copilot hooks fallback, which assigns every tool the host offers to an Architect agent to one of the tool classes `write`, `terminal` and `read_only` (C002-REQ-318) |
 | Host adapter | The part of the sdd CLI that turns a host's hook input into the hook input of C001-IF-07 §1 (`--host copilot`) |
 | Spike record | The committed result of spike S-07 or S-08, whose frontmatter fixes a target's enforcement mode and tested versions (C002-IF-009 §3) |
 | Per-user data folder | The folder of `architect-sdd` in the user's application-data location, used for Serena's data on the generated targets (`--user-data`, C002-IF-007) |
 | Serena read-only mode file | `plugins/architect/serena/architect-read-only.yml`, the Serena mode that leaves only the read-only tools of C001-IF-14 §4; also shipped in `architect-sdd` (C002-IF-003 §1) |
 | Template override | A template under `.sdd/_templates/<profile>/<path>` of a repository, which takes precedence over the template of the same path shipped with the plugin or with `architect-sdd` |
 | Case category | The `category` field of a case of the guard corpora. Memory-category cases (`memory`) test writes to an agent's memory folder; identity-category cases (`identity`) test decisions that depend on the calling agent's identity, such as a caller that is not an Architect agent |
-| Applicable case | A case of the guard corpora that the corpus replay runs against a given enforcement mechanism: every case, except the identity-category cases for the sdd MCP server and the agent-scoped guard hooks (C002-REQ-626, Q-safety-02) |
+| Applicable case | A case of the guard corpora that the corpus replay runs against a given enforcement mechanism: every case, except the identity-category cases for the sdd MCP server and the Copilot guard hooks (C002-REQ-626, Q-safety-02) |
 | Expected decision for a mechanism | The decision a case of the guard corpora expects from one enforcement mechanism: `deny` for a memory-category case on a generated target (C002-REQ-625); `deny` on a generated target for a case without a `cwd` or a tool name (C002-REQ-630); `allow` on the OpenCode permission rules for an identity-category case with an unknown `architect:sdd-*` caller (C002-REQ-632); otherwise the decision recorded in the corpus |
 | Malformed call | A call to an enforcement mechanism of a generated target that lacks the required arguments of its tool, so that the mechanism must refuse it (C002-CON-08); the corpus replay suite sends a case as a malformed call when the mechanism cannot receive the case's hook input (C002-REQ-630); the form per mechanism is in C002-IF-009 §2.2 |
 | Repository root | The top folder of the git working tree that contains the hook input's `cwd`, or the fallbacks of C002-IF-008 §1.1 rule 3; the bash guard core confines the Serena data folder (C002-REQ-517) and the `--cwd` folder of a writing `sdd` subcommand (C002-REQ-521) by it |
@@ -113,8 +121,9 @@ Components assigned in the architecture step (`../60-architecture/architecture.m
 | target structure check | The checks run by `npm run check` on a target package | C002-COMP-007 |
 | corpus replay suite | The tests replaying the guard corpora against each enforcement mechanism | C002-COMP-008 |
 | guard corpora | The path corpus and the shell corpus under `tests/guards/` | C002-COMP-013 |
-| enforcement mechanism | Whatever enforces the write/shell boundary on a target | C002-COMP-012 (Claude Code hooks, agent-scoped guard hooks), C002-COMP-003 (OpenCode permission rules), C002-COMP-005 (sdd MCP server) |
-| agent-scoped guard hook | A guard hook of the Copilot hooks fallback | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
+| enforcement mechanism | Whatever enforces the write/shell boundary on a target | C002-COMP-012 (Claude Code hooks, Copilot guard hooks), C002-COMP-003 (OpenCode permission rules), C002-COMP-005 (sdd MCP server) |
+| Copilot guard hook | A guard hook of the Copilot hooks fallback, keyed on `agent_type` | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
+| agent-scoped guard hook | Former name of the Copilot guard hook (D-003), kept until `50-interfaces/` and `60-architecture/` are revised | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
 | eval runner | An eval runner of a generated target | C002-COMP-009 |
 | OpenCode eval runner | The eval runner that drives OpenCode | C002-COMP-009 |
 | Copilot CLI eval runner | The eval runner that drives Copilot CLI | C002-COMP-009 |

@@ -91,7 +91,7 @@ classDiagram
 - **Relationships:** each refers to one target and package version; the spike record fixes the enforcement mode and tested versions copied into the mapping table, except a `deferred` S-08 record, which triggers the spec revision of scope §1.1; an S-07 record with `agent_tools_closed: false` also triggers a spec revision and refuses the OpenCode release (C002-IF-009 §3, ERR-REL-013)
 - **Owning component:** C002-COMP-008 (replay), C002-COMP-009 (injection summary), C002-COMP-011 (checklist and records); spike records are written by the implementer in the plan's spike tasks (C002-IF-009 §1)
 - **Invariants:**
-  - **C002-INV-14** A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision and source that C002-IF-009 §2.1 gives for its mechanism and replay host (a case without a `cwd` or a tool name always as a malformed call, C002-REQ-630; a case that requires a host capability always with its own hook input on a fixture built with that capability, or with `actual` `error` on a replay host that lacks it, C002-REQ-633), or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the agent-scoped guard hooks only).
+  - **C002-INV-14** A replay report lists every case of the corpora it cites exactly once: replayed with the expected decision and source that C002-IF-009 §2.1 gives for its mechanism and replay host (a case without a `cwd` or a tool name always as a malformed call, C002-REQ-630; a case that requires a host capability always with its own hook input on a fixture built with that capability, or with `actual` `error` on a replay host that lacks it, C002-REQ-633), or not applicable by C002-REQ-626 (identity-category cases on the sdd MCP server and the Copilot guard hooks only).
 
 ### 2.7 ReleaseRecord
 - **Attributes:** `target`, `package_version`, `decided_on`, `outcome` (released, refused), `enforcement_mode`, `exception`, `tested_versions`, `evidence`, `refusals[{code, message}]`
@@ -100,7 +100,7 @@ classDiagram
   - **C002-INV-10** A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions over the applicable cases for every mechanism of the package's mode and an injection summary with no case acted upon; for Copilot VS Code also a checklist record with every step passed; and under the Copilot hooks fallback a checklist record with hooks enabled whose injection steps are the injection evidence, and the exception of C002-DEC-005.
 
 ### 2.8 QuestionCall and Answer
-- **Attributes:** QuestionCall: `host tool` (AskUserQuestion, `question`, `vscode/askQuestions`), `questions[1..4]`, `result` (choices, skipped, dismissed, empty). Answer: the verbatim choice or text per question (C001-INV-23 applies)
+- **Attributes:** QuestionCall: `host tool` (AskUserQuestion, `question`, `ask_user`), `questions[1..4]`, `result` (choices, skipped, dismissed, empty). Answer: the verbatim choice or text per question (C001-INV-23 applies)
 - **Owning component:** C002-COMP-014 (conductor)
 - **Invariants:**
   - **C002-INV-09** A question-tool result without a choice of P-01 creates no answer in a questions log and no gate approval.

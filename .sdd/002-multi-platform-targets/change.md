@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:7ffa1bc10d53793563db83fd0790cf25d34f51ee6ed78eb52fe9d2d398d7c8e1", approved_at: 2026-10-16, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:b20f2e91fe7815ca538098faab05f883468d4865645efff514fb87048868b46c", approved_at: 2026-10-16, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:7ffa1bc10d53793563db83fd0790cf25d34f51ee6ed78eb52fe9d2d398d7c8e1", approved_at: 2026-10-16, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:b20f2e91fe7815ca538098faab05f883468d4865645efff514fb87048868b46c", approved_at: 2026-10-16, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -66,3 +66,4 @@ waivers:
 | 2026-10-16 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-16 | G3 (plan) | **Revise** | "P-01 (2026-10-16): Copilot bills AI Credits (1 credit = 0.01 USD, per token at model API rates), not requests; P-01's plan has 1,500 included credits per month and additional usage enabled with a 50 USD budget. Record the AI-Credit estimate in the test plan and run the Copilot spike C002-T-002 first; OpenCode inference goes through OpenRouter, to be discussed before C002-T-001" | none | unavailable |
 | 2026-10-16 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-17 | G2 (spec) | **Revise** | "D-003: spike S-08 facts F-1…F-7 (docs/spikes/S-08-copilot-vscode.md §5); P-01: one spec revision" | none | unavailable |

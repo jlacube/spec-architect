@@ -46,7 +46,7 @@ stateDiagram-v2
   [*] --> undetermined
   undetermined --> native_permissions : S-07, OpenCode rules decide both corpora as expected
   undetermined --> sdd_mcp_server : S-07, rules fail a corpus case (OpenCode) / S-08, subagents confined (Copilot)
-  undetermined --> copilot_hooks : S-08, subagents not confined, agent-scoped hooks block
+  undetermined --> copilot_hooks : S-08, subagents not confined, Copilot guard hooks block
   undetermined --> deferred : S-08, neither holds
   native_permissions --> undetermined : new tested version
   sdd_mcp_server --> undetermined : new tested version
@@ -59,7 +59,7 @@ stateDiagram-v2
 | undetermined | S-07 record | OpenCode `edit` and `bash` rules decide the path and shell corpora as expected (C002-AS-01, C002-AS-02) | native_permissions | table mode `native-permissions` |
 | undetermined | S-07 record | any corpus case decided otherwise | sdd_mcp_server | OpenCode table mode `sdd-mcp-server` (C002-REQ-209) |
 | undetermined | S-08 record | Copilot subagents confined to their tool list (C002-AS-03) | sdd_mcp_server | Copilot table mode `sdd-mcp-server` |
-| undetermined | S-08 record | not confined; agent-scoped hooks block a subagent's tool calls | copilot_hooks | Copilot table mode `copilot-hooks`; release flagged (C002-REQ-622) |
+| undetermined | S-08 record | not confined; Copilot guard hooks block a subagent's tool calls | copilot_hooks | Copilot table mode `copilot-hooks`; release flagged (C002-REQ-622) |
 | undetermined | S-08 record | not confined; hooks do not block | deferred | not copied into the Copilot table (C002-IF-001 §1); triggers the spec revision of `../10-context/scope.md` §1.1 that removes the Copilot target (Q-defer-01); until then the Copilot release is refused (C002-REQ-620, ERR-REL-005); OpenCode unaffected (C002-REQ-619) |
 | any determined mode | tested version changes | — | undetermined | spike re-run before the next release (C002-REQ-621) |
 
@@ -153,16 +153,16 @@ Each target runs this machine on its own (C002-REQ-619).
 ```mermaid
 stateDiagram-v2
   [*] --> asked : question tool called (≤ 4 questions)
-  [*] --> unavailable : Copilot, vscode/askQuestions missing
+  [*] --> unavailable : Copilot, ask_user missing
   asked --> answered : result holds P-01's choice or text
   asked --> no_choice : skipped, dismissed or empty result
   answered --> [*] : answer logged verbatim, gate decision applied
   no_choice --> [*] : nothing recorded, P-01 told no answer was received
-  unavailable --> [*] : reply with the instruction to enable chat.askQuestions.enabled
+  unavailable --> [*] : reply naming ask_user and the install-notes step
 ```
 
 | From | Event | Guard | To | Effect |
 |---|---|---|---|---|
 | asked | tool result | holds at least one choice or text answer | answered | questions log and, at a gate, `sdd gate approve` or `gate record` with the verbatim words |
 | asked | tool result | `{"skipped": true}`, dismissed or empty | no_choice | no log entry, no approval (C002-REQ-311, C002-INV-09) |
-| (none) | conductor would ask | VS Code reports no `vscode/askQuestions` tool | unavailable | no question asked (C002-REQ-312) |
+| (none) | conductor would ask | VS Code offers no `ask_user` tool | unavailable | no question asked; reply naming `ask_user` and the install-notes step (C002-REQ-312) |

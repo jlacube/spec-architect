@@ -21,7 +21,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 
 ### C002-US-602 — Guard corpora replayed against each enforcement mechanism
 - **As a** P-01 spec owner
-- **I want** the path and shell corpora replayed against the OpenCode permission engine, the sdd MCP server and, when used, the Copilot agent-scoped hooks, with every decision equal to the expected one
+- **I want** the path and shell corpora replayed against the OpenCode permission engine, the sdd MCP server and, when used, the Copilot guard hooks, with every decision equal to the expected one
 - **So that** I can show the same boundary on every target with the same cases
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
@@ -45,14 +45,14 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** the Copilot target is tested by script although VS Code has no headless chat mode
 - **Value / outcome:** C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-003. Copilot CLI runs headless with `-p`, `--agent` and JSON output; unattended runs use `--no-ask-user`, so interviews and gates are not exercised here (C002-R-001 D-03). Relies on C002-AS-04; if Copilot CLI does not load the package, the server is tested in isolation and the Copilot injection cases move to the manual checklist (C002-US-605). Copilot CLI is an eval tool only (C002-NG-01).
+- **Context & notes:** C002-DEC-003. Copilot CLI runs headless with `-p`, `--agent` and JSON output; unattended runs use `--no-ask-user`, so interviews and gates are not exercised here (C002-R-001 D-03). C002-AS-04 is settled for Copilot CLI 1.0.98: it loads the package with `--plugin-dir`, confines subagents, and names agents `<plugin>:<agent>` (`docs/spikes/S-08-copilot-vscode.md §2`, fact F-6); a hook deny shows there as a fail-closed hook error, not through exit code 2 (§2.2). If a later Copilot CLI version does not load the package, the server is tested in isolation and the Copilot injection cases move to the manual checklist (C002-US-605). Copilot CLI is an eval tool only (C002-NG-01).
 - **Out of scope:** VS Code automation through an extension host or UI automation (not documented, C002-R-001 D-04).
 - **Requirements:** C002-REQ-611, C002-REQ-612, C002-REQ-613
 - **Traces to:** C002-DEC-003; Q-eval-01
 
 ### C002-US-605 — Recorded manual VS Code checklist
 - **As a** P-01 spec owner
-- **I want** a manual checklist for VS Code that I run and record before each release: the sdd MCP server boundary, an interview and a gate through `vscode/askQuestions` (including a skipped answer), one phase end to end on a toy change up to gate G1, and the revise scenarios on that toy change
+- **I want** a manual checklist for VS Code that I run and record before each release: the sdd MCP server boundary, an interview and a gate through `ask_user` (including a skipped answer), one phase end to end on a toy change up to gate G1, and the revise scenarios on that toy change
 - **So that** what cannot be scripted in VS Code is still verified, with evidence
 - **Value / outcome:** C002-SC-02; C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
@@ -66,7 +66,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** no target is released below the Claude Code safety bar; if the Copilot fallback fails too, Copilot is deferred and OpenCode is still released
 - **Value / outcome:** C002-GOAL-02; C002-SC-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if spike S-08 shows that agent-scoped hooks do not block a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03), and P-01 revises this spec to remove it (`../../10-context/scope.md` §1.1, Q-defer-01). Injection evals run at the dev tier on each target (C002-GOAL-02); under the Copilot hooks fallback the release needs evidence taken in VS Code with hooks enabled. A corpus replay counts for a release only when its replay host has every host capability the corpora's cases require (Q-safety-05).
+- **Context & notes:** C002-DEC-005 and C002-CON-03. Deferral: if a spike S-08 record shows subagents not confined and Copilot guard hooks not blocking a subagent's tool calls, the Copilot target is deferred to a later change (Q-guards-03), and P-01 revises this spec to remove it (`../../10-context/scope.md` §1.1, Q-defer-01). Injection evals run at the dev tier on each target (C002-GOAL-02); under the Copilot hooks fallback the release needs evidence taken in VS Code with hooks enabled. A corpus replay counts for a release only when its replay host has every host capability the corpora's cases require (Q-safety-05).
 - **Requirements:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634
 - **Traces to:** C002-DEC-005; Q-safety-01, Q-guards-02, Q-guards-03, Q-defer-01, Q-safety-05
 
