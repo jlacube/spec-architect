@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-16T15:20:27Z",
+  "generated_at": "2026-10-17T13:07:16Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -212,6 +212,16 @@
           "status": "closed",
           "resolution": "Revised: the DoD's DOD-G-01 note points at the plan's eval budget (20-plan/60-test-plan.md §4.1, 40 USD per Q-evalbudget-03) instead of 25 USD; G2 re-approved",
           "closed_at": "2026-10-16"
+        },
+        {
+          "id": "D-003",
+          "ref": "C002-REQ-301",
+          "summary": "Spike S-08 (docs/spikes/S-08-copilot-vscode.md §5, F-1…F-7): in VS Code the specialists must be workspace agents and the sdd MCP server a workspace MCP server (plugin agents are not offered as subagents, plugin MCP servers are not started); ${PLUGIN_ROOT} is not expanded in hook commands on Windows; agent-scoped hooks do not run but plugin-level hooks carry agent_type; question tool ask_user; Copilot CLI exit-code and <plugin>:<agent> naming; MCP tools deferred, named <server>-<tool>. P-01: one spec revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-17",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [

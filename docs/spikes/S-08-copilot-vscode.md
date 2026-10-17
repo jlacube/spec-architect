@@ -14,7 +14,7 @@ enforcement_mode: sdd-mcp-server
 
 # S-08 — GitHub Copilot in VS Code and Copilot CLI (C002-T-002)
 
-**Status:** complete, awaiting P-01's sign-off (2026-10-17). Copilot CLI ran on 2026-10-16; VS Code
+**Status:** complete, signed off by P-01 on 2026-10-17 ("Sign off"). Copilot CLI ran on 2026-10-16; VS Code
 Insiders runs on 2026-10-16 and 2026-10-17 (P-01 at the keyboard, probe versions 0.0.1 … 0.0.5).
 
 ## 1. Method
