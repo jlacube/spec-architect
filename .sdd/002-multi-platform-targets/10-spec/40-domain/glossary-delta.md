@@ -61,7 +61,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | sdd MCP server enforcement | The enforcement mode in which Architect agents have no generic edit or terminal tool and write `.sdd/` files and run allowlisted commands through the sdd MCP server (C002-DEC-001) |
 | Generic edit or terminal tool | A host tool that writes any file (VS Code: its built-in edit tools; OpenCode: `edit`) or runs any shell command (VS Code: its terminal tool; OpenCode: `bash`) |
 | Write tool, command tool | The sdd MCP server tools that write a file under `.sdd/` (write tools) and run one allowlisted command (command tool) |
-| Agent-scoped guard hook | Former name of the Copilot guard hook (defect D-003); still used in `50-interfaces/` and `60-architecture/` until they are revised |
+| Agent-scoped guard hook | Former name of the Copilot guard hook (defect D-003); no longer used in the spec |
 | Path guard core, bash guard core | The guard core behind `sdd guard-path` (C001-REQ-1103, C001-REQ-1104) and behind `sdd guard-bash` (C001-REQ-1106, C001-REQ-1107) |
 | Quick-lint findings | The findings of `sdd lint --quick --file <path>` for one written file, in the post-write feedback format of C001-IF-07 §4 |
 | Post-write feedback channel | A host hook that returns text to the agent after one of its tool calls (on OpenCode `tool.execute.after`, if spike S-07 confirms it) |
@@ -123,7 +123,7 @@ Components assigned in the architecture step (`../60-architecture/architecture.m
 | guard corpora | The path corpus and the shell corpus under `tests/guards/` | C002-COMP-013 |
 | enforcement mechanism | Whatever enforces the write/shell boundary on a target | C002-COMP-012 (Claude Code hooks, Copilot guard hooks), C002-COMP-003 (OpenCode permission rules), C002-COMP-005 (sdd MCP server) |
 | Copilot guard hook | A guard hook of the Copilot hooks fallback, keyed on `agent_type` | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
-| agent-scoped guard hook | Former name of the Copilot guard hook (D-003), kept until `50-interfaces/` and `60-architecture/` are revised | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
+| agent-scoped guard hook | Former name of the Copilot guard hook (D-003) | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
 | eval runner | An eval runner of a generated target | C002-COMP-009 |
 | OpenCode eval runner | The eval runner that drives OpenCode | C002-COMP-009 |
 | Copilot CLI eval runner | The eval runner that drives Copilot CLI | C002-COMP-009 |

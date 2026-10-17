@@ -25,6 +25,14 @@ sdd-mcp --profile files|shell [--root <dir>]
 - The host starts one process per declared server and session, with standard input and output as the
   MCP transport, and closes standard input when the session ends (C002-CON-04). The process is not a
   daemon, opens no listening socket and makes no network connection (C002-NFR-205).
+- Copilot VS Code: the servers are workspace MCP servers, entries of the repository's
+  `.vscode/mcp.json` written by the install command (C002-IF-005 §3, C002-IF-007); the local agent
+  host does not start a plugin's MCP servers (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-2).
+  It starts a workspace server with the session, and only after the session's first message
+  ("Cannot start an MCP server before the session runtime has been created. Send a message
+  first.", §3.2); until then the agents have no write or command tool, which fails closed, and the
+  install notes tell P-03 so (C002-IF-005 §5). Copilot CLI (eval runs only): the eval runner gives
+  the servers to the session (C002-IF-010 §4).
 - Standard output carries JSON-RPC messages only, one per line (C002-REQ-410). Diagnostics go to
   standard error, one line each, prefixed `sdd-mcp:`; with `SDD_DEBUG=1` every decision is logged
   there with its code (C001-NFR-702).
@@ -43,8 +51,12 @@ tools and the command tool can be granted separately even where a host grants on
 
 | Profile | Declared server name | Tools | OpenCode tool names | Copilot tool names (grant) |
 |---|---|---|---|---|
-| `files` | `sdd-files` | `write_file`, `replace_text` | `sdd-files_write_file`, `sdd-files_replace_text` | `sdd-files/write_file`, `sdd-files/replace_text` (`sdd-files/*`) |
-| `shell` | `sdd-shell` | `run_command` | `sdd-shell_run_command` | `sdd-shell/run_command` (`sdd-shell/*`) |
+| `files` | `sdd-files` | `write_file`, `replace_text` | `sdd-files_write_file`, `sdd-files_replace_text` | `sdd-files-write_file`, `sdd-files-replace_text` (`sdd-files/*`) |
+| `shell` | `sdd-shell` | `run_command` | `sdd-shell_run_command` | `sdd-shell-run_command` (`sdd-shell/*`) |
+
+On Copilot the tools are deferred: the host lists them by name and an agent loads one through
+`tool_search_tool` before its first call; a subagent granted `<server>/*` reached both tools of a
+workspace server, and its tool list held no edit or terminal tool (S-08 §3.2, fact F-7).
 
 An agent whose source `tools` holds Write or Edit is granted the `files` tools; one whose source
 holds Bash is granted the `shell` tool (C002-TS-214, C002-TS-310).
@@ -55,7 +67,7 @@ The server serves one repository, fixed at initialisation (C002-CON-15):
 
 1. the `--root` argument, if given; else
 2. the first root the client offers through MCP `roots/list`, if the client supports roots
-   [ASSUMPTION: S-08 — VS Code offers its workspace folders as roots, first folder first]; else
+   [ASSUMPTION: S-08 — VS Code offers its workspace folders as roots, first folder first; the S-08 record does not show it, and the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that a write lands in the open repository's .sdd/]; else
 3. the process working folder.
 
 From that folder the server walks up to the first folder that contains `.sdd/`, as the CLI does

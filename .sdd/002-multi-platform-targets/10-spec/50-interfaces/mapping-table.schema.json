@@ -61,8 +61,14 @@
         "commands_dir": { "$ref": "#/$defs/relPath" },
         "command_file": { "type": "string", "pattern": "^[a-z{}._-]*\\{name\\}[a-z{}._-]*\\.md$" },
         "skills_dir": { "$ref": "#/$defs/relPath" },
-        "config_file": { "$ref": "#/$defs/relPath" },
-        "hooks_file": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+        "config_file": {
+          "description": "MCP configuration of the package: opencode.json on OpenCode; on Copilot the workspace MCP configuration install/mcp.json, which the install command merges into .vscode/mcp.json (C002-IF-005 §3).",
+          "$ref": "#/$defs/relPath"
+        },
+        "hooks_file": {
+          "description": "Copilot: install/hooks.template.json, the hook declarations with the token @CLI_COPY@ from which the install command writes hooks.json (C002-IF-008 §4); null when the target has no hooks.",
+          "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
+        },
         "plugin_manifest": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
         "cli_copy": {
           "description": "Path of the copy of the bundled sdd CLI used by hook commands (Copilot only, C002-CON-14); null when the target has no hook commands.",
@@ -120,16 +126,25 @@
       }
     },
     "mcp_tool_names": {
-      "description": "Rewrites mcp__plugin_architect_<server>__<tool> into the host's MCP tool name.",
+      "description": "Rewrites mcp__plugin_architect_<server>__<tool> into the host's MCP tool name: target_pattern in bodies (the name an agent calls), grant_pattern in tools lists when it differs (Copilot: call <server>-<tool>, grant <server>/*; spike S-08 fact F-7).",
       "type": "object",
       "additionalProperties": false,
       "required": ["source_pattern", "target_pattern", "grant"],
       "properties": {
         "source_pattern": { "const": "mcp__plugin_architect_{server}__{tool}" },
-        "target_pattern": { "enum": ["{server}_{tool}", "{server}/{tool}"] },
+        "target_pattern": { "enum": ["{server}_{tool}", "{server}-{tool}"] },
+        "grant_pattern": {
+          "description": "Name form of a per-tool grant in a tools list; absent: target_pattern. A per-server grant is {server}/*.",
+          "enum": ["{server}/{tool}"]
+        },
         "grant": {
-          "description": "per-tool: each tool is granted by name; per-server: only {server}/* can be granted, so a server is granted when the agent holds any of its tools.",
+          "description": "per-tool: each tool is granted by name; per-server: only {server}/* is granted, so a server is granted when the agent holds any of its tools.",
           "enum": ["per-tool", "per-server"]
+        },
+        "deferred": {
+          "description": "true when the host lists MCP tools as deferred tools that an agent loads through the host's tool search tool before the first call (Copilot, spike S-08 §3.2).",
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -247,7 +262,7 @@
             }
           },
           "agent_start": { "properties": { "style": { "const": "permission-task" } } },
-          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}_{tool}" } } }
+          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}_{tool}" } }, "not": { "required": ["grant_pattern"] } }
         },
         "not": { "required": ["hook_tool_classes"] }
       }
@@ -264,8 +279,8 @@
             }
           },
           "agent_start": { "properties": { "style": { "const": "agents-list" } }, "required": ["tools"] },
-          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}/{tool}" } } },
-          "placement": { "required": ["hooks_file", "cli_copy"] }
+          "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}-{tool}" }, "deferred": { "const": true } }, "required": ["grant_pattern", "deferred"] },
+          "placement": { "required": ["hooks_file", "cli_copy", "plugin_manifest"] }
         },
         "not": { "anyOf": [{ "required": ["permissions"] }, { "required": ["post_write_feedback"] }] }
       }
@@ -386,7 +401,7 @@
           "items": { "$ref": "#/$defs/context" }
         },
         "accepted_in": {
-          "description": "Contexts in which the construct may stay untranslated in the target package (C002-REQ-602), for example hook-command and mcp-config for ${CLAUDE_PLUGIN_ROOT} on Copilot.",
+          "description": "Contexts in which the construct may stay untranslated in the target package (C002-REQ-602); empty for ${CLAUDE_PLUGIN_ROOT} and ${PLUGIN_ROOT} on both generated targets (C002-REQ-326).",
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/context" }
@@ -492,7 +507,7 @@
         "env": { "type": "object", "additionalProperties": { "type": "string" } },
         "url": { "type": "string", "pattern": "^https://" },
         "modes": {
-          "description": "Enforcement modes in which the server is declared; sdd-files and sdd-shell are declared under sdd-mcp-server only.",
+          "description": "Enforcement modes in which the server is declared; sdd-files and sdd-shell are declared under sdd-mcp-server, and on Copilot also under copilot-hooks (C002-REQ-307, C002-REQ-321).",
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,

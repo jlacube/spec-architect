@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-17T13:26:10.329Z",
+  "generated_at": "2026-10-17T17:23:14.383Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1129,15 +1129,15 @@
       "id": "C002-COMP-001",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 51,
+      "line": 56,
       "title": "Target generator",
-      "content_hash": "sha256:ddcf56b6e8dfb7f73613b6c55f7388c60cb5a7f023df625697db844dff55cd9c"
+      "content_hash": "sha256:d8832c3261311408e21cc47cd1991f38d3167a803f8f8613401007e0a89a8ac6"
     },
     {
       "id": "C002-COMP-002",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 60,
+      "line": 65,
       "title": "Mapping tables and wiring variants",
       "content_hash": "sha256:c50728ef5a8afad33be1247438b55729c74dc87adbdab5cd018ca0e8bfd5bfed"
     },
@@ -1145,7 +1145,7 @@
       "id": "C002-COMP-003",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 69,
+      "line": 74,
       "title": "OpenCode target package",
       "content_hash": "sha256:8d50e4a0c89a03f0301f5a7d8b717f56acdb43f4d683c445a82eb4d6266223eb"
     },
@@ -1153,15 +1153,15 @@
       "id": "C002-COMP-004",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 78,
+      "line": 83,
       "title": "Copilot target package",
-      "content_hash": "sha256:05131e1ea9dd8a2bac1131576cb1d325f2eff59d48322ef6193843b17c0a6499"
+      "content_hash": "sha256:1e2cdd98cbd6d6cde814408df51bdd649c57a37b018c94d3abf6d903d13dada8"
     },
     {
       "id": "C002-COMP-005",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 87,
+      "line": 92,
       "title": "sdd MCP server",
       "content_hash": "sha256:6726c463d09982a08825120348b4792ac9235510e724c6d6aebe3f9acb99e35c"
     },
@@ -1169,7 +1169,7 @@
       "id": "C002-COMP-006",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 96,
+      "line": 101,
       "title": "`architect-sdd` npm package",
       "content_hash": "sha256:85dbe97efa3d77573afcef2a2065e0d76d4d72586e30931ca68beaceca9c198f"
     },
@@ -1177,7 +1177,7 @@
       "id": "C002-COMP-007",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 105,
+      "line": 110,
       "title": "Target structure checks",
       "content_hash": "sha256:62f56e089bdf37db45b65e5f76221262c52fa5d557b2593a0be806d5f86aa837"
     },
@@ -1185,23 +1185,23 @@
       "id": "C002-COMP-008",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 114,
+      "line": 119,
       "title": "Corpus replay suite",
-      "content_hash": "sha256:2f814c16a512fab7071a23d41b81656a362e2a035cbc92fda6bad7323c7ae907"
+      "content_hash": "sha256:4e7136772b0ed6ef603c9af9fb2062865c429d304d29babba0a8275db9e735ac"
     },
     {
       "id": "C002-COMP-009",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 123,
+      "line": 128,
       "title": "Eval runners for the generated targets",
-      "content_hash": "sha256:b0ddddee3b0cc627f98299dcdbf64c6a86039c7edb4e88dda8304e59d0eb0024"
+      "content_hash": "sha256:5f11007082d81da7a41b5dc395d4111760271b0b410b3dda2b10c6e11ea0ae18"
     },
     {
       "id": "C002-COMP-010",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 132,
+      "line": 137,
       "title": "Release check",
       "content_hash": "sha256:ec785ed7af8fc7f06f34b12c4c7ee0685000da84f501c934dfb439995dffa061"
     },
@@ -1209,23 +1209,23 @@
       "id": "C002-COMP-011",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 141,
+      "line": 146,
       "title": "Manual VS Code checklist",
-      "content_hash": "sha256:6b862e7ba7bb25c4f7d94888e32c7b72e112e94dba6f0da64b2ae5bf2729112d"
+      "content_hash": "sha256:6a4a5fc021a70800788f2aaaacecab141815e703d4c2351f9e15dbf0c5476dae"
     },
     {
       "id": "C002-COMP-012",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 150,
+      "line": 155,
       "title": "Hooks and guards (modified)",
-      "content_hash": "sha256:8294d0e9fddbbba4a674f0a135ec59a57fe1d690e28d3b8ff1ab72f95d2f02fa"
+      "content_hash": "sha256:b9ca4c0e59422281a02021debd5b560828f947671c04bf0aeb0338daa5868eda"
     },
     {
       "id": "C002-COMP-013",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 161,
+      "line": 166,
       "title": "Build and check tooling (modified)",
       "content_hash": "sha256:6b4ba01d714ad4ce9d44b6e4016f0f63ad261e0898f1cd8cee2496ca87f2eda3"
     },
@@ -1233,15 +1233,15 @@
       "id": "C002-COMP-014",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 172,
+      "line": 177,
       "title": "Conductor (modified)",
-      "content_hash": "sha256:9582d9c1821d3f17a6307d71e75e074f3286fb57a32092ecd46799b8a6e2cbda"
+      "content_hash": "sha256:4dbb2f7a3cb129ce4de1725c9f4af505a19912274f2acf6f75eacdcaf9918521"
     },
     {
       "id": "C002-COMP-015",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 183,
+      "line": 188,
       "title": "Commands (modified)",
       "content_hash": "sha256:59126d8f140f3a12a25d55246a9406d04f2b76b024c94ed8ec9d8a1aa9259c6b"
     },
@@ -1249,7 +1249,7 @@
       "id": "C002-COMP-016",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 194,
+      "line": 199,
       "title": "Skills library (modified)",
       "content_hash": "sha256:9035e392dc9e195473930fc037889ac510642c2d44b07390f24193826b3afec1"
     },
@@ -1257,7 +1257,7 @@
       "id": "C002-COMP-017",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 205,
+      "line": 210,
       "title": "Plugin package and configuration (modified)",
       "content_hash": "sha256:40fd0725101921fd26d06192818c0ae75ca74690a7e3c4872d4c4b084d39c26c"
     },
@@ -1265,9 +1265,9 @@
       "id": "C002-COMP-018",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 216,
+      "line": 221,
       "title": "CLI front-end (modified)",
-      "content_hash": "sha256:4604ff25330c28c93456b0793f2e19976ef5a5617573373a014611ea70bad567"
+      "content_hash": "sha256:9d9a879a9c1f097f581b9351a814eec8f7e6490fa32c94b717a46feff93d9e8a"
     },
     {
       "id": "C002-CON-01",
@@ -1330,8 +1330,8 @@
       "type": "CON",
       "file": "10-spec/60-architecture/constraints.md",
       "line": 19,
-      "title": "Every fault in the sdd MCP server or in an agent-scoped guard hook ends in a refusal: an error result that changed nothing, or exit code 2; no error path allows a call",
-      "content_hash": "sha256:416e4c9b19857de87c115d89e1b99c41945187aa5ce7179236e6f4bae1d6b4f3"
+      "title": "Every fault in the sdd MCP server or in a Copilot guard hook ends in a refusal: an error result that changed nothing, or a deny decision on standard output with exit code 2, which holds also where the host reports another non-zero code and fails closed (Copilot CLI, `docs/spikes/S-08-copilot-vscode.md §2.2`); no error path allows a call, and no deny relies on exit 0. A readable Copilot hook input whose `agent_type` names no Architect agent is not a fault: the guard hook allows it (C002-REQ-320)",
+      "content_hash": "sha256:e316dab5164d0b0161c2e18796717634b09f1eec97bf404ac200c6fdbc693feb"
     },
     {
       "id": "C002-CON-09",
@@ -1378,8 +1378,8 @@
       "type": "CON",
       "file": "10-spec/60-architecture/constraints.md",
       "line": 25,
-      "title": "Copilot hook commands call the CLI copy inside the Copilot target package (`node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" …`), never a PATH lookup, so that a missing Node.js is the only start failure left to a guard hook",
-      "content_hash": "sha256:835338cef106891de7052808514f70afd88861e22cc0c65cb5f3b7c73222559e"
+      "title": "Copilot hook commands call the CLI copy inside the Copilot target package through its absolute path, written by `sdd install copilot` into the package's `hooks.json` (`node \"<package>/scripts/sdd.mjs\" …`, C002-IF-008 §4); never a PATH lookup, and never `${PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_ROOT}`, which VS Code on Windows leaves unexpanded (S-08 §3, fact F-3), so that a missing Node.js is the only start failure left to a hook; a hook that errors denies every tool call of the session (S-08 §3)",
+      "content_hash": "sha256:f29dd2dbf1d9d80e3c5a489325dc97f95e7c26c523e0b0e586f0f2557282c08c"
     },
     {
       "id": "C002-CON-15",
@@ -1708,7 +1708,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 18,
       "title": "Target mapping table (translation table) and wiring variants",
-      "content_hash": "sha256:b355128307590298dc70120617a0dded1d0c2c3584027bbe94758ed21b83ccbb"
+      "content_hash": "sha256:ea65615ce2710adefd09ac0aa67400bcbe713e65cff838e8badd5467b60ec81d"
     },
     {
       "id": "C002-IF-002",
@@ -1716,7 +1716,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 19,
       "title": "sdd MCP server: process, protocol and tools",
-      "content_hash": "sha256:8afdf904e715939c7e719fae3257e4eea033f8ac5b8a3620f23365ee36634444"
+      "content_hash": "sha256:dcf23ecce646349c9c0b3fdf8f4aba3c5ec718a89e39e0fc7a6498171ae9688f"
     },
     {
       "id": "C002-IF-003",
@@ -1739,8 +1739,8 @@
       "type": "IF",
       "file": "10-spec/50-interfaces/README.md",
       "line": 22,
-      "title": "Target package contracts (OpenCode, Copilot VS Code) and target structure checks",
-      "content_hash": "sha256:1b1d530e505b6fbaf553f8c1e086cd8453cfafa8b7b9bb1f4eb3ff95dffe768d"
+      "title": "Target package contracts (OpenCode, Copilot VS Code: plugin part and install sources) and target structure checks",
+      "content_hash": "sha256:1b07342790f6bcfa5f8167cab888507638bdd894daa85a528a605e7ffb77dfd2"
     },
     {
       "id": "C002-IF-006",
@@ -1755,16 +1755,16 @@
       "type": "IF",
       "file": "10-spec/50-interfaces/README.md",
       "line": 24,
-      "title": "sdd CLI additions (delta to C001-IF-01)",
-      "content_hash": "sha256:8d002a3bb22b8904f27164c59a015e046905f711718e56526180cc25d5044c63"
+      "title": "sdd CLI additions (delta to C001-IF-01), including the Copilot install command",
+      "content_hash": "sha256:85a724eee3a4b64297bebd98c1256043ff513b81d92aaf03ca8d8a19b724ad45"
     },
     {
       "id": "C002-IF-008",
       "type": "IF",
       "file": "10-spec/50-interfaces/README.md",
       "line": 25,
-      "title": "Hooks contract delta: allowlist rows, Serena-command confinement, writing subcommands and their `--cwd` confinement, and Copilot hook input (delta to C001-IF-07)",
-      "content_hash": "sha256:254733234ba83df343ccc942d44e4b626c3e634177c2459f3f264bfd187dc45a"
+      "title": "Hooks contract delta: allowlist rows, Serena-command confinement, writing subcommands and their `--cwd` confinement (the install command denied), and Copilot hook input keyed by `agent_type` (delta to C001-IF-07)",
+      "content_hash": "sha256:868840c149036d0bd2baa3ab15e178d548696ba24fc9801d1fee902c3433a392"
     },
     {
       "id": "C002-IF-009",
@@ -9232,6 +9232,16 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-321",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-001",
+      "to": "C002-REQ-326",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-002",
       "to": "C002-IF-001",
       "relation": "references"
@@ -9383,12 +9393,22 @@
     },
     {
       "from": "C002-COMP-004",
+      "to": "C002-COMP-018",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C002-COMP-004",
       "to": "C002-IF-002",
       "relation": "references"
     },
     {
       "from": "C002-COMP-004",
       "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-IF-007",
       "relation": "references"
     },
     {
@@ -9464,6 +9484,16 @@
     {
       "from": "C002-COMP-004",
       "to": "C002-REQ-318",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-REQ-321",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-004",
+      "to": "C002-REQ-326",
       "relation": "realizes"
     },
     {
@@ -9788,6 +9818,16 @@
     },
     {
       "from": "C002-COMP-009",
+      "to": "C002-COMP-018",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C002-COMP-009",
+      "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-COMP-009",
       "to": "C002-IF-009",
       "relation": "references"
     },
@@ -9994,6 +10034,16 @@
     {
       "from": "C002-COMP-012",
       "to": "C002-REQ-319",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
+      "to": "C002-REQ-320",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-012",
+      "to": "C002-REQ-325",
       "relation": "realizes"
     },
     {
@@ -10293,6 +10343,26 @@
     },
     {
       "from": "C002-COMP-018",
+      "to": "C002-REQ-322",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-323",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-324",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-REQ-326",
+      "relation": "realizes"
+    },
+    {
+      "from": "C002-COMP-018",
       "to": "C002-REQ-407",
       "relation": "realizes"
     },
@@ -10442,6 +10512,11 @@
       "relation": "references"
     },
     {
+      "from": "C002-CON-08",
+      "to": "C002-REQ-320",
+      "relation": "references"
+    },
+    {
       "from": "C002-CON-09",
       "to": "C002-COMP-001",
       "relation": "references"
@@ -10563,7 +10638,17 @@
     },
     {
       "from": "C002-CON-14",
+      "to": "C002-COMP-018",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-14",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-CON-14",
+      "to": "C002-IF-008",
       "relation": "references"
     },
     {
@@ -11018,12 +11103,27 @@
     },
     {
       "from": "C002-IF-001",
+      "to": "C002-REQ-211",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
       "to": "C002-REQ-216",
       "relation": "references"
     },
     {
       "from": "C002-IF-001",
       "to": "C002-REQ-317",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-321",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
+      "to": "C002-REQ-326",
       "relation": "references"
     },
     {
@@ -11069,6 +11169,11 @@
     {
       "from": "C002-IF-002",
       "to": "C002-REQ-307",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-002",
+      "to": "C002-REQ-323",
       "relation": "references"
     },
     {
@@ -11208,6 +11313,11 @@
     },
     {
       "from": "C002-IF-005",
+      "to": "C002-COMP-018",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
       "to": "C002-REQ-107",
       "relation": "references"
     },
@@ -11273,6 +11383,21 @@
     },
     {
       "from": "C002-IF-005",
+      "to": "C002-REQ-321",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-323",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-326",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
       "to": "C002-REQ-602",
       "relation": "references"
     },
@@ -11318,6 +11443,11 @@
     },
     {
       "from": "C002-IF-007",
+      "to": "C002-COMP-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
       "to": "C002-COMP-018",
       "relation": "references"
     },
@@ -11333,12 +11463,42 @@
     },
     {
       "from": "C002-IF-007",
+      "to": "C002-REQ-309",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
       "to": "C002-REQ-313",
       "relation": "references"
     },
     {
       "from": "C002-IF-007",
       "to": "C002-REQ-315",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-320",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-322",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-323",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-324",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-007",
+      "to": "C002-REQ-326",
       "relation": "references"
     },
     {
@@ -11424,6 +11584,21 @@
     {
       "from": "C002-IF-008",
       "to": "C002-REQ-319",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-320",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-325",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-008",
+      "to": "C002-REQ-326",
       "relation": "references"
     },
     {
