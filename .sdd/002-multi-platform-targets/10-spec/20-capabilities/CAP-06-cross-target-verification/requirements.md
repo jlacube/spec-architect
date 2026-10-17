@@ -217,8 +217,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-623 — Claude Code regression set passes
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE plugin SHALL pass every test and eval of the regression set, with the corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521 as the only changed expectations.
-- **Rationale:** C002-GOAL-05, C002-SC-05; guard tests that pin today's behaviour (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2); the regression set is written in the plan (`20-plan/30-impact/regression-set.md`); the doctor and init commands of Claude Code keep their Serena step under C002-REQ-517
+- **Statement:** THE plugin SHALL pass every test and eval of the regression set, with the corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325 as the only changed expectations.
+- **Rationale:** C002-GOAL-05, C002-SC-05; guard tests that pin today's behaviour (current-state §2 item 6); 23 test files pin the Claude format (baseline survey §3.2); the regression set is written in the plan (`20-plan/30-impact/regression-set.md`); the doctor and init commands of Claude Code keep their Serena step under C002-REQ-517; C002-REQ-325 adds the `sdd install` deny cases and the "not install;" summary of the bash-guard deny message (C002-IF-008 §1)
 - **Stories:** C002-US-607
 - **Priority:** Must
 - **Acceptance:** C002-AC-623.1

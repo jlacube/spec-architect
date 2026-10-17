@@ -457,7 +457,7 @@ Scenario: C002-TS-626 — regression set after CHG-002
   Given the regression set of "20-plan/30-impact/regression-set.md"
   When it runs on the implementation of CHG-002
   Then every test and eval of the set passes
-  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521
+  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325
   And every changed corpus case is a case of a bare "sdd" command, of "node --version", of "sdd serena-config" or "sdd serena-launch", or of a writing "sdd" subcommand with the option "--cwd"
 ```
 

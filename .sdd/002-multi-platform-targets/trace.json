@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-17T17:39:18.356Z",
+  "generated_at": "2026-10-17T17:40:39.248Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -968,7 +968,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
       "line": 454,
       "title": "Regression set passes with the three bash guard changes as the only changed expectations",
-      "content_hash": "sha256:f14ca4c3d922d8fcfc839684091048e6c5095461d9a97937600c7ef7b5bbbe79"
+      "content_hash": "sha256:1a1b8105251f7a4f089190eac33cabc2367c38739d2c3b368dc641c16c3bfa32"
     },
     {
       "id": "C002-AC-625.1",
@@ -3228,7 +3228,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 217,
       "title": "Claude Code regression set passes",
-      "content_hash": "sha256:71f5aac729c2dd50261c62f36199636594cbac7ee27561917317613fac9c4ceb"
+      "content_hash": "sha256:d6f3216bf1a9c70f0d208650c3c99adf05ce75f7b3cb10b1fdb21f4f30c865c4"
     },
     {
       "id": "C002-REQ-625",
@@ -7373,7 +7373,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
       "line": 456,
       "title": "regression set after CHG-002",
-      "content_hash": "sha256:b5bd68205e685b80811e2149d7b6fcedf8e9e6558a9780dbdf423261ca377516"
+      "content_hash": "sha256:e537714127f44fc8e46e1537feadbef2fcf07ac6b2b55828ed293c40ac2130e9"
     },
     {
       "id": "C002-TS-627",
@@ -16061,6 +16061,16 @@
     {
       "from": "C002-REQ-623",
       "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-623",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-623",
+      "to": "C002-REQ-325",
       "relation": "references"
     },
     {
