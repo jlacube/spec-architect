@@ -89,3 +89,19 @@ P-01's statements after G3 (chat, with a screenshot of the GitHub Copilot usage 
 - **Blocking:** yes for C002-T-001 · **Material:** yes
 - **Statement:** P-01: "for OpenCode, let's discuss afterwards, as we might need to adjust some stuffs, as I actually use only OpenRouter on OpenCode for model inference". The plan bills OpenCode eval sessions to the prepaid Anthropic API key; with OpenRouter they bill P-01's OpenRouter account. To discuss before C002-T-001.
 - **Answer:** pending
+
+## Round 7 — 2026-10-17
+
+Questions from the architect's and planner's D-003 hand-backs.
+
+### Q-versions-02 — Which Copilot Chat version did the VS Code Insiders runs of S-08 use?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. 0.35.3 as written (Recommended) · 2. P-01 reads another version
+- **Answer:** 0.35.3 is fine (Recommended) — the tested pair is VS Code Insiders 1.142.0-insider with Copilot Chat 0.35.3.
+- **Extracted instructions:** none
+
+### Q-serena-ctx-01 — Which Serena --context does the Copilot mapping table use for VS Code?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. C002-T-024 takes it from Serena's context list at the tested Serena version and records it; C002-T-050 confirms Serena starts (Recommended) · 2. Name it in the spec (C002-IF-001 §6.2)
+- **Answer:** Decide in T-024 (Recommended)
+- **Extracted instructions:** none
