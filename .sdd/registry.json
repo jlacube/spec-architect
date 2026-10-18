@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T06:13:12Z",
+  "generated_at": "2026-10-18T06:22:51Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -147,9 +147,9 @@
           "summary": "Dogfood finding (T-070, 2026-10-13): the Bash allowlist of IF-07 §3 accepts the version probe 'node -v' but not 'node --version', so the cartographer's toolchain record could not show Node's version (it tried --version, like every other probe). Proposed: accept both spellings for node (and '-v'/'--version' consistently for the other probes where the tool supports them).",
           "reporter": "jerome.lacube",
           "date": "2026-10-13",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by CHG-002 C002-T-008 (3997daf): the bash guard allows exactly 'node --version' and bare 'sdd' (C002-REQ-503)",
+          "closed_at": "2026-10-18"
         }
       ],
       "waivers": []
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 60,
-          "done": 5,
+          "done": 6,
           "blocked": 0,
           "in_progress": 0
         },

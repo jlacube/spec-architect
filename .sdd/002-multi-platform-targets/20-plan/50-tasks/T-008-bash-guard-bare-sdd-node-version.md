@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-007]
 implements: [C002-REQ-503, C002-REQ-607]
 satisfies_ac: [C002-AC-503.1, C002-AC-607.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-504, C002-TS-505, C002-TS-610, C002-TC-504, C002-TC-505, C
 components: [C002-COMP-012]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3997daf, completed_at: 2026-10-18, notes: "Bare sdd and node --version allowed (C002-REQ-503); BG-278…292; D-011 of CHG-001 closed; TC-504/505 done, TC-610 rows of this task; Allowed: text grows with T-009/010/059; SAFETY.md and docs still omit node --version (docs follow-up)" }
 ---
 
 # C002-T-008 — Bash guard: bare sdd and node --version (closes CHG-001 defect D-011)
