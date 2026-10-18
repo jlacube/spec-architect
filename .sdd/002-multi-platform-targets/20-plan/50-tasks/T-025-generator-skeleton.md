@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-004, C002-T-024]
 implements: [C002-REQ-102, C002-NFR-301]
 satisfies_ac: [C002-AC-102.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-104, C002-TS-105, C002-TC-104, C002-TC-105]
 components: [C002-COMP-001]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: bd21e85, completed_at: 2026-10-18, notes: "Generator frame; TC-104/105 pass; ERR-GEN-008 run deletes nothing (outputs would be inside the source, REQ-102); node:crypto for hashes; emitters are placeholders (T-029/T-031)" }
 ---
 
 # C002-T-025 — Generator: entry, source reader, writer and manifest
