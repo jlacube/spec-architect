@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: done
 depends_on: [C002-T-003, C002-T-012, C002-T-013, C002-T-021]
 implements: [C002-REQ-412, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519]
 satisfies_ac: [C002-AC-412.1, C002-AC-501.1, C002-AC-502.1, C002-AC-512.1, C002-AC-518.1, C002-AC-519.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-417, C002-TS-501, C002-TS-502, C002-TS-503, C002-TS-519, C
 components: [C002-COMP-006, C002-COMP-013]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 10a5dbf, completed_at: 2026-10-18, notes: "Tarball dist/architect-sdd-0.0.1.tgz; TC-417/501/502/503/519/529/530/534/535 + TS-517 tarball row + TS-419 tarball part; fx-tgz fixture for later tasks; tests in tests/integration/npm-build/; open points logged as D-008" }
 ---
 
 # C002-T-022 — architect-sdd: staging, template CLI lines and npm pack
