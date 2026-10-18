@@ -6,12 +6,20 @@
 // `npm test` (scripts/test.mjs leaves tests/replay/ out).
 //   C002-TC-133 (C002-T-026)  adopter MCP server tool not available to an Architect agent
 //   C002-TC-226 (C002-T-029)  built-in commands kept beside the 13 architect-<name> commands
-// C002-T-030 (C002-TC-207, 209, 211, 213, 222, 223) adds its scenarios here.
+//   C002-TC-207 (C002-T-030)  @mode-native: edit decisions of the OpenCode permission engine on fx-oc
+//   C002-TC-209 (C002-T-030)  @mode-native: bash decisions of the OpenCode permission engine
+//   C002-TC-211 (C002-T-030)  the adopter's own agent my-build keeps its edit right
+//   C002-TC-213 (C002-T-030)  @mode-server: the built-in edit tool refused even inside .sdd/
+//   C002-TC-222 (C002-T-030)  @mode-native: the quick-lint plugin returns LINT-EARS-002 after a write
+//   C002-TC-223 (C002-T-030)  @mode-native: a clean file gives no finding line
+// A `@mode-*` scenario runs only when the OpenCode table's enforcement mode (copied from the S-07
+// record) is its mode; otherwise it is skipped as not applicable, citing the record (test plan §1).
 import { test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { CorpusCase } from "../../guards/fixture.ts";
+import { loadTargetTable, type Mode } from "../../../scripts/generate/tables.ts";
+import type { BashCase, CorpusCase } from "../../guards/fixture.ts";
 import { repoRoot } from "../../helpers.ts";
 import type { ReplayAdapter, ReplayFixture, ReplayInput } from "../adapter.ts";
 import type { Mechanism } from "../expect.ts";
@@ -159,4 +167,190 @@ test("C002-TC-226 (C002-TS-226): the session lists the 13 architect-<name> comma
   } finally {
     fx.cleanup();
   }
+});
+
+// --- C002-T-030: permission rules and the quick-lint plugin -------------------------------------------
+
+/** The enforcement mode the S-07 record fixes, as the OpenCode table carries it (C002-T-043 copies it). */
+const RECORD_MODE: Mode = loadTargetTable(repoRoot(), "opencode").enforcement_mode;
+
+/** False (scenario skipped as not applicable) when the scenario's `@mode-*` tag is not the record's mode. */
+function inMode(t: TestContext, mode: Mode): boolean {
+  if (RECORD_MODE === mode) return true;
+  t.skip(`not applicable: a ${mode} scenario, and the S-07 record fixes ${RECORD_MODE} (docs/spikes/S-07-opencode.md)`);
+  return false;
+}
+
+const WIN = process.platform === "win32";
+const REQ_FILE = ".sdd/002-x/10-spec/20-capabilities/CAP-01-x/requirements.md";
+
+/**
+ * fx-oc (CAP-02 acceptance, fixture paths): the replay fixture with change `002-x` in phase `10-spec`,
+ * `src/app.ts`, `README.md`, `.sdd/002-x/10-spec/a.md` holding `x`, and the link `.sdd/link-to-src` to
+ * `src/` (a junction on Windows, as S-07 probed it).
+ */
+function plantFxOc(fx: ReplayFixture): void {
+  const at = (p: string) => `${fx.repo}/${p}`;
+  mkdirSync(at(".sdd/002-x/10-spec/20-capabilities/CAP-01-x"), { recursive: true });
+  mkdirSync(at("src"), { recursive: true });
+  if (!existsSync(at("src/app.ts"))) writeFileSync(at("src/app.ts"), "export const app = 1;\n");
+  if (!existsSync(at("README.md"))) writeFileSync(at("README.md"), "# fx-oc\n");
+  if (!existsSync(at(".sdd/002-x/10-spec/a.md"))) writeFileSync(at(".sdd/002-x/10-spec/a.md"), "x");
+  if (!existsSync(at(".sdd/link-to-src"))) symlinkSync(at("src"), at(".sdd/link-to-src"), WIN ? "junction" : "dir");
+}
+
+/** A path case for an agent: `Write` (OpenCode `write`, decided by the `edit` rules) on `<repo>/<rel>` as written. */
+function pathInput(fx: ReplayFixture, id: string, caller: string, rel: string, expect: "allow" | "deny", tool = "Write"): ReplayInput {
+  const c: CorpusCase = { id, category: "scenario", tool, agent: caller.startsWith("sdd-") ? `architect:${caller}` : caller, path: `{repo}/${rel}`, expect };
+  return { id, corpus: "path", category: c.category, case: c, tool, caller, cwd: fx.repo, path: `${fx.repo}/${rel}`, field: "file_path", dialect: "bash", malformed: false, resolve: fx.resolvePath };
+}
+
+/** A shell case of an agent on OpenCode's one shell tool. */
+function shellInput(fx: ReplayFixture, id: string, caller: string, command: string, expect: "allow" | "deny"): ReplayInput {
+  const c: BashCase = { id, category: "scenario", tool: "Bash", agent: `architect:${caller}`, command, expect };
+  return { id, corpus: "shell", category: c.category, case: c, tool: "Bash", caller, cwd: fx.repo, command, dialect: "bash", malformed: false, resolve: fx.resolveShell };
+}
+
+/** Sets the fixture up, runs `body` with the adapter, tears down and removes the fixture. */
+async function withFxOc(adapter: ReplayAdapter, body: (fx: ReplayFixture) => Promise<void>, plant?: (fx: ReplayFixture) => void): Promise<void> {
+  const fx = buildReplayFixture(loadCorpora().path.corpus.fixture);
+  try {
+    plantFxOc(fx);
+    plant?.(fx);
+    await adapter.setup(fx);
+    try {
+      await body(fx);
+    } finally {
+      await adapter.teardown();
+    }
+  } finally {
+    fx.cleanup();
+  }
+}
+
+const TS_207: [string, string, "allow" | "deny"][] = [
+  ["sdd-spec-writer", ".sdd/002-x/10-spec/a.md", "allow"],
+  ["sdd-spec-writer", "src/app.ts", "deny"],
+  ["sdd-conductor", "README.md", "deny"],
+  ["sdd-planner", ".sdd/../src/app.ts", "deny"],
+  ["sdd-architect", ".sdd/link-to-src/app.ts", "deny"],
+  ["sdd-cartographer", ".claude/agent-memory/architect-sdd-cartographer/MEMORY.md", "deny"],
+];
+
+test("C002-TC-207 (C002-TS-207) @mode-native: OpenCode allows edits inside .sdd/ only (.., the link to src/, the memory folder denied)", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = await openCodeHost(t);
+  if (!adapter) return;
+  await withFxOc(adapter, async (fx) => {
+    const before = readFileSync(`${fx.repo}/src/app.ts`, "utf8");
+    for (const [i, [agent, rel, expected]] of TS_207.entries()) {
+      const d = await adapter.decide(pathInput(fx, `TS-207-${i + 1}`, agent, rel, expected));
+      assert.equal(d.actual, expected, `${agent} on ${rel} (${d.tool}${d.detail ? `: ${d.detail}` : ""})`);
+    }
+    assert.equal(readFileSync(`${fx.repo}/src/app.ts`, "utf8"), before, "src/app.ts is unchanged");
+    assert.ok(!existsSync(`${fx.repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md`), "nothing written into the memory folder");
+  });
+});
+
+const TS_209: [string, "allow" | "deny"][] = [
+  ["sdd lint 002", "allow"],
+  ["git log --oneline -5", "allow"],
+  ["node --version", "allow"],
+  ["npm install", "deny"],
+  ["git status && rm -rf src", "deny"],
+  ["sdd status > out.txt", "deny"],
+  ["Remove-Item -Recurse src", "deny"],
+];
+
+test("C002-TC-209 (C002-TS-209) @mode-native: OpenCode allows the allowlisted commands of sdd-planner only (chain, redirection, PowerShell denied)", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = await openCodeHost(t);
+  if (!adapter) return;
+  await withFxOc(adapter, async (fx) => {
+    for (const [i, [command, expected]] of TS_209.entries()) {
+      const d = await adapter.decide(shellInput(fx, `TS-209-${i + 1}`, "sdd-planner", command, expected));
+      assert.equal(d.actual, expected, `${command} (${d.tool}${d.detail ? `: ${d.detail}` : ""})`);
+    }
+    assert.ok(existsSync(`${fx.repo}/src/app.ts`), "src/ is still there");
+    assert.ok(!existsSync(`${fx.repo}/out.txt`), "no redirection target written");
+  });
+});
+
+test("C002-TC-211 (C002-TS-211): the adopter's own agent my-build keeps its edit right on src/app.ts", async (t) => {
+  const adapter = await openCodeHost(t);
+  if (!adapter) return;
+  let before = "";
+  await withFxOc(
+    adapter,
+    async (fx) => {
+      const d = await adapter.decide(pathInput(fx, "TS-211", "my-build", "src/app.ts", "allow"));
+      assert.equal(d.actual, "allow", `${d.tool}${d.detail ? `: ${d.detail}` : ""}`);
+      assert.notEqual(readFileSync(`${fx.repo}/src/app.ts`, "utf8"), before, "src/app.ts holds the new content");
+    },
+    (fx) => {
+      // The adopter's own opencode.json, beside the package's: my-build with edit set to allow (C002-REQ-208).
+      const config = { $schema: "https://opencode.ai/config.json", agent: { "my-build": { mode: "primary", description: "Adopter build agent", permission: { edit: "allow" } } } };
+      writeFileSync(`${fx.repo}/opencode.json`, JSON.stringify(config, null, 2) + "\n");
+      before = readFileSync(`${fx.repo}/src/app.ts`, "utf8");
+    },
+  );
+});
+
+test("C002-TC-213 (C002-TS-213) @mode-server: the built-in edit tool is refused to sdd-spec-writer even inside .sdd/", async (t) => {
+  if (!inMode(t, "sdd-mcp-server")) return;
+  const adapter = await openCodeHost(t);
+  if (!adapter) return;
+  await withFxOc(adapter, async (fx) => {
+    const file = `${fx.repo}/.sdd/002-x/10-spec/a.md`;
+    const before = readFileSync(file, "utf8");
+    const d = await adapter.decide(pathInput(fx, "TS-213", "sdd-spec-writer", ".sdd/002-x/10-spec/a.md", "deny", "Edit"));
+    assert.equal(d.actual, "deny", `${d.tool}${d.detail ? `: ${d.detail}` : ""}`);
+    assert.equal(readFileSync(file, "utf8"), before, ".sdd/002-x/10-spec/a.md is unchanged");
+  });
+});
+
+/**
+ * A write of given content by an agent and the tool result the agent sees (C002-TS-222, C002-TS-223).
+ * Not part of the adapter interface of C002-T-040: an adapter that offers it has `writeFile()`; until
+ * then the scenarios are skipped.
+ */
+type ResultReader = ReplayAdapter & { writeFile?: (agent: string, path: string, content: string) => Promise<{ actual: "allow" | "deny" | "error"; output: string }> };
+
+function requirementsFile(statement: string): string {
+  return (
+    "---\nid: C002-CAP-01\nartifact: spec/requirements\n---\n\n" +
+    `### C002-REQ-001 — Thing 1\n- **Pattern:** ubiquitous\n- **Statement:** ${statement}\n- **Rationale:** r\n` +
+    "- **Stories:** C002-US-001\n- **Priority:** Must\n- **Acceptance:** C002-AC-001.1\n\n"
+  );
+}
+
+async function quickLintCase(t: TestContext, statement: string, check: (output: string) => void): Promise<void> {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = (await openCodeHost(t)) as ResultReader | null;
+  if (!adapter) return;
+  if (typeof adapter.writeFile !== "function") {
+    t.skip(`the ${MECHANISM} adapter does not return tool results yet (C002-T-042)`);
+    return;
+  }
+  const writeFile = adapter.writeFile.bind(adapter);
+  await withFxOc(adapter, async (fx) => {
+    const r = await writeFile("sdd-spec-writer", `${fx.repo}/${REQ_FILE}`, requirementsFile(statement));
+    assert.equal(r.actual, "allow", r.output);
+    check(r.output);
+  });
+}
+
+test("C002-TC-222 (C002-TS-222) @mode-native: after a write with two SHALL the result returned to sdd-spec-writer holds LINT-EARS-002 and the file's path", async (t) => {
+  await quickLintCase(t, "THE sdd CLI SHALL write the file and SHALL print its path.", (output) => {
+    const line = output.split("\n").find((l) => l.includes("LINT-EARS-002"));
+    assert.ok(line, output);
+    assert.ok(line.includes(REQ_FILE) || output.includes(REQ_FILE), `the finding names ${REQ_FILE}: ${output}`);
+  });
+});
+
+test("C002-TC-223 (C002-TS-223) @mode-native: a clean requirements file gives no finding line", async (t) => {
+  await quickLintCase(t, "THE sdd CLI SHALL write the file.", (output) => {
+    assert.ok(!/^(error|warn|info) [A-Z]+-[A-Z0-9-]+ /m.test(output), output);
+    assert.ok(!output.includes("sdd quick lint of"), output);
+  });
 });

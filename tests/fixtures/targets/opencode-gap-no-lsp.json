@@ -513,6 +513,10 @@
           "action": "allow"
         },
         {
+          "pattern": "node --version",
+          "action": "allow"
+        },
+        {
           "pattern": "git --version",
           "action": "allow"
         },
@@ -590,6 +594,10 @@
         },
         {
           "pattern": "ast-grep * -i*",
+          "action": "deny"
+        },
+        {
+          "pattern": "sdd install *",
           "action": "deny"
         },
         {

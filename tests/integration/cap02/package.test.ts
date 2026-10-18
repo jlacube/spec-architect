@@ -19,6 +19,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from "node:f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { declaredServers, INSTALL_SOURCE, openCodePackageFindings } from "../../../scripts/generate/emit/opencode.ts";
+import { emitsQuickLint } from "../../../scripts/generate/emit/opencode-quicklint.ts";
 import { main } from "../../../scripts/generate/main.ts";
 import { readSource } from "../../../scripts/generate/reader.ts";
 import { loadTargetTable, TARGETS, type MappingTable, type Mode } from "../../../scripts/generate/tables.ts";
@@ -107,7 +108,8 @@ for (const mode of MODES) {
       assert.deepEqual(c.mcp[name], s.transport === "http" ? { type: "remote", url: s.url } : { type: "local", command: [s.command, ...(s.args ?? [])] }, name);
     assert.ok(files.has(MANIFEST) && files.has(INSTALL));
     assert.deepEqual(openCodePackageFindings(files, emitInput(mode)), [], "the target structure findings of a clean package");
-    assert.equal(files.size, 10 + 13 + source.skills.reduce((n, s) => n + 1 + s.resources.length, 0) + 3, "nothing else");
+    // + the quick-lint plugin of C002-T-030 where the mode and the table call for it (C002-REQ-215).
+    assert.equal(files.size, 10 + 13 + source.skills.reduce((n, s) => n + 1 + s.resources.length, 0) + 3 + (emitsQuickLint(table, mode) ? 1 : 0), "nothing else");
   });
 
   test(`C002-TC-203 (C002-TS-203) [${mode}]: sdd-conductor is primary, the nine specialists are subagents, each with the model of its tier`, () => {

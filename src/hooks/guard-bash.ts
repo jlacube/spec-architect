@@ -283,13 +283,13 @@ function cwdViolation(words: string[], cwd: string): string | null {
 }
 
 // Exact word count: `node --version --eval=x` (BG-166) and `node -v -e x` (BG-160) stay denied.
-const VERSION_PROBES: string[][] = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
+export const VERSION_PROBES: readonly (readonly string[])[] = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
 function versionProbe(words: string[]): boolean {
   return VERSION_PROBES.some((p) => p.length === words.length && exe(words[0], p[0]!) && words[1] === p[1]);
 }
 
-const RIPWIRE_VALUE_VERBS = ["--for", "--pack-task", "--callers", "--uses", "--impact", "--expand"];
-const RIPWIRE_FLAG_VERBS = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
+export const RIPWIRE_VALUE_VERBS: readonly string[] = ["--for", "--pack-task", "--callers", "--uses", "--impact", "--expand"];
+export const RIPWIRE_FLAG_VERBS: readonly string[] = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
 const RIPWIRE_BOUNDS = ["--token-budget", "--max-tokens", "--limit", "--offset", "--top-k"];
 
 /** `ripwire [<path>] <one read verb> [bounding flags] [--json]` (C001-IF-14 §2). */
@@ -311,13 +311,16 @@ function ripwire(words: string[]): boolean {
   return verbs === 1 && paths <= 1;
 }
 
+/** The ast-grep entry: its subcommand and the pattern option it needs (long form first). */
+export const AST_GREP_RUN = { subcommand: "run", pattern: ["--pattern", "-p"] } as const;
+
 /** `ast-grep run --pattern <p> [--lang <l>] [<paths>] [--json]`; rewriting flags are not on the list. */
 function astGrep(words: string[]): boolean {
-  if (!exe(words[0], "ast-grep") || words[1] !== "run") return false;
+  if (!exe(words[0], "ast-grep") || words[1] !== AST_GREP_RUN.subcommand) return false;
   let pattern = 0;
   for (let i = 2; i < words.length; i++) {
     const w = words[i]!;
-    if (w === "--pattern" || w === "-p") {
+    if ((AST_GREP_RUN.pattern as readonly string[]).includes(w)) {
       if (words[i + 1] === undefined) return false;
       pattern++;
       i++;
@@ -332,12 +335,26 @@ function astGrep(words: string[]): boolean {
   return pattern === 1;
 }
 
-const GIT_READ = ["log", "show", "diff", "blame", "ls-files", "rev-parse", "status", "grep"];
+export const GIT_READ: readonly string[] = ["log", "show", "diff", "blame", "ls-files", "rev-parse", "status", "grep"];
+/** Git options that write files or run a pager or external command: an exact word, or a word prefix. */
+export const GIT_OUTPUT_OPTIONS: readonly { readonly option: string; readonly prefix: boolean }[] = [
+  { option: "-o", prefix: false },
+  { option: "--output", prefix: true },
+  { option: "-O", prefix: true },
+  { option: "--open-files-in-pager", prefix: true },
+  { option: "--ext-diff", prefix: false },
+];
 /** `git <read verb> …` without output files or pager/external commands. */
 function gitRead(words: string[]): boolean {
   if (!exe(words[0], "git") || !GIT_READ.includes(words[1] ?? "")) return false;
-  return words.slice(2).every((w) => !(w === "-o" || w.startsWith("--output") || /^-O/.test(w) || w.startsWith("--open-files-in-pager") || w === "--ext-diff"));
+  return words.slice(2).every((w) => !GIT_OUTPUT_OPTIONS.some((o) => (o.prefix ? w.startsWith(o.option) : w === o.option)));
 }
+
+/**
+ * The canonical spelling of each pipe-only entry (`N` stands for a number), as the allow summary names
+ * them; `pipeOnly` also accepts the other spellings its comment lists.
+ */
+export const PIPE_ONLY_FORMS: readonly (readonly string[])[] = [["head", "-n", "N"], ["tail", "-n", "N"], ["wc", "-l"], ["sort"], ["uniq"]];
 
 /** Pipe-only entries: `head -n N`, `tail -n N` (also `-N`, `-nN`), `wc -l`, `sort`, `uniq`. */
 function pipeOnly(words: string[]): boolean {

@@ -8,8 +8,10 @@
 // `agent` entry per Architect agent whose `tools` map starts with the catch-all `"*": false`
 // (C002-IF-001 §6.1, closed tool set); `INSTALL.md` from `targets/opencode/install.md` with the tokens of
 // C002-IF-001 §4 resolved (C002-REQ-204). Every field comes from the mapping table. The `permission`
-// block of each agent entry holds the agent-start rule `task` here (C002-REQ-107); the other permission
-// rules (`edit`, `bash`, `question`, …) and the quick-lint plugin are C002-T-030's.
+// block of each agent entry holds the agent-start rule `task` (C002-REQ-107) and the rules of
+// ./opencode-permissions.ts (`edit`, `bash`, `question`, …; C002-REQ-206 … C002-REQ-209, C002-REQ-217);
+// the quick-lint plugin of ./opencode-quicklint.ts is written under native permission enforcement when
+// the table sets `post_write_feedback` (C002-REQ-215).
 import { stringify } from "yaml";
 import { diagnostic, type Diagnostic } from "../diagnostics.ts";
 import type { EmitInput, EmitResult } from "../model.ts";
@@ -19,6 +21,8 @@ import { agentFilePath, CONDUCTOR, translateAgents, type TranslatedAgent } from 
 import { inlineSkills } from "../translate/inline.ts";
 import { tokenValues, variantLines } from "../translate/wiring.ts";
 import { canonicalJson, MANIFEST } from "../writer.ts";
+import { agentPermission, permissionTableDiagnostics } from "./opencode-permissions.ts";
+import { emitsQuickLint, QUICK_LINT_PLUGIN, quickLintPlugin } from "./opencode-quicklint.ts";
 
 /** Source of the install notes inside the source plugin (C002-IF-005 §5). */
 export const INSTALL_SOURCE = "targets/opencode/install.md";
@@ -63,12 +67,9 @@ export function openCodeConfig(table: MappingTable, mode: Mode, agents: readonly
   const servers = declaredServers(table, mode);
   const agent: Record<string, unknown> = {};
   for (const a of agents) {
-    const fm = a.frontmatter;
     const tools: Record<string, boolean> = { "*": false };
-    for (const t of fm.tools) tools[t] = true;
-    const entry: Record<string, unknown> = { tools };
-    if (fm.agentStart.style === "permission-task") entry["permission"] = { task: fm.agentStart.task };
-    agent[fm.name] = entry;
+    for (const t of a.frontmatter.tools) tools[t] = true;
+    agent[a.frontmatter.name] = { tools, permission: agentPermission(table, mode, a) };
   }
   return {
     $schema: CONFIG_SCHEMA,
@@ -94,7 +95,7 @@ export const emitOpenCode = (input: EmitInput): EmitResult => {
   const front = translateAgents(input);
   const bodies = translateBodies(input);
   const inlined = inlineSkills(input.source, bodies.docs, target);
-  const diagnostics: Diagnostic[] = [...front.diagnostics, ...bodies.diagnostics, ...inlined.diagnostics];
+  const diagnostics: Diagnostic[] = [...front.diagnostics, ...bodies.diagnostics, ...inlined.diagnostics, ...permissionTableDiagnostics(table, mode)];
   const notes = installNotes(input, diagnostics);
 
   // Step 8 on the configuration: the server commands, arguments and URLs are `mcp-config` text.
@@ -139,6 +140,7 @@ export const emitOpenCode = (input: EmitInput): EmitResult => {
   }
 
   files.set(place(table, "config_file", "opencode.json"), canonicalJson(openCodeConfig(table, mode, front.agents)));
+  if (emitsQuickLint(table, mode)) files.set(QUICK_LINT_PLUGIN, quickLintPlugin());
   files.set(place(table, "install_notes", "INSTALL.md"), notes);
   return { files, diagnostics };
 };

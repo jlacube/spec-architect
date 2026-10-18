@@ -36,12 +36,18 @@ export function lf(text: string): string {
   return text.replace(/\r\n?/g, "\n");
 }
 
-/** JSON with keys sorted at every level, two-space indent and a final LF: for emitted JSON files. */
+/**
+ * JSON with keys sorted at every level, two-space indent and a final LF: for emitted JSON files. A `Map`
+ * is written as an object in its insertion order instead: the rule maps whose order the host evaluates
+ * (OpenCode `permission.bash` and `permission.edit`, last matching rule wins), still deterministic.
+ */
 export function canonicalJson(value: unknown): string {
   const sort = (v: unknown): unknown =>
     Array.isArray(v)
       ? v.map(sort)
-      : v !== null && typeof v === "object"
+      : v instanceof Map
+        ? Object.fromEntries([...v.entries()].map(([k, x]) => [String(k), sort(x)]))
+        : v !== null && typeof v === "object"
         ? Object.fromEntries(Object.keys(v as object).sort(byteOrder).map((k) => [k, sort((v as Record<string, unknown>)[k])]))
         : v;
   return JSON.stringify(sort(value), null, 2) + "\n";
