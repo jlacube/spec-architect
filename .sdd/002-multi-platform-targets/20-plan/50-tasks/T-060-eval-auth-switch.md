@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-01
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-623.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-626, C002-TC-626]
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-009, C002-RISK-015]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 6de8656, completed_at: 2026-10-18, notes: "Eval auth switch built (98e6353) and validated (6de8656): --auth api-key|subscription; subscription smoke passes (apiKeySource none, $0 on the key); invalid token → 401, no fallback" }
 ---
 
 # C002-T-060 — Eval harness: auth switch between the prepaid API key and P-01's Claude subscription
