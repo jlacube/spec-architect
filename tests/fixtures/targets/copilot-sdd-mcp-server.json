@@ -1,0 +1,440 @@
+{
+  "$schema": "../../../plugins/architect/targets/mapping-table.schema.json",
+  "schema_version": 1,
+  "target": "copilot",
+  "enforcement_mode": "sdd-mcp-server",
+  "host": {
+    "name": "VS Code with GitHub Copilot Chat",
+    "tested_versions": {
+      "vscode": "1.142.0-insider",
+      "copilot-chat": "0.35.3"
+    },
+    "validated_by": "docs/spikes/S-08-copilot-vscode.md"
+  },
+  "placement": {
+    "agents_dir": "agents",
+    "agent_file": "{name}.agent.md",
+    "commands_dir": "prompts",
+    "command_file": "{name}.prompt.md",
+    "skills_dir": "skills",
+    "config_file": "install/mcp.json",
+    "hooks_file": "install/hooks.template.json",
+    "plugin_manifest": "install/plugin.json",
+    "cli_copy": "scripts/sdd.mjs",
+    "manifest_file": "architect-target.json",
+    "install_notes": "INSTALL.md"
+  },
+  "models": {
+    "opus": "claude-sonnet-5.5",
+    "sonnet": "claude-sonnet-5.5",
+    "haiku": "claude-sonnet-5.5"
+  },
+  "agent_fields": {
+    "effort": "drop",
+    "color": "drop",
+    "memory": "drop",
+    "skills": "inline",
+    "subagent_flags": {
+      "user-invocable": false
+    }
+  },
+  "tools": {
+    "Read": [
+      "read"
+    ],
+    "Glob": [
+      "search"
+    ],
+    "Grep": [
+      "search"
+    ],
+    "Write": {
+      "by_mode": {
+        "sdd-mcp-server": [
+          "sdd-files/*"
+        ],
+        "copilot-hooks": [
+          "edit"
+        ]
+      }
+    },
+    "Edit": {
+      "by_mode": {
+        "sdd-mcp-server": [
+          "sdd-files/*"
+        ],
+        "copilot-hooks": [
+          "edit"
+        ]
+      }
+    },
+    "Bash": {
+      "by_mode": {
+        "sdd-mcp-server": [
+          "sdd-shell/*"
+        ],
+        "copilot-hooks": [
+          "execute"
+        ]
+      }
+    },
+    "WebSearch": [],
+    "WebFetch": [
+      "web/fetch"
+    ],
+    "LSP": [
+      "usages"
+    ],
+    "ToolSearch": [],
+    "AskUserQuestion": [
+      "ask_user"
+    ],
+    "TaskCreate": [
+      "todo"
+    ],
+    "TaskUpdate": [
+      "todo"
+    ],
+    "TaskList": [
+      "todo"
+    ],
+    "Skill": []
+  },
+  "agent_start": {
+    "style": "agents-list",
+    "tools": [
+      "agent"
+    ]
+  },
+  "mcp_tool_names": {
+    "source_pattern": "mcp__plugin_architect_{server}__{tool}",
+    "target_pattern": "{server}-{tool}",
+    "grant_pattern": "{server}/{tool}",
+    "grant": "per-server",
+    "deferred": true
+  },
+  "mcp_servers": {
+    "context7": {
+      "transport": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "modes": [
+        "sdd-mcp-server",
+        "copilot-hooks"
+      ]
+    },
+    "deepwiki": {
+      "transport": "http",
+      "url": "https://mcp.deepwiki.com/mcp",
+      "modes": [
+        "sdd-mcp-server",
+        "copilot-hooks"
+      ]
+    },
+    "serena": {
+      "transport": "stdio",
+      "command": "sdd",
+      "args": [
+        "serena-launch",
+        "--user-data",
+        "--read-only",
+        "--",
+        "start-mcp-server",
+        "--context",
+        "vscode",
+        "--mode",
+        "planning",
+        "--project",
+        ".",
+        "--enable-web-dashboard",
+        "False",
+        "--open-web-dashboard",
+        "False"
+      ],
+      "modes": [
+        "sdd-mcp-server",
+        "copilot-hooks"
+      ]
+    },
+    "sdd-files": {
+      "transport": "stdio",
+      "command": "sdd-mcp",
+      "args": [
+        "--profile",
+        "files"
+      ],
+      "modes": [
+        "sdd-mcp-server",
+        "copilot-hooks"
+      ]
+    },
+    "sdd-shell": {
+      "transport": "stdio",
+      "command": "sdd-mcp",
+      "args": [
+        "--profile",
+        "shell"
+      ],
+      "modes": [
+        "sdd-mcp-server",
+        "copilot-hooks"
+      ]
+    }
+  },
+  "variables": {
+    "${CLAUDE_PLUGIN_ROOT}": {
+      "body": null,
+      "hook-command": null,
+      "mcp-config": null
+    },
+    "${CLAUDE_PLUGIN_DATA}": {
+      "body": "--user-data",
+      "hook-command": null,
+      "mcp-config": null
+    },
+    "$ARGUMENTS": {
+      "body": "the text P-01 typed after the command",
+      "hook-command": null,
+      "mcp-config": null
+    }
+  },
+  "references": {
+    "agent": {
+      "from": "architect:",
+      "to": ""
+    },
+    "command": {
+      "from": "/architect:",
+      "to": "/"
+    }
+  },
+  "constructs": [
+    {
+      "id": "guard-line",
+      "kind": "guard-line",
+      "detect": "^This command runs in the `architect:sdd-conductor` main session\\.",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "drop_line": true
+      }
+    },
+    {
+      "id": "cli-invocation",
+      "kind": "cli-invocation",
+      "detect": "\\$\\{CLAUDE_PLUGIN_ROOT\\}/scripts/sdd\\.mjs",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "variant_required": true
+      }
+    },
+    {
+      "id": "claude-host",
+      "kind": "other",
+      "detect": "\\bclaude --version\\b",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "variant_required": true
+      }
+    },
+    {
+      "id": "plugin-root-templates",
+      "kind": "plugin-root",
+      "detect": "\\$\\{CLAUDE_PLUGIN_ROOT\\}/templates/",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "sdd template show "
+      }
+    },
+    {
+      "id": "plugin-root",
+      "kind": "plugin-root",
+      "detect": "\\$\\{(?:CLAUDE_)?PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)",
+      "contexts": [
+        "frontmatter",
+        "body",
+        "hook-command",
+        "mcp-config"
+      ],
+      "accepted_in": [],
+      "action": {
+        "variant_required": true
+      }
+    },
+    {
+      "id": "plugin-data",
+      "kind": "plugin-data",
+      "detect": "\"?\\$\\{CLAUDE_PLUGIN_DATA\\}\"?",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "--user-data"
+      }
+    },
+    {
+      "id": "arguments",
+      "kind": "arguments",
+      "detect": "\\$ARGUMENTS\\b",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "the text P-01 typed after the command"
+      }
+    },
+    {
+      "id": "command-reference",
+      "kind": "command-reference",
+      "detect": "/architect:(?=[a-z])",
+      "contexts": [
+        "frontmatter",
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "/"
+      }
+    },
+    {
+      "id": "agent-reference",
+      "kind": "agent-reference",
+      "detect": "\\barchitect:(?=sdd-)",
+      "contexts": [
+        "frontmatter",
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": ""
+      }
+    },
+    {
+      "id": "ask-user-question",
+      "kind": "question-tool-name",
+      "detect": "`?\\bAskUserQuestion\\b`?",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "the `ask_user` tool"
+      }
+    },
+    {
+      "id": "task-tools",
+      "kind": "task-tool-name",
+      "detect": "`?\\bTask(?:Create|Update|List)\\b`?",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "the `todo` tool"
+      }
+    },
+    {
+      "id": "tool-search",
+      "kind": "other",
+      "detect": "`?\\bToolSearch\\b`?",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "the `tool_search_tool` tool (MCP tools are deferred: load a `<server>-<tool>` tool through it before its first call)"
+      }
+    },
+    {
+      "id": "mcp-tool-name",
+      "kind": "mcp-tool-name",
+      "detect": "\\bmcp__plugin_architect_[a-z0-9]+__[A-Za-z0-9_-]+",
+      "contexts": [
+        "frontmatter",
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "{server}-{tool}"
+      }
+    },
+    {
+      "id": "bash-prose",
+      "kind": "tool-name",
+      "detect": "\\bBash\\b",
+      "contexts": [
+        "body"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": {
+          "by_mode": {
+            "sdd-mcp-server": "the `sdd-shell` command tool",
+            "copilot-hooks": "the terminal tool"
+          }
+        }
+      }
+    }
+  ],
+  "variants": [],
+  "hook_tool_classes": {
+    "write": [
+      {
+        "tool": "Write",
+        "paths": [
+          "/path"
+        ]
+      },
+      {
+        "tool": "sdd-files-write_file",
+        "paths": [
+          "/path"
+        ]
+      },
+      {
+        "tool": "sdd-files-replace_text",
+        "paths": [
+          "/path"
+        ]
+      }
+    ],
+    "terminal": [
+      {
+        "tool": "Bash",
+        "command": "/command",
+        "dialect": "powershell"
+      },
+      {
+        "tool": "sdd-shell-run_command",
+        "command": "/command",
+        "dialect": "strictest"
+      }
+    ],
+    "read_only": [
+      "Glob",
+      "tool_search_tool",
+      "serena-find_symbol",
+      "serena-get_symbols_overview",
+      "serena-find_referencing_symbols",
+      "serena-find_declaration",
+      "serena-find_implementations",
+      "context7-resolve-library-id",
+      "context7-query-docs",
+      "deepwiki-read_wiki_structure",
+      "deepwiki-read_wiki_contents",
+      "deepwiki-ask_wiki_question"
+    ]
+  }
+}

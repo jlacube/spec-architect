@@ -21,6 +21,7 @@ interface Pair {
 const PAIRS: Pair[] = [
   { copy: "src/mcp/tools.schema.json", change: "002", contract: "10-spec/50-interfaces/sdd-mcp-tools.schema.json" },
   { copy: "docs/releases/release-record.schema.json", change: "002", contract: "10-spec/50-interfaces/release-record.schema.json" },
+  { copy: "plugins/architect/targets/mapping-table.schema.json", change: "002", contract: "10-spec/50-interfaces/mapping-table.schema.json" },
 ];
 
 /** JSON text with object keys sorted at every level and no white space. */

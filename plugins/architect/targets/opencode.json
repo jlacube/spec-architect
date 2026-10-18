@@ -1,0 +1,176 @@
+{
+  "$schema": "./mapping-table.schema.json",
+  "schema_version": 1,
+  "target": "opencode",
+  "enforcement_mode": "sdd-mcp-server",
+  "host": {
+    "name": "OpenCode",
+    "tested_versions": { "opencode": "1.18.31" },
+    "validated_by": "docs/spikes/S-07-opencode.md"
+  },
+  "placement": {
+    "agents_dir": ".opencode/agents",
+    "agent_file": "{name}.md",
+    "commands_dir": ".opencode/commands",
+    "command_file": "architect-{name}.md",
+    "skills_dir": ".opencode/skills",
+    "config_file": "opencode.json",
+    "hooks_file": null,
+    "plugin_manifest": null,
+    "cli_copy": null,
+    "manifest_file": "architect-target.json",
+    "install_notes": "INSTALL.md"
+  },
+  "models": {
+    "opus": "openrouter/anthropic/claude-opus-5.5",
+    "sonnet": "openrouter/anthropic/claude-sonnet-5.5",
+    "haiku": "openrouter/anthropic/claude-haiku-5.5"
+  },
+  "agent_fields": {
+    "effort": "drop",
+    "color": "drop",
+    "memory": "drop",
+    "skills": "inline",
+    "subagent_flags": { "mode": "subagent" },
+    "primary_flags": { "mode": "primary" }
+  },
+  "tools": {
+    "Read": ["read"],
+    "Glob": ["glob"],
+    "Grep": ["grep"],
+    "Write": { "by_mode": { "native-permissions": ["write"], "sdd-mcp-server": ["sdd-files_write_file"] } },
+    "Edit": { "by_mode": { "native-permissions": ["edit"], "sdd-mcp-server": ["sdd-files_replace_text"] } },
+    "Bash": { "by_mode": { "native-permissions": ["bash"], "sdd-mcp-server": ["sdd-shell_run_command"] } },
+    "WebSearch": ["websearch"],
+    "WebFetch": ["webfetch"],
+    "LSP": ["lsp"],
+    "ToolSearch": [],
+    "AskUserQuestion": ["question"],
+    "TaskCreate": ["todowrite"],
+    "TaskUpdate": ["todowrite"],
+    "TaskList": ["todowrite"],
+    "Skill": ["skill"]
+  },
+  "agent_start": { "style": "permission-task" },
+  "mcp_tool_names": {
+    "source_pattern": "mcp__plugin_architect_{server}__{tool}",
+    "target_pattern": "{server}_{tool}",
+    "grant": "per-tool",
+    "deferred": false
+  },
+  "mcp_servers": {
+    "context7": { "transport": "http", "url": "https://mcp.context7.com/mcp", "modes": ["native-permissions", "sdd-mcp-server"] },
+    "deepwiki": { "transport": "http", "url": "https://mcp.deepwiki.com/mcp", "modes": ["native-permissions", "sdd-mcp-server"] },
+    "serena": {
+      "transport": "stdio",
+      "command": "sdd",
+      "args": [
+        "serena-launch", "--user-data", "--read-only", "--", "start-mcp-server",
+        "--context", "ide", "--mode", "planning", "--project", ".",
+        "--enable-web-dashboard", "False", "--open-web-dashboard", "False"
+      ],
+      "modes": ["native-permissions", "sdd-mcp-server"]
+    },
+    "sdd-files": { "transport": "stdio", "command": "sdd-mcp", "args": ["--profile", "files"], "modes": ["sdd-mcp-server"] },
+    "sdd-shell": { "transport": "stdio", "command": "sdd-mcp", "args": ["--profile", "shell"], "modes": ["sdd-mcp-server"] }
+  },
+  "variables": {
+    "${CLAUDE_PLUGIN_ROOT}": { "body": null, "hook-command": null, "mcp-config": null },
+    "${CLAUDE_PLUGIN_DATA}": { "body": "--user-data", "hook-command": null, "mcp-config": null },
+    "$ARGUMENTS": { "body": "$ARGUMENTS", "hook-command": null, "mcp-config": null }
+  },
+  "references": {
+    "agent": { "from": "architect:", "to": "" },
+    "command": { "from": "/architect:", "to": "/architect-" }
+  },
+  "constructs": [
+    { "id": "guard-line", "kind": "guard-line", "detect": "^This command runs in the `architect:sdd-conductor` main session\\.", "contexts": ["body"], "accepted_in": [], "action": { "drop_line": true } },
+    { "id": "cli-invocation", "kind": "cli-invocation", "detect": "\\$\\{CLAUDE_PLUGIN_ROOT\\}/scripts/sdd\\.mjs", "contexts": ["body"], "accepted_in": [], "action": { "variant_required": true } },
+    { "id": "claude-host", "kind": "other", "detect": "\\bclaude --version\\b", "contexts": ["body"], "accepted_in": [], "action": { "variant_required": true } },
+    { "id": "plugin-root-templates", "kind": "plugin-root", "detect": "\\$\\{CLAUDE_PLUGIN_ROOT\\}/templates/", "contexts": ["body"], "accepted_in": [], "action": { "replace": "sdd template show " } },
+    { "id": "plugin-root", "kind": "plugin-root", "detect": "\\$\\{CLAUDE_PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)", "contexts": ["frontmatter", "body", "hook-command", "mcp-config"], "accepted_in": [], "action": { "variant_required": true } },
+    { "id": "plugin-data", "kind": "plugin-data", "detect": "\"?\\$\\{CLAUDE_PLUGIN_DATA\\}\"?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "--user-data" } },
+    { "id": "arguments", "kind": "arguments", "detect": "\\$ARGUMENTS\\b", "contexts": ["body"], "accepted_in": ["body"], "action": { "replace": "$ARGUMENTS" } },
+    { "id": "command-reference", "kind": "command-reference", "detect": "/architect:(?=[a-z])", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "/architect-" } },
+    { "id": "agent-reference", "kind": "agent-reference", "detect": "\\barchitect:(?=sdd-)", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "" } },
+    { "id": "ask-user-question", "kind": "question-tool-name", "detect": "`?\\bAskUserQuestion\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "the `question` tool" } },
+    { "id": "task-tools", "kind": "task-tool-name", "detect": "`?\\bTask(?:Create|Update|List)\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "the `todowrite` tool" } },
+    { "id": "tool-search", "kind": "other", "detect": "`?\\bToolSearch\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "(MCP tools are loaded at start)" } },
+    { "id": "mcp-tool-name", "kind": "mcp-tool-name", "detect": "\\bmcp__plugin_architect_[a-z0-9]+__[A-Za-z0-9_-]+", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "{server}_{tool}" } },
+    { "id": "bash-prose", "kind": "tool-name", "detect": "\\bBash\\b", "contexts": ["body"], "accepted_in": [], "action": { "replace": { "by_mode": { "native-permissions": "the `bash` tool", "sdd-mcp-server": "the `sdd-shell` command tool" } } } }
+  ],
+  "variants": [],
+  "permissions": {
+    "native-permissions": {
+      "edit": [
+        { "pattern": "*", "action": "deny" },
+        { "pattern": ".sdd/*", "action": "allow" }
+      ],
+      "bash": [
+        { "pattern": "*", "action": "deny" },
+        { "pattern": "sdd *", "action": "allow" },
+        { "pattern": "git log *", "action": "allow" },
+        { "pattern": "git show *", "action": "allow" },
+        { "pattern": "git diff *", "action": "allow" },
+        { "pattern": "git blame *", "action": "allow" },
+        { "pattern": "git ls-files *", "action": "allow" },
+        { "pattern": "git rev-parse *", "action": "allow" },
+        { "pattern": "git status *", "action": "allow" },
+        { "pattern": "git grep *", "action": "allow" },
+        { "pattern": "ripwire *--for=*", "action": "allow" },
+        { "pattern": "ripwire *--pack-task=*", "action": "allow" },
+        { "pattern": "ripwire *--callers=*", "action": "allow" },
+        { "pattern": "ripwire *--uses=*", "action": "allow" },
+        { "pattern": "ripwire *--impact=*", "action": "allow" },
+        { "pattern": "ripwire *--expand=*", "action": "allow" },
+        { "pattern": "ripwire *--test-gate*", "action": "allow" },
+        { "pattern": "ripwire *--situ*", "action": "allow" },
+        { "pattern": "ripwire *--hotspots*", "action": "allow" },
+        { "pattern": "ripwire *--quality-panel*", "action": "allow" },
+        { "pattern": "ripwire *--quality-delta*", "action": "allow" },
+        { "pattern": "ripwire *--pack-signatures*", "action": "allow" },
+        { "pattern": "ripwire *--doctor*", "action": "allow" },
+        { "pattern": "ripwire *--help-task*", "action": "allow" },
+        { "pattern": "ripwire *--version*", "action": "allow" },
+        { "pattern": "ast-grep run *--pattern*", "action": "allow" },
+        { "pattern": "node -v", "action": "allow" },
+        { "pattern": "git --version", "action": "allow" },
+        { "pattern": "claude --version", "action": "allow" },
+        { "pattern": "serena --version", "action": "allow" },
+        { "pattern": "ast-grep --version", "action": "allow" },
+        { "pattern": "uv --version", "action": "allow" },
+        { "pattern": "head -n *", "action": "allow" },
+        { "pattern": "tail -n *", "action": "allow" },
+        { "pattern": "wc -l", "action": "allow" },
+        { "pattern": "sort", "action": "allow" },
+        { "pattern": "uniq", "action": "allow" },
+        { "pattern": "git * -o *", "action": "deny" },
+        { "pattern": "git * --output*", "action": "deny" },
+        { "pattern": "git * -O*", "action": "deny" },
+        { "pattern": "git * --open-files-in-pager*", "action": "deny" },
+        { "pattern": "git * --ext-diff*", "action": "deny" },
+        { "pattern": "ast-grep * --rewrite*", "action": "deny" },
+        { "pattern": "ast-grep * -r *", "action": "deny" },
+        { "pattern": "ast-grep * -U*", "action": "deny" },
+        { "pattern": "ast-grep * --update-all*", "action": "deny" },
+        { "pattern": "ast-grep * -i*", "action": "deny" },
+        { "pattern": "sdd serena-config *", "action": "deny" },
+        { "pattern": "sdd serena-launch *", "action": "deny" },
+        { "pattern": "sdd serena-config --user-data", "action": "allow" },
+        { "pattern": "sdd serena-launch --user-data *", "action": "allow" },
+        { "pattern": "sdd *--cwd*", "action": "deny" }
+      ],
+      "external_directory": "deny",
+      "question": "deny",
+      "skill": "deny"
+    },
+    "sdd-mcp-server": {
+      "edit": "deny",
+      "bash": "deny",
+      "external_directory": "deny",
+      "question": "deny",
+      "skill": "deny"
+    }
+  },
+  "post_write_feedback": true
+}
