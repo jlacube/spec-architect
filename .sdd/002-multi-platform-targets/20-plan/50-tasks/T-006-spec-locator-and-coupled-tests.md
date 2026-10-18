@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-053]
 implements: []
 satisfies_ac: [C002-AC-623.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-626, C002-TS-627, C002-TC-626, C002-TC-627]
 components: [C002-COMP-013]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b059402, completed_at: 2026-10-18, notes: "Locator also falls back to _archive/<NNN>-*/ (sdd archive moves interfaces and schemas there, only CAP-*.md go to _living/); pending lists in frontend.test.ts name T-012/013/014/032/058 — each task removes its entries; T-058: COMMANDS row 'install' vs spec 'install copilot' to reconcile; TC-626 carried, TC-627 to T-048" }
 ---
 
 # C002-T-006 — Spec-contract locator, schema-copy equality test and CHG-001-coupled CLI tests
