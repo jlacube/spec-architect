@@ -1,0 +1,65 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "share": "disabled",
+  "enabled_providers": ["stub"],
+  "model": "stub/stub-model",
+  "small_model": "stub/stub-model",
+  "provider": {
+    "stub": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "S-07 loopback stub",
+      "options": { "baseURL": "http://127.0.0.1:4199/v1", "apiKey": "stub-no-key" },
+      "models": { "stub-model": { "name": "stub-model", "tool_call": true, "limit": { "context": 100000, "output": 4000 } } }
+    }
+  },
+  "mcp": {
+    "adopter": { "type": "local", "command": ["node", "__S07__/mcp-stub.mjs", "__S07__/../logs/mcp-stub.jsonl"], "enabled": true }
+  },
+  "agent": {
+    "probe-open": {
+      "mode": "primary",
+      "description": "control agent: no tool map, no permission rules",
+      "steps": 30
+    },
+    "probe-closed": {
+      "mode": "primary",
+      "description": "closed tool set: catch-all off, derived tools on (C002-IF-001 §6.1)",
+      "steps": 30,
+      "tools": { "*": false, "read": true, "glob": true, "grep": true, "list": true, "write": true, "edit": true, "bash": true, "question": true },
+      "permission": { "edit": "allow", "bash": "allow", "question": "allow", "external_directory": "deny" }
+    },
+    "probe-perm": {
+      "mode": "primary",
+      "description": "native-permissions rules hand-written from C001-IF-07 §3 (C002-IF-001 §6.3)",
+      "steps": 30,
+      "permission": {
+        "external_directory": "deny",
+        "edit": { "*": "deny", ".sdd/*": "allow" },
+        "bash": {
+          "*": "deny",
+          "sdd *": "allow",
+          "git log *": "allow", "git show *": "allow", "git diff *": "allow", "git blame *": "allow",
+          "git ls-files *": "allow", "git rev-parse *": "allow", "git status *": "allow", "git grep *": "allow",
+          "ripwire *--for=*": "allow", "ripwire *--pack-task=*": "allow", "ripwire *--callers=*": "allow",
+          "ripwire *--uses=*": "allow", "ripwire *--impact=*": "allow", "ripwire *--expand=*": "allow",
+          "ripwire *--test-gate*": "allow", "ripwire *--situ*": "allow", "ripwire *--hotspots*": "allow",
+          "ripwire *--quality-panel*": "allow", "ripwire *--quality-delta*": "allow",
+          "ripwire *--pack-signatures*": "allow", "ripwire *--doctor*": "allow", "ripwire *--help-task*": "allow",
+          "ripwire *--version*": "allow",
+          "ast-grep run *": "allow",
+          "node -v": "allow", "git --version": "allow", "claude --version": "allow", "serena --version": "allow",
+          "ast-grep --version": "allow", "uv --version": "allow",
+          "head -n *": "allow", "tail -n *": "allow", "wc -l": "allow", "sort": "allow", "uniq": "allow",
+          "git * -o *": "deny", "git * --output*": "deny", "git * -O*": "deny",
+          "git * --open-files-in-pager*": "deny", "git * --ext-diff*": "deny",
+          "ast-grep * --rewrite*": "deny", "ast-grep * -r *": "deny", "ast-grep * -U*": "deny",
+          "ast-grep * --update-all*": "deny", "ast-grep * -i*": "deny",
+          "sdd serena-config *": "deny", "sdd serena-launch *": "deny",
+          "sdd serena-config --user-data": "allow", "sdd serena-launch --user-data *": "allow",
+          "sdd *--cwd*": "deny"
+        }
+      }
+    }
+  }
+}

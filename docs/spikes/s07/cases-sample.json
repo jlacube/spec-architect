@@ -1,0 +1,1422 @@
+[
+ {
+  "id": "PG-001",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/004-x/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-004",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/004-x/existing.md",
+  "tool": "edit",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/existing.md",
+   "oldString": "x",
+   "newString": "y"
+  }
+ },
+ {
+  "id": "PG-043",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/SDD.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/SDD.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-044",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/_living/CAP-auth.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/_living/CAP-auth.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-045",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/005-y/new-folder/deep/file.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/005-y/new-folder/deep/file.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-046",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/%2e%2e/src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/%2e%2e/src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-048",
+  "kind": "path",
+  "category": "inside",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/004-x/",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-049",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-050",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/README.md",
+  "tool": "edit",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/README.md",
+   "oldString": "x",
+   "newString": "y"
+  }
+ },
+ {
+  "id": "PG-052",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.git/config",
+  "tool": "edit",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.git/config",
+   "oldString": "x",
+   "newString": "y"
+  }
+ },
+ {
+  "id": "PG-053",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.claude/settings.json",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.claude/settings.json",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-079",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-080",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-081",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{outside}/x.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/outside/x.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-082",
+  "kind": "path",
+  "category": "outside",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{outside}/.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/outside/.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-086",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd-evil/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd-evil/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-087",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sddx/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sddx/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-088",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd.bak/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd.bak/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-090",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-091",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/x.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/x.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-092",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/src/.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/src/.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-093",
+  "kind": "path",
+  "category": "prefix",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd2/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd2/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-096",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/../src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/../src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-097",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/004-x/../../src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/../../src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-098",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/./../README.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/./../README.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-099",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/004-x/../../../outside.txt",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/../../../outside.txt",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-103",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/..",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/..",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-105",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.sdd/../.sdd-evil/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/../.sdd-evil/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-106",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/004-x/../005-y/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/004-x/../005-y/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-107",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/./a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/./a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-108",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/src/../.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/src/../.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-109",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.sdd/a/../b/./c.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/a/../b/./c.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-110",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/src/../.sdd/../src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/src/../.sdd/../src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-112",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}\\.sdd\\..\\src\\app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws\\.sdd\\..\\src\\app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-114",
+  "kind": "path",
+  "category": "traversal",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}\\.sdd\\004-x\\..\\005-y\\a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws\\.sdd\\004-x\\..\\005-y\\a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-119",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": ".sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": ".sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-120",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "./.sdd/004-x/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "./.sdd/004-x/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-121",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-122",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "../outside.txt",
+  "tool": "write",
+  "args": {
+   "filePath": "../outside.txt",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-124",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": ".sdd/../src/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": ".sdd/../src/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-125",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "src/../.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "src/../.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-127",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": ".sdd\\a.md",
+  "tool": "write",
+  "args": {
+   "filePath": ".sdd\\a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-128",
+  "kind": "path",
+  "category": "relative",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "src\\app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "src\\app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-139",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{REPO}/.SDD/004-x/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/USERS/JEROM/APPDATA/LOCAL/TEMP/CLAUDE/C--SANDBOX-CLAUDECODE-ARCHITECT/970CFA8F-5818-4CA9-B79D-8B06C412CE2B/SCRATCHPAD/S07WS/.SDD/004-x/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-140",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}/.SDD/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.SDD/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-142",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.Sdd/../SRC/app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.Sdd/../SRC/app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-143",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{REPO}/SRC/APP.TS",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/USERS/JEROM/APPDATA/LOCAL/TEMP/CLAUDE/C--SANDBOX-CLAUDECODE-ARCHITECT/970CFA8F-5818-4CA9-B79D-8B06C412CE2B/SCRATCHPAD/S07WS/SRC/APP.TS",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-144",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo-lowerdrive}/.sdd/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "c:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.sdd/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-146",
+  "kind": "path",
+  "category": "case",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo}/.SDD-evil/a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/.SDD-evil/a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-147",
+  "kind": "path",
+  "category": "separators",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo\\}\\.sdd\\a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-148",
+  "kind": "path",
+  "category": "separators",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_path": "{repo\\}\\src\\app.ts",
+  "tool": "write",
+  "args": {
+   "filePath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\src\\app.ts",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "PG-150",
+  "kind": "path",
+  "category": "separators",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_path": "{repo}//.sdd//a.md",
+  "tool": "write",
+  "args": {
+   "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws//.sdd//a.md",
+   "content": "s07\n"
+  }
+ },
+ {
+  "id": "BG-001",
+  "kind": "bash",
+  "category": "scenario",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "node C:/p/scripts/sdd.mjs lint --json",
+  "tool": "bash",
+  "args": {
+   "command": "node C:/p/scripts/sdd.mjs lint --json",
+   "description": "s07 BG-001"
+  }
+ },
+ {
+  "id": "BG-004",
+  "kind": "bash",
+  "category": "scenario",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --oneline -20",
+  "tool": "bash",
+  "args": {
+   "command": "git log --oneline -20",
+   "description": "s07 BG-004"
+  }
+ },
+ {
+  "id": "BG-007",
+  "kind": "bash",
+  "category": "scenario",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "npm install",
+  "tool": "bash",
+  "args": {
+   "command": "npm install",
+   "description": "s07 BG-007"
+  }
+ },
+ {
+  "id": "BG-010",
+  "kind": "bash",
+  "category": "scenario",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --oneline | head -5",
+  "tool": "bash",
+  "args": {
+   "command": "git log --oneline | head -5",
+   "description": "s07 BG-010"
+  }
+ },
+ {
+  "id": "BG-013",
+  "kind": "bash",
+  "category": "scenario",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "echo $(cat secrets.txt)",
+  "tool": "bash",
+  "args": {
+   "command": "echo $(cat secrets.txt)",
+   "description": "s07 BG-013"
+  }
+ },
+ {
+  "id": "BG-015",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "node \"{sdd}\" lint 001 --phase 00-ideation",
+  "tool": "bash",
+  "args": {
+   "command": "node \"C:/p/scripts/sdd.mjs\" lint 001 --phase 00-ideation",
+   "description": "s07 BG-015"
+  }
+ },
+ {
+  "id": "BG-030",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "node .sdd/004-x/sdd.mjs status",
+  "tool": "bash",
+  "args": {
+   "command": "node .sdd/004-x/sdd.mjs status",
+   "description": "s07 BG-030"
+  }
+ },
+ {
+  "id": "BG-039",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "node -e \"require('fs').writeFileSync('x','y')\"",
+  "tool": "bash",
+  "args": {
+   "command": "node -e \"require('fs').writeFileSync('x','y')\"",
+   "description": "s07 BG-039"
+  }
+ },
+ {
+  "id": "BG-045",
+  "kind": "bash",
+  "category": "ripwire",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "ripwire . \"--for=checkout flow\"",
+  "tool": "bash",
+  "args": {
+   "command": "ripwire . \"--for=checkout flow\"",
+   "description": "s07 BG-045"
+  }
+ },
+ {
+  "id": "BG-057",
+  "kind": "bash",
+  "category": "ripwire",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "ripwire --test-gate",
+  "tool": "bash",
+  "args": {
+   "command": "ripwire --test-gate",
+   "description": "s07 BG-057"
+  }
+ },
+ {
+  "id": "BG-066",
+  "kind": "bash",
+  "category": "ripwire",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "ripwire . --callers=createIntent --token-budget=4000",
+  "tool": "bash",
+  "args": {
+   "command": "ripwire . --callers=createIntent --token-budget=4000",
+   "description": "s07 BG-066"
+  }
+ },
+ {
+  "id": "BG-069",
+  "kind": "bash",
+  "category": "ripwire",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "ripwire . --callers=createIntent --max-tokens=x",
+  "tool": "bash",
+  "args": {
+   "command": "ripwire . --callers=createIntent --max-tokens=x",
+   "description": "s07 BG-069"
+  }
+ },
+ {
+  "id": "BG-094",
+  "kind": "bash",
+  "category": "ast-grep",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "ast-grep run --pattern 'console.log($X)'",
+  "tool": "bash",
+  "args": {
+   "command": "ast-grep run --pattern 'console.log($X)'",
+   "description": "s07 BG-094"
+  }
+ },
+ {
+  "id": "BG-100",
+  "kind": "bash",
+  "category": "ast-grep",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "ast-grep run --pattern 'f($$$ARGS)' src | wc -l",
+  "tool": "bash",
+  "args": {
+   "command": "ast-grep run --pattern 'f($$$ARGS)' src | wc -l",
+   "description": "s07 BG-100"
+  }
+ },
+ {
+  "id": "BG-103",
+  "kind": "bash",
+  "category": "ast-grep",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "ast-grep run --pattern 'x' --update-all",
+  "tool": "bash",
+  "args": {
+   "command": "ast-grep run --pattern 'x' --update-all",
+   "description": "s07 BG-103"
+  }
+ },
+ {
+  "id": "BG-109",
+  "kind": "bash",
+  "category": "ast-grep",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "ast-grep run src",
+  "tool": "bash",
+  "args": {
+   "command": "ast-grep run src",
+   "description": "s07 BG-109"
+  }
+ },
+ {
+  "id": "BG-115",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --oneline -5",
+  "tool": "bash",
+  "args": {
+   "command": "git log --oneline -5",
+   "description": "s07 BG-115"
+  }
+ },
+ {
+  "id": "BG-121",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git ls-files src",
+  "tool": "bash",
+  "args": {
+   "command": "git ls-files src",
+   "description": "s07 BG-121"
+  }
+ },
+ {
+  "id": "BG-127",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --oneline | tail -n 3",
+  "tool": "bash",
+  "args": {
+   "command": "git log --oneline | tail -n 3",
+   "description": "s07 BG-127"
+  }
+ },
+ {
+  "id": "BG-130",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git commit -m x",
+  "tool": "bash",
+  "args": {
+   "command": "git commit -m x",
+   "description": "s07 BG-130"
+  }
+ },
+ {
+  "id": "BG-133",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git reset --hard",
+  "tool": "bash",
+  "args": {
+   "command": "git reset --hard",
+   "description": "s07 BG-133"
+  }
+ },
+ {
+  "id": "BG-139",
+  "kind": "bash",
+  "category": "git",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git add .",
+  "tool": "bash",
+  "args": {
+   "command": "git add .",
+   "description": "s07 BG-139"
+  }
+ },
+ {
+  "id": "BG-154",
+  "kind": "bash",
+  "category": "version",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "node -v",
+  "tool": "bash",
+  "args": {
+   "command": "node -v",
+   "description": "s07 BG-154"
+  }
+ },
+ {
+  "id": "BG-157",
+  "kind": "bash",
+  "category": "version",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "serena --version",
+  "tool": "bash",
+  "args": {
+   "command": "serena --version",
+   "description": "s07 BG-157"
+  }
+ },
+ {
+  "id": "BG-160",
+  "kind": "bash",
+  "category": "version",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "node -v -e x",
+  "tool": "bash",
+  "args": {
+   "command": "node -v -e x",
+   "description": "s07 BG-160"
+  }
+ },
+ {
+  "id": "BG-166",
+  "kind": "bash",
+  "category": "version",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "node --version --eval=x",
+  "tool": "bash",
+  "args": {
+   "command": "node --version --eval=x",
+   "description": "s07 BG-166"
+  }
+ },
+ {
+  "id": "BG-167",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log | head",
+  "tool": "bash",
+  "args": {
+   "command": "git log | head",
+   "description": "s07 BG-167"
+  }
+ },
+ {
+  "id": "BG-170",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log | tail -2",
+  "tool": "bash",
+  "args": {
+   "command": "git log | tail -2",
+   "description": "s07 BG-170"
+  }
+ },
+ {
+  "id": "BG-173",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log | sort -r | uniq -c",
+  "tool": "bash",
+  "args": {
+   "command": "git log | sort -r | uniq -c",
+   "description": "s07 BG-173"
+  }
+ },
+ {
+  "id": "BG-176",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "tail -n 5 x",
+  "tool": "bash",
+  "args": {
+   "command": "tail -n 5 x",
+   "description": "s07 BG-176"
+  }
+ },
+ {
+  "id": "BG-182",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log | wc",
+  "tool": "bash",
+  "args": {
+   "command": "git log | wc",
+   "description": "s07 BG-182"
+  }
+ },
+ {
+  "id": "BG-185",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log | tee src/log.txt",
+  "tool": "bash",
+  "args": {
+   "command": "git log | tee src/log.txt",
+   "description": "s07 BG-185"
+  }
+ },
+ {
+  "id": "BG-188",
+  "kind": "bash",
+  "category": "pipe",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log | node",
+  "tool": "bash",
+  "args": {
+   "command": "git log | node",
+   "description": "s07 BG-188"
+  }
+ },
+ {
+  "id": "BG-197",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git status; rm -rf src",
+  "tool": "bash",
+  "args": {
+   "command": "git status; rm -rf src",
+   "description": "s07 BG-197"
+  }
+ },
+ {
+  "id": "BG-200",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git status || rm -rf src",
+  "tool": "bash",
+  "args": {
+   "command": "git status || rm -rf src",
+   "description": "s07 BG-200"
+  }
+ },
+ {
+  "id": "BG-203",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log >> src/log.txt",
+  "tool": "bash",
+  "args": {
+   "command": "git log >> src/log.txt",
+   "description": "s07 BG-203"
+  }
+ },
+ {
+  "id": "BG-206",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log < input.txt",
+  "tool": "bash",
+  "args": {
+   "command": "git log < input.txt",
+   "description": "s07 BG-206"
+  }
+ },
+ {
+  "id": "BG-209",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "cat <(git log)",
+  "tool": "bash",
+  "args": {
+   "command": "cat <(git log)",
+   "description": "s07 BG-209"
+  }
+ },
+ {
+  "id": "BG-212",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log \"$(rm -rf src)\"",
+  "tool": "bash",
+  "args": {
+   "command": "git log \"$(rm -rf src)\"",
+   "description": "s07 BG-212"
+  }
+ },
+ {
+  "id": "BG-215",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log $((1+1))",
+  "tool": "bash",
+  "args": {
+   "command": "git log $((1+1))",
+   "description": "s07 BG-215"
+  }
+ },
+ {
+  "id": "BG-221",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git status;",
+  "tool": "bash",
+  "args": {
+   "command": "git status;",
+   "description": "s07 BG-221"
+  }
+ },
+ {
+  "id": "BG-226",
+  "kind": "bash",
+  "category": "quoted",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --grep='a;b'",
+  "tool": "bash",
+  "args": {
+   "command": "git log --grep='a;b'",
+   "description": "s07 BG-226"
+  }
+ },
+ {
+  "id": "BG-229",
+  "kind": "bash",
+  "category": "quoted",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --grep=\"a|b\"",
+  "tool": "bash",
+  "args": {
+   "command": "git log --grep=\"a|b\"",
+   "description": "s07 BG-229"
+  }
+ },
+ {
+  "id": "BG-232",
+  "kind": "bash",
+  "category": "quoted",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "git log --grep='$(x)'",
+  "tool": "bash",
+  "args": {
+   "command": "git log --grep='$(x)'",
+   "description": "s07 BG-232"
+  }
+ },
+ {
+  "id": "BG-235",
+  "kind": "bash",
+  "category": "quoted",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "git log --grep=\"$(x)\"",
+  "tool": "bash",
+  "args": {
+   "command": "git log --grep=\"$(x)\"",
+   "description": "s07 BG-235"
+  }
+ },
+ {
+  "id": "BG-278",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd lint 002",
+  "tool": "bash",
+  "args": {
+   "command": "sdd lint 002",
+   "description": "s07 BG-278"
+  }
+ },
+ {
+  "id": "BG-287",
+  "kind": "bash",
+  "category": "compound",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd lint; curl http://x",
+  "tool": "bash",
+  "args": {
+   "command": "sdd lint; curl http://x",
+   "description": "s07 BG-287"
+  }
+ },
+ {
+  "id": "BG-302",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd change revise 001 10-spec --reason \"r\"",
+  "tool": "bash",
+  "args": {
+   "command": "sdd change revise 001 10-spec --reason \"r\"",
+   "description": "s07 BG-302"
+  }
+ },
+ {
+  "id": "BG-307",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd change stop 001 --reason x --cwd {repo}/pkg",
+  "tool": "bash",
+  "args": {
+   "command": "sdd change stop 001 --reason x --cwd C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/pkg",
+   "description": "s07 BG-307"
+  }
+ },
+ {
+  "id": "BG-317",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd trace 001 --write",
+  "tool": "bash",
+  "args": {
+   "command": "sdd trace 001 --write",
+   "description": "s07 BG-317"
+  }
+ },
+ {
+  "id": "BG-353",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd trace 001 --write --cwd ../other-repo",
+  "tool": "bash",
+  "args": {
+   "command": "sdd trace 001 --write --cwd ../other-repo",
+   "description": "s07 BG-353"
+  }
+ },
+ {
+  "id": "BG-358",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd id next TS --change 001 --cwd pkg",
+  "tool": "bash",
+  "args": {
+   "command": "sdd id next TS --change 001 --cwd pkg",
+   "description": "s07 BG-358"
+  }
+ },
+ {
+  "id": "BG-368",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd init --cwd ~/x",
+  "tool": "bash",
+  "args": {
+   "command": "sdd init --cwd ~/x",
+   "description": "s07 BG-368"
+  }
+ },
+ {
+  "id": "BG-373",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd serena-config {repo}/src",
+  "tool": "bash",
+  "args": {
+   "command": "sdd serena-config C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/src",
+   "description": "s07 BG-373"
+  }
+ },
+ {
+  "id": "BG-394",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "allow",
+  "corpus_command": "sdd serena-config {repo}-data",
+  "tool": "bash",
+  "args": {
+   "command": "sdd serena-config C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws-data",
+   "description": "s07 BG-394"
+  }
+ },
+ {
+  "id": "BG-412",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd serena-config --user-data --cwd={repo}/pkg",
+  "tool": "bash",
+  "args": {
+   "command": "sdd serena-config --user-data --cwd=C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07ws/pkg",
+   "description": "s07 BG-412"
+  }
+ },
+ {
+  "id": "BG-417",
+  "kind": "bash",
+  "category": "sdd",
+  "agent": "probe-perm",
+  "expect": "deny",
+  "corpus_command": "sdd serena-config",
+  "tool": "bash",
+  "args": {
+   "command": "sdd serena-config",
+   "description": "s07 BG-417"
+  }
+ }
+]

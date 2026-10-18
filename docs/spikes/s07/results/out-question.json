@@ -1,0 +1,1041 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "Q-answer",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0daa252ffeW0q7DFI5zy58mV",
+      "ms": 3322,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "completed",
+          "input": {
+            "questions": [
+              {
+                "header": "Pick one",
+                "question": "Which option?",
+                "options": [
+                  {
+                    "label": "Option A",
+                    "description": "first (Recommended)"
+                  },
+                  {
+                    "label": "Option B",
+                    "description": "second"
+                  }
+                ]
+              }
+            ]
+          },
+          "output": "User has answered your questions: \"Which option?\"=\"Option A\". You can now continue with the user's answers in mind.",
+          "metadata": {
+            "answers": [
+              [
+                "Option A"
+              ]
+            ],
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-answer\ndone.",
+      "question_event": {
+        "id": "que_14f256171001uk0WzEsRy65LWV",
+        "sessionID": "ses_eb0daa252ffeW0q7DFI5zy58mV",
+        "questions": [
+          {
+            "question": "Which option?",
+            "header": "Pick one",
+            "options": [
+              {
+                "label": "Option A",
+                "description": "first (Recommended)"
+              },
+              {
+                "label": "Option B",
+                "description": "second"
+              }
+            ]
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f255f22001DQGrFtwPr7gHqH",
+          "callID": "call_1"
+        }
+      }
+    },
+    {
+      "id": "Q-multi",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da97f2ffeqIIcH2qBJ1g70P",
+      "ms": 2136,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "completed",
+          "input": {
+            "questions": [
+              {
+                "header": "Q one",
+                "question": "First?",
+                "options": [
+                  {
+                    "label": "Yes",
+                    "description": "y"
+                  },
+                  {
+                    "label": "No",
+                    "description": "n"
+                  }
+                ]
+              },
+              {
+                "header": "Q two",
+                "question": "Second?",
+                "multiple": true,
+                "options": [
+                  {
+                    "label": "Yes",
+                    "description": "y"
+                  },
+                  {
+                    "label": "No",
+                    "description": "n"
+                  }
+                ]
+              }
+            ]
+          },
+          "output": "User has answered your questions: \"First?\"=\"Yes\", \"Second?\"=\"Yes\". You can now continue with the user's answers in mind.",
+          "metadata": {
+            "answers": [
+              [
+                "Yes"
+              ],
+              [
+                "Yes"
+              ]
+            ],
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-multi\ndone.",
+      "question_event": {
+        "id": "que_14f2569c70016uFmZillu2QcIb",
+        "sessionID": "ses_eb0da97f2ffeqIIcH2qBJ1g70P",
+        "questions": [
+          {
+            "question": "First?",
+            "header": "Q one",
+            "options": [
+              {
+                "label": "Yes",
+                "description": "y"
+              },
+              {
+                "label": "No",
+                "description": "n"
+              }
+            ]
+          },
+          {
+            "question": "Second?",
+            "header": "Q two",
+            "options": [
+              {
+                "label": "Yes",
+                "description": "y"
+              },
+              {
+                "label": "No",
+                "description": "n"
+              }
+            ],
+            "multiple": true
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f2568480013Dz16vx4AFLgB3",
+          "callID": "call_3"
+        }
+      }
+    },
+    {
+      "id": "Q-reject",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da8f93ffeuuHnwKrkgaqJwX",
+      "ms": 1102,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "error",
+          "input": {
+            "questions": [
+              {
+                "header": "Pick one",
+                "question": "Which option?",
+                "options": [
+                  {
+                    "label": "Option A",
+                    "description": "a"
+                  }
+                ]
+              }
+            ]
+          },
+          "error": "The user dismissed this question"
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-reject",
+      "question_event": {
+        "id": "que_14f257210001mVdO8yX5134Rbv",
+        "sessionID": "ses_eb0da8f93ffeuuHnwKrkgaqJwX",
+        "questions": [
+          {
+            "question": "Which option?",
+            "header": "Pick one",
+            "options": [
+              {
+                "label": "Option A",
+                "description": "a"
+              }
+            ]
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f25709a001YAdeagYU33lYIA",
+          "callID": "call_5"
+        }
+      }
+    },
+    {
+      "id": "Q-header30",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da8b40ffeabQv7HNJTEksR4",
+      "ms": 2170,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "completed",
+          "input": {
+            "questions": [
+              {
+                "header": "123456789012345678901234567890",
+                "question": "30-char header?",
+                "options": [
+                  {
+                    "label": "A",
+                    "description": "a"
+                  }
+                ]
+              }
+            ]
+          },
+          "output": "User has answered your questions: \"30-char header?\"=\"A\". You can now continue with the user's answers in mind.",
+          "metadata": {
+            "answers": [
+              [
+                "A"
+              ]
+            ],
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-header30\ndone.",
+      "question_event": {
+        "id": "que_14f25766c0013Fi3chxyWHX01x",
+        "sessionID": "ses_eb0da8b40ffeabQv7HNJTEksR4",
+        "questions": [
+          {
+            "question": "30-char header?",
+            "header": "123456789012345678901234567890",
+            "options": [
+              {
+                "label": "A",
+                "description": "a"
+              }
+            ]
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f2574f3001E7PvZg0CXKaFXM",
+          "callID": "call_6"
+        }
+      }
+    },
+    {
+      "id": "Q-header31",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da82c7ffeVSRKxzTKRIEvUA",
+      "ms": 2025,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "completed",
+          "input": {
+            "questions": [
+              {
+                "header": "1234567890123456789012345678901",
+                "question": "31-char header?",
+                "options": [
+                  {
+                    "label": "A",
+                    "description": "a"
+                  }
+                ]
+              }
+            ]
+          },
+          "output": "User has answered your questions: \"31-char header?\"=\"A\". You can now continue with the user's answers in mind.",
+          "metadata": {
+            "answers": [
+              [
+                "A"
+              ]
+            ],
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-header31\ndone.",
+      "question_event": {
+        "id": "que_14f257ed10015QfuS8dPhFIHLW",
+        "sessionID": "ses_eb0da82c7ffeVSRKxzTKRIEvUA",
+        "questions": [
+          {
+            "question": "31-char header?",
+            "header": "1234567890123456789012345678901",
+            "options": [
+              {
+                "label": "A",
+                "description": "a"
+              }
+            ]
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f257d64001UEyyy07JVGI21q",
+          "callID": "call_8"
+        }
+      }
+    },
+    {
+      "id": "Q-header60",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da7adbffeRi0neJlAujklI5",
+      "ms": 2016,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "completed",
+          "input": {
+            "questions": [
+              {
+                "header": "123456789012345678901234567890123456789012345678901234567890",
+                "question": "60-char header?",
+                "options": [
+                  {
+                    "label": "A",
+                    "description": "a"
+                  }
+                ]
+              }
+            ]
+          },
+          "output": "User has answered your questions: \"60-char header?\"=\"A\". You can now continue with the user's answers in mind.",
+          "metadata": {
+            "answers": [
+              [
+                "A"
+              ]
+            ],
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-header60\ndone.",
+      "question_event": {
+        "id": "que_14f25869d001jeTfqP2LRSC0hl",
+        "sessionID": "ses_eb0da7adbffeRi0neJlAujklI5",
+        "questions": [
+          {
+            "question": "60-char header?",
+            "header": "123456789012345678901234567890123456789012345678901234567890",
+            "options": [
+              {
+                "label": "A",
+                "description": "a"
+              }
+            ]
+          }
+        ],
+        "tool": {
+          "messageID": "msg_14f25854a001f2DLKDQTq7xowl",
+          "callID": "call_10"
+        }
+      }
+    },
+    {
+      "id": "Q-nodesc",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da72faffe3sLdplNhHklgih",
+      "ms": 2003,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "question",
+          "status": "error",
+          "input": {
+            "questions": [
+              {
+                "header": "No description",
+                "question": "Option without description?",
+                "options": [
+                  {
+                    "label": "A"
+                  }
+                ]
+              }
+            ]
+          },
+          "error": "The question tool was called with invalid arguments: SchemaError(Missing key\n  at [\"questions\"][0][\"options\"][0][\"description\"]).\nPlease rewrite the input so it satisfies the expected schema."
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-nodesc\ndone."
+    },
+    {
+      "id": "Q-open-default",
+      "agent": "probe-open",
+      "sessionID": "ses_eb0da6b24ffe71t8uwEYmfMHFK",
+      "ms": 1950,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "invalid",
+          "status": "completed",
+          "input": {
+            "tool": "question",
+            "error": "Model tried to call unavailable tool 'question'. Available tools: adopter_adopter_tool, bash, edit, glob, grep, invalid, plugin_tool, read, skill, task, todowrite, webfetch, write."
+          },
+          "output": "The arguments provided to the tool are invalid: Model tried to call unavailable tool 'question'. Available tools: adopter_adopter_tool, bash, edit, glob, grep, invalid, plugin_tool, read, skill, task, todowrite, webfetch, write.",
+          "metadata": {
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe Q-open-default\ndone."
+    },
+    {
+      "id": "LINK-junction-src",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb0da6386ffeA2WQOumupLJ5N0",
+      "ms": 2007,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "write",
+          "status": "completed",
+          "input": {
+            "filePath": ".sdd/link-to-src/new-file.ts",
+            "content": "s07\n"
+          },
+          "output": "Wrote file successfully.\nS07-POST-WRITE-FEEDBACK: lint says 0 findings",
+          "metadata": {
+            "diagnostics": {},
+            "filepath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\link-to-src\\new-file.ts",
+            "exists": false,
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe LINK-junction-src\ndone."
+    },
+    {
+      "id": "LINK-junction-outside",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb0da5bacffeD04PeGYA3jDHzL",
+      "ms": 1998,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "write",
+          "status": "completed",
+          "input": {
+            "filePath": ".sdd/link-to-outside/x.md",
+            "content": "s07\n"
+          },
+          "output": "Wrote file successfully.\nS07-POST-WRITE-FEEDBACK: lint says 0 findings",
+          "metadata": {
+            "diagnostics": {},
+            "filepath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\link-to-outside\\x.md",
+            "exists": false,
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe LINK-junction-outside\ndone."
+    },
+    {
+      "id": "EDIT-match-outside",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb0da53dbffe31SASTCvvyqThG",
+      "ms": 2022,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "edit",
+          "status": "error",
+          "input": {
+            "filePath": "src/app.ts",
+            "oldString": "x",
+            "newString": "y"
+          },
+          "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"edit\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"edit\",\"pattern\":\".sdd/*\",\"action\":\"allow\"}]"
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe EDIT-match-outside\ndone."
+    },
+    {
+      "id": "EDIT-match-inside",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb0da4bf6ffe57ng3gMYPU1AcG",
+      "ms": 1966,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "edit",
+          "status": "completed",
+          "input": {
+            "filePath": ".sdd/004-x/existing.md",
+            "oldString": "s07",
+            "newString": "s07b"
+          },
+          "output": "Edit applied successfully.\nS07-POST-WRITE-FEEDBACK: lint says 0 findings",
+          "metadata": {
+            "diagnostics": {},
+            "diff": "Index: C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n===================================================================\n--- C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n+++ C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n@@ -1,1 +1,1 @@\n-s07\n\\ No newline at end of file\n+s07b\n\\ No newline at end of file\n",
+            "filediff": {
+              "file": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md",
+              "patch": "Index: C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n===================================================================\n--- C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n+++ C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws\\.sdd\\004-x\\existing.md\n@@ -1,1 +1,1 @@\n-s07\n\\ No newline at end of file\n+s07b\n\\ No newline at end of file\n",
+              "additions": 1,
+              "deletions": 1
+            },
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe EDIT-match-inside\ndone."
+    },
+    {
+      "id": "BASH-redirect",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb0da4445ffewe9ZkZYyxMa9c3",
+      "ms": 2130,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "bash",
+          "status": "completed",
+          "input": {
+            "command": "git status > src/redirected.txt",
+            "description": "s07"
+          },
+          "output": "(no output)",
+          "metadata": {
+            "output": "(no output)",
+            "exit": 0,
+            "description": "s07",
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe BASH-redirect\ndone."
+    },
+    {
+      "id": "BASH-shell",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0da3bf7ffetIY3IbgA5fNXJS",
+      "ms": 2001,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "bash",
+          "status": "completed",
+          "input": {
+            "command": "echo $0; echo $PSVersionTable",
+            "description": "s07 shell"
+          },
+          "output": "/usr/bin/bash\n\n",
+          "metadata": {
+            "output": "/usr/bin/bash\n\n",
+            "exit": 0,
+            "description": "s07 shell",
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe BASH-shell\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "session.next.agent.switched",
+    "session.next.model.switched",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "question.asked",
+    "question.replied",
+    "message.part.delta",
+    "session.idle",
+    "question.rejected",
+    "server.heartbeat",
+    "file.edited",
+    "file.watcher.updated"
+  ]
+}

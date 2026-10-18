@@ -1,0 +1,129 @@
+{
+  "realModel": "openrouter/anthropic/claude-haiku-5.5",
+  "results": [
+    {
+      "id": "REAL-sonnet",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0d46d2affeWDa05dhPLG3zC3",
+      "ms": 5967,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md</path>\n<type>file</type>\n<content>\n1: s07 real probe readme\n2: second line\n\n(End of file - total 2 lines)\n</content>",
+          "metadata": {
+            "preview": "s07 real probe readme\nsecond line",
+            "truncated": false,
+            "loaded": []
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0.022023,
+          "tokens": {
+            "total": 8405,
+            "input": 4,
+            "output": 135,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 8266
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "anthropic/claude-sonnet-5.5"
+        },
+        {
+          "cost": 0.0016356,
+          "tokens": {
+            "total": 8560,
+            "input": 2,
+            "output": 10,
+            "reasoning": 0,
+            "cache": {
+              "read": 8266,
+              "write": 282
+            }
+          },
+          "finish": "stop",
+          "modelID": "anthropic/claude-sonnet-5.5"
+        }
+      ],
+      "text": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool.\ns07 real probe readme"
+    },
+    {
+      "id": "REAL-opus",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0d4589affe48bhcWnoVminsc",
+      "ms": 8845,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md</path>\n<type>file</type>\n<content>\n1: s07 real probe readme\n2: second line\n\n(End of file - total 2 lines)\n</content>",
+          "metadata": {
+            "preview": "s07 real probe readme\nsecond line",
+            "truncated": false,
+            "loaded": []
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0.044026,
+          "tokens": {
+            "total": 8401,
+            "input": 4,
+            "output": 135,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 8262
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "anthropic/claude-opus-5.5"
+        },
+        {
+          "cost": 0.0032704,
+          "tokens": {
+            "total": 8556,
+            "input": 2,
+            "output": 10,
+            "reasoning": 0,
+            "cache": {
+              "read": 8262,
+              "write": 282
+            }
+          },
+          "finish": "stop",
+          "modelID": "anthropic/claude-opus-5.5"
+        }
+      ],
+      "text": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool.\ns07 real probe readme"
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "session.next.agent.switched",
+    "session.next.model.switched",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "message.part.delta",
+    "session.idle",
+    "server.heartbeat"
+  ]
+}

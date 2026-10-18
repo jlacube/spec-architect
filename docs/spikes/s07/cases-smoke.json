@@ -1,0 +1,10 @@
+[
+  { "id": "SMOKE-open-read", "agent": "probe-open", "tool": "read", "args": { "filePath": "README.md" } },
+  { "id": "CLOSED-read", "agent": "probe-closed", "tool": "read", "args": { "filePath": "README.md" } },
+  { "id": "CLOSED-mcp", "agent": "probe-closed", "tool": "adopter_adopter_tool", "args": { "q": "x" } },
+  { "id": "CLOSED-plugin", "agent": "probe-closed", "tool": "plugin_tool", "args": { "q": "x" } },
+  { "id": "CLOSED-webfetch", "agent": "probe-closed", "tool": "webfetch", "args": { "url": "http://127.0.0.1:4199/health", "format": "text" } },
+  { "id": "CLOSED-write", "agent": "probe-closed", "tool": "write", "args": { "filePath": "closed-write.txt", "content": "x\n" } },
+  { "id": "OPEN-mcp", "agent": "probe-open", "tool": "adopter_adopter_tool", "args": { "q": "x" } },
+  { "id": "OPEN-plugin", "agent": "probe-open", "tool": "plugin_tool", "args": { "q": "x" } }
+]

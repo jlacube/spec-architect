@@ -1,0 +1,8 @@
+[
+  { "id": "REAL-haiku", "agent": "probe-closed", "model": "openrouter/anthropic/claude-haiku-5.5",
+    "prompt": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool." },
+  { "id": "REAL-sonnet", "agent": "probe-closed", "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "prompt": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool." },
+  { "id": "REAL-opus", "agent": "probe-closed", "model": "openrouter/anthropic/claude-opus-5.5",
+    "prompt": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool." }
+]

@@ -90,6 +90,51 @@
       "cost_usd": 0.4158,
       "pass": true,
       "note": "the one allowed rerun, by the conductor, with the corrected grader (judges the Serena step command line only): fresh session passes (evals/results/t010-rerun-TS-537-init-2026-10-18T07-22-45-360Z.json)"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-001",
+      "step": 8,
+      "case": "S-07 SDK session against OpenRouter, tier haiku (REAL-haiku)",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "openrouter-key",
+      "api_key_source": "opencode-auth-store",
+      "cost_usd": 0.0012233,
+      "pass": true,
+      "note": "OpenCode 1.15.10 reported cost (2 assistant turns, 8403+8558 tokens, 8264 cache-write); OpenRouter usage-view figure not read by P-02 (P-01 to compare, test plan §4.1). Two earlier start attempts made no model request (SQLite NOT NULL error on the shared opencode.db; ProviderModelNotFound with the models fetch off), 0 USD. The haiku figure looks low against the sonnet and opus figures for the same token counts (about 1/20 of sonnet); an estimate at list prices would be about 0.012 USD, so OpenCode's haiku price data may be wrong: compare with OpenRouter."
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-001",
+      "step": 8,
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "openrouter-key",
+      "api_key_source": "opencode-auth-store",
+      "pass": true,
+      "case": "S-07 SDK session against OpenRouter, tier sonnet (REAL-sonnet)",
+      "cost_usd": 0.0236586,
+      "note": "OpenCode 1.15.10 reported cost (2 assistant turns, 8405+8560 tokens); model id openrouter/anthropic/claude-sonnet-5.5 accepted; OpenRouter usage-view figure not read by P-02 (P-01 to compare)."
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-001",
+      "step": 8,
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "openrouter-key",
+      "api_key_source": "opencode-auth-store",
+      "pass": true,
+      "case": "S-07 SDK session against OpenRouter, tier opus (REAL-opus)",
+      "cost_usd": 0.0472964,
+      "note": "OpenCode 1.15.10 reported cost (2 assistant turns, 8401+8556 tokens); model id openrouter/anthropic/claude-opus-5.5 accepted; OpenRouter usage-view figure not read by P-02 (P-01 to compare)."
     }
   ]
 }

@@ -1,0 +1,73 @@
+{
+  "realModel": "openrouter/anthropic/claude-haiku-5.5",
+  "results": [
+    {
+      "id": "REAL-haiku",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb0d52fb4ffelNmMmgs147He2s",
+      "ms": 8152,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07ws-real\\README.md</path>\n<type>file</type>\n<content>\n1: s07 real probe readme\n2: second line\n\n(End of file - total 2 lines)\n</content>",
+          "metadata": {
+            "preview": "s07 real probe readme\nsecond line",
+            "truncated": false,
+            "loaded": []
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0.0011009,
+          "tokens": {
+            "total": 8403,
+            "input": 4,
+            "output": 135,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 8264
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "anthropic/claude-haiku-5.5"
+        },
+        {
+          "cost": 0.00012309,
+          "tokens": {
+            "total": 8558,
+            "input": 2,
+            "output": 10,
+            "reasoning": 0,
+            "cache": {
+              "read": 8264,
+              "write": 282
+            }
+          },
+          "finish": "stop",
+          "modelID": "anthropic/claude-haiku-5.5"
+        }
+      ],
+      "text": "Use the read tool once to read README.md, then reply with only the first line of that file. Do not call any other tool.\ns07 real probe readme"
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "session.next.agent.switched",
+    "session.next.model.switched",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "message.part.delta",
+    "session.idle"
+  ]
+}

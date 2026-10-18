@@ -1,0 +1,5 @@
+{"t":"2026-10-18T13:22:51.962Z","kind":"rpc","method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"opencode","version":"1.15.10"}}}
+{"t":"2026-10-18T13:22:51.974Z","kind":"rpc","method":"notifications/initialized"}
+{"t":"2026-10-18T13:22:51.975Z","kind":"rpc","method":"tools/list"}
+{"t":"2026-10-18T13:23:04.155Z","kind":"rpc","method":"tools/call","params":{"name":"adopter_tool","arguments":{"q":"x"}}}
+{"t":"2026-10-18T13:23:04.156Z","kind":"CALLED","tool":"adopter_tool","args":{"q":"x"}}

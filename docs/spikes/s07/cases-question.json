@@ -1,0 +1,26 @@
+[
+  { "id": "Q-answer", "agent": "probe-closed", "question": "answer:Option A", "tool": "question",
+    "args": { "questions": [ { "header": "Pick one", "question": "Which option?", "options": [ { "label": "Option A", "description": "first (Recommended)" }, { "label": "Option B", "description": "second" } ] } ] } },
+  { "id": "Q-multi", "agent": "probe-closed", "question": "answer:Yes", "tool": "question",
+    "args": { "questions": [
+      { "header": "Q one", "question": "First?", "options": [ { "label": "Yes", "description": "y" }, { "label": "No", "description": "n" } ] },
+      { "header": "Q two", "question": "Second?", "multiple": true, "options": [ { "label": "Yes", "description": "y" }, { "label": "No", "description": "n" } ] } ] } },
+  { "id": "Q-reject", "agent": "probe-closed", "question": "reject", "tool": "question",
+    "args": { "questions": [ { "header": "Pick one", "question": "Which option?", "options": [ { "label": "Option A", "description": "a" } ] } ] } },
+  { "id": "Q-header30", "agent": "probe-closed", "question": "answer:A", "tool": "question",
+    "args": { "questions": [ { "header": "123456789012345678901234567890", "question": "30-char header?", "options": [ { "label": "A", "description": "a" } ] } ] } },
+  { "id": "Q-header31", "agent": "probe-closed", "question": "answer:A", "tool": "question",
+    "args": { "questions": [ { "header": "1234567890123456789012345678901", "question": "31-char header?", "options": [ { "label": "A", "description": "a" } ] } ] } },
+  { "id": "Q-header60", "agent": "probe-closed", "question": "answer:A", "tool": "question",
+    "args": { "questions": [ { "header": "123456789012345678901234567890123456789012345678901234567890", "question": "60-char header?", "options": [ { "label": "A", "description": "a" } ] } ] } },
+  { "id": "Q-nodesc", "agent": "probe-closed", "question": "answer:A", "tool": "question",
+    "args": { "questions": [ { "header": "No description", "question": "Option without description?", "options": [ { "label": "A" } ] } ] } },
+  { "id": "Q-open-default", "agent": "probe-open", "question": "answer:A", "tool": "question",
+    "args": { "questions": [ { "header": "Default", "question": "Is question on by default?", "options": [ { "label": "A", "description": "a" } ] } ] } },
+  { "id": "LINK-junction-src", "agent": "probe-perm", "tool": "write", "args": { "filePath": ".sdd/link-to-src/new-file.ts", "content": "s07\n" }, "expect": "deny" },
+  { "id": "LINK-junction-outside", "agent": "probe-perm", "tool": "write", "args": { "filePath": ".sdd/link-to-outside/x.md", "content": "s07\n" }, "expect": "deny" },
+  { "id": "EDIT-match-outside", "agent": "probe-perm", "tool": "edit", "args": { "filePath": "src/app.ts", "oldString": "x", "newString": "y" }, "expect": "deny" },
+  { "id": "EDIT-match-inside", "agent": "probe-perm", "tool": "edit", "args": { "filePath": ".sdd/004-x/existing.md", "oldString": "s07", "newString": "s07b" }, "expect": "allow" },
+  { "id": "BASH-redirect", "agent": "probe-perm", "tool": "bash", "args": { "command": "git status > src/redirected.txt", "description": "s07" }, "expect": "deny" },
+  { "id": "BASH-shell", "agent": "probe-closed", "tool": "bash", "args": { "command": "echo $0; echo $PSVersionTable", "description": "s07 shell" } }
+]
