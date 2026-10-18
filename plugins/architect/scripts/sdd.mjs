@@ -7592,7 +7592,7 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync19, readdirSync as readdirSync10, readFileSync as readFileSync19, statSync as statSync10 } from "node:fs";
+import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync19, statSync as statSync11 } from "node:fs";
 import { basename as basename9, join as join27, resolve } from "node:path";
 
 // src/model/ids.ts
@@ -11230,6 +11230,66 @@ function formatOp(o) {
   return `${o.file}: ${o.op} ${o.id}${o.detail ? ` — ${o.detail}` : ""}`;
 }
 
+// src/cli/writing-commands.ts
+var WRITING_COMMANDS = [
+  { name: "init", when: "always", guard: "cwd" },
+  { name: "change new", when: "always", guard: "cwd" },
+  { name: "change profile", when: "always", guard: "cwd" },
+  { name: "change revise", when: "always", guard: "cwd" },
+  { name: "change stop", when: "always", guard: "cwd" },
+  { name: "id next", when: "always", guard: "cwd" },
+  { name: "id tombstone", when: "always", guard: "cwd" },
+  { name: "status", when: "with-write", guard: "cwd" },
+  { name: "trace", when: "with-write", guard: "cwd" },
+  { name: "hook subagent-stop", when: "always", guard: "cwd" },
+  { name: "gate approve", when: "always", guard: "cwd" },
+  { name: "gate record", when: "always", guard: "cwd" },
+  { name: "stale check", when: "always", guard: "cwd" },
+  { name: "task set", when: "always", guard: "cwd" },
+  { name: "defect add", when: "always", guard: "cwd" },
+  { name: "defect close", when: "always", guard: "cwd" },
+  { name: "defect reopen", when: "always", guard: "cwd" },
+  { name: "archive", when: "unless-dry-run", guard: "cwd" },
+  { name: "extract-features", when: "always", guard: "cwd" },
+  { name: "serena-config", when: "always", guard: "serena" },
+  { name: "serena-launch", when: "always", guard: "serena" },
+  { name: "install copilot", when: "always", guard: "deny" }
+];
+
+// src/io/repo-root.ts
+import { existsSync as existsSync12, statSync as statSync8 } from "node:fs";
+import { dirname as dirname7 } from "node:path";
+function holds(dir2, name, folderOnly) {
+  const p = dir2.endsWith("/") ? dir2 + name : dir2 + "/" + name;
+  try {
+    return folderOnly ? statSync8(p).isDirectory() : existsSync12(p);
+  } catch {
+    return false;
+  }
+}
+function nearest(dir2, name, folderOnly) {
+  for (let d = dir2; ; ) {
+    if (holds(d, name, folderOnly)) return d;
+    const parent = normalisePath(dirname7(d));
+    if (parent === d) return null;
+    d = parent;
+  }
+}
+function findRepositoryRoot(start) {
+  const dir2 = normalisePath(start);
+  return nearest(dir2, ".git", false) ?? nearest(dir2, ".sdd", true) ?? dir2;
+}
+function locateInRepository(root, folder, cwd) {
+  const written = normalisePath(folder, { cwd: normalisePath(cwd) });
+  const real = realPath(written);
+  return {
+    written,
+    real,
+    insideWritten: isInside(normalisePath(root), written),
+    insideReal: isInside(realPath(root), real)
+  };
+}
+
 // src/hooks/input.ts
 function parseHookInput(text) {
   try {
@@ -11246,7 +11306,7 @@ function isArchitectAgent(input) {
 // src/hooks/guard-bash.ts
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
-var ALLOWED2 = "sdd … or node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (--cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11357,6 +11417,43 @@ function bareSdd(words) {
 function sddEntry(words, raw, cwd) {
   return bareSdd(words) || sddCli(words, raw, cwd);
 }
+function cliArgs(words) {
+  return bareSdd(words) ? words.slice(1) : words.slice(2);
+}
+var WRITING_GROUP_NAMES = new Set(WRITING_COMMANDS.filter((w) => w.name.includes(" ")).map((w) => w.name.split(" ")[0]));
+function writingCommand(args) {
+  const [first, second] = args;
+  if (first === void 0) return null;
+  const row2 = WRITING_GROUP_NAMES.has(first) ? WRITING_COMMANDS.find((w) => w.name === `${first} ${second ?? ""}` || w.guard === "deny" && w.name.split(" ")[0] === first) : WRITING_COMMANDS.find((w) => w.name === first);
+  if (row2 === void 0) return null;
+  if (row2.when === "with-write") return args.includes("--write") ? row2 : null;
+  if (row2.when === "unless-dry-run") return args.includes("--dry-run") ? null : row2;
+  return row2;
+}
+function cwdWords(args) {
+  const found = [];
+  args.forEach((w, i) => {
+    if (w === "--cwd") found.push(args[i + 1] ?? null);
+    else if (w.startsWith("--cwd=")) found.push(w.slice("--cwd=".length));
+  });
+  return found;
+}
+function cwdViolation(words, cwd) {
+  const all = cliArgs(words);
+  const dashdash = all.indexOf("--");
+  const args = dashdash < 0 ? all : all.slice(0, dashdash);
+  const row2 = writingCommand(args);
+  if (row2 === null || row2.guard !== "cwd") return null;
+  const root = findRepositoryRoot(cwd);
+  for (const folder of cwdWords(args)) {
+    if (folder === null || folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null)
+      return `sdd ${row2.name} with a --cwd the guard cannot resolve (${folder ?? "--cwd"})`;
+    const at = locateInRepository(root, folder, cwd);
+    if (!at.insideWritten) return `sdd ${row2.name} with --cwd outside the repository (${at.written})`;
+    if (!at.insideReal) return `sdd ${row2.name} with --cwd outside the repository (${at.real})`;
+  }
+  return null;
+}
 var VERSION_PROBES = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
 function versionProbe(words) {
   return VERSION_PROBES.some((p) => p.length === words.length && exe(words[0], p[0]) && words[1] === p[1]);
@@ -11434,18 +11531,23 @@ function decideBash(input) {
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;
-  const allowed = dialect === "powershell" ? sddEntry(first.words, first.raw, cwd) || versionProbe(first.words) : sddEntry(first.words, first.raw, cwd) || versionProbe(first.words) || ripwire(first.words) || astGrep(first.words) || gitRead(first.words);
+  const entry = sddEntry(first.words, first.raw, cwd);
+  const allowed = dialect === "powershell" ? entry || versionProbe(first.words) : entry || versionProbe(first.words) || ripwire(first.words) || astGrep(first.words) || gitRead(first.words);
   if (!allowed) {
     const reason = pipeOnly(first.words) && rest.length === 0 ? `${first.words[0]} is allowed only after |` : `${first.words[0]} … is not on the allowlist`;
     return deny(rest.length > 0 ? RULE_COMPOUND : RULE_ALLOWLIST, tool, cmd, reason);
   }
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
+  if (entry) {
+    const violation = cwdViolation(first.words, cwd);
+    if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
+  }
   return { allow: true };
 }
 
 // src/hooks/guard-path.ts
-import { statSync as statSync8 } from "node:fs";
+import { statSync as statSync9 } from "node:fs";
 var RULE = "GUARD-PATH-001";
 var WRITE_TOOLS = /* @__PURE__ */ new Set(["Write", "Edit", "MultiEdit", "NotebookEdit"]);
 function below(dir2, target) {
@@ -11454,7 +11556,7 @@ function below(dir2, target) {
 }
 function hardLinkCount(p) {
   try {
-    const s = statSync8(p);
+    const s = statSync9(p);
     return s.isFile() ? s.nlink : 0;
   } catch {
     return 0;
@@ -11592,7 +11694,7 @@ function sessionBrief(input, fallbackCwd) {
 }
 
 // src/workspace/serena-config.ts
-import { existsSync as existsSync12, mkdirSync as mkdirSync5, readFileSync as readFileSync11 } from "node:fs";
+import { existsSync as existsSync13, mkdirSync as mkdirSync5, readFileSync as readFileSync11 } from "node:fs";
 import { join as join16 } from "node:path";
 function requiredSettings(dataDir) {
   const projects = join16(dataDir, "serena", "projects").split("\\").join("/");
@@ -11612,7 +11714,7 @@ function setKey(text, key, value2) {
 function writeSerenaConfig(dataDir) {
   const dir2 = join16(dataDir, "serena");
   const path = join16(dir2, "serena_config.yml");
-  const existed = existsSync12(path);
+  const existed = existsSync13(path);
   const before = existed ? readFileSync11(path, "utf8") : "";
   let text = before;
   for (const [k, v] of Object.entries(requiredSettings(dataDir))) text = setKey(text, k, v);
@@ -11633,8 +11735,8 @@ function serenaLaunch(dataDir, args, command = "serena") {
 }
 
 // src/trace/model.ts
-import { basename as basename7, dirname as dirname7 } from "node:path";
-import { readFileSync as readFileSync12, existsSync as existsSync13 } from "node:fs";
+import { basename as basename7, dirname as dirname8 } from "node:path";
+import { readFileSync as readFileSync12, existsSync as existsSync14 } from "node:fs";
 import { join as join17 } from "node:path";
 var RELATIONS = {
   stories: "story-of",
@@ -11660,7 +11762,7 @@ function compareIds(a, b) {
 }
 function buildTrace(changeDir) {
   const graph = buildChangeGraph(changeDir);
-  const sddDir = dirname7(changeDir);
+  const sddDir = dirname8(changeDir);
   const spec = gatherSpecFacts(sddDir, graph);
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const profile = fm["profile"] === "lite" ? "lite" : "full";
@@ -11695,7 +11797,7 @@ function buildTrace(changeDir) {
   const scenarios2 = /* @__PURE__ */ new Map();
   for (const e of graph.edges) if (e.kind === "scenario") scenarios2.set(e.from, [...scenarios2.get(e.from) ?? [], e.to]);
   const changeMd = join17(changeDir, "change.md");
-  const phases = existsSync13(changeMd) ? splitFrontmatter(readFileSync12(changeMd, "utf8")).data?.["phases"] ?? {} : {};
+  const phases = existsSync14(changeMd) ? splitFrontmatter(readFileSync12(changeMd, "utf8")).data?.["phases"] ?? {} : {};
   return {
     lint: lint2,
     doc: { change: `CHG-${graph.change}`, nodes, edges },
@@ -11857,7 +11959,7 @@ function renderPlanMatrix(t, tombstones = /* @__PURE__ */ new Set()) {
 }
 
 // src/trace/write.ts
-import { existsSync as existsSync14 } from "node:fs";
+import { existsSync as existsSync15 } from "node:fs";
 import { join as join19 } from "node:path";
 
 // src/trace/open-items.ts
@@ -11897,7 +11999,7 @@ function trace(changeDir, options) {
   const tombstones = new Set(loadLedger(changeDir).tombstones.map((x) => x.id));
   const planStarted = model.lint.spec.planStarted;
   const plan = planStarted ? planCoverage(model, tombstones) : null;
-  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync14(join19(changeDir, p)));
+  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync15(join19(changeDir, p)));
   const document = { change: model.doc.change, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
   const result = {
     model,
@@ -11912,8 +12014,8 @@ function trace(changeDir, options) {
     writeTextAtomic(join19(changeDir, ...rel.split("/")), text);
     result.written.push(rel);
   };
-  if (existsSync14(join19(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
-  if (planStarted && existsSync14(join19(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
+  if (existsSync15(join19(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
+  if (planStarted && existsSync15(join19(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
   for (const p of phases) put(`${p}/85-open-items.md`, renderOpenItems(model, p));
   put("trace.json", JSON.stringify(document, null, 2) + "\n");
   return result;
@@ -11921,7 +12023,7 @@ function trace(changeDir, options) {
 
 // src/gate/commit.ts
 import { spawnSync as spawnSync2 } from "node:child_process";
-import { existsSync as existsSync15 } from "node:fs";
+import { existsSync as existsSync16 } from "node:fs";
 import { join as join20, relative as relative2 } from "node:path";
 function git(root, args) {
   const r = spawnSync2("git", args, { cwd: root, encoding: "utf8", windowsHide: true });
@@ -11936,7 +12038,7 @@ function commitPreconditions(root) {
   if (staged.out !== "") throw refuse(`other changes are staged: ${staged.out.split("\n").slice(0, 5).join(", ")}`);
 }
 function commitApproval(root, changeDir, message) {
-  const paths = [relative2(root, changeDir), ".sdd/SDD.md", ".sdd/registry.json"].filter((p) => existsSync15(join20(root, p))).map((p) => p.split("\\").join("/"));
+  const paths = [relative2(root, changeDir), ".sdd/SDD.md", ".sdd/registry.json"].filter((p) => existsSync16(join20(root, p))).map((p) => p.split("\\").join("/"));
   const add = git(root, ["add", "--", ...paths]);
   if (!add.ok) throw refuse(`approval recorded, but git add failed: ${add.out}`);
   const commit = git(root, ["commit", "-q", "-m", message, "--", ...paths]);
@@ -11946,7 +12048,7 @@ function commitApproval(root, changeDir, message) {
 
 // src/gate/hash.ts
 import { createHash as createHash2 } from "node:crypto";
-import { existsSync as existsSync16, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync9 } from "node:fs";
+import { existsSync as existsSync17, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync10 } from "node:fs";
 import { join as join21 } from "node:path";
 var GENERATED2 = /* @__PURE__ */ new Set(["80-traceability.md", "85-open-items.md"]);
 var PHASES2 = ["00-ideation", "10-spec", "20-plan"];
@@ -11957,11 +12059,11 @@ function phaseFiles(phaseDir) {
     for (const name of readdirSync8(dir2)) {
       const abs = join21(dir2, name);
       const rel = prefix + name;
-      if (statSync9(abs).isDirectory()) walk(abs, rel + "/");
+      if (statSync10(abs).isDirectory()) walk(abs, rel + "/");
       else if (!GENERATED2.has(rel)) out.push(rel);
     }
   };
-  if (existsSync16(phaseDir)) walk(phaseDir, "");
+  if (existsSync17(phaseDir)) walk(phaseDir, "");
   return out.sort((a, b) => Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8")));
 }
 function fileHash(abs) {
@@ -11983,7 +12085,7 @@ function idHashes(changeDir, phase) {
 }
 function readApprovals(changeDir) {
   const p = join21(changeDir, "approvals.json");
-  return existsSync16(p) ? JSON.parse(readFileSync13(p, "utf8")) : {};
+  return existsSync17(p) ? JSON.parse(readFileSync13(p, "utf8")) : {};
 }
 function recordApproval(changeDir, phase, approvedAt) {
   const { hash, files } = phaseHash(changeDir, phase);
@@ -12000,12 +12102,12 @@ import { readFileSync as readFileSync15 } from "node:fs";
 import { basename as basename8, join as join23 } from "node:path";
 
 // src/gate/critic-parse.ts
-import { existsSync as existsSync17, readFileSync as readFileSync14 } from "node:fs";
+import { existsSync as existsSync18, readFileSync as readFileSync14 } from "node:fs";
 import { join as join22 } from "node:path";
 function criticReportPath(changeDir, phase) {
   for (const name of ["90-critic-report.md", "critic-report.md"]) {
     const p = join22(changeDir, phase, name);
-    if (existsSync17(p)) return p;
+    if (existsSync18(p)) return p;
   }
   return null;
 }
@@ -12175,7 +12277,7 @@ function record(ctx, decision, note, today) {
 }
 
 // src/tracking/task.ts
-import { existsSync as existsSync18, readdirSync as readdirSync9, readFileSync as readFileSync16 } from "node:fs";
+import { existsSync as existsSync19, readdirSync as readdirSync9, readFileSync as readFileSync16 } from "node:fs";
 import { join as join24 } from "node:path";
 var TASK_STATUSES = ["todo", "in-progress", "blocked", "done", "dropped"];
 var TRANSITIONS = {
@@ -12187,7 +12289,7 @@ var TRANSITIONS = {
 };
 function findTask(changeDir, id) {
   const dir2 = join24(changeDir, "20-plan", "50-tasks");
-  if (existsSync18(dir2))
+  if (existsSync19(dir2))
     for (const name of readdirSync9(dir2).filter((n) => n.endsWith(".md"))) {
       const path = join24(dir2, name);
       const text = readFileSync16(path, "utf8");
@@ -12197,7 +12299,7 @@ function findTask(changeDir, id) {
       return { path, text, status: String(fm["status"] ?? "todo"), report: fm["report"] ?? {}, dependsOn: deps, lite: false };
     }
   const plan = join24(changeDir, "20-plan", "plan.md");
-  if (existsSync18(plan)) {
+  if (existsSync19(plan)) {
     const node = buildChangeGraph(changeDir).nodes.find((n) => n.id === id && n.file === "20-plan/plan.md");
     if (node) {
       const field = (name) => node.fields.find((f) => f.name === name)?.value ?? "";
@@ -12347,7 +12449,7 @@ var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
   const sdd = join27(root, ".sdd");
-  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync10(join27(sdd, n)).isDirectory()).sort();
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join27(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -12386,7 +12488,7 @@ function gateApprove(ctx) {
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
   const sdd = join27(ctx.root, ".sdd");
-  if (existsSync19(join27(sdd, "registry.json"))) writeStatus(sdd);
+  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   if (commit) {
@@ -12415,7 +12517,7 @@ function gateRecord(ctx) {
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
   const sdd = join27(ctx.root, ".sdd");
-  if (existsSync19(join27(sdd, "registry.json"))) writeStatus(sdd);
+  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
   return 0;
 }
@@ -12426,7 +12528,7 @@ function changeOfId(ctx, id) {
 }
 function refreshRegistry(ctx) {
   const sdd = join27(ctx.root, ".sdd");
-  if (existsSync19(join27(sdd, "registry.json"))) writeStatus(sdd);
+  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
 }
 function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
@@ -12481,7 +12583,7 @@ function staleCmd(ctx) {
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync19(join27(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -12655,7 +12757,7 @@ function version(ctx) {
   ctx.out.line(TOOL);
   return 0;
 }
-var COMMANDS = [
+var ROWS = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
@@ -12685,6 +12787,7 @@ var COMMANDS = [
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version }
 ];
+var COMMANDS = ROWS.map((r) => ({ ...r, writes: WRITING_COMMANDS.find((w) => w.name === r.name)?.when ?? null }));
 function checkPositional(command, name, value2) {
   if (name === "NNN" && !/^\d{3}$/.test(value2)) throw usage(command, `<NNN> must have three digits: ${value2}`);
   if (name === "phase" && !PHASES.includes(value2)) throw usage(command, `<phase> must be one of ${PHASES.join(", ")}: ${value2}`);

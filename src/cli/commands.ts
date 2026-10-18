@@ -37,6 +37,7 @@ import { addDefect, closeDefect, reopenDefect } from "../tracking/defect.ts";
 import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatFinding, type Output } from "./output.ts";
+import { WRITING_COMMANDS, type WriteWhen } from "./writing-commands.ts";
 
 export interface OptionSpec {
   type: "string" | "boolean";
@@ -77,6 +78,8 @@ export interface CommandSpec {
   sampleArgs: string[];
   /** True when arguments after `--` are passed through to the command. */
   rest?: boolean;
+  /** When the command writes files, from the single table of writing-commands.ts; null: never. */
+  writes: WriteWhen | null;
   run?: (ctx: CommandContext) => number;
 }
 
@@ -477,7 +480,7 @@ function version(ctx: CommandContext): number {
   return 0;
 }
 
-export const COMMANDS: readonly CommandSpec[] = [
+const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
   { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
@@ -507,6 +510,9 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
 ];
+
+/** The command table; each row's `writes` comes from WRITING_COMMANDS (C002-IF-008 §1.2), no second list. */
+export const COMMANDS: readonly CommandSpec[] = ROWS.map((r) => ({ ...r, writes: WRITING_COMMANDS.find((w) => w.name === r.name)?.when ?? null }));
 
 /** Validates a positional by its name: `<NNN>` is three digits, `<phase>` one of PHASES. */
 export function checkPositional(command: string, name: string, value: string): void {

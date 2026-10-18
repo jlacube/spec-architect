@@ -12,10 +12,11 @@
 //   dialect    bash or powershell, must match the tool (PowerShell: powershell); absent: from the tool
 //   stdin      raw hook input used unchanged
 //   note       free text
-// The fixture repository has .sdd and .git, so {repo} is its repository root.
+// The fixture repository has .sdd and .git, so {repo} is its repository root, and the folder link
+// {repo}/link-out to a folder outside it.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, realpathSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { decideBash } from "../../src/hooks/guard-bash.ts";
@@ -44,6 +45,9 @@ test("the bash guard corpus is decided 100% as expected, with the expected rule"
   const repo = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bash-"))).split("\\").join("/");
   mkdirSync(join(repo, ".sdd"));
   mkdirSync(join(repo, ".git"));
+  // {repo}/link-out: a folder link from inside the root to a folder outside it (C002-TS-536).
+  const outside = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bash-out-")));
+  symlinkSync(outside, join(repo, "link-out"), process.platform === "win32" ? "junction" : "dir");
   const capabilities = new Set<string>();
   try {
     const cases = loadBashCorpus();
@@ -63,6 +67,7 @@ test("the bash guard corpus is decided 100% as expected, with the expected rule"
     assert.deepEqual(wrong, [], wrong.join("\n"));
   } finally {
     rmSync(repo, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
   }
 });
 

@@ -24,11 +24,14 @@ test("shell corpus cases have unique IDs, known categories and only known fields
   assert.deepEqual(formatProblems(cases, BASH_FIELDS, BASH_CATEGORIES), []);
 });
 
-// C002-TS-610 rows of C002-T-008 (C002-REQ-503): the shell corpus holds the new kinds of case.
+// C002-TS-610 rows of C002-T-008 (C002-REQ-503) and C002-T-009: the shell corpus holds the new kinds of case.
 const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] = [
   ["bare sdd command", "sdd lint 002", "allow"],
   ["node --version", "node --version", "allow"],
   ["redirection inside an allowlisted command", "sdd status > out.txt", "deny"],
+  // C002-T-009 (C002-REQ-521): the fixture root {repo} stands for the spec's C:/repo.
+  ["writing sdd subcommand with --cwd outside the repository root", "sdd change stop 001 --reason x --cwd {repo}/../other-repo", "deny"],
+  ["writing sdd subcommand with --cwd inside the repository root", "sdd trace 001 --write --cwd {repo}/pkg", "allow"],
 ];
 for (const [kind, command, expect] of TS_610_SHELL) {
   test(`C002-TS-610: the shell corpus holds a case of the kind "${kind}" (${command} → ${expect})`, () => {

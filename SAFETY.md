@@ -59,7 +59,8 @@ A PreToolUse hook on Bash and PowerShell. A quote-aware tokeniser splits the com
   - `git log|show|diff|blame|ls-files|rev-parse|status|grep …` — never `-o`/`--output`, pager or
     external-diff options;
   - version probes (`node -v`, `node --version`, `git --version`, …);
-  - bare `sdd …`, the npm-installed CLI (CHG-002, C002-REQ-503).
+  - bare `sdd …`, the npm-installed CLI (CHG-002, C002-REQ-503); a writing `sdd` subcommand may use
+    `--cwd` only with a folder inside the repository (C002-REQ-521).
 - **Later pipe segments** may only be `head`, `tail`, `wc -l`, `sort`, `uniq` (with safe flags).
 
 **Evidence:** 277 cases (scenario tables, every ripwire verb and bounding flag, dozens of bypass

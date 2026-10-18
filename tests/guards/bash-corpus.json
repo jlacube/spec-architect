@@ -2530,6 +2530,740 @@
    "expect": "deny",
    "rule": "GUARD-BASH-001",
    "note": "exact word count"
+  },
+  {
+   "id": "BG-293",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init",
+   "expect": "allow",
+   "note": "writing subcommand init (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-294",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand init with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-295",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand init with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-296",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change new \"Export\" --profile lite",
+   "expect": "allow",
+   "note": "writing subcommand change new (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-297",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change new \"Export\" --profile lite --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand change new with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-298",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change new \"Export\" --profile lite --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand change new with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-299",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change profile 001 full",
+   "expect": "allow",
+   "note": "writing subcommand change profile (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-300",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change profile 001 full --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand change profile with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-301",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change profile 001 full --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand change profile with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-302",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change revise 001 10-spec --reason \"r\"",
+   "expect": "allow",
+   "note": "writing subcommand change revise (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-303",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change revise 001 10-spec --reason \"r\" --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand change revise with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-304",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change revise 001 10-spec --reason \"r\" --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand change revise with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-305",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change stop 001 --reason x",
+   "expect": "allow",
+   "note": "writing subcommand change stop (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-306",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change stop 001 --reason x --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand change stop with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-307",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change stop 001 --reason x --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand change stop with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-308",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id next TS --change 001",
+   "expect": "allow",
+   "note": "writing subcommand id next (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-309",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id next TS --change 001 --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand id next with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-310",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id next TS --change 001 --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand id next with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-311",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id tombstone C001-REQ-001 --reason r",
+   "expect": "allow",
+   "note": "writing subcommand id tombstone (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-312",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id tombstone C001-REQ-001 --reason r --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand id tombstone with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-313",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id tombstone C001-REQ-001 --reason r --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand id tombstone with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-314",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd status --write",
+   "expect": "allow",
+   "note": "writing subcommand status --write (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-315",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd status --write --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand status --write with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-316",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd status --write --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand status --write with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-317",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write",
+   "expect": "allow",
+   "note": "writing subcommand trace --write (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-318",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand trace --write with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-319",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand trace --write with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-320",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd hook subagent-stop --host copilot --agents sdd-planner",
+   "expect": "allow",
+   "note": "writing subcommand hook subagent-stop (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-321",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd hook subagent-stop --host copilot --agents sdd-planner --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand hook subagent-stop with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-322",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd hook subagent-stop --host copilot --agents sdd-planner --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand hook subagent-stop with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-323",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate approve 001 10-spec --note \"Approve\"",
+   "expect": "allow",
+   "note": "writing subcommand gate approve (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-324",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate approve 001 10-spec --note \"Approve\" --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand gate approve with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-325",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate approve 001 10-spec --note \"Approve\" --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand gate approve with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-326",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate record 001 10-spec --decision revise --note n",
+   "expect": "allow",
+   "note": "writing subcommand gate record (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-327",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate record 001 10-spec --decision revise --note n --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand gate record with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-328",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate record 001 10-spec --decision revise --note n --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand gate record with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-329",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd stale check 001",
+   "expect": "allow",
+   "note": "writing subcommand stale check (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-330",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd stale check 001 --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand stale check with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-331",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd stale check 001 --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand stale check with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-332",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd task set C002-T-001 --status done",
+   "expect": "allow",
+   "note": "writing subcommand task set (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-333",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd task set C002-T-001 --status done --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand task set with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-334",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd task set C002-T-001 --status done --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand task set with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-335",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect add --ref C001-REQ-001 --summary s",
+   "expect": "allow",
+   "note": "writing subcommand defect add (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-336",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect add --ref C001-REQ-001 --summary s --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand defect add with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-337",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect add --ref C001-REQ-001 --summary s --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand defect add with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-338",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect close D-001 --change 001 --resolution r",
+   "expect": "allow",
+   "note": "writing subcommand defect close (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-339",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect close D-001 --change 001 --resolution r --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand defect close with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-340",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect close D-001 --change 001 --resolution r --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand defect close with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-341",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect reopen D-001 --change 001",
+   "expect": "allow",
+   "note": "writing subcommand defect reopen (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-342",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect reopen D-001 --change 001 --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand defect reopen with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-343",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd defect reopen D-001 --change 001 --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand defect reopen with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-344",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd archive 001",
+   "expect": "allow",
+   "note": "writing subcommand archive (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-345",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd archive 001 --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand archive with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-346",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd archive 001 --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand archive with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-347",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd extract-features 001",
+   "expect": "allow",
+   "note": "writing subcommand extract-features (C002-REQ-607, C002-TS-636)"
+  },
+  {
+   "id": "BG-348",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd extract-features 001 --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand extract-features with --cwd outside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-349",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd extract-features 001 --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "writing subcommand extract-features with --cwd inside the repository root (C002-REQ-521, C002-TS-636)"
+  },
+  {
+   "id": "BG-350",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd={repo}/..",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd=<dir> outside the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-351",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" task set C002-T-001 --status done --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "script form with --cwd outside the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-352",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate approve 001 10-spec --note n --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "PowerShell, --cwd outside the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-353",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd ../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "relative --cwd that leaves the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-354",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}/pkg/../../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": ".. segments that leave the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-355",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}-data",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "sibling folder whose name starts with the root's: compared per segment (C002-TS-536)"
+  },
+  {
+   "id": "BG-356",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}/link-out",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "link under the root to a folder outside it; the test fixture creates {repo}/link-out (C002-TS-536)"
+  },
+  {
+   "id": "BG-357",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}",
+   "expect": "allow",
+   "note": "--cwd is the root itself (C002-TS-536)"
+  },
+  {
+   "id": "BG-358",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd id next TS --change 001 --cwd pkg",
+   "expect": "allow",
+   "note": "relative --cwd inside the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-359",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change new \"Export\" --profile lite --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "PowerShell, --cwd inside the root (C002-TS-536)"
+  },
+  {
+   "id": "BG-360",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd status --write --cwd {repo}/.sdd",
+   "expect": "allow",
+   "note": "--cwd inside the root (the workspace folder)"
+  },
+  {
+   "id": "BG-361",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd status --cwd {repo}/../other-repo",
+   "expect": "allow",
+   "note": "status without --write writes nothing: --cwd unrestricted (C002-TS-536, BG-019)"
+  },
+  {
+   "id": "BG-362",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd archive 001 --dry-run --cwd {repo}/../other-repo",
+   "expect": "allow",
+   "note": "archive --dry-run writes nothing: --cwd unrestricted (C002-IF-008 §1.2)"
+  },
+  {
+   "id": "BG-363",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd gate show 001 10-spec --cwd {repo}/../other-repo",
+   "expect": "allow",
+   "note": "gate show writes nothing: --cwd unrestricted"
+  },
+  {
+   "id": "BG-364",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd hook session-start --cwd {repo}/../other-repo",
+   "expect": "allow",
+   "note": "hook session-start writes nothing: --cwd unrestricted"
+  },
+  {
+   "id": "BG-365",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd {repo}/../other-repo | head -n 5",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd outside the root before a pipe-only entry"
+  },
+  {
+   "id": "BG-366",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd {repo}/pkg --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "every --cwd is checked, not only the first (C002-IF-008 §1.2)"
+  },
+  {
+   "id": "BG-367",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd trace 001 --write --cwd",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd without a folder word cannot be resolved (C002-IF-008 §1.2 rule 2)"
+  },
+  {
+   "id": "BG-368",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd ~/x",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd starting with ~ cannot be resolved (C002-IF-008 §1.2 rule 2)"
+  },
+  {
+   "id": "BG-369",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd init --cwd \"$HOME\"",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd holding $ cannot be resolved (C002-IF-008 §1.2 rule 2)"
+  },
+  {
+   "id": "BG-370",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd change stop 001 --reason x --cwd {repo}/*",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd holding a wildcard cannot be resolved (C002-IF-008 §1.2 rule 2)"
   }
  ]
 }

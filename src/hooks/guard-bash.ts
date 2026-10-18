@@ -6,17 +6,21 @@
 // backticks) is denied; outside any quotes, `;`, `&`, `||`, `>`, `<`, parentheses, braces (PowerShell)
 // and line breaks are denied (GUARD-BASH-002). `|` splits segments: the first must match an entry, the
 // others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI
-// (`sdd …` or `node <path>/sdd.mjs …`, C002-REQ-503) and the version probes, without pipes. When in doubt the guard denies (fail closed).
+// (`sdd …` or `node <path>/sdd.mjs …`, C002-REQ-503) and the version probes, without pipes. A writing
+// sdd subcommand (src/cli/writing-commands.ts) takes `--cwd` only inside the repository root
+// (C002-REQ-521, C002-IF-008 §1.2). When in doubt the guard denies (fail closed).
 import { findWorkspace } from "../workspace/find.ts";
-import { isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
+import { WRITING_COMMANDS, type WritingCommand } from "../cli/writing-commands.ts";
+import { ambiguousWindowsPath, isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
+import { findRepositoryRoot, locateInRepository } from "../io/repo-root.ts";
 import { isArchitectAgent, type HookInput } from "./input.ts";
 
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
 export const RULE_COMPOUND = "GUARD-BASH-002";
-// C002-IF-008 §1 deny summary, without the parentheses of the sdd CLI entry that the rules of
-// C002-REQ-325 (install), C002-REQ-517 (Serena) and C002-REQ-521 (--cwd) add with their tasks.
+// C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the --cwd part of
+// C002-REQ-521; the install (C002-REQ-325) and Serena (C002-REQ-517) parts come with their tasks.
 const ALLOWED =
-  "sdd … or node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+  "sdd … or node <path>/sdd.mjs … (--cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
 type Dialect = "bash" | "powershell";
@@ -142,6 +146,63 @@ function sddEntry(words: string[], raw: string[], cwd: string): boolean {
   return bareSdd(words) || sddCli(words, raw, cwd);
 }
 
+/** The words after the CLI prefix (`sdd`, or `node <path>/sdd.mjs`) of an sdd CLI entry. */
+function cliArgs(words: string[]): string[] {
+  return bareSdd(words) ? words.slice(1) : words.slice(2);
+}
+
+// Groups whose second word names the subcommand, as the CLI's own lookup (src/cli/run.ts findCommand).
+const WRITING_GROUP_NAMES = new Set(WRITING_COMMANDS.filter((w) => w.name.includes(" ")).map((w) => w.name.split(" ")[0]!));
+
+/**
+ * The row of the writing-command table that `args` (the words after the CLI prefix, up to the first
+ * `--`) runs, or null (C002-IF-008 §1.2 "Writing command"). The CLI takes its subcommand from the first
+ * word, with the second for a group; a first word `install` is the `install copilot` row whatever follows.
+ */
+function writingCommand(args: string[]): WritingCommand | null {
+  const [first, second] = args;
+  if (first === undefined) return null;
+  const row = WRITING_GROUP_NAMES.has(first)
+    ? WRITING_COMMANDS.find((w) => w.name === `${first} ${second ?? ""}` || (w.guard === "deny" && w.name.split(" ")[0] === first))
+    : WRITING_COMMANDS.find((w) => w.name === first);
+  if (row === undefined) return null;
+  if (row.when === "with-write") return args.includes("--write") ? row : null;
+  if (row.when === "unless-dry-run") return args.includes("--dry-run") ? null : row;
+  return row;
+}
+
+/** Every `--cwd` folder word among `args` (`--cwd <dir>` or `--cwd=<dir>`); null for a `--cwd` without a word. */
+function cwdWords(args: string[]): (string | null)[] {
+  const found: (string | null)[] = [];
+  args.forEach((w, i) => {
+    if (w === "--cwd") found.push(args[i + 1] ?? null);
+    else if (w.startsWith("--cwd=")) found.push(w.slice("--cwd=".length));
+  });
+  return found;
+}
+
+/**
+ * The `--cwd` rule of C002-IF-008 §1.2 (C002-REQ-521): a writing command may carry `--cwd` only with a
+ * folder that resolves, as written and after link resolution, to the repository root of §1.1 rule 3
+ * or a folder under it. Returns the deny reason, or null when the command passes.
+ */
+function cwdViolation(words: string[], cwd: string): string | null {
+  const all = cliArgs(words);
+  const dashdash = all.indexOf("--");
+  const args = dashdash < 0 ? all : all.slice(0, dashdash);
+  const row = writingCommand(args);
+  if (row === null || row.guard !== "cwd") return null;
+  const root = findRepositoryRoot(cwd);
+  for (const folder of cwdWords(args)) {
+    if (folder === null || folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null)
+      return `sdd ${row.name} with a --cwd the guard cannot resolve (${folder ?? "--cwd"})`;
+    const at = locateInRepository(root, folder, cwd);
+    if (!at.insideWritten) return `sdd ${row.name} with --cwd outside the repository (${at.written})`;
+    if (!at.insideReal) return `sdd ${row.name} with --cwd outside the repository (${at.real})`;
+  }
+  return null;
+}
+
 // Exact word count: `node --version --eval=x` (BG-166) and `node -v -e x` (BG-160) stay denied.
 const VERSION_PROBES: string[][] = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
 function versionProbe(words: string[]): boolean {
@@ -231,12 +292,17 @@ export function decideBash(input: HookInput | null): BashDecision {
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;
-  const allowed = dialect === "powershell" ? sddEntry(first!.words, first!.raw, cwd) || versionProbe(first!.words) : sddEntry(first!.words, first!.raw, cwd) || versionProbe(first!.words) || ripwire(first!.words) || astGrep(first!.words) || gitRead(first!.words);
+  const entry = sddEntry(first!.words, first!.raw, cwd);
+  const allowed = dialect === "powershell" ? entry || versionProbe(first!.words) : entry || versionProbe(first!.words) || ripwire(first!.words) || astGrep(first!.words) || gitRead(first!.words);
   if (!allowed) {
     const reason = pipeOnly(first!.words) && rest.length === 0 ? `${first!.words[0]} is allowed only after |` : `${first!.words[0]} … is not on the allowlist`;
     return deny(rest.length > 0 ? RULE_COMPOUND : RULE_ALLOWLIST, tool, cmd, reason);
   }
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
+  if (entry) {
+    const violation = cwdViolation(first!.words, cwd);
+    if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
+  }
   return { allow: true };
 }
