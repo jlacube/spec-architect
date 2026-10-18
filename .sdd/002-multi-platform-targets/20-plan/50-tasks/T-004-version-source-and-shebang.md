@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: []
 implements: [C002-REQ-511]
 satisfies_ac: [C002-AC-511.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-517, C002-TS-518, C002-TC-517, C002-TC-518]
 components: [C002-COMP-013, C002-COMP-018]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: cd5c2dc, completed_at: 2026-10-18, notes: "Version from plugin.json, sdd --version, shebang line 1; TC-517 bundled row and TC-518; TS-517 tarball row waits for the fx-tgz fixture of T-022; PLG-VER-001 not yet catalogued (defect D-005)" }
 ---
 
 # C002-T-004 — Single version source, bare sdd --version and the executable first line

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T08:41:26Z",
+  "generated_at": "2026-10-18T08:51:09Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 60,
-          "done": 15,
+          "done": 16,
           "blocked": 0,
           "in_progress": 0
         },
@@ -227,6 +227,16 @@
           "id": "D-004",
           "ref": "C002-IF-003",
           "summary": "Found in C002-T-012: (1) architect-sdd-package.md:35 says the npm sdd uses its own templates only 'when CLAUDE_PLUGIN_ROOT is not set'; implemented: it prefers the templates/ folder above its own bundle and falls back to CLAUDE_PLUGIN_ROOT (same folder on Claude Code; prevents the npm CLI reading another package's templates). (2) ERR-CLI-019 message in errors.md contains the editorial note '(the profile and the path as given)', printed verbatim by the CLI. Batch into the next spec revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-005",
+          "ref": "C002-IF-005",
+          "summary": "Found in C002-T-004: the structure check PLG-VER-001 (root package.json version differs from plugin.json, C002-ADR-004) is implemented but named in no errors.md / check catalogue. Batch with D-004.",
           "reporter": "jerome.lacube",
           "date": "2026-10-18",
           "status": "open",
