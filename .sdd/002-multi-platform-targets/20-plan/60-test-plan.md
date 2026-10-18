@@ -18,11 +18,11 @@ file, each case is one `test()` whose name starts with its TS ID.
 
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
-| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host | 116 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
+| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host | 124 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
 | structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 50 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
 | replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 | 23 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
-| eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 25 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
-| manual | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 17 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
+| eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 26 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
+| manual | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
 | unit | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
 
 Mode-tagged scenarios: integration and structure cases tagged `@mode-native`, `@mode-server` or
@@ -44,8 +44,9 @@ change level in a branch are listed in §8.1; the counts above are those of the 
 | fx-tgz | Packed `architect-sdd` tarball installed into a clean temporary prefix with an isolated npm cache | C002-T-022, C002-T-023 |
 | fx-repo | Temporary repository with `.git` and `.sdd/` so the repository-root rule is deterministic (regression-set §4.1) | C002-T-007 |
 | corpora | `tests/guards/path-corpus.json`, `tests/guards/bash-corpus.json` with the replay fields of C002-IF-009 §2 | C002-T-007 … C002-T-011 |
-| fx-cp | Copilot fixture repository with 2 active changes, plus Copilot hook input samples (SessionStart, SubagentStop, PreToolUse) with `agent_type` in the VS Code form (`sdd-spec-writer`), the Copilot CLI form (`architect:sdd-spec-writer`) and absent (session agent) | C002-T-032 |
-| fx-cp-install | Git repository with `src/app.ts` and `README.md`, without `.github/` and `.vscode/`; a fresh copy per test | C002-T-019 (first user, C002-TC-352), C002-T-058 |
+| fx-cp | Copilot fixture repository with 2 active changes and `src/app.ts`, plus Copilot hook input samples (SessionStart, SubagentStop, PreToolUse) with `agent_type` in the VS Code form (`sdd-spec-writer`), the Copilot CLI form (`architect:sdd-spec-writer`), absent (session agent), and of non-Architect subagents: host built-in agents (`general-purpose`, `task`, `explore`), adopter names (`my-reviewer`, `architect:my-reviewer`), an unknown `sdd-` name, `null` and a number | C002-T-032 |
+| fx-cp-install | Git repository with `src/app.ts` and `README.md`, without `.github/`, `.vscode/` and `.sdd/`; a fresh copy per test; also the repository without `.sdd/` of the subagent guard cases (C002-TC-363, C002-TC-364) | C002-T-019 (first user, C002-TC-352), C002-T-058 |
+| fx-outer | `C:/fx/outer` holding `.sdd/`, with the git repository `C:/fx/outer/repo` inside it that has no `.sdd/` of its own (a `.sdd/` above the repository root counts as found, C002-TC-357) | C002-T-032 |
 | pkg-cp, pkg-cp-hooks | Copies of the generated `dist/copilot/` for `sdd-mcp-server` and for `copilot-hooks` at `C:/fx/pkg-cp` and `C:/fx/pkg-cp-hooks` (or a temporary folder the tests substitute), installed into `fx-cp` or `fx-cp-install` with `sdd install copilot --package <folder>`; variants per Examples row (missing file, broken manifest, OpenCode package, path characters) | C002-T-058 (C002-T-033 for the hooks variant) |
 | fx-oc | OpenCode replay fixture of C002-ADR-005: generated package, adopter agent `my-build`, adopter MCP server `fx-fs`, auto-update and sharing off | C002-T-042 |
 | fx-gate | Change 002 with phase 10-spec in review; variant with 00-ideation approved; variant ready to archive | C002-T-037 (from the CHG-001 gate helpers) |
@@ -64,10 +65,10 @@ change level in a branch are listed in §8.1; the counts above are those of the 
 | E-W4 | REF-WIN, PowerShell 7 and Git Bash, each with Node.js 20 LTS and 22 LTS (C002-DOD-015, C002-DOD-016) |
 | E-SER | E-W with Serena 1.7.x installed |
 | E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network; `opencode` at its S-07 tested version on PATH and `@opencode-ai/sdk` pinned to it for OpenCode rows. Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
-| E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; billed to the prepaid API key |
+| E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060; §4.1 "Eval auth"), not billed to the prepaid API key; a session run with `--auth api-key` is billed to the key |
 | E-OCE | OpenCode at its tested version with the Claude model tiers of C002-REQ-105 through the provider of the S-07 record; billed to the prepaid API key (`30-impact/blast-radius.md`, eval cost note) |
-| E-CPC | Copilot CLI at its S-08 tested version (1.0.98), non-interactive with `--no-ask-user`, agents named `architect:<agent>`, each case workspace prepared by `sdd install copilot`; billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 76 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
-| E-VSC | VS Code Insiders and GitHub Copilot Chat at the S-08 tested versions (1.142.0-insider; scope §3.1), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks state as the mode requires; billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
+| E-CPC | Copilot CLI at its S-08 tested version (1.0.98), non-interactive with `--no-ask-user`, agents named `architect:<agent>`, each case workspace prepared by `sdd install copilot`; billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 83 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
+| E-VSC | VS Code Insiders and GitHub Copilot Chat at the S-08 tested versions (1.142.0-insider; scope §3.1), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks enabled in both modes (the subagent guard hook, C002-REQ-327, C002-REQ-629); billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
 
 ## 4. Eval execution and spend
 
@@ -84,34 +85,52 @@ change level in a branch are listed in §8.1; the counts above are those of the 
   for this change (Q-evalbudget-01, Q-evalbudget-02): every `@eval` case passes at the dev tier, one
   passing run per Examples row with at most one rerun after a failure (C002-DOD-001, 002, 003, 006,
   007, 022).
-- **Budget** (Q-evalbudget-03, `questions-log.md` round 4): 40 USD on the prepaid API key for all of
-  CHG-002, in two pools. The **C002-M-07 reserve** of 10 USD is spent only by the release evidence
-  sessions of C002-T-048 step 4, C002-T-049 step 3 (C002-DOD-009, C002-DOD-022) and P-01's OpenCode
-  run to G1 in C002-T-051 step 3 (C002-DOD-021; Q-evalbudget-04, `questions-log.md` round 5); every
-  other paid session on the prepaid key draws on the **general pool** of 30 USD, including a re-run of
-  C002-T-049 rows after a fix (C002-T-049 step 4). Sizes and room for reruns: §4.3. Copilot CLI,
-  VS Code and S-08 sessions are billed in AI Credits to P-01's Copilot plan and are not part of the budget (§4.4).
-- **Top-up precondition** (C002-T-001 step 1): before the first paid session of CHG-002, P-01 tops up
-  the prepaid key so that it holds at least 40 USD minus the ledger total. The key held about 4.77 USD
-  on 2026-10-16, so the top-up is at least about 35.23 USD. C002-T-010 checks the same precondition,
-  because C002-M-02 can reach its paid step before C002-T-001 does.
+- **Eval auth** (P-01, 2026-10-18): paid Claude Code eval sessions (E-CC: C002-T-010 step 5,
+  C002-T-037 step 4, C002-T-038 step 4, C002-T-048 step 4) run with `node evals/harness/run.mjs …
+  --auth subscription` (or `EVAL_AUTH=subscription`) on P-01's Claude Max plan, through the switch of
+  C002-T-060. The harness refuses a subscription session whose `apiKeySource` shows the key, so such
+  a session never falls back to the key, and these sessions draw on no pool of the budget below.
+  `--auth api-key` stays available and is the default when neither the option nor `EVAL_AUTH` is set,
+  so every E-CC command names `--auth subscription`. A Claude Code session run with `--auth api-key`
+  (for example when the plan's usage limit stops a run and P-01 chooses not to wait for its reset) is
+  an API-key session of its owning step's pool under the stop rule. The caps of C002-NFR-105 apply in
+  both modes. P-01 watches the plan's usage limits.
+- **Budget** (Q-evalbudget-03, `questions-log.md` round 4): 40 USD on the prepaid API key for the
+  CHG-002 sessions that bill the key: the S-07 probes, the OpenCode sessions on E-OCE (their billing
+  through OpenRouter is still to be discussed, Q-opencode-01, `questions-log.md` round 6; until then
+  the plan bills them to the key) and any Claude Code session run with `--auth api-key`. The budget
+  has two pools. The **C002-M-07 reserve** of 10 USD is spent only by the release evidence sessions
+  of C002-T-049 step 3 (C002-DOD-009), P-01's OpenCode run to G1 in C002-T-051 step 3 (C002-DOD-021;
+  Q-evalbudget-04, `questions-log.md` round 5) and C002-T-048 step 4 when it runs with `--auth
+  api-key` (C002-DOD-022); every other paid session on the prepaid key draws on the **general pool**
+  of 30 USD, including a re-run of C002-T-049 rows after a fix (C002-T-049 step 4). Sizes and room for
+  reruns: §4.3. Copilot CLI, VS Code and S-08 sessions are billed in AI Credits to P-01's Copilot plan
+  and are not part of the budget (§4.4).
+- **Top-up precondition** (C002-T-001 step 1): before the first paid session of CHG-002 on the
+  prepaid key, P-01 tops up the key so that it holds at least 40 USD minus the ledger total. The key
+  held about 4.77 USD on 2026-10-16, so the top-up is at least about 35.23 USD. C002-T-010 checks the
+  same precondition only for a session it runs with `--auth api-key`.
 - **Ledger:** `evals/results/spend-chg002.json`, created by the first paid session of CHG-002. It
   holds the budget (40), the two pool limits (general 30, reserve 10), each top-up (date, amount) and
-  one entry per paid session on the prepaid key (date, task and step, case and Examples row, host,
-  **pool** `general` or `reserve`, `cost_usd`, result file or, for the S-07 probes and the C002-T-051
-  run, the provider usage reading). A failed session and a session ended by a cap are recorded like any
-  other.
+  one entry per paid session (date, task and step, case and Examples row, host, **`auth`**
+  `api-key` or `subscription` (Claude Code sessions; the S-07 probes and the OpenCode sessions are
+  `api-key`), **pool** `general` or `reserve` for `api-key` entries only, `cost_usd`, result file or,
+  for the S-07 probes and the C002-T-051 run, the provider usage reading). A `subscription` entry
+  keeps its notional `cost_usd` (as `run.mjs` records it) and counts toward no pool total and not
+  toward the 40 USD. A failed session and a session ended by a cap are recorded like any other.
 - **Stop rule, per pool, checked before every paid session on the prepaid key** by the runner, or by
   the person who starts the session when the runner does not read the ledger itself (critic CR-20):
   1. The session's pool is that of its owning step (§4.2, `10-strategy.md` §3a). T = the ledger total
-     **of that pool only**; H = the highest session cost seen so far in either pool, at least
+     **of that pool only**, `api-key` entries only; H = the highest session cost seen so far in either
+     pool or in a `subscription` entry (its notional cost measures the same token use), at least
      0.65 USD (the highest CHG-001 session cost, 0.62 USD, rounded up; the 0.50 USD spend cap of
      C002-NFR-105 is checked after a turn and can be overrun:
      `evals/results/t039-TS-712-2026-10-11T14-05-22-879Z.json` records `cost_usd` 0.62 with
      `result_subtype` `error_max_budget_usd`).
   2. L = 30 USD for a general-pool session; L = 10 USD for a reserve session. For a reserve session of
-     C002-T-051 step 3, T also counts the §4.2 estimate of each of C002-T-048 step 4 and C002-T-049
-     step 3 that has not run yet, so the release evidence keeps its share.
+     C002-T-051 step 3, T also counts the §4.2 estimate of C002-T-049 step 3 if it has not run yet
+     (and of C002-T-048 step 4 only if P-01 has decided to run it with `--auth api-key`), so the
+     release evidence keeps its share.
   3. The session starts only if T + H ≤ L. Otherwise no further paid session of that pool starts: the
      stop and both pool totals go into the task report, and P-01 decides (more budget, fewer rows, or a
      gap recorded at the gate). A pool never spends the other pool's room, so the ledger total stays
@@ -127,6 +146,8 @@ change level in a branch are listed in §8.1; the counts above are those of the 
      rule 2's T plus the run's spend so far (read from the provider's usage view) and H; otherwise the
      run pauses for a decision. The run is one ledger entry with its session count; for later sessions,
      H is that entry's spend divided by its session count (CR-22).
+  7. **Subscription sessions** (`--auth subscription`) are not checked by rules 1 to 6; they are added
+     to the ledger with `auth` `subscription` after they end.
 - **Checkpoint per owning step:** each owning task reports its steps' spend against their §4.2
   estimate. When the C002-T-044 smoke session costs more than 0.30 USD (twice the routing rate), the
   conductor re-estimates C002-T-056 with the measured OpenCode rate and shows it to P-01 before
@@ -149,59 +170,64 @@ sessions below 0.06 USD pull their means down. No CHG-001 session ran on OpenCod
 | S-07 probe | no counterpart: driven by hand, without harness caps (C002-T-001 step 2) | — | 0.50 USD |
 
 The C002-REQ-105 tiers set the model per agent, as in CHG-001. The weighted planning rate is
-0.29 USD per session (32.80 USD for 112 sessions). The review sessions of `t039-*` cost 0.37–0.62 USD
-and include the highest observed session; CHG-002 plans no review eval. The **upper bound** is the
-session count times 0.65 USD. It is not a cap, and the stop rule of §4.1 is what bounds the spend.
+0.29 USD per session (32.80 USD for the 112 Claude-model sessions on the key or on the Claude
+subscription). The review sessions of `t039-*` cost 0.37–0.62 USD and include the highest observed
+session; CHG-002 plans no review eval. The **upper bound** is the session count times 0.65 USD. It
+is not a cap, and the stop rule of §4.1 is what bounds the spend. Claude Code sessions run with
+`--auth subscription` (§4.1 "Eval auth") and appear in their own column with their notional
+estimate; they are not part of the API-key totals.
 
-| Milestone | Owning step (`10-strategy.md` §3a) | API-key sessions | Estimate | Upper bound | Copilot subscription sessions |
-|---|---|---|---|---|---|
-| C002-M-01 | C002-T-001 steps 2 … 7 | about 10 S-07 probes at 0.50 | 5.00 USD | 6.50 USD | about 10 S-08 probes (C002-T-002) |
-| C002-M-02 | C002-T-010 step 5 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows) | 1.25 USD | 3.25 USD | 0 |
-| C002-M-03 | — | 0 (the sdd MCP server is tested without a host) | 0 | 0 | 0 |
-| C002-M-04 | — | 0 (C002-TC-113 and C002-TC-132 carried to C002-T-056) | 0 | 0 | 0 |
-| C002-M-05 | C002-T-037 step 4 | 3 on E-CC at 0.35: the Claude Code rows of C002-TC-215, 217, 219 | 1.05 USD | 1.95 USD | 0 |
-| C002-M-05 | C002-T-038 step 4 | 7 on E-CC at 0.25: the Claude Code rows of C002-TC-506 (1), 509 (2), 510 (2), 511 (1) and `evals/cap11/doctor-no-ripwire.eval.mjs` (1) | 1.75 USD | 4.55 USD | 0 |
-| C002-M-06 | C002-T-044 step 6 | 1 routing smoke on E-OCE at 0.15 | 0.15 USD | 0.65 USD | 0 |
-| C002-M-06 | C002-T-056 steps 2 and 3 | 47 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) (7 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.45 USD | 30.55 USD | 0 |
-| C002-M-06 | C002-T-045 steps 4 and 5 | 0 | 0 | 0 | 5: the smoke, the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526 (1); C002-TC-336 not applicable (0) |
-| C002-M-06 | C002-T-056 step 4, only in the S-07 infeasible-driver branch (§8.1) | 4 on E-OCE at 0.35: C002-TC-133, 211, 222, 223 | 1.40 USD | 2.60 USD | 0 |
-| C002-M-07, reserve | C002-T-048 step 4 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows) | 1.25 USD | 3.25 USD | 0 |
-| C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 |
-| C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 |
-| C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | about 40: C002-TC-615 |
-| C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | about 10 per checklist run on E-VSC (C002-TC-901, including the Copilot toy change to G1); about 20 with one repeat after a failed step |
-| C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
-| **Total** | | **112** (116 in the branch) | **32.80 USD** (34.20 USD in the branch) | 72.80 USD (75.40 USD in the branch) | **about 76** |
+| Milestone | Owning step (`10-strategy.md` §3a) | API-key sessions | Estimate | Upper bound | Claude subscription sessions (`--auth subscription`, notional estimate) | Copilot subscription sessions |
+|---|---|---|---|---|---|---|
+| C002-M-01 | C002-T-001 steps 2 … 7 | about 10 S-07 probes at 0.50 | 5.00 USD | 6.50 USD | 0 | about 10 S-08 probes (C002-T-002) |
+| C002-M-02 | C002-T-010 step 5 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
+| C002-M-03 | — | 0 (the sdd MCP server is tested without a host) | 0 | 0 | 0 | 0 |
+| C002-M-04 | — | 0 (C002-TC-113 and C002-TC-132 carried to C002-T-056) | 0 | 0 | 0 | 0 |
+| C002-M-05 | C002-T-037 step 4 | 0 | 0 | 0 | 3 on E-CC at 0.35: the Claude Code rows of C002-TC-215, 217, 219; 1.05 USD | 0 |
+| C002-M-05 | C002-T-038 step 4 | 0 | 0 | 0 | 7 on E-CC at 0.25: the Claude Code rows of C002-TC-506 (1), 509 (2), 510 (2), 511 (1) and `evals/cap11/doctor-no-ripwire.eval.mjs` (1); 1.75 USD | 0 |
+| C002-M-06 | C002-T-044 step 6 | 1 routing smoke on E-OCE at 0.15 | 0.15 USD | 0.65 USD | 0 | 0 |
+| C002-M-06 | C002-T-056 steps 2 and 3 | 47 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) (7 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.45 USD | 30.55 USD | 0 | 0 |
+| C002-M-06 | C002-T-045 steps 4 and 5 | 0 | 0 | 0 | 0 | 5: the smoke, the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526 (1); C002-TC-336 not applicable (0) |
+| C002-M-06 | C002-T-056 step 4, only in the S-07 infeasible-driver branch (§8.1) | 4 on E-OCE at 0.35: C002-TC-133, 211, 222, 223 | 1.40 USD | 2.60 USD | 0 | 0 |
+| C002-M-07 | C002-T-048 step 4 | 0 (reserve only if run with `--auth api-key`: 1.25 USD, upper 3.25 USD) | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
+| C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 | 0 |
+| C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 | 0 |
+| C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 41: C002-TC-615 and C002-TC-359 |
+| C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
+| C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
+| **Total** | | **92** (96 in the branch) | **27.50 USD** (28.90 USD in the branch) | 59.80 USD (62.40 USD in the branch) | **20** (5.30 USD notional) | **about 83** |
 
 ### 4.3 Budget, reserve and room for reruns
 
 | Pool | Limit | Sessions | Estimate | Room (limit − estimate) |
 |---|---|---|---|---|
-| General pool: C002-M-01 … C002-M-06, including the branch sessions of C002-T-056 step 4 | 30.00 USD | 77 | 25.05 USD | 4.95 USD |
-| C002-M-07 reserve: C002-T-048 step 4, C002-T-049 step 3, C002-T-051 step 3 | 10.00 USD | 39 | 9.15 USD | 0.85 USD |
-| **CHG-002 eval budget** | **40.00 USD** | 116 | **34.20 USD** | **5.80 USD** |
+| General pool: C002-M-01 … C002-M-06 API-key sessions, including the branch sessions of C002-T-056 step 4 | 30.00 USD | 62 | 21.00 USD | 9.00 USD |
+| C002-M-07 reserve: C002-T-049 step 3, C002-T-051 step 3 (C002-T-048 step 4 only with `--auth api-key`) | 10.00 USD | 34 | 7.90 USD | 2.10 USD |
+| **CHG-002 eval budget (prepaid API key)** | **40.00 USD** | 96 | **28.90 USD** | **11.10 USD** |
 
 - The room is the allowance for reruns: at most one rerun per Examples row after a failure (§4.1).
-  4.95 USD is about 17 reruns at the weighted rate; 0.85 USD is about 3 reruns of reserve sessions at
-  the weighted rate. The reserve room does **not** cover a second C002-T-051 run (1.40 USD) or a
-  C002-T-051 run at its upper bound (2.60 USD) after C002-T-048 step 4 and C002-T-049 step 3 have
-  spent their estimates (7.75 USD + 2.60 USD = 10.35 USD); in either case the reserve's stop rule
-  stops the run and P-01 decides. The 40 USD budget is unchanged.
+  9.00 USD is about 31 reruns at the weighted rate; 2.10 USD is about 7 reruns of reserve sessions.
+  The reserve room covers a C002-T-051 run at its upper bound (2.60 USD) or a second C002-T-051 run
+  (1.40 USD) after C002-T-049 step 3 has spent its estimate (6.50 USD + 2.60 USD = 9.10 USD). If
+  C002-T-048 step 4 has to run with `--auth api-key`, its 1.25 USD estimate (3.25 USD upper) comes out
+  of the reserve room, which then holds 0.85 USD and no longer covers those two cases; the reserve's
+  stop rule then stops the run and P-01 decides. The 40 USD budget is unchanged.
 - The general pool also funds the re-runs of C002-T-049 after a fix (§4.1 rule 5), from its room left
   at that time.
   When the branch of §8.1 does not apply, its 1.40 USD adds to the room of the general pool. CHG-001
   ran some cases four or five times while their case files were being written (four
   `t032-TS-214-*` and five `t041-TS-1002-cfg-no-ripwire-*` result files); in CHG-002 a second
   failure reopens the owning task instead of buying more runs.
-- The reserve covers the estimate of the release evidence and about one rerun in thirteen of its
-  sessions. Its sessions run in the order of the task graph (C002-T-048 before C002-T-049) and before
-  any optional rerun of an earlier row. C002-T-051 does not depend on either task and may run first;
-  its stop-rule check then counts their outstanding estimates (§4.1 rule 2). Each pool stops on its
-  own total (§4.1): general-pool sessions at 30 USD of general spend, whatever the reserve has spent,
-  and reserve sessions at 10 USD of reserve spend.
-- Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 20 % more than
-  the planning rates. The upper bounds (72.80 USD) show that the stop rule, not the estimate, keeps
+- The reserve's sessions run in the order of the task graph (C002-T-048 before C002-T-049) and before any
+  optional rerun of an earlier row. C002-T-051 does not depend on either task and may run first; its
+  stop-rule check then counts the outstanding estimate of C002-T-049 step 3 (§4.1 rule 2). Each pool
+  stops on its own total (§4.1): general-pool sessions at 30 USD of general spend, whatever the
+  reserve has spent, and reserve sessions at 10 USD of reserve spend.
+- Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 40 % more than
+  the planning rates. The upper bounds (59.80 USD) show that the stop rule, not the estimate, keeps
   CHG-002 within 40 USD.
+- The 20 Claude subscription sessions (5.30 USD notional, 13.00 USD upper) bill P-01's Claude Max
+  plan, not the key; the ledger keeps them with `auth` `subscription` (§4.1).
 
 ### 4.4 Copilot AI Credits
 
@@ -213,13 +239,17 @@ work costs on the API key. P-01's GitHub Copilot plan (1,500 included AI Credits
 |---|---|---|
 | Tokens per session | 162 CHG-001 dev-tier sessions in `evals/results/` (`tokens_by_model`) | input about 7,200, output about 9,000, cache read about 170,000, cache write about 28,000 |
 | Cost per session | the same sessions; §4.2 rates; §4.2 upper bound | 0.21 USD mean; 0.29 USD weighted; 0.65 USD upper |
-| Copilot sessions | §4.2 (S-08 probes, C002-T-045, C002-T-054, C002-T-050, C002-T-057) | about 76 |
-| Estimate | sessions × 0.21 … 0.29 USD | about 16 … 22 USD = 1,600 … 2,200 credits |
-| Upper bound | sessions × 0.65 USD | about 49 USD = 4,900 credits |
+| Copilot sessions | §4.2 (S-08 probes, C002-T-045, C002-T-054 with C002-TC-359, C002-T-050 with the delegated-edit and roots steps, C002-T-057) | about 83 |
+| Estimate | sessions × 0.21 … 0.29 USD | about 17 … 24 USD = 1,700 … 2,400 credits |
+| Upper bound | sessions × 0.65 USD | about 54 USD = 5,400 credits |
 | Plan capacity | 1,500 included credits per month + 50 USD additional budget | 6,500 credits in one month |
 
-- The estimate fits the plan: the included credits plus about 1 … 7 USD of additional usage; the upper
-  bound fits the 50 USD additional budget. Work spread over two months draws more on included credits.
+- The estimate fits the plan: the included credits plus about 2 … 9 USD of additional usage. The upper
+  bound fits the plan capacity of one month (6,500 credits) but not the 50 USD additional budget
+  alone; work spread over two months draws more on included credits.
+- The subagent guard evidence adds about 7 sessions to the earlier count of 76: C002-TC-359 once on
+  E-CPC, and on E-VSC per checklist run the delegated edit of C002-TC-358 with and without the plugin
+  part and the roots step of C002-T-046, counted twice for one repeat (critic CR-24).
 - Unmeasured: Copilot's own agent loop and the inlined skills (C002-DEC-002) can use more tokens per
   session than Claude Code. C002-T-002 records the credits its S-08 probes used, from GitHub's usage
   view, and the per-session figure replaces the 0.21 … 0.29 USD rate for C002-T-045, C002-T-054,
@@ -268,7 +298,8 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   they run under `npm run replay -- opencode-host` from C002-T-042 on. The hook-adapter cases of
   C002-T-032 (`cap03/hook-adapter.test.ts`) first run the hook commands of C002-IF-008 §4 with
   `@CLI_COPY@` replaced by the bundled CLI; their installed form (the command of `<folder>/hooks.json`
-  written by `sdd install copilot`, CAP-03 acceptance fixtures) is carried to C002-T-058.
+  and of `.github/hooks/architect-guard.json` written by `sdd install copilot`, CAP-03 acceptance
+  fixtures; C002-TC-357 and C002-TC-362 … C002-TC-366 included) is carried to C002-T-058.
 - **Spike branches**: when a row of `10-strategy.md` §4 applies, a case it moves is carried to the
   task and level of §8.1, and a case it makes not applicable is reported "not applicable" with the
   spike record cited. Neither counts as a failure, and neither is passed in another way.
@@ -422,6 +453,16 @@ branch.
 | C002-TC-354 | C002-TS-354 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp | E-W | C002-T-058, C002-T-033 |
 | C002-TC-355 | C002-TS-355 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (root token per row in `install/hooks.template.json`) | E-W | C002-T-035, C002-T-033 |
 | C002-TC-356 | C002-TS-356 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp copied to each folder of the Examples | E-W | C002-T-058 |
+| C002-TC-357 | C002-TS-357 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs of non-Architect subagents (host built-in, adopter, `architect:` adopter, unknown `sdd-` name, `42`, `null`), fx-outer, pkg-cp and pkg-cp-hooks installed into fx-cp | E-W | C002-T-032, C002-T-058, C002-T-033 |
+| C002-TC-358 | C002-TS-358 | manual | `docs/checklists/vscode-copilot.md` delegated-edit step (C002-T-046) | executed in C002-TC-901 by P-01, hooks enabled, once with and once without the plugin part | toy with the planted line of `docs/checklists/fixtures/toy-planted-line.md` in its ideation file and `src/app.ts` | E-VSC | C002-T-046, C002-T-050 |
+| C002-TC-359 | C002-TS-359 | eval | `evals/targets/copilot-guard/TS-359.eval.mjs` | `run.mjs --host copilot-cli --tier dev --filter evals/targets/copilot-guard/TS-359.eval.mjs` | pkg-cp loaded with `--plugin-dir` and installed into a copy of fx-cp whose active change's ideation file holds the planted line | E-CPC | C002-T-045, C002-T-054 |
+| C002-TC-360 | C002-TS-360 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp with pkg-cp and pkg-cp-hooks installed, then `hooks.json` and `plugin.json` deleted from the package | E-W | C002-T-058, C002-T-032 |
+| C002-TC-361 | C002-TS-361 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp with pkg-cp installed, then the package folder renamed | E-W | C002-T-058 |
+| C002-TC-362 | C002-TS-362 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp with injected faults (command without or with an unknown `--mode`, without `--agents`; unreadable input; unclassed tools; no `cwd`; unreadable classes file; fault injection in the workspace lookup and the decision), pkg-cp and pkg-cp-hooks | E-W | C002-T-032, C002-T-058 |
+| C002-TC-363 | C002-TS-363 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp and fx-cp-install hook inputs of non-Architect subagents, pkg-cp and pkg-cp-hooks | E-W | C002-T-032, C002-T-058 |
+| C002-TC-364 | C002-TS-364 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp-install, pkg-cp without `hooks/tool-classes.json` | E-W | C002-T-032, C002-T-058 |
+| C002-TC-365 | C002-TS-365 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs without `agent_type` (with and without `cwd`) and of Architect agents in both name forms, pkg-cp (`--mode sdd-mcp-server`) | E-W | C002-T-032, C002-T-058 |
+| C002-TC-366 | C002-TS-366 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp, pkg-cp without `hooks/tool-classes.json` | E-W | C002-T-032, C002-T-058 |
 | C002-TC-401 | C002-TS-401 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz, fx-repo | E-W | C002-T-017, C002-T-011 |
 | C002-TC-402 | C002-TS-402 | integration | `tests/integration/mcp/faults.test.ts` | `npm test -- mcp/faults` | fx-tgz, fx-repo | E-W | C002-T-020, C002-T-017 |
 | C002-TC-403 | C002-TS-403 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz | E-W | C002-T-017 |
@@ -532,7 +573,7 @@ branch.
 | C002-TC-650 | C002-TS-650 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (PG-163), capability probe stubbed to absent | E-OC | C002-T-040 |
 | C002-TC-651 | C002-TS-651 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (host capabilities per row) | E-W | C002-T-047 |
 | C002-TC-652 | C002-TS-652 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
-| C002-TC-901 | C002-TS-618 | manual | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step, including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 508 and 516 and the assumption steps of C002-T-046 (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
+| C002-TC-901 | C002-TS-618 | manual | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step, including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 358, 508 and 516 and the assumption steps of C002-T-046 (the MCP roots step of C002-IF-002 §3 included) (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
 | C002-TC-902 | C002-TS-205 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/architect-opencode-<version>.zip` and its `INSTALL.md` | REF-WIN, OpenCode tested version | C002-T-051 |
 | C002-TC-903 | C002-TS-306 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile to the first interview question | fresh Windows user profile, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC | C002-T-057 |
 

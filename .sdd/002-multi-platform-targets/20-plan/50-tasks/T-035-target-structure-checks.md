@@ -22,13 +22,16 @@ report: { commit: null, completed_at: null, notes: null }
 
 Add the check family of C002-IF-005 §6 (revised for defect D-003). TGT-* checks compare each
 generated package with its contract (C002-REQ-603): on Copilot the plugin part and the install
-sources (`install/mcp.json`, `install/hooks.template.json`), and no `.mcp.json` or `hooks.json`
+sources (`install/plugin.json`, `install/mcp.json`, `install/hooks.template.json`,
+`hooks/tool-classes.json`), and no `.mcp.json`, `hooks.json` or `plugin.json` at the package root
 (TGT-LAYOUT-001, TGT-MCP-001). They report untranslated constructs, with `${CLAUDE_PLUGIN_ROOT}` and
 `${PLUGIN_ROOT}` accepted in no Copilot context (C002-REQ-602, C002-REQ-326, TGT-PORT-001), Copilot
 generic grants and agents without a `tools` list, and under the hooks fallback a generic grant of
 the conductor or a prompt file (C002-REQ-604, C002-REQ-321, TGT-GRANT-001), the hook-command form
-and the PreToolUse rule per mode (TGT-HOOK-001), the inlining budget (C002-REQ-110, C002-NFR-104),
-the Serena declaration and the tool classes. PLG-VAR-001 runs on the source plugin with the Copilot
+and, in both modes, exactly one PreToolUse entry with `--mode` equal to the table's mode and the ten
+agents in `--agents` (TGT-HOOK-001; C002-REQ-302, C002-REQ-327), the inlining budget (C002-REQ-110,
+C002-NFR-104), the Serena declaration and the tool classes in both modes, the sdd MCP server tools
+and the generic `Write` and `Bash` included (TGT-CLASS-001). PLG-VAR-001 runs on the source plugin with the Copilot
 host-only names `ask_user` and `tool_search_tool` (C002-REQ-113). No check reads a change folder by
 a fixed path (C002-REQ-605). `npm run check` generates into a fresh temporary folder and runs them
 (C002-REQ-601).
@@ -54,8 +57,8 @@ a fixed path (C002-REQ-605). `npm run check` generates into a fresh temporary fo
 3. Read the contract values from the mapping tables and from the C002 interface files through the
    locator, never by a fixed change-folder path.
 4. Copilot: scan `install/mcp.json` and `install/hooks.template.json` as configuration and hook files
-   (contexts `mcp-config` and `hook-command`); a `.mcp.json` or `hooks.json` in the generated package
-   is a layout error, and a server declared there is also a TGT-MCP-001 finding (C002-TS-327,
+   (contexts `mcp-config` and `hook-command`); a `.mcp.json`, `hooks.json` or `plugin.json` at the
+   root of the generated package is a layout error, and a server declared there is also a TGT-MCP-001 finding (C002-TS-327,
    C002-TS-605).
 
 ## Verification

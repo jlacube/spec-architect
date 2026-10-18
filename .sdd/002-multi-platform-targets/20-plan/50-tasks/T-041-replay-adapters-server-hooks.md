@@ -21,9 +21,11 @@ report: { commit: null, completed_at: null, notes: null }
 ## Intent
 
 Feed every applicable corpus case to the `sdd-mcp-server` mechanism, using the server of the packed
-tarball, and to the `copilot-hooks` mechanism, using `sdd hook guard --host copilot` of the Copilot
-package. Each case's input follows C002-IF-009 §2.2, and the decision is read per §2.3. Shell cases
-replay in their own dialect.
+tarball, and to the `copilot-hooks` mechanism, using the PreToolUse command of the fallback package
+(`sdd hook guard --host copilot --mode copilot-hooks --agents …`, C002-IF-008 §2). Each case's input
+follows C002-IF-009 §2.2, and the decision is read per §2.3. Shell cases replay in their own dialect.
+The rules that decide by caller identity and repository (C002-IF-008 §2 rules 3, 4 and 6, the
+subagent guard) are tested by the scenarios of C002-T-032, not by the replay (C002-REQ-626).
 
 ## Targets
 

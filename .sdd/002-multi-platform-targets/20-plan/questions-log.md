@@ -105,3 +105,12 @@ Questions from the architect's and planner's D-003 hand-backs.
 - **Options:** 1. C002-T-024 takes it from Serena's context list at the tested Serena version and records it; C002-T-050 confirms Serena starts (Recommended) · 2. Name it in the spec (C002-IF-001 §6.2)
 - **Answer:** Decide in T-024 (Recommended)
 - **Extracted instructions:** none
+
+## Round 8 — 2026-10-18
+
+P-01's statements in chat.
+
+### Q-evalauth-01 — Billing route of the Claude Code eval sessions
+- **Blocking:** no · **Material:** yes · **Candidates considered:** n/a (P-01 statement)
+- **Answer:** P-01 upgraded to the Claude Max plan ("upgrade to Max done") and asked for an eval auth switch: "add some small work to make the eval runs through the Claude Code subscription instead of the API (with a flag/config to switch)", then "first to add to D-003 fix round and then start building and validate". Built and validated as C002-T-060 (98e6353, 6de8656); Claude Code eval sessions run with `--auth subscription`; `--auth api-key` stays available.
+- **Extracted instructions:** none

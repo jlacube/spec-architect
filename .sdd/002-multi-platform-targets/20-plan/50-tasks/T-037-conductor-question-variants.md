@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-05
 status: todo
-depends_on: [C002-T-028]
+depends_on: [C002-T-028, C002-T-060]
 implements: [C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-214, C002-REQ-311, C002-REQ-312]
 satisfies_ac: [C002-AC-211.1, C002-AC-212.1, C002-AC-213.1, C002-AC-214.1, C002-AC-311.1, C002-AC-312.1]
 verified_by: [C002-TS-215, C002-TS-216, C002-TS-217, C002-TS-218, C002-TS-219, C002-TS-220, C002-TS-221, C002-TS-316, C002-TS-317, C002-TS-318, C002-TS-319, C002-TC-215, C002-TC-216, C002-TC-217, C002-TC-218, C002-TC-219, C002-TC-220, C002-TC-221, C002-TC-316, C002-TC-317, C002-TC-318, C002-TC-319]
@@ -43,8 +43,9 @@ C002-T-050 confirms both. The Claude Code text stays unchanged.
 
 ## Preconditions
 
-- C002-T-028 done (variant mechanism and first drafts).
-- For step 4: the ledger check of test plan §4.1 allows the sessions.
+- C002-T-028 done (variant mechanism and first drafts); C002-T-060 (eval auth switch) done.
+- For step 4: the sessions run with `--auth subscription` (test plan §4.1 "Eval auth"); a session run
+  with `--auth api-key` needs the ledger check of test plan §4.1 first.
 
 ## Step outline (no production code)
 
@@ -55,14 +56,14 @@ C002-T-050 confirms both. The Claude Code text stays unchanged.
 4. **Paid runs on E-CC (the Claude Code rows of C002-TC-215, 217 and 219):** once the integration
    test is green, run each Claude Code Examples row once with the existing harness, which runs Claude
    Code only (`--host` and `--filter` arrive later, with C002-T-044 step 2), at most one rerun after a
-   failure. Check the ledger before every session and add
-   each session's spend after it. The OpenCode rows of these cases and C002-TC-221 and C002-TC-316
+   failure. Run them with `--auth subscription` and add each session to the ledger with its `auth`
+   after it (test plan §4.1). The OpenCode rows of these cases and C002-TC-221 and C002-TC-316
    are carried to C002-T-056; the `@manual-vscode` cases to the checklist (C002-T-046, C002-T-050).
 
 ## Verification
 
 - `npm test -- cap02` and `npm run generate -- --out <tmp>`
-- `node evals/harness/run.mjs evals/targets/question-tool/TS-215.eval.mjs evals/targets/question-tool/TS-217.eval.mjs evals/targets/question-tool/TS-219.eval.mjs --tier dev`
+- `node evals/harness/run.mjs evals/targets/question-tool/TS-215.eval.mjs evals/targets/question-tool/TS-217.eval.mjs evals/targets/question-tool/TS-219.eval.mjs --tier dev --auth subscription`
   (positional case files; `--only` with the IDs of the Claude Code Examples rows where a file also
   holds rows of another host). The run must report at least one case; a total of 0 cases is a failure.
 

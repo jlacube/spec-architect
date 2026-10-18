@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
 status: todo
-depends_on: [C002-T-005, C002-T-009]
+depends_on: [C002-T-005, C002-T-009, C002-T-060]
 implements: [C002-REQ-517, C002-REQ-607]
 satisfies_ac: [C002-AC-517.1, C002-AC-607.1]
 verified_by: [C002-TS-527, C002-TS-528, C002-TS-537, C002-TS-610, C002-TC-527, C002-TC-528, C002-TC-537, C002-TC-610]
@@ -35,18 +35,19 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
 | modify | `tests/integration/cli/helpers.ts` | an optional environment stub for `runBundled`, additive only (hotspot rank 3) |
 | modify | `bench/guards.mjs` | recorded inputs for a Serena command |
 | add | `evals/targets/doctor/TS-537.eval.mjs` | C002-TC-537 (2 Examples rows) on E-CC; C002-T-038 later adds the other doctor cases beside it and C002-T-048 re-runs it |
-| modify | `evals/results/spend-chg002.json` | the spend of this task's 5 paid sessions (step 5); created here if C002-T-001 has not created it yet |
+| modify | `evals/results/spend-chg002.json` | this task's 5 paid sessions (step 5), each with its `auth`; created here if C002-T-001 has not created it yet |
 
 ## Preconditions
 
-- C002-T-005 and C002-T-009 done (same file, serialised).
-- Before the paid runs of step 5: P-01's top-up of C002-T-001 step 1 is done, so the prepaid key holds
-  at least 40 USD minus the ledger total of `evals/results/spend-chg002.json` (on 2026-10-16 the key
-  held about 4.77 USD: top-up at least about 35.23 USD; Q-evalbudget-03). M-02 runs in parallel with
-  M-01, so if C002-T-001 has not reached that step, P-01 does the top-up now. These runs use the caps that
-  `evals/harness/run.mjs` sets for Claude Code today (`maxTurns` 30, `maxBudgetUsd` 0.50); the SDK
-  cap can be overrun (one CHG-001 session cost 0.62 USD), so the ledger check counts the highest
-  observed session cost, not the cap.
+- C002-T-005 and C002-T-009 done (same file, serialised); C002-T-060 (eval auth switch) done.
+- The paid runs of step 5 run with `--auth subscription` on P-01's Claude Max plan (test plan §4.1
+  "Eval auth") and draw on no pool of the API-key budget. Only if one of them has to run with
+  `--auth api-key`: P-01's top-up of C002-T-001 step 1 is done first, so the prepaid key holds at
+  least 40 USD minus the ledger total of `evals/results/spend-chg002.json` (Q-evalbudget-03), and the
+  stop rule of test plan §4.1 is checked before it. These runs use the caps that
+  `evals/harness/run.mjs` sets for Claude Code today (`maxTurns` 30, `maxBudgetUsd` 0.50) in both
+  auth modes; the SDK cap can be overrun (one CHG-001 session cost 0.62 USD), so the stop rule counts
+  the highest observed session cost, not the cap.
 
 ## Step outline (no production code)
 
@@ -59,16 +60,17 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
 5. **Paid runs at the C002-M-02 exit (5 sessions on E-CC):** the 3 cases of regression-set §5 row 1
    (`evals/cap11/doctor-no-ripwire.eval.mjs`, `evals/cap10/TS-1015.eval.mjs`,
    `evals/cap11/TS-1111.eval.mjs`) and the 2 rows of C002-TC-537, one run each, at most one rerun
-   after a failure. Before every session, check the ledger against the budget by the stop rule of
-   test plan §4.1 and stop for P-01 when it says stop; after every session, add its `cost_usd` to the
-   ledger. These runs check the C002-TS-537 assumption on the real host.
+   after a failure, with `--auth subscription`. After every session, add it to the ledger with its
+   `auth` and its (notional) `cost_usd`; a session run with `--auth api-key` is checked by the stop
+   rule of test plan §4.1 before it starts. These runs check the C002-TS-537 assumption on the real
+   host.
 
 ## Verification
 
 - `npm test -- tests/guards`, `npm test -- cap10` and `npm test -- cap11`
 - `npm run bench` (p95 ≤ 300 ms with the new file-system work)
 - The milestone eval runs of step 5: `node evals/harness/run.mjs evals/cap11/doctor-no-ripwire.eval.mjs
-  evals/cap10/TS-1015.eval.mjs evals/cap11/TS-1111.eval.mjs evals/targets/doctor/TS-537.eval.mjs --tier dev`
+  evals/cap10/TS-1015.eval.mjs evals/cap11/TS-1111.eval.mjs evals/targets/doctor/TS-537.eval.mjs --tier dev --auth subscription`
   (positional case files, no `--host`: the existing runner runs Claude Code only; `--host` and
   `--filter` arrive with C002-T-044 step 2)
 

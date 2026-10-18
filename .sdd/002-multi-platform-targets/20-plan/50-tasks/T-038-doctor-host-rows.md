@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-05
 status: todo
-depends_on: [C002-T-013, C002-T-014, C002-T-028]
+depends_on: [C002-T-013, C002-T-014, C002-T-028, C002-T-060]
 implements: [C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510]
 satisfies_ac: [C002-AC-504.1, C002-AC-505.1, C002-AC-506.1, C002-AC-507.1, C002-AC-508.1, C002-AC-509.1, C002-AC-510.1]
 verified_by: [C002-TS-506, C002-TS-507, C002-TS-508, C002-TS-509, C002-TS-510, C002-TS-511, C002-TS-512, C002-TS-513, C002-TS-514, C002-TS-515, C002-TS-516, C002-TS-526, C002-TS-639, C002-TC-506, C002-TC-507, C002-TC-508, C002-TC-509, C002-TC-510, C002-TC-511, C002-TC-512, C002-TC-513, C002-TC-514, C002-TC-515, C002-TC-516, C002-TC-526, C002-TC-639]
@@ -23,7 +23,9 @@ report: { commit: null, completed_at: null, notes: null }
 Make the doctor table and the toolchain record host-dependent through wiring variants (C002-IF-006).
 The table gains a host row (C002-REQ-504), an sdd CLI row on the generated targets with the exact
 version check (C002-REQ-509) and an `untested` status for an unrecorded host version
-(C002-REQ-508). Under the hooks fallback it gains a hooks row (C002-REQ-510). The failure conditions of
+(C002-REQ-508). On Copilot in VS Code it gains a hooks row in both enforcement modes, because the
+Copilot subagent guard hook is a PreToolUse hook in both (C002-REQ-510, C002-REQ-327): `ok` only when
+hooks are read as enabled, `error` when they are disabled or the state cannot be read. The failure conditions of
 C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506), and the source
 `commands/doctor.md` text does not change, so `TS-1116` stays green.
 
@@ -39,20 +41,24 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 
 ## Preconditions
 
-- C002-T-013, C002-T-014 and C002-T-028 done.
-- For step 4: the ledger check of test plan §4.1 allows the sessions.
+- C002-T-013, C002-T-014 and C002-T-028 done; C002-T-060 (eval auth switch) done.
+- For step 4: the sessions run with `--auth subscription` (test plan §4.1 "Eval auth"); a session run
+  with `--auth api-key` needs the ledger check of test plan §4.1 first.
 
 ## Step outline (no production code)
 
 1. Write the remedies rows with the install command for the package's own `architect-sdd` version
    (C002-REQ-509).
 2. Report a `.cmd`-only tool as `error` with a native-install fix under server mode (C002-IF-006 §2).
+   Write the Copilot hooks row into the Copilot doctor variant of both modes, not only the fallback's
+   (C002-REQ-510).
 3. Write the case files; the integration test must be green before any paid run.
 4. **Paid runs on E-CC at the C002-M-05 exit:** the Claude Code rows of C002-TC-506, 509, 510 and
    511, and the doctor eval of regression-set §5 row 1 (`evals/cap11/doctor-no-ripwire.eval.mjs`),
    one run each, at most one rerun after a failure. The other §5 rows run only if a source agent,
-   command or skill text changed (it should not, C002-CON-10). Check the ledger before every session
-   and add each session's spend after it. The OpenCode rows are carried to C002-T-056 and the
+   command or skill text changed (it should not, C002-CON-10). Run them with `--auth subscription`
+   and add each session to the ledger with its `auth` after it (test plan §4.1); only a session run
+   with `--auth api-key` is checked by the stop rule first. The OpenCode rows are carried to C002-T-056 and the
    Copilot CLI rows of C002-TC-513 and C002-TC-526 to C002-T-045; the `@manual-vscode` cases to the
    checklist.
 
@@ -61,7 +67,8 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 - `npm test -- cap05` and `npm test -- cap11` (`TS-1116.test.ts`)
 - `node evals/harness/run.mjs <case files> --tier dev` with the Claude Code doctor cases of step 4 as
   positional case files (`evals/targets/doctor/TS-506.eval.mjs`, `TS-509`, `TS-510`, `TS-511` and
-  `evals/cap11/doctor-no-ripwire.eval.mjs`; `--only` for the Claude Code Examples rows), no `--host`:
+  `evals/cap11/doctor-no-ripwire.eval.mjs`; `--only` for the Claude Code Examples rows) and
+  `--auth subscription`, no `--host`:
   C002-T-038 does not wait for C002-T-044, which adds `--host` and `--filter`
 
 ## Done when

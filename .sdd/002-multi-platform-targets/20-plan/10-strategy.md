@@ -54,14 +54,16 @@ that every host runs, then the packages, and the release evidence last:
 | Replay suite before the final S-07 replay | The S-07 outcomes `edit_rules_match_path_corpus` and `bash_rules_match_shell_corpus` are the corpus replay of the generated rules (C002-IF-009 §3). S-07 records provisional values from a sample in M-01; C002-T-043 records the final values | C002-IF-009 §3; architecture §6.2 (OpenCode `bash` rules) |
 | Replay in its own command | The OpenCode replay starts a loopback stub (C002-ADR-005), and `tests/no-network.mjs` fails any test that opens a socket | regression-set §4.3 |
 | Waiver-aware lint loop before anything else | `frontend.test.ts` lints every change whose current phase is approved and fails on the 9 waived LINT-DELTA-001 findings once CHG-002 has an approved current phase; `npm run check` must be green for every task report. The conductor fixes it before G3; C002-T-053 verifies it | C002-DEC-008; regression-set §4.2; critic CR-10 |
-| Paid evals only at named task steps, each case once per owning step | Every paid session has an owning task step (§3a). CHG-002 eval budget 40 USD on the prepaid API key: a 30 USD general pool and a ring-fenced 10 USD reserve for the C002-M-07 release evidence, each with its own stop (Q-evalbudget-03, Q-evalbudget-04); P-01 tops up at least about 35.23 USD before the first paid session (C002-T-001 step 1); the ledger is checked before every paid session by the stop rule of test plan §4.1 | `questions-log.md` round 4; test plan §4 |
+| Paid evals only at named task steps, each case once per owning step | Every paid session has an owning task step (§3a). Claude Code sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060, P-01 2026-10-18) and draw on no pool; CHG-002 eval budget 40 USD on the prepaid API key for the S-07 probes, the OpenCode sessions and any `--auth api-key` session: a 30 USD general pool and a ring-fenced 10 USD reserve for the C002-M-07 release evidence, each with its own stop (Q-evalbudget-03, Q-evalbudget-04); P-01 tops up at least about 35.23 USD before the first paid session on the key (C002-T-001 step 1); the ledger records each session's `auth` and is checked before every API-key session by the stop rule of test plan §4.1 | `questions-log.md` round 4; test plan §4 |
+| Eval auth switch first | C002-T-060 (done in commits 98e6353 and 6de8656) precedes every task with a paid Claude Code step (C002-T-010, C002-T-037, C002-T-038, C002-T-048), so none of them bills the key by default | test plan §4.1 "Eval auth" |
+| Subagent guard inside the existing Copilot tasks | The Copilot subagent guard hook (C002-REQ-327 … C002-REQ-330) is the same hook command, hook template and install as the guard of the hooks fallback, so it is folded into C002-T-032 (rules, now L), C002-T-033 (entry and classes in both modes) and C002-T-058 (workspace hook file before the agents), not split into a new task that would edit the same files; its evidence joins the checklist (C002-T-046, C002-T-050) and the Copilot CLI injection run (C002-T-045, C002-T-054) | C002-IF-008 §2; C002-IF-007 §Install; critic CR-24 |
 | Release evidence and release per target | The two targets are decided independently (`75-rollout.md` §1): a Copilot task that slips must not hold back the OpenCode release. C002-T-049 and C002-T-052 serve OpenCode; C002-T-054, C002-T-057 and C002-T-055 serve Copilot. Shared tooling (C002-T-041, C002-T-045, C002-T-046, C002-T-047) and the Claude Code regression run (C002-T-048) stay common | critic CR-9 |
 
 ## 3. Milestones
 
 | ID | Name | Goal | Exit criterion | Tasks |
 |---|---|---|---|---|
-| C002-M-01 | Spikes and P-01 prerequisites (P-01, 2026-10-16: C002-T-002 runs first; C002-T-001 waits for the OpenRouter discussion, `questions-log.md` round 6) | The host facts that decide the enforcement modes, and the npm name, are known before any design-dependent task | P-01 has topped up the prepaid key (C002-T-001 step 1) and named the Copilot subscription (C002-T-002); `docs/spikes/S-07-opencode.md` and `docs/spikes/S-08-copilot-vscode.md` hold the frontmatter of C002-IF-009 §3 and P-01's sign-off; S-07 records whether the stub-model driver of C002-ADR-005 is feasible; every outcome that contradicts the spec is raised as a defect and triaged (§4); P-01 has confirmed the npm account and that the name `architect-sdd` is available | C002-T-001, C002-T-002, C002-T-003 |
+| C002-M-01 | Spikes and P-01 prerequisites (P-01, 2026-10-16: C002-T-002 runs first; C002-T-001 waits for the OpenRouter discussion, `questions-log.md` round 6) | The host facts that decide the enforcement modes, and the npm name, are known before any design-dependent task | P-01 has topped up the prepaid key (C002-T-001 step 1) and named the Copilot subscription (C002-T-002); `docs/spikes/S-07-opencode.md` and `docs/spikes/S-08-copilot-vscode.md` hold the frontmatter of C002-IF-009 §3 and P-01's sign-off; S-07 records whether the stub-model driver of C002-ADR-005 is feasible; every outcome that contradicts the spec is raised as a defect and triaged (§4); P-01 has confirmed the npm account and that the name `architect-sdd` is available; the eval auth switch passes its unit tests and the subscription smoke (C002-T-060) | C002-T-001, C002-T-002, C002-T-003, C002-T-060 |
 | C002-M-02 | Shared guard and CLI deltas | Claude Code runs the new allowlist, the Serena and `--cwd` confinement and the new CLI commands with no other change in behaviour | `npm test` green, including the regression set of `30-impact/regression-set.md` §3 and the waiver-aware lint loop (C002-T-053); `npm run bench` guard p95 ≤ 300 ms; defect D-011 of CHG-001 closed; `npm run package` produces Claude Code zips without `targets/`; the 5 E-CC sessions of C002-T-010 step 5 pass; the `sdd install` deny cases pass (C002-T-059) | C002-T-004 … C002-T-015, C002-T-053, C002-T-059 |
 | C002-M-03 | sdd MCP server and `architect-sdd` | A packed `architect-sdd` tarball provides `sdd` and `sdd-mcp`, tested without a host | Every C002-CAP-04 scenario passes against the packed tarball; the install smoke test passes in the 4 shell and Node.js combinations; the licence check covers both bundles; the MCP benchmarks meet C002-NFR-101 and C002-NFR-102 | C002-T-016 … C002-T-023 |
 | C002-M-04 | Target generator and packages | One `npm run package` writes both target packages and their zips from the source plugin, `npm run check` checks them, and `sdd install copilot` installs the Copilot package into a repository | Every untagged and `@mode-*` scenario of C002-CAP-01, C002-CAP-02 (package layout and rules) and C002-CAP-03 (package, hooks and install command) passes; `npm run package` writes `dist/architect-opencode-<version>.zip` and `dist/architect-copilot-<version>.zip` matching their folders (Q-release-01); `npm run check` green with the target structure step; determinism and generation benchmark recorded | C002-T-024 … C002-T-036, C002-T-058 |
@@ -73,30 +75,32 @@ that every host runs, then the packages, and the release evidence last:
 
 Every paid session belongs to one task step. Session counts and rates are those of test plan §4.2;
 the stop rule and the C002-M-07 reserve are those of test plan §4.1 (40 USD, Q-evalbudget-03). Before
-every paid session the runner checks the ledger `evals/results/spend-chg002.json`; after it, the
-session's `cost_usd` is added.
+every paid session on the prepaid key the runner checks the ledger `evals/results/spend-chg002.json`;
+after every paid session, the session is added with its `auth` and `cost_usd`. "Claude subscription"
+means `--auth subscription` on P-01's Claude Max plan (C002-T-060); a Claude Code session that has to
+run with `--auth api-key` bills the prepaid key from the pool of its owning step.
 
 | Group | Milestone row of test plan §4.2 | Billed to | Owning task and step |
 |---|---|---|---|
 | P-01 top-up before any paid session | — | prepaid key | C002-T-001 step 1 (P-01) |
 | S-07 probes | spikes | prepaid key | C002-T-001 step 2 (probe spend limit) and steps 3 … 7 |
 | S-08 probes | spikes | Copilot subscription | C002-T-002 steps 2 … 6 |
-| The 3 cases of regression-set §5 row 1 and the 2 rows of C002-TC-537 | guard and CLI deltas | prepaid key | C002-T-010 step 5 |
-| Claude Code rows of C002-TC-215, 217, 219 | workflow on every host (part) | prepaid key | C002-T-037 step 4 |
-| Claude Code rows of C002-TC-506, 509, 510, 511 and the doctor eval of regression-set §5 row 1 | workflow on every host (rest) | prepaid key | C002-T-038 step 4 |
+| The 3 cases of regression-set §5 row 1 and the 2 rows of C002-TC-537 | guard and CLI deltas | Claude subscription | C002-T-010 step 5 |
+| Claude Code rows of C002-TC-215, 217, 219 | workflow on every host (part) | Claude subscription | C002-T-037 step 4 |
+| Claude Code rows of C002-TC-506, 509, 510, 511 and the doctor eval of regression-set §5 row 1 | workflow on every host (rest) | Claude subscription | C002-T-038 step 4 |
 | OpenCode runner smoke | verification tooling (part) | prepaid key | C002-T-044 step 6 |
 | Carried OpenCode rows: C002-TC-113, 132, the OpenCode rows of 215, 217, 219, 221, 316, 506, 507, 509 … 515, 639, and C002-TC-613 with the C001-CAP-02 interview and gate cases, 634, 635 | verification tooling (rest) | prepaid key | C002-T-056 steps 2 and 3 (step 4 only under the infeasible-driver branch) |
 | Copilot CLI runner smoke and carried Copilot CLI rows (Copilot rows of C002-TC-513, C002-TC-526) | verification tooling, Copilot column | Copilot subscription | C002-T-045 steps 4 and 5 |
 | OpenCode release evidence: C002-TC-612 routing and at least 20 injection cases | release evidence, reserve | prepaid key | C002-T-049 step 3 |
-| Claude Code regression run | release evidence, reserve | prepaid key | C002-T-048 step 4 |
+| Claude Code regression run | release evidence | Claude subscription (reserve only with `--auth api-key`) | C002-T-048 step 4 |
 | P-01's OpenCode toy change to G1 (C002-TC-902, C002-DOD-021) | release evidence, reserve | prepaid key (Q-evalbudget-04) | C002-T-051 step 3 (P-01) |
 | Re-runs of C002-T-049 step 3 rows after a fix moved the release-candidate commit | release evidence, re-runs | prepaid key, general pool | C002-T-049 step 4 |
-| Copilot release evidence: C002-TC-615 | release evidence, Copilot column | Copilot subscription | C002-T-054 step 3 |
-| VS Code checklist runs, including the Copilot toy change to G1 | release evidence, Copilot column | Copilot subscription | C002-T-050 steps 2 and 3 (P-01) |
+| Copilot release evidence: C002-TC-615 and C002-TC-359 | release evidence, Copilot column | Copilot subscription | C002-T-054 step 3 |
+| VS Code checklist runs, including the Copilot toy change to G1 and the delegated edit of C002-TC-358 | release evidence, Copilot column | Copilot subscription | C002-T-050 steps 2 and 3 (P-01) |
 | Copilot clean-profile run to the first question | release evidence, Copilot column | Copilot subscription | C002-T-057 step 2 (P-01) |
 
-The reserve for the release evidence is spent only by C002-T-048 step 4, C002-T-049 step 3 and
-C002-T-051 step 3. Every other session on the prepaid key, including a re-run of C002-T-049 after a fix,
+The reserve for the release evidence is spent only by C002-T-049 step 3, C002-T-051 step 3 and
+C002-T-048 step 4 when it runs with `--auth api-key`. Every other session on the prepaid key, including a re-run of C002-T-049 after a fix,
 draws on the general pool. Each pool stops on its own limit (test plan §4.1), so a session of one pool
 never spends the other pool's room; at a stop, P-01 decides.
 
@@ -116,8 +120,11 @@ spec; defect D-003 revised it (workspace agents and `.vscode/mcp.json` written b
 copilot`, the Copilot guard hook keyed by `agent_type`, `ask_user`, `<server>-<tool>` and
 `<plugin>:<agent>` names, no root token in hook commands). The plan follows that revision:
 C002-T-058 and C002-T-059 are added; C002-T-024, C002-T-027, C002-T-031 … C002-T-033, C002-T-035,
-C002-T-045 … C002-T-047, C002-T-050 and C002-T-054 … C002-T-057 are revised. The three S-08 branches
-below are therefore **not taken**. Each would come back only with a later spike record for a new
+C002-T-045 … C002-T-047, C002-T-050 and C002-T-054 … C002-T-057 are revised. After the critic's D-003
+review the spec added the Copilot subagent guard hook in both modes (C002-REQ-327 … C002-REQ-330,
+Q-safety-06), its workspace hook file and the `install/plugin.json` gating; the plan folds them into
+C002-T-031 … C002-T-033, C002-T-035, C002-T-038, C002-T-045 … C002-T-047, C002-T-050, C002-T-054 and
+C002-T-058 (§2). The three S-08 branches below are therefore **not taken**. Each would come back only with a later spike record for a new
 tested version (C002-REQ-621), through a spec revision and a plan revision, not by this table alone:
 
 | Spike outcome | Effect on the plan |
@@ -136,8 +143,12 @@ the task that settles it; a refuted assumption is a spec defect:
 | `ask_user`: its `tools` grant name, input shape and result without a choice; whether it needs `chat.askQuestions.enabled` | C002-IF-001 §6.1, C002-REQ-304, C002-REQ-311 | interview and gate steps, C002-T-050 (C002-TC-317, 318, 319) |
 | Prompt file names and slash commands (no collision with a VS Code built-in) | C002-REQ-317 | C002-TC-329 in C002-T-050 |
 | Copilot CLI per-session MCP option (`--additional-mcp-config`, else `mcp-config.json` of the Copilot home; no servers file when CLI starts `.vscode/mcp.json`) | C002-IF-010 §1 | C002-T-045 step 1 |
-| `copilot-chat` 0.35.3 is the Copilot Chat of the tested Insiders build | C002-IF-009 §3 | P-01's confirmation before C002-T-024 writes the table |
-| Serena `--context` for Copilot VS Code (not in the record) | C002-IF-001 §6.2, C002-REQ-301 | P-01's answer to Q-serena-ctx-01 (`handoff.md` "Open points") before C002-T-024; the checklist confirms Serena starts |
+| `copilot-chat` 0.35.3 is the Copilot Chat of the tested Insiders build | C002-IF-009 §3 | settled: P-01 confirmed it (Q-versions-02, `questions-log.md` round 7); C002-T-024 step 3 writes it |
+| Serena `--context` for Copilot VS Code (not in the record) | C002-IF-001 §6.2, C002-REQ-301 | settled by P-01's answer to Q-serena-ctx-01 (`questions-log.md` round 7): C002-T-024 step 4 takes it from Serena's context list at the tested Serena version and records it; the checklist confirms Serena starts (C002-T-050) |
+| VS Code offers its workspace folders as MCP roots, first folder first, so a write lands in the open repository's `.sdd/` | C002-IF-002 §3 | roots step of the checklist, which names the expected `.sdd/` path (C002-T-046, C002-T-050; critic CR-26) |
+| VS Code adds no agent, prompt file or skill from a registered package folder without `plugin.json` (else agents and prompts move under `install/`) | C002-IF-005 §3 | fresh-install step before the install, C002-T-046 and C002-T-050 |
+| VS Code and Copilot CLI load `.github/hooks/architect-guard.json` with the input of plugin-level hooks, `agent_type` included | C002-IF-005 §3 | VS Code: delegated-edit step with the plugin part disabled (C002-T-046, C002-T-050); Copilot CLI: C002-T-045 step 1 |
+| The host offers its built-in agents to the workspace conductor, and their tool calls carry `agent_type` (else Q-safety-06 returns to P-01) | C002-IF-005 §3, C002-REQ-327 | delegated-edit step, C002-TC-358 (C002-T-050); Copilot CLI injection case C002-TC-359 (C002-T-054) |
 | S-07 `agent_tools_closed: false` | Spec revision with P-01, as for a deferred S-08 record (C002-IF-009 §3). The release check refuses the OpenCode target (ERR-REL-013) until the revision |
 | S-07 stub-model driver infeasible | A new ADR supersedes C002-ADR-005 with P-01's answer to Q-replay-01 (`questions-log.md` round 1). (1) C002-T-042 builds the fallback replay adapter, which evaluates OpenCode's permission module from its source at the tested tag; the permission-decision scenarios (C002-TC-207, 209, 213, 630, 646, 647, 652) and the corpus replay run through it. (2) C002-T-042 still delivers the session driver `evals/harness/opencode/driver.mjs` against the real provider, which C002-T-044 builds on in either branch (C002-T-001 step 5 records that this works); C002-TC-226 reads the command list through the server API with that driver and needs no model call. (3) The scenarios in which an agent must issue a call in a running session — C002-TC-133 (adopter MCP tool), C002-TC-211 (edit applied for `my-build`), C002-TC-222 and C002-TC-223 (post-write feedback) — move to the OpenCode eval runner as real-model eval cases on E-OCE, run by C002-T-056 within the budget (about 4 more sessions; the test-designer re-levels them). If a real-model session cannot make the agent issue the scenario's call reliably, the implementer raises a spec defect against the scenario's requirement (C002-REQ-113 for C002-TS-133, C002-REQ-210 for C002-TS-211, C002-REQ-215 for C002-TS-222 and C002-TS-223) instead of passing it another way |
 | S-07 `question_answerable_by_script: false` | The OpenCode rows of every scripted-answer case cannot run as specified (C002-REQ-610). C002-T-001 step 6 raises a spec defect against C002-REQ-610 that lists them: the OpenCode rows of C002-TC-215, 217, 219, and C002-TC-221, 316, 613, 634, 635. Until the revision, C002-T-037 still writes their case files, C002-T-056 skips them and reports them not applicable with the S-07 record cited, and the release check reads the revision's outcome. The Claude Code rows of C002-TC-215, 217 and 219 are unaffected (the Claude Code harness answers through the SDK) |

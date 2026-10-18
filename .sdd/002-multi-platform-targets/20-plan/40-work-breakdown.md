@@ -16,6 +16,7 @@ flowchart TB
     C002_T_001["T-001 Spike S-07: OpenCode (P-01 top-up first)"]
     C002_T_002["T-002 Spike S-08: Copilot in VS Code"]
     C002_T_003["T-003 P-01: npm account and name"]
+    C002_T_060["T-060 Eval auth switch (built)"]
   end
   subgraph M02["C002-M-02 Shared guard and CLI deltas"]
     C002_T_053["T-053 Lint loop honours waivers"]
@@ -52,8 +53,8 @@ flowchart TB
     C002_T_029["T-029 OpenCode emitter"]
     C002_T_030["T-030 OpenCode permissions"]
     C002_T_031["T-031 Copilot emitter"]
-    C002_T_032["T-032 Copilot hook adapter (agent_type)"]
-    C002_T_033["T-033 Copilot hook template and tool classes"]
+    C002_T_032["T-032 Copilot hook adapter (agent_type, mode, subagent guard)"]
+    C002_T_033["T-033 Copilot hook template (both modes) and tool classes"]
     C002_T_034["T-034 Packaging runs the generator, target zips"]
     C002_T_035["T-035 Target structure checks"]
     C002_T_036["T-036 Determinism and benchmark"]
@@ -92,6 +93,7 @@ flowchart TB
   C002_T_008 --> C002_T_009
   C002_T_005 --> C002_T_010
   C002_T_009 --> C002_T_010
+  C002_T_060 --> C002_T_010
   C002_T_006 --> C002_T_012
   C002_T_005 --> C002_T_013
   C002_T_006 --> C002_T_013
@@ -154,9 +156,11 @@ flowchart TB
   C002_T_033 --> C002_T_035
   C002_T_034 --> C002_T_036
   C002_T_028 --> C002_T_037
+  C002_T_060 --> C002_T_037
   C002_T_013 --> C002_T_038
   C002_T_014 --> C002_T_038
   C002_T_028 --> C002_T_038
+  C002_T_060 --> C002_T_038
   C002_T_030 --> C002_T_039
   C002_T_033 --> C002_T_039
   C002_T_006 --> C002_T_040
@@ -191,6 +195,7 @@ flowchart TB
   C002_T_044 --> C002_T_048
   C002_T_045 --> C002_T_048
   C002_T_047 --> C002_T_048
+  C002_T_060 --> C002_T_048
   C002_T_036 --> C002_T_049
   C002_T_041 --> C002_T_049
   C002_T_043 --> C002_T_049
@@ -228,9 +233,12 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 59 tasks weigh 119 in total (17 S, 24 M, 18 L). The longest chain
-weighs 33 and ends with the Copilot release (unchanged by the D-003 plan update: C002-T-058 finishes
-at 21, four units before C002-T-044, so C002-T-045 still starts at 25); the OpenCode release ends one unit earlier, at 32, and
+Weights S = 1, M = 2, L = 3. The 60 tasks weigh 121 in total (18 S, 23 M, 19 L). The longest chain
+weighs 33 and ends with the Copilot release (unchanged by the D-003 plan updates: C002-T-032, now L
+for the subagent guard, finishes at 11, before C002-T-031 at 16, so C002-T-033 still finishes at 18
+and C002-T-058 at 21, four units before C002-T-044, and C002-T-045 still starts at 25; C002-T-060,
+the eval auth switch, is already built and finishes at 1, before C002-T-010, C002-T-037, C002-T-038
+and C002-T-048 need it); the OpenCode release ends one unit earlier, at 32, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
 **Overall (to C002-T-055, weight 33):**
@@ -280,6 +288,7 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-01 | C002-T-001 | Spike S-07: OpenCode at its tested version | L | — |
 | C002-M-01 | C002-T-002 | Spike S-08: GitHub Copilot in VS Code and Copilot CLI | L | — |
 | C002-M-01 | C002-T-003 | P-01: npm account and availability of the name architect-sdd | S | — |
+| C002-M-01 | C002-T-060 | Eval harness: auth switch between the prepaid API key and P-01's Claude subscription | S | — |
 | C002-M-02 | C002-T-053 | Approved-phase lint loop of frontend.test.ts excludes waived findings | S | — |
 | C002-M-02 | C002-T-004 | Single version source, bare sdd --version and the executable first line | M | — |
 | C002-M-02 | C002-T-005 | Shared repository-root helper | S | — |
@@ -287,7 +296,7 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-02 | C002-T-007 | Guard corpora format for per-case cwd, environment and replay fields | M | — |
 | C002-M-02 | C002-T-008 | Bash guard: bare sdd and node --version (closes CHG-001 defect D-011) | S | T-007 |
 | C002-M-02 | C002-T-009 | Writing-command table as a single source and the --cwd confinement | M | T-005, T-006, T-008 |
-| C002-M-02 | C002-T-010 | Bash guard: Serena commands confined to a data folder outside the repository | M | T-005, T-009 |
+| C002-M-02 | C002-T-010 | Bash guard: Serena commands confined to a data folder outside the repository | M | T-005, T-009, T-060 |
 | C002-M-02 | C002-T-011 | Path guard core: memory-folder option | S | — |
 | C002-M-02 | C002-T-012 | CLI: template show and template list, confined to the profile folder | M | T-006 |
 | C002-M-02 | C002-T-013 | CLI: --user-data and --read-only for the Serena commands | M | T-005, T-006 |
@@ -310,14 +319,14 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-04 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | L | T-022, T-026, T-028 |
 | C002-M-04 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | L | T-009, T-010, T-029 |
 | C002-M-04 | C002-T-031 | Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes | L | T-021, T-026, T-028 |
-| C002-M-04 | C002-T-032 | CLI: Copilot hook adapter (hook guard by agent_type, session start, subagent stop) | M | T-002, T-006, T-010, T-011, T-059 |
-| C002-M-04 | C002-T-033 | Copilot package: hook template, Copilot guard hook and tool classes | M | T-031, T-032 |
+| C002-M-04 | C002-T-032 | CLI: Copilot hook adapter (hook guard by agent_type and mode, subagent guard, session start, subagent stop) | L | T-002, T-006, T-010, T-011, T-059 |
+| C002-M-04 | C002-T-033 | Copilot package: hook template, Copilot guard and subagent guard hook, tool classes | M | T-031, T-032 |
 | C002-M-04 | C002-T-034 | npm run package runs the generator and zips each target | S | T-022, T-029, T-031 |
 | C002-M-04 | C002-T-035 | Target structure checks and the npm run check step | L | T-022, T-030, T-033 |
 | C002-M-04 | C002-T-036 | Generation determinism test and generation benchmark | S | T-034 |
 | C002-M-04 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | L | T-005, T-009, T-031, T-033 |
-| C002-M-05 | C002-T-037 | Conductor: interview and gate variants for the host question tools | M | T-028 |
-| C002-M-05 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | L | T-013, T-014, T-028 |
+| C002-M-05 | C002-T-037 | Conductor: interview and gate variants for the host question tools | M | T-028, T-060 |
+| C002-M-05 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | L | T-013, T-014, T-028, T-060 |
 | C002-M-05 | C002-T-039 | README sections for OpenCode and Copilot VS Code | S | T-030, T-033 |
 | C002-M-06 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | L | T-006, T-007 |
 | C002-M-06 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | M | T-020, T-022, T-033, T-040 |
@@ -328,7 +337,7 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-06 | C002-T-046 | Manual VS Code checklist and its record template | M | T-033, T-037, T-038, T-058 |
 | C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046 |
 | C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044 |
-| C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047 |
+| C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-036, T-041, T-043, T-044, T-048, T-056 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
 | C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051 |

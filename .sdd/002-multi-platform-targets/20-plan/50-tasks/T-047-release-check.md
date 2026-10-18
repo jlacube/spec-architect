@@ -11,7 +11,7 @@ implements: [C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-62
 satisfies_ac: [C002-AC-617.1, C002-AC-618.1, C002-AC-619.1, C002-AC-620.1, C002-AC-621.1, C002-AC-622.1, C002-AC-629.1, C002-AC-634.1]
 verified_by: [C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-637, C002-TS-648, C002-TS-651, C002-TC-620, C002-TC-621, C002-TC-622, C002-TC-623, C002-TC-624, C002-TC-625, C002-TC-633, C002-TC-637, C002-TC-648, C002-TC-651]
 components: [C002-COMP-010]
-risk_refs: [C002-RISK-031]
+risk_refs: [C002-RISK-031, C002-RISK-032]
 estimate: L
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -24,8 +24,10 @@ Implement C002-IF-009 §5. For one target at a time (C002-REQ-619), the check re
 at the release commit and compares it (C002-NFR-501). It recomputes every replay expectation, refuses a
 report whose replay host lacks a capability that the cited corpora require (C002-REQ-634), and checks
 injection, checklist and spike evidence at the tested versions (C002-REQ-617, C002-REQ-618,
-C002-REQ-620, C002-REQ-621, C002-REQ-629). It then writes `release.json`, flagged under the hooks
-fallback (C002-REQ-622).
+C002-REQ-620, C002-REQ-621, C002-REQ-629). For the Copilot VS Code target it refuses, in both
+Copilot modes, a checklist record that does not show hooks enabled during the run, because the
+Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It then writes
+`release.json`, flagged under the hooks fallback (C002-REQ-622).
 
 ## Targets
 
@@ -50,8 +52,12 @@ fallback (C002-REQ-622).
    `vscode-insiders` value when present; the Copilot CLI runner's evidence is compared with the
    record's `copilot-cli` value (ERR-REL-006). The signed-off record (`docs/spikes/S-08-copilot-vscode.md`)
    is one of the fixture rows of C002-TC-623 and gives "allowed".
-3. Refuse with every applicable ERR-REL code listed, not only the first.
-4. Compare the regenerated package with the target zip that P-01 will release
+3. Read the hooks state of the checklist record whatever the mode (`sdd-mcp-server` or
+   `copilot-hooks`); a missing or disabled state refuses the Copilot VS Code release (C002-TS-633
+   server-mode rows). Read the result of the delegated-edit step (C002-TC-358) like any other
+   checklist step (C002-REQ-618).
+4. Refuse with every applicable ERR-REL code listed, not only the first.
+5. Compare the regenerated package with the target zip that P-01 will release
    (`dist/architect-<target>-<version>.zip`, C002-T-034; Q-release-01), not only with the
    `dist/<target>/` folder: a missing, extra or different file in the zip is a regeneration
    difference under the existing ERR-REL code for it (C002-NFR-501).

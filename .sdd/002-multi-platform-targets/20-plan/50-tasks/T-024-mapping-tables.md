@@ -48,17 +48,24 @@ check.
    the record, not a guess.
 3. Copilot table from the signed-off S-08 record (`enforcement_mode: sdd-mcp-server`; `10-strategy.md`
    §4) and C002-IF-001 as revised for defect D-003: `tested_versions.vscode` from `vscode-insiders`
-   (`1.142.0-insider`) and `copilot-chat` from the record, after P-01 has confirmed that `0.35.3` is
-   the Copilot Chat of the tested Insiders build (assumption of C002-IF-009 §3);
+   (`1.142.0-insider`) and `copilot-chat` `0.35.3` from the record, which P-01 confirmed as the
+   Copilot Chat of the tested Insiders build (Q-versions-02, `questions-log.md` round 7; assumption
+   of C002-IF-009 §3 settled);
    `mcp_tool_names` `{server}-{tool}` with `grant_pattern` `{server}/{tool}`, `grant` per-server and
    `deferred` true; `placement` with `plugin_manifest` `plugin.json`, `config_file`
    `install/mcp.json`, `hooks_file` `install/hooks.template.json` and `cli_copy` `scripts/sdd.mjs`;
    `ask_user` as the question tool; `plugin-root` (`${CLAUDE_PLUGIN_ROOT}` and `${PLUGIN_ROOT}`)
    accepted in no context; `sdd-files` and `sdd-shell` declared in both Copilot modes; terminal
-   dialect `powershell` and `cmd_shims` empty. The Serena `--context` for Copilot is not in the S-08
-   record: write it as `handoff.md` "Open points" records P-01's answer (planner question
-   Q-serena-ctx-01, G3).
-4. Check that PLG-PATH-001 passes: no machine path in any table.
+   dialect `powershell` and `cmd_shims` empty; `hook_tool_classes` for both modes (C002-REQ-318).
+4. **Serena `--context` for Copilot VS Code** (not in the S-08 record; C002-IF-001 §6.2; P-01's
+   answer to Q-serena-ctx-01: decided in this task, `questions-log.md` round 7): list the contexts
+   that the tested Serena version (1.7.x on E-SER) ships, with the Serena context-list command or its
+   `contexts/` folder; take the context that Serena provides for VS Code or a generic IDE agent; when
+   none of that kind exists, take the context the OpenCode table uses. Write it into the Copilot
+   table and record in the task report the Serena version, the listed contexts and the reason for the
+   choice. C002-T-050 confirms that Serena starts with it (C002-T-046 assumption step); a Serena that
+   does not start is a defect against this table value, not a spec defect.
+5. Check that PLG-PATH-001 passes: no machine path in any table.
 
 ## Verification
 
@@ -67,6 +74,7 @@ check.
 
 ## Done when
 
-- [ ] Both tables validate; every value traces to a spike record line
+- [ ] Both tables validate; every value traces to a spike record line, except the Copilot Serena
+      context, which traces to the step 4 record in the task report
 - [ ] Fixture tables fx-tables written; C002-TC-106, 109 and 110 (translator tests that read them) listed in the task report as carried to C002-T-026 and C002-T-027
 - [ ] Progress reported: `sdd task set C002-T-024 --status done --commit <sha>`
