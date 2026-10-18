@@ -1,0 +1,8 @@
+#!/bin/sh
+# Host shim (C002-T-014): VS Code Insiders with GitHub Copilot Chat at the S-08 versions.
+case "$1" in
+  --version) printf '1.142.0-insider\nfedcba9876543210fedcba9876543210fedcba98\nx64\n'; exit 0 ;;
+  --list-extensions) printf 'github.copilot-chat@0.35.3\n'; exit 0 ;;
+esac
+echo "code-insiders shim: unsupported arguments" >&2
+exit 1

@@ -28,7 +28,6 @@ const PENDING_CODES: Record<string, string> = {
   "ERR-CLI-022": "C002-T-058",
 };
 const PENDING_COMMANDS: Record<string, string> = {
-  "host-version": "C002-T-014",
   "template show": "C002-T-012",
   "template list": "C002-T-012",
   "hook guard": "C002-T-032",

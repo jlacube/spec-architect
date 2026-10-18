@@ -7368,7 +7368,7 @@ var require_dist = __commonJS({
 });
 
 // src/cli.ts
-import { readFileSync as readFileSync20 } from "node:fs";
+import { readFileSync as readFileSync21 } from "node:fs";
 
 // src/cli/run.ts
 import { parseArgs } from "node:util";
@@ -7487,6 +7487,12 @@ function writeTextAtomic(path, text, options = {}) {
 import { realpathSync } from "node:fs";
 import { posix, win32 } from "node:path";
 var CURRENT = process.platform === "win32" ? "win32" : "posix";
+var IS_WINDOWS = CURRENT === "win32";
+function userConfigDir(env, home) {
+  if (IS_WINDOWS) return env["APPDATA"] ?? win32.join(home, "AppData", "Roaming");
+  if (process.platform === "darwin") return posix.join(home, "Library", "Application Support");
+  return env["XDG_CONFIG_HOME"] ?? posix.join(home, ".config");
+}
 function defaultCwd(platform) {
   if (platform === CURRENT) return process.cwd();
   return platform === "win32" ? "C:\\" : "/";
@@ -7592,8 +7598,8 @@ function relativePath(root, target, options = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync19, statSync as statSync11 } from "node:fs";
-import { basename as basename9, join as join27, resolve } from "node:path";
+import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync20, statSync as statSync11 } from "node:fs";
+import { basename as basename9, join as join28, resolve } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -12488,14 +12494,118 @@ function staleCheck(changeDir, write2) {
   return checks;
 }
 
+// src/cli/host-version.ts
+import { spawnSync as spawnSync3 } from "node:child_process";
+import { readFileSync as readFileSync19 } from "node:fs";
+import { homedir } from "node:os";
+import { join as join27 } from "node:path";
+var HOSTS = ["opencode", "vscode", "vscode-insiders"];
+var PROBES = {
+  opencode: { command: "opencode", args: ["--version"] },
+  code: { command: "code", args: ["--version"] },
+  codeExtensions: { command: "code", args: ["--list-extensions", "--show-versions"] },
+  insiders: { command: "code-insiders", args: ["--version"] },
+  insidersExtensions: { command: "code-insiders", args: ["--list-extensions", "--show-versions"] }
+};
+var VERSION2 = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
+function run(p) {
+  const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, stdio: ["ignore", "pipe", "pipe"] };
+  const r = IS_WINDOWS ? spawnSync3([p.command, ...p.args].join(" "), { ...opts, shell: true }) : spawnSync3(p.command, [...p.args], opts);
+  if (r.error || r.status !== 0) return null;
+  return r.stdout;
+}
+function parseVersion(stdout) {
+  const first = stdout.split(/\r?\n/).find((l) => l.trim() !== "") ?? "";
+  return VERSION2.exec(first)?.[0] ?? null;
+}
+function parseCopilotChat(stdout) {
+  for (const line of stdout.split(/\r?\n/)) {
+    const m = /^\s*github\.copilot-chat@(\S+)\s*$/i.exec(line);
+    if (m) return VERSION2.exec(m[1])?.[0] ?? null;
+  }
+  return null;
+}
+function parseJsonc(text) {
+  let out = "";
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') {
+      const start = i;
+      for (i++; i < text.length && text[i] !== '"'; i++) if (text[i] === "\\") i++;
+      out += text.slice(start, i + 1);
+    } else if (c === "/" && text[i + 1] === "/") {
+      while (i < text.length && text[i] !== "\n") i++;
+      out += "\n";
+    } else if (c === "/" && text[i + 1] === "*") {
+      const end = text.indexOf("*/", i + 2);
+      i = end < 0 ? text.length : end + 1;
+      out += " ";
+    } else out += c;
+  }
+  try {
+    return JSON.parse(out.replace(/,(\s*[}\]])/g, "$1"));
+  } catch {
+    return null;
+  }
+}
+function userSettingsPath(insiders, env = process.env) {
+  const home = env["HOME"] ?? env["USERPROFILE"] ?? homedir();
+  return join27(userConfigDir(env, home), insiders ? "Code - Insiders" : "Code", "User", "settings.json");
+}
+function useHooks(file) {
+  let text;
+  try {
+    text = readFileSync19(file, "utf8");
+  } catch {
+    return void 0;
+  }
+  const doc = parseJsonc(text);
+  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return void 0;
+  const v = doc["chat.useHooks"];
+  return typeof v === "boolean" ? v : void 0;
+}
+function hooksState(cwd, insiders) {
+  const workspace = useHooks(join27(findRepositoryRoot(cwd), ".vscode", "settings.json"));
+  const value2 = workspace ?? useHooks(userSettingsPath(insiders));
+  if (value2 === true) return { state: "enabled" };
+  if (value2 === false) return { state: "disabled", source: "chat.useHooks" };
+  return { state: "unknown" };
+}
+function hostVersions(host, cwd) {
+  if (host === "opencode") {
+    const out2 = run(PROBES.opencode);
+    const v2 = out2 === null ? null : parseVersion(out2);
+    return { host, versions: { opencode: v2 }, missing: v2 === null };
+  }
+  const insiders = host === "vscode-insiders";
+  const out = run(insiders ? PROBES.insiders : PROBES.code);
+  const v = out === null ? null : parseVersion(out);
+  if (v === null) return { host, versions: { vscode: null }, missing: true };
+  const ext = run(insiders ? PROBES.insidersExtensions : PROBES.codeExtensions);
+  return { host, versions: { vscode: v, "copilot-chat": ext === null ? null : parseCopilotChat(ext) }, hooks: hooksState(cwd, insiders), missing: false };
+}
+function formatHostVersions(r) {
+  if (r.host === "opencode") return [`opencode ${r.versions["opencode"] ?? "missing"}`];
+  if (r.missing) return ["vscode missing"];
+  const h = r.hooks;
+  return [
+    `vscode ${r.versions["vscode"]}`,
+    `copilot-chat ${r.versions["copilot-chat"] ?? "missing"}`,
+    h.state === "disabled" ? `hooks disabled (${h.source})` : `hooks ${h.state}`
+  ];
+}
+function hostVersionsJson(r) {
+  return { host: r.host, versions: r.versions, ...r.hooks ? { hooks: r.hooks } : {} };
+}
+
 // src/cli/commands.ts
 var S = { type: "string" };
 var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join27(root, ".sdd");
-  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join27(sdd, n)).isDirectory()).sort();
+  const sdd = join28(root, ".sdd");
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join28(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -12533,8 +12643,8 @@ function gateApprove(ctx) {
   if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
-  const sdd = join27(ctx.root, ".sdd");
-  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join28(ctx.root, ".sdd");
+  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   if (commit) {
@@ -12552,7 +12662,7 @@ function changeRevise(ctx) {
 }
 function changeStop(ctx) {
   const changeDir = resolveChange(ctx, ctx.args["NNN"]);
-  const current = String(splitFrontmatter(readFileSync19(join27(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  const current = String(splitFrontmatter(readFileSync20(join28(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
   record({ root: ctx.root, changeDir, phase: current, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"]);
   refreshRegistry(ctx);
   ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
@@ -12562,19 +12672,19 @@ function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
-  const sdd = join27(ctx.root, ".sdd");
-  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join28(ctx.root, ".sdd");
+  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
   return 0;
 }
 function changeOfId(ctx, id) {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
   const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
-  return folder ? join27(ctx.root, ".sdd", folder) : null;
+  return folder ? join28(ctx.root, ".sdd", folder) : null;
 }
 function refreshRegistry(ctx) {
-  const sdd = join27(ctx.root, ".sdd");
-  if (existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join28(ctx.root, ".sdd");
+  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
 }
 function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
@@ -12592,7 +12702,7 @@ function taskSet(ctx) {
 function defectAdd(ctx) {
   const ref = ctx.values["ref"];
   const dir2 = changeOfId(ctx, ref);
-  const status2 = dir2 ? String(splitFrontmatter(readFileSync19(join27(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  const status2 = dir2 ? String(splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
   if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
   const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
   refreshRegistry(ctx);
@@ -12620,16 +12730,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join27(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join27(sdd, f));
+  const sdd = join28(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join28(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync19(join27(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync20(join27(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -12661,7 +12771,7 @@ function traceActive(ctx) {
   try {
     const root = findWorkspace(ctx.cwd);
     if (root === null) return 0;
-    const sdd = join27(root, ".sdd");
+    const sdd = join28(root, ".sdd");
     const registry = rebuildRegistry(sdd);
     listChanges(sdd).forEach((c, i) => {
       const status2 = registry.changes[i]?.status;
@@ -12680,15 +12790,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join27(ctx.root, ".sdd", match[0]);
+    return join28(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join27(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join27(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join27(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join28(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join28(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join28(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join27(ctx.root, ".sdd");
+  const sdd = join28(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -12711,7 +12821,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join27(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join28(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -12719,7 +12829,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync19(join27(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -12751,7 +12861,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join27(root, ".sdd");
+  const where = join28(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -12799,6 +12909,13 @@ function serenaLaunchCmd(ctx) {
   if (r.error) ctx.out.errorLine(r.error);
   return r.code;
 }
+function hostVersionCmd(ctx) {
+  const r = hostVersions(ctx.args["host"], ctx.cwd);
+  ctx.out.trace("host-version", { host: r.host, missing: r.missing });
+  if (ctx.values["json"]) ctx.out.json(hostVersionsJson(r));
+  else for (const l of formatHostVersions(r)) ctx.out.line(l);
+  return r.missing ? 1 : 0;
+}
 function version(ctx) {
   ctx.out.line(TOOL);
   return 0;
@@ -12831,12 +12948,14 @@ var ROWS = [
   { name: "serena-launch", usage: "<plugin-data-dir> -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
+  { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version }
 ];
 var COMMANDS = ROWS.map((r) => ({ ...r, writes: WRITING_COMMANDS.find((w) => w.name === r.name)?.when ?? null }));
 function checkPositional(command, name, value2) {
   if (name === "NNN" && !/^\d{3}$/.test(value2)) throw usage(command, `<NNN> must have three digits: ${value2}`);
   if (name === "phase" && !PHASES.includes(value2)) throw usage(command, `<phase> must be one of ${PHASES.join(", ")}: ${value2}`);
+  if (name === "host" && !HOSTS.includes(value2)) throw usage(command, `<host> must be one of ${HOSTS.join(", ")}: ${value2}`);
   if (name === "profile" && !PROFILES.includes(value2)) throw usage(command, `<profile> must be one of ${PROFILES.join(", ")}: ${value2}`);
 }
 function checkOptions(spec, values) {
@@ -12964,7 +13083,7 @@ process.exitCode = runCli(process.argv.slice(2), {
   stderr: (text) => process.stderr.write(text),
   stdin: () => {
     try {
-      return readFileSync20(0, "utf8");
+      return readFileSync21(0, "utf8");
     } catch {
       return "";
     }

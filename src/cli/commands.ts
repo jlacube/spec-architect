@@ -36,6 +36,7 @@ import { setTask, type TaskSetOptions } from "../tracking/task.ts";
 import { addDefect, closeDefect, reopenDefect } from "../tracking/defect.ts";
 import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
+import { formatHostVersions, HOSTS, hostVersions, hostVersionsJson, type Host } from "./host-version.ts";
 import { formatFinding, type Output } from "./output.ts";
 import { WRITING_COMMANDS, type WriteWhen } from "./writing-commands.ts";
 
@@ -475,6 +476,15 @@ function serenaLaunchCmd(ctx: CommandContext): number {
   return r.code;
 }
 
+/** `sdd host-version opencode|vscode|vscode-insiders [--json]` (C002-IF-007): exit 1 when the host is missing. */
+function hostVersionCmd(ctx: CommandContext): number {
+  const r = hostVersions(ctx.args["host"] as Host, ctx.cwd);
+  ctx.out.trace("host-version", { host: r.host, missing: r.missing });
+  if (ctx.values["json"]) ctx.out.json(hostVersionsJson(r));
+  else for (const l of formatHostVersions(r)) ctx.out.line(l);
+  return r.missing ? 1 : 0;
+}
+
 function version(ctx: CommandContext): number {
   ctx.out.line(TOOL);
   return 0;
@@ -508,6 +518,7 @@ const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "serena-launch", usage: "<plugin-data-dir> -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
+  { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
 ];
 
@@ -518,6 +529,7 @@ export const COMMANDS: readonly CommandSpec[] = ROWS.map((r) => ({ ...r, writes:
 export function checkPositional(command: string, name: string, value: string): void {
   if (name === "NNN" && !/^\d{3}$/.test(value)) throw usage(command, `<NNN> must have three digits: ${value}`);
   if (name === "phase" && !(PHASES as readonly string[]).includes(value)) throw usage(command, `<phase> must be one of ${PHASES.join(", ")}: ${value}`);
+  if (name === "host" && !(HOSTS as readonly string[]).includes(value)) throw usage(command, `<host> must be one of ${HOSTS.join(", ")}: ${value}`);
   if (name === "profile" && !(PROFILES as readonly string[]).includes(value)) throw usage(command, `<profile> must be one of ${PROFILES.join(", ")}: ${value}`);
 }
 

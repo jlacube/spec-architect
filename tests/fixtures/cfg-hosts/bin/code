@@ -1,0 +1,8 @@
+#!/bin/sh
+# Host shim (C002-T-014): VS Code with GitHub Copilot Chat; output shaped like the real CLI.
+case "$1" in
+  --version) printf '1.105.1\n0123456789abcdef0123456789abcdef01234567\nx64\n'; exit 0 ;;
+  --list-extensions) printf 'GitHub.copilot@1.388.0\nGitHub.copilot-chat@0.32.4\nms-python.python@2025.1.0\n'; exit 0 ;;
+esac
+echo "code shim: unsupported arguments" >&2
+exit 1

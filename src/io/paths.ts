@@ -20,6 +20,20 @@ export interface PathOptions {
 
 const CURRENT: Platform = process.platform === "win32" ? "win32" : "posix";
 
+/** True on Windows, where a fixed command line runs through the platform shell to start `.cmd` shims. */
+export const IS_WINDOWS = CURRENT === "win32";
+
+/**
+ * The per-user application configuration folder (where VS Code keeps `<product>/User/settings.json`):
+ * `%APPDATA%` on Windows, `~/Library/Application Support` on macOS, `$XDG_CONFIG_HOME` or `~/.config`
+ * elsewhere.
+ */
+export function userConfigDir(env: Readonly<Record<string, string | undefined>>, home: string): string {
+  if (IS_WINDOWS) return env["APPDATA"] ?? win32.join(home, "AppData", "Roaming");
+  if (process.platform === "darwin") return posix.join(home, "Library", "Application Support");
+  return env["XDG_CONFIG_HOME"] ?? posix.join(home, ".config");
+}
+
 function defaultCwd(platform: Platform): string {
   if (platform === CURRENT) return process.cwd();
   return platform === "win32" ? "C:\\" : "/";
