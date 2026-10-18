@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T05:57:03.043Z",
+  "generated_at": "2026-10-18T14:55:37.510Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1124,16 +1124,16 @@
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
       "line": 59,
-      "title": "[ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04)",
-      "content_hash": "sha256:3d566dd934291335586cb4f3bedc248e2af04a23545c6224ded6808559c045c9"
+      "title": "[ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04). Partly refuted by S-07 on OpenCode 1.18.31: piped parts are checked alone, but redirection targets, a trailing `;` and `$((…))` are not (`docs/spikes/S-07-opencode.md §3.3`, fact F-3)",
+      "content_hash": "sha256:4fd8d42866d1a1843af307276fa0107a9d14c7dcdeba6bc20c4d021f14d11d8d"
     },
     {
       "id": "C002-AS-02",
       "type": "AS",
       "file": "10-spec/10-context/scope.md",
       "line": 60,
-      "title": "[ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04)",
-      "content_hash": "sha256:c9032057750b6ab3400fd9d09f943117e1b9fc5f32f716ff34aaf219289951c1"
+      "title": "[ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04). Refuted on the hand-replayed sample of S-07 on OpenCode 1.18.31 (`docs/spikes/S-07-opencode.md §3`, facts F-2 … F-4), so the record gives `sdd-mcp-server`, provisional until the full corpus replay (§8)",
+      "content_hash": "sha256:5d3255f704476c5b708cb375e1335c29d985e7bbf8c2b3505f298edfedbd1688"
     },
     {
       "id": "C002-AS-03",
@@ -1174,7 +1174,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
       "line": 1,
       "title": "OpenCode target",
-      "content_hash": "sha256:108cab316dde6e74d5f29dd01bd33e2ebb55f5b5bd60d4746a4413f10fbb0e54",
+      "content_hash": "sha256:b151d7f327990a375f5836e4341b48bbafe300a032d5fa05707983cc204196c5",
       "status": "draft"
     },
     {
@@ -1201,7 +1201,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:469edcf47845b1c1f8dc760d9a725c4446879e711128eb92bf1b3be6ca7574ee",
+      "content_hash": "sha256:c96d8a678e94ccb1da3431fab7b221becc6be793af1e17e17c26510e064b1a0e",
       "status": "draft"
     },
     {
@@ -1361,7 +1361,7 @@
       "id": "C002-CON-01",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 88,
+      "line": 109,
       "title": "The source plugin is the only source of every target package; no target package is maintained by hand",
       "content_hash": "sha256:ea55b70f7e1201a72473baf271b1e2f04dc3dbcb2e9d603ec9f348180d107c77"
     },
@@ -1369,7 +1369,7 @@
       "id": "C002-CON-02",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 89,
+      "line": 110,
       "title": "Generated files are written outside `plugins/architect/agents/` and `plugins/architect/scripts/`",
       "content_hash": "sha256:ddcd1bb3acc6d89f2000f589fa85b2f90ca9055c73385a67cd1eff4216aa8861"
     },
@@ -1377,7 +1377,7 @@
       "id": "C002-CON-03",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 90,
+      "line": 111,
       "title": "A target is released only when its write/shell boundary is enforced by an enforcement mechanism; a boundary that relies on agent instructions alone is never released",
       "content_hash": "sha256:b9aa07013d5d9eb0e650db698b13f31dd469e45ab1447bc073d4872cac2111db"
     },
@@ -1385,7 +1385,7 @@
       "id": "C002-CON-04",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 91,
+      "line": 112,
       "title": "The sdd MCP server is a stdio process that the host starts with a session and stops with it; it is not a daemon and opens no network connection",
       "content_hash": "sha256:24a24975d94ba126201ea852da08ba136bd29b3c91028858b04855b8839aa6f0"
     },
@@ -1393,7 +1393,7 @@
       "id": "C002-CON-05",
       "type": "CON",
       "file": "10-spec/10-context/scope.md",
-      "line": 92,
+      "line": 113,
       "title": "Requirements that change CHG-001 behaviour are `MODIFIED` deltas citing the C001 requirement; their LINT-DELTA-001 findings are waived at G2 and G3 until C001-T-075 archives CHG-001",
       "content_hash": "sha256:c890f748413d68a95cec8efc442b8125a964183b3f45193fe953f9fdcf8a2cc9"
     },
@@ -2068,7 +2068,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 59,
       "title": "Eval session caps",
-      "content_hash": "sha256:d62b9e1607bb313e37cde087d7fa2213349d65f26f35faa6c17f273069a06f3f"
+      "content_hash": "sha256:dd8b8ca15abee5547f6da76177cb3499ee92b66a6812d5da2be2e2356a98acaa"
     },
     {
       "id": "C002-NFR-201",
@@ -2124,7 +2124,7 @@
       "file": "10-spec/30-nfr/nfr.md",
       "line": 136,
       "title": "Portability of the CLI package",
-      "content_hash": "sha256:4d5bcc2fa27538fb2a5a67cd724ba06a033f6bab027618e77260d38689b55b7e"
+      "content_hash": "sha256:39ad04a7746ed43a6be42b9494419c470b08ad3ecc1276d2051ac234cfebbd40"
     },
     {
       "id": "C002-NFR-402",
@@ -2564,7 +2564,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
       "line": 139,
       "title": "Question shape on OpenCode",
-      "content_hash": "sha256:058c65174c39c7d2ef3d3452350c74e900641a077531c341ef4ab582249ec5b7"
+      "content_hash": "sha256:7352935bc43a2ad0b09762edff8d178a9400dc0b4c04d26e00363893fd1dd22d"
     },
     {
       "id": "C002-REQ-215",
@@ -2581,6 +2581,14 @@
       "line": 157,
       "title": "OpenCode command names",
       "content_hash": "sha256:a63719586d2a06071df8907d070bc1f82a720554b89c32a483487ffa35ef34d3"
+    },
+    {
+      "id": "C002-REQ-217",
+      "type": "REQ",
+      "file": "10-spec/20-capabilities/CAP-02-opencode-target/requirements.md",
+      "line": 166,
+      "title": "Question tool allowed for the conductor on OpenCode",
+      "content_hash": "sha256:03c7f3172e6f87b70152612b2e98596afda4f05d6c511040259a141a3bea0de7"
     },
     {
       "id": "C002-REQ-301",
@@ -2948,7 +2956,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 19,
       "title": "`sdd` executable from npm",
-      "content_hash": "sha256:27b2b0777fc2f72995c41987494713412111ecea837abc772fc595c825c903cf"
+      "content_hash": "sha256:ab32ce3b985209cb277df1871d907f5c10711d9754fedec2e51e8d9003e9b21f"
     },
     {
       "id": "C002-REQ-502",
@@ -3036,7 +3044,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 126,
       "title": "Templates and the Serena read-only mode file in `architect-sdd`",
-      "content_hash": "sha256:28932c9a407f0e6104e35ddded806d201a4baa16e2ce1d70b64c925b7e126962"
+      "content_hash": "sha256:dd0a5c1aaffcd4539c237ea854a66fde4225403735268329fe90ea73f605973e"
     },
     {
       "id": "C002-REQ-513",
@@ -3044,7 +3052,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 135,
       "title": "Template lookup through the CLI",
-      "content_hash": "sha256:d54cad9238a81b0f8be5d801cc1239f758c42bffd61e9476c2b3a8df93a0146c"
+      "content_hash": "sha256:ee8958752474cf1ec3d082a56ac5a3c1f52f7a6d094eadecd2c1ce9b8238681b"
     },
     {
       "id": "C002-REQ-514",
@@ -3084,7 +3092,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 182,
       "title": "CLI named as `sdd` in the templates of `architect-sdd`",
-      "content_hash": "sha256:d9999c45d081bb18b2a1e199d4a7f5506ba7e5885cab05674bb96b0bf530ddd3"
+      "content_hash": "sha256:98bc325b2527083cdf1b30808f62d4309f1bcc2e7bf54de375aa4d041867a27f"
     },
     {
       "id": "C002-REQ-519",
@@ -3156,7 +3164,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 63,
       "title": "Corpus replay against each enforcement mechanism",
-      "content_hash": "sha256:ca3c0c7670ab61ad8ca45770d582fb327bcd5aa8f45391202db93457640fda20"
+      "content_hash": "sha256:3841b53b4a55ed5264495d87807663cf8c94df3eacfe8cef2bed58f7df3038d4"
     },
     {
       "id": "C002-REQ-607",
@@ -3188,7 +3196,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 99,
       "title": "Scripted interviews and gates on OpenCode",
-      "content_hash": "sha256:da50c1f70087e14b53e5b9f64fcc15762fe930efbe37efcd4eba8e906cfc4589"
+      "content_hash": "sha256:a59d9ccfd1a98ff4164c115fe31b7f8f2e16bbee85efd08376160973acaf9b71"
     },
     {
       "id": "C002-REQ-611",
@@ -3276,7 +3284,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 199,
       "title": "Release evidence on the tested versions",
-      "content_hash": "sha256:d49ecff10393509dca7fd5b6e8e4f513419326ac47ae856f4ba4b80f0379d955"
+      "content_hash": "sha256:9103767a389630929184515ca87311bd4699302d68a7f88751e2e648627e1ce5"
     },
     {
       "id": "C002-REQ-622",
@@ -3677,7 +3685,7 @@
       "line": 1,
       "title": "Spike S-07: OpenCode at its tested version",
       "content_hash": "sha256:068426174afc1425c89f04c42ce2872f8205b1d08411560d2e8d64213360b227",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-002",
@@ -3695,7 +3703,7 @@
       "line": 1,
       "title": "P-01: npm account and availability of the name architect-sdd",
       "content_hash": "sha256:326d5ff7092110a289af108c1bde5ad2724611e43cc7121b67c9899b0c878b65",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-004",
@@ -3704,7 +3712,7 @@
       "line": 1,
       "title": "Single version source, bare sdd --version and the executable first line",
       "content_hash": "sha256:d3ba8c7af410b62597451f1b7c6ee8f52d7a66724cb3b911255fc2ad4c3cb243",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-005",
@@ -3713,7 +3721,7 @@
       "line": 1,
       "title": "Shared repository-root helper",
       "content_hash": "sha256:cf7221d5b55e2ad59ffd88894d2dccb9b7be708dc138a9d407866b242545b07e",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-006",
@@ -3722,7 +3730,7 @@
       "line": 1,
       "title": "Spec-contract locator, schema-copy equality test and CHG-001-coupled CLI tests",
       "content_hash": "sha256:4172b5ab8008ed870427db6a40eca1c362b31dffaf5346744c7eaf3020432639",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-007",
@@ -3731,7 +3739,7 @@
       "line": 1,
       "title": "Guard corpora format for per-case cwd, environment and replay fields",
       "content_hash": "sha256:652c2b73d6dd4f825e3742086b8f6a115886dcba930a400a6a7ef987de91a3f7",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-008",
@@ -3740,7 +3748,7 @@
       "line": 1,
       "title": "Bash guard: bare sdd and node --version (closes CHG-001 defect D-011)",
       "content_hash": "sha256:7ae9c464a2fe6174f36b0df351af15e4d6c9d64d3aa4ce5bf8358cd0821536ca",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-009",
@@ -3749,7 +3757,7 @@
       "line": 1,
       "title": "Writing-command table as a single source and the --cwd confinement",
       "content_hash": "sha256:98e00d8051b932b84106ac1e9007848e30590e01afc785c0159c2f5a33618f52",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-010",
@@ -3758,7 +3766,7 @@
       "line": 1,
       "title": "Bash guard: Serena commands confined to a data folder outside the repository",
       "content_hash": "sha256:178c10af75c0f1e2e67680b219c7cf2e85289412de2335d12fd569cd68e83def",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-011",
@@ -3767,7 +3775,7 @@
       "line": 1,
       "title": "Path guard core: memory-folder option",
       "content_hash": "sha256:e631321de57bd0de1c01c542c135ad47347c225611bfcbfc43dcbb603fdb4a3c",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-012",
@@ -3776,7 +3784,7 @@
       "line": 1,
       "title": "CLI: template show and template list, confined to the profile folder",
       "content_hash": "sha256:67b4dde8d911556178e59297420cbf6e9059fec1d6ed04bc8fa90192f609bc45",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-013",
@@ -3785,7 +3793,7 @@
       "line": 1,
       "title": "CLI: --user-data and --read-only for the Serena commands",
       "content_hash": "sha256:cea205e705967faa68aa252a146ad276df7b8d445425f3b01a3ff419e27033bc",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-014",
@@ -3794,7 +3802,7 @@
       "line": 1,
       "title": "CLI: host-version command",
       "content_hash": "sha256:e3c541f4a38a32062903ee3616165b817ff340aacab44950bccf8266b95bd37c",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-015",
@@ -3803,7 +3811,7 @@
       "line": 1,
       "title": "Claude Code staging leaves out plugins/architect/targets/",
       "content_hash": "sha256:b381f6409b24981cd795c5b627ce15a578729f2b18617204e9fd00dcc1d25d85",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-016",
@@ -3812,7 +3820,7 @@
       "line": 1,
       "title": "sdd MCP server: protocol binding, profiles and standard-output discipline",
       "content_hash": "sha256:7d80cab14f10c856c1c699169f7d097979c282d7fdee8b1f4340eacb8b3e6fbb",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-017",
@@ -3821,7 +3829,7 @@
       "line": 1,
       "title": "sdd MCP server: write_file and replace_text",
       "content_hash": "sha256:8d96fe37ccf74639049d7a44ced631a53cfc30f540a8d90177640b9fc8e112e4",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-018",
@@ -3830,7 +3838,7 @@
       "line": 1,
       "title": "sdd MCP server: quick-lint findings with each write",
       "content_hash": "sha256:150b88f7b7a2178eb8dc2441f7cb05ecf8af37505d88c74cb7ffc9ca842276a2",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-019",
@@ -3839,7 +3847,7 @@
       "line": 1,
       "title": "sdd MCP server: run_command without a shell",
       "content_hash": "sha256:4753e565a1616fc67f216d6d519656d2b8991d69e4a1753fda78d4b278fd8e4c",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-020",
@@ -3848,7 +3856,7 @@
       "line": 1,
       "title": "sdd MCP server: fault injection and benchmarks",
       "content_hash": "sha256:1f8080468949e1683ca7399b79709e9cff54362380de21443eabe9d56f49d000",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-021",
@@ -3857,7 +3865,7 @@
       "line": 1,
       "title": "Build: two bundles and the licence check over both",
       "content_hash": "sha256:dcd8fc06113262a18968e3cd11ddfce081bc7c095ae9d62fdfe89dbf11a9da80",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-022",
@@ -3866,7 +3874,7 @@
       "line": 1,
       "title": "architect-sdd: staging, template CLI lines and npm pack",
       "content_hash": "sha256:a15a677988487ae2b9036609c9136ef634d94660917903f816a9e2449f2e5baa",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-023",
@@ -3956,7 +3964,7 @@
       "line": 1,
       "title": "CLI: Copilot hook adapter (hook guard by agent_type and mode, subagent guard, session start, subagent stop)",
       "content_hash": "sha256:50da225f4e9d20c9957fdedf54f856456b85e10d62a40ed0fa5d8ad0840a5603",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-033",
@@ -4028,7 +4036,7 @@
       "line": 1,
       "title": "Corpus replay suite: framework, expectations, report and its own command",
       "content_hash": "sha256:8763f2a072f32679ca98249ebdf267859d61a30fb0e0a5a8c44085d15a59bcdb",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-041",
@@ -4199,7 +4207,7 @@
       "line": 1,
       "title": "Bash guard: sdd install denied in every form",
       "content_hash": "sha256:44491a9d4f768f8ca4f2b71da194fdc3f38533d118cea4587e9fa7821847fa1d",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-060",
@@ -8104,7 +8112,7 @@
       "file": "10-spec/20-capabilities/CAP-02-opencode-target/stories.md",
       "line": 42,
       "title": "Interviews and gates through OpenCode's question tool",
-      "content_hash": "sha256:6f13c55c0614cc2e08c5719c3b2be4bd7de716c1533a5234cfdcdd9be8894276"
+      "content_hash": "sha256:ece271eb0ec80f0ec5cdb9b6f5fc5fc5e598908e3210cb08e4e4bd0c9b6c3ab0"
     },
     {
       "id": "C002-US-205",
@@ -8232,7 +8240,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 42,
       "title": "Templates through the CLI on every target",
-      "content_hash": "sha256:930d61b639688e22efafbf0e5e979d822765a48f6dbd8031c30ac86bbeb29776"
+      "content_hash": "sha256:e728579535fc6a735c58e981f9aebff480c4e64980b24ba67c4ffc385766cd65"
     },
     {
       "id": "C002-US-505",
@@ -13236,6 +13244,11 @@
       "relation": "references"
     },
     {
+      "from": "C002-NFR-401",
+      "to": "C002-NFR-402",
+      "relation": "references"
+    },
+    {
       "from": "C002-NFR-402",
       "to": "C002-DOD-017",
       "relation": "covers"
@@ -14611,6 +14624,41 @@
       "relation": "story-of"
     },
     {
+      "from": "C002-REQ-217",
+      "to": "C002-IF-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-REQ-108",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-REQ-211",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-REQ-212",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-REQ-213",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-REQ-610",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-217",
+      "to": "C002-US-204",
+      "relation": "story-of"
+    },
+    {
       "from": "C002-REQ-301",
       "to": "C002-AC-301.1",
       "relation": "acceptance-of"
@@ -15837,6 +15885,11 @@
     },
     {
       "from": "C002-REQ-501",
+      "to": "C002-REQ-518",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-501",
       "to": "C002-US-501",
       "relation": "story-of"
     },
@@ -16167,6 +16220,11 @@
     },
     {
       "from": "C002-REQ-513",
+      "to": "C002-REQ-512",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-513",
       "to": "C002-US-504",
       "relation": "story-of"
     },
@@ -16318,6 +16376,11 @@
     {
       "from": "C002-REQ-518",
       "to": "C002-GOAL-05",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-518",
+      "to": "C002-IF-003",
       "relation": "references"
     },
     {
@@ -16668,6 +16731,11 @@
     {
       "from": "C002-REQ-610",
       "to": "C002-R-001",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-610",
+      "to": "C002-REQ-217",
       "relation": "references"
     },
     {
@@ -32883,12 +32951,32 @@
     {
       "from": "C002-US-204",
       "to": "C002-REQ-214",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-REQ-214",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-REQ-217",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-REQ-217",
       "relation": "traces-to"
     },
     {
       "from": "C002-US-204",
       "to": "C002-REQ-311",
       "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-204",
+      "to": "C002-REQ-610",
+      "relation": "references"
     },
     {
       "from": "C002-US-204",

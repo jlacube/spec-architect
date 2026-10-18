@@ -65,7 +65,7 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 - **Environment:** REF-WIN, dev-tier eval runs
 - **Rationale:** the defaults of `runSession` on Claude Code (current-state E-9: `maxTurns` 30, `maxBudgetUsd` 0.5); three harnesses multiply eval cost (ideation §9)
 - **DoD:** C002-DOD-012
-- **Open items:** whether OpenCode reports the spend of one session is checked by spike S-07; Copilot CLI reports the AI Credits and tokens of a run (`docs/spikes/S-08-copilot-vscode.md §2.4`: 9.03 credits, 0.09 USD).
+- **Open items:** OpenCode reports the cost of each session (`docs/spikes/S-07-opencode.md §10`, measured on OpenCode 1.15.10 only; no paid session ran on 1.18.31); Copilot CLI reports the AI Credits and tokens of a run (`docs/spikes/S-08-copilot-vscode.md §2.4`: 9.03 credits, 0.09 USD).
 
 ## 2. Security and safety
 
@@ -140,7 +140,7 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 - **Threshold:** 100% under PowerShell 7 and Git Bash with Node.js 20 LTS and 22 LTS
 - **Method:** smoke test that installs the packed tarball into a clean prefix outside the repository
 - **Environment:** REF-WIN; macOS and Linux once the dormant CI matrix is enabled (C001-REQ-1119, C001-NFR-402)
-- **Rationale:** C002-GOAL-04; C001-NFR-401, C001-NFR-403; constitution (Node 20 minimum)
+- **Rationale:** C002-GOAL-04; C001-NFR-401, C001-NFR-403; constitution (Node 20 minimum); the Node.js floor of the OpenCode JS SDK binds the eval and replay machine only, because this package bundles no SDK (C002-NFR-402; `../10-context/scope.md` §5, S-07 fact F-10)
 - **DoD:** C002-DOD-016
 
 ### C002-NFR-402 — No runtime dependencies in `architect-sdd`

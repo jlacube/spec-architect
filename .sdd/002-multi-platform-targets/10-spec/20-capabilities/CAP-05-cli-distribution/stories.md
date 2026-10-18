@@ -42,10 +42,10 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 ### C002-US-504 — Templates through the CLI on every target
 - **As a** P-03 adopter on OpenCode or Copilot VS Code
 - **I want** the agents to read the artifact templates through `sdd`, from my repository's `.sdd/_templates/` or from the templates installed with `architect-sdd`
-- **So that** changes created on my host use the same templates as on Claude Code, without a plugin-root variable in agent and command bodies
+- **So that** changes created on my host use the same templates as on Claude Code (apart from the hand-off lines that name the CLI, which name the bare `sdd`), without a plugin-root variable in agent and command bodies
 - **Value / outcome:** C002-GOAL-03, C002-GOAL-04
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-05
-- **Context & notes:** Bodies name templates as `${CLAUDE_PLUGIN_ROOT}/templates/…` (`agents/sdd-spec-writer.md:19`, `commands/decide.md:18`, `commands/init.md:25`), which neither generated host expands in bodies (C002-R-001 A-09). The CLI looks up templates beside its bundle when `CLAUDE_PLUGIN_ROOT` is unset (`src/workspace/templates.ts:33`; current-state E-7). The hand-off templates name the CLI as `node <plugin-root>/scripts/sdd.mjs` (`templates/full/20-plan/handoff.md:20-23`, same lines in `templates/lite/`), which the shipped copies must not keep. Command and shipped files: C002-IF-007 (`template show`, `template list`), C002-IF-003 §1.
+- **Context & notes:** Bodies name templates as `${CLAUDE_PLUGIN_ROOT}/templates/…` (`agents/sdd-spec-writer.md:19`, `commands/decide.md:18`, `commands/init.md:25`), which neither generated host expands in bodies (C002-R-001 A-09). Before CHG-002 the CLI looked up templates beside its bundle only when `CLAUDE_PLUGIN_ROOT` was unset (`src/workspace/templates.ts:33`; current-state E-7); the lookup order of the shipped CLI is in C002-IF-003 §1 (defect D-004). The hand-off templates name the CLI as `node <plugin-root>/scripts/sdd.mjs` (`templates/full/20-plan/handoff.md:20-23`, same lines in `templates/lite/`), which the shipped copies must not keep. Command and shipped files: C002-IF-007 (`template show`, `template list`), C002-IF-003 §1.
 - **Requirements:** C002-REQ-115, C002-REQ-512, C002-REQ-513, C002-REQ-514, C002-REQ-518, C002-REQ-519, C002-REQ-520
 - **Traces to:** ideation §8 (One source, generated targets); C002-DEC-007
 

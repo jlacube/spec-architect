@@ -49,7 +49,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Copilot guard hook | A plugin-level or workspace-level PreToolUse hook of the Copilot hooks fallback that identifies the calling Architect agent from the hook input's `agent_type` and runs the path guard core or the bash guard core (C002-REQ-308) |
 | `architect-sdd` | The npm package that publishes the `sdd` CLI with the executable name `sdd` (C002-DEC-007) |
 | Bare `sdd` command | A shell command whose first word is `sdd` (the npm executable), as opposed to `node <path>/sdd.mjs` |
-| Question tool | The host tool that shows an interview round or a gate to P-01: AskUserQuestion (Claude Code), `question` (OpenCode), `ask_user` (Copilot VS Code, local agent host; `docs/spikes/S-08-copilot-vscode.md §3.2`) |
+| Question tool | The host tool that shows an interview round or a gate to P-01: AskUserQuestion (Claude Code), `question` (OpenCode; off by default in SDK and `opencode serve` sessions, so the package allows it for the conductor, C002-REQ-217, `docs/spikes/S-07-opencode.md §5`), `ask_user` (Copilot VS Code, local agent host; `docs/spikes/S-08-copilot-vscode.md §3.2`) |
 | Skipped answer | A question-tool result that reports the call as skipped and carries no choice of P-01 (C002-REQ-311); the research finding is the `{"skipped": true}` result of `vscode/askQuestions` under auto-approve (C002-R-001 A-07), a tool the Copilot target no longer uses; how `ask_user` reports a call without a choice is checked by the manual VS Code checklist |
 | Spike S-07, spike S-08 | Plan-phase experiments on OpenCode (S-07) and Copilot VS Code (S-08) that settle the assumptions of `10-context/scope.md` §3 before the targets are built |
 | Eval runner | A back end of the eval harness that executes eval cases on one host while keeping the case API of `evals/harness/` |
@@ -69,6 +69,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Quick-lint findings | The findings of `sdd lint --quick --file <path>` for one written file, in the post-write feedback format of C001-IF-07 §4 |
 | Post-write feedback channel | A host hook that returns text to the agent after one of its tool calls (on OpenCode `tool.execute.after`, if spike S-07 confirms it) |
 | Tested version | For each generated target, the host version (for Copilot VS Code: the VS Code and GitHub Copilot Chat versions) recorded by the spike that validated the target; shown by the doctor and re-checked before each release (Q-versions-01) |
+| Pinned host binary | The executable of a host at its tested version that the corpus replay suite and an eval runner start by its absolute path, instead of the executable that PATH resolves; on OpenCode it runs with a database of its own (`10-context/scope.md` §3.1; `docs/spikes/S-07-opencode.md §9`, facts F-7, F-8) |
 | Doctor remedies table | The table of detection and fix commands of the doctor (C001-IF-10 §3), which also records the tested version of each generated target |
 | Target structure check | A check that `npm run check` runs on one generated target package, next to the plugin structure checks of C001-IF-08 §3 |
 | Target package contract | The expected layout, agent tool lists and MCP configuration of one target package, written in `50-interfaces/` |

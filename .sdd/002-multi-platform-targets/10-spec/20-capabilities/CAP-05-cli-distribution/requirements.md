@@ -20,7 +20,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE `architect-sdd` package SHALL install an executable named `sdd` that runs the sdd CLI built from the same source and version as the bundled `scripts/sdd.mjs`.
-- **Rationale:** C002-DEC-007; C002-GOAL-04; today `package.json` is private and has no `bin` (current-state E-3); the Claude Code plugin keeps its bundled copy; the files the CLI reads beside its bundle are shipped by C002-REQ-512
+- **Rationale:** C002-DEC-007; C002-GOAL-04; today `package.json` is private and has no `bin` (current-state E-3); the Claude Code plugin keeps its bundled copy; the files the CLI reads beside its bundle are shipped by C002-REQ-512; both CLIs therefore create the same change files, except the CLI lines of the shipped hand-off templates, which name the bare `sdd` (C002-REQ-518; defect D-008)
 - **Stories:** C002-US-501
 - **Priority:** Must
 - **Acceptance:** C002-AC-501.1
@@ -127,7 +127,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE `architect-sdd` package SHALL contain every template of the source plugin's `templates/` folder and the source plugin's Serena read-only mode file.
-- **Rationale:** without `CLAUDE_PLUGIN_ROOT` the CLI looks up templates in the folder above its bundle (`src/workspace/templates.ts:33`; current-state E-7), so `sdd change new` (C002-TS-502) and `sdd template show` fail on the generated targets without them (C002-IF-003 §1); `sdd serena-launch` takes the read-only mode file from beside the CLI (C002-IF-007; C002-REQ-114); C002-REQ-412 and C002-REQ-501 cover the executables only
+- **Rationale:** the CLI reads the templates shipped with it from the `templates/` folder above its bundle, and from the plugin root named by `CLAUDE_PLUGIN_ROOT` only when that folder is absent (lookup order: C002-IF-003 §1; defect D-004; before CHG-002 it read the folder above its bundle only when `CLAUDE_PLUGIN_ROOT` was unset, `src/workspace/templates.ts:33`, current-state E-7), so `sdd change new` (C002-TS-502) and `sdd template show` fail on the generated targets without them, and the npm `sdd` started in a Claude Code session reads its own templates, not the plugin's; `sdd serena-launch` takes the read-only mode file from beside the CLI (C002-IF-007; C002-REQ-114); C002-REQ-412 and C002-REQ-501 cover the executables only
 - **Stories:** C002-US-504, C002-US-505
 - **Priority:** Must
 - **Acceptance:** C002-AC-512.1
@@ -136,7 +136,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN `sdd template show <profile>/<path>` runs, THE sdd CLI SHALL print the repository's template `.sdd/_templates/<profile>/<path>` if that file exists, and otherwise the template `<profile>/<path>` shipped with the CLI.
-- **Rationale:** the generated bodies name templates through this command (C002-REQ-115); the repository override keeps its precedence, as for `sdd change new` (`src/workspace/templates.ts:58`; C001-COMP-13); `<profile>` is `full`, `lite` or `constitution` (C002-IF-007)
+- **Rationale:** the generated bodies name templates through this command (C002-REQ-115); the templates shipped with the CLI are found as C002-REQ-512 states; the repository override keeps its precedence, as for `sdd change new` (`src/workspace/templates.ts:58`; C001-COMP-13); `<profile>` is `full`, `lite` or `constitution` (C002-IF-007)
 - **Stories:** C002-US-504
 - **Priority:** Must
 - **Acceptance:** C002-AC-513.1
@@ -183,7 +183,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN `npm run package` writes the `architect-sdd` package, THE build SHALL replace, in each template that the package ships, every invocation of the CLI through its plugin path (`node <plugin-root>/scripts/sdd.mjs …`) with the bare `sdd` command.
-- **Rationale:** the hand-off templates `templates/full/20-plan/handoff.md:20-23` and `templates/lite/20-plan/handoff.md:20-23` of the source plugin tell the implementer to run `node <plugin-root>/scripts/sdd.mjs task set …` and `… defect add …`, a path that does not exist on the generated targets (C002-GOAL-03, C002-GOAL-04); the plugin keeps its templates unchanged for Claude Code (C002-GOAL-05); templates shipped by C002-REQ-512 and read through C002-REQ-513
+- **Rationale:** the hand-off templates `templates/full/20-plan/handoff.md:20-23` and `templates/lite/20-plan/handoff.md:20-23` of the source plugin tell the implementer to run `node <plugin-root>/scripts/sdd.mjs task set …` and `… defect add …`, a path that does not exist on the generated targets (C002-GOAL-03, C002-GOAL-04); the plugin keeps its templates unchanged for Claude Code (C002-GOAL-05); templates shipped by C002-REQ-512 and read through C002-REQ-513; these rewritten lines are the only difference between a shipped template and its source (rule of C002-IF-003 §2), so a comparison of the files that the npm `sdd` and the bundled CLI create excepts them (defect D-008)
 - **Stories:** C002-US-504
 - **Priority:** Must
 - **Acceptance:** C002-AC-518.1

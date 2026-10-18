@@ -140,7 +140,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor asks a question through OpenCode's `question` tool, THE conductor SHALL give the question a header of at most 30 characters and every option a description.
-- **Rationale:** C002-R-001 C-05 (30-character header; option description required)
+- **Rationale:** C002-R-001 C-05 (30-character header; option description required); spike S-07 on OpenCode 1.18.31 (`docs/spikes/S-07-opencode.md §5`, fact F-6): an option without a description fails with a schema error, and OpenCode does not enforce the header length, so the 30-character limit (the tool schema's description) is Architect's own rule
 - **Stories:** C002-US-204
 - **Priority:** Must
 - **Acceptance:** C002-AC-214.1
@@ -162,3 +162,12 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Stories:** C002-US-201
 - **Priority:** Must
 - **Acceptance:** C002-AC-216.1
+
+### C002-REQ-217 — Question tool allowed for the conductor on OpenCode
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE OpenCode target package SHALL give the conductor the permission rule `question: allow`.
+- **Rationale:** the rule applies in both enforcement modes; spike S-07 on OpenCode 1.18.31 (`docs/spikes/S-07-opencode.md §5`, fact F-6; defect D-009): the `question` tool is off by default in SDK and `opencode serve` sessions (default rule `question: deny`), and an agent without the rule gets an "unavailable tool" result; C002-REQ-211, C002-REQ-212, C002-REQ-213 and the scripted answers of C002-REQ-610 rely on the conductor's `question` calls; the specialists keep `question: deny` and return their questions (C001-REQ-208, C002-REQ-108); configuration: C002-IF-001 §6.3
+- **Stories:** C002-US-204
+- **Priority:** Must
+- **Acceptance:** C002-AC-217.1

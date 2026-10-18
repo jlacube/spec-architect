@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:4cef873754b83b3b87d2cc92802e314540c9da4514ce0805f8fef50145a40a33", approved_at: 2026-10-18, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:99a70b123a9a926a0f809bdea298f20ce045d794a400ea44e7e4b59fbe653efd", approved_at: 2026-10-18, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:4cef873754b83b3b87d2cc92802e314540c9da4514ce0805f8fef50145a40a33", approved_at: 2026-10-18, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:99a70b123a9a926a0f809bdea298f20ce045d794a400ea44e7e4b59fbe653efd", approved_at: 2026-10-18, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -87,3 +87,4 @@ waivers:
 | 2026-10-18 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-18 | G3 (plan) | **Revise** | "Q-opencode-01 answered: OpenCode eval sessions bill P-01's OpenRouter account (Claude tiers via OpenRouter), stop at 40 USD; Claude Code evals on the Max subscription (T-060), so the prepaid API key top-up is no longer needed" | none | unavailable |
 | 2026-10-18 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-18 | G2 (spec) | **Revise** | "D-004…D-009: implementation findings (template root precedence, catalogue texts, PLG-VER-001, run_command plugin-root literal, hook-adapter extra denies, TS-502/ERR-BLD-002/README URL) and spike S-07 facts F-1…F-10 (OpenCode 1.18.31); P-01: one spec revision" | none | unavailable |

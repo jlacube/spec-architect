@@ -45,8 +45,8 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **So that** deciding and approving work the same way on OpenCode as on Claude Code
 - **Value / outcome:** C002-GOAL-03; C002-SC-01
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-02
-- **Context & notes:** Tool shape (C002-R-001 C-05): a `questions` array; `header` of at most 30 characters; each option needs a description; `multiple` and `custom` (free text). No documented limit on questions or options, so the four-question round and the two or three options remain Architect's own convention (C002-R-001 Implications). Interviews stay in the conductor (C001-CON-04). Whether `opencode run` or the SDK can answer a `question` call (for scripted gate evals) is open for spike S-07 (ideation §11).
-- **Requirements:** C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-214, C002-REQ-311
+- **Context & notes:** Tool shape (C002-R-001 C-05): a `questions` array; `header` of at most 30 characters; each option needs a description; `multiple` and `custom` (free text). No documented limit on questions or options, so the four-question round and the two or three options remain Architect's own convention (C002-R-001 Implications). Interviews stay in the conductor (C001-CON-04). Spike S-07 on OpenCode 1.18.31 (`docs/spikes/S-07-opencode.md §5`, fact F-6): the header length is not enforced (C002-REQ-214 keeps the limit as Architect's rule); the tool is off by default in SDK and `opencode serve` sessions, so the package allows it for the conductor (C002-REQ-217); the SDK answers and dismisses a `question` call, so scripted gate evals are possible (C002-REQ-610).
+- **Requirements:** C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-214, C002-REQ-217, C002-REQ-311
 - **Traces to:** ideation §8 (Interviews and gates); C002-R-001 C-05
 
 ### C002-US-205 — Quick-lint feedback after writes on OpenCode

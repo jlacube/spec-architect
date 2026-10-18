@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 636, "TS": 654, "ADR": 5, "M": 7, "T": 60, "RISK": 33, "RB": 6 },
+  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 1, "AS": 5, "CON": 16, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 637, "TS": 654, "ADR": 5, "M": 7, "T": 60, "RISK": 33, "RB": 6 },
   "blocks": [],
   "tombstones": [
     { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
@@ -13,6 +13,7 @@
     { "id": "C002-REQ-635", "reason": "allocated by mistake while registering REQ-633/634, which the ledger already counted from the files (unused)", "date": "2026-10-15" },
     { "id": "C002-REQ-636", "reason": "allocated by mistake while registering REQ-633/634, which the ledger already counted from the files (unused)", "date": "2026-10-15" },
     { "id": "C002-TS-653", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during D-003 revision; the scenarios use block numbering C002-TS-134 and C002-TS-336 onwards (unused)", "date": "2026-10-17" },
-    { "id": "C002-TS-654", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during D-003 revision; the scenarios use block numbering C002-TS-134 and C002-TS-336 onwards (unused)", "date": "2026-10-17" }
+    { "id": "C002-TS-654", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during D-003 revision; the scenarios use block numbering C002-TS-134 and C002-TS-336 onwards (unused)", "date": "2026-10-17" },
+    { "id": "C002-REQ-637", "reason": "allocated without a capability block (ledger has no blocks; --block 02 ignored) during the D-004…D-009 revision; the CAP-02 requirement uses block numbering C002-REQ-217 (unused)", "date": "2026-10-18" }
   ]
 }

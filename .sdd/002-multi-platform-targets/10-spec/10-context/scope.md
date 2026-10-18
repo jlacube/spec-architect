@@ -56,13 +56,32 @@ Spikes S-07 and S-08 confirm or refute them.
 
 | ID | Assumption | If wrong |
 |---|---|---|
-| C002-AS-01 | [ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04) | The shell boundary on OpenCode moves to the sdd MCP server |
-| C002-AS-02 | [ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04) | OpenCode agents lose their edit and shell tools and use the sdd MCP server, as on Copilot VS Code (ideation §8) |
+| C002-AS-01 | [ASSUMPTION: R-001] OpenCode splits compound commands and checks each part against `permission.bash` (C002-R-001 C-04). Partly refuted by S-07 on OpenCode 1.18.31: piped parts are checked alone, but redirection targets, a trailing `;` and `$((…))` are not (`docs/spikes/S-07-opencode.md §3.3`, fact F-3) | The shell boundary on OpenCode moves to the sdd MCP server |
+| C002-AS-02 | [ASSUMPTION: R-001] OpenCode's permission engine, configured per agent, decides every case of the guard corpora as expected, including `..` segments, links, redirection and the Windows shell (C002-R-001 C-02, C-03, C-04). Refuted on the hand-replayed sample of S-07 on OpenCode 1.18.31 (`docs/spikes/S-07-opencode.md §3`, facts F-2 … F-4), so the record gives `sdd-mcp-server`, provisional until the full corpus replay (§8) | OpenCode agents lose their edit and shell tools and use the sdd MCP server, as on Copilot VS Code (ideation §8) |
 | C002-AS-03 | VS Code Copilot confines a subagent to its tool list (C002-R-001 A-08, A-11). Settled by S-08: confined in the local agent host (`docs/spikes/S-08-copilot-vscode.md §3.1`, §3.2); the part "loads a plugin's `.mcp.json`" is refuted (plugin MCP servers are not started, §3.2, fact F-2) and replaced by workspace MCP servers (C002-REQ-307, C002-REQ-323) | For a later tested version whose record shows subagents not confined: the Copilot hooks fallback applies (C002-DEC-005 exception); if Copilot guard hooks do not block a subagent's tool calls either, the Copilot target is deferred to a later change and OpenCode still ships (§1.1) |
 | C002-AS-04 | Copilot CLI loads the Copilot target package and honours agent tool lists as VS Code does. Settled by S-08: `--plugin-dir` loads agents, hooks and `.mcp.json`, and subagents are confined (`docs/spikes/S-08-copilot-vscode.md §2.1`, §2.4); agents are named `<plugin>:<agent>` (§2.3, fact F-6) | For a later tested version that does not load the package: Copilot evals cover the sdd MCP server in isolation; the Copilot injection cases move to the manual VS Code checklist |
 | C002-AS-05 | [ASSUMPTION: Q-cli-01] Publishing `architect-sdd` to the npm registry is possible (name available, publishing account) | Agents on the generated targets use the bundled CLI through a per-target path (Q-cli-01 option 2) |
 
-### 3.1 Tested hosts of spike S-08
+### 3.1 Tested hosts of spikes S-07 and S-08
+
+Spike S-07 was signed off by P-01 on 2026-10-18 and re-tested on OpenCode 1.18.31, which P-01
+confirmed as the tested version (Q-s07-01, Q-s07-02, `../../20-plan/questions-log.md` round 11).
+Its enforcement mode is `sdd-mcp-server`, provisional until the full corpus replay
+(`docs/spikes/S-07-opencode.md §8`; frontmatter `host_versions`). The host it tested, and the
+conditions under which replay and evals use that host:
+
+- **OpenCode 1.18.31** on REF-WIN, with `@opencode-ai/sdk` and `@opencode-ai/plugin` 1.18.31
+  (§1); the model of each Claude model tier is the record's `host_versions.models` entry (§7;
+  C002-REQ-105). The first run on OpenCode 1.15.10 (§1.1) does not make 1.15.10 a tested version.
+- **Pinned host binary.** The `opencode` that PATH resolves need not be the tested one: on REF-WIN
+  the Windows PATH resolves the npm shim `opencode.cmd`, and the Git Bash PATH finds another OpenCode
+  install first (fact F-7). The corpus replay suite and the OpenCode eval runner therefore start the
+  pinned host binary, with a database of their own (`OPENCODE_DB`) instead of the user's shared
+  OpenCode database, which another OpenCode version migrates (fact F-8). The doctor reports the
+  `opencode` that PATH resolves in its shell, so another install shows as `untested` (C002-REQ-508).
+- **Node.js for the OpenCode JS SDK.** The Node.js floor of the SDK (row "OpenCode server and JS SDK"
+  of §5 of this file; fact F-10) binds the machine that runs the OpenCode eval runner and the corpus replay
+  (REF-WIN, upgraded by P-01, Q-s07-02), not `architect-sdd`.
 
 Spike S-08 was signed off by P-01 on 2026-10-17 with enforcement mode `sdd-mcp-server`
 (`docs/spikes/S-08-copilot-vscode.md §4`; frontmatter `host_versions`). The hosts it tested are:
@@ -73,9 +92,11 @@ Spike S-08 was signed off by P-01 on 2026-10-17 with enforcement mode `sdd-mcp-s
   Copilot CLI session type of VS Code was not used: it does not offer the package's agents (§3).
 - **Copilot CLI 1.0.98**, standalone (§2).
 
-The facts of the record that contradict the earlier platform assumptions (F-1 … F-7, §5) are taken
-into C002-CAP-03, C002-REQ-103, C002-REQ-211, C002-REQ-612 and C002-REQ-614 by the revision for
-defect D-003.
+The facts of the S-08 record that contradict the earlier platform assumptions (F-1 … F-7, §5) are
+taken into C002-CAP-03, C002-REQ-103, C002-REQ-211, C002-REQ-612 and C002-REQ-614 by the revision for
+defect D-003. The facts of the S-07 record (F-1 … F-10, `docs/spikes/S-07-opencode.md §9`) are taken
+into this section, C002-REQ-214, C002-REQ-217, C002-REQ-606, C002-REQ-610, C002-REQ-621 and the
+interfaces by the revision for defect D-009.
 
 ## 4. Constraints
 
@@ -95,12 +116,12 @@ bundled entry) and C001-CON-03 (distribution as a Claude Code plugin; CHG-002 ad
 
 | Dependency | Version policy | Required? | Used by | License |
 |---|---|---|---|---|
-| OpenCode | Tested version: the OpenCode version recorded by spike S-07, which validated the target; shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
+| OpenCode | Tested version: the OpenCode version recorded by spike S-07, which validated the target (OpenCode 1.18.31, started as the pinned host binary for replay and evals; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
 | VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions recorded by spike S-08, which validated the target (VS Code Insiders 1.142.0-insider with GitHub Copilot Chat 0.35.3, Local session type; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
 | Copilot CLI | Tested version: the Copilot CLI version recorded by spike S-08 for the eval runner (1.0.98; §3.1) and re-checked before each release (Q-versions-01); not shown by the doctor (eval tool only) | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
 | npm registry | package `architect-sdd`, unscoped, published by P-01 (Q-cli-02) | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
-| Node.js | 20 or later on the PATH (constitution) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |
-| OpenCode server and JS SDK | pinned with the OpenCode version | Evals only | OpenCode eval runner (C002-R-001 D-02) | checked against the license allowlist when the eval dependency is added |
+| Node.js | 20 or later on the PATH (constitution); unchanged by the floor of the OpenCode JS SDK (next row), which `architect-sdd` does not bundle (C002-NFR-402) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |
+| OpenCode server and JS SDK | pinned with the OpenCode version (1.18.31; §3.1); needs Node.js 22.22.2 or later on the machine that runs them (S-07 fact F-10) | Evals only | OpenCode eval runner (C002-R-001 D-02); corpus replay suite on OpenCode | checked against the license allowlist when the eval dependency is added |
 | Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki | as in CHG-001 `10-context/scope.md` §5 | as in CHG-001 | as in CHG-001; Serena's context on each generated target is an open research item (baseline survey §4 note 6) | as in CHG-001 |
 
 ## 6. Change dependencies

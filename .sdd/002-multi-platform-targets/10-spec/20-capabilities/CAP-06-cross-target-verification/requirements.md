@@ -64,7 +64,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the corpus replay suite runs, THE corpus replay suite SHALL evaluate every applicable case of the guard corpora against each enforcement mechanism in use on a generated target (the OpenCode permission rules of the OpenCode target package under native permission enforcement, the sdd MCP server and, under the Copilot hooks fallback, the Copilot guard hooks) and report each decision that differs from the case's expected decision for that mechanism.
-- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625, and for cases resting on hook inputs the generated mechanisms lack, C002-REQ-630 and C002-REQ-632 (Q-safety-04, spec round 4); cases that require a host capability: C002-REQ-633 (Q-safety-05, spec round 5); applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
+- **Rationale:** C002-DEC-005; C002-GOAL-02, C002-SC-03; Q-safety-02 (spec round 2, `../../questions-log.md`): "Per-mechanism" — expected decisions per mechanism: C002-REQ-625, and for cases resting on hook inputs the generated mechanisms lack, C002-REQ-630 and C002-REQ-632 (Q-safety-04, spec round 4); cases that require a host capability: C002-REQ-633 (Q-safety-05, spec round 5); applicable cases: C002-REQ-626; cases not replayed are listed: C002-REQ-627; the corpus tool names (Write, Edit, NotebookEdit, Bash, PowerShell) and caller agents are mapped to each mechanism's input by C002-IF-009 §2; OpenCode's rules are evaluated by OpenCode itself through a headless session or its SDK (ideation §8; C002-R-001 D-01, D-02), started as the pinned host binary of the tested version (`../../10-context/scope.md` §3.1); the existing tests keep replaying the corpora against the Claude Code hooks with the expectations recorded in the corpora (baseline survey §3.2)
 - **Stories:** C002-US-602
 - **Priority:** Must
 - **Acceptance:** C002-AC-606.1
@@ -100,7 +100,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** optional-feature
 - **Statement:** WHERE a script can answer OpenCode's `question` calls, THE OpenCode eval runner SHALL run the interview, gate and revise scenarios with scripted answers.
-- **Rationale:** C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"); revise scenario: glossary; whether `opencode run` or the SDK can answer a `question` call is open for spike S-07 (ideation §11; C002-R-001 D-01, D-02)
+- **Rationale:** C002-GOAL-03 (measure: "the gate, interview and revise scenarios pass on each target"); revise scenario: glossary; ideation §11; C002-R-001 D-01, D-02; settled by spike S-07 on OpenCode 1.18.31 (`question_answerable_by_script: true`, `docs/spikes/S-07-opencode.md §5`): the SDK answers a `question` call and dismisses it, in sessions in which the conductor's `question` permission is allowed (C002-REQ-217; fact F-6)
 - **Stories:** C002-US-603
 - **Priority:** Must
 - **Acceptance:** C002-AC-610.1
@@ -200,7 +200,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN a generated target is proposed for release, THE release check SHALL refuse the release unless the corpus replay, the evals and, for Copilot VS Code, the checklist record of that release ran on the host version recorded as the tested version of that target.
-- **Rationale:** Q-versions-01 (spec round 1): tested versions are re-checked before each release; ideation §9 (platforms change fast)
+- **Rationale:** Q-versions-01 (spec round 1): tested versions are re-checked before each release; ideation §9 (platforms change fast); on OpenCode the version that counts is that of the pinned host binary, not of the `opencode` that PATH resolves (`../../10-context/scope.md` §3.1; `docs/spikes/S-07-opencode.md §9`, fact F-7)
 - **Stories:** C002-US-606, C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-621.1
