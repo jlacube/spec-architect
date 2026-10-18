@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T09:26:00Z",
+  "generated_at": "2026-10-18T09:39:32Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 60,
-          "done": 19,
+          "done": 20,
           "blocked": 0,
           "in_progress": 0
         },
@@ -237,6 +237,16 @@
           "id": "D-005",
           "ref": "C002-IF-005",
           "summary": "Found in C002-T-004: the structure check PLG-VER-001 (root package.json version differs from plugin.json, C002-ADR-004) is implemented but named in no errors.md / check catalogue. Batch with D-004.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-006",
+          "ref": "C002-IF-002",
+          "summary": "Found in C002-T-019: (1) the literal 'node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs' passes the guard but is not expanded without a shell, so run_command fails with a non-zero exit — the spec is silent (generated agents use bare sdd); (2) ERR-MCP-006 gets a third reason 'not found beside the server' (sdd.mjs missing next to sdd-mcp) that errors.md does not list. Batch with D-004/D-005.",
           "reporter": "jerome.lacube",
           "date": "2026-10-18",
           "status": "open",

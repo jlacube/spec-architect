@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: done
 depends_on: [C002-T-008, C002-T-010, C002-T-016, C002-T-059]
 implements: [C002-REQ-405, C002-REQ-406, C002-REQ-407]
 satisfies_ac: [C002-AC-405.1, C002-AC-406.1, C002-AC-407.1, C002-AC-325.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-406, C002-TS-407, C002-TS-408, C002-TS-409, C002-TS-641, C
 components: [C002-COMP-005, C002-COMP-012]
 risk_refs: [C002-RISK-001]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b6802f8, completed_at: 2026-10-18, notes: "run_command; TC-406/407/408/409/641/642/352; guard-bash dialect selection exported (no rule change); paths.ts executableNames; open points logged as D-006; bench to be run in T-020" }
 ---
 
 # C002-T-019 — sdd MCP server: run_command without a shell
