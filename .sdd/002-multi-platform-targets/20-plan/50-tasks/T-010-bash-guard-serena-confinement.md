@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-005, C002-T-009, C002-T-060]
 implements: [C002-REQ-517, C002-REQ-607]
 satisfies_ac: [C002-AC-517.1, C002-AC-607.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-527, C002-TS-528, C002-TS-537, C002-TS-610, C002-TC-527, C
 components: [C002-COMP-012]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: fdef3a1, completed_at: 2026-10-18, notes: "Serena confinement; BG-371…419; evals on Max (subscription): 5 pass incl. TS-537-init rerun; outside Targets: pluginData(auth) in evals (plugin data folder under subscription is ~/.architect-evals/claude-config/plugins/data/architect-inline), doctor-no-ripwire fixture deletes only serena_config.yml; eval uses a local overlay + temp git repo instead of the marketplace install and C:/fx-work/fresh" }
 ---
 
 # C002-T-010 — Bash guard: Serena commands confined to a data folder outside the repository
