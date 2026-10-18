@@ -142,3 +142,8 @@ Questions on the S-07 record (C002-T-001).
 - **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 per question
 - **Answer:** sign-off: "Sign off"; version: "Re-test on 1.18.31 (Recommended)" — the PATH `opencode` (npm shim, 1.18.31) becomes the tested version; the free stub-model sample is re-run on 1.18.31 and the record updated (outcomes that change are put to P-01 again); spec facts: "One spec revision now (Recommended)" — one defect for the S-07 facts plus D-004…D-008, one revision round, then G2/G3; C002-T-024 waits for it.
 - **Extracted instructions:** none
+
+### Q-s07-02 — S-07 re-test on 1.18.31 and the Node version of REF-WIN
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 2 per question
+- **Answer:** re-test: "Confirm" — OpenCode 1.18.31 is the tested version, the harness pins its binary; Node: "Upgrade Node (Recommended)" — P-01 updates REF-WIN to the current Node 22.x LTS (≥ 22.22.2, F-10); the conductor re-runs `npm run check` afterwards.
+- **Extracted instructions:** none

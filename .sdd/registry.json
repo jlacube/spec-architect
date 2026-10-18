@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T12:31:53Z",
+  "generated_at": "2026-10-18T14:44:09Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -267,6 +267,16 @@
           "id": "D-008",
           "ref": "C002-TS-502",
           "summary": "Found in C002-T-022: (1) TS-502 asks for 'the same files' as the bundled CLI, but REQ-518 rewrites the hand-off CLI lines in the npm templates — test checks same list and text apart from those lines; (2) ERR-BLD-002 printed with a 'ERR-BLD-002: ' prefix (TS-530 needs the code) while errors.md shows the message without it; (3) the npm README has no repository URL in the spec (https://github.com/jlacube/spec-architect). Batch with D-004…D-007.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-009",
+          "ref": "C002-IF-001",
+          "summary": "Spike S-07 (docs/spikes/S-07-opencode.md §9, F-1…F-10; OpenCode 1.18.31 tested): mapping-table OpenCode tool names list/todoread/lsp/websearch absent by default; IF-001 §6.3 gap table lacks rows for links (junctions inside the project), redirections, trailing ';', $((…)) and pipe position; edit checks its text before permissions (replay Edit cases need matching fixture text); question tool off by default for SDK sessions; PATH resolves an npm .cmd shim and the shared DB is version-migrated (harness pins the binary and its own OPENCODE_DB); model catalog from models.opencode.ai; SDK 1.18.31 needs Node >= 22.22.2. P-01: one spec revision with D-004…D-008.",
           "reporter": "jerome.lacube",
           "date": "2026-10-18",
           "status": "open",
