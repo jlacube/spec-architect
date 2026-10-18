@@ -160,6 +160,16 @@ Scenario: C002-TS-408 — failing command
   And the result is not an MCP error result
 ```
 
+```gherkin
+Scenario: C002-TS-424 — plugin-root variable reaches node as literal text
+  Given the server instance "sdd-shell" runs in "fx-srv", whose environment sets "CLAUDE_PLUGIN_ROOT" to "C:/fx/plugin"
+  And "C:/fx/plugin/scripts/sdd.mjs" is a stub that records each start
+  When an agent calls the command tool with "node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs status"
+  Then the result is not an MCP error result
+  And it holds the non-zero exit code of "node" and a standard error text that contains "${CLAUDE_PLUGIN_ROOT}"
+  And the stub "C:/fx/plugin/scripts/sdd.mjs" records no start
+```
+
 ## C002-REQ-407
 
 #### C002-AC-407.1 — The server runs its own package's CLI
@@ -169,6 +179,17 @@ Scenario: C002-TS-409 — another sdd on PATH
   And the PATH holds first an executable "sdd" that prints "0.0.1-fake"
   When an agent calls the command tool with "sdd --version"
   Then the standard output in the result is "0.3.0"
+```
+
+```gherkin
+Scenario: C002-TS-423 — own CLI not found beside the server
+  Given the server instance "sdd-shell" runs in "fx-srv" from an unpacked "architect-sdd" package at "C:/fx/pkg-sdd" whose "scripts/sdd.mjs" was deleted before the start
+  And the PATH holds first an executable "sdd" that records each start
+  When an agent calls the command tool with "sdd status"
+  Then the result is an error result whose "structuredContent.code" is "ERR-MCP-006"
+  And its "structuredContent.message" starts with 'could not start "sdd": not found beside the server (' and names the absolute path of "C:/fx/pkg-sdd/scripts/sdd.mjs"
+  And the result holds no exit code
+  And the PATH executable "sdd" records no start
 ```
 
 ## C002-REQ-408
@@ -261,10 +282,10 @@ Scenario: C002-TS-417 — tarball entries
 #### C002-AC-413.1 — A bundled package outside the allowlist fails the build
 ```gherkin
 Scenario Outline: C002-TS-418 — GPL dependency in an entry
-  Given a development change makes the <entry> sources import a GPL-3.0 package "gpl-lib"
+  Given a development change makes the <entry> sources import the package "gpl-lib" version "1.0.0" with the license "GPL-3.0"
   When the build runs
   Then it exits non-zero
-  And the message names "gpl-lib" and "GPL-3.0"
+  And a line of its standard error starts with "ERR-BLD-001: build failed: " and ends with "bundled package license not allowed: gpl-lib@1.0.0 (GPL-3.0)"
   Examples:
     | entry           |
     | sdd executable  |
@@ -312,7 +333,7 @@ Scenario Outline: C002-TS-421 — tool of the other profile called by name
 Scenario Outline: C002-TS-422 — missing or unknown profile
   When the sdd MCP server is started in "fx-srv" as "<command line>"
   Then the process exits with code 2 before any MCP message
-  And standard error contains "ERR-MCP-007"
+  And a line of standard error starts with "sdd-mcp: ERR-MCP-007: usage: sdd-mcp --profile files|shell [--root <dir>]: "
   And standard output is empty
   Examples:
     | command line              |
@@ -329,8 +350,8 @@ Scenario Outline: C002-TS-422 — missing or unknown profile
 | C002-REQ-403 | TS-403, TS-404 | n/a | n/a | n/a: refused spans are C002-REQ-404 | n/a | n/a | n/a |
 | C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405 | n/a | n/a | n/a |
 | C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH) | TS-406, TS-641 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository) |
-| C002-REQ-406 | TS-407 | TS-408 (failing command) | n/a | TS-408 | n/a | n/a | n/a |
-| C002-REQ-407 | TS-409 | n/a | n/a | n/a | n/a | n/a | TS-409 (PATH shadowing) |
+| C002-REQ-406 | TS-407 | TS-408 (failing command), TS-424 (plugin-root literal not expanded: ordinary non-zero result) | n/a | TS-408, TS-424 | n/a | n/a | TS-424 (a variable never expands to another CLI without a shell) |
+| C002-REQ-407 | TS-409 | n/a | n/a | TS-423 (ERR-MCP-006 `not found beside the server`) | n/a | n/a | TS-409 (PATH shadowing), TS-423 (no fallback to a PATH `sdd` when the own CLI is missing) |
 | C002-REQ-408 | TS-410 | TS-412 (no finding) | TS-411 (15 of 20) | n/a: C002-REQ-409 | n/a | n/a | n/a |
 | C002-REQ-409 | TS-413 | n/a | n/a | TS-413 | n/a | n/a | n/a |
 | C002-REQ-410 | TS-414 | n/a | n/a | n/a | n/a | n/a | TS-414 |

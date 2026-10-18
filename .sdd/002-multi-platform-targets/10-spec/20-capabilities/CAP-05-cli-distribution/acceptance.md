@@ -26,7 +26,8 @@ record are prompts, so their scenarios are agent behaviour. Tags:
 Versions in the fixtures: plugin and `architect-sdd` "0.3.0"; the tested versions recorded in the
 doctor remedies table of the fixture are OpenCode "1.4.2", VS Code "1.105.1" and GitHub Copilot Chat
 "0.32.4". CLI scenarios run the installed `sdd` of the packed tarball with `CLAUDE_PLUGIN_ROOT` and
-`CLAUDE_PLUGIN_DATA` unset, in a temporary user profile whose environment the scenario names.
+`CLAUDE_PLUGIN_DATA` unset unless the scenario sets them (C002-TS-538), in a temporary user profile
+whose environment the scenario names.
 
 ## C002-REQ-501
 
@@ -39,11 +40,13 @@ Scenario: C002-TS-501 — version of the installed executable
 ```
 
 ```gherkin
-Scenario: C002-TS-502 — same behaviour as the bundled CLI
+Scenario: C002-TS-502 — same files as the bundled CLI, apart from the translated CLI lines
   Given the "architect-sdd" tarball is installed globally into a clean prefix and "CLAUDE_PLUGIN_ROOT" is unset
-  When P-01 runs "sdd change new \"Export\" --profile lite --kind greenfield" in a copy of "fx-bootstrap"
+  And two copies "fx-a" and "fx-b" of "fx-bootstrap", in which the bundled "node plugins/architect/scripts/sdd.mjs change new \"Export\" --profile lite --kind greenfield" has created the change "002" of "fx-b"
+  When P-01 runs "sdd change new \"Export\" --profile lite --kind greenfield" in "fx-a"
   Then the exit code is 0
-  And the change folder holds the same files as the one the bundled "scripts/sdd.mjs" creates in another copy of "fx-bootstrap"
+  And the change folder "002" of "fx-a" holds the same list of relative file paths as that of "fx-b"
+  And each file of "fx-a" has the same lines as its counterpart in "fx-b", except the lines of "20-plan/handoff.md" in which "fx-b" holds "node <plugin-root>/scripts/sdd.mjs" and "fx-a" holds "sdd" in its place, the rest of each such line being equal
 ```
 
 ## C002-REQ-502
@@ -329,6 +332,17 @@ Scenario Outline: C002-TS-520 — template lookup
     | ".sdd/_templates/full/10-spec/" holds only "nfr.md"                               | byte-identical to "plugins/architect/templates/full/10-spec/70-dod.md"    |
 ```
 
+```gherkin
+Scenario: C002-TS-538 — npm sdd in a Claude Code session reads its own templates
+  Given the "architect-sdd" tarball of version "0.3.0" is installed globally into a clean prefix
+  And a copy of "fx-bootstrap" without ".sdd/_templates/"
+  And "CLAUDE_PLUGIN_ROOT" is set to "C:/fx/plugin-root", whose "templates/full/20-plan/handoff.md" holds only the line "# plugin copy"
+  When P-01 runs "sdd template show full/20-plan/handoff.md" in that copy
+  Then the exit code is 0
+  And standard output is byte-identical to "templates/full/20-plan/handoff.md" of the installed "architect-sdd" package
+  And it does not contain "# plugin copy"
+```
+
 ## C002-REQ-514
 
 #### C002-AC-514.1 — A template that exists nowhere, or a path that leaves the profile's template folder, is refused with ERR-CLI-019
@@ -512,7 +526,7 @@ Scenario Outline: C002-TS-530 — plugin path in a template of the package
   Given the fixture "fx-plugin-tmpl" whose template "templates/<file>" holds "<text>" on line <line>
   When "npm run package" runs on that fixture
   Then the exit code is non-zero
-  And the output holds the error ERR-BLD-002 naming the template "<file>" and line <line>, and containing "<construct>"
+  And a line of its standard error starts with "ERR-BLD-002: ", names the template "<file>" and line <line>, and contains "<construct>"
   Examples:
     | file                    | line | text                                                        | construct                   |
     | full/20-plan/plan.md    | 12   | The CLI lives at <plugin-root>/scripts/sdd.mjs.             | <plugin-root>/scripts/sdd.mjs |
@@ -524,7 +538,7 @@ Scenario: C002-TS-535 — templates without a plugin path pass
   Given the source plugin's templates hold no plugin path of the CLI other than the invocation lines that C002-REQ-518 rewrites
   When P-01 runs "npm run package"
   Then the exit code is 0
-  And the output holds no message naming a template
+  And no line of its standard error starts with "ERR-BLD-002: "
 ```
 
 ## C002-REQ-520
@@ -583,7 +597,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-501 | TS-501, TS-502 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-501 | TS-501, TS-502 | n/a | TS-502 (translated hand-off CLI lines are the only difference) | n/a | n/a | n/a | n/a |
 | C002-REQ-502 | TS-503 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-503 | TS-504 | TS-504 (PowerShell, node -v) | TS-504 (extra word) | TS-504, TS-505 | TS-504 | n/a | TS-504 (npx, sddx, chaining, redirection) |
 | C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639 | n/a | n/a | n/a |
@@ -595,7 +609,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-510 | TS-516 | TS-516 (two disabling sources; both Copilot enforcement modes), TS-526 (both modes) | TS-526 (state not readable) | TS-516, TS-526 | n/a | n/a | TS-526 (unread state never reported ok) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
-| C002-REQ-513 | TS-520 | TS-520 (repository override) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | n/a |
+| C002-REQ-513 | TS-520 | TS-520 (repository override), TS-538 (`CLAUDE_PLUGIN_ROOT` set: the npm `sdd` keeps its own templates) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | TS-538 (another package's templates named by `CLAUDE_PLUGIN_ROOT` are not read) |
 | C002-REQ-514 | TS-521 | TS-521 (unknown profile) | TS-522 (`..` that stays inside the profile folder) | TS-521, TS-522 | n/a | n/a | TS-522 (`..` segments and a link leaving the profile's template folder) |
 | C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged) | TS-523 (XDG_DATA_HOME unset) | n/a: a folder that cannot be determined, is relative or lies inside the repository is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository) |
 | C002-REQ-516 | TS-525 | TS-525 (serena-config and serena-launch, four platforms) | TS-525 (case-different path inside the repository), TS-533 (folder beside the repository sharing its name prefix) | TS-525 | n/a | n/a | TS-525 (environment variable pointing into the repository, relative value) |

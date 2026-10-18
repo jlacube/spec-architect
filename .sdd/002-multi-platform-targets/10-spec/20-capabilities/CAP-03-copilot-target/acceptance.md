@@ -242,6 +242,23 @@ Scenario: C002-TS-336 — guard-hook deny holds on Copilot CLI
   And every "Write" call on "src/app.ts" in the session's JSON events is reported by the runner as a tool call that did not run
 ```
 
+```gherkin
+@mode-hooks
+Scenario Outline: C002-TS-369 — a tool listed in more than one class takes the most restrictive class
+  Given "C:/fx/pkg-cp-hooks/hooks/tool-classes.json" lists the tool "Glob" in the class "read_only" and also in the class "<class>" as <entry>
+  And Copilot PreToolUse hook input in "fx-cp" with "agent_type" "sdd-spec-writer", "tool_name" "Glob" and <input>
+  When the package's PreToolUse hook command, which holds "--mode copilot-hooks", runs
+  Then the exit code is <code>
+  And standard output is <stdout>
+  And standard error <stderr>
+  Examples:
+    | class    | entry                                                     | input                                         | code | stdout            | stderr                     |
+    | write    | '{ "tool": "Glob", "paths": ["/path"] }'                  | "tool_input.path" "src/app.ts"                | 2    | the deny decision | contains "GUARD-PATH-001"  |
+    | write    | '{ "tool": "Glob", "paths": ["/path"] }'                  | "tool_input.path" ".sdd/002-x/10-spec/a.md"   | 0    | empty             | is empty                   |
+    | write    | '{ "tool": "Glob", "paths": ["/path"] }'                  | "tool_input.pattern" "src/**" and no "tool_input.path" | 2 | the deny decision | contains "GUARD-HOOK-001" |
+    | terminal | '{ "tool": "Glob", "command": "/command", "dialect": "bash" }' | "tool_input.command" "npm install"       | 2    | the deny decision | contains "GUARD-BASH-001"  |
+```
+
 ## C002-REQ-309
 
 #### C002-AC-309.1 — A Copilot guard hook that cannot decide denies on standard output with a non-zero exit code
@@ -266,6 +283,22 @@ Scenario Outline: C002-TS-314 — faults of the Copilot guard hook
     | the hook input has "agent_type" "sdd-spec-writer" and the tool classes file of the package does not exist |
     | the hook input has "agent_type" "sdd-spec-writer" and the tool classes file of the package holds "{ not json" |
     | the hook input has "agent_type" "sdd-spec-writer" and the guard core throws an exception (fault injection) |
+```
+
+```gherkin
+@mode-hooks
+Scenario Outline: C002-TS-367 — fault messages of the Copilot guard hook for a write tool without a path and an --agents name without the sdd- prefix
+  Given the PreToolUse hook command of "pkg-cp-hooks" <command>
+  And Copilot PreToolUse hook input in "fx-cp" with "agent_type" "<agent_type>", "tool_name" "Write" and <input>
+  When that command runs
+  Then the exit code is 2
+  And standard output is the deny decision
+  And standard error contains "GUARD-HOOK-001: Write denied — <fault>."
+  Examples:
+    | command                                                         | agent_type       | input                                                    | fault                                                              |
+    | as installed                                                    | sdd-spec-writer  | "tool_input.file_text" "x" and no "tool_input.path"      | no path in the tool input (/path)                                  |
+    | with "--agents" in which "sdd-critic" is replaced by "critic"   | critic           | "tool_input.path" ".sdd/002-x/10-spec/a.md"              | internal error: agent critic of --agents is not an sdd- agent name |
+    | with "--agents" in which "sdd-critic" is replaced by "critic"   | architect:critic | "tool_input.path" "src/app.ts"                           | internal error: agent critic of --agents is not an sdd- agent name |
 ```
 
 ## C002-REQ-310
@@ -853,6 +886,21 @@ Scenario: C002-TS-361 — package moved after the install
   And standard output holds no allow decision
 ```
 
+```gherkin
+Scenario Outline: C002-TS-370 — a non-Architect subagent's tool listed as read-only and as write or terminal is denied
+  Given "C:/fx/<package>/hooks/tool-classes.json" lists the tool "Glob" in the class "read_only" and also in the class "<class>"
+  And Copilot PreToolUse hook input in "fx-cp" with "agent_type" "general-purpose", "tool_name" "Glob" and "tool_input.pattern" "src/**"
+  When the PreToolUse hook command of "<package>" runs
+  Then the exit code is 2
+  And standard output is the deny decision
+  And standard error contains "GUARD-HOOK-002: Glob denied — subagent general-purpose is not an Architect agent"
+  Examples:
+    | package      | class    |
+    | pkg-cp       | write    |
+    | pkg-cp       | terminal |
+    | pkg-cp-hooks | write    |
+```
+
 ## C002-REQ-328
 
 #### C002-AC-328.1 — The Copilot subagent guard hook denies with GUARD-HOOK-001 when it cannot decide
@@ -884,6 +932,22 @@ Scenario Outline: C002-TS-362 — faults of the Copilot subagent guard hook
     | pkg-cp       | as installed                                             | hook input in "fx-cp" with "agent_type" "general-purpose" and the tool "Glob", the decision throwing an exception (fault injection) | internal error |
     | pkg-cp-hooks | as installed                                             | hook input in "fx-cp" with "agent_type" "general-purpose" and the tool "edit"                      | tool edit is not in the tool classes   |
     | pkg-cp-hooks | as installed                                             | hook input with "agent_type" "my-reviewer", the tool "Glob" and no "cwd"                           | no cwd                                 |
+```
+
+```gherkin
+Scenario Outline: C002-TS-368 — a --host other than copilot is a usage fault, whatever the input
+  Given the PreToolUse hook command of "<package>" <command>
+  And <input>
+  When that command runs
+  Then the exit code is 2
+  And standard output is the deny decision
+  And standard error contains "GUARD-HOOK-001: <shown> denied — hook command usage: --host."
+  Examples:
+    | package      | command                                              | input                                                                                     | shown     |
+    | pkg-cp       | without "--host"                                     | the session agent's hook input in "fx-cp" (no "agent_type") for "Write" on "src/app.ts"   | Write     |
+    | pkg-cp       | with "--host opencode" in place of "--host copilot"  | the session agent's hook input in "fx-cp" (no "agent_type") for "Write" on "src/app.ts"   | Write     |
+    | pkg-cp       | with "--host opencode" in place of "--host copilot"  | standard input "not json"                                                                 | tool call |
+    | pkg-cp-hooks | with "--host claude" in place of "--host copilot"    | hook input in "fx-cp" with "agent_type" "sdd-spec-writer", the tool "Write" and "tool_input.path" ".sdd/002-x/10-spec/a.md" | Write |
 ```
 
 ## C002-REQ-329
@@ -959,8 +1023,8 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-305 | TS-307 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-306 | TS-308 | TS-308 (tool sets) | n/a | n/a | TS-308 | n/a | TS-309 |
 | C002-REQ-307 | TS-310 | TS-310 (both modes) | n/a | TS-327 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | TS-327 (server declared in a plugin MCP configuration) |
-| C002-REQ-308 | TS-311, TS-312 | TS-312 (`architect:` form of Copilot CLI), TS-313 (in VS Code), TS-336 (Copilot CLI), TS-311 (package and workspace hook file) | n/a | TS-312 | TS-312 | TS-311 (the same entry in both hook files, so both reach the same decision) | TS-312 (`..`, chaining, install command), TS-360 (specialist's write with the plugin part not loaded) |
-| C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file) | TS-314 (empty input, empty `cwd`) | TS-314 | n/a | n/a | TS-314 (unclassed tool, input not an object), TS-334 (letter case) |
+| C002-REQ-308 | TS-311, TS-312 | TS-312 (`architect:` form of Copilot CLI), TS-313 (in VS Code), TS-336 (Copilot CLI), TS-311 (package and workspace hook file) | TS-369 (a tool in two classes takes the most restrictive one) | TS-312 | TS-312 | TS-311 (the same entry in both hook files, so both reach the same decision) | TS-312 (`..`, chaining, install command), TS-360 (specialist's write with the plugin part not loaded), TS-369 (a duplicate `read_only` entry does not open a write or terminal tool) |
+| C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file), TS-367 (fault messages: no path in the tool input, `--agents` name without `sdd-`) | TS-314 (empty input, empty `cwd`) | TS-314, TS-367 | TS-367 (an `--agents` name without `sdd-` is never passed unchecked to a guard core) | n/a | TS-314 (unclassed tool, input not an object), TS-334 (letter case), TS-367 (`architect:` prefix on a non-`sdd-` name) |
 | C002-REQ-310 | TS-315 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-311 | TS-316, TS-317 | TS-318 (gate) | TS-316 (empty list) | TS-316 | n/a | n/a | TS-317 (auto-approve) |
 | C002-REQ-312 | TS-319 | n/a | n/a | TS-319 | n/a | n/a | n/a |
@@ -978,8 +1042,8 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-324 | TS-349 | TS-350 (files edited after an install) | TS-348 (equal agent file, hook file or entry is no conflict) | TS-349, TS-350 | n/a | TS-350 (a failed run changes nothing) | TS-349 (adopter server named "sdd-files"; adopter hook file `architect-guard.json`; comments a rewrite would drop) |
 | C002-REQ-325 | TS-351 | TS-352 (sdd MCP server command tool), TS-312 (Copilot guard hook) | TS-353 (other sdd commands, `install` as a later word) | TS-351 | TS-351 | n/a | TS-351 (script form, `--cwd` inside the root, `--help`, PowerShell) |
 | C002-REQ-326 | TS-354 | TS-354 (workspace hook file) | n/a | TS-355 | n/a | n/a | TS-356 (package path characters a hook command cannot carry) |
-| C002-REQ-327 | TS-357 | TS-357 (both modes; host built-in, adopter and `architect:`-prefixed agents; sdd MCP server tools), TS-358 (in VS Code), TS-359 (Copilot CLI) | TS-357 (path inside `.sdd/`, allowlisted command, `cwd` in a subfolder, `.sdd/` above the repository root) | n/a: a call the hook cannot decide is C002-REQ-328 (TS-362) | TS-357 | TS-360 (the workspace hook file decides alone, as the plugin-level entry does) | TS-358, TS-359 (planted instruction to delegate a product-code edit to `general-purpose`), TS-357 (non-string and `null` `agent_type`), TS-360 (agents installed, plugin part not loaded), TS-361 (package moved), TS-304 (PreToolUse entry removed) |
-| C002-REQ-328 | TS-362 | TS-362 (both modes; unclassed `edit`, `Agent` and adopter MCP tools) | TS-362 (empty input, empty `cwd`, letter case `write`) | TS-362 | TS-362 (a hook command without `--mode` or `--agents` denies even the session agent's call) | n/a | TS-362 (a host tool the classes file does not name is never allowed by default; fault injection in the lookup and the decision) |
+| C002-REQ-327 | TS-357 | TS-357 (both modes; host built-in, adopter and `architect:`-prefixed agents; sdd MCP server tools), TS-358 (in VS Code), TS-359 (Copilot CLI) | TS-357 (path inside `.sdd/`, allowlisted command, `cwd` in a subfolder, `.sdd/` above the repository root), TS-370 (a tool in `read_only` and in `write` or `terminal`) | n/a: a call the hook cannot decide is C002-REQ-328 (TS-362) | TS-357 | TS-360 (the workspace hook file decides alone, as the plugin-level entry does) | TS-358, TS-359 (planted instruction to delegate a product-code edit to `general-purpose`), TS-357 (non-string and `null` `agent_type`), TS-360 (agents installed, plugin part not loaded), TS-361 (package moved), TS-304 (PreToolUse entry removed) |
+| C002-REQ-328 | TS-362 | TS-362 (both modes; unclassed `edit`, `Agent` and adopter MCP tools), TS-368 (`--host` missing or other than `copilot`, both packages) | TS-362 (empty input, empty `cwd`, letter case `write`), TS-368 (unreadable input under a usage fault: `tool call` shown) | TS-362, TS-368 | TS-362 (a hook command without `--mode` or `--agents` denies even the session agent's call), TS-368 (likewise without `--host copilot`) | n/a | TS-362 (a host tool the classes file does not name is never allowed by default; fault injection in the lookup and the decision) |
 | C002-REQ-329 | TS-363 | TS-363 (both modes; host built-in and adopter agents), TS-364 | TS-363 (`cwd` in a subfolder; an unclassed tool in a repository without `.sdd/`) | n/a: an unreadable input or classes file is C002-REQ-328 (TS-362) | TS-363 | n/a | TS-364 (a broken classes file does not block subagents outside repositories with `.sdd/`) |
 | C002-REQ-330 | TS-365 | TS-365 (`architect:` form, sdd MCP server tools) | TS-365 (no `cwd`; an Architect agent's unclassed tool, which its tool list confines, C002-TS-308) | n/a: unreadable input is C002-REQ-328 (TS-362) | TS-365, TS-366 | n/a | TS-366 (a missing classes file does not block the Architect agents or P-03's chats) |
 

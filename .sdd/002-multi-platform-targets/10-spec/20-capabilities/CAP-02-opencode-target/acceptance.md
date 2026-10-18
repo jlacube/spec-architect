@@ -329,6 +329,45 @@ Scenario: C002-TS-227 — command file without the prefix
   Then it reports an error naming "new.md"
 ```
 
+## C002-REQ-217
+
+#### C002-AC-217.1 — The conductor holds `question: allow`, every specialist `question: deny`
+```gherkin
+Scenario Outline: C002-TS-228 — question rule per agent in both enforcement modes
+  Given "npm run package" has written "dist/opencode/" with "--mode opencode=<mode>"
+  When "dist/opencode/opencode.json" is parsed
+  Then the "permission" of the agent "sdd-conductor" holds "question" set to "allow"
+  And the "permission" of each of the nine specialists holds "question" set to "deny"
+  And the target structure check reports no TGT-PERM-001 finding
+  Examples:
+    | mode               |
+    | native-permissions |
+    | sdd-mcp-server     |
+```
+
+```gherkin
+Scenario Outline: C002-TS-229 — question rule missing from the conductor or given to a specialist
+  Given a generated "dist/opencode/opencode.json" in which <change>
+  When the target structure check runs on the OpenCode target package
+  Then it reports the error TGT-PERM-001 naming "<agent>" and <named>
+  Examples:
+    | change                                                                 | agent         | named                      |
+    | the "question" rule of "sdd-conductor" is set to "deny"                | sdd-conductor | the value "deny"           |
+    | the "question" key is removed from the "permission" of "sdd-conductor" | sdd-conductor | the missing key "question" |
+    | the "question" rule of "sdd-critic" is set to "allow"                  | sdd-critic    | the value "allow"          |
+    | the "question" key is removed from the "permission" of "sdd-planner"   | sdd-planner   | the missing key "question" |
+```
+
+```gherkin
+@eval
+Scenario: C002-TS-230 — conductor's question call reaches the SDK in a server session
+  Given the OpenCode eval runner with the OpenCode server ("opencode serve") of the pinned host binary of the tested version and the OpenCode target package in a copy of "fx-bootstrap" with 1 change
+  When P-01 runs the command "architect-new" with the title "Export to CSV"
+  Then the session's events hold a "question" call of "sdd-conductor" that the runner answers through the SDK's reply route
+  And no tool part of the session has the status "error" with a text starting "Model tried to call unavailable tool"
+  And the run does not end with "question unanswerable"
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -349,6 +388,7 @@ Scenario: C002-TS-227 — command file without the prefix
 | C002-REQ-214 | TS-221 | n/a | TS-221 (50-character topic) | n/a | n/a | n/a | n/a |
 | C002-REQ-215 | TS-222 | TS-223 (no finding) | n/a | n/a: C002-REQ-215 states no failure path; the server counterpart is C002-REQ-409 | n/a | n/a | n/a |
 | C002-REQ-216 | TS-225 | TS-226 (in an OpenCode session) | n/a | TS-227 | n/a | n/a | TS-226 (collision with the built-in "/new" and "/init") |
+| C002-REQ-217 | TS-228 | TS-228 (both enforcement modes), TS-230 (in an `opencode serve` session, whose default is `question: deny`) | n/a | TS-229 | TS-228, TS-229 (only the conductor may ask) | n/a | TS-229 (a specialist given `question: allow`) |
 
 Per-column n/a reasons. *Alternate*: package-content rules with one expected form. *Boundary*: no
 numeric limit in the requirement. *Error*: content rules whose failure is a target structure check

@@ -144,6 +144,35 @@ Scenario Outline: C002-TS-609 — a differing decision is reported
     | a path case writing "C:/repo/src/app.ts" through the tool "NotebookEdit"   | allow    | deny   |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-655 — Edit cases fed to OpenCode with the fixture file's first line
+  Given the OpenCode target package generated with "--mode opencode=native-permissions", and OpenCode started as the pinned host binary of the tested version with a database of its own
+  And the path corpus case "<case>", an "Edit" call of "<agent>" on "<path>" that expects "<expected>"
+  When the corpus replay suite replays "<case>" against the OpenCode permission rules
+  Then the replay fixture holds the file "<path>" before the call
+  And the "edit" call sent to OpenCode carries the path "<path>", that file's first line as "oldString" and another one-line text as "newString"
+  And the replay report records for "<case>" the decision "<expected>", with a "detail" that does not contain "Could not find oldString"
+  Examples:
+    | case   | agent                    | path                            | expected |
+    | PG-004 | architect:sdd-conductor  | {repo}/.sdd/004-x/existing.md   | allow    |
+    | PG-003 | architect:sdd-conductor  | {repo}/.sdd/004-x/a.md          | allow    |
+    | PG-050 | architect:sdd-researcher | {repo}/README.md                | deny     |
+```
+
+```gherkin
+Scenario Outline: C002-TS-656 — both forms of an unavailable-tool result read as deny
+  Given a stub OpenCode host that answers the "edit" call of the path case "PG-050" on "{repo}/README.md" with <part>
+  And "{repo}/README.md" of the replay fixture <target state> after the call
+  When the corpus replay suite reads the decision of that call for the OpenCode permission rules
+  Then the replay report records for "PG-050" the decision "<decision>"
+  And its "detail" <detail>
+  Examples:
+    | part                                                                                                                    | target state  | decision | detail                                                              |
+    | a tool part named "edit" with the status "error" and the text "Model tried to call unavailable tool 'edit'"             | is unchanged  | deny     | holds "Model tried to call unavailable tool 'edit'"                 |
+    | a part named "invalid" with the status "completed" and the output "The arguments provided to the tool are invalid: edit" | is unchanged  | deny     | holds "The arguments provided to the tool are invalid: edit"        |
+    | a tool part named "edit" with the status "completed"                                                                    | has changed   | allow    | is the part's output text                                           |
+```
+
 ## C002-REQ-607
 
 #### C002-AC-607.1 — Corpora hold the cases of the new risks
@@ -734,7 +763,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | TS-605 (plugin MCP configuration beside `install/mcp.json`) |
 | C002-REQ-604 | TS-606 | TS-606 (prompt file, tool set, agent without `tools`) | n/a | TS-606 | TS-606 | n/a | TS-606 (tool set, missing `tools` list) |
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases) | n/a | TS-609 | TS-608 | n/a | TS-608 (corpus abuse cases) |
+| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`) | TS-609 | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases) |
 | C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root, `sdd install copilot` in the bare and the script form and with an inside `--cwd`), TS-636 (writing subcommands, each with an outside `--cwd`) |
 | C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
