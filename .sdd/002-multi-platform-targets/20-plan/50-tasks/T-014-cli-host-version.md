@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-006]
 implements: [C002-REQ-508]
 satisfies_ac: [C002-AC-508.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-513, C002-TS-514, C002-TC-513, C002-TC-514]
 components: [C002-COMP-018]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 6bc1ba4, completed_at: 2026-10-18, notes: "host-version command; TC-513/514 are evals owned with T-038; open: Workspace Trust and organisation policy are not read (REQ-510 open item) — restricted-mode rows of TS-516 need T-038 or a spike to say where to read them; a host on PATH that fails --version is reported missing" }
 ---
 
 # C002-T-014 — CLI: host-version command
