@@ -1,5 +1,22 @@
-// Guard test fixtures (C001-T-050): builds the repository layout of tests/guards/path-corpus.json in a
-// temporary folder and resolves the corpus placeholders against it.
+// Guard test fixtures (C001-T-050, C002-T-007): builds the repository layout of
+// tests/guards/path-corpus.json in a temporary folder, resolves the corpus placeholders against it, and
+// holds the case format shared by the path and shell corpus tests and the replay suite (C002-COMP-008).
+//
+// Case fields common to both corpora (C002-IF-009 §2.1, §2.2):
+//   id        unique case ID (PG-nnn, BG-nnn)
+//   category  one of PATH_CATEGORIES / BASH_CATEGORIES; the replay applicability rules key on it
+//   tool      hook tool name (null: the hook input has no tool_name)
+//   agent     agent_type of the hook input (null: left out)
+//   cwd       optional working folder with placeholders; absent: {repo}; null: left out; "" empty
+//   env       optional stub of environment variables set while the case is decided, values with
+//             placeholders, null unsets the variable (for example CLAUDE_PLUGIN_DATA)
+//   requires  optional host capability the case needs (HOST_CAPABILITIES); the corpus tests skip the
+//             case when the fixture cannot provide it, the replay suite never does (C002-REQ-633)
+//   dialect   optional shell dialect of the tool, "bash" or "powershell"; when given it must match
+//             the tool (PowerShell: powershell, any other tool: bash); absent: derived from the tool
+//   stdin     raw hook input used unchanged instead of the fields above
+//   expect    "allow" | "deny" (path cases also per platform: { win32, posix })
+//   note      free text
 import { spawnSync } from "node:child_process";
 import { linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -10,6 +27,27 @@ import { repoRoot } from "../helpers.ts";
 
 const WIN = process.platform === "win32";
 
+export type Dialect = "bash" | "powershell";
+export type EnvStub = Record<string, string | null>;
+
+export const HOST_CAPABILITIES: readonly string[] = ["file-symlink"];
+export const DIALECTS: readonly Dialect[] = ["bash", "powershell"];
+
+const COMMON_FIELDS = ["id", "category", "tool", "agent", "cwd", "env", "requires", "dialect", "stdin", "expect", "note"];
+/** Path cases additionally carry the target path, the tool_input field it goes to, and platforms. */
+export const PATH_FIELDS: readonly string[] = [...COMMON_FIELDS, "path", "field", "platforms"];
+/** Shell cases additionally carry the command and, on a denial, the expected rule. */
+export const BASH_FIELDS: readonly string[] = [...COMMON_FIELDS, "command", "rule"];
+
+export const PATH_CATEGORIES: readonly string[] = [
+  "inside", "outside", "prefix", "traversal", "relative", "cwd", "case", "separators", "symlink", "unc",
+  "short-name", "windows-names", "drive", "memory", "identity", "tool", "malformed",
+];
+export const BASH_CATEGORIES: readonly string[] = [
+  "scenario", "sdd", "ripwire", "ast-grep", "git", "version", "pipe", "compound", "quoted", "powershell",
+  "identity", "tool", "malformed",
+];
+
 export interface CorpusCase {
   id: string;
   category: string;
@@ -18,11 +56,83 @@ export interface CorpusCase {
   path?: unknown;
   field?: string;
   cwd?: string | null;
+  env?: EnvStub;
+  dialect?: Dialect;
   stdin?: string;
   expect: "allow" | "deny" | { win32: "allow" | "deny"; posix: "allow" | "deny" };
   platforms?: string[];
   requires?: string;
   note?: string;
+}
+
+export interface BashCase {
+  id: string;
+  category: string;
+  tool: string;
+  agent: unknown;
+  command: unknown;
+  cwd?: string | null;
+  env?: EnvStub;
+  requires?: string;
+  dialect?: Dialect;
+  stdin?: string;
+  expect: "allow" | "deny";
+  rule?: string;
+  note?: string;
+}
+
+export function loadBashCorpus(): BashCase[] {
+  return (JSON.parse(readFileSync(join(repoRoot(), "tests", "guards", "bash-corpus.json"), "utf8")) as { cases: BashCase[] }).cases;
+}
+
+/** The shell dialect a case's tool is decided in (C002-IF-009 §2.2). */
+export function dialectOf(c: { tool: string | null; dialect?: Dialect }): Dialect {
+  return c.dialect ?? (c.tool === "PowerShell" ? "powershell" : "bash");
+}
+
+/** Problems of the case format: duplicate IDs, unknown categories, unknown fields, bad optional fields. */
+export function formatProblems(cases: readonly Record<string, unknown>[], fields: readonly string[], categories: readonly string[]): string[] {
+  const problems: string[] = [];
+  const seen = new Set<string>();
+  for (const c of cases) {
+    const id = typeof c["id"] === "string" ? c["id"] : JSON.stringify(c["id"]);
+    if (typeof c["id"] !== "string" || c["id"] === "") problems.push(`${id}: missing id`);
+    else if (seen.has(id)) problems.push(`${id}: duplicate id`);
+    seen.add(id);
+    if (!categories.includes(c["category"] as string)) problems.push(`${id}: unknown category ${JSON.stringify(c["category"])}`);
+    for (const k of Object.keys(c)) if (!fields.includes(k)) problems.push(`${id}: unknown field ${k}`);
+    if ("cwd" in c && c["cwd"] !== null && typeof c["cwd"] !== "string") problems.push(`${id}: cwd is neither a string nor null`);
+    if ("env" in c) {
+      const env = c["env"];
+      if (env === null || typeof env !== "object" || Array.isArray(env) || Object.values(env).some((v) => v !== null && typeof v !== "string"))
+        problems.push(`${id}: env is not an object of strings or null`);
+    }
+    if ("requires" in c && !HOST_CAPABILITIES.includes(c["requires"] as string)) problems.push(`${id}: unknown host capability ${JSON.stringify(c["requires"])}`);
+    if ("dialect" in c) {
+      if (!DIALECTS.includes(c["dialect"] as Dialect)) problems.push(`${id}: unknown dialect ${JSON.stringify(c["dialect"])}`);
+      else if (c["dialect"] !== dialectOf({ tool: c["tool"] as string | null })) problems.push(`${id}: dialect ${String(c["dialect"])} does not match tool ${JSON.stringify(c["tool"])}`);
+    }
+  }
+  return problems;
+}
+
+/** Runs `fn` with the case's environment stub applied (placeholders resolved), then restores the environment. */
+export function withEnv<T>(env: EnvStub | undefined, resolve: (s: string) => string, fn: () => T): T {
+  if (env === undefined) return fn();
+  const saved = new Map<string, string | undefined>();
+  for (const [k, v] of Object.entries(env)) {
+    saved.set(k, process.env[k]);
+    if (v === null) delete process.env[k];
+    else process.env[k] = resolve(v);
+  }
+  try {
+    return fn();
+  } finally {
+    for (const [k, v] of saved) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  }
 }
 
 export interface Corpus {
@@ -74,6 +184,8 @@ export function buildFixture(spec: Corpus["fixture"]): Fixture {
     writeFileSync(at(rel), content);
   }
   for (const rel of spec.dirs) mkdirSync(at(rel), { recursive: true });
+  // A .git folder next to .sdd makes {repo} the repository root whatever the case's cwd (C002-T-007).
+  mkdirSync(`${repo}/.git`, { recursive: true });
   for (const [rel, t] of Object.entries(spec.junctions)) {
     mkdirSync(dirname(at(rel)), { recursive: true });
     symlinkSync(target(t), at(rel), linkType);
@@ -132,6 +244,6 @@ export function applies(c: CorpusCase, fx: Fixture): boolean {
   return !c.requires || fx.capabilities.has(c.requires);
 }
 
-export function decide(stdin: string): "allow" | "deny" {
-  return decidePath(parseHookInput(stdin)).allow ? "allow" : "deny";
+export function decide(stdin: string, env?: EnvStub, resolve: (s: string) => string = (s) => s): "allow" | "deny" {
+  return withEnv(env, resolve, () => decidePath(parseHookInput(stdin)).allow) ? "allow" : "deny";
 }
