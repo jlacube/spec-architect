@@ -11384,6 +11384,9 @@ function isArchitectAgent(input) {
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
 var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+function dialectOf(toolName) {
+  return toolName === "PowerShell" ? "powershell" : "bash";
+}
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11647,7 +11650,7 @@ function decideBash(input) {
   if (typeof cmd !== "string" || cmd.trim() === "") return deny(RULE_ALLOWLIST, tool, "", "the tool input has no command");
   const cwd = typeof input.cwd === "string" && input.cwd !== "" ? input.cwd : null;
   if (cwd === null) return deny(RULE_ALLOWLIST, tool, cmd, "the hook input has no cwd");
-  const dialect = tool === "PowerShell" ? "powershell" : "bash";
+  const dialect = dialectOf(tool);
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;

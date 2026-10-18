@@ -1,13 +1,12 @@
-// Test client of the sdd MCP server (C002-T-016): bundles src/mcp/server.ts with esbuild once per test
-// file (the shipped bundle comes with C002-T-021), starts it as a child process with
+// Test client of the sdd MCP server (C002-T-016): runs the built server bundle (C002-T-021), starts it
+// as a child process with
 // tests/no-network.mjs preloaded (C002-NFR-205) and speaks newline-delimited JSON-RPC over its
 // standard input and output, keeping every byte the process writes.
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { build } from "esbuild";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = repoRoot();
@@ -21,37 +20,20 @@ net.Server.prototype.listen = function (...a) { process.stderr.write("LISTEN-ATT
 
 let bundled: { file: string; noListen: string; dir: string } | undefined;
 
-/** Bundles the server into a temporary folder (once per process). */
+/**
+ * The built server (`build/npm/sdd-mcp.mjs`, C002-T-021) with the plugin's `scripts/sdd.mjs` beside it,
+ * as in the shipped package (`<package>/scripts/`, C002-REQ-407, C002-ADR-004): the command tool runs
+ * `sdd …` with it. Both are copied to a temporary folder (once per process).
+ */
 export async function serverBundle(): Promise<{ file: string; noListen: string }> {
   if (bundled) return bundled;
+  const server = join(ROOT, "build", "npm", "sdd-mcp.mjs");
+  const cli = join(ROOT, "plugins", "architect", "scripts", "sdd.mjs");
+  for (const f of [server, cli]) if (!existsSync(f)) throw new Error(`${f} is missing: run \`npm run build\` first`);
   const dir = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-mcp-")));
   const file = join(dir, "sdd-mcp.mjs");
-  const version = (JSON.parse(readFileSync(join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8")) as { version: string }).version;
-  await build({
-    entryPoints: [join(ROOT, "src", "mcp", "server.ts")],
-    outfile: file,
-    bundle: true,
-    platform: "node",
-    format: "esm",
-    target: "node20",
-    define: { __SDD_VERSION__: JSON.stringify(version) },
-    banner: { js: `import { createRequire as __sddCreateRequire } from "node:module";\nconst require = __sddCreateRequire(import.meta.url);` },
-    logLevel: "warning",
-  });
-  // The package CLI beside the server, as in the shipped package (`<package>/scripts/sdd.mjs`,
-  // C002-REQ-407): the command tool runs `sdd …` with it.
-  await build({
-    entryPoints: [join(ROOT, "src", "cli.ts")],
-    outfile: join(dir, "sdd.mjs"),
-    bundle: true,
-    platform: "node",
-    format: "esm",
-    target: "node20",
-    charset: "utf8",
-    define: { __SDD_VERSION__: JSON.stringify(version) },
-    banner: { js: `import { createRequire as __sddCreateRequire } from "node:module";\nconst require = __sddCreateRequire(import.meta.url);` },
-    logLevel: "warning",
-  });
+  copyFileSync(server, file);
+  copyFileSync(cli, join(dir, "sdd.mjs"));
   const noListen = join(dir, "no-listen.mjs");
   writeFileSync(noListen, NO_LISTEN);
   bundled = { file, noListen, dir };

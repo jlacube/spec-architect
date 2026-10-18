@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
@@ -19,9 +19,13 @@ test("GPL dependency", () => {
     // C002-ADR-004: the build reads the version from plugin.json.
     cpSync(join(root, "plugins", "architect", ".claude-plugin"), join(tmp, "plugins", "architect", ".claude-plugin"), { recursive: true });
     cpSync(join(root, "plugins", "architect", "THIRD_PARTY_NOTICES.md"), join(tmp, "plugins", "architect", "THIRD_PARTY_NOTICES.md"));
-    // node_modules: the real packages, plus a GPL one imported by the CLI entry.
+    // node_modules: the real packages (C002-ADR-004: the same run bundles src/mcp/server.ts, so the
+    // MCP SDK and its dependencies must resolve too, or the build fails before the licence check),
+    // plus a GPL one imported by the CLI entry.
     mkdirSync(join(tmp, "node_modules"));
-    for (const name of ["esbuild", "yaml", "@esbuild"]) symlinkSync(join(root, "node_modules", name), join(tmp, "node_modules", name), "junction");
+    for (const e of readdirSync(join(root, "node_modules"), { withFileTypes: true })) {
+      if (e.isDirectory() && !e.name.startsWith(".")) symlinkSync(join(root, "node_modules", e.name), join(tmp, "node_modules", e.name), "junction");
+    }
     mkdirSync(join(tmp, "node_modules", "gpl-thing"));
     writeFileSync(join(tmp, "node_modules", "gpl-thing", "package.json"), JSON.stringify({ name: "gpl-thing", version: "1.2.3", license: "GPL-3.0", main: "index.js" }));
     writeFileSync(join(tmp, "node_modules", "gpl-thing", "index.js"), "module.exports = 1;\n");
@@ -29,7 +33,8 @@ test("GPL dependency", () => {
     writeFileSync(cli, `import gpl from "gpl-thing";\nvoid gpl;\n${readFileSync(cli, "utf8")}`);
     const r = spawnSync(process.execPath, [join(tmp, "scripts", "build.mjs")], { cwd: tmp, encoding: "utf8" });
     assert.notEqual(r.status, 0, r.stdout);
-    assert.match(r.stderr, /gpl-thing@1\.2\.3 \(GPL-3\.0\)/);
+    // The right reason: the licence check of the CLI entry (ERR-BLD-001), not a resolve error.
+    assert.match(r.stderr, /build failed: sdd: bundled package license not allowed: gpl-thing@1\.2\.3 \(GPL-3\.0\)/);
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
