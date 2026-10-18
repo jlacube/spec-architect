@@ -124,3 +124,12 @@ Question from the planner's billing revision.
 - **Options:** 1. Yes, a 40 USD limit on a dedicated CHG-002 key (Recommended) · 2. No key limit; ledger stop rule only
 - **Answer:** Yes, $40 key limit (Recommended) — P-01 creates a dedicated OpenRouter key for CHG-002 with a 40 USD credit limit and configures OpenCode with it (C002-T-001 step 1).
 - **Extracted instructions:** none
+
+## Round 10 — 2026-10-18
+
+P-01's statements on the prerequisites of C002-T-001 and C002-T-003.
+
+### Q-prereq-01 — OpenRouter key and npm account
+- **Blocking:** no · **Material:** no · **Candidates considered:** n/a (P-01 statements)
+- **Answer:** P-01: "OpenRouter key with 50$ limit created"; "npm account jlacube - valid and package name architect-sdd free"; npm 2FA: "2FA on for publish"; budget: "Keep: stop at $40, key $50 (Recommended)" — the ledger stop rule stays at 40 USD of OpenRouter spend; the 50 USD key limit is the hard backstop. The OpenRouter key lives only in OpenCode's credential store (`opencode auth list` shows one OpenRouter credential; OpenCode 1.15.10), never in the repository.
+- **Extracted instructions:** none
