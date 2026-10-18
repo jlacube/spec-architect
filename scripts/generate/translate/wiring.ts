@@ -150,8 +150,8 @@ export function tokenValues(source: SourcePlugin, table: MappingTable, mode: Mod
   return values;
 }
 
-/** Variant text lines with the tokens resolved; ERR-GEN-006 for each token without a value. */
-function variantLines(text: string, file: string, target: Target, tokens: Map<string, string>, diagnostics: Diagnostic[]): string[] {
+/** Variant text lines with the tokens resolved; ERR-GEN-006 for each token without a value. Also used for the install notes (C002-IF-005 §5). */
+export function variantLines(text: string, file: string, target: Target, tokens: Map<string, string>, diagnostics: Diagnostic[]): string[] {
   const lines = text.replace(/\n+$/, "").split("\n");
   return lines.map((l, i) =>
     l.replace(TOKEN, (token: string, name: string) => {

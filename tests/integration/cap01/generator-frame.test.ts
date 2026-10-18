@@ -260,7 +260,7 @@ test("--target selects one target; --mode overrides the mode and the manifest re
     const m = JSON.parse(readFileSync(join(out, "opencode", MANIFEST), "utf8")) as Record<string, unknown>;
     assert.equal(m.enforcement_mode, "native-permissions");
     assert.equal(m.mode_source, "override");
-    assert.match(r.stdout, /^opencode: written .*\/opencode\/ \(1 files, mode native-permissions\)$/);
+    assert.match(r.stdout, /^opencode: written .*\/opencode\/ \(\d+ files, mode native-permissions\)$/);
   } finally {
     rmSync(base, { recursive: true, force: true });
   }

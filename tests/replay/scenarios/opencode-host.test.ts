@@ -5,11 +5,14 @@
 // C002-T-042 registers it, each scenario is skipped. Run by `npm run replay -- opencode-host`, never by
 // `npm test` (scripts/test.mjs leaves tests/replay/ out).
 //   C002-TC-133 (C002-T-026)  adopter MCP server tool not available to an Architect agent
-// C002-T-029 (C002-TC-226) and C002-T-030 (C002-TC-207, 209, 211, 213, 222, 223) add their scenarios here.
+//   C002-TC-226 (C002-T-029)  built-in commands kept beside the 13 architect-<name> commands
+// C002-T-030 (C002-TC-207, 209, 211, 213, 222, 223) adds its scenarios here.
 import { test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import type { CorpusCase } from "../../guards/fixture.ts";
+import { repoRoot } from "../../helpers.ts";
 import type { ReplayAdapter, ReplayFixture, ReplayInput } from "../adapter.ts";
 import type { Mechanism } from "../expect.ts";
 import { ADAPTERS } from "../main.ts";
@@ -99,6 +102,60 @@ test("C002-TC-133 (C002-TS-133): the adopter's MCP tool fx-fs write_file is not 
     const calls = existsSync(log) ? readFileSync(log, "utf8").split("\n").filter((l) => l.includes("write_file")) : [];
     assert.deepEqual(calls, [], "fx-fs received no write_file call from the session");
     assert.equal(readFileSync(target, "utf8"), before, "src/app.ts is unchanged");
+  } finally {
+    fx.cleanup();
+  }
+});
+
+/** One entry of the command list of the OpenCode server API (`GET /command`). */
+interface HostCommand {
+  name: string;
+  description?: string;
+  agent?: string;
+}
+
+/**
+ * The command list of a running OpenCode session, read through the session driver without a model call
+ * (C002-T-042 step 1). Not part of the adapter interface of C002-T-040: an adapter that offers it has a
+ * `commands()` method; until then the scenario is skipped.
+ */
+type CommandLister = ReplayAdapter & { commands?: () => Promise<HostCommand[]> };
+
+test("C002-TC-226 (C002-TS-226): the session lists the 13 architect-<name> commands bound to sdd-conductor beside OpenCode's built-in init and new", async (t) => {
+  const adapter = (await openCodeHost(t)) as CommandLister | null;
+  if (!adapter) return;
+  if (typeof adapter.commands !== "function") {
+    t.skip(`the ${MECHANISM} adapter does not read the command list yet (C002-T-042 step 1)`);
+    return;
+  }
+  const names = readdirSync(join(repoRoot(), "plugins", "architect", "commands"))
+    .filter((n) => n.endsWith(".md"))
+    .map((n) => n.slice(0, -".md".length))
+    .sort();
+  assert.equal(names.length, 13);
+  const fx = buildReplayFixture(loadCorpora().path.corpus.fixture);
+  try {
+    await adapter.setup(fx);
+    let list: HostCommand[];
+    try {
+      list = await adapter.commands();
+    } finally {
+      await adapter.teardown();
+    }
+    const byName = new Map(list.map((c) => [c.name, c]));
+    for (const n of names) {
+      const c = byName.get(`architect-${n}`);
+      assert.ok(c, `architect-${n} is listed`);
+      assert.equal(c.agent, "sdd-conductor", `architect-${n} is bound to sdd-conductor`);
+    }
+    assert.deepEqual(list.filter((c) => c.name.startsWith("architect-")).map((c) => c.name).sort(), names.map((n) => `architect-${n}`), "exactly the 13 Architect commands");
+    const architect = new Set(list.filter((c) => c.name.startsWith("architect-")).map((c) => c.description));
+    for (const builtIn of ["init", "new"]) {
+      const c = byName.get(builtIn);
+      assert.ok(c, `the built-in command ${builtIn} is listed`);
+      assert.notEqual(c.agent, "sdd-conductor", `${builtIn} is OpenCode's own, not bound to the conductor`);
+      assert.ok(!architect.has(c.description), `${builtIn} keeps OpenCode's own description`);
+    }
   } finally {
     fx.cleanup();
   }
