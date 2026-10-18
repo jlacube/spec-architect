@@ -1,8 +1,12 @@
-// Tool handlers of the sdd MCP server (C002-IF-002 §5). C002-T-016 binds the protocol only: every
-// handler is a stub that fails closed with ERR-MCP-002 and changes nothing. C002-T-017 replaces the
-// write tools (src/mcp/tools/files.ts) and C002-T-019 the command tool (src/mcp/tools/shell.ts).
+// Tool handlers of the sdd MCP server (C002-IF-002 §5). The write tools are in src/mcp/tools/files.ts
+// (C002-T-017); the command tool is a stub that fails closed with ERR-MCP-002 and changes nothing until
+// C002-T-019 replaces it (src/mcp/tools/shell.ts).
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { errorResult } from "./results.ts";
 import type { ToolName, ToolSchemas } from "./schemas.ts";
+import { replaceText, writeFile } from "./tools/files.ts";
+
+export { errorResult };
 
 export interface ToolContext {
   /** The repository root of the session (C002-IF-002 §3), fixed at initialisation. */
@@ -14,21 +18,12 @@ export interface ToolContext {
 
 export type ToolHandler = (args: Record<string, unknown>, ctx: ToolContext) => Promise<CallToolResult>;
 
-/** A CallToolResult carrying `$defs/errorResult` (C002-IF-002 §4, §6). */
-export function errorResult(tool: ToolName, status: "refused" | "failed", code: string, message: string, extra: Record<string, unknown> = {}): CallToolResult {
-  return {
-    content: [{ type: "text", text: message }],
-    structuredContent: { status, tool, code, message, ...extra },
-    isError: true,
-  };
-}
-
 function notImplemented(tool: ToolName): ToolHandler {
   return async () => errorResult(tool, "failed", "ERR-MCP-002", `internal fault in ${tool}: the tool is not implemented in this build; the call was refused`);
 }
 
 export const HANDLERS: Record<ToolName, ToolHandler> = {
-  write_file: notImplemented("write_file"),
-  replace_text: notImplemented("replace_text"),
+  write_file: writeFile,
+  replace_text: replaceText,
   run_command: notImplemented("run_command"),
 };
