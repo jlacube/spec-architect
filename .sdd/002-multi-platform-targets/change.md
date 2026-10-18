@@ -7,7 +7,7 @@ status: active
 phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:4cef873754b83b3b87d2cc92802e314540c9da4514ce0805f8fef50145a40a33", approved_at: 2026-10-18, approved_by: jerome.lacube }
+  10-spec: { status: in-review, approved_hash: "sha256:4cef873754b83b3b87d2cc92802e314540c9da4514ce0805f8fef50145a40a33", approved_at: 2026-10-18, approved_by: jerome.lacube }
   20-plan: { status: stale, approved_hash: "sha256:99a70b123a9a926a0f809bdea298f20ce045d794a400ea44e7e4b59fbe653efd", approved_at: 2026-10-18, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null

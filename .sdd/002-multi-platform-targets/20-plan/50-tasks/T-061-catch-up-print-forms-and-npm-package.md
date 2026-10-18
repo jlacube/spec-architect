@@ -35,10 +35,10 @@ lookup of the npm `sdd` in a Claude Code session (C002-IF-003 §1, defect D-004)
 | modify | `scripts/licenses.mjs` › ERR-BLD-001 message builder | each line starts with `ERR-BLD-001: `, followed by the Message text of errors.md §4 unchanged |
 | modify | `src/mcp/server.ts` › usage-error output | the line `sdd-mcp: ERR-MCP-007: <message>`, the message being the errors.md §2 text (`usage: … [--root <dir>]: <detail>`); today the colon after the code is missing |
 | modify | `scripts/package.mjs` › npm README text | names the repository URL `https://github.com/jlacube/spec-architect`, whose README is the full guide (C002-IF-003 §1 tree) |
-| modify | `tests/integration/build/notices-union.test.ts` | C002-TC-418 reads the code and message from the line, as C002-TS-418 now states |
+| modify | `tests/integration/bundles/notices-union.test.ts` | C002-TC-418 reads the code and message from the line, as C002-TS-418 now states |
 | modify | `tests/integration/mcp/protocol.test.ts` | C002-TC-422 checks the start of the standard-error line |
 | modify | `tests/integration/mcp/shell.test.ts` | adds C002-TC-423 (own CLI deleted beside the server) and C002-TC-424 (`${CLAUDE_PLUGIN_ROOT}` reaches `node` as literal text) |
-| modify | `tests/integration/build/npm-staging.test.ts` | C002-TC-502 compares the two change folders as the revised C002-TS-502 states (same file list; equal lines except the translated CLI lines of `20-plan/handoff.md`); a unit assertion on the README URL |
+| modify | `tests/integration/npm-build/npm-staging.test.ts` | C002-TC-502 compares the two change folders as the revised C002-TS-502 states (same file list; equal lines except the translated CLI lines of `20-plan/handoff.md`); a unit assertion on the README URL |
 | modify | `tests/integration/cli/template.test.ts` | adds C002-TC-538 against the installed tarball (fx-tgz), with `CLAUDE_PLUGIN_ROOT` set to a fixture plugin root |
 
 ## Preconditions
@@ -68,8 +68,8 @@ lookup of the npm `sdd` in a Claude Code session (C002-IF-003 §1, defect D-004)
 
 ## Verification
 
-- `npm test -- build/notices-union`, `npm test -- mcp/protocol`, `npm test -- mcp/shell`
-- `npm test -- build/npm-staging`, `npm test -- cli/template`
+- `npm test -- bundles/notices-union`, `npm test -- mcp/protocol`, `npm test -- mcp/shell`
+- `npm test -- npm-build/npm-staging`, `npm test -- cli/template`
 - `npm run check`
 
 ## Done when

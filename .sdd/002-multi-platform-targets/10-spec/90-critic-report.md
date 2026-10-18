@@ -1207,3 +1207,38 @@ G2 can be re-approved after a short spec-writer, test-designer and architect pas
 CR-39 item 5. A check limited to C002-REQ-614, C002-DOD-004, C002-TS-358, C002-REQ-304,
 C002-REQ-327 … 329, C002-US-307, the glossary rows, C002-IF-005 §5 step 6, the rule-6 message and
 the index is enough.
+
+## Revision D-004 … D-009 review (2026-10-18)
+
+Reviewed by the critic on `git diff 80e3c4f HEAD` against defects D-004 … D-009, the S-07 record
+(§9 F-1 … F-10, OpenCode 1.18.31) and P-01's answers Q-prereq-01, Q-s07-01, Q-s07-02. The critic had
+no edit tool for this large report; the conductor appended this section from the critic's hand-back
+and fixed the two minor findings. Lint: the 9 waived LINT-DELTA-001 only; trace 100 %.
+
+Defects: D-004 (template root; literal catalogue messages, mirrored exactly by `src/cli/errors.ts`),
+D-005 (PLG-VER-001 catalogued), D-006 (no shell expansion in run_command; ERR-MCP-006 reasons), D-007
+(no-path fault; three extra fail-closed denies), D-008 (hand-off exception, ERR-BLD print form, README
+URL) and D-009 (F-1 … F-10 placed once and cross-referenced) are resolved; C002-REQ-217 is testable
+and owned.
+
+#### CR-42 — The print form claimed every code, check codes included; two ERR-REL cells kept value lists in the Message column
+- **Severity:** minor
+- **Refs:** `errors.md` print form, §7, ERR-REL-010, ERR-REL-013; architecture §5 "Error handling"; C002-IF-005 §6
+- **Evidence:** "Every code of this catalogue is shown as `<code>: <message>`" against the check runner's C001-IF-08 §3 finding format (`scripts/check/run.mjs:37`); `shows hooks <state or "not recorded">`.
+- **Why it matters:** C002-T-035 could print `TGT-PERM-001: …` unlike the existing checks; C002-T-047 could not tell how `not recorded` is printed.
+- **Suggested fix:** limit the print form to §1 … §6; move the placeholder values to the Condition column.
+- **Owner:** sdd-architect
+- **Status:** resolved — fixed by the conductor (this line updated by the conductor): `errors.md` and the architecture row limit the print form to §1 … §6 (§7 check codes keep the C001-IF-08 §3 format); ERR-REL-010 `<state>` and ERR-REL-013 `<value>` with their values in the Condition column, printed without quotes
+
+#### CR-43 — Index AC and TS counts were stale after the revision
+- **Severity:** minor
+- **Refs:** `00-index.md` capability table
+- **Evidence:** CAP-02 showed 16 AC / 27 TS and the totals 134 / 238, against the trace's 135 / 250.
+- **Why it matters:** a completeness check against the index finds 1 AC and 12 TS fewer than exist.
+- **Suggested fix:** CAP-02 17 / 30, CAP-03 TS 70, CAP-04 TS 26, CAP-05 TS 39, CAP-06 TS 50; totals 135 / 250.
+- **Owner:** sdd-spec-writer
+- **Status:** resolved — fixed by the conductor as suggested (this line updated by the conductor)
+
+### Verdict (revision D-004 … D-009)
+
+**ready for G2 re-approval.** 0 blocker, 0 major; the two minors are fixed.

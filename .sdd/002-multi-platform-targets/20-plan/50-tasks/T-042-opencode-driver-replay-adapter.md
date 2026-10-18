@@ -67,8 +67,9 @@ only, with the fixture's adopter agent (C002-REQ-626). Unknown `architect:sdd-*`
    file's first line. Read a tool part with status `error` and the text `Model tried to call
    unavailable tool`, and a part named `invalid`, as `deny`; read `allow` only when the call ran
    (C002-TS-656).
-4. Record `host_versions.opencode` from the pinned binary in every report; refuse to run on another
-   version.
+4. Record `host_versions.opencode` from the pinned binary in every report. The driver only reads and
+   returns the version; the `opencode-permissions` replay adapter refuses to run on another version
+   (the eval runner of C002-T-044 records it as read, ERR-REL-006).
 5. The infeasible-driver branch of `10-strategy.md` §4 is not taken (S-07 §4: feasible on 1.15.10
    and 1.18.31), so no fallback adapter is built and no case moves to C002-T-056.
 

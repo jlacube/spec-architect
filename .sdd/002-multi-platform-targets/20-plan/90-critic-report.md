@@ -871,3 +871,33 @@ owning steps, test cases, risk rows and the Copilot allowance, and it applies P-
 One major finding remains. CR-27 is a wording fix in C002-T-046 and C002-T-050 that follows the spec
 fix of CR-40. No P-01 question. G3 can be re-approved after G2 and that fix. A check limited to
 C002-T-046 and C002-T-050 is enough.
+
+## Revision D-004 … D-009 review (2026-10-18)
+
+Reviewed by the critic on `git diff 80e3c4f HEAD -- 20-plan` (planner 12a17b3) against the spec
+revision and P-01's answers (rounds 10–11); appended by the conductor from the critic's hand-back.
+Done tasks were not reopened; the catch-up tasks C002-T-061 and T-062 cover every code change the
+revised interfaces require; C002-REQ-217 is owned (T-030, T-035, T-044/T-056); budget arithmetic
+(93 sessions, 27.85 USD) and the critical path (33) check out. Lint: 9 waived; trace 100 %.
+
+#### CR-28 — C002-T-061 named test files under the git-ignored `tests/integration/build/`
+- **Severity:** minor
+- **Refs:** C002-T-061, C002-TC-417 … 419, 502, 503, 519, 529, 530, 534, 535, 121
+- **Evidence:** `tests/integration/build/notices-union.test.ts` in T-061 and the test plan, while `.gitignore:5` ignores `build/` and the done tests live in `bundles/`, `npm-build/` and `packaging/`.
+- **Why it matters:** the named filters select no file; a file created there would never be committed.
+- **Suggested fix:** point the task and the TC rows at the real paths and filters.
+- **Owner:** sdd-planner
+- **Status:** resolved — fixed by the conductor (this line updated by the conductor): T-061 and every TC row now name `tests/integration/bundles/`, `npm-build/` and `packaging/` with matching filters
+
+#### CR-29 — The shared OpenCode driver was told to refuse another version, while the eval runner must record it as read
+- **Severity:** minor
+- **Refs:** C002-T-042 step 4, C002-T-044 step 3a, C002-IF-010 §4, ERR-REL-006
+- **Evidence:** "refuse to run on another version" (T-042 step 4) against "a version other than the tested one is recorded as read" (T-044 step 3a, IF-010 §4).
+- **Why it matters:** two tasks editing one driver file would give opposite rules.
+- **Suggested fix:** the driver only reads and returns the version; the replay adapter refuses.
+- **Owner:** sdd-planner
+- **Status:** resolved — fixed by the conductor as suggested (this line updated by the conductor)
+
+### Verdict (revision D-004 … D-009)
+
+**ready for G3 re-approval after G2.** 0 blocker, 0 major; the two minors are fixed.

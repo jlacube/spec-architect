@@ -374,7 +374,7 @@ branch.
 | C002-TC-118 | C002-TS-118 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
 | C002-TC-119 | C002-TS-119 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
 | C002-TC-120 | C002-TS-120 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
-| C002-TC-121 | C002-TS-121 | integration | `tests/integration/build/package-staging.test.ts` | `npm test -- build/package-staging` | fx-src | E-W | C002-T-015, C002-T-028, C002-T-035 |
+| C002-TC-121 | C002-TS-121 | integration | `tests/integration/packaging/package-staging.test.ts` | `npm test -- build/package-staging` | fx-src | E-W | C002-T-015, C002-T-028, C002-T-035 |
 | C002-TC-122 | C002-TS-122 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-src with a pasted variant | E-W | C002-T-035, C002-T-028 |
 | C002-TC-123 | C002-TS-123 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
 | C002-TC-124 | C002-TS-124 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
@@ -505,9 +505,9 @@ branch.
 | C002-TC-414 | C002-TS-414 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-415 | C002-TS-415 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-416 | C002-TS-416 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
-| C002-TC-417 | C002-TS-417 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022, C002-T-023 |
-| C002-TC-418 | C002-TS-418 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-src with an injected GPL package (`gpl-lib` 1.0.0) | E-W | C002-T-061, C002-T-021 |
-| C002-TC-419 | C002-TS-419 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-tgz | E-W | C002-T-021 |
+| C002-TC-417 | C002-TS-417 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022, C002-T-023 |
+| C002-TC-418 | C002-TS-418 | integration | `tests/integration/bundles/notices-union.test.ts` | `npm test -- bundles/notices-union` | fx-src with an injected GPL package (`gpl-lib` 1.0.0) | E-W | C002-T-061, C002-T-021 |
+| C002-TC-419 | C002-TS-419 | integration | `tests/integration/bundles/notices-union.test.ts` | `npm test -- bundles/notices-union` | fx-tgz | E-W | C002-T-021 |
 | C002-TC-420 | C002-TS-420 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-421 | C002-TS-421 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-422 | C002-TS-422 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-061, C002-T-016 |
@@ -516,8 +516,8 @@ branch.
 | C002-TC-641 | C002-TS-641 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
 | C002-TC-642 | C002-TS-642 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, cfg shim with a `.cmd`-only executable | E-W | C002-T-019 |
 | C002-TC-501 | C002-TS-501 | integration | `scripts/smoke-npm.mjs` | `npm run smoke:npm` | fx-tgz (clean prefix) | E-W4 | C002-T-023, C002-T-022 |
-| C002-TC-502 | C002-TS-502 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz, two copies `fx-a` and `fx-b` of fx-bootstrap | E-W | C002-T-061, C002-T-022 |
-| C002-TC-503 | C002-TS-503 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022, C002-T-003, C002-T-052, C002-T-055 |
+| C002-TC-502 | C002-TS-502 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz, two copies `fx-a` and `fx-b` of fx-bootstrap | E-W | C002-T-061, C002-T-022 |
+| C002-TC-503 | C002-TS-503 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-src | E-W | C002-T-022, C002-T-003, C002-T-052, C002-T-055 |
 | C002-TC-504 | C002-TS-504 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-008 |
 | C002-TC-505 | C002-TS-505 | integration | `tests/integration/cli/guard-message.test.ts` | `npm test -- cli/guard-message` | inline | E-W | C002-T-008 |
 | C002-TC-506 | C002-TS-506 | eval | `evals/targets/doctor/TS-506.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-full | E-CC, E-OCE | C002-T-038, C002-T-056 |
@@ -533,7 +533,7 @@ branch.
 | C002-TC-516 | C002-TS-516 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy, hooks states per row | E-VSC | C002-T-038 |
 | C002-TC-517 | C002-TS-517 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | fx-tgz | E-W | C002-T-004 |
 | C002-TC-518 | C002-TS-518 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | inline | E-W | C002-T-004 |
-| C002-TC-519 | C002-TS-519 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-519 | C002-TS-519 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022 |
 | C002-TC-520 | C002-TS-520 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
 | C002-TC-521 | C002-TS-521 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
 | C002-TC-522 | C002-TS-522 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
@@ -543,13 +543,13 @@ branch.
 | C002-TC-526 | C002-TS-526 | eval | `evals/targets/doctor/TS-526.eval.mjs` | `run.mjs --host copilot-cli` | user profile without VS Code settings | E-CPC | C002-T-038, C002-T-045 |
 | C002-TC-527 | C002-TS-527 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-010, C002-T-005 |
 | C002-TC-528 | C002-TS-528 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-010 |
-| C002-TC-529 | C002-TS-529 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
-| C002-TC-530 | C002-TS-530 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src with a plugin path planted in a template | E-W | C002-T-022 |
+| C002-TC-529 | C002-TS-529 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-530 | C002-TS-530 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-src with a plugin path planted in a template | E-W | C002-T-022 |
 | C002-TC-531 | C002-TS-531 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline | E-W | C002-T-012 |
 | C002-TC-532 | C002-TS-532 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | inline with `.sdd/_templates` | E-W | C002-T-012 |
 | C002-TC-533 | C002-TS-533 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | fx-repo | E-W | C002-T-013 |
-| C002-TC-534 | C002-TS-534 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022 |
-| C002-TC-535 | C002-TS-535 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022 |
+| C002-TC-534 | C002-TS-534 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022 |
+| C002-TC-535 | C002-TS-535 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-src | E-W | C002-T-022 |
 | C002-TC-536 | C002-TS-536 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-009, C002-T-005 |
 | C002-TC-537 | C002-TS-537 | eval | `evals/targets/doctor/TS-537.eval.mjs` | `run.mjs --host claude-code` | cfg-full; fx-bootstrap copy; empty git repository `C:/fx-work/fresh` | E-CC | C002-T-010, C002-T-048 |
 | C002-TC-538 | C002-TS-538 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | fx-tgz (0.3.0, clean prefix), fx-bootstrap copy without `.sdd/_templates/`, `CLAUDE_PLUGIN_ROOT` = `C:/fx/plugin-root` whose `templates/full/20-plan/handoff.md` holds `# plugin copy` | E-W | C002-T-061, C002-T-012, C002-T-022 |

@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T15:46:06.783Z",
+  "generated_at": "2026-10-18T16:10:48.089Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -4061,7 +4061,7 @@
       "file": "20-plan/50-tasks/T-042-opencode-driver-replay-adapter.md",
       "line": 1,
       "title": "OpenCode session driver and the opencode-permissions replay adapter",
-      "content_hash": "sha256:a3438fb04d9a4c227f9e46efee77b448c237613ed90f630daf223782dc99917b",
+      "content_hash": "sha256:58b247350f369edd0f73f5b052c844063a700b3359d943476cc4b4b727e8ed2b",
       "status": "todo"
     },
     {
@@ -4232,7 +4232,7 @@
       "file": "20-plan/50-tasks/T-061-catch-up-print-forms-and-npm-package.md",
       "line": 1,
       "title": "Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates",
-      "content_hash": "sha256:f04b4792087ee8bf2c97b9dd057efdc88423d1ea8bcfcb9ec1817d2430e98675",
+      "content_hash": "sha256:6aaae0d0fa2716cd860e9275cb33a5f4b1861f5d5259975743bc0a066c512b0e",
       "status": "todo"
     },
     {
@@ -4410,7 +4410,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 377,
       "title": "C002-TS-121",
-      "content_hash": "sha256:d9912a80976e0f80afc71940fa307d87f51877fceb3ff449c085109491037d22"
+      "content_hash": "sha256:bfba45f580dbc00f4765f4870333dc08eae254e7f0b2967bae13eead7092d342"
     },
     {
       "id": "C002-TC-122",
@@ -5450,7 +5450,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 508,
       "title": "C002-TS-417",
-      "content_hash": "sha256:9adf5bd51533c21f3286b6b595a7457ae219ae1896689fad2587aa80ac11492a"
+      "content_hash": "sha256:73e58dccb21560a6050a88c737942368d10479f27a504c31c7026c18f9dc0e1a"
     },
     {
       "id": "C002-TC-418",
@@ -5458,7 +5458,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 509,
       "title": "C002-TS-418",
-      "content_hash": "sha256:7b84956581c953654bd913fd0fdadbcc7e50ac4fea92013b1be9cd28692b9ba0"
+      "content_hash": "sha256:84175350b24b92a3d0682545b42b60f8de6e04daae8e2002b1542383d3a50613"
     },
     {
       "id": "C002-TC-419",
@@ -5466,7 +5466,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 510,
       "title": "C002-TS-419",
-      "content_hash": "sha256:8abccc12254a3cf64f30777df9e66dcceb39f25a3f12f08ab433f35b5cff135e"
+      "content_hash": "sha256:f26bf85c0cc83ded662d34c3a0ce0cb4c92c0f1cb99a026614c224e8d94f3460"
     },
     {
       "id": "C002-TC-420",
@@ -5522,7 +5522,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 519,
       "title": "C002-TS-502",
-      "content_hash": "sha256:0561af27083f5876af23027e5ffa6a6e4f693a416bd0712b7f5f60f1b93617c3"
+      "content_hash": "sha256:93fdd77549ed33821ed0d62a9de7fab57dd21ac840c8bcf9dfb79ceb34fb0309"
     },
     {
       "id": "C002-TC-503",
@@ -5530,7 +5530,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 520,
       "title": "C002-TS-503",
-      "content_hash": "sha256:6adedece8131e9f1d0683be6b7e95716c7e3922af42349af4c2e9575276acd98"
+      "content_hash": "sha256:8592ea8ebffe0b43a4efb1df82c4858def967f0d6b2acc9ff79cb3cfee132373"
     },
     {
       "id": "C002-TC-504",
@@ -5658,7 +5658,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 536,
       "title": "C002-TS-519",
-      "content_hash": "sha256:8c43648d48a650e84468a3fae5f7ba4b61a646e132e31e3fdf7b4b6ae583fc3f"
+      "content_hash": "sha256:2676b4e0ebe697cd747150961d66b6f0c5879fcfed5e50d1d5cc1f758931c683"
     },
     {
       "id": "C002-TC-520",
@@ -5738,7 +5738,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 546,
       "title": "C002-TS-529",
-      "content_hash": "sha256:43d47e97a5deca4b68e1c79c4cca12a871901a7b8ebf4f3a367cbd9621537963"
+      "content_hash": "sha256:08a2cf5db6cf349704c14250bf7964cab20c70496103e68f9124da13c2bd82fe"
     },
     {
       "id": "C002-TC-530",
@@ -5746,7 +5746,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 547,
       "title": "C002-TS-530",
-      "content_hash": "sha256:2a74ef9ac915ccf1611f36b4bd167e298596d7831a7396e852e8863b25fce399"
+      "content_hash": "sha256:6b51126961c1c7ddc35920770a7fe0dc222dafa2a84aee60095a7b5bdde76e12"
     },
     {
       "id": "C002-TC-531",
@@ -5778,7 +5778,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 551,
       "title": "C002-TS-534",
-      "content_hash": "sha256:9b385a7c2bbefca3170c4f417da737ca8ef6dd516d5449328e62ad2d7199573a"
+      "content_hash": "sha256:0aa617d5ed2d60e3b961033df65de44662d27549eb98e96911b671eefbbaae55"
     },
     {
       "id": "C002-TC-535",
@@ -5786,7 +5786,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 552,
       "title": "C002-TS-535",
-      "content_hash": "sha256:20c19f29da2bd7f6b713b414e748a82d040f6f3feb59363c694df13bb798a5fa"
+      "content_hash": "sha256:94ee1d5fe3098dc6e39e7b595b124a575735fdff1deed8fa844460d9113a48d8"
     },
     {
       "id": "C002-TC-536",
