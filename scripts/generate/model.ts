@@ -55,6 +55,11 @@ export interface EmitInput {
   table: MappingTable;
   target: Target;
   mode: Mode;
+  /**
+   * The tables of every target of the run: a variant one of them declares names a wiring anchor required
+   * for every target (C002-IF-001 §3 step 3). Absent: this table alone.
+   */
+  peers?: readonly MappingTable[];
 }
 
 /** An emitter's result: package-relative `/`-separated paths and their text, plus its diagnostics. */

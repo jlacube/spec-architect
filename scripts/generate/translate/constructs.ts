@@ -11,13 +11,16 @@
 // not declare at all, so that a construct without a table entry still stops generation.
 //
 // Wiring anchors (`variant_required` constructs: CLI invocation lines, the Claude Code host probe, other
-// `${CLAUDE_PLUGIN_ROOT}` uses) are replaced by the variant pass of C002-T-028, which runs before this one
-// (§3 step 2) and owns their coverage check (§3 step 3, ERR-GEN-002). Until that pass exists the anchors
-// are `pending`: this pass leaves them as they are and does not report them.
+// `${CLAUDE_PLUGIN_ROOT}` uses; "Claude Code wiring" sections; the anchors of the tables' `variants`) are
+// replaced by the variant pass (./wiring.ts), which runs first (§3 step 2) and owns their coverage check
+// (§3 step 3, ERR-GEN-002). The constructs then apply to the variant text as to any body line; an anchor
+// construct left after the pass is a leak (ERR-GEN-001). A diagnostic on a variant line names the variant
+// file and its line.
 import { diagnostic, type Diagnostic } from "../diagnostics.ts";
 import type { EmitInput, SourceDoc, SourceFile } from "../model.ts";
 import type { Construct, Context, MappingTable, Mode, Target } from "../tables.ts";
 import { fieldLine } from "./frontmatter.ts";
+import { applyVariants, type WiredLine } from "./wiring.ts";
 
 /** Detector of a glossary construct, used when the table has no construct of that id. */
 interface GlossaryDetector {
@@ -85,7 +88,10 @@ export interface BodiesResult {
 }
 
 export interface ConstructOptions {
-  /** `pending` until the variant pass of C002-T-028 runs before this one; then `applied`, and an anchor left is a leak. */
+  /**
+   * `applied` (default): the variant pass runs first and an anchor construct left is a leak. `pending`: no
+   * variant pass; anchors are left as they are and not reported (the body-construct pass alone).
+   */
   variantAnchors?: "pending" | "applied";
 }
 
@@ -132,6 +138,8 @@ interface Ctx {
   diagnostics: Diagnostic[];
   /** `<file>\0<line>\0<id>\0<match>` of each construct already reported, so the scan does not repeat it. */
   reported: Set<string>;
+  /** Body lines after the variant pass, per source path; absent when the pass did not run. */
+  wired?: Map<string, WiredLine[]>;
 }
 
 function unmapped(ctx: Ctx, file: string, line: number, d: Detector, match: string, why?: string): void {
@@ -183,26 +191,32 @@ function translateLine(ctx: Ctx, file: string, line: number, text: string, conte
 }
 
 /** §3 step 8 on one translated line: every detector match outside `accepted_in` is ERR-GEN-001. */
-function scanLine(ctx: Ctx, file: string, line: number, text: string, context: Context): void {
+function scanLine(ctx: Ctx, file: string, line: number, text: string, context: Context, coveredAnchors = false): void {
   for (const d of ctx.dets) {
-    if (isAnchor(d) && ctx.anchors === "pending") continue;
+    // An anchor left on a source body line is the coverage check's ERR-GEN-002, not a second report here.
+    if (isAnchor(d) && (ctx.anchors === "pending" || coveredAnchors)) continue;
     if (d.accepted.includes(context)) continue;
     d.re.lastIndex = 0;
     for (const m of text.matchAll(d.re)) unmapped(ctx, file, line, d, m[0]);
   }
 }
 
-function translateText(ctx: Ctx, file: string, firstLine: number, lines: readonly string[], context: Context): { lines: string[]; sourceLines: number[] } {
+/** Body lines of a file as the variant pass left them, or as in the source when it did not run. */
+function bodyLines(ctx: Ctx, path: string, firstLine: number, lines: readonly string[]): WiredLine[] {
+  return ctx.wired?.get(path) ?? lines.map((text, i) => ({ text, line: firstLine + i, origin: { file: path, line: firstLine + i } }));
+}
+
+function translateText(ctx: Ctx, lines: readonly WiredLine[], context: Context): { lines: string[]; sourceLines: number[] } {
   const out: string[] = [];
   const sourceLines: number[] = [];
-  lines.forEach((text, i) => {
-    const line = firstLine + i;
-    const t = translateLine(ctx, file, line, text, context);
-    if (t === null) return;
-    scanLine(ctx, file, line, t, context);
+  for (const l of lines) {
+    const { file, line } = l.origin;
+    const t = translateLine(ctx, file, line, l.text, context);
+    if (t === null) continue;
+    scanLine(ctx, file, line, t, context, ctx.wired !== undefined && l.variant === undefined);
     out.push(t);
-    sourceLines.push(line);
-  });
+    sourceLines.push(l.line);
+  }
   return { lines: out, sourceLines };
 }
 
@@ -221,29 +235,33 @@ function translateDoc(ctx: Ctx, doc: SourceDoc, role: DocRole): TranslatedDoc {
       })
       .join("\n");
   }
-  const body = translateText(ctx, doc.path, doc.bodyStartLine, doc.lines.slice(doc.bodyStartLine - 1), "body");
+  const body = translateText(ctx, bodyLines(ctx, doc.path, doc.bodyStartLine, doc.lines.slice(doc.bodyStartLine - 1)), "body");
   return { path: doc.path, role, fields, body: body.lines.join("\n"), sourceLines: body.sourceLines };
 }
 
 function translateResource(ctx: Ctx, file: SourceFile): TranslatedDoc {
-  const body = translateText(ctx, file.path, 1, file.text.split("\n"), "body");
+  const body = translateText(ctx, bodyLines(ctx, file.path, 1, file.text.split("\n")), "body");
   return { path: file.path, role: "resource", fields: {}, body: body.lines.join("\n"), sourceLines: body.sourceLines };
 }
 
 /**
  * Translates every agent, command and skill body (and the Markdown resources of the skills) of the source
- * plugin for one target (C002-IF-001 §3 steps 6 and 8).
+ * plugin for one target: the variant pass and its coverage check (C002-IF-001 §3 steps 2 and 3), then
+ * the constructs and the leak scan (steps 6 and 8). `input.peers` holds the tables of every target of
+ * the run (C002-IF-001 §3 step 3).
  */
-export function translateBodies(input: Pick<EmitInput, "source" | "table" | "target" | "mode">, options: ConstructOptions = {}): BodiesResult {
-  const ctx: Ctx = {
-    table: input.table,
-    target: input.target,
-    mode: input.mode,
-    dets: detectors(input.table),
-    anchors: options.variantAnchors ?? "pending",
-    diagnostics: [],
-    reported: new Set(),
-  };
+export function translateBodies(input: Pick<EmitInput, "source" | "table" | "target" | "mode" | "peers">, options: ConstructOptions = {}): BodiesResult {
+  const dets = detectors(input.table);
+  const anchors = options.variantAnchors ?? "applied";
+  const ctx: Ctx = { table: input.table, target: input.target, mode: input.mode, dets, anchors, diagnostics: [], reported: new Set() };
+  if (anchors === "applied") {
+    const wiring = applyVariants(
+      input,
+      dets.filter((d) => isAnchor(d) && (d.contexts.length === 0 || d.contexts.includes("body"))).map((d) => ({ id: d.id, re: d.re })),
+    );
+    ctx.wired = wiring.bodies;
+    ctx.diagnostics.push(...wiring.diagnostics);
+  }
   const docs: TranslatedDoc[] = [];
   for (const a of input.source.agents) docs.push(translateDoc(ctx, a, "agent"));
   for (const c of input.source.commands) docs.push(translateDoc(ctx, c, "command"));
@@ -267,7 +285,7 @@ export function scanText(
   context: Context = "body",
   options: ConstructOptions = {},
 ): Diagnostic[] {
-  const ctx: Ctx = { table, target, mode, dets: detectors(table), anchors: options.variantAnchors ?? "pending", diagnostics: [], reported: new Set() };
+  const ctx: Ctx = { table, target, mode, dets: detectors(table), anchors: options.variantAnchors ?? "applied", diagnostics: [], reported: new Set() };
   text.split("\n").forEach((l, i) => scanLine(ctx, file, i + 1, l, context));
   return ctx.diagnostics;
 }

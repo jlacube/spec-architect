@@ -9,8 +9,9 @@
 //   C002-TC-128 (C002-TS-128)  Serena configuration call in generated commands
 //   C002-TC-131 (C002-TS-131)  question tool named in generated bodies
 //   C002-TC-134 (C002-TS-134)  Copilot MCP tool names in bodies (the source file's clause)
-// Carried: C002-TC-132 (eval, evals/targets/generator/TS-132.eval.mjs) to C002-T-056; the inlined-body
-// clause of C002-TC-134 and the CLI invocation row of C002-TC-107 (a wiring anchor) to C002-T-028.
+// Carried: C002-TC-132 (eval, evals/targets/generator/TS-132.eval.mjs) to C002-T-056. The CLI invocation
+// row of C002-TC-107 (a wiring anchor) is checked here on its variant; the inlined-body clause of
+// C002-TC-134 is in wiring.test.ts (C002-T-028).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -30,7 +31,9 @@ const source = readSource(PLUGIN);
 assert.deepEqual(source.diagnostics, [], "the source plugin reads without diagnostics");
 const tables = Object.fromEntries(TARGETS.map((t) => [t, loadTargetTable(root, t)])) as Record<Target, MappingTable>;
 const MODES: Record<Target, Mode[]> = { opencode: ["native-permissions", "sdd-mcp-server"], copilot: ["sdd-mcp-server", "copilot-hooks"] };
-const tableFor = (t: Target, m: Mode) => (m === tables[t].enforcement_mode ? tables[t] : loadTable(join(FIXTURES, `${t}-${m}.json`), `${t}-${m}.json`));
+/** The table of a mode; a fixture mode table takes the real table's wiring variants (C002-T-028). */
+const tableFor = (t: Target, m: Mode): MappingTable =>
+  m === tables[t].enforcement_mode ? tables[t] : { ...loadTable(join(FIXTURES, `${t}-${m}.json`), `${t}-${m}.json`), variants: tables[t].variants };
 const NAME: Record<Target, string> = { opencode: "OpenCode", copilot: "Copilot" };
 
 /** Every translated doc of the real plugin for one target and mode, by source path; fails on any diagnostic. */
@@ -52,6 +55,8 @@ function lineFrom(d: TranslatedDoc, n: number): string | undefined {
   const i = d.sourceLines.indexOf(n);
   return i < 0 ? undefined : d.body.split("\n")[i];
 }
+/** Every generated line that comes from source line `n` (a wiring variant replaces its anchor from the anchor's first line). */
+const linesFrom = (d: TranslatedDoc, n: number) => d.body.split("\n").filter((_, i) => d.sourceLines[i] === n).join("\n");
 const sourceLine = (path: string, n: number) => source.source.files.find((f) => f.path === path)!.text.split("\n")[n - 1]!;
 const construct = (table: MappingTable, id: string): Construct => {
   const c = table.constructs.find((x) => x.id === id);
@@ -140,11 +145,17 @@ for (const t of TARGETS) {
       for (const p of ["agents/sdd-conductor.md", "commands/archive.md"]) assert.ok(!textOf(docs.get(p)!).includes("AskUserQuestion"), `${where}: ${p}`);
       // ${CLAUDE_PLUGIN_ROOT}/templates/ — commands/decide.md line 18
       assert.ok(at("commands/decide.md", 18).includes(replaceOf(table, "plugin-root-templates", mode)), where);
-      // MCP tool name in a body — skills/research-protocol/SKILL.md lines 95–97
+      // MCP tool name in a body — skills/research-protocol/SKILL.md lines 95–97, inside the wiring section of
+      // line 93, which the target's variant replaces (C002-T-028); the variant names the tools in source form.
       const body = construct(table, "mcp-tool-name").action as { replace: string };
       const form = (s: string, tool: string) => body.replace.replace("{server}", s).replace("{tool}", tool);
-      assert.ok(at("skills/research-protocol/SKILL.md", 95).includes(form("context7", "resolve-library-id")), where);
-      assert.ok(at("skills/research-protocol/SKILL.md", 97).includes(form("deepwiki", "ask_wiki_question")), where);
+      const research = linesFrom(docs.get("skills/research-protocol/SKILL.md")!, 93);
+      assert.ok(research.includes(form("context7", "resolve-library-id")), where);
+      assert.ok(research.includes(form("deepwiki", "ask_wiki_question")), where);
+      // CLI invocation line — agents/sdd-auditor.md line 13 (a wiring anchor: the target's variant, C002-T-028)
+      assert.ok(sourceLine("agents/sdd-auditor.md", 13).includes("${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"));
+      assert.ok(at("agents/sdd-auditor.md", 13).includes("`sdd` is the bare `sdd` command"), where);
+      assert.ok(!docs.get("agents/sdd-auditor.md")!.body.includes("scripts/sdd.mjs"), where);
       // ToolSearch in a body — agents/sdd-architect.md line 19
       assert.ok(sourceLine("agents/sdd-architect.md", 19).includes("ToolSearch"));
       assert.ok(at("agents/sdd-architect.md", 19).includes(replaceOf(table, "tool-search", mode)), where);
@@ -158,15 +169,18 @@ for (const t of TARGETS) {
   });
 }
 
-test("C002-TS-107: the CLI invocation line is a wiring anchor — left to the variant pass (C002-T-028), a leak once anchors are applied", () => {
+test("C002-TS-107: the CLI invocation line is a wiring anchor — replaced by the variant pass, a leak where it is left", () => {
   for (const t of TARGETS) {
     const table = tables[t];
     assert.ok("variant_required" in construct(table, "cli-invocation").action);
-    const doc = docsOf(t).get("agents/sdd-auditor.md")!;
-    const line = lineFrom(doc, 13)!;
-    assert.ok(line.includes("${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"), "pending anchor kept unchanged for the variant pass");
-    const leaks = scanText(table, t, table.enforcement_mode, doc.path, line, "body", { variantAnchors: "applied" });
+    // Without the variant pass (the body-construct pass alone) the anchor is kept and not reported.
+    const pending = translateBodies({ source: source.source, table, target: t, mode: table.enforcement_mode }, { variantAnchors: "pending" });
+    assert.deepEqual(pending.diagnostics, []);
+    const line = lineFrom(pending.docs.find((d) => d.path === "agents/sdd-auditor.md")!, 13)!;
+    assert.ok(line.includes("${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"), "pending anchor kept unchanged");
+    const leaks = scanText(table, t, table.enforcement_mode, "agents/sdd-auditor.md", line, "body");
     assert.deepEqual(leaks.map((d) => [d.code, d.target, d.construct]), [["ERR-GEN-001", t, "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"]]);
+    assert.ok(!lineFrom(docsOf(t).get("agents/sdd-auditor.md")!, 13)!.includes("scripts/sdd.mjs"), "the variant replaces it");
   }
 });
 
@@ -252,17 +266,19 @@ for (const [file, lines, target] of [
   });
 }
 
-// --- C002-TC-134 (the source file's clause; every inlining agent body: C002-T-028) ---
-for (const [file, line, sourceName, call, grant] of [
-  ["skills/research-protocol/SKILL.md", 96, "mcp__plugin_architect_context7__query-docs", "context7-query-docs", "context7/query-docs"],
-  ["skills/code-discovery/SKILL.md", 111, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
+// --- C002-TC-134 (the source file's clause; every inlining agent body: wiring.test.ts) ---
+// The source line lies in the "Claude Code wiring" section (heading line `section`), which the Copilot
+// variant replaces; the variant's MCP names are translated like any body line.
+for (const [file, line, section, sourceName, call, grant] of [
+  ["skills/research-protocol/SKILL.md", 96, 93, "mcp__plugin_architect_context7__query-docs", "context7-query-docs", "context7/query-docs"],
+  ["skills/code-discovery/SKILL.md", 111, 109, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
 ] as const) {
   test(`C002-TC-134 (C002-TS-134): ${file}:${line} names "${call}" on Copilot`, () => {
     assert.ok(sourceLine(file, line).includes(sourceName));
     for (const mode of MODES.copilot) {
       const table = tableFor("copilot", mode);
       assert.equal(table.mcp_tool_names.target_pattern, "{server}-{tool}");
-      const l = lineFrom(docsOf("copilot", mode).get(file)!, line)!;
+      const l = linesFrom(docsOf("copilot", mode).get(file)!, section);
       assert.ok(l.includes(call), `copilot/${mode}: call form`);
       assert.ok(!l.includes(sourceName) && !l.includes(grant), `copilot/${mode}: neither the source nor the grant form`);
     }
@@ -294,8 +310,7 @@ test("a planted unmapped body construct stops generation; every place is reporte
       ["agents/sdd-critic.md", plantedLine, "copilot"],
       ["agents/sdd-critic.md", plantedLine, "opencode"],
       ["commands/archive.md", 15, "copilot"],
-      ["skills/interview-protocol/SKILL.md", 121, "copilot"],
-      ["skills/interview-protocol/SKILL.md", 127, "copilot"],
+      // interview-protocol lines 121 and 127 lie in its wiring section, which the Copilot variant replaces.
     ];
     assert.equal(r.stderr.length, expected.length, r.stderr.join("\n"));
     r.stderr.forEach((l, i) => {
@@ -304,7 +319,7 @@ test("a planted unmapped body construct stops generation; every place is reporte
       assert.ok(l.includes(`Fix: Add the entry to \`plugins/architect/targets/${target}.json\``), l);
       assert.ok(l.includes(file === "agents/sdd-critic.md" ? 'MCP tool name "mcp__plugin_architect_fxfs__write_file"' : 'question tool name "AskUserQuestion" has no entry in the copilot mapping table'), l);
     });
-    assert.deepEqual(r.stdout, ["copilot: not written (6 errors)", "opencode: not written (1 errors)"]);
+    assert.deepEqual(r.stdout, ["copilot: not written (4 errors)", "opencode: not written (1 errors)"]);
     for (const t of TARGETS) assert.ok(!existsSync(join(out, t)), `no ${t} package`);
   } finally {
     rmSync(base, { recursive: true, force: true });

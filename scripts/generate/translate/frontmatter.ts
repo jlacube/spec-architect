@@ -76,7 +76,8 @@ export function splitToolsField(value: unknown): string[] {
   return out.filter((v) => v !== "");
 }
 
-const listField = (value: unknown): string[] =>
+/** Splits a plain list field (`skills`): a comma list or a YAML list. */
+export const listField = (value: unknown): string[] =>
   Array.isArray(value) ? value.map((v) => String(v).trim()).filter((v) => v !== "") : typeof value === "string" ? value.split(",").map((v) => v.trim()).filter((v) => v !== "") : [];
 
 /** 1-based line of a frontmatter key, or of the first line from it that contains `needle`. */

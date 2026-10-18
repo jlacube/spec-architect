@@ -99,7 +99,149 @@
     { "id": "mcp-tool-name", "kind": "mcp-tool-name", "detect": "\\bmcp__plugin_architect_[a-z0-9]+__[A-Za-z0-9_-]+", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "{server}_{tool}" } },
     { "id": "bash-prose", "kind": "tool-name", "detect": "\\bBash\\b", "contexts": ["body"], "accepted_in": [], "action": { "replace": { "by_mode": { "native-permissions": "the `bash` tool", "sdd-mcp-server": "the `sdd-shell` command tool" } } } }
   ],
-  "variants": [],
+  "variants": [
+    {
+      "id": "cli-conductor",
+      "file": "agents/sdd-conductor.md",
+      "anchor": {
+        "lines": [
+          "The CLI is `node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\"` (written `sdd` below)."
+        ]
+      },
+      "text_file": "cli-conductor.md"
+    },
+    {
+      "id": "cli-auditor",
+      "file": "agents/sdd-auditor.md",
+      "anchor": {
+        "lines": [
+          "`;`, `|` or redirection; `sdd` is `node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\"`):"
+        ]
+      },
+      "text_file": "cli-auditor.md"
+    },
+    {
+      "id": "doctor-probe",
+      "file": "commands/doctor.md",
+      "anchor": {
+        "lines": [
+          "2. **Probe.** Dispatch `sdd-cartographer` to write `.sdd/_constitution/toolchain.md` (code-discovery",
+          "   skill, toolchain record): one row each for node, git, Claude Code, ripwire, Serena, ast-grep,",
+          "   Context7, DeepWiki with detected, version, path or endpoint, fallback. Probes: `--version` for",
+          "   the command-line tools (ripwire: `ripwire --version`, never `--doctor`); Context7 and DeepWiki:",
+          "   load one of their tools and make one small call (unreachable when it fails). Without `.sdd/`,",
+          "   probe the same way and skip the file."
+        ]
+      },
+      "text_file": "doctor-probe.md"
+    },
+    {
+      "id": "doctor-report",
+      "file": "commands/doctor.md",
+      "anchor": {
+        "lines": [
+          "3. **Report** a table with the columns Tool, Status, Version, Fallback, Fix — one row per tool in",
+          "   the order above. Status: `ok`, `missing`, `unreachable` (remote servers) or `error` (present but",
+          "   unusable or too old). Fix: for every non-ok row, the command of the remedies table below.",
+          "   - node: `error` below version 20.",
+          "   - Claude Code: `error` below 2.1.295 (`claude --version`).",
+          "   - Fallbacks: ripwire → `serena → lsp → grep` (or the next available layer); Serena → `lsp → grep`;",
+          "     ast-grep → `grep`; Context7 → `WebSearch/WebFetch`; DeepWiki → `WebFetch` of the repository.",
+          "4. **Outcome** — the last line of your reply, exactly one of:",
+          "   - `Doctor: failed: node ≥ 20 required` — node missing or older than 20;",
+          "   - `Doctor: completed with warnings` — any other row not `ok`;",
+          "   - `Doctor: completed` — every row `ok`."
+        ]
+      },
+      "text_file": "doctor-report.md"
+    },
+    {
+      "id": "doctor-remedies-host",
+      "file": "commands/doctor.md",
+      "anchor": {
+        "lines": [
+          "| Claude Code | `claude --version` ≥ 2.1.295 | `claude update`, or update the Claude desktop app (which bundles its own Claude Code) |"
+        ]
+      },
+      "text_file": "doctor-remedies-host.md"
+    },
+    {
+      "id": "doctor-remedies-task-tools",
+      "file": "commands/doctor.md",
+      "anchor": {
+        "lines": [
+          "| Task tools | `CLAUDE_CODE_ENABLE_TODO_TOOLS` is `1` | add `\"env\": { \"CLAUDE_CODE_ENABLE_TODO_TOOLS\": \"1\" }` to `~/.claude/settings.json` |"
+        ]
+      },
+      "text_file": "doctor-remedies-task-tools.md"
+    },
+    {
+      "id": "code-discovery-toolchain",
+      "file": "skills/code-discovery/SKILL.md",
+      "anchor": {
+        "lines": [
+          "- **Toolchain record** (`_constitution/toolchain.md`, init and doctor): a table with one row per",
+          "  node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki — detected (yes/no),",
+          "  version, path or endpoint, fallback in use (for ripwire absent: `serena → lsp → grep`, or the",
+          "  next layer that is available). Probe with `--version`; Context7 and DeepWiki are detected when",
+          "  their tools load."
+        ]
+      },
+      "text_file": "code-discovery-toolchain.md"
+    },
+    {
+      "id": "code-discovery",
+      "file": "skills/code-discovery/SKILL.md",
+      "anchor": {
+        "section": "Claude Code wiring"
+      },
+      "text_file": "code-discovery.md"
+    },
+    {
+      "id": "gate-protocol-reference",
+      "file": "skills/gate-protocol/SKILL.md",
+      "anchor": {
+        "lines": [
+          "The presentation goes into the gate question itself (see Claude Code wiring), so P-01 sees it"
+        ]
+      },
+      "text_file": "gate-protocol-reference.md"
+    },
+    {
+      "id": "gate-protocol",
+      "file": "skills/gate-protocol/SKILL.md",
+      "anchor": {
+        "section": "Claude Code wiring"
+      },
+      "text_file": "gate-protocol.md"
+    },
+    {
+      "id": "interview-protocol",
+      "file": "skills/interview-protocol/SKILL.md",
+      "anchor": {
+        "section": "Claude Code wiring"
+      },
+      "text_file": "interview-protocol.md"
+    },
+    {
+      "id": "research-protocol",
+      "file": "skills/research-protocol/SKILL.md",
+      "anchor": {
+        "section": "Claude Code wiring"
+      },
+      "text_file": "research-protocol.md"
+    },
+    {
+      "id": "cli-conventions",
+      "file": "skills/sdd-conventions/SKILL.md",
+      "anchor": {
+        "lines": [
+          "`sdd` means `node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\"`. Useful commands: `sdd status`,"
+        ]
+      },
+      "text_file": "cli-conventions.md"
+    }
+  ],
   "permissions": {
     "native-permissions": {
       "edit": [

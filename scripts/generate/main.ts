@@ -13,6 +13,7 @@ import { readSource } from "./reader.ts";
 import { loadTable, TableError, type MappingTable, type Mode, type Target } from "./tables.ts";
 import { translateBodies } from "./translate/constructs.ts";
 import { mergeTierDiagnostics, translateAgents } from "./translate/frontmatter.ts";
+import { inlineSkills } from "./translate/inline.ts";
 import { discard, fsOps, publish, targetDir, type WriteOps } from "./writer.ts";
 
 const USAGE =
@@ -21,10 +22,14 @@ const SCHEMA_FILE = "mapping-table.schema.json";
 
 /**
  * Until the emitters of C002-T-029 (OpenCode) and C002-T-031 (Copilot) exist, a package holds its manifest
- * only; the frontmatter translation (C002-IF-001 §3 step 4) and the body-construct translation (steps 6
- * and 8) already run, so their diagnostics stop the run.
+ * only; the variant pass and its coverage check (C002-IF-001 §3 steps 2 and 3), the frontmatter
+ * translation (step 4), the skill inlining (step 5) and the body-construct translation (steps 6 and 8)
+ * already run, so their diagnostics stop the run.
  */
-const noFiles: Emitter = (input) => ({ files: new Map(), diagnostics: [...translateAgents(input).diagnostics, ...translateBodies(input).diagnostics] });
+const noFiles: Emitter = (input) => {
+  const bodies = translateBodies(input);
+  return { files: new Map(), diagnostics: [...translateAgents(input).diagnostics, ...bodies.diagnostics, ...inlineSkills(input.source, bodies.docs, input.target).diagnostics] };
+};
 export const EMITTERS: Record<Target, Emitter> = { opencode: noFiles, copilot: noFiles };
 
 export interface MainOptions {
@@ -192,7 +197,7 @@ export function main(argv: readonly string[], options: MainOptions = {}): number
       const mode = modes.get(t);
       if (!table || !mode) continue;
       const emit = options.emitters?.[t] ?? EMITTERS[t] ?? noFiles;
-      const result = emit({ source: read.source, table, target: t, mode: mode.mode });
+      const result = emit({ source: read.source, table, target: t, mode: mode.mode, peers: [...tables.values()] });
       diagnostics.push(...result.diagnostics.map((d) => (d.target === undefined ? { ...d, target: t } : d)));
       packages.push({ target: t, mode: mode.mode, modeSource: mode.source, table, files: result.files });
     }
