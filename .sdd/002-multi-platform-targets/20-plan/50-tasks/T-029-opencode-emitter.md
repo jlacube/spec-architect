@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-022, C002-T-026, C002-T-028]
 implements: [C002-REQ-114, C002-REQ-201, C002-REQ-202, C002-REQ-203, C002-REQ-204, C002-REQ-216]
 satisfies_ac: [C002-AC-114.1, C002-AC-201.1, C002-AC-202.1, C002-AC-203.1, C002-AC-204.1, C002-AC-216.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-124, C002-TS-125, C002-TS-201, C002-TS-202, C002-TS-203, C
 components: [C002-COMP-001, C002-COMP-003]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: ee23e3c, completed_at: 2026-10-18, notes: "OpenCode emitter; TC-124/201…205/225/227 + TC-125 pass; TC-226 to T-042 (adapter needs commands()); load smoke by the conductor: opencode agent list shows the 10 sdd-* agents (Git Bash PATH runs 1.15.10 — the 1.18.31 check runs under the pinned binary in T-042); open: install-notes path targets/opencode/install.md vs IF-005 §5 wiring/install-notes.md, conductor description still says 'claude --agent' (D-010 batch), argument-hint folded into description" }
 ---
 
 # C002-T-029 — OpenCode emitter: layout, agents, commands, MCP servers and install notes
