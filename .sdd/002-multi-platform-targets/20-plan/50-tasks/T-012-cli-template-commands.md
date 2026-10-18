@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-006]
 implements: [C002-REQ-513, C002-REQ-514, C002-REQ-520]
 satisfies_ac: [C002-AC-513.1, C002-AC-514.1, C002-AC-520.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-520, C002-TS-521, C002-TS-522, C002-TS-531, C002-TS-532, C
 components: [C002-COMP-018]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 1674a52, completed_at: 2026-10-18, notes: "template show/list; TC-520/521/522/531/532; deviation logged as spec defect D-004 (template root precedence, ERR-CLI-019 editorial note); show reads UTF-8 text" }
 ---
 
 # C002-T-012 — CLI: template show and template list, confined to the profile folder
