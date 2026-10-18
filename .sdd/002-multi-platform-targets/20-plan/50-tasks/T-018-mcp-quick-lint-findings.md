@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: done
 depends_on: [C002-T-017]
 implements: [C002-REQ-408, C002-REQ-409]
 satisfies_ac: [C002-AC-408.1, C002-AC-409.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-410, C002-TS-411, C002-TS-412, C002-TS-413, C002-TC-410, C
 components: [C002-COMP-005]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 1ab5551, completed_at: 2026-10-18, notes: "TC-410…413; NFR-102 (write with findings p95 ≤ 800 ms) not measured here — single calls 300–900 ms, measure in T-020 benchmarks; TC-413 uses the fault switch from the scenario text" }
 ---
 
 # C002-T-018 — sdd MCP server: quick-lint findings with each write
