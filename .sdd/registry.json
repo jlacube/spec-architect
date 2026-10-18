@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T17:33:35Z",
+  "generated_at": "2026-10-18T17:52:01Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 62,
-          "done": 31,
+          "done": 32,
           "blocked": 0,
           "in_progress": 0
         },
@@ -282,6 +282,16 @@
           "status": "closed",
           "resolution": "Resolved in the batched spec revision D-004…D-009 (G2 re-approved 2026-10-18); code catch-up in C002-T-061/T-062",
           "closed_at": "2026-10-18"
+        },
+        {
+          "id": "D-010",
+          "ref": "C002-IF-001",
+          "summary": "Found in C002-T-026: (1) the OpenCode mapping needs the 'task' tool in agent_start — the conductor's closed tool map (\"*\": false) switches it off otherwise, and the conductor could not start specialists; IF-001 §2 does not list it. (2) Option-parser faults of hook guard (missing --mode value, unknown option, extra argument) still print 'tool call' (C002-T-062). (3) TS-502 assumes the new change is 002 though fx-bootstrap already holds change 002 (C002-T-061). Batch for the next revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [

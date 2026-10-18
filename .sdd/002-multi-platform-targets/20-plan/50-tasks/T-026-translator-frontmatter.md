@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-025, C002-T-040]
 implements: [C002-REQ-105, C002-REQ-106, C002-REQ-107, C002-REQ-108, C002-REQ-117]
 satisfies_ac: [C002-AC-105.1, C002-AC-106.1, C002-AC-107.1, C002-AC-108.1, C002-AC-117.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-109, C002-TS-110, C002-TS-111, C002-TS-112, C002-TS-113, C
 components: [C002-COMP-001]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 9df5ca4, completed_at: 2026-10-18, notes: "Frontmatter translator; TC-109/110/111/112/114/129/130 pass; TC-113 to T-056, TC-133 to T-042, TC-640 and the TC-130 check wrapper to T-035; 'task' tool added to the OpenCode table (defect D-010); descriptions left for T-027; main.ts now runs the translator" }
 ---
 
 # C002-T-026 — Translator: agent frontmatter
