@@ -88,7 +88,7 @@ P-01's statements after G3 (chat, with a screenshot of the GitHub Copilot usage 
 ### Q-opencode-01 — OpenCode model inference (open)
 - **Blocking:** yes for C002-T-001 · **Material:** yes
 - **Statement:** P-01: "for OpenCode, let's discuss afterwards, as we might need to adjust some stuffs, as I actually use only OpenRouter on OpenCode for model inference". The plan bills OpenCode eval sessions to the prepaid Anthropic API key; with OpenRouter they bill P-01's OpenRouter account. To discuss before C002-T-001.
-- **Answer:** pending
+- **Answer (2026-10-18):** P-01: "yes claude to establish the same baseline. yes opencode uses openrouter. no monthly cap, but stop at 40$ and we will advise". OpenCode's agents use Claude models of the C002-REQ-105 tiers through OpenRouter (model ids `openrouter/anthropic/claude-…`, recorded by S-07); OpenCode eval sessions bill P-01's OpenRouter account; stop at 40 USD of OpenRouter spend for CHG-002 and ask P-01. P-01 on the npm check (C002-T-003): "I will check and ask when it is the time".
 
 ## Round 7 — 2026-10-17
 

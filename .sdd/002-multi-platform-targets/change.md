@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:4cef873754b83b3b87d2cc92802e314540c9da4514ce0805f8fef50145a40a33", approved_at: 2026-10-18, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:40964d599a428ae59eee628ec30eb83804de6d51fef04e1d7cf5d72095e9cfb1", approved_at: 2026-10-18, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:40964d599a428ae59eee628ec30eb83804de6d51fef04e1d7cf5d72095e9cfb1", approved_at: 2026-10-18, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -79,3 +79,4 @@ waivers:
 | 2026-10-17 | G2 (spec) | **Revise** | "D-003: spike S-08 facts F-1…F-7 (docs/spikes/S-08-copilot-vscode.md §5); P-01: one spec revision" | none | unavailable |
 | 2026-10-18 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, DOD-G-01 | unavailable |
 | 2026-10-18 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-18 | G3 (plan) | **Revise** | "Q-opencode-01 answered: OpenCode eval sessions bill P-01's OpenRouter account (Claude tiers via OpenRouter), stop at 40 USD; Claude Code evals on the Max subscription (T-060), so the prepaid API key top-up is no longer needed" | none | unavailable |
