@@ -60,9 +60,10 @@ Run semantics:
 
 ## Output
 
-- Human (default): one line per diagnostic, sorted by source file, line and target, in the CLI human
-  format of C001-IF-01: `error ERR-GEN-001 agents/sdd-critic.md:7 [copilot] — tool name "KillShell"
-  has no entry in the copilot mapping table. Fix: …` (C002-TS-108). Then one summary line per
+- Human (default): one line per diagnostic, sorted by source file, line and target, in the print
+  form of `errors.md` (`<code>: <message>. Fix: <fix>`, as the CLI's ERR-CLI lines; revised for
+  defect D-008): `ERR-GEN-001: agents/sdd-critic.md:7: tool name "KillShell" has no entry in the
+  copilot mapping table. Fix: …` (C002-TS-108). Then one summary line per
   selected target. A run without errors prints `<target>: written <out>/<target>/ (<n> files, mode
   <mode>)` for each target. A run with any error writes no target (run semantics, step 2), so every
   selected target prints `<target>: not written (<n> errors)`, where `<n>` counts that target's own

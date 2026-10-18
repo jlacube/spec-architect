@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T14:55:37.510Z",
+  "generated_at": "2026-10-18T15:13:36.519Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1217,7 +1217,7 @@
       "id": "C002-COMP-001",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 60,
+      "line": 63,
       "title": "Target generator",
       "content_hash": "sha256:d8832c3261311408e21cc47cd1991f38d3167a803f8f8613401007e0a89a8ac6"
     },
@@ -1225,7 +1225,7 @@
       "id": "C002-COMP-002",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 69,
+      "line": 72,
       "title": "Mapping tables and wiring variants",
       "content_hash": "sha256:c50728ef5a8afad33be1247438b55729c74dc87adbdab5cd018ca0e8bfd5bfed"
     },
@@ -1233,15 +1233,15 @@
       "id": "C002-COMP-003",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 78,
+      "line": 81,
       "title": "OpenCode target package",
-      "content_hash": "sha256:8d50e4a0c89a03f0301f5a7d8b717f56acdb43f4d683c445a82eb4d6266223eb"
+      "content_hash": "sha256:86fa6a0ca59c0117347b8763b02380643076c4136b250076f80a1e7b5abb35a3"
     },
     {
       "id": "C002-COMP-004",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 87,
+      "line": 90,
       "title": "Copilot target package",
       "content_hash": "sha256:fbe85114ee98fed981b75b94ab800fb7f8537730d3cda00d76ebef14c646caed"
     },
@@ -1249,15 +1249,15 @@
       "id": "C002-COMP-005",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 96,
+      "line": 99,
       "title": "sdd MCP server",
-      "content_hash": "sha256:6726c463d09982a08825120348b4792ac9235510e724c6d6aebe3f9acb99e35c"
+      "content_hash": "sha256:34eb445c7b19f92c637739ea32e5fa8a6d5b8c27edc4db8fdaedf10e52fffa66"
     },
     {
       "id": "C002-COMP-006",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 105,
+      "line": 108,
       "title": "`architect-sdd` npm package",
       "content_hash": "sha256:85dbe97efa3d77573afcef2a2065e0d76d4d72586e30931ca68beaceca9c198f"
     },
@@ -1265,7 +1265,7 @@
       "id": "C002-COMP-007",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 114,
+      "line": 117,
       "title": "Target structure checks",
       "content_hash": "sha256:62f56e089bdf37db45b65e5f76221262c52fa5d557b2593a0be806d5f86aa837"
     },
@@ -1273,23 +1273,23 @@
       "id": "C002-COMP-008",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 123,
+      "line": 126,
       "title": "Corpus replay suite",
-      "content_hash": "sha256:4e7136772b0ed6ef603c9af9fb2062865c429d304d29babba0a8275db9e735ac"
+      "content_hash": "sha256:426d1a348e29fe6e3a25fce36632b965c896a2e3496f4fb43c4b2e2940a8794d"
     },
     {
       "id": "C002-COMP-009",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 132,
+      "line": 135,
       "title": "Eval runners for the generated targets",
-      "content_hash": "sha256:5f11007082d81da7a41b5dc395d4111760271b0b410b3dda2b10c6e11ea0ae18"
+      "content_hash": "sha256:637047a4f4f507c8e4046249f7ca7cf7efec1fda4fe26e0d3befb89b3bcfd617"
     },
     {
       "id": "C002-COMP-010",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 141,
+      "line": 144,
       "title": "Release check",
       "content_hash": "sha256:ec785ed7af8fc7f06f34b12c4c7ee0685000da84f501c934dfb439995dffa061"
     },
@@ -1297,7 +1297,7 @@
       "id": "C002-COMP-011",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 150,
+      "line": 153,
       "title": "Manual VS Code checklist",
       "content_hash": "sha256:26e44f1cb1f9aa215526f90877050b8364c5c4335df488959107a9da37346ad3"
     },
@@ -1305,7 +1305,7 @@
       "id": "C002-COMP-012",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 159,
+      "line": 162,
       "title": "Hooks and guards (modified)",
       "content_hash": "sha256:2fd656f2ffbedae5c951915a95b3119bcef399b7aa57e29cb1bb5294e118e142"
     },
@@ -1313,15 +1313,15 @@
       "id": "C002-COMP-013",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 170,
+      "line": 173,
       "title": "Build and check tooling (modified)",
-      "content_hash": "sha256:6b4ba01d714ad4ce9d44b6e4016f0f63ad261e0898f1cd8cee2496ca87f2eda3"
+      "content_hash": "sha256:02ac0ff808aea745a53d044dc1e60bb274df92ec85c2d2f9590ad659260da93f"
     },
     {
       "id": "C002-COMP-014",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 181,
+      "line": 184,
       "title": "Conductor (modified)",
       "content_hash": "sha256:4dbb2f7a3cb129ce4de1725c9f4af505a19912274f2acf6f75eacdcaf9918521"
     },
@@ -1329,7 +1329,7 @@
       "id": "C002-COMP-015",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 192,
+      "line": 195,
       "title": "Commands (modified)",
       "content_hash": "sha256:59126d8f140f3a12a25d55246a9406d04f2b76b024c94ed8ec9d8a1aa9259c6b"
     },
@@ -1337,7 +1337,7 @@
       "id": "C002-COMP-016",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 203,
+      "line": 206,
       "title": "Skills library (modified)",
       "content_hash": "sha256:9035e392dc9e195473930fc037889ac510642c2d44b07390f24193826b3afec1"
     },
@@ -1345,7 +1345,7 @@
       "id": "C002-COMP-017",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 214,
+      "line": 217,
       "title": "Plugin package and configuration (modified)",
       "content_hash": "sha256:40fd0725101921fd26d06192818c0ae75ca74690a7e3c4872d4c4b084d39c26c"
     },
@@ -1353,9 +1353,9 @@
       "id": "C002-COMP-018",
       "type": "COMP",
       "file": "10-spec/60-architecture/architecture.md",
-      "line": 225,
+      "line": 228,
       "title": "CLI front-end (modified)",
-      "content_hash": "sha256:439997fc142fd415a3e442b05c6a02be72cce0aedca0177710b75e70551a255f"
+      "content_hash": "sha256:11313540e929b61050147fdde1974e8c5e4aecabd74a85b6d1de3990953248a2"
     },
     {
       "id": "C002-CON-01",
@@ -1796,7 +1796,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 18,
       "title": "Target mapping table (translation table) and wiring variants",
-      "content_hash": "sha256:ea65615ce2710adefd09ac0aa67400bcbe713e65cff838e8badd5467b60ec81d"
+      "content_hash": "sha256:c24474c27f4c0b324b6fb3809c68cc772c3888567e268b2741ddbbfbefd97653"
     },
     {
       "id": "C002-IF-002",
@@ -1828,7 +1828,7 @@
       "file": "10-spec/50-interfaces/README.md",
       "line": 22,
       "title": "Target package contracts (OpenCode, Copilot VS Code: plugin part and install sources) and target structure checks",
-      "content_hash": "sha256:44c0d76312b83f153d7f9089e9594876869daba3443d878952b12942d295f46f"
+      "content_hash": "sha256:110a2de4b923886db0c6dd0277a690065eead28d4568a906c8b8936fa25ac0bc"
     },
     {
       "id": "C002-IF-006",
@@ -10264,6 +10264,11 @@
       "relation": "realizes"
     },
     {
+      "from": "C002-COMP-003",
+      "to": "C002-REQ-217",
+      "relation": "realizes"
+    },
+    {
       "from": "C002-COMP-004",
       "to": "C002-COMP-005",
       "relation": "depends-on"
@@ -10645,6 +10650,11 @@
     },
     {
       "from": "C002-COMP-008",
+      "to": "C002-IF-010",
+      "relation": "references"
+    },
+    {
+      "from": "C002-COMP-008",
       "to": "C002-NFR-201",
       "relation": "realizes"
     },
@@ -11015,6 +11025,11 @@
     },
     {
       "from": "C002-COMP-013",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-COMP-013",
       "to": "C002-IF-008",
       "relation": "references"
     },
@@ -11247,6 +11262,11 @@
       "from": "C002-COMP-018",
       "to": "C002-COMP-012",
       "relation": "depends-on"
+    },
+    {
+      "from": "C002-COMP-018",
+      "to": "C002-IF-003",
+      "relation": "references"
     },
     {
       "from": "C002-COMP-018",
@@ -12075,6 +12095,11 @@
     },
     {
       "from": "C002-IF-001",
+      "to": "C002-REQ-217",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-001",
       "to": "C002-REQ-317",
       "relation": "references"
     },
@@ -12321,6 +12346,11 @@
     {
       "from": "C002-IF-005",
       "to": "C002-REQ-216",
+      "relation": "references"
+    },
+    {
+      "from": "C002-IF-005",
+      "to": "C002-REQ-217",
       "relation": "references"
     },
     {

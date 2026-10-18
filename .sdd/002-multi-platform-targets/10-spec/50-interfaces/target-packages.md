@@ -69,7 +69,7 @@ model: <models.opus>
   "tools": { "context7*": false, "deepwiki*": false, "serena*": false, "sdd-files*": false, "sdd-shell*": false },
   "agent": {
     "sdd-spec-writer": {
-      "tools": { "*": false, "read": true, "list": true, "glob": true, "grep": true, "sdd-files*": true, "sdd-shell*": true },
+      "tools": { "*": false, "read": true, "glob": true, "grep": true, "sdd-files*": true, "sdd-shell*": true },
       "permission": { "edit": "deny", "bash": "deny", "external_directory": "deny", "question": "deny", "skill": "deny" }
     }
   }
@@ -93,6 +93,10 @@ model: <models.opus>
   (C002-REQ-208, C002-TS-210).
 - The conductor's `permission.task` is `{"*": "deny", "sdd-researcher": "allow", …}` with the nine
   specialists; every specialist has `"task": "deny"` (C002-REQ-107).
+- The conductor's `permission` holds `"question": "allow"` in both enforcement modes; every specialist
+  has `"question": "deny"` (C002-REQ-217, C002-REQ-108). OpenCode's default rule in SDK and
+  `opencode serve` sessions is `question: deny`, and an agent without the rule gets an "unavailable
+  tool" result for its `question` call (`docs/spikes/S-07-opencode.md §5`, fact F-6).
 - Whether OpenCode merges an agent defined both in `.opencode/agents/` and under `agent` in
   `opencode.json` is confirmed by spike S-07 [ASSUMPTION: S-07]; if not, the permission block moves to
   the agent file's frontmatter and C002-TS-208 reads it there.
@@ -341,12 +345,14 @@ finding is printed in the format of C001-IF-08 §3 with the target name.
 | TGT-CLASS-001 | Both modes: `hooks/tool-classes.json` exists and assigns every tool that the host offers to an Architect agent other than the conductor, by its hook `tool_name` (the tools granted by its `tools` list, the sdd MCP server tools included, and the host-added `tool_search_tool`), and the recorded generic tools `Write` and `Bash`, to exactly one of `write`, `terminal` and `read_only`, with the tools the table maps Read, Glob and Grep to in `read_only`, `Write` and the `sdd-files` tools in `write`, `Bash` and the `sdd-shell` tool in `terminal`, and the terminal dialect of the table; the finding names `tool-classes.json`, the tool and every agent that is offered it, or the generic tool | C002-REQ-318, C002-REQ-319, C002-REQ-327 (C002-TS-330, C002-TS-332) |
 | TGT-SIZE-001 | Each inlined skill ≤ 24,000 characters and all inlined skills of one agent ≤ 64,000 characters, references excluded. One finding per budget exceeded, naming the target, the agent, the budget (24,000 per skill or 64,000 per agent), the measured size and the skills concerned: the skill over the per-skill budget, or every inlined skill with its size when the per-agent total is over | C002-REQ-110, C002-NFR-104 (C002-TS-116) |
 | TGT-HOOK-001 | Every command of `install/hooks.template.json` is `node "@CLI_COPY@"` followed by arguments only (no `&&`, `\|\|`, `;`, `\|`, `>`, `<`, `$(`, backtick, `${PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_ROOT}`); no agent frontmatter declares a hook; in both modes the template declares exactly one PreToolUse entry, running `hook guard --host copilot` with `--mode` equal to the table's enforcement mode and the ten Architect agents in `--agents`, and no other file of the package declares a PreToolUse hook | C002-REQ-302, C002-REQ-308, C002-REQ-316, C002-REQ-326, C002-REQ-327 |
-| TGT-PERM-001 | OpenCode: no top-level `permission`; `agent` entries for the ten agents only; `edit` and `bash` rules as the table's mode requires | C002-REQ-206 … C002-REQ-209 |
+| TGT-PERM-001 | OpenCode: no top-level `permission`; `agent` entries for the ten agents only; `edit` and `bash` rules as the table's mode requires; `question` is `allow` for the conductor and `deny` for each specialist (the finding names the agent and its `question` value or its missing key) | C002-REQ-206 … C002-REQ-209, C002-REQ-217 |
 | TGT-AGENT-001 | Only the conductor holds an agent-start grant, admitting exactly the nine specialists | C002-REQ-107 |
 | TGT-MODE-001 | Conductor primary, specialists subagent; every command or prompt file bound to the conductor | C002-REQ-202, C002-REQ-203, C002-REQ-303 |
 | TGT-MEM-001 | No agent has a `memory` field | C002-REQ-106 |
 | TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2, the shipped templates included | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519 |
 | PLG-VAR-001 | On the source plugin: no agent file (`agents/*.md`), command file (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`ask_user`, `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is not in the source text its anchor replaces. The finding names the file, the line and the name or the variant file found | C002-REQ-113 (C002-TS-121, C002-TS-122) |
+| PLG-VER-001 | On the repository (revised for defect D-005): the `version` of the root `package.json` equals the `version` of `plugins/architect/.claude-plugin/plugin.json`, the single version source of a packaging run, which the build no longer reads from `package.json` (C002-ADR-004). One finding naming the file: `plugin.json has no version`, `root package.json has no version`, or `root package.json version <have> differs from plugin.json version <want>; set both to the same version` (`scripts/check/rules.mjs` › `ver001`) | C002-CON-16, C002-INV-11 |
 
-PLG-VAR-001 extends the plugin structure checks of C001-IF-08 §3; the 14 existing checks are
+PLG-VAR-001 and PLG-VER-001 extend the plugin structure checks of C001-IF-08 §3 and run with them
+(C002-COMP-013 runs PLG-VER-001; C002-COMP-007 runs PLG-VAR-001); the 14 existing checks are
 unchanged (C002-REQ-601).

@@ -46,7 +46,7 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 | tool name | agent `tools` field | `tools` entry; an empty list drops the tool on purpose | per §6.1 | per §6.1 |
 | MCP tool name | agent `tools`, skill bodies | `mcp_tool_names.target_pattern` (bodies) and `grant_pattern` (`tools` lists) | `serena_find_symbol` | body: `serena-find_symbol`, a deferred tool loaded through `tool_search_tool` (S-08 §3.2, fact F-7); grant: `serena/*` (per-server; `serena/find_symbol` per-tool works on Copilot CLI only, S-08 §2.1) |
 | `Agent(...)` grant | conductor `tools` | `agent_start` | `permission.task`: `"*": deny`, nine `sdd-*` specialists `allow` | `agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`). Unlike `Agent(...)` and `permission.task`, the list does not bound the starts: the local agent host also offered its host built-in agents (`explore`, `task`, `general-purpose`, …) to such a parent (S-08 §3), and they run with the host's tools (§3.2); their write and terminal calls are denied by the Copilot subagent guard hook in repositories with `.sdd/` (C002-IF-008 §2 rule 6; C002-REQ-327; assumptions: C002-IF-005 §3) |
-| model name | agent `model` | `models` by tier; any other value is ERR-GEN-003 | from spike S-07 (provider/model id per tier) | Copilot model name per tier (the S-08 record shows only the default `claude-sonnet-5.5` of agents without `model`, §2.4) |
+| model name | agent `model` | `models` by tier; any other value is ERR-GEN-003 | opus `openrouter/anthropic/claude-opus-5.5`, sonnet `openrouter/anthropic/claude-sonnet-5.5`, haiku `openrouter/anthropic/claude-haiku-5.5` (S-07 record `host_versions.models`, §7: listed by `opencode models openrouter` on 1.18.31, accepted in a paid session on 1.15.10; the floating `~anthropic/…-latest` aliases are not used) | Copilot model name per tier (the S-08 record shows only the default `claude-sonnet-5.5` of agents without `model`, §2.4) |
 | `effort`, `color` | agent frontmatter | `agent_fields` | `drop` (OpenCode passes unknown agent options to the provider, C002-R-001 C-08) | `drop` (no such field, C002-R-001 A-11) |
 | `memory` | agent frontmatter | always dropped | dropped | dropped |
 | `skills` | agent frontmatter | always inlined (§3 step 5) | inlined | inlined |
@@ -125,6 +125,9 @@ target; the exit code is 1 if any error was found (C002-IF-004).
   body form of ideation §8). OpenCode: no `grant_pattern` (grants use `target_pattern`), `deferred`
   `false`.
 - Every variant file exists and every variant `id` is unique.
+- OpenCode: `permissions.<mode>.question` is `deny` or absent. The `question` rule is written per
+  agent: `allow` for each agent whose source `tools` holds AskUserQuestion, which is the conductor
+  alone, and `deny` for every other Architect agent (C002-REQ-217, C002-REQ-108; TGT-PERM-001).
 
 ## §6 Initial entries (informative)
 
@@ -136,19 +139,29 @@ tables, never from this list (C002-CAP-01 acceptance, verification note).
 
 | Claude Code tool | OpenCode, native | OpenCode, server | Copilot, server | Copilot, hooks |
 |---|---|---|---|---|
-| Read | `read`, `list` | `read`, `list` | `read` (host tool `view`, S-08 §2.1, §3.1) | `read` |
+| Read | `read` | `read` | `read` (host tool `view`, S-08 §2.1, §3.1) | `read` |
 | Glob | `glob` | `glob` | `search` (host tools `grep`, `glob`, S-08 §3.1) | `search` |
 | Grep | `grep` | `grep` | `search` | `search` |
 | Write | `write` | `sdd-files_write_file` | `sdd-files/*` | `edit` (host tools `create`, `edit`, S-08 §3.1) |
 | Edit | `edit` | `sdd-files_replace_text` | `sdd-files/*` | `edit` |
 | Bash | `bash` | `sdd-shell_run_command` | `sdd-shell/*` | `execute` (host PowerShell tools, S-08 §2.2, §3.1) |
-| WebSearch | `websearch` | `websearch` | dropped (no web search tool in the S-08 record) | same |
+| WebSearch | `websearch` (offered only with `OPENCODE_ENABLE_EXA`, S-07 F-1) | same | dropped (no web search tool in the S-08 record) | same |
 | WebFetch | `webfetch` | `webfetch` | `web/fetch` | `web/fetch` |
-| LSP | `lsp` (S-07) | `lsp` (S-07) | usages tool (not in the S-08 record) | same |
+| LSP | `lsp` (offered only with `OPENCODE_EXPERIMENTAL_LSP_TOOL`, S-07 F-1) | same | usages tool (not in the S-08 record) | same |
 | ToolSearch | dropped | dropped | dropped (the host adds `tool_search_tool` to every agent, S-08 §3.2) | dropped |
 | AskUserQuestion | `question` | `question` | `ask_user` | `ask_user` |
-| TaskCreate, TaskUpdate, TaskList | `todowrite`, `todoread` | same | `todo` (not in the S-08 record) | same |
+| TaskCreate, TaskUpdate, TaskList | `todowrite` | same | `todo` (not in the S-08 record) | same |
 | Skill | `skill` | `skill` | dropped (skills are inlined) | dropped |
+
+**OpenCode tools at the tested version** (revised for defect D-009; `docs/spikes/S-07-opencode.md`
+§0, §2, §7, fact F-1, OpenCode 1.18.31). OpenCode offers `bash`, `edit`, `glob`, `grep`, `read`,
+`skill`, `task`, `todowrite`, `webfetch` and `write` by default, and `question` where an agent's
+permission allows it. It has no `list` and no `todoread` tool (`glob` lists files, `todowrite`
+returns the list it writes), so neither is granted. `websearch` and `lsp` exist only when the
+environment sets `OPENCODE_ENABLE_EXA=1` or `OPENCODE_EXPERIMENTAL_LSP_TOOL=1`. A grant that names a
+tool the host does not offer is no error (S-07 §2). Without these variables the researcher and the
+options analyst search through `webfetch` (and the researcher also through Context7 and DeepWiki),
+and the cartographer reads code through Serena. The corpus replay and the evals run without them.
 
 Copilot entries are `tools` grant names; the S-08 probes granted `read`, `search`, `edit` and
 `execute` and recorded the host tools they gave (`docs/spikes/s08/agents/`, record §2.1, §2.2,
@@ -166,8 +179,9 @@ plugins, which `permission.edit` does not govern (C002-R-001 C-01). The OpenCode
 Architect agent therefore starts its tool map with a catch-all entry that turns every tool off
 (`"*": false`) and then turns on only the derived tools (C002-IF-005 §2; C002-REQ-108, C002-TS-133);
 TGT-TOOLS-001 checks it.
-[ASSUMPTION: S-07 — OpenCode honours the catch-all tool entry for every tool, adopter MCP and plugin tools included, and a named entry overrides it (outcome agent_tools_closed)]
-Spike S-07 records the outcome (C002-IF-009 §3). The catch-all decides in both enforcement modes, so a record with
+Spike S-07 records the outcome (C002-IF-009 §3): on OpenCode 1.18.31 the catch-all keeps an
+adopter's MCP tool and a plugin tool away, and the named entries override it
+(`agent_tools_closed: true`, `docs/spikes/S-07-opencode.md §2`). The catch-all decides in both enforcement modes, so a record with
 `agent_tools_closed: false` leaves the tool set open whichever mode the replay selects: it triggers
 a revision of this spec with P-01, and until that revision the release check refuses the OpenCode
 target with ERR-REL-013 (C002-IF-009 §3, §5).
@@ -178,7 +192,7 @@ target with ERR-REL-013 (C002-IF-009 §3, §5).
 |---|---|---|---|
 | context7 | http | `https://mcp.context7.com/mcp` | all |
 | deepwiki | http | `https://mcp.deepwiki.com/mcp` | all |
-| serena | stdio | `sdd serena-launch --user-data --read-only -- start-mcp-server --context <S-07; Copilot: not in the S-08 record> --mode planning --project . --enable-web-dashboard False --open-web-dashboard False` | all |
+| serena | stdio | `sdd serena-launch --user-data --read-only -- start-mcp-server --context <context> --mode planning --project . --enable-web-dashboard False --open-web-dashboard False`; `<context>` is `ide` on OpenCode (S-07 §7: Serena 1.7.0 has no OpenCode context, and `ide` is the generic one for a client with its own file and shell tools); on Copilot not in the S-08 record | all |
 | sdd-files | stdio | `sdd-mcp --profile files` | `sdd-mcp-server`; on Copilot also `copilot-hooks` |
 | sdd-shell | stdio | `sdd-mcp --profile shell` | `sdd-mcp-server`; on Copilot also `copilot-hooks` |
 
@@ -191,25 +205,36 @@ C002-REQ-307).
 
 | Mode | `edit` | `bash` |
 |---|---|---|
-| native-permissions | `"*": deny`, then `.sdd/*`: allow (the string OpenCode matches is fixed by S-07, C002-R-001 C-02, C-03) | `"*": deny`, then `allow` rules for the forms the generated agents send (`sdd *`, `git <read verb> *` for each read verb, the ripwire read verbs, `ast-grep run *`, the version probes as exact strings, the pipe-only entries as S-07 shows OpenCode evaluates piped parts), then `deny` rules for the forms the guard refuses that a glob can name (below); no rule for the script form `node <path>/sdd.mjs` |
+| native-permissions | `"*": deny`, then `.sdd/*`: allow. OpenCode matches the target path relative to the project root, after resolving `..` and `.` segments, with either separator and, on Windows, in any letter case; a path outside the project is decided by `external_directory` first (S-07 §3.2; C002-R-001 C-02, C-03) | `"*": deny`, then `allow` rules for the forms the generated agents send (`sdd *`, `git <read verb> *` for each read verb, the ripwire read verbs, `ast-grep run *--pattern*`, the version probes as exact strings, the pipe-only entries `head -n *`, `tail -n *`, `wc -l`, `sort`, `uniq`, which OpenCode evaluates as separate parts, S-07 §3.3), then `deny` rules for the forms the guard refuses that a glob can name (below); no rule for the script form `node <path>/sdd.mjs` |
 | sdd-mcp-server | `deny` | `deny` |
 
 Other keys in both modes: `external_directory: deny`, `question: allow` for the conductor and
-`deny` for the specialists, `skill: deny` (skills are inlined), `webfetch` and `websearch` as the
-agent's tools allow.
+`deny` for the specialists (C002-REQ-217: OpenCode's default for SDK and `opencode serve` sessions is
+`question: deny`, S-07 §5, fact F-6), `skill: deny` (skills are inlined), `webfetch` and `websearch`
+as the agent's tools allow.
 
 **What a glob cannot express.** OpenCode matches a `bash` rule as a wildcard pattern against the
-command text, `*` crosses `/` and spaces, and the last matching rule wins (C002-R-001 C-01, C-02). The
-bash guard core of C002-IF-008 §1 also decides on arguments, which a pattern cannot always follow:
+command text, `*` crosses `/` and spaces, and the last matching rule wins (C002-R-001 C-01, C-02). It
+splits a compound command and checks each part alone, but it does not check redirection targets and
+lets some shell forms through (S-07 §3.3, fact F-3). An `edit` rule is matched against the path as
+written, before links are resolved (S-07 §3.2, fact F-2). The guard cores of C002-IF-008 §1 and
+C001-IF-07 §2 also decide on arguments and resolved paths, which a pattern cannot always follow. Rows
+marked S-07 were found on OpenCode 1.18.31 by the hand-replayed sample of the spike (revised for
+defect D-009); the full corpus replay settles them (C002-IF-009 §2):
 
 | Guard rule | Glob form in the OpenCode table | Gap |
 |---|---|---|
+| path guard: links resolved through the real path (C001-REQ-1104) | none: the `edit` pattern sees the path as written | S-07 (F-2): a junction or symbolic link under `.sdd/` to a folder inside the project (`.sdd/link-to-src/` → `src/`) passes `.sdd/*` and writes into that folder (false allows); a link to a folder outside the project is denied, because `external_directory` is evaluated on the resolved target (1.18.31; 1.15.10 wrote outside) |
+| path guard on a folder path (for example PG-048, `{repo}/.sdd/004-x/`, allowed by the guard) | none | S-07 (F-4): `write` and `edit` read the target before the permission check and fail on a folder path, which the replay reads as a deny (C002-IF-009 §2.3; a false deny) |
+| redirection `>`, `>>`, `<` is GUARD-BASH-002 (C001-REQ-1107) | none: OpenCode does not check redirection targets | S-07 (F-3): `git log >> src/log.txt`, `git log < input.txt`, `git status > src/redirected.txt` are allowed and run (false allows, BG-203, BG-206) |
+| a trailing `;` and arithmetic expansion `$((…))` are GUARD-BASH-002 | none | S-07 (F-3): `git status;` and `git log $((1+1))` are allowed (false allows, BG-215, BG-221); `$(…)`, `<(…)`, `;` and `\|\|` between two commands are split and denied, as the guard denies them |
+| pipe position: a pipe-only entry is allowed only after `\|` (C001-IF-07 §3) | the pipe-only entries as exact patterns | S-07 (F-3): every part of a pipe is evaluated alone, so a pipe-only entry also allows the command on its own (`tail -n 5 x`, BG-176: false allow); spellings the exact patterns do not name (`head`, `head -5`, `tail -2`, `sort -r`, `uniq -c`; BG-010, BG-167, BG-170, BG-173) are false denies, and a wider pattern adds standalone false allows |
 | script form `node <path>/sdd.mjs` (no `sdd.mjs` under `.sdd/`, no expansion characters, no node options before the script) | none: the generated agents call bare `sdd` (C002-GOAL-04) | allowed script-form cases are denied (false denies) |
 | Serena data folder outside the repository (C002-REQ-517, C002-IF-008 §1.1) | `sdd serena-config *` and `sdd serena-launch *` denied, then `sdd serena-config --user-data` and `sdd serena-launch --user-data *` allowed | the repository is unknown when the package is generated, so a positional folder outside it is denied (false denies) |
 | git output options (`-o`, `--output…`, `-O…`, `--open-files-in-pager`, `--ext-diff`) | `git * -o *`, `git * --output*`, `git * -O*`, `git * --open-files-in-pager*`, `git * --ext-diff*` denied | spellings a pattern misses are false allows that the replay finds |
 | `--cwd` of a writing `sdd` subcommand only with a folder at or under the repository root (C002-REQ-521, C002-IF-008 §1.2) | `sdd *--cwd*` denied, written after every `allow` rule of an `sdd` form, the Serena `--user-data` rules included (the last matching rule wins) | the repository root is unknown when the package is generated, so every `sdd` command with `--cwd` is denied, also with a folder inside the root and for subcommands that write no file (false denies; for example the inside-root `--cwd` case of C002-REQ-607); no false allow |
 | ripwire: one read verb, bounded flags only (C001-IF-14 §2) | one `allow` rule per read verb (`ripwire *--for=*`, `ripwire *--situ*`, …); any other ripwire command falls to the catch-all deny | a command with two read verbs or another flag still matches an `allow` rule (false allows the replay finds) |
-| ast-grep `run --pattern` without rewrite flags | `ast-grep run *` allowed, then `ast-grep * --rewrite*`, `ast-grep * -r *`, `ast-grep * -U*` denied | as for git |
+| ast-grep `run --pattern` without rewrite flags | `ast-grep run *--pattern*` allowed, then `ast-grep * --rewrite*`, `ast-grep * -r *`, `ast-grep * -U*` denied (S-07 §3.3: with `ast-grep run *`, a `run` without `--pattern` was allowed, BG-109) | as for git |
 | PowerShell dialect (C001-IF-07 §3 PowerShell rows) | none: OpenCode has one shell tool, and the rules follow the Bash rows | PowerShell-only decisions (for example `git log` denied in PowerShell) are not reproduced |
 
 The generator writes these rules with no `allow` rule wider than the forms the generated agents send
@@ -221,4 +246,6 @@ present corpus the script-form allow cases (for example BG-001), the Serena case
 outside the repository and the inside-root `--cwd` case are expected to differ, so `sdd-mcp-server`
 is the expected OpenCode mode. P-01 keeps 0 differences for these forms too (Q-safety-03, spec
 round 3): no OpenCode decision stricter than the guard is accepted, and the replay alone selects
-the mode.
+the mode. On OpenCode 1.18.31 the hand sample of S-07 differs in 16 of 57 shell cases and in 1 of
+52 path cases plus the in-project junction probe, by the rows above, so the record's mode is
+`sdd-mcp-server`, provisional until the full corpus replay (`docs/spikes/S-07-opencode.md §3`, §8).

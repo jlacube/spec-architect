@@ -38,7 +38,10 @@ and the host capabilities it provides (`replay_host`, for example `file-symlink`
 release check can recompute every expected decision (§2.1) and refuse a report whose host lacks a
 capability that a case of the cited corpora requires (§5, C002-REQ-634). Mechanisms: `opencode-permissions`
 (evaluated by OpenCode at its tested version through a headless session or its SDK, `host_versions`
-required), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
+required; OpenCode runs as the pinned host binary with a database of its own, as the OpenCode eval
+runner does, C002-IF-010 §4, and is started so that it reaches no network: no model catalog fetch,
+and the plugin package already installed for the project and the global configuration folder,
+`docs/spikes/S-07-opencode.md §4`, fact F-9), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
 `copilot-hooks` (`sdd hook guard --host copilot --mode copilot-hooks` of the Copilot package
 generated for the hooks fallback, fed with Copilot-shaped input).
 
@@ -107,7 +110,7 @@ S-08 §3.1) and the hook `tool_name` of the class the case maps to (C002-IF-008 
 | Corpus tool | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` |
 |---|---|---|---|
 | Write, NotebookEdit | `write` call with the path | `write_file` with the path and a one-line content | hook input of the tool the table maps Write to (class `write`), the path at its first `paths` pointer |
-| Edit, MultiEdit | `edit` call with the path | `replace_text` with the path and the first line of the fixture file as `old_text` | hook input of the tool the table maps Edit to |
+| Edit, MultiEdit | `edit` call with the path, the first line of the fixture file at that path as `oldString` and another one-line text as `newString`; the replay fixture holds that file for every Edit case whose target lies in the fixture (the project or its sibling outside folder), so that OpenCode's text check, which runs before the permission check, does not decide in place of the rule (S-07 §3.2, fact F-4; PG-004 reads `deny` with text that does not match and `allow` with the matching text) | `replace_text` with the path and the first line of the fixture file as `old_text` | hook input of the tool the table maps Edit to |
 | Read, Glob, Grep (path corpus, category `tool`) | the `read`, `glob` or `grep` call on the path | the server never receives the call: `allow` when the package grants the agent the tool the table maps it to, else `deny` | hook input of that tool (class `read_only`) |
 | Bash (path corpus, category `tool`) | `bash` call of `git status -- <path>` | `run_command` of `git status -- <path>` | hook input of the terminal tool with `git status -- <path>` |
 | Bash (shell corpus) | `bash` call with the command | `run_command` with the command, `dialect: bash` | hook input of the terminal tool with the command, decided in the `bash` dialect |
@@ -130,7 +133,7 @@ outside the copy.
 
 | Mechanism | `deny` | `allow` | `error` |
 |---|---|---|---|
-| `opencode-permissions` | OpenCode refuses the call by a permission rule, or rejects its arguments, before the tool runs | the tool runs, whatever its own result | no decision can be read (session failure, timeout) |
+| `opencode-permissions` | the target is unchanged and OpenCode refused the call before the tool ran: by a permission rule; as an unavailable tool, in either form S-07 shows (a tool part with the called name, status `error`, text `Model tried to call unavailable tool …`; or a part named `invalid`, status `completed`, output `The arguments provided to the tool are invalid: …`; fact F-5); by rejecting its arguments (a schema error); or by a tool error raised before the permission check (`Could not find oldString …`, a file-system error on a folder path; fact F-4). `detail` holds the part's error or output text | the tool runs, whatever its own result | no decision can be read (session failure, timeout) |
 | `sdd-mcp-server` | error result with GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001 | success, `completed`, `timed_out`, or a refusal after the boundary allowed the call (ERR-MCP-004, ERR-MCP-005, ERR-MCP-006) | ERR-MCP-002, ERR-MCP-003, a JSON-RPC error or no response |
 | `copilot-hooks` | exit code 2 with the deny decision of C002-IF-008 §2 on standard output (the command runs directly, not through a host, so exit 2 is read as written) | exit code 0 with empty standard output | any other exit code, or exit 2 without the deny decision |
 
@@ -143,7 +146,7 @@ Markdown with YAML frontmatter. The release check and the mapping tables use onl
 spike: S-08
 target: copilot
 date: 2026-10-17
-host_versions: { vscode-insiders: "1.142.0-insider", vscode: "1.108.0", copilot: "1.388.0", copilot-chat: "0.35.3", copilot-cli: "1.0.98" }   # S-07: { opencode: "1.4.2" }
+host_versions: { vscode-insiders: "1.142.0-insider", vscode: "1.108.0", copilot: "1.388.0", copilot-chat: "0.35.3", copilot-cli: "1.0.98" }   # S-07: { opencode: "1.18.31", opencode-sdk: "1.18.31", models: { opus: …, sonnet: …, haiku: … } }
 outcomes:                                                     # S-08 keys; S-07 keys below
   subagent_tool_list_confined: true
   agent_hooks_block_subagent_calls: false   # agent-scoped hooks (VS Code: never ran for a subagent)

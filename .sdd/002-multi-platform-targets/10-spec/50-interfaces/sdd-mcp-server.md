@@ -35,7 +35,8 @@ sdd-mcp --profile files|shell [--root <dir>]
   the servers to the session (C002-IF-010 §4).
 - Standard output carries JSON-RPC messages only, one per line (C002-REQ-410). Diagnostics go to
   standard error, one line each, prefixed `sdd-mcp:`; with `SDD_DEBUG=1` every decision is logged
-  there with its code (C001-NFR-702).
+  there with its code (C001-NFR-702). A usage error is the line `sdd-mcp: ERR-MCP-007: <message>`
+  (print form of `errors.md`).
 
 | Exit code | Meaning |
 |---|---|
@@ -126,9 +127,19 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
 3. Execute without a shell (C002-CON-07): take the words of each pipe segment from the guard core's
    tokeniser of that dialect; run the first segment as a child process with `shell: false`, working
    folder = root.
+   - **No expansion** (revised for defect D-006). Without a shell nothing expands: a variable
+     (`${CLAUDE_PLUGIN_ROOT}`, `$HOME`, `$env:X`, `%X%`), `~` or a wildcard reaches the child process
+     as the literal text the tokeniser gives. The script form with the plugin-root literal,
+     `node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs …`, passes the bash guard (C001-IF-07 §3,
+     current-state E-5) but makes `node` look for a file named by that literal text, so the call
+     completes with Node.js's non-zero exit code and its error on standard error, a normal result of
+     step 4, not an error result. The generated agents call the bare `sdd` (the CLI invocation
+     variants of C002-IF-001 §2, C002-REQ-111), which the next item runs.
    - A first word `sdd` runs the CLI of the server's own package: the Node.js executable that runs
      the server, with `<package>/scripts/sdd.mjs` and the remaining words (C002-REQ-407,
-     C002-TS-409); a PATH `sdd` is never used.
+     C002-TS-409); a PATH `sdd` is never used. When that file is not found beside the server's
+     bundle, the call fails with ERR-MCP-006, reason `not found beside the server (<path>)`, and no
+     process starts.
    - Any other executable is resolved on PATH; one that resolves only to a `.cmd` or `.bat` file is
      not run (ERR-MCP-006, reason `only a .cmd or .bat shim was found`), because running it needs a
      shell. The allowlisted executables are expected as native executables on Windows: `node`,
@@ -138,6 +149,8 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
      tool as `error` with the fix to install a native executable (C002-IF-006 §2), and code
      discovery falls back as for a failing layer (C001-REQ-1010). Spikes S-07 and S-08 record
      the shims found on REF-WIN (`cmd_shims`, C002-IF-009 §3).
+   - A process that the operating system refuses to start fails with ERR-MCP-006, the reason being
+     the operating system's error text.
    - The pipe-only segments (`head -n N`, `tail -n N`, `wc -l`, `sort`, `uniq` with the flags of
      C001-IF-07 §3) are applied in-process to the standard output, line by line.
 4. Return `exit_code`, `stdout` and `stderr` (C002-REQ-406). A non-zero exit code is a normal

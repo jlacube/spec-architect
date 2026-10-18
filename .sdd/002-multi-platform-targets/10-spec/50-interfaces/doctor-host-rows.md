@@ -37,9 +37,9 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 
 | Row | Detection | `ok` | Other statuses | Fix column |
 |---|---|---|---|---|
-| node | Claude Code: `node -v`; generated targets: `node --version` | version ≥ 20 | `missing`; `error` below 20 | `winget install OpenJS.NodeJS.LTS` |
+| node | Claude Code: `node -v`; generated targets: `node --version` | version ≥ 20 (the floor of `architect-sdd`, C002-NFR-401; the Node.js 22.22.2 floor of the OpenCode JS SDK binds only the machine of the eval runner and the corpus replay, `../10-context/scope.md` §5) | `missing`; `error` below 20 | `winget install OpenJS.NodeJS.LTS` |
 | Claude Code | `claude --version` | ≥ 2.1.295 | `error` below 2.1.295, on Claude Code only (C002-REQ-506) | `claude update`, or update the Claude desktop app |
-| OpenCode | `sdd host-version opencode` | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
+| OpenCode | `sdd host-version opencode`: the `opencode` that PATH resolves for the CLI's process, so with two installs the one first on that PATH is reported (`docs/spikes/S-07-opencode.md §9`, fact F-7) | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
 | VS Code with GitHub Copilot Chat | `sdd host-version vscode` | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
 | sdd CLI | `sdd --version` (C002-IF-007, C002-REQ-511) | its major, minor and patch numbers equal those of `{{package_version}}` (exact match, Q-cli-03) | `missing` when not reachable; `error` when any of the three numbers differs, older or newer (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
 | Copilot hooks | the `hooks` line of `sdd host-version vscode` | `enabled` | `error` when `disabled (<source>)` with the source `chat.useHooks`, Workspace Trust or organisation policy, and `error` when `hooks unknown` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |

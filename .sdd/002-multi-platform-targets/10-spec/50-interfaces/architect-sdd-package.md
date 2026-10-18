@@ -25,17 +25,31 @@ package/                                  tarball root
 ├── serena/architect-read-only.yml        copy of plugins/architect/serena/architect-read-only.yml
 ├── LICENSE                               MIT license of the repository (C002-REQ-414)
 ├── THIRD_PARTY_NOTICES.md                every package bundled into either entry, with version and license
-└── README.md                             install, the two executables, link to the repository README
+└── README.md                             install command, the two executables, the shipped files, and the
+                                          repository URL https://github.com/jlacube/spec-architect, whose
+                                          README is the full guide
 ```
 
 - The two entries are separate esbuild bundles of the same source tree and version as the plugin's
   `scripts/sdd.mjs` (C002-REQ-501, C002-REQ-412). The plugin keeps its one bundled file
   (C002-CON-12).
-- `templates/` must sit next to `scripts/`: the CLI resolves templates from the folder above its
-  bundle when `CLAUDE_PLUGIN_ROOT` is not set (`src/workspace/templates.ts:33`, current-state E-7).
-  Without it `sdd change new` and `sdd template show` fail on the generated targets.
-- `serena/architect-read-only.yml` is found the same way by `sdd serena-launch --read-only`
-  (C002-IF-007).
+- `templates/` must sit next to `scripts/`. **Template lookup order** of the CLI, the same program
+  in the plugin's bundle and in this package (revised for defect D-004; `src/workspace/templates.ts`
+  › `defaultPluginRoot()`):
+  1. the repository's `.sdd/_templates/<profile>/<path>`, when the file exists (C002-REQ-513);
+  2. the `templates/` folder above the running bundle (`<package>/templates/` for this package's
+     `sdd`, `<plugin-root>/templates/` for the plugin's `scripts/sdd.mjs`), when that folder exists;
+  3. only when it does not (an unbundled run, such as the tests running `src/cli.ts`), the
+     `templates/` folder of the plugin root named by `CLAUDE_PLUGIN_ROOT`.
+
+  On Claude Code steps 2 and 3 name the same folder. The npm `sdd` started inside a Claude Code
+  session, which sets `CLAUDE_PLUGIN_ROOT`, therefore reads its own translated templates, never
+  another package's. Before CHG-002 the CLI took the folder above its bundle only when
+  `CLAUDE_PLUGIN_ROOT` was unset (`src/workspace/templates.ts:33`, current-state E-7). Without
+  `templates/` beside `scripts/`, `sdd change new` and `sdd template show` fail on the generated
+  targets.
+- `serena/architect-read-only.yml` is taken from the folder above the running bundle by
+  `sdd serena-launch --read-only`, with no fallback (`<cli folder>/../serena/`, C002-IF-007).
 - **CLI lines in the templates** (C002-REQ-518, C002-REQ-519). While staging, the build copies each
   template and replaces, on every line, each invocation of the CLI through its plugin path — the
   word `node` followed by `<plugin-root>/scripts/sdd.mjs` or `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`,
@@ -43,8 +57,9 @@ package/                                  tarball root
   `templates/full/20-plan/handoff.md:20-23`, C002-TS-529). Then it scans every staged template for a
   remaining plugin path of the CLI (any `<…>/scripts/sdd.mjs`, `scripts/sdd.mjs` after a variable, or
   `${CLAUDE_PLUGIN_ROOT}`) and fails with ERR-BLD-002 naming the template, the line and the construct
-  (C002-TS-530). The source plugin's templates stay unchanged for Claude Code (C002-GOAL-05); the
-  templates the CLI reads on Claude Code are the plugin's own (`CLAUDE_PLUGIN_ROOT`).
+  (C002-TS-530), each finding printed as `ERR-BLD-002: <message>` (`errors.md` print form). The
+  source plugin's templates stay unchanged for Claude Code (C002-GOAL-05); the plugin's bundle reads
+  the plugin's own templates (lookup step 2).
 
 ## §2 Manifest
 
@@ -81,7 +96,7 @@ npm adds `LICENSE`, `README.md` and `package.json` to the tarball without a `fil
 
 | Command | Behaviour |
 |---|---|
-| `sdd <command> …` | the sdd CLI of C001-IF-01 with the additions of C002-IF-007; same output and files as `node plugins/architect/scripts/sdd.mjs` of the same version (C002-TS-501, C002-TS-502) |
+| `sdd <command> …` | the sdd CLI of C001-IF-01 with the additions of C002-IF-007; same output and files as `node plugins/architect/scripts/sdd.mjs` of the same version (C002-TS-501, C002-TS-502), with one exception (defect D-008): text taken from a shipped template, in a file the CLI creates (for example `20-plan/handoff.md` of a lite change) or printed by `sdd template show`, carries the CLI lines that §1 translates (`sdd …` where the plugin's template has `node <plugin-root>/scripts/sdd.mjs …`, C002-REQ-518); every other line, and the list of files, are the same |
 | `sdd-mcp --profile files\|shell [--root <dir>]` | the sdd MCP server of C002-IF-002 |
 
 Install command written in the install notes and in the doctor's fix column:

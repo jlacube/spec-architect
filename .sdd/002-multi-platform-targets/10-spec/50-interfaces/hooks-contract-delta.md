@@ -224,9 +224,11 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
 
 **Decision order** (C002-IF-007 `hook guard`):
 
-1. `--mode` missing or not `sdd-mcp-server` or `copilot-hooks`, or `--agents` missing or empty →
-   deny GUARD-HOOK-001 (`hook command usage`), whatever the input; a generated command always holds
-   both (TGT-HOOK-001).
+1. `--host` missing or other than `copilot`, `--mode` missing or not `sdd-mcp-server` or
+   `copilot-hooks`, `--agents` missing or empty, or any other error of the command's options →
+   deny GUARD-HOOK-001 (`hook command usage: <option>`), whatever the input, never a usage error
+   without a deny decision (revised for defect D-007: `--host`); a generated command always holds
+   the three (TGT-HOOK-001).
 2. Standard input empty, not JSON, or not a JSON object → deny GUARD-HOOK-001, whoever calls
    (C002-REQ-309, C002-REQ-328: unreadable input; no identity can be read).
 3. No `agent_type` → allow, exit 0, in both modes, without reading the classes file or the file
@@ -254,7 +256,11 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
    without `tool_name`, or with a classes file that cannot be read or parsed → deny GUARD-HOOK-001
    (C002-REQ-309, C002-CON-08).
 8. Otherwise (an Architect agent's call with `--mode copilot-hooks`) the input is mapped to the hook
-   input of C001-IF-07 §1 and decided by its class:
+   input of C001-IF-07 §1 and decided by its class. The guard cores guard only callers named
+   `architect:sdd-*` (C001-IF-07 §1) and would pass any other name unchecked, so an `--agents` name
+   without the `sdd-` prefix that the caller matched is denied with GUARD-HOOK-001 (`internal error:
+   agent <agent> of --agents is not an sdd- agent name`) before a core runs (revised for defect
+   D-007; under `--mode sdd-mcp-server` rule 4 decides such a caller):
 
 | Field of the guard core input | Value |
 |---|---|
@@ -264,10 +270,15 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
 
 | Class | Decision |
 |---|---|
-| write | Every string found at the class's `paths` pointers (a `*` segment walks an array) is decided as `{ "tool_name": "Write", "tool_input": { "file_path": <path> } }` by the path guard core with the memory folder off (§5); all must be allowed. No path found → deny GUARD-HOOK-001. `always_deny` → deny GUARD-PATH-001 (a tool whose targets cannot be read from its input, such as a patch tool) |
+| write | Every string found at the class's `paths` pointers (a `*` segment walks an array) is decided as `{ "tool_name": "Write", "tool_input": { "file_path": <path> } }` by the path guard core with the memory folder off (§5); all must be allowed. No path found → deny GUARD-HOOK-001 (`no path in the tool input (<pointers>)`). `always_deny` → deny GUARD-PATH-001 (a tool whose targets cannot be read from its input, such as a patch tool) |
 | terminal | The string at `command` is decided as `{ "tool_name": "Bash" or "PowerShell", "tool_input": { "command": <command> } }` by the bash guard core in the class's dialect; `strictest` allows only when both dialects allow. The table takes the dialect of the shell that the spike record names for the terminal tool (`terminal_dialect: powershell` in the S-08 record; C002-IF-009 §3), and `strictest` when a record names none |
 | read_only | allow |
 | any other tool name | deny GUARD-HOOK-001 (C002-REQ-309) |
+
+A tool name that the classes file assigns to more than one class takes the most restrictive of them,
+in the order `write`, `terminal`, `read_only`, in rule 6 and in rule 8 alike, so a duplicate entry
+never turns a write or terminal tool into a read-only one (revised for defect D-007). TGT-CLASS-001
+keeps a generated classes file free of such duplicates (C002-IF-005 §6).
 
 Initial classes from the S-08 record and C002-IF-002 §2 (informative; the table is the source; one
 file in both modes, C002-REQ-318): `write` `{ "tool": "Write", "paths": ["/path"] }`, `{ "tool":
