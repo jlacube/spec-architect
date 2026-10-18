@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:8ff7fddae0cdbebfe47e78de13b8d893729d3239028029c1cb431194f261ef49", approved_at: 2026-10-18, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:99a70b123a9a926a0f809bdea298f20ce045d794a400ea44e7e4b59fbe653efd", approved_at: 2026-10-18, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:34ab0c67e5fb15e5853173717772c8df5c41aba13bdc1f3aaa67600a73521b81", approved_at: 2026-10-18, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -99,3 +99,4 @@ waivers:
 | 2026-10-18 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-18 | G2 (spec) | **Revise** | "D-004…D-009: implementation findings (template root precedence, catalogue texts, PLG-VER-001, run_command plugin-root literal, hook-adapter extra denies, TS-502/ERR-BLD-002/README URL) and spike S-07 facts F-1…F-10 (OpenCode 1.18.31); P-01: one spec revision" | none | unavailable |
 | 2026-10-18 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, DOD-G-01 | unavailable |
+| 2026-10-18 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
