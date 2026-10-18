@@ -5,10 +5,15 @@
 // Steps: build (bundle, license allowlist, notices), plugin structure checks, `claude plugin validate`
 // on the staged plugin and marketplace (skipped when Claude Code is not found), then stage and zip.
 // The Claude Code packages leave out plugins/architect/targets/ (C002-CON-10, C002-ADR-002).
-import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+// Then the npm package architect-sdd (C002-IF-003, C002-ADR-004): dist/npm/architect-sdd/ staged with the
+// template CLI-line translation and scan (ERR-BLD-002), packed by `npm pack` into
+// dist/architect-sdd-<version>.tgz. Publication stays manual (C002-REQ-502).
+import { execFileSync, spawnSync } from "node:child_process";
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { NPM_NAME, npmManifestText } from "./npm-manifest.mjs";
+import { translateAndScanTemplates } from "./template-cli-lines.mjs";
 
 /** Top-level folders of plugins/architect/ that no Claude Code package holds: targets/ is the generator's input. */
 export const CLAUDE_EXCLUDES = ["targets"];
@@ -62,6 +67,84 @@ export function stageMarketplace(root, stage, version) {
   cpSync(join(root, ".claude-plugin", "marketplace.json"), join(stage, ".claude-plugin", "marketplace.json"));
   cpSync(plugin, join(stage, "plugins", "architect"), { recursive: true, filter: pluginFilter(plugin) });
   writeFileSync(join(stage, "INSTALL.md"), installText(version, name));
+}
+
+function npmReadme(version) {
+  return [
+    `# ${NPM_NAME} ${version}`,
+    "",
+    "The sdd CLI and the sdd MCP server of the Architect spec-driven workflow, for the targets other than",
+    "Claude Code (OpenCode, GitHub Copilot). The Claude Code plugin carries its own copy of the CLI.",
+    "",
+    "Requirements: Node.js 20 or later.",
+    "",
+    "```text",
+    `npm install -g ${NPM_NAME}@${version}`,
+    "```",
+    "",
+    "Executables:",
+    "",
+    "- `sdd <command> …` — the sdd CLI (`sdd --version`, `sdd status`, `sdd template show <profile>/<path>`, …).",
+    "- `sdd-mcp --profile files|shell [--root <dir>]` — the sdd MCP server over standard input and output.",
+    "",
+    "The package also ships the artifact templates (`templates/`) and Serena's read-only mode file",
+    "(`serena/architect-read-only.yml`). Full guide: `README.md` of the Architect repository.",
+    "",
+  ].join("\n");
+}
+
+/**
+ * Stages `dist/npm/architect-sdd/` (C002-IF-003 §1, C002-ADR-004) from repository `root` into `stage`:
+ * manifest, byte copies of the two bundles, the templates with their CLI lines translated, the Serena
+ * read-only mode file, LICENSE, the union notices and README.md. Writes only under `stage`. Returns the
+ * ERR-BLD-002 messages of the template scan (empty when clean).
+ */
+export function stageNpm(root, stage, version) {
+  const plugin = join(root, "plugins", "architect");
+  const npmBuild = join(root, "build", "npm");
+  rmSync(stage, { recursive: true, force: true });
+  mkdirSync(join(stage, "scripts"), { recursive: true });
+  writeFileSync(join(stage, "package.json"), npmManifestText(version));
+  copyFileSync(join(plugin, "scripts", "sdd.mjs"), join(stage, "scripts", "sdd.mjs"));
+  copyFileSync(join(npmBuild, "sdd-mcp.mjs"), join(stage, "scripts", "sdd-mcp.mjs"));
+  cpSync(join(plugin, "templates"), join(stage, "templates"), { recursive: true });
+  mkdirSync(join(stage, "serena"));
+  copyFileSync(join(plugin, "serena", "architect-read-only.yml"), join(stage, "serena", "architect-read-only.yml"));
+  copyFileSync(join(root, "LICENSE"), join(stage, "LICENSE"));
+  copyFileSync(join(npmBuild, "THIRD_PARTY_NOTICES.md"), join(stage, "THIRD_PARTY_NOTICES.md"));
+  writeFileSync(join(stage, "README.md"), npmReadme(version));
+  return translateAndScanTemplates(join(stage, "templates"));
+}
+
+/**
+ * npm's JavaScript entry (C002-ADR-004): `npm_execpath` under `npm run`, else
+ * `node_modules/npm/bin/npm-cli.js` beside the Node executable (`lib/node_modules/…` one level up on
+ * POSIX installs). Throws naming the places looked at when none exists; there is no shell fallback.
+ */
+export function npmCli(env = process.env, node = process.execPath) {
+  const tried = [];
+  if (env.npm_execpath) {
+    if (/npm-cli\.js$/.test(env.npm_execpath) && existsSync(env.npm_execpath)) return env.npm_execpath;
+    tried.push(`npm_execpath (${env.npm_execpath})`);
+  } else tried.push("npm_execpath (not set)");
+  for (const p of [join(dirname(node), "node_modules", "npm", "bin", "npm-cli.js"), join(dirname(node), "..", "lib", "node_modules", "npm", "bin", "npm-cli.js")]) {
+    if (existsSync(p)) return p;
+    tried.push(p);
+  }
+  throw new Error(`npm's JavaScript entry not found; looked at: ${tried.join(", ")}`);
+}
+
+/** Runs `npm pack <stage> --pack-destination <dest>` through Node (no shell); returns the tarball path. */
+export function packNpm(stage, dest) {
+  mkdirSync(dest, { recursive: true });
+  const out = execFileSync(process.execPath, [npmCli(), "pack", stage, "--pack-destination", dest, "--json", "--no-update-notifier"], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "inherit"],
+  });
+  const [{ filename }] = JSON.parse(out);
+  const tgz = join(dest, filename);
+  if (!existsSync(tgz)) throw new Error(`${tgz} not produced`);
+  return tgz;
 }
 
 /** Zips the content of `dir` into `out` (entries relative to it, dot-folders included, "/" separators); throws on failure. */
@@ -125,5 +208,26 @@ if (fileURLToPath(import.meta.url) === process.argv[1] && /[\\/]scripts[\\/]pack
   zipStep("zip plugin (upload)", join(stage, "plugins", "architect"), join(dist, `${name}-plugin.zip`));
   // Marketplace archive for `/plugin marketplace add <extracted folder>`.
   zipStep("zip marketplace", stage, zip);
-  console.log(`\npackaged:\n  dist/${name}-plugin.zip   plugin archive (upload in Claude: .claude-plugin/plugin.json at its root)\n  dist/${name}.zip          marketplace archive (extract, then /plugin marketplace add <folder>)\n  dist/${name}/             the marketplace folder, unzipped`);
+
+  // architect-sdd: staging, template CLI lines and their scan, npm pack (C002-T-022).
+  console.log(`\n=== stage npm/${NPM_NAME} ===`);
+  const npmStage = join(dist, "npm", NPM_NAME);
+  const tgzName = `${NPM_NAME}-${version}.tgz`;
+  rmSync(join(dist, tgzName), { force: true });
+  const scan = stageNpm(root, npmStage, version);
+  if (scan.length > 0) {
+    for (const line of scan) console.error(line);
+    console.error(`package failed at: stage npm/${NPM_NAME}`);
+    process.exit(1);
+  }
+  console.log(`\n=== npm pack ${NPM_NAME} ===`);
+  try {
+    packNpm(npmStage, dist);
+  } catch (e) {
+    console.error(`package failed at: npm pack (${e instanceof Error ? e.message : e})`);
+    process.exit(1);
+  }
+  console.log(
+    `\npackaged:\n  dist/${name}-plugin.zip   plugin archive (upload in Claude: .claude-plugin/plugin.json at its root)\n  dist/${name}.zip          marketplace archive (extract, then /plugin marketplace add <folder>)\n  dist/${name}/             the marketplace folder, unzipped\n  dist/${tgzName}      npm package (publish by hand: npm publish dist/${tgzName})\n  dist/npm/${NPM_NAME}/      its staging folder`,
+  );
 }
