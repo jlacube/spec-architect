@@ -12,4 +12,9 @@ closed.
 
 State at the decision: 52 M-3 scenarios pass at dev tier (one run each, ≈ $14.70 per full pass);
 the metrics report is `docs/metrics/eval-metrics.md`. Evals are billed to a prepaid API key.
+
+## CHG-002 milestones (`.sdd/002-multi-platform-targets/20-plan/10-strategy.md`)
+
+| Date | Milestone | Exit criterion | Decision (P-01, verbatim) | Status |
+|---|---|---|---|---|
 | 2026-10-18 | C002-M-02 | npm test green incl. regression set §3 and the waiver-aware lint loop (C002-T-053); bench guard p95 ≤ 300 ms; CHG-001 D-011 closed; npm run package without targets/; the 5 E-CC sessions of C002-T-010 step 5 pass; sdd install deny cases pass (C002-T-059) | met: npm run check green at cd5c2dc; bench guard p95 132 ms (lint-quick 314 ms, session-start 291 ms, faults pass); D-011 closed with C002-T-008 (3997daf); plugin zip has 0 targets/ entries; T-010 evals on Claude Max all pass (TS-537-init on the one allowed rerun); BG-420…435 pass | passed |
