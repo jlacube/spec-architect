@@ -59,11 +59,19 @@ const env = { ...process.env, NODE_OPTIONS: [process.env.NODE_OPTIONS, preload].
 // A run started from inside a test (C001-TS-1118) must not inherit node:test's child marker, or it
 // reports to the outer runner instead of failing with its own exit code.
 delete env.NODE_TEST_CONTEXT;
-const res = spawnSync(process.execPath, ["--test", ...flags, ...files], { stdio: "inherit", cwd: root, env });
+// Timing tests run after the parallel batch, one file at a time: with ~900 tests sharing the cores, a
+// spawned CLI's start-up time is bound by machine load, not by the code (C001-TS-705 measured 900–1200 ms
+// under load and 285 ms p95 alone). Their thresholds stay as the scenarios state.
+const TIMING = ["integration/cap07/TS-705.test"];
+const isTiming = (f) => TIMING.some((t) => relative(outdir, f).split(sep).join("/").includes(t));
+const parallel = files.filter((f) => !isTiming(f));
+const serial = files.filter(isTiming);
+const res = parallel.length > 0 ? spawnSync(process.execPath, ["--test", ...flags, ...parallel], { stdio: "inherit", cwd: root, env }) : { status: 0 };
+const timed = serial.length > 0 ? spawnSync(process.execPath, ["--test", "--test-concurrency=1", ...flags, ...serial], { stdio: "inherit", cwd: root, env }) : { status: 0 };
 const attempts = existsSync(netLog) ? readFileSync(netLog, "utf8").trim() : "";
 if (attempts) {
   console.error(`network access attempted during the tests (C001-NFR-202):\n${attempts}`);
   process.exit(1);
 }
 console.log("network calls during the tests: 0 (C001-NFR-202)");
-process.exit(res.status ?? 1);
+process.exit((res.status ?? 1) || (timed.status ?? 1));
