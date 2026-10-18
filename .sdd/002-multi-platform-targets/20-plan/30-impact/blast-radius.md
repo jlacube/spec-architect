@@ -197,7 +197,7 @@ must bound the inlined result.
 signature; selecting a host inside it widens a 76-line function with 4 commits that three importers rely
 on. `evals/harness/env.mjs` requires `CLAUDE_CODE_EXECPATH` and must not become mandatory for the other
 hosts. Cost control stays as recorded in the project memory (evals $0.50 per run, $5 per M-3 task; the
-OpenCode and Copilot CLI runs bill the same prepaid key).
+OpenCode runs bill P-01's OpenRouter account (stop at 40 USD, Q-opencode-01), Copilot CLI runs bill AI Credits, and Claude Code evals run on the Claude Max subscription with `--auth subscription` (C002-T-060)).
 
 ## 4. What the new modules will import (new dependants of existing code)
 

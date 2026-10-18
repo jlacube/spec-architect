@@ -44,7 +44,8 @@ of C002-IF-009.
 
 - C002-T-037 (case files, fx-gate) and C002-T-042 (driver) done. C002-T-042 delivers
   `evals/harness/opencode/driver.mjs` in both S-07 branches (`10-strategy.md` §4).
-- For step 6: the ledger check of test plan §4.1 allows the session.
+- For step 6: OpenCode on REF-WIN uses P-01's OpenRouter account with the S-07 model ids
+  (C002-T-001 step 1), and the general pool's stop rule of test plan §4.1 allows the session.
 
 ## Step outline (no production code)
 
@@ -63,11 +64,14 @@ of C002-IF-009.
    `question_answerable_by_script: false`, the scripted-answer cases are reported not applicable with
    the record cited, and the spec defect of `10-strategy.md` §4 is open.
 4. Read spend from the host's usage report. Where the host reports none, the turn cap alone applies,
-   and the result says so.
+   and the result says so. Each result records `provider` `openrouter` and the model ids used.
 5. Write the three gate case files.
-6. **Paid smoke run:** one dev-tier routing case on E-OCE, checked against the ledger before the
-   session and added to it after. The carried OpenCode rows run in C002-T-056; the release rows
-   (C002-TC-612) in C002-T-049.
+6. **Paid smoke run (OpenRouter, general pool):** one dev-tier routing case on E-OCE, checked
+   against the ledger before the session and added to it after (`provider` `openrouter`, pool
+   `general`). Compare the runner's spend with OpenRouter's usage view for that session; when they
+   differ by more than 10 %, or the host reports none, the ledger takes OpenRouter's figure for every
+   later OpenCode session, and the report says so. The smoke cost feeds the checkpoint of test plan
+   §4.1. The carried OpenCode rows run in C002-T-056; the release rows (C002-TC-612) in C002-T-049.
 
 ## Verification
 

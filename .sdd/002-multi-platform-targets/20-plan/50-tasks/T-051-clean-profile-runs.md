@@ -31,7 +31,7 @@ not wait for it.
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/releases/clean-profile-runs.md` | the OpenCode section: date, versions, timings, transcript link, the toy change's Gate log row (C002-T-057 adds the Copilot section) |
-| modify | `evals/results/spend-chg002.json` | the spend of step 3, pool `reserve`, read from the provider's usage view |
+| modify | `evals/results/spend-chg002.json` | the spend of step 3, `provider` `openrouter`, pool `reserve`, read from OpenRouter's usage view |
 
 ## Preconditions
 
@@ -39,22 +39,23 @@ not wait for it.
   OpenCode mode) done.
 - REF-WIN set up as `handoff.md` "Reference machine" lists.
 - **Before step 3:** the reserve's stop rule of test plan §4.1 allows the run. The model calls of the
-  run bill the prepaid API key through the provider of the S-07 record and are paid from the
-  C002-M-07 reserve (Q-evalbudget-04, `questions-log.md` round 5). While C002-T-048 step 4 or
-  C002-T-049 step 3 has not run, its test plan §4.2 estimate counts as already spent in this check, so
-  the release evidence keeps its share of the reserve.
+  run use the Claude models of the S-07 record through OpenRouter, bill P-01's OpenRouter account and
+  are paid from the OpenRouter C002-M-07 reserve (Q-evalbudget-04, `questions-log.md` round 5;
+  Q-opencode-01, round 6). While C002-T-049 step 3 has not run, its test plan §4.2 estimate counts as
+  already spent in this check, so the release evidence keeps its share of the reserve.
 
 ## Step outline (no production code)
 
 1. **P-01 step:** use a fresh Windows user profile with only Node.js and OpenCode at its tested
-   version installed.
+   version installed, and OpenCode's OpenRouter provider configured with P-01's key (OpenCode's own
+   set-up, before the timer starts; the key stays in OpenCode's credential store).
 2. **P-01 step:** extract `dist/architect-opencode-<version>.zip` and follow its `INSTALL.md`. Time
    each phase from the first install command to the first question.
 3. **P-01 step — paid, reserve (about 4 agent sessions on E-OCE, test plan §4.2):** continue the toy
    change to G1 and link the transcript. The run is driven by hand, outside the harness caps of
-   C002-T-044: P-01 reads the provider's usage view at each interview round and at the gate, and
+   C002-T-044: P-01 reads OpenRouter's usage view at each interview round and at the gate, and
    before each interview round and before the gate checks the reserve condition of the stop rule (test
-   plan §4.1): reserve total + the outstanding estimates of C002-T-048 step 4 and C002-T-049 step 3 (a
+   plan §4.1): reserve total + the outstanding estimate of C002-T-049 step 3 (a
    step in progress counts its estimate minus its spend so far, not below 0) + the run's spend so far
    + H ≤ 10 USD; otherwise the run pauses and P-01 decides. After the run, its spend goes into the
    ledger (one entry, pool `reserve`, with the usage reading and the session count), before any other

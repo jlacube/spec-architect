@@ -43,7 +43,8 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
 
 - C002-T-013, C002-T-014 and C002-T-028 done; C002-T-060 (eval auth switch) done.
 - For step 4: the sessions run with `--auth subscription` (test plan §4.1 "Eval auth"); a session run
-  with `--auth api-key` needs the ledger check of test plan §4.1 first.
+  with `--auth api-key` needs P-01's decision for that session first and bills the prepaid key,
+  outside the OpenRouter budget (test plan §4.1).
 
 ## Step outline (no production code)
 
@@ -57,8 +58,7 @@ C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506),
    511, and the doctor eval of regression-set §5 row 1 (`evals/cap11/doctor-no-ripwire.eval.mjs`),
    one run each, at most one rerun after a failure. The other §5 rows run only if a source agent,
    command or skill text changed (it should not, C002-CON-10). Run them with `--auth subscription`
-   and add each session to the ledger with its `auth` after it (test plan §4.1); only a session run
-   with `--auth api-key` is checked by the stop rule first. The OpenCode rows are carried to C002-T-056 and the
+   and add each session to the ledger with its `provider` and `auth` after it (test plan §4.1). The OpenCode rows are carried to C002-T-056 and the
    Copilot CLI rows of C002-TC-513 and C002-TC-526 to C002-T-045; the `@manual-vscode` cases to the
    checklist.
 

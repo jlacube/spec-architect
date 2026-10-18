@@ -41,10 +41,9 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
 
 - C002-T-005 and C002-T-009 done (same file, serialised); C002-T-060 (eval auth switch) done.
 - The paid runs of step 5 run with `--auth subscription` on P-01's Claude Max plan (test plan §4.1
-  "Eval auth") and draw on no pool of the API-key budget. Only if one of them has to run with
-  `--auth api-key`: P-01's top-up of C002-T-001 step 1 is done first, so the prepaid key holds at
-  least 40 USD minus the ledger total of `evals/results/spend-chg002.json` (Q-evalbudget-03), and the
-  stop rule of test plan §4.1 is checked before it. These runs use the caps that
+  "Eval auth") and are outside every USD budget. A session runs with `--auth api-key` only when
+  P-01 decides it for that session; it then bills the prepaid Anthropic API key, outside the OpenRouter
+  budget (test plan §4.1). These runs use the caps that
   `evals/harness/run.mjs` sets for Claude Code today (`maxTurns` 30, `maxBudgetUsd` 0.50) in both
   auth modes; the SDK cap can be overrun (one CHG-001 session cost 0.62 USD), so the stop rule counts
   the highest observed session cost, not the cap.
@@ -61,9 +60,8 @@ Claude Code doctor and init steps, which pass `${CLAUDE_PLUGIN_DATA}`, must stay
    (`evals/cap11/doctor-no-ripwire.eval.mjs`, `evals/cap10/TS-1015.eval.mjs`,
    `evals/cap11/TS-1111.eval.mjs`) and the 2 rows of C002-TC-537, one run each, at most one rerun
    after a failure, with `--auth subscription`. After every session, add it to the ledger with its
-   `auth` and its (notional) `cost_usd`; a session run with `--auth api-key` is checked by the stop
-   rule of test plan §4.1 before it starts. These runs check the C002-TS-537 assumption on the real
-   host.
+   `provider`, `auth` and (notional) `cost_usd` (test plan §4.1). These runs check the C002-TS-537
+   assumption on the real host.
 
 ## Verification
 

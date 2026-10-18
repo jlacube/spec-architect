@@ -45,7 +45,8 @@ C002-T-050 confirms both. The Claude Code text stays unchanged.
 
 - C002-T-028 done (variant mechanism and first drafts); C002-T-060 (eval auth switch) done.
 - For step 4: the sessions run with `--auth subscription` (test plan §4.1 "Eval auth"); a session run
-  with `--auth api-key` needs the ledger check of test plan §4.1 first.
+  with `--auth api-key` needs P-01's decision for that session first and bills the prepaid key,
+  outside the OpenRouter budget (test plan §4.1).
 
 ## Step outline (no production code)
 

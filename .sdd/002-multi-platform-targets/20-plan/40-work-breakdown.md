@@ -13,7 +13,7 @@ Edges are `depends_on` (dependency → dependent). Node IDs are task IDs with `-
 ```mermaid
 flowchart TB
   subgraph M01["C002-M-01 Spikes and P-01 prerequisites"]
-    C002_T_001["T-001 Spike S-07: OpenCode (P-01 top-up first)"]
+    C002_T_001["T-001 Spike S-07: OpenCode (P-01 OpenRouter check first)"]
     C002_T_002["T-002 Spike S-08: Copilot in VS Code"]
     C002_T_003["T-003 P-01: npm account and name"]
     C002_T_060["T-060 Eval auth switch (built)"]

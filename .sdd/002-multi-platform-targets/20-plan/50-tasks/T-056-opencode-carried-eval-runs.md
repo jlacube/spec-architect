@@ -24,7 +24,8 @@ Run, on the OpenCode target at its tested version (E-OCE), every OpenCode eval r
 wrote and carried to the OpenCode runner: the generator cases, the question-tool cases, the doctor
 cases and the gate cases with the C001-CAP-02 interview and gate cases (test plan §4.2, verification
 tooling row). These rows are the evidence of C002-DOD-001, C002-DOD-002 and C002-DOD-006 for OpenCode.
-They run on the prepaid API key outside the reserve for the release evidence (Q-evalbudget-03).
+They bill P-01's OpenRouter account from the OpenRouter general pool, outside the reserve for the
+release evidence (Q-evalbudget-03, Q-opencode-01).
 
 ## Targets
 
@@ -39,7 +40,10 @@ They run on the prepaid API key outside the reserve for the release evidence (Q-
 
 - C002-T-038 (doctor case files) and C002-T-044 (runner, gate case files) done; C002-T-026,
   C002-T-027 and C002-T-037 done through them.
-- OpenCode at its tested version with the Claude model tiers of the S-07 record.
+- OpenCode at its tested version with the Claude model tiers of the S-07 record, through P-01's
+  OpenRouter account (C002-T-001 step 1).
+- The conductor's re-estimate of the checkpoints of test plan §4.1 (S-07 probes, C002-T-044 smoke),
+  when one was triggered, has been shown to P-01.
 - The general pool's stop rule of test plan §4.1 allows the next session (general-pool total plus H
   within 30 USD; reserve spend does not count against it).
 
@@ -57,8 +61,8 @@ They run on the prepaid API key outside the reserve for the release evidence (Q-
 4. Under the infeasible-driver branch of `10-strategy.md` §4, also run C002-TC-133, 211, 222 and 223
    as real-model eval cases (about 4 sessions, as re-levelled in the test plan).
 5. Before every session check the ledger by the general pool's stop rule of test plan §4.1 and add the
-   session's spend after it, with pool `general`. At the stop, pause and let P-01 decide; never spend
-   the reserve here.
+   session's spend after it, with `provider` `openrouter` and pool `general`. At the stop, pause and
+   ask P-01; never spend the reserve here.
 
 ## Verification
 

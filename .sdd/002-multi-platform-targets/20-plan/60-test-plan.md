@@ -65,8 +65,8 @@ change level in a branch are listed in §8.1; the counts above are those of the 
 | E-W4 | REF-WIN, PowerShell 7 and Git Bash, each with Node.js 20 LTS and 22 LTS (C002-DOD-015, C002-DOD-016) |
 | E-SER | E-W with Serena 1.7.x installed |
 | E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network; `opencode` at its S-07 tested version on PATH and `@opencode-ai/sdk` pinned to it for OpenCode rows. Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
-| E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060; §4.1 "Eval auth"), not billed to the prepaid API key; a session run with `--auth api-key` is billed to the key |
-| E-OCE | OpenCode at its tested version with the Claude model tiers of C002-REQ-105 through the provider of the S-07 record; billed to the prepaid API key (`30-impact/blast-radius.md`, eval cost note) |
+| E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060; §4.1 "Eval auth"), outside every USD budget; a session run with `--auth api-key` bills the prepaid Anthropic API key and runs only after P-01 decides it (§4.1) |
+| E-OCE | OpenCode at its tested version with the Claude models of the C002-REQ-105 tiers through **OpenRouter** (model ids `openrouter/anthropic/claude-…`, the exact id per tier recorded by S-07, C002-T-001 step 8); billed to P-01's OpenRouter account within the OpenRouter budget of §4.1 (Q-opencode-01, `questions-log.md` round 6) |
 | E-CPC | Copilot CLI at its S-08 tested version (1.0.98), non-interactive with `--no-ask-user`, agents named `architect:<agent>`, each case workspace prepared by `sdd install copilot`; billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 83 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
 | E-VSC | VS Code Insiders and GitHub Copilot Chat at the S-08 tested versions (1.142.0-insider; scope §3.1), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks enabled in both modes (the subagent guard hook, C002-REQ-327, C002-REQ-629); billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
 
@@ -89,52 +89,55 @@ change level in a branch are listed in §8.1; the counts above are those of the 
   C002-T-037 step 4, C002-T-038 step 4, C002-T-048 step 4) run with `node evals/harness/run.mjs …
   --auth subscription` (or `EVAL_AUTH=subscription`) on P-01's Claude Max plan, through the switch of
   C002-T-060. The harness refuses a subscription session whose `apiKeySource` shows the key, so such
-  a session never falls back to the key, and these sessions draw on no pool of the budget below.
+  a session never falls back to the key, and these sessions are outside every USD budget.
   `--auth api-key` stays available and is the default when neither the option nor `EVAL_AUTH` is set,
-  so every E-CC command names `--auth subscription`. A Claude Code session run with `--auth api-key`
-  (for example when the plan's usage limit stops a run and P-01 chooses not to wait for its reset) is
-  an API-key session of its owning step's pool under the stop rule. The caps of C002-NFR-105 apply in
-  both modes. P-01 watches the plan's usage limits.
-- **Budget** (Q-evalbudget-03, `questions-log.md` round 4): 40 USD on the prepaid API key for the
-  CHG-002 sessions that bill the key: the S-07 probes, the OpenCode sessions on E-OCE (their billing
-  through OpenRouter is still to be discussed, Q-opencode-01, `questions-log.md` round 6; until then
-  the plan bills them to the key) and any Claude Code session run with `--auth api-key`. The budget
-  has two pools. The **C002-M-07 reserve** of 10 USD is spent only by the release evidence sessions
-  of C002-T-049 step 3 (C002-DOD-009), P-01's OpenCode run to G1 in C002-T-051 step 3 (C002-DOD-021;
-  Q-evalbudget-04, `questions-log.md` round 5) and C002-T-048 step 4 when it runs with `--auth
-  api-key` (C002-DOD-022); every other paid session on the prepaid key draws on the **general pool**
-  of 30 USD, including a re-run of C002-T-049 rows after a fix (C002-T-049 step 4). Sizes and room for
+  so every E-CC command names `--auth subscription`. The prepaid Anthropic API key is no longer used by
+  CHG-002 evals (Q-opencode-01, Q-evalauth-01; `questions-log.md` rounds 6 and 8): a Claude Code
+  session runs with `--auth api-key` only when P-01 decides it for that session (for example when the
+  plan's usage limit stops a run and P-01 chooses not to wait for its reset). Such a session bills the
+  key, is recorded with `provider` `anthropic-key`, and draws on no OpenRouter pool. The caps of
+  C002-NFR-105 apply in both modes. P-01 watches the plan's usage limits.
+- **Budget** (Q-evalbudget-03, `questions-log.md` round 4; Q-opencode-01, round 6): **40 USD of
+  OpenRouter spend** for the CHG-002 sessions that bill P-01's OpenRouter account: the S-07 probes and
+  the OpenCode sessions on E-OCE. At 40 USD the runs stop and P-01 is asked; there is no monthly cap
+  otherwise. The budget has two pools. The **OpenRouter C002-M-07 reserve** (short: reserve) of 10 USD
+  is spent only by the release evidence sessions of C002-T-049 step 3 (C002-DOD-009) and P-01's
+  OpenCode run to G1 in C002-T-051 step 3 (C002-DOD-021; Q-evalbudget-04, `questions-log.md` round 5);
+  every other OpenRouter session draws on the **OpenRouter general pool** (short: general pool) of
+  30 USD, including a re-run of C002-T-049 rows after a fix (C002-T-049 step 4). Sizes and room for
   reruns: §4.3. Copilot CLI, VS Code and S-08 sessions are billed in AI Credits to P-01's Copilot plan
   and are not part of the budget (§4.4).
-- **Top-up precondition** (C002-T-001 step 1): before the first paid session of CHG-002 on the
-  prepaid key, P-01 tops up the key so that it holds at least 40 USD minus the ledger total. The key
-  held about 4.77 USD on 2026-10-16, so the top-up is at least about 35.23 USD. C002-T-010 checks the
-  same precondition only for a session it runs with `--auth api-key`.
+- **OpenRouter precondition** (C002-T-001 step 1): before the first paid OpenCode session of CHG-002,
+  P-01's OpenRouter account has credit, and OpenCode on REF-WIN is configured to use it (OpenRouter
+  provider, the Claude models of the C002-REQ-105 tiers). The 40 USD stop is the ledger's; the account
+  balance is P-01's to keep above the next session's cost.
 - **Ledger:** `evals/results/spend-chg002.json`, created by the first paid session of CHG-002. It
-  holds the budget (40), the two pool limits (general 30, reserve 10), each top-up (date, amount) and
-  one entry per paid session (date, task and step, case and Examples row, host, **`auth`**
-  `api-key` or `subscription` (Claude Code sessions; the S-07 probes and the OpenCode sessions are
-  `api-key`), **pool** `general` or `reserve` for `api-key` entries only, `cost_usd`, result file or,
-  for the S-07 probes and the C002-T-051 run, the provider usage reading). A `subscription` entry
-  keeps its notional `cost_usd` (as `run.mjs` records it) and counts toward no pool total and not
-  toward the 40 USD. A failed session and a session ended by a cap are recorded like any other.
-- **Stop rule, per pool, checked before every paid session on the prepaid key** by the runner, or by
+  holds the OpenRouter budget (40), the two pool limits (general 30, reserve 10) and one entry per paid
+  session (date, task and step, case and Examples row, host, **`provider`** `openrouter` (the S-07
+  probes and the OpenCode sessions), `anthropic-key` (a Claude Code session run with `--auth api-key`)
+  or `claude-max` (a Claude Code session run with `--auth subscription`), **`auth`** `api-key` or
+  `subscription` (the OpenRouter sessions are `api-key`), **pool** `general` or `reserve` for
+  `openrouter` entries only, `cost_usd`, result file or, for the S-07 probes and the C002-T-051 run,
+  the OpenRouter usage reading). A `claude-max` entry keeps its notional `cost_usd` (as `run.mjs`
+  records it); `claude-max` and `anthropic-key` entries count toward no pool total and not toward the
+  40 USD. A failed session and a session ended by a cap are recorded like any other.
+- **Stop rule, per pool, checked before every paid OpenRouter session** by the runner, or by
   the person who starts the session when the runner does not read the ledger itself (critic CR-20):
   1. The session's pool is that of its owning step (§4.2, `10-strategy.md` §3a). T = the ledger total
-     **of that pool only**, `api-key` entries only; H = the highest session cost seen so far in either
-     pool or in a `subscription` entry (its notional cost measures the same token use), at least
+     **of that pool only**, `openrouter` entries only; H = the highest session cost seen so far in
+     either pool or in a `claude-max` or `anthropic-key` entry (a notional cost measures the same token
+     use), at least
      0.65 USD (the highest CHG-001 session cost, 0.62 USD, rounded up; the 0.50 USD spend cap of
      C002-NFR-105 is checked after a turn and can be overrun:
      `evals/results/t039-TS-712-2026-10-11T14-05-22-879Z.json` records `cost_usd` 0.62 with
      `result_subtype` `error_max_budget_usd`).
   2. L = 30 USD for a general-pool session; L = 10 USD for a reserve session. For a reserve session of
-     C002-T-051 step 3, T also counts the §4.2 estimate of C002-T-049 step 3 if it has not run yet
-     (and of C002-T-048 step 4 only if P-01 has decided to run it with `--auth api-key`), so the
-     release evidence keeps its share.
+     C002-T-051 step 3, T also counts the §4.2 estimate of C002-T-049 step 3 if it has not run yet,
+     so the release evidence keeps its share.
   3. The session starts only if T + H ≤ L. Otherwise no further paid session of that pool starts: the
-     stop and both pool totals go into the task report, and P-01 decides (more budget, fewer rows, or a
-     gap recorded at the gate). A pool never spends the other pool's room, so the ledger total stays
-     within 40 USD.
+     stop and both pool totals go into the task report, and P-01 is asked and decides (more budget,
+     fewer rows, or a gap recorded at the gate). A pool never spends the other pool's room, so the
+     OpenRouter total stays within 40 USD.
   4. After the session, its `cost_usd` is added to the ledger, with its pool, before the next session
      starts.
   5. **Re-run of C002-T-049 after a fix** (C002-T-049 step 4): the paid rows that the fix requires are
@@ -143,23 +146,28 @@ change level in a branch are listed in §8.1; the counts above are those of the 
   6. **C002-T-051 step 3** is driven by hand, outside the harness caps, as one run of about 4 agent
      sessions: rule 3 is checked once before the run, with the run's §4.2 estimate (1.40 USD) added to
      T, and before each interview round and before the gate P-01 checks rule 3's reserve condition with
-     rule 2's T plus the run's spend so far (read from the provider's usage view) and H; otherwise the
+     rule 2's T plus the run's spend so far (read from OpenRouter's usage view) and H; otherwise the
      run pauses for a decision. The run is one ledger entry with its session count; for later sessions,
      H is that entry's spend divided by its session count (CR-22).
-  7. **Subscription sessions** (`--auth subscription`) are not checked by rules 1 to 6; they are added
-     to the ledger with `auth` `subscription` after they end.
+  7. **Claude Code sessions** (`claude-max`, and `anthropic-key` after P-01's decision) are not
+     checked by rules 1 to 6; they are added to the ledger with their `provider` and `auth` after they
+     end.
 - **Checkpoint per owning step:** each owning task reports its steps' spend against their §4.2
   estimate. When the C002-T-044 smoke session costs more than 0.30 USD (twice the routing rate), the
   conductor re-estimates C002-T-056 with the measured OpenCode rate and shows it to P-01 before
-  C002-T-056 starts, since no CHG-001 session ran on OpenCode.
+  C002-T-056 starts, since no CHG-001 session ran on OpenCode or through OpenRouter. The S-07 probes
+  give the first OpenRouter rate (C002-T-001 step 2); when their mean session cost is above twice the
+  S-07 probe rate of §4.2, the conductor re-estimates the remaining OpenRouter rows and shows them to
+  P-01 before C002-T-044 step 6 (C002-RISK-015).
 
 ### 4.2 Estimated spend per owning step (dev tier)
 
 **Rates.** Planning rates per case family, from the top-level `cost_usd` of the CHG-001 dev-tier
 result files `evals/results/t0*.json` (Claude Code, 2026-10-11 to 2026-10-13). Each rate is the
 family mean rounded to 0.05 USD. The doctor and injection rates are raised to 0.25 USD, because
-sessions below 0.06 USD pull their means down. No CHG-001 session ran on OpenCode; the checkpoint of
-§4.1 covers that gap.
+sessions below 0.06 USD pull their means down. No CHG-001 session ran on OpenCode or through
+OpenRouter, so the OpenRouter rows carry the Claude Code rates of the same family; the checkpoints of
+§4.1 (S-07 probes, C002-T-044 smoke) cover that gap.
 
 | Family | CHG-001 evidence | Observed | Rate |
 |---|---|---|---|
@@ -170,14 +178,14 @@ sessions below 0.06 USD pull their means down. No CHG-001 session ran on OpenCod
 | S-07 probe | no counterpart: driven by hand, without harness caps (C002-T-001 step 2) | — | 0.50 USD |
 
 The C002-REQ-105 tiers set the model per agent, as in CHG-001. The weighted planning rate is
-0.29 USD per session (32.80 USD for the 112 Claude-model sessions on the key or on the Claude
-subscription). The review sessions of `t039-*` cost 0.37–0.62 USD and include the highest observed
+0.29 USD per session (32.80 USD for the 112 Claude-model sessions through OpenRouter or on the
+Claude subscription). The review sessions of `t039-*` cost 0.37–0.62 USD and include the highest observed
 session; CHG-002 plans no review eval. The **upper bound** is the session count times 0.65 USD. It
 is not a cap, and the stop rule of §4.1 is what bounds the spend. Claude Code sessions run with
 `--auth subscription` (§4.1 "Eval auth") and appear in their own column with their notional
-estimate; they are not part of the API-key totals.
+estimate; they are not part of the OpenRouter totals.
 
-| Milestone | Owning step (`10-strategy.md` §3a) | API-key sessions | Estimate | Upper bound | Claude subscription sessions (`--auth subscription`, notional estimate) | Copilot subscription sessions |
+| Milestone | Owning step (`10-strategy.md` §3a) | OpenRouter sessions | Estimate | Upper bound | Claude subscription sessions (`--auth subscription`, notional estimate) | Copilot subscription sessions |
 |---|---|---|---|---|---|---|
 | C002-M-01 | C002-T-001 steps 2 … 7 | about 10 S-07 probes at 0.50 | 5.00 USD | 6.50 USD | 0 | about 10 S-08 probes (C002-T-002) |
 | C002-M-02 | C002-T-010 step 5 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
@@ -189,7 +197,7 @@ estimate; they are not part of the API-key totals.
 | C002-M-06 | C002-T-056 steps 2 and 3 | 47 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) (7 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.45 USD | 30.55 USD | 0 | 0 |
 | C002-M-06 | C002-T-045 steps 4 and 5 | 0 | 0 | 0 | 0 | 5: the smoke, the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526 (1); C002-TC-336 not applicable (0) |
 | C002-M-06 | C002-T-056 step 4, only in the S-07 infeasible-driver branch (§8.1) | 4 on E-OCE at 0.35: C002-TC-133, 211, 222, 223 | 1.40 USD | 2.60 USD | 0 | 0 |
-| C002-M-07 | C002-T-048 step 4 | 0 (reserve only if run with `--auth api-key`: 1.25 USD, upper 3.25 USD) | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
+| C002-M-07 | C002-T-048 step 4 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
 | C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 | 0 |
 | C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 | 0 |
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 41: C002-TC-615 and C002-TC-359 |
@@ -201,17 +209,21 @@ estimate; they are not part of the API-key totals.
 
 | Pool | Limit | Sessions | Estimate | Room (limit − estimate) |
 |---|---|---|---|---|
-| General pool: C002-M-01 … C002-M-06 API-key sessions, including the branch sessions of C002-T-056 step 4 | 30.00 USD | 62 | 21.00 USD | 9.00 USD |
-| C002-M-07 reserve: C002-T-049 step 3, C002-T-051 step 3 (C002-T-048 step 4 only with `--auth api-key`) | 10.00 USD | 34 | 7.90 USD | 2.10 USD |
-| **CHG-002 eval budget (prepaid API key)** | **40.00 USD** | 96 | **28.90 USD** | **11.10 USD** |
+| OpenRouter general pool: C002-M-01 … C002-M-06 OpenRouter sessions, including the branch sessions of C002-T-056 step 4 | 30.00 USD | 62 | 21.00 USD | 9.00 USD |
+| OpenRouter C002-M-07 reserve: C002-T-049 step 3, C002-T-051 step 3 | 10.00 USD | 34 | 7.90 USD | 2.10 USD |
+| **CHG-002 eval budget (OpenRouter, P-01's account)** | **40.00 USD** | 96 | **28.90 USD** | **11.10 USD** |
 
 - The room is the allowance for reruns: at most one rerun per Examples row after a failure (§4.1).
   9.00 USD is about 31 reruns at the weighted rate; 2.10 USD is about 7 reruns of reserve sessions.
   The reserve room covers a C002-T-051 run at its upper bound (2.60 USD) or a second C002-T-051 run
-  (1.40 USD) after C002-T-049 step 3 has spent its estimate (6.50 USD + 2.60 USD = 9.10 USD). If
-  C002-T-048 step 4 has to run with `--auth api-key`, its 1.25 USD estimate (3.25 USD upper) comes out
-  of the reserve room, which then holds 0.85 USD and no longer covers those two cases; the reserve's
-  stop rule then stops the run and P-01 decides. The 40 USD budget is unchanged.
+  (1.40 USD) after C002-T-049 step 3 has spent its estimate (6.50 USD + 2.60 USD = 9.10 USD). No
+  Claude Code session draws on the reserve: C002-T-048 step 4 runs on the Claude subscription, and a
+  session P-01 decides to run with `--auth api-key` bills the prepaid key outside the 40 USD (§4.1).
+- The planning rates are Claude Code rates (§4.2). OpenRouter bills the Claude models per token at its
+  own listed rates, and whether OpenCode's requests through OpenRouter reuse the prompt cache as Claude
+  Code does is not measured; CHG-001 sessions read about 170,000 cached tokens each (§4.4). The S-07
+  probes and the C002-T-044 smoke measure the OpenRouter rate before the large runs (§4.1
+  checkpoints), and the stop rule bounds the spend whatever the rate (C002-RISK-015).
 - The general pool also funds the re-runs of C002-T-049 after a fix (§4.1 rule 5), from its room left
   at that time.
   When the branch of §8.1 does not apply, its 1.40 USD adds to the room of the general pool. CHG-001
@@ -225,9 +237,10 @@ estimate; they are not part of the API-key totals.
   reserve has spent, and reserve sessions at 10 USD of reserve spend.
 - Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 40 % more than
   the planning rates. The upper bounds (59.80 USD) show that the stop rule, not the estimate, keeps
-  CHG-002 within 40 USD.
+  CHG-002 within 40 USD of OpenRouter spend.
 - The 20 Claude subscription sessions (5.30 USD notional, 13.00 USD upper) bill P-01's Claude Max
-  plan, not the key; the ledger keeps them with `auth` `subscription` (§4.1).
+  plan, not the key and not OpenRouter; the ledger keeps them with `provider` `claude-max` and `auth`
+  `subscription` (§4.1).
 
 ### 4.4 Copilot AI Credits
 
@@ -275,7 +288,8 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
 
 - **Entry (task)**: dependencies done; the task's fixtures exist; for replay cases the C002-T-042
   driver, for OpenCode eval cases the C002-T-044 runner, for Copilot CLI cases the C002-T-045 runner;
-  for a paid session, the top-up of C002-T-001 step 1 and the stop rule of §4.1.
+  for a paid OpenRouter session, the OpenRouter precondition of C002-T-001 step 1 and the stop rule
+  of §4.1; for a Claude Code session, `--auth subscription` (or P-01's decision for `--auth api-key`).
 - **Owning and contributing tasks** (Task column of §8): the first task named owns the case. It
   writes or runs the test, and its exit needs the case to pass. Each further task contributes code,
   fixtures or records the case needs, or runs it again as evidence (C002-T-048, C002-T-049, C002-T-054,
@@ -582,7 +596,8 @@ branch.
 When the S-07 record shows that the stub-model driver of C002-ADR-005 is infeasible
 (`10-strategy.md` §4), the fallback adapter evaluates OpenCode's permission rules without a session.
 The four replay cases below need an agent to issue a call in a running session. They become eval
-cases on the real provider, run by C002-T-056 step 4 within the general pool (§4.2, 4 sessions). Their
+cases on the real provider (OpenRouter, E-OCE), run by C002-T-056 step 4 within the OpenRouter
+general pool (§4.2, 4 sessions). Their
 Given, When and Then are unchanged. The assertions read the transcript, the tool list and the files,
 never the model's free text alone. C002-T-030 or C002-T-026 lists them as carried to C002-T-056, and
 C002-T-056 writes their case files from the expectations already in `opencode-host.test.ts`.

@@ -44,8 +44,8 @@ C002-T-049 and C002-T-054 package.
 - C002-T-053 done, so that the approved-phase lint loop of `frontend.test.ts` passes with CHG-002's
   waivers in force.
 - C002-T-060 (eval auth switch) done. The 5 sessions of step 4 run with `--auth subscription` (test
-  plan §4.1 "Eval auth"); only if they run with `--auth api-key` must the C002-M-07 reserve still hold
-  their spend.
+  plan §4.1 "Eval auth"); a session runs with `--auth api-key` only when P-01 decides it, and then
+  bills the prepaid key outside the OpenRouter budget.
 
 ## Step outline (no production code)
 
@@ -65,9 +65,9 @@ C002-T-049 and C002-T-054 package.
 4. **Paid runs (5 sessions on E-CC):** the 3 cases of regression-set §5 row 1 and the 2 rows of
    C002-TC-537, one run each, at most one rerun after a failure. Run the other §5 rows only if a
    source agent, command or skill changed (C002-CON-10). Run them with `--auth subscription` and add
-   each to the ledger with its `auth` after it. A session that has to run with `--auth api-key` draws
-   on the C002-M-07 reserve: check the reserve's stop rule of test plan §4.1 before it and record it
-   with pool `reserve`.
+   each to the ledger with its `provider` and `auth` after it. A session that has to run with
+   `--auth api-key` starts only after P-01's decision and is recorded with `provider`
+   `anthropic-key`; it draws on no OpenRouter pool (test plan §4.1).
 5. If a later fix changes a source, harness or root file before C002-T-049 or C002-T-054 packages the
    release candidate, re-run steps 1 to 3 at the new commit and update the report.
 

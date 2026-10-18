@@ -55,21 +55,23 @@ CLI 1.0.98 (`10-strategy.md` §4).
 - Paid evals: dev tier only, and only at the task steps listed in `10-strategy.md` §3a. **Claude Code
   sessions run with `--auth subscription`** on P-01's Claude Max plan (C002-T-060; test plan §4.1
   "Eval auth"); `--auth api-key` is the harness default, so name the option on every Claude Code
-  run. No session on the prepaid key starts before P-01's top-up (C002-T-001 step 1: at least about
-  35.23 USD, so that the key holds at least 40 USD minus the ledger total). Check the ledger
-  `evals/results/spend-chg002.json` **before every session on the key** by the stop rule of test
-  plan §4.1, and add every paid session with its `auth` after it. The CHG-002 eval budget is 40 USD
-  on the key in two pools: a 30 USD general pool and a 10 USD reserve for the release evidence that
-  only C002-T-049 step 3, P-01's OpenCode run to G1 (C002-T-051 step 3) and C002-T-048 step 4 run
-  with `--auth api-key` may spend (Q-evalbudget-03, Q-evalbudget-04); each pool has its own stop; at
-  the stop, pause and let P-01 decide. Copilot sessions, in Copilot CLI and in VS Code, bill P-01's
-  Copilot subscription, not the key (C002-T-002 preconditions). Never store the Claude OAuth token in
-  the repository.
+  run; a Claude Code session runs with `--auth api-key` (prepaid Anthropic key) only when P-01
+  decides it. **OpenCode sessions** (S-07 probes included) use the Claude models of the C002-REQ-105
+  tiers through OpenRouter and bill P-01's OpenRouter account (Q-opencode-01); none starts before
+  P-01 confirms OpenRouter credit and the OpenCode configuration (C002-T-001 step 1). Check the
+  ledger `evals/results/spend-chg002.json` **before every OpenRouter session** by the stop rule of
+  test plan §4.1, and add every paid session with its `provider` and `auth` after it. The CHG-002
+  eval budget is 40 USD of OpenRouter spend in two pools: a 30 USD general pool and a 10 USD reserve
+  for the release evidence that only C002-T-049 step 3 and P-01's OpenCode run to G1 (C002-T-051
+  step 3) may spend (Q-evalbudget-03, Q-evalbudget-04); each pool has its own stop; at the stop,
+  pause and ask P-01. Copilot sessions, in Copilot CLI and in VS Code, bill P-01's Copilot
+  subscription in AI Credits (C002-T-002 preconditions). Never store the Claude OAuth token or the
+  OpenRouter key in the repository.
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
   defer branch of `75-rollout.md` §5.
 - P-01 steps are done by P-01: C002-T-003, C002-T-050, C002-T-051, C002-T-052, C002-T-055 and
-  C002-T-057, the top-up of C002-T-001 step 1, the Copilot subscription of C002-T-002, and the
+  C002-T-057, the OpenRouter confirmation of C002-T-001 step 1, the Copilot subscription of C002-T-002, and the
   sign-offs. Never publish, never store a token or credential in the repository.
 - `sdd install copilot` writes outside `.sdd/` (C002-REQ-325): its tests run it on fixture
   repositories only (C002-T-058); in a real repository only P-01 or P-03 runs it, in their own
@@ -87,7 +89,7 @@ CLI 1.0.98 (`10-strategy.md` §4).
 | Waiver | Scope | Source |
 |---|---|---|
 | LINT-DELTA-001 for C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601 (9 findings) | Citations of CHG-001 requirements not yet in `_living/`; ends when CHG-001 is archived (C001-T-075), before CHG-002 can be archived | C002-DEC-008; `change.md` waivers (G2), repeated at G3 |
-| DOD-G-01, clause "pass in at least 9 of 10 runs" | CHG-002 only: `@eval` scenarios pass at the dev tier, one passing run per Examples row, at most one rerun after a failure, within the CHG-002 eval budget (40 USD, Q-evalbudget-03) | Q-evalbudget-01, Q-evalbudget-02 (`questions-log.md` round 2), Q-evalbudget-03 (round 4); `10-spec/70-dod.md` |
+| DOD-G-01, clause "pass in at least 9 of 10 runs" | CHG-002 only: `@eval` scenarios pass at the dev tier, one passing run per Examples row, at most one rerun after a failure, within the CHG-002 eval budget (40 USD of OpenRouter spend, Q-evalbudget-03, Q-opencode-01) | Q-evalbudget-01, Q-evalbudget-02 (`questions-log.md` round 2), Q-evalbudget-03 (round 4); `10-spec/70-dod.md` |
 
 `sdd lint 002` is expected to report exactly the 9 waived LINT-DELTA-001 findings; the
 approved-phase lint loop of `frontend.test.ts` excludes them through the waivers of `change.md`
@@ -107,7 +109,7 @@ environments:
 | OpenCode, with auto-update off | the S-07 tested version (C002-T-001) | E-OC, E-OCE |
 | VS Code Insiders (`code-insiders` on PATH), GitHub Copilot Chat, Copilot CLI, with auto-update off | the S-08 tested versions (C002-T-002; scope §3.1): VS Code Insiders 1.142.0-insider, Local session type; Copilot CLI 1.0.98; Copilot Chat 0.35.3 (Q-versions-02) | E-VSC, E-CPC |
 | Claude Code desktop-bundled binary (`CLAUDE_CODE_EXECPATH`) | the tested version | E-CC |
-| Prepaid API key topped up (C002-T-001 step 1); P-01's Claude Max plan with its OAuth token outside the repository (C002-T-060); P-01's Copilot subscription with Claude models (C002-T-002) | — | paid evals |
+| P-01's OpenRouter account with credit, configured in OpenCode with the Claude model ids of the S-07 record (C002-T-001 step 1); P-01's Claude Max plan with its OAuth token outside the repository (C002-T-060); P-01's Copilot subscription with Claude models (C002-T-002) | — | paid evals |
 
 A host that auto-updates invalidates its evidence (C002-RISK-020, C002-RISK-031 for the daily
 Insiders builds): record the version before each run.
@@ -120,7 +122,7 @@ Insiders builds): record the version before each run.
 | Copilot Chat 0.35.3 of the S-08 record is the Copilot Chat of the tested Insiders build (C002-IF-009 §3) | C002-T-024 step 3 | settled: P-01 confirmed it (Q-versions-02, `questions-log.md` round 7) |
 | C002-REQ-325 as a changed expectation of the regression set (`sdd install` cases, `not install;` in the `Allowed:` summary) | C002-T-059, C002-T-048 | settled: `30-impact/regression-set.md` §4.1 lists it beside C002-REQ-503, C002-REQ-517 and C002-REQ-521 |
 | The assumptions left to the checklist and the runner (`10-strategy.md` §4, "Open assumptions"), the MCP roots of C002-IF-002 §3 and the subagent guard assumptions of C002-IF-005 §3 and C002-REQ-327 included | C002-T-045, C002-T-046, C002-T-050, C002-T-054 | settled by those tasks |
-| OpenCode model inference through OpenRouter (Q-opencode-01, `questions-log.md` round 6): until P-01 decides, the plan bills the OpenCode sessions to the prepaid key | C002-T-001 | open: to discuss with P-01 before C002-T-001 |
+| OpenCode model inference through OpenRouter (Q-opencode-01, `questions-log.md` round 6) | C002-T-001 | settled: Claude models of the C002-REQ-105 tiers through OpenRouter, billed to P-01's OpenRouter account; stop at 40 USD of OpenRouter spend and ask P-01 (test plan §4.1); S-07 records the model id per tier |
 
 ## CLI commands
 
@@ -235,7 +237,7 @@ CHG-002 is done when:
   under the DOD-G-01 waiver above;
 - every item of `10-spec/70-dod.md` (DOD-G-01 … 07 as applied there, C002-DOD-001 … C002-DOD-023) has
   its evidence filled, with the release records and `zip.sha256` lines under `docs/releases/`;
-- the CHG-002 spend ledger shows every paid session with its `auth`, and an API-key total within the
-  40 USD budget;
+- the CHG-002 spend ledger shows every paid session with its `provider` and `auth`, and an OpenRouter
+  total within the 40 USD budget (or P-01's recorded decision at a stop);
 - no spec defect is open (D-002 of CHG-002 included), and D-011 of CHG-001 is closed (C002-DOD-023);
 - CHG-001 is archived (C001-T-075), so the LINT-DELTA-001 waivers can end before CHG-002 is archived.
