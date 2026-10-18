@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-027]
 implements: [C002-REQ-109, C002-REQ-111, C002-REQ-112, C002-REQ-113]
 satisfies_ac: [C002-AC-109.1, C002-AC-111.1, C002-AC-112.1, C002-AC-113.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-115, C002-TS-117, C002-TS-118, C002-TS-119, C002-TS-120, C
 components: [C002-COMP-001, C002-COMP-002, C002-COMP-016]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 08a61b2, completed_at: 2026-10-18, notes: "Variants + skill inlining; TC-115/117/118/119/120/123 + generator part of TC-121, TC-107 CLI row, TC-134 inlined-body clause; TC-122 and PLG-SIZE part of TC-121 to T-035; interview/gate/doctor/toolchain variants are drafts for T-037/T-038; three extra anchors (gate-protocol wiring line, doctor task-tools and probe/report blocks) — add to D-010 batch; frontmatter mentions of Claude (doctor description, conductor claude --agent) not covered by body variants" }
 ---
 
 # C002-T-028 — Wiring variants, anchors and skill inlining
