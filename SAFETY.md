@@ -58,7 +58,8 @@ A PreToolUse hook on Bash and PowerShell. A quote-aware tokeniser splits the com
   - `ast-grep run --pattern … [--lang] [paths] [--json]` — never `--rewrite`, `-U`, `-i`;
   - `git log|show|diff|blame|ls-files|rev-parse|status|grep …` — never `-o`/`--output`, pager or
     external-diff options;
-  - version probes (`node -v`, `git --version`, …).
+  - version probes (`node -v`, `node --version`, `git --version`, …);
+  - bare `sdd …`, the npm-installed CLI (CHG-002, C002-REQ-503).
 - **Later pipe segments** may only be `head`, `tail`, `wc -l`, `sort`, `uniq` (with safe flags).
 
 **Evidence:** 277 cases (scenario tables, every ripwire verb and bounding flag, dozens of bypass
