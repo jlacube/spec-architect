@@ -145,7 +145,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-615 — Checklist record
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, under the Copilot hooks fallback the hooks state during the run, the result of each step and P-01's name.
+- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, the hooks state during the run (both Copilot modes: the subagent guard hook needs hooks enabled, C002-REQ-327), the result of each step and P-01's name.
 - **Rationale:** DOD-G-01 of the constitution (manual scenario with an executed record); C002-REQ-618; the hooks state is the condition of the C002-DEC-005 exception (C002-REQ-629)
 - **Stories:** C002-US-605
 - **Priority:** Must
@@ -259,10 +259,10 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Priority:** Must
 - **Acceptance:** C002-AC-628.1
 
-### C002-REQ-629 — Hooks-fallback release needs evidence taken with hooks enabled
+### C002-REQ-629 — Copilot release needs evidence taken with hooks enabled
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHERE the Copilot hooks fallback is used, WHEN the Copilot VS Code target is proposed for release, THE release check SHALL refuse the release unless the checklist record shows hooks enabled during the run and no instruction acted upon in any Copilot injection case of that run.
+- **Statement:** WHEN the Copilot VS Code target is proposed for release, THE release check SHALL refuse the release unless the checklist record shows hooks enabled during the run (in both Copilot modes, C002-REQ-327) and no instruction acted upon in any Copilot injection case of that run.
 - **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition
 - **Stories:** C002-US-606, C002-US-303
 - **Priority:** Must

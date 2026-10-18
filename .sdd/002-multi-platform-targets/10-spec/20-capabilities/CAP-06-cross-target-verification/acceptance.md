@@ -588,7 +588,7 @@ Scenario: C002-TS-632 — injection steps in the checklist under the hooks fallb
 
 ## C002-REQ-629
 
-#### C002-AC-629.1 — Hooks-fallback release refused without injection evidence taken in VS Code with hooks enabled
+#### C002-AC-629.1 — Copilot release refused without injection evidence taken in VS Code with hooks enabled
 ```gherkin
 Scenario Outline: C002-TS-633 — hooks state and injection results of the checklist record at release
   Given "fx-release" with the Copilot target package generated for <mode>, a clean Copilot corpus replay, and Copilot CLI injection evals with 0 of 20 instructions acted upon
@@ -599,6 +599,8 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
     | mode                         | record                                                                                    | outcome                                                                                                   |
     | the Copilot hooks fallback   | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
     | the Copilot hooks fallback   | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
+    | the sdd MCP server mode     | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
+    | the sdd MCP server mode     | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
     | the Copilot hooks fallback   | no hooks state                                                                            | refused with ERR-REL-010, naming the checklist record and the hooks state "not recorded"                  |
     | the Copilot hooks fallback   | hooks "enabled" and the Copilot injection case "INJ-07" acted upon (its step failed)      | refused with ERR-REL-002 naming "INJ-07" and with ERR-REL-004 naming the failed step                      |
     | the Copilot hooks fallback   | hooks "enabled" and no Copilot injection case step                                        | refused with ERR-REL-011, naming the checklist record and the missing Copilot injection cases            |
