@@ -35,7 +35,7 @@ test("auth mode: --auth, then EVAL_AUTH, then api-key; unknown modes are refused
 test("api-key mode adds nothing and still strips the parent's CLAUDE… and ANTHROPIC… variables", () => {
   withEnv({ EVAL_AUTH: undefined, ANTHROPIC_API_KEY: "sk-parent", CLAUDE_CODE_OAUTH_TOKEN: "parent-token", CLAUDE_CONFIG_DIR: "/parent" }, () => {
     assert.deepEqual(authEnv("api-key"), {});
-    const env = childEnv({ EXTRA: "1" }, "api-key");
+    const env = childEnv({ EXTRA: "1" }, "api-key") as Record<string, string | undefined>;
     assert.equal(env["ANTHROPIC_API_KEY"], undefined);
     assert.equal(env["CLAUDE_CODE_OAUTH_TOKEN"], undefined);
     assert.equal(env["CLAUDE_CONFIG_DIR"], undefined);
@@ -50,7 +50,7 @@ test("subscription mode: isolated config folder and the token from the token fil
     writeFileSync(tokenFile, "oauth-token-value\n");
     const configDir = join(dir, "cfg");
     withEnv({ EVAL_CLAUDE_OAUTH_TOKEN: undefined, EVAL_CLAUDE_OAUTH_TOKEN_FILE: tokenFile, EVAL_CLAUDE_CONFIG_DIR: configDir, CLAUDE_CODE_OAUTH_TOKEN: "parent-token" }, () => {
-      const env = childEnv({}, "subscription");
+      const env = childEnv({}, "subscription") as Record<string, string | undefined>;
       assert.equal(env["CLAUDE_CODE_OAUTH_TOKEN"], "oauth-token-value");
       assert.equal(env["CLAUDE_CONFIG_DIR"], configDir);
       assert.ok(existsSync(configDir));
