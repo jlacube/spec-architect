@@ -84,6 +84,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Variant token | A placeholder in a wiring variant that the generator fills from the mapping table, such as the tested version (C002-IF-001 §4) |
 | Server profile | One of the two tool sets of the sdd MCP server, declared as its own server: `sdd-files` (write tools) and `sdd-shell` (command tool) (C002-IF-002 §2) |
 | Server repository root | The repository folder an sdd MCP server process serves, fixed when it is initialised (C002-IF-002 §3) |
+| Repository with `.sdd/` (Copilot guard) | A repository in which the tool call's working folder, or a folder above it, holds `.sdd/` — the same upward lookup as the sdd CLI (C002-IF-008 §2 rule 6). It includes a repository nested below an Architect workspace, which extends the cost P-01 accepted in Q-safety-06 and Q-safety-07 to such repositories (CR-41) |
 | Tool classes | The classification of a host's tool names into write, terminal and read-only tools that the Copilot guard hooks and the Copilot subagent guard hook use (C002-IF-008 §2) |
 | Tool classes file | The file `hooks/tool-classes.json` of the Copilot target package, in both Copilot enforcement modes, which assigns every tool the host offers to an Architect agent and every recorded generic edit or terminal tool of the host to one of the tool classes `write`, `terminal` and `read_only` (C002-REQ-318) |
 | Host adapter | The part of the sdd CLI that turns a host's hook input into the hook input of C001-IF-07 §1 (`--host copilot`) |

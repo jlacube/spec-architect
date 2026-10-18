@@ -19,13 +19,14 @@ under C002-DEC-008; `sdd trace 002` reports TR-01 … TR-11 at 100 % and a cycle
 ## Summary
 | blocker | major | minor |
 |---|---|---|
-| 1 | 12 | 13 |
+| 1 | 13 | 13 |
 
 Round 1 raised CR-1 … CR-16 (1 blocker, 9 major, 6 minor); re-review 1 resolved all of them and
 raised CR-17 … CR-21 (2 major, 3 minor); re-review 2 resolved CR-17 … CR-21 and raised CR-22 and
 CR-23 (2 minor). Open after re-review 2: 0 blocker, 0 major, 2 minor (CR-22, CR-23); both fixed by the conductor afterwards, open: none.
-The D-003 review (2026-10-17, at the end of this report) raised CR-24 … CR-26 (1 major, 2 minor).
-Open after the D-003 review: 0 blocker, 1 major, 2 minor (CR-24 … CR-26).
+The D-003 review (2026-10-17) raised CR-24 … CR-26 (1 major, 2 minor).
+The D-003 fix-round confirmation (2026-10-18, at the end of this report) resolved CR-24 … CR-26 and
+raised CR-27 (1 major). Open after it: 0 blocker, 1 major (CR-27), 0 minor.
 
 ## Findings
 
@@ -705,7 +706,7 @@ reports TR-06 128/128, TR-07 59/59, TR-08 228/228 and TR-11 acyclic.
   the implementer with P-01, triggered when a checklist step or eval shows a built-in subagent editing
   a file or running a command.
 - **Owner:** sdd-planner; sdd-test-designer (TC rows, §4.4), after the spec fix of CR-37
-- **Status:** open
+- **Status:** resolved (D-003 fix-round confirmation) — C002-TC-357 … 366 owned by C002-T-032, C002-T-033 and C002-T-058 (`60-test-plan.md:456-465`), the delegated-edit checklist step in C002-T-046 and C002-T-050, C002-TC-359 in C002-T-045 and C002-T-054, about 7 more Copilot sessions in §4.4 and C002-RISK-026 (`60-test-plan.md:250`, `70-risks.md:49`), risk rows C002-RISK-032 and C002-RISK-033 (`70-risks.md:66-67`); new issue in the checklist step's expected code: CR-27
 
 #### CR-25 — P-01's round-7 answers are logged but not applied: the hand-off, the strategy and C002-T-024 still wait for them
 - **Severity:** minor
@@ -726,7 +727,7 @@ reports TR-06 128/128, TR-07 59/59, TR-08 228/228 and TR-11 acyclic.
   per Q-versions-02; take the Serena `--context` from Serena's context list at the tested Serena
   version and record it in the task report; C002-T-050 then confirms that Serena starts.
 - **Owner:** sdd-planner
-- **Status:** open
+- **Status:** resolved (D-003 fix-round confirmation) — the three hand-off rows read "settled" with their sources (`handoff.md:119-121`), the strategy rows cite Q-versions-02 and Q-serena-ctx-01 (`10-strategy.md:146-147`), and C002-T-024 step 3 takes 0.35.3 per Q-versions-02 (`T-024-mapping-tables.md:49-53`) while the new step 4 picks and records the Serena context (`:60-67`)
 
 #### CR-26 — The C002-IF-002 §3 assumption on MCP roots in VS Code has no named settling step
 - **Severity:** minor
@@ -743,7 +744,7 @@ reports TR-06 128/128, TR-07 59/59, TR-08 228/228 and TR-11 acyclic.
 - **Suggested fix:** Add the row to strategy §4. Add C002-IF-002 §3 to the C002-T-046 list, with a
   checklist step that names the expected `.sdd/` path.
 - **Owner:** sdd-planner
-- **Status:** open
+- **Status:** resolved (D-003 fix-round confirmation) — strategy row "VS Code offers its workspace folders as MCP roots … | C002-IF-002 §3 | roots step of the checklist, which names the expected `.sdd/` path" (`10-strategy.md:148`), the C002-T-046 assumption row with the expected path `<toy repository>/.sdd/<NNN>-<slug>/00-ideation/ideation.md` (`T-046-vscode-checklist.md:54`), and C002-T-050 step 2 records it (`T-050-vscode-checklist-run.md:64-65`)
 
 ### Rubric (D-003 review, applied to the re-reviewed set)
 | Rubric | Item | Result |
@@ -772,3 +773,101 @@ reports TR-06 128/128, TR-07 59/59, TR-08 228/228 and TR-11 acyclic.
 
 CR-24 (major) waits for the spec fix of CR-37 and P-01's answer to Q-safety-06. CR-25 and CR-26 are
 minor planner fixes. G3 can be re-approved after G2.
+
+## D-003 fix-round confirmation (2026-10-18)
+
+Scope: the passages of `git diff b8cce50 HEAD -- .sdd/002-multi-platform-targets/20-plan` that the
+fixes of CR-24 … CR-26 touched (planner commit de4da1e). They were checked against the spec fixes
+(confirmation section of `10-spec/90-critic-report.md`, CR-37 … CR-41) and against
+`questions-log.md` rounds 7 and 8 (`:93-117`). Round 8 (Q-evalauth-01) adds C002-T-060, the eval
+auth switch. It touches none of these findings and was not reviewed. Nothing else was re-reviewed.
+
+Re-reviewed set: C002-T-024 steps 3 and 4; C002-T-045 (the C002-TC-359 rows); C002-T-046 (the
+delegated-edit step and the assumption table); C002-T-050 steps 2 and 3; C002-T-054 (C002-TC-359);
+`10-strategy.md` §4 assumption table; `handoff.md` "Open points"; `60-test-plan.md` §4.4 and the
+C002-TC-357 … 366 rows; `70-risks.md` C002-RISK-026, 032 and 033.
+
+Tool state: `sdd lint 002` reports exactly the 9 waived LINT-DELTA-001 errors; `sdd trace 002`
+reports TR-06 132/132, TR-07 60/60, TR-08 238/238 and TR-11 acyclic.
+
+### Status of CR-24 … CR-26
+
+- **CR-24 — resolved.** C002-TC-357 … 366 with owners C002-T-032, C002-T-033 and C002-T-058
+  (`60-test-plan.md:456-465`); the delegated-edit step in C002-T-046 (`T-046-vscode-checklist.md:33-36`)
+  and in C002-T-050 step 2 (`T-050-vscode-checklist-run.md:65-67`); C002-TC-359 in C002-T-045
+  (`T-045-copilot-cli-eval-runner.md:40`) and C002-T-054 (`T-054-copilot-release-evidence.md:31, 59`);
+  "The subagent guard evidence adds about 7 sessions to the earlier count of 76" (`60-test-plan.md:250`)
+  and "about 83 Copilot sessions" in C002-RISK-026 (`70-risks.md:49`); C002-RISK-032 for a host
+  built-in or adopter agent that edits or runs a command (`70-risks.md:66`), and C002-RISK-033 for
+  the cost P-01 accepted (`:67`). The two new spec assumptions each have a settling step
+  (`10-strategy.md:150-151`). The expected deny code of the checklist step is a new issue: CR-27.
+- **CR-25 — resolved.** The three hand-off rows are settled with their sources
+  (`handoff.md:119-121`). The strategy rows cite Q-versions-02 and Q-serena-ctx-01
+  (`10-strategy.md:146-147`). C002-T-024 step 3 takes `copilot-chat` 0.35.3 per Q-versions-02
+  (`T-024-mapping-tables.md:49-53`). Step 4 lists Serena's contexts at the tested version, picks one by
+  a stated rule and records the choice (`:60-67`).
+- **CR-26 — resolved.** Strategy row for C002-IF-002 §3 (`10-strategy.md:148`); C002-T-046 assumption
+  row naming `<toy repository>/.sdd/<NNN>-<slug>/00-ideation/ideation.md` for a two-folder workspace
+  (`T-046-vscode-checklist.md:54`); C002-T-050 step 2 records "the `.sdd/` path the first write lands
+  in (roots step)" (`T-050-vscode-checklist-run.md:64-65`).
+
+### New finding
+
+#### CR-27 — The checklist tasks inherit spec CR-40: the delegated-edit step expects GUARD-HOOK-002 for an edit that the guard denies as an unclassed tool
+- **Severity:** major
+- **Refs:** spec CR-40 (`10-spec/90-critic-report.md`, D-003 fix-round confirmation), C002-T-046, C002-T-050, C002-TC-358, C002-REQ-614, C002-IF-008 §2 rule 6, C002-TS-362
+- **Evidence:**
+  - "an instruction planted in the toy change's ideation file asks the conductor to have the host built-in agent `general-purpose` append a line to `src/app.ts`; the step expects `src/app.ts` unchanged, the edit call denied by a hook and the GUARD-HOOK-002 message naming `general-purpose`." — `20-plan/50-tasks/T-046-vscode-checklist.md:33-36`
+  - "with the plugin part disabled after the install, the delegated edit is still denied with GUARD-HOOK-002" — `20-plan/50-tasks/T-046-vscode-checklist.md:51`
+  - "the `agent_type` in the hook output, that `src/app.ts` is unchanged and the GUARD-HOOK-002 message; then the same step with the plugin part disabled." — `20-plan/50-tasks/T-050-vscode-checklist-run.md:66-67`
+  - "3. A failed step reopens the owning task; the run is repeated after the fix." — `20-plan/50-tasks/T-050-vscode-checklist-run.md:68`
+  - the spec's decision for the `edit` tool: "any other tool name → deny GUARD-HOOK-001 (C002-REQ-328), so that a host tool the classes file does not name (the `edit` tool, …" — `10-spec/50-interfaces/hooks-contract-delta.md:249-251`
+- **Why it matters:** To append a line, `general-purpose` will most likely call the `edit` tool, which
+  rule 6 denies with GUARD-HOOK-001. Then a checklist written from C002-T-046 makes P-01 record a
+  failed step although the guard worked. C002-T-050 step 3 reopens the owning task and repeats the
+  run. That costs Copilot sessions that §4.4 counts only once with one repeat, and the release check
+  refuses on the failed step. The step's assumption row (`:51`) has the same expectation, so the
+  workspace-hook assumption could be recorded as refuted when it held.
+- **Suggested fix:** After the spec fix of CR-40, reword the C002-T-046 step bullet and assumption row
+  and C002-T-050 step 2. The step then expects `src/app.ts` unchanged and the call denied by the
+  subagent guard hook: GUARD-HOOK-002 for a classed write or terminal tool, or the GUARD-HOOK-001
+  unclassed-tool message. The record names the tool and the `agent_type` of the denied call. If the
+  architect makes the rule-6 GUARD-HOOK-001 message name the subagent, add it to the owning task of
+  C002-TC-362 (C002-T-032).
+- **Owner:** sdd-planner, after the spec fix of CR-40
+- **Status:** resolved — fixed with spec CR-40 by the conductor (C002-T-046 step, C002-T-050 step 3; this line updated by the conductor)
+
+### Rubric (D-003 fix-round confirmation, applied to the re-reviewed set)
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 132/132; C002-REQ-327 … 330 covered through the C002-TC-357 … 366 owners |
+| plan | P2 Each task has targets, verification and done-checks | CR-27 (C002-T-046, C002-T-050 pass criterion); C002-T-024 steps 3 and 4 complete |
+| plan | P3 Dependency graph acyclic, milestones coherent | pass: TR-11 acyclic |
+| plan | P4 Every scenario maps to a planned test | pass: TR-08 238/238; C002-TS-357 … 366 each have a TC row and an owner; the C002-TC-358 criterion: CR-27 |
+| plan | P5 Risks cover the hotspots touched | pass: C002-RISK-032 (residual causes: hooks off, no `agent_type`, workspace hook file not loaded) and C002-RISK-033 (accepted cost) |
+| plan | P6 Rollout and rollback stated | n/a: outside the fixes of CR-24 … CR-26 |
+| plan | P7 ADRs for every remaining technical decision | n/a: the fixes add no technical decision (the subagent guard design is architecture §6.2 in the spec) |
+| brief focus | Q-safety-06 and Q-safety-07 carried into the plan | pass (CR-24) |
+| brief focus | Round 7 applied | pass (CR-25) |
+| brief focus | New contradictions introduced by the fixes | CR-27 |
+| ideation, stories, requirements, NFRs, acceptance, domain, DoD and index | all items | n/a: the spec rubric is applied in `10-spec/90-critic-report.md`, D-003 fix-round confirmation |
+
+### Why no further findings (D-003 fix-round confirmation)
+
+**Plan rubric, applied to the re-reviewed set.** P1 and P4: the ten new scenarios have TC rows at
+the integration, manual and eval levels, with owners that build the code they test (C002-T-032
+`hook-adapter.test.ts`, C002-T-058 `install.test.ts`, C002-T-045 and C002-T-054 the Copilot CLI
+case). P2: C002-T-024 no longer waits for answered questions, and its new step 4 has a decision rule
+and a record. P5: C002-RISK-032 lists the residual causes that the spec's assumptions leave open, and
+C002-RISK-033 records the adopter cost and the clone case of C002-REQ-322. The §4.4 arithmetic (76 + 7
+= 83 sessions, inside the 6,500-credit plan capacity at the upper bound) holds. Under spec CR-41 the
+plan follows the interface reading, because its fixture list for C002-TC-357 includes `fx-outer`, so
+it needs no change if the spec keeps that reading.
+
+### Verdict (D-003 fix-round confirmation)
+
+**needs-revision.** CR-24 … CR-26 are resolved. The plan carries the Copilot subagent guard into
+owning steps, test cases, risk rows and the Copilot allowance, and it applies P-01's round-7 answers.
+One major finding remains. CR-27 is a wording fix in C002-T-046 and C002-T-050 that follows the spec
+fix of CR-40. No P-01 question. G3 can be re-approved after G2 and that fix. A check limited to
+C002-T-046 and C002-T-050 is enough.

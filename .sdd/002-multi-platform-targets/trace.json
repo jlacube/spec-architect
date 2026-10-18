@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T00:48:48.976Z",
+  "generated_at": "2026-10-18T01:16:50.887Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -504,7 +504,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 773,
       "title": "In both modes, a non-Architect subagent's write and terminal calls in a repository with `.sdd/` are denied with GUARD-HOOK-002",
-      "content_hash": "sha256:a21cea01f7803e38566260e6b12f9661cd6722868da1d176e66d5b4d5a3674a9"
+      "content_hash": "sha256:c307f1dd8fe259f9cd3db5123b4645f6b01c1abbf219307067f426e6273972b7"
     },
     {
       "id": "C002-AC-328.1",
@@ -1595,8 +1595,8 @@
       "type": "DOD",
       "file": "10-spec/70-dod.md",
       "line": 28,
-      "title": "A checklist record of one run of the manual VS Code checklist, made on the tested VS Code and GitHub Copilot Chat versions, shows every step passed, including one step for each `@manual-vscode` scenario of C002-CAP-02, C002-CAP-03 and C002-CAP-05, a toy change taken from its creation to gate G1 on a fresh install, a Revise choice at gate G1 followed by the gate presented again, one run of the revise prompt on the toy change's approved ideation phase, and the delegated-edit step in which a planted instruction makes the conductor delegate an edit of `src/app.ts` to `general-purpose` and the edit is denied with `GUARD-HOOK-002` (C002-TS-358); under the Copilot hooks fallback the record also states hooks \"enabled\" during the run and holds one passed step for each Copilot injection case",
-      "content_hash": "sha256:d4fc4020c87c6f15a450771ff6b18fa1275da0356fdd9b26be0f440eda20c3d6"
+      "title": "A checklist record of one run of the manual VS Code checklist, made on the tested VS Code and GitHub Copilot Chat versions, shows every step passed, including one step for each `@manual-vscode` scenario of C002-CAP-02, C002-CAP-03 and C002-CAP-05, a toy change taken from its creation to gate G1 on a fresh install, a Revise choice at gate G1 followed by the gate presented again, one run of the revise prompt on the toy change's approved ideation phase, and the delegated-edit step in which a planted instruction makes the conductor delegate an edit of `src/app.ts` to `general-purpose` and the edit is denied by the Copilot subagent guard hook (`GUARD-HOOK-002`, or `GUARD-HOOK-001` when the host's edit tool is not in the tool classes file; C002-TS-358); under the Copilot hooks fallback the record also states hooks \"enabled\" during the run and holds one passed step for each Copilot injection case",
+      "content_hash": "sha256:15c25c5a72fac96e6e975f23a5651fd578b0499a237b5160df6cdc0f920464bb"
     },
     {
       "id": "C002-DOD-005",
@@ -2796,7 +2796,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 263,
       "title": "Write and terminal calls of non-Architect subagents denied",
-      "content_hash": "sha256:b1f9d5c7ab980b94b7c576386a6173d2dd816e37c1862dc53c37f8ec484d2714"
+      "content_hash": "sha256:eda90600a7b1d2257cbe6da60d1c2998af6e10ac513dbaea21607b723084c246"
     },
     {
       "id": "C002-REQ-328",
@@ -3220,7 +3220,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 136,
       "title": "Checklist content",
-      "content_hash": "sha256:343090c3a3a56e83deb206724f0c7affc3d2523d5f6321bf9c1203f3f9463660"
+      "content_hash": "sha256:7bde3caf39864acf8ae6c4d9ad0980368ec5c6c5f96e0ce4a9f9cfa5ddc6502e"
     },
     {
       "id": "C002-REQ-615",
@@ -4081,7 +4081,7 @@
       "file": "20-plan/50-tasks/T-046-vscode-checklist.md",
       "line": 1,
       "title": "Manual VS Code checklist and its record template",
-      "content_hash": "sha256:3fc294c5fa8873408196b266a14e1ff3e798e3ece99826b2e1af29bae7a4d3ca",
+      "content_hash": "sha256:fa29b21a1ba5632fd376402e524243138c39a2463610a03818e0321f010e0968",
       "status": "todo"
     },
     {
@@ -4117,7 +4117,7 @@
       "file": "20-plan/50-tasks/T-050-vscode-checklist-run.md",
       "line": 1,
       "title": "P-01: run the manual VS Code checklist and record it",
-      "content_hash": "sha256:67ccf41e574ac786ce3d1e7d8c44e33476ace43dcc25d1a6071447db8dd3a324",
+      "content_hash": "sha256:f509336b8356e27dc32cf0ad9d482fa5ac22f90f7cf90344c65a9f9dff87131e",
       "status": "todo"
     },
     {
@@ -7088,7 +7088,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 807,
       "title": "conductor delegates a planted edit to general-purpose in VS Code",
-      "content_hash": "sha256:a862b0217bde00c6f596d2ce54135b80d39a7526910a6904d0efdbf45b622df5"
+      "content_hash": "sha256:fc4d4711ce7ff94b53c0871a1c07a37ab50e0fe5adaec5179b4051214d2b9d2d"
     },
     {
       "id": "C002-TS-359",

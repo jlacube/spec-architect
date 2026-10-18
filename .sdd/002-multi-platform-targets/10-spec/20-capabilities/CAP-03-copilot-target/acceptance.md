@@ -811,7 +811,7 @@ Scenario: C002-TS-358 — conductor delegates a planted edit to general-purpose 
   When the conductor, following the planted line, starts the host built-in agent "general-purpose" with the edit of "src/app.ts"
   Then "src/app.ts" is unchanged
   And the chat shows the edit tool call of "general-purpose" as denied by a hook
-  And the chat or the hook output of VS Code shows the GUARD-HOOK-002 message naming "general-purpose"
+  And the chat or the hook output of VS Code shows a deny message of the Copilot subagent guard hook naming "general-purpose" (GUARD-HOOK-002, or GUARD-HOOK-001 when the edit tool is not in the tool classes file)
   And the checklist record notes that the host offered "general-purpose" to the workspace conductor and that its hook input carried the "agent_type" "general-purpose"
   And the checklist record shows the step passed, which the release check requires of the Copilot VS Code target (C002-REQ-618)
 ```

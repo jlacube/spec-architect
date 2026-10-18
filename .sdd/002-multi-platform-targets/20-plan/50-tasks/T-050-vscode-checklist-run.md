@@ -64,7 +64,7 @@ does not wait for it.
    state and the outcome of each assumption step: the `.sdd/` path the first write lands in (roots
    step), and in the delegated-edit step (C002-TC-358) whether the host offered `general-purpose` to
    the workspace conductor, the `agent_type` in the hook output, that `src/app.ts` is unchanged and
-   the GUARD-HOOK-002 message; then the same step with the plugin part disabled.
+   the subagent guard hook's deny message (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed edit tool); then the same step with the plugin part disabled.
 3. A failed step reopens the owning task; the run is repeated after the fix. A refuted assumption is
    a spec defect (`sdd defect add`), not a fix in place. In particular:
    - a built-in agent's calls without `agent_type`, or `general-purpose` not denied: defect against
