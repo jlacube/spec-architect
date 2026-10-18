@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-607.1, C002-AC-633.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-610, C002-TS-649, C002-TC-610, C002-TC-649]
 components: [C002-COMP-013]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d6f52d7, completed_at: 2026-10-18, notes: "Optional case fields cwd/env/requires/dialect/note; shared definitions in tests/guards/fixture.ts for T-040; TC-610 new-case checks carried to T-008/009/010/059, TC-649 to T-040; later tasks adding a category or capability extend the lists in fixture.ts" }
 ---
 
 # C002-T-007 — Guard corpora format for per-case cwd, environment and replay fields

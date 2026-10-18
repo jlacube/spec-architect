@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T06:03:23Z",
+  "generated_at": "2026-10-18T06:13:12Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 60,
-          "done": 4,
+          "done": 5,
           "blocked": 0,
           "in_progress": 0
         },
