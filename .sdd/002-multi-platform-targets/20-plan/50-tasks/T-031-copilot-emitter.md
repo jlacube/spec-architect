@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-021, C002-T-026, C002-T-028]
 implements: [C002-REQ-114, C002-REQ-301, C002-REQ-303, C002-REQ-304, C002-REQ-306, C002-REQ-307, C002-REQ-317, C002-REQ-321]
 satisfies_ac: [C002-AC-114.1, C002-AC-301.1, C002-AC-303.1, C002-AC-304.1, C002-AC-306.1, C002-AC-307.1, C002-AC-317.1, C002-AC-321.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-301, C002-TS-302, C002-TS-305, C002-TS-306, C002-TS-308, C
 components: [C002-COMP-001, C002-COMP-004]
 risk_refs: [C002-RISK-031, C002-RISK-033]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: cde64cf, completed_at: 2026-10-18, notes: "Copilot emitter; TC-301/302/305/306/308/310/327/328/339 + Copilot row of TC-124; TC-309/329 to T-050, TC-306 timing to T-057, TGT-GRANT-001 of TC-339 to T-035, hooks.template/tool-classes clauses of TC-301/302 to T-033; open: conductor description '(claude --agent sdd-conductor)' not translated on either target (frontmatter construct missing) — fix in T-037" }
 ---
 
 # C002-T-031 — Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes
