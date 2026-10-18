@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-401.1, C002-AC-625.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-401, C002-TS-628, C002-TC-401, C002-TC-628]
 components: [C002-COMP-012]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 85d016b, completed_at: 2026-10-18, notes: "decidePath(input, { memoryFolder }) ; TC-401 carried to T-017, TC-628 to T-040; the sdd MCP server (T-017) and the Copilot hook adapter must pass { memoryFolder: false }" }
 ---
 
 # C002-T-011 — Path guard core: memory-folder option
