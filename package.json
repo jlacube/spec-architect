@@ -19,6 +19,7 @@
     "package": "node scripts/package.mjs"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
     "@types/node": "^20.19.43",
     "ajv": "^8.20.0",
     "esbuild": "^0.28.2",

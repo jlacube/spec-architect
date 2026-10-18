@@ -1,0 +1,341 @@
+{
+  "write_file": {
+    "description": "Creates or replaces a whole file under .sdd/ (C002-REQ-403). Missing parent folders inside .sdd/ are created.",
+    "inputSchema": {
+      "title": "write_file input",
+      "description": "Creates or replaces a whole file under .sdd/ (C002-REQ-403). Missing parent folders inside .sdd/ are created.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "content"
+      ],
+      "properties": {
+        "path": {
+          "description": "Target file: absolute, or relative to the server's repository root (sdd-mcp-server.md §3). The path guard core decides it (C002-REQ-401).",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "content": {
+          "description": "Complete new file content, written as UTF-8 without BOM, line endings unchanged.",
+          "type": "string",
+          "maxLength": 2097152
+        }
+      }
+    },
+    "outputSchema": {
+      "title": "write_file output",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "tool",
+        "path",
+        "bytes",
+        "created"
+      ],
+      "properties": {
+        "status": {
+          "const": "written"
+        },
+        "tool": {
+          "const": "write_file"
+        },
+        "path": {
+          "description": "Normalised absolute path written.",
+          "type": "string"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created": {
+          "type": "boolean"
+        },
+        "findings": {
+          "description": "Quick-lint findings of the written file in the post-write feedback format of C001-IF-07 §4 (C002-REQ-408).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total",
+            "lines"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lines": {
+              "description": "At most 15 findings, errors before warnings before info, each in the CLI human format of C001-IF-01; when total > 15 a last line '… <n> more: run sdd lint --quick --file <path>'.",
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "findings_unavailable": {
+          "description": "Present instead of findings when the quick-lint check could not run (C002-REQ-409).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "reason"
+          ],
+          "properties": {
+            "code": {
+              "const": "WARN-MCP-001"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "findings"
+          ],
+          "not": {
+            "required": [
+              "findings_unavailable"
+            ]
+          }
+        },
+        {
+          "required": [
+            "findings_unavailable"
+          ],
+          "not": {
+            "required": [
+              "findings"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "replace_text": {
+    "description": "Replaces one exact text span in an existing file under .sdd/ (C002-REQ-403); the span must occur exactly once (C002-REQ-404).",
+    "inputSchema": {
+      "title": "replace_text input",
+      "description": "Replaces one exact text span in an existing file under .sdd/ (C002-REQ-403); the span must occur exactly once (C002-REQ-404).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "old_text",
+        "new_text"
+      ],
+      "properties": {
+        "path": {
+          "description": "Target file: absolute, or relative to the server's repository root (sdd-mcp-server.md §3). The path guard core decides it (C002-REQ-401).",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "old_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2097152
+        },
+        "new_text": {
+          "type": "string",
+          "maxLength": 2097152
+        }
+      }
+    },
+    "outputSchema": {
+      "title": "replace_text output",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "tool",
+        "path",
+        "bytes",
+        "occurrences"
+      ],
+      "properties": {
+        "status": {
+          "const": "written"
+        },
+        "tool": {
+          "const": "replace_text"
+        },
+        "path": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "occurrences": {
+          "const": 1
+        },
+        "findings": {
+          "description": "Quick-lint findings of the written file in the post-write feedback format of C001-IF-07 §4 (C002-REQ-408).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total",
+            "lines"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lines": {
+              "description": "At most 15 findings, errors before warnings before info, each in the CLI human format of C001-IF-01; when total > 15 a last line '… <n> more: run sdd lint --quick --file <path>'.",
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "findings_unavailable": {
+          "description": "Present instead of findings when the quick-lint check could not run (C002-REQ-409).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "reason"
+          ],
+          "properties": {
+            "code": {
+              "const": "WARN-MCP-001"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "findings"
+          ],
+          "not": {
+            "required": [
+              "findings_unavailable"
+            ]
+          }
+        },
+        {
+          "required": [
+            "findings_unavailable"
+          ],
+          "not": {
+            "required": [
+              "findings"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "run_command": {
+    "description": "Runs one command allowed by the bash guard core (C002-REQ-405), without a shell (C002-CON-07).",
+    "inputSchema": {
+      "title": "run_command input",
+      "description": "Runs one command allowed by the bash guard core (C002-REQ-405), without a shell (C002-CON-07).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "dialect": {
+          "description": "Shell syntax the bash guard core applies to the command (sdd-mcp-server.md §5.2); the command runs without a shell in either case.",
+          "enum": [
+            "bash",
+            "powershell"
+          ],
+          "default": "bash"
+        },
+        "timeout_ms": {
+          "description": "Wall-clock limit; the process is killed when it is reached.",
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 600000,
+          "default": 120000
+        }
+      }
+    },
+    "outputSchema": {
+      "title": "run_command output",
+      "description": "Result of an allowed command (C002-REQ-406). A non-zero exit code is a normal result, not an error result (C002-TS-408).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "tool",
+        "exit_code",
+        "stdout",
+        "stderr",
+        "truncated",
+        "duration_ms"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "completed",
+            "timed_out"
+          ]
+        },
+        "tool": {
+          "const": "run_command"
+        },
+        "exit_code": {
+          "description": "Exit code of the command's first segment; pipe-only filters never fail. null when the process was killed at the timeout.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "stdout": {
+          "description": "Standard output after the pipe-only filters, UTF-8, at most 1,048,576 characters.",
+          "type": "string"
+        },
+        "stderr": {
+          "description": "Standard error of the first segment, UTF-8, at most 1,048,576 characters.",
+          "type": "string"
+        },
+        "truncated": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stdout",
+            "stderr"
+          ],
+          "properties": {
+            "stdout": {
+              "type": "boolean"
+            },
+            "stderr": {
+              "type": "boolean"
+            }
+          }
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:architect:c002:sdd-mcp-tools:1",
+  "title": "sdd MCP server tools (C002-IF-002)",
+  "description": "Input and output schemas of the sdd MCP server tools. tools/list returns $defs/<tool>Input as inputSchema and $defs/<tool>Output as outputSchema. The document itself validates the structuredContent of any tools/call result: a success output of one tool, or an error result (isError: true). Process and protocol: sdd-mcp-server.md.",
+  "oneOf": [
+    { "$ref": "#/$defs/writeFileOutput" },
+    { "$ref": "#/$defs/replaceTextOutput" },
+    { "$ref": "#/$defs/runCommandOutput" },
+    { "$ref": "#/$defs/errorResult" }
+  ],
+  "$defs": {
+    "path": {
+      "description": "Target file: absolute, or relative to the server's repository root (sdd-mcp-server.md §3). The path guard core decides it (C002-REQ-401).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "writeFileInput": {
+      "title": "write_file input",
+      "description": "Creates or replaces a whole file under .sdd/ (C002-REQ-403). Missing parent folders inside .sdd/ are created.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "content"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "content": {
+          "description": "Complete new file content, written as UTF-8 without BOM, line endings unchanged.",
+          "type": "string",
+          "maxLength": 2097152
+        }
+      }
+    },
+    "replaceTextInput": {
+      "title": "replace_text input",
+      "description": "Replaces one exact text span in an existing file under .sdd/ (C002-REQ-403); the span must occur exactly once (C002-REQ-404).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "old_text", "new_text"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "old_text": { "type": "string", "minLength": 1, "maxLength": 2097152 },
+        "new_text": { "type": "string", "maxLength": 2097152 }
+      }
+    },
+    "runCommandInput": {
+      "title": "run_command input",
+      "description": "Runs one command allowed by the bash guard core (C002-REQ-405), without a shell (C002-CON-07).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1, "maxLength": 8192 },
+        "dialect": {
+          "description": "Shell syntax the bash guard core applies to the command (sdd-mcp-server.md §5.2); the command runs without a shell in either case.",
+          "enum": ["bash", "powershell"],
+          "default": "bash"
+        },
+        "timeout_ms": {
+          "description": "Wall-clock limit; the process is killed when it is reached.",
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 600000,
+          "default": 120000
+        }
+      }
+    },
+    "findings": {
+      "description": "Quick-lint findings of the written file in the post-write feedback format of C001-IF-07 §4 (C002-REQ-408).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "lines"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "lines": {
+          "description": "At most 15 findings, errors before warnings before info, each in the CLI human format of C001-IF-01; when total > 15 a last line '… <n> more: run sdd lint --quick --file <path>'.",
+          "type": "array",
+          "maxItems": 16,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "findingsUnavailable": {
+      "description": "Present instead of findings when the quick-lint check could not run (C002-REQ-409).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "reason"],
+      "properties": {
+        "code": { "const": "WARN-MCP-001" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "writeFileOutput": {
+      "title": "write_file output",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tool", "path", "bytes", "created"],
+      "properties": {
+        "status": { "const": "written" },
+        "tool": { "const": "write_file" },
+        "path": { "description": "Normalised absolute path written.", "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "created": { "type": "boolean" },
+        "findings": { "$ref": "#/$defs/findings" },
+        "findings_unavailable": { "$ref": "#/$defs/findingsUnavailable" }
+      },
+      "oneOf": [
+        { "required": ["findings"], "not": { "required": ["findings_unavailable"] } },
+        { "required": ["findings_unavailable"], "not": { "required": ["findings"] } }
+      ]
+    },
+    "replaceTextOutput": {
+      "title": "replace_text output",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tool", "path", "bytes", "occurrences"],
+      "properties": {
+        "status": { "const": "written" },
+        "tool": { "const": "replace_text" },
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "occurrences": { "const": 1 },
+        "findings": { "$ref": "#/$defs/findings" },
+        "findings_unavailable": { "$ref": "#/$defs/findingsUnavailable" }
+      },
+      "oneOf": [
+        { "required": ["findings"], "not": { "required": ["findings_unavailable"] } },
+        { "required": ["findings_unavailable"], "not": { "required": ["findings"] } }
+      ]
+    },
+    "runCommandOutput": {
+      "title": "run_command output",
+      "description": "Result of an allowed command (C002-REQ-406). A non-zero exit code is a normal result, not an error result (C002-TS-408).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tool", "exit_code", "stdout", "stderr", "truncated", "duration_ms"],
+      "properties": {
+        "status": { "enum": ["completed", "timed_out"] },
+        "tool": { "const": "run_command" },
+        "exit_code": {
+          "description": "Exit code of the command's first segment; pipe-only filters never fail. null when the process was killed at the timeout.",
+          "type": ["integer", "null"]
+        },
+        "stdout": { "description": "Standard output after the pipe-only filters, UTF-8, at most 1,048,576 characters.", "type": "string" },
+        "stderr": { "description": "Standard error of the first segment, UTF-8, at most 1,048,576 characters.", "type": "string" },
+        "truncated": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stdout", "stderr"],
+          "properties": {
+            "stdout": { "type": "boolean" },
+            "stderr": { "type": "boolean" }
+          }
+        },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "errorResult": {
+      "title": "error result",
+      "description": "structuredContent of a result with isError: true. refused: the boundary or a tool rule said no; failed: a fault, and nothing was changed (C002-REQ-402, C002-CON-08).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tool", "code", "message"],
+      "properties": {
+        "status": { "enum": ["refused", "failed"] },
+        "tool": { "enum": ["write_file", "replace_text", "run_command"] },
+        "code": {
+          "enum": [
+            "GUARD-PATH-001",
+            "GUARD-BASH-001",
+            "GUARD-BASH-002",
+            "ERR-MCP-001",
+            "ERR-MCP-002",
+            "ERR-MCP-003",
+            "ERR-MCP-004",
+            "ERR-MCP-005",
+            "ERR-MCP-006"
+          ]
+        },
+        "message": {
+          "description": "For GUARD-* codes the guard core's deny message (C001-IF-07 §4); otherwise the catalogue message of errors.md.",
+          "type": "string",
+          "minLength": 1
+        },
+        "path": { "type": "string" },
+        "occurrences": { "description": "ERR-MCP-004 only.", "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "code": { "enum": ["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-004", "ERR-MCP-005"] } } },
+          "then": { "properties": { "status": { "const": "refused" } } }
+        },
+        {
+          "if": { "properties": { "code": { "enum": ["ERR-MCP-001", "ERR-MCP-002", "ERR-MCP-003", "ERR-MCP-006"] } } },
+          "then": { "properties": { "status": { "const": "failed" } } }
+        },
+        {
+          "if": { "properties": { "code": { "const": "ERR-MCP-004" } } },
+          "then": { "required": ["occurrences"] }
+        }
+      ]
+    }
+  }
+}

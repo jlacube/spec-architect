@@ -18,7 +18,7 @@ interface Pair {
   contract: string;
 }
 
-const PAIRS: Pair[] = [];
+const PAIRS: Pair[] = [{ copy: "src/mcp/tools.schema.json", change: "002", contract: "10-spec/50-interfaces/sdd-mcp-tools.schema.json" }];
 
 /** JSON text with object keys sorted at every level and no white space. */
 function canonicalJson(text: string): string {
