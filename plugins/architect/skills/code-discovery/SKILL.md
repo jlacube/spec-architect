@@ -113,3 +113,5 @@ the paths written, and a `questions` block only for what P-01 alone can decide.
   `ToolSearch` (`select:<name>`) before the first call. LSP: the `LSP` tool.
 - Bash is limited to the allowlist: `ripwire` read verbs, `ast-grep run --pattern` (no rewrite),
   read-only `git`, `sdd`, version probes; one command per call, no `&&`, `;` or redirection.
+  Run `git` from the working folder with the read verb first (`git log …`): `git -C <dir>`,
+  `--git-dir` and `--work-tree` are denied.

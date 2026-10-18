@@ -12,7 +12,7 @@ These rules apply to every agent that reads or writes `.sdd/`. The CLI enforces 
 
 `sdd` means `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"`. Useful commands: `sdd status`,
 `sdd lint [<NNN>] [--phase <phase>]`, `sdd trace <NNN> --write`, `sdd id next <TYPE> --change <NNN>`,
-`sdd gate show <NNN> <phase>`. Run it from the repository root (or pass `--cwd`).
+`sdd gate show <NNN> <phase>`. Run it from the repository root; if you must name another folder, `--cwd <dir>` comes after the subcommand (`sdd lint 002 --cwd <dir>`), never before it. A non-zero exit of `lint` or `trace` means findings, not a broken command.
 
 ## Layout
 
