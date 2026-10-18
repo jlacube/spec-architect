@@ -187,3 +187,10 @@ subagent reaches the MCP tools (§3.2), so the mode is **`sdd-mcp-server`**. Cop
 | Copilot CLI probe (2026-10-16) | 9.03 |
 | VS Code Insiders, first run (0.0.1) | 36.7 |
 | Later VS Code runs (0.0.2 … 0.0.5) | to be read from P-01's billing view |
+
+## Addendum — 2026-10-18: model ids per tier
+
+P-01 read the Copilot CLI model list (`/model`, no model call): the Claude tiers are `claude-opus-5.5`,
+`claude-sonnet-5.5` and `claude-haiku-5.5` (P-01: "claude-opus-5.5 / claude-haiku-5.5"). These
+complete §2.4, which showed only the default `claude-sonnet-5.5`; the Copilot mapping table
+(`plugins/architect/targets/copilot.json`) uses them (C002-T-024).
