@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-009, C002-T-010]
 implements: [C002-REQ-325]
 satisfies_ac: [C002-AC-325.1, C002-AC-607.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-351, C002-TS-353, C002-TS-610, C002-TS-636, C002-TC-351, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: [C002-RISK-001]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7eba61a, completed_at: 2026-10-18, notes: "sdd install denied to Architect agents in every form; BG-420…435; TC-351/353/610/636; deny summary gains 'not install;' (allowed changed expectation, C002-REQ-623/TS-626); install copilot pending entry stays for T-058" }
 ---
 
 # C002-T-059 — Bash guard: sdd install denied in every form
