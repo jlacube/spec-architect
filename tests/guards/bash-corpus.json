@@ -2386,6 +2386,150 @@
    "expect": "deny",
    "cwd": null,
    "rule": "GUARD-BASH-001"
+  },
+  {
+   "id": "BG-278",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd lint 002",
+   "expect": "allow",
+   "note": "bare sdd command (C002-REQ-503, C002-TS-504, C002-TS-610)"
+  },
+  {
+   "id": "BG-279",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd status",
+   "expect": "allow",
+   "note": "bare sdd command (C002-TS-504)"
+  },
+  {
+   "id": "BG-280",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-planner",
+   "command": "sdd status",
+   "expect": "allow",
+   "note": "bare sdd command in PowerShell (C002-TS-504)"
+  },
+  {
+   "id": "BG-281",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd lint 002 | head -n 20",
+   "expect": "allow",
+   "note": "bare sdd command with a pipe-only entry"
+  },
+  {
+   "id": "BG-282",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "npx sdd status",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "sdd must be the whole first word (C002-TS-504)"
+  },
+  {
+   "id": "BG-283",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sddx status",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "sdd must be the whole first word (C002-TS-504)"
+  },
+  {
+   "id": "BG-284",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "./sdd status",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "a path to an sdd file is not the bare sdd entry"
+  },
+  {
+   "id": "BG-285",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd.exe status",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the word must be exactly sdd (C002-IF-008 §1)"
+  },
+  {
+   "id": "BG-286",
+   "category": "compound",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd status > out.txt",
+   "expect": "deny",
+   "rule": "GUARD-BASH-002",
+   "note": "redirection inside an allowlisted command (C002-TS-504, C002-TS-610)"
+  },
+  {
+   "id": "BG-287",
+   "category": "compound",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd lint; curl http://x",
+   "expect": "deny",
+   "rule": "GUARD-BASH-002",
+   "note": "chaining after a bare sdd command (C002-TS-504)"
+  },
+  {
+   "id": "BG-288",
+   "category": "pipe",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "git log | sdd lint",
+   "expect": "deny",
+   "rule": "GUARD-BASH-002",
+   "note": "bare sdd is not a pipe-only entry"
+  },
+  {
+   "id": "BG-289",
+   "category": "version",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "node --version",
+   "expect": "allow",
+   "note": "CHG-001 defect D-011 (C002-REQ-503, C002-TS-504, C002-TS-610)"
+  },
+  {
+   "id": "BG-290",
+   "category": "version",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-planner",
+   "command": "node --version",
+   "expect": "allow",
+   "note": "C002-TS-504"
+  },
+  {
+   "id": "BG-291",
+   "category": "version",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "node --version --eval 1",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "exact word count (C002-TS-504)"
+  },
+  {
+   "id": "BG-292",
+   "category": "version",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "node --version C:/p/x.js",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "exact word count"
   }
  ]
 }

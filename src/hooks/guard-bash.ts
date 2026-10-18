@@ -5,16 +5,18 @@
 // The command is split by a quote-aware tokeniser. Outside single quotes, command substitution (`$(`,
 // backticks) is denied; outside any quotes, `;`, `&`, `||`, `>`, `<`, parentheses, braces (PowerShell)
 // and line breaks are denied (GUARD-BASH-002). `|` splits segments: the first must match an entry, the
-// others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI and
-// the version probes, without pipes. When in doubt the guard denies (fail closed).
+// others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI
+// (`sdd …` or `node <path>/sdd.mjs …`, C002-REQ-503) and the version probes, without pipes. When in doubt the guard denies (fail closed).
 import { findWorkspace } from "../workspace/find.ts";
 import { isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
 import { isArchitectAgent, type HookInput } from "./input.ts";
 
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
 export const RULE_COMPOUND = "GUARD-BASH-002";
+// C002-IF-008 §1 deny summary, without the parentheses of the sdd CLI entry that the rules of
+// C002-REQ-325 (install), C002-REQ-517 (Serena) and C002-REQ-521 (--cwd) add with their tasks.
 const ALLOWED =
-  "node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes; head -n N, tail -n N, wc -l, sort, uniq only after |";
+  "sdd … or node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
 type Dialect = "bash" | "powershell";
@@ -130,7 +132,18 @@ function sddCli(words: string[], raw: string[], cwd: string): boolean {
   return !inside(lexical) && !inside(realPath(lexical)) && !pathKey(realPath(lexical)).startsWith(pathKey(realPath(sdd)) + "/");
 }
 
-const VERSION_PROBES: string[][] = [["node", "-v"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
+/** `sdd …` with `sdd` as the whole first word (C002-REQ-503): the sdd that PATH resolves, as for git. */
+function bareSdd(words: string[]): boolean {
+  return words[0] === "sdd";
+}
+
+/** The sdd CLI entry in either form (C002-IF-008 §1). */
+function sddEntry(words: string[], raw: string[], cwd: string): boolean {
+  return bareSdd(words) || sddCli(words, raw, cwd);
+}
+
+// Exact word count: `node --version --eval=x` (BG-166) and `node -v -e x` (BG-160) stay denied.
+const VERSION_PROBES: string[][] = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
 function versionProbe(words: string[]): boolean {
   return VERSION_PROBES.some((p) => p.length === words.length && exe(words[0], p[0]!) && words[1] === p[1]);
 }
@@ -218,7 +231,7 @@ export function decideBash(input: HookInput | null): BashDecision {
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;
-  const allowed = dialect === "powershell" ? sddCli(first!.words, first!.raw, cwd) || versionProbe(first!.words) : sddCli(first!.words, first!.raw, cwd) || versionProbe(first!.words) || ripwire(first!.words) || astGrep(first!.words) || gitRead(first!.words);
+  const allowed = dialect === "powershell" ? sddEntry(first!.words, first!.raw, cwd) || versionProbe(first!.words) : sddEntry(first!.words, first!.raw, cwd) || versionProbe(first!.words) || ripwire(first!.words) || astGrep(first!.words) || gitRead(first!.words);
   if (!allowed) {
     const reason = pipeOnly(first!.words) && rest.length === 0 ? `${first!.words[0]} is allowed only after |` : `${first!.words[0]} … is not on the allowlist`;
     return deny(rest.length > 0 ? RULE_COMPOUND : RULE_ALLOWLIST, tool, cmd, reason);

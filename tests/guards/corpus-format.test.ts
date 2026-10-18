@@ -24,6 +24,19 @@ test("shell corpus cases have unique IDs, known categories and only known fields
   assert.deepEqual(formatProblems(cases, BASH_FIELDS, BASH_CATEGORIES), []);
 });
 
+// C002-TS-610 rows of C002-T-008 (C002-REQ-503): the shell corpus holds the new kinds of case.
+const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] = [
+  ["bare sdd command", "sdd lint 002", "allow"],
+  ["node --version", "node --version", "allow"],
+  ["redirection inside an allowlisted command", "sdd status > out.txt", "deny"],
+];
+for (const [kind, command, expect] of TS_610_SHELL) {
+  test(`C002-TS-610: the shell corpus holds a case of the kind "${kind}" (${command} → ${expect})`, () => {
+    const cases = raw("bash-corpus.json");
+    assert.ok(cases.some((c) => c["command"] === command && c["expect"] === expect && !("stdin" in c)), `${command} expecting ${expect}`);
+  });
+}
+
 test("the format check rejects an unknown field, an unknown category and a duplicate ID", () => {
   const base = { id: "BG-900", category: "sdd", tool: "Bash", agent: "architect:sdd-auditor", command: "sdd lint", expect: "allow" };
   assert.deepEqual(formatProblems([base], BASH_FIELDS, BASH_CATEGORIES), []);

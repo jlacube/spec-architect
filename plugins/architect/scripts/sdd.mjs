@@ -11246,7 +11246,7 @@ function isArchitectAgent(input) {
 // src/hooks/guard-bash.ts
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
-var ALLOWED2 = "node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes; head -n N, tail -n N, wc -l, sort, uniq only after |";
+var ALLOWED2 = "sdd … or node <path>/sdd.mjs …, ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11351,7 +11351,13 @@ function sddCli(words, raw, cwd) {
   const lexical = normalisePath(script, { cwd });
   return !inside(lexical) && !inside(realPath(lexical)) && !pathKey(realPath(lexical)).startsWith(pathKey(realPath(sdd)) + "/");
 }
-var VERSION_PROBES = [["node", "-v"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
+function bareSdd(words) {
+  return words[0] === "sdd";
+}
+function sddEntry(words, raw, cwd) {
+  return bareSdd(words) || sddCli(words, raw, cwd);
+}
+var VERSION_PROBES = [["node", "-v"], ["node", "--version"], ["git", "--version"], ["claude", "--version"], ["serena", "--version"], ["ast-grep", "--version"], ["uv", "--version"]];
 function versionProbe(words) {
   return VERSION_PROBES.some((p) => p.length === words.length && exe(words[0], p[0]) && words[1] === p[1]);
 }
@@ -11428,7 +11434,7 @@ function decideBash(input) {
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;
-  const allowed = dialect === "powershell" ? sddCli(first.words, first.raw, cwd) || versionProbe(first.words) : sddCli(first.words, first.raw, cwd) || versionProbe(first.words) || ripwire(first.words) || astGrep(first.words) || gitRead(first.words);
+  const allowed = dialect === "powershell" ? sddEntry(first.words, first.raw, cwd) || versionProbe(first.words) : sddEntry(first.words, first.raw, cwd) || versionProbe(first.words) || ripwire(first.words) || astGrep(first.words) || gitRead(first.words);
   if (!allowed) {
     const reason = pipeOnly(first.words) && rest.length === 0 ? `${first.words[0]} is allowed only after |` : `${first.words[0]} … is not on the allowlist`;
     return deny(rest.length > 0 ? RULE_COMPOUND : RULE_ALLOWLIST, tool, cmd, reason);

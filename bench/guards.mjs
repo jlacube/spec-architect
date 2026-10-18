@@ -13,6 +13,7 @@ const INPUTS = [
   ["guard-path", hook("Edit", "architect:sdd-architect", { file_path: at(".sdd/../README.md"), old_string: "a", new_string: "b" })],
   ["guard-bash", hook("Bash", "architect:sdd-cartographer", { command: "git log --oneline -5" })],
   ["guard-bash", hook("Bash", "architect:sdd-cartographer", { command: "rm -rf src" })],
+  ["guard-bash", hook("Bash", "architect:sdd-planner", { command: "sdd lint 002 --json" })],
 ];
 
 const run = (cmd, input) => {
