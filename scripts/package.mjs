@@ -8,6 +8,9 @@
 // Then the npm package architect-sdd (C002-IF-003, C002-ADR-004): dist/npm/architect-sdd/ staged with the
 // template CLI-line translation and scan (ERR-BLD-002), packed by `npm pack` into
 // dist/architect-sdd-<version>.tgz. Publication stays manual (C002-REQ-502).
+// Between the two, the target generator (C002-IF-004, C002-REQ-101, C002-ADR-003) writes dist/opencode/ and
+// dist/copilot/, each zipped to dist/architect-<target>-<version>.zip; a generator failure stops the run
+// with the generator's exit code, before any target zip or tarball exists.
 import { execFileSync, spawnSync } from "node:child_process";
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
@@ -168,6 +171,42 @@ export function zipDir(dir, out) {
   if (r.status !== 0 || !existsSync(out)) throw new Error(`${out} not produced`);
 }
 
+/** The target packages the generator writes by default (one table each under plugins/architect/targets/). */
+export const GENERATED_TARGETS = ["opencode", "copilot"];
+
+/** File name of a target package's zip in dist/ (C002-REQ-101, Q-release-01). */
+export function targetZipName(target, version) {
+  return `architect-${target}-${version}.zip`;
+}
+
+/**
+ * Generator step of `npm run package` (C002-T-034): removes the previous run's target zips, runs
+ * `scripts/generate.mjs` of `root` as a child process (no shell) and, when it exits 0, zips each
+ * `<dist>/<target>/` (folder content at the zip root, generation manifest included) to
+ * `<dist>/architect-<target>-<version>.zip`. `source` (a fixture plugin) and a `dist` other than
+ * `<root>/dist` are passed as `--source` and `--out`; packaging itself uses the defaults (C002-IF-004).
+ * Returns the generator's exit code and, with `stdio: "pipe"`, its output; `zips` is empty on failure.
+ * Throws when a zip is not produced.
+ * @param {{ root: string, dist?: string, version: string, source?: string, stdio?: "inherit" | "pipe" }} options
+ * @returns {{ code: number, stdout: string, stderr: string, zips: string[] }}
+ */
+export function packageTargets({ root, dist = join(root, "dist"), version, source, stdio = "inherit" }) {
+  const zips = GENERATED_TARGETS.map((t) => join(dist, targetZipName(t, version)));
+  for (const z of zips) rmSync(z, { force: true });
+  const args = [join(root, "scripts", "generate.mjs")];
+  if (source) args.push("--source", source);
+  if (dist !== join(root, "dist")) args.push("--out", dist);
+  let stdout = "";
+  try {
+    stdout = execFileSync(process.execPath, args, { cwd: root, encoding: "utf8", stdio: stdio === "pipe" ? ["ignore", "pipe", "pipe"] : "inherit" }) ?? "";
+  } catch (e) {
+    if (typeof e?.status !== "number" && e?.signal == null) throw e;
+    return { code: e.status || 3, stdout: e.stdout ?? "", stderr: e.stderr ?? "", zips: [] };
+  }
+  GENERATED_TARGETS.forEach((t, i) => zipDir(join(dist, t), zips[i]));
+  return { code: 0, stdout, stderr: "", zips };
+}
+
 // Script entry only: bundled into a test, import.meta.url is the test file, so match the file name too.
 if (fileURLToPath(import.meta.url) === process.argv[1] && /[\\/]scripts[\\/]package\.mjs$/.test(process.argv[1] ?? "")) {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -215,11 +254,26 @@ if (fileURLToPath(import.meta.url) === process.argv[1] && /[\\/]scripts[\\/]pack
   // Marketplace archive for `/plugin marketplace add <extracted folder>`.
   zipStep("zip marketplace", stage, zip);
 
+  // Target packages (C002-T-034): the generator with its defaults (out dist/), then one zip per target.
+  // The previous run's tarball goes first, so that a generator failure leaves none.
+  const tgzName = `${NPM_NAME}-${version}.tgz`;
+  rmSync(join(dist, tgzName), { force: true });
+  console.log("\n=== generate target packages ===");
+  let targets;
+  try {
+    targets = packageTargets({ root, version });
+  } catch (e) {
+    console.error(`package failed at: zip target packages (${e instanceof Error ? e.message : e})`);
+    process.exit(1);
+  }
+  if (targets.code !== 0) {
+    console.error(`package failed at: generate target packages (exit ${targets.code})`);
+    process.exit(targets.code);
+  }
+
   // architect-sdd: staging, template CLI lines and their scan, npm pack (C002-T-022).
   console.log(`\n=== stage npm/${NPM_NAME} ===`);
   const npmStage = join(dist, "npm", NPM_NAME);
-  const tgzName = `${NPM_NAME}-${version}.tgz`;
-  rmSync(join(dist, tgzName), { force: true });
   const scan = stageNpm(root, npmStage, version);
   if (scan.length > 0) {
     for (const line of scan) console.error(line);
@@ -234,6 +288,6 @@ if (fileURLToPath(import.meta.url) === process.argv[1] && /[\\/]scripts[\\/]pack
     process.exit(1);
   }
   console.log(
-    `\npackaged:\n  dist/${name}-plugin.zip   plugin archive (upload in Claude: .claude-plugin/plugin.json at its root)\n  dist/${name}.zip          marketplace archive (extract, then /plugin marketplace add <folder>)\n  dist/${name}/             the marketplace folder, unzipped\n  dist/${tgzName}      npm package (publish by hand: npm publish dist/${tgzName})\n  dist/npm/${NPM_NAME}/      its staging folder`,
+    `\npackaged:\n  dist/${name}-plugin.zip   plugin archive (upload in Claude: .claude-plugin/plugin.json at its root)\n  dist/${name}.zip          marketplace archive (extract, then /plugin marketplace add <folder>)\n  dist/${name}/             the marketplace folder, unzipped\n${GENERATED_TARGETS.map((t) => `  dist/${targetZipName(t, version)}  ${t} target package (dist/${t}/, zipped)\n`).join("")}  dist/${tgzName}      npm package (publish by hand: npm publish dist/${tgzName})\n  dist/npm/${NPM_NAME}/      its staging folder`,
   );
 }
