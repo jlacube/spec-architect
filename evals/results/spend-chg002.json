@@ -135,6 +135,48 @@
       "case": "S-07 SDK session against OpenRouter, tier opus (REAL-opus)",
       "cost_usd": 0.0472964,
       "note": "OpenCode 1.15.10 reported cost (2 assistant turns, 8401+8556 tokens); model id openrouter/anthropic/claude-opus-5.5 accepted; OpenRouter usage-view figure not read by P-02 (P-01 to compare)."
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-037",
+      "step": 4,
+      "case": "C002-TC-215",
+      "row": "Claude Code (n = 4)",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.262,
+      "pass": true,
+      "result": "evals/results/t037-TS-215-claude-code-4-2026-10-18T22-22-55-917Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-037",
+      "step": 4,
+      "case": "C002-TC-217",
+      "row": "Claude Code",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.2377,
+      "pass": true,
+      "result": "evals/results/t037-TS-217-claude-code-2026-10-18T22-23-28-119Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-037",
+      "step": 4,
+      "case": "C002-TC-219",
+      "row": "Claude Code",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.1474,
+      "pass": true,
+      "result": "evals/results/t037-TS-219-claude-code-2026-10-18T22-25-49-422Z.json"
     }
   ]
 }

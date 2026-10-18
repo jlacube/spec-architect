@@ -309,6 +309,18 @@
       }
     },
     {
+      "id": "conductor-start",
+      "kind": "other",
+      "detect": "\\(claude --agent (?:architect:)?sdd-conductor\\)",
+      "contexts": [
+        "frontmatter"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "(select `sdd-conductor` as the session agent in the Chat agent picker of a Local session)"
+      }
+    },
+    {
       "id": "agent-reference",
       "kind": "agent-reference",
       "detect": "\\barchitect:(?=sdd-)",

@@ -1,0 +1,124 @@
+{
+  "scenario": "TS-219-claude-code",
+  "title": "Profile round on claude-code through AskUserQuestion before the change exists (TS-219)",
+  "tier": "dev",
+  "label": "t037",
+  "agent": "architect:sdd-conductor",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-18T22:27:09.572Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.14743140000000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.14743140000000002,
+        "session_ms": 79127,
+        "api_ms": 16021,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 1491,
+            "cache_read": 110257,
+            "cache_write": 11939,
+            "cost_usd": 0.14743140000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 1491,
+              "cache_read": 110257,
+              "cache_write": 11939
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b3z6h9zpa",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bes40ivxn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bw3qmq40b",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Grep": 1,
+          "Bash": 4,
+          "Glob": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 177
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 323
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34453
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 185
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 13
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12173
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11778
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "transcript": "evals/results/transcripts/TS-219-claude-code-2026-10-18T22-25-49-422Z-run1.json"
+    }
+  ]
+}

@@ -3,9 +3,10 @@
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { ROOT } from "./fixtures.mjs";
 
-export const CLI = join(ROOT, "plugins", "architect", "scripts", "sdd.mjs");
+// The repository root, computed here rather than imported from fixtures.mjs: fixtures.mjs imports the
+// workspace builders (fx-gate), so a top-level use of its ROOT would read it before it is initialised.
+export const CLI = join(import.meta.dirname, "..", "..", "plugins", "architect", "scripts", "sdd.mjs");
 
 export function sdd(root, ...args) {
   return execFileSync(process.execPath, [CLI, ...args], { cwd: root, encoding: "utf8" });

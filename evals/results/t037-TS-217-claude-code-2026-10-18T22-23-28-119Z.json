@@ -1,0 +1,174 @@
+{
+  "scenario": "TS-217-claude-code",
+  "title": "Gate question on claude-code through AskUserQuestion (TS-217)",
+  "tier": "dev",
+  "label": "t037",
+  "agent": "architect:sdd-conductor",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-18T22:25:49.420Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2376642,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2376642,
+        "session_ms": 137956,
+        "api_ms": 38040,
+        "turns": 14,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 18,
+            "output": 2729,
+            "cache_read": 192781,
+            "cache_write": 18057,
+            "cost_usd": 0.2376642
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 2729,
+              "cache_read": 192781,
+              "cache_write": 18057
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b5yxs8zm8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "barlgyi2r",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btg7bknbv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b52y3uilk",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btl0r854z",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7fkxeu0y",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Bash": 8,
+          "Glob": 1,
+          "AskUserQuestion": 1,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 326
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 148
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 32872
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 324
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11990
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 23402
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34180
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 198
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 15416
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12123
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "transcript": "evals/results/transcripts/TS-217-claude-code-2026-10-18T22-23-28-119Z-run1.json"
+    }
+  ]
+}

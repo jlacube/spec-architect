@@ -40,6 +40,8 @@ export const GLOSSARY: readonly GlossaryDetector[] = [
   { id: "plugin-data", kind: "plugin-data", detect: "\\$\\{CLAUDE_PLUGIN_DATA\\}" },
   { id: "arguments", kind: "arguments", detect: "\\$ARGUMENTS\\b" },
   { id: "command-reference", kind: "command-reference", detect: "/architect:(?=[a-z])" },
+  // The Claude Code way to start the conductor, in its description: each target names its own (C002-T-037).
+  { id: "conductor-start", kind: "other", detect: "\\(claude --agent (?:architect:)?sdd-conductor\\)" },
   { id: "agent-reference", kind: "agent-reference", detect: "\\barchitect:(?=sdd-)" },
   { id: "ask-user-question", kind: "question-tool-name", detect: "\\bAskUserQuestion\\b" },
   { id: "task-tools", kind: "task-tool-name", detect: "\\bTask(?:Create|Update|List)\\b" },

@@ -343,8 +343,9 @@ test("descriptions are translated: agent and command references take the target'
   for (const t of TARGETS) {
     const docs = docsOf(t);
     const conductor = docs.get("agents/sdd-conductor.md")!.fields["description"]!;
-    assert.ok(conductor.includes(`${replaceOf(tables[t], "agent-reference", tables[t].enforcement_mode)}sdd-conductor)`), t);
-    assert.ok(!conductor.includes("architect:"), t);
+    // The way to start the conductor is the target's own (construct conductor-start, C002-T-037).
+    assert.ok(conductor.includes(replaceOf(tables[t], "conductor-start", tables[t].enforcement_mode)), t);
+    assert.ok(!conductor.includes("architect:") && !conductor.includes("claude --agent"), t);
     const researcher = docs.get("agents/sdd-researcher.md")!.fields["description"]!;
     assert.ok(researcher.includes(`${replaceOf(tables[t], "command-reference", tables[t].enforcement_mode)}research`), t);
   }

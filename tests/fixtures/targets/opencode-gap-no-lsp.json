@@ -311,6 +311,18 @@
       }
     },
     {
+      "id": "conductor-start",
+      "kind": "other",
+      "detect": "\\(claude --agent (?:architect:)?sdd-conductor\\)",
+      "contexts": [
+        "frontmatter"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "(select the `sdd-conductor` primary agent: press Tab until it is selected, or start `opencode --agent sdd-conductor`)"
+      }
+    },
+    {
       "id": "agent-reference",
       "kind": "agent-reference",
       "detect": "\\barchitect:(?=sdd-)",
