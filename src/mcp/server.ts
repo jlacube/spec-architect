@@ -216,7 +216,7 @@ export async function main(argv: readonly string[], env: NodeJS.ProcessEnv = pro
     opts = parseArgs(argv);
   } catch (e) {
     if (!(e instanceof UsageError)) throw e;
-    process.stderr.write(`sdd-mcp: ERR-MCP-007 ${USAGE}: ${e.message}\n`);
+    process.stderr.write(`sdd-mcp: ERR-MCP-007: ${USAGE}: ${e.message}\n`);
     return 2;
   }
   let schemas: ToolSchemas;

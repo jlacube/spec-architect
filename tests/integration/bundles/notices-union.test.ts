@@ -1,7 +1,7 @@
 // C002-TC-418 / C002-TS-418 (C002-AC-413.1, C002-REQ-413) and C002-TC-419 / C002-TS-419 (C002-AC-414.1,
 // C002-REQ-414), build part (C002-T-021, C002-ADR-004): one esbuild run bundles the sdd CLI into the
 // plugin and the sdd MCP server into build/npm/; a GPL-3.0 package in either entry fails the build with
-// ERR-BLD-001 naming the entry, the package and its license; build/npm/THIRD_PARTY_NOTICES.md lists
+// a line `ERR-BLD-001: <message>` (C002-T-061) naming the entry, the package and its license; build/npm/THIRD_PARTY_NOTICES.md lists
 // every package of both bundles, the plugin's notices only those of sdd.mjs. Runs on a temporary copy of
 // the build inputs (the repository is untouched). The tarball row of TS-419 (LICENSE and notices read
 // from the packed architect-sdd) needs fx-tgz and belongs to the packaging task.
@@ -37,7 +37,7 @@ function buildTree(): string {
     if (e.isDirectory() && !e.name.startsWith(".")) symlinkSync(join(root, "node_modules", e.name), join(tmp, "node_modules", e.name), "junction");
   }
   mkdirSync(join(tmp, "node_modules", "gpl-lib"));
-  writeFileSync(join(tmp, "node_modules", "gpl-lib", "package.json"), JSON.stringify({ name: "gpl-lib", version: "0.4.0", license: "GPL-3.0", main: "index.js" }));
+  writeFileSync(join(tmp, "node_modules", "gpl-lib", "package.json"), JSON.stringify({ name: "gpl-lib", version: "1.0.0", license: "GPL-3.0", main: "index.js" }));
   writeFileSync(join(tmp, "node_modules", "gpl-lib", "index.js"), "module.exports = 1;\n");
   return tmp;
 }
@@ -56,7 +56,12 @@ for (const [entry, name, source] of [
     writeFileSync(file, `import gpl from "gpl-lib";\nvoid gpl;\n${readFileSync(file, "utf8")}`);
     const r = runBuild(tree);
     assert.notEqual(r.status, 0, r.stdout);
-    assert.match(r.stderr, new RegExp(`build failed: ${name}: bundled package license not allowed: gpl-lib@0\\.4\\.0 \\(GPL-3\\.0\\)`));
+    // C002-TS-418 (revised, print form of errors.md §4): a line starts with the code and its message.
+    const line = r.stderr.split(/\r?\n/).find((l) => l.startsWith("ERR-BLD-001: "));
+    assert.ok(line, `an ERR-BLD-001 line on standard error:\n${r.stderr}`);
+    assert.ok(line.startsWith("ERR-BLD-001: build failed: "), line);
+    assert.ok(line.endsWith("bundled package license not allowed: gpl-lib@1.0.0 (GPL-3.0)"), line);
+    assert.equal(line, `ERR-BLD-001: build failed: ${name}: bundled package license not allowed: gpl-lib@1.0.0 (GPL-3.0)`);
     assert.doesNotMatch(r.stderr, /Could not resolve/, "fails on the licence, not on resolution");
     // Nothing is written when the check fails.
     assert.equal(existsSync(join(tree, "plugins", "architect", "scripts", "sdd.mjs")), false);

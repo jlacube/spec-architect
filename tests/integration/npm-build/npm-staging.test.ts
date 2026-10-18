@@ -15,7 +15,7 @@ import { createHash } from "node:crypto";
 import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { npmCli, stageNpm } from "../../../scripts/package.mjs";
+import { npmCli, npmReadme, REPOSITORY_URL, stageNpm } from "../../../scripts/package.mjs";
 import { scanCliPaths, translateCliLines } from "../../../scripts/template-cli-lines.mjs";
 import { fxBootstrap } from "../../fixtures/fixtures.ts";
 import { cleanupFxTgz, fxTgz } from "../../fixtures/fx-tgz.ts";
@@ -89,6 +89,13 @@ test("C002-TS-417: the tarball holds exactly the layout of C002-IF-003 §1, with
   const readme = entry("README.md").toString("utf8");
   assert.ok(readme.includes(`npm install -g architect-sdd@${version}`));
   assert.ok(readme.includes("`sdd <command> …`") && readme.includes("`sdd-mcp --profile files|shell"));
+  assert.equal(readme, npmReadme(version));
+});
+
+test("npm README names the repository URL https://github.com/jlacube/spec-architect, whose README is the full guide (C002-IF-003 §1)", () => {
+  assert.equal(REPOSITORY_URL, "https://github.com/jlacube/spec-architect");
+  const readme = npmReadme("0.3.0");
+  assert.ok(readme.split("\n").some((l) => l.includes("https://github.com/jlacube/spec-architect") && /full guide/i.test(l)), readme);
 });
 
 test("C002-TS-419 (tarball part): LICENSE holds the MIT license and THIRD_PARTY_NOTICES.md the union of both bundles", () => {
@@ -205,32 +212,43 @@ test("C002-TS-501 / C002-TS-517 (tarball row): the installed sdd --version print
   for (const bin of ["sdd", "sdd-mcp"]) assert.ok(readdirSync(fx.binDir).some((f) => f === bin || f === `${bin}.cmd`), bin);
 });
 
-test("C002-TS-502: the installed sdd creates the same change folder as the bundled CLI (CLAUDE_PLUGIN_ROOT unset)", () => {
+test("C002-TS-502: the installed sdd creates the same change folder as the bundled CLI, apart from the translated CLI lines (CLAUDE_PLUGIN_ROOT unset)", () => {
   const a = fxBootstrap();
   const b = fxBootstrap();
   try {
     const args = ["change", "new", "Export", "--profile", "lite", "--kind", "greenfield"];
     const env = { CLAUDE_PLUGIN_ROOT: undefined, CLAUDE_PLUGIN_DATA: undefined };
-    const installed = fx.runEntry("sdd", args, { cwd: a.root, env });
-    assert.equal(installed.code, 0, installed.stderr);
+    // Given: the bundled CLI has created the change of fx-b.
     const bundled = runBundled(args, { cwd: b.root, env });
     assert.equal(bundled.code, 0, bundled.stderr);
-    assert.equal(installed.stdout, bundled.stdout);
+    // When: the installed sdd runs in fx-a.
+    const installed = fx.runEntry("sdd", args, { cwd: a.root, env });
+    assert.equal(installed.code, 0, installed.stderr);
     const created = readdirSync(join(a.root, ".sdd")).filter((d) => d.endsWith("-export"));
     assert.equal(created.length, 1, readdirSync(join(a.root, ".sdd")).join(", "));
+    // The same change folder in both copies (the scenario's "002" is the next free number of the fixture).
     const folder = created[0]!;
+    assert.deepEqual(readdirSync(join(b.root, ".sdd")).filter((d) => d.endsWith("-export")), [folder]);
+    // The same list of relative file paths.
     const fa = filesUnder(join(a.root, ".sdd", folder)).sort();
     assert.deepEqual(fa, filesUnder(join(b.root, ".sdd", folder)).sort());
-    // Same files; their text is equal up to the CLI lines that C002-REQ-518 translates in the shipped
-    // templates (the hand-off scaffold reads `sdd …` from the npm package, `node <plugin-root>/…` from the plugin).
-    const translatedOnly: string[] = [];
+    // Each file has the same lines, except lines of 20-plan/handoff.md in which fx-b holds
+    // `node <plugin-root>/scripts/sdd.mjs` and fx-a `sdd` in its place, the rest of the line being equal.
+    const PLUGIN_CLI = "node <plugin-root>/scripts/sdd.mjs";
+    const differing: string[] = [];
     for (const rel of fa) {
-      const ta = readFileSync(join(a.root, ".sdd", folder, rel), "utf8");
-      const tb = readFileSync(join(b.root, ".sdd", folder, rel), "utf8");
-      assert.equal(ta, translateCliLines(tb), rel);
-      if (ta !== tb) translatedOnly.push(rel);
+      const la = readFileSync(join(a.root, ".sdd", folder, rel), "utf8").split("\n");
+      const lb = readFileSync(join(b.root, ".sdd", folder, rel), "utf8").split("\n");
+      assert.equal(la.length, lb.length, `${rel}: line count`);
+      lb.forEach((line, i) => {
+        if (la[i] === line) return;
+        differing.push(rel);
+        assert.equal(rel, "20-plan/handoff.md", `${rel}:${i + 1} differs: ${JSON.stringify(la[i])} vs ${JSON.stringify(line)}`);
+        assert.ok(line.includes(PLUGIN_CLI), `${rel}:${i + 1} of fx-b holds ${PLUGIN_CLI}: ${line}`);
+        assert.equal(la[i], line.split(PLUGIN_CLI).join("sdd"), `${rel}:${i + 1}`);
+      });
     }
-    assert.deepEqual(translatedOnly, ["20-plan/handoff.md"]);
+    assert.ok(differing.includes("20-plan/handoff.md"), "the hand-off CLI lines are translated");
   } finally {
     a.cleanup();
     b.cleanup();

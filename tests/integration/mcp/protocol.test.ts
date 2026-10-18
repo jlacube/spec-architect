@@ -105,7 +105,8 @@ for (const args of [[], ["--profile", "admin"], ["--profile"], ["--profile", "fi
     try {
       const r = await runServerSync(args, { cwd: ws.root, input: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "ping" }) + "\n" });
       assert.equal(r.code, 2, r.stderr);
-      assert.match(r.stderr, /^sdd-mcp: ERR-MCP-007 usage: sdd-mcp --profile files\|shell \[--root <dir>\]: /);
+      // C002-TC-422 (revised print form, errors.md §2): `sdd-mcp: ERR-MCP-007: <message>`.
+      assert.ok(r.stderr.startsWith("sdd-mcp: ERR-MCP-007: usage: sdd-mcp --profile files|shell [--root <dir>]: "), r.stderr);
       assert.equal(r.stdout, "");
     } finally {
       ws.cleanup();

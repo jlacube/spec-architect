@@ -1,16 +1,19 @@
 // `sdd template show` and `sdd template list` (C002-T-012; C002-IF-007, C002-REQ-513, C002-REQ-514,
 // C002-REQ-520): repository override first, shipped fallback, refusal of paths that leave the
 // profile folder (`..`, links), code-point order and uniqueness, and the npm `sdd` reading its own
-// templates while CLAUDE_PLUGIN_ROOT is set.
-import { test } from "node:test";
+// templates while CLAUDE_PLUGIN_ROOT is set (C002-TC-538 on the installed tarball, fx-tgz; C002-T-061).
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fxBootstrap } from "../../fixtures/fixtures.ts";
+import { cleanupFxTgz, fxTgz } from "../../fixtures/fx-tgz.ts";
 import { repoRoot } from "../../helpers.ts";
 import { CLI, runBundled } from "./helpers.ts";
+
+after(cleanupFxTgz);
 
 const PLUGIN = join(repoRoot(), "plugins", "architect");
 const shipped = (rel: string) => readFileSync(join(PLUGIN, "templates", ...rel.split("/")), "utf8");
@@ -141,6 +144,23 @@ test("C002-TC-532 (C002-TS-532): repository templates are merged, each path once
     for (const l of lines) assert.equal(runBundled(["template", "show", `lite/${l}`], { cwd: fx.root }).code, 0, l);
   } finally {
     fx.cleanup();
+  }
+});
+
+test("C002-TC-538 (C002-TS-538): the installed npm sdd in a Claude Code session reads its own templates, not those of CLAUDE_PLUGIN_ROOT", () => {
+  const fx = fxBootstrap();
+  const pluginRoot = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-fx-plugin-root-")));
+  try {
+    const tgz = fxTgz();
+    rmSync(join(fx.root, ".sdd", "_templates"), { recursive: true, force: true });
+    put(pluginRoot, "templates/full/20-plan/handoff.md", "# plugin copy\n");
+    const r = tgz.runShim("sdd", ["template", "show", "full/20-plan/handoff.md"], { cwd: fx.root, env: { CLAUDE_PLUGIN_ROOT: pluginRoot.replace(/\\/g, "/") } });
+    assert.equal(r.code, 0, r.stderr);
+    assert.equal(r.stdout, readFileSync(join(tgz.pkgDir, "templates", "full", "20-plan", "handoff.md"), "utf8"));
+    assert.ok(!r.stdout.includes("# plugin copy"), r.stdout);
+  } finally {
+    fx.cleanup();
+    rmSync(pluginRoot, { recursive: true, force: true });
   }
 });
 

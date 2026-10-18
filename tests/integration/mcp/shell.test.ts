@@ -1,5 +1,5 @@
 // C002-TC-406, C002-TC-407, C002-TC-408, C002-TC-409, C002-TC-641, C002-TC-642 and C002-TC-352
-// (C002-T-019): the command tool `run_command` of the sdd MCP server's `shell` profile (C002-IF-002
+// (C002-T-019), C002-TC-423 and C002-TC-424 (C002-T-061): the command tool `run_command` of the sdd MCP server's `shell` profile (C002-IF-002
 // §5.2; C002-REQ-405 … C002-REQ-407, C002-REQ-325). The server runs as a child process, bundled from the
 // sources with the package CLI `sdd.mjs` beside it (tests/integration/mcp/client.ts). A preload wraps
 // every `node:child_process` function of the server process and records the options of each call, so
@@ -10,11 +10,11 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { delimiter, join } from "node:path";
+import { delimiter, dirname, isAbsolute, join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
 import { applyFilter, STREAM_CAP } from "../../../src/mcp/tools/shell.ts";
-import { McpSession, serverWorkspace, VERSION } from "./client.ts";
+import { McpSession, serverBundle, serverWorkspace, VERSION } from "./client.ts";
 
 const schema = JSON.parse(readFileSync(join(repoRoot(), "src", "mcp", "tools.schema.json"), "utf8")) as object;
 const validateResult = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
@@ -127,11 +127,11 @@ type Call = (args: Record<string, unknown>) => Promise<ToolResult>;
 
 async function withServer(
   fn: (call: Call, fx: Fx, s: McpSession) => Promise<void>,
-  opts: { env?: Record<string, string | undefined>; fixture?: () => Fx & { cleanup: () => void } } = {},
+  opts: { env?: Record<string, string | undefined>; fixture?: () => Fx & { cleanup: () => void }; serverFile?: string } = {},
 ): Promise<void> {
   const f = (opts.fixture ?? fxSrv)();
   // C002-TS-641: the server's environment has no CLAUDE_PLUGIN_DATA.
-  const s = await McpSession.start(["--profile", "shell"], { cwd: f.root, env: { CLAUDE_PLUGIN_DATA: undefined, ...opts.env }, preload: [recorder()] });
+  const s = await McpSession.start(["--profile", "shell"], { cwd: f.root, env: { CLAUDE_PLUGIN_DATA: undefined, ...opts.env }, preload: [recorder()], serverFile: opts.serverFile });
   try {
     await s.initialize();
     const call: Call = async (args) => {
@@ -344,6 +344,72 @@ test("C002-TS-409: an sdd first on PATH is never used; sdd --version prints the 
     );
   } finally {
     stub.cleanup();
+  }
+});
+
+/** A PATH stub `sdd` (`sdd.cmd` on Windows, a shell script elsewhere) that appends a line to `starts.txt` beside it. */
+function recordingSdd(dir: string): void {
+  writeFileSync(join(dir, "sdd.cmd"), `@echo off\r\necho started>> "%~dp0starts.txt"\r\n`);
+  writeFileSync(join(dir, "sdd"), `#!/bin/sh\necho started >> "$(dirname "$0")/starts.txt"\n`);
+  chmodSync(join(dir, "sdd"), 0o755);
+}
+
+// C002-TS-423 — own CLI not found beside the server (C002-TC-423, C002-T-061).
+test("C002-TS-423: the package's scripts/sdd.mjs deleted → ERR-MCP-006 'not found beside the server (<absolute path>)', no PATH sdd started", async () => {
+  const b = await serverBundle();
+  const pkg = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-fx-pkg-sdd-")));
+  const stub = stubDir();
+  try {
+    // An unpacked package whose scripts/ holds the server but not its CLI (deleted before the start).
+    mkdirSync(join(pkg, "scripts"));
+    const server = join(pkg, "scripts", "sdd-mcp.mjs");
+    copyFileSync(b.file, server);
+    copyFileSync(join(dirname(b.file), "sdd.mjs"), join(pkg, "scripts", "sdd.mjs"));
+    rmSync(join(pkg, "scripts", "sdd.mjs"));
+    recordingSdd(stub.dir);
+    await withServer(
+      async (call, _fx, s) => {
+        const mark = spawnCalls(s.stderr).length;
+        const r = await call({ command: "sdd status" });
+        assertRefused(r, "ERR-MCP-006");
+        const message = r.structuredContent["message"] as string;
+        assert.ok(message.startsWith('could not start "sdd": not found beside the server ('), message);
+        assert.equal(message, `could not start "sdd": not found beside the server (${join(pkg, "scripts", "sdd.mjs")})`);
+        assert.ok(isAbsolute(message.slice(message.indexOf("(") + 1, -1)), message);
+        assert.deepEqual(callsSince(s, mark), [], "a process was started");
+        assert.equal(existsSync(join(stub.dir, "starts.txt")), false, "the PATH sdd was started");
+      },
+      { serverFile: server, env: { [PATH_KEY]: `${stub.dir}${delimiter}${process.env[PATH_KEY] ?? ""}` } },
+    );
+  } finally {
+    stub.cleanup();
+    rmSync(pkg, { recursive: true, force: true });
+  }
+});
+
+// C002-TS-424 — the plugin-root variable reaches node as literal text (C002-TC-424, C002-T-061).
+test("C002-TS-424: node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs status → node's non-zero exit naming the literal variable; the plugin's sdd.mjs records no start", async () => {
+  const plugin = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-fx-plugin-")));
+  try {
+    mkdirSync(join(plugin, "scripts"));
+    const starts = join(plugin, "starts.txt");
+    writeFileSync(join(plugin, "scripts", "sdd.mjs"), `import { appendFileSync } from "node:fs";\nappendFileSync(${JSON.stringify(starts)}, "started\\n");\n`);
+    await withServer(
+      async (call, _fx, s) => {
+        const mark = spawnCalls(s.stderr).length;
+        const r = await call({ command: "node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs status" });
+        assertCompleted(r);
+        assert.notEqual(r.structuredContent["exit_code"], 0, JSON.stringify(r));
+        assert.ok((r.structuredContent["stderr"] as string).includes("${CLAUDE_PLUGIN_ROOT}"), JSON.stringify(r));
+        const [c] = callsSince(s, mark);
+        assert.match(c!.file, WIN ? /[\\/]node\.exe$/i : /[\\/]node$/);
+        assert.deepEqual(c!.args, ["${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs", "status"]);
+        assert.equal(existsSync(starts), false, "the plugin's scripts/sdd.mjs was started");
+      },
+      { env: { CLAUDE_PLUGIN_ROOT: plugin.replace(/\\/g, "/") } },
+    );
+  } finally {
+    rmSync(plugin, { recursive: true, force: true });
   }
 });
 

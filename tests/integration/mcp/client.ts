@@ -99,9 +99,13 @@ export class McpSession {
     this.exited = new Promise((resolve) => child.on("exit", (code) => resolve(code)));
   }
 
-  /** `preload`: extra modules loaded with `--import` before the server (absolute file paths). */
-  static async start(args: string[], opts: { cwd: string; env?: Record<string, string | undefined>; preload?: string[] }): Promise<McpSession> {
-    const b = await serverBundle();
+  /**
+   * `preload`: extra modules loaded with `--import` before the server (absolute file paths).
+   * `serverFile`: another copy of the server bundle to run (C002-TS-423: a package without its CLI).
+   */
+  static async start(args: string[], opts: { cwd: string; env?: Record<string, string | undefined>; preload?: string[]; serverFile?: string }): Promise<McpSession> {
+    const bundle = await serverBundle();
+    const b = opts.serverFile ? { file: opts.serverFile, noListen: bundle.noListen } : bundle;
     return new McpSession(spawn(process.execPath, nodeArgs(b, args, opts.preload), { cwd: opts.cwd, env: childEnv(opts.env ?? {}), stdio: ["pipe", "pipe", "pipe"] }));
   }
 

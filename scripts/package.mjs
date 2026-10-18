@@ -69,7 +69,11 @@ export function stageMarketplace(root, stage, version) {
   writeFileSync(join(stage, "INSTALL.md"), installText(version, name));
 }
 
-function npmReadme(version) {
+/** The Architect repository, whose README is the full guide (C002-IF-003 §1). */
+export const REPOSITORY_URL = "https://github.com/jlacube/spec-architect";
+
+/** README.md of architect-sdd (C002-IF-003 §1): install, the two executables, the shipped files, the repository URL. */
+export function npmReadme(version) {
   return [
     `# ${NPM_NAME} ${version}`,
     "",
@@ -88,7 +92,9 @@ function npmReadme(version) {
     "- `sdd-mcp --profile files|shell [--root <dir>]` — the sdd MCP server over standard input and output.",
     "",
     "The package also ships the artifact templates (`templates/`) and Serena's read-only mode file",
-    "(`serena/architect-read-only.yml`). Full guide: `README.md` of the Architect repository.",
+    "(`serena/architect-read-only.yml`).",
+    "",
+    `Full guide: the README of the Architect repository, ${REPOSITORY_URL}`,
     "",
   ].join("\n");
 }

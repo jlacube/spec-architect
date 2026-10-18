@@ -46,10 +46,11 @@ export function renderBundled(pkgs) {
 
 /**
  * ERR-BLD-001 (C002-REQ-413): one line per disallowed package of each entry, naming the entry, the
- * package and its license; empty when every entry passes. `entries`: [{ name, pkgs }].
+ * package and its license, in the print form `ERR-BLD-001: <message>` (errors.md "Print form", §4);
+ * empty when every entry passes. `entries`: [{ name, pkgs }].
  */
 export function licenseErrors(entries) {
-  return entries.flatMap((e) => disallowed(e.pkgs).map((p) => `build failed: ${e.name}: bundled package license not allowed: ${p.name}@${p.version} (${p.license})`));
+  return entries.flatMap((e) => disallowed(e.pkgs).map((p) => `ERR-BLD-001: build failed: ${e.name}: bundled package license not allowed: ${p.name}@${p.version} (${p.license})`));
 }
 
 /** A complete notices file (for a generated, untracked destination such as build/npm/). */
