@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-005, C002-T-006, C002-T-008]
 implements: [C002-REQ-521, C002-REQ-607]
 satisfies_ac: [C002-AC-521.1, C002-AC-607.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-536, C002-TS-636, C002-TS-610, C002-TC-536, C002-TC-636, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a89bfc4, completed_at: 2026-10-18, notes: "Table + --cwd rule; BG-293…370; TC-536/636/610 rows; pending: 'hook subagent-stop' (T-032) and 'install copilot' (T-058) exempt in writing-commands.test.ts — those tasks remove their entries; Serena/install corpus cases belong to T-010/T-059; ambiguous Windows paths like C:pkg also denied (fail-closed, beyond IF-008 rule 2's list)" }
 ---
 
 # C002-T-009 — Writing-command table as a single source and the --cwd confinement
