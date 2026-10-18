@@ -69,7 +69,10 @@
           "description": "Copilot: install/hooks.template.json, the hook declarations with the token @CLI_COPY@ from which the install command writes hooks.json (C002-IF-008 §4); null when the target has no hooks.",
           "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
         },
-        "plugin_manifest": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+        "plugin_manifest": {
+          "description": "Copilot: install/plugin.json, which the install command copies to plugin.json at the package root together with hooks.json, so that the folder is no plugin before the install (C002-IF-005 §3); null when the target has no plugin manifest.",
+          "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
+        },
         "cli_copy": {
           "description": "Path of the copy of the bundled sdd CLI used by hook commands (Copilot only, C002-CON-14); null when the target has no hook commands.",
           "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
@@ -198,7 +201,7 @@
       }
     },
     "hook_tool_classes": {
-      "description": "Copilot hooks fallback only: classification of the hook tool_name values (C002-IF-008 §2), written to hooks/tool-classes.json of the package.",
+      "description": "Copilot, both enforcement modes: classification of the hook tool_name values (C002-IF-008 §2), written to hooks/tool-classes.json of the package and read by the Copilot subagent guard hook and, under the hooks fallback, by the Copilot guard hook (C002-REQ-318).",
       "type": "object",
       "additionalProperties": false,
       "required": ["write", "terminal", "read_only"],
@@ -282,12 +285,9 @@
           "mcp_tool_names": { "properties": { "target_pattern": { "const": "{server}-{tool}" }, "deferred": { "const": true } }, "required": ["grant_pattern", "deferred"] },
           "placement": { "required": ["hooks_file", "cli_copy", "plugin_manifest"] }
         },
+        "required": ["hook_tool_classes"],
         "not": { "anyOf": [{ "required": ["permissions"] }, { "required": ["post_write_feedback"] }] }
       }
-    },
-    {
-      "if": { "properties": { "enforcement_mode": { "const": "copilot-hooks" } }, "required": ["enforcement_mode"] },
-      "then": { "required": ["hook_tool_classes"] }
     }
   ],
   "$defs": {

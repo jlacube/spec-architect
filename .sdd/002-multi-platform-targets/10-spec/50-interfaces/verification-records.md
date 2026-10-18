@@ -39,8 +39,8 @@ release check can recompute every expected decision (§2.1) and refuse a report 
 capability that a case of the cited corpora requires (§5, C002-REQ-634). Mechanisms: `opencode-permissions`
 (evaluated by OpenCode at its tested version through a headless session or its SDK, `host_versions`
 required), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
-`copilot-hooks` (`sdd hook guard --host copilot` of the Copilot package, fed with Copilot-shaped
-input).
+`copilot-hooks` (`sdd hook guard --host copilot --mode copilot-hooks` of the Copilot package
+generated for the hooks fallback, fed with Copilot-shaped input).
 
 ### §2.1 Applicability and expected decision per mechanism (Q-safety-02, Q-safety-04, Q-safety-05)
 
@@ -50,7 +50,7 @@ and the first of the following rows that matches it gives its expected decision 
 
 | Case | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` | Rule (`expected_source`) |
 |---|---|---|---|---|
-| category `identity` | replayed (rows below) | not applicable | not applicable | C002-REQ-626: only OpenCode has a caller that is not an Architect agent among the replayed mechanisms; the server and the Copilot guard hooks decide for Architect agents only (C002-REQ-208, C002-REQ-302), the guard hooks passing every call without an Architect `agent_type`, which C002-REQ-320 tests apart from the replay |
+| category `identity` | replayed (rows below) | not applicable | not applicable | C002-REQ-626: only OpenCode has a caller that is not an Architect agent among the replayed mechanisms; the server and the guard cores of the Copilot guard hooks decide for Architect agents only (C002-REQ-208, C002-REQ-302); the Copilot hook decides calls without an Architect `agent_type` by identity and repository, not by the guard cores (C002-IF-008 §2 rules 3 and 6), which C002-REQ-320 and C002-REQ-327 … C002-REQ-330 test apart from the replay |
 | hook input without a `cwd` (`"cwd": null`), with an empty `cwd` (`""`) or without a tool name (`"tool": null`), for example PG-253, PG-254, BG-277, PG-256 | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | replayed as the malformed call of §2.2, expected `deny` | C002-REQ-630: no generated mechanism receives such a call except as a malformed one, and every fault refuses (C002-CON-08); the corpus keeps its expectation for Claude Code (`allow` for PG-256) |
 | category `identity`, caller an `architect:sdd-*` name that is none of the ten Architect agents (PG-237, PG-238) | replayed, expected `allow` | (not applicable, first row) | (not applicable, first row) | C002-REQ-632: the OpenCode rules bind only the generated agents, so the fixture's adopter agent that plays the case is not confined; the corpus keeps `deny` for Claude Code |
 | category `memory` | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C002-REQ-625: the generated agents have no memory folder (C002-DEC-009); the corpus keeps `allow` for Claude Code |
@@ -159,7 +159,10 @@ The frontmatter above is that of the signed-off record (`docs/spikes/S-08-copilo
 the VS Code build the record tested, `vscode-insiders` when the record has it (the tested host of
 `../10-context/scope.md` §3.1; `vscode` then names an installed build that ran no probe), and
 `copilot-chat` its value; `copilot-cli` stays in the record, and the release check compares the
-`host_versions` of the Copilot CLI runner's evidence with it (ERR-REL-006). [ASSUMPTION: S-08 — the record's copilot-chat 0.35.3 is the Copilot Chat version of the tested VS Code Insiders build; P-01 confirms it from the record's run before the table is written]
+`host_versions` of the Copilot CLI runner's evidence with it (ERR-REL-006). The record's
+`copilot-chat` 0.35.3 is the Copilot Chat version of the tested VS Code Insiders build: P-01's
+answer to Q-versions-02 (`../../20-plan/questions-log.md`, round 7) gives the tested pair as VS Code
+Insiders 1.142.0-insider with Copilot Chat 0.35.3.
 
 S-07 outcome keys: `edit_rules_match_path_corpus`, `bash_rules_match_shell_corpus`,
 `question_answerable_by_script`, `post_write_feedback_channel`, `agent_tools_closed` (a catch-all
@@ -192,7 +195,9 @@ The checklist holds steps with stable IDs (`VSC-01` …): the sdd MCP server bou
 `ask_user` with a skipped answer (these steps also record the `ask_user` input shape and its result
 without a choice, which the S-08 record does not hold, C002-REQ-614), a toy change from creation to
 gate G1 on a fresh install (which includes `sdd install copilot`, C002-IF-005 §5, and confirms the
-assumptions of C002-IF-005 §3 and C002-IF-002 §3), one Revise choice at gate G1 followed by the gate presented again, and one run of the
+assumptions of C002-IF-005 §3 and C002-IF-002 §3), a step in which the conductor is asked to delegate
+an edit of product code to the host built-in agent `general-purpose` and the edit is denied, which
+records whether that agent's hook input carried `agent_type` (C002-REQ-327 open item), one Revise choice at gate G1 followed by the gate presented again, and one run of the
 revise prompt on the approved ideation phase of the toy change (C002-REQ-614); under the Copilot
 hooks fallback, a step that records the hooks state and a guard-hook denial of a subagent's write
 outside `.sdd/` (C002-REQ-616); and one step per Copilot injection case of the dev tier, each

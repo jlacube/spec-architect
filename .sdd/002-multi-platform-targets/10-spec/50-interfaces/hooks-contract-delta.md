@@ -13,9 +13,11 @@ C001-IF-07 stays in force for Claude Code. This delta changes two allowlist rows
 Serena subcommands of the sdd CLI entry and confines the option `--cwd` of its writing subcommands
 (the only Claude Code behaviours CHG-002 changes, C002-REQ-503, C002-REQ-517 and C002-REQ-521,
 C002-GOAL-05 as widened by Q-guards-04 and Q-guards-05), denies the new subcommand `install` (no
-existing decision changes, C002-REQ-325), and adds the Copilot hook input used by the Copilot hooks
-fallback and the Copilot session hooks, revised for defect D-003 after spike S-08
-(`docs/spikes/S-08-copilot-vscode.md §2.2`, §2.3, §3, §3.1, §5). Owner: C002-COMP-012.
+existing decision changes, C002-REQ-325), and adds the Copilot hook input used by the Copilot
+subagent guard hook in both Copilot enforcement modes, by the Copilot hooks fallback and by the
+Copilot session hooks, revised for defect D-003 after spike S-08 (`docs/spikes/S-08-copilot-vscode.md
+§2.2`, §2.3, §3, §3.1, §5) and after the critic's D-003 review (Q-safety-06, Q-safety-07; CR-37,
+CR-38). Owner: C002-COMP-012.
 
 ## §1 Allowlist rows changed (C001-IF-07 §3)
 
@@ -120,7 +122,7 @@ expects `allow` for the other rows.
 | `extract-features` | `.feature` files from the change's gherkin blocks (C001-IF-01, Could). Not implemented at baseline (no handler at `src/cli/commands.ts:507`), so it writes nothing today; the change that implements it fixes its output folder, and a folder outside `.sdd/` then needs a guard rule like §1.1 | allow; `--cwd` as below |
 | `serena-config` | `<data folder>/serena/serena_config.yml` | §1.1 (no `--cwd`) |
 | `serena-launch` | as `serena-config`, then Serena's own data under `<data folder>/serena/` | §1.1 (no `--cwd`) |
-| `install copilot` | outside `.sdd/`: `.github/agents/sdd-*.agent.md`, `.vscode/mcp.json` and `.github/architect-install.json` of the repository, and `hooks.json` of the Copilot package (C002-IF-007 §Install) | deny GUARD-BASH-001, reason `sdd install writes outside .sdd/; P-03 runs it in their own terminal`, whatever words follow `install` (C002-REQ-325) |
+| `install copilot` | outside `.sdd/`: `.github/agents/<agent name>.agent.md`, `.github/hooks/architect-guard.json`, `.vscode/mcp.json` and `.github/architect-install.json` of the repository, and `plugin.json` and `hooks.json` of the Copilot package (C002-IF-007 §Install) | deny GUARD-BASH-001, reason `sdd install writes outside .sdd/; P-03 runs it in their own terminal`, whatever words follow `install` (C002-REQ-325) |
 
 **Writing command.** A command of the sdd CLI entry is a writing command when the first word after
 the CLI prefix (`sdd`, or `node <path>/sdd.mjs` as the script form allows), together with the second
@@ -168,14 +170,36 @@ the folder the CLI starts from, not the workspace it finds. Stopping workspace d
 root would change C001-IF-01 and C001-REQ-1103 on every host, beyond C002-GOAL-05; it is an idea for
 a later change.
 
-## §2 Copilot PreToolUse input (Copilot hooks fallback)
+## §2 Copilot PreToolUse input (Copilot subagent guard hook, both modes; Copilot hooks fallback)
 
-**Where the hook is declared.** Once, as a plugin-level PreToolUse entry of the package's hooks file
-(C002-IF-005 §3), not in agent frontmatter: agent-scoped hooks do not run for a subagent's tool
-calls in the local agent host (`docs/spikes/S-08-copilot-vscode.md §3.1`, fact F-4), while
-plugin-level hooks run for every tool call of every agent, in VS Code and in Copilot CLI (§2.2,
-§3, §3.1). The hook therefore sees P-03's own chats too and decides only the calls of Architect
-agents (C002-REQ-320).
+**One command in both modes.** The Copilot target package has one PreToolUse hook command,
+`sdd hook guard --host copilot --mode <mode> --agents <list> [--classes <file>]` (C002-IF-007),
+`<mode>` being the enforcement mode of the Copilot mapping table (`sdd-mcp-server` or
+`copilot-hooks`), written into the command by the generator. In both modes it is the Copilot
+subagent guard hook (C002-REQ-327 … C002-REQ-330; Q-safety-06, Q-safety-07); under the hooks
+fallback it is also the Copilot guard hook of the Architect agents (C002-REQ-308, C002-REQ-309,
+C002-REQ-319, C002-REQ-320). The need: the local agent host offers its host built-in agents to a
+parent beside the agents of its `agents` list, and such an agent runs with the host's tools, not
+with a `tools` list of the package (S-08 §3, §3.2; C002-IF-005 §3).
+
+**Where the hook is declared.** The same PreToolUse entry in two hooks files, both written by the
+install command from `install/hooks.template.json` (C002-IF-005 §3, C002-IF-007 §Install); never in
+agent frontmatter, because agent-scoped hooks do not run for a subagent's tool calls in the local
+agent host (`docs/spikes/S-08-copilot-vscode.md §3.1`, fact F-4).
+
+| Hooks file | Loaded by | Why this file |
+|---|---|---|
+| `<package>/hooks.json` (plugin level) | VS Code from its copy of the plugin part; Copilot CLI with `--plugin-dir` | plugin-level hooks run for every tool call of every agent and carry `agent_type` on subagent calls, in VS Code and in Copilot CLI (S-08 §2.2, §2.3, §3, §3.1) |
+| `<repo>/.github/hooks/architect-guard.json` (workspace level) | the host that opens the repository | the guard is loaded wherever the workspace agents of `.github/agents/` are, also when the plugin part is not loaded, is disabled, or is a copy that VS Code took before the latest install (critic CR-38); assumptions: C002-IF-005 §3 |
+
+When both files are loaded, the command runs twice on the same input and reaches the same
+decision; a deny of either denies the call (the most restrictive decision wins, C002-R-001 A-02).
+Both commands name the CLI copy by its absolute path (§4). Where that path does not exist (the
+package moved or deleted, a clone on another machine), the hook errors before the CLI runs and the
+host denies every tool call of the session (S-08 §3): the guard fails closed (C002-CON-08,
+C002-CON-14). A plugin-level hook runs for every tool call in every repository the adopter opens
+(S-08 §2.2, §3), so the command sees P-03's own chats too: it passes the session agent's calls
+(rule 3) and, outside repositories with `.sdd/`, every subagent's calls (rule 6).
 
 **Input** (S-08 §2.3, §3.1; VS Code-compatible format on both hosts). Standard input carries
 `hook_event_name`, `session_id`, `timestamp`, `cwd`, `tool_name`, `tool_input`; a call made inside a
@@ -187,21 +211,50 @@ seen in hook input: `Write` (create tool; `tool_input.path`, `tool_input.file_te
 `tool_input.agent_type`, `description`, `name`), MCP tools as `<server>-<tool>`
 (`probe-stub-stub_read`), and the host-added `tool_search_tool`. The hook name of the `edit` tool
 and of the read tool is not in the S-08 record; a later spike record supplies them to the table
-(C002-REQ-308 open item), and until then such a call of an Architect agent is denied by the last
-row of the class table.
+(C002-REQ-308 open item), and until then such a call is denied by the last row of the class table
+(rule 8 for an Architect agent under the fallback, rule 6 for a non-Architect subagent).
 
-**Decision order** of `sdd hook guard --host copilot --agents <list> [--classes <file>]`
-(C002-IF-007):
+**Caller**, read from `agent_type`:
 
-1. Standard input empty, not JSON, or not a JSON object → deny GUARD-HOOK-001, whoever calls
-   (C002-REQ-309: unreadable input; no identity can be read).
-2. `agent_type` absent, not a string, or, with any `architect:` prefix removed, not a name of
-   `--agents` → allow, exit 0, without reading the classes file (C002-REQ-320). This covers the
-   session agent, so the conductor and its prompt files hold no generic edit or terminal tool under
-   the fallback (C002-REQ-321), and the adopter's own agents.
-3. An Architect agent's call without `cwd`, with an empty `cwd` or without `tool_name`, or with a
-   classes file that cannot be read or parsed → deny GUARD-HOOK-001 (C002-REQ-309, C002-CON-08).
-4. Otherwise the input is mapped to the hook input of C001-IF-07 §1 and decided by its class:
+| `agent_type` | Caller |
+|---|---|
+| absent (the key is missing) | the session agent (S-08 §2.3, §3) |
+| a string that, with any `architect:` prefix removed, is a name of `--agents` | an Architect agent (`sdd-spec-writer` in VS Code, `architect:sdd-spec-writer` in Copilot CLI) |
+| any other value: a string that names no Architect agent (a host built-in agent such as `general-purpose`, an adopter's agent, `architect:my-reviewer`), the empty string, `null`, a number or another non-string value | a non-Architect subagent (glossary; C002-REQ-327) |
+
+**Decision order** (C002-IF-007 `hook guard`):
+
+1. `--mode` missing or not `sdd-mcp-server` or `copilot-hooks`, or `--agents` missing or empty →
+   deny GUARD-HOOK-001 (`hook command usage`), whatever the input; a generated command always holds
+   both (TGT-HOOK-001).
+2. Standard input empty, not JSON, or not a JSON object → deny GUARD-HOOK-001, whoever calls
+   (C002-REQ-309, C002-REQ-328: unreadable input; no identity can be read).
+3. No `agent_type` → allow, exit 0, in both modes, without reading the classes file or the file
+   system (C002-REQ-320, C002-REQ-330). This covers the session agent; the conductor and its prompt
+   files hold no generic edit or terminal tool in either mode (C002-REQ-306, C002-REQ-321).
+4. An Architect agent's call with `--mode sdd-mcp-server` → allow, exit 0, without reading the
+   classes file (C002-REQ-330): the agent is confined by its tool list (C002-REQ-306; S-08 §2.1,
+   §3.1), and no guard core runs on its calls (C002-REQ-302).
+5. An Architect agent's call with `--mode copilot-hooks` → rules 7 and 8.
+6. A non-Architect subagent's call, in both modes (C002-REQ-327, C002-REQ-328, C002-REQ-329):
+   - no `cwd`, or an empty `cwd` → deny GUARD-HOOK-001 (the repository cannot be read);
+   - the workspace lookup of C001-IF-01 from `cwd` (the nearest `.sdd/` at or above it, as the path
+     guard takes it, `src/workspace/find.ts:5-15`) finds none → allow, exit 0, without reading the
+     classes file (C002-REQ-329); a `.sdd/` above the repository root counts as found; a lookup that
+     fails → deny GUARD-HOOK-001;
+   - no `tool_name`, or a classes file that cannot be read or parsed → deny GUARD-HOOK-001
+     (C002-REQ-328);
+   - by the class of `tool_name` in the classes file, names compared exactly, letter case included:
+     `write` or `terminal` → deny GUARD-HOOK-002, whatever path or command the input holds
+     (C002-REQ-327); `read_only` → allow, exit 0 (C002-REQ-329); any other tool name → deny
+     GUARD-HOOK-001 (C002-REQ-328), so that a host tool the classes file does not name (the `edit`
+     tool, a tool of the adopter's own MCP server, the `Agent` tool of a nested start) is never
+     allowed by default.
+7. An Architect agent's call with `--mode copilot-hooks` without `cwd`, with an empty `cwd` or
+   without `tool_name`, or with a classes file that cannot be read or parsed → deny GUARD-HOOK-001
+   (C002-REQ-309, C002-CON-08).
+8. Otherwise (an Architect agent's call with `--mode copilot-hooks`) the input is mapped to the hook
+   input of C001-IF-07 §1 and decided by its class:
 
 | Field of the guard core input | Value |
 |---|---|
@@ -216,28 +269,36 @@ row of the class table.
 | read_only | allow |
 | any other tool name | deny GUARD-HOOK-001 (C002-REQ-309) |
 
-Initial classes from the S-08 record (informative; the table is the source): `write` `{ "tool":
-"Write", "paths": ["/path"] }`; `terminal` `{ "tool": "Bash", "command": "/command", "dialect":
-"powershell" }`; `read_only` `Glob`, `tool_search_tool` and the `<server>-<tool>` names of the read
-MCP servers granted to specialists (`serena-…`, `context7-…`, `deepwiki-…`).
+Initial classes from the S-08 record and C002-IF-002 §2 (informative; the table is the source; one
+file in both modes, C002-REQ-318): `write` `{ "tool": "Write", "paths": ["/path"] }`, `{ "tool":
+"sdd-files-write_file", "paths": ["/path"] }`, `{ "tool": "sdd-files-replace_text", "paths":
+["/path"] }`; `terminal` `{ "tool": "Bash", "command": "/command", "dialect": "powershell" }`,
+`{ "tool": "sdd-shell-run_command", "command": "/command", "dialect": "strictest" }`; `read_only`
+`Glob`, `tool_search_tool` and the `<server>-<tool>` names of the read MCP servers granted to
+specialists (`serena-…`, `context7-…`, `deepwiki-…`). The sdd MCP server tools are classed for rule
+6: an agent without a `tools` list of the package gets the host's full tool set (S-08 §3.2), which
+may hold the workspace MCP servers' tools; an Architect agent's call to them never reaches the class
+table (rules 3 and 4; under the fallback only the conductor holds them, C002-REQ-321).
 
 **Allow and deny.** Allow: exit 0, nothing on standard output or standard error. Deny (a guard
-decision or GUARD-HOOK-001): standard output holds one JSON object with the deny decision in both
+decision, GUARD-HOOK-001 or GUARD-HOOK-002): standard output holds one JSON object with the deny decision in both
 forms the S-08 probe wrote (`docs/spikes/s08/hooks/deny.mjs:6`),
 
 ```json
 {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"<message>"},"permissionDecision":"deny","permissionDecisionReason":"<message>"}
 ```
 
-standard error holds `<message>` (the guard message of C001-IF-07 §4 or the GUARD-HOOK-001
-message), and the exit code is 2. The deny holds on both hosts without exit code 2 being passed
+standard error holds `<message>` (the guard message of C001-IF-07 §4, or the GUARD-HOOK-001 or
+GUARD-HOOK-002 message), and the exit code is 2. The deny holds on both hosts without exit code 2 being passed
 through: Copilot CLI on Windows reports the exit as code 1, does not use the decision on standard
 output and fails closed (`Denied by preToolUse hook … (hook errored)`, S-08 §2.2, fact F-6), and the
 local agent host denies a call whose hook errors (§3). The message the model sees may therefore be
 the host's hook-error text rather than `<message>`. Exit 0 with a deny decision is never used: a
-host that ignores the decision would run the call. The corpus replay runs the command directly and
-reads exit 2 (C002-IF-009 §2.3); it feeds the inputs of rule 3 as malformed calls (C002-REQ-630,
-C002-IF-009 §2.2). Hook tool names and input fields are table data, not code.
+host that ignores the decision would run the call. The corpus replay runs the command of the
+fallback package (`--mode copilot-hooks`) directly and reads exit 2 (C002-IF-009 §2.3); it feeds the
+inputs of rule 7 as malformed calls (C002-REQ-630, C002-IF-009 §2.2). Rules 3, 4 and 6 decide by
+caller identity and repository, not by the guard cores, so scenarios test them, not the replay
+(C002-REQ-626). Hook tool names and input fields are table data, not code.
 
 ## §3 Copilot SessionStart and SubagentStop input
 
@@ -257,9 +318,12 @@ Every Copilot hook command is `node "<package>/scripts/sdd.mjs" <arguments>`, `<
 absolute path of the Copilot package folder with `/` separators, in double quotes, calling the CLI
 copy inside the package without shell operators (C002-REQ-316, C002-REQ-326, C002-CON-14). The
 generator writes the commands into `install/hooks.template.json` with the token `@CLI_COPY@` in
-place of `<package>/scripts/sdd.mjs`; the install command writes the package's `hooks.json` with the
-token replaced (C002-IF-007 §Install, C002-IF-005 §3). The S-08 probe's hook commands of this form
-ran on both hosts (`docs/spikes/s08/hooks.json`; S-08 §3).
+place of `<package>/scripts/sdd.mjs`; the install command writes the package's `hooks.json` and the
+repository's workspace hook file `.github/hooks/architect-guard.json` with the token replaced
+(C002-IF-007 §Install, C002-IF-005 §3). The S-08 probe's hook commands of this form ran on both
+hosts (`docs/spikes/s08/hooks.json`; S-08 §3). The PreToolUse command is
+`node "<package>/scripts/sdd.mjs" hook guard --host copilot --mode <mode> --agents <the ten Architect
+agent names, comma-separated>` in both modes (§2).
 
 No command holds `${PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_ROOT}`: VS Code on Windows does not expand
 `${PLUGIN_ROOT}` in hook commands, such a hook errors before its script runs and every tool call of

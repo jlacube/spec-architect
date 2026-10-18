@@ -17,7 +17,9 @@ of CHG-001 that CHG-002 does not change (workspace, parser/lint/trace, gate, tra
 templates, specialist agents) keep their C001 IDs and are not repeated. Decisions are those of
 C002-DEC-001 … C002-DEC-009; this step adds no ADR (§6.2 lists the design choices it fixes).
 Revised for defect D-003: the Copilot target follows the signed-off spike S-08 record
-(`docs/spikes/S-08-copilot-vscode.md`, facts F-1 … F-7 of §5).
+(`docs/spikes/S-08-copilot-vscode.md`, facts F-1 … F-7 of §5); after the critic's D-003 review, the
+Copilot subagent guard hook of both modes and its workspace-level placement (CR-37, CR-38;
+Q-safety-06, Q-safety-07).
 
 ## 1. Context and scope
 
@@ -36,7 +38,7 @@ package (sdd CLI and sdd MCP server) and the verification records under `docs/`.
 | P-03 adopter | Installs a package and `architect-sdd`, runs `sdd install copilot` in each repository for VS Code, runs the conductor on Claude Code, OpenCode or VS Code | trusted user; its own agents, MCP servers and settings are outside Architect |
 | Claude Code | Source target, unchanged except the allowlist rows (C002-REQ-503), the Serena-command confinement (C002-REQ-517) and the `--cwd` confinement of the writing `sdd` subcommands (C002-REQ-521) of the bash guard | platform |
 | OpenCode (tested version) | Loads the OpenCode package; enforces `permission` rules under native permission enforcement; starts the sdd MCP server under sdd MCP server enforcement | platform; permission engine verified by corpus replay (C002-AS-01, C002-AS-02) |
-| VS Code with GitHub Copilot Chat (tested versions; Local session type, local agent host) | Loads the Copilot package's plugin part (prompt files, skills, hooks); runs the workspace agents of `.github/agents/` as subagents and starts the workspace MCP servers of `.vscode/mcp.json` after a session's first message, both written by the install command; confines agents to their tool lists (C002-AS-03); runs plugin-level hooks for every agent's calls, with `agent_type` on subagent calls | platform; verified by spike S-08 §3 (plugin agents and plugin MCP servers are not used, facts F-1, F-2) |
+| VS Code with GitHub Copilot Chat (tested versions; Local session type, local agent host) | Loads the Copilot package's plugin part (prompt files, skills, hooks) once the install has written its manifest; runs the workspace agents of `.github/agents/` as subagents and starts the workspace MCP servers of `.vscode/mcp.json` after a session's first message, both written by the install command; confines agents to their tool lists (C002-AS-03), but offers its host built-in agents beside a parent's `agents` list (S-08 §3); runs plugin-level hooks, and the workspace hook file written by the install command, for every agent's calls, with `agent_type` on subagent calls | platform; verified by spike S-08 §3 (plugin agents and plugin MCP servers are not used, facts F-1, F-2); workspace hook file: assumption of C002-IF-005 §3 |
 | Copilot CLI | Eval runner host only (C002-NG-01); loads the package with `--plugin-dir`, names its agents `architect:<agent>` | tool; verified by spike S-08 §2 |
 | npm registry | Receives `architect-sdd` from P-01; serves it to P-03 | service |
 | Repository source, web, MCP results | Read by agents | **untrusted content** (C002-NFR-203) |
@@ -45,11 +47,13 @@ package (sdd CLI and sdd MCP server) and the verification records under `docs/`.
 shell — enforced per target by the enforcement mechanism of its mode, never by instructions alone
 (C002-CON-03); (3) agent ↔ gate — only P-01's choice through the host question tool approves
 (C002-INV-09); (4) Architect ↔ the adopter's own agents and files — the OpenCode package sets no
-permission for other agents (C002-REQ-208); the Copilot package declares no PreToolUse hook under sdd
-MCP server enforcement (C002-REQ-302), and under the hooks fallback its guard hook passes every call
-whose `agent_type` names no Architect agent (C002-REQ-320); the install command replaces no agent
-file or MCP server entry it did not write (C002-REQ-324) and is never run by an Architect agent
-(C002-REQ-325).
+permission for other agents (C002-REQ-208); the Copilot package's one PreToolUse hook passes every
+call of the session agent (C002-REQ-320, C002-REQ-330) and, outside repositories with `.sdd/`, every
+call of the adopter's subagents (C002-REQ-329); in a repository with `.sdd/` it lets a subagent that
+is not an Architect agent, host built-in agents included, call read-only tools only (C002-REQ-327,
+C002-REQ-328; the cost P-01 accepted in Q-safety-06 and Q-safety-07); the install command replaces no
+agent file, hook file or MCP server entry it did not write (C002-REQ-324) and is never run by an
+Architect agent (C002-REQ-325).
 
 ## 2. Component catalogue
 
@@ -81,13 +85,13 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 - **Owned data:** generated files only
 
 ### C002-COMP-004 — Copilot target package
-- **Name:** `dist/copilot/`: plugin part (`plugin.json`, `agents/*.agent.md`, `prompts/*.prompt.md`, `skills/`, `hooks/tool-classes.json`, `scripts/sdd.mjs` copy) and install sources (`install/mcp.json`, `install/hooks.template.json`), `INSTALL.md`, manifest
+- **Name:** `dist/copilot/`: plugin part (`agents/*.agent.md`, `prompts/*.prompt.md`, `skills/`, `hooks/tool-classes.json`, `scripts/sdd.mjs` copy; `plugin.json` and `hooks.json` written at install) and install sources (`install/plugin.json`, `install/mcp.json`, `install/hooks.template.json`), `INSTALL.md`, manifest
 - **Status:** new
-- **Responsibility:** run the Architect agents in VS Code as workspace agents, installed by `sdd install copilot`, with no generic edit or terminal tool and the sdd MCP servers as workspace MCP servers (server mode), or with one plugin-level Copilot guard hook keyed by `agent_type`, the tool classes file and a conductor without generic tools (hooks fallback); carry the plugin agents that Copilot CLI loads for the eval runner; prompt files named `<name>.prompt.md`; Serena read-only with per-user data; session-start brief and trace refresh hooks whose commands reach the CLI copy by an absolute path written at install; interviews and gates through `ask_user`
-- **Realizes:** C002-REQ-114, C002-REQ-301, C002-REQ-302, C002-REQ-303, C002-REQ-304, C002-REQ-306, C002-REQ-307, C002-REQ-308, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-317, C002-REQ-318, C002-REQ-321, C002-REQ-326
+- **Responsibility:** run the Architect agents in VS Code as workspace agents, installed by `sdd install copilot`, with no generic edit or terminal tool and the sdd MCP servers as workspace MCP servers (server mode), or with generic tools decided by the Copilot guard hook keyed by `agent_type` and a conductor without generic tools (hooks fallback); in both modes declare one PreToolUse entry, the Copilot subagent guard hook, which the install writes into the package's `hooks.json` and into the workspace hook file beside the agents, and the tool classes file it reads; become a loadable plugin only when the install has written its manifest and hooks file; carry the plugin agents that Copilot CLI loads for the eval runner; prompt files named `<name>.prompt.md`; Serena read-only with per-user data; session-start brief and trace refresh hooks whose commands reach the CLI copy by an absolute path written at install; interviews and gates through `ask_user`
+- **Realizes:** C002-REQ-114, C002-REQ-301, C002-REQ-302, C002-REQ-303, C002-REQ-304, C002-REQ-306, C002-REQ-307, C002-REQ-308, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-317, C002-REQ-318, C002-REQ-321, C002-REQ-326, C002-REQ-327
 - **Interfaces:** C002-IF-005 §3; declares C002-IF-002 (workspace MCP configuration); hook commands of C002-IF-008 §2–§4; installed by `install copilot` of C002-IF-007
 - **Depends on:** C002-COMP-006, C002-COMP-005 (server profiles), C002-COMP-012 (through the CLI copy), C002-COMP-018 (install command)
-- **Owned data:** generated files only; `hooks.json` written into the package folder at install
+- **Owned data:** generated files only; `plugin.json` and `hooks.json` written into the package folder at install
 
 ### C002-COMP-005 — sdd MCP server
 - **Name:** `src/mcp/` bundled to `scripts/sdd-mcp.mjs` of `architect-sdd`; profiles `files` and `shell`
@@ -146,7 +150,7 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 ### C002-COMP-011 — Manual VS Code checklist
 - **Name:** `docs/checklists/vscode-copilot.md` and records under `docs/checklists/records/`
 - **Status:** new
-- **Responsibility:** verify by hand what no script can drive in VS Code (boundary, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot`, Revise at G1 and the revise prompt, hooks state, injection cases when Copilot CLI cannot load the package and always under the hooks fallback) and keep one record per run, with the hooks state under the hooks fallback
+- **Responsibility:** verify by hand what no script can drive in VS Code (boundary, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot` with the assumptions of C002-IF-005 §3, an edit delegated to the host built-in agent `general-purpose` and denied by the Copilot subagent guard hook, Revise at G1 and the revise prompt, hooks state, injection cases when Copilot CLI cannot load the package and always under the hooks fallback) and keep one record per run, with the hooks state under the hooks fallback
 - **Realizes:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-628; C002-NFR-601
 - **Interfaces:** C002-IF-009 §4
 - **Depends on:** C002-COMP-004
@@ -156,8 +160,8 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 - **Name:** `src/hooks/` (guard-path, guard-bash, session-start, post-write, new host adapter) and `hooks/hooks.json`
 - **Status:** modified
 - **Modifies:** C001-COMP-08
-- **Responsibility:** as in CHG-001, plus: the bash guard accepts a bare `sdd …` and `node --version`, denies `sdd install` in every form (C002-IF-008 §1.2), confines `sdd serena-config` and `sdd serena-launch` to `--user-data` or a data folder outside the repository on every host (C002-IF-008 §1.1), and allows `--cwd` on a writing `sdd` subcommand only with a folder at or under the repository root on every host (C002-IF-008 §1.2); the path guard core takes a memory-folder option (off for the generated targets); a Copilot host adapter turns Copilot hook input into guard decisions for the calls whose `agent_type` names an Architect agent (other readable calls pass; read-only tools allowed, unclassed tools denied), briefs and trace refreshes, failing closed with a deny decision and exit 2
-- **Realizes:** C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-308, C002-REQ-309, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-319, C002-REQ-320, C002-REQ-325; C002-NFR-201, C002-NFR-202, C002-NFR-204
+- **Responsibility:** as in CHG-001, plus: the bash guard accepts a bare `sdd …` and `node --version`, denies `sdd install` in every form (C002-IF-008 §1.2), confines `sdd serena-config` and `sdd serena-launch` to `--user-data` or a data folder outside the repository on every host (C002-IF-008 §1.1), and allows `--cwd` on a writing `sdd` subcommand only with a folder at or under the repository root on every host (C002-IF-008 §1.2); the path guard core takes a memory-folder option (off for the generated targets); a Copilot host adapter (`hook guard --host copilot --mode …`) decides Copilot hook input by caller and mode: the session agent's calls pass; in both modes, a non-Architect subagent's call in a repository with `.sdd/` is denied for a write or terminal tool (GUARD-HOOK-002), allowed for a read-only tool and denied for an unclassed tool, and passes outside such repositories (the Copilot subagent guard hook); an Architect agent's call passes under server enforcement and is decided by the guard cores under the hooks fallback (read-only tools allowed, unclassed tools denied); plus briefs and trace refreshes; every fault is a deny decision with exit 2
+- **Realizes:** C002-REQ-503, C002-REQ-517, C002-REQ-521, C002-REQ-308, C002-REQ-309, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-319, C002-REQ-320, C002-REQ-325, C002-REQ-327, C002-REQ-328, C002-REQ-329, C002-REQ-330; C002-NFR-201, C002-NFR-202, C002-NFR-204
 - **Interfaces:** C002-IF-008; C001-IF-07
 - **Depends on:** C001-COMP-03, C001-COMP-04
 - **Owned data:** none
@@ -222,8 +226,8 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 - **Name:** `src/cli.ts`, `src/cli/commands.ts` → bundled `scripts/sdd.mjs` (plugin) and `scripts/sdd.mjs` of `architect-sdd`
 - **Status:** modified
 - **Modifies:** C001-COMP-07
-- **Responsibility:** as in CHG-001, plus `--version`, `host-version`, `template show|list` (confined to the profile's template folder, listed in code-point order), `--user-data` (refused when not determinable, relative or inside the repository) and `--read-only` for the Serena commands, the `--host copilot` hook commands, and the Copilot install command `install copilot` (workspace agents, `.vscode/mcp.json` merge, the package's `hooks.json` with the absolute CLI path, the install record; refusal on adopter files); one source for the plugin bundle and the npm executable
-- **Realizes:** C002-REQ-114, C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-407, C002-REQ-501, C002-REQ-508, C002-REQ-509, C002-REQ-511, C002-REQ-513, C002-REQ-514, C002-REQ-515, C002-REQ-516, C002-REQ-520
+- **Responsibility:** as in CHG-001, plus `--version`, `host-version`, `template show|list` (confined to the profile's template folder, listed in code-point order), `--user-data` (refused when not determinable, relative or inside the repository) and `--read-only` for the Serena commands, the `--host copilot` hook commands, and the Copilot install command `install copilot` (the guard hook first, in the package's `hooks.json` and the workspace hook file `.github/hooks/architect-guard.json`, with the absolute CLI path; the package's `plugin.json`; then the workspace agents, the `.vscode/mcp.json` merge and the install record; refusal on adopter files); one source for the plugin bundle and the npm executable
+- **Realizes:** C002-REQ-114, C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-327, C002-REQ-407, C002-REQ-501, C002-REQ-508, C002-REQ-509, C002-REQ-511, C002-REQ-513, C002-REQ-514, C002-REQ-515, C002-REQ-516, C002-REQ-520
 - **Interfaces:** C001-IF-01, C002-IF-007
 - **Depends on:** C001-COMP-03, C001-COMP-04, C001-COMP-05, C001-COMP-06, C002-COMP-012
 - **Owned data:** none
@@ -237,7 +241,7 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 | F2 | OpenCode write and command through the native permission rules, with the optional quick-lint feedback | C002-REQ-206, C002-REQ-207, C002-REQ-215; C002-TS-207, C002-TS-209, C002-TS-222, C002-TS-223 |
 | F3 | Copilot write through the sdd MCP server (`sdd-files`, a workspace MCP server started after the session's first message, its tools deferred), including the server's start and end | C002-REQ-307, C002-REQ-401 … C002-REQ-404, C002-REQ-408 … C002-REQ-411; C002-TS-401, C002-TS-402, C002-TS-404, C002-TS-405, C002-TS-410, C002-TS-413, C002-TS-414, C002-TS-415 |
 | F4 | Copilot command through the sdd MCP server (`sdd-shell`) | C002-REQ-405, C002-REQ-406, C002-REQ-407; C002-TS-406, C002-TS-407, C002-TS-408, C002-TS-409 |
-| F5 | Copilot hooks fallback: the plugin-level Copilot guard hook reads `agent_type`, passes calls of other agents and the session agent, and decides an Architect subagent's edit, terminal or read call; a deny is a deny decision with exit 2, which Copilot CLI turns into a fail-closed hook error | C002-REQ-308, C002-REQ-309, C002-REQ-319, C002-REQ-320, C002-REQ-321; C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-333 |
+| F5 | Copilot PreToolUse hook, both modes: the same entry, loaded from the package's `hooks.json` and the workspace hook file, reads `agent_type`; passes the session agent's calls; for a non-Architect subagent (a host built-in agent such as `general-purpose` that the conductor started) denies write and terminal calls and unclassed tools in a repository with `.sdd/`, allows read-only tools, and passes every call elsewhere; passes an Architect agent's calls under server enforcement and decides its edit, terminal or read call under the hooks fallback; a deny is a deny decision with exit 2, which Copilot CLI turns into a fail-closed hook error | C002-REQ-308, C002-REQ-309, C002-REQ-319, C002-REQ-320, C002-REQ-321, C002-REQ-327, C002-REQ-328, C002-REQ-329, C002-REQ-330; C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-333, C002-TS-337, C002-TS-338 |
 | F6 | Copilot session-start brief and SubagentStop trace refresh, through hook commands with the absolute CLI path written at install | C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-326; C002-TS-320, C002-TS-322, C002-TS-323, C002-TS-324, C002-TS-325 |
 | F7 | Gate through the host question tool on a generated target (`ask_user` on Copilot) | C002-REQ-211, C002-REQ-212, C002-REQ-311, C002-REQ-312; C002-TS-217, C002-TS-218, C002-TS-316, C002-TS-318, C002-TS-319 |
 | F8 | Doctor on a generated target | C002-REQ-504, C002-REQ-505, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516 |
@@ -245,7 +249,7 @@ file or MCP server entry it did not write (C002-REQ-324) and is never run by an 
 | F10 | `npm run check` with the target structure checks | C002-REQ-601 … C002-REQ-605; C002-TS-601, C002-TS-602, C002-TS-603, C002-TS-604, C002-TS-605 |
 | F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd`, cases that require a host capability, and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
 | F12 | Serena command, or writing `sdd` subcommand with `--cwd`, decided by the bash guard core on every host, then run by the sdd CLI | C002-REQ-517, C002-REQ-521, C002-REQ-515, C002-REQ-516; C002-TS-525, C002-TS-527, C002-TS-528, C002-TS-536, C002-TS-537 |
-| F13 | Copilot install: P-03 runs `sdd install copilot` in a repository; the CLI checks the package and every target, then writes the workspace agents, merges `.vscode/mcp.json`, writes the package's `hooks.json` and the install record, or refuses and writes nothing; an Architect agent's request of the command is denied by the bash guard | C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-325, C002-REQ-326; scenarios for these requirements: test-designer, D-003 revision |
+| F13 | Copilot install: P-03 runs `sdd install copilot` in a repository; the CLI checks the package and every target, then writes the guard hook (the package's `hooks.json`, the workspace hook file), the package's `plugin.json`, the workspace agents, the `.vscode/mcp.json` merge and the install record, in that order, or refuses and writes nothing; an Architect agent's request of the command is denied by the bash guard | C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-325, C002-REQ-326, C002-REQ-327; C002-TS-341, C002-TS-342, C002-TS-343, C002-TS-344, C002-TS-345, C002-TS-346, C002-TS-347, C002-TS-348, C002-TS-349, C002-TS-350, C002-TS-351, C002-TS-352, C002-TS-353, C002-TS-354, C002-TS-356 |
 
 ## 4. Data view
 
@@ -260,7 +264,7 @@ Entities: `../40-domain/domain-model.md`. No new data enters `.sdd/` (C002-NG-03
 | Replay reports, injection summaries, release records | C002-COMP-008, C002-COMP-009, C002-COMP-010 | `docs/releases/<target>/<version>/` (git) | kept for every proposed release |
 | Spike records, checklist and checklist records | implementer in the plan's spike tasks (C002-IF-009 §1), C002-COMP-011 | `docs/spikes/`, `docs/checklists/` (git) | kept |
 | Serena data on the generated targets | Serena (external) | per-user data folder of `architect-sdd` (C002-IF-007) | user-managed, never in the repository |
-| Copilot workspace files: the ten agents, the Architect server entries of `.vscode/mcp.json`, the install record `.github/architect-install.json`; the package's `hooks.json` | written by C002-COMP-018 (`install copilot`) from C002-COMP-004 | the adopter's repository (outside `.sdd/`); the unpacked package folder | P-03's; replaced only by a later install that recognises them through the record (C002-REQ-324) |
+| Copilot workspace files: the ten agents, the workspace hook file `.github/hooks/architect-guard.json`, the Architect server entries of `.vscode/mcp.json`, the install record `.github/architect-install.json`; the package's `plugin.json` and `hooks.json` | written by C002-COMP-018 (`install copilot`) from C002-COMP-004 | the adopter's repository (outside `.sdd/`); the unpacked package folder | P-03's; replaced only by a later install that recognises them through the record (C002-REQ-324); the hook files hold the machine's package path, so the agents, the workspace hook file and the record are kept together in version control or not at all (C002-IF-005 §5) |
 
 Sensitive data: none expected; eval transcripts may contain model output and are kept out of the
 packages. Generated files are rebuildable at any commit (C002-NFR-301).
@@ -272,7 +276,7 @@ packages. Generated files are rebuildable at any commit (C002-NFR-301).
 | Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check; a corpus replay for a release runs with Developer Mode on or elevated, so that the `file-symlink` capability is present (C002-REQ-634, C002-IF-009 §2.1) | P-01 (`npm run …`) | per command |
 | Adopter machine, Claude Code | plugin as today; hooks call `node <plugin-root>/scripts/sdd.mjs` | Claude Code | per session; per hook call |
 | Adopter machine, OpenCode | `.opencode/` and `opencode.json` of the OpenCode package (project or global placement); `sdd` from `architect-sdd`; under server mode one `sdd-mcp --profile files` and one `--profile shell` process per session; `sdd serena-launch` for Serena | OpenCode | per session (C002-CON-04) |
-| Adopter machine, VS Code | the Copilot package's plugin part as a local plugin (`chat.pluginLocations`; VS Code loads it from its own copy, S-08 §3); in each repository, after `sdd install copilot` run by P-03, the ten agents in `.github/agents/` and the servers in `.vscode/mcp.json`; one `sdd-mcp --profile files` and one `--profile shell` process per Local chat session, started after its first message; hook commands `node "<package>/scripts/sdd.mjs" …` with the absolute path written at install | VS Code (local agent host); P-03 for the install | per chat session; per hook call; per install |
+| Adopter machine, VS Code | the Copilot package's plugin part as a local plugin (`chat.pluginLocations`; loadable once the install has written its `plugin.json`; VS Code loads it from its own copy, S-08 §3); in each repository, after `sdd install copilot` run by P-03, the ten agents in `.github/agents/`, the workspace hook file in `.github/hooks/` and the servers in `.vscode/mcp.json`; one `sdd-mcp --profile files` and one `--profile shell` process per Local chat session, started after its first message; hook commands `node "<package>/scripts/sdd.mjs" …` with the absolute path written at install, the PreToolUse command once per loaded hooks file | VS Code (local agent host); P-03 for the install | per chat session; per hook call; per install |
 | Maintainer machine, Copilot CLI eval runs | `copilot -p` per case, with a package copy installed into the case workspace and the sdd MCP servers given per session (C002-IF-010 §4) | the Copilot CLI eval runner | per eval session |
 | npm registry | `architect-sdd` | P-01 publishes by hand | per version |
 | Remote | Context7 and DeepWiki endpoints; Claude models through each host's provider | hosts | — |
@@ -283,12 +287,12 @@ packages. Generated files are rebuildable at any commit (C002-NFR-301).
 
 | Concern | Approach |
 |---|---|
-| Authorization and boundary | Per target, the enforcement mechanism of its mode (C002-CON-03): Claude Code hooks; OpenCode `permission` rules generated from the allowlist, or the sdd MCP server; on Copilot no generic tool and the sdd MCP server, or one plugin-level Copilot guard hook with a conductor still on the server (flagged exception). One decision point: the guard cores and the one allowlist (C002-CON-06), which also confines the Serena commands to a data folder outside the repository and denies `sdd install` on every host (C002-IF-008 §1.1, §1.2). Closed tool sets: Copilot `tools` lists are allowlists (every agent has one; the host adds only `tool_search_tool`), and OpenCode agents start from a catch-all that turns every tool off (C002-IF-001 §6.1). Identity: the server needs none (only Architect agents are granted it); the Copilot guard hook takes it from the hook input's `agent_type`, present on subagent calls only (C002-IF-008 §2) |
-| Fail closed | Server faults refuse and change nothing; guard-hook faults write a deny decision and exit 2, and both Copilot hosts deny a call whose hook errors (C002-CON-08; S-08 §2.2, §3); a generator error leaves no package (C002-INV-02); a missing `sdd-mcp`, or a session before its first message, leaves agents without write tools, never with generic ones; an install conflict writes nothing (ERR-CLI-021) |
+| Authorization and boundary | Per target, the enforcement mechanism of its mode (C002-CON-03): Claude Code hooks; OpenCode `permission` rules generated from the allowlist, or the sdd MCP server; on Copilot no generic tool and the sdd MCP server, or one plugin-level Copilot guard hook with a conductor still on the server (flagged exception). One decision point: the guard cores and the one allowlist (C002-CON-06), which also confines the Serena commands to a data folder outside the repository and denies `sdd install` on every host (C002-IF-008 §1.1, §1.2). Closed tool sets: Copilot `tools` lists are allowlists (every agent has one; the host adds only `tool_search_tool`), and OpenCode agents start from a catch-all that turns every tool off (C002-IF-001 §6.1). On Copilot the conductor's `agents` list does not bound the agents it can start (host built-in agents, S-08 §3), so the Copilot subagent guard hook denies, in both modes, the write and terminal calls of every non-Architect subagent in a repository with `.sdd/` (C002-REQ-327). Identity: the server needs none (only Architect agents are granted it); the Copilot hook takes it from the hook input's `agent_type`, present on subagent calls only (C002-IF-008 §2) |
+| Fail closed | Server faults refuse and change nothing; guard-hook faults write a deny decision and exit 2, and both Copilot hosts deny a call whose hook errors (C002-CON-08; S-08 §2.2, §3); the Copilot hook denies a tool it cannot class (C002-REQ-328) and is installed beside the agents it guards, before them, and the package is no plugin until then (C002-IF-005 §3); a hook command whose CLI copy is missing errors, so every call is denied; a generator error leaves no package (C002-INV-02); a missing `sdd-mcp`, or a session before its first message, leaves agents without write tools, never with generic ones; an install conflict writes nothing (ERR-CLI-021) |
 | Shell surface | The server never starts a shell (C002-CON-07); compound commands are refused by the core before any process starts |
 | Untrusted content | Unchanged rule (C001-NFR-205); injection evals per target (C002-NFR-203) |
-| Error handling | Stable codes with fixes: ERR-GEN, ERR-MCP, WARN-MCP, ERR-REL (001 … 013), ERR-BLD (001, 002), ERR-CLI-019 … 022, GUARD-HOOK-001, and the TGT-* and PLG-VAR-001 check codes (`../50-interfaces/errors.md`, C002-IF-005 §6) |
-| Configuration | Mapping tables (mode, tested versions, models, tools) are the only per-target configuration; P-03 sets host settings named by the install notes and runs the install command, whose only machine-specific output is the package path in `hooks.json` (generated files hold none, C002-CON-09) |
+| Error handling | Stable codes with fixes: ERR-GEN, ERR-MCP, WARN-MCP, ERR-REL (001 … 013), ERR-BLD (001, 002), ERR-CLI-019 … 022, GUARD-HOOK-001, GUARD-HOOK-002, and the TGT-* and PLG-VAR-001 check codes (`../50-interfaces/errors.md`, C002-IF-005 §6) |
+| Configuration | Mapping tables (mode, tested versions, models, tools) are the only per-target configuration; P-03 sets host settings named by the install notes and runs the install command, whose only machine-specific output is the package path in `hooks.json` and in the workspace hook file (generated files hold none, C002-CON-09) |
 | Observability | `SDD_DEBUG=1` decision logs of the server on standard error; generator diagnostics; replay reports and release records as evidence |
 | Determinism and versioning | Byte-identical generation (C002-CON-09); one version per packaging run (C002-CON-16); manifests carry `source_digest` and file hashes |
 | Portability | Windows first: no shell in the server, so `.cmd`/`.bat` shims are not run (ERR-MCP-006) and the doctor reports such a tool as `error` with a native-install fix (C002-IF-006 §2); the `host-version` probes may use the platform shell for fixed command lines only; PowerShell and Git Bash cases in the corpora (C002-REQ-607), replayed in their own dialect (C002-IF-009 §2.2) |
@@ -308,9 +312,10 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Templates through `sdd template show`, Serena data through `--user-data` | `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` have no counterpart in OpenCode and VS Code bodies (C002-R-001 A-09), and the Copilot package uses no root token anywhere (C002-REQ-326) | a templates copy per package with a host-specific path |
 | Copilot hook commands use a CLI copy in the package | C002-NFR-204; a hook that errors denies every tool call of the session (S-08 §3), so a PATH miss would block the chat | the npm `sdd` on PATH |
 | The Copilot package splits into a plugin part (prompt files, skills, hooks; agents for Copilot CLI) and install sources that `sdd install copilot` writes into the repository (agents byte-copied to `.github/agents/`, servers merged into `.vscode/mcp.json`) | C002-REQ-301, C002-REQ-307, C002-REQ-322, C002-REQ-323, C002-REQ-612; S-08 facts F-1, F-2 | an install step written as manual copy instructions (no conflict check, C002-REQ-324) |
-| Hook commands reach the CLI copy by an absolute path that the install command writes into the package's `hooks.json` from `install/hooks.template.json` (token `@CLI_COPY@`); a package path with `"`, `$`, `%` or a backtick is refused (ERR-CLI-022) | C002-REQ-316, C002-REQ-326; S-08 fact F-3; absolute-path hooks ran on both hosts (S-08 §3) | a command that reads `PLUGIN_ROOT` (`node -e` with quoted code, which each shell parses differently) |
+| Hook commands reach the CLI copy by an absolute path that the install command writes into the package's `hooks.json` and the workspace hook file from `install/hooks.template.json` (token `@CLI_COPY@`); a package path with `"`, `$`, `%` or a backtick is refused (ERR-CLI-022) | C002-REQ-316, C002-REQ-326; S-08 fact F-3; absolute-path hooks ran on both hosts (S-08 §3) | a command that reads `PLUGIN_ROOT` (`node -e` with quoted code, which each shell parses differently) |
 | The install command recognises its own files by an install record with the SHA-256 of each file and server entry it wrote, and treats an edited one as the adopter's; `.vscode/mcp.json` is parsed as strict JSON and refused, not rewritten, when it holds comments | C002-REQ-324 | a marker line in each agent file (covers no server entry); a JSONC rewrite (drops comments) |
-| The Copilot guard hook of the fallback is one plugin-level PreToolUse entry keyed by `agent_type` with an `--agents` list; a readable call without an Architect `agent_type` passes, and the conductor (the session agent, whose calls carry none) keeps the server profiles | C002-REQ-308, C002-REQ-320, C002-REQ-321; S-08 fact F-4 | agent-scoped hooks (never ran for a subagent's calls, S-08 §3.1); a workspace-level hook written by the install command |
+| One PreToolUse command in both modes, `hook guard --host copilot --mode <mode> --agents <ten>`, keyed by `agent_type`: the session agent's calls pass; a non-Architect subagent in a repository with `.sdd/` gets read-only tools only (GUARD-HOOK-002 for write and terminal tools, GUARD-HOOK-001 for unclassed tools); an Architect agent's calls pass under server enforcement and go to the guard cores under the fallback; the conductor (the session agent) keeps the server profiles in both modes | C002-REQ-302, C002-REQ-308, C002-REQ-320, C002-REQ-321, C002-REQ-327 … C002-REQ-330 (Q-safety-06, Q-safety-07); S-08 fact F-4 | agent-scoped hooks (never ran for a subagent's calls, S-08 §3.1); two hook entries, one per mode role (two processes per call, and two places to keep in step); a fixed list of host built-in agent names (rejected by P-01 in Q-safety-07: an adopter agent or a built-in agent of a later host version would pass) |
+| The PreToolUse entry is written twice by the install command: into the package's `hooks.json` (plugin level) and into the workspace hook file `.github/hooks/architect-guard.json` beside the workspace agents; the guard hook is written before the agents, and the package's `plugin.json` is written by the same install, so the package is no plugin before it (critic CR-38) | C002-CON-08, C002-DEC-005: the workspace agents are loaded by every VS Code that opens the repository, with or without the plugin part, and a plugin conductor loaded before the install could start host built-in agents with no hook (S-08 §3); a missing CLI copy makes the hook error, which denies (S-08 §3) | plugin level only (fail-open where the plugin part is not loaded); workspace level only (rests on an unverified assumption, C002-IF-005 §3; the plugin level is the location S-08 showed); specialists on the server profiles also under the fallback (no help where subagents are not confined, the case the fallback exists for) |
 | A Copilot deny is a deny decision on standard output plus exit 2 | C002-REQ-309, C002-CON-08; S-08 fact F-6 (Copilot CLI reports exit 2 as 1 and fails closed) | exit 0 with the deny decision only (an allow on a host that ignores the decision) |
 | The Copilot CLI eval runner installs a package copy into the case workspace and gives the session the servers of its workspace MCP configuration | C002-REQ-612, C002-REQ-307 | a plugin `.mcp.json` added to the runner's copy (the tested package would differ from the released one) |
 | Generator runs every target; the release check decides publication; a `deferred` S-08 record leads to the spec revision of scope §1.1, not to a table mode | C002-REQ-101, C002-REQ-619, Q-defer-01 | skip a refused target at generation |
@@ -564,25 +569,40 @@ sequenceDiagram
   VSC-->>C002_COMP_004: tool result
 ```
 
-### 8.6 F5 — Copilot hooks fallback (realizes C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-333)
+### 8.6 F5 — Copilot PreToolUse hook in both modes (realizes C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-333, C002-TS-337, C002-TS-338)
 
 ```mermaid
 sequenceDiagram
-  %% F5 Copilot hooks fallback, plugin-level guard hook keyed by agent_type. Realizes C002-TS-311 C002-TS-312 C002-TS-313 C002-TS-314 C002-TS-333
+  %% F5 Copilot PreToolUse hook keyed by agent_type, subagent guard in both modes, guard cores under the fallback. Realizes C002-TS-311 C002-TS-312 C002-TS-313 C002-TS-314 C002-TS-333 C002-TS-337 C002-TS-338
   participant C002_COMP_014 as Conductor, session agent, server profiles only
-  participant C002_COMP_004 as Copilot workspace subagent sdd-spec-writer, hooks fallback
+  participant C002_COMP_004 as Copilot subagent, Architect sdd-spec-writer or host built-in general-purpose
   participant VSC as VS Code local agent host or Copilot CLI
-  participant C002_COMP_012 as hook guard with host copilot, CLI copy at its installed absolute path
-  C002_COMP_014->>VSC: Agent call, start sdd-spec-writer
-  VSC->>C002_COMP_012: plugin-level PreToolUse JSON without agent_type
+  participant C002_COMP_012 as hook guard with host copilot and mode, CLI copy at its installed absolute path
+  Note over VSC,C002_COMP_012: the same entry from the package hooks.json and from .github/hooks/architect-guard.json, the most restrictive decision wins
+  C002_COMP_014->>VSC: Agent call, start a subagent
+  VSC->>C002_COMP_012: PreToolUse JSON without agent_type
   C002_COMP_012-->>VSC: allow, exit 0, no output
   C002_COMP_004->>VSC: Write on src/app.ts
-  VSC->>C002_COMP_012: plugin-level PreToolUse JSON, tool_name Write, agent_type sdd-spec-writer
-  alt input empty, not JSON or not an object
+  VSC->>C002_COMP_012: PreToolUse JSON, tool_name Write, agent_type of the subagent
+  alt mode or agents option missing, input empty, not JSON or not an object
     C002_COMP_012->>C002_COMP_012: GUARD-HOOK-001
-  else agent_type absent or not in the agents list
-    C002_COMP_012->>C002_COMP_012: allow without the classes file, C002-REQ-320
-  else Architect agent
+  else agent_type absent, the session agent
+    C002_COMP_012->>C002_COMP_012: allow without the classes file, C002-REQ-320 and C002-REQ-330
+  else Architect agent and mode sdd-mcp-server
+    C002_COMP_012->>C002_COMP_012: allow without the classes file, confined by its tool list, C002-REQ-330
+  else non-Architect subagent, both modes
+    alt no cwd, failed workspace lookup, no tool name or unreadable classes file
+      C002_COMP_012->>C002_COMP_012: GUARD-HOOK-001
+    else no .sdd at or above cwd
+      C002_COMP_012->>C002_COMP_012: allow, C002-REQ-329
+    else write or terminal tool
+      C002_COMP_012->>C002_COMP_012: GUARD-HOOK-002, C002-REQ-327
+    else read-only tool
+      C002_COMP_012->>C002_COMP_012: allow, C002-REQ-329
+    else unclassed tool
+      C002_COMP_012->>C002_COMP_012: GUARD-HOOK-001, C002-REQ-328
+    end
+  else Architect agent and mode copilot-hooks
     C002_COMP_012->>C002_COMP_012: read tool-classes.json, classify tool_name
     alt write tool
       C002_COMP_012->>C002_COMP_012: path guard core for every target path, memory folder off
@@ -819,11 +839,11 @@ sequenceDiagram
   end
 ```
 
-### 8.14 F13 — Copilot install command (realizes C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-325, C002-REQ-326; scenarios added by the test-designer)
+### 8.14 F13 — Copilot install command (realizes C002-TS-341, C002-TS-342, C002-TS-343, C002-TS-344, C002-TS-345, C002-TS-346, C002-TS-347, C002-TS-348, C002-TS-349, C002-TS-350, C002-TS-351, C002-TS-352, C002-TS-353, C002-TS-354, C002-TS-356)
 
 ```mermaid
 sequenceDiagram
-  %% F13 sdd install copilot. Realizes C002-REQ-322 C002-REQ-323 C002-REQ-324 C002-REQ-325 C002-REQ-326, scenarios to be added by the test-designer
+  %% F13 sdd install copilot. Realizes C002-TS-341 C002-TS-342 C002-TS-343 C002-TS-344 C002-TS-345 C002-TS-346 C002-TS-347 C002-TS-348 C002-TS-349 C002-TS-350 C002-TS-351 C002-TS-352 C002-TS-353 C002-TS-354 C002-TS-356
   actor P03 as P-03 in their own terminal
   participant C002_COMP_018 as sdd CLI, install copilot
   participant C002_COMP_004 as Copilot target package folder
@@ -831,18 +851,21 @@ sequenceDiagram
   participant C002_COMP_014 as Conductor or another Architect agent
   participant C002_COMP_012 as Bash guard core
   P03->>C002_COMP_018: sdd install copilot, package option naming the unpacked folder
-  C002_COMP_018->>C002_COMP_004: read architect-target.json, agents, install/mcp.json, install/hooks.template.json
+  C002_COMP_018->>C002_COMP_004: read architect-target.json, agents, install/plugin.json, install/mcp.json, install/hooks.template.json, hooks/tool-classes.json
   alt no package, wrong target, missing source file, or a path with a quote, dollar, percent or backtick
     C002_COMP_018-->>P03: ERR-CLI-022, exit 2, nothing written
   else package usable
-    C002_COMP_018->>REPO: read .github/architect-install.json, .github/agents, .vscode/mcp.json
-    C002_COMP_018->>C002_COMP_018: each target recognised by its SHA-256 in the record, or equal to the package's
-    alt an adopter agent file or server entry in the way, or mcp.json not strict JSON
+    C002_COMP_018->>REPO: read .github/architect-install.json, .github/agents, .github/hooks/architect-guard.json, .vscode/mcp.json
+    C002_COMP_018->>C002_COMP_018: each target recognised by its SHA-256 in the record, or equal to what this run writes
+    alt an adopter agent file, hook file or server entry in the way, or mcp.json not strict JSON
       C002_COMP_018-->>P03: one ERR-CLI-021 line per file or server, exit 2, nothing written
     else no conflict
+      Note over C002_COMP_018,REPO: guard first, so that an interrupted install never leaves agents without their guard hook
+      C002_COMP_018->>C002_COMP_004: write hooks.json, the token replaced by the absolute scripts/sdd.mjs path
+      C002_COMP_018->>REPO: write .github/hooks/architect-guard.json with the same PreToolUse entry
+      C002_COMP_018->>C002_COMP_004: copy install/plugin.json to plugin.json, the folder becomes a plugin
       C002_COMP_018->>REPO: write the ten agents to .github/agents, temporary file then rename
       C002_COMP_018->>REPO: merge the package servers into .vscode/mcp.json, other entries kept
-      C002_COMP_018->>C002_COMP_004: write hooks.json, the token replaced by the absolute scripts/sdd.mjs path
       C002_COMP_018->>REPO: write the install record last
       C002_COMP_018-->>P03: written, unchanged or merged lines, exit 0
     end
@@ -887,12 +910,12 @@ flowchart LR
 
 | Component | As-is (CHG-001) | To-be (CHG-002) | Evidence |
 |---|---|---|---|
-| C002-COMP-012 (C001-COMP-08) | Bash allowlist accepts only `node <path>/sdd.mjs`, with any subcommand, any Serena data folder and any `--cwd`; probes lack `node --version`; path guard allows the memory folder; Claude hook input only | Bare `sdd …` and `node --version` accepted (C002-REQ-503); the new subcommand `install` denied in every form (C002-REQ-325); `serena-config` and `serena-launch` only with `--user-data` or a data folder outside the repository, on every host (C002-REQ-517); `--cwd` of a writing subcommand only at or under the repository root, on every host (C002-REQ-521); `memoryFolder` option; Copilot host adapter (`hook guard` keyed by `agent_type`, `session-start`, `subagent-stop`); cores otherwise unchanged | current-state E-4, E-5, E-6, E-22; baseline E-13 |
+| C002-COMP-012 (C001-COMP-08) | Bash allowlist accepts only `node <path>/sdd.mjs`, with any subcommand, any Serena data folder and any `--cwd`; probes lack `node --version`; path guard allows the memory folder; Claude hook input only | Bare `sdd …` and `node --version` accepted (C002-REQ-503); the new subcommand `install` denied in every form (C002-REQ-325); `serena-config` and `serena-launch` only with `--user-data` or a data folder outside the repository, on every host (C002-REQ-517); `--cwd` of a writing subcommand only at or under the repository root, on every host (C002-REQ-521); `memoryFolder` option; Copilot host adapter (`hook guard` keyed by `agent_type` with `--mode`, the Copilot subagent guard hook in both modes, `session-start`, `subagent-stop`); cores otherwise unchanged | current-state E-4, E-5, E-6, E-22; baseline E-13 |
 | C002-COMP-013 (C001-COMP-12) | One bundle; Claude-only staging and INSTALL.md; six check steps over `plugins/architect/` | Two more bundles with license check; generator in package and check; npm staging with the template CLI-line translation and scan, and pack; target checks step; corpora extended (one case per writing sdd subcommand, and one per writing subcommand with an outside `--cwd`); `targets/` excluded from the Claude Code staging | current-state E-1, E-2, E-3, E-8 |
 | C002-COMP-014 (C001-COMP-01) | AskUserQuestion only; doctor rows fixed to Claude Code | Host question tool per wiring variant (`question`, `ask_user`); no-choice handling; doctor host rows (Claude Code text unchanged) | current-state E-24, E-25 |
 | C002-COMP-015 (C001-COMP-09) | Doctor with eight rows and Claude Code probe; commands name `claude --agent` | Doctor host rows and sdd CLI row through variants; guard line and `$ARGUMENTS` translated per target | current-state E-14, E-16, E-17, E-28 |
 | C002-COMP-016 (C001-COMP-10) | Four "Claude Code wiring" sections; toolchain record of eight rows | Same Claude Code text; variants kept in `targets/`; toolchain record host rows through a variant | current-state E-21, E-26, E-27 |
 | C002-COMP-017 (C001-COMP-11) | Claude Code plugin with `.mcp.json` in Claude spelling | Adds `targets/`; README sections for OpenCode and Copilot VS Code | current-state E-10, E-13 |
-| C002-COMP-018 (C001-COMP-07) | Bundled in the plugin only; templates beside the bundle or from `CLAUDE_PLUGIN_ROOT`; `sdd version` only | Same source also shipped as `architect-sdd` `sdd`; `--version` (bare), `host-version`, `template show` (confined to the profile folder) and `template list`, `--user-data` (ERR-CLI-020 when not determinable, relative or inside the repository), `--read-only`, `--host copilot`, `install copilot` (ERR-CLI-021, ERR-CLI-022) | current-state E-22; baseline E-14 |
+| C002-COMP-018 (C001-COMP-07) | Bundled in the plugin only; templates beside the bundle or from `CLAUDE_PLUGIN_ROOT`; `sdd version` only | Same source also shipped as `architect-sdd` `sdd`; `--version` (bare), `host-version`, `template show` (confined to the profile folder) and `template list`, `--user-data` (ERR-CLI-020 when not determinable, relative or inside the repository), `--read-only`, `--host copilot`, `install copilot` (guard hook in the package and the workspace hook file before the agents, package manifest; ERR-CLI-021, ERR-CLI-022) | current-state E-22; baseline E-14 |
 | New | — | C002-COMP-001 … C002-COMP-011 | — |
 | Unchanged | C001-COMP-02 … C001-COMP-06, C001-COMP-13 | used as they are; the sdd MCP server calls C001-COMP-03 and C001-COMP-04 in-process | baseline survey §4 note 1 |
