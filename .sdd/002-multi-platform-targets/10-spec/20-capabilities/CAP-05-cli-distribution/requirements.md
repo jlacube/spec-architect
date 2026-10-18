@@ -104,12 +104,12 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Priority:** Must
 - **Acceptance:** C002-AC-509.1
 
-### C002-REQ-510 — Disabled hooks reported under the hooks fallback
+### C002-REQ-510 — Disabled hooks reported in both Copilot enforcement modes
 - **Delta:** ADDED
 - **Pattern:** complex
-- **Statement:** WHERE the Copilot hooks fallback is used, WHEN the doctor command runs in VS Code, THE conductor SHALL show a Copilot hooks row with status `ok` only when it reads that hooks are enabled, and with status `error` when hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy or when it cannot read the hooks state.
-- **Rationale:** C002-DEC-005 (Consequences: the doctor reads the VS Code settings, not a hook, which could not report its own absence); a hooks state the doctor cannot read is shown as `error`, never as `ok`, so an unread state is not reported as protected (C002-IF-006 §2, `hooks unknown`)
-- **Stories:** C002-US-503, C002-US-303
+- **Statement:** WHERE the Copilot target uses sdd MCP server enforcement or the Copilot hooks fallback, WHEN the doctor command runs in VS Code, THE conductor SHALL show a Copilot hooks row with status `ok` only when it reads that hooks are enabled, and with status `error` when hooks are disabled by `chat.useHooks`, Workspace Trust or an organisation policy or when it cannot read the hooks state.
+- **Rationale:** C002-DEC-005 (Consequences: the doctor reads the VS Code settings, not a hook, which could not report its own absence); the row applies in both Copilot enforcement modes because the Copilot subagent guard hook is a PreToolUse hook in both (C002-REQ-327; C002-IF-008 §2), so with hooks disabled the write and terminal calls of non-Architect subagents are not denied under sdd MCP server enforcement either (C002-US-307); under the hooks fallback the Copilot guard hooks of the Architect agents are off as well (C002-REQ-308); a hooks state the doctor cannot read is shown as `error`, never as `ok`, so an unread state is not reported as protected (C002-IF-006 §2, `hooks unknown`)
+- **Stories:** C002-US-503, C002-US-303, C002-US-307
 - **Priority:** Must
 - **Acceptance:** C002-AC-510.1
 - **Open items:** how the doctor detects each disabling source is open for spike S-08 (ideation §11).

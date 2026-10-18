@@ -302,7 +302,8 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304). Copilot, in this order (
    updating the package. A refusal names each adopter file or server in the way (ERR-CLI-021). The
    install writes the guard hook beside the agents (`.github/hooks/architect-guard.json`), whose
    command names this machine's package path: keep `.github/agents/<agent name>.agent.md`, that file
-   and `.github/architect-install.json` together, all in version control or none. In a clone where
+   `.github/architect-install.json` and `.vscode/mcp.json` together (the package itself stays outside
+   the repository), all in version control or none (C002-REQ-322). In a clone where
    that path does not exist, VS Code denies every tool call in the repository until the install
    runs there (fail-closed, C002-CON-08).
 3. The settings `chat.plugins.enabled` (true), `chat.pluginLocations` (the package folder) and

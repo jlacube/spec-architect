@@ -24,7 +24,7 @@ rows below through wiring variants of `doctor.md` and of the code-discovery tool
 | 3 | host | Claude Code | OpenCode | VS Code with GitHub Copilot Chat |
 | 4–8 | ripwire, Serena, ast-grep, Context7, DeepWiki | yes | yes | yes |
 | 9 | sdd CLI | no | yes | yes |
-| 10 | Copilot hooks | no | no | Copilot hooks fallback only |
+| 10 | Copilot hooks | no | no | both Copilot enforcement modes: the subagent guard hook needs hooks enabled (C002-REQ-510, C002-REQ-327) |
 
 Columns: Tool, Status, Version, Fallback, Fix (C001-IF-10 §3). Status values: `ok`, `missing`,
 `unreachable`, `error`, `untested` (C002-REQ-504).

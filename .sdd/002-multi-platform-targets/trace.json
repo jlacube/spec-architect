@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T00:03:03.124Z",
+  "generated_at": "2026-10-18T00:14:26.673Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -1151,7 +1151,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 1,
       "title": "Copilot VS Code target",
-      "content_hash": "sha256:bbbe74dd1de680be9afefabc68ed85aaea388be36e8e5d8ded68852006ed005e",
+      "content_hash": "sha256:08028afa9adb7cb93b67b690be663e208e408d3a4fe1a7a7736771103d0de8a1",
       "status": "draft"
     },
     {
@@ -1169,7 +1169,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 1,
       "title": "CLI distribution, allowlist and doctor",
-      "content_hash": "sha256:d28eb6728a176f237f7634396b1277d0d98855c34424d48377e09aba8fe37fc5",
+      "content_hash": "sha256:469edcf47845b1c1f8dc760d9a725c4446879e711128eb92bf1b3be6ca7574ee",
       "status": "draft"
     },
     {
@@ -2724,7 +2724,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 218,
       "title": "Copilot install command writes the workspace agents",
-      "content_hash": "sha256:58ed8eb0a56aa6bf2926e9f2fe453cd311000e5ae6d3626fa4f088ea16ed21be"
+      "content_hash": "sha256:6a73c82fd71127534f89054fc48531ae81a51b0eaf21fa883d2cb0c147ac61a0"
     },
     {
       "id": "C002-REQ-323",
@@ -2732,7 +2732,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 227,
       "title": "Copilot install command writes the workspace MCP servers",
-      "content_hash": "sha256:29982e34473f91016f8156b60d12d48c828d499cb81ac1fb3c9b45a910cd7d92"
+      "content_hash": "sha256:0f7c21c42fb66e959098779301a61ab85a653dadf9f7e43739c12f798094bc5d"
     },
     {
       "id": "C002-REQ-324",
@@ -2764,7 +2764,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/requirements.md",
       "line": 263,
       "title": "Write and terminal calls of non-Architect subagents denied",
-      "content_hash": "sha256:26e2d3d53076527d5c899aaed298c8b0e6a576a1866f59ab7763dd2efe13af92"
+      "content_hash": "sha256:b1f9d5c7ab980b94b7c576386a6173d2dd816e37c1862dc53c37f8ec484d2714"
     },
     {
       "id": "C002-REQ-328",
@@ -2987,8 +2987,8 @@
       "type": "REQ",
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/requirements.md",
       "line": 107,
-      "title": "Disabled hooks reported under the hooks fallback",
-      "content_hash": "sha256:ea278e932bcd5ec27e959aba8143e249fbdddacacea95bf589dc0bc781657507"
+      "title": "Disabled hooks reported in both Copilot enforcement modes",
+      "content_hash": "sha256:0ee2ff6f2ef5fccace7b3f89c6df1c04e2d34e709accdca314d6084f4e240072"
     },
     {
       "id": "C002-REQ-511",
@@ -3188,7 +3188,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 136,
       "title": "Checklist content",
-      "content_hash": "sha256:37debc6b5272ce6a25fc38c8462bbca8628a80a4a9c914077d5b4adc376ff2af"
+      "content_hash": "sha256:343090c3a3a56e83deb206724f0c7affc3d2523d5f6321bf9c1203f3f9463660"
     },
     {
       "id": "C002-REQ-615",
@@ -7951,7 +7951,7 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/stories.md",
       "line": 75,
       "title": "Host built-in agents kept from edits and commands in Architect repositories",
-      "content_hash": "sha256:d5380eb50ccc2351e47c09c8a868c2b6b171c8ab746b5c0b23ad44e67ce7c180"
+      "content_hash": "sha256:c00d9ccf186cb0013b7850d7d6240283be9bd24455eae988299e97394c91d2d7"
     },
     {
       "id": "C002-US-401",
@@ -8007,7 +8007,7 @@
       "file": "10-spec/20-capabilities/CAP-05-cli-distribution/stories.md",
       "line": 32,
       "title": "Doctor on every target",
-      "content_hash": "sha256:6088832bca630309ed17c7962b560202fa850eeb10154dc8da157f8464f072ec"
+      "content_hash": "sha256:8babafb401f048e4927c1bd3052cb67e7045d95fa2f2c01a41749e01e56aa783"
     },
     {
       "id": "C002-US-504",
@@ -14930,12 +14930,22 @@
     },
     {
       "from": "C002-REQ-322",
+      "to": "C002-CON-08",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-322",
       "to": "C002-IF-005",
       "relation": "references"
     },
     {
       "from": "C002-REQ-322",
       "to": "C002-IF-007",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-322",
+      "to": "C002-IF-008",
       "relation": "references"
     },
     {
@@ -14966,6 +14976,11 @@
     {
       "from": "C002-REQ-323",
       "to": "C002-REQ-307",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-323",
+      "to": "C002-REQ-322",
       "relation": "references"
     },
     {
@@ -15056,6 +15071,11 @@
     {
       "from": "C002-REQ-327",
       "to": "C002-DEC-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-327",
+      "to": "C002-IF-005",
       "relation": "references"
     },
     {
@@ -15680,7 +15700,32 @@
     },
     {
       "from": "C002-REQ-510",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-510",
+      "to": "C002-REQ-308",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-510",
+      "to": "C002-REQ-327",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-510",
       "to": "C002-US-303",
+      "relation": "story-of"
+    },
+    {
+      "from": "C002-REQ-510",
+      "to": "C002-US-307",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-510",
+      "to": "C002-US-307",
       "relation": "story-of"
     },
     {
@@ -16405,7 +16450,22 @@
     },
     {
       "from": "C002-REQ-614",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-614",
+      "to": "C002-IF-008",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-614",
       "to": "C002-REQ-311",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-614",
+      "to": "C002-REQ-327",
       "relation": "references"
     },
     {
@@ -31940,6 +32000,11 @@
     },
     {
       "from": "C002-US-307",
+      "to": "C002-REQ-510",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C002-US-307",
       "to": "C002-SC-03",
       "relation": "references"
     },
@@ -32331,6 +32396,11 @@
     {
       "from": "C002-US-503",
       "to": "C002-REQ-510",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-REQ-510",
       "relation": "traces-to"
     },
     {
@@ -32351,6 +32421,11 @@
     {
       "from": "C002-US-503",
       "to": "C002-US-303",
+      "relation": "references"
+    },
+    {
+      "from": "C002-US-503",
+      "to": "C002-US-307",
       "relation": "references"
     },
     {

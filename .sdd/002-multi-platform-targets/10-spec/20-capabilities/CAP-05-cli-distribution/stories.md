@@ -35,7 +35,7 @@ id_block: { US: 501-599, REQ: 501-599, TS: 501-599 }
 - **So that** I see what is missing or untested before I start a change
 - **Value / outcome:** C002-GOAL-04; C002-SC-01, C002-SC-02
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-05
-- **Context & notes:** Today the doctor reports Claude Code and checks its minimum version (C001-REQ-1110, C001-REQ-1123); on the generated targets the host rows differ, so these are `MODIFIED` candidates. Tested versions are recorded by the doctor and re-checked before each release (ideation §9, platforms change fast): the tested version of a target is the host version recorded by the spike that validated it (Q-versions-01, spec round 1). On Copilot VS Code the doctor also reports disabled hooks when the Copilot hooks fallback is in use (C002-US-303). A missing optional tool still never fails the doctor (C001-REQ-1111).
+- **Context & notes:** Today the doctor reports Claude Code and checks its minimum version (C001-REQ-1110, C001-REQ-1123); on the generated targets the host rows differ, so these are `MODIFIED` candidates. Tested versions are recorded by the doctor and re-checked before each release (ideation §9, platforms change fast): the tested version of a target is the host version recorded by the spike that validated it (Q-versions-01, spec round 1). On Copilot VS Code the doctor also reports disabled hooks, in both Copilot enforcement modes (C002-REQ-510; C002-US-303, C002-US-307). A missing optional tool still never fails the doctor (C001-REQ-1111).
 - **Requirements:** C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510, C002-REQ-621
 - **Traces to:** ideation §9, §11; C002-DEC-005 (Consequences)
 
