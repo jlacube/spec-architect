@@ -244,29 +244,39 @@ Scenario Outline: C002-TS-515 — CLI version against the target package version
 
 ## C002-REQ-510
 
-#### C002-AC-510.1 — Copilot hooks row is `ok` only when hooks are read as enabled
+#### C002-AC-510.1 — In both Copilot enforcement modes the Copilot hooks row is `ok` only when hooks are read as enabled
 ```gherkin
-@manual-vscode @mode-hooks
+@manual-vscode
 Scenario Outline: C002-TS-516 — hooks state in the VS Code doctor
-  Given in VS Code <state>
+  Given the Copilot target package generated for <mode> in VS Code, where <state>
   When P-01 runs the doctor prompt
   Then the Copilot hooks row shows status "<status>"
   Examples:
-    | state                                              | status |
-    | hooks are enabled and the workspace is trusted     | ok     |
-    | "chat.useHooks" is false                           | error  |
-    | the workspace is in restricted mode (not trusted)  | error  |
+    | mode                         | state                                              | status |
+    | sdd MCP server enforcement   | hooks are enabled and the workspace is trusted     | ok     |
+    | sdd MCP server enforcement   | "chat.useHooks" is false                           | error  |
+    | sdd MCP server enforcement   | the workspace is in restricted mode (not trusted)  | error  |
+    | the Copilot hooks fallback   | hooks are enabled and the workspace is trusted     | ok     |
+    | the Copilot hooks fallback   | "chat.useHooks" is false                           | error  |
+    | the Copilot hooks fallback   | the workspace is in restricted mode (not trusted)  | error  |
 ```
 
 ```gherkin
-@eval @mode-hooks
-Scenario: C002-TS-526 — hooks state that cannot be read
-  Given the doctor of the Copilot target package, in a user profile without the VS Code settings that "sdd host-version vscode" reads, so that it prints "hooks unknown"
+@eval
+Scenario Outline: C002-TS-526 — hooks state that cannot be read
+  Given the doctor of the Copilot target package generated for <mode>, in a user profile without the VS Code settings that "sdd host-version vscode" reads, so that it prints "hooks unknown"
   When P-01 runs the doctor command
   Then the Copilot hooks row shows status "error"
   And it does not show status "ok"
   And the doctor run reports "completed with warnings"
+  Examples:
+    | mode                         |
+    | sdd MCP server enforcement   |
+    | the Copilot hooks fallback   |
 ```
+
+Each scenario's rows of the mode that spike S-08 did not select are recorded as not applicable in
+the test report (`@mode-*` rule of C002-CAP-03).
 
 ## C002-REQ-511
 
@@ -582,7 +592,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
-| C002-REQ-510 | TS-516 | TS-516 (two disabling sources) | TS-526 (state not readable) | TS-516, TS-526 | n/a | n/a | TS-526 (unread state never reported ok) |
+| C002-REQ-510 | TS-516 | TS-516 (two disabling sources; both Copilot enforcement modes), TS-526 (both modes) | TS-526 (state not readable) | TS-516, TS-526 | n/a | n/a | TS-526 (unread state never reported ok) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | n/a |
