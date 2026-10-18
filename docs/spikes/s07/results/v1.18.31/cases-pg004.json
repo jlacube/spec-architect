@@ -1,0 +1,1 @@
+[{"id":"PG-004","kind":"path","category":"inside","agent":"probe-perm","expect":"allow","corpus_path":"{repo}/.sdd/004-x/existing.md","tool":"edit","args":{"filePath":"C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md","oldString":"x","newString":"y"}}]

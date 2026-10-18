@@ -1,0 +1,6 @@
+{"t":"2026-10-18T14:37:39.980Z","kind":"rpc","method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{"roots":{}},"clientInfo":{"name":"opencode","version":"1.18.31"}}}
+{"t":"2026-10-18T14:37:39.997Z","kind":"rpc","method":"notifications/initialized"}
+{"t":"2026-10-18T14:37:39.998Z","kind":"rpc","method":"tools/list"}
+{"t":"2026-10-18T14:37:55.646Z","kind":"rpc","method":"tools/call","params":{"name":"adopter_tool","arguments":{"q":"x"},"_meta":{"progressToken":2}}}
+{"t":"2026-10-18T14:37:55.647Z","kind":"CALLED","tool":"adopter_tool","args":{"q":"x"}}
+{"t":"2026-10-18T14:37:56.395Z","kind":"rpc","method":"notifications/cancelled","params":{"requestId":2,"reason":"AbortError: The operation was aborted."}}

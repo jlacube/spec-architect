@@ -1,0 +1,74 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "RG-grep",
+      "agent": "probe-open",
+      "sessionID": "ses_eb0909b55ffeYaFCOarsVfHj0H",
+      "ms": 5524,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "grep",
+          "status": "completed",
+          "input": {
+            "pattern": "readme"
+          },
+          "output": "Found 1 matches\nC:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md:\n  Line 1: readme\n",
+          "metadata": {
+            "matches": 1,
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe RG-grep\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "plugin.added",
+    "catalog.updated",
+    "reference.updated",
+    "integration.updated",
+    "message.part.delta",
+    "session.idle"
+  ]
+}

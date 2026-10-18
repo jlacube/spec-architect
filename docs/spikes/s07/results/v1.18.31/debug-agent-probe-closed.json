@@ -1,0 +1,135 @@
+{
+  "name": "probe-closed",
+  "mode": "primary",
+  "permission": [
+    {
+      "permission": "*",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "doom_loop",
+      "action": "ask",
+      "pattern": "*"
+    },
+    {
+      "permission": "external_directory",
+      "pattern": "*",
+      "action": "ask"
+    },
+    {
+      "permission": "external_directory",
+      "pattern": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\xdg\\data\\opencode\\tool-output\\*",
+      "action": "allow"
+    },
+    {
+      "permission": "external_directory",
+      "pattern": "C:\\Users\\jerom\\AppData\\Local\\Temp\\opencode\\*",
+      "action": "allow"
+    },
+    {
+      "permission": "question",
+      "action": "deny",
+      "pattern": "*"
+    },
+    {
+      "permission": "plan_enter",
+      "action": "deny",
+      "pattern": "*"
+    },
+    {
+      "permission": "plan_exit",
+      "action": "deny",
+      "pattern": "*"
+    },
+    {
+      "permission": "read",
+      "pattern": "*",
+      "action": "allow"
+    },
+    {
+      "permission": "read",
+      "pattern": "*.env",
+      "action": "ask"
+    },
+    {
+      "permission": "read",
+      "pattern": "*.env.*",
+      "action": "ask"
+    },
+    {
+      "permission": "read",
+      "pattern": "*.env.example",
+      "action": "allow"
+    },
+    {
+      "permission": "*",
+      "action": "deny",
+      "pattern": "*"
+    },
+    {
+      "permission": "read",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "glob",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "grep",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "list",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "edit",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "bash",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "question",
+      "action": "allow",
+      "pattern": "*"
+    },
+    {
+      "permission": "external_directory",
+      "action": "deny",
+      "pattern": "*"
+    },
+    {
+      "permission": "external_directory",
+      "pattern": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\xdg\\data\\opencode\\tool-output\\*",
+      "action": "allow"
+    }
+  ],
+  "options": {},
+  "native": false,
+  "description": "closed tool set: catch-all off, derived tools on (C002-IF-001 §6.1)",
+  "steps": 30,
+  "tools": {
+    "invalid": false,
+    "question": true,
+    "bash": true,
+    "read": true,
+    "glob": true,
+    "grep": true,
+    "edit": true,
+    "write": true,
+    "task": false,
+    "webfetch": false,
+    "todowrite": false,
+    "skill": false,
+    "plugin_tool": false
+  }
+}

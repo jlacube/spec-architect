@@ -1,0 +1,186 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "FLAGS-open-read",
+      "agent": "probe-open",
+      "sessionID": "ses_eb091f73dffeECvImmRwjxjLzb",
+      "ms": 5583,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md</path>\n<type>file</type>\n<content>\n1: readme\n\n(End of file - total 1 lines)\n</content>",
+          "metadata": {
+            "preview": "readme",
+            "truncated": false,
+            "loaded": [],
+            "display": {
+              "type": "file",
+              "path": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md",
+              "text": "readme",
+              "lineStart": 1,
+              "lineEnd": 1,
+              "totalLines": 1,
+              "truncated": false
+            }
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe FLAGS-open-read\ndone."
+    },
+    {
+      "id": "FLAGS-open-list",
+      "agent": "probe-open",
+      "sessionID": "ses_eb091e3caffePWPNm1pBrYAT03",
+      "ms": 2105,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "invalid",
+          "status": "completed",
+          "input": {
+            "tool": "list",
+            "error": "Model tried to call unavailable tool 'list'. Available tools: adopter_adopter_tool, bash, edit, glob, grep, invalid, lsp, plugin_tool, read, skill, task, todowrite, webfetch, websearch, write."
+          },
+          "output": "The arguments provided to the tool are invalid: Model tried to call unavailable tool 'list'. Available tools: adopter_adopter_tool, bash, edit, glob, grep, invalid, lsp, plugin_tool, read, skill, task, todowrite, webfetch, websearch, write.",
+          "metadata": {
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe FLAGS-open-list\ndone."
+    },
+    {
+      "id": "FLAGS-open-lsp",
+      "agent": "probe-open",
+      "sessionID": "ses_eb091db8affeYuiErzFJUeCvZY",
+      "ms": 2070,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "lsp",
+          "status": "error",
+          "input": {},
+          "error": "The lsp tool was called with invalid arguments: SchemaError(Missing key\n  at [\"operation\"]).\nPlease rewrite the input so it satisfies the expected schema."
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe FLAGS-open-lsp\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "plugin.added",
+    "catalog.updated",
+    "reference.updated",
+    "integration.updated",
+    "message.part.delta",
+    "session.idle"
+  ]
+}

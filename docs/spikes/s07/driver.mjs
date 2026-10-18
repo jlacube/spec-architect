@@ -41,7 +41,8 @@ if (isolate) {
   if (!realModel) env.XDG_DATA_HOME = path.join(xdg, "data");
   // the real data folder's opencode.db was migrated by a newer OpenCode (1.18.31 on REF-WIN) and
   // 1.15.10 fails on it (NOT NULL constraint failed: session_message.seq); use a probe database
-  else env.OPENCODE_DB = path.join(xdg, "data", "opencode-s07.db");
+  // (stub runs too since the 1.18.31 re-test: S07_OPENCODE_DB, or one inside the probe data folder)
+  env.OPENCODE_DB = process.env.S07_OPENCODE_DB ?? path.join(xdg, "data", "opencode-s07.db");
 }
 if (!realModel) {
   // any non-loopback HTTP(S) request goes to a closed port
@@ -61,7 +62,10 @@ if (!realModel) {
   const stub = spawn(process.execPath, [path.join(here, "stub-model.mjs"), String(STUB_PORT), path.join(logs, "stub-model.jsonl")], { stdio: "ignore" });
   procs.push(stub);
 }
-const oc = spawn("opencode", ["serve", "--port", String(OC_PORT), "--hostname", "127.0.0.1", "--print-logs", "--log-level", "INFO"], { cwd: ws, env, shell: true });
+// S07_OPENCODE_BIN pins the binary under test (1.18.31 re-test: the npm install's opencode.exe);
+// default: whatever `opencode` the spawning shell's PATH resolves
+const ocBin = process.env.S07_OPENCODE_BIN ?? "opencode";
+const oc = spawn(ocBin.includes(" ") ? `"${ocBin}"` : ocBin, ["serve", "--port", String(OC_PORT), "--hostname", "127.0.0.1", "--print-logs", "--log-level", "INFO"], { cwd: ws, env, shell: true });
 procs.push(oc);
 const ocLog = fs.createWriteStream(path.join(logs, "opencode-serve.log"), { flags: "a" });
 oc.stdout.pipe(ocLog);

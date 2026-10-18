@@ -1,0 +1,1 @@
+[{"id":"FLAGS-open-read","agent":"probe-open","tool":"read","args":{"filePath":"README.md"}},{"id":"FLAGS-open-list","agent":"probe-open","tool":"list","args":{"path":"."}},{"id":"FLAGS-open-lsp","agent":"probe-open","tool":"lsp","args":{}}]

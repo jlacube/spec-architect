@@ -1,0 +1,74 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "RG-glob",
+      "agent": "probe-open",
+      "sessionID": "ses_eb08ff114ffemARGbpDS4BnNBC",
+      "ms": 7714,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "glob",
+          "status": "completed",
+          "input": {
+            "pattern": "**/*.ts"
+          },
+          "output": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\src\\new-file.ts\nC:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\src\\app.ts",
+          "metadata": {
+            "count": 2,
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe RG-glob\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "plugin.added",
+    "catalog.updated",
+    "reference.updated",
+    "integration.updated",
+    "message.part.delta",
+    "session.idle"
+  ]
+}

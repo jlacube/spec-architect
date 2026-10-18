@@ -1,0 +1,85 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "PG-004",
+      "agent": "probe-perm",
+      "sessionID": "ses_eb092cf57fferrrzUrPHMVA05n",
+      "ms": 5533,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "edit",
+          "status": "completed",
+          "input": {
+            "filePath": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md",
+            "oldString": "x",
+            "newString": "y"
+          },
+          "output": "Edit applied successfully.\nS07-POST-WRITE-FEEDBACK: lint says 0 findings",
+          "metadata": {
+            "diagnostics": {},
+            "diff": "Index: C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n===================================================================\n--- C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n+++ C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n@@ -1,1 +1,1 @@\n-x\n+y\n",
+            "filediff": {
+              "file": "C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md",
+              "patch": "Index: C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n===================================================================\n--- C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n+++ C:/Users/jerom/AppData/Local/Temp/claude/C--Sandbox-ClaudeCode-Architect/970cfa8f-5818-4ca9-b79d-8b06c412ce2b/scratchpad/s07v18/ws/.sdd/004-x/existing.md\n@@ -1,1 +1,1 @@\n-x\n+y\n",
+              "additions": 1,
+              "deletions": 1
+            },
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe PG-004\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "plugin.added",
+    "catalog.updated",
+    "reference.updated",
+    "integration.updated",
+    "file.edited",
+    "file.watcher.updated",
+    "message.part.delta",
+    "session.idle"
+  ]
+}

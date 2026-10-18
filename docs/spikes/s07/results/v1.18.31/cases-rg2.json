@@ -1,0 +1,1 @@
+[{"id":"RG-glob","agent":"probe-open","tool":"glob","args":{"pattern":"**/*.ts"}}]

@@ -1,0 +1,465 @@
+{
+  "realModel": null,
+  "results": [
+    {
+      "id": "SMOKE-open-read",
+      "agent": "probe-open",
+      "sessionID": "ses_eb08d9e99ffe76jhcsknF1HTcD",
+      "ms": 5963,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md</path>\n<type>file</type>\n<content>\n1: readme\n\n(End of file - total 1 lines)\n</content>",
+          "metadata": {
+            "preview": "readme",
+            "truncated": false,
+            "loaded": [],
+            "display": {
+              "type": "file",
+              "path": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md",
+              "text": "readme",
+              "lineStart": 1,
+              "lineEnd": 1,
+              "totalLines": 1,
+              "truncated": false
+            }
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe SMOKE-open-read\ndone."
+    },
+    {
+      "id": "CLOSED-read",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb08d89b9ffe9GS12CoFB4e7zf",
+      "ms": 2332,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "read",
+          "status": "completed",
+          "input": {
+            "filePath": "README.md"
+          },
+          "output": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md</path>\n<type>file</type>\n<content>\n1: readme\n\n(End of file - total 1 lines)\n</content>",
+          "metadata": {
+            "preview": "readme",
+            "truncated": false,
+            "loaded": [],
+            "display": {
+              "type": "file",
+              "path": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\README.md",
+              "text": "readme",
+              "lineStart": 1,
+              "lineEnd": 1,
+              "totalLines": 1,
+              "truncated": false
+            }
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe CLOSED-read\ndone."
+    },
+    {
+      "id": "CLOSED-mcp",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb08d8098ffeJ36XBNzc3iR8Yb",
+      "ms": 2232,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "adopter_adopter_tool",
+          "status": "error",
+          "input": {
+            "q": "x"
+          },
+          "error": "Model tried to call unavailable tool 'invalid'. Available tools: bash, edit, glob, grep, question, read, write."
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe CLOSED-mcp\ndone."
+    },
+    {
+      "id": "CLOSED-plugin",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb08d77ddffevxexo5L4nQif5D",
+      "ms": 2228,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "plugin_tool",
+          "status": "error",
+          "input": {
+            "q": "x"
+          },
+          "error": "Model tried to call unavailable tool 'invalid'. Available tools: bash, edit, glob, grep, question, read, write."
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe CLOSED-plugin\ndone."
+    },
+    {
+      "id": "CLOSED-webfetch",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb08d6f25ffeITfxND36LPhSNI",
+      "ms": 2191,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "webfetch",
+          "status": "error",
+          "input": {
+            "url": "http://127.0.0.1:4199/health",
+            "format": "text"
+          },
+          "error": "Model tried to call unavailable tool 'invalid'. Available tools: bash, edit, glob, grep, question, read, write."
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe CLOSED-webfetch\ndone."
+    },
+    {
+      "id": "CLOSED-write",
+      "agent": "probe-closed",
+      "sessionID": "ses_eb08d6692ffeuN68Gs68Y0IFlz",
+      "ms": 2332,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "write",
+          "status": "completed",
+          "input": {
+            "filePath": "closed-write.txt",
+            "content": "x\n"
+          },
+          "output": "Wrote file successfully.\nS07-POST-WRITE-FEEDBACK: lint says 0 findings",
+          "metadata": {
+            "diagnostics": {},
+            "filepath": "C:\\Users\\jerom\\AppData\\Local\\Temp\\claude\\C--Sandbox-ClaudeCode-Architect\\970cfa8f-5818-4ca9-b79d-8b06c412ce2b\\scratchpad\\s07v18\\ws\\closed-write.txt",
+            "exists": true,
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe CLOSED-write\ndone."
+    },
+    {
+      "id": "OPEN-mcp",
+      "agent": "probe-open",
+      "sessionID": "ses_eb08d5d75ffeBbrinS2jq51viu",
+      "ms": 2446,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "adopter_adopter_tool",
+          "status": "completed",
+          "input": {
+            "q": "x"
+          },
+          "output": "adopter tool ran",
+          "metadata": {
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe OPEN-mcp\ndone."
+    },
+    {
+      "id": "OPEN-plugin",
+      "agent": "probe-open",
+      "sessionID": "ses_eb08d53e2ffesff4lyD8QQgD6n",
+      "ms": 2197,
+      "promptError": null,
+      "tools": [
+        {
+          "tool": "plugin_tool",
+          "status": "completed",
+          "input": {
+            "q": "x"
+          },
+          "output": "plugin tool ran",
+          "metadata": {
+            "truncated": false
+          }
+        }
+      ],
+      "assistant": [
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls",
+          "modelID": "stub-model"
+        },
+        {
+          "cost": 0,
+          "tokens": {
+            "total": 15,
+            "input": 10,
+            "output": 5,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop",
+          "modelID": "stub-model"
+        }
+      ],
+      "text": "probe OPEN-plugin\ndone."
+    }
+  ],
+  "eventTypes": [
+    "server.connected",
+    "session.created",
+    "session.updated",
+    "message.updated",
+    "message.part.updated",
+    "session.status",
+    "session.diff",
+    "plugin.added",
+    "catalog.updated",
+    "reference.updated",
+    "integration.updated",
+    "message.part.delta",
+    "session.idle",
+    "server.heartbeat",
+    "file.edited",
+    "file.watcher.updated"
+  ]
+}
