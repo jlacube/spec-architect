@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-01
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-105.1, C002-AC-114.1, C002-AC-215.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-620, C002-TS-648, C002-TC-620, C002-TC-648]
 components: [C002-COMP-002, C002-COMP-003]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 96c6349, completed_at: 2026-10-18, notes: "S-07 signed off (P-01) and re-tested on OpenCode 1.18.31 (confirmed): enforcement_mode sdd-mcp-server provisional until T-043; agent_tools_closed true; stub-model driver feasible (Q-replay-01 fallback not needed); model ids openrouter/anthropic/claude-{opus,sonnet,haiku}-5.5; spend 0.0722 USD on OpenRouter (older key; P-01 to run opencode auth login with the new 50 USD key); facts in D-009 for one spec revision; TC-620/648 carried to T-047" }
 ---
 
 # C002-T-001 — Spike S-07: OpenCode at its tested version
