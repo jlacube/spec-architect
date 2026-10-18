@@ -114,3 +114,13 @@ P-01's statements in chat.
 - **Blocking:** no · **Material:** yes · **Candidates considered:** n/a (P-01 statement)
 - **Answer:** P-01 upgraded to the Claude Max plan ("upgrade to Max done") and asked for an eval auth switch: "add some small work to make the eval runs through the Claude Code subscription instead of the API (with a flag/config to switch)", then "first to add to D-003 fix round and then start building and validate". Built and validated as C002-T-060 (98e6353, 6de8656); Claude Code eval sessions run with `--auth subscription`; `--auth api-key` stays available.
 - **Extracted instructions:** none
+
+## Round 9 — 2026-10-18
+
+Question from the planner's billing revision.
+
+### Q-openrouter-01 — Should a 40 USD credit limit be set on a dedicated OpenRouter key for CHG-002, as a hard backstop to the ledger's stop rule?
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. Yes, a 40 USD limit on a dedicated CHG-002 key (Recommended) · 2. No key limit; ledger stop rule only
+- **Answer:** Yes, $40 key limit (Recommended) — P-01 creates a dedicated OpenRouter key for CHG-002 with a 40 USD credit limit and configures OpenCode with it (C002-T-001 step 1).
+- **Extracted instructions:** none

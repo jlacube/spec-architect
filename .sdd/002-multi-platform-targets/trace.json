@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-10-18T05:53:07.215Z",
+  "generated_at": "2026-10-18T05:57:03.043Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -3676,7 +3676,7 @@
       "file": "20-plan/50-tasks/T-001-spike-s07-opencode.md",
       "line": 1,
       "title": "Spike S-07: OpenCode at its tested version",
-      "content_hash": "sha256:a692bf4286840ab1df958db9bca926bba64dc84eaeac6976e6fe2ca74b17e937",
+      "content_hash": "sha256:068426174afc1425c89f04c42ce2872f8205b1d08411560d2e8d64213360b227",
       "status": "todo"
     },
     {

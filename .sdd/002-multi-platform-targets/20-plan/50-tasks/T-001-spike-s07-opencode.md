@@ -42,7 +42,7 @@ spike writes the spike record of C002-IF-009 §3, which decides the OpenCode enf
 
 ## Step outline (no production code)
 
-1. **P-01 step — OpenRouter.** P-01's OpenRouter account has credit, and OpenCode on REF-WIN is
+1. **P-01 step — OpenRouter.** P-01 creates a dedicated OpenRouter key for CHG-002 with a 40 USD credit limit (Q-openrouter-01, hard backstop to the ledger's stop rule); P-01's OpenRouter account has credit, and OpenCode on REF-WIN is
    configured to use it: the OpenRouter provider with P-01's key in OpenCode's own credential store,
    outside the repository and the probe package, and the Claude models of the C002-REQ-105 tiers
    selectable. P-01 confirms both in the task report. No paid OpenCode session of CHG-002 starts
