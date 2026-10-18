@@ -3,16 +3,21 @@
 // file. Each call is (1) validated against its input schema (ERR-MCP-001) before any guard or I/O call,
 // (2) decided by the path guard core for an Architect agent with the memory folder off (GUARD-PATH-001;
 // an exception is ERR-MCP-002), (3) for `replace_text` checked for exactly one occurrence of the span
-// (ERR-MCP-004, ERR-MCP-005), and (4) written atomically through a temporary file in the target folder
-// and a rename (ERR-MCP-003: the temporary file is removed and the file keeps its previous content).
-// The quick-lint findings of the written file (C002-REQ-408, C002-REQ-409) come with C002-T-018; until
-// then a write result carries `findings_unavailable` with WARN-MCP-001.
+// (ERR-MCP-004, ERR-MCP-005), (4) written atomically through a temporary file in the target folder
+// and a rename (ERR-MCP-003: the temporary file is removed and the file keeps its previous content),
+// and (5) quick-linted in process: the result carries the findings (C002-REQ-408), or
+// `findings_unavailable` with WARN-MCP-001 when the lint fails; the write stands (C002-REQ-409).
 import { existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
 import { dirname } from "node:path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { formatFinding } from "../../cli/output.ts";
 import { decidePath, RULE } from "../../hooks/guard-path.ts";
+import { MAX_FINDINGS } from "../../hooks/post-write.ts";
 import { writeFileAtomic } from "../../io/atomic.ts";
 import { normalisePath } from "../../io/paths.ts";
+import { lintWorkspace } from "../../lint/engine.ts";
+import { RULES } from "../../lint/rules/index.ts";
+import { TOOL } from "../../version.ts";
 import type { ToolContext, ToolHandler } from "../handlers.ts";
 import { errorResult } from "../results.ts";
 import type { ToolName } from "../schemas.ts";
@@ -32,14 +37,43 @@ function guardFault(): boolean {
   return /(?:^|,)mcp-guard-throw(?:,|$)/.test(process.env["SDD_TEST_FAULT"] ?? "");
 }
 
-/** Placeholder until C002-T-018 wires the in-process quick lint (C002-REQ-409 shape). */
-function lintFindings(): { findings_unavailable: { code: "WARN-MCP-001"; reason: string } } {
-  return { findings_unavailable: { code: "WARN-MCP-001", reason: "the quick-lint check is not available in this build" } };
+/** Test fault (C002-TS-413): `SDD_TEST_FAULT=mcp-lint-throw` makes the quick-lint check throw. */
+function lintFault(): boolean {
+  return /(?:^|,)mcp-lint-throw(?:,|$)/.test(process.env["SDD_TEST_FAULT"] ?? "");
 }
 
-function success(tool: WriteTool, path: string, bytes: number, extra: Record<string, unknown>): CallToolResult {
-  const lint = lintFindings();
-  const text = `wrote ${path} (${bytes} bytes)\nquick-lint findings unavailable: ${lint.findings_unavailable.reason}`;
+const RANK: Record<string, number> = { error: 0, warn: 1, info: 2 };
+
+type Lint ={ findings: { total: number; lines: string[] } } | { findings_unavailable: { code: "WARN-MCP-001"; reason: string } };
+
+/**
+ * Step 5 of §5.1: the quick lint of the written file in process, with the rules loaded once per process
+ * (C002-REQ-408). The findings follow C001-IF-07 §4: at most 15, errors before warnings before info, in
+ * the CLI human format, then a "… <n> more" line. Any fault leaves the write in place and gives
+ * WARN-MCP-001 (C002-REQ-409).
+ */
+function quickLint(tool: WriteTool, path: string, ctx: ToolContext): Lint {
+  try {
+    if (lintFault()) throw new Error("SDD_TEST_FAULT: quick-lint failure");
+    const findings = lintWorkspace(ctx.root, { file: path, cwd: ctx.root, rules: RULES, tool: TOOL, phase: null }).findings;
+    const sorted = [...findings].sort((a, b) => (RANK[a.severity] ?? 3) - (RANK[b.severity] ?? 3));
+    const lines = sorted.slice(0, MAX_FINDINGS).map(formatFinding);
+    if (sorted.length > MAX_FINDINGS) lines.push(`… ${sorted.length - MAX_FINDINGS} more: run sdd lint --quick --file ${path}`);
+    ctx.debug("quick-lint", { tool, path, findings: findings.length });
+    return { findings: { total: findings.length, lines } };
+  } catch (e) {
+    ctx.debug("quick-lint", { tool, path, code: "WARN-MCP-001", reason: reason(e) });
+    return { findings_unavailable: { code: "WARN-MCP-001", reason: `the quick-lint check failed: ${reason(e)}` } };
+  }
+}
+
+function success(tool: WriteTool, path: string, bytes: number, extra: Record<string, unknown>, ctx: ToolContext): CallToolResult {
+  const lint = quickLint(tool, path, ctx);
+  const block =
+    "findings" in lint
+      ? [`sdd quick lint of ${path}: ${lint.findings.total} finding(s)`, ...lint.findings.lines].join("\n")
+      : `quick-lint findings unavailable: ${lint.findings_unavailable.reason}`;
+  const text = `wrote ${path} (${bytes} bytes)\n${block}`;
   return { content: [{ type: "text", text }], structuredContent: { status: "written", tool, path, bytes, ...extra, ...lint } };
 }
 
@@ -122,7 +156,7 @@ export const writeFile: ToolHandler = guarded("write_file", async (args, ctx) =>
   const created = !existsSync(path);
   const failed = writeAtomic("write_file", path, bytes, ctx);
   if (failed) return failed;
-  return success("write_file", path, bytes.length, { created });
+  return success("write_file", path, bytes.length, { created }, ctx);
 });
 
 export const replaceText: ToolHandler = guarded("replace_text", async (args, ctx) => {
@@ -150,5 +184,5 @@ export const replaceText: ToolHandler = guarded("replace_text", async (args, ctx
   const after = Buffer.concat([before.subarray(0, at), Buffer.from(args["new_text"] as string, "utf8"), before.subarray(at + old.length)]);
   const failed = writeAtomic("replace_text", path, after, ctx);
   if (failed) return failed;
-  return success("replace_text", path, after.length, { occurrences: 1 });
+  return success("replace_text", path, after.length, { occurrences: 1 }, ctx);
 });
