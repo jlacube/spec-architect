@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-01
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-502.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-503, C002-TC-503]
 components: [C002-COMP-006]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 5ef4d58, completed_at: 2026-10-18, notes: "Account jlacube, 2FA on for publish, name unclaimed (npm view: E404); docs/releases/npm-prerequisites.md; publication only in T-052 by P-01" }
 ---
 
 # C002-T-003 — P-01: npm account and availability of the name architect-sdd
