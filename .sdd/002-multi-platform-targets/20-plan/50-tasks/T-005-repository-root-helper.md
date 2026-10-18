@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: []
 implements: []
 satisfies_ac: [C002-AC-516.1, C002-AC-517.1, C002-AC-521.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-525, C002-TS-527, C002-TS-536, C002-TC-525, C002-TC-527, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: bb5d309, completed_at: 2026-10-18, notes: "Helper in src/io/repo-root.ts with 7 tests; TC-525/527/536 carried to T-013/T-010/T-009; open points: a --cwd written as an 8.3 short name is denied (both readings required, fail-closed); the .sdd fallback counts only a folder (IF-008 §1.1)" }
 ---
 
 # C002-T-005 — Shared repository-root helper
