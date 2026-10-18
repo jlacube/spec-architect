@@ -13,7 +13,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node scripts/build.mjs && node scripts/test.mjs",
     "check": "node scripts/check.mjs",
-    "bench": "node scripts/build.mjs && node bench/run.mjs",
+    "replay": "node tests/replay/run.mjs",
+    "bench":"node scripts/build.mjs && node bench/run.mjs",
     "eval": "node evals/harness/run.mjs",
     "eval:report": "node evals/harness/report.mjs",
     "package": "node scripts/package.mjs"

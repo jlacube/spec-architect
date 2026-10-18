@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:architect:c002:release-record:1",
+  "title": "Release record of a generated target (C002-IF-009)",
+  "description": "Written by the release check (C002-COMP-010) to docs/releases/<target>/<version>/release.json for every decision, allowed or refused. $defs also define the corpus replay report and the injection eval summary the release check reads (verification-records.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target", "package_version", "decided_on", "outcome", "enforcement_mode", "exception", "tested_versions", "evidence", "refusals"],
+  "properties": {
+    "target": { "enum": ["opencode", "copilot"] },
+    "package_version": { "$ref": "#/$defs/version" },
+    "decided_on": { "type": "string", "format": "date" },
+    "outcome": { "enum": ["released", "refused"] },
+    "enforcement_mode": { "enum": ["native-permissions", "sdd-mcp-server", "copilot-hooks"] },
+    "exception": {
+      "description": "Set when the Copilot target is released under the Copilot hooks fallback (C002-REQ-622); null otherwise.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decision", "reason"],
+          "properties": {
+            "decision": { "const": "C002-DEC-005" },
+            "reason": { "const": "copilot-hooks fallback: the boundary is off whenever hooks are disabled" }
+          }
+        }
+      ]
+    },
+    "tested_versions": { "$ref": "#/$defs/hostVersions" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["replay", "injection", "spike", "regeneration"],
+      "properties": {
+        "replay": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "mechanism", "applicable", "not_applicable", "differing"],
+            "properties": {
+              "path": { "type": "string" },
+              "mechanism": { "$ref": "#/$defs/mechanism" },
+              "host_versions": { "$ref": "#/$defs/hostVersions" },
+              "applicable": { "description": "Cases replayed (C002-NFR-201, C002-NFR-202 count these only).", "type": "integer", "minimum": 0 },
+              "not_applicable": { "description": "IDs listed as not applicable in the report (C002-REQ-627); the release check compares them with verification-records.md §2.1 (ERR-REL-012).", "type": "array", "items": { "type": "string" } },
+              "differing": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "injection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "source", "host_versions", "cases", "acted_upon"],
+          "properties": {
+            "path": { "type": "string" },
+            "source": { "$ref": "#/$defs/injectionSource" },
+            "hooks_state": { "description": "From the checklist record when source is manual-checklist under the Copilot hooks fallback (C002-REQ-629).", "enum": ["enabled", "disabled", null] },
+            "host_versions": { "$ref": "#/$defs/hostVersions" },
+            "cases": { "type": "integer", "minimum": 0 },
+            "acted_upon": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "checklist": {
+          "description": "Copilot VS Code only (C002-REQ-618).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "host_versions", "failed_steps"],
+              "properties": {
+                "path": { "type": "string" },
+                "host_versions": { "$ref": "#/$defs/hostVersions" },
+                "hooks_state": { "description": "Required in the record under the Copilot hooks fallback (C002-REQ-615); null under sdd MCP server enforcement.", "enum": ["enabled", "disabled", null] },
+                "injection_cases_missing": { "description": "Copilot injection cases of the dev tier without a step in the record (ERR-REL-011).", "type": "array", "items": { "type": "string" } },
+                "failed_steps": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          ]
+        },
+        "spike": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "enforcement_mode"],
+          "properties": {
+            "path": { "type": "string", "pattern": "^docs/spikes/S-0[78]-[a-z0-9-]+\\.md$" },
+            "enforcement_mode": { "enum": ["native-permissions", "sdd-mcp-server", "copilot-hooks", "deferred"] }
+          }
+        },
+        "regeneration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["identical", "differences"],
+          "properties": {
+            "identical": { "type": "boolean" },
+            "differences": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "refusals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^ERR-REL-\\d{3}$" },
+          "message": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "released" } } },
+      "then": { "properties": { "refusals": { "maxItems": 0 } } },
+      "else": { "properties": { "refusals": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "target": { "const": "copilot" }, "outcome": { "const": "released" } } },
+      "then": {
+        "properties": { "evidence": { "required": ["checklist"], "properties": { "checklist": { "type": "object" } } } }
+      }
+    },
+    {
+      "if": { "properties": { "enforcement_mode": { "const": "copilot-hooks" }, "outcome": { "const": "released" } } },
+      "then": {
+        "properties": {
+          "exception": { "type": "object" },
+          "evidence": {
+            "properties": {
+              "injection": { "properties": { "source": { "const": "manual-checklist" }, "hooks_state": { "const": "enabled" } }, "required": ["hooks_state"] },
+              "checklist": { "type": "object", "properties": { "hooks_state": { "const": "enabled" }, "injection_cases_missing": { "maxItems": 0 } }, "required": ["hooks_state"] }
+            }
+          }
+        }
+      },
+      "else": { "properties": { "exception": { "type": "null" } } }
+    }
+  ],
+  "$defs": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "hostVersions": {
+      "type": "object",
+      "propertyNames": { "enum": ["opencode", "vscode", "copilot-chat", "copilot-cli"] },
+      "additionalProperties": { "$ref": "#/$defs/version" }
+    },
+    "mechanism": { "enum": ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"] },
+    "injectionSource": { "enum": ["opencode-runner", "copilot-cli-runner", "manual-checklist"] },
+    "replayReport": {
+      "title": "Corpus replay report (C002-REQ-606, C002-REQ-625 … C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633)",
+      "description": "Every case of both corpora appears exactly once, under cases or under not_applicable (verification-records.md §2).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mechanism", "target", "package_version", "corpora", "replay_host", "cases", "not_applicable", "applicable", "differing"],
+      "properties": {
+        "mechanism": { "$ref": "#/$defs/mechanism" },
+        "target": { "enum": ["opencode", "copilot"] },
+        "package_version": { "$ref": "#/$defs/version" },
+        "host_versions": { "$ref": "#/$defs/hostVersions" },
+        "replay_host": {
+          "description": "Platform of the replay host and the host capabilities it provides, recorded while the fixture is built (file-symlink when file symbolic links could be created). The release check recomputes per-platform expectations from it and refuses the report when a case of the cited corpora requires a capability missing here (C002-REQ-633, C002-REQ-634; verification-records.md §2.1, §5).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["platform", "capabilities"],
+          "properties": {
+            "platform": { "enum": ["win32", "posix"] },
+            "capabilities": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+          }
+        },
+        "corpora": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "shell"],
+          "properties": {
+            "path": { "$ref": "#/$defs/corpusRef" },
+            "shell": { "$ref": "#/$defs/corpusRef" }
+          }
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "corpus", "category", "fed_as", "expected", "expected_source", "actual"],
+            "properties": {
+              "id": { "type": "string" },
+              "corpus": { "enum": ["path", "shell"] },
+              "category": { "type": "string", "minLength": 1 },
+              "fed_as": {
+                "description": "The input the case was mapped to (verification-records.md §2.2).",
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["tool", "caller"],
+                "properties": {
+                  "tool": { "description": "Host tool or server tool name, for example write_file, bash, or the Copilot edit tool.", "type": "string", "minLength": 1 },
+                  "caller": { "description": "Generated agent that played the case, or adopter-agent.", "type": "string", "minLength": 1 },
+                  "dialect": { "enum": ["bash", "powershell"] },
+                  "malformed": { "description": "True when the case was fed as a malformed call: a raw-stdin case or a C002-REQ-630 case (verification-records.md §2.2).", "type": "boolean" }
+                }
+              },
+              "expected": { "enum": ["allow", "deny"] },
+              "expected_source": {
+                "description": "The rule of verification-records.md §2.1 that gave the expected decision.",
+                "enum": ["corpus", "C002-REQ-625", "C002-REQ-630", "C002-REQ-632"]
+              },
+              "actual": { "enum": ["allow", "deny", "error"] },
+              "detail": { "description": "Free text; for an error, its cause, for example the host capability the replay host lacks (verification-records.md §2.1).", "type": "string" }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-625" } }, "required": ["expected_source"] },
+                "then": { "properties": { "expected": { "const": "deny" } } }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-630" } }, "required": ["expected_source"] },
+                "then": {
+                  "properties": {
+                    "expected": { "const": "deny" },
+                    "fed_as": { "required": ["malformed"], "properties": { "malformed": { "const": true } } }
+                  }
+                }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-632" } }, "required": ["expected_source"] },
+                "then": {
+                  "properties": {
+                    "expected": { "const": "allow" },
+                    "category": { "const": "identity" },
+                    "fed_as": { "properties": { "caller": { "const": "adopter-agent" } } }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "not_applicable": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "corpus", "category", "rule"],
+            "properties": {
+              "id": { "type": "string" },
+              "corpus": { "enum": ["path", "shell"] },
+              "category": { "type": "string", "minLength": 1 },
+              "rule": { "const": "C002-REQ-626" }
+            }
+          }
+        },
+        "applicable": { "type": "integer", "minimum": 0 },
+        "differing": { "type": "integer", "minimum": 0 }
+      },
+      "if": { "properties": { "mechanism": { "const": "opencode-permissions" } }, "required": ["mechanism"] },
+      "then": { "properties": { "not_applicable": { "maxItems": 0 } } },
+      "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "const": "C002-REQ-632" } } } } } } }
+    },
+    "corpusRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "cases", "sha256"],
+      "properties": {
+        "file": { "type": "string" },
+        "cases": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "injectionSummary": {
+      "title": "Injection eval summary (C002-NFR-203)",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "tier", "source", "host_versions", "cases"],
+      "properties": {
+        "target": { "enum": ["opencode", "copilot"] },
+        "tier": { "const": "dev" },
+        "source": { "$ref": "#/$defs/injectionSource" },
+        "checklist_record": { "description": "Path of the checklist record the summary was written from (source manual-checklist).", "type": "string" },
+        "hooks_state": { "description": "Hooks state of that checklist record (C002-REQ-629).", "enum": ["enabled", "disabled", null] },
+        "host_versions": { "$ref": "#/$defs/hostVersions" },
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "acted_upon"],
+            "properties": {
+              "id": { "type": "string" },
+              "acted_upon": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

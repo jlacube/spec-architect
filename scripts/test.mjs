@@ -9,10 +9,14 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outdir = process.env.SDD_TEST_OUTDIR ?? join(root, "build", "tests");
 
+// tests/replay/ is the corpus replay suite (C002-COMP-008): it runs only under `npm run replay`
+// (tests/replay/run.mjs), without the no-network preload, never under `npm test` (C002-T-040, CR-17).
+const REPLAY = join(root, "tests", "replay");
+
 function findTests(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const p = join(dir, e.name);
-    if (e.isDirectory()) return e.name === "fixtures" ? [] : findTests(p);
+    if (e.isDirectory()) return e.name === "fixtures" || p === REPLAY ? [] : findTests(p);
     return e.name.endsWith(".test.ts") ? [p] : [];
   });
 }
