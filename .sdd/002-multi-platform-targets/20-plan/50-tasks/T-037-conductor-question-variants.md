@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-05
-status: todo
+status: done
 depends_on: [C002-T-028, C002-T-060]
 implements: [C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-214, C002-REQ-311, C002-REQ-312]
 satisfies_ac: [C002-AC-211.1, C002-AC-212.1, C002-AC-213.1, C002-AC-214.1, C002-AC-311.1, C002-AC-312.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-215, C002-TS-216, C002-TS-217, C002-TS-218, C002-TS-219, C
 components: [C002-COMP-014, C002-COMP-016, C002-COMP-002]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: fc155ac, completed_at: 2026-10-19, notes: "Question variants + conductor description fix; Claude Code evals TS-215-claude-code-4, TS-217, TS-219 pass (subscription); OpenCode rows of TC-215/217/219 + TC-221/316 to T-056, TC-216/218/220/317/318/319 to T-050; fxGate spec-in-review/ideation-approved/ready-to-archive (TS-132 can use it); TS-316 scripted answers {reject:true}/[] must be mapped by the T-044 runner" }
 ---
 
 # C002-T-037 — Conductor: interview and gate variants for the host question tools
