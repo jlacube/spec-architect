@@ -38,6 +38,20 @@ export async function serverBundle(): Promise<{ file: string; noListen: string }
     banner: { js: `import { createRequire as __sddCreateRequire } from "node:module";\nconst require = __sddCreateRequire(import.meta.url);` },
     logLevel: "warning",
   });
+  // The package CLI beside the server, as in the shipped package (`<package>/scripts/sdd.mjs`,
+  // C002-REQ-407): the command tool runs `sdd …` with it.
+  await build({
+    entryPoints: [join(ROOT, "src", "cli.ts")],
+    outfile: join(dir, "sdd.mjs"),
+    bundle: true,
+    platform: "node",
+    format: "esm",
+    target: "node20",
+    charset: "utf8",
+    define: { __SDD_VERSION__: JSON.stringify(version) },
+    banner: { js: `import { createRequire as __sddCreateRequire } from "node:module";\nconst require = __sddCreateRequire(import.meta.url);` },
+    logLevel: "warning",
+  });
   const noListen = join(dir, "no-listen.mjs");
   writeFileSync(noListen, NO_LISTEN);
   bundled = { file, noListen, dir };
@@ -47,8 +61,8 @@ export async function serverBundle(): Promise<{ file: string; noListen: string }
 
 export const VERSION = (JSON.parse(readFileSync(join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8")) as { version: string }).version;
 
-function nodeArgs(b: { file: string; noListen: string }, args: string[]): string[] {
-  return [`--import=${NO_NETWORK}`, `--import=${pathToFileURL(b.noListen).href}`, b.file, ...args];
+function nodeArgs(b: { file: string; noListen: string }, args: string[], preload: string[] = []): string[] {
+  return [`--import=${NO_NETWORK}`, `--import=${pathToFileURL(b.noListen).href}`, ...preload.map((p) => `--import=${pathToFileURL(p).href}`), b.file, ...args];
 }
 
 function childEnv(env: Record<string, string | undefined>): Record<string, string | undefined> {
@@ -103,9 +117,10 @@ export class McpSession {
     this.exited = new Promise((resolve) => child.on("exit", (code) => resolve(code)));
   }
 
-  static async start(args: string[], opts: { cwd: string; env?: Record<string, string | undefined> }): Promise<McpSession> {
+  /** `preload`: extra modules loaded with `--import` before the server (absolute file paths). */
+  static async start(args: string[], opts: { cwd: string; env?: Record<string, string | undefined>; preload?: string[] }): Promise<McpSession> {
     const b = await serverBundle();
-    return new McpSession(spawn(process.execPath, nodeArgs(b, args), { cwd: opts.cwd, env: childEnv(opts.env ?? {}), stdio: ["pipe", "pipe", "pipe"] }));
+    return new McpSession(spawn(process.execPath, nodeArgs(b, args, opts.preload), { cwd: opts.cwd, env: childEnv(opts.env ?? {}), stdio: ["pipe", "pipe", "pipe"] }));
   }
 
   /** Writes one raw line (a newline is added). */

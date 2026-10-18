@@ -29,7 +29,17 @@ const ALLOWED =
   "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
-type Dialect = "bash" | "powershell";
+export type Dialect = "bash" | "powershell";
+
+/** The dialect `decideBash` applies to a tool call: PowerShell syntax for `PowerShell`, Bash otherwise. */
+export function dialectOf(toolName: string): Dialect {
+  return toolName === "PowerShell" ? "powershell" : "bash";
+}
+
+/** The hook tool name whose dialect is `dialect` (the inverse of `dialectOf`, C002-IF-002 §5.2 step 2). */
+export function toolOfDialect(dialect: Dialect): "Bash" | "PowerShell" {
+  return dialect === "powershell" ? "PowerShell" : "Bash";
+}
 
 /** Words of each pipe segment, or the reason the command is compound/unsafe. */
 export function tokenise(cmd: string, dialect: Dialect): { segments: { words: string[]; raw: string[] }[] } | { error: string } {
@@ -357,7 +367,7 @@ export function decideBash(input: HookInput | null): BashDecision {
   if (typeof cmd !== "string" || cmd.trim() === "") return deny(RULE_ALLOWLIST, tool, "", "the tool input has no command");
   const cwd = typeof input.cwd === "string" && input.cwd !== "" ? input.cwd : null;
   if (cwd === null) return deny(RULE_ALLOWLIST, tool, cmd, "the hook input has no cwd");
-  const dialect: Dialect = tool === "PowerShell" ? "powershell" : "bash";
+  const dialect = dialectOf(tool);
   const t = tokenise(cmd.trim(), dialect);
   if ("error" in t) return deny(RULE_COMPOUND, tool, cmd, t.error);
   const [first, ...rest] = t.segments;

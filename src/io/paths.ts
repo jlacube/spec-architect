@@ -170,6 +170,20 @@ export function isCommand(word: string | undefined, name: string): boolean {
   return word !== undefined && (word === name || word.toLowerCase() === `${name}.exe`);
 }
 
+/**
+ * The file names a PATH folder may hold for the executable `name` (C002-IF-002 §5.2 step 3): `native`
+ * files a process can start without a shell (on Windows `.exe` and `.com`; elsewhere the name itself,
+ * which must also be executable), and `shims`, Windows `.cmd` and `.bat` files that need `cmd.exe`.
+ */
+export function executableNames(name: string, platform: Platform = CURRENT): { native: string[]; shims: string[]; checkMode: boolean } {
+  if (platform !== "win32") return { native: [name], shims: [], checkMode: true };
+  const ext = win32.extname(name).toLowerCase();
+  if (ext === ".exe" || ext === ".com") return { native: [name], shims: [], checkMode: false };
+  if (ext === ".cmd" || ext === ".bat") return { native: [], shims: [name], checkMode: false };
+  if (ext !== "") return { native: [], shims: [], checkMode: false };
+  return { native: [`${name}.exe`, `${name}.com`], shims: [`${name}.cmd`, `${name}.bat`], checkMode: false };
+}
+
 export interface InsideOptions extends PathOptions {
   /** Resolve both paths through the file system first (current platform only). */
   real?: boolean;
