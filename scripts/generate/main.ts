@@ -11,14 +11,18 @@ import { diagnostic, formatDiagnostic, sortDiagnostics, type Diagnostic } from "
 import { TARGET_MODES, type Emitter, type TargetPackage } from "./model.ts";
 import { readSource } from "./reader.ts";
 import { loadTable, TableError, type MappingTable, type Mode, type Target } from "./tables.ts";
+import { mergeTierDiagnostics, translateAgents } from "./translate/frontmatter.ts";
 import { discard, fsOps, publish, targetDir, type WriteOps } from "./writer.ts";
 
 const USAGE =
   "usage: node scripts/generate.mjs [--target opencode|copilot]… [--source <plugin-dir>] [--out <dir>] [--mode <target>=<mode>]… [--json] [--quiet]";
 const SCHEMA_FILE = "mapping-table.schema.json";
 
-/** Until the emitters of C002-T-029 (OpenCode) and C002-T-031 (Copilot) exist, a package holds its manifest only. */
-const noFiles: Emitter = () => ({ files: new Map(), diagnostics: [] });
+/**
+ * Until the emitters of C002-T-029 (OpenCode) and C002-T-031 (Copilot) exist, a package holds its manifest
+ * only; the frontmatter translation (C002-IF-001 §3 step 4) already runs, so its diagnostics stop the run.
+ */
+const noFiles: Emitter = (input) => ({ files: new Map(), diagnostics: translateAgents(input).diagnostics });
 export const EMITTERS: Record<Target, Emitter> = { opencode: noFiles, copilot: noFiles };
 
 export interface MainOptions {
@@ -194,7 +198,7 @@ export function main(argv: readonly string[], options: MainOptions = {}): number
     // C002-INV-02: a run with any diagnostic keeps no selected package, an earlier one included.
     if (diagnostics.length > 0) {
       discard(out, selected, ops);
-      report(diagnostics, null, modes);
+      report(mergeTierDiagnostics(diagnostics), null, modes);
       return EXIT.diagnostics;
     }
 

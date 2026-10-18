@@ -51,7 +51,7 @@
     "TaskList": ["todowrite"],
     "Skill": ["skill"]
   },
-  "agent_start": { "style": "permission-task" },
+  "agent_start": { "style": "permission-task", "tools": ["task"] },
   "mcp_tool_names": {
     "source_pattern": "mcp__plugin_architect_{server}__{tool}",
     "target_pattern": "{server}_{tool}",

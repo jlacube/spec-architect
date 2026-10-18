@@ -107,7 +107,10 @@
     ]
   },
   "agent_start": {
-    "style": "permission-task"
+    "style": "permission-task",
+    "tools": [
+      "task"
+    ]
   },
   "mcp_tool_names": {
     "source_pattern": "mcp__plugin_architect_{server}__{tool}",
