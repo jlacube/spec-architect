@@ -111,9 +111,13 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     out.line(commandHelp(spec));
     return 0;
   }
+  // Arguments after `--` go to commands that pass them through (serena-launch); elsewhere they are extra.
+  const dashdash = rest.indexOf("--");
+  const passed = spec.rest && dashdash >= 0 ? rest.slice(dashdash + 1) : [];
+  const own = parsed.positionals.slice(0, parsed.positionals.length - passed.length);
   const args: Record<string, string | undefined> = {};
   spec.positionals.forEach((p, i) => {
-    const v = parsed.positionals[i];
+    const v = own[i];
     if (v === undefined) {
       if (!p.optional) throw usage(spec.name, `missing argument <${p.name}>`);
       return;
@@ -121,10 +125,6 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     checkPositional(spec.name, p.name, v);
     args[p.name] = v;
   });
-  // Arguments after `--` go to commands that pass them through (serena-launch); elsewhere they are extra.
-  const dashdash = rest.indexOf("--");
-  const passed = spec.rest && dashdash >= 0 ? rest.slice(dashdash + 1) : [];
-  const own = parsed.positionals.slice(0, parsed.positionals.length - passed.length);
   const extra = own[spec.positionals.length];
   if (extra !== undefined) throw usage(spec.name, `unexpected argument ${extra}`);
   for (const [k, o] of Object.entries(spec.options)) if (o.required && values[k] === undefined) throw usage(spec.name, `missing option --${k}`);
@@ -139,5 +139,5 @@ function execute(spec: CommandSpec, rest: string[], io: CliIo, out: Output): num
     out.trace("workspace", { root });
   }
   if (!spec.run) throw usage(spec.name, `sdd ${spec.name} is not implemented yet`);
-  return spec.run({ name: spec.name, out, cwd, root, args, values, rules: io.rules ?? RULES, stdin: io.stdin ?? (() => ""), rest: passed });
+  return spec.run({ name: spec.name, out, cwd, root, args, env: io.env, values, rules: io.rules ?? RULES, stdin: io.stdin ?? (() => ""), rest: passed });
 }

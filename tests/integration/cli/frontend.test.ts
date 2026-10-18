@@ -22,7 +22,6 @@ const SDD_CLI_MD = [specFile("001", `${IF}sdd-cli.md`), specFile("002", `${IF}sd
 // CHG-002 rows not implemented yet, with the task that implements each. That task adds the code or
 // the `COMMANDS` row (with `sampleArgs` that neither hang nor read a real stdin) and removes it here.
 const PENDING_CODES: Record<string, string> = {
-  "ERR-CLI-020": "C002-T-013",
   "ERR-CLI-021": "C002-T-058",
   "ERR-CLI-022": "C002-T-058",
 };

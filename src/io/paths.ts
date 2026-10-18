@@ -34,6 +34,32 @@ export function userConfigDir(env: Readonly<Record<string, string | undefined>>,
   return env["XDG_CONFIG_HOME"] ?? posix.join(home, ".config");
 }
 
+/** The operating system whose per-user folder rules apply (C002-IF-007 `--user-data`). */
+export type UserOs = "windows" | "macos" | "linux";
+
+export const USER_OS: UserOs = IS_WINDOWS ? "windows" : process.platform === "darwin" ? "macos" : "linux";
+
+/** The per-user data folder of an application, or the variable that prevents it (unset or empty; relative: `value`). */
+export type UserDataFolder = { folder: string } | { variable: string; value?: string };
+
+/**
+ * The per-user data folder of `app` (C002-IF-007): `%LOCALAPPDATA%\<app>` (Windows),
+ * `$HOME/Library/Application Support/<app>` (macOS), `$XDG_DATA_HOME/<app>`, or
+ * `$HOME/.local/share/<app>` when XDG_DATA_HOME is unset or empty (Linux). No other fallback: an unset
+ * or empty variable, or a relative value, is returned as such. The folder is normalised (`/`).
+ */
+export function userDataFolder(app: string, env: Readonly<Record<string, string | undefined>>, os: UserOs = USER_OS): UserDataFolder {
+  const xdg = env["XDG_DATA_HOME"];
+  const [variable, tail] =
+    os === "windows" ? ["LOCALAPPDATA", [app]] : os === "macos" ? ["HOME", ["Library", "Application Support", app]] : xdg ? ["XDG_DATA_HOME", [app]] : ["HOME", [".local", "share", app]];
+  const value = env[variable];
+  if (value === undefined || value === "") return { variable };
+  // Windows: a drive letter with its root, or a UNC path; `C:x` and `\x` depend on the current drive or folder.
+  const absolute = os === "windows" ? /^([A-Za-z]:[\\/]|[\\/]{2}[^\\/])/.test(value) : value.startsWith("/");
+  if (!absolute) return { variable, value };
+  return { folder: normalisePath([value, ...tail].join("/"), { platform: os === "windows" ? "win32" : "posix" }) };
+}
+
 function defaultCwd(platform: Platform): string {
   if (platform === CURRENT) return process.cwd();
   return platform === "win32" ? "C:\\" : "/";

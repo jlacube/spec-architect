@@ -22,7 +22,8 @@ import { postWriteFeedback } from "../hooks/post-write.ts";
 import { changeLine, sessionBrief } from "../hooks/session-start.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
-import { serenaLaunch } from "../workspace/serena-launch.ts";
+import { readOnlyModeFile, serenaLaunch, type LaunchOptions } from "../workspace/serena-launch.ts";
+import { userDataDir } from "../workspace/user-data.ts";
 import type { Profile } from "../workspace/templates.ts";
 import { listChanges, rebuildRegistry, registryDrift, renderStatusBlock, writeStatus } from "../workspace/status.ts";
 import { parseId } from "../model/ids.ts";
@@ -60,6 +61,8 @@ export interface CommandContext {
   /** Repository root containing `.sdd/` (commands with `workspace: true`). */
   root: string;
   args: Record<string, string | undefined>;
+  /** Environment of the invocation (process.env, or the stub of an in-process test). */
+  env: Readonly<Record<string, string | undefined>>;
   values: Record<string, string | boolean | string[] | undefined>;
   rules: readonly LintRule[];
   /** Standard input (hook commands). */
@@ -421,9 +424,22 @@ function init(ctx: CommandContext): number {
   return 0;
 }
 
-/** `sdd serena-config <plugin-data-dir>` (C001-REQ-1013): Serena's config in the plugin data folder. */
+/**
+ * The data folder of the Serena commands: the positional folder as given (resolved against the working
+ * directory, as before CHG-002), or with `--user-data` the per-user folder of C002-IF-007, ERR-CLI-020
+ * before anything is written or started (C002-REQ-515, C002-REQ-516).
+ */
+function serenaDataDir(ctx: CommandContext): { dir: string; userData: boolean } {
+  const given = ctx.args["plugin-data-dir"];
+  const userData = ctx.values["user-data"] === true;
+  if (given !== undefined && userData) throw usage(ctx.name, "pass <plugin-data-dir> or --user-data, not both");
+  if (given === undefined && !userData) throw usage(ctx.name, "missing argument <plugin-data-dir> (or --user-data)");
+  return userData ? { dir: userDataDir(ctx.cwd, ctx.env), userData } : { dir: resolve(ctx.cwd, given!), userData };
+}
+
+/** `sdd serena-config <plugin-data-dir> | --user-data` (C001-REQ-1013, C002-REQ-515): Serena's config in the data folder. */
 function serenaConfig(ctx: CommandContext): number {
-  const r = writeSerenaConfig(resolve(ctx.cwd, String(ctx.args["plugin-data-dir"])));
+  const r = writeSerenaConfig(serenaDataDir(ctx).dir);
   ctx.out.line(`${r.outcome}: ${r.path}`);
   return 0;
 }
@@ -470,9 +486,18 @@ function hookPostWrite(ctx: CommandContext): number {
   return 0;
 }
 
-/** `sdd serena-launch <plugin-data-dir> -- <args>` (C001-REQ-1013): config first, then Serena; stdout stays Serena's. */
+/**
+ * `sdd serena-launch (<plugin-data-dir> | --user-data) [--read-only] -- <args>` (C001-REQ-1013,
+ * C002-IF-007): config first, then Serena; stdout stays Serena's. `--user-data` also sets SERENA_HOME
+ * to `<data>/serena` for the child; `--read-only` adds the shipped read-only mode file.
+ */
 function serenaLaunchCmd(ctx: CommandContext): number {
-  const r = serenaLaunch(resolve(ctx.cwd, String(ctx.args["plugin-data-dir"])), ctx.rest);
+  const { dir, userData } = serenaDataDir(ctx);
+  const options: LaunchOptions = {};
+  if (userData) options.env = { ...ctx.env, SERENA_HOME: `${dir}/serena` };
+  if (ctx.values["read-only"] === true) options.modeFile = readOnlyModeFile();
+  ctx.out.trace("serena-launch", { data: dir, serenaHome: options.env?.["SERENA_HOME"], mode: options.modeFile });
+  const r = serenaLaunch(dir, ctx.rest, options);
   if (r.error) ctx.out.errorLine(r.error);
   return r.code;
 }
@@ -516,8 +541,8 @@ const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
   { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookPostWrite },
-  { name: "serena-launch", usage: "<plugin-data-dir> -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
-  { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
+  { name: "serena-launch", usage: "(<plugin-data-dir> | --user-data) [--read-only] -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir", true)], options: { "user-data": B, "read-only": B }, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
+  { name: "serena-config", usage: "<plugin-data-dir> | --user-data", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir", true)], options: { "user-data": B }, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
   { name: "template show", usage: "<profile>/<path>", summary: "Print a template: the repository override, else the shipped one", positionals: [P("template")], options: {}, workspace: false, sampleArgs: ["full/10-spec/70-dod.md"], run: templateShow },
