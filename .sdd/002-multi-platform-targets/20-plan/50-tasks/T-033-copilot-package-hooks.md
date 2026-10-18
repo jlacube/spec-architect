@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-031, C002-T-032]
 implements: [C002-REQ-302, C002-REQ-308, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-318, C002-REQ-326, C002-REQ-327]
 satisfies_ac: [C002-AC-302.1, C002-AC-308.1, C002-AC-316.1, C002-AC-318.1, C002-AC-326.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-303, C002-TS-304, C002-TS-311, C002-TS-325, C002-TS-326, C
 components: [C002-COMP-001, C002-COMP-004]
 risk_refs: [C002-RISK-032]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d02b182, completed_at: 2026-10-18, notes: "Hook template + tool classes; TC-303/304/311 (template part)/325/330/331/332 + T-031 clauses of TC-301/302; TGT-HOOK-001/TGT-CLASS-001 findings implemented (copilotHookFindings) — T-035 wires them into npm run check; TC-311 installed files to T-058; tool classes kept only in targets/copilot.json (hook_tool_classes), no separate targets/copilot/tool-classes.json (single source)" }
 ---
 
 # C002-T-033 — Copilot package: hook template, Copilot guard and subagent guard hook, tool classes
