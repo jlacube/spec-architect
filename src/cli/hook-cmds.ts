@@ -3,7 +3,7 @@
 // `hook subagent-stop --host copilot`, plus the active-change trace refresh behind `trace --active`.
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { decideCopilot, denyDecision, agentList, agentName } from "../hooks/copilot.ts";
+import { decideCopilot, denyDecision, agentList, agentName, shownTool } from "../hooks/copilot.ts";
 import { parseHookInput } from "../hooks/input.ts";
 import { sessionBrief } from "../hooks/session-start.ts";
 import { trace } from "../trace/write.ts";
@@ -66,7 +66,7 @@ function hookGuard(ctx: CommandContext): number {
   const classes = ctx.values["classes"] as string | undefined;
   const d =
     host !== "copilot"
-      ? ({ allow: false, message: "GUARD-HOOK-001: tool call denied — hook command usage: --host." } as const)
+      ? ({ allow: false, message: `GUARD-HOOK-001: ${shownTool(ctx.stdin())} denied — hook command usage: --host.` } as const)
       : decideCopilot(ctx.stdin(), {
           mode: ctx.values["mode"] as string | undefined,
           agents: ctx.values["agents"] as string | undefined,

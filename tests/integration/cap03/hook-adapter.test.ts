@@ -4,8 +4,9 @@
 // `hooks/tool-classes.json` (the default `--classes`), for `pkg-cp` (`--mode sdd-mcp-server`) and
 // `pkg-cp-hooks` (`--mode copilot-hooks`), with Copilot-shaped input of the S-08 record (`agent_type`
 // as VS Code and Copilot CLI report it, host built-in and adopter names, absent, `null`, a number).
-// C002-TC-312, 314, 320, 322, 323, 324, 333, 334, 337, 338, 357, 362, 363, 364, 365, 366. Their
-// installed form (`sdd install copilot`) is carried to C002-T-058.
+// C002-TC-312, 314, 320, 322, 323, 324, 333, 334, 337, 338, 357, 362, 363, 364, 365, 366 and, for
+// revision D-007 (C002-T-062), C002-TC-367, 368, 369, 370. Their installed form (`sdd install
+// copilot`) is carried to C002-T-058.
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -42,6 +43,9 @@ interface Fx {
   pkg: string;
   pkgNoClasses: string;
   pkgBadClasses: string;
+  /** Variants of the package whose classes file also lists `Glob` as `write` / `terminal` (C002-TC-369, C002-TC-370). */
+  pkgDupWrite: string;
+  pkgDupTerminal: string;
 }
 let fx: Fx;
 
@@ -62,14 +66,19 @@ before(() => {
   const pkg = makePackage(JSON.stringify(CLASSES, null, 2));
   const none = makePackage(null);
   const bad = makePackage("{ not json");
+  // Glob stays in read_only and is listed once more in a more restrictive class.
+  const dupWrite = makePackage(JSON.stringify({ ...CLASSES, write: [...CLASSES.write, { tool: "Glob", paths: ["/path"] }] }, null, 2));
+  const dupTerminal = makePackage(JSON.stringify({ ...CLASSES, terminal: [...CLASSES.terminal, { tool: "Glob", command: "/command", dialect: "bash" }] }, null, 2));
   fx = {
-    cleanups: [cp, install, outer, pkg, none, bad].map((w) => w.cleanup),
+    cleanups: [cp, install, outer, pkg, none, bad, dupWrite, dupTerminal].map((w) => w.cleanup),
     cp: cp.root,
     install: install.root,
     outerRepo: join(outer.root, "repo"),
     pkg: pkg.root,
     pkgNoClasses: none.root,
     pkgBadClasses: bad.root,
+    pkgDupWrite: dupWrite.root,
+    pkgDupTerminal: dupTerminal.root,
   };
 });
 
@@ -273,18 +282,21 @@ test("C002-TC-357: write and terminal calls of non-Architect subagents in a repo
 
 test("C002-TC-362: faults of the Copilot subagent guard hook deny with GUARD-HOOK-001 and exit 2", () => {
   const session = input({ agent_type: ABSENT, tool_name: "Write", tool_input: path("src/app.ts") });
-  const usageRows: [string[], string][] = [
-    [["hook", "guard", "--host", "copilot", "--agents", AGENTS], "hook command usage: --mode"],
-    [["hook", "guard", "--host", "copilot", "--mode", "strict", "--agents", AGENTS], "hook command usage: --mode"],
-    [["hook", "guard", "--host", "copilot", "--mode", "sdd-mcp-server"], "hook command usage: --agents"],
-    [["hook", "guard", "--host", "copilot", "--mode", "sdd-mcp-server", "--agents", " , "], "hook command usage: --agents"],
+  // The input's tool name is shown whenever the input is readable (errors.md GUARD-HOOK-001).
+  const usageRows: [string[], string, string][] = [
+    [["hook", "guard", "--host", "copilot", "--agents", AGENTS], "Write", "hook command usage: --mode"],
+    [["hook", "guard", "--host", "copilot", "--mode", "strict", "--agents", AGENTS], "Write", "hook command usage: --mode"],
+    [["hook", "guard", "--host", "copilot", "--mode", "sdd-mcp-server"], "Write", "hook command usage: --agents"],
+    [["hook", "guard", "--host", "copilot", "--mode", "sdd-mcp-server", "--agents", " , "], "Write", "hook command usage: --agents"],
     // Faults of the command line that the option parser finds are denies too, never usage errors.
-    [["hook", "guard", "--host", "copilot", "--agents", AGENTS, "--mode"], "hook command usage: "],
-    [[...guardArgs("sdd-mcp-server"), "--frob"], "hook command usage: "],
-    [[...guardArgs("sdd-mcp-server"), "extra"], "hook command usage: "],
-    [["hook", "guard", "--mode", "sdd-mcp-server", "--agents", AGENTS], "hook command usage: --host"],
+    [["hook", "guard", "--host", "copilot", "--agents", AGENTS, "--mode"], "tool call", "hook command usage: "],
+    [[...guardArgs("sdd-mcp-server"), "--frob"], "tool call", "hook command usage: "],
+    [[...guardArgs("sdd-mcp-server"), "extra"], "tool call", "hook command usage: "],
+    // A missing or other --host: C002-TC-368.
   ];
-  for (const [args, fault] of usageRows) assertDeny(run(fx.pkg, args, session), `GUARD-HOOK-001: tool call denied — ${fault}`, args.join(" "));
+  for (const [args, shown, fault] of usageRows) assertDeny(run(fx.pkg, args, session), `GUARD-HOOK-001: ${shown} denied — ${fault}`, args.join(" "));
+  // Unreadable input with a usage fault: `tool call`.
+  assertDeny(run(fx.pkg, ["hook", "guard", "--host", "copilot", "--agents", AGENTS], "not json"), "GUARD-HOOK-001: tool call denied — hook command usage: --mode.", "--mode, not json");
 
   const gp = (o: Parameters<typeof input>[0]) => input({ agent_type: "general-purpose", ...o });
   const rows: [keyof typeof PKG, string, string, string?, Record<string, string>?][] = [
@@ -374,3 +386,60 @@ test("rule 8 table data: JSON pointers with *, always_deny and the strictest dia
     ws.cleanup();
   }
 });
+
+// C002-TC-367: fault messages for a write tool without a path and an --agents name without sdd-.
+const agentsWithCritic = AGENTS.replace("sdd-critic", "critic");
+const tc367: [string, string, string, Record<string, unknown>, string][] = [
+  ["as installed", AGENTS, "sdd-spec-writer", { file_text: "x" }, "no path in the tool input (/path)"],
+  ["--agents with critic", agentsWithCritic, "critic", path(".sdd/002-x/10-spec/a.md"), "internal error: agent critic of --agents is not an sdd- agent name"],
+  ["--agents with critic", agentsWithCritic, "architect:critic", path("src/app.ts"), "internal error: agent critic of --agents is not an sdd- agent name"],
+];
+for (const [command, agents, agent, ti, fault] of tc367) {
+  test(`C002-TS-367 (C002-TC-367): pkg-cp-hooks ${command}, agent_type ${agent}, Write ${JSON.stringify(ti)} → ${fault}`, () => {
+    const r = run(fx.pkg, ["hook", "guard", "--host", "copilot", "--mode", "copilot-hooks", "--agents", agents], input({ agent_type: agent, tool_name: "Write", tool_input: ti }));
+    assertDeny(r, `GUARD-HOOK-001: Write denied — ${fault}.`, `${command} ${agent}`);
+  });
+}
+
+// C002-TC-368: a --host other than copilot is a usage fault whatever the input; the input's tool name is shown when readable.
+const withHost = (host: string[], mode: Mode) => ["hook", "guard", ...host, "--mode", mode, "--agents", AGENTS];
+const tc368: [keyof typeof PKG, string, string[], () => string, string][] = [
+  ["pkg-cp", "without --host", [], () => input({ agent_type: ABSENT, tool_name: "Write", tool_input: path("src/app.ts") }), "Write"],
+  ["pkg-cp", "--host opencode", ["--host", "opencode"], () => input({ agent_type: ABSENT, tool_name: "Write", tool_input: path("src/app.ts") }), "Write"],
+  ["pkg-cp", "--host opencode, not json", ["--host", "opencode"], () => "not json", "tool call"],
+  ["pkg-cp-hooks", "--host claude", ["--host", "claude"], () => input({ agent_type: "sdd-spec-writer", tool_name: "Write", tool_input: path(".sdd/002-x/10-spec/a.md") }), "Write"],
+];
+for (const [pkg, label, host, stdin, shown] of tc368) {
+  test(`C002-TS-368 (C002-TC-368): ${pkg} ${label} → GUARD-HOOK-001 for ${shown}`, () => {
+    const r = run(fx.pkg, withHost(host, PKG[pkg]!), stdin());
+    assertDeny(r, `GUARD-HOOK-001: ${shown} denied — hook command usage: --host.`, `${pkg} ${label}`);
+  });
+}
+
+// C002-TC-369: an Architect agent's tool listed in more than one class takes the most restrictive class (--mode copilot-hooks).
+const tc369: ["write" | "terminal", Record<string, unknown>, string | null][] = [
+  ["write", path("src/app.ts"), "GUARD-PATH-001"],
+  ["write", path(".sdd/002-x/10-spec/a.md"), null],
+  ["write", { pattern: "src/**" }, "GUARD-HOOK-001: Glob denied — no path in the tool input (/path)."],
+  ["terminal", command("npm install"), "GUARD-BASH-001"],
+];
+for (const [cls, ti, rule] of tc369) {
+  test(`C002-TS-369 (C002-TC-369): Glob in read_only and ${cls}, sdd-spec-writer ${JSON.stringify(ti)} → ${rule ?? "allow"}`, () => {
+    const r = guard("pkg-cp-hooks", input({ agent_type: "sdd-spec-writer", tool_name: "Glob", tool_input: ti }), cls === "write" ? fx.pkgDupWrite : fx.pkgDupTerminal);
+    if (rule === null) assertAllow(r, cls);
+    else assertDeny(r, rule, cls);
+  });
+}
+
+// C002-TC-370: a non-Architect subagent's tool listed as read-only and as write or terminal is denied.
+const tc370: [keyof typeof PKG, "write" | "terminal"][] = [
+  ["pkg-cp", "write"],
+  ["pkg-cp", "terminal"],
+  ["pkg-cp-hooks", "write"],
+];
+for (const [pkg, cls] of tc370) {
+  test(`C002-TS-370 (C002-TC-370): ${pkg}, Glob in read_only and ${cls}, general-purpose → GUARD-HOOK-002`, () => {
+    const r = guard(pkg, input({ agent_type: "general-purpose", tool_name: "Glob", tool_input: { pattern: "src/**" } }), cls === "write" ? fx.pkgDupWrite : fx.pkgDupTerminal);
+    assertDeny(r, "GUARD-HOOK-002: Glob denied — subagent general-purpose is not an Architect agent", `${pkg} ${cls}`);
+  });
+}

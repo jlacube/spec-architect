@@ -210,23 +210,35 @@ function decideArchitect(input: Record<string, unknown>, agent: string, tool: st
   return { allow: true };
 }
 
+/** Standard input as a JSON object; null when it is empty, not JSON or not a JSON object. */
+function parseObject(stdin: string): Record<string, unknown> | null {
+  try {
+    const doc: unknown = JSON.parse(stdin);
+    return doc !== null && typeof doc === "object" && !Array.isArray(doc) ? (doc as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** `<tool or "tool call">` of GUARD-HOOK-001 (errors.md §6): the input's `tool_name` when it is a non-empty string of a JSON object, else `tool call`. */
+export function shownTool(input: string | Record<string, unknown> | null): string {
+  const doc = typeof input === "string" ? parseObject(input) : input;
+  const name = doc?.["tool_name"];
+  return typeof name === "string" && name !== "" ? name : "tool call";
+}
+
 /** The decision of `hook guard --host copilot` on its standard input (C002-IF-008 §2). Never throws. */
 export function decideCopilot(stdin: string, opts: CopilotGuardOptions): CopilotDecision {
   let tool = "tool call";
   try {
+    const doc = parseObject(stdin);
+    tool = shownTool(doc);
     // Rule 1: the command's own arguments, whatever the input.
     if (opts.mode === undefined || !(MODES as readonly string[]).includes(opts.mode)) return hookDeny(RULE_FAULT, tool, "hook command usage: --mode");
     if (agentList(opts.agents).length === 0) return hookDeny(RULE_FAULT, tool, "hook command usage: --agents");
     // Rule 2: unreadable input; no identity can be read.
-    let doc: unknown;
-    try {
-      doc = JSON.parse(stdin);
-    } catch {
-      doc = undefined;
-    }
-    if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return hookDeny(RULE_FAULT, tool, "unreadable hook input");
-    const input = doc as Record<string, unknown>;
-    if (typeof input["tool_name"] === "string" && input["tool_name"] !== "") tool = input["tool_name"];
+    if (doc === null) return hookDeny(RULE_FAULT, tool, "unreadable hook input");
+    const input = doc;
     // Rule 3: the session agent's calls carry no `agent_type` (S-08 §2.3).
     if (!Object.prototype.hasOwnProperty.call(input, "agent_type")) return { allow: true };
     if (fault(opts.env, "hook-decision-throw")) throw new Error("SDD_TEST_FAULT: decision failure");
