@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-02
-status: todo
+status: done
 depends_on: [C002-T-005, C002-T-006]
 implements: [C002-REQ-515, C002-REQ-516]
 satisfies_ac: [C002-AC-515.1, C002-AC-516.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-523, C002-TS-524, C002-TS-525, C002-TS-533, C002-TC-523, C
 components: [C002-COMP-018]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e0240a7, completed_at: 2026-10-18, notes: "Options --user-data and --read-only; TC-523/524/525/533; cross-platform refusal rows tested on the rule only; ERR-CLI-020 prints its catalogue placeholders unfilled (same issue as D-004 item 2)" }
 ---
 
 # C002-T-013 — CLI: --user-data and --read-only for the Serena commands
