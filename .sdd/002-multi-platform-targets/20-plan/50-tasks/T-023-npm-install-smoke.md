@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
 status: todo
-depends_on: [C002-T-022]
+depends_on: [C002-T-022, C002-T-061]
 implements: [C002-NFR-401, C002-NFR-402, C002-NFR-801]
 satisfies_ac: [C002-AC-501.1, C002-AC-412.1]
 verified_by: [C002-TS-501, C002-TS-417, C002-TC-501, C002-TC-417]
@@ -34,7 +34,10 @@ allowlisted licences (C002-NFR-801, C002-DOD-020).
 
 ## Preconditions
 
-- C002-T-022 done.
+- C002-T-022 done; C002-T-061 done, so the smoke runs on the tarball with the revised print forms and
+  README of the D-004 … D-009 revision.
+- The Node.js 20 LTS and 22 LTS of step 3 are the adopter floors (C002-NFR-401). The Node.js 22.22.2
+  floor of the OpenCode JS SDK binds the eval and replay machine only, not this smoke (scope §5).
 
 ## Step outline (no production code)
 

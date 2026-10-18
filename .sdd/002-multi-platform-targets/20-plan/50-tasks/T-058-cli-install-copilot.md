@@ -6,10 +6,10 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
 status: todo
-depends_on: [C002-T-005, C002-T-009, C002-T-031, C002-T-033]
+depends_on: [C002-T-005, C002-T-009, C002-T-031, C002-T-033, C002-T-062]
 implements: [C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-327]
 satisfies_ac: [C002-AC-322.1, C002-AC-323.1, C002-AC-324.1, C002-AC-326.1, C002-AC-327.1]
-verified_by: [C002-TS-341, C002-TS-342, C002-TS-343, C002-TS-344, C002-TS-345, C002-TS-346, C002-TS-347, C002-TS-348, C002-TS-349, C002-TS-350, C002-TS-354, C002-TS-356, C002-TS-357, C002-TS-360, C002-TS-361, C002-TS-362, C002-TS-363, C002-TS-364, C002-TS-365, C002-TS-366, C002-TC-341, C002-TC-342, C002-TC-343, C002-TC-344, C002-TC-345, C002-TC-346, C002-TC-347, C002-TC-348, C002-TC-349, C002-TC-350, C002-TC-354, C002-TC-356, C002-TC-357, C002-TC-360, C002-TC-361, C002-TC-362, C002-TC-363, C002-TC-364, C002-TC-365, C002-TC-366]
+verified_by: [C002-TS-341, C002-TS-342, C002-TS-343, C002-TS-344, C002-TS-345, C002-TS-346, C002-TS-347, C002-TS-348, C002-TS-349, C002-TS-350, C002-TS-354, C002-TS-356, C002-TS-357, C002-TS-360, C002-TS-361, C002-TS-362, C002-TS-363, C002-TS-364, C002-TS-365, C002-TS-366, C002-TS-367, C002-TS-368, C002-TS-369, C002-TS-370, C002-TC-341, C002-TC-342, C002-TC-343, C002-TC-344, C002-TC-345, C002-TC-346, C002-TC-347, C002-TC-348, C002-TC-349, C002-TC-350, C002-TC-354, C002-TC-356, C002-TC-357, C002-TC-360, C002-TC-361, C002-TC-362, C002-TC-363, C002-TC-364, C002-TC-365, C002-TC-366, C002-TC-367, C002-TC-368, C002-TC-369, C002-TC-370]
 components: [C002-COMP-018, C002-COMP-004]
 risk_refs: [C002-RISK-003, C002-RISK-030, C002-RISK-032, C002-RISK-033]
 estimate: L
@@ -47,7 +47,7 @@ ERR-CLI-021) or the package cannot be used (ERR-CLI-022).
 | modify | `src/cli/errors.ts` | ERR-CLI-021, ERR-CLI-022 (C002-IF-007 errors table) |
 | modify | `tests/guards/writing-commands.test.ts` | remove the exemption that C002-T-009 gives the `install copilot` row: the row must now name a `COMMANDS` row |
 | add | `tests/integration/cap03/install.test.ts` | the listed install scenarios on `fx-cp-install` and `fx-cp` with `pkg-cp` and `pkg-cp-hooks` copies (test plan §2), C002-TS-360 and C002-TS-361 included |
-| modify | `tests/integration/cap03/hook-adapter.test.ts` | run the hook-adapter cases of C002-T-032 a second time through the installed form: the command of the PreToolUse entry in `<folder>/hooks.json` and in `.github/hooks/architect-guard.json` written by this command (C002-TS-357, C002-TS-362 … C002-TS-366 "as installed") |
+| modify | `tests/integration/cap03/hook-adapter.test.ts` | run the hook-adapter cases of C002-T-032 a second time through the installed form: the command of the PreToolUse entry in `<folder>/hooks.json` and in `.github/hooks/architect-guard.json` written by this command (C002-TS-357, C002-TS-362 … C002-TS-370 "as installed"; C002-TS-367 … C002-TS-370 from C002-T-062) |
 
 ## Preconditions
 
@@ -55,6 +55,7 @@ ERR-CLI-021) or the package cannot be used (ERR-CLI-022).
   `install copilot` row), C002-T-031 (agents, `install/mcp.json`, `install/plugin.json`,
   `architect-target.json`) and C002-T-033 (`install/hooks.template.json` with the PreToolUse entry in
   both modes) done.
+- C002-T-062 done (the D-007 fault and duplicate-class cases of the hook adapter).
 - C002-T-059 done through C002-T-033's chain (C002-T-032 depends on it), so no Architect agent can run
   the command while it is being built.
 

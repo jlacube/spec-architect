@@ -43,6 +43,7 @@ flowchart TB
     C002_T_021["T-021 Two bundles and licence check"]
     C002_T_022["T-022 npm staging and pack"]
     C002_T_023["T-023 Install smoke and manifest check"]
+    C002_T_061["T-061 Catch-up D-004…D-009: print forms, ERR-MCP-006 cases, npm README, own templates"]
   end
   subgraph M04["C002-M-04 Target generator and packages"]
     C002_T_024["T-024 Mapping tables"]
@@ -59,6 +60,7 @@ flowchart TB
     C002_T_035["T-035 Target structure checks"]
     C002_T_036["T-036 Determinism and benchmark"]
     C002_T_058["T-058 sdd install copilot"]
+    C002_T_062["T-062 Catch-up D-007: hook guard faults and duplicate classes"]
   end
   subgraph M05["C002-M-05 Workflow on every host"]
     C002_T_037["T-037 Question-tool variants"]
@@ -118,6 +120,11 @@ flowchart TB
   C002_T_013 --> C002_T_022
   C002_T_021 --> C002_T_022
   C002_T_022 --> C002_T_023
+  C002_T_061 --> C002_T_023
+  C002_T_016 --> C002_T_061
+  C002_T_019 --> C002_T_061
+  C002_T_021 --> C002_T_061
+  C002_T_022 --> C002_T_061
   C002_T_001 --> C002_T_024
   C002_T_002 --> C002_T_024
   C002_T_006 --> C002_T_024
@@ -148,6 +155,8 @@ flowchart TB
   C002_T_009 --> C002_T_058
   C002_T_031 --> C002_T_058
   C002_T_033 --> C002_T_058
+  C002_T_062 --> C002_T_058
+  C002_T_032 --> C002_T_062
   C002_T_022 --> C002_T_034
   C002_T_029 --> C002_T_034
   C002_T_031 --> C002_T_034
@@ -233,12 +242,16 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 60 tasks weigh 121 in total (18 S, 23 M, 19 L). The longest chain
-weighs 33 and ends with the Copilot release (unchanged by the D-003 plan updates: C002-T-032, now L
+Weights S = 1, M = 2, L = 3. The 62 tasks weigh 124 in total (19 S, 24 M, 19 L). The longest chain
+weighs 33 and ends with the Copilot release. The D-004 … D-009 plan update does not change it: the
+catch-up task C002-T-061 (M) finishes at 13 after C002-T-022 (11), so C002-T-023 finishes at 15, still
+far ahead of its dependents C002-T-051, C002-T-052, C002-T-055 and C002-T-057; C002-T-062 (S) finishes
+at 12 after C002-T-032 (11), before C002-T-058 starts at 18; C002-REQ-217 adds no task. Nor did the
+D-003 plan updates change it: C002-T-032, now L
 for the subagent guard, finishes at 11, before C002-T-031 at 16, so C002-T-033 still finishes at 18
 and C002-T-058 at 21, four units before C002-T-044, and C002-T-045 still starts at 25; C002-T-060,
 the eval auth switch, is already built and finishes at 1, before C002-T-010, C002-T-037, C002-T-038
-and C002-T-048 need it); the OpenCode release ends one unit earlier, at 32, and
+and C002-T-048 need it. The OpenCode release ends one unit earlier, at 32, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
 **Overall (to C002-T-055, weight 33):**
@@ -310,7 +323,8 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-03 | C002-T-020 | sdd MCP server: fault injection and benchmarks | M | T-018, T-019 |
 | C002-M-03 | C002-T-021 | Build: two bundles and the licence check over both | M | T-004, T-016 |
 | C002-M-03 | C002-T-022 | architect-sdd: staging, template CLI lines and npm pack | L | T-003, T-012, T-013, T-021 |
-| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022 |
+| C002-M-03 | C002-T-061 | Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates | M | T-016, T-019, T-021, T-022 |
+| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022, T-061 |
 | C002-M-04 | C002-T-024 | Mapping tables, their schema copy and loader | M | T-001, T-002, T-006, T-015 |
 | C002-M-04 | C002-T-025 | Generator: entry, source reader, writer and manifest | L | T-004, T-024 |
 | C002-M-04 | C002-T-026 | Translator: agent frontmatter | M | T-025, T-040 |
@@ -324,7 +338,8 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-04 | C002-T-034 | npm run package runs the generator and zips each target | S | T-022, T-029, T-031 |
 | C002-M-04 | C002-T-035 | Target structure checks and the npm run check step | L | T-022, T-030, T-033 |
 | C002-M-04 | C002-T-036 | Generation determinism test and generation benchmark | S | T-034 |
-| C002-M-04 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | L | T-005, T-009, T-031, T-033 |
+| C002-M-04 | C002-T-062 | Catch-up for revision D-007: Copilot hook guard faults, --host usage fault and duplicate tool classes | S | T-032 |
+| C002-M-04 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | L | T-005, T-009, T-031, T-033, T-062 |
 | C002-M-05 | C002-T-037 | Conductor: interview and gate variants for the host question tools | M | T-028, T-060 |
 | C002-M-05 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | L | T-013, T-014, T-028, T-060 |
 | C002-M-05 | C002-T-039 | README sections for OpenCode and Copilot VS Code | S | T-030, T-033 |

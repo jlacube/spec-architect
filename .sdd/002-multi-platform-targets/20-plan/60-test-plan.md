@@ -18,10 +18,10 @@ file, each case is one `test()` whose name starts with its TS ID.
 
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
-| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host | 124 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
-| structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 50 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
-| replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 | 23 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
-| eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 26 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
+| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host (an in-process stub host at most, C002-TC-656) | 132 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
+| structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 52 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
+| replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 (feasible, S-07 §4) on the pinned host binary | 24 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
+| eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 27 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
 | manual | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
 | unit | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
 
@@ -30,8 +30,12 @@ Mode-tagged scenarios: integration and structure cases tagged `@mode-native`, `@
 cases run for the mode that the spike records fix (C002-IF-009 §3); a case for a mode not in use is
 reported "not applicable" and cites the spike record. The spike-outcome rows of `10-strategy.md` §4
 decide which cases are dropped, moved or reported not applicable; for example,
-`post_write_feedback_channel: false` makes C002-TC-222 and C002-TC-223 not applicable. The cases that
-change level in a branch are listed in §8.1; the counts above are those of the main branch.
+`post_write_feedback_channel: false` would make C002-TC-222 and C002-TC-223 not applicable. The S-07
+record (C002-T-001, OpenCode 1.18.31) takes none of the S-07 branches: `agent_tools_closed`,
+`question_answerable_by_script` and `post_write_feedback_channel` are `true`, and the stub-model
+driver is feasible. Its mode `sdd-mcp-server` stays provisional until C002-T-043. The cases that
+would change level in the infeasible-driver branch are listed in §8.1, which is not taken; the
+counts above are those of the main branch.
 
 ## 2. Fixtures
 
@@ -64,9 +68,9 @@ change level in a branch are listed in §8.1; the counts above are those of the 
 | E-W | REF-WIN (Windows 11 reference machine), Node 20 and 22, `npm test` with the no-network preload |
 | E-W4 | REF-WIN, PowerShell 7 and Git Bash, each with Node.js 20 LTS and 22 LTS (C002-DOD-015, C002-DOD-016) |
 | E-SER | E-W with Serena 1.7.x installed |
-| E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network; `opencode` at its S-07 tested version on PATH and `@opencode-ai/sdk` pinned to it for OpenCode rows. Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
+| E-OC | REF-WIN under `npm run replay`: loopback stub model, no other network. For OpenCode rows, the pinned host binary of the S-07 tested version (OpenCode 1.18.31) is named by its absolute path in the harness configuration, never the `opencode` that PATH resolves; `@opencode-ai/sdk` is pinned to 1.18.31. Each run has its own `OPENCODE_DB` and isolated data, config, cache and state folders; the models fetch is off, and npm is offline with `@opencode-ai/plugin` 1.18.31 ready for the project `.opencode/` folder and the global config folder; no `rg.exe` is provisioned (C002-ADR-005 host process). Node.js 22.22.2 or later (S-07 fact F-10; P-01 upgrades REF-WIN, Q-s07-02). Release replays run under PowerShell 7 and Git Bash with Developer Mode on (`file-symlink`, C002-REQ-634) |
 | E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060; §4.1 "Eval auth"), outside every USD budget; a session run with `--auth api-key` bills the prepaid Anthropic API key and runs only after P-01 decides it (§4.1) |
-| E-OCE | OpenCode at its tested version with the Claude models of the C002-REQ-105 tiers through **OpenRouter** (model ids `openrouter/anthropic/claude-…`, the exact id per tier recorded by S-07, C002-T-001 step 8); billed to P-01's OpenRouter account within the OpenRouter budget of §4.1 (Q-opencode-01, `questions-log.md` round 6) |
+| E-OCE | OpenCode at its tested version (1.18.31) as `opencode serve` of the pinned host binary, with its own `OPENCODE_DB` and the user's credential store for the provider key (C002-ADR-005 host process; Node.js 22.22.2 or later, as E-OC), and the Claude models of the C002-REQ-105 tiers through **OpenRouter** (model ids `openrouter/anthropic/claude-…`, the exact id per tier recorded by S-07, C002-T-001 step 8); billed to P-01's OpenRouter account within the OpenRouter budget of §4.1 (Q-opencode-01, `questions-log.md` round 6) |
 | E-CPC | Copilot CLI at its S-08 tested version (1.0.98), non-interactive with `--no-ask-user`, agents named `architect:<agent>`, each case workspace prepared by `sdd install copilot`; billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 83 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
 | E-VSC | VS Code Insiders and GitHub Copilot Chat at the S-08 tested versions (1.142.0-insider; scope §3.1), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks enabled in both modes (the subagent guard hook, C002-REQ-327, C002-REQ-629); billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
 
@@ -178,7 +182,7 @@ OpenRouter, so the OpenRouter rows carry the Claude Code rates of the same famil
 | S-07 probe | no counterpart: driven by hand, without harness caps (C002-T-001 step 2) | — | 0.50 USD |
 
 The C002-REQ-105 tiers set the model per agent, as in CHG-001. The weighted planning rate is
-0.29 USD per session (32.80 USD for the 112 Claude-model sessions through OpenRouter or on the
+0.29 USD per session (33.15 USD for the 113 Claude-model sessions through OpenRouter or on the
 Claude subscription). The review sessions of `t039-*` cost 0.37–0.62 USD and include the highest observed
 session; CHG-002 plans no review eval. The **upper bound** is the session count times 0.65 USD. It
 is not a cap, and the stop rule of §4.1 is what bounds the spend. Claude Code sessions run with
@@ -194,27 +198,27 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-05 | C002-T-037 step 4 | 0 | 0 | 0 | 3 on E-CC at 0.35: the Claude Code rows of C002-TC-215, 217, 219; 1.05 USD | 0 |
 | C002-M-05 | C002-T-038 step 4 | 0 | 0 | 0 | 7 on E-CC at 0.25: the Claude Code rows of C002-TC-506 (1), 509 (2), 510 (2), 511 (1) and `evals/cap11/doctor-no-ripwire.eval.mjs` (1); 1.75 USD | 0 |
 | C002-M-06 | C002-T-044 step 6 | 1 routing smoke on E-OCE at 0.15 | 0.15 USD | 0.65 USD | 0 | 0 |
-| C002-M-06 | C002-T-056 steps 2 and 3 | 47 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) (7 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.45 USD | 30.55 USD | 0 | 0 |
+| C002-M-06 | C002-T-056 steps 2 and 3 | 48 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) and C002-TC-230 (1) (8 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.80 USD | 31.20 USD | 0 | 0 |
 | C002-M-06 | C002-T-045 steps 4 and 5 | 0 | 0 | 0 | 0 | 5: the smoke, the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526 (1); C002-TC-336 not applicable (0) |
-| C002-M-06 | C002-T-056 step 4, only in the S-07 infeasible-driver branch (§8.1) | 4 on E-OCE at 0.35: C002-TC-133, 211, 222, 223 | 1.40 USD | 2.60 USD | 0 | 0 |
+| C002-M-06 | C002-T-056 step 4: not used, the S-07 infeasible-driver branch (§8.1) is not taken | 0 (C002-TC-133, 211, 222, 223 stay replay cases) | 0 | 0 | 0 | 0 |
 | C002-M-07 | C002-T-048 step 4 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
 | C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 | 0 |
 | C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 | 0 |
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 41: C002-TC-615 and C002-TC-359 |
 | C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
 | C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
-| **Total** | | **92** (96 in the branch) | **27.50 USD** (28.90 USD in the branch) | 59.80 USD (62.40 USD in the branch) | **20** (5.30 USD notional) | **about 83** |
+| **Total** | | **93** | **27.85 USD** | 60.45 USD | **20** (5.30 USD notional) | **about 83** |
 
 ### 4.3 Budget, reserve and room for reruns
 
 | Pool | Limit | Sessions | Estimate | Room (limit − estimate) |
 |---|---|---|---|---|
-| OpenRouter general pool: C002-M-01 … C002-M-06 OpenRouter sessions, including the branch sessions of C002-T-056 step 4 | 30.00 USD | 62 | 21.00 USD | 9.00 USD |
+| OpenRouter general pool: C002-M-01 … C002-M-06 OpenRouter sessions (no branch sessions: the S-07 infeasible-driver branch is not taken) | 30.00 USD | 59 | 19.95 USD | 10.05 USD |
 | OpenRouter C002-M-07 reserve: C002-T-049 step 3, C002-T-051 step 3 | 10.00 USD | 34 | 7.90 USD | 2.10 USD |
-| **CHG-002 eval budget (OpenRouter, P-01's account)** | **40.00 USD** | 96 | **28.90 USD** | **11.10 USD** |
+| **CHG-002 eval budget (OpenRouter, P-01's account)** | **40.00 USD** | 93 | **27.85 USD** | **12.15 USD** |
 
 - The room is the allowance for reruns: at most one rerun per Examples row after a failure (§4.1).
-  9.00 USD is about 31 reruns at the weighted rate; 2.10 USD is about 7 reruns of reserve sessions.
+  10.05 USD is about 34 reruns at the weighted rate; 2.10 USD is about 7 reruns of reserve sessions.
   The reserve room covers a C002-T-051 run at its upper bound (2.60 USD) or a second C002-T-051 run
   (1.40 USD) after C002-T-049 step 3 has spent its estimate (6.50 USD + 2.60 USD = 9.10 USD). No
   Claude Code session draws on the reserve: C002-T-048 step 4 runs on the Claude subscription, and a
@@ -226,7 +230,7 @@ estimate; they are not part of the OpenRouter totals.
   checkpoints), and the stop rule bounds the spend whatever the rate (C002-RISK-015).
 - The general pool also funds the re-runs of C002-T-049 after a fix (§4.1 rule 5), from its room left
   at that time.
-  When the branch of §8.1 does not apply, its 1.40 USD adds to the room of the general pool. CHG-001
+  The branch of §8.1 is not taken (S-07 §4), so its 1.40 USD is out of the estimate. CHG-001
   ran some cases four or five times while their case files were being written (four
   `t032-TS-214-*` and five `t041-TS-1002-cfg-no-ripwire-*` result files); in CHG-002 a second
   failure reopens the owning task instead of buying more runs.
@@ -236,7 +240,7 @@ estimate; they are not part of the OpenRouter totals.
   stops on its own total (§4.1): general-pool sessions at 30 USD of general spend, whatever the
   reserve has spent, and reserve sessions at 10 USD of reserve spend.
 - Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 40 % more than
-  the planning rates. The upper bounds (59.80 USD) show that the stop rule, not the estimate, keeps
+  the planning rates. The upper bounds (60.45 USD) show that the stop rule, not the estimate, keeps
   CHG-002 within 40 USD of OpenRouter spend.
 - The 20 Claude subscription sessions (5.30 USD notional, 13.00 USD upper) bill P-01's Claude Max
   plan, not the key and not OpenRouter; the ledger keeps them with `provider` `claude-max` and `auth`
@@ -313,7 +317,8 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   C002-T-032 (`cap03/hook-adapter.test.ts`) first run the hook commands of C002-IF-008 §4 with
   `@CLI_COPY@` replaced by the bundled CLI; their installed form (the command of `<folder>/hooks.json`
   and of `.github/hooks/architect-guard.json` written by `sdd install copilot`, CAP-03 acceptance
-  fixtures; C002-TC-357 and C002-TC-362 … C002-TC-366 included) is carried to C002-T-058.
+  fixtures; C002-TC-357 and C002-TC-362 … C002-TC-370 included, C002-TC-367 … C002-TC-370 written by
+  C002-T-062) is carried to C002-T-058.
 - **Spike branches**: when a row of `10-strategy.md` §4 applies, a case it moves is carried to the
   task and level of §8.1, and a case it makes not applicable is reported "not applicable" with the
   spike record cited. Neither counts as a failure, and neither is passed in another way.
@@ -411,6 +416,9 @@ branch.
 | C002-TC-225 | C002-TS-225 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
 | C002-TC-226 | C002-TS-226 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc | E-OC | C002-T-029 |
 | C002-TC-227 | C002-TS-227 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist-bad | E-W | C002-T-029 |
+| C002-TC-228 | C002-TS-228 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist (native and server) | E-W | C002-T-030, C002-T-035 |
+| C002-TC-229 | C002-TS-229 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (one `question` rule changed or removed per Examples row) | E-W | C002-T-035, C002-T-030 |
+| C002-TC-230 | C002-TS-230 | eval | `evals/targets/question-tool/TS-230.eval.mjs` | `run.mjs --host opencode --tier dev --filter evals/targets/question-tool/TS-230.eval.mjs` | copy of fx-bootstrap with 1 change, OpenCode target package | E-OCE | C002-T-044, C002-T-030, C002-T-056 |
 | C002-TC-301 | C002-TS-301 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist | E-W | C002-T-031, C002-T-033 |
 | C002-TC-302 | C002-TS-302 | structure | `tests/integration/cap03/package.test.ts` | `npm test -- cap03/package` | fx-dist-bad | E-W | C002-T-031, C002-T-033, C002-T-035 |
 | C002-TC-303 | C002-TS-303 | structure | `tests/integration/cap03/package-hooks.test.ts` | `npm test -- cap03/package-hooks` | fx-dist (server) | E-W | C002-T-033 |
@@ -477,6 +485,10 @@ branch.
 | C002-TC-364 | C002-TS-364 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp-install, pkg-cp without `hooks/tool-classes.json` | E-W | C002-T-032, C002-T-058 |
 | C002-TC-365 | C002-TS-365 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs without `agent_type` (with and without `cwd`) and of Architect agents in both name forms, pkg-cp (`--mode sdd-mcp-server`) | E-W | C002-T-032, C002-T-058 |
 | C002-TC-366 | C002-TS-366 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp, pkg-cp without `hooks/tool-classes.json` | E-W | C002-T-032, C002-T-058 |
+| C002-TC-367 | C002-TS-367 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs (write without a path; `critic` and `architect:critic`), pkg-cp-hooks with the hook command as installed and with `--agents` holding `critic` | E-W | C002-T-062, C002-T-058 |
+| C002-TC-368 | C002-TS-368 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | fx-cp hook inputs and the stdin `not json`; pkg-cp and pkg-cp-hooks hook commands without `--host` or with `--host opencode` or `--host claude` | E-W | C002-T-062, C002-T-058 |
+| C002-TC-369 | C002-TS-369 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | pkg-cp-hooks whose `hooks/tool-classes.json` lists `Glob` in `read_only` and in `write` or `terminal` (one variant per row), fx-cp hook inputs of `sdd-spec-writer` | E-W | C002-T-062, C002-T-058 |
+| C002-TC-370 | C002-TS-370 | integration | `tests/integration/cap03/hook-adapter.test.ts` | `npm test -- cap03/hook-adapter` | pkg-cp and pkg-cp-hooks whose classes file lists `Glob` in `read_only` and in `write` or `terminal`, fx-cp hook input of `general-purpose` | E-W | C002-T-062, C002-T-058 |
 | C002-TC-401 | C002-TS-401 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz, fx-repo | E-W | C002-T-017, C002-T-011 |
 | C002-TC-402 | C002-TS-402 | integration | `tests/integration/mcp/faults.test.ts` | `npm test -- mcp/faults` | fx-tgz, fx-repo | E-W | C002-T-020, C002-T-017 |
 | C002-TC-403 | C002-TS-403 | integration | `tests/integration/mcp/files.test.ts` | `npm test -- mcp/files` | fx-tgz | E-W | C002-T-017 |
@@ -494,15 +506,17 @@ branch.
 | C002-TC-415 | C002-TS-415 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-416 | C002-TS-416 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-417 | C002-TS-417 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz | E-W | C002-T-022, C002-T-023 |
-| C002-TC-418 | C002-TS-418 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-src with an injected GPL package | E-W | C002-T-021 |
+| C002-TC-418 | C002-TS-418 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-src with an injected GPL package (`gpl-lib` 1.0.0) | E-W | C002-T-061, C002-T-021 |
 | C002-TC-419 | C002-TS-419 | integration | `tests/integration/build/notices-union.test.ts` | `npm test -- build/notices-union` | fx-tgz | E-W | C002-T-021 |
 | C002-TC-420 | C002-TS-420 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
 | C002-TC-421 | C002-TS-421 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
-| C002-TC-422 | C002-TS-422 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-016 |
+| C002-TC-422 | C002-TS-422 | integration | `tests/integration/mcp/protocol.test.ts` | `npm test -- mcp/protocol` | fx-tgz | E-W | C002-T-061, C002-T-016 |
+| C002-TC-423 | C002-TS-423 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | unpacked fx-tgz package at `C:/fx/pkg-sdd` (or a substituted temporary folder) with `scripts/sdd.mjs` deleted, PATH shim `sdd` that records each start, fx-repo (the `fx-srv` of the CAP-04 acceptance file) | E-W | C002-T-061, C002-T-019 |
+| C002-TC-424 | C002-TS-424 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo (the `fx-srv` of the CAP-04 acceptance file) with `CLAUDE_PLUGIN_ROOT` = `C:/fx/plugin` holding a recording stub `scripts/sdd.mjs` | E-W | C002-T-061, C002-T-019 |
 | C002-TC-641 | C002-TS-641 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
 | C002-TC-642 | C002-TS-642 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, cfg shim with a `.cmd`-only executable | E-W | C002-T-019 |
 | C002-TC-501 | C002-TS-501 | integration | `scripts/smoke-npm.mjs` | `npm run smoke:npm` | fx-tgz (clean prefix) | E-W4 | C002-T-023, C002-T-022 |
-| C002-TC-502 | C002-TS-502 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz, fx-bootstrap | E-W | C002-T-022 |
+| C002-TC-502 | C002-TS-502 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-tgz, two copies `fx-a` and `fx-b` of fx-bootstrap | E-W | C002-T-061, C002-T-022 |
 | C002-TC-503 | C002-TS-503 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022, C002-T-003, C002-T-052, C002-T-055 |
 | C002-TC-504 | C002-TS-504 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-008 |
 | C002-TC-505 | C002-TS-505 | integration | `tests/integration/cli/guard-message.test.ts` | `npm test -- cli/guard-message` | inline | E-W | C002-T-008 |
@@ -538,6 +552,7 @@ branch.
 | C002-TC-535 | C002-TS-535 | integration | `tests/integration/build/npm-staging.test.ts` | `npm test -- build/npm-staging` | fx-src | E-W | C002-T-022 |
 | C002-TC-536 | C002-TS-536 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-009, C002-T-005 |
 | C002-TC-537 | C002-TS-537 | eval | `evals/targets/doctor/TS-537.eval.mjs` | `run.mjs --host claude-code` | cfg-full; fx-bootstrap copy; empty git repository `C:/fx-work/fresh` | E-CC | C002-T-010, C002-T-048 |
+| C002-TC-538 | C002-TS-538 | integration | `tests/integration/cli/template.test.ts` | `npm test -- cli/template` | fx-tgz (0.3.0, clean prefix), fx-bootstrap copy without `.sdd/_templates/`, `CLAUDE_PLUGIN_ROOT` = `C:/fx/plugin-root` whose `templates/full/20-plan/handoff.md` holds `# plugin copy` | E-W | C002-T-061, C002-T-012, C002-T-022 |
 | C002-TC-639 | C002-TS-639 | eval | `evals/targets/doctor/TS-639.eval.mjs` | `run.mjs --host opencode` | cfg-full with `ast-grep.cmd` only; fx-dist (server) | E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-601 | C002-TS-601 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks`; `npm run check` | fx-src (clean checkout) | E-W | C002-T-035 |
 | C002-TC-602 | C002-TS-602 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
@@ -587,11 +602,17 @@ branch.
 | C002-TC-650 | C002-TS-650 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (PG-163), capability probe stubbed to absent | E-OC | C002-T-040 |
 | C002-TC-651 | C002-TS-651 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (host capabilities per row) | E-W | C002-T-047 |
 | C002-TC-652 | C002-TS-652 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
+| C002-TC-655 | C002-TS-655 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (native) with `.sdd/004-x/existing.md`, `.sdd/004-x/a.md` and `README.md`; corpus cases PG-004, PG-003, PG-050 | E-OC | C002-T-042 |
+| C002-TC-656 | C002-TS-656 | integration | `tests/unit/replay/opencode-decision.test.ts` | `npm test -- unit/replay` | in-process stub OpenCode host answering the `edit` call of PG-050 with each part form of the Examples; replay fixture copy of `README.md` | E-W | C002-T-042 |
 | C002-TC-901 | C002-TS-618 | manual | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step, including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 358, 508 and 516 and the assumption steps of C002-T-046 (the MCP roots step of C002-IF-002 §3 included) (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
 | C002-TC-902 | C002-TS-205 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/architect-opencode-<version>.zip` and its `INSTALL.md` | REF-WIN, OpenCode tested version | C002-T-051 |
 | C002-TC-903 | C002-TS-306 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile to the first interview question | fresh Windows user profile, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC | C002-T-057 |
 
-### 8.1 Cases re-levelled in the S-07 infeasible-driver branch
+### 8.1 Cases re-levelled in the S-07 infeasible-driver branch (not taken)
+
+**Not taken.** The S-07 record (C002-T-001; OpenCode 1.15.10 and 1.18.31, §4) gives the stub-model
+driver as feasible, so the four cases below stay replay cases of §8 and C002-T-056 step 4 runs no
+session (§4.2). The table is kept for a later S-07 record of a new tested version only.
 
 When the S-07 record shows that the stub-model driver of C002-ADR-005 is infeasible
 (`10-strategy.md` §4), the fallback adapter evaluates OpenCode's permission rules without a session.

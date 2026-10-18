@@ -21,7 +21,12 @@ modes, its workspace hook file `.github/hooks/architect-guard.json` and the `ins
 gating, C002-REQ-327 … C002-REQ-330); any G2 revision still open at that time (for example D-002, the DoD's
 eval-budget figure) must be approved before G3. Spike S-08 (C002-T-002) is done: the Copilot target
 uses sdd MCP server enforcement on VS Code Insiders 1.142.0-insider (Local session type) and Copilot
-CLI 1.0.98 (`10-strategy.md` §4).
+CLI 1.0.98 (`10-strategy.md` §4). Spike S-07 (C002-T-001) is done too: the OpenCode target is tested
+on OpenCode 1.18.31, with mode `sdd-mcp-server` provisional until C002-T-043, and the stub-model replay
+driver is feasible. The spec revision for defects D-004 … D-009 (the S-07 facts, the print form
+`<code>: <message>`, the template lookup order and the Copilot hook-guard faults) is re-approved at G2
+before G3, like any open G2 revision. Its code for done tasks lands in the catch-up tasks C002-T-061 and C002-T-062; C002-REQ-217 lands in
+C002-T-030 and C002-T-035.
 
 ## Reading order
 
@@ -102,11 +107,11 @@ environments:
 
 | Install | Version | Needed by |
 |---|---|---|
-| Node.js 20 LTS and 22 LTS, switched with a version manager (for example `nvm-windows`: `nvm use 20` / `nvm use 22`), one active per shell | both LTS lines | E-W, E-W4 (C002-T-023, C002-DOD-015, C002-DOD-016) |
+| Node.js 20 LTS and 22 LTS, switched with a version manager (for example `nvm-windows`: `nvm use 20` / `nvm use 22`), one active per shell | both LTS lines; the 22 line at 22.22.2 or later, the floor of the OpenCode JS SDK for the replay and the OpenCode eval runner (S-07 fact F-10; P-01 upgrades REF-WIN, Q-s07-02) | E-W, E-W4 (C002-T-023, C002-DOD-015, C002-DOD-016); E-OC, E-OCE on 22.22.2 or later |
 | PowerShell 7 and Git Bash | current | E-W4, release replays (C002-T-049, C002-T-054) |
 | Windows Developer Mode on (symbolic links without elevation) | — | E-OC `file-symlink` cases (C002-REQ-634) |
 | Serena | 1.7.x | E-SER (C002-TC-125, `serena-launch.test.ts`) |
-| OpenCode, with auto-update off | the S-07 tested version (C002-T-001) | E-OC, E-OCE |
+| OpenCode, with auto-update off, started by the harness as the pinned host binary (absolute path in the harness configuration) with its own `OPENCODE_DB`, never the `opencode` that PATH resolves (REF-WIN has two installs: Git Bash finds 1.15.10 first; C002-ADR-005 host process) | 1.18.31, the S-07 tested version (C002-T-001) | E-OC, E-OCE |
 | VS Code Insiders (`code-insiders` on PATH), GitHub Copilot Chat, Copilot CLI, with auto-update off | the S-08 tested versions (C002-T-002; scope §3.1): VS Code Insiders 1.142.0-insider, Local session type; Copilot CLI 1.0.98; Copilot Chat 0.35.3 (Q-versions-02) | E-VSC, E-CPC |
 | Claude Code desktop-bundled binary (`CLAUDE_CODE_EXECPATH`) | the tested version | E-CC |
 | P-01's OpenRouter account with credit, configured in OpenCode with the Claude model ids of the S-07 record (C002-T-001 step 1); P-01's Claude Max plan with its OAuth token outside the repository (C002-T-060); P-01's Copilot subscription with Claude models (C002-T-002) | — | paid evals |
@@ -123,6 +128,7 @@ Insiders builds): record the version before each run.
 | C002-REQ-325 as a changed expectation of the regression set (`sdd install` cases, `not install;` in the `Allowed:` summary) | C002-T-059, C002-T-048 | settled: `30-impact/regression-set.md` §4.1 lists it beside C002-REQ-503, C002-REQ-517 and C002-REQ-521 |
 | The assumptions left to the checklist and the runner (`10-strategy.md` §4, "Open assumptions"), the MCP roots of C002-IF-002 §3 and the subagent guard assumptions of C002-IF-005 §3 and C002-REQ-327 included | C002-T-045, C002-T-046, C002-T-050, C002-T-054 | settled by those tasks |
 | OpenCode model inference through OpenRouter (Q-opencode-01, `questions-log.md` round 6) | C002-T-001 | settled: Claude models of the C002-REQ-105 tiers through OpenRouter, billed to P-01's OpenRouter account; stop at 40 USD of OpenRouter spend and ask P-01 (test plan §4.1); S-07 records the model id per tier |
+| OpenCode tested version and the Node.js of REF-WIN (Q-s07-01, Q-s07-02, `questions-log.md` round 11) | C002-T-042, C002-T-044 | settled: OpenCode 1.18.31 as the pinned host binary; P-01 upgrades REF-WIN to Node.js 22.22.2 or later before C002-T-042 runs |
 
 ## CLI commands
 
@@ -138,8 +144,8 @@ allowed read-only filters).
 
 Topological order of `depends_on` (not numeric order: C002-T-053 comes first, C002-T-040 comes before
 C002-T-026 because it takes `tests/replay/` out of `npm test` before the first replay test file lands,
-and the tasks added in plan round 4 and for defect D-003, C002-T-059 and C002-T-058, sit after their
-dependencies; C002-T-060, the eval auth switch already built in commits 98e6353 and 6de8656, comes
+and the tasks added in plan round 4, for defect D-003 and for the D-004 … D-009 revision, C002-T-059,
+C002-T-058, C002-T-061 and C002-T-062, sit after their dependencies; C002-T-060, the eval auth switch already built in commits 98e6353 and 6de8656, comes
 right after C002-T-053, before any task with a paid Claude Code step). Tasks may run in another order when their dependencies
 allow; C002-M-02 and C002-M-03 run in parallel with C002-M-01. After C002-T-048, the OpenCode tasks
 (C002-T-049, C002-T-051, C002-T-052) and the Copilot tasks (C002-T-054, C002-T-050, C002-T-057,
@@ -172,41 +178,43 @@ C002-T-055) are independent of each other.
 | 22 | C002-T-020 | sdd MCP server: fault injection and benchmarks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-020-mcp-faults-and-benchmarks.md` |
 | 23 | C002-T-021 | Build: two bundles and the licence check over both | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-021-build-two-bundles.md` |
 | 24 | C002-T-022 | architect-sdd: staging, template CLI lines and npm pack | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-022-npm-staging-and-pack.md` |
-| 25 | C002-T-023 | architect-sdd: install smoke test and manifest check | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-023-npm-install-smoke.md` |
-| 26 | C002-T-024 | Mapping tables, their schema copy and loader | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-024-mapping-tables.md` |
-| 27 | C002-T-025 | Generator: entry, source reader, writer and manifest | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-025-generator-skeleton.md` |
-| 28 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-040-replay-suite-framework.md` |
-| 29 | C002-T-026 | Translator: agent frontmatter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-026-translator-frontmatter.md` |
-| 30 | C002-T-027 | Translator: body constructs, templates, plugin data and question tool | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-027-translator-body-constructs.md` |
-| 31 | C002-T-028 | Wiring variants, anchors and skill inlining | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-028-wiring-variants-and-inlining.md` |
-| 32 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-029-opencode-emitter.md` |
-| 33 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-030-opencode-permissions.md` |
-| 34 | C002-T-031 | Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-031-copilot-emitter.md` |
-| 35 | C002-T-032 | CLI: Copilot hook adapter (hook guard by agent_type and mode, subagent guard, session start, subagent stop) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-032-copilot-hook-adapter.md` |
-| 36 | C002-T-033 | Copilot package: hook template, Copilot guard and subagent guard hook, tool classes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-033-copilot-package-hooks.md` |
-| 37 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-058-cli-install-copilot.md` |
-| 38 | C002-T-034 | npm run package runs the generator and zips each target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-034-packaging-runs-generator.md` |
-| 39 | C002-T-035 | Target structure checks and the npm run check step | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-035-target-structure-checks.md` |
-| 40 | C002-T-036 | Generation determinism test and generation benchmark | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-036-generation-determinism-bench.md` |
-| 41 | C002-T-037 | Conductor: interview and gate variants for the host question tools | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-037-conductor-question-variants.md` |
-| 42 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-038-doctor-host-rows.md` |
-| 43 | C002-T-039 | README sections for OpenCode and Copilot VS Code | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-039-readme-target-sections.md` |
-| 44 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-041-replay-adapters-server-hooks.md` |
-| 45 | C002-T-042 | OpenCode session driver and the opencode-permissions replay adapter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-042-opencode-driver-replay-adapter.md` |
-| 46 | C002-T-043 | S-07 record: final replay outcomes and the OpenCode enforcement mode | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-043-spike-s07-final-replay.md` |
-| 47 | C002-T-044 | OpenCode eval runner behind the existing case API | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-044-opencode-eval-runner.md` |
-| 48 | C002-T-045 | Copilot CLI eval runner | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-045-copilot-cli-eval-runner.md` |
-| 49 | C002-T-046 | Manual VS Code checklist and its record template | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-046-vscode-checklist.md` |
-| 50 | C002-T-047 | Release check per target and release records | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-047-release-check.md` |
-| 51 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
-| 52 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
-| 53 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
-| 54 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
-| 55 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 56 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 57 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 58 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 59 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 25 | C002-T-061 | Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-061-catch-up-print-forms-and-npm-package.md` |
+| 26 | C002-T-023 | architect-sdd: install smoke test and manifest check | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-023-npm-install-smoke.md` |
+| 27 | C002-T-024 | Mapping tables, their schema copy and loader | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-024-mapping-tables.md` |
+| 28 | C002-T-025 | Generator: entry, source reader, writer and manifest | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-025-generator-skeleton.md` |
+| 29 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-040-replay-suite-framework.md` |
+| 30 | C002-T-026 | Translator: agent frontmatter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-026-translator-frontmatter.md` |
+| 31 | C002-T-027 | Translator: body constructs, templates, plugin data and question tool | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-027-translator-body-constructs.md` |
+| 32 | C002-T-028 | Wiring variants, anchors and skill inlining | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-028-wiring-variants-and-inlining.md` |
+| 33 | C002-T-029 | OpenCode emitter: layout, agents, commands, MCP servers and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-029-opencode-emitter.md` |
+| 34 | C002-T-030 | OpenCode permission rules for both modes and the quick-lint plugin | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-030-opencode-permissions.md` |
+| 35 | C002-T-031 | Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-031-copilot-emitter.md` |
+| 36 | C002-T-032 | CLI: Copilot hook adapter (hook guard by agent_type and mode, subagent guard, session start, subagent stop) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-032-copilot-hook-adapter.md` |
+| 37 | C002-T-062 | Catch-up for revision D-007: Copilot hook guard faults, --host usage fault and duplicate tool classes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-062-catch-up-copilot-hook-guard-faults.md` |
+| 38 | C002-T-033 | Copilot package: hook template, Copilot guard and subagent guard hook, tool classes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-033-copilot-package-hooks.md` |
+| 39 | C002-T-058 | CLI: Copilot install command (sdd install copilot) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-058-cli-install-copilot.md` |
+| 40 | C002-T-034 | npm run package runs the generator and zips each target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-034-packaging-runs-generator.md` |
+| 41 | C002-T-035 | Target structure checks and the npm run check step | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-035-target-structure-checks.md` |
+| 42 | C002-T-036 | Generation determinism test and generation benchmark | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-036-generation-determinism-bench.md` |
+| 43 | C002-T-037 | Conductor: interview and gate variants for the host question tools | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-037-conductor-question-variants.md` |
+| 44 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-038-doctor-host-rows.md` |
+| 45 | C002-T-039 | README sections for OpenCode and Copilot VS Code | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-039-readme-target-sections.md` |
+| 46 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-041-replay-adapters-server-hooks.md` |
+| 47 | C002-T-042 | OpenCode session driver and the opencode-permissions replay adapter | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-042-opencode-driver-replay-adapter.md` |
+| 48 | C002-T-043 | S-07 record: final replay outcomes and the OpenCode enforcement mode | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-043-spike-s07-final-replay.md` |
+| 49 | C002-T-044 | OpenCode eval runner behind the existing case API | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-044-opencode-eval-runner.md` |
+| 50 | C002-T-045 | Copilot CLI eval runner | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-045-copilot-cli-eval-runner.md` |
+| 51 | C002-T-046 | Manual VS Code checklist and its record template | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-046-vscode-checklist.md` |
+| 52 | C002-T-047 | Release check per target and release records | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-047-release-check.md` |
+| 53 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
+| 54 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
+| 55 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
+| 56 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
+| 57 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+| 58 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 59 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 60 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 61 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 
