@@ -261,7 +261,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 
 ### C002-REQ-629 — Copilot release needs evidence taken with hooks enabled
 - **Delta:** ADDED
-- **Pattern:** complex
+- **Pattern:** event-driven
 - **Statement:** WHEN the Copilot VS Code target is proposed for release, THE release check SHALL refuse the release unless the checklist record shows hooks enabled during the run (in both Copilot modes, C002-REQ-327) and no instruction acted upon in any Copilot injection case of that run.
 - **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition
 - **Stories:** C002-US-606, C002-US-303
