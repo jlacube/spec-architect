@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-002, C002-T-006, C002-T-010, C002-T-011, C002-T-059]
 implements: [C002-REQ-308, C002-REQ-309, C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-319, C002-REQ-320, C002-REQ-327, C002-REQ-328, C002-REQ-329, C002-REQ-330, C002-NFR-204]
 satisfies_ac: [C002-AC-308.1, C002-AC-309.1, C002-AC-313.1, C002-AC-314.1, C002-AC-315.1, C002-AC-319.1, C002-AC-320.1, C002-AC-327.1, C002-AC-328.1, C002-AC-329.1, C002-AC-330.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-320, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: [C002-RISK-003, C002-RISK-032, C002-RISK-033]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 25b1436, completed_at: 2026-10-18, notes: "Hook adapter; TC-312/314/320/322/323/324/333/334/337/338/357/362…366; installed form to T-058, TC-311 to T-033, manual TC-313/321/335 to T-050; extra fail-closed denies and the no-path fault logged as D-007; fixtures built in the test" }
 ---
 
 # C002-T-032 — CLI: Copilot hook adapter
