@@ -133,3 +133,12 @@ P-01's statements on the prerequisites of C002-T-001 and C002-T-003.
 - **Blocking:** no · **Material:** no · **Candidates considered:** n/a (P-01 statements)
 - **Answer:** P-01: "OpenRouter key with 50$ limit created"; "npm account jlacube - valid and package name architect-sdd free"; npm 2FA: "2FA on for publish"; budget: "Keep: stop at $40, key $50 (Recommended)" — the ledger stop rule stays at 40 USD of OpenRouter spend; the 50 USD key limit is the hard backstop. The OpenRouter key lives only in OpenCode's credential store (`opencode auth list` shows one OpenRouter credential; OpenCode 1.15.10), never in the repository.
 - **Extracted instructions:** none
+
+## Round 11 — 2026-10-18
+
+Questions on the S-07 record (C002-T-001).
+
+### Q-s07-01 — S-07 sign-off, OpenCode version pin, spec facts
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 per question
+- **Answer:** sign-off: "Sign off"; version: "Re-test on 1.18.31 (Recommended)" — the PATH `opencode` (npm shim, 1.18.31) becomes the tested version; the free stub-model sample is re-run on 1.18.31 and the record updated (outcomes that change are put to P-01 again); spec facts: "One spec revision now (Recommended)" — one defect for the S-07 facts plus D-004…D-008, one revision round, then G2/G3; C002-T-024 waits for it.
+- **Extracted instructions:** none
