@@ -13,8 +13,8 @@
 //   C002-TC-328 (C002-TS-328)  prompt file names `<name>.prompt.md`
 //   C002-TC-339 (C002-TS-339)  hooks fallback: the conductor and every prompt file hold the server profiles
 //   C002-TC-124 (C002-TS-124)  the Copilot row: the serena entry of install/mcp.json
-// Carried: the `install/hooks.template.json` and `hooks/tool-classes.json` clauses of C002-TC-301 and
-// their rows of C002-TC-302 to C002-T-033; the TGT-GRANT-001 clause of C002-TC-339 to C002-T-035;
+// The `install/hooks.template.json` and `hooks/tool-classes.json` clauses of C002-TC-301 and their rows
+// of C002-TC-302 came with C002-T-033 (also in package-hooks.test.ts). Carried: the TGT-GRANT-001 clause of C002-TC-339 to C002-T-035;
 // C002-TC-306 timing to C002-T-057; C002-TC-309 and C002-TC-329 (manual VS Code) to C002-T-050.
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -147,7 +147,8 @@ for (const mode of MODES) {
     assert.ok(files.has(MANIFEST) && files.has(INSTALL));
     assert.deepEqual(copilotPackageFindings(files, emitInput(mode)), [], "the target structure findings of a clean package");
     const skillFiles = source.skills.reduce((n, s) => n + 1 + s.resources.length, 0);
-    assert.equal(files.size, 10 + 13 + skillFiles + 5, "nothing else (plugin manifest, MCP configuration, CLI copy, install notes, generation manifest)");
+    assert.ok(files.has(table.placement["hooks_file"]!) && files.has("hooks/tool-classes.json"), "the hook template and the tool classes file (C002-T-033)");
+    assert.equal(files.size, 10 + 13 + skillFiles + 7, "nothing else (plugin manifest, MCP configuration, hook template, tool classes, CLI copy, install notes, generation manifest)");
   });
 
   test(`agent frontmatter [${mode}]: name = file name, model of the tier, a tools list, agents, user-invocable false on the nine specialists, no memory or hooks`, () => {
@@ -298,7 +299,7 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   assert.deepEqual([...order].sort((a, b) => a - b), order, "steps in the order of C002-IF-005 §5");
 });
 
-for (const row of ["agents/sdd-critic.agent.md", "scripts/sdd.mjs", "install/plugin.json", "install/mcp.json"]) {
+for (const row of ["agents/sdd-critic.agent.md", "scripts/sdd.mjs", "install/plugin.json", "install/mcp.json", "install/hooks.template.json", "hooks/tool-classes.json"]) {
   test(`C002-TC-302 (C002-TS-302): fx-dist-bad without ${row} is reported naming it`, () => {
     const mode = table.enforcement_mode;
     const bad = new Map(fxDist(mode));

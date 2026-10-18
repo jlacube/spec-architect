@@ -99,7 +99,7 @@ export function fieldLine(doc: SourceDoc, key: string, needle?: string): number 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /** Matcher of `mcp_tool_names.source_pattern` (`mcp__plugin_architect_{server}__{tool}`). */
-function mcpMatcher(table: MappingTable): RegExp {
+export function mcpMatcher(table: MappingTable): RegExp {
   const parts = table.mcp_tool_names.source_pattern.split(/(\{server\}|\{tool\})/);
   const re = parts.map((p) => (p === "{server}" ? "(?<server>[A-Za-z0-9-]+)" : p === "{tool}" ? "(?<tool>[A-Za-z0-9_-]+)" : escapeRe(p))).join("");
   return new RegExp(`^${re}$`);

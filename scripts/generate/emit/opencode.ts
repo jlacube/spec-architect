@@ -147,7 +147,7 @@ export const emitOpenCode = (input: EmitInput): EmitResult => {
 
 /** One target structure finding on an OpenCode package (C002-IF-005 §6; run by C002-T-035's checks). */
 export interface PackageFinding {
-  code: "TGT-LAYOUT-001" | "TGT-MCP-001";
+  code: "TGT-LAYOUT-001" | "TGT-MCP-001" | "TGT-HOOK-001" | "TGT-CLASS-001";
   file: string;
   message: string;
 }
