@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-032]
 implements: [C002-REQ-308, C002-REQ-309, C002-REQ-327, C002-REQ-328, C002-NFR-204]
 satisfies_ac: [C002-AC-308.1, C002-AC-309.1, C002-AC-327.1, C002-AC-328.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-367, C002-TS-368, C002-TS-369, C002-TS-370, C002-TC-367, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: [C002-RISK-032]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 4c1b67c, completed_at: 2026-10-18, notes: "TC-367/368/369/370; shownTool shared in src/hooks/copilot.ts; remaining: option-parser faults (missing --mode value, unknown option, extra argument) still say 'tool call' because that path cannot read the input — minor, for the next spec batch; installed form in T-058" }
 ---
 
 # C002-T-062 — Catch-up for revision D-007: Copilot hook guard faults, --host usage fault and duplicate tool classes
