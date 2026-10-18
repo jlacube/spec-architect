@@ -21,7 +21,6 @@ import { loadBashCorpus } from "./fixture.ts";
 // removes its entry here.
 const PENDING_COMMANDS: Record<string, string> = {
   "install copilot": "C002-T-058",
-  "hook subagent-stop": "C002-T-032",
 };
 
 interface SpecRow {

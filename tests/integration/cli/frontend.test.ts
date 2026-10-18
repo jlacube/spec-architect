@@ -26,8 +26,6 @@ const PENDING_CODES: Record<string, string> = {
   "ERR-CLI-022": "C002-T-058",
 };
 const PENDING_COMMANDS: Record<string, string> = {
-  "hook guard": "C002-T-032",
-  "hook subagent-stop": "C002-T-032",
   "install copilot": "C002-T-058",
 };
 

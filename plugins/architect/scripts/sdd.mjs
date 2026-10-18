@@ -7369,7 +7369,7 @@ var require_dist = __commonJS({
 });
 
 // src/cli.ts
-import { readFileSync as readFileSync21 } from "node:fs";
+import { readFileSync as readFileSync22 } from "node:fs";
 
 // src/cli/run.ts
 import { parseArgs } from "node:util";
@@ -7609,8 +7609,8 @@ function relativePath(root, target, options2 = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync20, statSync as statSync11 } from "node:fs";
-import { basename as basename9, join as join30, resolve } from "node:path";
+import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync21, statSync as statSync11 } from "node:fs";
+import { basename as basename9, join as join31, resolve as resolve2 } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -11387,6 +11387,9 @@ var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (not install; serena-config a
 function dialectOf(toolName) {
   return toolName === "PowerShell" ? "powershell" : "bash";
 }
+function toolOfDialect(dialect) {
+  return dialect === "powershell" ? "PowerShell" : "Bash";
+}
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11823,75 +11826,189 @@ function sessionBrief(input, fallbackCwd) {
   }
 }
 
-// src/workspace/serena-config.ts
-import { existsSync as existsSync13, mkdirSync as mkdirSync5, readFileSync as readFileSync11 } from "node:fs";
-import { join as join16 } from "node:path";
-function requiredSettings(dataDir) {
-  const projects = join16(dataDir, "serena", "projects").split("\\").join("/");
-  return {
-    web_dashboard: "false",
-    web_dashboard_open_on_launch: "false",
-    project_serena_folder_location: `"${projects}/$projectFolderName/.serena"`
-  };
-}
-function setKey(text, key, value2) {
-  const re = new RegExp(`^${key}:.*$`, "m");
-  const line = `${key}: ${value2}`;
-  if (re.test(text)) return text.replace(re, line);
-  return `${text.replace(/\n*$/, "\n")}${line}
-`;
-}
-function writeSerenaConfig(dataDir) {
-  const dir2 = join16(dataDir, "serena");
-  const path = join16(dir2, "serena_config.yml");
-  const existed = existsSync13(path);
-  const before = existed ? readFileSync11(path, "utf8") : "";
-  let text = before;
-  for (const [k, v] of Object.entries(requiredSettings(dataDir))) text = setKey(text, k, v);
-  if (!/^projects:/m.test(text)) text = setKey(text, "projects", "[]");
-  if (existed && text === before) return { path, outcome: "unchanged" };
-  mkdirSync5(dir2, { recursive: true });
-  writeTextAtomic(path, text);
-  return { path, outcome: existed ? "updated" : "created" };
-}
-
-// src/workspace/serena-launch.ts
-import { spawnSync } from "node:child_process";
-import { dirname as dirname8, join as join17 } from "node:path";
+// src/cli/hook-cmds.ts
+import { dirname as dirname9, join as join19, resolve } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
-var defaultSpawner = (command, args, env) => spawnSync(command, args, { stdio: "inherit", windowsHide: true, ...env ? { env: { ...env } } : {} });
-var spawner = defaultSpawner;
-function readOnlyModeFile(cliDir = dirname8(fileURLToPath2(import.meta.url))) {
-  return normalisePath(join17(cliDir, "..", "serena", "architect-read-only.yml"));
+
+// src/hooks/copilot.ts
+import { readFileSync as readFileSync11 } from "node:fs";
+var RULE_FAULT = "GUARD-HOOK-001";
+var RULE_SUBAGENT = "GUARD-HOOK-002";
+var MODES = ["sdd-mcp-server", "copilot-hooks"];
+var Fault = class extends Error {
+};
+function fault(env, name) {
+  return new RegExp(`(?:^|,)${name}(?:,|$)`).test(env?.["SDD_TEST_FAULT"] ?? "");
 }
-function launchArgs(args, modeFile) {
-  return modeFile === void 0 ? [...args] : [...args, "--mode", modeFile];
+function hookDeny(rule, tool, text) {
+  return { allow: false, message: `${rule}: ${tool} denied — ${text}.` };
 }
-function serenaLaunch(dataDir, args, options2 = {}) {
-  const command = options2.command ?? "serena";
-  writeSerenaConfig(dataDir);
-  const r = spawner(command, launchArgs(args, options2.modeFile), options2.env);
-  if (r.error) return { code: 1, error: `${command} could not be started: ${r.error.message}` };
-  return { code: r.status ?? 1 };
+function agentName(agentType) {
+  return agentType.startsWith("architect:") ? agentType.slice("architect:".length) : agentType;
+}
+function agentList(agents) {
+  return (agents ?? "").split(",").map((a) => a.trim()).filter((a) => a !== "");
+}
+function readToolClasses(file) {
+  let doc;
+  try {
+    doc = JSON.parse(readFileSync11(file, "utf8"));
+  } catch (e) {
+    throw new Fault(e instanceof Error ? e.message : String(e));
+  }
+  const bad = (what) => new Fault(`${file}: ${what}`);
+  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) throw bad("not a JSON object");
+  const d = doc;
+  const list = (k) => {
+    if (!Array.isArray(d[k])) throw bad(`"${k}" is not an array`);
+    return d[k];
+  };
+  const str3 = (v) => typeof v === "string" && v !== "";
+  const pointer = (v) => typeof v === "string" && v.startsWith("/");
+  const write2 = list("write").map((e, i) => {
+    const o = e ?? {};
+    if (!str3(o["tool"]) || !Array.isArray(o["paths"]) || o["paths"].length === 0 || !o["paths"].every(pointer)) throw bad(`write[${i}] needs "tool" and JSON pointers in "paths"`);
+    if (o["always_deny"] !== void 0 && typeof o["always_deny"] !== "boolean") throw bad(`write[${i}].always_deny is not a boolean`);
+    return o;
+  });
+  const terminal = list("terminal").map((e, i) => {
+    const o = e ?? {};
+    if (!str3(o["tool"]) || !pointer(o["command"])) throw bad(`terminal[${i}] needs "tool" and a JSON pointer in "command"`);
+    if (o["dialect"] !== void 0 && !["bash", "powershell", "strictest"].includes(o["dialect"])) throw bad(`terminal[${i}].dialect is not bash, powershell or strictest`);
+    return o;
+  });
+  const readOnly = list("read_only");
+  if (!readOnly.every(str3)) throw bad(`"read_only" holds a value that is not a tool name`);
+  return { write: write2, terminal, read_only: readOnly };
+}
+function stringsAt(doc, ptr) {
+  const segments = ptr.split("/").slice(1).map((s) => s.replace(/~1/g, "/").replace(/~0/g, "~"));
+  let nodes = [doc];
+  for (const s of segments) {
+    const next = [];
+    for (const n of nodes) {
+      if (s === "*" && Array.isArray(n)) next.push(...n);
+      else if (Array.isArray(n) && /^(0|[1-9]\d*)$/.test(s)) next.push(n[Number(s)]);
+      else if (n !== null && typeof n === "object" && !Array.isArray(n) && Object.prototype.hasOwnProperty.call(n, s)) next.push(n[s]);
+    }
+    nodes = next;
+  }
+  return nodes.filter((n) => typeof n === "string");
+}
+function classOf(classes, tool) {
+  const w = classes.write.find((e) => e.tool === tool);
+  if (w) return { kind: "write", entry: w };
+  const t = classes.terminal.find((e) => e.tool === tool);
+  if (t) return { kind: "terminal", entry: t };
+  return classes.read_only.includes(tool) ? { kind: "read_only" } : null;
+}
+function loadClasses(file, tool) {
+  try {
+    return readToolClasses(file);
+  } catch (e) {
+    return hookDeny(RULE_FAULT, tool, `tool classes file unreadable: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+var isDecision = (x) => "allow" in x;
+function decideSubagent(input, tool, opts) {
+  const cwd = input["cwd"];
+  if (typeof cwd !== "string" || cwd === "") return hookDeny(RULE_FAULT, tool, "no cwd");
+  let root;
+  try {
+    if (fault(opts.env, "hook-lookup-throw")) throw new Error("SDD_TEST_FAULT: workspace lookup failure");
+    root = findWorkspace(normalisePath(cwd));
+  } catch (e) {
+    return hookDeny(RULE_FAULT, tool, `workspace lookup failed: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  if (root === null) return { allow: true };
+  const name = input["tool_name"];
+  if (typeof name !== "string" || name === "") return hookDeny(RULE_FAULT, tool, "no tool name");
+  const classes = loadClasses(opts.classesFile, name);
+  if (isDecision(classes)) return classes;
+  const c = classOf(classes, name);
+  if (c === null) return hookDeny(RULE_FAULT, name, `tool ${name} is not in the tool classes`);
+  if (c.kind === "read_only") return { allow: true };
+  const at = input["agent_type"];
+  const shown = typeof at === "string" ? at : JSON.stringify(at);
+  return { allow: false, message: `${RULE_SUBAGENT}: ${name} denied — subagent ${shown} is not an Architect agent, and this repository contains .sdd/. Allowed: read-only tools.` };
+}
+function decideArchitect(input, agent, tool, opts) {
+  const cwd = input["cwd"];
+  if (typeof cwd !== "string" || cwd === "") return hookDeny(RULE_FAULT, tool, "no cwd");
+  const name = input["tool_name"];
+  if (typeof name !== "string" || name === "") return hookDeny(RULE_FAULT, tool, "no tool name");
+  const classes = loadClasses(opts.classesFile, name);
+  if (isDecision(classes)) return classes;
+  const c = classOf(classes, name);
+  if (c === null) return hookDeny(RULE_FAULT, name, `tool ${name} is not in the tool classes`);
+  if (c.kind === "read_only") return { allow: true };
+  const agentType = `architect:${agent}`;
+  const core = { hook_event_name: "PreToolUse", cwd, agent_type: agentType };
+  if (!isArchitectAgent(core)) return hookDeny(RULE_FAULT, name, `internal error: agent ${agent} of --agents is not an sdd- agent name`);
+  const toolInput = input["tool_input"];
+  if (c.kind === "write") {
+    if (c.entry.always_deny === true) {
+      const repo = normalisePath(findWorkspace(normalisePath(cwd)) ?? cwd);
+      return deny2(name, "(unknown target)", "its targets cannot be read from its input", [normalisePath(".sdd", { cwd: repo })], false);
+    }
+    const paths = c.entry.paths.flatMap((p) => stringsAt(toolInput, p));
+    if (paths.length === 0) return hookDeny(RULE_FAULT, name, `no path in the tool input (${c.entry.paths.join(", ")})`);
+    for (const p of paths) {
+      const d = decidePath({ ...core, tool_name: "Write", tool_input: { file_path: p } }, { memoryFolder: false });
+      if (!d.allow) return d;
+    }
+    return { allow: true };
+  }
+  const command = stringsAt(toolInput, c.entry.command)[0] ?? "";
+  const dialect = c.entry.dialect ?? "strictest";
+  const dialects = dialect === "strictest" ? ["bash", "powershell"] : [dialect];
+  for (const d of dialects) {
+    const r = decideBash({ ...core, tool_name: toolOfDialect(d), tool_input: { command } });
+    if (!r.allow) return r;
+  }
+  return { allow: true };
+}
+function decideCopilot(stdin, opts) {
+  let tool = "tool call";
+  try {
+    if (opts.mode === void 0 || !MODES.includes(opts.mode)) return hookDeny(RULE_FAULT, tool, "hook command usage: --mode");
+    if (agentList(opts.agents).length === 0) return hookDeny(RULE_FAULT, tool, "hook command usage: --agents");
+    let doc;
+    try {
+      doc = JSON.parse(stdin);
+    } catch {
+      doc = void 0;
+    }
+    if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return hookDeny(RULE_FAULT, tool, "unreadable hook input");
+    const input = doc;
+    if (typeof input["tool_name"] === "string" && input["tool_name"] !== "") tool = input["tool_name"];
+    if (!Object.prototype.hasOwnProperty.call(input, "agent_type")) return { allow: true };
+    if (fault(opts.env, "hook-decision-throw")) throw new Error("SDD_TEST_FAULT: decision failure");
+    const at = input["agent_type"];
+    const agents = agentList(opts.agents);
+    const architect = typeof at === "string" && agents.includes(agentName(at)) ? agentName(at) : null;
+    if (architect !== null) return opts.mode === "sdd-mcp-server" ? { allow: true } : decideArchitect(input, architect, tool, opts);
+    return decideSubagent(input, tool, opts);
+  } catch (e) {
+    return hookDeny(RULE_FAULT, tool, `internal error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+function denyDecision(message) {
+  return JSON.stringify({
+    hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: message },
+    permissionDecision: "deny",
+    permissionDecisionReason: message
+  });
 }
 
-// src/workspace/user-data.ts
-var USER_DATA_APP = "architect-sdd";
-function userDataDir(cwd, env, os = USER_OS) {
-  const r = userDataFolder(USER_DATA_APP, env, os);
-  if (!("folder" in r)) {
-    const reason = r.value === void 0 ? `${r.variable} is not set` : `${r.variable} is relative: ${r.value}`;
-    throw new CliError("ERR-CLI-020", { reason });
-  }
-  const root = findRepositoryRoot(cwd);
-  if (!isOutsideRepository(root, r.folder, cwd)) throw new CliError("ERR-CLI-020", { reason: `${r.folder} lies inside the repository ${root}` });
-  return r.folder;
-}
+// src/trace/write.ts
+import { existsSync as existsSync14 } from "node:fs";
+import { join as join18 } from "node:path";
 
 // src/trace/model.ts
-import { basename as basename7, dirname as dirname9 } from "node:path";
-import { readFileSync as readFileSync12, existsSync as existsSync14 } from "node:fs";
-import { join as join18 } from "node:path";
+import { basename as basename7, dirname as dirname8 } from "node:path";
+import { readFileSync as readFileSync12, existsSync as existsSync13 } from "node:fs";
+import { join as join16 } from "node:path";
 var RELATIONS = {
   stories: "story-of",
   requirements: "traces-to",
@@ -11916,7 +12033,7 @@ function compareIds(a, b) {
 }
 function buildTrace(changeDir) {
   const graph = buildChangeGraph(changeDir);
-  const sddDir = dirname9(changeDir);
+  const sddDir = dirname8(changeDir);
   const spec = gatherSpecFacts(sddDir, graph);
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const profile = fm["profile"] === "lite" ? "lite" : "full";
@@ -11950,8 +12067,8 @@ function buildTrace(changeDir) {
   for (const n of graph.nodes) if (n.form === "heading" && !headings.has(n.id)) headings.set(n.id, n);
   const scenarios2 = /* @__PURE__ */ new Map();
   for (const e of graph.edges) if (e.kind === "scenario") scenarios2.set(e.from, [...scenarios2.get(e.from) ?? [], e.to]);
-  const changeMd = join18(changeDir, "change.md");
-  const phases = existsSync14(changeMd) ? splitFrontmatter(readFileSync12(changeMd, "utf8")).data?.["phases"] ?? {} : {};
+  const changeMd = join16(changeDir, "change.md");
+  const phases = existsSync13(changeMd) ? splitFrontmatter(readFileSync12(changeMd, "utf8")).data?.["phases"] ?? {} : {};
   return {
     lint: lint2,
     doc: { change: `CHG-${graph.change}`, nodes, edges },
@@ -11967,7 +12084,7 @@ function percent(covered, total) {
   return `${covered} / ${total} (${total === 0 ? 100 : Math.floor(100 * covered / total)}%)`;
 }
 var row = (cells) => `| ${cells.join(" | ")} |`;
-var join19 = (ids2) => [...new Set(ids2)].sort(compareIds).join(", ") || "—";
+var join17 = (ids2) => [...new Set(ids2)].sort(compareIds).join(", ") || "—";
 function coverage(rule, label, items, ok) {
   const gaps = items.filter((id) => !ok(id));
   return { rule, label, covered: items.length - gaps.length, total: items.length, gaps };
@@ -12020,7 +12137,7 @@ function renderSpecMatrix(t) {
   const forward = (cap, us, req) => {
     const acs = t.field(req, "Acceptance", "AC");
     if (acs.length === 0) out.push(row([cap, us, req, "—", "—"]));
-    for (const ac of acs) out.push(row([cap, us, req, ac, join19(t.scenariosOf(ac))]));
+    for (const ac of acs) out.push(row([cap, us, req, ac, join17(t.scenariosOf(ac))]));
   };
   for (const us of ids(t, "US"))
     for (const req of t.field(us, "Requirements", "REQ")) {
@@ -12033,7 +12150,7 @@ function renderSpecMatrix(t) {
   out.push("", "## Backward: TS → AC → REQ → US", "", row(["TS", "AC", "REQ", "US"]), "|---|---|---|---|");
   for (const req of ids(t, "REQ"))
     for (const ac of t.field(req, "Acceptance", "AC"))
-      for (const ts of t.scenariosOf(ac)) out.push(row([ts, ac, req, join19(storiesOf.get(req) ?? [])]));
+      for (const ts of t.scenariosOf(ac)) out.push(row([ts, ac, req, join17(storiesOf.get(req) ?? [])]));
   return out.join("\n") + "\n";
 }
 function planFacts(t, tombstones) {
@@ -12103,18 +12220,14 @@ function renderPlanMatrix(t, tombstones = /* @__PURE__ */ new Set()) {
     }
   out.push("## Forward: REQ → T → TC → DOD", "", row(["REQ", "Task", "Test cases", "DoD"]), "|---|---|---|---|");
   for (const req of ids(t, "REQ"))
-    out.push(row([req, join19(f.live.filter((x) => x.implements.includes(req)).map((x) => x.id)), join19(tcsOfReq.get(req) ?? []), join19(dod.get(req) ?? [])]));
+    out.push(row([req, join17(f.live.filter((x) => x.implements.includes(req)).map((x) => x.id)), join17(tcsOfReq.get(req) ?? []), join17(dod.get(req) ?? [])]));
   out.push("", "## Backward: TC → T → REQ", "", row(["TC", "Task", "REQ"]), "|---|---|---|");
   for (const tc of [...f.tcToTs.keys()].sort(compareIds)) {
     const reqs = (f.tcToTs.get(tc) ?? []).map((ts) => f.acToReq.get(f.tsToAc.get(ts) ?? "")).filter((x) => x !== void 0);
-    out.push(row([tc, join19(f.tcToTasks.get(tc) ?? []), join19(reqs)]));
+    out.push(row([tc, join17(f.tcToTasks.get(tc) ?? []), join17(reqs)]));
   }
   return out.join("\n") + "\n";
 }
-
-// src/trace/write.ts
-import { existsSync as existsSync15 } from "node:fs";
-import { join as join20 } from "node:path";
 
 // src/trace/open-items.ts
 var MARKER = /\[(NEEDS CLARIFICATION|ASSUMPTION|WAIVED)(?::\s*([^\]]*))?\]/g;
@@ -12153,7 +12266,7 @@ function trace(changeDir, options2) {
   const tombstones = new Set(loadLedger(changeDir).tombstones.map((x) => x.id));
   const planStarted = model.lint.spec.planStarted;
   const plan = planStarted ? planCoverage(model, tombstones) : null;
-  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync15(join20(changeDir, p)));
+  const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync14(join18(changeDir, p)));
   const document = { change: model.doc.change, generated_at: (options2.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
   const result = {
     model,
@@ -12165,20 +12278,171 @@ function trace(changeDir, options2) {
   };
   if (!options2.write) return result;
   const put = (rel, text) => {
-    writeTextAtomic(join20(changeDir, ...rel.split("/")), text);
+    writeTextAtomic(join18(changeDir, ...rel.split("/")), text);
     result.written.push(rel);
   };
-  if (existsSync15(join20(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
-  if (planStarted && existsSync15(join20(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
+  if (existsSync14(join18(changeDir, "10-spec"))) put("10-spec/80-traceability.md", renderSpecMatrix(model));
+  if (planStarted && existsSync14(join18(changeDir, "20-plan"))) put("20-plan/80-traceability.md", renderPlanMatrix(model, tombstones));
   for (const p of phases) put(`${p}/85-open-items.md`, renderOpenItems(model, p));
   put("trace.json", JSON.stringify(document, null, 2) + "\n");
   return result;
 }
 
+// src/cli/hook-cmds.ts
+var S = { type: "string" };
+function defaultClassesFile(cliFile = fileURLToPath2(import.meta.url)) {
+  return join19(dirname9(cliFile), "..", "hooks", "tool-classes.json");
+}
+function traceActiveChanges(ctx, cwd, write2) {
+  try {
+    const root = findWorkspace(cwd);
+    if (root === null) return;
+    const sdd = join19(root, ".sdd");
+    const registry = rebuildRegistry(sdd);
+    listChanges(sdd).forEach((c, i) => {
+      const status2 = registry.changes[i]?.status;
+      if (c.archived || status2 === "stopped" || status2 === "archived") return;
+      const r = trace(c.dir, { write: write2 });
+      if (!ctx.values["quiet"]) ctx.out.line(`${registry.changes[i].id}: open items ${r.markers.length}${r.written.length > 0 ? `, written ${r.written.length} file(s)` : ""}`);
+    });
+  } catch (e) {
+    ctx.out.trace("trace.active.error", { detail: e instanceof Error ? e.message : String(e) });
+  }
+}
+function hookSessionStart(ctx) {
+  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
+  return 0;
+}
+function guardDeny(out, message) {
+  out.line(denyDecision(message));
+  out.errorLine(message);
+  return 2;
+}
+function hookGuard(ctx) {
+  const host = ctx.values["host"];
+  const classes = ctx.values["classes"];
+  const d = host !== "copilot" ? { allow: false, message: "GUARD-HOOK-001: tool call denied — hook command usage: --host." } : decideCopilot(ctx.stdin(), {
+    mode: ctx.values["mode"],
+    agents: ctx.values["agents"],
+    classesFile: classes !== void 0 ? resolve(ctx.cwd, classes) : defaultClassesFile(),
+    env: ctx.env
+  });
+  ctx.out.trace("hook.guard", { decision: d.allow ? "allow" : "deny" });
+  return d.allow ? 0 : guardDeny(ctx.out, d.message);
+}
+function hookGuardFault(e, out) {
+  const fault2 = e instanceof CliError && e.code === "ERR-CLI-003" ? `hook command usage: ${String(e.params["detail"] ?? e.message)}` : `internal error: ${e instanceof Error ? e.message : String(e)}`;
+  return guardDeny(out, `GUARD-HOOK-001: tool call denied — ${fault2}.`);
+}
+function hookSubagentStop(ctx) {
+  try {
+    const input = parseHookInput(ctx.stdin());
+    const at = input?.agent_type;
+    if (typeof at !== "string" || !agentList(ctx.values["agents"]).includes(agentName(at))) return 0;
+    const cwd = typeof input?.cwd === "string" && input.cwd !== "" ? normalisePath(input.cwd) : ctx.cwd;
+    traceActiveChanges({ ...ctx, values: { ...ctx.values, quiet: true } }, cwd, true);
+  } catch (e) {
+    ctx.out.trace("hook.subagent-stop.error", { detail: e instanceof Error ? e.message : String(e) });
+  }
+  return 0;
+}
+var HOSTS_SESSION = ["claude-code", "copilot"];
+var AGENTS = "sdd-conductor,sdd-planner";
+var HOOK_ROWS = [
+  { name: "hook session-start", usage: "[--host claude-code|copilot] (hook JSON on stdin)", summary: "Print the session brief", positionals: [], options: { host: S }, workspace: false, sampleArgs: ["--host", "copilot"], run: hookSessionStart },
+  {
+    name: "hook guard",
+    usage: "--host copilot --mode sdd-mcp-server|copilot-hooks --agents <agent>[,<agent>…] [--classes <tool-classes.json>] (hook JSON on stdin)",
+    summary: "Allow/deny a Copilot tool call (hook)",
+    positionals: [],
+    options: { host: S, mode: S, agents: S, classes: S },
+    workspace: false,
+    sampleArgs: ["--host", "copilot", "--mode", "sdd-mcp-server", "--agents", AGENTS],
+    run: hookGuard,
+    onFault: hookGuardFault
+  },
+  {
+    name: "hook subagent-stop",
+    usage: "--host copilot --agents <agent>[,<agent>…] (hook JSON on stdin)",
+    summary: "Refresh the trace after an author agent (hook)",
+    positionals: [],
+    options: { host: S, agents: S },
+    workspace: false,
+    sampleArgs: ["--host", "copilot", "--agents", AGENTS],
+    run: hookSubagentStop,
+    onFault: () => 0
+  }
+];
+
+// src/workspace/serena-config.ts
+import { existsSync as existsSync15, mkdirSync as mkdirSync5, readFileSync as readFileSync13 } from "node:fs";
+import { join as join20 } from "node:path";
+function requiredSettings(dataDir) {
+  const projects = join20(dataDir, "serena", "projects").split("\\").join("/");
+  return {
+    web_dashboard: "false",
+    web_dashboard_open_on_launch: "false",
+    project_serena_folder_location: `"${projects}/$projectFolderName/.serena"`
+  };
+}
+function setKey(text, key, value2) {
+  const re = new RegExp(`^${key}:.*$`, "m");
+  const line = `${key}: ${value2}`;
+  if (re.test(text)) return text.replace(re, line);
+  return `${text.replace(/\n*$/, "\n")}${line}
+`;
+}
+function writeSerenaConfig(dataDir) {
+  const dir2 = join20(dataDir, "serena");
+  const path = join20(dir2, "serena_config.yml");
+  const existed = existsSync15(path);
+  const before = existed ? readFileSync13(path, "utf8") : "";
+  let text = before;
+  for (const [k, v] of Object.entries(requiredSettings(dataDir))) text = setKey(text, k, v);
+  if (!/^projects:/m.test(text)) text = setKey(text, "projects", "[]");
+  if (existed && text === before) return { path, outcome: "unchanged" };
+  mkdirSync5(dir2, { recursive: true });
+  writeTextAtomic(path, text);
+  return { path, outcome: existed ? "updated" : "created" };
+}
+
+// src/workspace/serena-launch.ts
+import { spawnSync } from "node:child_process";
+import { dirname as dirname10, join as join21 } from "node:path";
+import { fileURLToPath as fileURLToPath3 } from "node:url";
+var defaultSpawner = (command, args, env) => spawnSync(command, args, { stdio: "inherit", windowsHide: true, ...env ? { env: { ...env } } : {} });
+var spawner = defaultSpawner;
+function readOnlyModeFile(cliDir = dirname10(fileURLToPath3(import.meta.url))) {
+  return normalisePath(join21(cliDir, "..", "serena", "architect-read-only.yml"));
+}
+function launchArgs(args, modeFile) {
+  return modeFile === void 0 ? [...args] : [...args, "--mode", modeFile];
+}
+function serenaLaunch(dataDir, args, options2 = {}) {
+  const command = options2.command ?? "serena";
+  writeSerenaConfig(dataDir);
+  const r = spawner(command, launchArgs(args, options2.modeFile), options2.env);
+  if (r.error) return { code: 1, error: `${command} could not be started: ${r.error.message}` };
+  return { code: r.status ?? 1 };
+}
+
+// src/workspace/user-data.ts
+var USER_DATA_APP = "architect-sdd";
+function userDataDir(cwd, env, os = USER_OS) {
+  const r = userDataFolder(USER_DATA_APP, env, os);
+  if (!("folder" in r)) {
+    const reason = r.value === void 0 ? `${r.variable} is not set` : `${r.variable} is relative: ${r.value}`;
+    throw new CliError("ERR-CLI-020", { reason });
+  }
+  const root = findRepositoryRoot(cwd);
+  if (!isOutsideRepository(root, r.folder, cwd)) throw new CliError("ERR-CLI-020", { reason: `${r.folder} lies inside the repository ${root}` });
+  return r.folder;
+}
+
 // src/gate/commit.ts
 import { spawnSync as spawnSync2 } from "node:child_process";
 import { existsSync as existsSync16 } from "node:fs";
-import { join as join21, relative as relative2 } from "node:path";
+import { join as join22, relative as relative2 } from "node:path";
 function git(root, args) {
   const r = spawnSync2("git", args, { cwd: root, encoding: "utf8", windowsHide: true });
   return { ok: !r.error && r.status === 0, out: `${r.stdout ?? ""}${r.stderr ?? ""}`.trim() };
@@ -12192,7 +12456,7 @@ function commitPreconditions(root) {
   if (staged.out !== "") throw refuse(`other changes are staged: ${staged.out.split("\n").slice(0, 5).join(", ")}`);
 }
 function commitApproval(root, changeDir, message) {
-  const paths = [relative2(root, changeDir), ".sdd/SDD.md", ".sdd/registry.json"].filter((p) => existsSync16(join21(root, p))).map((p) => p.split("\\").join("/"));
+  const paths = [relative2(root, changeDir), ".sdd/SDD.md", ".sdd/registry.json"].filter((p) => existsSync16(join22(root, p))).map((p) => p.split("\\").join("/"));
   const add = git(root, ["add", "--", ...paths]);
   if (!add.ok) throw refuse(`approval recorded, but git add failed: ${add.out}`);
   const commit = git(root, ["commit", "-q", "-m", message, "--", ...paths]);
@@ -12202,8 +12466,8 @@ function commitApproval(root, changeDir, message) {
 
 // src/gate/hash.ts
 import { createHash as createHash2 } from "node:crypto";
-import { existsSync as existsSync17, readdirSync as readdirSync8, readFileSync as readFileSync13, statSync as statSync10 } from "node:fs";
-import { join as join22 } from "node:path";
+import { existsSync as existsSync17, readdirSync as readdirSync8, readFileSync as readFileSync14, statSync as statSync10 } from "node:fs";
+import { join as join23 } from "node:path";
 var GENERATED2 = /* @__PURE__ */ new Set(["80-traceability.md", "85-open-items.md"]);
 var PHASES2 = ["00-ideation", "10-spec", "20-plan"];
 var sha2562 = (text) => createHash2("sha256").update(text, "utf8").digest("hex");
@@ -12211,7 +12475,7 @@ function phaseFiles(phaseDir) {
   const out = [];
   const walk = (dir2, prefix) => {
     for (const name of readdirSync8(dir2)) {
-      const abs = join22(dir2, name);
+      const abs = join23(dir2, name);
       const rel = prefix + name;
       if (statSync10(abs).isDirectory()) walk(abs, rel + "/");
       else if (!GENERATED2.has(rel)) out.push(rel);
@@ -12221,12 +12485,12 @@ function phaseFiles(phaseDir) {
   return out.sort((a, b) => Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8")));
 }
 function fileHash(abs) {
-  return sha2562(normalizeForHash(readFileSync13(abs, "utf8")));
+  return sha2562(normalizeForHash(readFileSync14(abs, "utf8")));
 }
 function phaseHash(changeDir, phase) {
-  const dir2 = join22(changeDir, phase);
+  const dir2 = join23(changeDir, phase);
   const files = phaseFiles(dir2);
-  const hashes = files.map((rel) => [rel, fileHash(join22(dir2, ...rel.split("/")))]);
+  const hashes = files.map((rel) => [rel, fileHash(join23(dir2, ...rel.split("/")))]);
   if (hashes.length === 1) return { hash: `sha256:${hashes[0][1]}`, files: 1 };
   return { hash: `sha256:${sha2562(hashes.map(([rel, h]) => `${rel}	${h}
 `).join(""))}`, files: hashes.length };
@@ -12238,29 +12502,29 @@ function idHashes(changeDir, phase) {
   return Object.fromEntries([...ids2].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }
 function readApprovals(changeDir) {
-  const p = join22(changeDir, "approvals.json");
-  return existsSync17(p) ? JSON.parse(readFileSync13(p, "utf8")) : {};
+  const p = join23(changeDir, "approvals.json");
+  return existsSync17(p) ? JSON.parse(readFileSync14(p, "utf8")) : {};
 }
 function recordApproval(changeDir, phase, approvedAt) {
   const { hash, files } = phaseHash(changeDir, phase);
   const record2 = { hash, approved_at: approvedAt, files, ids: idHashes(changeDir, phase) };
   const all = readApprovals(changeDir);
   all[phase] = record2;
-  writeTextAtomic(join22(changeDir, "approvals.json"), JSON.stringify(all, null, 2) + "\n");
+  writeTextAtomic(join23(changeDir, "approvals.json"), JSON.stringify(all, null, 2) + "\n");
   return record2;
 }
 
 // src/gate/gate.ts
 import { execFileSync } from "node:child_process";
-import { readFileSync as readFileSync15 } from "node:fs";
-import { basename as basename8, join as join24 } from "node:path";
+import { readFileSync as readFileSync16 } from "node:fs";
+import { basename as basename8, join as join25 } from "node:path";
 
 // src/gate/critic-parse.ts
-import { existsSync as existsSync18, readFileSync as readFileSync14 } from "node:fs";
-import { join as join23 } from "node:path";
+import { existsSync as existsSync18, readFileSync as readFileSync15 } from "node:fs";
+import { join as join24 } from "node:path";
 function criticReportPath(changeDir, phase) {
   for (const name of ["90-critic-report.md", "critic-report.md"]) {
-    const p = join23(changeDir, phase, name);
+    const p = join24(changeDir, phase, name);
     if (existsSync18(p)) return p;
   }
   return null;
@@ -12268,7 +12532,7 @@ function criticReportPath(changeDir, phase) {
 function criticFindings(changeDir, phase) {
   const path = criticReportPath(changeDir, phase);
   if (!path) return [];
-  const lines2 = toLines(readFileSync14(path, "utf8"));
+  const lines2 = toLines(readFileSync15(path, "utf8"));
   const blocks2 = parseBlocks(lines2, 1);
   const file = `${phase}/${path.slice(path.lastIndexOf(path.includes("\\") ? "\\" : "/") + 1)}`;
   const out = [];
@@ -12306,7 +12570,7 @@ function impactLines(i) {
 
 // src/gate/gate.ts
 function readChange(changeDir) {
-  const text = readFileSync15(join24(changeDir, "change.md"), "utf8");
+  const text = readFileSync16(join25(changeDir, "change.md"), "utf8");
   const fm = splitFrontmatter(text).data ?? {};
   return { text, fm, phases: fm["phases"] ?? {} };
 }
@@ -12328,7 +12592,7 @@ function revisionImpact(ctx) {
 function gateSummary(ctx) {
   const s = readChange(ctx.changeDir);
   const t = buildTrace(ctx.changeDir);
-  const files = phaseFiles(join24(ctx.changeDir, ctx.phase));
+  const files = phaseFiles(join25(ctx.changeDir, ctx.phase));
   const counts = /* @__PURE__ */ new Map();
   for (const n of t.doc.nodes) if (n.file.startsWith(`${ctx.phase}/`)) counts.set(n.type, (counts.get(n.type) ?? 0) + 1);
   const coverage2 = coverageFor(ctx.changeDir, ctx.phase);
@@ -12411,7 +12675,7 @@ function approve(ctx, o) {
     waivers.length > 0 ? waivers.map((w) => w.item).join(", ") : "none",
     o.usage ?? "unavailable"
   ]);
-  writeTextAtomic(join24(ctx.changeDir, "change.md"), text);
+  writeTextAtomic(join25(ctx.changeDir, "change.md"), text);
   return { hash: record2.hash, approvedBy, date, waivers };
 }
 function record(ctx, decision, note, today) {
@@ -12427,12 +12691,12 @@ function record(ctx, decision, note, today) {
     text = setTopLevel(text, "stopped", `{ reason: ${JSON.stringify(note)}, date: ${date} }`);
   }
   text = appendGateLog(text, [date, GATES[ctx.phase], decision === "revise" ? "**Revise**" : "**Stop**", `"${note}"`, "none", "unavailable"]);
-  writeTextAtomic(join24(ctx.changeDir, "change.md"), text);
+  writeTextAtomic(join25(ctx.changeDir, "change.md"), text);
 }
 
 // src/tracking/task.ts
-import { existsSync as existsSync19, readdirSync as readdirSync9, readFileSync as readFileSync16 } from "node:fs";
-import { join as join25 } from "node:path";
+import { existsSync as existsSync19, readdirSync as readdirSync9, readFileSync as readFileSync17 } from "node:fs";
+import { join as join26 } from "node:path";
 var TASK_STATUSES = ["todo", "in-progress", "blocked", "done", "dropped"];
 var TRANSITIONS = {
   todo: ["in-progress", "dropped", "done"],
@@ -12442,24 +12706,24 @@ var TRANSITIONS = {
   dropped: []
 };
 function findTask(changeDir, id) {
-  const dir2 = join25(changeDir, "20-plan", "50-tasks");
+  const dir2 = join26(changeDir, "20-plan", "50-tasks");
   if (existsSync19(dir2))
     for (const name of readdirSync9(dir2).filter((n) => n.endsWith(".md"))) {
-      const path = join25(dir2, name);
-      const text = readFileSync16(path, "utf8");
+      const path = join26(dir2, name);
+      const text = readFileSync17(path, "utf8");
       const fm = splitFrontmatter(text).data ?? {};
       if (fm["id"] !== id) continue;
       const deps = Array.isArray(fm["depends_on"]) ? fm["depends_on"].map(String) : [];
       return { path, text, status: String(fm["status"] ?? "todo"), report: fm["report"] ?? {}, dependsOn: deps, lite: false };
     }
-  const plan = join25(changeDir, "20-plan", "plan.md");
+  const plan = join26(changeDir, "20-plan", "plan.md");
   if (existsSync19(plan)) {
     const node = buildChangeGraph(changeDir).nodes.find((n) => n.id === id && n.file === "20-plan/plan.md");
     if (node) {
       const field = (name) => node.fields.find((f) => f.name === name)?.value ?? "";
       return {
         path: plan,
-        text: readFileSync16(plan, "utf8"),
+        text: readFileSync17(plan, "utf8"),
         status: field("Status") || "todo",
         report: { commit: field("Commit") || null, notes: field("Notes") || null, completed_at: field("Completed at") || null },
         dependsOn: field("Depends on").split(/[,\s]+/).filter((x) => /-T-/.test(x)),
@@ -12523,16 +12787,16 @@ function setTask(changeDir, id, o) {
 }
 
 // src/tracking/defect.ts
-import { readFileSync as readFileSync17 } from "node:fs";
-import { join as join26 } from "node:path";
+import { readFileSync as readFileSync18 } from "node:fs";
+import { join as join27 } from "node:path";
 function read(changeDir) {
-  const text = readFileSync17(join26(changeDir, "change.md"), "utf8");
+  const text = readFileSync18(join27(changeDir, "change.md"), "utf8");
   const fm = splitFrontmatter(text).data ?? {};
   const list = Array.isArray(fm["defects"]) ? fm["defects"] : [];
   return { text, defects: list.map((d) => Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v instanceof Date ? v.toISOString().slice(0, 10) : v]))) };
 }
 function write(changeDir, text, defects) {
-  writeTextAtomic(join26(changeDir, "change.md"), setTopLevel(text, "defects", listYaml(defects)));
+  writeTextAtomic(join27(changeDir, "change.md"), setTopLevel(text, "defects", listYaml(defects)));
 }
 function addDefect(changeDir, ref, summary, reporter, today = isoDate()) {
   const { text, defects } = read(changeDir);
@@ -12565,11 +12829,11 @@ function reopenDefect(changeDir, id) {
 }
 
 // src/gate/stale.ts
-import { readFileSync as readFileSync18 } from "node:fs";
-import { join as join27 } from "node:path";
+import { readFileSync as readFileSync19 } from "node:fs";
+import { join as join28 } from "node:path";
 function staleCheck(changeDir, write2) {
-  const path = join27(changeDir, "change.md");
-  const text = readFileSync18(path, "utf8");
+  const path = join28(changeDir, "change.md");
+  const text = readFileSync19(path, "utf8");
   const phases = splitFrontmatter(text).data?.["phases"] ?? {};
   const checks = [];
   let staleFrom = false;
@@ -12598,9 +12862,9 @@ function staleCheck(changeDir, write2) {
 
 // src/cli/host-version.ts
 import { spawnSync as spawnSync3 } from "node:child_process";
-import { readFileSync as readFileSync19 } from "node:fs";
+import { readFileSync as readFileSync20 } from "node:fs";
 import { homedir } from "node:os";
-import { join as join28 } from "node:path";
+import { join as join29 } from "node:path";
 var HOSTS = ["opencode", "vscode", "vscode-insiders"];
 var PROBES = {
   opencode: { command: "opencode", args: ["--version"] },
@@ -12652,12 +12916,12 @@ function parseJsonc(text) {
 }
 function userSettingsPath(insiders, env = process.env) {
   const home = env["HOME"] ?? env["USERPROFILE"] ?? homedir();
-  return join28(userConfigDir(env, home), insiders ? "Code - Insiders" : "Code", "User", "settings.json");
+  return join29(userConfigDir(env, home), insiders ? "Code - Insiders" : "Code", "User", "settings.json");
 }
 function useHooks(file) {
   let text;
   try {
-    text = readFileSync19(file, "utf8");
+    text = readFileSync20(file, "utf8");
   } catch {
     return void 0;
   }
@@ -12667,7 +12931,7 @@ function useHooks(file) {
   return typeof v === "boolean" ? v : void 0;
 }
 function hooksState(cwd, insiders) {
-  const workspace = useHooks(join28(findRepositoryRoot(cwd), ".vscode", "settings.json"));
+  const workspace = useHooks(join29(findRepositoryRoot(cwd), ".vscode", "settings.json"));
   const value2 = workspace ?? useHooks(userSettingsPath(insiders));
   if (value2 === true) return { state: "enabled" };
   if (value2 === false) return { state: "disabled", source: "chat.useHooks" };
@@ -12701,13 +12965,13 @@ function hostVersionsJson(r) {
 }
 
 // src/cli/template-cmd.ts
-import { join as join29 } from "node:path";
+import { join as join30 } from "node:path";
 function isProfile(p) {
   return TEMPLATE_PROFILES.includes(p);
 }
 function options(cwd) {
   const root = findWorkspace(cwd);
-  return root === null ? {} : { sddDir: join29(root, ".sdd") };
+  return root === null ? {} : { sddDir: join30(root, ".sdd") };
 }
 function templateShow(ctx) {
   const arg = ctx.args["template"];
@@ -12728,13 +12992,13 @@ function templateList(ctx) {
 }
 
 // src/cli/commands.ts
-var S = { type: "string" };
+var S2 = { type: "string" };
 var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join30(root, ".sdd");
-  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join30(sdd, n)).isDirectory()).sort();
+  const sdd = join31(root, ".sdd");
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join31(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
@@ -12772,8 +13036,8 @@ function gateApprove(ctx) {
   if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
-  const sdd = join30(ctx.root, ".sdd");
-  if (existsSync20(join30(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join31(ctx.root, ".sdd");
+  if (existsSync20(join31(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   if (commit) {
@@ -12791,7 +13055,7 @@ function changeRevise(ctx) {
 }
 function changeStop(ctx) {
   const changeDir = resolveChange(ctx, ctx.args["NNN"]);
-  const current = String(splitFrontmatter(readFileSync20(join30(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  const current = String(splitFrontmatter(readFileSync21(join31(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
   record({ root: ctx.root, changeDir, phase: current, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"]);
   refreshRegistry(ctx);
   ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
@@ -12801,19 +13065,19 @@ function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
-  const sdd = join30(ctx.root, ".sdd");
-  if (existsSync20(join30(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join31(ctx.root, ".sdd");
+  if (existsSync20(join31(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
   return 0;
 }
 function changeOfId(ctx, id) {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
   const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
-  return folder ? join30(ctx.root, ".sdd", folder) : null;
+  return folder ? join31(ctx.root, ".sdd", folder) : null;
 }
 function refreshRegistry(ctx) {
-  const sdd = join30(ctx.root, ".sdd");
-  if (existsSync20(join30(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join31(ctx.root, ".sdd");
+  if (existsSync20(join31(sdd, "registry.json"))) writeStatus(sdd);
 }
 function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
@@ -12831,7 +13095,7 @@ function taskSet(ctx) {
 function defectAdd(ctx) {
   const ref = ctx.values["ref"];
   const dir2 = changeOfId(ctx, ref);
-  const status2 = dir2 ? String(splitFrontmatter(readFileSync20(join30(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  const status2 = dir2 ? String(splitFrontmatter(readFileSync21(join31(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
   if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
   const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
   refreshRegistry(ctx);
@@ -12859,16 +13123,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join30(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join30(sdd, f));
+  const sdd = join31(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join31(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync20(join30(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync21(join31(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync20(join30(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync20(join31(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -12897,20 +13161,7 @@ function traceCmd(ctx) {
   return r.coverage.some((c) => c.gaps.length > 0) || r.dagOk === false ? 1 : 0;
 }
 function traceActive(ctx) {
-  try {
-    const root = findWorkspace(ctx.cwd);
-    if (root === null) return 0;
-    const sdd = join30(root, ".sdd");
-    const registry = rebuildRegistry(sdd);
-    listChanges(sdd).forEach((c, i) => {
-      const status2 = registry.changes[i]?.status;
-      if (c.archived || status2 === "stopped" || status2 === "archived") return;
-      const r = trace(c.dir, { write: ctx.values["write"] === true });
-      if (!ctx.values["quiet"]) ctx.out.line(`${registry.changes[i].id}: open items ${r.markers.length}${r.written.length > 0 ? `, written ${r.written.length} file(s)` : ""}`);
-    });
-  } catch (e) {
-    ctx.out.trace("trace.active.error", { detail: e instanceof Error ? e.message : String(e) });
-  }
+  traceActiveChanges(ctx, ctx.cwd, ctx.values["write"] === true);
   return 0;
 }
 function resolveChange(ctx, nnn) {
@@ -12919,15 +13170,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join30(ctx.root, ".sdd", match[0]);
+    return join31(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join30(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join30(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join30(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join31(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join31(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join31(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join30(ctx.root, ".sdd");
+  const sdd = join31(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -12950,7 +13201,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join30(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join31(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -12958,7 +13209,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync20(join30(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync21(join31(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -12990,7 +13241,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join30(root, ".sdd");
+  const where = join31(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -13001,7 +13252,7 @@ function serenaDataDir(ctx) {
   const userData = ctx.values["user-data"] === true;
   if (given !== void 0 && userData) throw usage(ctx.name, "pass <plugin-data-dir> or --user-data, not both");
   if (given === void 0 && !userData) throw usage(ctx.name, "missing argument <plugin-data-dir> (or --user-data)");
-  return userData ? { dir: userDataDir(ctx.cwd, ctx.env), userData } : { dir: resolve(ctx.cwd, given), userData };
+  return userData ? { dir: userDataDir(ctx.cwd, ctx.env), userData } : { dir: resolve2(ctx.cwd, given), userData };
 }
 function serenaConfig(ctx) {
   const r = writeSerenaConfig(serenaDataDir(ctx).dir);
@@ -13029,10 +13280,6 @@ function archiveCmd(ctx) {
   if (dry) return 0;
   applyArchive(ctx.root, plan);
   ctx.out.line(`archived: ${plan.change} → .sdd/_archive/${basename9(dir2)}`);
-  return 0;
-}
-function hookSessionStart(ctx) {
-  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
   return 0;
 }
 function hookPostWrite(ctx) {
@@ -13063,28 +13310,28 @@ function version(ctx) {
 }
 var ROWS = [
   { name: "init", usage: "[--force]", summary: "Create or complete .sdd/", positionals: [], options: { force: B }, workspace: false, sampleArgs: [], run: init },
-  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S, kind: S }, workspace: true, sampleArgs: ["A title"], run: changeNew },
+  { name: "change new", usage: '"<title>" [--profile lite|full] [--kind greenfield|brownfield|mixed]', summary: "Create a change folder", positionals: [P("title")], options: { profile: S2, kind: S2 }, workspace: true, sampleArgs: ["A title"], run: changeNew },
   { name: "change profile", usage: "<NNN> full", summary: "Upgrade lite → full", positionals: [P("NNN"), P("profile")], options: {}, workspace: true, sampleArgs: ["004", "full"], run: changeProfile },
   { name: "change revise", usage: '<NNN> <phase> --reason "<text>"', summary: "Phase → in-revision; downstream → stale", positionals: [P("NNN"), P("phase")], options: { reason: R }, workspace: true, sampleArgs: ["004", "10-spec", "--reason", "r"], run: changeRevise },
   { name: "change stop", usage: '<NNN> --reason "<text>"', summary: "Change → stopped", positionals: [P("NNN")], options: { reason: R }, workspace: true, sampleArgs: ["004", "--reason", "r"], run: changeStop },
-  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S, block: S }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
+  { name: "id next", usage: "<TYPE> [--change NNN] [--block <capability>]", summary: "Allocate and print the next ID", positionals: [P("TYPE")], options: { change: S2, block: S2 }, workspace: true, sampleArgs: ["REQ", "--change", "004"], run: idNext },
   { name: "id tombstone", usage: '<ID> --reason "<text>"', summary: "Retire an ID", positionals: [P("ID")], options: { reason: R }, workspace: true, sampleArgs: ["C004-REQ-012", "--reason", "r"], run: idTombstone },
   { name: "status", usage: "[--write] [--brief] [--json]", summary: "Print status; --write rebuilds registry and SDD.md block", positionals: [], options: { write: B, brief: B }, workspace: true, sampleArgs: [], run: status },
-  { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S, quick: B, file: S }, workspace: true, sampleArgs: [], run: lint },
+  { name: "lint", usage: "[<NNN>] [--phase <phase>] [--json] [--quick --file <path>]", summary: "Run lint rules", positionals: [P("NNN", true)], options: { phase: S2, quick: B, file: S2 }, workspace: true, sampleArgs: [], run: lint },
   { name: "trace", usage: "<NNN> [--write] [--json]", summary: "Build the trace graph; write matrix, open items, trace.json", positionals: [P("NNN", true)], options: { write: B, active: B }, workspace: false, sampleArgs: ["004"], run: traceCmd },
   { name: "gate show", usage: "<NNN> <phase>", summary: "Print the gate summary", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: gateShow },
-  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"] [--commit]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S, waive: { type: "string", multiple: true }, by: S, usage: S, commit: B }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
+  { name: "gate approve", usage: '<NNN> <phase> --note "<text>" [--waive <item>]… [--by <name>] [--usage "<text>"] [--commit]', summary: "Approve a phase", positionals: [P("NNN"), P("phase")], options: { note: S2, waive: { type: "string", multiple: true }, by: S2, usage: S2, commit: B }, workspace: true, sampleArgs: ["004", "10-spec", "--note", "n"], run: gateApprove },
   { name: "gate record", usage: '<NNN> <phase> --decision revise|stop --note "<text>"', summary: "Log a non-approval decision", positionals: [P("NNN"), P("phase")], options: { decision: R, note: R }, workspace: true, sampleArgs: ["004", "10-spec", "--decision", "revise", "--note", "n"], run: gateRecord },
   { name: "stale check", usage: "[<NNN>]", summary: "Recompute hashes; mark stale", positionals: [P("NNN", true)], options: {}, workspace: true, sampleArgs: [], run: staleCmd },
   { name: "hash", usage: "<NNN> <phase>", summary: "Print the phase hash", positionals: [P("NNN"), P("phase")], options: {}, workspace: true, sampleArgs: ["004", "10-spec"], run: hashCmd },
-  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S, note: S, reason: S }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"], run: taskSet },
-  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
+  { name: "task set", usage: '<T-ID> --status <s> [--commit <sha>] [--note "<t>"] [--reason "<t>"]', summary: "Update a task", positionals: [P("T-ID")], options: { status: R, commit: S2, note: S2, reason: S2 }, workspace: true, sampleArgs: ["C004-T-001", "--status", "done"], run: taskSet },
+  { name: "defect add", usage: '--ref <ID> --summary "<t>" [--by <name>]', summary: "Open a spec defect", positionals: [], options: { ref: R, summary: R, by: S2 }, workspace: true, sampleArgs: ["--ref", "C004-REQ-012", "--summary", "s"], run: defectAdd },
   { name: "defect close", usage: '<D-id> --change <NNN> --resolution "<t>"', summary: "Close a defect", positionals: [P("D-id")], options: { change: R, resolution: R }, workspace: true, sampleArgs: ["D-001", "--change", "004", "--resolution", "r"], run: defectClose },
   { name: "defect reopen", usage: "<D-id> --change <NNN>", summary: "Reopen a defect", positionals: [P("D-id")], options: { change: R }, workspace: true, sampleArgs: ["D-001", "--change", "004"], run: defectReopen },
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"], run: archiveCmd },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
-  { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
+  ...HOOK_ROWS,
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookPostWrite },
   { name: "serena-launch", usage: "(<plugin-data-dir> | --user-data) [--read-only] -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir", true)], options: { "user-data": B, "read-only": B }, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
   { name: "serena-config", usage: "<plugin-data-dir> | --user-data", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir", true)], options: { "user-data": B }, workspace: false, sampleArgs: ["data"], run: serenaConfig },
@@ -13107,6 +13354,10 @@ function checkOptions(spec, values) {
     if (profile !== void 0 && !PROFILES.includes(profile)) throw usage(spec.name, `--profile must be one of ${PROFILES.join(", ")}`);
     const kind = values["kind"];
     if (kind !== void 0 && !KINDS.includes(kind)) throw usage(spec.name, `--kind must be one of ${KINDS.join(", ")}`);
+  }
+  if (spec.name === "hook session-start") {
+    const host = values["host"];
+    if (host !== void 0 && !HOSTS_SESSION.includes(host)) throw usage(spec.name, `--host must be one of ${HOSTS_SESSION.join(", ")}`);
   }
   if (spec.name === "lint") {
     const phase = values["phase"];
@@ -13169,7 +13420,15 @@ function runCli(argv, io) {
     } else {
       const { spec, rest } = findCommand(argv);
       out.trace("dispatch", { command: spec.name.replace(" ", ".") });
-      code = execute(spec, rest, io, out);
+      if (spec.onFault === void 0) code = execute(spec, rest, io, out);
+      else {
+        try {
+          code = execute(spec, rest, io, out);
+        } catch (e) {
+          out.trace("fault", { detail: e instanceof Error ? e.message : String(e) });
+          code = spec.onFault(e, out);
+        }
+      }
     }
   } catch (e) {
     const err = e instanceof CliError ? e : e instanceof AtomicWriteError ? new CliError("ERR-CLI-017", { file: e.path }) : new CliError("ERR-CLI-016", { detail: e instanceof Error ? e.message : String(e) });
@@ -13229,7 +13488,7 @@ process.exitCode = runCli(process.argv.slice(2), {
   stderr: (text) => process.stderr.write(text),
   stdin: () => {
     try {
-      return readFileSync21(0, "utf8");
+      return readFileSync22(0, "utf8");
     } catch {
       return "";
     }

@@ -87,7 +87,16 @@ export function runCli(argv: readonly string[], io: CliIo): number {
     } else {
       const { spec, rest } = findCommand(argv);
       out.trace("dispatch", { command: spec.name.replace(" ", ".") });
-      code = execute(spec, rest, io, out);
+      if (spec.onFault === undefined) code = execute(spec, rest, io, out);
+      else {
+        // Hook commands that fail closed (or always succeed) decide their own fault output (C002-IF-007).
+        try {
+          code = execute(spec, rest, io, out);
+        } catch (e) {
+          out.trace("fault", { detail: e instanceof Error ? e.message : String(e) });
+          code = spec.onFault(e, out);
+        }
+      }
     }
   } catch (e) {
     const err =

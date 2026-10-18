@@ -44,7 +44,8 @@ function hardLinkCount(p: string): number {
   }
 }
 
-function deny(tool: string, target: string, reason: string, allowed: string[], memory = true): PathDecision {
+/** The GUARD-PATH-001 deny of C001-IF-07 §4 (also used by `hook guard --host copilot` for `always_deny` tools). */
+export function deny(tool: string, target: string, reason: string, allowed: string[], memory = true): PathDecision {
   const scope = memory ? ".sdd/ and their own memory folder" : ".sdd/";
   return {
     allow: false,

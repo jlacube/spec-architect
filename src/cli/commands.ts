@@ -19,7 +19,8 @@ import { decideBash } from "../hooks/guard-bash.ts";
 import { decidePath } from "../hooks/guard-path.ts";
 import { parseHookInput } from "../hooks/input.ts";
 import { postWriteFeedback } from "../hooks/post-write.ts";
-import { changeLine, sessionBrief } from "../hooks/session-start.ts";
+import { changeLine } from "../hooks/session-start.ts";
+import { HOOK_ROWS, HOSTS_SESSION, traceActiveChanges } from "./hook-cmds.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
 import { readOnlyModeFile, serenaLaunch, type LaunchOptions } from "../workspace/serena-launch.ts";
@@ -86,6 +87,12 @@ export interface CommandSpec {
   /** When the command writes files, from the single table of writing-commands.ts; null: never. */
   writes: WriteWhen | null;
   run?: (ctx: CommandContext) => number;
+  /**
+   * Hook commands that must not end with a usage or internal error (`hook guard` denies with exit 2,
+   * `hook subagent-stop` exits 0): turns any error of the invocation, option parsing included, into
+   * the command's own output and exit code.
+   */
+  onFault?: (e: unknown, out: Output) => number;
 }
 
 const S: OptionSpec = { type: "string" };
@@ -313,20 +320,7 @@ function traceCmd(ctx: CommandContext): number {
  * subagent from stopping. Outside a workspace it does nothing.
  */
 function traceActive(ctx: CommandContext): number {
-  try {
-    const root = findWorkspace(ctx.cwd);
-    if (root === null) return 0;
-    const sdd = join(root, ".sdd");
-    const registry = rebuildRegistry(sdd);
-    listChanges(sdd).forEach((c, i) => {
-      const status = registry.changes[i]?.status;
-      if (c.archived || status === "stopped" || status === "archived") return;
-      const r = trace(c.dir, { write: ctx.values["write"] === true });
-      if (!ctx.values["quiet"]) ctx.out.line(`${registry.changes[i]!.id}: open items ${r.markers.length}${r.written.length > 0 ? `, written ${r.written.length} file(s)` : ""}`);
-    });
-  } catch (e) {
-    ctx.out.trace("trace.active.error", { detail: e instanceof Error ? e.message : String(e) });
-  }
+  traceActiveChanges(ctx, ctx.cwd, ctx.values["write"] === true);
   return 0;
 }
 
@@ -473,12 +467,6 @@ function archiveCmd(ctx: CommandContext): number {
   return 0;
 }
 
-/** SessionStart hook: the brief on standard output, nothing without .sdd/ (C001-REQ-911, 912). Always exit 0. */
-function hookSessionStart(ctx: CommandContext): number {
-  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
-  return 0;
-}
-
 /** PostToolUse hook on Write|Edit: quick-lint feedback for .sdd/ files as additionalContext. Always exit 0. */
 function hookPostWrite(ctx: CommandContext): number {
   const doc = postWriteFeedback(parseHookInput(ctx.stdin()), ctx.rules, TOOL);
@@ -539,7 +527,7 @@ const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "archive", usage: "<NNN> [--dry-run]", summary: "Merge into _living/, move to _archive/", positionals: [P("NNN")], options: { "dry-run": B }, workspace: true, sampleArgs: ["004", "--dry-run"], run: archiveCmd },
   { name: "guard-path", usage: "hook JSON on stdin", summary: "Allow/deny a write (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardPath },
   { name: "guard-bash", usage: "hook JSON on stdin", summary: "Allow/deny a shell command (hook)", positionals: [], options: {}, workspace: false, sampleArgs: [], run: guardBash },
-  { name: "hook session-start", usage: "hook JSON on stdin", summary: "Print the session brief", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookSessionStart },
+  ...HOOK_ROWS,
   { name: "hook post-write", usage: "hook JSON on stdin", summary: "Quick lint of a written .sdd/ file", positionals: [], options: {}, workspace: false, sampleArgs: [], run: hookPostWrite },
   { name: "serena-launch", usage: "(<plugin-data-dir> | --user-data) [--read-only] -- <serena arguments>", summary: "Write Serena's config if missing, then run Serena", positionals: [P("plugin-data-dir", true)], options: { "user-data": B, "read-only": B }, workspace: false, sampleArgs: ["data", "--", "--version"], rest: true, run: serenaLaunchCmd },
   { name: "serena-config", usage: "<plugin-data-dir> | --user-data", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir", true)], options: { "user-data": B }, workspace: false, sampleArgs: ["data"], run: serenaConfig },
@@ -568,6 +556,10 @@ export function checkOptions(spec: CommandSpec, values: CommandContext["values"]
     if (profile !== undefined && !(PROFILES as readonly string[]).includes(profile as string)) throw usage(spec.name, `--profile must be one of ${PROFILES.join(", ")}`);
     const kind = values["kind"];
     if (kind !== undefined && !(KINDS as readonly string[]).includes(kind as string)) throw usage(spec.name, `--kind must be one of ${KINDS.join(", ")}`);
+  }
+  if (spec.name === "hook session-start") {
+    const host = values["host"];
+    if (host !== undefined && !(HOSTS_SESSION as readonly string[]).includes(host as string)) throw usage(spec.name, `--host must be one of ${HOSTS_SESSION.join(", ")}`);
   }
   if (spec.name === "lint") {
     const phase = values["phase"];
