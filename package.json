@@ -17,7 +17,8 @@
     "bench":"node scripts/build.mjs && node bench/run.mjs",
     "eval": "node evals/harness/run.mjs",
     "eval:report": "node evals/harness/report.mjs",
-    "package": "node scripts/package.mjs"
+    "package": "node scripts/package.mjs",
+    "generate": "node scripts/generate.mjs"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.32.1",
