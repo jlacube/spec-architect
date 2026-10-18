@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-006, C002-T-007]
 implements: [C002-REQ-606, C002-REQ-625, C002-REQ-627, C002-REQ-630, C002-REQ-633]
 satisfies_ac: [C002-AC-606.1, C002-AC-625.1, C002-AC-627.1, C002-AC-630.1, C002-AC-633.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-631, C
 components: [C002-COMP-008]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7ac8267, completed_at: 2026-10-18, notes: "Replay framework + stub adapter; TC-609/628/629/631/638/643/644/645/649/650 on the stub; real-mechanism rows and TC-608/609 to T-041/T-042/T-049, TC-637 to T-047; real adapters register in tests/replay/main.ts; extra files suite.ts and main.ts; replay fixture leaves out .claude/agent-memory/ (TS-638 reading)" }
 ---
 
 # C002-T-040 — Corpus replay suite: framework, expectations, report and its own command
