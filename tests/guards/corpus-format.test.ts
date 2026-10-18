@@ -24,7 +24,7 @@ test("shell corpus cases have unique IDs, known categories and only known fields
   assert.deepEqual(formatProblems(cases, BASH_FIELDS, BASH_CATEGORIES), []);
 });
 
-// C002-TS-610 rows of C002-T-008 (C002-REQ-503), C002-T-009 and C002-T-010: the shell corpus holds the new kinds of case.
+// C002-TS-610 rows of C002-T-008 (C002-REQ-503), C002-T-009, C002-T-010 and C002-T-059: the shell corpus holds the new kinds of case.
 const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] = [
   ["bare sdd command", "sdd lint 002", "allow"],
   ["node --version", "node --version", "allow"],
@@ -39,6 +39,10 @@ const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] 
   ["serena-launch with --user-data", "sdd serena-launch --user-data -- start-mcp-server", "allow"],
   ["serena-launch with a folder outside the repository", "sdd serena-launch {repo}/../fx-data -- start-mcp-server", "allow"],
   ["serena-launch with a folder inside the repository", "sdd serena-launch src -- start-mcp-server", "deny"],
+  // C002-T-059 (C002-REQ-325).
+  ["Copilot install command, bare form", "sdd install copilot", "deny"],
+  ["Copilot install command, script form", "node C:/pkg/scripts/sdd.mjs install copilot --package C:/pkg", "deny"],
+  ["Copilot install command with --cwd inside the repository root", "sdd install copilot --cwd {repo}/pkg", "deny"],
 ];
 for (const [kind, command, expect] of TS_610_SHELL) {
   test(`C002-TS-610: the shell corpus holds a case of the kind "${kind}" (${command} → ${expect})`, () => {

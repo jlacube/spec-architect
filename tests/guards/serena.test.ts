@@ -41,7 +41,7 @@ test("the deny reasons name the subcommand and the resolved folder or the unreso
   assert.ok(!shape.allow && shape.message.includes("sdd serena-launch with an argument the guard cannot resolve (--cwd)"), JSON.stringify(shape));
   const unset = decide("Bash", 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"');
   assert.ok(!unset.allow && unset.message.includes("sdd serena-config with an argument the guard cannot resolve (${CLAUDE_PLUGIN_DATA}"), JSON.stringify(unset));
-  assert.ok(!unset.allow && unset.message.includes("(serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of"), JSON.stringify(unset));
+  assert.ok(!unset.allow && unset.message.includes("(not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of"), JSON.stringify(unset));
 });
 
 test("C002-TS-527: letter case and drive spelling of a folder inside the root follow the platform", { skip: process.platform !== "win32" && "Windows letter case" }, () => {

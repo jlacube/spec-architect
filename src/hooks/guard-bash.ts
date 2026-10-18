@@ -8,7 +8,7 @@
 // others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI
 // (`sdd …` or `node <path>/sdd.mjs …`, C002-REQ-503) and the version probes, without pipes. A writing
 // sdd subcommand (src/cli/writing-commands.ts) takes `--cwd` only inside the repository root
-// (C002-REQ-521, C002-IF-008 §1.2). `serena-config` and `serena-launch` take only `--user-data` or a
+// (C002-REQ-521, C002-IF-008 §1.2); `install` is denied in every form (C002-REQ-325). `serena-config` and `serena-launch` take only `--user-data` or a
 // data folder outside the repository root (C002-REQ-517, C002-IF-008 §1.1). When in doubt the guard
 // denies (fail closed).
 //
@@ -23,10 +23,10 @@ import { isArchitectAgent, type HookInput } from "./input.ts";
 
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
 export const RULE_COMPOUND = "GUARD-BASH-002";
-// C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the Serena part of
-// C002-REQ-517 and the --cwd part of C002-REQ-521; the install part (C002-REQ-325) comes with C002-T-059.
+// C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the install part of
+// C002-REQ-325, the Serena part of C002-REQ-517 and the --cwd part of C002-REQ-521.
 const ALLOWED =
-  "sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+  "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
 type Dialect = "bash" | "powershell";
@@ -226,6 +226,22 @@ function serenaViolation(words: string[], raw: string[], cwd: string, dialect: D
   return null;
 }
 
+/** The words after the CLI prefix up to the first `--`: the CLI's own subcommand and options. */
+function subcommandArgs(words: string[]): string[] {
+  const all = cliArgs(words);
+  const dashdash = all.indexOf("--");
+  return dashdash < 0 ? all : all.slice(0, dashdash);
+}
+
+/**
+ * The deny rule of C002-IF-008 §1.2 (C002-REQ-325): a row marked `deny` (`install copilot`; a first
+ * word `install` selects it whatever follows) is denied in every form. A later word `install`
+ * (`sdd lint install`) is no subcommand. Returns the deny reason, or null.
+ */
+function deniedCommand(words: string[]): string | null {
+  return writingCommand(subcommandArgs(words))?.guard === "deny" ? "sdd install writes outside .sdd/; P-03 runs it in their own terminal" : null;
+}
+
 /** Every `--cwd` folder word among `args` (`--cwd <dir>` or `--cwd=<dir>`); null for a `--cwd` without a word. */
 function cwdWords(args: string[]): (string | null)[] {
   const found: (string | null)[] = [];
@@ -242,9 +258,7 @@ function cwdWords(args: string[]): (string | null)[] {
  * or a folder under it. Returns the deny reason, or null when the command passes.
  */
 function cwdViolation(words: string[], cwd: string): string | null {
-  const all = cliArgs(words);
-  const dashdash = all.indexOf("--");
-  const args = dashdash < 0 ? all : all.slice(0, dashdash);
+  const args = subcommandArgs(words);
   const row = writingCommand(args);
   if (row === null || row.guard !== "cwd") return null;
   const root = findRepositoryRoot(cwd);
@@ -356,7 +370,7 @@ export function decideBash(input: HookInput | null): BashDecision {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = serenaViolation(first!.words, first!.raw, cwd, dialect) ?? cwdViolation(first!.words, cwd);
+    const violation = deniedCommand(first!.words) ?? serenaViolation(first!.words, first!.raw, cwd, dialect) ?? cwdViolation(first!.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };

@@ -3770,6 +3770,162 @@
    "expect": "deny",
    "rule": "GUARD-BASH-001",
    "note": "a folder starting with ~ cannot be resolved"
+  },
+  {
+   "id": "BG-420",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install copilot",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "Copilot install command, bare form (C002-REQ-325, C002-TS-351, C002-TS-610, C002-TS-636)"
+  },
+  {
+   "id": "BG-421",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install copilot --package C:/fx/pkg-cp",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install command with --package (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-422",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "node C:/fx/pkg-cp/scripts/sdd.mjs install copilot",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install command, script form (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-423",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install copilot --cwd {repo}/pkg",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "Copilot install command with --cwd inside the repository root (C002-REQ-325, C002-TS-351, C002-TS-610)"
+  },
+  {
+   "id": "BG-424",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install alone (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-425",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install opencode",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install with another target (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-426",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install --help",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install --help (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-427",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install copilot",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install command in PowerShell (C002-REQ-325, C002-TS-351)"
+  },
+  {
+   "id": "BG-428",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "node C:/pkg/scripts/sdd.mjs install copilot --package C:/pkg",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "Copilot install command, script form (C002-REQ-325, C002-TS-610)"
+  },
+  {
+   "id": "BG-429",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install copilot --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "writing subcommand install copilot with --cwd outside the repository root (C002-REQ-325, C002-TS-636)"
+  },
+  {
+   "id": "BG-430",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" install copilot",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install command, the plugin's own script spelling (C002-REQ-325)"
+  },
+  {
+   "id": "BG-431",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd install -- copilot",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "install before -- (C002-REQ-325)"
+  },
+  {
+   "id": "BG-432",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd lint 002",
+   "expect": "allow",
+   "note": "other sdd commands keep their decision (C002-TS-353)"
+  },
+  {
+   "id": "BG-433",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd lint install",
+   "expect": "allow",
+   "note": "a later word install is not the subcommand (C002-TS-353)"
+  },
+  {
+   "id": "BG-434",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "node C:/fx/pkg-cp/scripts/sdd.mjs status",
+   "expect": "allow",
+   "note": "other sdd commands keep their decision, script form (C002-TS-353)"
+  },
+  {
+   "id": "BG-435",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-spec-writer",
+   "command": "sdd trace 002 --write --cwd {repo}/pkg",
+   "expect": "allow",
+   "note": "other sdd commands keep their decision, --cwd inside the root (C002-TS-353)"
   }
  ]
 }

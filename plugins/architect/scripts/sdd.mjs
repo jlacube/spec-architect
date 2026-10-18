@@ -11306,7 +11306,7 @@ function isArchitectAgent(input) {
 // src/hooks/guard-bash.ts
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
-var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11467,6 +11467,14 @@ function serenaViolation(words, raw, cwd, dialect) {
   if (at.insideReal) return `sdd ${sub} with a data folder inside the repository (${at.real})`;
   return null;
 }
+function subcommandArgs(words) {
+  const all = cliArgs(words);
+  const dashdash = all.indexOf("--");
+  return dashdash < 0 ? all : all.slice(0, dashdash);
+}
+function deniedCommand(words) {
+  return writingCommand(subcommandArgs(words))?.guard === "deny" ? "sdd install writes outside .sdd/; P-03 runs it in their own terminal" : null;
+}
 function cwdWords(args) {
   const found = [];
   args.forEach((w, i) => {
@@ -11476,9 +11484,7 @@ function cwdWords(args) {
   return found;
 }
 function cwdViolation(words, cwd) {
-  const all = cliArgs(words);
-  const dashdash = all.indexOf("--");
-  const args = dashdash < 0 ? all : all.slice(0, dashdash);
+  const args = subcommandArgs(words);
   const row2 = writingCommand(args);
   if (row2 === null || row2.guard !== "cwd") return null;
   const root = findRepositoryRoot(cwd);
@@ -11577,7 +11583,7 @@ function decideBash(input) {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = serenaViolation(first.words, first.raw, cwd, dialect) ?? cwdViolation(first.words, cwd);
+    const violation = deniedCommand(first.words) ?? serenaViolation(first.words, first.raw, cwd, dialect) ?? cwdViolation(first.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };

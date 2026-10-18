@@ -75,7 +75,7 @@ test("every writing-command entry names a COMMANDS row, which takes its writes p
   assert.equal(COMMANDS.find((c) => c.name === "status")?.writes, "with-write");
 });
 
-test("C002-TS-636: the shell corpus holds, per writing subcommand under the --cwd rule, a case, one with --cwd outside (deny) and one inside (allow)", () => {
+test("C002-TS-636: the shell corpus holds, per writing subcommand under the --cwd rule, a case, one with --cwd outside (deny) and one inside (allow); install copilot is denied in each", () => {
   const cases = loadBashCorpus().filter((c) => typeof c.command === "string" && c.stdin === undefined);
   const runs = (command: string, w: WritingCommand) => {
     const words = command.split(" ");
@@ -90,6 +90,13 @@ test("C002-TS-636: the shell corpus holds, per writing subcommand under the --cw
     if (!mine.some((c) => !(c.command as string).includes("--cwd") && c.expect === "allow")) missing.push(`${w.name}: no case without --cwd`);
     if (!mine.some((c) => (c.command as string).includes("--cwd {repo}/../") && c.expect === "deny" && c.rule === "GUARD-BASH-001")) missing.push(`${w.name}: no --cwd outside case`);
     if (!mine.some((c) => (c.command as string).endsWith("--cwd {repo}/pkg") && c.expect === "allow")) missing.push(`${w.name}: no --cwd inside case`);
+  }
+  // A row denied in every form (C002-REQ-325, C002-T-059): a case that runs it and one with --cwd outside the root, both denied.
+  for (const w of WRITING_COMMANDS.filter((x) => x.guard === "deny")) {
+    const mine = cases.filter((c) => runs(c.command as string, w));
+    if (!mine.some((c) => !(c.command as string).includes("--cwd") && c.expect === "deny" && c.rule === "GUARD-BASH-001")) missing.push(`${w.name}: no case without --cwd`);
+    if (!mine.some((c) => (c.command as string).includes("--cwd {repo}/../") && c.expect === "deny" && c.rule === "GUARD-BASH-001")) missing.push(`${w.name}: no --cwd outside case`);
+    if (mine.some((c) => c.expect !== "deny")) missing.push(`${w.name}: a case is not denied`);
   }
   assert.deepEqual(missing, []);
   // BG-019 stays allow: a subcommand that writes no file keeps --cwd unrestricted.
