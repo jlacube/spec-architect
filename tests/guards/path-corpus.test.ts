@@ -14,6 +14,8 @@
 // The fixture repository has .git next to .sdd, so {repo} is its repository root.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { decidePath } from "../../src/hooks/guard-path.ts";
+import { parseHookInput } from "../../src/hooks/input.ts";
 import { applies, buildFixture, decide, expected, hookInput, loadCorpus } from "./fixture.ts";
 
 test("the path guard corpus is decided 100% as expected", (t) => {
@@ -35,6 +37,51 @@ test("the path guard corpus is decided 100% as expected", (t) => {
     assert.deepEqual(wrong, [], wrong.join("\n"));
     assert.equal(matrix["deny/allow"], 0, "no false allow");
     if (process.platform === "win32") assert.ok(run >= 200, `at least 200 cases run on Windows (${run})`);
+  } finally {
+    fx.cleanup();
+  }
+});
+
+// C002-T-011 (C002-IF-008 §5, C002-REQ-625, C002-DEC-009): with the memory folder off, as the sdd MCP
+// server and the Copilot hook adapter call the core, every memory-category case is denied. A memory
+// case is played by an Architect agent (C002-IF-009 §2.2): a caller outside `architect:sdd-*` (PG-224)
+// is replaced by the conductor.
+test("with the memory folder off every memory-category case is denied (C002-REQ-625)", (t) => {
+  const corpus = loadCorpus();
+  const fx = buildFixture(corpus.fixture);
+  try {
+    const wrong: string[] = [];
+    let run = 0;
+    for (const c of corpus.cases) {
+      if (c.category !== "memory" || !applies(c, fx)) continue;
+      run++;
+      const agent = typeof c.agent === "string" && c.agent.startsWith("architect:sdd-") ? c.agent : "architect:sdd-conductor";
+      const got = decide(hookInput({ ...c, agent }, fx), c.env, fx.resolve, { memoryFolder: false });
+      if (got !== "deny") wrong.push(`${c.id} ${JSON.stringify(c.path)}: expected deny, got ${got}`);
+    }
+    t.diagnostic(`memory cases run ${run} with the memory folder off`);
+    assert.ok(run >= 20, `at least 20 memory cases (${run})`);
+    assert.deepEqual(wrong, [], wrong.join("\n"));
+  } finally {
+    fx.cleanup();
+  }
+});
+
+test("the memory-off denial names .sdd/ only; the default denial keeps the memory folder (C002-IF-008 §5)", () => {
+  const corpus = loadCorpus();
+  const fx = buildFixture(corpus.fixture);
+  try {
+    const input = parseHookInput(
+      JSON.stringify({ cwd: fx.repo, agent_type: "architect:sdd-cartographer", tool_name: "Write", tool_input: { file_path: `${fx.repo}/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md`, content: "x" } }),
+    );
+    assert.deepEqual(decidePath(input), { allow: true });
+    const off = decidePath(input, { memoryFolder: false });
+    assert.equal(off.allow, false);
+    const msg = (off as { message: string }).message;
+    assert.match(msg, /^GUARD-PATH-001: Write on .* denied — the path is outside \.sdd\/\. Allowed: files under \S+\/\.sdd\/ \(Architect agents write only inside \.sdd\/\)\.$/);
+    assert.doesNotMatch(msg.slice(msg.indexOf("Allowed:")), /agent-memory|memory folder/);
+    const def = decidePath({ ...input!, tool_input: { file_path: `${fx.repo}/src/app.ts` } });
+    assert.match((def as { message: string }).message, /and their own memory folder\)\.$/);
   } finally {
     fx.cleanup();
   }

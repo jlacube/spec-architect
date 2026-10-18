@@ -21,7 +21,7 @@ import { spawnSync } from "node:child_process";
 import { linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { decidePath } from "../../src/hooks/guard-path.ts";
+import { decidePath, type PathOptions } from "../../src/hooks/guard-path.ts";
 import { parseHookInput } from "../../src/hooks/input.ts";
 import { repoRoot } from "../helpers.ts";
 
@@ -244,6 +244,7 @@ export function applies(c: CorpusCase, fx: Fixture): boolean {
   return !c.requires || fx.capabilities.has(c.requires);
 }
 
-export function decide(stdin: string, env?: EnvStub, resolve: (s: string) => string = (s) => s): "allow" | "deny" {
-  return withEnv(env, resolve, () => decidePath(parseHookInput(stdin)).allow) ? "allow" : "deny";
+/** The path guard core's decision on a hook input; `options` as in C002-IF-008 §5 (default: Claude Code). */
+export function decide(stdin: string, env?: EnvStub, resolve: (s: string) => string = (s) => s, options?: PathOptions): "allow" | "deny" {
+  return withEnv(env, resolve, () => decidePath(parseHookInput(stdin), options).allow) ? "allow" : "deny";
 }
