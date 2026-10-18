@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: done
 depends_on: [C002-T-016, C002-T-019, C002-T-021, C002-T-022]
 implements: [C002-REQ-406, C002-REQ-407, C002-REQ-413, C002-REQ-415, C002-REQ-501, C002-REQ-513]
 satisfies_ac: [C002-AC-406.1, C002-AC-407.1, C002-AC-413.1, C002-AC-415.1, C002-AC-501.1, C002-AC-513.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-418, C002-TS-422, C002-TS-423, C002-TS-424, C002-TS-502, C
 components: [C002-COMP-005, C002-COMP-006, C002-COMP-013, C002-COMP-018]
 risk_refs: [C002-RISK-007]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: ff3188e, completed_at: 2026-10-18, notes: "Print forms and README URL; TC-418/422/423/424/502/538 pass; ERR-MCP-006 reasons and template lookup needed no change; TS-502 wording: fx-bootstrap already holds change 002 so the new change is 003 — test compares both copies instead (scenario wording fix for a later revision)" }
 ---
 
 # C002-T-061 — Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates
