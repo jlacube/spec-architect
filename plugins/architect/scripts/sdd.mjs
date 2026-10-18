@@ -1424,7 +1424,7 @@ var require_stringify = __commonJS({
     var identity = require_identity();
     var stringifyComment = require_stringifyComment();
     var stringifyString = require_stringifyString();
-    function createStringifyContext(doc, options) {
+    function createStringifyContext(doc, options2) {
       const opt = Object.assign({
         blockQuote: true,
         commentString: stringifyComment.stringifyComment,
@@ -1444,7 +1444,7 @@ var require_stringify = __commonJS({
         trailingComma: false,
         trueStr: "true",
         verifyAliasOrder: true
-      }, doc.schema.toStringOptions, options);
+      }, doc.schema.toStringOptions, options2);
       let inFlow;
       switch (opt.collectionStyle) {
         case "block":
@@ -1866,10 +1866,10 @@ var require_stringifyCollection = __commonJS({
     var identity = require_identity();
     var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
-    function stringifyCollection(collection, ctx, options) {
+    function stringifyCollection(collection, ctx, options2) {
       const flow2 = ctx.inFlow ?? collection.flow;
       const stringify2 = flow2 ? stringifyFlowCollection : stringifyBlockCollection;
-      return stringify2(collection, ctx, options);
+      return stringify2(collection, ctx, options2);
     }
     function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, flowChars, itemIndent, onChompKeep, onComment }) {
       const { indent, options: { commentString } } = ctx;
@@ -3324,10 +3324,10 @@ var require_stringifyDocument = __commonJS({
     var identity = require_identity();
     var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
-    function stringifyDocument(doc, options) {
+    function stringifyDocument(doc, options2) {
       const lines2 = [];
-      let hasDirectives = options.directives === true;
-      if (options.directives !== false && doc.directives) {
+      let hasDirectives = options2.directives === true;
+      if (options2.directives !== false && doc.directives) {
         const dir2 = doc.directives.toString(doc);
         if (dir2) {
           lines2.push(dir2);
@@ -3337,7 +3337,7 @@ var require_stringifyDocument = __commonJS({
       }
       if (hasDirectives)
         lines2.push("---");
-      const ctx = stringify.createStringifyContext(doc, options);
+      const ctx = stringify.createStringifyContext(doc, options2);
       const { commentString } = ctx.options;
       if (doc.commentBefore) {
         if (lines2.length !== 1)
@@ -3413,7 +3413,7 @@ var require_Document = __commonJS({
     var createNode = require_createNode();
     var directives = require_directives();
     var Document = class _Document {
-      constructor(value2, replacer, options) {
+      constructor(value2, replacer, options2) {
         this.commentBefore = null;
         this.comment = null;
         this.errors = [];
@@ -3422,8 +3422,8 @@ var require_Document = __commonJS({
         let _replacer = null;
         if (typeof replacer === "function" || Array.isArray(replacer)) {
           _replacer = replacer;
-        } else if (options === void 0 && replacer) {
-          options = replacer;
+        } else if (options2 === void 0 && replacer) {
+          options2 = replacer;
           replacer = void 0;
         }
         const opt = Object.assign({
@@ -3435,17 +3435,17 @@ var require_Document = __commonJS({
           stringKeys: false,
           uniqueKeys: true,
           version: "1.2"
-        }, options);
+        }, options2);
         this.options = opt;
         let { version: version2 } = opt;
-        if (options?._directives) {
-          this.directives = options._directives.atDocument();
+        if (options2?._directives) {
+          this.directives = options2._directives.atDocument();
           if (this.directives.yaml.explicit)
             version2 = this.directives.yaml.version;
         } else
           this.directives = new directives.Directives({ version: version2 });
-        this.setSchema(version2, options);
-        this.contents = value2 === void 0 ? null : this.createNode(value2, _replacer, options);
+        this.setSchema(version2, options2);
+        this.contents = value2 === void 0 ? null : this.createNode(value2, _replacer, options2);
       }
       /**
        * Create a deep copy of this Document and its contents.
@@ -3496,7 +3496,7 @@ var require_Document = __commonJS({
         }
         return new Alias.Alias(node.anchor);
       }
-      createNode(value2, replacer, options) {
+      createNode(value2, replacer, options2) {
         let _replacer = void 0;
         if (typeof replacer === "function") {
           value2 = replacer.call({ "": value2 }, "", value2);
@@ -3507,11 +3507,11 @@ var require_Document = __commonJS({
           if (asStr.length > 0)
             replacer = replacer.concat(asStr);
           _replacer = replacer;
-        } else if (options === void 0 && replacer) {
-          options = replacer;
+        } else if (options2 === void 0 && replacer) {
+          options2 = replacer;
           replacer = void 0;
         }
-        const { aliasDuplicateObjects, anchorPrefix, flow: flow2, keepUndefined, onTagObj, tag } = options ?? {};
+        const { aliasDuplicateObjects, anchorPrefix, flow: flow2, keepUndefined, onTagObj, tag } = options2 ?? {};
         const { onAnchor, setAnchors, sourceObjects } = anchors.createNodeAnchors(
           this,
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -3536,9 +3536,9 @@ var require_Document = __commonJS({
        * Convert a key and a value into a `Pair` using the current schema,
        * recursively wrapping all values as `Scalar` or `Collection` nodes.
        */
-      createPair(key, value2, options = {}) {
-        const k = this.createNode(key, null, options);
-        const v = this.createNode(value2, null, options);
+      createPair(key, value2, options2 = {}) {
+        const k = this.createNode(key, null, options2);
+        const v = this.createNode(value2, null, options2);
         return new Pair.Pair(k, v);
       }
       /**
@@ -3624,7 +3624,7 @@ var require_Document = __commonJS({
        *
        * Overrides all previously set schema options.
        */
-      setSchema(version2, options = {}) {
+      setSchema(version2, options2 = {}) {
         if (typeof version2 === "number")
           version2 = String(version2);
         let opt;
@@ -3654,10 +3654,10 @@ var require_Document = __commonJS({
             throw new Error(`Expected '1.1', '1.2' or null as first argument, but found: ${sv}`);
           }
         }
-        if (options.schema instanceof Object)
-          this.schema = options.schema;
+        if (options2.schema instanceof Object)
+          this.schema = options2.schema;
         else if (opt)
-          this.schema = new Schema.Schema(Object.assign(opt, options));
+          this.schema = new Schema.Schema(Object.assign(opt, options2));
         else
           throw new Error(`With a null YAML version, the { schema: Schema } option is required`);
       }
@@ -3687,14 +3687,14 @@ var require_Document = __commonJS({
         return this.toJS({ json: true, jsonArg, mapAsMap: false, onAnchor });
       }
       /** A YAML representation of the document. */
-      toString(options = {}) {
+      toString(options2 = {}) {
         if (this.errors.length > 0)
           throw new Error("Document with errors cannot be stringified");
-        if ("indent" in options && (!Number.isInteger(options.indent) || Number(options.indent) <= 0)) {
-          const s = JSON.stringify(options.indent);
+        if ("indent" in options2 && (!Number.isInteger(options2.indent) || Number(options2.indent) <= 0)) {
+          const s = JSON.stringify(options2.indent);
           throw new Error(`"indent" option must be a positive integer, not ${s}`);
         }
-        return stringifyDocument.stringifyDocument(this, options);
+        return stringifyDocument.stringifyDocument(this, options2);
       }
     };
     function assertCollection(contents) {
@@ -5045,14 +5045,14 @@ var require_compose_node = __commonJS({
       }
       return node;
     }
-    function composeAlias({ options }, { offset, source, end }, onError) {
+    function composeAlias({ options: options2 }, { offset, source, end }, onError) {
       const alias = new Alias.Alias(source.substring(1));
       if (alias.source === "")
         onError(offset, "BAD_ALIAS", "Alias cannot be an empty string");
       if (alias.source.endsWith(":"))
         onError(offset + source.length - 1, "BAD_ALIAS", "Alias ending in : is ambiguous", true);
       const valueEnd = offset + source.length;
-      const re = resolveEnd.resolveEnd(end, valueEnd, options.strict, onError);
+      const re = resolveEnd.resolveEnd(end, valueEnd, options2.strict, onError);
       alias.range = [offset, valueEnd, re.offset];
       if (re.comment)
         alias.comment = re.comment;
@@ -5071,8 +5071,8 @@ var require_compose_doc = __commonJS({
     var composeNode = require_compose_node();
     var resolveEnd = require_resolve_end();
     var resolveProps = require_resolve_props();
-    function composeDoc(options, directives, { offset, start, value: value2, end }, onError) {
-      const opts = Object.assign({ _directives: directives }, options);
+    function composeDoc(options2, directives, { offset, start, value: value2, end }, onError) {
+      const opts = Object.assign({ _directives: directives }, options2);
       const doc = new Document.Document(void 0, opts);
       const ctx = {
         atKey: false,
@@ -5151,7 +5151,7 @@ var require_composer = __commonJS({
       return { comment, afterEmptyLine };
     }
     var Composer = class {
-      constructor(options = {}) {
+      constructor(options2 = {}) {
         this.doc = null;
         this.atDirectives = false;
         this.prelude = [];
@@ -5164,8 +5164,8 @@ var require_composer = __commonJS({
           else
             this.errors.push(new errors.YAMLParseError(pos, code, message));
         };
-        this.directives = new directives.Directives({ version: options.version || "1.2" });
-        this.options = options;
+        this.directives = new directives.Directives({ version: options2.version || "1.2" });
+        this.options = options2;
       }
       decorate(doc, afterDoc) {
         const { comment, afterEmptyLine } = parsePrelude(this.prelude);
@@ -7229,15 +7229,15 @@ var require_public_api = __commonJS({
     var identity = require_identity();
     var lineCounter = require_line_counter();
     var parser = require_parser();
-    function parseOptions(options) {
-      const prettyErrors = options.prettyErrors !== false;
-      const lineCounter$1 = options.lineCounter || prettyErrors && new lineCounter.LineCounter() || null;
+    function parseOptions(options2) {
+      const prettyErrors = options2.prettyErrors !== false;
+      const lineCounter$1 = options2.lineCounter || prettyErrors && new lineCounter.LineCounter() || null;
       return { lineCounter: lineCounter$1, prettyErrors };
     }
-    function parseAllDocuments2(source, options = {}) {
-      const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options);
+    function parseAllDocuments2(source, options2 = {}) {
+      const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options2);
       const parser$1 = new parser.Parser(lineCounter2?.addNewLine);
-      const composer$1 = new composer.Composer(options);
+      const composer$1 = new composer.Composer(options2);
       const docs = Array.from(composer$1.compose(parser$1.parse(source)));
       if (prettyErrors && lineCounter2)
         for (const doc of docs) {
@@ -7248,10 +7248,10 @@ var require_public_api = __commonJS({
         return docs;
       return Object.assign([], { empty: true }, composer$1.streamInfo());
     }
-    function parseDocument(source, options = {}) {
-      const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options);
+    function parseDocument(source, options2 = {}) {
+      const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options2);
       const parser$1 = new parser.Parser(lineCounter2?.addNewLine);
-      const composer$1 = new composer.Composer(options);
+      const composer$1 = new composer.Composer(options2);
       let doc = null;
       for (const _doc of composer$1.compose(parser$1.parse(source), true, source.length)) {
         if (!doc)
@@ -7267,14 +7267,14 @@ var require_public_api = __commonJS({
       }
       return doc;
     }
-    function parse(src, reviver, options) {
+    function parse(src, reviver, options2) {
       let _reviver = void 0;
       if (typeof reviver === "function") {
         _reviver = reviver;
-      } else if (options === void 0 && reviver && typeof reviver === "object") {
-        options = reviver;
+      } else if (options2 === void 0 && reviver && typeof reviver === "object") {
+        options2 = reviver;
       }
-      const doc = parseDocument(src, options);
+      const doc = parseDocument(src, options2);
       if (!doc)
         return null;
       doc.warnings.forEach((warning) => log.warn(doc.options.logLevel, warning));
@@ -7284,29 +7284,29 @@ var require_public_api = __commonJS({
         else
           doc.errors = [];
       }
-      return doc.toJS(Object.assign({ reviver: _reviver }, options));
+      return doc.toJS(Object.assign({ reviver: _reviver }, options2));
     }
-    function stringify(value2, replacer, options) {
+    function stringify(value2, replacer, options2) {
       let _replacer = null;
       if (typeof replacer === "function" || Array.isArray(replacer)) {
         _replacer = replacer;
-      } else if (options === void 0 && replacer) {
-        options = replacer;
+      } else if (options2 === void 0 && replacer) {
+        options2 = replacer;
       }
-      if (typeof options === "string")
-        options = options.length;
-      if (typeof options === "number") {
-        const indent = Math.round(options);
-        options = indent < 1 ? void 0 : indent > 8 ? { indent: 8 } : { indent };
+      if (typeof options2 === "string")
+        options2 = options2.length;
+      if (typeof options2 === "number") {
+        const indent = Math.round(options2);
+        options2 = indent < 1 ? void 0 : indent > 8 ? { indent: 8 } : { indent };
       }
       if (value2 === void 0) {
-        const { keepUndefined } = options ?? replacer ?? {};
+        const { keepUndefined } = options2 ?? replacer ?? {};
         if (!keepUndefined)
           return void 0;
       }
       if (identity.isDocument(value2) && !_replacer)
-        return value2.toString(options);
-      return new Document.Document(value2, _replacer, options).toString(options);
+        return value2.toString(options2);
+      return new Document.Document(value2, _replacer, options2).toString(options2);
     }
     exports.parse = parse;
     exports.parseAllDocuments = parseAllDocuments2;
@@ -7441,7 +7441,7 @@ function fsyncDirectory(dir2) {
     if (fd !== void 0) closeSync(fd);
   }
 }
-function writeFileAtomic(path, data, options = {}) {
+function writeFileAtomic(path, data, options2 = {}) {
   const bytes = typeof data === "string" ? Buffer.from(data, "utf8") : data;
   const dir2 = dirname2(path);
   const temp = join2(dir2, `${basename(path)}.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
@@ -7454,12 +7454,12 @@ function writeFileAtomic(path, data, options = {}) {
       throw new Error(`SDD_TEST_FAULT: temporary-file write failed after ${Math.min(limit, bytes.length)} bytes`);
     }
     writeAll(fd, bytes);
-    options.fault?.("write");
+    options2.fault?.("write");
     fsyncSync(fd);
-    options.fault?.("fsync");
+    options2.fault?.("fsync");
     closeSync(fd);
     fd = void 0;
-    options.fault?.("rename");
+    options2.fault?.("rename");
     renameWithRetry(temp, path);
   } catch (e) {
     if (fd !== void 0) {
@@ -7479,8 +7479,8 @@ function writeFileAtomic(path, data, options = {}) {
 function toArtifactText(text) {
   return text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
 }
-function writeTextAtomic(path, text, options = {}) {
-  writeFileAtomic(path, toArtifactText(text), options);
+function writeTextAtomic(path, text, options2 = {}) {
+  writeFileAtomic(path, toArtifactText(text), options2);
 }
 
 // src/io/paths.ts
@@ -7497,9 +7497,9 @@ function defaultCwd(platform) {
   if (platform === CURRENT) return process.cwd();
   return platform === "win32" ? "C:\\" : "/";
 }
-function normalisePath(p, options = {}) {
-  const platform = options.platform ?? CURRENT;
-  const cwd = options.cwd ?? defaultCwd(platform);
+function normalisePath(p, options2 = {}) {
+  const platform = options2.platform ?? CURRENT;
+  const cwd = options2.cwd ?? defaultCwd(platform);
   if (platform === "posix") {
     const r2 = posix.resolve(cwd, p);
     return r2.length > 1 && r2.endsWith("/") ? r2.slice(0, -1) : r2;
@@ -7513,9 +7513,9 @@ function normalisePath(p, options = {}) {
   if (!isDriveRoot && r.length > 1 && r.endsWith("/")) r = r.slice(0, -1);
   return r;
 }
-function pathKey(p, options = {}) {
-  const platform = options.platform ?? CURRENT;
-  const n = normalisePath(p, options);
+function pathKey(p, options2 = {}) {
+  const platform = options2.platform ?? CURRENT;
+  const n = normalisePath(p, options2);
   return platform === "win32" ? n.toLowerCase() : n;
 }
 function realPath(p) {
@@ -7583,23 +7583,23 @@ function ambiguousWindowsPath(p, platform = CURRENT) {
 function isCommand(word, name) {
   return word !== void 0 && (word === name || word.toLowerCase() === `${name}.exe`);
 }
-function isInside(root, target, options = {}) {
-  const key = (p) => options.real ? pathKey(realPath(p)) : pathKey(p, options);
+function isInside(root, target, options2 = {}) {
+  const key = (p) => options2.real ? pathKey(realPath(p)) : pathKey(p, options2);
   const r = key(root);
   const t = key(target);
   if (t === r) return true;
   return t.startsWith(r.endsWith("/") ? r : r + "/");
 }
-function relativePath(root, target, options = {}) {
-  const platform = options.platform ?? CURRENT;
-  const r = normalisePath(root, options);
-  const t = normalisePath(target, options);
+function relativePath(root, target, options2 = {}) {
+  const platform = options2.platform ?? CURRENT;
+  const r = normalisePath(root, options2);
+  const t = normalisePath(target, options2);
   return (platform === "win32" ? win32.relative(r, t) : posix.relative(r, t)).replace(/\\/g, "/");
 }
 
 // src/cli/commands.ts
 import { existsSync as existsSync20, readdirSync as readdirSync10, readFileSync as readFileSync20, statSync as statSync11 } from "node:fs";
-import { basename as basename9, join as join28, resolve } from "node:path";
+import { basename as basename9, join as join29, resolve } from "node:path";
 
 // src/model/ids.ts
 var ID_TYPES = [
@@ -9538,6 +9538,8 @@ var entries = [
   ["ERR-CLI-016", "Internal error (exit 3)", "Internal error: `<detail>`", "Re-run with `SDD_DEBUG=1` and report"],
   ["ERR-CLI-017", "Atomic write failed (exit 3)", "Could not write `<file>`; previous version kept", "Check disk space and permissions"],
   ["ERR-CLI-018", "Commit at approval impossible", "Cannot commit the approval: `<reason>`", "Run inside a git repository with nothing else staged, or approve without `--commit`"],
+  // CHG-002 errors.md §5 (contract delta C002-IF-007).
+  ["ERR-CLI-019", "`sdd template show` names an unknown profile, a path that leaves the profile's template folder after `..` segments and links are resolved, or a template that exists neither under `.sdd/_templates/<profile>/` nor among the shipped templates", "`no <profile> template <path>` (the profile and the path as given)", "List the templates with `sdd template list <profile>` (C002-REQ-520)"],
   ["WARN-CLI-001", "Task done while dependencies unfinished", "`<T>` done before `<deps>`", "Confirm order or update dependencies"]
 ];
 var CATALOGUE = Object.fromEntries(
@@ -9949,7 +9951,7 @@ function capabilityId(nnn, name) {
 function blockTypes(b) {
   return b.type.split("|").map((t) => t.trim());
 }
-function nextId(dir2, type, options = {}) {
+function nextId(dir2, type, options2 = {}) {
   if (!LEDGER_TYPES.includes(type)) throw new CliError("ERR-CLI-004", { TYPE: type, list: LEDGER_TYPES.join(", ") });
   if (type === "AC") throw usage("id next", "AC IDs derive from their requirement (AC-<req-seq>.<n>) and are not allocated");
   const nnn = changeNumber(dir2);
@@ -9957,8 +9959,8 @@ function nextId(dir2, type, options = {}) {
   const blocks2 = ledger.blocks.filter((b) => blockTypes(b).includes(type));
   let block;
   if (blocks2.length > 0) {
-    if (options.block === void 0) throw usage("id next", `${type} uses capability blocks; pass --block <capability>`);
-    const cap = capabilityId(nnn, options.block);
+    if (options2.block === void 0) throw usage("id next", `${type} uses capability blocks; pass --block <capability>`);
+    const cap = capabilityId(nnn, options2.block);
     block = blocks2.find((b) => capabilityId(nnn, b.capability) === cap);
     if (!block) throw usage("id next", `no block for ${type} in capability ${cap}`);
   }
@@ -10326,30 +10328,30 @@ function statements(changes) {
     }
   return out;
 }
-function lintWorkspace(root, options) {
-  const trace2 = options.trace ?? (() => {
+function lintWorkspace(root, options2) {
+  const trace2 = options2.trace ?? (() => {
   });
   const sdd = join8(root, ".sdd");
   const folders = changeFolders(sdd);
-  const phase = options.phase ?? null;
+  const phase = options2.phase ?? null;
   let file;
   let selected = folders.filter((f) => !f.archived && changeStatus(f.dir).status !== "archived");
-  if (options.file !== void 0) {
-    const abs = normalisePath(options.file, { cwd: options.cwd });
+  if (options2.file !== void 0) {
+    const abs = normalisePath(options2.file, { cwd: options2.cwd });
     if (!isInside(sdd, abs)) throw usage("lint", "--file must be inside .sdd/");
-    if (!existsSync5(abs)) throw usage("lint", `--file does not exist: ${options.file}`);
+    if (!existsSync5(abs)) throw usage("lint", `--file does not exist: ${options2.file}`);
     file = relativePath(root, abs);
     const name = /^\.sdd\/(\d{3}-[^/]+)\//.exec(file)?.[1];
     selected = folders.filter((f) => !f.archived && f.name === name);
   }
-  if (options.change !== void 0) {
-    const match = folders.filter((f) => !f.archived && f.name.startsWith(options.change + "-"));
-    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: options.change });
+  if (options2.change !== void 0) {
+    const match = folders.filter((f) => !f.archived && f.name.startsWith(options2.change + "-"));
+    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: options2.change });
     selected = match;
   }
   const quick = file !== void 0;
-  const workspaceScope = options.change === void 0 && !quick;
-  const rules = options.rules.filter((r) => quick ? r.scope === "file" : r.scope !== "workspace" || workspaceScope);
+  const workspaceScope = options2.change === void 0 && !quick;
+  const rules = options2.rules.filter((r) => quick ? r.scope === "file" : r.scope !== "workspace" || workspaceScope);
   const changes = selected.map((f) => {
     const graph = buildChangeGraph(f.dir);
     trace2("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
@@ -10450,7 +10452,7 @@ function lintWorkspace(root, options) {
   trace2("lint", { rules: rules.length, error: summary.error, warn: summary.warn, info: summary.info });
   const scope = { changes: changes.map((c) => `CHG-${c.change}`), phase, quick };
   if (file !== void 0) scope.file = file;
-  return { tool: options.tool, scope, summary, findings };
+  return { tool: options2.tool, scope, summary, findings };
 }
 
 // src/lint/types.ts
@@ -10472,7 +10474,7 @@ function initRoot(start) {
   }
   return start;
 }
-function initWorkspace(root, options = {}) {
+function initWorkspace(root, options2 = {}) {
   const sdd = join9(root, ".sdd");
   const existed = isDir(sdd);
   const created = [];
@@ -10486,7 +10488,7 @@ function initWorkspace(root, options = {}) {
   }
   const registry = join9(sdd, "registry.json");
   if (!existsSync6(registry)) {
-    const doc = { sdd_version: 1, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
+    const doc = { sdd_version: 1, generated_at: (options2.now ?? /* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z"), changes: [] };
     writeTextAtomic(registry, JSON.stringify(doc, null, 2) + "\n");
     created.push("registry.json");
   }
@@ -10494,7 +10496,7 @@ function initWorkspace(root, options = {}) {
   if (!existsSync6(sddMd)) {
     writeTextAtomic(sddMd, renderSddMd(TOOL));
     created.push("SDD.md");
-  } else if (options.force) {
+  } else if (options2.force) {
     const block = readStatusBlock(readFileSync7(sddMd, "utf8"));
     writeTextAtomic(sddMd, block === null ? renderSddMd(TOOL) : renderSddMd(TOOL, block));
     rewritten.push("SDD.md");
@@ -10510,6 +10512,7 @@ import { join as join11 } from "node:path";
 import { existsSync as existsSync7, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync6 } from "node:fs";
 import { dirname as dirname4, join as join10 } from "node:path";
 import { fileURLToPath } from "node:url";
+var TEMPLATE_PROFILES = ["full", "lite", "constitution"];
 var LITE_SCAFFOLD = [
   "00-ideation/ideation.md",
   "00-ideation/questions-log.md",
@@ -10519,22 +10522,74 @@ var LITE_SCAFFOLD = [
   "20-plan/handoff.md"
 ];
 function defaultPluginRoot() {
-  const env = process.env["CLAUDE_PLUGIN_ROOT"];
-  if (env) return env;
-  return join10(dirname4(fileURLToPath(import.meta.url)), "..");
+  const beside = join10(dirname4(fileURLToPath(import.meta.url)), "..");
+  if (existsSync7(join10(beside, "templates"))) return beside;
+  return process.env["CLAUDE_PLUGIN_ROOT"] || beside;
 }
-function templatesDir(profile, options) {
-  return join10(options.pluginRoot ?? defaultPluginRoot(), "templates", profile);
+function templatesDir(profile, options2) {
+  return join10(options2.pluginRoot ?? defaultPluginRoot(), "templates", profile);
 }
-function resolveTemplate(profile, rel, options = {}) {
-  const parts = rel.split("/");
-  if (options.sddDir) {
-    const override = join10(options.sddDir, "_templates", profile, ...parts);
-    if (existsSync7(override)) return { path: override, source: "override", text: readFileSync8(override, "utf8") };
+function profileFolders(profile, options2) {
+  return [
+    ...options2.sddDir ? [{ root: join10(options2.sddDir, "_templates", profile), source: "override" }] : [],
+    { root: templatesDir(profile, options2), source: "plugin" }
+  ];
+}
+function confined(root, candidate) {
+  return isInside(root, candidate) && isInside(root, candidate, { real: true });
+}
+function isFile(p) {
+  try {
+    return statSync6(p).isFile();
+  } catch {
+    return false;
   }
-  const path = join10(templatesDir(profile, options), ...parts);
-  if (!existsSync7(path)) throw new Error(`no ${profile} template for ${rel}`);
-  return { path, source: "plugin", text: readFileSync8(path, "utf8") };
+}
+function byCodePoint(a, b) {
+  const x = [...a];
+  const y = [...b];
+  for (let i = 0; i < Math.min(x.length, y.length); i++) {
+    const d = x[i].codePointAt(0) - y[i].codePointAt(0);
+    if (d !== 0) return d;
+  }
+  return x.length - y.length;
+}
+function confinedFiles(root) {
+  if (!existsSync7(root)) return [];
+  const out = [];
+  const seen = /* @__PURE__ */ new Set();
+  const walk = (dir2, rel) => {
+    const real = realPath(dir2);
+    if (seen.has(real)) return;
+    seen.add(real);
+    for (const name of readdirSync5(dir2)) {
+      const p = join10(dir2, name);
+      if (!confined(root, p)) continue;
+      let st;
+      try {
+        st = statSync6(p);
+      } catch {
+        continue;
+      }
+      if (st.isDirectory()) walk(p, `${rel}${name}/`);
+      else if (st.isFile()) out.push(`${rel}${name}`);
+    }
+  };
+  walk(root, "");
+  return out;
+}
+function listResolvableTemplates(profile, options2 = {}) {
+  const all = new Set(profileFolders(profile, options2).flatMap((f) => confinedFiles(f.root)));
+  return [...all].sort(byCodePoint);
+}
+function resolveTemplate(profile, rel, options2 = {}) {
+  const parts = rel.split("/");
+  for (const { root, source } of profileFolders(profile, options2)) {
+    const path = join10(root, ...parts);
+    if (!isFile(path) || !confined(root, path)) continue;
+    return { path, source, text: readFileSync8(path, "utf8") };
+  }
+  throw new CliError("ERR-CLI-019", { profile, path: rel });
 }
 function renderTemplate(text, vars) {
   return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key) => vars[key] ?? m);
@@ -10569,7 +10624,7 @@ function setFrontmatterValue(text, key, yamlValue) {
   lines2[at] = `${key}: ${yamlValue}`;
   return lines2.join("\n");
 }
-function createChange(sddDir, title, options) {
+function createChange(sddDir, title, options2) {
   const slug = slugify(title);
   if (slug === "") throw usage("change new", "title yields an empty slug; use letters or digits");
   const nnn = nextChangeNumber(sddDir);
@@ -10580,9 +10635,9 @@ function createChange(sddDir, title, options) {
     P: `C${nnn}`,
     NNN: nnn,
     TITLE: title,
-    DATE: isoDate(options.date),
-    KIND: options.kind,
-    PROFILE: options.profile,
+    DATE: isoDate(options2.date),
+    KIND: options2.kind,
+    PROFILE: options2.profile,
     // Entity placeholders of the scaffolded lite files: the first entity of each kind.
     NAME: title,
     SEQ: "001",
@@ -10590,13 +10645,13 @@ function createChange(sddDir, title, options) {
     B: "1",
     SLUG: slug
   };
-  const tpl = { ...options.pluginRoot !== void 0 ? { pluginRoot: options.pluginRoot } : {}, sddDir };
-  const render = (rel) => renderTemplate(resolveTemplate(options.profile, rel, tpl).text, vars);
+  const tpl = { ...options2.pluginRoot !== void 0 ? { pluginRoot: options2.pluginRoot } : {}, sddDir };
+  const render = (rel) => renderTemplate(resolveTemplate(options2.profile, rel, tpl).text, vars);
   mkdirSync2(dir2);
   for (const phase of ["00-ideation", "10-spec", "20-plan"]) mkdirSync2(join11(dir2, phase));
   writeTextAtomic(join11(dir2, "change.md"), setFrontmatterValue(render("change.md"), "title", JSON.stringify(title)));
   writeTextAtomic(join11(dir2, "ids.json"), render("ids.json"));
-  if (options.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join11(dir2, ...rel.split("/")), render(rel));
+  if (options2.profile === "lite") for (const rel of LITE_SCAFFOLD) writeTextAtomic(join11(dir2, ...rel.split("/")), render(rel));
   return { id: `CHG-${nnn}`, folder, dir: dir2 };
 }
 
@@ -11618,8 +11673,8 @@ function deny2(tool, target, reason, allowed, memory = true) {
     message: `${RULE}: ${tool} on ${target} denied — ${reason}. Allowed: files under ${allowed.map((a) => a + "/").join(" and ")} (Architect agents write only inside ${scope}).`
   };
 }
-function decidePath(input, options = {}) {
-  const memory = options.memoryFolder !== false;
+function decidePath(input, options2 = {}) {
+  const memory = options2.memoryFolder !== false;
   const refuse2 = (tool2, target, reason, allowed2) => deny2(tool2, target, reason, allowed2, memory);
   if (input === null) return refuse2("tool call", "(unknown target)", "the hook input is not a JSON object", [".sdd"]);
   if (!isArchitectAgent(input)) return { allow: true };
@@ -11670,6 +11725,10 @@ var Output = class {
   debug;
   line(text) {
     this.w.stdout(text + "\n");
+  }
+  /** Text on standard output exactly as given, no newline added (`template show`, C002-IF-007). */
+  raw(text) {
+    this.w.stdout(text);
   }
   /** The only standard-output write of a --json run (C001-REQ-703). */
   json(doc) {
@@ -12046,13 +12105,13 @@ function started(t, phase) {
   const anyStatus = PHASE_FOLDERS.some((p) => t.phaseStatus(p) !== "not-started");
   return !anyStatus && [...t.lint.spec.docs.keys()].some((p) => p.startsWith(`${phase}/`));
 }
-function trace(changeDir, options) {
+function trace(changeDir, options2) {
   const model = buildTrace(changeDir);
   const tombstones = new Set(loadLedger(changeDir).tombstones.map((x) => x.id));
   const planStarted = model.lint.spec.planStarted;
   const plan = planStarted ? planCoverage(model, tombstones) : null;
   const phases = PHASE_FOLDERS.filter((p) => started(model, p) && existsSync15(join19(changeDir, p)));
-  const document = { change: model.doc.change, generated_at: (options.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
+  const document = { change: model.doc.change, generated_at: (options2.now ?? /* @__PURE__ */ new Date()).toISOString(), nodes: model.doc.nodes, edges: model.doc.edges };
   const result = {
     model,
     document,
@@ -12061,7 +12120,7 @@ function trace(changeDir, options) {
     markers: phases.flatMap((p) => markers(model, p)),
     written: []
   };
-  if (!options.write) return result;
+  if (!options2.write) return result;
   const put = (rel, text) => {
     writeTextAtomic(join19(changeDir, ...rel.split("/")), text);
     result.written.push(rel);
@@ -12598,21 +12657,48 @@ function hostVersionsJson(r) {
   return { host: r.host, versions: r.versions, ...r.hooks ? { hooks: r.hooks } : {} };
 }
 
+// src/cli/template-cmd.ts
+import { join as join28 } from "node:path";
+function isProfile(p) {
+  return TEMPLATE_PROFILES.includes(p);
+}
+function options(cwd) {
+  const root = findWorkspace(cwd);
+  return root === null ? {} : { sddDir: join28(root, ".sdd") };
+}
+function templateShow(ctx) {
+  const arg = ctx.args["template"];
+  const slash = arg.indexOf("/");
+  const profile = slash < 0 ? arg : arg.slice(0, slash);
+  const path = slash < 0 ? "" : arg.slice(slash + 1);
+  if (!isProfile(profile)) throw new CliError("ERR-CLI-019", { profile, path });
+  const t = resolveTemplate(profile, path, options(ctx.cwd));
+  ctx.out.trace("template", { source: t.source, path: t.path });
+  ctx.out.raw(t.text);
+  return 0;
+}
+function templateList(ctx) {
+  const profile = ctx.args["profile-name"];
+  if (!isProfile(profile)) return 0;
+  for (const p of listResolvableTemplates(profile, options(ctx.cwd))) ctx.out.line(p);
+  return 0;
+}
+
 // src/cli/commands.ts
 var S = { type: "string" };
 var R = { type: "string", required: true };
 var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
-  const sdd = join28(root, ".sdd");
-  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join28(sdd, n)).isDirectory()).sort();
+  const sdd = join29(root, ".sdd");
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync11(join29(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;
-  const options = { cwd: ctx.cwd, rules: ctx.rules, tool: TOOL, phase: values["phase"] ?? null, trace: (e, d) => out.trace(e, d) };
-  if (ctx.args["NNN"] !== void 0) options.change = ctx.args["NNN"];
-  if (values["file"] !== void 0) options.file = values["file"];
-  const report = lintWorkspace(root, options);
+  const options2 = { cwd: ctx.cwd, rules: ctx.rules, tool: TOOL, phase: values["phase"] ?? null, trace: (e, d) => out.trace(e, d) };
+  if (ctx.args["NNN"] !== void 0) options2.change = ctx.args["NNN"];
+  if (values["file"] !== void 0) options2.file = values["file"];
+  const report = lintWorkspace(root, options2);
   if (values["json"]) out.json(report);
   else {
     for (const f of report.findings) out.line(formatFinding(f));
@@ -12643,8 +12729,8 @@ function gateApprove(ctx) {
   if (ctx.values["by"] !== void 0) o.by = ctx.values["by"];
   if (ctx.values["usage"] !== void 0) o.usage = ctx.values["usage"];
   const r = approve(g, o);
-  const sdd = join28(ctx.root, ".sdd");
-  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join29(ctx.root, ".sdd");
+  if (existsSync20(join29(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`approved: CHG-${ctx.args["NNN"]} ${g.phase} ${r.hash} by ${r.approvedBy} on ${r.date}`);
   for (const w of r.waivers) ctx.out.line(`waived: ${w.item}`);
   if (commit) {
@@ -12662,7 +12748,7 @@ function changeRevise(ctx) {
 }
 function changeStop(ctx) {
   const changeDir = resolveChange(ctx, ctx.args["NNN"]);
-  const current = String(splitFrontmatter(readFileSync20(join28(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
+  const current = String(splitFrontmatter(readFileSync20(join29(changeDir, "change.md"), "utf8")).data?.["phase"] ?? "00-ideation");
   record({ root: ctx.root, changeDir, phase: current, rules: ctx.rules, tool: TOOL }, "stop", ctx.values["reason"]);
   refreshRegistry(ctx);
   ctx.out.line(`stopped: CHG-${ctx.args["NNN"]}`);
@@ -12672,19 +12758,19 @@ function gateRecord(ctx) {
   const decision = ctx.values["decision"];
   if (decision !== "revise" && decision !== "stop") throw usage(ctx.name, `--decision must be revise or stop: ${decision}`);
   record(gateContext(ctx), decision, ctx.values["note"]);
-  const sdd = join28(ctx.root, ".sdd");
-  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join29(ctx.root, ".sdd");
+  if (existsSync20(join29(sdd, "registry.json"))) writeStatus(sdd);
   ctx.out.line(`recorded: CHG-${ctx.args["NNN"]} ${ctx.args["phase"]} ${decision}`);
   return 0;
 }
 function changeOfId(ctx, id) {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
   const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
-  return folder ? join28(ctx.root, ".sdd", folder) : null;
+  return folder ? join29(ctx.root, ".sdd", folder) : null;
 }
 function refreshRegistry(ctx) {
-  const sdd = join28(ctx.root, ".sdd");
-  if (existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
+  const sdd = join29(ctx.root, ".sdd");
+  if (existsSync20(join29(sdd, "registry.json"))) writeStatus(sdd);
 }
 function taskSet(ctx) {
   const raw = ctx.args["T-ID"];
@@ -12702,7 +12788,7 @@ function taskSet(ctx) {
 function defectAdd(ctx) {
   const ref = ctx.values["ref"];
   const dir2 = changeOfId(ctx, ref);
-  const status2 = dir2 ? String(splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
+  const status2 = dir2 ? String(splitFrontmatter(readFileSync20(join29(dir2, "change.md"), "utf8")).data?.["status"] ?? "active") : "";
   if (!dir2 || status2 === "archived" || !buildChangeGraph(dir2).byId.has(ref)) throw new CliError("ERR-CLI-008", { ID: ref });
   const d = addDefect(dir2, ref, ctx.values["summary"], ctx.values["by"] ?? gitUser(ctx.root));
   refreshRegistry(ctx);
@@ -12730,16 +12816,16 @@ function hashCmd(ctx) {
   return 0;
 }
 function staleCmd(ctx) {
-  const sdd = join28(ctx.root, ".sdd");
-  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join28(sdd, f));
+  const sdd = join29(ctx.root, ".sdd");
+  const dirs = ctx.args["NNN"] !== void 0 ? [resolveChange(ctx, ctx.args["NNN"])] : changeFolders2(ctx.root).map((f) => join29(sdd, f));
   const results = [];
   for (const dir2 of dirs) {
-    const fm = splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data ?? {};
+    const fm = splitFrontmatter(readFileSync20(join29(dir2, "change.md"), "utf8")).data ?? {};
     if (fm["status"] === "archived") continue;
     results.push({ change: String(fm["id"] ?? dir2), phases: staleCheck(dir2, true) });
   }
   const changed = results.some((r) => r.phases.some((p) => p.stale));
-  if (changed && existsSync20(join28(sdd, "registry.json"))) writeStatus(sdd);
+  if (changed && existsSync20(join29(sdd, "registry.json"))) writeStatus(sdd);
   if (ctx.values["json"]) ctx.out.json({ changes: results });
   else
     for (const r of results)
@@ -12771,7 +12857,7 @@ function traceActive(ctx) {
   try {
     const root = findWorkspace(ctx.cwd);
     if (root === null) return 0;
-    const sdd = join28(root, ".sdd");
+    const sdd = join29(root, ".sdd");
     const registry = rebuildRegistry(sdd);
     listChanges(sdd).forEach((c, i) => {
       const status2 = registry.changes[i]?.status;
@@ -12790,15 +12876,15 @@ function resolveChange(ctx, nnn) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
     const match = folders.filter((f) => f.startsWith(nnn + "-"));
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join28(ctx.root, ".sdd", match[0]);
+    return join29(ctx.root, ".sdd", match[0]);
   }
-  const inside = folders.find((f) => isInside(join28(ctx.root, ".sdd", f), ctx.cwd));
-  if (inside) return join28(ctx.root, ".sdd", inside);
-  if (folders.length === 1) return join28(ctx.root, ".sdd", folders[0]);
+  const inside = folders.find((f) => isInside(join29(ctx.root, ".sdd", f), ctx.cwd));
+  if (inside) return join29(ctx.root, ".sdd", inside);
+  if (folders.length === 1) return join29(ctx.root, ".sdd", folders[0]);
   throw usage(ctx.name, "several changes exist; pass --change <NNN>");
 }
 function status(ctx) {
-  const sdd = join28(ctx.root, ".sdd");
+  const sdd = join29(ctx.root, ".sdd");
   if (ctx.values["write"]) {
     const r = writeStatus(sdd);
     ctx.out.trace("status.write", { adopted: r.adopted, registry: r.registryWritten, sddMd: r.sddMdWritten, changes: r.registry.changes.length });
@@ -12821,7 +12907,7 @@ function status(ctx) {
 function changeNew(ctx) {
   const profile = ctx.values["profile"] ?? "full";
   const kind = ctx.values["kind"] ?? "greenfield";
-  const c = createChange(join28(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
+  const c = createChange(join29(ctx.root, ".sdd"), ctx.args["title"], { profile, kind });
   ctx.out.trace("change.new", { id: c.id, folder: c.folder, profile, kind });
   ctx.out.line(`${c.id} .sdd/${c.folder}`);
   return 0;
@@ -12829,7 +12915,7 @@ function changeNew(ctx) {
 function changeProfile(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
   const target = ctx.args["profile"];
-  const current = splitFrontmatter(readFileSync20(join28(dir2, "change.md"), "utf8")).data?.["profile"];
+  const current = splitFrontmatter(readFileSync20(join29(dir2, "change.md"), "utf8")).data?.["profile"];
   if (current === target) {
     ctx.out.line(`CHG-${ctx.args["NNN"]} is already ${target}`);
     return 0;
@@ -12861,7 +12947,7 @@ function init(ctx) {
   const root = initRoot(ctx.cwd);
   ctx.out.trace("init", { root });
   const r = initWorkspace(root, { force: ctx.values["force"] === true });
-  const where = join28(root, ".sdd");
+  const where = join29(root, ".sdd");
   ctx.out.line(r.existed ? `workspace exists: ${where}` : `created workspace: ${where}`);
   for (const c of r.created) ctx.out.line(`created: ${c}`);
   for (const c of r.rewritten) ctx.out.line(`rewritten: ${c}`);
@@ -12949,6 +13035,8 @@ var ROWS = [
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
+  { name: "template show", usage: "<profile>/<path>", summary: "Print a template: the repository override, else the shipped one", positionals: [P("template")], options: {}, workspace: false, sampleArgs: ["full/10-spec/70-dod.md"], run: templateShow },
+  { name: "template list", usage: "<profile>", summary: "List the template paths of a profile", positionals: [P("profile-name")], options: {}, workspace: false, sampleArgs: ["lite"], run: templateList },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version }
 ];
 var COMMANDS = ROWS.map((r) => ({ ...r, writes: WRITING_COMMANDS.find((w) => w.name === r.name)?.when ?? null }));

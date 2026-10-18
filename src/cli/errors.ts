@@ -31,6 +31,8 @@ const entries: [string, string, string, string][] = [
   ["ERR-CLI-016", "Internal error (exit 3)", "Internal error: `<detail>`", "Re-run with `SDD_DEBUG=1` and report"],
   ["ERR-CLI-017", "Atomic write failed (exit 3)", "Could not write `<file>`; previous version kept", "Check disk space and permissions"],
   ["ERR-CLI-018", "Commit at approval impossible", "Cannot commit the approval: `<reason>`", "Run inside a git repository with nothing else staged, or approve without `--commit`"],
+  // CHG-002 errors.md §5 (contract delta C002-IF-007).
+  ["ERR-CLI-019", "`sdd template show` names an unknown profile, a path that leaves the profile's template folder after `..` segments and links are resolved, or a template that exists neither under `.sdd/_templates/<profile>/` nor among the shipped templates", "`no <profile> template <path>` (the profile and the path as given)", "List the templates with `sdd template list <profile>` (C002-REQ-520)"],
   ["WARN-CLI-001", "Task done while dependencies unfinished", "`<T>` done before `<deps>`", "Confirm order or update dependencies"],
 ];
 

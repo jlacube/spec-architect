@@ -31,6 +31,11 @@ export class Output {
     this.w.stdout(text + "\n");
   }
 
+  /** Text on standard output exactly as given, no newline added (`template show`, C002-IF-007). */
+  raw(text: string): void {
+    this.w.stdout(text);
+  }
+
   /** The only standard-output write of a --json run (C001-REQ-703). */
   json(doc: unknown): void {
     this.w.stdout(JSON.stringify(doc, null, 2) + "\n");

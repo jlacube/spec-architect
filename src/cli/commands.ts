@@ -38,6 +38,7 @@ import { staleCheck, type PhaseCheck } from "../gate/stale.ts";
 import { CliError, usage } from "./errors.ts";
 import { formatHostVersions, HOSTS, hostVersions, hostVersionsJson, type Host } from "./host-version.ts";
 import { formatFinding, type Output } from "./output.ts";
+import { templateList, templateShow } from "./template-cmd.ts";
 import { WRITING_COMMANDS, type WriteWhen } from "./writing-commands.ts";
 
 export interface OptionSpec {
@@ -519,6 +520,8 @@ const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "serena-config", usage: "<plugin-data-dir>", summary: "Write Serena's config in the plugin data folder", positionals: [P("plugin-data-dir")], options: {}, workspace: false, sampleArgs: ["data"], run: serenaConfig },
   { name: "extract-features", usage: "<NNN>", summary: "Write .feature files from gherkin blocks", positionals: [P("NNN")], options: {}, workspace: true, sampleArgs: ["004"] },
   { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
+  { name: "template show", usage: "<profile>/<path>", summary: "Print a template: the repository override, else the shipped one", positionals: [P("template")], options: {}, workspace: false, sampleArgs: ["full/10-spec/70-dod.md"], run: templateShow },
+  { name: "template list", usage: "<profile>", summary: "List the template paths of a profile", positionals: [P("profile-name")], options: {}, workspace: false, sampleArgs: ["lite"], run: templateList },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
 ];
 
