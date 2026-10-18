@@ -7,9 +7,10 @@ import { join } from "node:path";
 import { idHashes, phaseHash } from "../../../src/gate/hash.ts";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 import { runBundled } from "../cli/helpers.ts";
 
-const dir = join(repoRoot(), ".sdd", "001-architect-agent-suite");
+const dir = changeFolder("001");
 
 test("the 00-ideation hash of CHG-001 at G1 equals the G1 value", () => {
   // fx-bootstrap at G1: the ideation as approved on 2026-10-10, before the C001-T-028 revision.

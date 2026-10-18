@@ -6,8 +6,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 
-const IF09 = join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "agents.md");
+const IF09 = specFile("001", "10-spec/50-interfaces/agents.md");
 const AGENTS = join(repoRoot(), "plugins", "architect", "agents");
 
 /** Splits a comma list, keeping `Agent(a, b)` together. */

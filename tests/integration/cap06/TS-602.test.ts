@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { taskProblems } from "./plan-structure.ts";
 
 const GOOD = [
@@ -37,6 +38,6 @@ test("missing frontmatter keys, a bad status and a missing heading are reported"
 });
 
 test("every task file of CHG-001 (the worked example) has the shape", () => {
-  const dir = join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan", "50-tasks");
+  const dir = specFile("001", "20-plan/50-tasks");
   for (const f of readdirSync(dir)) assert.deepEqual(taskProblems(readFileSync(join(dir, f), "utf8")), [], f);
 });

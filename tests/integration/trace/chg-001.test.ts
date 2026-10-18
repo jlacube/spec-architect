@@ -10,8 +10,9 @@ import { renderPlanMatrix, renderSpecMatrix } from "../../../src/trace/matrix.ts
 import { buildTrace } from "../../../src/trace/model.ts";
 import { trace } from "../../../src/trace/write.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 
-const dir = join(repoRoot(), ".sdd", "001-architect-agent-suite");
+const dir = changeFolder("001");
 const schema = JSON.parse(readFileSync(join(dir, "10-spec", "50-interfaces", "trace.schema.json"), "utf8")) as object;
 const validate = new Ajv2020({ strict: false, validateFormats: false }).compile(schema);
 

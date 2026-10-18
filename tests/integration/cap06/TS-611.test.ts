@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { testPlanProblems } from "./plan-structure.ts";
 
 const PLAN = (owner: string) =>
@@ -35,5 +36,5 @@ test("a bad level, a missing environment and a manual TC without an executor are
 });
 
 test("the CHG-001 test plan (the worked example) has every field", () => {
-  assert.deepEqual(testPlanProblems(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan", "60-test-plan.md"), "utf8")), []);
+  assert.deepEqual(testPlanProblems(readFileSync(specFile("001", "20-plan/60-test-plan.md"), "utf8")), []);
 });

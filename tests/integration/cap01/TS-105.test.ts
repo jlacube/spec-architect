@@ -7,11 +7,12 @@ import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { generateLarge } from "../../fixtures/gen-large.mjs";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { makeWorkspace, runBundled } from "../cli/helpers.ts";
 import { changeMd, SDD_MD } from "../workspace-fixtures.ts";
 
 export const validateRegistry = new Ajv2020({ strict: false }).compile(
-  JSON.parse(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "registry.schema.json"), "utf8")) as object,
+  JSON.parse(readFileSync(specFile("001", "10-spec/50-interfaces/registry.schema.json"), "utf8")) as object,
 );
 
 test("status --write rebuilds a deleted registry.json from the change manifests", () => {

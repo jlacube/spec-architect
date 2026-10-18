@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { riskProblems } from "./plan-structure.ts";
 
 const HEAD = "| ID | Risk | Likelihood | Impact | Mitigation | Trigger | Owner | Refs |\n|---|---|---|---|---|---|---|---|\n";
@@ -19,5 +20,5 @@ test("an unknown rating, a missing trigger and no T or COMP ID are reported", ()
 });
 
 test("the CHG-001 risk register (the worked example) is complete", () => {
-  assert.deepEqual(riskProblems(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan", "70-risks.md"), "utf8")), []);
+  assert.deepEqual(riskProblems(readFileSync(specFile("001", "20-plan/70-risks.md"), "utf8")), []);
 });

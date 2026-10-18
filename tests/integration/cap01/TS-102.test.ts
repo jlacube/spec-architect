@@ -7,11 +7,12 @@ import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { makeWorkspace, runBundled } from "../cli/helpers.ts";
 
 const ROOT_DIRS = ["_constitution", "_living", "_decisions", "_templates", "_archive"];
 const registrySchema = JSON.parse(
-  readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "registry.schema.json"), "utf8"),
+  readFileSync(specFile("001", "10-spec/50-interfaces/registry.schema.json"), "utf8"),
 ) as object;
 const validateRegistry = new Ajv2020({ strict: false }).compile(registrySchema);
 

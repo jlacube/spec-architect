@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { rolloutProblems } from "./plan-structure.ts";
 
 const FULL = [
@@ -42,5 +43,5 @@ test("impact none: the statement with a reason", () => {
 });
 
 test("the CHG-001 rollout (the worked example) is complete", () => {
-  assert.deepEqual(rolloutProblems(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan", "75-rollout.md"), "utf8")), []);
+  assert.deepEqual(rolloutProblems(readFileSync(specFile("001", "20-plan/75-rollout.md"), "utf8")), []);
 });

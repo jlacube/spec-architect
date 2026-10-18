@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { handoffProblems } from "./plan-structure.ts";
 
 const GOOD = [
@@ -28,5 +29,5 @@ test("the five headings and a reporting protocol with both commands and the fall
 });
 
 test("the CHG-001 hand-off (the worked example) has the shape", () => {
-  assert.deepEqual(handoffProblems(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan", "handoff.md"), "utf8")), []);
+  assert.deepEqual(handoffProblems(readFileSync(specFile("001", "20-plan/handoff.md"), "utf8")), []);
 });

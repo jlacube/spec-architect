@@ -7,8 +7,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { LITE_SCAFFOLD, listTemplates } from "../../../src/workspace/templates.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 
-const IF06 = join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "workspace-layout.md");
+const IF06 = specFile("001", "10-spec/50-interfaces/workspace-layout.md");
 
 test("the lite scaffold is exactly the file set of C001-IF-06 §3, each with a lite template", () => {
   const section = readFileSync(IF06, "utf8").split("## §3")[1] ?? "";

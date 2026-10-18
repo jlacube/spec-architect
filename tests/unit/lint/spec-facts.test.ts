@@ -2,16 +2,17 @@
 // the facts the requirement-quality rules read are really gathered, so a clean run is not vacuous.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { join } from "node:path";
+import { join, relative, sep } from "node:path";
 import { knownSystem, systemName } from "../../../src/lint/ears.ts";
 import { gatherSpecFacts } from "../../../src/lint/spec-facts.ts";
 import { tasks } from "../../../src/lint/spec.ts";
 import type { LintChange } from "../../../src/lint/types.ts";
 import { buildChangeGraph } from "../../../src/model/graph.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 
 const sdd = join(repoRoot(), ".sdd");
-const graph = buildChangeGraph(join(sdd, "001-architect-agent-suite"));
+const graph = buildChangeGraph(changeFolder("001"));
 const facts = gatherSpecFacts(sdd, graph);
 
 test("every CHG-001 story section, persona and system name is gathered", () => {
@@ -34,7 +35,7 @@ test("every CHG-001 statement names a known system", () => {
 });
 
 test("the CHG-001 plan is started and every task file is read", () => {
-  const change: LintChange = { change: "001", folder: ".sdd/001-architect-agent-suite", profile: "full", graph, spec: facts };
+  const change: LintChange = { change: "001", folder: relative(repoRoot(), changeFolder("001")).split(sep).join("/"), profile: "full", graph, spec: facts };
   assert.equal(facts.planStarted, true);
   const all = tasks(change);
   assert.equal(all.length, 61);

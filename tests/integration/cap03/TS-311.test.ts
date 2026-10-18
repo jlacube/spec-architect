@@ -9,8 +9,9 @@ import { toLines } from "../../../src/model/frontmatter.ts";
 import { weightedErrors } from "../../../src/lint/rules/oa-001.ts";
 import { tables } from "../../../src/lint/spec.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 
-const lines = toLines(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "00-ideation", "ideation.md"), "utf8"));
+const lines = toLines(readFileSync(specFile("001", "00-ideation/ideation.md"), "utf8"));
 const doc = { lines, blocks: parseBlocks(lines, 1) };
 
 test("no LINT-OA-001 on the approved CHG-001 ideation", () => {

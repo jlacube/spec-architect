@@ -5,10 +5,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { runTrace } from "./trace-fixture.ts";
 import { task } from "../cap06/plan-fixture.ts";
 
-const schema = JSON.parse(readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "trace.schema.json"), "utf8")) as object;
+const schema = JSON.parse(readFileSync(specFile("001", "10-spec/50-interfaces/trace.schema.json"), "utf8")) as object;
 // Formats are not validated by Ajv here (no ajv-formats dependency); generated_at is checked below.
 const validate = new Ajv2020({ strict: false, validateFormats: false }).compile(schema);
 

@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fxBootstrap, fxBrownfieldTs, fxEmpty, fxLarge } from "../fixtures/fixtures.ts";
+import { changeFolder } from "../helpers/spec-file.ts";
 
 test("fx-empty is an empty git repository", () => {
   const fx = fxEmpty();
@@ -18,7 +19,7 @@ test("fx-empty is an empty git repository", () => {
 test("fx-bootstrap is this repository's workspace with the bootstrap generator", () => {
   const fx = fxBootstrap();
   try {
-    assert.ok(existsSync(join(fx.root, ".sdd", "001-architect-agent-suite", "change.md")));
+    assert.ok(existsSync(join(changeFolder("001", fx.root), "change.md")));
   } finally {
     fx.cleanup();
   }

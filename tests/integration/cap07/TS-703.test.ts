@@ -6,9 +6,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { makeWorkspace, minimalChange, runBundled, runInProcess } from "../cli/helpers.ts";
 
-const schemaPath = join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "lint-report.schema.json");
+const schemaPath = specFile("001", "10-spec/50-interfaces/lint-report.schema.json");
 const ajv = new Ajv2020({ strict: false });
 const validate = ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")) as object);
 

@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import { questionsBlocks, questionsErrors } from "../../../evals/harness/questions.mjs";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 
 const SCHEMA = join(repoRoot(), "plugins", "architect", "skills", "interview-protocol", "references", "questions.schema.json");
 const base = { id: "Q-budget-01", topic: "budget", question: "What budget is available?", why_it_matters: "Decides the hosting option.", blocking: true, material: false };
@@ -25,6 +26,6 @@ test("questionsErrors accepts a valid block and rejects a material question with
 
 test("the skill's schema is a copy of C001-IF-05", async () => {
   const { readFileSync } = await import("node:fs");
-  const spec = readFileSync(join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "questions.schema.json"), "utf8");
+  const spec = readFileSync(specFile("001", "10-spec/50-interfaces/questions.schema.json"), "utf8");
   assert.equal(readFileSync(SCHEMA, "utf8"), spec);
 });

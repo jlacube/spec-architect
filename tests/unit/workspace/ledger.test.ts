@@ -5,9 +5,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { formatLedger, loadLedger, nextId } from "../../../src/workspace/ledger.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 import { makeWorkspace, minimalChange, runBundled, runInProcess } from "../../integration/cli/helpers.ts";
 
-const CHG001 = join(repoRoot(), ".sdd", "001-architect-agent-suite");
+const CHG001 = changeFolder("001");
 
 test("this repository's ids.json loads and records C001-REQ-308 as tombstoned", () => {
   const l = loadLedger(CHG001);

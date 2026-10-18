@@ -10,16 +10,46 @@ import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { CATALOGUE, formatError, CliError } from "../../../src/cli/errors.ts";
 import { COMMANDS } from "../../../src/cli/commands.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { makeWorkspace, minimalChange, runBundled, runInProcess } from "./helpers.ts";
 
-const ERRORS_MD = join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "errors.md");
-const SDD_CLI_MD = join(repoRoot(), ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces", "sdd-cli.md");
+// The CLI contracts: C001-IF-01 with its errors (CHG-001) and the delta C002-IF-007 with its errors
+// (CHG-002), found through the spec-file locator so the tests survive `sdd archive` (C002-T-006).
+const IF = "10-spec/50-interfaces/";
+const ERRORS_MD = [specFile("001", `${IF}errors.md`), specFile("002", `${IF}errors.md`)];
+const SDD_CLI_MD = [specFile("001", `${IF}sdd-cli.md`), specFile("002", `${IF}sdd-cli-delta.md`)];
 
-test("the catalogue mirrors every ERR-CLI and WARN-CLI row of errors.md", () => {
-  const rows = readFileSync(ERRORS_MD, "utf8").split("\n").filter((l) => /^\| (ERR|WARN)-CLI-\d{3} \|/.test(l)).map(splitCells);
-  assert.ok(rows.length >= 18);
-  const expected = rows.map(([code, condition, message, fix]) => ({ code, condition, message, fix }));
-  const actual = Object.values(CATALOGUE).map(({ code, condition, message, fix }) => ({ code, condition, message, fix }));
+// CHG-002 rows not implemented yet, with the task that implements each. That task adds the code or
+// the `COMMANDS` row (with `sampleArgs` that neither hang nor read a real stdin) and removes it here.
+const PENDING_CODES: Record<string, string> = {
+  "ERR-CLI-019": "C002-T-012",
+  "ERR-CLI-020": "C002-T-013",
+  "ERR-CLI-021": "C002-T-058",
+  "ERR-CLI-022": "C002-T-058",
+};
+const PENDING_COMMANDS: Record<string, string> = {
+  "host-version": "C002-T-014",
+  "template show": "C002-T-012",
+  "template list": "C002-T-012",
+  "hook guard": "C002-T-032",
+  "hook subagent-stop": "C002-T-032",
+  "install copilot": "C002-T-058",
+};
+
+test("the catalogue mirrors every ERR-CLI and WARN-CLI row of the CHG-001 and CHG-002 errors.md", () => {
+  const rows = ERRORS_MD.flatMap((f) => readFileSync(f, "utf8").split("\n").filter((l) => /^\| (ERR|WARN)-CLI-\d{3} \|/.test(l)).map(splitCells));
+  assert.ok(rows.length >= 22);
+  assert.equal(new Set(rows.map((r) => r[0])).size, rows.length, "a code is defined twice");
+  for (const [code, task] of Object.entries(PENDING_CODES)) {
+    assert.ok(rows.some((r) => r[0] === code), `${code} is pending (${task}) but not in errors.md`);
+    assert.equal(CATALOGUE[code], undefined, `${code} is in the catalogue: remove it from PENDING_CODES (${task})`);
+  }
+  const byCode = (a: { code?: string }, b: { code?: string }) => ((a.code ?? "") < (b.code ?? "") ? -1 : (a.code ?? "") > (b.code ?? "") ? 1 : 0);
+  const expected = rows
+    .filter(([code]) => PENDING_CODES[code!] === undefined)
+    .map(([code, condition, message, fix]) => ({ code, condition, message, fix }))
+    .sort(byCode);
+  const actual = Object.values(CATALOGUE).map(({ code, condition, message, fix }) => ({ code, condition, message, fix })).sort(byCode);
   assert.deepEqual(actual, expected);
   for (const e of Object.values(CATALOGUE)) {
     const expectedExit = e.code.startsWith("WARN") ? 0 : /\(exit 3\)/.test(e.condition) ? 3 : 2;
@@ -39,10 +69,16 @@ test("errors render as `ERR-CLI-<nnn>: <message>. Fix: <action>` with placeholde
   );
 });
 
-test("every command of C001-IF-01 is dispatched", () => {
-  const spec = readFileSync(SDD_CLI_MD, "utf8").split("\n").filter((l) => /^\| `[a-z-]+( [a-z-]+)?` \|/.test(l));
-  const names = spec.map((l) => /^\| `([^`]+)`/.exec(l)![1]);
-  assert.deepEqual(COMMANDS.map((c) => c.name).sort(), [...names].sort());
+test("every command of C001-IF-01 and C002-IF-007 is dispatched", () => {
+  const spec = SDD_CLI_MD.flatMap((f) => readFileSync(f, "utf8").split("\n").filter((l) => /^\| `[a-z-]+( [a-z-]+)?` \|/.test(l)));
+  // Rows of options (`--version`) are not commands; a command changed by the delta is listed in both.
+  const names = new Set(spec.map((l) => /^\| `([^`]+)`/.exec(l)![1]!).filter((n) => !n.startsWith("-")));
+  const dispatched = COMMANDS.map((c) => c.name);
+  for (const [name, task] of Object.entries(PENDING_COMMANDS)) {
+    assert.ok(names.has(name), `${name} is pending (${task}) but not in the CLI contracts`);
+    assert.equal(dispatched.includes(name), false, `${name} is in COMMANDS: remove it from PENDING_COMMANDS (${task})`);
+  }
+  assert.deepEqual([...dispatched].sort(), [...names].filter((n) => PENDING_COMMANDS[n] === undefined).sort());
 });
 
 test("outside a workspace, commands other than init and version fail with ERR-CLI-001", () => {

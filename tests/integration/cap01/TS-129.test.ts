@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { adoptBootstrap } from "../../../src/workspace/adopt.ts";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 import { makeWorkspace, minimalChange, runBundled } from "../cli/helpers.ts";
 
 function bootstrapCopy(): { root: string; cleanup: () => void } {
@@ -25,7 +26,7 @@ const gateLog = (text: string) => text.slice(text.indexOf("## Gate log"));
 test("C001-TS-129: adopting the bootstrap keeps phases, hashes and gate log and sets the generator", () => {
   const ws = bootstrapCopy();
   try {
-    const changeMd = join(ws.root, ".sdd", "001-architect-agent-suite", "change.md");
+    const changeMd = join(changeFolder("001", ws.root), "change.md");
     const before = readFileSync(changeMd, "utf8");
     const sddBefore = readFileSync(join(ws.root, ".sdd", "SDD.md"), "utf8");
     assert.match(String(splitFrontmatter(sddBefore).data?.["generator"]), /^manual/);
@@ -69,7 +70,7 @@ test("init on a copy of this repository's workspace only adds the missing root f
     };
     const missingBefore = ["_archive", "_constitution", "_decisions", "_living", "_templates"].filter((d) => !existsSync(join(ws.root, ".sdd", d)));
     const before = snapshot(join(ws.root, ".sdd"));
-    const r = runBundled(["init"], { cwd: join(ws.root, ".sdd", "001-architect-agent-suite") });
+    const r = runBundled(["init"], { cwd: changeFolder("001", ws.root) });
     assert.equal(r.code, 0, r.stderr);
     assert.deepEqual(snapshot(join(ws.root, ".sdd")), before);
     // Exactly the root folders that were missing (git keeps no empty folders, so a fresh clone may
@@ -83,7 +84,7 @@ test("init on a copy of this repository's workspace only adds the missing root f
 test("C001-TS-129 through the CLI: `sdd status --write` adopts the bootstrap and keeps change.md", () => {
   const ws = bootstrapCopy();
   try {
-    const changeMd = join(ws.root, ".sdd", "001-architect-agent-suite", "change.md");
+    const changeMd = join(changeFolder("001", ws.root), "change.md");
     const before = readFileSync(changeMd, "utf8");
     const r = runBundled(["status", "--write"], { cwd: ws.root });
     assert.equal(r.code, 0, r.stderr);

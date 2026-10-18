@@ -6,6 +6,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { orderedListProblems, type TaskRef } from "./plan-structure.ts";
 
 const TASKS: TaskRef[] = [
@@ -28,7 +29,7 @@ test("a task before its dependency, a missing task and a missing path are report
 });
 
 test("the CHG-001 hand-off (the worked example) lists its tasks in dependency order", () => {
-  const plan = join(repoRoot(), ".sdd", "001-architect-agent-suite", "20-plan");
+  const plan = specFile("001", "20-plan");
   const tasks = readdirSync(join(plan, "50-tasks")).map((f) => {
     const fm = (splitFrontmatter(readFileSync(join(plan, "50-tasks", f), "utf8")).data ?? {}) as Record<string, unknown>;
     return { id: String(fm["id"]), dependsOn: (fm["depends_on"] as string[]) ?? [], status: String(fm["status"]) };

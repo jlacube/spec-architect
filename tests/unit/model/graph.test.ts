@@ -7,8 +7,9 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { buildChangeGraph, loadWorkspace } from "../../../src/model/graph.ts";
 import { repoRoot } from "../../helpers.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 
-const changeDir = join(repoRoot(), ".sdd", "001-architect-agent-suite");
+const changeDir = changeFolder("001");
 const graph = buildChangeGraph(changeDir);
 
 function countByType(phase: string): Record<string, number> {
