@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: done
 depends_on: [C002-T-004, C002-T-006]
 implements: [C002-REQ-410, C002-REQ-411, C002-REQ-415, C002-NFR-205]
 satisfies_ac: [C002-AC-410.1, C002-AC-411.1, C002-AC-415.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-414, C002-TS-415, C002-TS-416, C002-TS-420, C002-TS-421, C
 components: [C002-COMP-005]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d54beb9, completed_at: 2026-10-18, notes: "MCP SDK 1.32.1 (MIT; bundle adds ajv, ajv-formats, fast-uri BSD-3, zod 4.6.7, zod-to-json-schema ISC — allowlist passes); TC-414/415/416/420/421/422; TS-414 to re-run after T-017/T-019; tests bundle the server until T-021 builds build/npm/sdd-mcp.mjs; T-017/T-019 import schemas.ts/handlers.ts, not server.ts (it starts on load); repository-root rules (--root, first client root, cwd) implemented here" }
 ---
 
 # C002-T-016 — sdd MCP server: protocol binding, profiles and standard-output discipline
