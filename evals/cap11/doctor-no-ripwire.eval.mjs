@@ -8,9 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { checker } from "../harness/assert.mjs";
 import { ROOT } from "../harness/fixtures.mjs";
-import { doctorRows, doctorRun, PLUGIN_DATA, TOOLS, workspace } from "./doctor.mjs";
-
-const CONFIG = join(PLUGIN_DATA, "serena", "serena_config.yml");
+import { doctorRows, doctorRun, PLUGIN_DATA_FOLDERS, pluginData, TOOLS, workspace } from "./doctor.mjs";
 
 export function ts1111(transcript) {
   const { failures, check } = checker();
@@ -24,7 +22,7 @@ export function ts1111(transcript) {
 }
 
 /** Starts Serena for 20 s from the config on a git copy of fx-brownfield-ts; returns its ignored/untracked entries. */
-function serenaLeavesNothing() {
+function serenaLeavesNothing(PLUGIN_DATA) {
   const repo = mkdtempSync(join(tmpdir(), "sdd-1015-"));
   cpSync(join(ROOT, "tests", "fixtures", "fx-brownfield-ts"), repo, { recursive: true });
   execFileSync("git", ["init", "-q"], { cwd: repo });
@@ -50,10 +48,13 @@ export default {
   ...doctorRun("cfg-no-ripwire"),
   fixture: (root) => {
     // Given: the plugin data folder has no serena_config.yml (eval artifact of earlier runs only).
-    rmSync(join(PLUGIN_DATA, "serena"), { recursive: true, force: true });
+    // Only the config: a running Serena (another session) may hold its log files there.
+    for (const data of PLUGIN_DATA_FOLDERS) rmSync(join(data, "serena", "serena_config.yml"), { force: true });
     workspace(root);
   },
-  assert({ transcript }) {
+  assert({ transcript, auth }) {
+    const PLUGIN_DATA = pluginData(auth);
+    const CONFIG = join(PLUGIN_DATA, "serena", "serena_config.yml");
     const failures = ts1111(transcript);
     const local = [];
     const c = (cond, msg) => cond || local.push(msg);
@@ -63,7 +64,7 @@ export default {
     c(loc.split("\\").join("/").toLowerCase().startsWith(PLUGIN_DATA.split("\\").join("/").toLowerCase()), `TS-1015: project_serena_folder_location "${loc}" is not inside the data folder`);
     c(/^web_dashboard:\s*(false|False)\s*$/m.test(text), "TS-1015: web_dashboard is not false");
     if (existsSync(CONFIG)) {
-      const leaks = serenaLeavesNothing();
+      const leaks = serenaLeavesNothing(PLUGIN_DATA);
       c(leaks.length === 0, `TS-1015: git status lists ${leaks.join(", ")}`);
     }
     return [...failures, ...local];

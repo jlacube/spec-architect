@@ -3264,6 +3264,512 @@
    "expect": "deny",
    "rule": "GUARD-BASH-001",
    "note": "--cwd holding a wildcard cannot be resolved (C002-IF-008 §1.2 rule 2)"
+  },
+  {
+   "id": "BG-371",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config --user-data",
+   "expect": "allow",
+   "note": "serena-config, bare form, --user-data (C002-REQ-517, C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-372",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config {repo}/../fx-data",
+   "expect": "allow",
+   "note": "serena-config, bare form, a data folder outside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-373",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config {repo}/src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-config, bare form, a data folder inside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-374",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "serena-config, bare form, the literal ${CLAUDE_PLUGIN_DATA} resolved from the guard's environment to a folder outside the root (C002-TS-528)"
+  },
+  {
+   "id": "BG-375",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config \"$HOME/serena\"",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-config, bare form, a shell expansion the guard cannot resolve (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-376",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-config --user-data",
+   "expect": "allow",
+   "note": "serena-config, script form, --user-data (C002-REQ-517, C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-377",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-config {repo}/../fx-data",
+   "expect": "allow",
+   "note": "serena-config, script form, a data folder outside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-378",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-config {repo}/src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-config, script form, a data folder inside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-379",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "serena-config, script form, the literal ${CLAUDE_PLUGIN_DATA} resolved from the guard's environment to a folder outside the root (C002-TS-528)"
+  },
+  {
+   "id": "BG-380",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-config \"$HOME/serena\"",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-config, script form, a shell expansion the guard cannot resolve (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-381",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch --user-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "serena-launch, bare form, --user-data (C002-REQ-517, C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-382",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch {repo}/../fx-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "serena-launch, bare form, a data folder outside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-383",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch {repo}/src -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-launch, bare form, a data folder inside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-384",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch \"${CLAUDE_PLUGIN_DATA}\" -- start-mcp-server",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "serena-launch, bare form, the literal ${CLAUDE_PLUGIN_DATA} resolved from the guard's environment to a folder outside the root (C002-TS-528)"
+  },
+  {
+   "id": "BG-385",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch \"$HOME/serena\" -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-launch, bare form, a shell expansion the guard cannot resolve (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-386",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-launch --user-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "serena-launch, script form, --user-data (C002-REQ-517, C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-387",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-launch {repo}/../fx-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "serena-launch, script form, a data folder outside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-388",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-launch {repo}/src -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-launch, script form, a data folder inside the repository root (C002-TS-527)"
+  },
+  {
+   "id": "BG-389",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-launch \"${CLAUDE_PLUGIN_DATA}\" -- start-mcp-server",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "serena-launch, script form, the literal ${CLAUDE_PLUGIN_DATA} resolved from the guard's environment to a folder outside the root (C002-TS-528)"
+  },
+  {
+   "id": "BG-390",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"{sdd}\" serena-launch \"$HOME/serena\" -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "serena-launch, script form, a shell expansion the guard cannot resolve (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-391",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-launch --user-data --read-only -- start-mcp-server",
+   "expect": "allow",
+   "note": "C002-TS-527 row 2: --user-data with --read-only"
+  },
+  {
+   "id": "BG-392",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "node C:/p/scripts/sdd.mjs serena-launch {repo}/../fx-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "C002-TS-527 row 4: script form, folder outside"
+  },
+  {
+   "id": "BG-393",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config {repo}/../fx-data",
+   "expect": "allow",
+   "note": "C002-TS-527 row 5: PowerShell, folder outside"
+  },
+  {
+   "id": "BG-394",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config {repo}-data",
+   "expect": "allow",
+   "note": "C002-TS-527 row 7: a sibling folder sharing the root's name as prefix lies outside (per-segment comparison)"
+  },
+  {
+   "id": "BG-395",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 8: relative folder inside the root"
+  },
+  {
+   "id": "BG-396",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config .",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 9: the root itself"
+  },
+  {
+   "id": "BG-397",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config {repo}/../fx-data/../repository-root/src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 12: .. segments back into the root"
+  },
+  {
+   "id": "BG-398",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-config {repo}-link/src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 13: a link outside the root that resolves into it"
+  },
+  {
+   "id": "BG-399",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-launch {repo}/.sdd -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 14: the workspace folder"
+  },
+  {
+   "id": "BG-400",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-planner",
+   "command": "node C:/p/scripts/sdd.mjs serena-config {repo}/src",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 15: script form, folder inside"
+  },
+  {
+   "id": "BG-401",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-planner",
+   "command": "sdd serena-launch src -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "C002-TS-527 row 16: PowerShell, folder inside"
+  },
+  {
+   "id": "BG-402",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "C002-TS-528: the form the conductor sends on Claude Code, variable set in the guard's environment"
+  },
+  {
+   "id": "BG-403",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config ${CLAUDE_PLUGIN_DATA}",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "the literal without double quotes (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-404",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs\" serena-launch \"${CLAUDE_PLUGIN_DATA}\" -- start-mcp-server --context claude-code --project .",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "allow",
+   "note": "the .mcp.json launch line; the words after -- are not checked (C002-IF-008 §1.1 rule 1)"
+  },
+  {
+   "id": "BG-405",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": null
+   },
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the literal with CLAUDE_PLUGIN_DATA unset in the guard's environment (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-406",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": ""
+   },
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the literal with CLAUDE_PLUGIN_DATA empty"
+  },
+  {
+   "id": "BG-407",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch \"${CLAUDE_PLUGIN_DATA}\" -- start-mcp-server",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/.plugin-data"
+   },
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the literal resolved to a folder inside the root"
+  },
+  {
+   "id": "BG-408",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config '${CLAUDE_PLUGIN_DATA}'",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "in single quotes the shell does not expand the literal: a word holding $"
+  },
+  {
+   "id": "BG-409",
+   "category": "sdd",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config \"${CLAUDE_PLUGIN_DATA}\"",
+   "env": {
+    "CLAUDE_PLUGIN_DATA": "{repo}/../plugin-data"
+   },
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the literal is resolved in the Bash dialect only (C002-IF-008 §1.1 rule 2)"
+  },
+  {
+   "id": "BG-410",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config --user-data --cwd {repo}/../other-repo",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "a Serena command never takes --cwd: --cwd outside the root (C002-IF-008 §1.2, C002-TS-636)"
+  },
+  {
+   "id": "BG-411",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch --user-data --cwd {repo}/pkg -- start-mcp-server",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "a Serena command never takes --cwd, not even inside the root"
+  },
+  {
+   "id": "BG-412",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config --user-data --cwd={repo}/pkg",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--cwd=<dir> form"
+  },
+  {
+   "id": "BG-413",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config --read-only --user-data",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--read-only belongs to serena-launch only"
+  },
+  {
+   "id": "BG-414",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch --read-only {repo}/../fx-data -- start-mcp-server",
+   "expect": "allow",
+   "note": "--read-only before the folder (any order)"
+  },
+  {
+   "id": "BG-415",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config {repo}/../a {repo}/../b",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "a second data folder"
+  },
+  {
+   "id": "BG-416",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config --user-data {repo}/../fx-data",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--user-data and a folder"
+  },
+  {
+   "id": "BG-417",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "no data-folder argument"
+  },
+  {
+   "id": "BG-418",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-launch -- start-mcp-server --project {repo}",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "no data-folder argument before --"
+  },
+  {
+   "id": "BG-419",
+   "category": "sdd",
+   "tool": "Bash",
+   "agent": "architect:sdd-conductor",
+   "command": "sdd serena-config ~/serena",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "a folder starting with ~ cannot be resolved"
   }
  ]
 }

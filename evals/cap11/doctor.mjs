@@ -14,6 +14,19 @@ export const MCP = ["mcp__plugin_architect_context7__resolve-library-id", "mcp__
 /** The plugin data folder Claude Code gives the eval plugin (`--plugin-dir` style local plugin). */
 export const PLUGIN_DATA = join(homedir(), ".claude", "plugins", "data", "architect-inline");
 
+/**
+ * The plugin data folder of a session in eval auth mode `auth` (evals/harness/env.mjs): Claude Code
+ * keeps it under its config folder, which `--auth subscription` moves to its own folder.
+ */
+export function pluginData(auth) {
+  if (auth !== "subscription") return PLUGIN_DATA;
+  const config = process.env.EVAL_CLAUDE_CONFIG_DIR ?? join(homedir(), ".architect-evals", "claude-config");
+  return join(config, "plugins", "data", "architect-inline");
+}
+
+/** Both candidate data folders, for fixtures that must clear the folder before the session starts. */
+export const PLUGIN_DATA_FOLDERS = [pluginData("api-key"), pluginData("subscription")];
+
 export function workspace(root) {
   git(root, "init", "-q");
   sdd(root, "init");

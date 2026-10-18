@@ -11306,7 +11306,7 @@ function isArchitectAgent(input) {
 // src/hooks/guard-bash.ts
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
-var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (--cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 function tokenise(cmd, dialect) {
   const segments = [];
   let words = [];
@@ -11430,6 +11430,43 @@ function writingCommand(args) {
   if (row2.when === "unless-dry-run") return args.includes("--dry-run") ? null : row2;
   return row2;
 }
+var SERENA_COMMANDS = ["serena-config", "serena-launch"];
+var PLUGIN_DATA_LITERAL = /^(\$\{CLAUDE_PLUGIN_DATA\}|"\$\{CLAUDE_PLUGIN_DATA\}")$/;
+function unresolvable(folder) {
+  return folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null;
+}
+function serenaViolation(words, raw, cwd, dialect) {
+  const allWords = cliArgs(words);
+  const allRaw = bareSdd(words) ? raw.slice(1) : raw.slice(2);
+  const dashdash = allWords.indexOf("--");
+  const args = dashdash < 0 ? allWords : allWords.slice(0, dashdash);
+  const sub = args.find((w) => SERENA_COMMANDS.includes(w));
+  if (sub === void 0) return null;
+  const cannot = (word) => `sdd ${sub} with an argument the guard cannot resolve (${word})`;
+  let subSeen = false;
+  let readOnlySeen = false;
+  let folder = null;
+  for (let i = 0; i < args.length; i++) {
+    const w = args[i];
+    if (w === sub && !subSeen) subSeen = true;
+    else if (w === "--read-only" && sub === "serena-launch" && !readOnlySeen) readOnlySeen = true;
+    else if (folder === null && (w === "--user-data" || !w.startsWith("-"))) folder = { word: w, raw: allRaw[i] };
+    else return cannot(w);
+  }
+  if (folder === null) return cannot("no data folder");
+  if (folder.word === "--user-data") return null;
+  let target = folder.word;
+  if (dialect === "bash" && PLUGIN_DATA_LITERAL.test(folder.raw)) {
+    const value2 = process.env["CLAUDE_PLUGIN_DATA"];
+    if (value2 === void 0 || value2 === "") return cannot(folder.word);
+    target = value2;
+  } else if (unresolvable(target)) return cannot(target);
+  if (ambiguousWindowsPath(target) !== null) return cannot(target);
+  const at = locateInRepository(findRepositoryRoot(cwd), target, cwd);
+  if (at.insideWritten) return `sdd ${sub} with a data folder inside the repository (${at.written})`;
+  if (at.insideReal) return `sdd ${sub} with a data folder inside the repository (${at.real})`;
+  return null;
+}
 function cwdWords(args) {
   const found = [];
   args.forEach((w, i) => {
@@ -11446,7 +11483,7 @@ function cwdViolation(words, cwd) {
   if (row2 === null || row2.guard !== "cwd") return null;
   const root = findRepositoryRoot(cwd);
   for (const folder of cwdWords(args)) {
-    if (folder === null || folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null)
+    if (folder === null || unresolvable(folder))
       return `sdd ${row2.name} with a --cwd the guard cannot resolve (${folder ?? "--cwd"})`;
     const at = locateInRepository(root, folder, cwd);
     if (!at.insideWritten) return `sdd ${row2.name} with --cwd outside the repository (${at.written})`;
@@ -11540,7 +11577,7 @@ function decideBash(input) {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = cwdViolation(first.words, cwd);
+    const violation = serenaViolation(first.words, first.raw, cwd, dialect) ?? cwdViolation(first.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };

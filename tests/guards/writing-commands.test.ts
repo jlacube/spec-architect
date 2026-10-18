@@ -119,7 +119,7 @@ test("the deny names the subcommand and the resolved folder; letter case and dri
     if (!d.allow) {
       assert.ok(d.message.startsWith("GUARD-BASH-001: "), d.message);
       assert.ok(d.message.includes(`sdd change stop with --cwd outside the repository (`), d.message);
-      assert.ok(d.message.includes("(--cwd of a writing subcommand only with a folder inside the repository)"), d.message);
+      assert.ok(d.message.includes("; --cwd of a writing subcommand only with a folder inside the repository)"), d.message);
     }
     const u = decide("Bash", "sdd init --cwd ~/x");
     assert.ok(!u.allow && u.message.includes("sdd init with a --cwd the guard cannot resolve (~/x)"), JSON.stringify(u));

@@ -42,12 +42,17 @@ export function bashHookInput(c: BashCase, repo: string): string {
 }
 
 test("the bash guard corpus is decided 100% as expected, with the expected rule", (t) => {
-  const repo = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bash-"))).split("\\").join("/");
-  mkdirSync(join(repo, ".sdd"));
+  // {repo} is <base>/repository-root, so a case can leave the root and come back by its name (C002-TS-527).
+  const base = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bash-"))).split("\\").join("/");
+  const repo = `${base}/repository-root`;
+  mkdirSync(join(repo, ".sdd"), { recursive: true });
   mkdirSync(join(repo, ".git"));
+  const linkType = process.platform === "win32" ? "junction" : "dir";
   // {repo}/link-out: a folder link from inside the root to a folder outside it (C002-TS-536).
   const outside = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-bash-out-")));
-  symlinkSync(outside, join(repo, "link-out"), process.platform === "win32" ? "junction" : "dir");
+  symlinkSync(outside, join(repo, "link-out"), linkType);
+  // {repo}-link: a folder link from outside the root to the root (C002-TS-527 "C:/repo-link").
+  symlinkSync(repo, `${repo}-link`, linkType);
   const capabilities = new Set<string>();
   try {
     const cases = loadBashCorpus();
@@ -66,7 +71,7 @@ test("the bash guard corpus is decided 100% as expected, with the expected rule"
     t.diagnostic(`cases run ${run} of ${cases.length}; expected/decided ${JSON.stringify(matrix)}`);
     assert.deepEqual(wrong, [], wrong.join("\n"));
   } finally {
-    rmSync(repo, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true });
     rmSync(outside, { recursive: true, force: true });
   }
 });

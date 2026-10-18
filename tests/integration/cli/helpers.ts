@@ -17,8 +17,11 @@ export interface Result {
   stderr: string;
 }
 
-/** Runs the bundled CLI with a clean environment (no inherited SDD_DEBUG). */
-export function runBundled(args: string[], opts: { cwd: string; env?: Record<string, string>; stdin?: string }): Result {
+/**
+ * Runs the bundled CLI with a clean environment (no inherited SDD_DEBUG). `env` is a stub laid over
+ * the inherited environment; an `undefined` value unsets that variable (for example CLAUDE_PLUGIN_DATA).
+ */
+export function runBundled(args: string[], opts: { cwd: string; env?: Record<string, string | undefined>; stdin?: string }): Result {
   const env: Record<string, string | undefined> = { ...process.env, SDD_DEBUG: undefined, SDD_TEST_FAULT: undefined, ...opts.env };
   const r = spawnSync(process.execPath, [CLI, ...args], { cwd: opts.cwd, env, encoding: "utf8", input: opts.stdin ?? "" });
   return { code: r.status ?? -1, stdout: r.stdout, stderr: r.stderr };

@@ -1,0 +1,269 @@
+{
+  "scenario": "TS-537-init",
+  "title": "Serena step of /architect:init passes the bash guard on Claude Code (TS-537, init)",
+  "tier": "dev",
+  "label": "t010",
+  "agent": "architect:sdd-conductor",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-18T07:19:03.348Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.327133,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-537 init: the guard denied \"cd \\\"C:/Users/jerom/AppData/Local/Temp/sdd-eval-QsAAIU\\\" && node \\\"C:/Users/jerom/AppData/Local/Temp/sdd-eval-plugin-V0sK7Q/architect/scripts/sdd.mjs\\\" init; node \\\"C:/Users/jerom/AppData/Local/Temp/sdd-eval-plugin-V0sK7Q/architect/scripts/sdd.mjs\\\" serena-config \\\"C:/Users/jerom/.architect-evals/claude-config/plugins/data/architect-inline\\\"; ls .sdd/_constitution; git ls-files | head -50\": PreToolUse:Bash hook error: [node \"C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-eval-plugin-V0sK7Q\\architect/scripts/sdd.mjs\" guard-bash]: GUARD-BASH-002: Bash on \"cd \\\"C:/Users/jerom/AppData/Local/Temp/sdd-eval-QsAAIU\\\" && node \\\"C:/Users/jerom/AppData/Local/Temp/sdd-eval-plugin-V0sK7Q/architect/scripts/s"
+      ],
+      "metrics": {
+        "cost_usd": 0.327133,
+        "session_ms": 200310,
+        "api_ms": 60901,
+        "turns": 12,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 16,
+            "output": 5013,
+            "cache_read": 157736,
+            "cache_write": 15806,
+            "cost_usd": 0.25831919999999997
+          },
+          "claude-sonnet-5-5": {
+            "input": 8,
+            "output": 2141,
+            "cache_read": 62828,
+            "cache_write": 16442,
+            "cost_usd": 0.06881380000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 5013,
+              "cache_read": 157736,
+              "cache_write": 15806
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 42328,
+              "cache_write": 15452
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bbv32afit",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b99zpzgm4",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bp5v5w86i",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a9386bd603bf6ba35",
+            "ms": 72231,
+            "tool_uses": 9,
+            "total_tokens": 22144
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b64efefj8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsl89mwnt",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvfx1xjwz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b1ijkcfb6",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2aod99hd",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bgpxvzn7o",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 10,
+          "Glob": 2,
+          "Agent": 1,
+          "ToolSearch": 2,
+          "Write": 3,
+          "AskUserQuestion": 1,
+          "Read": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 299
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 32341
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 43417
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 43231
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11551
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 72246
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 11877
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 23021
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 34025
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 45367
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 56355
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 55586
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 55581
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 155
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 699
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 20
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 41
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 559
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 560
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11737
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "transcript": "evals/results/transcripts/TS-537-init-2026-10-18T07-15-42-940Z-run1.json"
+    }
+  ]
+}

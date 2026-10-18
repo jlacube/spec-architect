@@ -8,15 +8,15 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { checker, toolCalls } from "../harness/assert.mjs";
-import { PLUGIN_DATA } from "../cap11/doctor.mjs";
+import { PLUGIN_DATA_FOLDERS, pluginData } from "../cap11/doctor.mjs";
 import { brief, callersFixture, cartoRun, EVIDENCE } from "./carto.mjs";
 
-const CONFIG = join(PLUGIN_DATA, "serena", "serena_config.yml");
 const TASK = "Use Serena (find_symbol) to locate the function createIntent and record its file and line as one evidence entry.";
 
 const base = cartoRun("cfg-no-ripwire", brief(TASK, `\`${EVIDENCE}/serena-probe.md\`.`), (root) => {
   // Given: no Serena configuration in the plugin data folder (eval artifact of earlier runs only).
-  rmSync(CONFIG, { force: true }); // only the config: a running Serena may hold its log files
+  // only the config: a running Serena may hold its log files
+  for (const data of PLUGIN_DATA_FOLDERS) rmSync(join(data, "serena", "serena_config.yml"), { force: true });
   callersFixture(root);
 });
 
@@ -25,7 +25,9 @@ export default {
   title: "Serena data kept outside the repository without init or doctor (TS-1015, D-010)",
   ...base,
   maxTurns: 14,
-  assert({ transcript, root }) {
+  assert({ transcript, root, auth }) {
+    const PLUGIN_DATA = pluginData(auth);
+    const CONFIG = join(PLUGIN_DATA, "serena", "serena_config.yml");
     const { failures, check } = checker();
     const serena = toolCalls(transcript).filter((c) => /mcp__plugin_architect_serena__/.test(c.name));
     check(serena.length > 0, "no Serena tool was called (the scenario needs Serena to start)");

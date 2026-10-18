@@ -24,7 +24,7 @@ test("shell corpus cases have unique IDs, known categories and only known fields
   assert.deepEqual(formatProblems(cases, BASH_FIELDS, BASH_CATEGORIES), []);
 });
 
-// C002-TS-610 rows of C002-T-008 (C002-REQ-503) and C002-T-009: the shell corpus holds the new kinds of case.
+// C002-TS-610 rows of C002-T-008 (C002-REQ-503), C002-T-009 and C002-T-010: the shell corpus holds the new kinds of case.
 const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] = [
   ["bare sdd command", "sdd lint 002", "allow"],
   ["node --version", "node --version", "allow"],
@@ -32,6 +32,13 @@ const TS_610_SHELL: [kind: string, command: string, expect: "allow" | "deny"][] 
   // C002-T-009 (C002-REQ-521): the fixture root {repo} stands for the spec's C:/repo.
   ["writing sdd subcommand with --cwd outside the repository root", "sdd change stop 001 --reason x --cwd {repo}/../other-repo", "deny"],
   ["writing sdd subcommand with --cwd inside the repository root", "sdd trace 001 --write --cwd {repo}/pkg", "allow"],
+  // C002-T-010 (C002-REQ-517): {repo}/../fx-data stands for the spec's C:/fx-data, outside the root.
+  ["serena-config with --user-data", "sdd serena-config --user-data", "allow"],
+  ["serena-config with a folder outside the repository", "sdd serena-config {repo}/../fx-data", "allow"],
+  ["serena-config with a folder inside the repository", "sdd serena-config src", "deny"],
+  ["serena-launch with --user-data", "sdd serena-launch --user-data -- start-mcp-server", "allow"],
+  ["serena-launch with a folder outside the repository", "sdd serena-launch {repo}/../fx-data -- start-mcp-server", "allow"],
+  ["serena-launch with a folder inside the repository", "sdd serena-launch src -- start-mcp-server", "deny"],
 ];
 for (const [kind, command, expect] of TS_610_SHELL) {
   test(`C002-TS-610: the shell corpus holds a case of the kind "${kind}" (${command} → ${expect})`, () => {

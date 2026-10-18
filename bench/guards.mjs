@@ -14,6 +14,9 @@ const INPUTS = [
   ["guard-bash", hook("Bash", "architect:sdd-cartographer", { command: "git log --oneline -5" })],
   ["guard-bash", hook("Bash", "architect:sdd-cartographer", { command: "rm -rf src" })],
   ["guard-bash", hook("Bash", "architect:sdd-planner", { command: "sdd lint 002 --json" })],
+  // Serena commands (C002-REQ-517, C002-T-010): repository root and real-path work on a data folder.
+  ["guard-bash", hook("Bash", "architect:sdd-conductor", { command: `sdd serena-config "${at("../serena-data")}"` })],
+  ["guard-bash", hook("Bash", "architect:sdd-conductor", { command: `sdd serena-launch ${at(".sdd/serena")} -- start-mcp-server` })],
 ];
 
 const run = (cmd, input) => {

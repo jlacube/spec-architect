@@ -8,7 +8,13 @@
 // others must be pipe-only entries (head, tail, wc, sort, uniq). PowerShell allows only the sdd CLI
 // (`sdd …` or `node <path>/sdd.mjs …`, C002-REQ-503) and the version probes, without pipes. A writing
 // sdd subcommand (src/cli/writing-commands.ts) takes `--cwd` only inside the repository root
-// (C002-REQ-521, C002-IF-008 §1.2). When in doubt the guard denies (fail closed).
+// (C002-REQ-521, C002-IF-008 §1.2). `serena-config` and `serena-launch` take only `--user-data` or a
+// data folder outside the repository root (C002-REQ-517, C002-IF-008 §1.1). When in doubt the guard
+// denies (fail closed).
+//
+// Environment: `decideBash` is not a pure function of its hook input. For the literal
+// `${CLAUDE_PLUGIN_DATA}` of a Serena command (Bash dialect) it reads the variable CLAUDE_PLUGIN_DATA of
+// its own process (unset or empty: denied), and it reads the file system (repository root, real paths).
 import { findWorkspace } from "../workspace/find.ts";
 import { WRITING_COMMANDS, type WritingCommand } from "../cli/writing-commands.ts";
 import { ambiguousWindowsPath, isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
@@ -17,10 +23,10 @@ import { isArchitectAgent, type HookInput } from "./input.ts";
 
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
 export const RULE_COMPOUND = "GUARD-BASH-002";
-// C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the --cwd part of
-// C002-REQ-521; the install (C002-REQ-325) and Serena (C002-REQ-517) parts come with their tasks.
+// C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the Serena part of
+// C002-REQ-517 and the --cwd part of C002-REQ-521; the install part (C002-REQ-325) comes with C002-T-059.
 const ALLOWED =
-  "sdd … or node <path>/sdd.mjs … (--cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+  "sdd … or node <path>/sdd.mjs … (serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
 type Dialect = "bash" | "powershell";
@@ -171,6 +177,55 @@ function writingCommand(args: string[]): WritingCommand | null {
   return row;
 }
 
+const SERENA_COMMANDS = ["serena-config", "serena-launch"];
+const PLUGIN_DATA_LITERAL = /^(\$\{CLAUDE_PLUGIN_DATA\}|"\$\{CLAUDE_PLUGIN_DATA\}")$/;
+
+/** A folder word the guard cannot resolve: `~…`, a shell expansion or wildcard, an ambiguous Windows path. */
+function unresolvable(folder: string): boolean {
+  return folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null;
+}
+
+/**
+ * The Serena rule of C002-IF-008 §1.1 (C002-REQ-517): a command whose words before the first `--`
+ * name `serena-config` or `serena-launch` is allowed only with exactly one data-folder argument
+ * (`--user-data`, the literal `${CLAUDE_PLUGIN_DATA}` in the Bash dialect, or a folder outside the
+ * repository root, as written and after link resolution) and, for `serena-launch`, `--read-only`.
+ * The literal is resolved from this process's own environment (unset or empty: denied). Returns the
+ * deny reason, or null when the command is no Serena command or passes.
+ */
+function serenaViolation(words: string[], raw: string[], cwd: string, dialect: Dialect): string | null {
+  const allWords = cliArgs(words);
+  const allRaw = bareSdd(words) ? raw.slice(1) : raw.slice(2);
+  const dashdash = allWords.indexOf("--");
+  const args = dashdash < 0 ? allWords : allWords.slice(0, dashdash);
+  const sub = args.find((w) => SERENA_COMMANDS.includes(w));
+  if (sub === undefined) return null;
+  const cannot = (word: string) => `sdd ${sub} with an argument the guard cannot resolve (${word})`;
+  let subSeen = false;
+  let readOnlySeen = false;
+  let folder: { word: string; raw: string } | null = null;
+  for (let i = 0; i < args.length; i++) {
+    const w = args[i]!;
+    if (w === sub && !subSeen) subSeen = true;
+    else if (w === "--read-only" && sub === "serena-launch" && !readOnlySeen) readOnlySeen = true;
+    else if (folder === null && (w === "--user-data" || !w.startsWith("-"))) folder = { word: w, raw: allRaw[i]! };
+    else return cannot(w);
+  }
+  if (folder === null) return cannot("no data folder");
+  if (folder.word === "--user-data") return null;
+  let target = folder.word;
+  if (dialect === "bash" && PLUGIN_DATA_LITERAL.test(folder.raw)) {
+    const value = process.env["CLAUDE_PLUGIN_DATA"];
+    if (value === undefined || value === "") return cannot(folder.word);
+    target = value;
+  } else if (unresolvable(target)) return cannot(target);
+  if (ambiguousWindowsPath(target) !== null) return cannot(target);
+  const at = locateInRepository(findRepositoryRoot(cwd), target, cwd);
+  if (at.insideWritten) return `sdd ${sub} with a data folder inside the repository (${at.written})`;
+  if (at.insideReal) return `sdd ${sub} with a data folder inside the repository (${at.real})`;
+  return null;
+}
+
 /** Every `--cwd` folder word among `args` (`--cwd <dir>` or `--cwd=<dir>`); null for a `--cwd` without a word. */
 function cwdWords(args: string[]): (string | null)[] {
   const found: (string | null)[] = [];
@@ -194,7 +249,7 @@ function cwdViolation(words: string[], cwd: string): string | null {
   if (row === null || row.guard !== "cwd") return null;
   const root = findRepositoryRoot(cwd);
   for (const folder of cwdWords(args)) {
-    if (folder === null || folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null)
+    if (folder === null || unresolvable(folder))
       return `sdd ${row.name} with a --cwd the guard cannot resolve (${folder ?? "--cwd"})`;
     const at = locateInRepository(root, folder, cwd);
     if (!at.insideWritten) return `sdd ${row.name} with --cwd outside the repository (${at.written})`;
@@ -301,7 +356,7 @@ export function decideBash(input: HookInput | null): BashDecision {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = cwdViolation(first!.words, cwd);
+    const violation = serenaViolation(first!.words, first!.raw, cwd, dialect) ?? cwdViolation(first!.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };

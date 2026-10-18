@@ -1,0 +1,95 @@
+{
+  "description": "CHG-002 eval spend ledger (test plan §4.1). OpenRouter budget 40 USD in two pools; claude-max (--auth subscription) and anthropic-key entries count toward no pool and not toward the 40 USD; a claude-max cost_usd is notional (as run.mjs records it).",
+  "budget_usd": 40,
+  "pools": {
+    "general": 30,
+    "reserve": 10
+  },
+  "entries": [
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "doctor-no-ripwire (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3079,
+      "pass": true,
+      "result": "evals/results/t010-doctor-no-ripwire-2026-10-18T07-05-05-149Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "TS-1015 (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.0739,
+      "pass": true,
+      "result": "evals/results/t010-TS-1015-2026-10-18T07-07-51-611Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "TS-1111 (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3478,
+      "pass": true,
+      "result": "evals/results/t010-TS-1111-2026-10-18T07-09-27-223Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "C002-TC-537",
+      "row": "doctor",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.2162,
+      "pass": true,
+      "result": "evals/results/t010-TS-537-doctor-2026-10-18T07-13-07-559Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "C002-TC-537",
+      "row": "init",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3271,
+      "pass": false,
+      "note": "failed on the first grader: the agent first chained `cd … && sdd init; sdd serena-config …; ls …` (GUARD-BASH-002, compound rule), then sent the step alone, which was allowed. The grader now decides on the step's own command line; the saved transcript regrades as pass without a new session.",
+      "result": "evals/results/t010-TS-537-init-2026-10-18T07-15-42-940Z.json"
+    },
+    {
+      "date": "2026-10-18",
+      "task": "C002-T-010",
+      "step": 5,
+      "case": "C002-TC-537",
+      "row": "init",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.4158,
+      "pass": true,
+      "note": "the one allowed rerun, by the conductor, with the corrected grader (judges the Serena step command line only): fresh session passes (evals/results/t010-rerun-TS-537-init-2026-10-18T07-22-45-360Z.json)"
+    }
+  ]
+}
