@@ -58,14 +58,15 @@ function checkPath(target: Target, path: string): void {
 }
 
 /**
- * Every file of a package as written: the emitter's files (LF) in byte order of path, then the
+ * Every file of a package as written: the emitter's files (text with LF, bytes as given) in byte order of path, then the
  * manifest, whose key order is that of C002-IF-004 and whose `files` lists every other file.
  */
 export function packageFiles(pkg: TargetPackage, sourceDigest: string, version: string): [string, Buffer][] {
   const files = [...pkg.files]
     .map(([path, text]) => {
       checkPath(pkg.target, path);
-      return [path, Buffer.from(lf(text), "utf8")] as [string, Buffer];
+      // Bytes (the CLI copy, C002-ADR-004) are written unchanged; text gets LF line endings.
+      return [path, Buffer.isBuffer(text) ? text : Buffer.from(lf(text), "utf8")] as [string, Buffer];
     })
     .sort(([a], [b]) => byteOrder(a, b));
   const manifest = {

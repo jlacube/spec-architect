@@ -7,9 +7,9 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { splitFrontmatter, toLines } from "../../src/model/frontmatter.ts";
 import { diagnostic, type Diagnostic } from "./diagnostics.ts";
-import type { SourceDoc, SourceFile, SourcePlugin, SourceSkill } from "./model.ts";
+import { CLI_BUNDLE, type SourceDoc, type SourceFile, type SourcePlugin, type SourceSkill } from "./model.ts";
 
-/** The parts of the plugin the generator reads; everything else (scripts/, templates/, …) is not input. */
+/** The parts of the plugin the generator reads as text; everything else (templates/, …) is not input; `scripts/sdd.mjs` is read as bytes below. */
 const SOURCE_PARTS = [".claude-plugin", ".mcp.json", "agents", "commands", "hooks", "skills", "targets"] as const;
 
 const byteOrder = (a: string, b: string) => Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
@@ -91,6 +91,15 @@ export function readSource(root: string): ReadResult {
   const mcp = json(".mcp.json") as { mcpServers?: Record<string, unknown> } | null;
   const files = paths.map((path) => ({ path, text: texts.get(path)! }));
 
+  // The bundled CLI, as bytes, for the packages that carry a copy of it (C002-ADR-004); a build output,
+  // so neither part of `files` nor of the digest. Absent: the emitter that needs it reports ERR-GEN-007.
+  let cli: Buffer | undefined;
+  try {
+    cli = readFileSync(join(root, ...CLI_BUNDLE.split("/")));
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "ENOENT") diagnostics.push(diagnostic("ERR-GEN-007", `${CLI_BUNDLE}: ${reason(e)}`, { file: CLI_BUNDLE }));
+  }
+
   return {
     source: {
       agents,
@@ -100,6 +109,7 @@ export function readSource(root: string): ReadResult {
       mcpServers: mcp?.mcpServers ?? {},
       files,
       digest: sourceDigest(files),
+      ...(cli === undefined ? {} : { cli }),
     },
     diagnostics,
   };

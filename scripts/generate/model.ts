@@ -41,7 +41,19 @@ export interface SourcePlugin {
   files: SourceFile[];
   /** `sha256:<hex>` over the sorted file list and contents (C002-IF-004 manifest). */
   digest: string;
+  /**
+   * The bytes of the plugin's bundled CLI `scripts/sdd.mjs`, which a package with `placement.cli_copy`
+   * carries byte for byte (C002-ADR-004, C002-CON-12); absent when the plugin has none. A build output,
+   * not part of `files` or `digest`: the manifest hashes the copy.
+   */
+  cli?: Buffer;
 }
+
+/** Path of the bundled CLI inside the source plugin. */
+export const CLI_BUNDLE = "scripts/sdd.mjs";
+
+/** A package file: text (written with LF line endings) or bytes written unchanged (the CLI copy). */
+export type PackageFile = string | Buffer;
 
 /** The enforcement modes each target has (C002-IF-001; ERR-GEN-009). */
 export const TARGET_MODES: Record<Target, readonly Mode[]> = {
@@ -62,9 +74,9 @@ export interface EmitInput {
   peers?: readonly MappingTable[];
 }
 
-/** An emitter's result: package-relative `/`-separated paths and their text, plus its diagnostics. */
+/** An emitter's result: package-relative `/`-separated paths and their content, plus its diagnostics. */
 export interface EmitResult {
-  files: Map<string, string>;
+  files: Map<string, PackageFile>;
   diagnostics: Diagnostic[];
 }
 
@@ -76,5 +88,5 @@ export interface TargetPackage {
   mode: Mode;
   modeSource: "table" | "override";
   table: MappingTable;
-  files: Map<string, string>;
+  files: Map<string, PackageFile>;
 }

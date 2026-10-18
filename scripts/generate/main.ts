@@ -8,6 +8,7 @@ import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
 import { VERSION } from "../../src/version.ts";
 import { diagnostic, formatDiagnostic, sortDiagnostics, type Diagnostic } from "./diagnostics.ts";
+import { emitCopilot } from "./emit/copilot.ts";
 import { emitOpenCode } from "./emit/opencode.ts";
 import { TARGET_MODES, type Emitter, type TargetPackage } from "./model.ts";
 import { readSource } from "./reader.ts";
@@ -22,16 +23,16 @@ const USAGE =
 const SCHEMA_FILE = "mapping-table.schema.json";
 
 /**
- * Until the emitter of C002-T-031 (Copilot) exists, a Copilot package holds its manifest only; the
- * variant pass and its coverage check (C002-IF-001 §3 steps 2 and 3), the frontmatter translation
- * (step 4), the skill inlining (step 5) and the body-construct translation (steps 6 and 8) already run,
- * so their diagnostics stop the run. OpenCode: C002-T-029 (./emit/opencode.ts).
+ * Fallback for a target without an emitter: the package holds its manifest only, while the variant pass
+ * and its coverage check (C002-IF-001 §3 steps 2 and 3), the frontmatter translation (step 4), the skill
+ * inlining (step 5) and the body-construct translation (steps 6 and 8) run, so their diagnostics stop the
+ * run. OpenCode: C002-T-029 (./emit/opencode.ts); Copilot: C002-T-031 (./emit/copilot.ts).
  */
 const noFiles: Emitter = (input) => {
   const bodies = translateBodies(input);
   return { files: new Map(), diagnostics: [...translateAgents(input).diagnostics, ...bodies.diagnostics, ...inlineSkills(input.source, bodies.docs, input.target).diagnostics] };
 };
-export const EMITTERS: Record<Target, Emitter> = { opencode: emitOpenCode, copilot: noFiles };
+export const EMITTERS: Record<Target, Emitter> = { opencode: emitOpenCode, copilot: emitCopilot };
 
 export interface MainOptions {
   /** Folder that relative `--source` and `--out` resolve against; default the process's working folder. */
