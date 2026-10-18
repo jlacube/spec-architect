@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-001, C002-T-002, C002-T-006, C002-T-015]
 implements: []
 satisfies_ac: [C002-AC-103.1, C002-AC-105.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-106, C002-TS-109, C002-TS-110, C002-TC-106, C002-TC-109, C
 components: [C002-COMP-002]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 141b0fe, completed_at: 2026-10-18, notes: "Mapping tables for OpenCode and Copilot in plugins/architect/targets/; both sdd-mcp-server (OpenCode provisional until T-043); Serena ide (OpenCode) / vscode (Copilot, from Serena 1.7.0 contexts — T-050 confirms); Copilot model ids added from P-01's /model list (S-08 addendum); Copilot tools todo/usages and read/edit hook names from the spec, not S-08; plugin_manifest install/plugin.json per IF-005; variants empty until T-028; TC-106/109/110 carried to T-026/T-027" }
 ---
 
 # C002-T-024 — Mapping tables, their schema copy and loader
