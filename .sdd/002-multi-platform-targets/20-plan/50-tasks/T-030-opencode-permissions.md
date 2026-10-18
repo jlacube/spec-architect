@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-009, C002-T-010, C002-T-029]
 implements: [C002-REQ-206, C002-REQ-207, C002-REQ-208, C002-REQ-209, C002-REQ-210, C002-REQ-215, C002-REQ-217]
 satisfies_ac: [C002-AC-206.1, C002-AC-207.1, C002-AC-208.1, C002-AC-209.1, C002-AC-210.1, C002-AC-215.1, C002-AC-217.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-207, C002-TS-208, C002-TS-209, C002-TS-210, C002-TS-211, C
 components: [C002-COMP-001, C002-COMP-003]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c84c3e0, completed_at: 2026-10-18, notes: "Permission rules; TC-208/210/212/214/224/228 pass; TC-207/209 to T-042/T-043, TC-211/213/222/223 to T-042, TC-229 to T-035, TC-230 to T-044/T-056; glob gaps exported as globGaps(mode) for T-043 (no note-level diagnostic in the spec); table gains node --version allow and sdd install * deny; open (D-010 batch): guard header says serena-launch needs --read-only but code and BG-381 allow it without" }
 ---
 
 # C002-T-030 — OpenCode permission rules for both modes and the quick-lint plugin
