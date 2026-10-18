@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-025]
 implements: [C002-REQ-103, C002-REQ-104, C002-REQ-115, C002-REQ-116, C002-REQ-118]
 satisfies_ac: [C002-AC-103.1, C002-AC-104.1, C002-AC-115.1, C002-AC-116.1, C002-AC-118.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-106, C002-TS-107, C002-TS-108, C002-TS-127, C002-TS-128, C
 components: [C002-COMP-001]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b3cadcd, completed_at: 2026-10-18, notes: "TC-106/107/108/127/128/131 + source clause of TC-134; TC-132 eval to T-056 (needs fxGate ready-to-archive from T-037); inlined-body clause of TC-134 and TC-107 CLI row to T-028; wiring anchors skipped (variantAnchors: pending) until T-028 switches to applied" }
 ---
 
 # C002-T-027 — Translator: body constructs, templates, plugin data and question tool
