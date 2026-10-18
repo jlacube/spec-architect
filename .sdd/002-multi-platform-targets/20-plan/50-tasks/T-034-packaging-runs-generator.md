@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-022, C002-T-029, C002-T-031]
 implements: [C002-REQ-101]
 satisfies_ac: [C002-AC-101.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-101, C002-TS-102, C002-TS-103, C002-TC-101, C002-TC-102, C
 components: [C002-COMP-013, C002-COMP-001]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 4a8e1a3, completed_at: 2026-10-18, notes: "Packaging runs the generator; TC-101/102/103; target-zips test under tests/integration/packaging/ (build/ is git-ignored)" }
 ---
 
 # C002-T-034 — npm run package runs the generator and zips each target
