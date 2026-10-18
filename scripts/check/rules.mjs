@@ -54,6 +54,32 @@ export const rules001 = {
   },
 };
 
+/** `version` of a JSON file, or null when the file is missing, unreadable or has no string version. */
+function jsonVersion(p) {
+  try {
+    const v = JSON.parse(read(p)).version;
+    return typeof v === "string" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+// PLG-VER-001 (C002-ADR-004, C002-CON-16): plugin.json is the single version source; the root
+// package.json, no longer read by the build, must carry the same version so the two cannot disagree silently.
+export const ver001 = {
+  code: "PLG-VER-001",
+  check(ctx) {
+    const manifest = join(ctx.plugin, ".claude-plugin", "plugin.json");
+    const pkg = join(ctx.repo, "package.json");
+    const want = jsonVersion(manifest);
+    const have = jsonVersion(pkg);
+    if (want === null) return [finding(this.code, rel(ctx, manifest), null, "plugin.json has no version")];
+    if (have === null) return [finding(this.code, rel(ctx, pkg), null, "root package.json has no version")];
+    if (have !== want) return [finding(this.code, rel(ctx, pkg), null, `root package.json version ${have} differs from plugin.json version ${want}; set both to the same version`)];
+    return [];
+  },
+};
+
 export const msg001 = {
   code: "PLG-MSG-001",
   check(ctx) {

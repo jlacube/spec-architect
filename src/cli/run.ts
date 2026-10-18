@@ -9,6 +9,7 @@ import type { LintRule } from "../lint/types.ts";
 import { checkOptions, checkPositional, COMMANDS, RULES, type CommandSpec } from "./commands.ts";
 import { CliError, usage } from "./errors.ts";
 import { Output } from "./output.ts";
+import { VERSION } from "../version.ts";
 
 export interface CliIo {
   cwd: string;
@@ -61,7 +62,7 @@ function topHelp(): string {
     "Commands:",
     ...lines,
     "",
-    "Global options: --cwd <path>, --json (where supported), --quiet, --help. SDD_DEBUG=1 writes traces to standard error.",
+    "Global options: --cwd <path>, --json (where supported), --quiet, --help. `sdd --version` prints the bare version. SDD_DEBUG=1 writes traces to standard error.",
   ].join("\n");
 }
 
@@ -78,6 +79,10 @@ export function runCli(argv: readonly string[], io: CliIo): number {
   try {
     if (argv[0] === "--help" || argv[0] === "-h" || argv[0] === "help") {
       out.line(topHelp());
+      code = 0;
+    } else if (argv[0] === "--version") {
+      // C002-REQ-511: the bare version, one line; `sdd version` keeps `architect-plugin@<semver>`.
+      out.line(VERSION);
       code = 0;
     } else {
       const { spec, rest } = findCommand(argv);

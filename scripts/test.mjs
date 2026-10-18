@@ -39,7 +39,8 @@ await build({
   format: "esm",
   target: "node20",
   outExtension: { ".js": ".mjs" },
-  define: { __SDD_VERSION__: JSON.stringify(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version) },
+  // C002-ADR-004: the version comes from plugin.json, as in scripts/build.mjs.
+  define: { __SDD_VERSION__: JSON.stringify(JSON.parse(readFileSync(join(root, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8")).version) },
   logLevel: "warning",
 });
 

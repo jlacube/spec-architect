@@ -1,6 +1,6 @@
 // C001-TC-1115 / C001-TS-1115 (C001-AC-1114.1, C001-REQ-1114): a GPL-3.0 package imported by the CLI
 // sources makes the build fail, naming the package and "GPL-3.0". Run on a copy of the build inputs
-// (scripts/, src/, package.json) with a fake GPL package added, so the repository is untouched.
+// (scripts/, src/, package.json, plugin.json) with a fake GPL package added, so the repository is untouched.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -16,6 +16,8 @@ test("GPL dependency", () => {
     for (const d of ["scripts", "src"]) cpSync(join(root, d), join(tmp, d), { recursive: true });
     cpSync(join(root, "package.json"), join(tmp, "package.json"));
     mkdirSync(join(tmp, "plugins", "architect", "scripts"), { recursive: true });
+    // C002-ADR-004: the build reads the version from plugin.json.
+    cpSync(join(root, "plugins", "architect", ".claude-plugin"), join(tmp, "plugins", "architect", ".claude-plugin"), { recursive: true });
     cpSync(join(root, "plugins", "architect", "THIRD_PARTY_NOTICES.md"), join(tmp, "plugins", "architect", "THIRD_PARTY_NOTICES.md"));
     // node_modules: the real packages, plus a GPL one imported by the CLI entry.
     mkdirSync(join(tmp, "node_modules"));

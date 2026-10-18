@@ -7,20 +7,19 @@ import { repoRoot } from "./helpers.ts";
 
 const root = repoRoot();
 const cli = join(root, "plugins", "architect", "scripts", "sdd.mjs");
-const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { version: string };
+// C002-ADR-004: plugin.json is the single version source.
+const manifest = JSON.parse(readFileSync(join(root, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8")) as { version: string };
 
-test("sdd version prints architect-plugin@<package version>", () => {
+test("sdd version prints architect-plugin@<plugin.json version>", () => {
   const out = execFileSync(process.execPath, [cli, "version"], { encoding: "utf8" });
-  assert.equal(out.trim(), `architect-plugin@${pkg.version}`);
+  assert.equal(out.trim(), `architect-plugin@${manifest.version}`);
 });
 
 test("build produces exactly one file in plugins/architect/scripts", () => {
   assert.deepEqual(readdirSync(join(root, "plugins", "architect", "scripts")), ["sdd.mjs"]);
 });
 
-test("plugin manifest version matches package.json", () => {
-  const manifest = JSON.parse(
-    readFileSync(join(root, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8"),
-  ) as { version: string };
-  assert.equal(manifest.version, pkg.version);
+test("root package.json version matches plugin.json", () => {
+  const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { version: string };
+  assert.equal(pkg.version, manifest.version);
 });

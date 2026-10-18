@@ -12,11 +12,11 @@ import mcp from "./mcp.mjs";
 import path from "./path.mjs";
 import { port001, port002 } from "./port.mjs";
 import readme from "./readme.mjs";
-import { msg001, rules001 } from "./rules.mjs";
+import { msg001, rules001, ver001 } from "./rules.mjs";
 import size from "./size.mjs";
 import tools from "./tools.mjs";
 
-export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, readme, hooks, ci, evals, mcp];
+export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, ver001, readme, hooks, ci, evals, mcp];
 
 /** Runs every check; each finding gets `severity` error, or pending while its owner task is open. */
 export function runChecks(ctx = context(), checks = CHECKS) {
