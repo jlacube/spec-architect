@@ -1,7 +1,8 @@
 // One eval session through the Agent SDK (C001-ADR-007): the plugin is loaded, a main-thread agent
 // is selected, AskUserQuestion is answered with scripted choices through canUseTool, and every SDK
 // message is recorded with its arrival time.
-import { query } from "@anthropic-ai/claude-agent-sdk";
+// The Agent SDK is imported when a Claude Code session starts, so that the other hosts (and the runner
+// tests, which bundle this module) never need it.
 import { checkKeySource, childEnv, claudeExecutable, resolveAuth } from "./env.mjs";
 
 /** Default answer policy: the first option, which the interview protocol marks "(Recommended)". */
@@ -9,8 +10,53 @@ export function firstOption(question) {
   return question.options?.[0]?.label ?? "";
 }
 
+/** Hosts of `--host` (C002-IF-010 §1); the default is the existing behaviour. */
+export const HOSTS = ["claude-code", "opencode", "copilot-cli"];
+export const DEFAULT_HOST = "claude-code";
+
 /**
- * Runs one session and returns `{ transcript, answers, result, wallMs, auth, apiKeySource }`.
+ * Harness context (C002-IF-010 §1, C002-T-044): the host that `runSession` runs on, set by run.mjs from
+ * `--host` (else `EVAL_HOST`, else claude-code); a case never names it. `runners` replaces the runner
+ * of a host (the stub host of the runner tests).
+ */
+const context = { host: undefined, runners: {} };
+
+/** Sets the harness context: `{ host?, runners? }`; returns the previous one. */
+export function setHarnessContext({ host, runners } = {}) {
+  const prev = { host: context.host, runners: context.runners };
+  if (host !== undefined) {
+    if (!HOSTS.includes(host)) throw new Error(`unknown eval host ${host}; use ${HOSTS.join(", ")}`);
+    context.host = host;
+  }
+  if (runners !== undefined) context.runners = runners;
+  return prev;
+}
+
+/** The host of the harness context (else `EVAL_HOST`, else claude-code). */
+export function currentHost() {
+  const h = context.host ?? process.env.EVAL_HOST ?? DEFAULT_HOST;
+  if (!HOSTS.includes(h)) throw new Error(`unknown eval host ${h}; use ${HOSTS.join(", ")}`);
+  return h;
+}
+
+/**
+ * Runs one session on the host of the harness context (signature unchanged). A case written for one
+ * host (`host` option, from the case's `host` field) reads that host's own tool names (runners/opencode.mjs).
+ */
+export async function runSession(options) {
+  const host = currentHost();
+  const own = context.runners[host];
+  if (own) return own(options);
+  if (host === "claude-code") return runClaudeCodeSession(options);
+  if (host === "opencode") {
+    const { runOpenCodeSession } = await import("./runners/opencode.mjs");
+    return runOpenCodeSession({ ...options, names: options.host === "opencode" ? "host" : "source" });
+  }
+  throw new Error(`eval host ${host}: no runner yet (the Copilot CLI runner is C002-T-045)`);
+}
+
+/**
+ * Runs one Claude Code session and returns `{ transcript, answers, result, wallMs, auth, apiKeySource }`.
  * - `auth`: billing route, `api-key` or `subscription` (env.mjs); a subscription session whose
  *   init message reports another key source is aborted before its first turn
  * - `agent`: main-thread agent, e.g. "architect:sdd-conductor"
@@ -20,7 +66,7 @@ export function firstOption(question) {
  * - `env`: extra environment variables for the session (for example CLAUDE_CODE_ENABLE_TODO_TOOLS)
  * - `startDelayMs`: send the prompt only after this delay (MCP servers connect first)
  */
-export async function runSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0, auth }) {
+export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0, auth }) {
   const mode = resolveAuth(auth);
   const abortController = new AbortController();
   let apiKeySource = null;
@@ -64,6 +110,7 @@ export async function runSession({ cwd, prompt, agent, plugins = [], answer = fi
     // seconds after session start (Serena) are ready before the first subagent is spawned: a
     // subagent's tool set is fixed when it starts (C001-T-041).
     const input = startDelayMs > 0 ? delayedPrompt(prompt, startDelayMs) : prompt;
+    const { query } = await import("@anthropic-ai/claude-agent-sdk");
     for await (const message of query({ prompt: input, options })) {
       stamp({ type: "sdk", message });
       if (message.type === "system" && message.subtype === "init") {

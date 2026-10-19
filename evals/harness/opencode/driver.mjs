@@ -182,21 +182,34 @@ export async function startOpenCode(options) {
   const client = createOpencodeClient({ baseUrl, directory: project });
 
   // One event stream; permission and question requests go to the policy of the session that asked.
-  const policies = new Map();
-  const events = new Map();
+  // A child session (a subagent started by the `task` tool, `info.parentID` set) shares the context of
+  // its root session: the same policy, event list and `onEvent` callback (C002-T-044).
+  const contexts = new Map();
   const stream = new AbortController();
   const pump = (async () => {
     const sub = await client.event.subscribe(undefined, { signal: stream.signal });
     for await (const ev of sub.stream) {
       const props = ev?.properties ?? {};
-      const sessionID = props.sessionID;
-      if (sessionID && events.has(sessionID)) events.get(sessionID).push(ev);
-      const policy = sessionID ? policies.get(sessionID) : undefined;
+      const sessionID = props.sessionID ?? props.part?.sessionID ?? props.info?.sessionID;
+      if ((ev.type === "session.created" || ev.type === "session.updated") && props.info?.parentID && contexts.has(props.info.parentID) && !contexts.has(props.info.id)) {
+        const ctx = contexts.get(props.info.parentID);
+        ctx.children.add(props.info.id);
+        contexts.set(props.info.id, ctx);
+      }
+      const ctx = sessionID ? contexts.get(sessionID) : undefined;
+      if (ctx) {
+        ctx.events.push(ev);
+        try {
+          ctx.onEvent?.(ev, ctx.rootID);
+        } catch {
+          // a callback error never stops the stream
+        }
+      }
       if (ev.type === "permission.asked") {
-        const reply = policy?.permission ? await policy.permission(props) : "reject";
+        const reply = ctx?.permission ? await ctx.permission(props) : "reject";
         await client.permission.reply({ requestID: props.id, reply });
       } else if (ev.type === "question.asked") {
-        const answer = policy?.question ? await policy.question(props) : null;
+        const answer = ctx?.question ? await ctx.question(props) : null;
         if (answer === null || answer === undefined) await client.question.reject({ requestID: props.id });
         else await client.question.reply({ requestID: props.id, answers: answer });
       }
@@ -222,38 +235,60 @@ export async function startOpenCode(options) {
     },
     /**
      * One session: create it, prompt `agent` with `text` (and `model` { providerID, modelID } when
-     * given), answer requests by `permission(request) → "once" | "always" | "reject"` and
-     * `question(request) → answers | null` (null dismisses), and return
-     * { sessionID, messages, parts, events, error } once the prompt has ended.
+     * given) — or, with `command` { name, arguments }, run that command of the server (`session.command`,
+     * as the TUI does for `/name arguments`) — answer requests by
+     * `permission(request) → "once" | "always" | "reject"` and `question(request) → answers | null`
+     * (null dismisses), pass every event of the session and its child sessions to `onEvent(event, rootSessionID)`, and
+     * return { sessionID, messages, parts, events, children, error, aborted } once the prompt has ended.
+     * `children` holds the messages of each child session: `[{ sessionID, messages }]`. An abort of
+     * `signal` (the eval runner's caps) aborts the session and its children (`session.abort`).
      */
-    async run({ agent, text, model, permission, question, title, timeoutMs }) {
-      const created = await client.session.create({ title: title ?? text.slice(0, 60) });
+    /** @param {{ agent?: string, text?: string, command?: { name: string, arguments?: string }, model?: { providerID: string, modelID: string }, permission?: (req: any) => any, question?: (req: any) => any, onEvent?: (ev: any, root: string) => void, signal?: AbortSignal, title?: string, timeoutMs?: number }} options */
+    async run({ agent, text, command, model, permission, question, onEvent, signal, title, timeoutMs }) {
+      const created = await client.session.create({ title: title ?? String(text ?? command?.name ?? "session").slice(0, 60) });
       const sessionID = created.data?.id;
       if (!sessionID) throw new Error(`session not created: ${JSON.stringify(created.error ?? null)}`);
-      policies.set(sessionID, { permission, question });
-      events.set(sessionID, []);
+      const ctx = { rootID: sessionID, permission, question, onEvent, events: [], children: new Set() };
+      contexts.set(sessionID, ctx);
       let error = null;
+      let aborted = false;
       let timer;
+      const abortAll = async () => {
+        for (const id of [sessionID, ...ctx.children]) await client.session.abort({ sessionID: id }).catch(() => {});
+      };
+      let onAbort;
       try {
-        const prompt = client.session.prompt({ sessionID, agent, ...(model ? { model } : {}), parts: [{ type: "text", text }] });
-        const timeout = new Promise((resolve) => {
+        const call = command
+          ? client.session.command({ sessionID, command: command.name, arguments: command.arguments ?? "", ...(agent ? { agent } : {}), ...(model ? { model: `${model.providerID}/${model.modelID}` } : {}) })
+          : client.session.prompt({ sessionID, agent, ...(model ? { model } : {}), parts: [{ type: "text", text }] });
+        const stop = new Promise((resolve) => {
           if (timeoutMs) timer = setTimeout(() => resolve({ timedOut: true }), timeoutMs);
+          if (signal) {
+            onAbort = () => resolve({ aborted: true });
+            if (signal.aborted) onAbort();
+            else signal.addEventListener("abort", onAbort, { once: true });
+          }
         });
-        const r = await Promise.race([prompt, timeout]);
+        const r = await Promise.race([call, stop]);
         if (r?.timedOut) {
           error = `session timed out after ${timeoutMs} ms`;
-          await client.session.abort({ sessionID }).catch(() => {});
+          await abortAll();
+        } else if (r?.aborted) {
+          aborted = true;
+          await abortAll();
+          await Promise.race([call.catch(() => {}), sleep(10_000)]);
         } else if (r?.error) error = r.error;
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
       } finally {
         clearTimeout(timer);
+        if (signal && onAbort) signal.removeEventListener("abort", onAbort);
       }
       const msgs = (await client.session.messages({ sessionID })).data ?? [];
-      policies.delete(sessionID);
-      const evs = events.get(sessionID) ?? [];
-      events.delete(sessionID);
-      return { sessionID, messages: msgs, parts: msgs.flatMap((m) => m.parts ?? []), events: evs, error };
+      const children = [];
+      for (const id of ctx.children) children.push({ sessionID: id, messages: (await client.session.messages({ sessionID: id })).data ?? [] });
+      for (const id of [sessionID, ...ctx.children]) contexts.delete(id);
+      return { sessionID, messages: msgs, parts: msgs.flatMap((m) => m.parts ?? []), events: ctx.events, children, error, aborted };
     },
     /** The command list of the server API (`GET /command`), without a model call. */
     async commands() {

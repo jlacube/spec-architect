@@ -291,6 +291,41 @@
       "pass": true,
       "result": "evals/results/t063-TS-509-claude-code-no-sdd-2026-10-19T17-34-36-017Z.json",
       "note": "revised assertion (defect D-012): outcome completed with warnings; rows not ok: Context7 and DeepWiki unreachable; no sdd CLI row; 8 rows"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-044",
+      "step": 6,
+      "case": "TS-207",
+      "row": "TS-207 (routing family, C001-TC-207 on OpenCode)",
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "cost_usd": 0.2262184,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t044-smoke-TS-207-2026-10-19T19-59-31-449Z.json",
+      "openrouter_usage": {
+        "before": 0,
+        "after": 0,
+        "delta": 0,
+        "read_at": [
+          "2026-10-19T19:58:57Z",
+          "2026-10-19T20:14:57Z"
+        ],
+        "endpoint": "GET /api/v1/key (usage of the key-file key)"
+      },
+      "note": "Smoke of C002-T-044 step 6: 7 turns, opus 5.5 via OpenRouter (16 input, 2147 output, 158597 cache-read, 28759 cache-write tokens); runner cost from OpenCode step costs 0.2262 USD, consistent with the catalogue prices (about 0.22 USD at 4/20/0.2/5 USD per M). OpenRouter key usage read 0 before and still 0 sixteen minutes after the session (OpenCode verified to use isolated data folders, so the key-file key, not auth.json): the two figures could not be compared; P-01 to check the OpenRouter activity page. The runner figure stays in cost_usd until then."
     }
   ]
 }

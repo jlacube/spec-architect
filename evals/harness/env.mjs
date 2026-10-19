@@ -61,7 +61,16 @@ export function checkKeySource(mode, apiKeySource) {
   }
 }
 
-/** Desktop-bundled Claude Code (≥ 2.1.295, C001-REQ-1123); the SDK's own binary is not installed. */
+/**
+ * Checks, before any session, the environment a host needs (C002-T-044): `CLAUDE_CODE_EXECPATH` for the
+ * Claude Code host only; the OpenCode host needs its pinned binary and key file, which its driver checks
+ * at session start (opencode/driver.mjs). Throws with the fix.
+ */
+export function checkHostEnv(host) {
+  if (host === "claude-code") claudeExecutable();
+}
+
+/** Desktop-bundled Claude Code (≥ 2.1.295, C001-REQ-1123); the SDK's own binary is not installed. Claude Code host only. */
 export function claudeExecutable() {
   const path = process.env.CLAUDE_CODE_EXECPATH;
   if (!path) throw new Error("CLAUDE_CODE_EXECPATH is not set: run evals from the Claude desktop app or set it to a Claude Code ≥ 2.1.295 binary");
