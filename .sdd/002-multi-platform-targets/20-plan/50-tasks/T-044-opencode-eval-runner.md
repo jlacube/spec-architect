@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-037, C002-T-042]
 implements: [C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611, C002-NFR-105]
 satisfies_ac: [C002-AC-608.1, C002-AC-609.1, C002-AC-610.1, C002-AC-611.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-230, C002-TS-611, C002-TS-612, C002-TS-613, C002-TS-614, C
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-020]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d78c99f, completed_at: 2026-10-19, notes: "cap06 163 pass (runner-caps 20). Smoke TS-207 pass, 7 turns, runner 0.2262 USD; OpenRouter key usage read 0 before and 16 min after (P-01 to check the activity page; ledger keeps runner figure). Carried TC-230/613/634/635 to T-056, TC-612 to T-049. Candidate defects: IF-010 §3 tool names; answers vs answer; opencode-host folder; key file vs credential store; allowTools cannot gate non-asking tools; no eval-dispatcher relay on OpenCode; doctor rows without host field." }
 ---
 
 # C002-T-044 — OpenCode eval runner behind the existing case API
