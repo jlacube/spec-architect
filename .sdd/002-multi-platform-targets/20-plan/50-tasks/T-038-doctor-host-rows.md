@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-05
-status: todo
+status: done
 depends_on: [C002-T-013, C002-T-014, C002-T-028, C002-T-060]
 implements: [C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510]
 satisfies_ac: [C002-AC-504.1, C002-AC-505.1, C002-AC-506.1, C002-AC-507.1, C002-AC-508.1, C002-AC-509.1, C002-AC-510.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-506, C002-TS-507, C002-TS-508, C002-TS-509, C002-TS-510, C
 components: [C002-COMP-014, C002-COMP-015, C002-COMP-016, C002-COMP-002]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 172e6df, completed_at: 2026-10-19, notes: "cap05 49/49, cap11 green; Claude Code doctor byte-unchanged. 7 sessions --auth subscription all pass first run (notional 1.86 USD, ledger). Carried: OpenCode rows TS-506/507/509/510/511/512/513/514/515/639 to T-056; Copilot CLI TS-513, TS-526 to T-045; TS-508, TS-516 to VS Code checklist. Open: host-version reads only chat.useHooks, so Copilot hooks row never ok (TS-516 ok rows cannot pass) - spec defect candidate. Others: TS-509 Claude expects completed but Context7/DeepWiki unreachable; TS-509/515 OpenCode assume PATH sdd; host_version_arg token not in IF-001 §4." }
 ---
 
 # C002-T-038 — Doctor host rows, version checks and the toolchain record per host
