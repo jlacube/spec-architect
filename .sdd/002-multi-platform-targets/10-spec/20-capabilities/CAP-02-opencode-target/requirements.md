@@ -158,7 +158,7 @@ fixed by spike S-07 (glossary: enforcement mode).
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE OpenCode target package SHALL name each command `architect-<name>`, where `<name>` is the file name of the source command without its extension.
-- **Rationale:** OpenCode has built-in `/new` and `/init` commands, with which the source commands `new` and `init` would collide (C002-IF-001 §2, row `/architect:<name>`); the prefix keeps the `architect` namespace of the Claude Code names `/architect:<name>`; references in bodies follow the same mapping (C002-REQ-103); placement `.opencode/commands/architect-<command>.md` (C002-IF-005 §2; command files: C002-R-001 C-08)
+- **Rationale:** the built-in commands of OpenCode 1.18.31 are `init`, `review` and `customize-opencode`; of these, only `init` shares its name with a source command and would collide with it without the prefix (defect D-011 item 1; C002-TS-226; C002-IF-001 §2, row `/architect:<name>`); the prefix keeps the `architect` namespace of the Claude Code names `/architect:<name>`; references in bodies follow the same mapping (C002-REQ-103); placement `.opencode/commands/architect-<command>.md` (C002-IF-005 §2; command files: C002-R-001 C-08)
 - **Stories:** C002-US-201
 - **Priority:** Must
 - **Acceptance:** C002-AC-216.1

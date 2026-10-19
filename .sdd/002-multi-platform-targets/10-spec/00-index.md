@@ -43,17 +43,17 @@ status: draft
 
 | Capability | Folder | US | REQ | AC | TS |
 |---|---|---|---|---|---|
-| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 35 (block 101–199, plus C002-TS-640) |
+| C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 37 (block 101–199, plus C002-TS-640, C002-TS-657, C002-TS-658) |
 | C002-CAP-02 OpenCode target | `CAP-02-opencode-target` | 201–205 (5) | 201–217 (17) | 17 | 30 (block 201–299) |
-| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–307 (7) | 301–330 (30) | 30 | 70 (block 301–399) |
-| C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 26 (block 401–499, plus C002-TS-641, C002-TS-642) |
+| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–307 (7) | 301–330 (30) | 30 | 72 (block 301–399, plus C002-TS-659, C002-TS-664) |
+| C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 27 (block 401–499, plus C002-TS-641, C002-TS-642, C002-TS-660) |
 | C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–521 (21) | 21 | 39 (block 501–599, plus C002-TS-639) |
-| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–630, 632–634 (32) | 32 | 50 (block 601–699) |
-| **Total** | | **32** | **133** | **135** | **250** |
+| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–607 (7) | 601–623, 625–630, 632–634 (32) | 32 | 53 (block 601–699) |
+| **Total** | | **32** | **133** | **135** | **258** |
 
-Scenarios C002-TS-639 … C002-TS-642 were numbered in the 601–699 block during the step-7 rework and
-are defined in the capability named in the TS column. The AC and TS columns count the criteria and
-scenarios written.
+Scenarios C002-TS-639 … C002-TS-642 (step-7 rework) and C002-TS-657 … C002-TS-660 and
+C002-TS-664 (revision D-010 … D-014) were numbered in the 601–699 block and are defined in the
+capability named in the TS column. The AC and TS columns count the criteria and scenarios written.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·
 501 (1) · 601 (1) · 801 (1) — 16 in total.
