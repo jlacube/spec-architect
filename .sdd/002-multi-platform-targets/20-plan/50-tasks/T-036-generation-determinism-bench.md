@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-034]
 implements: [C002-NFR-103, C002-NFR-301]
 satisfies_ac: [C002-AC-101.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-101, C002-TC-101]
 components: [C002-COMP-001]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: cee5e0d, completed_at: 2026-10-19, notes: "cap01 green under Git Bash and PowerShell 7 (141/141); generate p95 777 ms (bench/results/generate-2026-10-19T05-56-14-966Z.json). Candidate spec gaps for the next revision: no TC row for NFR-301/NFR-103; NFR-103 'build' wording vs ADR-003 bundling." }
 ---
 
 # C002-T-036 — Generation determinism test and generation benchmark
