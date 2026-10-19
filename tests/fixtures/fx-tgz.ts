@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
+import { readTgz as readTgzEntries } from "../../scripts/check/tarball.mjs";
 import { npmCli, packNpm, stageNpm } from "../../scripts/package.mjs";
 import { repoRoot } from "../helpers.ts";
 
@@ -35,31 +35,9 @@ export interface Run {
   stderr: string;
 }
 
-/** Entries of a gzipped tar archive (ustar, with pax `path` records), by name. */
+/** Entries of a gzipped tar archive, by name (the reader of the tarball check). */
 export function readTgz(path: string): Map<string, Buffer> {
-  const buf = gunzipSync(readFileSync(path));
-  const out = new Map<string, Buffer>();
-  let p = 0;
-  let paxPath: string | null = null;
-  while (p + 512 <= buf.length) {
-    const header = buf.subarray(p, p + 512);
-    if (header.every((b) => b === 0)) break;
-    const str = (o: number, n: number) => header.toString("utf8", o, o + n).replace(/\0.*$/s, "");
-    const size = parseInt(str(124, 12).trim() || "0", 8);
-    const type = str(156, 1) || "0";
-    const prefix = str(345, 155);
-    const name = paxPath ?? (prefix ? `${prefix}/${str(0, 100)}` : str(0, 100));
-    const body = buf.subarray(p + 512, p + 512 + size);
-    p += 512 + Math.ceil(size / 512) * 512;
-    if (type === "x") {
-      const m = /\d+ path=([^\n]*)\n/.exec(body.toString("utf8"));
-      paxPath = m ? m[1]! : null;
-      continue;
-    }
-    paxPath = null;
-    if (type === "0" || type === "\0") out.set(name, Buffer.from(body));
-  }
-  return out;
+  return readTgzEntries(path) as Map<string, Buffer>;
 }
 
 const ENV_BASE = { SDD_DEBUG: undefined, SDD_TEST_FAULT: undefined, CLAUDE_PLUGIN_ROOT: undefined, CLAUDE_PLUGIN_DATA: undefined };

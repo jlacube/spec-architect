@@ -18,6 +18,7 @@
     "eval": "node evals/harness/run.mjs",
     "eval:report": "node evals/harness/report.mjs",
     "package": "node scripts/package.mjs",
+    "smoke:npm": "node scripts/smoke-npm.mjs",
     "generate": "node scripts/generate.mjs"
   },
   "devDependencies": {

@@ -1,0 +1,112 @@
+{
+  "kind": "smoke-npm",
+  "task": "C002-T-023",
+  "started_at": "2026-10-19T07:59:56.316Z",
+  "tarball": "dist/architect-sdd-0.0.1.tgz",
+  "version": "0.0.1",
+  "platform": "win32",
+  "node": "v22.22.3",
+  "npm": "10.9.8",
+  "install": [
+    {
+      "name": "npm install --global <tarball> --prefix <clean prefix> --offline",
+      "ok": true,
+      "ms": 2661,
+      "detail": "exit 0: "
+    },
+    {
+      "name": "install folder holds architect-sdd only, with both executables",
+      "ok": true,
+      "ms": 1,
+      "detail": "other packages: none; nested node_modules: false; missing shims: none"
+    }
+  ],
+  "shells": [
+    {
+      "shell": "bash",
+      "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "probes": [
+        {
+          "name": "bash: sdd and sdd-mcp resolve to the prefix; node is v22.22.3",
+          "ok": true,
+          "ms": 333,
+          "detail": "exit 0: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\prefix\\sdd\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\prefix\\sdd-mcp\nv22.22.3\r\n "
+        },
+        {
+          "name": "bash: sdd --version prints 0.0.1, the bundled CLI's output (C002-TS-501)",
+          "ok": true,
+          "ms": 656,
+          "detail": "exit 0: \"0.0.1\\n\" vs bundled \"0.0.1\\n\" "
+        },
+        {
+          "name": "bash: sdd init creates the fixture workspace",
+          "ok": true,
+          "ms": 568,
+          "detail": "exit 0: created workspace: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\ws-bash\\.sdd\ncreated: _constitution/\ncreated: _living/\ncreated: _decisions/\ncreated: _templates/\ncreated: _archive/\ncreated: registry.json\ncreated: SDD.md\n "
+        },
+        {
+          "name": "bash: sdd change new creates change 001 from the shipped templates",
+          "ok": true,
+          "ms": 649,
+          "detail": "exit 0: CHG-001 .sdd/001-smoke\n "
+        },
+        {
+          "name": "bash: sdd status lists the change",
+          "ok": true,
+          "ms": 557,
+          "detail": "exit 0: | Change | Title | Phase | Status | Tasks done | Open defects | Updated |\n|---|---|---|---|---|---|---|\n| 001 | Smoke | 00-ideation | not-started | 0/1 | 0 | — |\n "
+        },
+        {
+          "name": "bash: sdd-mcp --profile files answers initialize and tools/list, exits 0",
+          "ok": true,
+          "ms": 675,
+          "detail": "server sdd-mcp 0.0.1, protocol 2025-06-18, 2 tools (files profile), exit 0 on end of input"
+        }
+      ]
+    },
+    {
+      "shell": "pwsh",
+      "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "probes": [
+        {
+          "name": "pwsh: sdd and sdd-mcp resolve to the prefix; node is v22.22.3",
+          "ok": true,
+          "ms": 557,
+          "detail": "exit 0: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\prefix\\sdd.ps1\r\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\prefix\\sdd-mcp.ps1\r\nv22.22.3\r\n "
+        },
+        {
+          "name": "pwsh: sdd --version prints 0.0.1, the bundled CLI's output (C002-TS-501)",
+          "ok": true,
+          "ms": 717,
+          "detail": "exit 0: \"0.0.1\\n\" vs bundled \"0.0.1\\n\" "
+        },
+        {
+          "name": "pwsh: sdd init creates the fixture workspace",
+          "ok": true,
+          "ms": 674,
+          "detail": "exit 0: created workspace: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-smoke-npm-TWcUcF\\ws-pwsh\\.sdd\ncreated: _constitution/\ncreated: _living/\ncreated: _decisions/\ncreated: _templates/\ncreated: _archive/\ncreated: registry.json\ncreated: SDD.md\n "
+        },
+        {
+          "name": "pwsh: sdd change new creates change 001 from the shipped templates",
+          "ok": true,
+          "ms": 765,
+          "detail": "exit 0: CHG-001 .sdd/001-smoke\n "
+        },
+        {
+          "name": "pwsh: sdd status lists the change",
+          "ok": true,
+          "ms": 738,
+          "detail": "exit 0: | Change | Title | Phase | Status | Tasks done | Open defects | Updated |\n|---|---|---|---|---|---|---|\n| 001 | Smoke | 00-ideation | not-started | 0/1 | 0 | — |\n "
+        },
+        {
+          "name": "pwsh: sdd-mcp --profile files answers initialize and tools/list, exits 0",
+          "ok": true,
+          "ms": 782,
+          "detail": "server sdd-mcp 0.0.1, protocol 2025-06-18, 2 tools (files profile), exit 0 on end of input"
+        }
+      ]
+    }
+  ],
+  "pass": true,
+  "seconds": 10.9
+}

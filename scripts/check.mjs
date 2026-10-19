@@ -2,8 +2,10 @@
 // integration), the lint fixture suite and the plugin structure checks of C001-IF-08 §3. Every step
 // runs and prints its result; the exit code is non-zero when any step failed. The step `targets`
 // (C002-REQ-601, C002-IF-005 §6) generates the OpenCode and Copilot packages from the current source
-// plugin into a fresh temporary folder and runs the target structure checks on them.
-//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,structure,targets]
+// plugin into a fresh temporary folder and runs the target structure checks on them. The step `tarball`
+// (C002-T-023, C002-IF-003 §2) stages and packs architect-sdd into a fresh temporary folder and runs the
+// manifest check TGT-NPM-001 and the SPDX header scan on it.
+//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,structure,targets,tarball]
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,6 +38,7 @@ const STEPS = {
   },
   structure: { title: "plugin structure checks", run: () => run(node, [join(root, "scripts", "check", "run.mjs")]) },
   targets: { title: "target structure checks (opencode, copilot)", run: () => run(node, [join(root, "scripts", "check", "targets", "run.mjs")]) },
+  tarball: { title: "architect-sdd tarball check (TGT-NPM-001, SPDX)", run: () => run(node, [join(root, "scripts", "check", "tarball.mjs")]) },
 };
 
 const i = process.argv.indexOf("--steps");
