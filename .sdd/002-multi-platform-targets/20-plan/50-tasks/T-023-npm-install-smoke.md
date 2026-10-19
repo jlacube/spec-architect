@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-03
-status: todo
+status: in-progress
 depends_on: [C002-T-022, C002-T-061]
 implements: [C002-NFR-401, C002-NFR-402, C002-NFR-801]
 satisfies_ac: [C002-AC-501.1, C002-AC-412.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-501, C002-TS-417, C002-TC-501, C002-TC-417]
 components: [C002-COMP-006]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "Code 64760b0. Node 22 x Git Bash/PowerShell pass (bench/results/smoke-npm-2026-10-19T07-59-*). Node 20 runs open: Node 20 not installed on REF-WIN. Candidate defects: TGT-NPM-001 owner = T-023; SPDX scan has no code (used C002-NFR-801); DoD-020 dist/ target scan only via --spdx." }
 ---
 
 # C002-T-023 — architect-sdd: install smoke test and manifest check
