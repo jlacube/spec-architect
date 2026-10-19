@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: in-progress
 depends_on: [C002-T-038, C002-T-044, C002-T-063]
 implements: [C002-REQ-608, C002-REQ-610]
 satisfies_ac: [C002-AC-608.1, C002-AC-610.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-113, C002-TS-132, C002-TS-133, C002-TS-211, C002-TS-215, C
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-015]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "Partial edd5fa9: 12 pass, TS-507 fail (run_command error results rejected by OpenCode MCP client, -32602, defect D-017), 18 sessions 402 (OpenRouter account credit out; valid_run false). T-056 spend 3.92 USD, OpenRouter total 4.22 of 40. Remaining ~31 sessions after top-up and the D-017 fix." }
 ---
 
 # C002-T-056 — OpenCode dev-tier runs of the carried eval rows
