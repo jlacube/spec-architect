@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-020, C002-T-022, C002-T-033, C002-T-040, C002-T-063]
 implements: [C002-REQ-606, C002-NFR-201, C002-NFR-202]
 satisfies_ac: [C002-AC-606.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-608, C002-TS-609, C002-TS-661, C002-TS-662, C002-TS-663, C
 components: [C002-COMP-008, C002-COMP-005, C002-COMP-012]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: "Adapters 5b4392b. sdd-mcp-server 10 differing (copilot, opencode), copilot-hooks 1 differing, all spec mapping/expectation gaps (D-014). Done after the D-014 revision re-baselines the expectations." }
+report: { commit: e68a7cf, completed_at: 2026-10-19, notes: "665 replayed / 26 n/a / 0 differing for sdd-mcp-server (copilot, opencode) and copilot-hooks (copilot), both shells; reports from PowerShell 7. replay suite 42 pass + 1 skip (TC-661 OpenCode @mode-native row; OpenCode mode is sdd-mcp-server). ~/.serena untouched." }
 ---
 
 # C002-T-041 — Replay adapters: sdd MCP server and Copilot guard hooks
