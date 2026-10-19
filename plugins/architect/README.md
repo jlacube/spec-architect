@@ -63,6 +63,35 @@ missing, the cartographer falls back to the next layer and says so in its eviden
 
 Archify is not used in this version: architecture diagrams are Mermaid.
 
+## Other hosts
+
+The rest of this README is about Claude Code. The same agents, commands and skills are also generated
+as a target package for each host below (`npm run package` writes `dist/architect-<target>-<version>.zip`;
+`npm run generate` writes the unzipped `dist/<target>/`). Each package carries its own install notes,
+`INSTALL.md` at the package root, generated from the source linked in its section; its
+`architect-target.json` records the enforcement mode and the tested host versions.
+
+### OpenCode
+
+- **Install notes:** [targets/opencode/install.md](targets/opencode/install.md) (`INSTALL.md` in the
+  OpenCode package).
+- **Tested version:** OpenCode `1.18.31`.
+- **Enforcement mode:** sdd MCP server enforcement (`sdd-mcp-server`). The Architect agents have no
+  generic edit or shell tool: they write `.sdd/` files and run the allowlisted commands through the
+  sdd MCP server (`sdd-mcp`, installed with the `architect-sdd` npm package), which applies the same
+  path and command rules as the Claude Code hooks.
+
+### Copilot VS Code
+
+- **Install notes:** [targets/copilot/install.md](targets/copilot/install.md) (`INSTALL.md` in the
+  Copilot package).
+- **Tested versions:** VS Code `1.142.0-insider` (Insiders) with GitHub Copilot Chat `0.35.3`.
+- **Enforcement mode:** sdd MCP server enforcement (`sdd-mcp-server`). The Architect agents have no
+  generic edit or terminal tool: they write `.sdd/` files and run the allowlisted commands through the
+  sdd MCP server, so their write/shell boundary does not depend on hooks. The package's subagent guard
+  hook, which keeps subagents that are not Architect agents read-only in a repository with `.sdd/`,
+  runs only while hooks are enabled.
+
 ## Quickstart
 
 In your repository, with the conductor running (`claude --agent architect:sdd-conductor`):
