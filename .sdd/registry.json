@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-19T20:20:13Z",
+  "generated_at": "2026-10-19T20:21:15Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -332,6 +332,16 @@
           "status": "closed",
           "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
           "closed_at": "2026-10-19"
+        },
+        {
+          "id": "D-015",
+          "ref": "C002-IF-010",
+          "summary": "Found in C002-T-044/T-046: (1) IF-010 §3 reports tool calls by Claude Code names, but the T-037/T-038 case files expect OpenCode names for host opencode cases (runner: OpenCode names when host is opencode); (2) IF-010 §2 option 'answers' vs the case API's 'answer' function; (3) T-044 verification names evals/targets/opencode-host/, which T-056 never writes; (4) T-044, IF-010 §4 and E-OCE say the key comes from the user's credential store — P-01 replaced it by the key file with isolated data folders; (5) allowTools cannot gate tools OpenCode runs without asking (sdd MCP tools); (6) no eval-dispatcher relay on OpenCode (relay: direct); (7) doctor case rows without a host field also run under --host opencode; (8) T-046: TS-358 tagged @mode-server only vs IF-009 §4 both modes; REQ-614 MCP boundary step makes sense only in sdd-mcp-server mode; record 'each step once' vs rerun rule; TS-516 /doctor in restricted mode may be blocked by VS Code. Batch for the next revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-19",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
