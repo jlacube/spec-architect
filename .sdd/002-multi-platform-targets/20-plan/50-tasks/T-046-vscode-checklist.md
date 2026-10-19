@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-033, C002-T-037, C002-T-038, C002-T-058, C002-T-063]
 implements: [C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-628]
 satisfies_ac: [C002-AC-613.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-628.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-358, C002-TS-516, C002-TS-616, C002-TS-617, C002-TS-618, C
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-032]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7254e8f, completed_at: 2026-10-19, notes: "sdd-mcp-server 26 steps, copilot-hooks 48 steps; checklist.test 17 pass. Carried TC-358 to T-050. Candidate defects: TS-358 tagged @mode-server only vs IF-009 §4 both modes; REQ-614 MCP boundary step server-only; record 'each step once' vs rerun rule (last run + note); A-1 spec-writer start asked explicitly; TS-516 /doctor in restricted mode may be blocked by VS Code. UI details to confirm in T-050." }
 ---
 
 # C002-T-046 — Manual VS Code checklist and its record template
