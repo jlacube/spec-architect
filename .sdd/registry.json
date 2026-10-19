@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-19T17:04:22Z",
+  "generated_at": "2026-10-19T17:04:46Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -289,9 +289,9 @@
           "summary": "Found in C002-T-026: (1) the OpenCode mapping needs the 'task' tool in agent_start — the conductor's closed tool map (\"*\": false) switches it off otherwise, and the conductor could not start specialists; IF-001 §2 does not list it. (2) Option-parser faults of hook guard (missing --mode value, unknown option, extra argument) still print 'tool call' (C002-T-062). (3) TS-502 assumes the new change is 002 though fx-bootstrap already holds change 002 (C002-T-061). Batch for the next revision.",
           "reporter": "jerome.lacube",
           "date": "2026-10-18",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
+          "closed_at": "2026-10-19"
         },
         {
           "id": "D-011",
@@ -299,9 +299,9 @@
           "summary": "Found in C002-T-042: (1) TS-226 assumes OpenCode built-in commands /new and /init clash with the plugin's; OpenCode 1.18.31 lists built-ins init, review, customize-opencode — no 'new'; (2) IF-009 §2.2 gives no mapping for shell-corpus cases whose tool is not a shell (BG-268…270) — implemented as the command fed as that tool's argument (BG-268 Write reads deny); (3) OpenCode tries to download ripgrep from GitHub at start (blocked by the closed proxy) — record in IF-010 §4 start-up conditions. Batch with D-010.",
           "reporter": "jerome.lacube",
           "date": "2026-10-19",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
+          "closed_at": "2026-10-19"
         },
         {
           "id": "D-012",
@@ -309,9 +309,9 @@
           "summary": "Found in C002-T-038: sdd host-version reads only chat.useHooks, never Workspace Trust or organisation policy, so the Copilot doctor hooks row can never be ok (TS-516 ok rows, @manual-vscode, cannot pass). Decide: read trust/policy (where?) or change REQ-510/TS-516 (e.g. ok when chat.useHooks on, with a note that trust/policy are not read). Also from T-038: TS-509 Claude Code expects 'completed' but Context7/DeepWiki rows are always unreachable on Claude Code; TS-509/TS-515 OpenCode assume a PATH sdd, which server mode never uses; new wiring token {{host_version_arg}} missing from IF-001 §4; doctor command description still names Claude Code (frontmatter not an anchor). Must be settled before C002-T-046.",
           "reporter": "jerome.lacube",
           "date": "2026-10-19",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
+          "closed_at": "2026-10-19"
         },
         {
           "id": "D-013",
@@ -319,9 +319,9 @@
           "summary": "Found in C002-T-035/T-036/T-039: (1) copilot.json plugin-root detector excludes /scripts/sdd.mjs and cli-invocation matches only the CLAUDE_ form, so ${PLUGIN_ROOT}/scripts/sdd.mjs escapes the table detectors and the generator (TGT-PORT-001 checks it directly); (2) TGT-AGENT-001, TGT-MODE-001, TGT-MEM-001, TGT-SERENA-001 and TGT-NPM-001 have no owning task; (3) IF-005 says '14 existing checks', there were 15 (PLG-VER-001); (4) TC-121 location in the test plan vs structure-checks.test.ts; (5) TS-606 does not define which host tool sets contain generic tools; (6) no TC row for C002-NFR-301 / C002-NFR-103 (determinism test, generate bench); NFR-103 'build' wording vs ADR-003 bundling; (7) README links targets/<t>/install.md which target-packages.md §5 calls targets/<t>/wiring/install-notes.md, and the link does not resolve inside the Claude Code package (targets/ excluded); (8) under Claude desktop (MSIX) %LOCALAPPDATA% writes are redirected to the package LocalCache, so --user-data data written there is not seen by hosts started outside the package. Batch with D-010/D-011.",
           "reporter": "jerome.lacube",
           "date": "2026-10-19",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
+          "closed_at": "2026-10-19"
         },
         {
           "id": "D-014",
@@ -329,9 +329,9 @@
           "summary": "Found in C002-T-041 (blocks its done criterion '0 differing'): sdd-mcp-server replay 665 replayed, 10 differing on both targets; copilot-hooks 1. (1) BG-268 (shell corpus, tool Write, 'rm -rf src', expected allow): §2.2 has no mapping for shell-corpus cases of non-shell tools, fed as a write path -> deny on both mechanisms (OpenCode too); (2) PG-135 cwd through a junction: §2.2 runs the server at {repo} and uses the absolute path as given -> deny; (3) PG-048 trailing separator: guard allows, write fails ERR-MCP-003, §2.3 counts it as error (ERR-MCP-003 only happens after an allow; count as allow like ERR-MCP-004..006?); (4) BG-374, 379, 384, 389, 402, 403, 404: ${CLAUDE_PLUGIN_DATA} literal — run_command runs without a shell (no expansion) so the guard now denies it (code fix 5b4392b; before, the guard expanded it and the CLI created a folder named ${CLAUDE_PLUGIN_DATA} inside the repo); the corpus expectation is allow (shell semantics) — needs a per-mechanism expectation; (5) Copilot tool-name mapping for hooks: Read/Glob/Grep fed as Glob, Edit/NotebookEdit as Write, since S-08 does not record the read tool's hook name.",
           "reporter": "jerome.lacube",
           "date": "2026-10-19",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Batched revision D-010…D-014 (2026-10-19): spec 9439c8d…df0d9e6, plan f3e288e…a940f58, G2 6cc55ef, G3 5cbe7ee; code follow-ups in C002-T-063",
+          "closed_at": "2026-10-19"
         }
       ],
       "waivers": [
