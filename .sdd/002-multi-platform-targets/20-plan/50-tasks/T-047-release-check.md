@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-034, C002-T-040, C002-T-046, C002-T-063]
 implements: [C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634, C002-NFR-501]
 satisfies_ac: [C002-AC-617.1, C002-AC-618.1, C002-AC-619.1, C002-AC-620.1, C002-AC-621.1, C002-AC-622.1, C002-AC-629.1, C002-AC-634.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C
 components: [C002-COMP-010]
 risk_refs: [C002-RISK-031, C002-RISK-032]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a47257d, completed_at: 2026-10-19, notes: "cap06 178/178 (release-check 15). Real evidence dry run: opencode refused ERR-REL-009 (no injection.json); copilot ERR-REL-003 (no checklist record) + ERR-REL-009 — expected until T-049/T-050/T-054. Candidate defects (D-015 batch): --dry-run/--root not in IF-009 §5; <20 injection cases no code; corpus SHA mismatch text; missing/not-applicable checklist steps as ERR-REL-004; mechanisms per mode reading; generator stamps CLI version not source plugin.json version; platforms-limited cases text." }
 ---
 
 # C002-T-047 — Release check per target and release records
