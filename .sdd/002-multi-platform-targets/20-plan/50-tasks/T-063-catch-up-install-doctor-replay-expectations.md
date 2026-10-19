@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-019, C002-T-027, C002-T-029, C002-T-035, C002-T-038, C002-T-040, C002-T-042, C002-T-058, C002-T-061]
 implements: [C002-REQ-103, C002-REQ-104, C002-REQ-216, C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-405, C002-REQ-501, C002-REQ-505, C002-REQ-509, C002-REQ-510, C002-REQ-602, C002-REQ-604, C002-REQ-606]
 satisfies_ac: [C002-AC-103.1, C002-AC-104.1, C002-AC-216.1, C002-AC-322.1, C002-AC-323.1, C002-AC-324.1, C002-AC-326.1, C002-AC-405.1, C002-AC-501.1, C002-AC-505.1, C002-AC-509.1, C002-AC-510.1, C002-AC-602.1, C002-AC-604.1, C002-AC-606.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-343, C002-TS-345, C002-TS-347, C002-TS-349, C002-TS-659, C
 components: [C002-COMP-018, C002-COMP-001, C002-COMP-002, C002-COMP-007, C002-COMP-015, C002-COMP-005, C002-COMP-008, C002-COMP-010]
 risk_refs: [C002-RISK-001, C002-RISK-022, C002-RISK-025, C002-RISK-030]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a7d47c2, completed_at: 2026-10-19, notes: "Replay: sdd-mcp-server copilot/opencode 665/26/0, copilot-hooks 665/26/0, opencode-permissions (PowerShell) 691/0/158. npm run check 1202 pass. 1 subscription session TS-509 Claude no-sdd pass (notional 0.32). Follow-up of T-038, T-058, T-014, T-042. Candidate: TS-658 'names the construct' vs ERR-GEN-001 quoting matched text (code now adds the id for kind other)." }
 ---
 
 # C002-T-063 — Catch-up for revision D-010 … D-014: install sources, plugin-root detector, doctor description and hooks row, replay expectations
