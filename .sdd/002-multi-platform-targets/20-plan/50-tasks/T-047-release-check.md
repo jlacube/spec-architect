@@ -26,14 +26,18 @@ report whose replay host lacks a capability that the cited corpora require (C002
 injection, checklist and spike evidence at the tested versions (C002-REQ-617, C002-REQ-618,
 C002-REQ-620, C002-REQ-621, C002-REQ-629). For the Copilot VS Code target it refuses, in both
 Copilot modes, a checklist record that does not show hooks enabled during the run, because the
-Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It then writes
-`release.json`, flagged under the hooks fallback (C002-REQ-622).
+Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). The hooks-state check of
+C002-IF-009 §5 names four problems, in this order: `hooks_state` not recorded; `hooks_sources` not
+recorded in full; `hooks_state` contradicting the value derived from `hooks_sources`, in either
+direction; `hooks_state` `disabled` (C002-TS-633). It then writes `release.json`, flagged under the
+hooks fallback (C002-REQ-622), whose `evidence.checklist.hooks_state` holds the stored value.
 
-**Revised for D-012 and D-014.** ERR-REL-010 applies in both Copilot modes, with the message
-`copilot: checklist record <path> shows hooks <state>; the Copilot release needs evidence taken with
-hooks enabled` (`../../10-spec/50-interfaces/errors.md` §3); under sdd MCP server enforcement a record
-without a hooks state is refused (`not recorded`), and one with hooks `enabled` but no Copilot
-injection step is allowed, the injection evidence coming from the Copilot CLI runner (C002-TS-633).
+**Revised for D-012, D-014 and Q-release-hooks-01.** ERR-REL-010 applies in both Copilot modes, with
+the message `copilot: checklist record <path> <problem>; the Copilot release needs evidence taken
+with hooks enabled` and the `<problem>` texts of `../../10-spec/50-interfaces/errors.md` §3; under
+sdd MCP server enforcement a record without a hooks state is refused (`shows hooks not recorded`), and
+one with hooks `enabled`, sources that give `enabled` and no Copilot injection step is allowed, the
+injection evidence coming from the Copilot CLI runner (C002-TS-633).
 The replay recomputation accepts the `expected_source` values `C001-REQ-1103`, `C002-REQ-401` and
 `C002-REQ-517` of the revised C002-IF-009 §2.1, the last two on `sdd-mcp-server` only, and reads
 ERR-MCP-003 as `allow` (§2.3); both come from `tests/replay/expect.ts` as C002-T-063 leaves it, and
@@ -64,11 +68,16 @@ the record schema is the copy C002-T-063 puts in `docs/releases/`.
    `vscode-insiders` value when present; the Copilot CLI runner's evidence is compared with the
    record's `copilot-cli` value (ERR-REL-006). The signed-off record (`docs/spikes/S-08-copilot-vscode.md`)
    is one of the fixture rows of C002-TC-623 and gives "allowed".
-3. Read the hooks state of the checklist record whatever the mode (`sdd-mcp-server` or
-   `copilot-hooks`); a missing or disabled state refuses the Copilot VS Code release with
-   ERR-REL-010 in its revised text, naming the record and `disabled` or `not recorded` (C002-TS-633,
-   every row of both modes). Read the result of the delegated-edit step (C002-TC-358) like any other
-   checklist step (C002-REQ-618).
+3. Read `hooks_state` and `hooks_sources` of the checklist record whatever the mode
+   (`sdd-mcp-server` or `copilot-hooks`), as the frontmatter parser returns them (C002-IF-009 §4).
+   Apply the hooks-state check of C002-IF-009 §5 and print one ERR-REL-010 line for the first
+   problem that applies, in this order: (1) `hooks_state` not recorded; (2) `hooks_sources` not
+   recorded in full, naming the missing keys; (3) `hooks_state` contradicting the value derived from
+   `hooks_sources`, either way; (4) `hooks_state` `disabled`. The `<problem>` texts are those of
+   `errors.md` §3; C002-TS-633 gives one row per case, both modes. Write the stored `hooks_state`
+   (`enabled` or `disabled`, else `null`, never the derived value) to the release record's
+   `evidence.checklist.hooks_state`. Read the result of the delegated-edit step (C002-TC-358) like
+   any other checklist step (C002-REQ-618).
 4. Recompute each replayed case's expected decision and `expected_source` with the rules imported
    from `tests/replay/expect.ts`; a report whose case records another value, or `C002-REQ-401` or
    `C002-REQ-517` on a mechanism other than `sdd-mcp-server`, is refused with ERR-REL-012
