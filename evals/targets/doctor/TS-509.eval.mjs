@@ -5,16 +5,16 @@
 //   TS-509-opencode-bare           ripwire, Serena, ast-grep missing → completed with warnings   (C002-T-056)
 //   TS-509-opencode-node18         node 18 on PATH                   → failed: node ≥ 20 required (C002-T-056)
 //   TS-509-opencode-no-sdd         no "sdd" executable on PATH       → failed, naming the sdd CLI (C002-T-056)
-//   TS-509-claude-code-no-sdd      no "sdd" executable on PATH       → completed                  (C002-T-038 step 4)
+//   TS-509-claude-code-no-sdd      no "sdd" executable on PATH       → completed with warnings   (C002-T-063 step 5)
 //   TS-509-claude-code-node18      node 18 on PATH                   → failed: node ≥ 20 required (C002-T-038 step 4)
 // The OpenCode no-sdd row uses native permission enforcement: under sdd MCP server enforcement the
 // command tool runs the CLI of the server's own package, never a PATH `sdd` (C002-IF-002 §5.2), so the
 // PATH has no bearing on that mode.
-// Claude Code no-sdd row: the Claude Code doctor runs the plugin's bundled CLI and has no sdd CLI row, so
-// a PATH without `sdd` changes nothing; the case checks that, and that the outcome is the one REQ-505
-// gives for the table as reported: `completed` when every row is `ok`, else `completed with warnings`
-// (on E-CC the Context7 and DeepWiki rows depend on their tools loading in the probing agent; such
-// rows are logged, not failed).
+// Claude Code no-sdd row (revised for defect D-012): the Claude Code doctor runs the plugin's bundled CLI
+// and has no sdd CLI row, so a PATH without `sdd` changes nothing; on Claude Code the Context7 and
+// DeepWiki rows are always `unreachable` (neither the conductor nor the cartographer holds their tools),
+// so the run reports "completed with warnings". The case checks the outcome, the eight Claude Code rows
+// and no sdd CLI row; the rows not `ok` are logged.
 import { checker } from "../../harness/assert.mjs";
 import { doctorCase, outcomeOf, tableRows } from "./doctor-cases.mjs";
 
@@ -29,11 +29,10 @@ function row(id, host, cfg, expect, extra = {}) {
       const { failures, check } = checker();
       const out = outcomeOf(transcript);
       const rows = tableRows(transcript);
-      if (expect === "completed (sdd not used)") {
+      if (expect === "completed with warnings (sdd not used)") {
         const notOk = rows.filter((r) => r.status !== "ok");
-        const want = notOk.length === 0 ? "completed" : "completed with warnings";
         console.log(`TS-509 ${host} ${id}: rows not ok: ${notOk.map((r) => `${r.tool}=${r.status}`).join(", ") || "none"}`);
-        check(out === want, `TS-509 ${host} ${id}: outcome "${out}", expected "${want}" for the rows reported`);
+        check(out === "completed with warnings", `TS-509 ${host} ${id}: outcome "${out}", expected "completed with warnings"`);
         check(!rows.some((r) => r.tool === "sdd CLI"), `TS-509 ${host} ${id}: the table has an sdd CLI row`);
         check(rows.length === 8, `TS-509 ${host} ${id}: ${rows.length} rows, expected the 8 Claude Code rows`);
       } else {
@@ -57,6 +56,6 @@ export default [
   row("bare", "opencode", "cfg-bare", "completed with warnings", { targetPackage: OC }),
   row("node18", "opencode", "cfg-node18", "failed: node ≥ 20 required", { targetPackage: OC }),
   row("no-sdd", "opencode", "cfg-no-sdd", "failed: sdd CLI not reachable", { targetPackage: { target: "opencode", mode: "native-permissions" } }),
-  row("no-sdd", "claude-code", "cfg-no-sdd", "completed (sdd not used)"),
+  row("no-sdd", "claude-code", "cfg-no-sdd", "completed with warnings (sdd not used)"),
   row("node18", "claude-code", "cfg-node18", "failed: node ≥ 20 required"),
 ];

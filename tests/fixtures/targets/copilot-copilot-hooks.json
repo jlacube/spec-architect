@@ -259,7 +259,7 @@
     {
       "id": "plugin-root",
       "kind": "plugin-root",
-      "detect": "\\$\\{(?:CLAUDE_)?PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)",
+      "detect": "\\$\\{PLUGIN_ROOT\\}|\\$\\{CLAUDE_PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)",
       "contexts": [
         "frontmatter",
         "body",
@@ -318,6 +318,18 @@
       "accepted_in": [],
       "action": {
         "replace": "(select `sdd-conductor` as the session agent in the Chat agent picker of a Local session)"
+      }
+    },
+    {
+      "id": "doctor-description",
+      "kind": "other",
+      "detect": "\\(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki\\)",
+      "contexts": [
+        "frontmatter"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "(node, git, VS Code with GitHub Copilot Chat, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI, Copilot hooks)"
       }
     },
     {

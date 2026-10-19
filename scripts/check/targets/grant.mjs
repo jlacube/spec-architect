@@ -11,14 +11,14 @@ import { agentPath, commandPath, configPath, doc, finding, json } from "./lib.mj
 const GENERIC_MODE = { opencode: "native-permissions", copilot: "copilot-hooks" };
 
 /** Host built-in edit and terminal tools beside the table's own generic grants. */
-const BUILT_IN = {
+export const BUILT_IN = {
   opencode: ["write", "edit", "bash", "patch", "multiedit"],
   // VS Code tool reference names and the Copilot CLI tool names (create, edit, shell, powershell; S-08 §3.2).
   copilot: ["create", "edit", "execute", "createFile", "createDirectory", "editFiles", "editNotebook", "shell", "powershell", "bash", "runInTerminal", "terminal", "runTask", "createAndRunTask", "runCommand"],
 };
 
 /** Tool sets of the host and the generic tools each contains (a grant `<set>` or `<set>/*` holds them all). */
-const TOOL_SETS = {
+export const TOOL_SETS = {
   opencode: {},
   copilot: {
     edit: ["create", "edit", "createFile", "createDirectory", "editFiles", "editNotebook"],

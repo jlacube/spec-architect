@@ -8,7 +8,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { chmodSync, copyFileSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, linkSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, isAbsolute, join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
@@ -219,6 +219,50 @@ test("C002-TS-406: node --version runs the PATH node without a shell and returns
     assert.equal(c!.shell, false);
   });
 });
+
+// C002-TS-660 (C002-T-063, item g) — the literal ${CLAUDE_PLUGIN_DATA} is not expanded by the command tool
+// (decideBash(…, { expands: false }), commit 5b4392b): refused, no folder of that name, no Serena config
+// under the data folder. A temporary folder stands for C:/fx-data.
+const TS660: { env: "set" | "unset"; command: string }[] = [
+  { env: "set", command: 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"' },
+  { env: "set", command: "sdd serena-config ${CLAUDE_PLUGIN_DATA}" },
+  { env: "set", command: 'sdd serena-launch "${CLAUDE_PLUGIN_DATA}" -- start-mcp-server' },
+  { env: "unset", command: 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"' },
+];
+
+/** Every file or folder under `dir` whose name is `name` (recursively; `.git` skipped). */
+function namedUnder(dir: string, name: string): string[] {
+  const out: string[] = [];
+  const walk = (d: string) => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      if (e.name === ".git") continue;
+      if (e.name === name) out.push(join(d, e.name));
+      if (e.isDirectory()) walk(join(d, e.name));
+    }
+  };
+  walk(dir);
+  return out;
+}
+
+for (const row of TS660)
+  test(`C002-TS-660 (C002-TC-660): CLAUDE_PLUGIN_DATA ${row.env === "set" ? "set to the fx-data folder" : "unset"}, ${row.command} (dialect bash) → GUARD-BASH-001; no \${CLAUDE_PLUGIN_DATA} folder, no serena_config.yml`, async () => {
+    const data = stubDir();
+    try {
+      await withServer(
+        async (call, fx, s) => {
+          const mark = spawnCalls(s.stderr).length;
+          const r = await call({ command: row.command, dialect: "bash" });
+          assertRefused(r, "GUARD-BASH-001");
+          assert.deepEqual(callsSince(s, mark), [], "no process started");
+          assert.deepEqual(namedUnder(fx.root, "${CLAUDE_PLUGIN_DATA}"), [], "no file or folder named ${CLAUDE_PLUGIN_DATA} in fx-srv");
+          assert.deepEqual(namedUnder(data.dir, "serena_config.yml"), [], "no serena_config.yml under the data folder");
+        },
+        { env: { CLAUDE_PLUGIN_DATA: row.env === "set" ? data.dir.replace(/\\/g, "/") : undefined } },
+      );
+    } finally {
+      data.cleanup();
+    }
+  });
 
 // C002-TS-641 — the dialect argument.
 const TS641: { dialect: string; command: (fx: Fx) => string; result: "run" | "GUARD-BASH-001" | "GUARD-BASH-002" | "ERR-MCP-001" }[] = [

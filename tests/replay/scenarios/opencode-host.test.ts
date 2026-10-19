@@ -29,7 +29,7 @@ import { loadTargetTable, type Mode } from "../../../scripts/generate/tables.ts"
 import type { BashCase, Corpus, CorpusCase } from "../../guards/fixture.ts";
 import { repoRoot } from "../../helpers.ts";
 import type { ReplayAdapter, ReplayFixture, ReplayInput } from "../adapter.ts";
-import type { Mechanism } from "../expect.ts";
+import { ARCHITECT_AGENTS, type Mechanism } from "../expect.ts";
 import type { SentCall } from "../adapters/opencode-permissions.ts";
 import { ADAPTERS, type AdapterOptions, main } from "../main.ts";
 import type { ReplayReport, ReportCase } from "../report.ts";
@@ -141,7 +141,7 @@ interface HostCommand {
  */
 type CommandLister = ReplayAdapter & { commands?: () => Promise<HostCommand[]> };
 
-test("C002-TC-226 (C002-TS-226): the session lists the 13 architect-<name> commands bound to sdd-conductor beside OpenCode's built-in init and new", async (t) => {
+test("C002-TC-226 (C002-TS-226): the session lists the 13 architect-<name> commands bound to sdd-conductor beside OpenCode 1.18.31's built-in init, review and customize-opencode", async (t) => {
   const adapter = (await openCodeHost(t)) as CommandLister | null;
   if (!adapter) return;
   if (typeof adapter.commands !== "function") {
@@ -170,12 +170,14 @@ test("C002-TC-226 (C002-TS-226): the session lists the 13 architect-<name> comma
     }
     assert.deepEqual(list.filter((c) => c.name.startsWith("architect-")).map((c) => c.name).sort(), names.map((n) => `architect-${n}`), "exactly the 13 Architect commands");
     const architect = new Set(list.filter((c) => c.name.startsWith("architect-")).map((c) => c.description));
-    for (const builtIn of ["init", "new"]) {
+    const tenAgents = new Set(ARCHITECT_AGENTS);
+    for (const builtIn of ["init", "review", "customize-opencode"]) {
       const c = byName.get(builtIn);
       assert.ok(c, `the built-in command ${builtIn} is listed`);
-      assert.notEqual(c.agent, "sdd-conductor", `${builtIn} is OpenCode's own, not bound to the conductor`);
+      assert.ok(c.agent === undefined || !tenAgents.has(c.agent), `${builtIn} is OpenCode's own, bound to no Architect agent (${c.agent})`);
       assert.ok(!architect.has(c.description), `${builtIn} keeps OpenCode's own description`);
     }
+    assert.ok(byName.has("architect-init") && byName.has("init"), "architect-init is listed beside the built-in init");
   } finally {
     fx.cleanup();
   }

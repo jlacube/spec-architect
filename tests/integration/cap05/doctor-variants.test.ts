@@ -203,17 +203,18 @@ for (const t of ["opencode", "copilot"] as const) {
     });
 
     if (t === "copilot")
-      test(`C002-REQ-510 ${where}: the Copilot hooks row is in this mode too; \`ok\` only for a hooks state read as enabled, never for one not read`, () => {
+      test(`C002-REQ-510, C002-IF-006 §2 ${where}: the Copilot hooks row in this mode — \`ok\` for hooks enabled with the caveat Version text, \`error\` for disabled and unknown`, () => {
         const body = bodyOf(file(fxDist(t, mode), doctorPath(t)));
         assert.ok(body.includes("Copilot hooks, in both enforcement modes (the subagent guard hook is a PreToolUse hook in both)"));
-        assert.ok(body.includes("`ok` only when hooks are read as enabled for every source that can disable them — `chat.useHooks`, Workspace Trust and organisation policy"));
-        // sdd host-version reads chat.useHooks only (src/cli/host-version.ts), so `hooks enabled` alone is not read as enabled.
-        assert.ok(body.includes("- `hooks enabled`: `error`, Version `chat.useHooks on; Workspace Trust and policy cannot be read`, Fix `check chat.useHooks and Workspace Trust by hand`"));
-        assert.ok(body.includes("- `hooks disabled (<source>)`: `error`, Version `disabled (<source>)`, Fix `enable chat.useHooks and trust the workspace`"));
-        assert.ok(body.includes("- `hooks unknown`, or no `hooks` line: `error`, Version `cannot be read`, Fix `check chat.useHooks and Workspace Trust by hand`"));
-        assert.ok(body.includes("Never show this row as `ok` for a hooks state that was not read."));
+        // P-01 "ok + caveat" (D-012), the Version text names what is not read (critic CR-45).
+        assert.ok(body.includes("- `hooks enabled`: `ok`, Version `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist`, Fix empty;"));
+        assert.ok(body.includes("- `hooks disabled (chat.useHooks)`: `error`, Version `disabled (chat.useHooks)`, Fix `enable chat.useHooks and trust the workspace`;"));
+        assert.ok(body.includes("- `hooks unknown`, or no `hooks` line: `error`, Version `cannot be read`, Fix `check chat.useHooks and Workspace Trust by hand`."));
+        assert.ok(!body.includes("Workspace Trust and policy cannot be read"), "the earlier error text for hooks enabled is gone");
         const row = remedies(body).get("Copilot hooks");
-        assert.ok(row && row[1].includes("`enable chat.useHooks and trust the workspace`") && row[1].includes("`check chat.useHooks and Workspace Trust by hand`"));
+        assert.ok(row, "remedies row");
+        assert.ok(row[0].includes("`chat.useHooks` on; profile and `.code-workspace` settings, Workspace Trust and organisation policy not read"), row[0]);
+        assert.ok(row[1].includes("`enable chat.useHooks and trust the workspace`") && row[1].includes("`check chat.useHooks and Workspace Trust by hand`"));
       });
 
     test(`C002-REQ-507 ${where}: the toolchain record has the doctor table's rows, in the skill and in the cartographer that inlines it`, () => {

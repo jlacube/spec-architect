@@ -3,7 +3,11 @@
 // terminal; the bash guard denies it to every Architect agent (C002-REQ-325).
 //
 //   1  package   `--package`, else the package that holds the running `scripts/sdd.mjs`; ERR-CLI-022
-//                when it cannot be used (manifest, source files, characters of its absolute path)
+//                when it cannot be used (manifest, source files with `scripts/sdd.mjs` among them,
+//                characters of its absolute path). The agent list comes from the template
+//                `install/hooks.template.json`: the one `hook guard` command of its PreToolUse entries
+//                and its `--agents` value, which the manifest's `agents/<name>.agent.md` files must match
+//                both ways (C002-IF-007 §Install step 1, revised for critic CR-50)
 //   2  record    `.github/architect-install.json`; a record that does not parse counts as absent
 //   3  recognition: a file or server entry is this command's when the record lists the SHA-256 of
 //                its present content
@@ -127,7 +131,7 @@ export interface PackageSources {
   /** Absolute package folder, `/` separators. */
   dir: string;
   version: string;
-  /** Agent file names (`sdd-critic.agent.md`), from the manifest's file list. */
+  /** Agent file names (`sdd-critic.agent.md`) of the guard hook's `--agents` names, in manifest order. */
   agents: string[];
   agentBytes: Map<string, Buffer>;
   pluginManifest: Buffer;
@@ -152,7 +156,7 @@ export function loadPackage(given: string | undefined, cwd: string, cli: string 
   const listed = Array.isArray(manifest.files) ? manifest.files.map((f) => (isObject(f) && typeof f["path"] === "string" ? f["path"] : "")) : [];
   const agents = listed.map((p) => AGENT_FILE.exec(p)?.[1]).filter((n): n is string => n !== undefined);
   if (agents.length === 0) throw refuse(dir, `${PACKAGE_FILES.manifest} lists no agents/<agent name>.agent.md file`);
-  const sources = [...agents.map((a) => `agents/${a}`), PACKAGE_FILES.pluginManifest, PACKAGE_FILES.mcp, PACKAGE_FILES.hooksTemplate, PACKAGE_FILES.toolClasses];
+  const sources = [...agents.map((a) => `agents/${a}`), PACKAGE_FILES.pluginManifest, PACKAGE_FILES.mcp, PACKAGE_FILES.hooksTemplate, PACKAGE_FILES.toolClasses, PACKAGE_FILES.cliCopy];
   const missing = sources.filter((s) => !isFile(join(dir, s)));
   if (missing.length > 0) throw refuse(dir, `source file${missing.length === 1 ? "" : "s"} missing: ${missing.join(", ")}`);
 
@@ -171,6 +175,12 @@ export function loadPackage(given: string | undefined, cwd: string, cli: string 
   const hooks = JSON.parse(hooksJson) as unknown;
   const pre = isObject(hooks) && isObject(hooks["hooks"]) ? hooks["hooks"]["PreToolUse"] : undefined;
   if (!Array.isArray(pre) || pre.length === 0) throw refuse(dir, `${PACKAGE_FILES.hooksTemplate} has no PreToolUse entry`);
+  const names = guardAgents(pre);
+  if (names === null) throw refuse(dir, `${PACKAGE_FILES.hooksTemplate} has no single hook guard command with --agents`);
+  const unlisted = names.filter((n) => !agents.includes(`${n}.agent.md`)).map((n) => `agents/${n}.agent.md`);
+  if (unlisted.length > 0) throw refuse(dir, `${PACKAGE_FILES.manifest} does not list ${unlisted.join(", ")}, which --agents names`);
+  const unnamed = agents.filter((a) => !names.includes(a.slice(0, -".agent.md".length))).map((a) => `agents/${a}`);
+  if (unnamed.length > 0) throw refuse(dir, `${PACKAGE_FILES.manifest} lists ${unnamed.join(", ")}, which --agents does not name`);
   return {
     dir,
     version: manifest.package_version,
@@ -181,6 +191,27 @@ export function loadPackage(given: string | undefined, cwd: string, cli: string 
     guardHook: jsonText({ hooks: { PreToolUse: pre } }),
     servers: mcp["servers"],
   };
+}
+
+const GUARD_COMMAND = /(?:^|\s)hook\s+guard(?:\s|$)/;
+
+/**
+ * The agent names of the template's single `hook guard` command with a non-empty `--agents` value: the
+ * word after `--agents`, split at commas, blank names dropped, as the hook splits it (C002-IF-008 §2);
+ * null when the PreToolUse entries hold no such command or more than one.
+ */
+export function guardAgents(preToolUse: unknown[]): string[] | null {
+  const found: string[][] = [];
+  for (const entry of preToolUse) {
+    const command = isObject(entry) ? entry["command"] : undefined;
+    if (typeof command !== "string" || !GUARD_COMMAND.test(command)) continue;
+    const words = command.trim().split(/\s+/);
+    const at = words.indexOf("--agents");
+    const value = at >= 0 ? words[at + 1] : words.find((w) => w.startsWith("--agents="))?.slice("--agents=".length);
+    const names = (value ?? "").split(",").map((a) => a.trim()).filter((a) => a !== "");
+    if (names.length > 0) found.push(names);
+  }
+  return found.length === 1 ? found[0]! : null;
 }
 
 function isFile(p: string): boolean {

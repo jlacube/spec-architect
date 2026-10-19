@@ -323,6 +323,18 @@
       }
     },
     {
+      "id": "doctor-description",
+      "kind": "other",
+      "detect": "\\(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki\\)",
+      "contexts": [
+        "frontmatter"
+      ],
+      "accepted_in": [],
+      "action": {
+        "replace": "(node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI)"
+      }
+    },
+    {
       "id": "agent-reference",
       "kind": "agent-reference",
       "detect": "\\barchitect:(?=sdd-)",

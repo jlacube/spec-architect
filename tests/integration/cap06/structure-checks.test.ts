@@ -30,12 +30,14 @@ import { main } from "../../../scripts/generate/main.ts";
 import { TARGET_MODES } from "../../../scripts/generate/model.ts";
 import { loadTargetTable, TARGETS, type Mode, type Target } from "../../../scripts/generate/tables.ts";
 import { CONDUCTOR, listField } from "../../../scripts/generate/translate/frontmatter.ts";
+import { scanText } from "../../../scripts/generate/translate/constructs.ts";
 import { skillHeading } from "../../../scripts/generate/translate/inline.ts";
 import { context } from "../../../scripts/check/lib.mjs";
 import { runChecks } from "../../../scripts/check/run.mjs";
 import variants from "../../../scripts/check/variants.mjs";
 import { checkPackage, format, runTargetChecks } from "../../../scripts/check/targets/index.mjs";
 import { readTree, sourceContext, targetContext } from "../../../scripts/check/targets/lib.mjs";
+import { BUILT_IN, TOOL_SETS } from "../../../scripts/check/targets/grant.mjs";
 import { PER_AGENT, PER_SKILL } from "../../../scripts/check/targets/size.mjs";
 import { repoRoot } from "../../helpers.ts";
 import { pluginCopy } from "../cap11/structure.ts";
@@ -318,27 +320,50 @@ test("C002-TC-340: under the Copilot hooks fallback the specialists' generic too
   assert.deepEqual(withCode(check("copilot", fxDist("copilot", "copilot-hooks"), "copilot-hooks"), "TGT-GRANT-001"), []);
 });
 
-const SERVER_GRANTS: { file: string; path: string; grant: string; plant: (f: Files) => void; named: RegExp }[] = [
-  { file: "sdd-conductor.agent.md", path: cpAgent(CONDUCTOR), grant: 'grants "edit"', plant: (f) => grantCp(f, cpAgent(CONDUCTOR), "edit"), named: /"edit"/ },
-  { file: "plan.prompt.md", path: cpPrompt("plan"), grant: 'grants "execute"', plant: (f) => grantCp(f, cpPrompt("plan"), "execute"), named: /"execute"/ },
-  { file: "sdd-planner.agent.md", path: cpAgent("sdd-planner"), grant: 'grants a tool set that contains the host tool "create"', plant: (f) => grantCp(f, cpAgent("sdd-planner"), "edit/*"), named: /tool set "edit\/\*".*"create"/ },
-  {
-    file: "sdd-critic.agent.md",
-    path: cpAgent("sdd-critic"),
-    grant: 'has no "tools" field in its frontmatter',
-    plant: (f) => setText(f, cpAgent("sdd-critic"), textOf(f, cpAgent("sdd-critic")).replace(/^tools: .*\n/m, "")),
-    named: /no "tools" list/,
-  },
+/**
+ * C002-TS-606 Examples (revised for defect D-013 item 5): the tool sets and the generic tools are read
+ * from the check's data (C002-IF-005 §6.1), never from a copy here.
+ */
+const CP_SETS = TOOL_SETS.copilot as Record<string, string[]>;
+const SERVER_GRANTS: { file: string; path: string; grant: string; tool: string | null }[] = [
+  { file: "sdd-conductor.agent.md", path: cpAgent(CONDUCTOR), grant: 'grants the tool set "edit"', tool: "edit" },
+  { file: "plan.prompt.md", path: cpPrompt("plan"), grant: 'grants the tool set "execute"', tool: "execute" },
+  { file: "sdd-planner.agent.md", path: cpAgent("sdd-planner"), grant: 'grants "edit/*"', tool: "edit/*" },
+  { file: "sdd-planner.agent.md", path: cpAgent("sdd-planner"), grant: 'grants the tool set "new"', tool: "new" },
+  { file: "sdd-architect.agent.md", path: cpAgent("sdd-architect"), grant: 'grants the tool set "runCommands"', tool: "runCommands" },
+  { file: "sdd-architect.agent.md", path: cpAgent("sdd-architect"), grant: 'grants the tool set "runTasks"', tool: "runTasks" },
+  { file: "sdd-auditor.agent.md", path: cpAgent("sdd-auditor"), grant: 'grants the tool set "vscode"', tool: "vscode" },
+  { file: "sdd-auditor.agent.md", path: cpAgent("sdd-auditor"), grant: 'grants "vscode/runCommand"', tool: "vscode/runCommand" },
+  { file: "sdd-researcher.agent.md", path: cpAgent("sdd-researcher"), grant: 'grants "edit/createFile"', tool: "edit/createFile" },
+  { file: "sdd-researcher.agent.md", path: cpAgent("sdd-researcher"), grant: 'grants the tool "runInTerminal" by name', tool: "runInTerminal" },
+  { file: "sdd-researcher.agent.md", path: cpAgent("sdd-researcher"), grant: 'grants the tool "shell" by name', tool: "shell" },
+  { file: "sdd-critic.agent.md", path: cpAgent("sdd-critic"), grant: 'has no "tools" field in its frontmatter', tool: null },
 ];
 
+test("C002-TS-606: every tool set and named tool of the Examples is in the check's data", () => {
+  for (const set of ["edit", "execute", "new", "runCommands", "runTasks", "vscode"]) assert.ok(Object.hasOwn(CP_SETS, set) && CP_SETS[set]!.length > 0, set);
+  for (const name of ["runInTerminal", "shell"]) assert.ok(BUILT_IN.copilot.includes(name), name);
+  assert.ok(CP_SETS["vscode"]!.includes("runCommand") && CP_SETS["edit"]!.includes("createFile"));
+});
+
 for (const row of SERVER_GRANTS)
-  test(`C002-TC-606 (C002-TS-606): under sdd MCP server enforcement ${row.file} that ${row.grant} is TGT-GRANT-001 naming the file`, () => {
-    const files = bad("copilot", row.plant, "sdd-mcp-server");
+  test(`C002-TC-606 (C002-TS-606): under sdd MCP server enforcement ${row.file} that ${row.grant} is TGT-GRANT-001 naming the file and ${row.tool === null ? "the missing tools list" : `"${row.tool}"`}`, () => {
+    const plant = (f: Files) =>
+      row.tool === null ? setText(f, row.path, textOf(f, row.path).replace(/^tools: .*\n/m, "")) : grantCp(f, row.path, row.tool);
+    const files = bad("copilot", plant, "sdd-mcp-server");
     const fs = withCode(check("copilot", files, "sdd-mcp-server"), "TGT-GRANT-001");
     assert.equal(fs.length, 1, show(fs));
     assert.equal(fs[0]!.path, row.path);
     assert.ok(fs[0]!.message.includes(row.file), fs[0]!.message);
-    assert.match(fs[0]!.message, row.named);
+    if (row.tool === null) {
+      assert.match(fs[0]!.message, /no "tools" list/);
+      return;
+    }
+    assert.ok(fs[0]!.message.includes(`"${row.tool}"`), fs[0]!.message);
+    // A whole tool set (`<set>` or `<set>/*`) granted by its set name names the generic tools the check's data gives it.
+    const set = row.tool.endsWith("/*") ? row.tool.slice(0, -2) : row.tool;
+    if (/tool set "/.test(fs[0]!.message) && Object.hasOwn(CP_SETS, set) && !row.tool.includes("/", set.length + 1))
+      for (const member of CP_SETS[set]!) assert.ok(fs[0]!.message.includes(`"${member}"`), `${member} in ${fs[0]!.message}`);
   });
 
 test("C002-TC-606: under sdd MCP server enforcement an OpenCode agent granted bash is TGT-GRANT-001", () => {
@@ -360,6 +385,29 @@ for (const token of ["${PLUGIN_ROOT}", "${CLAUDE_PLUGIN_ROOT}"])
   });
 
 // --- TGT-PORT-001 -----------------------------------------------------------------------------------
+
+// Defect D-013 item 1 (C002-T-063): `${PLUGIN_ROOT}/scripts/sdd.mjs` is found by the Copilot table's
+// own plugin-root detector (and so by the generator), not only by TGT-PORT-001's direct root-token check.
+for (const context of ["body", "frontmatter", "hook-command", "mcp-config"] as const)
+  test(`C002-TS-606, D-013: \${PLUGIN_ROOT}/scripts/sdd.mjs in the ${context} context is found by the Copilot table detector`, () => {
+    for (const mode of TARGET_MODES.copilot) {
+      const d = scanText(tables.copilot, "copilot", mode, "x.md", 'Run node "${PLUGIN_ROOT}/scripts/sdd.mjs" lint.', context);
+      assert.deepEqual(d.map((x) => [x.code, x.construct]), [["ERR-GEN-001", "${PLUGIN_ROOT}"]], `${mode}: ${JSON.stringify(d)}`);
+    }
+    // The ${CLAUDE_PLUGIN_ROOT} spelling stays the cli-invocation construct's (a variant anchor), not plugin-root's.
+    const claude = scanText(tables.copilot, "copilot", "sdd-mcp-server", "x.md", 'Run node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs" lint.', context, { variantAnchors: "applied" });
+    assert.ok(claude.every((x) => x.construct !== "${PLUGIN_ROOT}"), JSON.stringify(claude));
+  });
+
+test("C002-TS-606, D-013: a planted ${PLUGIN_ROOT}/scripts/sdd.mjs body line is one TGT-PORT-001 finding, which the table detector also reports", () => {
+  const p = cpAgent("sdd-auditor");
+  const files = bad("copilot", (f) => insertLine(f, p, 13, 'Run node "${PLUGIN_ROOT}/scripts/sdd.mjs" lint.'));
+  const fs = withCode(check("copilot", files), "TGT-PORT-001").filter((f) => f.path === p);
+  assert.equal(fs.length, 1, show(fs));
+  assert.ok(fs[0]!.message.includes('"${PLUGIN_ROOT}'), fs[0]!.message);
+  const byTable = scanText(tables.copilot, "copilot", tables.copilot.enforcement_mode, p, textOf(files, p).split("\n")[12]!, "body");
+  assert.equal(byTable.length, 1, JSON.stringify(byTable));
+});
 
 /** install/hooks.template.json with the SessionStart command on line 3, holding `token`. */
 function hooksWithLine3(files: Files, token: string): void {

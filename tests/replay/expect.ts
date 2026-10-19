@@ -6,7 +6,13 @@
 //   3. identity, caller an architect:sdd-* name none of the ten        → allow (C002-REQ-632; OpenCode only,
 //                                                                         the other mechanisms stop at rule 1)
 //   4. category memory                                                  → deny (C002-REQ-625)
-//   5. every other case                                                 → the corpus value (corpus), per
+//   5. shell corpus, a write tool (Write, Edit, MultiEdit, NotebookEdit) → deny on every mechanism
+//                                                                         (C001-REQ-1103; D-014 item 1)
+//   6. shell corpus, Bash, a Serena command whose data-folder argument  → deny on sdd-mcp-server only
+//      is the literal ${CLAUDE_PLUGIN_DATA}, bare or double-quoted        (C002-REQ-517; D-014 item 4)
+//   7. path corpus, category cwd, a cwd through the link {repolink}     → deny on sdd-mcp-server only
+//                                                                         (C002-REQ-401; D-014 item 2)
+//   8. every other case                                                 → the corpus value (corpus), per
 //                                                                         platform of the replay host
 // A case that requires a host capability (C002-REQ-633) is never not applicable and never a malformed
 // call: rule 2 does not apply to it, and the other rules give its expectation as for any other case.
@@ -16,7 +22,7 @@ export type Mechanism = "opencode-permissions" | "sdd-mcp-server" | "copilot-hoo
 export const MECHANISMS: readonly Mechanism[] = ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"];
 export type Platform = "win32" | "posix";
 export type Decision = "allow" | "deny";
-export type ExpectedSource = "corpus" | "C002-REQ-625" | "C002-REQ-630" | "C002-REQ-632";
+export type ExpectedSource = "corpus" | "C002-REQ-625" | "C002-REQ-630" | "C002-REQ-632" | "C001-REQ-1103" | "C002-REQ-401" | "C002-REQ-517";
 export type CorpusName = "path" | "shell";
 export type AnyCase = CorpusCase | BashCase;
 
@@ -57,11 +63,34 @@ function corpusValue(c: AnyCase, platform: Platform): Decision {
   return typeof c.expect === "string" ? c.expect : c.expect[platform];
 }
 
-export function expectationOf(c: AnyCase, mechanism: Mechanism, platform: Platform): Expectation {
+/** The write tools of C002-IF-009 §2.1 (shell corpus row of C001-REQ-1103). */
+export const WRITE_TOOLS: readonly string[] = ["Write", "Edit", "MultiEdit", "NotebookEdit"];
+/** A Serena command whose data-folder argument is the literal `${CLAUDE_PLUGIN_DATA}`, bare or in double quotes. */
+const SERENA_PLUGIN_DATA = /(?:^|\s)serena-(?:config|launch)\s+(?:"\$\{CLAUDE_PLUGIN_DATA\}"|\$\{CLAUDE_PLUGIN_DATA\})(?=\s|$)/;
+
+/** Shell corpus, tool Bash, a Serena command with the literal data folder (C002-REQ-517). */
+export function serenaPluginDataCase(c: AnyCase, corpus: CorpusName): boolean {
+  return corpus === "shell" && c.tool === "Bash" && typeof (c as BashCase).command === "string" && SERENA_PLUGIN_DATA.test((c as BashCase).command as string);
+}
+
+/** Path corpus, category cwd, a cwd that reaches the repository root through the link `{repolink}` (C002-REQ-401). */
+export function linkedCwdCase(c: AnyCase, corpus: CorpusName): boolean {
+  return corpus === "path" && c.category === "cwd" && typeof c.cwd === "string" && (c.cwd === "{repolink}" || c.cwd.startsWith("{repolink}/"));
+}
+
+/** The corpus a case belongs to, when the caller does not name it: a shell case has a `command`. */
+function corpusOf(c: AnyCase): CorpusName {
+  return "command" in c ? "shell" : "path";
+}
+
+export function expectationOf(c: AnyCase, mechanism: Mechanism, platform: Platform, corpus: CorpusName = corpusOf(c)): Expectation {
   if (c.category === "identity" && mechanism !== "opencode-permissions") return { applicable: false, rule: "C002-REQ-626" };
   if (missingField(c)) return { applicable: true, expected: "deny", source: "C002-REQ-630", malformed: true };
   if (c.category === "identity" && unknownSddCaller(c.agent)) return { applicable: true, expected: "allow", source: "C002-REQ-632", malformed: false };
   if (c.category === "memory") return { applicable: true, expected: "deny", source: "C002-REQ-625", malformed: false };
+  if (corpus === "shell" && c.tool !== null && WRITE_TOOLS.includes(c.tool)) return { applicable: true, expected: "deny", source: "C001-REQ-1103", malformed: c.stdin !== undefined };
+  if (mechanism === "sdd-mcp-server" && serenaPluginDataCase(c, corpus)) return { applicable: true, expected: "deny", source: "C002-REQ-517", malformed: c.stdin !== undefined };
+  if (mechanism === "sdd-mcp-server" && linkedCwdCase(c, corpus)) return { applicable: true, expected: "deny", source: "C002-REQ-401", malformed: c.stdin !== undefined };
   const platforms = (c as CorpusCase).platforms;
   if (platforms && !platforms.includes(platform)) return { applicable: true, omitted: `limited to ${platforms.join(", ")}; no expectation on ${platform}` };
   return { applicable: true, expected: corpusValue(c, platform), source: "corpus", malformed: c.stdin !== undefined };

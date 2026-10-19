@@ -36,12 +36,17 @@ export const GLOSSARY: readonly GlossaryDetector[] = [
   { id: "cli-invocation", kind: "cli-invocation", detect: "\\$\\{CLAUDE_PLUGIN_ROOT\\}/scripts/sdd\\.mjs", anchor: true },
   { id: "claude-host", kind: "other", detect: "\\bclaude --version\\b", anchor: true },
   { id: "plugin-root-templates", kind: "plugin-root", detect: "\\$\\{CLAUDE_PLUGIN_ROOT\\}/templates/" },
-  { id: "plugin-root", kind: "plugin-root", detect: "\\$\\{(?:CLAUDE_)?PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)", anchor: true },
+  // Every `${PLUGIN_ROOT}` spelling is a leak, `/templates/` and `/scripts/sdd.mjs` included; only the
+  // `${CLAUDE_PLUGIN_ROOT}` spellings of those two are owned by other constructs (C002-IF-001 §2, D-013 item 1).
+  { id: "plugin-root", kind: "plugin-root", detect: "\\$\\{PLUGIN_ROOT\\}|\\$\\{CLAUDE_PLUGIN_ROOT\\}(?!/templates/|/scripts/sdd\\.mjs)", anchor: true },
   { id: "plugin-data", kind: "plugin-data", detect: "\\$\\{CLAUDE_PLUGIN_DATA\\}" },
   { id: "arguments", kind: "arguments", detect: "\\$ARGUMENTS\\b" },
   { id: "command-reference", kind: "command-reference", detect: "/architect:(?=[a-z])" },
   // The Claude Code way to start the conductor, in its description: each target names its own (C002-T-037).
   { id: "conductor-start", kind: "other", detect: "\\(claude --agent (?:architect:)?sdd-conductor\\)" },
+  // The doctor's host list in its description names Claude Code: each target names its own host and rows
+  // (C002-IF-001 §2 "Frontmatter text", decided for defect D-010 item 4).
+  { id: "doctor-description", kind: "other", detect: "\\(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki\\)" },
   { id: "agent-reference", kind: "agent-reference", detect: "\\barchitect:(?=sdd-)" },
   { id: "ask-user-question", kind: "question-tool-name", detect: "\\bAskUserQuestion\\b" },
   { id: "task-tools", kind: "task-tool-name", detect: "\\bTask(?:Create|Update|List)\\b" },
@@ -149,8 +154,10 @@ function unmapped(ctx: Ctx, file: string, line: number, d: Detector, match: stri
   if (ctx.reported.has(key)) return;
   ctx.reported.add(key);
   const construct = bare(match);
+  // A construct of kind `other` has no kind word of its own: its id names it (`construct doctor-description`, C002-TS-658).
+  const kind = d.kind === "other" ? `${KIND_LABEL.other} ${d.id}` : KIND_LABEL[d.kind];
   ctx.diagnostics.push(
-    diagnostic("ERR-GEN-001", `${file}:${line}: ${KIND_LABEL[d.kind]} "${construct}" ${why ?? `has no entry in the ${ctx.target} mapping table`}`, {
+    diagnostic("ERR-GEN-001", `${file}:${line}: ${kind} "${construct}" ${why ?? `has no entry in the ${ctx.target} mapping table`}`, {
       file,
       line,
       target: ctx.target,

@@ -11,7 +11,7 @@ import { decideBash } from "../../src/hooks/guard-bash.ts";
 import { decidePath } from "../../src/hooks/guard-path.ts";
 import { parseHookInput } from "../../src/hooks/input.ts";
 import { type Dialect, type EnvStub, withEnv } from "../guards/fixture.ts";
-import { ADOPTER_AGENT, type AnyCase, type CorpusName, type Decision, type Mechanism } from "./expect.ts";
+import { ADOPTER_AGENT, type AnyCase, type CorpusName, type Decision, type Mechanism, WRITE_TOOLS } from "./expect.ts";
 
 export type Actual = Decision | "error";
 export type Target = "opencode" | "copilot";
@@ -120,6 +120,7 @@ export interface StubAdapter extends ReplayAdapter {
 
 /** The stub's tool name for a case: the sdd MCP server's names of the §2.2 table. */
 function stubTool(input: ReplayInput): string {
+  if (input.corpus === "shell" && shellWrite(input)) return input.tool === "Edit" || input.tool === "MultiEdit" ? "replace_text" : "write_file";
   if (input.corpus === "shell") return input.tool === "Bash" || input.tool === "PowerShell" || input.tool === null ? "run_command" : input.tool.toLowerCase();
   switch (input.tool) {
     case "Edit":
@@ -136,21 +137,34 @@ function stubTool(input: ReplayInput): string {
   }
 }
 
+/** A shell-corpus case of a write tool (BG-268): every mechanism receives it as a write of the command text (§2.2). */
+function shellWrite(input: ReplayInput): boolean {
+  return input.corpus === "shell" && input.tool !== null && WRITE_TOOLS.includes(input.tool);
+}
+
 /**
  * Stub adapter: decides each case with the guard cores in process, as a generated mechanism would
  * (memory folder off, C002-IF-008 §5; a malformed call refused, C002-CON-08). It reports for the
- * mechanism it emulates, never under docs/releases/.
+ * mechanism it emulates, never under docs/releases/. It feeds each case as §2.2 gives it: a
+ * shell-corpus write-tool case as a write whose path is the command text; when it emulates
+ * `sdd-mcp-server`, a path case at `{repo}` with its path joined to its cwd (the server takes no
+ * working folder per call) and a shell case without expanding `${CLAUDE_PLUGIN_DATA}` (the server
+ * runs the command without a shell, C002-IF-008 §1.1 rule 2).
  */
 export function createStubAdapter(opts: { emulate?: Mechanism; target?: Target; seed?: StubSeed } = {}): StubAdapter {
   const seed = opts.seed ?? {};
   const calls: ReplayInput[] = [];
+  const server = (opts.emulate ?? "sdd-mcp-server") === "sdd-mcp-server";
+  let repo = "";
   return {
     mechanism: opts.emulate ?? "sdd-mcp-server",
     target: opts.target ?? "opencode",
     name: "stub",
     stub: true,
     calls,
-    async setup() {},
+    async setup(fx) {
+      repo = fx.repo;
+    },
     async teardown() {},
     async decide(input) {
       calls.push(input);
@@ -158,20 +172,23 @@ export function createStubAdapter(opts: { emulate?: Mechanism; target?: Target; 
       if (input.malformed === "missing-field") return { actual: seed.allowMalformedWrite && tool === "write_file" ? "allow" : "deny", tool };
       if (seed.allowMemory && typeof input.path === "string" && /[\\/]\.claude[\\/]agent-memory[\\/]/i.test(joinedPath(input) as string)) return { actual: "allow", tool };
       const agentType = input.caller === ADOPTER_AGENT ? ADOPTER_AGENT : `architect:${input.caller}`;
+      const asWrite = shellWrite(input) && input.stdin === undefined;
       let stdin = input.stdin;
       if (stdin === undefined) {
-        const doc: Record<string, unknown> = { hook_event_name: "PreToolUse", agent_type: agentType, tool_name: input.tool };
-        if (input.cwd !== null) doc["cwd"] = input.cwd;
-        doc["tool_input"] =
-          input.corpus === "shell"
+        const atRepo = server && input.corpus === "path" && repo !== "";
+        const doc: Record<string, unknown> = { hook_event_name: "PreToolUse", agent_type: agentType, tool_name: asWrite ? "Write" : input.tool };
+        if (input.cwd !== null) doc["cwd"] = atRepo && input.cwd !== "" ? repo : input.cwd;
+        doc["tool_input"] = asWrite
+          ? { file_path: input.command, content: "x" }
+          : input.corpus === "shell"
             ? { command: input.command }
             : input.path === null
               ? undefined
-              : { [input.field ?? "file_path"]: input.path, content: "x" };
+              : { [input.field ?? "file_path"]: atRepo ? joinedPath(input) : input.path, content: "x" };
         stdin = JSON.stringify(doc);
       }
       const decided = withEnv(input.env, input.resolve, () =>
-        input.corpus === "shell" ? decideBash(parseHookInput(stdin)) : decidePath(parseHookInput(stdin), { memoryFolder: false }),
+        input.corpus === "shell" && !asWrite ? decideBash(parseHookInput(stdin), { expands: !server }) : decidePath(parseHookInput(stdin), { memoryFolder: false }),
       );
       return { actual: decided.allow ? "allow" : "deny", tool, ...(decided.allow ? {} : { detail: decided.message }) };
     },

@@ -705,7 +705,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-050",
@@ -719,7 +719,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-051",
@@ -733,7 +733,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/package.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/package.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-052",
@@ -747,7 +747,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.git/config denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.git/config denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-053",
@@ -761,7 +761,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/settings.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/settings.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-054",
@@ -775,7 +775,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.mcp.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.mcp.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-055",
@@ -789,7 +789,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/plugins/architect/hooks/hooks.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/plugins/architect/hooks/hooks.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-056",
@@ -803,7 +803,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.github/workflows/ci.yml denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.github/workflows/ci.yml denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-057",
@@ -817,7 +817,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/docs/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/docs/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-058",
@@ -831,7 +831,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/node_modules/x/index.js denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/node_modules/x/index.js denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-059",
@@ -845,7 +845,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-060",
@@ -859,7 +859,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-061",
@@ -873,7 +873,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-062",
@@ -887,7 +887,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-063",
@@ -901,7 +901,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-064",
@@ -915,7 +915,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-065",
@@ -929,7 +929,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-066",
@@ -943,7 +943,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-067",
@@ -957,7 +957,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-068",
@@ -971,7 +971,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-069",
@@ -985,7 +985,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-070",
@@ -999,7 +999,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-071",
@@ -1013,7 +1013,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-072",
@@ -1027,7 +1027,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-073",
@@ -1041,7 +1041,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-074",
@@ -1055,7 +1055,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-075",
@@ -1069,7 +1069,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-076",
@@ -1083,7 +1083,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-077",
@@ -1097,7 +1097,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-078",
@@ -1111,7 +1111,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-079",
@@ -1125,7 +1125,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-080",
@@ -1139,7 +1139,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-081",
@@ -1153,7 +1153,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-082",
@@ -1167,7 +1167,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-083",
@@ -1181,7 +1181,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/analysis.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/analysis.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-084",
@@ -1195,7 +1195,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/nb.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/nb.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-085",
@@ -1209,7 +1209,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-086",
@@ -1223,7 +1223,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-087",
@@ -1237,7 +1237,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sddx/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sddx/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-088",
@@ -1251,7 +1251,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd.bak/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd.bak/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-089",
@@ -1265,7 +1265,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-090",
@@ -1279,7 +1279,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-091",
@@ -1293,7 +1293,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/x.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/x.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-092",
@@ -1307,7 +1307,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-093",
@@ -1321,7 +1321,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd2/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd2/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-094",
@@ -1335,7 +1335,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/_sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/_sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-095",
@@ -1349,7 +1349,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd_/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd_/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-096",
@@ -1363,7 +1363,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-097",
@@ -1377,7 +1377,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-098",
@@ -1391,7 +1391,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-099",
@@ -1405,7 +1405,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-100",
@@ -1419,7 +1419,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/x.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/x.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-101",
@@ -1433,7 +1433,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.git/hooks/pre-commit denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.git/hooks/pre-commit denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-102",
@@ -1447,7 +1447,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-103",
@@ -1461,7 +1461,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-104",
@@ -1475,7 +1475,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-105",
@@ -1489,7 +1489,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-106",
@@ -1559,7 +1559,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-111",
@@ -1573,7 +1573,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-112",
@@ -1587,7 +1587,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-113",
@@ -1601,7 +1601,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-114",
@@ -1629,7 +1629,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/README.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/README.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-116",
@@ -1643,7 +1643,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/x.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/x.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/x.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/x.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-117",
@@ -1657,7 +1657,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-src/new-file.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/new-file.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-src/new-file.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/new-file.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-118",
@@ -1713,7 +1713,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-122",
@@ -1727,7 +1727,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside.txt denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-123",
@@ -1741,7 +1741,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-124",
@@ -1755,7 +1755,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-125",
@@ -1783,7 +1783,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-127",
@@ -1811,7 +1811,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-129",
@@ -1839,7 +1839,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-131",
@@ -1881,7 +1881,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/x.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/x.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-134",
@@ -1895,7 +1895,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-135",
@@ -1923,7 +1923,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repolink/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repolink/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repolink/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repolink/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-137",
@@ -1937,7 +1937,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/.sdd/a.md denied — .sdd/ is (or lies behind) a link to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/src. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/.sdd/a.md denied — .sdd/ is (or lies behind) a link to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/src. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-138",
@@ -1951,7 +1951,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/.sdd/x.ts denied — .sdd/ is (or lies behind) a link to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/src. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repo2/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/.sdd/x.ts denied — .sdd/ is (or lies behind) a link to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/src. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repo2/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-139",
@@ -2007,7 +2007,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/SRC/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/SRC/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-143",
@@ -2021,7 +2021,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/USERS/JEROM/APPDATA/LOCAL/TEMP/SDD-GUARD-ZKBV6I/REPOSITORY-ROOT/SRC/APP.TS denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/USERS/JEROM/APPDATA/LOCAL/TEMP/SDD-GUARD-FGVCAD/REPOSITORY-ROOT/SRC/APP.TS denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-144",
@@ -2049,7 +2049,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-146",
@@ -2063,7 +2063,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.SDD-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.SDD-evil/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-147",
@@ -2091,7 +2091,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-149",
@@ -2147,7 +2147,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-153",
@@ -2161,7 +2161,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-154",
@@ -2175,7 +2175,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-155",
@@ -2189,7 +2189,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-156",
@@ -2203,7 +2203,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-src/new/deep.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/new/deep.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-src/new/deep.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/new/deep.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-157",
@@ -2217,7 +2217,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-outside/x.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside/x.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-outside/x.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside/x.md, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-158",
@@ -2231,7 +2231,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-159",
@@ -2245,7 +2245,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/link-to-repo/src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/link-to-repo/src/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-160",
@@ -2273,7 +2273,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-162",
@@ -2287,7 +2287,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repolink/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repolink/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-163",
@@ -2301,7 +2301,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/file-link.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/file-link.md denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-164",
@@ -2315,7 +2315,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/hard.md denied — the file has 2 hard links and may be shared with a file outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/hard.md denied — the file has 2 hard links and may be shared with a file outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-165",
@@ -2329,7 +2329,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on //server/share/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on //server/share/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-166",
@@ -2343,7 +2343,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on //server/share/repo/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on //server/share/repo/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-167",
@@ -2357,7 +2357,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on //localhost/C$/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on //localhost/C$/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-168",
@@ -2371,7 +2371,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on //localhost/C$/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on //localhost/C$/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-169",
@@ -2385,7 +2385,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on //server/share/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on //server/share/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-170",
@@ -2399,7 +2399,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on \\\\.\\C:\\x.md denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on \\\\.\\C:\\x.md denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-171",
@@ -2413,7 +2413,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on \\\\.\\PhysicalDrive0 denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on \\\\.\\PhysicalDrive0 denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-172",
@@ -2427,7 +2427,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on \\\\?\\GLOBALROOT\\Device\\HarddiskVolume1\\x.md denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on \\\\?\\GLOBALROOT\\Device\\HarddiskVolume1\\x.md denied — ambiguous path (device path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-173",
@@ -2455,7 +2455,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-175",
@@ -2469,7 +2469,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-176",
@@ -2497,7 +2497,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SOURCE~1/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SOURCE~1/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-178",
@@ -2511,7 +2511,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SDD~1/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SDD~1/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-179",
@@ -2525,7 +2525,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SDD~1/LONG-C~1/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/SDD-GU~1/REPOSI~1/SDD~1/LONG-C~1/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-180",
@@ -2553,7 +2553,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/source-code-folder/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/source-code-folder/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-182",
@@ -2567,7 +2567,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/LONG-L~1/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/source-code-folder/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/LONG-L~1/app.ts denied — the path resolves to C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/source-code-folder/app.ts, outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-183",
@@ -2581,7 +2581,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/SOURCE~1/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/SOURCE~1/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-184",
@@ -2595,7 +2595,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md. denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md. denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-185",
@@ -2609,7 +2609,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md  denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md  denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-186",
@@ -2623,7 +2623,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md... denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md... denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-187",
@@ -2637,7 +2637,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/.. /src/app.ts denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/.. /src/app.ts denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-188",
@@ -2651,7 +2651,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/004-x. /a.md denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/004-x. /a.md denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-189",
@@ -2665,7 +2665,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md:stream denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md:stream denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-190",
@@ -2679,7 +2679,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md::$DATA denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md::$DATA denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-191",
@@ -2693,7 +2693,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/con denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/con denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-192",
@@ -2707,7 +2707,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/NUL.md denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/NUL.md denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-193",
@@ -2721,7 +2721,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/com1.txt denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/com1.txt denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-194",
@@ -2735,7 +2735,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/aux denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/aux denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-195",
@@ -2749,7 +2749,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/LPT1 denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/LPT1 denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-196",
@@ -2763,7 +2763,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/prn.txt denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/prn.txt denied — ambiguous path (reserved device name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-197",
@@ -2777,7 +2777,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd:stream denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd:stream denied — ambiguous path (alternate data stream or colon in a name). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-198",
@@ -2791,7 +2791,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:relative.md denied — ambiguous path (drive-relative path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:relative.md denied — ambiguous path (drive-relative path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-199",
@@ -2805,7 +2805,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:.sdd\\a.md denied — ambiguous path (drive-relative path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:.sdd\\a.md denied — ambiguous path (drive-relative path). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-200",
@@ -2819,7 +2819,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a\\u0000.md\" denied — the path contains a NUL character. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a\\u0000.md\" denied — the path contains a NUL character. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-201",
@@ -2833,7 +2833,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on Q:/repo/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on Q:/repo/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-202",
@@ -2847,7 +2847,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on Q:/other/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on Q:/other/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-203",
@@ -2861,7 +2861,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on Q:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on Q:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-204",
@@ -2875,7 +2875,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/.sdd/a.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-205",
@@ -2889,7 +2889,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-206",
@@ -2903,7 +2903,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-207",
@@ -2917,7 +2917,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-researcher/vendor_notes.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-researcher/vendor_notes.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-208",
@@ -2931,7 +2931,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/notes/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/notes/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-209",
@@ -2945,7 +2945,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/USERS/JEROM/APPDATA/LOCAL/TEMP/SDD-GUARD-ZKBV6I/REPOSITORY-ROOT/.CLAUDE/Agent-Memory/ARCHITECT-SDD-CARTOGRAPHER/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/USERS/JEROM/APPDATA/LOCAL/TEMP/SDD-GUARD-FGVCAD/REPOSITORY-ROOT/.CLAUDE/Agent-Memory/ARCHITECT-SDD-CARTOGRAPHER/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-210",
@@ -2959,7 +2959,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-211",
@@ -2973,7 +2973,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-spec-writer-evil/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-spec-writer-evil/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-212",
@@ -2987,7 +2987,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-spec-writerx/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-spec-writerx/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-213",
@@ -3001,7 +3001,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-214",
@@ -3015,7 +3015,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-215",
@@ -3029,7 +3029,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/settings.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/settings.json denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-216",
@@ -3043,7 +3043,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agents/sdd-cartographer.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agents/sdd-cartographer.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-217",
@@ -3057,7 +3057,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-researcher/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-researcher/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-218",
@@ -3071,7 +3071,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-219",
@@ -3085,7 +3085,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-researcher/link-to-src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-researcher/link-to-src/app.ts denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-220",
@@ -3099,7 +3099,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/README.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-221",
@@ -3113,7 +3113,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-critic/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-critic/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-222",
@@ -3127,7 +3127,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/x.md. denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/x.md. denied — ambiguous path (name ending in a dot or a space). Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-223",
@@ -3141,7 +3141,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/outside/.claude/agent-memory/architect-sdd-cartographer/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/outside/.claude/agent-memory/architect-sdd-cartographer/x.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-224",
@@ -3155,7 +3155,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.claude/agent-memory/architect-sdd-cartographer/MEMORY.md denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-241",
@@ -3295,7 +3295,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on (no path) denied — the tool input names no file. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on (no path) denied — the tool input names no file. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-251",
@@ -3309,7 +3309,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on (no path) denied — the tool input names no file. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on (no path) denied — the tool input names no file. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-252",
@@ -3365,7 +3365,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src/x.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src/x.ipynb denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "PG-256",
@@ -3814,7 +3814,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"node C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/sdd.mjs lint\" denied — node … is not on the allowlist. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node …"
+      "detail": "GUARD-BASH-001: Bash on \"node C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/sdd.mjs lint\" denied — node … is not on the allowlist. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node …"
     },
     {
       "id": "BG-030",
@@ -7246,10 +7246,10 @@
         "malformed": false,
         "dialect": "bash"
       },
-      "expected": "allow",
-      "expected_source": "corpus",
+      "expected": "deny",
+      "expected_source": "C001-REQ-1103",
       "actual": "deny",
-      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/rm -rf src denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
+      "detail": "GUARD-PATH-001: Write on C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/rm -rf src denied — the path is outside .sdd/. Allowed: files under C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd/ (Architect agents write only inside .sdd/)."
     },
     {
       "id": "BG-269",
@@ -7639,7 +7639,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --patt…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --patt…"
     },
     {
       "id": "BG-295",
@@ -7684,7 +7684,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd change new \\\"Export\\\" --profile lite --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd change new with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), r…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd change new \\\"Export\\\" --profile lite --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd change new with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), r…"
     },
     {
       "id": "BG-298",
@@ -7729,7 +7729,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd change profile 001 full --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd change profile with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire re…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd change profile 001 full --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd change profile with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire re…"
     },
     {
       "id": "BG-301",
@@ -7774,7 +7774,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd change revise 001 10-spec --reason \\\"r\\\" --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd change revise with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the reposit…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd change revise 001 10-spec --reason \\\"r\\\" --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd change revise with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the reposit…"
     },
     {
       "id": "BG-304",
@@ -7819,7 +7819,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd change stop 001 --reason x --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd change stop with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire re…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd change stop 001 --reason x --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd change stop with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire re…"
     },
     {
       "id": "BG-307",
@@ -7864,7 +7864,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd id next TS --change 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd id next with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verb…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd id next TS --change 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd id next with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verb…"
     },
     {
       "id": "BG-310",
@@ -7909,7 +7909,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd id tombstone C001-REQ-001 --reason r --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd id tombstone with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd id tombstone C001-REQ-001 --reason r --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd id tombstone with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
     },
     {
       "id": "BG-313",
@@ -7954,7 +7954,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd status --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd status with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-gre…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd status --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd status with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-gre…"
     },
     {
       "id": "BG-316",
@@ -7999,7 +7999,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-g…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-g…"
     },
     {
       "id": "BG-319",
@@ -8044,7 +8044,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd hook subagent-stop --host copilot --agents sdd-planner --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd hook subagent-stop with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd hook subagent-stop --host copilot --agents sdd-planner --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd hook subagent-stop with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder…"
     },
     {
       "id": "BG-322",
@@ -8089,7 +8089,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd gate approve 001 10-spec --note \\\"Approve\\\" --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd gate approve with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repos…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd gate approve 001 10-spec --note \\\"Approve\\\" --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd gate approve with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repos…"
     },
     {
       "id": "BG-325",
@@ -8134,7 +8134,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd gate record 001 10-spec --decision revise --note n --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd gate record with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd gate record 001 10-spec --decision revise --note n --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd gate record with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the…"
     },
     {
       "id": "BG-328",
@@ -8179,7 +8179,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd stale check 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd stale check with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, a…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd stale check 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd stale check with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, a…"
     },
     {
       "id": "BG-331",
@@ -8224,7 +8224,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd task set C002-T-001 --status done --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd task set with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwir…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd task set C002-T-001 --status done --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd task set with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwir…"
     },
     {
       "id": "BG-334",
@@ -8269,7 +8269,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd defect add --ref C001-REQ-001 --summary s --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd defect add with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd defect add --ref C001-REQ-001 --summary s --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd defect add with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
     },
     {
       "id": "BG-337",
@@ -8314,7 +8314,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd defect close D-001 --change 001 --resolution r --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd defect close with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the re…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd defect close D-001 --change 001 --resolution r --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd defect close with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the re…"
     },
     {
       "id": "BG-340",
@@ -8359,7 +8359,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd defect reopen D-001 --change 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd defect reopen with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ri…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd defect reopen D-001 --change 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd defect reopen with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ri…"
     },
     {
       "id": "BG-343",
@@ -8404,7 +8404,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd archive 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd archive with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep …"
+      "detail": "GUARD-BASH-001: Bash on \"sdd archive 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd archive with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep …"
     },
     {
       "id": "BG-346",
@@ -8449,7 +8449,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd extract-features 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd extract-features with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire rea…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd extract-features 001 --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd extract-features with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire rea…"
     },
     {
       "id": "BG-349",
@@ -8479,7 +8479,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/..\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/..\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff…"
     },
     {
       "id": "BG-351",
@@ -8494,7 +8494,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" task set C002-T-001 --status done --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd task set with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of…"
+      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" task set C002-T-001 --status done --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd task set with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of…"
     },
     {
       "id": "BG-352",
@@ -8509,7 +8509,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: PowerShell on \"sdd gate approve 001 10-spec --note n --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd gate approve with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
+      "detail": "GUARD-BASH-001: PowerShell on \"sdd gate approve 001 10-spec --note n --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd gate approve with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
     },
     {
       "id": "BG-353",
@@ -8524,7 +8524,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd ../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|statu…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd ../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|statu…"
     },
     {
       "id": "BG-354",
@@ -8539,7 +8539,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg/../../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg/../../other-repo\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs…"
     },
     {
       "id": "BG-355",
@@ -8554,7 +8554,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root-data\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root-data\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-…"
     },
     {
       "id": "BG-356",
@@ -8569,7 +8569,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/link-out\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/shell-outside). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-gre…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/link-out\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/shell-outside). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-gre…"
     },
     {
       "id": "BG-357",
@@ -8704,7 +8704,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo | head -n 5\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read …"
+      "detail": "GUARD-BASH-001: Bash on \"sdd trace 001 --write --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo | head -n 5\" denied — sdd trace with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read …"
     },
     {
       "id": "BG-366",
@@ -8719,7 +8719,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only …"
+      "detail": "GUARD-BASH-001: Bash on \"sdd init --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd init with --cwd outside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/other-repo). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only …"
     },
     {
       "id": "BG-367",
@@ -8779,7 +8779,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd change stop 001 --reason x --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/*\" denied — sdd change stop with a --cwd the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/*). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire rea…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd change stop 001 --reason x --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/*\" denied — sdd change stop with a --cwd the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/*). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire rea…"
     },
     {
       "id": "BG-371",
@@ -8824,7 +8824,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, a…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, a…"
     },
     {
       "id": "BG-374",
@@ -8899,7 +8899,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subc…"
+      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subc…"
     },
     {
       "id": "BG-379",
@@ -8974,7 +8974,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), r…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), r…"
     },
     {
       "id": "BG-384",
@@ -9049,7 +9049,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --c…"
+      "detail": "GUARD-BASH-001: Bash on \"node \\\"C:/Sandbox/ClaudeCode/Architect/plugins/architect/scripts/sdd.mjs\\\" serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --c…"
     },
     {
       "id": "BG-389",
@@ -9154,7 +9154,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|s…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|s…"
     },
     {
       "id": "BG-396",
@@ -9169,7 +9169,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config .\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config .\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|…"
     },
     {
       "id": "BG-397",
@@ -9184,7 +9184,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../fx-data/../repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repo…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../fx-data/../repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repo…"
     },
     {
       "id": "BG-398",
@@ -9199,7 +9199,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root-link/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read ver…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root-link/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read ver…"
     },
     {
       "id": "BG-399",
@@ -9214,7 +9214,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.sdd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.sdd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
     },
     {
       "id": "BG-400",
@@ -9229,7 +9229,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"node C:/p/scripts/sdd.mjs serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
+      "detail": "GUARD-BASH-001: Bash on \"node C:/p/scripts/sdd.mjs serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src\" denied — sdd serena-config with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository),…"
     },
     {
       "id": "BG-401",
@@ -9244,7 +9244,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: PowerShell on \"sdd serena-launch src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|…"
+      "detail": "GUARD-BASH-001: PowerShell on \"sdd serena-launch src -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/src). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|…"
     },
     {
       "id": "BG-402",
@@ -9334,7 +9334,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch \\\"${CLAUDE_PLUGIN_DATA}\\\" -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/.plugin-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pa…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch \\\"${CLAUDE_PLUGIN_DATA}\\\" -- start-mcp-server\" denied — sdd serena-launch with a data folder inside the repository (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/.plugin-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pa…"
     },
     {
       "id": "BG-408",
@@ -9379,7 +9379,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd serena-config with an argument the guard cannot resolve (--cwd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd serena-config with an argument the guard cannot resolve (--cwd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|…"
     },
     {
       "id": "BG-411",
@@ -9394,7 +9394,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch --user-data --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg -- start-mcp-server\" denied — sdd serena-launch with an argument the guard cannot resolve (--cwd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch --user-data --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg -- start-mcp-server\" denied — sdd serena-launch with an argument the guard cannot resolve (--cwd). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git…"
     },
     {
       "id": "BG-412",
@@ -9409,7 +9409,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data --cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg\" denied — sdd serena-config with an argument the guard cannot resolve (--cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data --cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg\" denied — sdd serena-config with an argument the guard cannot resolve (--cwd=C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repositor…"
     },
     {
       "id": "BG-413",
@@ -9454,7 +9454,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../a C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../b\" denied — sdd serena-config with an argument the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../b). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing …"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../a C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../b\" denied — sdd serena-config with an argument the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../b). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing …"
     },
     {
       "id": "BG-416",
@@ -9469,7 +9469,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../fx-data\" denied — sdd serena-config with an argument the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../fx-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the reposit…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-config --user-data C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../fx-data\" denied — sdd serena-config with an argument the guard cannot resolve (C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../fx-data). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the reposit…"
     },
     {
       "id": "BG-417",
@@ -9499,7 +9499,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch -- start-mcp-server --project C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root\" denied — sdd serena-launch with an argument the guard cannot resolve (no data folder). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git lo…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd serena-launch -- start-mcp-server --project C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root\" denied — sdd serena-launch with an argument the guard cannot resolve (no data folder). Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git lo…"
     },
     {
       "id": "BG-419",
@@ -9574,7 +9574,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd install copilot --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/pkg\" denied — sdd install writes outside .sdd/; P-03 runs it in their own terminal. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd install copilot --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/pkg\" denied — sdd install writes outside .sdd/; P-03 runs it in their own terminal. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files…"
     },
     {
       "id": "BG-424",
@@ -9664,7 +9664,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "GUARD-BASH-001: Bash on \"sdd install copilot --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-ZkBv6i/repository-root/../other-repo\" denied — sdd install writes outside .sdd/; P-03 runs it in their own terminal. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blam…"
+      "detail": "GUARD-BASH-001: Bash on \"sdd install copilot --cwd C:/Users/jerom/AppData/Local/Temp/sdd-guard-FGVCaD/repository-root/../other-repo\" denied — sdd install writes outside .sdd/; P-03 runs it in their own terminal. Allowed: sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blam…"
     },
     {
       "id": "BG-430",
@@ -9916,5 +9916,5 @@
     }
   ],
   "applicable": 665,
-  "differing": 1
+  "differing": 0
 }

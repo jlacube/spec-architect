@@ -4,7 +4,9 @@
 // folder that stands for `C:/fx/pkg-cp`.
 //   C002-TC-341 … C002-TC-350 (C002-AC-322.1, C002-AC-323.1, C002-AC-324.1), C002-TC-354, C002-TC-356
 //   (C002-AC-326.1), C002-TC-360, C002-TC-361 (C002-AC-327.1); also the installed hook files of C002-TC-311
-//   (carried from C002-T-033) and the failed-write rule of §Install step 5 (ERR-CLI-017, second run).
+//   (carried from C002-T-033) and the failed-write rule of §Install step 5 (C002-TC-659 ERR-CLI-017,
+//   C002-TC-664 second run). C002-T-063: the revised C002-TC-343, 345 (scripts/sdd.mjs and the four
+//   `--agents` variants), 347 and 349 rows.
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -158,37 +160,71 @@ test("C002-TS-344 (C002-TC-344): an install after a package update replaces the 
   assert.equal(rec.agents[".github/agents/sdd-critic.agent.md"], sha(read(critic)));
 });
 
-test("C002-TS-345 (C002-TC-345): a package the install command cannot use is refused with ERR-CLI-022 (ERR-CLI-003 for another target); nothing is written", () => {
-  const variant = (change: (pkg: string) => void) => {
-    const pkg = copilotPackage("sdd-mcp-server");
-    change(pkg);
-    return pkg;
-  };
-  const PKG_PATH = "<the package path>";
-  const empty = `${tempFolder()}/empty`;
-  mkdirSync(empty);
-  const rows: [string, () => { pkg: string; run: (repo: string) => Result }, string, string[]][] = [
-    ["empty folder", () => ({ pkg: empty, run: (repo) => install(repo, empty) }), "ERR-CLI-022", [empty, "architect-target.json"]],
-    ["OpenCode package", () => { const p = openCodePackage(); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", [PKG_PATH, '"opencode"']],
-    ["manifest not JSON", () => { const p = variant((d) => writeFileSync(join(d, "architect-target.json"), "{ not json")); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", [PKG_PATH, "architect-target.json"]],
-    ["agent missing", () => { const p = variant((d) => rmSync(join(d, "agents", "sdd-critic.agent.md"))); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", ["agents/sdd-critic.agent.md"]],
-    ["install/mcp.json missing", () => { const p = variant((d) => rmSync(join(d, "install", "mcp.json"))); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", ["install/mcp.json"]],
-    ["install/plugin.json missing", () => { const p = variant((d) => rmSync(join(d, "install", "plugin.json"))); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", ["install/plugin.json"]],
-    ["install/hooks.template.json missing", () => { const p = variant((d) => rmSync(join(d, "install", "hooks.template.json"))); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", ["install/hooks.template.json"]],
-    ["hooks/tool-classes.json missing", () => { const p = variant((d) => rmSync(join(d, "hooks", "tool-classes.json"))); return { pkg: p, run: (repo) => install(repo, p) }; }, "ERR-CLI-022", ["hooks/tool-classes.json"]],
-    ["install opencode", () => { const p = copilotPackage("sdd-mcp-server"); return { pkg: p, run: (repo) => node(CLI, ["install", "opencode", "--package", p], repo) }; }, "ERR-CLI-003", ["install opencode"]],
-  ];
-  for (const [label, make, code, named] of rows) {
+/** A copy of pkg-cp changed by `change`. */
+function pkgCpWith(change: (pkg: string) => void): string {
+  const pkg = copilotPackage("sdd-mcp-server");
+  change(pkg);
+  return pkg;
+}
+const writeJson = (file: string, doc: unknown) => writeFileSync(file, JSON.stringify(doc, null, 2) + "\n");
+const manifestOf = (pkg: string) => join(pkg, "architect-target.json");
+const editManifest = (pkg: string, edit: (m: { files: { path: string; sha256: string }[] } & Record<string, unknown>) => void) => {
+  const m = json(manifestOf(pkg)) as { files: { path: string; sha256: string }[] } & Record<string, unknown>;
+  edit(m);
+  writeJson(manifestOf(pkg), m);
+};
+const templateOf = (pkg: string) => join(pkg, "install", "hooks.template.json");
+const editTemplate = (pkg: string, edit: (pre: { command: string; type: string }[]) => { command: string; type: string }[]) => {
+  const t = json(templateOf(pkg)) as { hooks: Record<string, { command: string; type: string }[]> };
+  t.hooks["PreToolUse"] = edit(t.hooks["PreToolUse"]!);
+  writeJson(templateOf(pkg), t);
+};
+const PKG = "<the package path>";
+
+/** C002-TS-345 Examples: label, package (folder), command, code and the texts standard error names. */
+const TS_345: [string, () => string, (pkg: string) => string[], string, string[]][] = [
+  ['the folder "C:/fx/empty" without "architect-target.json"', () => { const d = `${tempFolder()}/empty`; mkdirSync(d); return d; }, (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", [PKG, "the folder holds no architect-target.json"]],
+  ['no folder at "C:/fx/missing"', () => `${tempFolder()}/missing`, (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", [PKG, "the folder does not exist"]],
+  ['the generated OpenCode package at "C:/fx/pkg-oc"', () => openCodePackage(), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", [PKG, 'architect-target.json names the target "opencode", not "copilot"']],
+  ['"pkg-cp" whose "architect-target.json" holds "{ not json"', () => pkgCpWith((d) => writeFileSync(manifestOf(d), "{ not json")), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", [PKG, "architect-target.json cannot be parsed: "]],
+  ['"pkg-cp" whose "architect-target.json" holds "[]"', () => pkgCpWith((d) => writeFileSync(manifestOf(d), "[]")), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["architect-target.json is not a JSON object"]],
+  ['"pkg-cp" whose "architect-target.json" has no "package_version"', () => pkgCpWith((d) => editManifest(d, (m) => void delete m["package_version"])), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["architect-target.json gives no package_version"]],
+  ['"pkg-cp" whose "architect-target.json" lists in its "files" no file under "agents/"', () => pkgCpWith((d) => editManifest(d, (m) => void (m.files = m.files.filter((x) => !x.path.startsWith("agents/"))))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["architect-target.json lists no agents/<agent name>.agent.md file"]],
+  ['"pkg-cp" without "agents/sdd-critic.agent.md", which its manifest lists', () => pkgCpWith((d) => rmSync(join(d, "agents", "sdd-critic.agent.md"))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source file missing: agents/sdd-critic.agent.md"]],
+  ['"pkg-cp" without "install/mcp.json"', () => pkgCpWith((d) => rmSync(join(d, "install", "mcp.json"))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source file missing: install/mcp.json"]],
+  ['"pkg-cp" without "install/plugin.json"', () => pkgCpWith((d) => rmSync(join(d, "install", "plugin.json"))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source file missing: install/plugin.json"]],
+  ['"pkg-cp" without "hooks/tool-classes.json"', () => pkgCpWith((d) => rmSync(join(d, "hooks", "tool-classes.json"))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source file missing: hooks/tool-classes.json"]],
+  ['"pkg-cp" without "scripts/sdd.mjs"', () => pkgCpWith((d) => rmSync(join(d, "scripts", "sdd.mjs"))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source file missing: scripts/sdd.mjs"]],
+  ['"pkg-cp" without "install/plugin.json" and "hooks/tool-classes.json"', () => pkgCpWith((d) => { rmSync(join(d, "install", "plugin.json")); rmSync(join(d, "hooks", "tool-classes.json")); }), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["source files missing: install/plugin.json, hooks/tool-classes.json"]],
+  ['"pkg-cp" whose "install/mcp.json" holds "{ not json"', () => pkgCpWith((d) => writeFileSync(join(d, "install", "mcp.json"), "{ not json")), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/mcp.json cannot be parsed: "]],
+  ['"pkg-cp" whose "install/mcp.json" is \'{ "inputs": [] }\'', () => pkgCpWith((d) => writeFileSync(join(d, "install", "mcp.json"), '{ "inputs": [] }')), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/mcp.json has no servers object"]],
+  ['"pkg-cp" whose "install/hooks.template.json" holds "{ not json"', () => pkgCpWith((d) => writeFileSync(templateOf(d), "{ not json")), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/hooks.template.json cannot be parsed: "]],
+  ['"pkg-cp" whose "install/hooks.template.json" is \'{ "hooks": { "SessionStart": [] } }\'', () => pkgCpWith((d) => writeFileSync(templateOf(d), '{ "hooks": { "SessionStart": [] } }')), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/hooks.template.json has no PreToolUse entry"]],
+  ['"pkg-cp" whose "install/hooks.template.json" PreToolUse entry has the command \'node "@CLI_COPY@" hook guard --host copilot --mode sdd-mcp-server\', without "--agents"', () => pkgCpWith((d) => editTemplate(d, () => [{ command: 'node "@CLI_COPY@" hook guard --host copilot --mode sdd-mcp-server', type: "command" }])), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/hooks.template.json has no single hook guard command with --agents"]],
+  ['"pkg-cp" whose "install/hooks.template.json" holds two PreToolUse entries, each with the package\'s "hook guard" command and its "--agents" list', () => pkgCpWith((d) => editTemplate(d, (pre) => [pre[0]!, { ...pre[0]! }])), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["install/hooks.template.json has no single hook guard command with --agents"]],
+  ['"pkg-cp" whose "architect-target.json" does not list "agents/sdd-critic.agent.md" in its "files", while "sdd-critic" is one of the ten names of the guard hook\'s "--agents" and the file is present', () => pkgCpWith((d) => editManifest(d, (m) => void (m.files = m.files.filter((x) => x.path !== "agents/sdd-critic.agent.md")))), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["architect-target.json does not list agents/sdd-critic.agent.md, which --agents names"]],
+  ['"pkg-cp" whose "architect-target.json" also lists "agents/my-helper.agent.md" in its "files", a file present in the package, while the guard hook\'s "--agents" names only the ten Architect agents', () => pkgCpWith((d) => {
+    writeFileSync(join(d, "agents", "my-helper.agent.md"), "---\nname: my-helper\n---\n# my helper\n");
+    editManifest(d, (m) => void m.files.push({ path: "agents/my-helper.agent.md", sha256: createHash("sha256").update(readFileSync(join(d, "agents", "my-helper.agent.md"))).digest("hex") }));
+  }), (p) => ["install", "copilot", "--package", p], "ERR-CLI-022", ["architect-target.json lists agents/my-helper.agent.md, which --agents does not name"]],
+  ['"pkg-cp" with "sdd install opencode"', () => copilotPackage("sdd-mcp-server"), (p) => ["install", "opencode", "--package", p], "ERR-CLI-003", ["install opencode"]],
+];
+
+for (const [label, make, args, code, named] of TS_345) {
+  test(`C002-TS-345 (C002-TC-345): ${label} is refused with ${code}; nothing is written`, () => {
     const repo = fxInstall();
-    const made = make();
-    const r = made.run(repo);
-    assert.equal(r.code, 2, `${label}: ${r.stdout}${r.stderr}`);
-    assert.ok(r.stderr.startsWith(`${code}: `), `${label}: ${r.stderr}`);
-    for (const n of named.map((x) => (x === PKG_PATH ? made.pkg : x))) assert.ok(r.stderr.includes(n), `${label}: ${n} in ${r.stderr}`);
-    assert.equal(lines(r.stderr).length, 1, label);
-    assertWritesNothing(repo, made.pkg);
-  }
-});
+    const pkg = make();
+    const pkgBefore = tree(pkg);
+    const r = node(CLI, args(pkg), repo);
+    assert.equal(r.code, 2, `${r.stdout}${r.stderr}`);
+    assert.ok(r.stderr.startsWith(`${code}: `), r.stderr);
+    for (const n of named.map((x) => (x === PKG ? pkg : x))) assert.ok(r.stderr.includes(n), `${n} in ${r.stderr}`);
+    assert.equal(lines(r.stderr).length, 1);
+    assert.equal(r.stdout, "");
+    assertWritesNothing(repo, pkg);
+    assert.deepEqual(tree(pkg), pkgBefore, "nothing written into the --package folder");
+  });
+}
 
 test("C002-TS-345 (C002-TC-345): the globally installed architect-sdd is not the CLI copy of a Copilot package (fx-tgz)", () => {
   const repo = fxInstall();
@@ -224,10 +260,13 @@ test("C002-TS-346 (C002-TC-346): the package's servers are merged into an adopte
 test("C002-TS-347 (C002-TC-347): without .vscode/, .vscode/mcp.json holds only the package's servers", () => {
   const repo = fxInstall();
   const pkg = copilotPackage("sdd-mcp-server");
-  assert.equal(install(repo, pkg).code, 0);
+  const r = install(repo, pkg);
+  assert.equal(r.code, 0, r.stderr);
   const doc = json(join(repo, MCP));
   assert.deepEqual(Object.keys(doc), ["servers"]);
   assert.deepEqual(doc["servers"], pkgServers(pkg));
+  assert.ok(lines(r.stdout).includes(`written ${MCP}`), r.stdout);
+  assert.ok(!lines(r.stdout).some((l) => l.startsWith(`merged ${MCP}`)), r.stdout);
 });
 
 test("C002-TS-348 (C002-TC-348): adopter copies equal to the package's are no conflicts and are recorded", () => {
@@ -263,8 +302,8 @@ test("C002-TS-349 (C002-TC-349): an adopter file or server in the way: exactly o
     ["adopter server", { [MCP]: '{ "servers": { "sdd-files": { "type": "stdio", "command": "my-files-mcp" } } }' }, 'install conflict: .vscode/mcp.json server "sdd-files" was not written by sdd install copilot'],
     ["comment line", { [MCP]: '// my servers\n{ "servers": {} }\n' }, "install conflict: .vscode/mcp.json cannot be parsed as JSON without comments:"],
     ["trailing comma", { [MCP]: '{ "servers": { "my-db": { "type": "stdio", "command": "my-db-mcp" }, } }\n' }, "install conflict: .vscode/mcp.json cannot be parsed as JSON without comments:"],
-    ["array", { [MCP]: "[]" }, "install conflict: .vscode/mcp.json"],
-    ["servers a string", { [MCP]: '{ "servers": "none" }' }, "install conflict: .vscode/mcp.json"],
+    ["array", { [MCP]: "[]" }, "install conflict: .vscode/mcp.json cannot be parsed as JSON without comments: the top level is not an object"],
+    ["servers a string", { [MCP]: '{ "servers": "none" }' }, 'install conflict: .vscode/mcp.json cannot be parsed as JSON without comments: "servers" is not an object'],
   ];
   for (const [label, files, message] of rows) {
     const repo = fxInstall(files);
@@ -302,7 +341,7 @@ test("C002-TS-350 (C002-TC-350): files and entries edited after an install are t
   assert.deepEqual(tree(pkg), pkgBefore, "the package's hooks.json and plugin.json as they were");
 });
 
-test("§Install step 5: a failed write ends with ERR-CLI-017 (exit 3) naming the files already written; a second run completes the install", () => {
+test("C002-TS-659 (C002-TC-659): a failed fourth write ends with ERR-CLI-017 (exit 3) naming the files already written in write order", () => {
   const repo = fxInstall();
   const pkg = copilotPackage("sdd-mcp-server");
   // The fourth atomic write is the first agent file: hooks.json, the workspace hook file and plugin.json are written.
@@ -315,11 +354,20 @@ test("§Install step 5: a failed write ends with ERR-CLI-017 (exit 3) naming the
   assert.equal(existsSync(join(repo, RECORD)), false, "no record");
   assert.equal(existsSync(join(repo, MCP)), false);
   assert.deepEqual(readdirSync(join(repo, ".github", "agents")).filter((n) => !n.includes(".tmp-")), [], "no agent file yet");
+});
+
+test("C002-TS-664 (C002-TC-664): the run after a failed write completes the install", () => {
+  const repo = fxInstall();
+  const pkg = copilotPackage("sdd-mcp-server");
+  assert.equal(install(repo, pkg, { SDD_TEST_FAULT: "atomic-write-fail-at=4" }).code, 3);
   const again = install(repo, pkg);
   assert.equal(again.code, 0, again.stderr);
-  assert.ok(lines(again.stdout).includes(`unchanged ${GUARD}`), again.stdout);
-  assert.equal(readdirSync(join(repo, ".github", "agents")).length, 10);
-  assert.ok(existsSync(join(repo, RECORD)));
+  assert.deepEqual(errLines(again, "ERR-CLI-021"), []);
+  const out = lines(again.stdout);
+  for (const l of [`unchanged ${pkg}/hooks.json`, `unchanged ${GUARD}`, `unchanged ${pkg}/plugin.json`, `written ${MCP}`, `written ${RECORD}`]) assert.ok(out.includes(l), `${l} in ${again.stdout}`);
+  for (const a of AGENTS) assert.equal(out.filter((l) => l === `written .github/agents/${a}.agent.md`).length, 1, a);
+  assert.deepEqual(readdirSync(join(repo, ".github", "agents")).sort(), readdirSync(join(pkg, "agents")).sort());
+  for (const a of AGENTS) assert.ok(read(join(repo, ".github", "agents", `${a}.agent.md`)).equals(read(join(pkg, "agents", `${a}.agent.md`))), a);
 });
 
 test("the repository is the root of C002-IF-008 §1.1 rule 3 from the working folder (also with --cwd)", () => {

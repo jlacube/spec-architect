@@ -92,6 +92,13 @@ async function runCli(args: string[], plant?: { path?: (c: Corpus) => void; shel
   }
 }
 
+/** The planted rows of the revised C002-TS-609 that expect deny and are allowed. */
+const WRITE_SHELL_LABEL = 'a shell case of the tool "Write" whose command text is ".sdd/002-x/notes.md", which the write-tool row of C002-IF-009 §2.1 expects "deny"';
+const TRAILING_LABEL = 'a path case writing the folder path "{repo}/.sdd/004-x/" with a trailing separator, planted as "deny", which the guard allows (ERR-MCP-003 on the server)';
+const PLANTED_DECISIONS: Record<string, [string, string]> = { "BG-900": ["deny", "allow"], "PG-901": ["deny", "allow"] };
+const writeShellCase = (cases: BashCase[]): BashCase => ({ ...cases.find((x) => x.id === "BG-268")!, id: "BG-900", command: ".sdd/002-x/notes.md", expect: "allow" });
+const trailingCase = (c: Corpus): Corpus["cases"][number] => ({ ...c.cases.find((x) => x.id === "PG-048")!, id: "PG-901", expect: "deny" });
+
 for (const [label, plant, id] of [
   [
     'the shell case "sdd status > out.txt"',
@@ -113,15 +120,27 @@ for (const [label, plant, id] of [
     },
     "PG-900",
   ],
+  [WRITE_SHELL_LABEL, { shell: (cases: BashCase[]) => [...cases, writeShellCase(cases)] }, "BG-900"],
+  [
+    TRAILING_LABEL,
+    {
+      path: (c: Corpus) => {
+        c.cases.push(trailingCase(c));
+      },
+    },
+    "PG-901",
+  ],
 ] as const) {
   test(`C002-TS-609 — a differing decision is reported: ${label}`, async () => {
     const { code, report, log } = await runCli([], plant);
     const caseId = id || loadCorpora().shell.cases.find((x) => x.command === "sdd status > out.txt")!.id;
     const e = entry(report, caseId);
+    const [expected, actual] = PLANTED_DECISIONS[caseId] ?? ["allow", "deny"];
     assert.equal(report.mechanism, "sdd-mcp-server");
-    assert.deepEqual([e.expected, e.actual], ["allow", "deny"]);
+    assert.deepEqual([e.expected, e.actual], [expected, actual]);
+    if (caseId === "BG-900") assert.equal(e.expected_source, "C001-REQ-1103");
     assert.equal(report.differing, 1);
-    assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes("expected allow") && l.includes("got deny")), log.join("\n"));
+    assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes(`expected ${expected}`) && l.includes(`got ${actual}`)), log.join("\n"));
     assert.notEqual(code, 0, "the suite exits non-zero");
   });
 }
@@ -282,16 +301,39 @@ for (const [label, plant, id] of [
     },
     "PG-900",
   ],
+  [
+    WRITE_SHELL_LABEL,
+    {
+      path: (c: Corpus) => {
+        c.cases = c.cases.filter((x) => PATH_KEEP.includes(x.id));
+      },
+      shell: (cases: BashCase[]) => [...cases.filter((x) => SHELL_KEEP.includes(x.id)), writeShellCase(cases)],
+    },
+    "BG-900",
+  ],
+  [
+    TRAILING_LABEL,
+    {
+      path: (c: Corpus) => {
+        c.cases = [...c.cases.filter((x) => PATH_KEEP.includes(x.id)), trailingCase(c)];
+      },
+      shell: (cases: BashCase[]) => cases.filter((x) => SHELL_KEEP.includes(x.id)),
+    },
+    "PG-901",
+  ],
 ] as const) {
   test(`C002-TS-609 — a differing decision is reported by the real sdd MCP server: ${label}`, async (t) => {
     if (!haveTarball(t)) return;
     const { code, report, log } = await runCli([], plant, "sdd-mcp-server");
     const caseId = id || loadCorpora().shell.cases.find((x) => x.command === "sdd status > out.txt")!.id;
     const e = entry(report, caseId);
+    const [expected, actual] = PLANTED_DECISIONS[caseId] ?? ["allow", "deny"];
     assert.equal(report.mechanism, "sdd-mcp-server");
-    assert.deepEqual([e.expected, e.actual], ["allow", "deny"]);
+    assert.deepEqual([e.expected, e.actual], [expected, actual]);
+    if (caseId === "BG-900") assert.deepEqual([e.expected_source, e.fed_as.tool], ["C001-REQ-1103", "write_file"]);
+    if (caseId === "PG-901") assert.match(e.detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/);
     assert.equal(report.differing, 1);
-    assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes("expected allow") && l.includes("got deny")), log.join("\n"));
+    assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes(`expected ${expected}`) && l.includes(`got ${actual}`)), log.join("\n"));
     assert.notEqual(code, 0, "the suite exits non-zero");
   });
 }

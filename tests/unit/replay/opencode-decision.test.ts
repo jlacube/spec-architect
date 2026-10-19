@@ -8,7 +8,8 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Corpus } from "../../guards/fixture.ts";
-import { createOpenCodeAdapter, type HostResult, type OpenCodeHost, readDecision, type ScriptedCall } from "../../replay/adapters/opencode-permissions.ts";
+import type { ReplayFixture, ReplayInput } from "../../replay/adapter.ts";
+import { callOf, createOpenCodeAdapter, type HostResult, type OpenCodeHost, readDecision, type ScriptedCall } from "../../replay/adapters/opencode-permissions.ts";
 import { DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS, runReplay } from "../../replay/suite.ts";
 
 type Row = { label: string; answer: (call: ScriptedCall) => HostResult; changes: boolean; decision: "allow" | "deny"; detail: (d: string) => boolean; shows: string };
@@ -103,4 +104,13 @@ test("C002-TS-656 — a refusal whose target changed, a part still running and a
   const rule = "The user has specified a rule which prevents you from using this specific tool call.";
   assert.equal(readDecision({ parts: [{ type: "tool", tool: "write", state: { status: "error", error: rule } }] }).actual, "deny");
   assert.equal(readDecision({ parts: [{ type: "tool", tool: "edit", state: { status: "error", error: "Could not find oldString in the file." } }] }).actual, "deny");
+});
+
+test("C002-IF-009 §2.2 (critic CR-48) — shell-corpus cases of a non-shell tool: Edit and MultiEdit sent as write with the command text as filePath", () => {
+  const fx = { base: "C:/fx", repo: "C:/fx/repo" } as unknown as ReplayFixture;
+  const shell = (tool: string): ReplayInput => ({ id: "BG-X", corpus: "shell", category: "tool", case: { id: "BG-X", category: "tool", tool, agent: "architect:sdd-planner", command: "rm -rf src", expect: "allow" }, tool, caller: "sdd-planner", cwd: fx.repo, command: "rm -rf src", dialect: "bash", malformed: false, resolve: (s) => s });
+  for (const tool of ["Write", "NotebookEdit", "Edit", "MultiEdit"]) assert.deepEqual(callOf(shell(tool), fx), { tool: "write", args: { filePath: "rm -rf src", content: "replay BG-X\n" } }, tool);
+  assert.deepEqual(callOf(shell("Read"), fx), { tool: "read", args: { filePath: "rm -rf src" } });
+  assert.deepEqual(callOf(shell("Glob"), fx), { tool: "glob", args: { pattern: "rm -rf src" } });
+  assert.deepEqual(callOf(shell("Grep"), fx), { tool: "grep", args: { pattern: "rm -rf src" } });
 });

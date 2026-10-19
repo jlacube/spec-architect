@@ -17,8 +17,8 @@
 // A shell-corpus case of a write tool (BG-268) is fed as write_file with its command text as the path,
 // as the OpenCode adapter feeds it. The decision is read per §2.3: deny on GUARD-PATH-001,
 // GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001; allow on success, `completed`, `timed_out` or a
-// refusal after the boundary allowed the call (ERR-MCP-004 … ERR-MCP-006); error on ERR-MCP-002,
-// ERR-MCP-003, a JSON-RPC error or no response. Allowed commands run for real inside the replay
+// refusal or failure after the boundary allowed the call (ERR-MCP-003 … ERR-MCP-006, the I/O error in
+// `detail`); error on ERR-MCP-002, a JSON-RPC error or no response. Allowed commands run for real inside the replay
 // fixture, in the sandbox of ./package.ts (inert stubs on PATH, per-user data folders in the run folder).
 import { type ChildProcess, execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -170,7 +170,7 @@ export function serverCallOf(input: ReplayInput): ServerCall {
 }
 
 const DENY = new Set(["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-001"]);
-const ALLOWED_REFUSAL = new Set(["ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]);
+const ALLOWED_REFUSAL = new Set(["ERR-MCP-003", "ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]);
 
 /** The decision of one tool call from the server's response (C002-IF-009 §2.3). */
 export function readServerDecision(m: RpcMessage): { actual: Actual; detail: string } {

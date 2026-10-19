@@ -117,7 +117,7 @@ export async function runReplay(adapter: ReplayAdapter, options: ReplayOptions =
         ...corpora.shell.cases.map((c) => ["shell", c] as [CorpusName, AnyCase]),
       ];
       for (const [corpus, c] of all) {
-        const e = expectationOf(c, mechanism, platform);
+        const e = expectationOf(c, mechanism, platform, corpus);
         if (!e.applicable) {
           notApplicable.push({ id: c.id, corpus, category: c.category, rule: e.rule });
           continue;

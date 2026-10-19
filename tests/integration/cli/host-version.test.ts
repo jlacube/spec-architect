@@ -83,6 +83,59 @@ test("the hooks line: user settings false is disabled (chat.useHooks); no settin
   }
 });
 
+// C002-TS-526 rows (revised for critic CR-45): an unusable workspace file is unknown without reading the user settings.
+for (const [label, text] of [
+  ["a workspace file that cannot be parsed", '{ "chat.useHooks": tru'],
+  ['a workspace file with "chat.useHooks": "yes"', '{ "chat.useHooks": "yes" }'],
+  ["a workspace file without an object at its top level", "[true]"],
+] as const) {
+  test(`C002-TS-526 — the hooks line: ${label} beside user settings with true is hooks unknown`, () => {
+    const ws = workspace({ ".vscode/settings.json": text, [userSettings("Code")]: '{ "chat.useHooks": true }' });
+    try {
+      const r = hostVersion(["vscode"], ws.root, HOSTS_BIN);
+      assert.equal(r.stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n");
+      assert.equal(r.code, 0);
+      assert.deepEqual(JSON.parse(hostVersion(["vscode", "--json"], ws.root, HOSTS_BIN).stdout).hooks, { state: "unknown" });
+    } finally {
+      ws.cleanup();
+    }
+  });
+}
+
+test("C002-TS-526 — the hooks line: a workspace folder at .vscode/settings.json (cannot be read) beside user settings with true is hooks unknown", () => {
+  const ws = workspace({ ".vscode/settings.json/.keep": "", [userSettings("Code")]: '{ "chat.useHooks": true }' });
+  try {
+    assert.equal(hostVersion(["vscode"], ws.root, HOSTS_BIN).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n");
+  } finally {
+    ws.cleanup();
+  }
+});
+
+test("C002-TS-526 — the hooks line: a missing workspace file, or one without the key, falls back to the user settings", () => {
+  const missing = workspace({ [userSettings("Code")]: '{ "chat.useHooks": true }' });
+  const noKey = workspace({ ".vscode/settings.json": '{ "editor.tabSize": 2 }', [userSettings("Code")]: '{ "chat.useHooks": true }' });
+  const noKeyOff = workspace({ ".vscode/settings.json": "{}", [userSettings("Code")]: '{ "chat.useHooks": false }' });
+  try {
+    for (const ws of [missing, noKey]) assert.equal(hostVersion(["vscode"], ws.root, HOSTS_BIN).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks enabled\n");
+    assert.equal(hostVersion(["vscode"], noKeyOff.root, HOSTS_BIN).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks disabled (chat.useHooks)\n");
+  } finally {
+    missing.cleanup();
+    noKey.cleanup();
+    noKeyOff.cleanup();
+  }
+});
+
+test("C002-TS-526 — the hooks line: user settings that cannot be parsed or hold another value are hooks unknown", () => {
+  const broken = workspace({ [userSettings("Code")]: '{ "chat.useHooks": tru' });
+  const other = workspace({ [userSettings("Code")]: '{ "chat.useHooks": "yes" }' });
+  try {
+    for (const ws of [broken, other]) assert.equal(hostVersion(["vscode"], ws.root, HOSTS_BIN).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n");
+  } finally {
+    broken.cleanup();
+    other.cleanup();
+  }
+});
+
 test("host-version vscode-insiders runs code-insiders and reads the Insiders user settings, with the same lines", () => {
   const ws = workspace({ [userSettings("Code - Insiders")]: '{ "chat.useHooks": true }', [userSettings("Code")]: '{ "chat.useHooks": false }' });
   try {

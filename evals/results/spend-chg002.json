@@ -276,6 +276,21 @@
       "cost_usd": 0.2261,
       "pass": true,
       "result": "evals/results/t038-doctor-no-ripwire-2026-10-19T07-36-58-419Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-063",
+      "step": 5,
+      "case": "C002-TC-509",
+      "row": "Claude Code, no sdd executable on PATH",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3239,
+      "pass": true,
+      "result": "evals/results/t063-TS-509-claude-code-no-sdd-2026-10-19T17-34-36-017Z.json",
+      "note": "revised assertion (defect D-012): outcome completed with warnings; rows not ok: Context7 and DeepWiki unreachable; no sdd CLI row; 8 rows"
     }
   ]
 }

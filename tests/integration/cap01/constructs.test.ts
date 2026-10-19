@@ -350,3 +350,47 @@ test("descriptions are translated: agent and command references take the target'
     assert.ok(researcher.includes(`${replaceOf(tables[t], "command-reference", tables[t].enforcement_mode)}research`), t);
   }
 });
+
+// --- C002-TC-657, C002-TC-658 (C002-T-063; the construct doctor-description, C002-IF-001 §2 "Frontmatter text") ---
+const DOCTOR = "commands/doctor.md";
+const CLAUDE_HOST_LIST = "(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)";
+
+for (const t of TARGETS) {
+  test(`C002-TS-657 (C002-TC-657): the generated doctor description names the ${NAME[t]} rows, read from the table, and not Claude Code`, () => {
+    const src = source.source.commands.find((c) => c.path === DOCTOR)!;
+    const before = (src.data as Record<string, string>)["description"]!;
+    assert.ok(before.includes(CLAUDE_HOST_LIST), "the source description holds the Claude Code host list");
+    for (const mode of MODES[t]) {
+      const list = replaceOf(tableFor(t, mode), "doctor-description", mode);
+      const generated = docsOf(t, mode).get(DOCTOR)!.fields["description"]!;
+      assert.equal(generated, before.replace(CLAUDE_HOST_LIST, list), `${t}/${mode}: the host list replaced, the rest unchanged`);
+      assert.ok(!generated.includes("Claude Code"), `${t}/${mode}: ${generated}`);
+    }
+  });
+}
+
+test("the source commands/doctor.md is byte-unchanged by C002-T-063 (C002-CON-10): its description still holds the Claude Code host list on line 2", () => {
+  const lines = readFileSync(join(PLUGIN, DOCTOR), "utf8").replace(/\r\n/g, "\n").split("\n");
+  assert.ok(lines[1]!.startsWith("description: ") && lines[1]!.includes(CLAUDE_HOST_LIST), lines[1]);
+});
+
+test("C002-TS-658 (C002-TC-658): fx-plugin-nodesc — a Copilot table without doctor-description stops generation with ERR-GEN-001 on commands/doctor.md line 2, copilot only", () => {
+  const base = mkdtempSync(join(tmpdir(), "sdd-cx-"));
+  try {
+    const src = fxSrc(base);
+    editJson(join(src, "targets", "copilot.json"), (d) => {
+      d["constructs"] = (d["constructs"] as { id: string }[]).filter((c) => c.id !== "doctor-description");
+    });
+    assert.ok(tables.opencode.constructs.some((c) => c.id === "doctor-description"), "the OpenCode table keeps its entry");
+    const out = join(base, "out");
+    const r = run(["--source", src, "--out", out]);
+    assert.notEqual(r.code, 0);
+    const errs = r.stderr.filter((l) => l.startsWith("ERR-GEN-001"));
+    assert.equal(errs.length, 1, r.stderr.join("\n"));
+    assert.ok(errs[0]!.startsWith(`ERR-GEN-001: ${DOCTOR}:2: construct doctor-description "${CLAUDE_HOST_LIST}" has no entry in the copilot mapping table`), errs[0]);
+    assert.ok(!r.stderr.some((l) => l.includes("opencode")), r.stderr.join("\n"));
+    assert.ok(!existsSync(join(out, "copilot")), "no Copilot package, so no doctor prompt that names Claude Code");
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+});

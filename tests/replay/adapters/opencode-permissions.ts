@@ -228,7 +228,11 @@ export function callOf(input: ReplayInput, fx: ReplayFixture): ScriptedCall & { 
   const description = `replay ${input.id}`;
   if (input.malformed !== false) return { tool: input.corpus === "shell" ? "bash" : openCodeTool(input.tool), args: {} };
   if (input.corpus === "shell") {
-    const tool = openCodeTool(input.tool);
+    // Edit and MultiEdit with a command are sent as `write`, like Write and NotebookEdit (§2.2, revised
+    // for critic CR-48): `edit` matches oldString against a file before the permission check, and no
+    // fixture file lies at the command text; `write` is checked under the `edit` permission.
+    const mapped = openCodeTool(input.tool);
+    const tool = mapped === "edit" ? "write" : mapped;
     const command = input.command;
     switch (tool) {
       case "bash":

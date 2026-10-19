@@ -7,10 +7,15 @@
 // install; elsewhere the executable runs directly with a fixed argument list. Nothing from the
 // command line or the environment is placed in a probe.
 //
-// The hooks line reads `chat.useHooks` from the workspace settings (`.vscode/settings.json` at the
-// repository root), which take precedence, and from the user settings of the matching VS Code build.
-// `true` is `enabled`, `false` is `disabled (chat.useHooks)`; unset or unreadable is `unknown`, never
-// `enabled` (C002-REQ-510, C002-TS-526).
+// The hooks line reads `chat.useHooks` only (C002-IF-007 host-version Output, revised for critic CR-45):
+// first the workspace settings (`.vscode/settings.json` at the repository root), which take precedence;
+// only a missing workspace file, or one without the key, leads to the user settings of the default
+// profile of the matching VS Code build. A workspace file that exists but cannot be read, does not
+// parse, has no object at its top level or holds a non-boolean `chat.useHooks` is `unknown`, the user
+// settings unread (VS Code may still take a value from it). `true` is `enabled`, `false` is
+// `disabled (chat.useHooks)`; anything else is `unknown`, never `enabled` (C002-REQ-510, C002-TS-526).
+// Not read: the settings of other VS Code profiles, of a `.code-workspace` file, Workspace Trust and
+// organisation policy (C002-IF-006 §2).
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
@@ -101,24 +106,32 @@ export function userSettingsPath(insiders: boolean, env: Readonly<Record<string,
   return join(userConfigDir(env, home), insiders ? "Code - Insiders" : "Code", "User", "settings.json");
 }
 
-/** `chat.useHooks` of one settings file: true/false, or undefined when unset or unreadable. */
-function useHooks(file: string): boolean | undefined {
+/**
+ * `chat.useHooks` of one settings file: `true`/`false`; `"missing"` when the file does not exist;
+ * `"unset"` when the file holds an object without the key; `"unusable"` when it cannot be read, does
+ * not parse, has no object at its top level or holds another value.
+ */
+export function useHooks(file: string): boolean | "missing" | "unset" | "unusable" {
   let text: string;
   try {
     text = readFileSync(file, "utf8");
-  } catch {
-    return undefined;
+  } catch (err) {
+    return (err as NodeJS.ErrnoException).code === "ENOENT" ? "missing" : "unusable";
   }
   const doc = parseJsonc(text);
-  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return undefined;
+  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return "unusable";
+  if (!Object.prototype.hasOwnProperty.call(doc, "chat.useHooks")) return "unset";
   const v = (doc as Record<string, unknown>)["chat.useHooks"];
-  return typeof v === "boolean" ? v : undefined;
+  return typeof v === "boolean" ? v : "unusable";
 }
 
-/** The hooks state: workspace settings first, then user settings; unset means unknown. */
-export function hooksState(cwd: string, insiders: boolean): HooksState {
+/**
+ * The hooks state: the workspace settings first; only a missing workspace file or one without the key
+ * leads to the user settings; an unusable workspace file is unknown without reading the user settings.
+ */
+export function hooksState(cwd: string, insiders: boolean, env: Readonly<Record<string, string | undefined>> = process.env): HooksState {
   const workspace = useHooks(join(findRepositoryRoot(cwd), ".vscode", "settings.json"));
-  const value = workspace ?? useHooks(userSettingsPath(insiders));
+  const value = workspace === "missing" || workspace === "unset" ? useHooks(userSettingsPath(insiders, env)) : workspace;
   if (value === true) return { state: "enabled" };
   if (value === false) return { state: "disabled", source: "chat.useHooks" };
   return { state: "unknown" };

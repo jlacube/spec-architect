@@ -694,7 +694,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.sdd/004-x/)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.sdd/004-x/)"
     },
     {
       "id": "PG-049",
@@ -1128,7 +1128,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root)"
     },
     {
       "id": "PG-080",
@@ -1142,7 +1142,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.sdd)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.sdd)"
     },
     {
       "id": "PG-081",
@@ -1156,7 +1156,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-082",
@@ -1170,7 +1170,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-083",
@@ -1408,7 +1408,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-100",
@@ -1464,7 +1464,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.sdd/..)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.sdd/..)"
     },
     {
       "id": "PG-104",
@@ -1478,7 +1478,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.sdd/../)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.sdd/../)"
     },
     {
       "id": "PG-105",
@@ -1604,7 +1604,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-114",
@@ -1730,7 +1730,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-123",
@@ -1940,7 +1940,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-138",
@@ -1954,7 +1954,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-139",
@@ -2332,7 +2332,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-166",
@@ -2346,7 +2346,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-167",
@@ -2360,7 +2360,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-168",
@@ -2374,7 +2374,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-169",
@@ -2388,7 +2388,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-170",
@@ -2402,7 +2402,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-171",
@@ -2416,7 +2416,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-172",
@@ -2430,7 +2430,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-173",
@@ -2822,7 +2822,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "FileSystem.writeFile: The argument 'path' must be a string, Uint8Array, or URL without null bytes. Received \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.sdd/a\\u0000.md\""
+      "detail": "FileSystem.writeFile: The argument 'path' must be a string, Uint8Array, or URL without null bytes. Received \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.sdd/a\\u0000.md\""
     },
     {
       "id": "PG-201",
@@ -2836,7 +2836,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-202",
@@ -2850,7 +2850,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-203",
@@ -2864,7 +2864,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-204",
@@ -2878,7 +2878,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-205",
@@ -3018,7 +3018,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root/.claude/agent-memory/architect-sdd-cartographer)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root/.claude/agent-memory/architect-sdd-cartographer)"
     },
     {
       "id": "PG-215",
@@ -3144,7 +3144,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-qtvXHo\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-0cOxVA\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-224",
@@ -3396,7 +3396,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-2DugWI\\repository-root\\src\\app.ts</path>\n<type>file</type>\n<content>\n1: replay PG-240\n\n(End of file - total 1 lines)\n</content>"
+      "detail": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-YHPjBw\\repository-root\\src\\app.ts</path>\n<type>file</type>\n<content>\n1: replay PG-240\n\n(End of file - total 1 lines)\n</content>"
     },
     {
       "id": "PG-242",
@@ -3522,7 +3522,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-2DugWI\\repository-root)"
+      "detail": "BadResource: FileSystem.readFile (C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-YHPjBw\\repository-root)"
     },
     {
       "id": "PG-251",
@@ -3666,7 +3666,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "24ef350 replay fixture\n"
+      "detail": "cebceac replay fixture\n"
     },
     {
       "id": "BG-005",
@@ -5331,7 +5331,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "24ef350 replay fixture\n"
+      "detail": "cebceac replay fixture\n"
     },
     {
       "id": "BG-116",
@@ -5436,7 +5436,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "C:/Users/jerom/AppData/Local/Temp/sdd-guard-2DugWI/repository-root\n"
+      "detail": "C:/Users/jerom/AppData/Local/Temp/sdd-guard-YHPjBw/repository-root\n"
     },
     {
       "id": "BG-123",
@@ -5481,7 +5481,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "24ef350 replay fixture\n"
+      "detail": "cebceac replay fixture\n"
     },
     {
       "id": "BG-126",
@@ -5496,7 +5496,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 24ef35083d8364dc72cc1178f9e7288e4123527c\nAuthor: replay <replay@localhost>\nDate:   Mon Oct 19 07:42:34 2026 +0200\n\n    replay fixture\n"
+      "detail": "commit cebceacdf9f174e2cb294378404faabda83f0206\nAuthor: replay <replay@localhost>\nDate:   Mon Oct 19 19:47:10 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-127",
@@ -6186,7 +6186,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "\r\n    replay fixture\r\nAuthor: replay <replay@localhost>\r\ncommit 24ef35083d8364dc72cc1178f9e7288e4123527c\r\nDate:   Mon Oct 19 07:42:34 2026 +0200\r\n"
+      "detail": "\r\n    replay fixture\r\nAuthor: replay <replay@localhost>\r\ncommit cebceacdf9f174e2cb294378404faabda83f0206\r\nDate:   Mon Oct 19 19:47:10 2026 +0200\r\n"
     },
     {
       "id": "BG-173",
@@ -6666,7 +6666,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 24ef35083d8364dc72cc1178f9e7288e4123527c\nAuthor: replay <replay@localhost>\nDate:   Mon Oct 19 07:42:34 2026 +0200\n\n    replay fixture\n"
+      "detail": "commit cebceacdf9f174e2cb294378404faabda83f0206\nAuthor: replay <replay@localhost>\nDate:   Mon Oct 19 19:47:10 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-205",
@@ -6846,7 +6846,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 24ef35083d8364dc72cc1178f9e7288e4123527c\r\nAuthor: replay <replay@localhost>\r\nDate:   Mon Oct 19 07:42:34 2026 +0200\r\n\r\n    replay fixture\r\n"
+      "detail": "commit cebceacdf9f174e2cb294378404faabda83f0206\r\nAuthor: replay <replay@localhost>\r\nDate:   Mon Oct 19 19:47:10 2026 +0200\r\n\r\n    replay fixture\r\n"
     },
     {
       "id": "BG-217",
@@ -7251,7 +7251,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "24ef350 replay fixture\n"
+      "detail": "cebceac replay fixture\n"
     },
     {
       "id": "BG-244",
@@ -7623,8 +7623,8 @@
         "malformed": false,
         "dialect": "powershell"
       },
-      "expected": "allow",
-      "expected_source": "corpus",
+      "expected": "deny",
+      "expected_source": "C001-REQ-1103",
       "actual": "deny",
       "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"edit\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"edit\",\"pattern\":\".sdd/*\",\"action\":\"allow\"}]"
     },
@@ -7641,7 +7641,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "File not found: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-2DugWI\\repository-root\\rm -rf src\n\nDid you mean one of these?\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-2DugWI\\repository-root\\src"
+      "detail": "File not found: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-YHPjBw\\repository-root\\rm -rf src\n\nDid you mean one of these?\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-YHPjBw\\repository-root\\src"
     },
     {
       "id": "BG-270",
@@ -9396,7 +9396,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "INFO  2026-10-19 07:46:31,529 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 07:46:31,530 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:/Users/jerom/AppData/Local/Temp/sdd-oc-run-qtvXHo/localappdata/architect-sdd/serena\\logs\\2026-10-19\\mcp_20261019-074631_33596.txt\r\nINFO  2026-10-19 07:46:31,533 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:/Users/jerom/AppData/Local/Temp/sd…"
+      "detail": "INFO  2026-10-19 19:51:09,528 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 19:51:09,529 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:/Users/jerom/AppData/Local/Temp/sdd-oc-run-0cOxVA/localappdata/architect-sdd/serena\\logs\\2026-10-19\\mcp_20261019-195109_1056.txt\r\nINFO  2026-10-19 19:51:09,544 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:/Users/jerom/AppData/Local/Temp/sdd…"
     },
     {
       "id": "BG-387",
@@ -9411,7 +9411,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "INFO  2026-10-19 07:46:38,747 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 07:46:38,748 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena-home\\logs\\2026-10-19\\mcp_20261019-074638_29460.txt\r\nINFO  2026-10-19 07:46:38,750 [MainThread] serena.config.serena_config:from_config_file:1037 - Serena configuration file not found at C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\s…"
+      "detail": "INFO  2026-10-19 19:51:17,087 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 19:51:17,087 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena-home\\logs\\2026-10-19\\mcp_20261019-195117_7608.txt\r\nINFO  2026-10-19 19:51:17,090 [MainThread] serena.config.serena_config:from_config_file:1037 - Serena configuration file not found at C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\se…"
     },
     {
       "id": "BG-388",
@@ -9426,7 +9426,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "INFO  2026-10-19 07:46:46,032 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 07:46:46,033 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena-home\\logs\\2026-10-19\\mcp_20261019-074646_25872.txt\r\nINFO  2026-10-19 07:46:46,035 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena…"
+      "detail": "INFO  2026-10-19 19:51:24,864 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 19:51:24,864 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena-home\\logs\\2026-10-19\\mcp_20261019-195124_32404.txt\r\nINFO  2026-10-19 19:51:24,867 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena…"
     },
     {
       "id": "BG-389",
@@ -9441,7 +9441,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "INFO  2026-10-19 07:46:53,281 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 07:46:53,281 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena-home\\logs\\2026-10-19\\mcp_20261019-074653_24004.txt\r\nINFO  2026-10-19 07:46:53,284 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena…"
+      "detail": "INFO  2026-10-19 19:51:32,379 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 19:51:32,379 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena-home\\logs\\2026-10-19\\mcp_20261019-195132_30112.txt\r\nINFO  2026-10-19 19:51:32,383 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena…"
     },
     {
       "id": "BG-390",
@@ -9456,7 +9456,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "INFO  2026-10-19 07:47:00,368 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 07:47:00,368 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena-home\\logs\\2026-10-19\\mcp_20261019-074700_28748.txt\r\nINFO  2026-10-19 07:47:00,371 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-qtvXHo\\serena…"
+      "detail": "INFO  2026-10-19 19:51:39,970 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-19 19:51:39,970 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena-home\\logs\\2026-10-19\\mcp_20261019-195139_24364.txt\r\nINFO  2026-10-19 19:51:39,973 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-0cOxVA\\serena…"
     },
     {
       "id": "BG-391",
@@ -10136,5 +10136,5 @@
   ],
   "not_applicable": [],
   "applicable": 691,
-  "differing": 159
+  "differing": 158
 }

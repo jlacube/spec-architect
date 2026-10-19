@@ -202,8 +202,10 @@ function unresolvable(folder: string): boolean {
  * The Serena rule of C002-IF-008 §1.1 (C002-REQ-517): a command whose words before the first `--`
  * name `serena-config` or `serena-launch` is allowed only with exactly one data-folder argument
  * (`--user-data`, the literal `${CLAUDE_PLUGIN_DATA}` in the Bash dialect, or a folder outside the
- * repository root, as written and after link resolution) and, for `serena-launch`, `--read-only`.
- * The literal is resolved from this process's own environment (unset or empty: denied). Returns the
+ * repository root, as written and after link resolution); `serena-launch` may also carry `--read-only`,
+ * at most once, and is allowed with or without it (BG-381, C002-IF-008 §1.1).
+ * The literal is resolved from this process's own environment (unset or empty: denied); with
+ * `{ expands: false }` (the sdd MCP server, which runs no shell) it is not expanded. Returns the
  * deny reason, or null when the command is no Serena command or passes.
  */
 function serenaViolation(words: string[], raw: string[], cwd: string, dialect: Dialect, expands: boolean): string | null {

@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { BashCase, CorpusCase } from "../../guards/fixture.ts";
@@ -49,6 +49,51 @@ test("rule 4: a memory case expects deny on every mechanism (C002-REQ-625); rule
   assert.deepEqual(expectationOf(pc({ stdin: "not json" }), "copilot-hooks", "win32"), { applicable: true, expected: "deny", source: "corpus", malformed: true });
   assert.ok("omitted" in expectationOf(pc({ platforms: ["win32"] }), "sdd-mcp-server", "posix"));
 });
+
+const bc = (o: Partial<BashCase>): BashCase => ({ id: "BG-X", category: "tool", tool: "Bash", agent: "architect:sdd-planner", command: "git status", expect: "allow", ...o });
+const realShell = (JSON.parse(readFileSync(join(repoRoot(), "tests", "guards", "bash-corpus.json"), "utf8")) as { cases: BashCase[] }).cases;
+const realPath = (JSON.parse(readFileSync(join(repoRoot(), "tests", "guards", "path-corpus.json"), "utf8")) as { cases: CorpusCase[] }).cases;
+const idsWith = <T extends CorpusCase | BashCase>(cases: T[], corpus: "path" | "shell", m: Mechanism, source: string) =>
+  cases.filter((c) => (expectationOf(c, m, "win32", corpus) as { source?: string }).source === source).map((c) => c.id);
+
+for (const m of MECHANISMS)
+  test(`rule 5 (${m}): a shell-corpus write-tool case expects deny (C001-REQ-1103); BG-268 is one, the read-tool cases BG-269 and BG-270 are not`, () => {
+    for (const tool of ["Write", "Edit", "MultiEdit", "NotebookEdit"])
+      assert.deepEqual(expectationOf(bc({ tool, command: "rm -rf src" }), m, "win32", "shell"), { applicable: true, expected: "deny", source: "C001-REQ-1103", malformed: false });
+    assert.deepEqual(idsWith(realShell, "shell", m, "C001-REQ-1103"), ["BG-268"]);
+    for (const id of ["BG-269", "BG-270"]) assert.equal((expectationOf(realShell.find((c) => c.id === id)!, m, "win32", "shell") as { source: string }).source, "corpus");
+    // A path-corpus write is not this row.
+    assert.equal((expectationOf(pc({ tool: "Write" }), m, "win32", "path") as { source: string }).source, "corpus");
+  });
+
+const SERENA_IDS = ["BG-374", "BG-379", "BG-384", "BG-389", "BG-402", "BG-403", "BG-404", "BG-405", "BG-406", "BG-407"];
+for (const m of MECHANISMS)
+  test(`rule 6 (${m}): the \${CLAUDE_PLUGIN_DATA} Serena cases expect deny on sdd-mcp-server only (C002-REQ-517); BG-408 and BG-409 are no such case`, () => {
+    const ids = idsWith(realShell, "shell", m, "C002-REQ-517");
+    if (m === "sdd-mcp-server") {
+      assert.deepEqual(ids, SERENA_IDS);
+      for (const id of SERENA_IDS) assert.equal((expectationOf(realShell.find((c) => c.id === id)!, m, "win32", "shell") as { expected: string }).expected, "deny");
+    } else {
+      assert.deepEqual(ids, []);
+      for (const id of SERENA_IDS) {
+        const c = realShell.find((x) => x.id === id)!;
+        assert.deepEqual(expectationOf(c, m, "win32", "shell"), { applicable: true, expected: c.expect, source: "corpus", malformed: false });
+      }
+    }
+    for (const id of ["BG-408", "BG-409", "BG-034"]) assert.equal((expectationOf(realShell.find((c) => c.id === id)!, m, "win32", "shell") as { source: string }).source, "corpus");
+  });
+
+for (const m of MECHANISMS)
+  test(`rule 7 (${m}): the linked-cwd cases PG-135 and PG-136 expect deny on sdd-mcp-server only (C002-REQ-401)`, () => {
+    const ids = idsWith(realPath, "path", m, "C002-REQ-401");
+    assert.deepEqual(ids, m === "sdd-mcp-server" ? ["PG-135", "PG-136"] : []);
+    const pg135 = realPath.find((c) => c.id === "PG-135")!;
+    assert.deepEqual(expectationOf(pg135, m, "win32", "path"), m === "sdd-mcp-server"
+      ? { applicable: true, expected: "deny", source: "C002-REQ-401", malformed: false }
+      : { applicable: true, expected: "allow", source: "corpus", malformed: false });
+    // Another cwd case (PG-137, {repo2}) is not this row.
+    assert.equal((expectationOf(realPath.find((c) => c.id === "PG-137")!, m, "win32", "path") as { source: string }).source, "corpus");
+  });
 
 test("a case requiring a host capability is never a malformed call nor not applicable (C002-REQ-633)", () => {
   for (const m of MECHANISMS) assert.deepEqual(expectationOf(pc({ category: "symlink", requires: "file-symlink", cwd: null }), m, "win32"), { applicable: true, expected: "deny", source: "corpus", malformed: false });

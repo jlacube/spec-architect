@@ -12473,7 +12473,7 @@ function loadPackage(given, cwd, cli = runningCli()) {
   const listed = Array.isArray(manifest.files) ? manifest.files.map((f) => isObject(f) && typeof f["path"] === "string" ? f["path"] : "") : [];
   const agents = listed.map((p) => AGENT_FILE.exec(p)?.[1]).filter((n) => n !== void 0);
   if (agents.length === 0) throw refuse(dir2, `${PACKAGE_FILES.manifest} lists no agents/<agent name>.agent.md file`);
-  const sources2 = [...agents.map((a) => `agents/${a}`), PACKAGE_FILES.pluginManifest, PACKAGE_FILES.mcp, PACKAGE_FILES.hooksTemplate, PACKAGE_FILES.toolClasses];
+  const sources2 = [...agents.map((a) => `agents/${a}`), PACKAGE_FILES.pluginManifest, PACKAGE_FILES.mcp, PACKAGE_FILES.hooksTemplate, PACKAGE_FILES.toolClasses, PACKAGE_FILES.cliCopy];
   const missing = sources2.filter((s) => !isFile2(join20(dir2, s)));
   if (missing.length > 0) throw refuse(dir2, `source file${missing.length === 1 ? "" : "s"} missing: ${missing.join(", ")}`);
   const parse = (rel) => {
@@ -12491,6 +12491,12 @@ function loadPackage(given, cwd, cli = runningCli()) {
   const hooks = JSON.parse(hooksJson);
   const pre = isObject(hooks) && isObject(hooks["hooks"]) ? hooks["hooks"]["PreToolUse"] : void 0;
   if (!Array.isArray(pre) || pre.length === 0) throw refuse(dir2, `${PACKAGE_FILES.hooksTemplate} has no PreToolUse entry`);
+  const names = guardAgents(pre);
+  if (names === null) throw refuse(dir2, `${PACKAGE_FILES.hooksTemplate} has no single hook guard command with --agents`);
+  const unlisted = names.filter((n) => !agents.includes(`${n}.agent.md`)).map((n) => `agents/${n}.agent.md`);
+  if (unlisted.length > 0) throw refuse(dir2, `${PACKAGE_FILES.manifest} does not list ${unlisted.join(", ")}, which --agents names`);
+  const unnamed = agents.filter((a) => !names.includes(a.slice(0, -".agent.md".length))).map((a) => `agents/${a}`);
+  if (unnamed.length > 0) throw refuse(dir2, `${PACKAGE_FILES.manifest} lists ${unnamed.join(", ")}, which --agents does not name`);
   return {
     dir: dir2,
     version: manifest.package_version,
@@ -12501,6 +12507,20 @@ function loadPackage(given, cwd, cli = runningCli()) {
     guardHook: jsonText({ hooks: { PreToolUse: pre } }),
     servers: mcp["servers"]
   };
+}
+var GUARD_COMMAND = /(?:^|\s)hook\s+guard(?:\s|$)/;
+function guardAgents(preToolUse) {
+  const found = [];
+  for (const entry of preToolUse) {
+    const command = isObject(entry) ? entry["command"] : void 0;
+    if (typeof command !== "string" || !GUARD_COMMAND.test(command)) continue;
+    const words = command.trim().split(/\s+/);
+    const at = words.indexOf("--agents");
+    const value2 = at >= 0 ? words[at + 1] : words.find((w) => w.startsWith("--agents="))?.slice("--agents=".length);
+    const names = (value2 ?? "").split(",").map((a) => a.trim()).filter((a) => a !== "");
+    if (names.length > 0) found.push(names);
+  }
+  return found.length === 1 ? found[0] : null;
 }
 function isFile2(p) {
   try {
@@ -13188,17 +13208,18 @@ function useHooks(file) {
   let text;
   try {
     text = readFileSync21(file, "utf8");
-  } catch {
-    return void 0;
+  } catch (err) {
+    return err.code === "ENOENT" ? "missing" : "unusable";
   }
   const doc = parseJsonc(text);
-  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return void 0;
+  if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return "unusable";
+  if (!Object.prototype.hasOwnProperty.call(doc, "chat.useHooks")) return "unset";
   const v = doc["chat.useHooks"];
-  return typeof v === "boolean" ? v : void 0;
+  return typeof v === "boolean" ? v : "unusable";
 }
-function hooksState(cwd, insiders) {
+function hooksState(cwd, insiders, env = process.env) {
   const workspace = useHooks(join30(findRepositoryRoot(cwd), ".vscode", "settings.json"));
-  const value2 = workspace ?? useHooks(userSettingsPath(insiders));
+  const value2 = workspace === "missing" || workspace === "unset" ? useHooks(userSettingsPath(insiders, env)) : workspace;
   if (value2 === true) return { state: "enabled" };
   if (value2 === false) return { state: "disabled", source: "chat.useHooks" };
   return { state: "unknown" };

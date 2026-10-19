@@ -134,8 +134,9 @@ test("C002-T-041 — copilot-hooks adapter: Copilot-shaped hook input run throug
 test("C002-T-041 — decision reading of the server (C002-IF-009 §2.3)", () => {
   const err = (code: string) => ({ id: 1, result: { isError: true, content: [{ type: "text", text: code }], structuredContent: { code } } });
   for (const code of ["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-001"]) assert.equal(readServerDecision(err(code)).actual, "deny", code);
-  for (const code of ["ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]) assert.equal(readServerDecision(err(code)).actual, "allow", code);
-  for (const code of ["ERR-MCP-002", "ERR-MCP-003"]) assert.equal(readServerDecision(err(code)).actual, "error", code);
+  for (const code of ["ERR-MCP-003", "ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]) assert.equal(readServerDecision(err(code)).actual, "allow", code);
+  assert.match(readServerDecision(err("ERR-MCP-003")).detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/, "the I/O error in detail");
+  for (const code of ["ERR-MCP-002"]) assert.equal(readServerDecision(err(code)).actual, "error", code);
   assert.equal(readServerDecision({ id: 1, result: { content: [{ type: "text", text: "exit 0" }], structuredContent: { status: "timed_out" } } }).actual, "allow");
   assert.equal(readServerDecision({ id: 1, error: { code: -32602, message: "unknown tool" } }).actual, "error");
 });

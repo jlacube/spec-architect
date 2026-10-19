@@ -93,6 +93,7 @@
     { "id": "arguments", "kind": "arguments", "detect": "\\$ARGUMENTS\\b", "contexts": ["body"], "accepted_in": ["body"], "action": { "replace": "$ARGUMENTS" } },
     { "id": "command-reference", "kind": "command-reference", "detect": "/architect:(?=[a-z])", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "/architect-" } },
     { "id": "conductor-start", "kind": "other", "detect": "\\(claude --agent (?:architect:)?sdd-conductor\\)", "contexts": ["frontmatter"], "accepted_in": [], "action": { "replace": "(select the `sdd-conductor` primary agent: press Tab until it is selected, or start `opencode --agent sdd-conductor`)" } },
+    { "id": "doctor-description", "kind": "other", "detect": "\\(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki\\)", "contexts": ["frontmatter"], "accepted_in": [], "action": { "replace": "(node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI)" } },
     { "id": "agent-reference", "kind": "agent-reference", "detect": "\\barchitect:(?=sdd-)", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "" } },
     { "id": "ask-user-question", "kind": "question-tool-name", "detect": "`?\\bAskUserQuestion\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "the `question` tool" } },
     { "id": "task-tools", "kind": "task-tool-name", "detect": "`?\\bTask(?:Create|Update|List)\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "the `todowrite` tool" } },
