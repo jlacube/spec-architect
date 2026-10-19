@@ -17,8 +17,10 @@
 //   raw stdin    the case's standard input unchanged
 //   C002-REQ-630 the input of the case's tool with the field the case leaves out also left out or empty
 //
-// Before each case the package's classes file is rewritten so that its terminal entries name the
-// dialect of the case's tool (§2.2: each case is decided in its own dialect). The decision is read per
+// Before each case the package's classes file is rewritten (the per-case copy of §2.2 "Copilot classes
+// copy per case", critic CR-46) so that every terminal entry names the dialect of the case's tool
+// (`bash` for a case that is not a shell corpus case), every other entry kept: each case is decided in
+// its own dialect. The hook runs without `--classes` and reads that file, its default. The decision is read per
 // §2.3: exit 2 with the deny decision on standard output is `deny`, exit 0 with empty standard output
 // `allow`, anything else `error`. The hook runs in the sandbox of ./package.ts.
 import { spawnSync } from "node:child_process";
@@ -116,8 +118,8 @@ export function readHookDecision(r: { status: number | null; stdout: string; std
 export interface CopilotHooksAdapter extends ReplayAdapter {
   /** The installed PreToolUse command, split (set up only). */
   readonly command: () => { script: string; args: string[] } | undefined;
-  /** Every hook input sent, in order. */
-  readonly calls: { id: string; tool: string; stdin: string; dialect: Dialect }[];
+  /** Every hook input sent, in order, with the dialects of the classes file's terminal entries when it ran. */
+  readonly calls: { id: string; tool: string; stdin: string; dialect: Dialect; terminalDialects: string[] }[];
 }
 
 export function createCopilotHooksAdapter(): CopilotHooksAdapter {
@@ -127,14 +129,12 @@ export function createCopilotHooksAdapter(): CopilotHooksAdapter {
   let hook: { script: string; args: string[] } | undefined;
   let classesFile: string | undefined;
   let classes: Classes | undefined;
-  let written: Dialect | undefined;
   let grants: Grants = () => true;
 
-  /** The package's classes file with every terminal entry in `dialect`. */
-  function classesFor(dialect: Dialect): void {
-    if (written === dialect) return;
+  /** Rewrites the package's classes file for one case, every terminal entry in `dialect`; returns the terminal dialects read back. */
+  function classesFor(dialect: Dialect): string[] {
     writeFileSync(classesFile!, JSON.stringify({ ...classes!, terminal: classes!.terminal.map((e) => ({ ...e, dialect })) }, null, 2) + "\n");
-    written = dialect;
+    return (JSON.parse(readFileSync(classesFile!, "utf8")) as Classes).terminal.map((e) => String(e.dialect));
   }
 
   return {
@@ -147,7 +147,6 @@ export function createCopilotHooksAdapter(): CopilotHooksAdapter {
     async setup(fx) {
       fixture = fx;
       calls.length = 0;
-      written = undefined;
       hook = undefined;
       sandbox = createSandbox("sdd-cp-hooks-run-");
       try {
@@ -180,9 +179,9 @@ export function createCopilotHooksAdapter(): CopilotHooksAdapter {
     async decide(input: ReplayInput): Promise<AdapterDecision> {
       if (!fixture || !hook || !classes || !sandbox) throw new Error("the copilot-hooks adapter is not set up");
       const dialect: Dialect = input.corpus === "shell" ? input.dialect : "bash";
-      classesFor(dialect);
+      const terminalDialects = classesFor(dialect);
       const { stdin, tool } = hookInputOf(input, classes);
-      calls.push({ id: input.id, tool, stdin, dialect });
+      calls.push({ id: input.id, tool, stdin, dialect, terminalDialects });
       const stub = input.env === undefined ? undefined : Object.fromEntries(Object.entries(input.env).map(([k, v]) => [k, v === null ? null : input.resolve(v)]));
       const r = spawnSync(process.execPath, [hook.script, ...hook.args], { cwd: fixture.repo, env: sandbox.env(stub), input: stdin, encoding: "utf8", timeout: HOOK_TIMEOUT_MS, windowsHide: true });
       const d = readHookDecision({ status: r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "", ...(r.error ? { error: r.error } : {}) });

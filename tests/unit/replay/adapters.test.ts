@@ -45,18 +45,13 @@ const entry = (report: ReplayReport, id: string): ReportCase => {
   return e;
 };
 
-// The server runs a command without a shell, so its guard call does not expand ${CLAUDE_PLUGIN_DATA}
-// and denies the literal (fail closed; the CLI would get the literal text). The corpus expects allow, as
-// for a shell; the expectation per mechanism is spec defect D-014.
-const SERVER_DENIES = ["BG-374"];
-
-function assertReport(result: ReplayResult, mechanism: string, known: string[] = []): void {
+function assertReport(result: ReplayResult, mechanism: string): void {
   const { report } = result;
   assert.equal(report.mechanism, mechanism);
   assert.deepEqual(result.problems, [], "schema-valid, every case once");
   assert.deepEqual(report.not_applicable.map((n) => n.id).sort(), ["BG-265", "PG-237"], "identity cases only (C002-REQ-626)");
   assert.deepEqual(
-    report.cases.filter((c) => c.actual !== c.expected && !known.includes(c.id)).map((c) => `${c.id}: expected ${c.expected}, got ${c.actual} (${c.detail ?? ""})`),
+    report.cases.filter((c) => c.actual !== c.expected).map((c) => `${c.id}: expected ${c.expected}, got ${c.actual} (${c.detail ?? ""})`),
     [],
     "0 differing decisions",
   );
@@ -72,9 +67,11 @@ test("C002-T-041 — sdd-mcp-server adapter: each case fed as its server tool ca
   const adapter: McpServerAdapter = createMcpServerAdapter({ serverEntry: file });
   let repo = "";
   const result = await runReplay(adapter, { pathCorpus, shellCorpus, afterRun: (fx) => (repo = fx.repo) });
-  assertReport(result, "sdd-mcp-server", SERVER_DENIES);
-  for (const id of SERVER_DENIES) assert.equal(entry(result.report, id).actual, "deny", id);
+  assertReport(result, "sdd-mcp-server");
   const { report } = result;
+  // The server runs a command without a shell, so its guard call does not expand ${CLAUDE_PLUGIN_DATA}
+  // and denies the literal: the Serena-literal row of C002-IF-009 §2.1 (D-014 item 4).
+  assert.deepEqual([entry(report, "BG-374").expected, entry(report, "BG-374").expected_source, entry(report, "BG-374").actual], ["deny", "C002-REQ-517", "deny"]);
   const tools = Object.fromEntries(report.cases.map((c) => [c.id, c.fed_as.tool]));
   assert.deepEqual(
     [tools["PG-003"], tools["PG-042"], tools["PG-241"], tools["PG-243"], tools["BG-115"], tools["BG-269"], tools["PG-245"], tools["PG-256"], tools["BG-277"]],
@@ -110,6 +107,8 @@ test("C002-T-041 — copilot-hooks adapter: Copilot-shaped hook input run throug
   });
   assertReport(result, "copilot-hooks");
   assert.equal(result.report.target, "copilot");
+  // The Copilot guard hooks keep the corpus expectation of the Serena-literal case (§2.1).
+  assert.deepEqual([entry(result.report, "BG-374").expected, entry(result.report, "BG-374").expected_source, entry(result.report, "BG-374").actual], ["allow", "corpus", "allow"]);
   assert.ok(command, "the installed command was read");
   assert.match(command.script, /pkg-cp-hooks\/scripts\/sdd\.mjs$/);
   assert.deepEqual(command.args.slice(0, 6), ["hook", "guard", "--host", "copilot", "--mode", "copilot-hooks"]);

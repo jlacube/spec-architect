@@ -6,20 +6,25 @@
 // mechanism rows of C002-TS-628, C002-TS-638, C002-TS-643 and C002-TS-644 below also run against the
 // real `sdd-mcp-server` (the server of dist/architect-sdd-<version>.tgz, `npm run package`) and
 // `copilot-hooks` adapters; C002-TC-608 with C002-T-049 (release runs), C002-TC-637 (release-check
-// refusal) with C002-T-047.
+// refusal) with C002-T-047. C002-TC-661 (the per-mechanism rows of C002-IF-009 §2.1 revised for D-014)
+// and C002-TC-662 (ERR-MCP-003 read as allow) run against the real adapters only (C002-T-041); the
+// OpenCode row of C002-TC-661 (@mode-native) through the adapter of C002-T-042.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import type { TestContext } from "node:test";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { BashCase, Corpus } from "../../guards/fixture.ts";
 import { createStubAdapter, joinedPath, type ReplayAdapter, type StubAdapter } from "../adapter.ts";
-import { createCopilotHooksAdapter } from "../adapters/copilot-hooks.ts";
-import { createMcpServerAdapter } from "../adapters/sdd-mcp-server.ts";
+import { type CopilotHooksAdapter, createCopilotHooksAdapter } from "../adapters/copilot-hooks.ts";
+import type { SentCall } from "../adapters/opencode-permissions.ts";
+import { createMcpServerAdapter, type McpServerAdapter } from "../adapters/sdd-mcp-server.ts";
+import { loadTargetTable } from "../../../scripts/generate/tables.ts";
 import { repoRoot } from "../../helpers.ts";
 import { type Mechanism, MECHANISMS } from "../expect.ts";
-import { main } from "../main.ts";
+import { ADAPTERS, main } from "../main.ts";
 import { type ReplayReport, type ReportCase, sourceVersion } from "../report.ts";
 import { DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS, loadCorpora, type ReplayResult, runReplay } from "../suite.ts";
 
@@ -370,3 +375,238 @@ for (const m of ["sdd-mcp-server", "copilot-hooks"] as const) {
     assert.deepEqual(report.not_applicable.map((n) => n.id).sort(), identity);
   });
 }
+
+// --- C002-TC-661, C002-TC-662 (C002-T-041, C002-T-063; the OpenCode row with C002-T-042) ---------------
+
+const PLUGIN_DATA_LITERAL = "${CLAUDE_PLUGIN_DATA}";
+const digest = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex");
+const RECORD_MODE = loadTargetTable(repoRoot(), "opencode").enforcement_mode;
+const FIXTURE_APP_TS = (JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus).fixture.files["src/app.ts"]!;
+const commandOf = (id: string): string => loadCorpora().shell.cases.find((c) => c.id === id)!.command as string;
+
+type RowMechanism = "opencode-permissions" | "sdd-mcp-server" | "copilot-hooks";
+
+/** The cases of the Examples of C002-TS-661 (and PG-048 of C002-TS-662) replayed per mechanism, cut from the corpora. */
+const ROW_CASES: Record<RowMechanism, { path: string[]; shell: string[] }> = {
+  // BG-268 beside a path case that changes no file (PG-050, an Edit that OpenCode denies).
+  "opencode-permissions": { path: ["PG-050"], shell: ["BG-268"] },
+  "sdd-mcp-server": { path: ["PG-135", "PG-136", "PG-048"], shell: ["BG-268", "BG-374", "BG-403", "BG-405", "BG-408"] },
+  "copilot-hooks": { path: ["PG-135"], shell: ["BG-268", "BG-374"] },
+};
+
+/** Paths under `root` whose last segment is `name`; links (junctions) and node_modules are not entered. */
+function named(root: string, name: string): string[] {
+  const hits: string[] = [];
+  const walk = (dir: string) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = `${dir}/${e.name}`;
+      if (e.name === name) hits.push(p);
+      if (e.isDirectory() && !e.isSymbolicLink() && e.name !== "node_modules") walk(p);
+    }
+  };
+  walk(root);
+  return hits;
+}
+
+interface Sent {
+  tool: string;
+  args: Record<string, unknown>;
+  agent?: string;
+}
+
+interface RowRun {
+  report: ReplayReport;
+  problems: string[];
+  repo: string;
+  repolink: string;
+  /** The tool and arguments (server, OpenCode) or the hook's tool_name and whole input (Copilot) per case. */
+  sent: Map<string, Sent>;
+  srcExists: boolean;
+  sddAExists: boolean;
+  appTs: string | null;
+  rmNamed: string[];
+  pluginDataNamed: string[];
+  digestsBefore: string[];
+  digestsAfter: string[];
+}
+
+const rowRuns = new Map<RowMechanism, Promise<RowRun>>();
+
+/** One replay of the cases of ROW_CASES (cut corpora in a temporary folder) through the real adapter of `m`. */
+function rowReplay(m: RowMechanism): Promise<RowRun> {
+  let r = rowRuns.get(m);
+  if (r) return r;
+  r = (async () => {
+    const digestsBefore = [DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS].map(digest);
+    const dir = mkdtempSync(join(tmpdir(), "sdd-tc661-"));
+    try {
+      const p = JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus;
+      p.cases = p.cases.filter((c) => ROW_CASES[m].path.includes(c.id));
+      const s = JSON.parse(readFileSync(DEFAULT_SHELL_CORPUS, "utf8")) as { cases: BashCase[] };
+      s.cases = s.cases.filter((c) => ROW_CASES[m].shell.includes(c.id));
+      assert.equal(p.cases.length + s.cases.length, ROW_CASES[m].path.length + ROW_CASES[m].shell.length, "every named case is in the corpora");
+      writeFileSync(join(dir, "path-corpus.json"), JSON.stringify(p));
+      writeFileSync(join(dir, "bash-corpus.json"), JSON.stringify(s));
+      const adapter: ReplayAdapter =
+        m === "sdd-mcp-server" ? createMcpServerAdapter() : m === "copilot-hooks" ? createCopilotHooksAdapter() : await ADAPTERS["opencode-permissions"]!({ mode: "native-permissions" });
+      const run: Partial<RowRun> = {};
+      const { report, problems } = await runReplay(adapter, {
+        pathCorpus: join(dir, "path-corpus.json"),
+        shellCorpus: join(dir, "bash-corpus.json"),
+        afterRun: (fx) => {
+          run.repo = fx.repo;
+          run.repolink = fx.resolvePath("{repolink}");
+          run.srcExists = existsSync(`${fx.repo}/src`);
+          run.sddAExists = existsSync(`${fx.repo}/.sdd/a.md`);
+          run.appTs = existsSync(`${fx.repo}/src/app.ts`) ? readFileSync(`${fx.repo}/src/app.ts`, "utf8") : null;
+          run.rmNamed = named(fx.base, "rm -rf src");
+          run.pluginDataNamed = named(fx.base, PLUGIN_DATA_LITERAL);
+        },
+      });
+      const sent = new Map<string, Sent>();
+      if (m === "sdd-mcp-server") for (const c of (adapter as McpServerAdapter).calls) sent.set(c.id, { tool: c.tool, args: (c.args ?? {}) as Record<string, unknown> });
+      else if (m === "copilot-hooks")
+        for (const c of (adapter as CopilotHooksAdapter).calls) {
+          const input = JSON.parse(c.stdin) as Record<string, unknown>;
+          sent.set(c.id, { tool: String(input["tool_name"]), args: input });
+        }
+      else for (const c of (adapter as ReplayAdapter & { calls: SentCall[] }).calls) sent.set(c.id, { tool: c.tool, args: c.args as Record<string, unknown>, agent: c.agent });
+      return { ...(run as RowRun), report, problems, sent, digestsBefore, digestsAfter: [DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS].map(digest) };
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  })();
+  rowRuns.set(m, r);
+  return r;
+}
+
+interface Row {
+  corpus: "path" | "shell";
+  id: string;
+  corpusExpect: "allow" | "deny";
+  mechanism: RowMechanism;
+  fedAs: string;
+  fed(r: RowRun): void;
+  expected: "allow" | "deny";
+  source: string;
+  afterText: string;
+  after(r: RowRun): void;
+}
+
+const toolInput = (s: Sent | undefined): Record<string, unknown> => (s?.args["tool_input"] ?? {}) as Record<string, unknown>;
+const serverRunCommand = (id: string) => (r: RowRun) => assert.deepEqual(r.sent.get(id), { tool: "run_command", args: { command: commandOf(id), dialect: "bash" } });
+const noPluginDataEntry = (r: RowRun) => assert.deepEqual(r.pluginDataNamed, [], `the replay fixture holds no file or folder named ${PLUGIN_DATA_LITERAL}`);
+const srcKeptNoRmFile = (r: RowRun) => assert.deepEqual([r.srcExists, r.rmNamed], [true, []], '"{repo}/src" still exists and no file "rm -rf src" exists in the replay fixture');
+
+/** The Examples of C002-TS-661, in order. */
+const TS_661: Row[] = [
+  {
+    corpus: "shell", id: "BG-268", corpusExpect: "allow", mechanism: "opencode-permissions",
+    fedAs: 'a "write" call of "sdd-cartographer" whose "filePath" is "rm -rf src"',
+    fed: (r) => {
+      const c = r.sent.get("BG-268");
+      assert.ok(c, "BG-268 was sent to OpenCode");
+      assert.deepEqual([c.tool, c.agent, c.args["filePath"]], ["write", "sdd-cartographer", "rm -rf src"]);
+    },
+    expected: "deny", source: "C001-REQ-1103", afterText: '"{repo}/src" still exists, no file "rm -rf src"', after: srcKeptNoRmFile,
+  },
+  {
+    corpus: "shell", id: "BG-268", corpusExpect: "allow", mechanism: "sdd-mcp-server",
+    fedAs: 'a "write_file" call whose "path" is "rm -rf src"',
+    fed: (r) => assert.deepEqual([r.sent.get("BG-268")?.tool, r.sent.get("BG-268")?.args["path"]], ["write_file", "rm -rf src"]),
+    expected: "deny", source: "C001-REQ-1103", afterText: '"{repo}/src" still exists, no file "rm -rf src"', after: srcKeptNoRmFile,
+  },
+  {
+    corpus: "shell", id: "BG-268", corpusExpect: "allow", mechanism: "copilot-hooks",
+    fedAs: 'hook input with the "tool_name" "Write" and "rm -rf src" as "tool_input.path"',
+    fed: (r) => assert.deepEqual([r.sent.get("BG-268")?.tool, toolInput(r.sent.get("BG-268"))["path"]], ["Write", "rm -rf src"]),
+    expected: "deny", source: "C001-REQ-1103", afterText: '"{repo}/src" still exists', after: (r) => assert.equal(r.srcExists, true),
+  },
+  ...(["BG-374", "BG-403", "BG-405"] as const).map(
+    (id): Row => ({
+      corpus: "shell", id, corpusExpect: id === "BG-405" ? "deny" : "allow", mechanism: "sdd-mcp-server",
+      fedAs: `a "run_command" call with the case's command and the "dialect" "bash"`,
+      fed: serverRunCommand(id),
+      expected: "deny", source: "C002-REQ-517", afterText: `no file or folder named ${PLUGIN_DATA_LITERAL}`, after: noPluginDataEntry,
+    }),
+  ),
+  {
+    corpus: "shell", id: "BG-374", corpusExpect: "allow", mechanism: "copilot-hooks",
+    fedAs: `hook input with the "tool_name" "Bash" and the case's command as "tool_input.command"`,
+    fed: (r) => assert.deepEqual([r.sent.get("BG-374")?.tool, toolInput(r.sent.get("BG-374"))["command"]], ["Bash", commandOf("BG-374")]),
+    expected: "allow", source: "corpus", afterText: `no file or folder named ${PLUGIN_DATA_LITERAL}`, after: noPluginDataEntry,
+  },
+  {
+    corpus: "shell", id: "BG-408", corpusExpect: "deny", mechanism: "sdd-mcp-server",
+    fedAs: `a "run_command" call with the case's command (single quotes) and the "dialect" "bash"`,
+    fed: serverRunCommand("BG-408"),
+    expected: "deny", source: "corpus", afterText: `no file or folder named ${PLUGIN_DATA_LITERAL}`, after: noPluginDataEntry,
+  },
+  {
+    corpus: "path", id: "PG-135", corpusExpect: "allow", mechanism: "sdd-mcp-server",
+    fedAs: 'a "write_file" call whose "path" is "{repolink}/.sdd/a.md", the server at "{repo}"',
+    fed: (r) => assert.deepEqual([r.sent.get("PG-135")?.tool, r.sent.get("PG-135")?.args["path"]], ["write_file", `${r.repolink}/.sdd/a.md`]),
+    expected: "deny", source: "C002-REQ-401", afterText: '"{repo}/.sdd/a.md" does not exist', after: (r) => assert.equal(r.sddAExists, false),
+  },
+  {
+    corpus: "path", id: "PG-136", corpusExpect: "deny", mechanism: "sdd-mcp-server",
+    fedAs: 'a "write_file" call whose "path" is "{repolink}/src/app.ts", the server at "{repo}"',
+    fed: (r) => assert.deepEqual([r.sent.get("PG-136")?.tool, r.sent.get("PG-136")?.args["path"]], ["write_file", `${r.repolink}/src/app.ts`]),
+    expected: "deny", source: "C002-REQ-401", afterText: '"{repo}/src/app.ts" is unchanged', after: (r) => assert.equal(r.appTs, FIXTURE_APP_TS),
+  },
+  {
+    corpus: "path", id: "PG-135", corpusExpect: "allow", mechanism: "copilot-hooks",
+    fedAs: 'hook input with the "cwd" "{repolink}", the "tool_name" "Write" and "{repolink}/.sdd/a.md" as "tool_input.path"',
+    fed: (r) => {
+      const c = r.sent.get("PG-135");
+      assert.deepEqual([c?.args["cwd"], c?.tool, toolInput(c)["path"]], [r.repolink, "Write", `${r.repolink}/.sdd/a.md`]);
+    },
+    expected: "allow", source: "corpus", afterText: "the hook command exits with code 0",
+    after: (r) => assert.equal(entry(r.report, "PG-135").detail, "exit 0, no output", "exit 0 with empty standard output"),
+  },
+];
+
+/** False (and the test skipped) when the row's mechanism cannot run here: no tarball, or OpenCode not in native-permissions. */
+function rowRunnable(t: TestContext, m: RowMechanism): boolean {
+  if (m === "sdd-mcp-server") return haveTarball(t);
+  if (m === "opencode-permissions") {
+    if (RECORD_MODE !== "native-permissions") {
+      t.skip(`not applicable: a @mode-native row, and the S-07 record fixes ${RECORD_MODE} (docs/spikes/S-07-opencode.md)`);
+      return false;
+    }
+    if (!ADAPTERS["opencode-permissions"]) {
+      t.skip("no opencode-permissions replay adapter registered (C002-T-042)");
+      return false;
+    }
+  }
+  return true;
+}
+
+for (const row of TS_661) {
+  test(`C002-TS-661 — ${row.id} (corpus ${row.corpusExpect}) against ${row.mechanism}: fed as ${row.fedAs}; ${row.expected} (${row.source}); ${row.afterText}`, async (t) => {
+    if (!rowRunnable(t, row.mechanism)) return;
+    const r = await rowReplay(row.mechanism);
+    assert.deepEqual(r.problems, [], "the report validates and lists every case once");
+    row.fed(r);
+    assert.ok(!notApplicable(r.report, row.id), `${row.id} is a replayed case`);
+    const e = entry(r.report, row.id);
+    assert.deepEqual([e.expected, e.expected_source, e.actual], [row.expected, row.source, row.expected], e.detail ?? "");
+    const { path, shell } = loadCorpora();
+    const c = (row.corpus === "path" ? path.corpus.cases : shell.cases).find((x) => x.id === row.id)!;
+    assert.equal(c.expect, row.corpusExpect, `tests/guards/${row.corpus === "path" ? "path-corpus.json" : "bash-corpus.json"} still records ${row.corpusExpect} for ${row.id}`);
+    assert.deepEqual(r.digestsAfter, r.digestsBefore, "the corpus files read back unchanged");
+    row.after(r);
+  });
+}
+
+test("C002-TS-662 — PG-048, a write the guard allows and the file system refuses with ERR-MCP-003, counts as allow on the sdd MCP server", async (t) => {
+  if (!haveTarball(t)) return;
+  const r = await rowReplay("sdd-mcp-server");
+  const c = loadCorpora().path.corpus.cases.find((x) => x.id === "PG-048")!;
+  assert.deepEqual([c.tool, c.agent, c.path, c.expect], ["Write", "architect:sdd-spec-writer", "{repo}/.sdd/004-x/", "allow"]);
+  assert.deepEqual([r.sent.get("PG-048")?.tool, r.sent.get("PG-048")?.args["path"]], ["write_file", `${r.repo}/.sdd/004-x/`]);
+  const e = entry(r.report, "PG-048");
+  assert.match(e.detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/, "the server's error result with ERR-MCP-003, named in detail");
+  assert.deepEqual([e.expected, e.expected_source, e.actual], ["allow", "corpus", "allow"]);
+  assert.equal(r.report.differing, 0, "PG-048 is not among the differing decisions (nor is any other case of the run)");
+});
