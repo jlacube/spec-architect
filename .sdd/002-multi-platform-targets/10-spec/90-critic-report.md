@@ -1242,3 +1242,29 @@ and owned.
 ### Verdict (revision D-004 … D-009)
 
 **ready for G2 re-approval.** 0 blocker, 0 major; the two minors are fixed.
+
+
+## Revision D-010…D-014 (2026-10-19)
+
+Scope: `git diff 9439c8d~1 f23deb2 -- .sdd/002-multi-platform-targets/10-spec/` read against
+`20-plan/revision-D010-D014-digest.md`, defects D-010 … D-014 and P-01 answers Q-hooks-row-01,
+Q-safety-08, Q-release-hooks-01. Lint: the 9 waived LINT-DELTA-001 only. Trace 100 %. Appended by the
+conductor from the critic's reply (report file too large for the critic to rewrite).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-44 | major | TS-516, AC-510.1, REQ-615/629, DOD-004, IF-009 §4 | TS-516 rows that turn `chat.useHooks` off or untrust the workspace run inside the checklist run whose record must state hooks enabled during the run; no order is given | IF-009 §4: disabling/untrusting rows first, restore, then the hooks-state step and every step that needs hooks | open |
+| CR-45 | major | REQ-510, IF-007 host-version, IF-006 §2, TS-526 | `ok` can show while `chat.useHooks` is off: an unparsable `.vscode/settings.json` falls back to user settings (`src/cli/host-version.ts:121`); profile and `.code-workspace` settings not read | unparsable workspace file → `hooks unknown` (no fallback); name profile and multi-root settings as not read in the Version text; TS-526 row | open |
+| CR-46 | major | IF-009 §2.1/§2.2, IF-008 §2, TS-661/663 | Copilot-hooks replay feeds shell cases as `Bash` from the shipped classes file (`dialect: powershell`), while §2.2 says decided in the bash dialect; the adapter rewrites the dialect unstated | §2.2: the adapter decides each shell case through a copy of the classes file whose terminal entries carry the case's dialect | open |
+| CR-47 | minor | IF-008 §1.1 rule 1, BG-381, arch §6.2 | `--read-only` made optional for `serena-launch` (text moves towards allow; behaviour unchanged) without a recorded alternative | record the rejected alternative and risk argument in §6.2 | open |
+| CR-48 | minor | IF-009 §2.1–§2.3, TS-661 | write-tool shell row names Edit, MultiEdit, NotebookEdit but §2.2 maps only Write, Read, Grep | extend the §2.2 row with the OpenCode input of each tool | open |
+| CR-49 | minor | REQ-615, REQ-629, Q-release-hooks-01 | the Q-release-hooks-01 decision has no anchor in a requirement | REQ-615 names the three sources; REQ-629 rationale cites Q-release-hooks-01 | open |
+| CR-50 | minor | IF-007 Install steps 1/5, IF-005 §3, ERR-CLI-022 | agent list comes from the manifest but step 5 writes "the ten agent files" | "the agent files the manifest lists", or require exactly the ten names | open |
+
+Checked, no finding: four-step hooks-state order (errors.md, IF-009 §5, TS-633, schema); ERR-MCP-003 as
+allow; the three D-014 deny rows; ERR-CLI-021/022 reasons; `doctor-description` and
+`{{host_version_arg}}`; `plugin-root` detector; MSIX condition. No new row moves a case towards allow.

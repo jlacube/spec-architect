@@ -901,3 +901,25 @@ revised interfaces require; C002-REQ-217 is owned (T-030, T-035, T-044/T-056); b
 ### Verdict (revision D-004 … D-009)
 
 **ready for G3 re-approval after G2.** 0 blocker, 0 major; the two minors are fixed.
+
+
+## Revision D-010…D-014 (2026-10-19)
+
+Scope: `git diff 9439c8d~1 f23deb2 -- .sdd/002-multi-platform-targets/20-plan/` (planner f3e288e,
+f23deb2). Lint 0 findings; trace TR-06 … TR-08 100 % (63 tasks, 258 TS → TC); TR-11 acyclic. Appended
+by the conductor from the critic's reply.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-30 | major | T-046, T-050, TC-516, TC-901, spec CR-44 | checklist tasks plan only the `ok` row of TS-516; disabled and restricted-mode rows have no step | T-046: one step per TS-516 row, disabling rows first, restore, then hooks-state step; T-050 follows; `checklist.test.ts` asserts order | open |
+| CR-31 | minor | T-041, T-063, TC-663 | T-041 says T-063 puts the Copilot hook tool names into expect.ts; T-063 has no such target | T-041 owns the names in the Copilot-hooks adapter; drop the clause | open |
+| CR-32 | minor | T-063 step 6, Verification | four reports written, only two mechanisms in Verification | add `npm run replay -- --mechanism opencode-permissions` | open |
+| CR-33 | minor | T-023 (M-03), T-034 (M-04), strategy M-03 exit, DOD-020 | an M-03 task waits for an M-04 task (`--spdx dist/…`) | move the `--spdx` target scan evidence to T-034 or a release-evidence task; T-023 keeps the tarball scan | open |
+| CR-34 | minor | TC-663, test plan §1 | mapped integration case placed in a unit test file | move to an integration file or note the exception | open |
+
+Checked, no finding: T-063 covers every code follow-up of the digest; ERR-CLI-021/022 mirror (0c6c7bf);
+T-047 four-step order and stored-value rule; TC-621/623…625 fixtures; level counts; critical path 36.
