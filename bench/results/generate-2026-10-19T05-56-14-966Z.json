@@ -1,0 +1,30 @@
+{
+  "benchmark": "generate",
+  "measured_at": "2026-10-19T05:56:14.966Z",
+  "machine": {
+    "os": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+    "cores": 8,
+    "memory_gb": 16,
+    "node": "v22.22.3"
+  },
+  "nfr": "C002-NFR-103",
+  "fixture": "plugins/architect",
+  "command": "node scripts/generate.mjs --out <tmp> --quiet",
+  "threshold_ms": 5000,
+  "runs": 10,
+  "times_ms": [
+    757,
+    720,
+    771,
+    746,
+    726,
+    738,
+    770,
+    718,
+    715,
+    777
+  ],
+  "p95_ms": 776.5644,
+  "pass": true
+}
