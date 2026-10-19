@@ -1,9 +1,10 @@
 // OpenCode-host replay scenarios (C002-COMP-008): cases that need OpenCode itself at its tested version,
 // driven through the replay adapter of the mechanism `opencode-permissions` (C002-T-042, scripted-model
-// driver of C002-ADR-005). The file uses only the adapter interface of C002-T-040 (../adapter.ts) and
-// selects the adapter by its mechanism name at run time from the registry of ../main.ts; until
-// C002-T-042 registers it, each scenario is skipped. Run by `npm run replay -- opencode-host`, never by
-// `npm test` (scripts/test.mjs leaves tests/replay/ out).
+// driver of C002-ADR-005). The file uses the adapter interface of C002-T-040 (../adapter.ts) and selects
+// the adapter by its mechanism name at run time from the registry of ../main.ts, with the package mode a
+// scenario needs: the S-07 record's mode (fx-oc as released), or the native rules that the replay of the
+// mechanism decides. Run by `npm run replay -- opencode-host`, never by `npm test` (scripts/test.mjs
+// leaves tests/replay/ out).
 //   C002-TC-133 (C002-T-026)  adopter MCP server tool not available to an Architect agent
 //   C002-TC-226 (C002-T-029)  built-in commands kept beside the 13 architect-<name> commands
 //   C002-TC-207 (C002-T-030)  @mode-native: edit decisions of the OpenCode permission engine on fx-oc
@@ -12,31 +13,42 @@
 //   C002-TC-213 (C002-T-030)  @mode-server: the built-in edit tool refused even inside .sdd/
 //   C002-TC-222 (C002-T-030)  @mode-native: the quick-lint plugin returns LINT-EARS-002 after a write
 //   C002-TC-223 (C002-T-030)  @mode-native: a clean file gives no finding line
+//   C002-TC-655 (C002-T-042)  Edit cases fed with the fixture file's first line (native rules)
+//   C002-TC-630 (C002-T-042)  @mode-native: the identity case BG-258 played by the adopter agent
+//   C002-TC-646 (C002-T-042)  @mode-native: unknown architect:sdd-* callers expect allow
+//   C002-TC-647 (C002-T-042)  @mode-native: rules that also bind adopter agents are a difference
+//   C002-TC-652 (C002-T-042)  @mode-native: the identity case BG-265 played by sdd-conductor
 // A `@mode-*` scenario runs only when the OpenCode table's enforcement mode (copied from the S-07
 // record) is its mode; otherwise it is skipped as not applicable, citing the record (test plan §1).
 import { test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadTargetTable, type Mode } from "../../../scripts/generate/tables.ts";
-import type { BashCase, CorpusCase } from "../../guards/fixture.ts";
+import type { BashCase, Corpus, CorpusCase } from "../../guards/fixture.ts";
 import { repoRoot } from "../../helpers.ts";
 import type { ReplayAdapter, ReplayFixture, ReplayInput } from "../adapter.ts";
 import type { Mechanism } from "../expect.ts";
-import { ADAPTERS } from "../main.ts";
-import { buildReplayFixture, loadCorpora } from "../suite.ts";
+import type { SentCall } from "../adapters/opencode-permissions.ts";
+import { ADAPTERS, type AdapterOptions, main } from "../main.ts";
+import type { ReplayReport, ReportCase } from "../report.ts";
+import { buildReplayFixture, DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS, loadCorpora, runReplay } from "../suite.ts";
 
 /** The mechanism whose adapter drives OpenCode (C002-IF-009 §2.2). */
 const MECHANISM: Mechanism = "opencode-permissions";
 
-/** The OpenCode-host adapter, or null (scenario skipped) while no adapter is registered. */
-async function openCodeHost(t: TestContext): Promise<ReplayAdapter | null> {
+/**
+ * The OpenCode-host adapter, or null (scenario skipped) while no adapter is registered. Default: the
+ * package of the enforcement mode that the S-07 record fixes (fx-oc as released).
+ */
+async function openCodeHost(t: TestContext, options?: AdapterOptions): Promise<ReplayAdapter | null> {
   const make = ADAPTERS[MECHANISM];
   if (!make) {
     t.skip(`no ${MECHANISM} replay adapter registered yet (C002-T-042)`);
     return null;
   }
-  return make();
+  return make(options ?? { mode: RECORD_MODE });
 }
 
 /**
@@ -353,4 +365,141 @@ test("C002-TC-223 (C002-TS-223) @mode-native: a clean requirements file gives no
     assert.ok(!/^(error|warn|info) [A-Z]+-[A-Z0-9-]+ /m.test(output), output);
     assert.ok(!output.includes("sdd quick lint of"), output);
   });
+});
+
+// --- C002-T-042: the replay of the OpenCode permission rules ------------------------------------------
+
+const NATIVE: AdapterOptions = { mode: "native-permissions" };
+
+/** Corpus files holding only the named cases (each corpus keeps at least one case, as the report schema needs). */
+function plantCorpora(dir: string, pathIds: string[], shellIds: string[]): { path: string; shell: string } {
+  const path = JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus;
+  path.cases = path.cases.filter((c) => pathIds.includes(c.id));
+  const shell = JSON.parse(readFileSync(DEFAULT_SHELL_CORPUS, "utf8")) as { cases: BashCase[] };
+  shell.cases = shell.cases.filter((c) => shellIds.includes(c.id));
+  assert.equal(path.cases.length + shell.cases.length, pathIds.length + shellIds.length, "every named case is in the corpora");
+  writeFileSync(join(dir, "path-corpus.json"), JSON.stringify(path));
+  writeFileSync(join(dir, "bash-corpus.json"), JSON.stringify(shell));
+  return { path: join(dir, "path-corpus.json"), shell: join(dir, "bash-corpus.json") };
+}
+
+interface NamedReplay {
+  report: ReplayReport;
+  repo: string;
+  srcAfter: boolean;
+  calls: SentCall[];
+}
+
+/** Replays the named corpus cases through the adapter (a replay report as `npm run replay` writes it). */
+async function replayNamed(adapter: ReplayAdapter, pathIds: string[], shellIds: string[]): Promise<NamedReplay> {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-oc-scenario-"));
+  try {
+    const files = plantCorpora(dir, pathIds, shellIds);
+    let repo = "";
+    let srcAfter = false;
+    const { report, problems } = await runReplay(adapter, {
+      pathCorpus: files.path,
+      shellCorpus: files.shell,
+      afterRun: (fx) => {
+        repo = fx.repo;
+        srcAfter = existsSync(`${fx.repo}/src`);
+      },
+    });
+    assert.deepEqual(problems, [], "the report validates and lists every case once");
+    return { report, repo, srcAfter, calls: [...((adapter as ReplayAdapter & { calls?: SentCall[] }).calls ?? [])] };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+const caseOf = (report: ReplayReport, id: string): ReportCase => {
+  const e = report.cases.find((c) => c.id === id);
+  assert.ok(e, `${id} is a replayed case`);
+  return e;
+};
+
+const TS_655: [string, string, string, "allow" | "deny"][] = [
+  ["PG-004", "sdd-conductor", ".sdd/004-x/existing.md", "allow"],
+  ["PG-003", "sdd-conductor", ".sdd/004-x/a.md", "allow"],
+  ["PG-050", "sdd-researcher", "README.md", "deny"],
+];
+
+test("C002-TC-655 (C002-TS-655): Edit cases are fed to OpenCode with the fixture file's first line as oldString", async (t) => {
+  const adapter = await openCodeHost(t, NATIVE);
+  if (!adapter) return;
+  const { report, repo, calls } = await replayNamed(adapter, TS_655.map(([id]) => id), ["BG-265"]);
+  for (const [id, agent, rel, expected] of TS_655) {
+    const call = calls.find((c) => c.id === id);
+    assert.ok(call, `${id} was sent`);
+    assert.equal(call.tool, "edit", id);
+    const args = call.args as { filePath: string; oldString: string; newString: string };
+    assert.equal(args.filePath, `${repo}/${rel}`, `${id} carries the path`);
+    assert.equal(typeof call.before, "string", `the replay fixture holds ${rel} before the call`);
+    assert.equal(args.oldString, (call.before as string).split(/\r?\n/)[0], `${id}: oldString is the file's first line`);
+    assert.ok(args.newString !== args.oldString && !/[\r\n]/.test(args.newString), `${id}: newString is another one-line text`);
+    const e = caseOf(report, id);
+    // Played by its own agent, or by the conductor where the package does not grant that agent edit (§2.2).
+    assert.ok([agent, "sdd-conductor"].includes(e.fed_as.caller), `${id} caller ${e.fed_as.caller}`);
+    assert.deepEqual([e.expected, e.actual], [expected, expected], `${id}: ${e.detail ?? ""}`);
+    assert.ok(!(e.detail ?? "").includes("Could not find oldString"), `${id}: ${e.detail}`);
+  }
+  assert.deepEqual(report.host_versions, { opencode: loadTargetTable(repoRoot(), "opencode").host.tested_versions["opencode"] });
+});
+
+test("C002-TC-630 (C002-TS-630) @mode-native: the identity case BG-258 runs as a call of the adopter agent and is allowed", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = await openCodeHost(t, NATIVE);
+  if (!adapter) return;
+  const { report } = await replayNamed(adapter, ["PG-225"], ["BG-258"]);
+  const e = caseOf(report, "BG-258");
+  assert.equal(e.fed_as.caller, "adopter-agent");
+  assert.deepEqual([e.expected, e.expected_source, e.actual], ["allow", "corpus", "allow"], e.detail);
+  assert.deepEqual(report.not_applicable, []);
+});
+
+test("C002-TC-646 (C002-TS-646) @mode-native: unknown architect:sdd-* callers run as the adopter agent and expect allow", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = await openCodeHost(t, NATIVE);
+  if (!adapter) return;
+  const { report } = await replayNamed(adapter, ["PG-237", "PG-238"], ["BG-265"]);
+  for (const id of ["PG-237", "PG-238"]) {
+    const e = caseOf(report, id);
+    assert.equal(e.fed_as.caller, "adopter-agent", id);
+    assert.deepEqual([e.expected, e.expected_source, e.actual], ["allow", "C002-REQ-632", "allow"], `${id}: ${e.detail ?? ""}`);
+  }
+  const corpus = loadCorpora().path.corpus.cases;
+  for (const id of ["PG-237", "PG-238"]) assert.equal(corpus.find((c) => c.id === id)!.expect, "deny", `the corpus still records deny for ${id}`);
+});
+
+test("C002-TC-647 (C002-TS-647) @mode-native: rules that also bind adopter agents make PG-237 a differing decision", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  if (!ADAPTERS[MECHANISM]) {
+    t.skip(`no ${MECHANISM} replay adapter registered yet (C002-T-042)`);
+    return;
+  }
+  const dir = mkdtempSync(join(tmpdir(), "sdd-oc-ts647-"));
+  try {
+    const files = plantCorpora(dir, ["PG-237"], ["BG-265"]);
+    const log: string[] = [];
+    const code = await main(["--mechanism", MECHANISM, "--seed", "bind-adopters", "--path-corpus", files.path, "--shell-corpus", files.shell, "--out", dir], (l) => log.push(l));
+    const report = JSON.parse(readFileSync(join(dir, `replay-${MECHANISM}.json`), "utf8")) as ReplayReport;
+    const e = caseOf(report, "PG-237");
+    assert.deepEqual([e.expected, e.actual], ["allow", "deny"], e.detail);
+    assert.ok(report.differing >= 1);
+    assert.ok(log.some((l) => l.includes("differing PG-237")), log.join("\n"));
+    assert.notEqual(code, 0, "the suite exits non-zero");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("C002-TC-652 (C002-TS-652) @mode-native: the identity case BG-265 runs as sdd-conductor and is denied", async (t) => {
+  if (!inMode(t, "native-permissions")) return;
+  const adapter = await openCodeHost(t, NATIVE);
+  if (!adapter) return;
+  const { report, srcAfter } = await replayNamed(adapter, ["PG-225"], ["BG-265"]);
+  const e = caseOf(report, "BG-265");
+  assert.equal(e.fed_as.caller, "sdd-conductor", "played by the generated agent, not the adopter agent");
+  assert.deepEqual([e.expected, e.expected_source, e.actual], ["deny", "corpus", "deny"], e.detail);
+  assert.ok(srcAfter, "{repo}/src still exists");
 });

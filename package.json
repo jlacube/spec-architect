@@ -14,7 +14,7 @@
     "test": "node scripts/build.mjs && node scripts/test.mjs",
     "check": "node scripts/check.mjs",
     "replay": "node tests/replay/run.mjs",
-    "bench":"node scripts/build.mjs && node bench/run.mjs",
+    "bench": "node scripts/build.mjs && node bench/run.mjs",
     "eval": "node evals/harness/run.mjs",
     "eval:report": "node evals/harness/report.mjs",
     "package": "node scripts/package.mjs",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.32.1",
+    "@opencode-ai/sdk": "1.18.31",
     "@types/node": "^20.19.43",
     "ajv": "^8.20.0",
     "esbuild": "^0.28.2",

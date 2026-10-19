@@ -1,0 +1,8 @@
+{
+  "agent": {
+    "adopter-agent": {
+      "mode": "primary",
+      "description": "Adopter agent of the replay fixture: none of the ten Architect agents, no rule of the target package (C002-IF-009 §2.2, C002-REQ-626)"
+    }
+  }
+}

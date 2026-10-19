@@ -6,7 +6,7 @@
 // shell corpus uses ({repo}/link-out, {repo}-link), without the corpus fixture's memory folders under
 // .claude/agent-memory/: the generated agents have none (C002-DEC-009), and a denied memory write
 // leaves no file behind (C002-TS-638).
-import { readFileSync, symlinkSync, mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, symlinkSync } from "node:fs";
 import { join } from "node:path";
 import { type BashCase, buildFixture, type Corpus, type CorpusCase, dialectOf } from "../guards/fixture.ts";
 import { repoRoot } from "../helpers.ts";
@@ -49,7 +49,15 @@ export function buildReplayFixture(spec: Corpus["fixture"], denyCapabilities: re
     capabilities: fx.capabilities,
     resolvePath: fx.resolve,
     resolveShell: (s) => s.split("{sdd}").join(sdd).split("{repo}").join(fx.repo),
-    cleanup: fx.cleanup,
+    // A host process of a real mechanism (OpenCode, C002-T-042) may hold a folder handle for a moment
+    // after it was stopped: retry the removal instead of failing the run.
+    cleanup: () => {
+      try {
+        fx.cleanup();
+      } catch {
+        rmSync(fx.base, { recursive: true, force: true, maxRetries: 20, retryDelay: 250 });
+      }
+    },
   };
 }
 

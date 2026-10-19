@@ -11604,12 +11604,13 @@ function ripwire(words) {
   }
   return verbs === 1 && paths <= 1;
 }
+var AST_GREP_RUN = { subcommand: "run", pattern: ["--pattern", "-p"] };
 function astGrep(words) {
-  if (!exe(words[0], "ast-grep") || words[1] !== "run") return false;
+  if (!exe(words[0], "ast-grep") || words[1] !== AST_GREP_RUN.subcommand) return false;
   let pattern = 0;
   for (let i = 2; i < words.length; i++) {
     const w = words[i];
-    if (w === "--pattern" || w === "-p") {
+    if (AST_GREP_RUN.pattern.includes(w)) {
       if (words[i + 1] === void 0) return false;
       pattern++;
       i++;
@@ -11624,9 +11625,16 @@ function astGrep(words) {
   return pattern === 1;
 }
 var GIT_READ = ["log", "show", "diff", "blame", "ls-files", "rev-parse", "status", "grep"];
+var GIT_OUTPUT_OPTIONS = [
+  { option: "-o", prefix: false },
+  { option: "--output", prefix: true },
+  { option: "-O", prefix: true },
+  { option: "--open-files-in-pager", prefix: true },
+  { option: "--ext-diff", prefix: false }
+];
 function gitRead(words) {
   if (!exe(words[0], "git") || !GIT_READ.includes(words[1] ?? "")) return false;
-  return words.slice(2).every((w) => !(w === "-o" || w.startsWith("--output") || /^-O/.test(w) || w.startsWith("--open-files-in-pager") || w === "--ext-diff"));
+  return words.slice(2).every((w) => !GIT_OUTPUT_OPTIONS.some((o) => o.prefix ? w.startsWith(o.option) : w === o.option));
 }
 function pipeOnly(words) {
   const [cmd, ...args] = words;
@@ -11968,20 +11976,28 @@ function decideArchitect(input, agent, tool, opts) {
   }
   return { allow: true };
 }
+function parseObject(stdin) {
+  try {
+    const doc = JSON.parse(stdin);
+    return doc !== null && typeof doc === "object" && !Array.isArray(doc) ? doc : null;
+  } catch {
+    return null;
+  }
+}
+function shownTool(input) {
+  const doc = typeof input === "string" ? parseObject(input) : input;
+  const name = doc?.["tool_name"];
+  return typeof name === "string" && name !== "" ? name : "tool call";
+}
 function decideCopilot(stdin, opts) {
   let tool = "tool call";
   try {
+    const doc = parseObject(stdin);
+    tool = shownTool(doc);
     if (opts.mode === void 0 || !MODES.includes(opts.mode)) return hookDeny(RULE_FAULT, tool, "hook command usage: --mode");
     if (agentList(opts.agents).length === 0) return hookDeny(RULE_FAULT, tool, "hook command usage: --agents");
-    let doc;
-    try {
-      doc = JSON.parse(stdin);
-    } catch {
-      doc = void 0;
-    }
-    if (doc === null || typeof doc !== "object" || Array.isArray(doc)) return hookDeny(RULE_FAULT, tool, "unreadable hook input");
+    if (doc === null) return hookDeny(RULE_FAULT, tool, "unreadable hook input");
     const input = doc;
-    if (typeof input["tool_name"] === "string" && input["tool_name"] !== "") tool = input["tool_name"];
     if (!Object.prototype.hasOwnProperty.call(input, "agent_type")) return { allow: true };
     if (fault(opts.env, "hook-decision-throw")) throw new Error("SDD_TEST_FAULT: decision failure");
     const at = input["agent_type"];
@@ -12321,7 +12337,7 @@ function guardDeny(out, message) {
 function hookGuard(ctx) {
   const host = ctx.values["host"];
   const classes = ctx.values["classes"];
-  const d = host !== "copilot" ? { allow: false, message: "GUARD-HOOK-001: tool call denied — hook command usage: --host." } : decideCopilot(ctx.stdin(), {
+  const d = host !== "copilot" ? { allow: false, message: `GUARD-HOOK-001: ${shownTool(ctx.stdin())} denied — hook command usage: --host.` } : decideCopilot(ctx.stdin(), {
     mode: ctx.values["mode"],
     agents: ctx.values["agents"],
     classesFile: classes !== void 0 ? resolve(ctx.cwd, classes) : defaultClassesFile(),

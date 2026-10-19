@@ -4,6 +4,7 @@
 //                     [--target opencode|copilot] [--version <v>] [--out <folder>]
 //                     [--path-corpus <file>] [--shell-corpus <file>] [--deny-capability <capability>]
 //                     [--emulate <mechanism>] [--seed allow-memory|allow-malformed-write]   (stub only)
+//                     [--seed bind-adopters]   (opencode-permissions: rules that also bind adopter agents, C002-TS-647)
 //
 // One report per mechanism and package version, written to docs/releases/<target>/<version>/
 // replay-<mechanism>.json (C002-IF-009 §1); the stub's report goes to build/replay/reports/ and never
@@ -13,14 +14,22 @@
 import { join } from "node:path";
 import { repoRoot } from "../helpers.ts";
 import { createStubAdapter, type ReplayAdapter, type StubSeed, type Target } from "./adapter.ts";
+import { createOpenCodeAdapter, type OpenCodeAdapterOptions } from "./adapters/opencode-permissions.ts";
 import { type Mechanism, MECHANISMS } from "./expect.ts";
 import { releaseReportPath, writeReport } from "./report.ts";
 import { runReplay } from "./suite.ts";
 
-/** Adapters of the real mechanisms; C002-T-041 adds sdd-mcp-server and copilot-hooks, C002-T-042 opencode-permissions. */
-export const ADAPTERS: Partial<Record<Mechanism, () => Promise<ReplayAdapter>>> = {};
+/** Options a scenario may pass to an adapter factory (the mechanism runs pass none). */
+export type AdapterOptions = OpenCodeAdapterOptions;
+
+/** Adapters of the real mechanisms; C002-T-041 adds sdd-mcp-server and copilot-hooks. */
+export const ADAPTERS: Partial<Record<Mechanism, (options?: AdapterOptions) => Promise<ReplayAdapter>>> = {
+  // C002-T-042: OpenCode at its tested version, native permission rules unless a scenario names a mode.
+  "opencode-permissions": async (options) => createOpenCodeAdapter(options),
+};
 const OWNER: Record<Mechanism, string> = { "opencode-permissions": "C002-T-042", "sdd-mcp-server": "C002-T-041", "copilot-hooks": "C002-T-041" };
 const SEEDS: Record<string, keyof StubSeed> = { "allow-memory": "allowMemory", "allow-malformed-write": "allowMalformedWrite" };
+const ADAPTER_SEEDS: Record<string, keyof AdapterOptions> = { "bind-adopters": "bindAdopters" };
 
 class UsageError extends Error {}
 
@@ -34,10 +43,11 @@ interface Args {
   denyCapabilities: string[];
   emulate?: Mechanism;
   seed: StubSeed;
+  adapterOptions: AdapterOptions;
 }
 
 function parse(argv: readonly string[]): Args {
-  const a: Args = { mechanisms: [], denyCapabilities: [], seed: {} };
+  const a: Args = { mechanisms: [], denyCapabilities: [], seed: {}, adapterOptions: {} };
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i]!;
     const value = () => {
@@ -82,8 +92,10 @@ function parse(argv: readonly string[]): Args {
       case "--seed": {
         const s = value();
         const key = SEEDS[s];
-        if (!key) throw new UsageError(`unknown seed ${s}; seeds: ${Object.keys(SEEDS).join(", ")}`);
-        a.seed[key] = true;
+        const adapterKey = ADAPTER_SEEDS[s];
+        if (key) a.seed[key] = true;
+        else if (adapterKey === "bindAdopters") a.adapterOptions.bindAdopters = true;
+        else throw new UsageError(`unknown seed ${s}; seeds: ${[...Object.keys(SEEDS), ...Object.keys(ADAPTER_SEEDS)].join(", ")}`);
         break;
       }
       default:
@@ -118,7 +130,7 @@ export async function main(argv: readonly string[], log: (line: string) => void 
         failed = true;
         continue;
       }
-      adapter = await make();
+      adapter = await make(args.adapterOptions);
     }
     const { report, omitted, problems } = await runReplay(adapter, {
       ...(args.target ? { target: args.target } : {}),
