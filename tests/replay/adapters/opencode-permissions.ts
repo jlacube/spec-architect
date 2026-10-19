@@ -444,7 +444,14 @@ export function driverHost(opts: { bin?: string } = {}): OpenCodeHost & { links:
       // the run folder, so that no case writes the user's own data folder.
       const local = join(runDir, "localappdata");
       mkdirSync(local, { recursive: true });
-      const env = { [pathKey]: `${shims}${WIN ? ";" : ":"}${process.env[pathKey] ?? ""}`, ...(WIN ? { LOCALAPPDATA: local } : {}) };
+      // An allowed `node <sdd.mjs> serena-launch <folder> -- …` (PowerShell lets these through, S-07 §3)
+      // runs the real CLI, which starts the real Serena without SERENA_HOME: its home goes to the run
+      // folder too, never the user's ~/.serena.
+      const env = {
+        [pathKey]: `${shims}${WIN ? ";" : ":"}${process.env[pathKey] ?? ""}`,
+        SERENA_HOME: join(runDir, "serena-home"),
+        ...(WIN ? { LOCALAPPDATA: local } : {}),
+      };
       driver = await startOpenCode({ ...(opts.bin ? { bin: opts.bin } : {}), project, runDir, isolate: true, env });
       return { version: driver.version };
     },

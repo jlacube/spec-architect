@@ -5,22 +5,23 @@ date: 2026-10-18
 # tested version: 1.18.31 (re-test, P-01 Round 11 Q-s07-01); first run on 1.15.10, same date (§1.1, §12)
 host_versions: { opencode: "1.18.31", opencode-sdk: "1.18.31", models: { opus: "openrouter/anthropic/claude-opus-5.5", sonnet: "openrouter/anthropic/claude-sonnet-5.5", haiku: "openrouter/anthropic/claude-haiku-5.5" } }
 outcomes:
-  edit_rules_match_path_corpus: false    # PROVISIONAL (hand sample, §3.2); C002-T-043 records the final value from the full replay. 1.15.10: false (same value)
-  bash_rules_match_shell_corpus: false   # PROVISIONAL (hand sample, §3.3); C002-T-043 records the final value from the full replay. 1.15.10: false (same)
+  edit_rules_match_path_corpus: false    # FINAL (C002-T-043, full replay §13): 29 of 256 path cases differ under both shells. 1.15.10: false (hand sample)
+  bash_rules_match_shell_corpus: false   # FINAL (C002-T-043, full replay §13): 118 (Git Bash) / 130 (PowerShell 7) of 435 shell cases differ. 1.15.10: false (hand sample)
   question_answerable_by_script: true    # 1.15.10: true (same)
   post_write_feedback_channel: true      # 1.15.10: true (same)
   agent_tools_closed: true               # 1.15.10: true (same)
 cmd_shims: []                            # 1.15.10: [] (same)
-enforcement_mode: sdd-mcp-server         # PROVISIONAL until C002-T-043 (S-07 rule: native-permissions only with 0 replay differences). 1.15.10: same
+enforcement_mode: sdd-mcp-server         # FINAL (C002-T-043): the full replay differs (S-07 rule: native-permissions only with 0 differences). 1.15.10: same
 ---
 
 # S-07 — OpenCode 1.18.31 (C002-T-001; re-test of the 1.15.10 run)
 
-**Status:** P-01 signed off the 1.15.10 record ("Sign off", 2026-10-18, questions log Round 11
-Q-s07-01) and chose "Re-test on 1.18.31". Re-test done 2026-10-18 (free stub probes only);
-**re-test on 1.18.31 pending P-01 confirmation** — no frontmatter outcome changed, but one probe
-result and two facts did (§0). The two `…_match_…` outcomes and `enforcement_mode` stay provisional
-values from a hand-replayed sample; C002-T-043 settles them from the full corpus replay.
+**Status:** final. P-01 signed off the 1.15.10 record ("Sign off", 2026-10-18, questions log Round 11
+Q-s07-01), chose "Re-test on 1.18.31" and confirmed the re-test ("Confirm"). C002-T-043 (2026-10-19)
+replaced the hand-sample values of the two `…_match_…` outcomes and of `enforcement_mode` with the
+full corpus replay (§13); none of the three values changed. Signed for P-01 under P-01's standing
+waiver of 2026-10-19: "I waive "before each signature" and "before each paid batch" if you stay
+within the approved cost limits".
 
 ## 0. Re-test summary — 1.18.31 against 1.15.10
 
@@ -37,14 +38,14 @@ values from a hand-replayed sample; C002-T-043 settles them from the full corpus
 | `edit` pre-check (`oldString` matched before the permission check) | yes | yes | same |
 | `bash` sample (57 corpus cases) | 41 same, 16 differ — the same 16 cases | 41 / 16 | same |
 | Redirect probe `git status > src/redirected.txt` | allowed, ran | allowed, ran | same |
-| `edit_rules_match_path_corpus` / `bash_rules_match_shell_corpus` (provisional) | false / false | false / false | same |
+| `edit_rules_match_path_corpus` / `bash_rules_match_shell_corpus` (final, §13) | false / false | false / false (sample) | same |
 | Stub-model driver (C002-ADR-005 option A) | feasible | feasible | same |
 | Models fetch at start | `https://models.opencode.ai/api.json` (failure not fatal) | `https://models.dev/api.json` | **CHANGED** (URL) |
 | `rg.exe` needed in `<cache>/opencode/bin/` | **no** (`grep`, `glob` ran with an empty cache, nothing downloaded) | yes (else download from GitHub) | **CHANGED** |
 | Model ids per tier (`opencode models openrouter`) | the same three ids listed | listed and accepted in a paid session | same (listed only; no paid session on 1.18.31) |
 | Serena context | `ide` (Serena 1.7.0, no OpenCode context) | `ide` | same |
 | `cmd_shims` | `[]` | `[]` | same |
-| Enforcement mode (provisional) | `sdd-mcp-server` | `sdd-mcp-server` | same |
+| Enforcement mode (final, §13) | `sdd-mcp-server` | `sdd-mcp-server` | same |
 
 ## 1. Method
 
@@ -299,12 +300,12 @@ input is still `{ tool, sessionID, callID }` with no agent field (C002-R-001 C-0
   `OPENCODE_EXPERIMENTAL_LSP_TOOL=1`, `probe-open` is also offered `websearch` and `lsp`; `list` is
   still no tool (`results/v1.18.31/out-flags.json`).
 
-## 8. Enforcement mode: `sdd-mcp-server` (provisional, same)
+## 8. Enforcement mode: `sdd-mcp-server` (final, same)
 
 S-07 rule (C002-IF-009 §3, C002-IF-001 §6.3): `native-permissions` only with 0 replay differences.
 On 1.18.31 the sample still differs in both mechanisms, including differences no rule can remove
 (the in-project link, redirections, pipe parts, script form), so the mode is **`sdd-mcp-server`**, as
-the spec expected. C002-T-043 confirms it from the full replay. `agent_tools_closed: true` holds in
+the spec expected. C002-T-043 confirmed it from the full replay (§13). `agent_tools_closed: true` holds in
 both modes, so ERR-REL-013 does not apply.
 
 ## 9. Facts that contradict the approved spec (to triage with P-01)
@@ -349,9 +350,7 @@ The 1.18.31 re-test made no paid call: **0 USD**. The paid sessions of the first
 
 ## 11. Open points
 
-- **P-01: confirm the 1.18.31 re-test** — no frontmatter outcome changed; changed: the outside-junction
-  probe (now deny, F-2 narrowed), the start-up network conditions (F-9), and the new Node-engine note
-  (F-10).
+- ~~P-01: confirm the 1.18.31 re-test~~ — confirmed ("Confirm", 2026-10-18).
 - P-01: no paid session ran on 1.18.31; whether one billed session on 1.18.31 (about 0.02 USD) is
   wanted to confirm the SDK-to-OpenRouter path and the model ids on the tested version.
 - P-01: OpenCode's credential file in the real data folder was last modified on 2026-09-12; confirm
@@ -361,7 +360,7 @@ The 1.18.31 re-test made no paid call: **0 USD**. The paid sessions of the first
 - Harness pin (F-7): the replay host must run the 1.18.31 binary explicitly (the driver now takes
   `S07_OPENCODE_BIN`); Git Bash resolves 1.15.10 first.
 - Not re-tested on 1.18.31: the project-`.opencode` npm hang without network (§4).
-- C002-T-043: full replay; settles both `…_match_…` values and the mode.
+- ~~C002-T-043: full replay~~ — done 2026-10-19 (§13).
 - C002-TC-620 and C002-TC-648 (release-check cases that read this record) carry to C002-T-047.
 
 ## 12. History
@@ -370,3 +369,45 @@ The 1.18.31 re-test made no paid call: **0 USD**. The paid sessions of the first
 |---|---|---|
 | 2026-10-18 | 1.15.10 (`~/.opencode/bin`) | 139 stub sessions + 3 paid sessions (0.0722 USD); signed off by P-01 ("Sign off", Round 11 Q-s07-01) with "Re-test on 1.18.31" |
 | 2026-10-18 | 1.18.31 (npm `opencode.cmd`) | 145 stub sessions, separate `OPENCODE_DB`, 0 USD; this record |
+| 2026-10-19 | 1.18.31 (pinned npm binary) | C002-T-043 full replay, 691 cases per shell, stub model, 0 USD; outcomes and mode final |
+
+## 13. Full replay of the native rules (C002-T-043)
+
+`npm run replay -- --mechanism opencode-permissions` (C002-IF-009 §3) on REF-WIN, OpenCode 1.18.31
+(pinned binary), `@opencode-ai/sdk` 1.18.31, Node 22.22.3, the stub model (0 USD). Generated package
+0.0.1 in `native-permissions` rules, both corpora (path 256 cases, shell 435), replay host
+`win32 [file-symlink]`, 0 cases not applicable. OpenCode's shell tool is the shell it was started
+from, so the replay ran once per shell.
+
+| Shell | Path cases differing | Shell cases differing | Total | False allows | False denies | Report |
+|---|---|---|---|---|---|---|
+| Git Bash | 29 | 118 | 147 | 67 | 80 | `docs/spikes/s07/results/v1.18.31/replay-opencode-permissions-git-bash.json` |
+| PowerShell 7 | 29 | 130 | 159 | 75 | 84 | `docs/releases/opencode/0.0.1/replay-opencode-permissions.json` (C002-IF-009 §1) |
+
+Differences per corpus category (false allows / false denies; Git Bash — PowerShell 7):
+
+| Category | Git Bash | PowerShell 7 |
+|---|---|---|
+| path: windows-names | 14 / 0 | 14 / 0 |
+| path: symlink | 7 / 0 | 7 / 0 |
+| path: traversal | 3 / 0 | 3 / 0 |
+| path: unc | 0 / 2 | 0 / 2 |
+| path: short-name, inside, cwd | 1 / 2 | 1 / 2 |
+| shell: sdd (Serena data-folder and `--cwd` rules) | 0 / 60 | 10 / 52 |
+| shell: compound | 16 / 0 | 17 / 0 |
+| shell: ripwire | 13 / 1 | 6 / 7 |
+| shell: pipe | 4 / 5 | 6 / 5 |
+| shell: ast-grep | 4 / 1 | 4 / 2 |
+| shell: powershell | 2 / 4 | 2 / 4 |
+| shell: scenario, git, quoted, tool, malformed | 3 / 5 | 5 / 10 |
+
+- The identity and memory cases (agent identity, PG-2xx memory folder) give 0 differences: the
+  closed tool set and the per-agent rules hold (`agent_tools_closed: true`).
+- Every other mechanism difference is one that a glob cannot express (§3, C002-IF-001 §6.3): link
+  targets, Windows name forms, traversal, redirections, compound and pipe parts, and the argument
+  rules of `sdd serena-launch` / `--cwd`. The mode is therefore `sdd-mcp-server`, as recorded in
+  `plugins/architect/targets/opencode.json` (no change).
+- Replay harness fix found by the PowerShell run: PowerShell's rules let `node <sdd.mjs> serena-launch
+  <folder> -- start-mcp-server` through (Git Bash denies them), and the real CLI then started the real
+  Serena with the user's `~/.serena` as its home (4 starts, each shut down at once; logs only). The
+  adapter now sets `SERENA_HOME` to the run folder.
