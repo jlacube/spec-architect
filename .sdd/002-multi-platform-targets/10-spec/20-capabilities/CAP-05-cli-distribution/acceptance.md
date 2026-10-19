@@ -263,37 +263,52 @@ does the probe run the `sdd` on PATH.
 @manual-vscode
 Scenario Outline: C002-TS-516 — Copilot hooks row in the VS Code doctor
   Given the Copilot target package generated for <mode> in VS Code, where <state>
+  And this row is run <order> of the manual VS Code checklist (C002-IF-009 §4 Run order)
   When P-01 runs the doctor prompt
   Then the Copilot hooks row shows status "<status>" and the Version text "<version>"
   And <fix>
   Examples:
-    | mode                         | state                                                                        | status | version                                                                                              | fix                                                                  |
-    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is trusted                         | ok     | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
-    | sdd MCP server enforcement   | "chat.useHooks" is false                                                     | error  | disabled (chat.useHooks)                                                                             | its Fix column holds "enable chat.useHooks and trust the workspace" |
-    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | ok    | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
-    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is trusted                         | ok     | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
-    | the Copilot hooks fallback   | "chat.useHooks" is false                                                     | error  | disabled (chat.useHooks)                                                                             | its Fix column holds "enable chat.useHooks and trust the workspace" |
-    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | ok    | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | mode                         | state                                                                         | order                                                                       | status | version                                                                                                                                      | fix                                                                  |
+    | sdd MCP server enforcement   | "chat.useHooks" is false                                                      | first, in group 2 before the restore step                                   | error  | disabled (chat.useHooks)                                                                                                                     | its Fix column holds "enable chat.useHooks and trust the workspace" |
+    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | second, in group 2 before the restore step                                  | ok     | chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is trusted                          | third, in group 3 after the restore step and directly before the hooks-state step | ok | chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | the Copilot hooks fallback   | "chat.useHooks" is false                                                      | first, in group 2 before the restore step                                   | error  | disabled (chat.useHooks)                                                                                                                     | its Fix column holds "enable chat.useHooks and trust the workspace" |
+    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | second, in group 2 before the restore step                                  | ok     | chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is trusted                          | third, in group 3 after the restore step and directly before the hooks-state step | ok | chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
 ```
 
 The restricted-mode rows show the caveat of the P-01 decision on defect D-012: the doctor reads
-`chat.useHooks` only, so an untrusted workspace still shows `ok` with the text that names the two
+`chat.useHooks` only, so an untrusted workspace still shows `ok` with the text that names the
 sources not read; the manual VS Code checklist records them (C002-TS-619).
+
+The rows of the package's mode are listed in run order (revised for critic CR-44): the rows that
+switch off `chat.useHooks` or Workspace Trust run first, then the restore step sets `chat.useHooks`
+true and trusts the workspace again, then the true-and-trusted row runs directly before the
+hooks-state step of C002-TS-619. Every step that a hook decides comes after that hooks-state step,
+so the hooks state of the record (C002-TS-618) holds for each of them.
 
 ```gherkin
 @eval
 Scenario Outline: C002-TS-526 — hooks state that cannot be read
-  Given the doctor of the Copilot target package generated for <mode>, in a user profile without the VS Code user settings that its "sdd host-version" probe reads and a workspace without ".vscode/settings.json", so that the probe prints "hooks unknown"
+  Given the doctor of the Copilot target package generated for <mode>, with <settings>, so that its "sdd host-version" probe prints "hooks unknown"
   When P-01 runs the doctor command
   Then the Copilot hooks row shows status "error" and the Version text "cannot be read"
   And its Fix column holds "check chat.useHooks and Workspace Trust by hand"
   And it does not show status "ok"
   And the doctor run reports "completed with warnings"
   Examples:
-    | mode                         |
-    | sdd MCP server enforcement   |
-    | the Copilot hooks fallback   |
+    | mode                         | settings                                                                                                                                                       |
+    | sdd MCP server enforcement   | a user profile without the VS Code user settings that the probe reads and a workspace without ".vscode/settings.json"                                          |
+    | sdd MCP server enforcement   | a workspace ".vscode/settings.json" that holds '{ "chat.useHooks": tru' and cannot be parsed, and VS Code user settings of the default profile that hold '{ "chat.useHooks": true }' |
+    | sdd MCP server enforcement   | a workspace ".vscode/settings.json" that holds '{ "chat.useHooks": "yes" }', and VS Code user settings of the default profile that hold '{ "chat.useHooks": true }' |
+    | the Copilot hooks fallback   | a user profile without the VS Code user settings that the probe reads and a workspace without ".vscode/settings.json"                                          |
+    | the Copilot hooks fallback   | a workspace ".vscode/settings.json" that holds '{ "chat.useHooks": tru' and cannot be parsed, and VS Code user settings of the default profile that hold '{ "chat.useHooks": true }' |
+    | the Copilot hooks fallback   | a workspace ".vscode/settings.json" that holds '{ "chat.useHooks": "yes" }', and VS Code user settings of the default profile that hold '{ "chat.useHooks": true }' |
 ```
+
+In the rows with an unusable workspace file the user settings would give `hooks enabled`; the
+probe does not fall back to them, since VS Code may still take a value from that file that
+overrides them (C002-IF-007 host-version Output item 1, revised for critic CR-45).
 
 Each scenario's rows of the mode that spike S-08 did not select are recorded as not applicable in
 the test report (`@mode-*` rule of C002-CAP-03).
@@ -623,7 +638,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
-| C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text), TS-526 (both modes) | TS-526 (state not readable) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the two sources it did not read) |
+| C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override), TS-538 (`CLAUDE_PLUGIN_ROOT` set: the npm `sdd` keeps its own templates) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | TS-538 (another package's templates named by `CLAUDE_PLUGIN_ROOT` are not read) |
