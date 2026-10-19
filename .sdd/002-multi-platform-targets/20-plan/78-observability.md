@@ -36,7 +36,7 @@ smoke test of the packed tarball), **replay** (`npm run replay`, reports under
 | C002-NFR-402 | Manifest check output on the packed tarball (`scripts/check/tarball.mjs`) | log | check | 0 `dependencies`, 0 unbundled runtime imports | C002-T-023 |
 | C002-NFR-501 | Regeneration diff of the release check against `dist/<target>/` and the target zip, stored in the release record | log | release | 0 files missing, extra or different | C002-T-047 |
 | C002-NFR-601 | Timed clean-profile runs in `docs/releases/clean-profile-runs.md` | metric | manual | ≤ 15 minutes per target | C002-T-051, C002-T-057 |
-| C002-NFR-801 | Build licence check over both metafiles (ERR-BLD-001) and the SPDX header scan of the tarball, `dist/opencode/` and `dist/copilot/` (`scripts/check/tarball.mjs … --spdx dist/opencode --spdx dist/copilot`, findings under the code `C002-NFR-801`) | log | check | 0 files or packages outside the allowlist | C002-T-021, C002-T-023 |
+| C002-NFR-801 | Build licence check over both metafiles (ERR-BLD-001) and the SPDX header scan of the tarball, `dist/opencode/` and `dist/copilot/` (`scripts/check/tarball.mjs … --spdx dist/opencode --spdx dist/copilot`, findings under the code `C002-NFR-801`) | log | check | 0 files or packages outside the allowlist | C002-T-021, C002-T-023 (tarball scan and the `--spdx` option), C002-T-049 (the `--spdx dist/opencode --spdx dist/copilot` run at the release-candidate commit) |
 
 Alerting is not applicable (no running service). The release check (C002-T-047) reads the replay,
 injection and checklist evidence at the tested versions; a miss of any other threshold is raised as

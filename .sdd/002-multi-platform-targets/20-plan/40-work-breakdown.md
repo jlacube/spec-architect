@@ -121,7 +121,6 @@ flowchart TB
   C002_T_013 --> C002_T_022
   C002_T_021 --> C002_T_022
   C002_T_022 --> C002_T_023
-  C002_T_034 --> C002_T_023
   C002_T_061 --> C002_T_023
   C002_T_016 --> C002_T_061
   C002_T_019 --> C002_T_061
@@ -221,6 +220,7 @@ flowchart TB
   C002_T_045 --> C002_T_048
   C002_T_047 --> C002_T_048
   C002_T_060 --> C002_T_048
+  C002_T_023 --> C002_T_049
   C002_T_036 --> C002_T_049
   C002_T_041 --> C002_T_049
   C002_T_043 --> C002_T_049
@@ -264,8 +264,10 @@ catch-up task C002-T-063 (L) starts after C002-T-035 and C002-T-042 (both finish
 finishes at 25; C002-T-046 now waits for it and finishes at 27, C002-T-047 at 30, so C002-T-048
 finishes at 32 (before: 29, when it waited for C002-T-045 at 27). C002-T-041 finishes at 27 and
 C002-T-045 at 27, both off the critical path. Most of these tasks are done, so the weights model the
-order, not the remaining calendar. C002-T-023 now also waits for C002-T-034 (its `--spdx` scan of the
-generated folders) and finishes at 19, still ahead of its dependents. The D-004 … D-009 plan update
+order, not the remaining calendar. The `--spdx` scan of the generated folders (C002-DOD-020) is run
+by C002-T-049 at the release-candidate commit, so C002-T-023 waits only for C002-T-022 and C002-T-061
+and finishes at 15 (plan critic CR-33); C002-T-049 now also waits for it, with no effect on the chain
+(C002-T-049 starts at 32). The D-004 … D-009 plan update
 did not change the chain: the
 catch-up task C002-T-061 (M) finishes at 13 after C002-T-022 (11), before C002-T-023; C002-T-062 (S) finishes
 at 12 after C002-T-032 (11), before C002-T-058 starts at 18; C002-REQ-217 adds no task. Nor did the
@@ -347,7 +349,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-03 | C002-T-021 | Build: two bundles and the licence check over both | M | T-004, T-016 |
 | C002-M-03 | C002-T-022 | architect-sdd: staging, template CLI lines and npm pack | L | T-003, T-012, T-013, T-021 |
 | C002-M-03 | C002-T-061 | Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates | M | T-016, T-019, T-021, T-022 |
-| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022, T-034, T-061 |
+| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022, T-061 |
 | C002-M-04 | C002-T-024 | Mapping tables, their schema copy and loader | M | T-001, T-002, T-006, T-015 |
 | C002-M-04 | C002-T-025 | Generator: entry, source reader, writer and manifest | L | T-004, T-024 |
 | C002-M-04 | C002-T-026 | Translator: agent frontmatter | M | T-025, T-040 |
@@ -377,7 +379,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046, T-063 |
 | C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044, T-063 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060 |
-| C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-036, T-041, T-043, T-044, T-048, T-056 |
+| C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
 | C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048 |

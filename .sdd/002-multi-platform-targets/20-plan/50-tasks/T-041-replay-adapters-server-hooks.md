@@ -29,10 +29,10 @@ subagent guard) are tested by the scenarios of C002-T-032, not by the replay (C0
 
 **After the D-010 … D-014 revision.** The development run of commit 5b4392b differed only where the
 spec had no per-mechanism expectation (D-014). The revised §2.1 rows (write-tool shell cases, the
-unexpanded `${CLAUDE_PLUGIN_DATA}` literal and the linked `cwd`), ERR-MCP-003 read as `allow` (§2.3)
-and the Copilot hook tool names (`Write`, `Bash`, `Glob`, §2.2) are put into `tests/replay/expect.ts`
-and the server adapter by C002-T-063, which also regenerates the reports under `docs/releases/`. This
-task then proves them with C002-TS-661, C002-TS-662 and C002-TS-663 and the two new planted rows of
+unexpanded `${CLAUDE_PLUGIN_DATA}` literal and the linked `cwd`) and ERR-MCP-003 read as `allow`
+(§2.3) are put into `tests/replay/expect.ts` and the server adapter by C002-T-063, which also
+regenerates the reports under `docs/releases/`. This task owns the Copilot hook tool names (`Write`,
+`Bash`, `Glob`, §2.2) in its Copilot-hooks adapter. It then proves the revised rows with C002-TS-661, C002-TS-662 and C002-TS-663 and the two new planted rows of
 C002-TS-609, and closes with 0 differing decisions.
 
 ## Targets
@@ -40,8 +40,9 @@ C002-TS-609, and closes with 0 differing decisions.
 | Kind | Target | Change |
 |---|---|---|
 | add | `tests/replay/adapters/sdd-mcp-server.ts` | starts `sdd-mcp` from an install of the tarball; one session per profile; `dialect` per case |
-| add | `tests/replay/adapters/copilot-hooks.ts` | Copilot-shaped input from the S-08 record, with the playing generated agent in `agent_type` as VS Code reports it (`sdd-spec-writer`) and the hook `tool_name` of the case's class (C002-IF-009 §2.2); decision per §2.3: exit 2 with the deny decision on standard output is a deny, exit 0 with empty standard output an allow, anything else no decision. Used only under `copilot-hooks`; the signed-off S-08 record gives `sdd-mcp-server`, so its release replay is not applicable at the tested versions |
-| add | `tests/unit/replay/adapters.test.ts` | a sample of cases per adapter on a fixture; C002-TC-663: the hook `tool_name` and `tool_input` fields of each corpus tool, read from the classes file of the hooks-fallback package |
+| add | `tests/replay/adapters/copilot-hooks.ts` | Copilot-shaped input from the S-08 record, with the playing generated agent in `agent_type` as VS Code reports it (`sdd-spec-writer`) and the hook `tool_name` of the case's class, by the Copilot hook tool names of C002-IF-009 §2.2 (the seven non-shell tools of the shell corpus: Write, Edit, MultiEdit and NotebookEdit as `Write`, Read, Glob and Grep as their `read_only` hook tool); the installed copy of the fallback package run without `--classes`, its classes file rewritten per case with the case's dialect in every `terminal` entry and the case's `env` set for the hook process (§2.2 "Copilot classes copy per case", critic CR-46); decision per §2.3: exit 2 with the deny decision on standard output is a deny, exit 0 with empty standard output an allow, anything else no decision. Used only under `copilot-hooks`; the signed-off S-08 record gives `sdd-mcp-server`, so its release replay is not applicable at the tested versions |
+| add | `tests/unit/replay/adapters.test.ts` | a sample of cases per adapter on a fixture (unit, not mapped to a TS) |
+| add | `tests/integration/cap06/copilot-hook-names.test.ts` | C002-TC-663: the hook `tool_name` and `tool_input` fields of each corpus tool, read from the classes file of the generated hooks-fallback package (pkg-cp-hooks); an integration case, so not in the unit file (critic CR-34) |
 | modify | `tests/replay/scenarios/suite.test.ts` | C002-TC-661 (the rows of C002-TS-661, per mechanism, with the corpus files unchanged) and C002-TC-662 (PG-048: ERR-MCP-003 in `detail`, decision `allow`, not differing) |
 
 ## Preconditions
@@ -63,7 +64,7 @@ C002-TS-609, and closes with 0 differing decisions.
 
 - `npm run replay -- --mechanism sdd-mcp-server` and `npm run replay -- --mechanism copilot-hooks`,
   each under PowerShell 7 and Git Bash
-- `npm run replay -- suite`, `npm test -- unit/replay`
+- `npm run replay -- suite`, `npm test -- unit/replay`, `npm test -- cap06/copilot-hook-names`
 
 ## Done when
 

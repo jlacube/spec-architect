@@ -45,8 +45,9 @@ does not wait for it.
 ## Preconditions
 
 - C002-T-046 and C002-T-054 done; the release candidate packed at the commit of C002-T-054.
-- Hooks enabled in VS Code (`chat.useHooks`, Workspace Trust for the toy repository, no organisation
-  policy that disables them): the release check refuses a record that shows hooks disabled or not
+- Hooks enabled in VS Code from the restore step of step 2 on (`chat.useHooks`, Workspace Trust for
+  the toy repository, no organisation policy that disables them; the hooks-off rows of C002-TC-516
+  run before the restore, C002-IF-009 §4 "Run order"): the release check refuses a record that shows hooks disabled or not
   recorded in either mode (C002-REQ-629, ERR-REL-010). The doctor's Copilot hooks row reads
   `chat.useHooks` only and shows `ok` with its caveat text (C002-IF-006 §2), so the checklist's
   hooks-state step is where P-01 reads Workspace Trust and the organisation policy.
@@ -62,13 +63,26 @@ does not wait for it.
    install (no Architect entry, C002-T-046 assumption step), run `sdd install copilot --package
    <folder>` in P-01's own terminal, set the three settings, open a Local chat with `sdd-conductor`
    selected.
-2. **P-01 step:** run every step of the checklist and record each result, the versions, the hooks
-   state with its three sources (`hooks_sources`: `use_hooks`, `workspace_trust`, `policy`, and
-   `hooks_state` derived from them, C002-IF-009 §4; C002-TS-618, C002-TS-619), the doctor's Copilot
-   hooks row and its Version text (C002-TC-516) and the outcome of each assumption step: the `.sdd/` path the first write lands in (roots
-   step), and in the delegated-edit step (C002-TC-358) whether the host offered `general-purpose` to
-   the workspace conductor, the `agent_type` in the hook output, that `src/app.ts` is unchanged and
-   the subagent guard hook's deny message (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed edit tool); then the same step with the plugin part disabled.
+2. **P-01 step:** run the checklist steps of the mode in use in the run order of C002-IF-009 §4
+   (C002-T-046 "Run order"), step 1's install being group 1, and record each result in run order:
+   - group 2: the C002-TC-516 row with `chat.useHooks` false, then the row with the workspace in
+     restricted mode, each with the doctor's Copilot hooks row as shown (status, Version text, Fix);
+     then the restore step (`chat.useHooks` true, workspace trusted);
+   - group 3: the C002-TC-516 row with `chat.useHooks` true and the workspace trusted (`ok`, Version
+     `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy
+     not read, confirmed by the manual VS Code checklist`), then the hooks-state step with its three
+     sources (`hooks_sources`: `use_hooks` as the Settings editor shows it for the active profile and
+     workspace, `workspace_trust`, `policy`, and `hooks_state` derived from them, C002-IF-009 §4;
+     C002-TS-618, C002-TS-619);
+   - group 4: every other step, with the versions and the outcome of each assumption step: the
+     `.sdd/` path the first write lands in (roots step), and in the delegated-edit step (C002-TC-358)
+     whether the host offered `general-purpose` to the workspace conductor, the `agent_type` in the
+     hook output, that `src/app.ts` is unchanged and the subagent guard hook's deny message
+     (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed edit tool); then the same step with the
+     plugin part disabled.
+   If a group-4 step ran before the hooks-state step, or `chat.useHooks`, Workspace Trust or an
+   organisation policy changed after it, run a new restore step and then groups 3 and 4 again; the
+   record lists every step in run order.
 3. A failed step reopens the owning task; the run is repeated after the fix. A refuted assumption is
    a spec defect (`sdd defect add`), not a fix in place. In particular:
    - a built-in agent's calls without `agent_type`, or `general-purpose` not denied: defect against
@@ -86,6 +100,6 @@ does not wait for it.
 
 ## Done when
 
-- [ ] Record committed with every step passed, `hooks_state: enabled` with `hooks_sources` reading
+- [ ] Record committed with every step passed and listed in the run order of C002-IF-009 §4 (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, the assumption outcomes and P-01's name
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

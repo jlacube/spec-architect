@@ -915,11 +915,13 @@ by the conductor from the critic's reply.
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-30 | major | T-046, T-050, TC-516, TC-901, spec CR-44 | checklist tasks plan only the `ok` row of TS-516; disabled and restricted-mode rows have no step | T-046: one step per TS-516 row, disabling rows first, restore, then hooks-state step; T-050 follows; `checklist.test.ts` asserts order | open |
-| CR-31 | minor | T-041, T-063, TC-663 | T-041 says T-063 puts the Copilot hook tool names into expect.ts; T-063 has no such target | T-041 owns the names in the Copilot-hooks adapter; drop the clause | open |
-| CR-32 | minor | T-063 step 6, Verification | four reports written, only two mechanisms in Verification | add `npm run replay -- --mechanism opencode-permissions` | open |
-| CR-33 | minor | T-023 (M-03), T-034 (M-04), strategy M-03 exit, DOD-020 | an M-03 task waits for an M-04 task (`--spdx dist/…`) | move the `--spdx` target scan evidence to T-034 or a release-evidence task; T-023 keeps the tarball scan | open |
-| CR-34 | minor | TC-663, test plan §1 | mapped integration case placed in a unit test file | move to an integration file or note the exception | open |
+| CR-30 | major | T-046, T-050, TC-516, TC-901, spec CR-44 | checklist tasks plan only the `ok` row of TS-516; disabled and restricted-mode rows have no step | T-046: one step per TS-516 row, disabling rows first, restore, then hooks-state step; T-050 follows; `checklist.test.ts` asserts order | fixed |
+| CR-31 | minor | T-041, T-063, TC-663 | T-041 says T-063 puts the Copilot hook tool names into expect.ts; T-063 has no such target | T-041 owns the names in the Copilot-hooks adapter; drop the clause | fixed |
+| CR-32 | minor | T-063 step 6, Verification | four reports written, only two mechanisms in Verification | add `npm run replay -- --mechanism opencode-permissions` | fixed |
+| CR-33 | minor | T-023 (M-03), T-034 (M-04), strategy M-03 exit, DOD-020 | an M-03 task waits for an M-04 task (`--spdx dist/…`) | move the `--spdx` target scan evidence to T-034 or a release-evidence task; T-023 keeps the tarball scan | fixed |
+| CR-34 | minor | TC-663, test plan §1 | mapped integration case placed in a unit test file | move to an integration file or note the exception | fixed |
 
 Checked, no finding: T-063 covers every code follow-up of the digest; ERR-CLI-021/022 mirror (0c6c7bf);
 T-047 four-step order and stored-value rule; TC-621/623…625 fixtures; level counts; critical path 36.
+
+All findings of this section fixed: planner (CR-30…34), conductor commit after df0d9e6.

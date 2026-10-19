@@ -44,8 +44,10 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 
 - C002-T-002 (done), C002-T-044 and C002-T-058 done.
 - C002-T-063 done: the Copilot doctor's hooks row and the case file of C002-TC-526 follow the revised
-  C002-TS-526 (Version `cannot be read`, no workspace `.vscode/settings.json`), and the install
-  command that prepares each workspace requires `scripts/sdd.mjs`.
+  C002-TS-526 (Version `cannot be read` in its three rows: no settings, an unparsable workspace
+  `.vscode/settings.json`, a non-boolean `chat.useHooks`; the probe of C002-T-063 (h)), and the
+  install command that prepares each workspace requires `scripts/sdd.mjs` and takes its agents from
+  the guard hook's `--agents` (C002-T-063 (i)).
 - The Copilot subscription named in C002-T-002 has allowance left for the sessions of steps 4 and 5
   (C002-RISK-026). These sessions are not billed to the prepaid API key.
 
@@ -68,8 +70,8 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 3. Reuse the caps of `evals/harness/caps.mjs` (C002-T-044) and the host selection of
    `evals/harness/session.mjs` without changing its signature or its `--auth` handling (C002-T-060).
 4. **Smoke run on E-CPC:** one routing case within $0.50.
-5. **Carried Copilot CLI rows on E-CPC:** the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526,
-   one run each, at most one rerun after a failure. The release rows (C002-TC-615 and C002-TC-359)
+5. **Carried Copilot CLI rows on E-CPC:** the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526
+   (3, the rows of the mode in use), one run each, at most one rerun after a failure. The release rows (C002-TC-615 and C002-TC-359)
    run in C002-T-054.
 6. C002-TC-336 is `@mode-hooks`: under the signed-off S-08 record (`sdd-mcp-server`) it is reported
    not applicable with the record cited and runs no session (test plan §1).

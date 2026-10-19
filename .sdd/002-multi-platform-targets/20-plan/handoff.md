@@ -149,8 +149,9 @@ Topological order of `depends_on` (not numeric order: C002-T-053 comes first, C0
 C002-T-026 because it takes `tests/replay/` out of `npm test` before the first replay test file lands,
 and the tasks added in plan round 4, for defect D-003 and for the D-004 … D-009 and D-010 … D-014
 revisions, C002-T-059, C002-T-058, C002-T-061, C002-T-062 and C002-T-063, sit after their
-dependencies (C002-T-063 after C002-T-042 and before C002-T-041; C002-T-023 after C002-T-034,
-whose generated folders its `--spdx` scan reads); C002-T-060, the eval auth switch already built in commits 98e6353 and 6de8656, comes
+dependencies (C002-T-063 after C002-T-042 and before C002-T-041; C002-T-023 needs only C002-T-022 and
+C002-T-061, and the `--spdx` scan of the generated folders is run by C002-T-049, which comes after
+C002-T-023); C002-T-060, the eval auth switch already built in commits 98e6353 and 6de8656, comes
 right after C002-T-053, before any task with a paid Claude Code step). Tasks may run in another order when their dependencies
 allow; C002-M-02 and C002-M-03 run in parallel with C002-M-01. After C002-T-048, the OpenCode tasks
 (C002-T-049, C002-T-051, C002-T-052) and the Copilot tasks (C002-T-054, C002-T-050, C002-T-057,
