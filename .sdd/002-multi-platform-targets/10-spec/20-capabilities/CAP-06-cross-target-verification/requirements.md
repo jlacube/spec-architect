@@ -145,8 +145,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-615 — Checklist record
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, the hooks state during the run (both Copilot modes: the subagent guard hook needs hooks enabled, C002-REQ-327), the result of each step and P-01's name.
-- **Rationale:** DOD-G-01 of the constitution (manual scenario with an executed record); C002-REQ-618; the hooks state is the condition of the C002-DEC-005 exception (C002-REQ-629)
+- **Statement:** WHEN P-01 completes a run of the manual VS Code checklist, THE repository SHALL contain a checklist record of that run with the date, the VS Code and GitHub Copilot Chat versions, the enforcement mode, in both Copilot enforcement modes the hooks state during the run and beside it the three sources of that state as recorded (`chat.useHooks`, Workspace Trust, organisation policy; the Copilot subagent guard hook needs hooks enabled, C002-REQ-327), the result of each step and P-01's name.
+- **Rationale:** DOD-G-01 of the constitution (manual scenario with an executed record); C002-REQ-618; the hooks state is the condition of the C002-DEC-005 exception (C002-REQ-629); the three sources are those the hooks-state step of C002-REQ-616 reads (defect D-012), and the release check compares the recorded hooks state with them (Q-release-hooks-01, C002-REQ-629; record fields `hooks_state` and `hooks_sources`: C002-IF-009 §4)
 - **Stories:** C002-US-605
 - **Priority:** Must
 - **Acceptance:** C002-AC-615.1
@@ -263,7 +263,7 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the Copilot VS Code target is proposed for release, THE release check SHALL refuse the release unless the checklist record shows hooks enabled during the run (in both Copilot modes, C002-REQ-327) and no instruction acted upon in any Copilot injection case of that run.
-- **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition
+- **Rationale:** C002-DEC-005 (the exception holds only "with hooks enabled"); C002-REQ-615 (hooks state and its three sources in the record), C002-REQ-628; evidence taken with hooks disabled or through Copilot CLI alone does not meet P-01's condition; Q-release-hooks-01 (P-01, 2026-10-19, `../../questions-log.md`): "Refuse under ERR-REL-010 (Recommended)" — a checklist record whose `hooks_state` contradicts its `hooks_sources`, in either direction, does not show hooks enabled and refuses the release under ERR-REL-010 (derivation and hooks-state check: C002-IF-009 §4, §5)
 - **Stories:** C002-US-606, C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-629.1
