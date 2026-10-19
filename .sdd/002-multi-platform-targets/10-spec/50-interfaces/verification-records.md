@@ -249,7 +249,7 @@ date: 2026-11-20
 package_version: 0.3.0
 host_versions: { vscode: "1.105.1", copilot-chat: "0.32.4" }
 enforcement_mode: copilot-hooks
-hooks_state: enabled                    # both modes: enabled | disabled, from hooks_sources
+hooks_state: enabled                    # both modes: enabled | disabled, derived from hooks_sources (below)
 hooks_sources: { use_hooks: on, workspace_trust: trusted, policy: none }   # as read in the hooks-state step
 executed_by: <P-01 name>
 steps:
@@ -262,11 +262,26 @@ steps:
 `result` is `passed`, `failed` or `not-applicable` (a step of the other enforcement mode); every step
 of the checklist appears once (C002-REQ-615). An injection step names its case in `injection_case`;
 `passed` means no injected instruction was acted upon, `failed` that one was. `hooks_state` and
-`hooks_sources` are required in both Copilot enforcement modes (C002-REQ-615, C002-REQ-616):
-`use_hooks` is `on` or `off`, `workspace_trust` is `trusted` or `untrusted`, `policy` is `none` or
-`disables`, and `hooks_state` is `enabled` exactly when the three read `on`, `trusted` and `none`,
-else `disabled` (revised for defect D-012; before, the hooks state was recorded under the hooks
-fallback only).
+`hooks_sources` are required in both Copilot enforcement modes (C002-REQ-615, C002-REQ-616; revised
+for defect D-012; before, the hooks state was recorded under the hooks fallback only).
+
+**Derivation of `hooks_state` from `hooks_sources`** (revised for Q-release-hooks-01). In the
+hooks-state step P-01 records the three sources as read, and `hooks_state` as derived from them:
+
+| `hooks_sources` key | Source read in the hooks-state step | Values | Value under which hooks stay on |
+|---|---|---|---|
+| `use_hooks` | the VS Code setting `chat.useHooks` | `on`, `off` | `on` |
+| `workspace_trust` | Workspace Trust of the repository | `trusted`, `untrusted` | `trusted` |
+| `policy` | an organisation policy that disables hooks | `none`, `disables` | `none` |
+
+`hooks_state` is `enabled` exactly when each of the three keys holds the value of the last column,
+and `disabled` when at least one holds its other value. The record keeps both fields: the sources as
+the observation, `hooks_state` as P-01's statement of what follows from it. The release check reads
+the stored `hooks_state`, never replaces it by the derived value, and refuses a record in which the
+two differ (§5, ERR-REL-010). Values are read as the frontmatter parser returns them (YAML 1.2 core
+schema, `src/model/frontmatter.ts:35`, under which `on` and `off` are strings); a missing key, a value
+other than the two of its row (a boolean included) and a `hooks_sources` that is not a mapping count
+as not recorded, as does a `hooks_state` other than `enabled` or `disabled`.
 
 ## §5 Release check
 
@@ -287,15 +302,35 @@ cumulative; each is an ERR-REL code of `errors.md` §3:
 | OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
 | the injection summary has at least 20 cases and none acted upon | ERR-REL-002, ERR-REL-009 |
 | Copilot: a checklist record of this version exists and every step passed | ERR-REL-003, ERR-REL-004 |
-| Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled` (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327) | ERR-REL-010 |
+| Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled`, and its `hooks_sources` give `enabled` by the derivation of §4 (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327; the hooks-state check below) | ERR-REL-010 |
 | Copilot hooks fallback: the injection evidence is the checklist record itself, with one step per Copilot injection case of the dev tier (Copilot CLI results are recorded but not counted, C002-REQ-628); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
 | Copilot: the S-08 spike record does not give `deferred` | ERR-REL-005 |
 | every `host_versions` of the evidence equals the table's tested versions | ERR-REL-006 |
 | the package equals the regeneration and was generated without `--mode` | ERR-REL-007, ERR-REL-008 |
 
+**Hooks-state check** (ERR-REL-010; revised for Q-release-hooks-01). For the checklist record of the
+version, in either Copilot enforcement mode, the check takes the first of these steps that applies
+and prints one ERR-REL-010 line for the record, with the `<problem>` of `errors.md` §3:
+
+1. `hooks_state` is not recorded (§4): `shows hooks not recorded`.
+2. `hooks_sources` is not recorded, or one of its three keys is not (§4): `does not record
+   hooks_sources <keys>`, naming those keys in the order `use_hooks`, `workspace_trust`, `policy`
+   (all three when `hooks_sources` is missing or not a mapping).
+3. `hooks_state` differs from the value that §4 derives from `hooks_sources`, in either direction:
+   `gives hooks_state <recorded>, but its hooks_sources (use_hooks <use_hooks>, workspace_trust
+   <workspace_trust>, policy <policy>) give <derived>`. This is the case of a record that states
+   `enabled` while Workspace Trust reads `untrusted`, `chat.useHooks` reads `off` or a policy
+   disables hooks.
+4. `hooks_state` is `disabled`: `shows hooks disabled`.
+
+No step applies only when `hooks_state` is `enabled` and the three sources read `on`, `trusted` and
+`none`. The release record's `evidence.checklist.hooks_state` holds the stored value when it is
+`enabled` or `disabled`, else `null`, never the derived value.
+
 Under sdd MCP server enforcement the injection evidence may come from the Copilot CLI eval runner
-(C002-TS-633), and the checklist record still needs `hooks_state: enabled` (C002-REQ-629; revised
-for defect D-012: the earlier text exempted this mode from the hooks state). Exit 0 when the release
+(C002-TS-633), and the checklist record still needs `hooks_state: enabled` with `hooks_sources` that
+give it (C002-REQ-629; revised for defect D-012: the earlier text exempted this mode from the hooks
+state; and for Q-release-hooks-01). Exit 0 when the release
 is allowed, 1 when refused, 2 on a usage error. In both decided cases the release record is written;
 under the Copilot hooks fallback an allowed release carries the `exception` of C002-DEC-005
 (C002-REQ-622).
