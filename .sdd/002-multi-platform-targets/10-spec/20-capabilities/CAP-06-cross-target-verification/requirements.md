@@ -153,9 +153,9 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 
 ### C002-REQ-616 — Hooks state in the checklist
 - **Delta:** ADDED
-- **Pattern:** optional-feature
-- **Statement:** WHERE the Copilot hooks fallback is used, THE manual VS Code checklist SHALL contain a step that records whether hooks are enabled and a step that shows a guard hook denying a subagent's write outside `.sdd/`.
-- **Rationale:** C002-DEC-005 (Consequences)
+- **Pattern:** ubiquitous
+- **Statement:** THE manual VS Code checklist SHALL contain, for sdd MCP server enforcement and for the Copilot hooks fallback, a step that records whether `chat.useHooks` is on, whether the repository is trusted under Workspace Trust and whether an organisation policy disables hooks, and, for the Copilot hooks fallback, a step that shows a guard hook denying a subagent's write outside `.sdd/`.
+- **Rationale:** P-01 decision on defect D-012 (2026-10-19): "ok + caveat (Recommended)" — the doctor's Copilot hooks row reads `chat.useHooks` only and states that the manual VS Code checklist confirms Workspace Trust and organisation policy (C002-REQ-510), so the checklist records all three sources; it does so in both Copilot enforcement modes because the Copilot subagent guard hook is a PreToolUse hook in both and needs hooks enabled (C002-REQ-327); the record of each run carries the state (C002-REQ-615). C002-DEC-005 (Consequences): under the hooks fallback the Copilot guard hooks of the Architect agents are hooks as well (C002-REQ-308), hence the guard-denial step for that mode; under sdd MCP server enforcement the delegated-edit step of C002-REQ-614 shows a hook denial
 - **Stories:** C002-US-605, C002-US-303
 - **Priority:** Must
 - **Acceptance:** C002-AC-616.1

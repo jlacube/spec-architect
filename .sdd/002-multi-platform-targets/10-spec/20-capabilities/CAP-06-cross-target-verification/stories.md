@@ -56,7 +56,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **So that** what cannot be scripted in VS Code is still verified, with evidence
 - **Value / outcome:** C002-SC-02; C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-06
-- **Context & notes:** C002-DEC-003 (the release check requires the manual record for the Copilot target). DOD-G-01 of the constitution accepts a manual scenario with an executed record. With the Copilot hooks fallback, the checklist also records the hooks state (C002-US-303) and holds the Copilot injection cases run in VS Code with hooks enabled, because Copilot CLI results do not prove the VS Code hooks (C002-DEC-005 exception). Re-run before each release because the VS Code features used are Preview or Experimental (ideation §9).
+- **Context & notes:** C002-DEC-003 (the release check requires the manual record for the Copilot target). DOD-G-01 of the constitution accepts a manual scenario with an executed record. In both Copilot enforcement modes the checklist records the hooks state, including the Workspace Trust and organisation policy sources that the doctor does not read (C002-REQ-616; defect D-012, P-01 2026-10-19). With the Copilot hooks fallback, it also holds the Copilot injection cases run in VS Code with hooks enabled (C002-US-303), because Copilot CLI results do not prove the VS Code hooks (C002-DEC-005 exception). Re-run before each release because the VS Code features used are Preview or Experimental (ideation §9).
 - **Requirements:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-618, C002-REQ-628
 - **Traces to:** C002-DEC-003, C002-DEC-005 (Consequences); Q-eval-01
 

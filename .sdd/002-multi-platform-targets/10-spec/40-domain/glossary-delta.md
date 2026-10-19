@@ -107,6 +107,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Revise command | The command that reopens an approved phase: `/architect:revise` on Claude Code, and its generated command or prompt file on OpenCode and Copilot VS Code |
 | Writing `sdd` subcommand | An `sdd` subcommand that writes files, such as `change new`, `trace --write`, `task set`, `serena-config` and `serena-launch`; the full list is the table of C002-IF-008 §1.2 (C002-REQ-607, C002-REQ-521) |
 | Data-folder argument | The folder that `sdd serena-config` and `sdd serena-launch` write Serena's configuration and data into: a folder path or the option `--user-data` (C002-REQ-515, C002-REQ-517) |
+| MSIX AppData redirection | A Windows platform condition: a process started by an application installed as an MSIX package, such as the Claude desktop app, writes under `%LOCALAPPDATA%` into `%LOCALAPPDATA%\Packages\<package>\LocalCache\Local\…` instead, a folder that processes started outside the package do not see (defect D-013 item 7; C002-REQ-515) |
 
 ## 2. System names (allowed after `THE` in EARS statements)
 

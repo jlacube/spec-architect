@@ -39,11 +39,11 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 ### C002-NFR-103 — Target generation time
 - **Category:** Performance efficiency / time behaviour
 - **Statement:** WHEN the generator writes both target packages from the source plugin, THE generator SHALL complete within the threshold.
-- **Metric:** wall-clock time of the generation step for both targets (build, checks and zipping excluded), p95
+- **Metric:** wall-clock time of one generator run that writes both targets, p95; the run includes the generator's own bundling step (C002-ADR-003) and excludes `scripts/build.mjs`, the checks and zipping
 - **Threshold:** ≤ 5 s at p95 over 10 runs
 - **Method:** benchmark script under `bench/` that runs the generator on the source plugin 10 times
 - **Environment:** REF-WIN, warm file cache
-- **Rationale:** Q-perf-01 (spec round 2, `../questions-log.md`): "≤ 5 s p95"; generation runs in every `npm run check` and `npm run package` (C002-REQ-601, C002-REQ-101); the constitution has no default for it
+- **Rationale:** Q-perf-01 (spec round 2, `../questions-log.md`): "≤ 5 s p95"; generation runs in every `npm run check` and `npm run package` (C002-REQ-601, C002-REQ-101); the constitution has no default for it; the generator bundles its own entry at each run, so that step counts and only the plugin build of `scripts/build.mjs` is left out (C002-ADR-003 Consequences; defect D-013 item 6)
 - **DoD:** C002-DOD-010
 
 ### C002-NFR-104 — Inlined skill budget
