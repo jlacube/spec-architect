@@ -319,8 +319,12 @@ Scenario: C002-TS-226 — built-in commands kept beside the Architect commands
   Given an OpenCode session at the tested version on "fx-oc" with the OpenCode target package
   When the session's command list is read through the OpenCode server API
   Then it lists the 13 commands "architect-<name>", each bound to the agent "sdd-conductor"
-  And the built-in commands "init" and "new" are listed with OpenCode's own descriptions
+  And it lists the built-in commands of OpenCode 1.18.31, "init", "review" and "customize-opencode", each with OpenCode's own description and bound to no Architect agent
+  And it lists "architect-init" beside the built-in "init"
 ```
+
+OpenCode 1.18.31 has no built-in command `new` (defect D-011 item 1); of its built-ins only `init`
+shares a name with a source command, and the prefix keeps the two apart.
 
 ```gherkin
 Scenario: C002-TS-227 — command file without the prefix
@@ -387,7 +391,7 @@ Scenario: C002-TS-230 — conductor's question call reaches the SDK in a server 
 | C002-REQ-213 | TS-219, TS-220 | TS-219 (Claude Code) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-214 | TS-221 | n/a | TS-221 (50-character topic) | n/a | n/a | n/a | n/a |
 | C002-REQ-215 | TS-222 | TS-223 (no finding) | n/a | n/a: C002-REQ-215 states no failure path; the server counterpart is C002-REQ-409 | n/a | n/a | n/a |
-| C002-REQ-216 | TS-225 | TS-226 (in an OpenCode session) | n/a | TS-227 | n/a | n/a | TS-226 (collision with the built-in "/new" and "/init") |
+| C002-REQ-216 | TS-225 | TS-226 (in an OpenCode session) | n/a | TS-227 | n/a | n/a | TS-226 (collision with the built-in "init") |
 | C002-REQ-217 | TS-228 | TS-228 (both enforcement modes), TS-230 (in an `opencode serve` session, whose default is `question: deny`) | n/a | TS-229 | TS-228, TS-229 (only the conductor may ask) | n/a | TS-229 (a specialist given `question: allow`) |
 
 Per-column n/a reasons. *Alternate*: package-content rules with one expected form. *Boundary*: no

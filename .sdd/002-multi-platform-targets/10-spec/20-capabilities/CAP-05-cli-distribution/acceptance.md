@@ -42,10 +42,11 @@ Scenario: C002-TS-501 — version of the installed executable
 ```gherkin
 Scenario: C002-TS-502 — same files as the bundled CLI, apart from the translated CLI lines
   Given the "architect-sdd" tarball is installed globally into a clean prefix and "CLAUDE_PLUGIN_ROOT" is unset
-  And two copies "fx-a" and "fx-b" of "fx-bootstrap", in which the bundled "node plugins/architect/scripts/sdd.mjs change new \"Export\" --profile lite --kind greenfield" has created the change "002" of "fx-b"
+  And two copies "fx-a" and "fx-b" of "fx-bootstrap", in which the bundled "node plugins/architect/scripts/sdd.mjs change new \"Export\" --profile lite --kind greenfield" has created in "fx-b" the change with the next free change number of "fx-bootstrap" ("003-export" while "fx-bootstrap" holds the changes "001" and "002")
   When P-01 runs "sdd change new \"Export\" --profile lite --kind greenfield" in "fx-a"
   Then the exit code is 0
-  And the change folder "002" of "fx-a" holds the same list of relative file paths as that of "fx-b"
+  And "fx-a" holds a change folder with the same number and name as the one the bundled CLI created in "fx-b"
+  And that change folder of "fx-a" holds the same list of relative file paths as that of "fx-b"
   And each file of "fx-a" has the same lines as its counterpart in "fx-b", except the lines of "20-plan/handoff.md" in which "fx-b" holds "node <plugin-root>/scripts/sdd.mjs" and "fx-a" holds "sdd" in its place, the rest of each such line being equal
 ```
 
@@ -152,10 +153,17 @@ Scenario Outline: C002-TS-509 — doctor outcome per situation
     | OpenCode    | DeepWiki endpoint unreachable           | completed with warnings     |
     | OpenCode    | ripwire, Serena and ast-grep missing    | completed with warnings     |
     | OpenCode    | node 18 on PATH                         | failed: node ≥ 20 required  |
-    | OpenCode    | no "sdd" executable on PATH             | failed, naming the sdd CLI  |
-    | Claude Code | no "sdd" executable on PATH             | completed                   |
+    | OpenCode with the package generated for native permission enforcement | no "sdd" executable on PATH | failed, naming the sdd CLI |
+    | Claude Code | no "sdd" executable on PATH             | completed with warnings     |
     | Claude Code | node 18 on PATH                         | failed: node ≥ 20 required  |
 ```
+
+On Claude Code the Context7 and DeepWiki rows are `unreachable` in every run, because neither the
+conductor nor the cartographer holds their tools (defect D-012), so the Claude Code row without a
+PATH `sdd` expects "completed with warnings": it checks that a missing `sdd` does not fail the run
+there. The OpenCode row without a PATH `sdd` uses the package generated for native permission
+enforcement: under sdd MCP server enforcement the command tool runs the server's own CLI
+(C002-REQ-407), so the doctor's `sdd --version` probe never reaches a PATH `sdd`.
 
 ## C002-REQ-506
 
@@ -232,7 +240,7 @@ Scenario: C002-TS-514 — untested is a warning
 ```gherkin
 @eval
 Scenario Outline: C002-TS-515 — CLI version against the target package version
-  Given the OpenCode target package of version "0.3.0" and "sdd --version" reporting "<cli>"
+  Given the OpenCode target package of version "0.3.0", generated for native permission enforcement, and the "sdd" on PATH whose "sdd --version" reports "<cli>"
   When P-01 runs the doctor command on OpenCode
   Then the sdd CLI row shows status "<status>"
   And <fix>
@@ -245,31 +253,40 @@ Scenario Outline: C002-TS-515 — CLI version against the target package version
     | 1.3.0 | error  | its Fix column holds the npm command that installs "architect-sdd" version "0.3.0" |
 ```
 
+C002-TS-515 uses native permission enforcement for the reason given below C002-TS-509: only there
+does the probe run the `sdd` on PATH.
+
 ## C002-REQ-510
 
-#### C002-AC-510.1 — In both Copilot enforcement modes the Copilot hooks row is `ok` only when hooks are read as enabled
+#### C002-AC-510.1 — In both Copilot enforcement modes the Copilot hooks row is `ok` with its caveat text when `chat.useHooks` is read as on, and `error` when hooks are read as disabled or cannot be read
 ```gherkin
 @manual-vscode
-Scenario Outline: C002-TS-516 — hooks state in the VS Code doctor
+Scenario Outline: C002-TS-516 — Copilot hooks row in the VS Code doctor
   Given the Copilot target package generated for <mode> in VS Code, where <state>
   When P-01 runs the doctor prompt
-  Then the Copilot hooks row shows status "<status>"
+  Then the Copilot hooks row shows status "<status>" and the Version text "<version>"
+  And <fix>
   Examples:
-    | mode                         | state                                              | status |
-    | sdd MCP server enforcement   | hooks are enabled and the workspace is trusted     | ok     |
-    | sdd MCP server enforcement   | "chat.useHooks" is false                           | error  |
-    | sdd MCP server enforcement   | the workspace is in restricted mode (not trusted)  | error  |
-    | the Copilot hooks fallback   | hooks are enabled and the workspace is trusted     | ok     |
-    | the Copilot hooks fallback   | "chat.useHooks" is false                           | error  |
-    | the Copilot hooks fallback   | the workspace is in restricted mode (not trusted)  | error  |
+    | mode                         | state                                                                        | status | version                                                                                              | fix                                                                  |
+    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is trusted                         | ok     | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | sdd MCP server enforcement   | "chat.useHooks" is false                                                     | error  | disabled (chat.useHooks)                                                                             | its Fix column holds "enable chat.useHooks and trust the workspace" |
+    | sdd MCP server enforcement   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | ok    | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is trusted                         | ok     | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
+    | the Copilot hooks fallback   | "chat.useHooks" is false                                                     | error  | disabled (chat.useHooks)                                                                             | its Fix column holds "enable chat.useHooks and trust the workspace" |
+    | the Copilot hooks fallback   | "chat.useHooks" is true and the workspace is in restricted mode (not trusted) | ok    | chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist | its Fix column is empty                                    |
 ```
+
+The restricted-mode rows show the caveat of the P-01 decision on defect D-012: the doctor reads
+`chat.useHooks` only, so an untrusted workspace still shows `ok` with the text that names the two
+sources not read; the manual VS Code checklist records them (C002-TS-619).
 
 ```gherkin
 @eval
 Scenario Outline: C002-TS-526 — hooks state that cannot be read
-  Given the doctor of the Copilot target package generated for <mode>, in a user profile without the VS Code settings that "sdd host-version vscode" reads, so that it prints "hooks unknown"
+  Given the doctor of the Copilot target package generated for <mode>, in a user profile without the VS Code user settings that its "sdd host-version" probe reads and a workspace without ".vscode/settings.json", so that the probe prints "hooks unknown"
   When P-01 runs the doctor command
-  Then the Copilot hooks row shows status "error"
+  Then the Copilot hooks row shows status "error" and the Version text "cannot be read"
+  And its Fix column holds "check chat.useHooks and Workspace Trust by hand"
   And it does not show status "ok"
   And the doctor run reports "completed with warnings"
   Examples:
@@ -601,12 +618,12 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-502 | TS-503 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-503 | TS-504 | TS-504 (PowerShell, node -v) | TS-504 (extra word) | TS-504, TS-505 | TS-504 | n/a | TS-504 (npx, sddx, chaining, redirection) |
 | C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639 | n/a | n/a | n/a |
-| C002-REQ-505 | TS-509 | TS-509 (Claude Code) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
+| C002-REQ-505 | TS-509 | TS-509 (Claude Code: no sdd CLI row, completed with warnings) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
-| C002-REQ-510 | TS-516 | TS-516 (two disabling sources; both Copilot enforcement modes), TS-526 (both modes) | TS-526 (state not readable) | TS-516, TS-526 | n/a | n/a | TS-526 (unread state never reported ok) |
+| C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text), TS-526 (both modes) | TS-526 (state not readable) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the two sources it did not read) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override), TS-538 (`CLAUDE_PLUGIN_ROOT` set: the npm `sdd` keeps its own templates) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | TS-538 (another package's templates named by `CLAUDE_PLUGIN_ROOT` are not read) |
@@ -624,6 +641,6 @@ requirement. *Error*: packaging and record rules fail through the build or the d
 in C002-TS-509. *Authorization*: the doctor and the CLI run for the local user; only the allowlist is
 an authorization rule. *Concurrency/idempotency*: one doctor run per session; repeated runs rewrite
 `toolchain.md` with the same rows. *Abuse*: the doctor and packaging take no external input; the
-allowlist carries the misuse cases. The organisation-policy source of C002-REQ-510 is not in
-C002-TS-516 because the detection of each source is open for spike S-08 (requirement open item); the
-test plan adds it once the detection is known.
+allowlist carries the misuse cases. The doctor does not read Workspace Trust or an organisation
+policy (C002-REQ-510, P-01 decision on defect D-012), so C002-TS-516 has no row per source beyond
+`chat.useHooks`; the checklist step of C002-TS-619 records all three sources.

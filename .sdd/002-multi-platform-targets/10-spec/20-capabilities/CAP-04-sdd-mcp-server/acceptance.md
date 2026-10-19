@@ -130,6 +130,25 @@ Scenario Outline: C002-TS-641 — command decisions with the dialect argument
 ```
 
 ```gherkin
+Scenario Outline: C002-TS-660 — the literal `${CLAUDE_PLUGIN_DATA}` is not expanded by the command tool
+  Given the server instance "sdd-shell" runs in "fx-srv", whose environment <environment>
+  When an agent calls the command tool with the command '<command>' and the argument "dialect" set to "bash"
+  Then the result is refused with GUARD-BASH-001
+  And "fx-srv" holds no file or folder named "${CLAUDE_PLUGIN_DATA}"
+  And no "serena_config.yml" exists under "C:/fx-data"
+  Examples:
+    | environment                                           | command                                                   |
+    | sets "CLAUDE_PLUGIN_DATA" to "C:/fx-data"             | sdd serena-config "${CLAUDE_PLUGIN_DATA}"                 |
+    | sets "CLAUDE_PLUGIN_DATA" to "C:/fx-data"             | sdd serena-config ${CLAUDE_PLUGIN_DATA}                   |
+    | sets "CLAUDE_PLUGIN_DATA" to "C:/fx-data"             | sdd serena-launch "${CLAUDE_PLUGIN_DATA}" -- start-mcp-server |
+    | has no "CLAUDE_PLUGIN_DATA"                           | sdd serena-config "${CLAUDE_PLUGIN_DATA}"                 |
+```
+
+The server runs a command without a shell, so its guard call does not expand the literal: the
+folder outside the repository that the environment names is never used (C002-IF-008 §1.1 rule 2,
+C002-IF-002 §5.2; defect D-014 item 4).
+
+```gherkin
 Scenario Outline: C002-TS-642 — allowed command whose executable cannot be started without a shell
   Given the server instance "sdd-shell" runs in "fx-srv" on REF-WIN with a PATH on which <executables>
   When an agent calls the command tool with "ast-grep --version"
@@ -349,7 +368,7 @@ Scenario Outline: C002-TS-422 — missing or unknown profile
 | C002-REQ-402 | TS-402 | n/a | n/a | TS-402 | n/a | n/a | TS-402 (missing argument) |
 | C002-REQ-403 | TS-403, TS-404 | n/a | n/a | n/a: refused spans are C002-REQ-404 | n/a | n/a | n/a |
 | C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405 | n/a | n/a | n/a |
-| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH) | TS-406, TS-641 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository) |
+| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect), TS-660 (Serena literal with and without the variable set) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH) | TS-406, TS-641, TS-660 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository), TS-660 (literal `${CLAUDE_PLUGIN_DATA}` never expanded from the server's environment; no folder of that name created) |
 | C002-REQ-406 | TS-407 | TS-408 (failing command), TS-424 (plugin-root literal not expanded: ordinary non-zero result) | n/a | TS-408, TS-424 | n/a | n/a | TS-424 (a variable never expands to another CLI without a shell) |
 | C002-REQ-407 | TS-409 | n/a | n/a | TS-423 (ERR-MCP-006 `not found beside the server`) | n/a | n/a | TS-409 (PATH shadowing), TS-423 (no fallback to a PATH `sdd` when the own CLI is missing) |
 | C002-REQ-408 | TS-410 | TS-412 (no finding) | TS-411 (15 of 20) | n/a: C002-REQ-409 | n/a | n/a | n/a |

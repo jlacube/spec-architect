@@ -619,7 +619,7 @@ Scenario: C002-TS-343 — second run with the same package
   When P-03 runs "sdd install copilot --package C:/fx/pkg-cp" in "fx-cp-install" again
   Then the exit code is 0
   And the ten agent files, ".github/hooks/architect-guard.json", ".vscode/mcp.json" and ".github/architect-install.json" are byte-equal to their content before the run
-  And standard output holds the line "unchanged .github/hooks/architect-guard.json" and the line "unchanged .github/agents/<file>" for each of the ten agent files
+  And standard output holds the line "unchanged .github/hooks/architect-guard.json", the line "unchanged .github/agents/<file>" for each of the ten agent files, the line "unchanged .vscode/mcp.json" and the line "unchanged .github/architect-install.json"
 ```
 
 ```gherkin
@@ -640,17 +640,54 @@ Scenario Outline: C002-TS-345 — package that the install command cannot use
   Then the exit code is 2
   And standard error starts with "<code>" and names <named>
   And "fx-cp-install" has neither ".github/" nor ".vscode/" afterwards
+  And no "hooks.json" or "plugin.json" was written into the folder given with "--package"
   Examples:
     | package                                                                            | command                                         | code        | named                                       |
-    | the folder "C:/fx/empty" without "architect-target.json"                            | sdd install copilot --package C:/fx/empty       | ERR-CLI-022 | "C:/fx/empty" and "architect-target.json"   |
-    | the generated OpenCode package at "C:/fx/pkg-oc"                                    | sdd install copilot --package C:/fx/pkg-oc      | ERR-CLI-022 | "C:/fx/pkg-oc" and the target "opencode"    |
-    | "pkg-cp" whose "architect-target.json" holds "{ not json"                           | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "C:/fx/pkg-cp" and "architect-target.json"  |
-    | "pkg-cp" without "agents/sdd-critic.agent.md"                                       | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "agents/sdd-critic.agent.md"                |
-    | "pkg-cp" without "install/mcp.json"                                                 | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "install/mcp.json"                          |
-    | "pkg-cp" without "install/plugin.json"                                              | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "install/plugin.json"                       |
-    | "pkg-cp" without "hooks/tool-classes.json"                                          | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "hooks/tool-classes.json"                   |
-    | the globally installed "architect-sdd", which is not the CLI copy of a Copilot package | sdd install copilot                          | ERR-CLI-022 | "--package"                                 |
+    | the folder "C:/fx/empty" without "architect-target.json"                            | sdd install copilot --package C:/fx/empty       | ERR-CLI-022 | "C:/fx/empty" and "the folder holds no architect-target.json" |
+    | no folder at "C:/fx/missing"                                                        | sdd install copilot --package C:/fx/missing     | ERR-CLI-022 | "C:/fx/missing" and "the folder does not exist" |
+    | the generated OpenCode package at "C:/fx/pkg-oc"                                    | sdd install copilot --package C:/fx/pkg-oc      | ERR-CLI-022 | "C:/fx/pkg-oc" and 'architect-target.json names the target "opencode", not "copilot"' |
+    | "pkg-cp" whose "architect-target.json" holds "{ not json"                           | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "C:/fx/pkg-cp" and "architect-target.json cannot be parsed: " |
+    | "pkg-cp" whose "architect-target.json" holds "[]"                                   | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "architect-target.json is not a JSON object" |
+    | "pkg-cp" whose "architect-target.json" has no "package_version"                     | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "architect-target.json gives no package_version" |
+    | "pkg-cp" whose "architect-target.json" lists in its "files" no file under "agents/" | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "architect-target.json lists no agents/<agent name>.agent.md file" |
+    | "pkg-cp" without "agents/sdd-critic.agent.md", which its manifest lists             | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source file missing: agents/sdd-critic.agent.md" |
+    | "pkg-cp" without "install/mcp.json"                                                 | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source file missing: install/mcp.json"     |
+    | "pkg-cp" without "install/plugin.json"                                              | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source file missing: install/plugin.json"  |
+    | "pkg-cp" without "hooks/tool-classes.json"                                          | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source file missing: hooks/tool-classes.json" |
+    | "pkg-cp" without "scripts/sdd.mjs"                                                  | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source file missing: scripts/sdd.mjs"      |
+    | "pkg-cp" without "install/plugin.json" and "hooks/tool-classes.json"                | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "source files missing: install/plugin.json, hooks/tool-classes.json" |
+    | "pkg-cp" whose "install/mcp.json" holds "{ not json"                                | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "install/mcp.json cannot be parsed: "       |
+    | "pkg-cp" whose "install/mcp.json" is '{ "inputs": [] }'                             | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "install/mcp.json has no servers object"    |
+    | "pkg-cp" whose "install/hooks.template.json" holds "{ not json"                     | sdd install copilot --package C:/fx/pkg-cp      | ERR-CLI-022 | "install/hooks.template.json cannot be parsed: " |
+    | "pkg-cp" whose "install/hooks.template.json" is '{ "hooks": { "SessionStart": [] } }' | sdd install copilot --package C:/fx/pkg-cp    | ERR-CLI-022 | "install/hooks.template.json has no PreToolUse entry" |
+    | the globally installed "architect-sdd", which is not the CLI copy of a Copilot package | sdd install copilot                          | ERR-CLI-022 | "no --package given, and the running CLI is not the scripts/sdd.mjs of a Copilot package" |
     | "pkg-cp"                                                                            | sdd install opencode --package C:/fx/pkg-cp     | ERR-CLI-003 | "install opencode"                          |
+```
+
+The CLI copy `scripts/sdd.mjs` is a required source file although the install only writes its path
+into the hook commands: without it every hook command errors and the hosts deny every tool call
+(C002-IF-007 §Install step 1, decided for defect D-013 item 8). The source files are named in the
+order of C002-IF-005 §3 (agent files, `install/plugin.json`, `install/mcp.json`,
+`install/hooks.template.json`, `hooks/tool-classes.json`, `scripts/sdd.mjs`).
+
+```gherkin
+Scenario: C002-TS-659 — a failed write names the files already written, and a second run completes the install
+  Given "pkg-cp" at "C:/fx/pkg-cp" and the repository "fx-cp-install" without ".github/" and ".vscode/"
+  And an injected fault that makes the fourth file write of the install fail, the write of the first agent file
+  When P-03 runs "sdd install copilot --package C:/fx/pkg-cp" in "fx-cp-install"
+  Then the exit code is 3
+  And standard error holds exactly one "ERR-CLI-017" line, which names a file under ".github/agents/" followed by "(already written: " and, comma-separated in this order, "C:/fx/pkg-cp/hooks.json", ".github/hooks/architect-guard.json" and "C:/fx/pkg-cp/plugin.json"
+  And ".github/hooks/architect-guard.json" exists, ".github/agents/" holds no agent file, and neither ".vscode/mcp.json" nor ".github/architect-install.json" exists
+```
+
+```gherkin
+Scenario: C002-TS-664 — the run after a failed write completes the install
+  Given "fx-cp-install" in which the install of C002-TS-659 ended with ERR-CLI-017 after writing "C:/fx/pkg-cp/hooks.json", ".github/hooks/architect-guard.json" and "C:/fx/pkg-cp/plugin.json"
+  When P-03 runs "sdd install copilot --package C:/fx/pkg-cp" in "fx-cp-install" without the fault
+  Then the exit code is 0
+  And standard error holds no "ERR-CLI-021" line
+  And standard output holds the lines "unchanged C:/fx/pkg-cp/hooks.json", "unchanged .github/hooks/architect-guard.json", "unchanged C:/fx/pkg-cp/plugin.json", one line "written .github/agents/<file>" per agent file, "written .vscode/mcp.json" and "written .github/architect-install.json"
+  And ".github/agents/" holds the ten agent files of "C:/fx/pkg-cp/agents/", byte for byte
 ```
 
 ## C002-REQ-323
@@ -673,6 +710,7 @@ Scenario: C002-TS-347 — no workspace MCP configuration yet
   When P-03 runs "sdd install copilot --package C:/fx/pkg-cp" in "fx-cp-install"
   Then the exit code is 0
   And ".vscode/mcp.json" holds only the key "servers", whose entries equal the "servers" entries of "C:/fx/pkg-cp/install/mcp.json"
+  And standard output holds the line "written .vscode/mcp.json" and no line starting with "merged .vscode/mcp.json"
 ```
 
 ```gherkin
@@ -704,8 +742,8 @@ Scenario Outline: C002-TS-349 — conflict with an adopter file or server
     | ".vscode/mcp.json" declares the server "sdd-files" with the command "my-files-mcp"         | install conflict: .vscode/mcp.json server "sdd-files" was not written by sdd install copilot |
     | ".vscode/mcp.json" holds the comment line "// my servers"                                  | install conflict: .vscode/mcp.json cannot be parsed as JSON without comments:        |
     | ".vscode/mcp.json" holds a trailing comma after its last server entry                      | install conflict: .vscode/mcp.json cannot be parsed as JSON without comments:        |
-    | ".vscode/mcp.json" is the JSON array "[]"                                                  | install conflict: .vscode/mcp.json                                                   |
-    | the "servers" value of ".vscode/mcp.json" is the string "none"                             | install conflict: .vscode/mcp.json                                                   |
+    | ".vscode/mcp.json" is the JSON array "[]"                                                  | install conflict: .vscode/mcp.json cannot be parsed as JSON without comments: the top level is not an object |
+    | the "servers" value of ".vscode/mcp.json" is the string "none"                             | install conflict: .vscode/mcp.json cannot be parsed as JSON without comments: "servers" is not an object |
 ```
 
 ```gherkin
@@ -1037,8 +1075,8 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-319 | TS-333 | TS-335 (in VS Code) | TS-333 (inside and outside `.sdd/`; host-added `tool_search_tool`) | n/a: an unclassed or faulty call is C002-REQ-309 (TS-314) | TS-333 | n/a | TS-334 (letter case) |
 | C002-REQ-320 | TS-337 | TS-337 (terminal tool, a tool the classes file does not class) | n/a: one condition, the key missing; a present `agent_type` is an Architect caller (C002-REQ-308) or a non-Architect subagent (C002-REQ-327, TS-357) | n/a: unreadable input from any caller is C002-REQ-309 (TS-314) | TS-337, TS-338 | n/a | TS-312 (an `architect:` prefix does not take an Architect call out of the guard), TS-338 (a broken classes file does not block P-03's chats), TS-357 (adopter agent, unknown `sdd-` name, non-string value no longer pass) |
 | C002-REQ-321 | TS-339 | n/a | n/a | TS-340 | TS-339 | n/a | TS-340 |
-| C002-REQ-322 | TS-341 (agents, workspace hook file, `plugin.json`, record with `hook_files`) | TS-342 (package of the running CLI copy), TS-344 (package update) | n/a | TS-345 (incl. `install/plugin.json` and `hooks/tool-classes.json` missing) | n/a: P-03 runs the command in their own terminal; Architect agents are denied it (C002-REQ-325) | TS-343 (second run), TS-344 | TS-345 (package of another target, CLI outside a package) |
-| C002-REQ-323 | TS-346 | TS-347 (no `.vscode/mcp.json`) | TS-348 (adopter entry equal to the package's) | n/a: an unusable file is C002-REQ-324 (TS-349) | n/a | TS-343 (second run leaves the file unchanged) | n/a: adopter entries of the same name are C002-REQ-324 (TS-349) |
+| C002-REQ-322 | TS-341 (agents, workspace hook file, `plugin.json`, record with `hook_files`) | TS-342 (package of the running CLI copy), TS-344 (package update) | TS-345 (one and two missing source files) | TS-345 (every ERR-CLI-022 reason a package folder can trigger, `scripts/sdd.mjs` missing included), TS-659 (failed write: ERR-CLI-017 with the files already written) | n/a: P-03 runs the command in their own terminal; Architect agents are denied it (C002-REQ-325) | TS-343 (second run), TS-344, TS-664 (run after a failed write completes the install) | TS-345 (package of another target, CLI outside a package, package without the CLI copy its hook commands name) |
+| C002-REQ-323 | TS-346 | TS-347 (no `.vscode/mcp.json`: `written .vscode/mcp.json`) | TS-348 (adopter entry equal to the package's) | n/a: an unusable file is C002-REQ-324 (TS-349) | n/a | TS-343 (second run leaves the file unchanged) | n/a: adopter entries of the same name are C002-REQ-324 (TS-349) |
 | C002-REQ-324 | TS-349 | TS-350 (files edited after an install) | TS-348 (equal agent file, hook file or entry is no conflict) | TS-349, TS-350 | n/a | TS-350 (a failed run changes nothing) | TS-349 (adopter server named "sdd-files"; adopter hook file `architect-guard.json`; comments a rewrite would drop) |
 | C002-REQ-325 | TS-351 | TS-352 (sdd MCP server command tool), TS-312 (Copilot guard hook) | TS-353 (other sdd commands, `install` as a later word) | TS-351 | TS-351 | n/a | TS-351 (script form, `--cwd` inside the root, `--help`, PowerShell) |
 | C002-REQ-326 | TS-354 | TS-354 (workspace hook file) | n/a | TS-355 | n/a | n/a | TS-356 (package path characters a hook command cannot carry) |
@@ -1054,6 +1092,6 @@ requirement (C002-REQ-314). *Authorization*: only rules about grants, hooks, per
 install command carry a case; the rest is local single-user configuration. *Concurrency/idempotency*:
 one P-01 session per change (C001-CON-11); hooks are stateless per call, and where both hook files
 are loaded each runs the same command on the same input (TS-311, TS-354, TS-360); the install
-command's repeated runs are TS-343, TS-344 and TS-350. *Abuse*: the boundary rules carry the
+command's repeated runs are TS-343, TS-344, TS-350 and TS-664. *Abuse*: the boundary rules carry the
 traversal, chaining and planted-input cases; prompt injection on Copilot is C002-NFR-203, with the
 planted delegation to a host built-in agent in TS-358 and TS-359.

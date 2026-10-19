@@ -116,6 +116,21 @@ Scenario Outline: C002-TS-134 — Copilot MCP tool names in bodies
     | skills/code-discovery/SKILL.md    | mcp__plugin_architect_serena__find_symbol  | serena-find_symbol  | serena/find_symbol  |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-657 — doctor description names the target's rows
+  Given the "description" of "commands/doctor.md" holds the host list "(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)"
+  When the generator writes the <target> target package
+  Then the "description" of the generated doctor command holds "<host list>" in place of that host list, the rest of the description unchanged
+  And that "description" does not contain "Claude Code"
+  Examples:
+    | target   | host list                                                                                                        |
+    | OpenCode | (node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI)                                    |
+    | Copilot  | (node, git, VS Code with GitHub Copilot Chat, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI, Copilot hooks) |
+```
+
+The host lists are the `doctor-description` entries of the mapping tables (C002-IF-001 §2), which
+name the rows of C002-IF-006 §1; the test reads them from the tables.
+
 ## C002-REQ-104
 
 #### C002-AC-104.1 — Unmapped construct named with file, line and target
@@ -127,6 +142,17 @@ Scenario: C002-TS-108 — tool without a Copilot mapping entry
   Then the exit code is non-zero
   And the message names "agents/sdd-critic.md", line 7, "KillShell" and the target "copilot"
   And the message does not name the target "opencode"
+```
+
+```gherkin
+Scenario: C002-TS-658 — doctor description without a Copilot entry
+  Given the fixture "fx-plugin-nodesc" whose Copilot mapping table has no entry for the construct "doctor-description" and whose OpenCode mapping table has one
+  And line 2 of its "commands/doctor.md" holds the "description" with the host list "(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)"
+  When the generator runs on that fixture
+  Then the exit code is non-zero
+  And a line of standard error starts with "ERR-GEN-001" and names "commands/doctor.md", line 2, the construct "doctor-description" and the target "copilot"
+  And no line of standard error names the target "opencode"
+  And "dist/copilot/" holds no doctor command whose "description" contains "Claude Code"
 ```
 
 ## C002-REQ-105
@@ -479,8 +505,8 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 |---|---|---|---|---|---|---|---|
 | C002-REQ-101 | TS-101 | n/a | n/a | TS-102 | n/a | TS-103 | n/a |
 | C002-REQ-102 | TS-104 | TS-105 (failed run) | n/a | TS-105 | n/a | TS-104 | n/a |
-| C002-REQ-103 | TS-106, TS-107 | TS-106 (two targets), TS-134 (Copilot call form in bodies, grant form in `tools`) | n/a | n/a: an unmapped construct is C002-REQ-104 (TS-108) | n/a | n/a | n/a |
-| C002-REQ-104 | TS-108 | TS-108 (one target of two) | n/a | TS-108 | n/a | n/a | n/a |
+| C002-REQ-103 | TS-106, TS-107 | TS-106 (two targets), TS-134 (Copilot call form in bodies, grant form in `tools`), TS-657 (frontmatter construct `doctor-description`) | n/a | n/a: an unmapped construct is C002-REQ-104 (TS-108, TS-658) | n/a | n/a | n/a |
+| C002-REQ-104 | TS-108 | TS-108 (one target of two), TS-658 (frontmatter construct `doctor-description`) | n/a | TS-108, TS-658 | n/a | n/a | n/a |
 | C002-REQ-105 | TS-109 | TS-109 (three tiers, two targets) | n/a | TS-110 | n/a | n/a | n/a |
 | C002-REQ-106 | TS-111 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-107 | TS-112 | TS-112 (two targets) | n/a | n/a | TS-112 | n/a | TS-113 |

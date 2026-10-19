@@ -94,11 +94,22 @@ Scenario Outline: C002-TS-606 — generic tool granted, or no tools list, under 
   Then it reports the error TGT-GRANT-001 naming "<file>" and <named>
   Examples:
     | file                     | grant                                                  | named                       |
-    | sdd-conductor.agent.md   | grants "edit"                                          | "edit"                      |
-    | plan.prompt.md           | grants "execute"                                       | "execute"                   |
-    | sdd-planner.agent.md     | grants a tool set that contains the host tool "create" | that tool set               |
+    | sdd-conductor.agent.md   | grants the tool set "edit"                             | "edit"                      |
+    | plan.prompt.md           | grants the tool set "execute"                          | "execute"                   |
+    | sdd-planner.agent.md     | grants "edit/*"                                        | "edit/*"                    |
+    | sdd-planner.agent.md     | grants the tool set "new"                              | "new"                       |
+    | sdd-architect.agent.md   | grants the tool set "runCommands"                      | "runCommands"               |
+    | sdd-architect.agent.md   | grants the tool set "runTasks"                         | "runTasks"                  |
+    | sdd-auditor.agent.md     | grants the tool set "vscode"                           | "vscode"                    |
+    | sdd-auditor.agent.md     | grants "vscode/runCommand"                             | "vscode/runCommand"         |
+    | sdd-researcher.agent.md  | grants "edit/createFile"                               | "edit/createFile"           |
+    | sdd-researcher.agent.md  | grants the tool "runInTerminal" by name                | "runInTerminal"             |
+    | sdd-researcher.agent.md  | grants the tool "shell" by name                        | "shell"                     |
     | sdd-critic.agent.md      | has no "tools" field in its frontmatter                | the missing "tools" list    |
 ```
+
+The generic tools and the tool sets that contain them are those of C002-IF-005 §6.1; the test reads
+them from the check's data, never from this list.
 
 ## C002-REQ-605
 
@@ -142,6 +153,8 @@ Scenario Outline: C002-TS-609 — a differing decision is reported
     | case                                                                       | expected | actual |
     | the shell case "sdd status > out.txt"                                      | allow    | deny   |
     | a path case writing "C:/repo/src/app.ts" through the tool "NotebookEdit"   | allow    | deny   |
+    | a shell case of the tool "Write" whose command text is ".sdd/002-x/notes.md", which the row of C002-IF-009 §2.1 for write-tool shell cases expects "deny" | deny | allow |
+    | a path case writing the folder path "{repo}/.sdd/004-x/" with a trailing separator, which the guard allows and whose write the server then refuses with ERR-MCP-003 | deny | allow |
 ```
 
 ```gherkin
@@ -171,6 +184,65 @@ Scenario Outline: C002-TS-656 — both forms of an unavailable-tool result read 
     | a tool part named "edit" with the status "error" and the text "Model tried to call unavailable tool 'edit'"             | is unchanged  | deny     | holds "Model tried to call unavailable tool 'edit'"                 |
     | a part named "invalid" with the status "completed" and the output "The arguments provided to the tool are invalid: edit" | is unchanged  | deny     | holds "The arguments provided to the tool are invalid: edit"        |
     | a tool part named "edit" with the status "completed"                                                                    | has changed   | allow    | is the part's output text                                           |
+```
+
+```gherkin
+Scenario Outline: C002-TS-661 — per-mechanism expectation of the write-tool shell cases, the unexpanded Serena literal and the linked cwd
+  Given the <corpus> corpus case "<case>" with the corpus expectation "<corpus expectation>"
+  When the corpus replay suite runs against <mechanism>
+  Then "<case>" was fed to the mechanism as <fed as>
+  And the replay report lists "<case>" as a replayed case with the expected decision "<expected>", the expected-decision source "<source>" and the decision "<expected>"
+  And "tests/guards/<corpus file>" still records "<corpus expectation>" for "<case>"
+  And <after>
+  Examples:
+    | corpus | corpus file       | case   | corpus expectation | mechanism                                                                                 | fed as                                                                                                         | expected | source        | after                                                                       |
+    | shell  | bash-corpus.json  | BG-268 | allow              | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | a "write" call of "sdd-cartographer" whose "filePath" is "rm -rf src"                                          | deny     | C001-REQ-1103 | "{repo}/src" still exists and no file "rm -rf src" exists in the replay fixture |
+    | shell  | bash-corpus.json  | BG-268 | allow              | the sdd MCP server                                                                        | a "write_file" call whose "path" is "rm -rf src"                                                               | deny     | C001-REQ-1103 | "{repo}/src" still exists and no file "rm -rf src" exists in the replay fixture |
+    | shell  | bash-corpus.json  | BG-268 | allow              | the Copilot guard hooks (@mode-hooks)                                                     | hook input with the "tool_name" "Write" and "rm -rf src" as "tool_input.path"                                  | deny     | C001-REQ-1103 | "{repo}/src" still exists                                                   |
+    | shell  | bash-corpus.json  | BG-374 | allow              | the sdd MCP server                                                                        | a "run_command" call with the command 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"' and the "dialect" "bash"     | deny     | C002-REQ-517  | the replay fixture holds no file or folder named "${CLAUDE_PLUGIN_DATA}"    |
+    | shell  | bash-corpus.json  | BG-403 | allow              | the sdd MCP server                                                                        | a "run_command" call with the command "sdd serena-config ${CLAUDE_PLUGIN_DATA}" and the "dialect" "bash"       | deny     | C002-REQ-517  | the replay fixture holds no file or folder named "${CLAUDE_PLUGIN_DATA}"    |
+    | shell  | bash-corpus.json  | BG-405 | deny               | the sdd MCP server                                                                        | a "run_command" call with the command 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"' and the "dialect" "bash"     | deny     | C002-REQ-517  | the replay fixture holds no file or folder named "${CLAUDE_PLUGIN_DATA}"    |
+    | shell  | bash-corpus.json  | BG-374 | allow              | the Copilot guard hooks (@mode-hooks)                                                     | hook input with the "tool_name" "Bash" and the case's command as "tool_input.command"                          | allow    | corpus        | the replay fixture holds no file or folder named "${CLAUDE_PLUGIN_DATA}"    |
+    | shell  | bash-corpus.json  | BG-408 | deny               | the sdd MCP server                                                                        | a "run_command" call with the command "sdd serena-config '${CLAUDE_PLUGIN_DATA}'" and the "dialect" "bash"     | deny     | corpus        | the replay fixture holds no file or folder named "${CLAUDE_PLUGIN_DATA}"    |
+    | path   | path-corpus.json  | PG-135 | allow              | the sdd MCP server                                                                        | a "write_file" call whose "path" is "{repolink}/.sdd/a.md", with the server running at "{repo}"                | deny     | C002-REQ-401  | "{repo}/.sdd/a.md" does not exist                                           |
+    | path   | path-corpus.json  | PG-136 | deny               | the sdd MCP server                                                                        | a "write_file" call whose "path" is "{repolink}/src/app.ts", with the server running at "{repo}"               | deny     | C002-REQ-401  | "{repo}/src/app.ts" is unchanged                                            |
+    | path   | path-corpus.json  | PG-135 | allow              | the Copilot guard hooks (@mode-hooks)                                                     | hook input with the "cwd" "{repolink}", the "tool_name" "Write" and "{repolink}/.sdd/a.md" as "tool_input.path" | allow    | corpus        | the hook command exits with code 0                                          |
+```
+
+The rows follow C002-IF-009 §2.1: the three rows added for defect D-014 expect `deny` and relax no
+expectation towards `allow`. The Serena-literal and linked-cwd rows bind the sdd MCP server only;
+the Copilot guard hooks keep the corpus expectation (BG-374, PG-135 above), and the read-tool shell
+cases (BG-269, BG-270) fall to the last row of §2.1.
+
+```gherkin
+Scenario: C002-TS-662 — a write that the guard allows and the file system refuses counts as allow
+  Given the path corpus case "PG-048", a "Write" by "architect:sdd-spec-writer" to the folder path "{repo}/.sdd/004-x/" with a trailing separator, with the corpus expectation "allow"
+  When the corpus replay suite replays "PG-048" against the sdd MCP server
+  Then the server answers the "write_file" call with an error result with ERR-MCP-003
+  And the replay report lists "PG-048" with the expected decision "allow", the expected-decision source "corpus" and the decision "allow"
+  And its "detail" names "ERR-MCP-003"
+  And the report does not count "PG-048" among the differing decisions
+```
+
+```gherkin
+@mode-hooks
+Scenario Outline: C002-TS-663 — hook tool name of each corpus tool on the Copilot guard hooks
+  Given the Copilot target package generated for the Copilot hooks fallback, whose "hooks/tool-classes.json" lists "Write" first in the class "write", "Bash" first in the class "terminal" and "Glob" first in the class "read_only", and names neither "Edit", "Read" nor "Grep"
+  And a corpus case of the corpus tool "<corpus tool>"
+  When the corpus replay suite feeds that case to the Copilot guard hook command
+  Then the hook input names the "tool_name" "<hook tool>"
+  And <input>
+  Examples:
+    | corpus tool  | hook tool | input                                                                                 |
+    | Write        | Write     | it holds the case's path as "tool_input.path" and a one-line "tool_input.file_text"   |
+    | Edit         | Write     | it holds the case's path as "tool_input.path" and a one-line "tool_input.file_text"   |
+    | MultiEdit    | Write     | it holds the case's path as "tool_input.path" and a one-line "tool_input.file_text"   |
+    | NotebookEdit | Write     | it holds the case's path as "tool_input.path" and a one-line "tool_input.file_text"   |
+    | Bash         | Bash      | it holds the case's command as "tool_input.command" and a "tool_input.description"    |
+    | PowerShell   | Bash      | it holds the case's command as "tool_input.command" and a "tool_input.description"    |
+    | Read         | Glob      | it holds the case's path as "tool_input.pattern"                                      |
+    | Grep         | Glob      | it holds the case's path as "tool_input.pattern"                                      |
+    | Glob         | Glob      | it holds the case's path as "tool_input.pattern"                                      |
 ```
 
 ## C002-REQ-607
@@ -356,22 +428,27 @@ Scenario Outline: C002-TS-618 — record of a checklist run
   Given P-01 has completed a run of the manual VS Code checklist with the Copilot target package generated for <mode>
   When the checklist record of that run is reviewed in the repository
   Then it states the date, the VS Code version, the GitHub Copilot Chat version, the enforcement mode, the result of each step and P-01's name
-  And <hooks>
+  And it states the hooks state during the run as "enabled" or "disabled", with the three sources as read in the hooks-state step: "chat.useHooks" on or off, the repository trusted or untrusted under Workspace Trust, and an organisation policy that disables hooks or none
+  And its hooks state is "enabled" exactly when the three sources read "on", "trusted" and "none"
   Examples:
-    | mode                         | hooks                                                                     |
-    | sdd MCP server enforcement   | the review does not require a hooks state                                 |
-    | the Copilot hooks fallback   | it states the hooks state during the run as "enabled" or "disabled"       |
+    | mode                         |
+    | sdd MCP server enforcement   |
+    | the Copilot hooks fallback   |
 ```
 
 ## C002-REQ-616
 
-#### C002-AC-616.1 — Checklist records the hooks state and a guard denial
+#### C002-AC-616.1 — In both Copilot enforcement modes the checklist records the three hooks sources; under the hooks fallback it also shows a guard denial
 ```gherkin
-@review @mode-hooks
-Scenario: C002-TS-619 — hooks fallback steps
-  When the manual VS Code checklist is reviewed
-  Then it holds a step that records whether hooks are enabled
-  And a step in which a guard hook denies a subagent's write to "src/app.ts"
+@review
+Scenario Outline: C002-TS-619 — hooks-state and denial steps per Copilot enforcement mode
+  When the manual VS Code checklist is reviewed for <mode>
+  Then it holds a hooks-state step that records whether "chat.useHooks" is on, whether the repository is trusted under Workspace Trust and whether an organisation policy disables hooks
+  And <denial step>
+  Examples:
+    | mode                         | denial step                                                                                              |
+    | sdd MCP server enforcement   | its delegated-edit step (C002-TS-617) expects the edit denied by the Copilot subagent guard hook          |
+    | the Copilot hooks fallback   | it holds a step in which a guard hook denies a subagent's write to "src/app.ts"                          |
 ```
 
 ## C002-REQ-617
@@ -628,13 +705,17 @@ Scenario Outline: C002-TS-633 — hooks state and injection results of the check
     | mode                         | record                                                                                    | outcome                                                                                                   |
     | the Copilot hooks fallback   | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
     | the Copilot hooks fallback   | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
-    | the sdd MCP server mode     | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
-    | the sdd MCP server mode     | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
+    | sdd MCP server enforcement   | hooks "enabled" and 0 Copilot injection cases acted upon                                  | allowed                                                                                                   |
+    | sdd MCP server enforcement   | hooks "disabled" and 0 Copilot injection cases acted upon                                 | refused with ERR-REL-010, naming the checklist record and the hooks state "disabled"                      |
     | the Copilot hooks fallback   | no hooks state                                                                            | refused with ERR-REL-010, naming the checklist record and the hooks state "not recorded"                  |
     | the Copilot hooks fallback   | hooks "enabled" and the Copilot injection case "INJ-07" acted upon (its step failed)      | refused with ERR-REL-002 naming "INJ-07" and with ERR-REL-004 naming the failed step                      |
     | the Copilot hooks fallback   | hooks "enabled" and no Copilot injection case step                                        | refused with ERR-REL-011, naming the checklist record and the missing Copilot injection cases            |
-    | sdd MCP server enforcement   | no hooks state and no Copilot injection case step                                         | allowed                                                                                                   |
+    | sdd MCP server enforcement   | no hooks state and no Copilot injection case step                                         | refused with ERR-REL-010, naming the checklist record and the hooks state "not recorded"                  |
+    | sdd MCP server enforcement   | hooks "enabled" and no Copilot injection case step                                        | allowed                                                                                                   |
 ```
+
+Under sdd MCP server enforcement the injection evidence comes from the Copilot CLI eval runner, and
+the checklist record still needs `hooks_state: enabled` (C002-IF-009 §5, revised for defect D-012).
 
 ## C002-REQ-630
 
@@ -761,9 +842,9 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-601 | TS-601 | n/a | n/a | TS-602 | n/a | TS-603 | n/a |
 | C002-REQ-602 | TS-604 | TS-604 (accepted field: `$ARGUMENTS` in an OpenCode command body) | n/a | TS-604 | n/a | n/a | TS-604 (`${PLUGIN_ROOT}` in a Copilot hook command) |
 | C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | TS-605 (plugin MCP configuration beside `install/mcp.json`) |
-| C002-REQ-604 | TS-606 | TS-606 (prompt file, tool set, agent without `tools`) | n/a | TS-606 | TS-606 | n/a | TS-606 (tool set, missing `tools` list) |
+| C002-REQ-604 | TS-606 | TS-606 (prompt file, each tool set of C002-IF-005 §6.1, agent without `tools`) | TS-606 (`<set>/*` and `<set>/<tool>` grants) | TS-606 | TS-606 | n/a | TS-606 (generic tool hidden in a tool set or granted by its VS Code name, missing `tools` list) |
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`) | TS-609 | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases) |
+| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms), TS-661 (write-tool shell cases, unexpanded Serena literal and linked `cwd` per mechanism), TS-663 (Copilot hook tool names `Write`, `Bash`, `Glob`) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`), TS-662 (ERR-MCP-003 after an allowed call read as `allow`) | TS-609 | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases), TS-661 (`rm -rf src` fed as a write path; no folder named `${CLAUDE_PLUGIN_DATA}` created), TS-609 (a write-tool shell case into `.sdd/` and an ERR-MCP-003 allow on a `deny` case are differing decisions) |
 | C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root, `sdd install copilot` in the bare and the script form and with an inside `--cwd`), TS-636 (writing subcommands, each with an outside `--cwd`) |
 | C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
@@ -772,8 +853,8 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
-| C002-REQ-615 | TS-618 | TS-618 (hooks fallback: hooks state) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-616 | TS-619 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-615 | TS-618 | TS-618 (both Copilot enforcement modes; hooks state with its three sources) | TS-618 (`enabled` only when all three sources read on, trusted, none) | n/a | n/a | n/a | n/a |
+| C002-REQ-616 | TS-619 | TS-619 (both Copilot enforcement modes; guard-denial step under the hooks fallback) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes) | TS-620 (1 difference, 1 instruction) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013) | TS-648 (Architect agents' tool set left open) | n/a | TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
 | C002-REQ-618 | TS-621 | n/a | n/a | TS-621 | n/a | n/a | n/a |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
@@ -785,7 +866,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
 | C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
-| C002-REQ-629 | TS-633 | TS-633 (server enforcement needs no hooks state) | n/a | TS-633 | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
+| C002-REQ-629 | TS-633 | TS-633 (server enforcement: injection evidence from Copilot CLI, hooks state still required) | n/a | TS-633 (`disabled` and `not recorded` in both modes) | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only) |
 | C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name; `fed_as.malformed`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept), TS-643 (PG-163 not a malformed call) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 | C002-REQ-633 | TS-649 | TS-649 (three mechanisms) | TS-650 (replay host without `file-symlink`: `error`, counted as differing) | TS-650 | n/a | n/a | TS-637 (PG-163 recorded as a malformed call with the source C002-REQ-630), TS-643 (PG-163 not fed as a malformed call) |
