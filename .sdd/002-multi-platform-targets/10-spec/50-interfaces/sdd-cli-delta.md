@@ -19,6 +19,9 @@ copilot` also writes the workspace hook file and the package's manifest (Q-safet
 CR-37, CR-38). Revised for defects D-012 (the hooks line reads `chat.useHooks` only) and D-013
 (item 8: the refusal reasons and output of `install copilot` as implemented, and `scripts/sdd.mjs`
 made a required source file; item 7: MSIX AppData redirection of the per-user data folder).
+Revised for the critic's D-010 … D-014 review: CR-45 (an unusable workspace settings file gives
+`hooks unknown`; the settings files not read are named) and CR-50 (the install's agent files are
+exactly those of the guard hook's `--agents` names).
 
 ## Synopsis
 
@@ -49,7 +52,7 @@ on Claude Code; both are the same program (C002-REQ-501).
 | `serena-config` | `<plugin-data-dir>` (unchanged), or `--user-data` instead of the folder | `--user-data` uses the per-user data folder of `architect-sdd`: `%LOCALAPPDATA%\architect-sdd` (Windows), `$HOME/Library/Application Support/architect-sdd` (macOS), `$XDG_DATA_HOME/architect-sdd`, or `$HOME/.local/share/architect-sdd` when `XDG_DATA_HOME` is unset or empty (Linux). ERR-CLI-020, before anything is written, when the variable the platform rule needs is unset or empty (no other fallback), when its value is a relative path, or when the folder resolves inside the repository root of C002-IF-008 §1.1 (letter case, drive letters and links resolved as there). A positional folder is used as given, as today; for Architect agents the bash guard confines it (C002-REQ-517). Known platform condition, no behaviour of the CLI: on Windows, a process started by an application installed as an MSIX package, such as the Claude desktop app, has its writes under `%LOCALAPPDATA%` redirected to `%LOCALAPPDATA%\Packages\<package>\LocalCache\Local\…` (glossary: MSIX AppData redirection), so a per-user data folder written from such a session is not the folder that OpenCode or VS Code started outside the package see; the CLI resolves the folder the same way in both cases and ERR-CLI-020 does not apply to it (C002-REQ-515, C002-REQ-516 rationale; defect D-013 item 7) | C002-REQ-515, C002-REQ-516; C001-REQ-1013 on the generated targets |
 | `serena-launch` | `--user-data` as above; `--read-only`, optional | `--user-data` as for `serena-config` (ERR-CLI-020 before Serena starts) and also sets `SERENA_HOME` to `<data>/serena` for the child; `--read-only` adds `--mode <cli folder>/../serena/architect-read-only.yml` to the Serena arguments. A launch without `--read-only` is a valid command, and the bash guard allows it (C002-IF-008 §1.1 rule 1, BG-381); the target packages always pass the option (TGT-SERENA-001) | C002-REQ-114, C002-REQ-512, C002-REQ-515, C002-REQ-516; C001-REQ-1006, C001-REQ-1013 on the generated targets |
 | `hook guard` | `--host copilot`; `--mode`, the enforcement mode of the package (`sdd-mcp-server` or `copilot-hooks`); `--agents <list>`, the ten Architect agent names, comma-separated; `--classes <file>`, default `hooks/tool-classes.json` of the package that holds the running `scripts/sdd.mjs` (`<cli folder>/../hooks/tool-classes.json`) | The PreToolUse hook of the Copilot target package, the same entry in the package's `hooks.json` and in the workspace hook file (C002-IF-005 §3): read Copilot PreToolUse input on standard input and decide it by the order of C002-IF-008 §2. A call without `agent_type` is allowed; an Architect agent's call is allowed under `--mode sdd-mcp-server` and decided by its tool class and the path or bash guard core, memory folder off, under `--mode copilot-hooks` (C002-IF-008 §2, §5); a non-Architect subagent's call in a repository with `.sdd/` is denied for a `write` or `terminal` tool (GUARD-HOOK-002), allowed for a `read_only` tool and denied for an unclassed one, and allowed in a repository without `.sdd/`. A `--host` other than `copilot`, a missing or unknown `--mode`, a missing or empty `--agents`, or any other option error is a deny with GUARD-HOOK-001, not a usage error (C002-IF-008 §2 rule 1). Exit 0 allow, nothing on standard output; deny: the deny decision on standard output, the guard message, GUARD-HOOK-001 or GUARD-HOOK-002 on standard error, exit 2 | C002-REQ-308, C002-REQ-309, C002-REQ-319, C002-REQ-320, C002-REQ-327, C002-REQ-328, C002-REQ-329, C002-REQ-330 |
-| `install copilot` | `--package <dir>`: the Copilot target package folder; default: the package that holds the running CLI, when it runs as `node <package>/scripts/sdd.mjs` and `<package>/architect-target.json` names the target `copilot`. The repository is the repository root of C002-IF-008 §1.1 rule 3 from the working folder (global `--cwd` as usual) | The Copilot install command (§Install). Writes the package's `hooks.json`, the workspace hook file `.github/hooks/architect-guard.json` and the package's `plugin.json`, then the ten workspace agents, merges the server entries into `.vscode/mcp.json`, and writes the install record; or writes nothing and refuses (ERR-CLI-021, ERR-CLI-022). Never run by an Architect agent: the bash guard denies it in every form (C002-IF-008 §1.2, C002-REQ-325) | C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-327 |
+| `install copilot` | `--package <dir>`: the Copilot target package folder; default: the package that holds the running CLI, when it runs as `node <package>/scripts/sdd.mjs` and `<package>/architect-target.json` names the target `copilot`. The repository is the repository root of C002-IF-008 §1.1 rule 3 from the working folder (global `--cwd` as usual) | The Copilot install command (§Install). Writes the package's `hooks.json`, the workspace hook file `.github/hooks/architect-guard.json` and the package's `plugin.json`, then the workspace agents of the guard hook's `--agents` names (the ten Architect agents; §Install step 1), merges the server entries into `.vscode/mcp.json`, and writes the install record; or writes nothing and refuses (ERR-CLI-021, ERR-CLI-022). Never run by an Architect agent: the bash guard denies it in every form (C002-IF-008 §1.2, C002-REQ-325) | C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-327 |
 | `hook session-start` | `--host copilot` | The status brief of C001-IF-07 §4 from Copilot SessionStart input; nothing without `.sdd/`; always exit 0. Without `--host` (Claude Code) unchanged | C002-REQ-313, C002-REQ-314 |
 | `hook subagent-stop` | `--host copilot`, `--agents <list>` | When the input's `agent_type`, with any `architect:` prefix removed, is in the list, run `trace --quiet --write --active`; otherwise do nothing. Always exit 0, also when the trace fails. VS Code reports a workspace agent as `sdd-planner`, Copilot CLI a plugin agent as `architect:sdd-planner` (S-08 §2.3, §3.1) | C002-REQ-315 |
 | `guard-bash` | unchanged arguments | Allowlist rows of C002-IF-008 §1 (bare `sdd …`, `node --version`), the Serena-command confinement of C002-IF-008 §1.1, which reads `CLAUDE_PLUGIN_DATA` from its own environment, and the `--cwd` confinement of the writing subcommands of C002-IF-008 §1.2 | C002-REQ-503, C002-REQ-517, C002-REQ-521 |
@@ -72,7 +75,8 @@ command writes").
      object, names a target other than `copilot`, gives no non-empty `package_version`, or lists
      in its `files` no file `agents/<agent name>.agent.md`;
    - a source file of C002-IF-005 §3 is missing: the agent files that the manifest's `files` list
-     (the install takes its agent list from there, not from the folder), `install/plugin.json`,
+     (never read from the folder; the checks below compare them with the guard hook's agent
+     names), `install/plugin.json`,
      `install/mcp.json`, `install/hooks.template.json`, `hooks/tool-classes.json` and
      `scripts/sdd.mjs`, every missing file named. The CLI copy is required although the install
      only writes its path: hook commands that name a missing copy error, and the hosts then deny
@@ -80,9 +84,20 @@ command writes").
      every call is refused (decided for defect D-013 item 8, the fail-closed choice: the refusal
      comes before any write, C002-CON-08, C002-CON-14);
    - `install/mcp.json` does not parse or has no `servers` object;
-   - `install/hooks.template.json` does not parse or has no `PreToolUse` entry under `hooks`.
+   - `install/hooks.template.json` does not parse or has no `PreToolUse` entry under `hooks`;
+   - the template's `PreToolUse` entries do not hold exactly one `hook guard` command with a
+     non-empty `--agents` value. The **agent names** of the install are the names of that value:
+     the word after `--agents` in the entry's `command`, split at commas, blank names dropped, as
+     the hook splits it (C002-IF-008 §2); in a generated package they are the ten Architect agent
+     names (C002-IF-008 §4, TGT-HOOK-001);
+   - the manifest's `files` do not list `agents/<name>.agent.md` for every agent name;
+   - the manifest's `files` list an `agents/<name>.agent.md` whose `<name>` is no agent name.
 
-   `install` with a target other than `copilot`: ERR-CLI-003.
+   The install therefore writes exactly the agent files of the guard hook's `--agents` names, the
+   ten of a generated package, and refuses a package whose manifest lists other agent files or not
+   all of them (fail closed, revised for critic CR-50): a workspace agent that the hook does not
+   name would be a non-Architect subagent to it, and a name without its agent file would leave the
+   conductor without that specialist. `install` with a target other than `copilot`: ERR-CLI-003.
 2. **Install record.** Read `<repo>/.github/architect-install.json` when it exists: `{
    "package_version": "<semver>", "agents": { "<repo-relative path>": "sha256:<hex>" },
    "hook_files": { "<repo-relative path>": "sha256:<hex>" }, "mcp_servers": { "<name>":
@@ -110,8 +125,9 @@ command writes").
    every `@CLI_COPY@` replaced by `<package>/scripts/sdd.mjs` (absolute, `/` separators); (b) the
    workspace hook file `<repo>/.github/hooks/architect-guard.json`, `{ "hooks": { "PreToolUse": […]
    } }` holding the template's `PreToolUse` entries with the same replacement (two-space indentation,
-   LF, final newline); (c) `<package>/plugin.json`, a byte copy of `install/plugin.json`; (d) the ten
-   agent files (folders created as needed); (e) `.vscode/mcp.json` with the package's server entries
+   LF, final newline); (c) `<package>/plugin.json`, a byte copy of `install/plugin.json`; (d) the
+   agent files of the agent names of step 1, the ten of a generated package, in the order the
+   manifest lists them (folders created as needed); (e) `.vscode/mcp.json` with the package's server entries
    added or replaced and every other key and entry kept in its place (new entries appended in
    code-point order; two-space indentation, LF, final newline); (f) last the install record. A file
    whose present content equals what this run writes is not written again. A write that fails ends
@@ -147,13 +163,23 @@ Nothing else in the repository is read or written; `.sdd/` is neither required n
 - `host-version vscode` (and `vscode-insiders`, with the same lines): three lines, `vscode <version>`, `copilot-chat <version>` (or
   `copilot-chat missing`), and `hooks enabled`, `hooks disabled (chat.useHooks)` or `hooks unknown`.
   The hooks line reads the setting `chat.useHooks` only (revised for defect D-012; P-01 decision of
-  2026-10-19): from the workspace settings `<repository root>/.vscode/settings.json`, which take
-  precedence, then from the user settings of the probed build (`Code` or `Code - Insiders` under the
-  user configuration folder: `%APPDATA%` on Windows, `~/Library/Application Support` on macOS,
-  `$XDG_CONFIG_HOME` or `~/.config` on Linux), each read as JSON with comments. `true` is `hooks
-  enabled`, `false` is `hooks disabled (chat.useHooks)`, unset in both or unreadable is `hooks
-  unknown`, never `enabled`. Workspace Trust and organisation policy are not read (C002-REQ-510,
-  C002-IF-006 §2).
+  2026-10-19; revised for critic CR-45), each file read as JSON with comments, in this order:
+  1. The workspace settings `<repository root>/.vscode/settings.json`, which take precedence. A file
+     that does not exist leads to item 2. A file that exists and cannot be read, does not parse, has
+     no object at its top level, or holds `chat.useHooks` with a value other than `true` or `false`
+     gives `hooks unknown`, and the user settings are not read: VS Code may still take a value from
+     such a file that overrides them. Otherwise `true` is `hooks enabled`, `false` is `hooks
+     disabled (chat.useHooks)`, and a file without the key leads to item 2.
+  2. The user settings of the default profile of the probed build, `User/settings.json` of `Code` or
+     `Code - Insiders` under the user configuration folder (`%APPDATA%` on Windows, `~/Library/Application
+     Support` on macOS, `$XDG_CONFIG_HOME` or `~/.config` on Linux). `true` is `hooks enabled`,
+     `false` is `hooks disabled (chat.useHooks)`; any other outcome (no file, a file that cannot be
+     read or parsed or has no object at its top level, the key unset or another value) is `hooks
+     unknown`.
+
+  The line is never `enabled` in any other case. Not read: the settings of a VS Code profile other
+  than the default one (`User/profiles/<profile>/settings.json`), the settings of a
+  `.code-workspace` file, Workspace Trust and organisation policy (C002-REQ-510, C002-IF-006 §2).
 - `--json` (host-version): `{ "host": "vscode", "versions": { "vscode": "1.105.1", "copilot-chat":
   "0.32.4" }, "hooks": { "state": "enabled|disabled|unknown", "source": "chat.useHooks" } }`,
   `source` present only with `disabled`.

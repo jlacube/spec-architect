@@ -149,15 +149,18 @@ in the order of C002-IF-007 §Install step 5, the guard hook before the agents:
 | `install/hooks.template.json` | `<package>/hooks.json` | `@CLI_COPY@` replaced by `<package>/scripts/sdd.mjs`, absolute, with `/` separators |
 | the `PreToolUse` entries of `install/hooks.template.json` | `<repo>/.github/hooks/architect-guard.json` (workspace hook file) | `{ "hooks": { "PreToolUse": [ … ] } }` with those entries, `@CLI_COPY@` replaced as for `hooks.json` |
 | `install/plugin.json` | `<package>/plugin.json` | byte copy |
-| `agents/<agent name>.agent.md` (10 files) | `<repo>/.github/agents/<agent name>.agent.md` | byte copy |
+| `agents/<agent name>.agent.md` (10 files: one per name of the guard hook's `--agents`) | `<repo>/.github/agents/<agent name>.agent.md` | byte copy |
 | every entry of `servers` in `install/mcp.json` | `<repo>/.vscode/mcp.json`, key `servers` | merged: the package's entries added or replaced, every other entry and key kept |
 | — | `<repo>/.github/architect-install.json` | install record: package version and the SHA-256 of each agent file, of the workspace hook file and of each server entry written |
 
-The install reads its agent list from the `files` of `architect-target.json` (the files
-`agents/<agent name>.agent.md` listed there), and requires every source of this table and the CLI
-copy `scripts/sdd.mjs`, whose absolute path the hook commands name: without the copy the hooks would
-error and the hosts deny every tool call, so the install refuses the package before any write
-(ERR-CLI-022; C002-IF-007 §Install step 1, decided for defect D-013 item 8).
+The install takes its agent names from the `--agents` value of the `hook guard` command in
+`install/hooks.template.json` (the ten Architect agents, TGT-HOOK-001) and requires the `files` of
+`architect-target.json` to list the file `agents/<agent name>.agent.md` of every name and no other
+agent file, so that the agents written into the repository are exactly those the guard hook
+treats as Architect agents (revised for critic CR-50). It requires every source of this table and
+the CLI copy `scripts/sdd.mjs`, whose absolute path the hook commands name: without the copy the
+hooks would error and the hosts deny every tool call, so the install refuses the package before any
+write (ERR-CLI-022; C002-IF-007 §Install step 1, decided for defect D-013 item 8).
 
 **Why the guard hook is written twice** (critic CR-38). The workspace agents are files of the
 repository: every VS Code that opens it loads them, with or without the plugin part. The plugin-level

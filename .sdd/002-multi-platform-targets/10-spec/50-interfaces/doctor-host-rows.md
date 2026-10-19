@@ -44,21 +44,29 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 | OpenCode | `sdd host-version opencode`: the `opencode` that PATH resolves for the CLI's process, so with two installs the one first on that PATH is reported (`docs/spikes/S-07-opencode.md §9`, fact F-7) | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
 | VS Code with GitHub Copilot Chat | `sdd host-version {{host_version_arg}}`: `vscode-insiders` while the tested VS Code version is an Insiders build, as the one S-08 tested is, else `vscode` (C002-IF-001 §4) | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
 | sdd CLI | `sdd --version` (C002-IF-007, C002-REQ-511) | its major, minor and patch numbers equal those of `{{package_version}}` (exact match, Q-cli-03) | `missing` when not reachable; `error` when any of the three numbers differs, older or newer (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
-| Copilot hooks | the `hooks` line of `sdd host-version {{host_version_arg}}`, which reads `chat.useHooks` only (C002-IF-007 Output) | `hooks enabled`, with the Version text `chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist` (C002-REQ-510) | `error` when `hooks disabled (chat.useHooks)`, Version `disabled (chat.useHooks)`; `error` when `hooks unknown` or no `hooks` line, Version `cannot be read` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
+| Copilot hooks | the `hooks` line of `sdd host-version {{host_version_arg}}`, which reads `chat.useHooks` only (C002-IF-007 Output) | `hooks enabled`, with the Version text `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist` (C002-REQ-510) | `error` when `hooks disabled (chat.useHooks)`, Version `disabled (chat.useHooks)`; `error` when `hooks unknown` or no `hooks` line, Version `cannot be read` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
 
 The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states.
 
-**Copilot hooks row** (revised for defect D-012; P-01 decision of 2026-10-19, "ok + caveat"). The
-row reads `chat.useHooks` alone: the `hooks` line of `sdd host-version` takes it from the workspace
-settings, then from the user settings of the VS Code build it probes (C002-IF-007 Output).
+**Copilot hooks row** (revised for defect D-012; P-01 decision of 2026-10-19, "ok + caveat"; revised
+for critic CR-45). The row reads `chat.useHooks` alone: the `hooks` line of `sdd host-version` takes
+it from the workspace settings `.vscode/settings.json`, then from the user settings of the default
+profile of the VS Code build it probes, and gives `hooks unknown` when the workspace file exists but
+cannot be used, without falling back to the user settings (C002-IF-007 Output). Three places can
+still set `chat.useHooks` unseen by the CLI: the settings of a VS Code profile other than the
+default one, which replace the default profile's user settings while that profile is active, and
+the settings of a `.code-workspace` file, which apply when VS Code opens the repository through
+such a file (a multi-root workspace).
 Workspace Trust and organisation policy, the two other sources that can disable hooks, are read by
-neither the CLI nor the doctor. The row is therefore `ok` when `chat.useHooks` is on, and its
-Version text names the two sources it did not read; the manual VS Code checklist records all three
-sources in both Copilot enforcement modes before each release (C002-REQ-616, C002-IF-009 §4). A
-hooks state read as disabled, or one the doctor cannot read (`hooks unknown`), is `error`, never
-`ok`, so an unread `chat.useHooks` is not reported as protected (C002-REQ-510, C002-TS-526). The
-remedies-table row of the Copilot variant states the same check: `chat.useHooks` on, Workspace
-Trust and organisation policy not read.
+neither the CLI nor the doctor. The row is therefore `ok` when `chat.useHooks` is read as on, and
+its Version text names what it did not read ("profile and .code-workspace settings" for those two
+settings files); the manual VS Code checklist records the setting as VS Code shows it for the
+active profile and workspace, and the two other sources, in both Copilot enforcement modes before
+each release (C002-REQ-616, C002-IF-009 §4). A hooks state read as disabled, or one the doctor
+cannot read (`hooks unknown`), is `error`, never `ok`, so an unread `chat.useHooks` is not reported
+as protected (C002-REQ-510, C002-TS-526). The remedies-table row of the Copilot variant states the
+same check: `chat.useHooks` on; profile and `.code-workspace` settings, Workspace Trust and
+organisation policy not read.
 
 **Tools started through the sdd MCP server.** Under sdd MCP server enforcement the probes of the
 command-line tools run through the `sdd-shell` command tool, which does not start a `.cmd` or `.bat`

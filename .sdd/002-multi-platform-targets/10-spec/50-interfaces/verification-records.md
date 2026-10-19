@@ -43,7 +43,8 @@ runner does, C002-IF-010 §4, and is started so that it reaches no network: no m
 and the plugin package already installed for the project and the global configuration folder,
 `docs/spikes/S-07-opencode.md §4`, fact F-9), `sdd-mcp-server` (the server of the packed `architect-sdd`, host-independent),
 `copilot-hooks` (`sdd hook guard --host copilot --mode copilot-hooks` of the Copilot package
-generated for the hooks fallback, fed with Copilot-shaped input).
+generated for the hooks fallback, fed with Copilot-shaped input and reading the per-case classes copy
+of §2.2).
 
 ### §2.1 Applicability and expected decision per mechanism (Q-safety-02, Q-safety-04, Q-safety-05)
 
@@ -58,7 +59,7 @@ and the first of the following rows that matches it gives its expected decision 
 | category `identity`, caller an `architect:sdd-*` name that is none of the ten Architect agents (PG-237, PG-238) | replayed, expected `allow` | (not applicable, first row) | (not applicable, first row) | C002-REQ-632: the OpenCode rules bind only the generated agents, so the fixture's adopter agent that plays the case is not confined; the corpus keeps `deny` for Claude Code |
 | category `memory` | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C002-REQ-625: the generated agents have no memory folder (C002-DEC-009); the corpus keeps `allow` for Claude Code |
 | shell corpus, a case whose tool is a write tool (Write, Edit, MultiEdit, NotebookEdit), for example BG-268 (`Write`, `rm -rf src`) | replayed, expected `deny` | replayed, expected `deny` | replayed, expected `deny` | C001-REQ-1103: every generated mechanism receives the call as a write whose path is the command text (§2.2), a path outside `.sdd/`; on Claude Code the bash guard does not decide a non-shell tool, so the corpus keeps `allow` there (revised for defects D-011 item 2 and D-014 item 1). The shell corpus's read-tool cases (BG-269, BG-270) fall to the last row |
-| shell corpus, tool `Bash`, a Serena command (C002-IF-008 §1.1) whose data-folder argument is the literal `${CLAUDE_PLUGIN_DATA}` alone or in double quotes (the literal of §1.1 rule 2): BG-374, BG-379, BG-384, BG-389, BG-402, BG-403, BG-404 (corpus `allow`) and BG-405, BG-406, BG-407 (corpus `deny`); the single-quoted BG-408 and the PowerShell BG-409 are no such case | replayed, expected as in the corpus (`corpus`) | replayed, expected `deny` | replayed, expected as in the corpus (`corpus`) | C002-REQ-517: the server runs the command without a shell and its guard call does not expand the literal (C002-IF-008 §1.1 rule 2, C002-IF-002 §5.2), so the CLI would receive it as a folder inside the repository. The corpus value comes from the guard's stubbed environment, which the Copilot guard hook reads as Claude Code's hook does; on the OpenCode rules the literal is one of the native-rule gaps of C002-IF-001 §6.3 and stays a difference (revised for defect D-014 item 4) |
+| shell corpus, tool `Bash`, a Serena command (C002-IF-008 §1.1) whose data-folder argument is the literal `${CLAUDE_PLUGIN_DATA}` alone or in double quotes (the literal of §1.1 rule 2): BG-374, BG-379, BG-384, BG-389, BG-402, BG-403, BG-404 (corpus `allow`) and BG-405, BG-406, BG-407 (corpus `deny`); the single-quoted BG-408 and the PowerShell BG-409 are no such case | replayed, expected as in the corpus (`corpus`) | replayed, expected `deny` | replayed, expected as in the corpus (`corpus`) | C002-REQ-517: the server runs the command without a shell and its guard call does not expand the literal (C002-IF-008 §1.1 rule 2, C002-IF-002 §5.2), so the CLI would receive it as a folder inside the repository. On `copilot-hooks` these cases, all of tool `Bash`, are decided through the classes copy of §2.2 whose terminal entries carry the `bash` dialect, with the case's `env` set for the hook process, so the guard expands the literal from that stubbed environment as Claude Code's hook does and gives the corpus value; under the shipped `powershell` dialect the guard denies the literal (Bash dialect only, C002-IF-008 §1.1 rule 2), the decision that the PowerShell case BG-409 replays (corpus `deny`, last row) (revised for critic CR-46). On the OpenCode rules the literal is one of the native-rule gaps of C002-IF-001 §6.3 and stays a difference (revised for defect D-014 item 4) |
 | path corpus, category `cwd`, a `cwd` that reaches the repository root through a link (`{repolink}`): PG-135, PG-136 | replayed, expected as in the corpus (`corpus`) | replayed, expected `deny` | replayed, expected as in the corpus (`corpus`) | C002-REQ-401: the server takes no working folder per call and runs at `{repo}` (§2.2), so it receives the case's absolute path as written, which spells the repository otherwise than its root: the input of PG-162 (corpus `deny`, fail closed). A server that a host starts through the link has that link as its root (C002-IF-002 §3) and decides as Claude Code does. The Copilot guard hook receives the case's own `cwd`; the OpenCode rules receive the server's input too, and their difference stays, since no OpenCode decision stricter than the guard is accepted (Q-safety-03) (revised for defect D-014 item 2) |
 | every other case | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | replayed, expected as in the corpus (`corpus`) | 0 differences (C002-NFR-201, C002-NFR-202) |
 
@@ -123,10 +124,10 @@ S-08 §3.1) and the hook `tool_name` of the class the case maps to (C002-IF-008 
 | Write, NotebookEdit | `write` call with the path | `write_file` with the path and a one-line content | the `write` hook input below, the path at its first `paths` pointer |
 | Edit, MultiEdit | `edit` call with the path, the first line of the fixture file at that path as `oldString` and another one-line text as `newString`; the replay fixture holds that file for every Edit case whose target lies in the fixture (the project or its sibling outside folder), so that OpenCode's text check, which runs before the permission check, does not decide in place of the rule (S-07 §3.2, fact F-4; PG-004 reads `deny` with text that does not match and `allow` with the matching text) | `replace_text` with the path and the first line of the fixture file as `old_text` | the `write` hook input below (`Write`), the path at its first `paths` pointer |
 | Read, Glob, Grep (path corpus, category `tool`) | the `read`, `glob` or `grep` call on the path | the server never receives the call: `allow` when the package grants the agent the tool the table maps it to, else `deny` | the `read_only` hook input below, the path as `tool_input.pattern` |
-| Write, Read, Grep (shell corpus, category `tool`: a non-shell tool with a command, BG-268 … BG-270) | the call of the tool the corpus tool maps to, the command text in place of the path: `write` and `read` with it as `filePath`, `glob` and `grep` as `pattern` | write tools: `write_file` with the command text as `path` (`replace_text` for Edit, MultiEdit); Read, Glob, Grep: not sent, decided by the grant as in the path corpus | the hook input of the class the tool maps to, the command text at the `write` class's first `paths` pointer or as `tool_input.pattern` |
-| Bash (path corpus, category `tool`) | `bash` call of `git status -- <path>` | `run_command` of `git status -- <path>` | hook input of the terminal tool with `git status -- <path>` |
-| Bash (shell corpus) | `bash` call with the command | `run_command` with the command, `dialect: bash` | hook input of the terminal tool with the command, decided in the `bash` dialect |
-| PowerShell (shell corpus) | `bash` call with the command (OpenCode has one shell tool; C002-IF-001 §6.3) | `run_command` with the command, `dialect: powershell` | hook input of the terminal tool with the command, decided in the `powershell` dialect |
+| Write, Edit, MultiEdit, NotebookEdit, Read, Glob, Grep (shell corpus, category `tool`: a non-shell tool with a command, BG-268 … BG-270) | the command text in place of the path. Write and NotebookEdit: `write` with it as `filePath` and a one-line `content`. Edit and MultiEdit: also `write` with it as `filePath` and a one-line `content`, not `edit`, so that the permission rule decides: OpenCode's `edit` matches `oldString` against the file before the permission check, and no fixture file lies at the command text (S-07 §3.2, fact F-4), while `write` is checked under the `edit` permission (S-07 §2). Read: `read` with it as `filePath`. Glob and Grep: `glob` and `grep` with it as `pattern` (revised for critic CR-48) | write tools: `write_file` with the command text as `path` and a one-line content (Write, NotebookEdit); `replace_text` with it as `path` and a one-line `old_text` and `new_text` (Edit, MultiEdit), which the path guard core decides before the file is read (C002-IF-002 §5.1 steps 2 and 3); Read, Glob, Grep: not sent, decided by the grant as in the path corpus | the hook input of the class the tool maps to (Copilot hook tool names below): Write, Edit, MultiEdit and NotebookEdit as `Write` with the command text at the `write` class's first `paths` pointer and a one-line `file_text`; Read, Glob and Grep as their `read_only` hook tool with it as `tool_input.pattern` |
+| Bash (path corpus, category `tool`) | `bash` call of `git status -- <path>` | `run_command` of `git status -- <path>` | hook input of the terminal tool with `git status -- <path>`, decided in the `bash` dialect through the classes copy below |
+| Bash (shell corpus) | `bash` call with the command | `run_command` with the command, `dialect: bash` | hook input of the terminal tool with the command, decided in the case's dialect (`bash`) through the classes copy below |
+| PowerShell (shell corpus) | `bash` call with the command (OpenCode has one shell tool; C002-IF-001 §6.3) | `run_command` with the command, `dialect: powershell` | hook input of the terminal tool with the command, decided in the `powershell` dialect through the classes copy below, whose `Bash` entry then equals the shipped one |
 | raw `stdin` (category `malformed`) | the tool call with its required arguments missing | the tool call with `{}` as arguments | the case's standard input unchanged |
 | C002-REQ-630 case (no or empty `cwd`, no tool name): the **malformed call** | the call of the tool the case maps to (`write`; `edit` for Edit; `bash` for the shell corpus; `write` when the case has no tool name) with its required arguments missing | the tool the case maps to (`write_file`; `replace_text` for Edit; `run_command` for the shell corpus; `write_file` when the case has no tool name) with `{}` as arguments | the Copilot hook input of the tool the case maps to, with the field the case leaves out also left out or empty (no `cwd`, `cwd` `""`, no `tool_name`) |
 
@@ -135,7 +136,8 @@ S-08 §3.1) and the hook `tool_name` of the class the case maps to (C002-IF-008 
 (`hooks/tool-classes.json`): `write` (Write, Edit, MultiEdit, NotebookEdit) → its first entry
 without `always_deny` (`Write`), the path at its first `paths` pointer and a one-line `file_text`;
 `terminal` (Bash, PowerShell, and the shell corpus) → its first entry (`Bash`), the command at its
-`command` pointer and a `description`; `read_only` (Read, Glob, Grep) → the case's own tool when the
+`command` pointer and a `description`, decided in the dialect that the classes copy below gives that
+entry; `read_only` (Read, Glob, Grep) → the case's own tool when the
 `read_only` list names it, else the list's first entry (`Glob`). Edit, MultiEdit and NotebookEdit
 are therefore fed as `Write`, and Read and Grep as `Glob`: the S-08 record gives the hook names of
 the create tool (`Write`), the terminal tool (`Bash`) and `Glob`, but not those of the edit tool
@@ -145,10 +147,24 @@ and the read tool (C002-IF-008 §2 Input). A spike record that supplies them add
 A case fed as a malformed call (the last two rows) records `fed_as.malformed: true`, with
 `fed_as.tool` naming the tool of the call; a malformed call that a generated mechanism allows is a
 differing decision (C002-TS-645). Placeholders (`{repo}`, `{outside}`, `{sdd}`, …) resolve against
-the replay fixture as in the existing corpus tests. The `copilot-hooks` adapter writes, per case, a classes file whose terminal
-entry names the dialect of the case's tool, so that each case is decided in its own dialect; the
-dialect of the packaged classes file is checked by TGT-CLASS-001 against the table. The
-`sdd-mcp-server` adapter runs the server in a disposable copy of the fixture, with stub executables
+the replay fixture as in the existing corpus tests.
+
+**Copilot classes copy per case** (revised for critic CR-46). The `copilot-hooks` adapter installs a
+copy of the fallback package in its run folder and runs the installed PreToolUse command as written,
+without `--classes`, so that the hook reads the copy's `hooks/tool-classes.json` (its default,
+C002-IF-007 `hook guard`). Before each case the adapter rewrites that file so that every `terminal`
+entry carries the case's dialect, every other entry kept: for a shell corpus case the dialect of its
+tool (`bash` for `Bash`, `powershell` for `PowerShell`; a case's `dialect` field must match its
+tool, `tests/guards/fixture.ts:88-91`), and `bash` for every other case. Each case is therefore
+decided in its own dialect, as on Claude Code, and not in the dialect of the shipped classes file
+(`powershell`, from the S-08 record's `terminal_dialect`, C002-IF-008 §2), under which every `Bash`
+case of the corpora would be decided as PowerShell. The shipped dialect is replayed by the
+PowerShell cases, for which the copy's `Bash` entry equals the shipped one; TGT-CLASS-001 checks the
+shipped file's dialect against the table. The case's `env` (for example `CLAUDE_PLUGIN_DATA` of
+BG-374) is set in the environment of the hook process, placeholders resolved, as the existing corpus
+tests set it for the guard (`tests/guards/fixture.ts:120`).
+
+The `sdd-mcp-server` adapter runs the server in a disposable copy of the fixture, with stub executables
 first on PATH for every allowlisted executable other than `node`, and the per-user data folder
 variables pointing to a temporary folder, so that an allowed command runs without side effects
 outside the copy.
@@ -240,7 +256,32 @@ two last being the sources the doctor's Copilot hooks row does not read (C002-RE
 shows a guard-hook denial of a subagent's write outside `.sdd/` (C002-REQ-616); and one step per
 Copilot injection case of the dev tier, each naming its case ID, when Copilot CLI cannot load the
 package (C002-REQ-613) and in every case under the Copilot hooks fallback, where those steps come
-after the hooks-state step (C002-REQ-628). A checklist record has the frontmatter:
+after the hooks-state step (C002-REQ-628).
+
+**Run order** (revised for critic CR-44). The checklist lists its steps in the order P-01 runs them,
+in four groups, so that the hooks state of the record holds for every step that a hook decides:
+
+1. **Install.** The `sdd install copilot` part of the fresh-install step, which P-01 runs in their
+   own terminal (C002-IF-005 §5) and which no hook decides; the steps below need the installed
+   package. The toy change of that step belongs to group 4.
+2. **Hooks-off steps, then the restore.** The steps whose scenario switches off a source of the
+   hooks state: the C002-TS-516 rows of the package's enforcement mode with `chat.useHooks` false and
+   with the workspace in restricted mode (not trusted). Then a restore step sets `chat.useHooks` to
+   true and trusts the workspace again.
+3. **Hooks-state step.** After the restore, the C002-TS-516 row with `chat.useHooks` true and the
+   workspace trusted, then the hooks-state step, which records the three sources as they stand from
+   then on.
+4. **Every other step**, after the hooks-state step, in particular every step that a hook decides:
+   the delegated edit to `general-purpose` (both modes, C002-TS-358), under the Copilot hooks
+   fallback the guard-hook denial and every step in which a specialist writes or runs a command,
+   and the injection steps (C002-REQ-628).
+
+No step of group 4 runs before the hooks-state step, and no step after it changes `chat.useHooks`,
+Workspace Trust or an organisation policy. When either happens, P-01 runs groups 3 and 4 again
+after a new restore step. The record lists the steps in run order; the release check reads the
+recorded state (§5) and does not check the order, which P-01's sign-off of the record covers.
+
+A checklist record has the frontmatter:
 
 ```yaml
 ---
@@ -270,7 +311,7 @@ hooks-state step P-01 records the three sources as read, and `hooks_state` as de
 
 | `hooks_sources` key | Source read in the hooks-state step | Values | Value under which hooks stay on |
 |---|---|---|---|
-| `use_hooks` | the VS Code setting `chat.useHooks` | `on`, `off` | `on` |
+| `use_hooks` | the VS Code setting `chat.useHooks` as the Settings editor shows it for the active profile and the open workspace, which covers the profile and `.code-workspace` settings that the doctor does not read (C002-IF-006 §2; revised for critic CR-45) | `on`, `off` | `on` |
 | `workspace_trust` | Workspace Trust of the repository | `trusted`, `untrusted` | `trusted` |
 | `policy` | an organisation policy that disables hooks | `none`, `disables` | `none` |
 
