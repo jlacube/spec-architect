@@ -44,6 +44,14 @@ test("the deny reasons name the subcommand and the resolved folder or the unreso
   assert.ok(!unset.allow && unset.message.includes("(not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of"), JSON.stringify(unset));
 });
 
+test("without a shell (the sdd MCP server's run_command) the ${CLAUDE_PLUGIN_DATA} literal is denied even when the variable is set", () => {
+  const command = 'sdd serena-config "${CLAUDE_PLUGIN_DATA}"';
+  const shell = withEnv({ CLAUDE_PLUGIN_DATA: DATA }, (s) => s, () => decideBash(parseHookInput(input("Bash", command))));
+  assert.deepEqual(shell, { allow: true });
+  const noShell = withEnv({ CLAUDE_PLUGIN_DATA: DATA }, (s) => s, () => decideBash(parseHookInput(input("Bash", command)), { expands: false }));
+  assert.ok(!noShell.allow && noShell.message.includes("sdd serena-config with an argument the guard cannot resolve (${CLAUDE_PLUGIN_DATA}"), JSON.stringify(noShell));
+});
+
 test("C002-TS-527: letter case and drive spelling of a folder inside the root follow the platform", { skip: process.platform !== "win32" && "Windows letter case" }, () => {
   const upper = repo[0]!.toLowerCase() + repo.slice(1).toUpperCase();
   const d = decide("Bash", `sdd serena-config ${upper}/src`);

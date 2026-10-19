@@ -14,18 +14,31 @@
 import { join } from "node:path";
 import { repoRoot } from "../helpers.ts";
 import { createStubAdapter, type ReplayAdapter, type StubSeed, type Target } from "./adapter.ts";
+import { createCopilotHooksAdapter } from "./adapters/copilot-hooks.ts";
 import { createOpenCodeAdapter, type OpenCodeAdapterOptions } from "./adapters/opencode-permissions.ts";
+import { createMcpServerAdapter } from "./adapters/sdd-mcp-server.ts";
 import { type Mechanism, MECHANISMS } from "./expect.ts";
 import { releaseReportPath, writeReport } from "./report.ts";
 import { runReplay } from "./suite.ts";
 
-/** Options a scenario may pass to an adapter factory (the mechanism runs pass none). */
-export type AdapterOptions = OpenCodeAdapterOptions;
+/** Options a scenario may pass to an adapter factory; the mechanism runs pass `--seed` options and `--target`. */
+export type AdapterOptions = OpenCodeAdapterOptions & { target?: Target };
 
-/** Adapters of the real mechanisms; C002-T-041 adds sdd-mcp-server and copilot-hooks. */
+/** Adapters of the real mechanisms. */
 export const ADAPTERS: Partial<Record<Mechanism, (options?: AdapterOptions) => Promise<ReplayAdapter>>> = {
   // C002-T-042: OpenCode at its tested version, native permission rules unless a scenario names a mode.
-  "opencode-permissions": async (options) => createOpenCodeAdapter(options),
+  "opencode-permissions": async (options) => {
+    const { target: _target, ...rest } = options ?? {};
+    return createOpenCodeAdapter(rest);
+  },
+  // C002-T-041: the server of the packed architect-sdd tarball; the target names the package whose
+  // grants decide the Read/Glob/Grep row (default copilot).
+  "sdd-mcp-server": async (options) => createMcpServerAdapter(options?.target ? { target: options.target } : {}),
+  // C002-T-041: the PreToolUse command of the Copilot package generated for the hooks fallback.
+  "copilot-hooks": async (options) => {
+    if (options?.target !== undefined && options.target !== "copilot") throw new UsageError(`copilot-hooks is a mechanism of the copilot target, not ${options.target}`);
+    return createCopilotHooksAdapter();
+  },
 };
 const OWNER: Record<Mechanism, string> = { "opencode-permissions": "C002-T-042", "sdd-mcp-server": "C002-T-041", "copilot-hooks": "C002-T-041" };
 const SEEDS: Record<string, keyof StubSeed> = { "allow-memory": "allowMemory", "allow-malformed-write": "allowMalformedWrite" };
@@ -130,7 +143,13 @@ export async function main(argv: readonly string[], log: (line: string) => void 
         failed = true;
         continue;
       }
-      adapter = await make(args.adapterOptions);
+      try {
+        adapter = await make({ ...args.adapterOptions, ...(args.target ? { target: args.target } : {}) });
+      } catch (err) {
+        if (!(err instanceof UsageError)) throw err;
+        log(`usage error: ${err.message}`);
+        return 2;
+      }
     }
     const { report, omitted, problems } = await runReplay(adapter, {
       ...(args.target ? { target: args.target } : {}),

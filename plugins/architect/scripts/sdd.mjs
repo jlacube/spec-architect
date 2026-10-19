@@ -11520,7 +11520,7 @@ var PLUGIN_DATA_LITERAL = /^(\$\{CLAUDE_PLUGIN_DATA\}|"\$\{CLAUDE_PLUGIN_DATA\}"
 function unresolvable(folder) {
   return folder === "" || folder.startsWith("~") || /[$%`*?[\]]/.test(folder) || ambiguousWindowsPath(folder) !== null;
 }
-function serenaViolation(words, raw, cwd, dialect) {
+function serenaViolation(words, raw, cwd, dialect, expands) {
   const allWords = cliArgs(words);
   const allRaw = bareSdd(words) ? raw.slice(1) : raw.slice(2);
   const dashdash = allWords.indexOf("--");
@@ -11541,7 +11541,7 @@ function serenaViolation(words, raw, cwd, dialect) {
   if (folder === null) return cannot("no data folder");
   if (folder.word === "--user-data") return null;
   let target = folder.word;
-  if (dialect === "bash" && PLUGIN_DATA_LITERAL.test(folder.raw)) {
+  if (dialect === "bash" && expands && PLUGIN_DATA_LITERAL.test(folder.raw)) {
     const value2 = process.env["CLAUDE_PLUGIN_DATA"];
     if (value2 === void 0 || value2 === "") return cannot(folder.word);
     target = value2;
@@ -11654,7 +11654,7 @@ function deny(rule, tool, cmd, reason) {
   const shown = cmd.length > 200 ? cmd.slice(0, 200) + "…" : cmd;
   return { allow: false, message: `${rule}: ${tool} on ${JSON.stringify(shown)} denied — ${reason}. Allowed: ${ALLOWED2}.` };
 }
-function decideBash(input) {
+function decideBash(input, options2 = {}) {
   if (input === null) return deny(RULE_ALLOWLIST, "tool call", "", "the hook input is not a JSON object");
   if (!isArchitectAgent(input)) return { allow: true };
   const tool = input.tool_name;
@@ -11676,7 +11676,7 @@ function decideBash(input) {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = deniedCommand(first.words) ?? serenaViolation(first.words, first.raw, cwd, dialect) ?? cwdViolation(first.words, cwd);
+    const violation = deniedCommand(first.words) ?? serenaViolation(first.words, first.raw, cwd, dialect, options2.expands !== false) ?? cwdViolation(first.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };

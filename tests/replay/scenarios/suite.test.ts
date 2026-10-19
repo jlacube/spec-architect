@@ -2,18 +2,25 @@
 // cores as a generated mechanism would and reports for the mechanism it emulates, on the corpora of
 // tests/guards/ and planted corpus fixtures. Run by `npm run replay -- suite`, never by `npm test`.
 // The rows that need a real mechanism (the packed sdd MCP server, the Copilot hook command, OpenCode
-// through C002-ADR-005) run with the adapters of C002-T-041 and C002-T-042; C002-TC-608 with
-// C002-T-049 (release runs), C002-TC-637 (release-check refusal) with C002-T-047.
+// through C002-ADR-005) run with the adapters of C002-T-041 and C002-T-042: C002-TS-609 and the
+// mechanism rows of C002-TS-628, C002-TS-638, C002-TS-643 and C002-TS-644 below also run against the
+// real `sdd-mcp-server` (the server of dist/architect-sdd-<version>.tgz, `npm run package`) and
+// `copilot-hooks` adapters; C002-TC-608 with C002-T-049 (release runs), C002-TC-637 (release-check
+// refusal) with C002-T-047.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import type { TestContext } from "node:test";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { BashCase, Corpus } from "../../guards/fixture.ts";
-import { createStubAdapter, joinedPath, type StubAdapter } from "../adapter.ts";
+import { createStubAdapter, joinedPath, type ReplayAdapter, type StubAdapter } from "../adapter.ts";
+import { createCopilotHooksAdapter } from "../adapters/copilot-hooks.ts";
+import { createMcpServerAdapter } from "../adapters/sdd-mcp-server.ts";
+import { repoRoot } from "../../helpers.ts";
 import { type Mechanism, MECHANISMS } from "../expect.ts";
 import { main } from "../main.ts";
-import type { ReplayReport, ReportCase } from "../report.ts";
+import { type ReplayReport, type ReportCase, sourceVersion } from "../report.ts";
 import { DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS, loadCorpora, type ReplayResult, runReplay } from "../suite.ts";
 
 const MEMORY_FILE = ".claude/agent-memory/architect-sdd-cartographer/MEMORY.md";
@@ -59,7 +66,7 @@ const corpusExpect = (id: string) => {
 };
 
 /** Runs `npm run replay -- --mechanism stub …` in process on planted corpora; returns the exit code and report. */
-async function runCli(args: string[], plant?: { path?: (c: Corpus) => void; shell?: (cases: BashCase[]) => void }): Promise<{ code: number; report: ReplayReport; log: string[] }> {
+async function runCli(args: string[], plant?: { path?: (c: Corpus) => void; shell?: (cases: BashCase[]) => BashCase[] | void }, mechanism = "stub"): Promise<{ code: number; report: ReplayReport; log: string[] }> {
   const dir = mkdtempSync(join(tmpdir(), "sdd-replay-cli-"));
   try {
     const corpusArgs: string[] = [];
@@ -71,12 +78,13 @@ async function runCli(args: string[], plant?: { path?: (c: Corpus) => void; shel
     }
     if (plant?.shell) {
       const c = JSON.parse(readFileSync(DEFAULT_SHELL_CORPUS, "utf8")) as { cases: BashCase[] };
-      plant.shell(c.cases);
+      const kept = plant.shell(c.cases);
+      if (kept) c.cases = kept;
       writeFileSync(join(dir, "bash-corpus.json"), JSON.stringify(c));
       corpusArgs.push("--shell-corpus", join(dir, "bash-corpus.json"));
     }
     const log: string[] = [];
-    const code = await main(["--mechanism", "stub", ...args, ...corpusArgs, "--out", dir], (l) => log.push(l));
+    const code = await main(["--mechanism", mechanism, ...args, ...corpusArgs, "--out", dir], (l) => log.push(l));
     const report = JSON.parse(readFileSync(join(dir, "replay-sdd-mcp-server.json"), "utf8")) as ReplayReport;
     return { code, report, log };
   } finally {
@@ -233,3 +241,90 @@ test("C002-TS-650 — PG-163 on a host without file-symlink is an error that cou
   assert.notEqual(cli.code, 0, "the suite exits non-zero");
   assert.equal(entry(cli.report, "PG-163").actual, "error");
 });
+
+// --- Real adapters (C002-T-041) -----------------------------------------------------------------------
+
+const TGZ = join(repoRoot(), "dist", `architect-sdd-${sourceVersion()}.tgz`);
+
+/** False (and the test skipped) when the packed tarball the server adapter installs is missing. */
+function haveTarball(t: TestContext): boolean {
+  if (existsSync(process.env["SDD_REPLAY_TGZ"] ?? TGZ)) return true;
+  t.skip(`${TGZ} is missing: run \`npm run package\` first (or set SDD_REPLAY_TGZ)`);
+  return false;
+}
+
+/** The planted corpora of C002-TS-609 cut to the planted case and one case per corpus, so that the run counts only that difference. */
+const SHELL_KEEP = ["BG-115"];
+const PATH_KEEP = ["PG-003"];
+for (const [label, plant, id] of [
+  [
+    'the shell case "sdd status > out.txt"',
+    {
+      path: (c: Corpus) => {
+        c.cases = c.cases.filter((x) => PATH_KEEP.includes(x.id));
+      },
+      shell: (cases: BashCase[]) => {
+        const c = cases.find((x) => x.command === "sdd status > out.txt")!;
+        c.expect = "allow";
+        delete c.rule;
+        return cases.filter((x) => x === c || SHELL_KEEP.includes(x.id));
+      },
+    },
+    "",
+  ],
+  [
+    'a path case writing "{repo}/src/app.ts" through the tool "NotebookEdit"',
+    {
+      path: (c: Corpus) => {
+        c.cases = [...c.cases.filter((x) => PATH_KEEP.includes(x.id)), { id: "PG-900", category: "outside", tool: "NotebookEdit", agent: "architect:sdd-spec-writer", field: "notebook_path", path: "{repo}/src/app.ts", expect: "allow" }];
+      },
+      shell: (cases: BashCase[]) => cases.filter((x) => SHELL_KEEP.includes(x.id)),
+    },
+    "PG-900",
+  ],
+] as const) {
+  test(`C002-TS-609 — a differing decision is reported by the real sdd MCP server: ${label}`, async (t) => {
+    if (!haveTarball(t)) return;
+    const { code, report, log } = await runCli([], plant, "sdd-mcp-server");
+    const caseId = id || loadCorpora().shell.cases.find((x) => x.command === "sdd status > out.txt")!.id;
+    const e = entry(report, caseId);
+    assert.equal(report.mechanism, "sdd-mcp-server");
+    assert.deepEqual([e.expected, e.actual], ["allow", "deny"]);
+    assert.equal(report.differing, 1);
+    assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes("expected allow") && l.includes("got deny")), log.join("\n"));
+    assert.notEqual(code, 0, "the suite exits non-zero");
+  });
+}
+
+const realRuns = new Map<Mechanism, Promise<ReplayResult>>();
+
+/** One replay of the corpora per real adapter of C002-T-041, shared by the scenarios below. */
+function realReplay(mechanism: "sdd-mcp-server" | "copilot-hooks"): Promise<ReplayResult> {
+  let r = realRuns.get(mechanism);
+  if (!r) {
+    const adapter: ReplayAdapter = mechanism === "sdd-mcp-server" ? createMcpServerAdapter() : createCopilotHooksAdapter();
+    r = runReplay(adapter);
+    realRuns.set(mechanism, r);
+  }
+  return r;
+}
+
+for (const m of ["sdd-mcp-server", "copilot-hooks"] as const) {
+  test(`C002-TS-628, C002-TS-638, C002-TS-643, C002-TS-644 — mechanism rows against the real ${m} adapter`, async (t) => {
+    if (m === "sdd-mcp-server" && !haveTarball(t)) return;
+    const { report, problems, omitted } = await realReplay(m);
+    assert.deepEqual([problems, omitted], [[], []]);
+    // C002-TS-628, C002-TS-638: memory cases deny, a non-Architect caller's memory case played by the conductor.
+    for (const id of ["PG-205", "PG-224"]) assert.deepEqual([entry(report, id).expected, entry(report, id).expected_source, entry(report, id).actual], ["deny", "C002-REQ-625", "deny"], id);
+    assert.equal(entry(report, "PG-224").fed_as.caller, "sdd-conductor");
+    // C002-TS-643: the absent-field cases are malformed calls, denied.
+    for (const id of ["PG-253", "PG-254", "BG-277", "PG-256"]) {
+      const e = entry(report, id);
+      assert.deepEqual([e.expected, e.expected_source, e.actual, e.fed_as.malformed], ["deny", "C002-REQ-630", "deny", true], id);
+    }
+    // C002-TS-644: a case with its own cwd keeps its corpus expectation.
+    assert.deepEqual([entry(report, "PG-134").actual, entry(report, "PG-129").actual], ["deny", "allow"]);
+    const identity = [...loadCorpora().path.corpus.cases, ...loadCorpora().shell.cases].filter((c) => c.category === "identity").map((c) => c.id).sort();
+    assert.deepEqual(report.not_applicable.map((n) => n.id).sort(), identity);
+  });
+}

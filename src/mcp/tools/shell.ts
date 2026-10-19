@@ -243,7 +243,7 @@ async function run(args: Record<string, unknown>, ctx: ToolContext): Promise<Cal
   let decision: ReturnType<typeof decideBash>;
   try {
     if (guardFault()) throw new Error("SDD_TEST_FAULT: bash guard core failure");
-    decision = decideBash({ hook_event_name: "PreToolUse", tool_name: toolOfDialect(dialect), tool_input: { command }, cwd: ctx.root, agent_type: AGENT_TYPE });
+    decision = decideBash({ hook_event_name: "PreToolUse", tool_name: toolOfDialect(dialect), tool_input: { command }, cwd: ctx.root, agent_type: AGENT_TYPE }, { expands: false });
   } catch (e) {
     ctx.debug("guard-bash", { tool: "run_command", code: "ERR-MCP-002", reason: reason(e) });
     return errorResult("run_command", "failed", "ERR-MCP-002", `internal fault in run_command: the bash guard core failed: ${reason(e)}; the call was refused`);

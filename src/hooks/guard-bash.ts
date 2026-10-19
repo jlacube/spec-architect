@@ -15,6 +15,9 @@
 // Environment: `decideBash` is not a pure function of its hook input. For the literal
 // `${CLAUDE_PLUGIN_DATA}` of a Serena command (Bash dialect) it reads the variable CLAUDE_PLUGIN_DATA of
 // its own process (unset or empty: denied), and it reads the file system (repository root, real paths).
+// A caller that runs the command without a shell (the sdd MCP server's run_command) passes
+// `{ expands: false }`: the CLI would then get the literal text, so the literal is denied like any
+// other unresolvable folder.
 import { findWorkspace } from "../workspace/find.ts";
 import { WRITING_COMMANDS, type WritingCommand } from "../cli/writing-commands.ts";
 import { ambiguousWindowsPath, isCommand, normalisePath, pathKey, realPath } from "../io/paths.ts";
@@ -203,7 +206,7 @@ function unresolvable(folder: string): boolean {
  * The literal is resolved from this process's own environment (unset or empty: denied). Returns the
  * deny reason, or null when the command is no Serena command or passes.
  */
-function serenaViolation(words: string[], raw: string[], cwd: string, dialect: Dialect): string | null {
+function serenaViolation(words: string[], raw: string[], cwd: string, dialect: Dialect, expands: boolean): string | null {
   const allWords = cliArgs(words);
   const allRaw = bareSdd(words) ? raw.slice(1) : raw.slice(2);
   const dashdash = allWords.indexOf("--");
@@ -224,7 +227,7 @@ function serenaViolation(words: string[], raw: string[], cwd: string, dialect: D
   if (folder === null) return cannot("no data folder");
   if (folder.word === "--user-data") return null;
   let target = folder.word;
-  if (dialect === "bash" && PLUGIN_DATA_LITERAL.test(folder.raw)) {
+  if (dialect === "bash" && expands && PLUGIN_DATA_LITERAL.test(folder.raw)) {
     const value = process.env["CLAUDE_PLUGIN_DATA"];
     if (value === undefined || value === "") return cannot(folder.word);
     target = value;
@@ -375,7 +378,7 @@ function deny(rule: string, tool: string, cmd: string, reason: string): BashDeci
   return { allow: false, message: `${rule}: ${tool} on ${JSON.stringify(shown)} denied — ${reason}. Allowed: ${ALLOWED}.` };
 }
 
-export function decideBash(input: HookInput | null): BashDecision {
+export function decideBash(input: HookInput | null, options: { expands?: boolean } = {}): BashDecision {
   if (input === null) return deny(RULE_ALLOWLIST, "tool call", "", "the hook input is not a JSON object");
   if (!isArchitectAgent(input)) return { allow: true };
   const tool = input.tool_name;
@@ -397,7 +400,7 @@ export function decideBash(input: HookInput | null): BashDecision {
   const bad = rest.find((s) => !pipeOnly(s.words));
   if (bad) return deny(RULE_COMPOUND, tool, cmd, `piped segment "${bad.words.join(" ")}" is not a pipe-only entry`);
   if (entry) {
-    const violation = deniedCommand(first!.words) ?? serenaViolation(first!.words, first!.raw, cwd, dialect) ?? cwdViolation(first!.words, cwd);
+    const violation = deniedCommand(first!.words) ?? serenaViolation(first!.words, first!.raw, cwd, dialect, options.expands !== false) ?? cwdViolation(first!.words, cwd);
     if (violation !== null) return deny(RULE_ALLOWLIST, tool, cmd, violation);
   }
   return { allow: true };
