@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: in-progress
 depends_on: [C002-T-020, C002-T-022, C002-T-033, C002-T-040]
 implements: [C002-REQ-606, C002-NFR-201, C002-NFR-202]
 satisfies_ac: [C002-AC-606.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-608, C002-TS-609, C002-TC-608, C002-TC-609]
 components: [C002-COMP-008, C002-COMP-005, C002-COMP-012]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "Adapters 5b4392b. sdd-mcp-server 10 differing (copilot, opencode), copilot-hooks 1 differing, all spec mapping/expectation gaps (D-014). Done after the D-014 revision re-baselines the expectations." }
 ---
 
 # C002-T-041 — Replay adapters: sdd MCP server and Copilot guard hooks
