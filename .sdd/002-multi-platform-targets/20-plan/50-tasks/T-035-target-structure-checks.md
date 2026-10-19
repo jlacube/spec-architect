@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-022, C002-T-030, C002-T-033]
 implements: [C002-REQ-110, C002-REQ-113, C002-REQ-217, C002-REQ-321, C002-REQ-326, C002-REQ-601, C002-REQ-602, C002-REQ-603, C002-REQ-604, C002-REQ-605, C002-NFR-104]
 satisfies_ac: [C002-AC-110.1, C002-AC-113.1, C002-AC-217.1, C002-AC-321.1, C002-AC-326.1, C002-AC-601.1, C002-AC-602.1, C002-AC-603.1, C002-AC-604.1, C002-AC-605.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-116, C002-TS-121, C002-TS-122, C002-TS-126, C002-TS-229, C
 components: [C002-COMP-007, C002-COMP-013]
 risk_refs: []
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c4eb00f, completed_at: 2026-10-19, notes: "cap06 98/98 (54 new); targets step ~1.3 s. TGT-NPM-001 not in scope (no owning task). Candidate defects: copilot.json detectors miss ${PLUGIN_ROOT}/scripts/sdd.mjs (TGT-PORT-001 checks it directly); TGT-AGENT/MODE/MEM/SERENA/NPM have no owning task; IF-005 '14 existing checks' is 15; TC-121 location; TS-606 tool sets undefined." }
 ---
 
 # C002-T-035 — Target structure checks and the npm run check step
