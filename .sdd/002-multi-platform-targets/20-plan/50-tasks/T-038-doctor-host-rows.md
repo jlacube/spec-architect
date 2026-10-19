@@ -29,6 +29,12 @@ hooks are read as enabled, `error` when they are disabled or the state cannot be
 C002-REQ-505 apply. On Claude Code the minimum-version row stays (C002-REQ-506), and the source
 `commands/doctor.md` text does not change, so `TS-1116` stays green.
 
+**Follow-up (revision D-010 … D-014), not a reopening.** P-01 decided the Copilot hooks row "ok +
+caveat" (Q-hooks-row-01; C002-IF-006 §2): `ok` when `chat.useHooks` is on, with a Version text naming
+Workspace Trust and organisation policy as not read. That wiring, the `doctor-description` construct
+of the doctor command's description, and the revised case files of C002-TS-509, C002-TS-515 and
+C002-TS-526 are done by C002-T-063.
+
 ## Targets
 
 | Kind | Target | Change |

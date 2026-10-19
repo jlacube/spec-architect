@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: todo
-depends_on: [C002-T-002, C002-T-044, C002-T-058]
+depends_on: [C002-T-002, C002-T-044, C002-T-058, C002-T-063]
 implements: [C002-REQ-611, C002-REQ-612, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1, C002-AC-612.1, C002-AC-308.1, C002-AC-327.1]
 verified_by: [C002-TS-513, C002-TS-526, C002-TS-614, C002-TS-615, C002-TS-336, C002-TS-359, C002-TC-513, C002-TC-526, C002-TC-614, C002-TC-615, C002-TC-336, C002-TC-359]
@@ -43,6 +43,9 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 ## Preconditions
 
 - C002-T-002 (done), C002-T-044 and C002-T-058 done.
+- C002-T-063 done: the Copilot doctor's hooks row and the case file of C002-TC-526 follow the revised
+  C002-TS-526 (Version `cannot be read`, no workspace `.vscode/settings.json`), and the install
+  command that prepares each workspace requires `scripts/sdd.mjs`.
 - The Copilot subscription named in C002-T-002 has allowance left for the sessions of steps 4 and 5
   (C002-RISK-026). These sessions are not billed to the prepaid API key.
 

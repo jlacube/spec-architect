@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: todo
-depends_on: [C002-T-033, C002-T-037, C002-T-038, C002-T-058]
+depends_on: [C002-T-033, C002-T-037, C002-T-038, C002-T-058, C002-T-063]
 implements: [C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-628]
 satisfies_ac: [C002-AC-613.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-628.1]
 verified_by: [C002-TS-358, C002-TS-616, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-632, C002-TC-358, C002-TC-616, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-632]
@@ -36,9 +36,17 @@ session type. It covers (C002-REQ-614):
   naming `general-purpose`.
 
 The record template carries the fields of C002-REQ-615, the hooks state included in both Copilot
-modes, because the subagent guard hook needs hooks enabled (C002-REQ-327, C002-REQ-629). It adds the
-hooks steps (C002-REQ-616) and the Copilot injection cases where C002-REQ-613 or C002-REQ-628 applies
-(neither applies under the signed-off S-08 record).
+modes, because the subagent guard hook needs hooks enabled (C002-REQ-327, C002-REQ-629). Revised for
+the P-01 decision on defect D-012 (C002-IF-009 §4): in **both** modes the checklist has a
+hooks-state step that records the three sources, `chat.useHooks` on or off, the repository trusted
+or untrusted under Workspace Trust, and an organisation policy that disables hooks or none; the
+record holds them as `hooks_sources` and derives `hooks_state` (`enabled` exactly when they read
+`on`, `trusted`, `none`). The doctor's Copilot hooks row reads `chat.useHooks` only and shows `ok`
+with its caveat text (C002-IF-006 §2, wiring of C002-T-063), so this step is where the two other
+sources are confirmed (C002-TS-516, C002-TS-618, C002-TS-619). The guard-denial step of
+C002-REQ-616 is a hooks-fallback step; under sdd MCP server enforcement the delegated-edit step
+(C002-TS-617) carries the denial. The checklist adds the Copilot injection cases where C002-REQ-613
+or C002-REQ-628 applies (neither applies under the signed-off S-08 record).
 
 **Assumption steps.** The fresh-install and delegated-edit steps confirm the assumptions the spec
 leaves to this checklist; each step names its expected observation and the record keeps the outcome:
@@ -59,13 +67,15 @@ leaves to this checklist; each step names its expected observation and the recor
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/checklists/vscode-copilot.md` | steps, expected results, the assumption steps above, and the steps that each `@manual-vscode` scenario of C002-CAP-02, C002-CAP-03 and C002-CAP-05 maps to (C002-TS-358 included) |
-| add | `docs/checklists/records/TEMPLATE.md` | date, VS Code (Insiders) and Copilot Chat versions, session type, mode, hooks state (both modes), result per step, the recorded `ask_user` input shape and no-choice result, the outcome of each assumption step (the `.sdd/` path of the roots step, the offered agents and `agent_type` of the delegated-edit step), P-01's name |
+| add | `docs/checklists/records/TEMPLATE.md` | date, VS Code (Insiders) and Copilot Chat versions, session type, mode, `hooks_state` and `hooks_sources` (`use_hooks`, `workspace_trust`, `policy`) in both modes (C002-IF-009 §4), result per step, the recorded `ask_user` input shape and no-choice result, the outcome of each assumption step (the `.sdd/` path of the roots step, the offered agents and `agent_type` of the delegated-edit step), P-01's name |
 | add | `docs/checklists/fixtures/toy-planted-line.md` | the planted line of C002-TS-358 and where to put it in the toy change, so P-01 does not type it from memory |
-| add | `tests/integration/cap06/checklist.test.ts` | every `@manual-vscode` scenario maps to a step; the delegated-edit and roots steps present in both modes; hooks steps of C002-REQ-616 present only under `copilot-hooks`; the template has the hooks-state field in both modes |
+| add | `tests/integration/cap06/checklist.test.ts` | every `@manual-vscode` scenario maps to a step (the C002-TS-516 step expects the `ok` row with its caveat text when `chat.useHooks` is on); the delegated-edit, roots and hooks-state steps present in both modes, the hooks-state step naming the three sources; the guard-denial step of C002-REQ-616 present under `copilot-hooks` (C002-TS-619, one test per mode row); the template has `hooks_state` and `hooks_sources` in both modes |
 
 ## Preconditions
 
 - C002-T-033, C002-T-037, C002-T-038 and C002-T-058 (the install step names its output) done.
+- C002-T-063 done (the Copilot doctor's hooks row with its caveat text, which the C002-TS-516 step
+  expects).
 
 ## Step outline (no production code)
 
@@ -74,7 +84,8 @@ leaves to this checklist; each step names its expected observation and the recor
 2. Add the assumption steps of the table above, each with its expected observation; a refuted
    assumption is recorded and raised as a spec defect by C002-T-050, never passed.
 3. Make the record template parseable by the release check (C002-T-047), with the hooks state as a
-   field the check reads in both modes (C002-REQ-629).
+   field the check reads in both modes (C002-REQ-629), and `hooks_sources` beside it as the
+   hooks-state step reads them (C002-TS-618).
 
 ## Verification
 
@@ -82,6 +93,6 @@ leaves to this checklist; each step names its expected observation and the recor
 
 ## Done when
 
-- [ ] Checklist covers every required step and every assumption step; the template parses
+- [ ] Checklist covers every required step and every assumption step, the hooks-state step with its three sources in both modes; the template parses
 - [ ] Carried case listed in the task report: C002-TC-358 (manual) to C002-T-050
 - [ ] Progress reported: `sdd task set C002-T-046 --status done --commit <sha>`

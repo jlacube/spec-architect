@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: todo
-depends_on: [C002-T-034, C002-T-040, C002-T-046]
+depends_on: [C002-T-034, C002-T-040, C002-T-046, C002-T-063]
 implements: [C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634, C002-NFR-501]
 satisfies_ac: [C002-AC-617.1, C002-AC-618.1, C002-AC-619.1, C002-AC-620.1, C002-AC-621.1, C002-AC-622.1, C002-AC-629.1, C002-AC-634.1]
 verified_by: [C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-637, C002-TS-648, C002-TS-651, C002-TC-620, C002-TC-621, C002-TC-622, C002-TC-623, C002-TC-624, C002-TC-625, C002-TC-633, C002-TC-637, C002-TC-648, C002-TC-651]
@@ -29,6 +29,16 @@ Copilot modes, a checklist record that does not show hooks enabled during the ru
 Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It then writes
 `release.json`, flagged under the hooks fallback (C002-REQ-622).
 
+**Revised for D-012 and D-014.** ERR-REL-010 applies in both Copilot modes, with the message
+`copilot: checklist record <path> shows hooks <state>; the Copilot release needs evidence taken with
+hooks enabled` (`../../10-spec/50-interfaces/errors.md` §3); under sdd MCP server enforcement a record
+without a hooks state is refused (`not recorded`), and one with hooks `enabled` but no Copilot
+injection step is allowed, the injection evidence coming from the Copilot CLI runner (C002-TS-633).
+The replay recomputation accepts the `expected_source` values `C001-REQ-1103`, `C002-REQ-401` and
+`C002-REQ-517` of the revised C002-IF-009 §2.1, the last two on `sdd-mcp-server` only, and reads
+ERR-MCP-003 as `allow` (§2.3); both come from `tests/replay/expect.ts` as C002-T-063 leaves it, and
+the record schema is the copy C002-T-063 puts in `docs/releases/`.
+
 ## Targets
 
 | Kind | Target | Change |
@@ -40,6 +50,8 @@ Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It 
 ## Preconditions
 
 - C002-T-034 (generation), C002-T-040 (report format) and C002-T-046 (record template) done.
+- C002-T-063 done (revised expectation rules in `tests/replay/expect.ts`, schema copy in
+  `docs/releases/release-record.schema.json`).
 
 ## Step outline (no production code)
 
@@ -53,11 +65,17 @@ Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It 
    record's `copilot-cli` value (ERR-REL-006). The signed-off record (`docs/spikes/S-08-copilot-vscode.md`)
    is one of the fixture rows of C002-TC-623 and gives "allowed".
 3. Read the hooks state of the checklist record whatever the mode (`sdd-mcp-server` or
-   `copilot-hooks`); a missing or disabled state refuses the Copilot VS Code release (C002-TS-633
-   server-mode rows). Read the result of the delegated-edit step (C002-TC-358) like any other
+   `copilot-hooks`); a missing or disabled state refuses the Copilot VS Code release with
+   ERR-REL-010 in its revised text, naming the record and `disabled` or `not recorded` (C002-TS-633,
+   every row of both modes). Read the result of the delegated-edit step (C002-TC-358) like any other
    checklist step (C002-REQ-618).
-4. Refuse with every applicable ERR-REL code listed, not only the first.
-5. Compare the regenerated package with the target zip that P-01 will release
+4. Recompute each replayed case's expected decision and `expected_source` with the rules imported
+   from `tests/replay/expect.ts`; a report whose case records another value, or `C002-REQ-401` or
+   `C002-REQ-517` on a mechanism other than `sdd-mcp-server`, is refused with ERR-REL-012
+   `records expectations other than C002-IF-009 §2.1`. Validate the written `release.json` with the
+   schema copy, which requires `hooks_state: enabled` in a released Copilot record.
+5. Refuse with every applicable ERR-REL code listed, not only the first.
+6. Compare the regenerated package with the target zip that P-01 will release
    (`dist/architect-<target>-<version>.zip`, C002-T-034; Q-release-01), not only with the
    `dist/<target>/` folder: a missing, extra or different file in the zip is a regeneration
    difference under the existing ERR-REL code for it (C002-NFR-501).
@@ -69,5 +87,6 @@ Copilot subagent guard hook needs them in both (C002-REQ-629, C002-REQ-327). It 
 
 ## Done when
 
-- [ ] Listed scenarios pass for both targets, independently
+- [ ] Listed scenarios pass for both targets, independently; C002-TC-633 passes every row of both Copilot modes with the revised ERR-REL-010 text
+- [ ] The regenerated reports under `docs/releases/*/0.0.1/` (C002-T-063) pass the replay recomputation with their `expected_source` values
 - [ ] Progress reported: `sdd task set C002-T-047 --status done --commit <sha>`

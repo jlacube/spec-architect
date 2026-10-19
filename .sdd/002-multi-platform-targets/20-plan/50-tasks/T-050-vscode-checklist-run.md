@@ -8,8 +8,8 @@ milestone: C002-M-07
 status: todo
 depends_on: [C002-T-046, C002-T-054]
 implements: []
-satisfies_ac: [C002-AC-327.1, C002-AC-614.1, C002-AC-615.1, C002-AC-618.1]
-verified_by: [C002-TS-358, C002-TS-617, C002-TS-618, C002-TS-621, C002-TC-358, C002-TC-617, C002-TC-618, C002-TC-621, C002-TC-901]
+satisfies_ac: [C002-AC-327.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
+verified_by: [C002-TS-358, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031, C002-RISK-032]
 estimate: S
@@ -46,8 +46,10 @@ does not wait for it.
 
 - C002-T-046 and C002-T-054 done; the release candidate packed at the commit of C002-T-054.
 - Hooks enabled in VS Code (`chat.useHooks`, Workspace Trust for the toy repository, no organisation
-  policy that disables them): the release check refuses a record that shows hooks disabled in either
-  mode (C002-REQ-629).
+  policy that disables them): the release check refuses a record that shows hooks disabled or not
+  recorded in either mode (C002-REQ-629, ERR-REL-010). The doctor's Copilot hooks row reads
+  `chat.useHooks` only and shows `ok` with its caveat text (C002-IF-006 §2), so the checklist's
+  hooks-state step is where P-01 reads Workspace Trust and the organisation policy.
 - The Copilot subscription named in C002-T-002 has allowance for about 13 VS Code sessions per
   checklist run, about 26 with the repeat of step 3 (test plan §4.2, C002-RISK-026). These sessions
   are not billed to the prepaid API key.
@@ -61,7 +63,9 @@ does not wait for it.
    <folder>` in P-01's own terminal, set the three settings, open a Local chat with `sdd-conductor`
    selected.
 2. **P-01 step:** run every step of the checklist and record each result, the versions, the hooks
-   state and the outcome of each assumption step: the `.sdd/` path the first write lands in (roots
+   state with its three sources (`hooks_sources`: `use_hooks`, `workspace_trust`, `policy`, and
+   `hooks_state` derived from them, C002-IF-009 §4; C002-TS-618, C002-TS-619), the doctor's Copilot
+   hooks row and its Version text (C002-TC-516) and the outcome of each assumption step: the `.sdd/` path the first write lands in (roots
    step), and in the delegated-edit step (C002-TC-358) whether the host offered `general-purpose` to
    the workspace conductor, the `agent_type` in the hook output, that `src/app.ts` is unchanged and
    the subagent guard hook's deny message (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed edit tool); then the same step with the plugin part disabled.
@@ -82,6 +86,6 @@ does not wait for it.
 
 ## Done when
 
-- [ ] Record committed with every step passed, the hooks state, the assumption outcomes and P-01's
-      name
+- [ ] Record committed with every step passed, `hooks_state: enabled` with `hooks_sources` reading
+      `on`, `trusted` and `none`, the assumption outcomes and P-01's name
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

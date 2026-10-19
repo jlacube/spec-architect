@@ -38,6 +38,12 @@ interrupted install never leaves agents without their guard hook (C002-CON-08), 
 It refuses before any write when an adopter file or server is in the way (C002-REQ-324,
 ERR-CLI-021) or the package cannot be used (ERR-CLI-022).
 
+**Follow-up (revision D-010 … D-014), not a reopening.** The revision for defect D-013 item 8 makes
+`scripts/sdd.mjs` a required source file, names every ERR-CLI-021 and ERR-CLI-022 reason, and adds
+the output lines and failed-write cases of C002-TS-343, C002-TS-345, C002-TS-347, C002-TS-349,
+C002-TS-659 and C002-TS-664. The CLI catalogue mirror is done (commit 0c6c7bf); the code and test
+changes are done by C002-T-063.
+
 ## Targets
 
 | Kind | Target | Change |

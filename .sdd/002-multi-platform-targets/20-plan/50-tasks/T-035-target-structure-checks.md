@@ -38,6 +38,14 @@ host-only names `ask_user` and `tool_search_tool` (C002-REQ-113). No check reads
 a fixed path (C002-REQ-605). `npm run check` generates into a fresh temporary folder and runs them
 (C002-REQ-601).
 
+**Owned checks** (revised for defect D-013 item 2). This task owns every TGT-* code of C002-IF-005
+§6 except TGT-NPM-001, which C002-T-023 owns: TGT-AGENT-001, TGT-MODE-001, TGT-MEM-001 and
+TGT-SERENA-001 (built in commit c4eb00f) included, and TGT-GRANT-001 with C002-TS-606, whose generic
+tools and tool sets are those of C002-IF-005 §6.1. The revised C002-TS-606 rows (`<set>/*` and
+`<set>/<tool>` grants, tools granted by their VS Code name) and the Copilot `plugin-root` table
+detector that now finds `${PLUGIN_ROOT}/scripts/sdd.mjs` (D-013 item 1) land in the follow-up
+C002-T-063; this task is not reopened.
+
 ## Targets
 
 | Kind | Target | Change |

@@ -13,14 +13,19 @@ status: draft
 Every acceptance scenario of the approved spec maps to one test case with the same number
 (`C002-TS-n` → `C002-TC-n`), as in CHG-001, so TR-08 stays mechanically checkable. Three more manual
 cases (`C002-TC-901` … `C002-TC-903`) are the P-01 runs of C002-T-050, C002-T-051 and C002-T-057; each
-names the one scenario whose evidence it produces. Inside a test
-file, each case is one `test()` whose name starts with its TS ID.
+names the one scenario whose evidence it produces. Two NFR cases, C002-TC-904 and C002-TC-905
+(revision D-010 … D-014, defect D-013 item 6), verify C002-NFR-301 and C002-NFR-103, which no
+scenario states; each row names its NFR first in the Location cell. Their Verifies cell holds
+C002-TS-101, the generation run that both measure, because a TC row is defined by the one scenario
+it verifies. Inside a test
+file, each case is one `test()` whose name starts with its TS ID (or, for an NFR case, its TC ID).
 
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
-| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host (an in-process stub host at most, C002-TC-656) | 132 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
-| structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 52 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
-| replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 (feasible, S-07 §4) on the pinned host binary | 24 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
+| integration | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host (an in-process stub host at most, C002-TC-656) | 138 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
+| structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 53 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
+| replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 (feasible, S-07 §4) on the pinned host binary | 26 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
+| benchmark | Timing of an NFR threshold on REF-WIN, result file under `bench/results/` (C002-TC-905) | 1 | `npm run bench` (`bench/*.mjs`) |
 | eval | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 27 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
 | manual | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
 | unit | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
@@ -52,6 +57,7 @@ counts above are those of the main branch.
 | fx-cp-install | Git repository with `src/app.ts` and `README.md`, without `.github/`, `.vscode/` and `.sdd/`; a fresh copy per test; also the repository without `.sdd/` of the subagent guard cases (C002-TC-363, C002-TC-364) | C002-T-019 (first user, C002-TC-352), C002-T-058 |
 | fx-outer | `C:/fx/outer` holding `.sdd/`, with the git repository `C:/fx/outer/repo` inside it that has no `.sdd/` of its own (a `.sdd/` above the repository root counts as found, C002-TC-357) | C002-T-032 |
 | pkg-cp, pkg-cp-hooks | Copies of the generated `dist/copilot/` for `sdd-mcp-server` and for `copilot-hooks` at `C:/fx/pkg-cp` and `C:/fx/pkg-cp-hooks` (or a temporary folder the tests substitute), installed into `fx-cp` or `fx-cp-install` with `sdd install copilot --package <folder>`; variants per Examples row (missing file, broken manifest, OpenCode package, path characters) | C002-T-058 (C002-T-033 for the hooks variant) |
+| fx-plugin-nodesc | Copy of fx-src whose Copilot mapping table has no `doctor-description` entry, the OpenCode table keeping its own (C002-TC-658) | C002-T-063 |
 | fx-oc | OpenCode replay fixture of C002-ADR-005: generated package, adopter agent `my-build`, adopter MCP server `fx-fs`, auto-update and sharing off | C002-T-042 |
 | fx-gate | Change 002 with phase 10-spec in review; variant with 00-ideation approved; variant ready to archive | C002-T-037 (from the CHG-001 gate helpers) |
 | fx-bootstrap | CHG-001 fixture (copy of `.sdd/` at its G2) | CHG-001 |
@@ -90,7 +96,8 @@ counts above are those of the main branch.
   passing run per Examples row with at most one rerun after a failure (C002-DOD-001, 002, 003, 006,
   007, 022).
 - **Eval auth** (P-01, 2026-10-18): paid Claude Code eval sessions (E-CC: C002-T-010 step 5,
-  C002-T-037 step 4, C002-T-038 step 4, C002-T-048 step 4) run with `node evals/harness/run.mjs …
+  C002-T-037 step 4, C002-T-038 step 4, the conditional row of C002-T-063 step 5, C002-T-048 step 4)
+  run with `node evals/harness/run.mjs …
   --auth subscription` (or `EVAL_AUTH=subscription`) on P-01's Claude Max plan, through the switch of
   C002-T-060. The harness refuses a subscription session whose `apiKeySource` shows the key, so such
   a session never falls back to the key, and these sessions are outside every USD budget.
@@ -200,6 +207,7 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-06 | C002-T-044 step 6 | 1 routing smoke on E-OCE at 0.15 | 0.15 USD | 0.65 USD | 0 | 0 |
 | C002-M-06 | C002-T-056 steps 2 and 3 | 48 on E-OCE: C002-TC-113 (1 at 0.25), C002-TC-132 (1 at 0.35); the OpenCode rows of C002-TC-215 (2), 217 (1), 219 (1), 221 (1), 316 (2) and C002-TC-230 (1) (8 at 0.35); the OpenCode rows of C002-TC-506 (1), 507 (1), 509 (4), 510 (1), 511 (1), 512 (1), 513 (3), 514 (1), 515 (5), 639 (1) (19 at 0.25); C002-TC-613 with the C001-CAP-02 interview and gate cases (about 17), C002-TC-634 and C002-TC-635 (19 at 0.35) | 14.80 USD | 31.20 USD | 0 | 0 |
 | C002-M-06 | C002-T-045 steps 4 and 5 | 0 | 0 | 0 | 0 | 5: the smoke, the Copilot CLI rows of C002-TC-513 (3) and C002-TC-526 (1); C002-TC-336 not applicable (0) |
+| C002-M-06 | C002-T-063 step 5, only if the Claude Code row "no `sdd` executable on PATH" of `TS-509.eval.mjs` changes its assertion | 0 | 0 | 0 | 0 or 1 on E-CC at 0.25: that row of C002-TC-509; at most 0.25 USD notional | 0 |
 | C002-M-06 | C002-T-056 step 4: not used, the S-07 infeasible-driver branch (§8.1) is not taken | 0 (C002-TC-133, 211, 222, 223 stay replay cases) | 0 | 0 | 0 | 0 |
 | C002-M-07 | C002-T-048 step 4 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
 | C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 | 0 |
@@ -207,7 +215,7 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 41: C002-TC-615 and C002-TC-359 |
 | C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
 | C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
-| **Total** | | **93** | **27.85 USD** | 60.45 USD | **20** (5.30 USD notional) | **about 83** |
+| **Total** | | **93** | **27.85 USD** | 60.45 USD | **20** (5.30 USD notional), 21 with the conditional row of C002-T-063 step 5 | **about 83** |
 
 ### 4.3 Budget, reserve and room for reruns
 
@@ -319,6 +327,13 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   and of `.github/hooks/architect-guard.json` written by `sdd install copilot`, CAP-03 acceptance
   fixtures; C002-TC-357 and C002-TC-362 … C002-TC-370 included, C002-TC-367 … C002-TC-370 written by
   C002-T-062) is carried to C002-T-058.
+- **Revision D-010 … D-014.** The scenarios revised or added for done tasks are written or adjusted
+  by the catch-up task C002-T-063: C002-TC-343, 345, 347, 349, 659 and 664 (install), 657 and 658
+  (doctor description), 606 (generic grants), 226 (OpenCode built-ins), 502 (next free change
+  number), 660 (unexpanded `${CLAUDE_PLUGIN_DATA}`), the case files of 509, 515 and 526, and the
+  expectation rules and planted rows that C002-TC-609 and 661 … 663 need. C002-T-041 owns
+  C002-TC-661 … 663 and runs them against those rules; the paid rows of 509, 515 and 526 stay
+  carried to C002-T-056 and C002-T-045, and C002-TC-516 to the checklist run of C002-T-050.
 - **Spike branches**: when a row of `10-strategy.md` §4 applies, a case it moves is carried to the
   task and level of §8.1, and a case it makes not applicable is reported "not applicable" with the
   spike record cited. Neither counts as a failure, and neither is passed in another way.
@@ -374,7 +389,7 @@ branch.
 | C002-TC-118 | C002-TS-118 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
 | C002-TC-119 | C002-TS-119 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
 | C002-TC-120 | C002-TS-120 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | inline | E-W | C002-T-028 |
-| C002-TC-121 | C002-TS-121 | integration | `tests/integration/packaging/package-staging.test.ts` | `npm test -- build/package-staging` | fx-src | E-W | C002-T-015, C002-T-028, C002-T-035 |
+| C002-TC-121 | C002-TS-121 | structure | `tests/integration/cap06/structure-checks.test.ts` (plugin structure checks); its generator part in `tests/integration/cap01/wiring.test.ts`, its staging part in `tests/integration/packaging/package-staging.test.ts` | `npm test -- cap06/structure-checks`; `npm test -- cap01/wiring`; `npm test -- packaging/package-staging` | fx-src | E-W | C002-T-035, C002-T-028, C002-T-015 |
 | C002-TC-122 | C002-TS-122 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-src with a pasted variant | E-W | C002-T-035, C002-T-028 |
 | C002-TC-123 | C002-TS-123 | integration | `tests/integration/cap01/wiring.test.ts` | `npm test -- cap01/wiring` | fx-src | E-W | C002-T-028 |
 | C002-TC-124 | C002-TS-124 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
@@ -388,6 +403,10 @@ branch.
 | C002-TC-132 | C002-TS-132 | eval | `evals/targets/generator/TS-132.eval.mjs` | `run.mjs --host opencode` | fx-gate (ready to archive) | E-OCE | C002-T-027, C002-T-056 |
 | C002-TC-133 | C002-TS-133 | replay (eval in the branch of §8.1) | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc with `fx-fs` | E-OC | C002-T-026; branch of §8.1: C002-T-056 |
 | C002-TC-134 | C002-TS-134 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src (Copilot table) | E-W | C002-T-027, C002-T-028, C002-T-024 |
+| C002-TC-657 | C002-TS-657 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-src; the host lists read from the `doctor-description` entries of both tables, one test per Examples row | E-W | C002-T-063 |
+| C002-TC-658 | C002-TS-658 | integration | `tests/integration/cap01/constructs.test.ts` | `npm test -- cap01/constructs` | fx-plugin-nodesc | E-W | C002-T-063 |
+| C002-TC-904 | C002-TS-101 | integration | C002-NFR-301 (C002-DOD-015): `tests/integration/cap01/determinism.test.ts` | `npm test -- cap01/determinism`, once under PowerShell 7 and once under Git Bash | fx-src (clean checkout), two output folders | E-W | C002-T-036 |
+| C002-TC-905 | C002-TS-101 | benchmark | C002-NFR-103 (C002-DOD-010): `bench/generate.mjs` | `npm run bench`; result in `bench/results/generate-*.json` (p95 over 10 runs of `node scripts/generate.mjs`, its bundling step included, `scripts/build.mjs`, the checks and zipping excluded; C002-DOD-010) | fx-src | REF-WIN | C002-T-036 |
 | C002-TC-640 | C002-TS-640 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (tool map rows) | E-W | C002-T-035 |
 | C002-TC-201 | C002-TS-201 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
 | C002-TC-202 | C002-TS-202 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist-bad | E-W | C002-T-029 |
@@ -414,7 +433,7 @@ branch.
 | C002-TC-223 | C002-TS-223 | replay (eval in the branch of §8.1) | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (quick-lint plugin) | E-OC | C002-T-030; branch of §8.1: C002-T-056 |
 | C002-TC-224 | C002-TS-224 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist-bad | E-W | C002-T-030 |
 | C002-TC-225 | C002-TS-225 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist | E-W | C002-T-029 |
-| C002-TC-226 | C002-TS-226 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc | E-OC | C002-T-029 |
+| C002-TC-226 | C002-TS-226 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc; the built-in commands of OpenCode 1.18.31 (`init`, `review`, `customize-opencode`) bound to no Architect agent, `architect-init` beside `init` | E-OC | C002-T-029, C002-T-063 |
 | C002-TC-227 | C002-TS-227 | structure | `tests/integration/cap02/package.test.ts` | `npm test -- cap02/package` | fx-dist-bad | E-W | C002-T-029 |
 | C002-TC-228 | C002-TS-228 | structure | `tests/integration/cap02/permissions.test.ts` | `npm test -- cap02/permissions` | fx-dist (native and server) | E-W | C002-T-030, C002-T-035 |
 | C002-TC-229 | C002-TS-229 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (one `question` rule changed or removed per Examples row) | E-W | C002-T-035, C002-T-030 |
@@ -461,14 +480,16 @@ branch.
 | C002-TC-340 | C002-TS-340 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (hooks: conductor grants `edit`, `plan.prompt.md` grants `execute`) | E-W | C002-T-035, C002-T-031 |
 | C002-TC-341 | C002-TS-341 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp | E-W | C002-T-058 |
 | C002-TC-342 | C002-TS-342 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp (CLI run as its `scripts/sdd.mjs`) | E-W | C002-T-058 |
-| C002-TC-343 | C002-TS-343 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install after one install, pkg-cp | E-W | C002-T-058 |
+| C002-TC-343 | C002-TS-343 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install after one install, pkg-cp; the `unchanged` lines of the hook file, each agent file, `.vscode/mcp.json` and `.github/architect-install.json` | E-W | C002-T-058, C002-T-063 |
 | C002-TC-344 | C002-TS-344 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install after an install of 0.3.0, pkg-cp replaced by 0.3.1 | E-W | C002-T-058 |
-| C002-TC-345 | C002-TS-345 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install; `C:/fx/empty`, the generated OpenCode package, pkg-cp variants per row; fx-tgz for the global `architect-sdd` row | E-W | C002-T-058 |
+| C002-TC-345 | C002-TS-345 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install; `C:/fx/empty`, no folder at `C:/fx/missing`, the generated OpenCode package, pkg-cp variants per row (manifest `{ not json`, `[]`, without `package_version`, listing no agent file; one or two source files missing, `scripts/sdd.mjs` included; `install/mcp.json` unparsable or without `servers`; `install/hooks.template.json` unparsable or without PreToolUse); fx-tgz for the global `architect-sdd` row; each row also checks that no `hooks.json` or `plugin.json` was written into the `--package` folder | E-W | C002-T-058, C002-T-063 |
 | C002-TC-346 | C002-TS-346 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install with an adopter `.vscode/mcp.json`, pkg-cp | E-W | C002-T-058 |
-| C002-TC-347 | C002-TS-347 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp | E-W | C002-T-058 |
+| C002-TC-347 | C002-TS-347 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp; the line `written .vscode/mcp.json`, no `merged .vscode/mcp.json` line | E-W | C002-T-058, C002-T-063 |
 | C002-TC-348 | C002-TS-348 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install with adopter copies equal to the package's, pkg-cp | E-W | C002-T-058 |
-| C002-TC-349 | C002-TS-349 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install with one adopter file or server per row, pkg-cp | E-W | C002-T-058 |
+| C002-TC-349 | C002-TS-349 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install with one adopter file or server per row, pkg-cp; the `[]` and `"servers": "none"` rows with the details `the top level is not an object` and `"servers" is not an object` | E-W | C002-T-058, C002-T-063 |
 | C002-TC-350 | C002-TS-350 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install after one install, then edited by P-03 | E-W | C002-T-058 |
+| C002-TC-659 | C002-TS-659 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install, pkg-cp at `C:/fx/pkg-cp` (or a substituted temporary folder); an injected failure of the fourth write (the first agent file) | E-W | C002-T-063 |
+| C002-TC-664 | C002-TS-664 | integration | `tests/integration/cap03/install.test.ts` | `npm test -- cap03/install` | fx-cp-install as C002-TC-659 left it, pkg-cp, no injected fault | E-W | C002-T-063 |
 | C002-TC-351 | C002-TS-351 | integration | `tests/guards/bash-corpus.test.ts` (cases in `bash-corpus.json`) | `npm test -- tests/guards` | corpora, fx-repo (`C:/repo`) | E-W | C002-T-059 |
 | C002-TC-352 | C002-TS-352 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-cp-install | E-W | C002-T-019, C002-T-059 |
 | C002-TC-353 | C002-TS-353 | integration | `tests/guards/bash-corpus.test.ts` (cases in `bash-corpus.json`) | `npm test -- tests/guards` | corpora, fx-repo (`C:/repo`) | E-W | C002-T-059, C002-T-009 |
@@ -515,22 +536,23 @@ branch.
 | C002-TC-424 | C002-TS-424 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo (the `fx-srv` of the CAP-04 acceptance file) with `CLAUDE_PLUGIN_ROOT` = `C:/fx/plugin` holding a recording stub `scripts/sdd.mjs` | E-W | C002-T-061, C002-T-019 |
 | C002-TC-641 | C002-TS-641 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo | E-W | C002-T-019 |
 | C002-TC-642 | C002-TS-642 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, cfg shim with a `.cmd`-only executable | E-W | C002-T-019 |
+| C002-TC-660 | C002-TS-660 | integration | `tests/integration/mcp/shell.test.ts` | `npm test -- mcp/shell` | fx-tgz, fx-repo (the `fx-srv` of the CAP-04 acceptance file) with `CLAUDE_PLUGIN_DATA` = `C:/fx-data` per row (unset for the last row) | E-W | C002-T-063, C002-T-019 |
 | C002-TC-501 | C002-TS-501 | integration | `scripts/smoke-npm.mjs` | `npm run smoke:npm` | fx-tgz (clean prefix) | E-W4 | C002-T-023, C002-T-022 |
-| C002-TC-502 | C002-TS-502 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz, two copies `fx-a` and `fx-b` of fx-bootstrap | E-W | C002-T-061, C002-T-022 |
+| C002-TC-502 | C002-TS-502 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz, two copies `fx-a` and `fx-b` of fx-bootstrap; the new change takes the next free number (`003-export`, fx-bootstrap holding 001 and 002) and the two change folders are compared by that number and name | E-W | C002-T-061, C002-T-022, C002-T-063 |
 | C002-TC-503 | C002-TS-503 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-src | E-W | C002-T-022, C002-T-003, C002-T-052, C002-T-055 |
 | C002-TC-504 | C002-TS-504 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-008 |
 | C002-TC-505 | C002-TS-505 | integration | `tests/integration/cli/guard-message.test.ts` | `npm test -- cli/guard-message` | inline | E-W | C002-T-008 |
 | C002-TC-506 | C002-TS-506 | eval | `evals/targets/doctor/TS-506.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-full | E-CC, E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-507 | C002-TS-507 | eval | `evals/targets/doctor/TS-507.eval.mjs` | `run.mjs --host opencode` | cfg-no-ripwire | E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-508 | C002-TS-508 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy with `architect-sdd` installed | E-VSC | C002-T-038 |
-| C002-TC-509 | C002-TS-509 | eval | `evals/targets/doctor/TS-509.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-* per row | E-CC, E-OCE | C002-T-038, C002-T-056 |
+| C002-TC-509 | C002-TS-509 | eval | `evals/targets/doctor/TS-509.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-* per row; the OpenCode row without a PATH `sdd` uses the OpenCode package generated for native permission enforcement; the Claude Code row without a PATH `sdd` expects `completed with warnings` (Context7 and DeepWiki `unreachable` on Claude Code) | E-CC, E-OCE | C002-T-038, C002-T-063, C002-T-056 |
 | C002-TC-510 | C002-TS-510 | eval | `evals/targets/doctor/TS-510.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-old-claude, cfg-full with a `claude` shim per row | E-CC, E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-511 | C002-TS-511 | eval | `evals/targets/doctor/TS-511.eval.mjs` | `run.mjs --host claude-code`, `--host opencode` | cfg-full, workspace with `.sdd/` | E-CC, E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-512 | C002-TS-512 | eval | `evals/targets/doctor/TS-512.eval.mjs` | `run.mjs --host opencode` | cfg-full, repository without `.sdd/` | E-OCE | C002-T-038, C002-T-056 |
 | C002-TC-513 | C002-TS-513 | eval | `evals/targets/doctor/TS-513.eval.mjs` | `run.mjs --host opencode`, `--host copilot-cli` | `opencode` and `code` version shims per row | E-OCE, E-CPC | C002-T-038, C002-T-014, C002-T-056, C002-T-045 |
 | C002-TC-514 | C002-TS-514 | eval | `evals/targets/doctor/TS-514.eval.mjs` | `run.mjs --host opencode` | `opencode` shim reporting 1.5.0 | E-OCE | C002-T-038, C002-T-014, C002-T-056 |
-| C002-TC-515 | C002-TS-515 | eval | `evals/targets/doctor/TS-515.eval.mjs` | `run.mjs --host opencode` | `sdd` version shims per row | E-OCE | C002-T-038, C002-T-056 |
-| C002-TC-516 | C002-TS-516 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy, hooks states per row | E-VSC | C002-T-038 |
+| C002-TC-515 | C002-TS-515 | eval | `evals/targets/doctor/TS-515.eval.mjs` | `run.mjs --host opencode` | `sdd` version shims per row on PATH; the OpenCode package generated for native permission enforcement | E-OCE | C002-T-038, C002-T-063, C002-T-056 |
+| C002-TC-516 | C002-TS-516 | manual | `docs/checklists/vscode-copilot.md` step | executed in C002-TC-901 | toy, per row: `chat.useHooks` true or false, the workspace trusted or in restricted mode; the row's status, Version text (the caveat text for `ok`) and Fix | E-VSC | C002-T-038, C002-T-063, C002-T-050 |
 | C002-TC-517 | C002-TS-517 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | fx-tgz | E-W | C002-T-004 |
 | C002-TC-518 | C002-TS-518 | integration | `tests/integration/cli/version.test.ts` | `npm test -- cli/version` | inline | E-W | C002-T-004 |
 | C002-TC-519 | C002-TS-519 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022 |
@@ -540,7 +562,7 @@ branch.
 | C002-TC-523 | C002-TS-523 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | inline (platform environment per row) | E-W | C002-T-013 |
 | C002-TC-524 | C002-TS-524 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | Serena shim | E-W | C002-T-013 |
 | C002-TC-525 | C002-TS-525 | integration | `tests/integration/cli/serena-user-data.test.ts` | `npm test -- cli/serena-user-data` | fx-repo | E-W | C002-T-013, C002-T-005 |
-| C002-TC-526 | C002-TS-526 | eval | `evals/targets/doctor/TS-526.eval.mjs` | `run.mjs --host copilot-cli` | user profile without VS Code settings | E-CPC | C002-T-038, C002-T-045 |
+| C002-TC-526 | C002-TS-526 | eval | `evals/targets/doctor/TS-526.eval.mjs` | `run.mjs --host copilot-cli` | user profile without the VS Code user settings that the `sdd host-version` probe reads, workspace without `.vscode/settings.json`; expects `error`, Version `cannot be read` and the Fix `check chat.useHooks and Workspace Trust by hand` | E-CPC | C002-T-038, C002-T-063, C002-T-045 |
 | C002-TC-527 | C002-TS-527 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora, fx-repo | E-W | C002-T-010, C002-T-005 |
 | C002-TC-528 | C002-TS-528 | integration | `tests/guards/bash-corpus.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-010 |
 | C002-TC-529 | C002-TS-529 | integration | `tests/integration/npm-build/npm-staging.test.ts` | `npm test -- npm-build/npm-staging` | fx-tgz | E-W | C002-T-022 |
@@ -559,10 +581,10 @@ branch.
 | C002-TC-603 | C002-TS-603 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist of an earlier run | E-W | C002-T-035 |
 | C002-TC-604 | C002-TS-604 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
 | C002-TC-605 | C002-TS-605 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad | E-W | C002-T-035 |
-| C002-TC-606 | C002-TS-606 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (server) | E-W | C002-T-035 |
+| C002-TC-606 | C002-TS-606 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-dist-bad (server), one planted grant per Examples row (the tool sets `edit`, `execute`, `new`, `runCommands`, `runTasks`, `vscode`; `edit/*`, `vscode/runCommand`, `edit/createFile`; `runInTerminal` and `shell` by name; no `tools` field), the generic tools and tool sets read from the check's data (C002-IF-005 §6.1) | E-W | C002-T-035, C002-T-063 |
 | C002-TC-607 | C002-TS-607 | structure | `tests/integration/cap06/structure-checks.test.ts` | `npm test -- cap06/structure-checks` | fx-src with CHG-001 moved to `_archive/` | E-W | C002-T-035 |
 | C002-TC-608 | C002-TS-608 | replay | `tests/replay/run.mjs` | `npm run replay -- --all` | corpora, fx-dist per mode in use, fx-oc | E-OC (release: PowerShell 7 and Git Bash, `file-symlink`) | C002-T-040, C002-T-041, C002-T-049, C002-T-054 |
-| C002-TC-609 | C002-TS-609 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpus fixture with a planted expectation | E-OC | C002-T-040, C002-T-041, C002-T-049 |
+| C002-TC-609 | C002-TS-609 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpus fixture with one planted expectation per Examples row: the two earlier rows, a shell case of the tool `Write` whose command text is `.sdd/002-x/notes.md` (expected `deny` by the write-tool row of C002-IF-009 §2.1, decided `allow`), and a trailing-separator write into `{repo}/.sdd/004-x/` planted as `deny` and answered with ERR-MCP-003 (read as `allow`) | E-OC | C002-T-041, C002-T-040, C002-T-063, C002-T-049 |
 | C002-TC-610 | C002-TS-610 | integration | `tests/guards/corpus-format.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-007, C002-T-008, C002-T-009, C002-T-010, C002-T-059 |
 | C002-TC-611 | C002-TS-611 | integration | `tests/integration/cap06/runner-caps.test.ts` | `npm test -- cap06/runner-caps` | stub-host, SHA-256 of `evals/` case files | E-W | C002-T-044 |
 | C002-TC-612 | C002-TS-612 | eval | routing cases and `evals/injection/injection.eval.mjs` | `run.mjs --host opencode --tier dev` | case fixtures | E-OCE | C002-T-044, C002-T-049 |
@@ -571,8 +593,8 @@ branch.
 | C002-TC-615 | C002-TS-615 | eval | routing, injection, sdd MCP server guard and non-interactive cases | `run.mjs --host copilot-cli --tier dev` | case fixtures; each workspace prepared by `sdd install copilot` from a package copy loaded with `--plugin-dir` | E-CPC | C002-T-045, C002-T-054 |
 | C002-TC-616 | C002-TS-616 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | checklist, S-08 record with `copilot_cli_loads_package: false` | E-W | C002-T-046 |
 | C002-TC-617 | C002-TS-617 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046, C002-T-050 |
-| C002-TC-618 | C002-TS-618 | manual | review of `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | review entry (C002-DOD-007) | record of C002-TC-901 | E-VSC | C002-T-046, C002-T-050 |
-| C002-TC-619 | C002-TS-619 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046 |
+| C002-TC-618 | C002-TS-618 | manual | review of `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | review entry (C002-DOD-007): the record states `hooks_state` and `hooks_sources` in both modes, and `hooks_state` is `enabled` exactly when the sources read `on`, `trusted` and `none` | record of C002-TC-901 (the mode in use); the template of C002-T-046 for the other mode | E-VSC | C002-T-046, C002-T-050 |
+| C002-TC-619 | C002-TS-619 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md`, one test per mode row: the hooks-state step with the three sources in both modes; the delegated-edit step under sdd MCP server enforcement, the guard-denial step under the hooks fallback | E-W | C002-T-046, C002-T-050 |
 | C002-TC-620 | C002-TS-620 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-001, C002-T-043, C002-T-052, C002-T-055 |
 | C002-TC-621 | C002-TS-621 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-050 |
 | C002-TC-622 | C002-TS-622 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release | E-W | C002-T-047, C002-T-052, C002-T-055 |
@@ -586,7 +608,7 @@ branch.
 | C002-TC-630 | C002-TS-630 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
 | C002-TC-631 | C002-TS-631 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora | E-OC | C002-T-040 |
 | C002-TC-632 | C002-TS-632 | structure | `tests/integration/cap06/checklist.test.ts` | `npm test -- cap06/checklist`; review entry (C002-DOD-007) | `docs/checklists/vscode-copilot.md` | E-W | C002-T-046 |
-| C002-TC-633 | C002-TS-633 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (checklist records per row) | E-W | C002-T-047 |
+| C002-TC-633 | C002-TS-633 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (checklist records per row, both Copilot modes; `hooks_state` `enabled`, `disabled` or absent); the refusals with the revised ERR-REL-010 text | E-W | C002-T-047 |
 | C002-TC-634 | C002-TS-634 | eval | `evals/targets/gate/TS-634.eval.mjs` | `run.mjs --host opencode` | fx-gate | E-OCE | C002-T-044, C002-T-056 |
 | C002-TC-635 | C002-TS-635 | eval | `evals/targets/gate/TS-635.eval.mjs` | `run.mjs --host opencode` | fx-gate (00-ideation approved) | E-OCE | C002-T-044, C002-T-056 |
 | C002-TC-636 | C002-TS-636 | integration | `tests/guards/writing-commands.test.ts` | `npm test -- tests/guards` | corpora | E-W | C002-T-009, C002-T-059, C002-T-058 |
@@ -603,6 +625,9 @@ branch.
 | C002-TC-651 | C002-TS-651 | integration | `tests/integration/cap06/release-check.test.ts` | `npm test -- cap06/release-check` | fx-release (host capabilities per row) | E-W | C002-T-047 |
 | C002-TC-652 | C002-TS-652 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (identity cases) | E-OC | C002-T-042 |
 | C002-TC-655 | C002-TS-655 | replay | `tests/replay/scenarios/opencode-host.test.ts` | `npm run replay -- opencode-host` | fx-oc (native) with `.sdd/004-x/existing.md`, `.sdd/004-x/a.md` and `README.md`; corpus cases PG-004, PG-003, PG-050 | E-OC | C002-T-042 |
+| C002-TC-661 | C002-TS-661 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | corpora (BG-268, BG-374, BG-403, BG-405, BG-408, PG-135, PG-136), replay fixture with `{repolink}` as a junction to `{repo}`; one test per Examples row and mechanism; the corpus files read back unchanged | E-OC (`@mode-native` row: the pinned OpenCode host; `@mode-hooks` rows: the hooks-fallback package) | C002-T-041, C002-T-063, C002-T-042 |
+| C002-TC-662 | C002-TS-662 | replay | `tests/replay/scenarios/suite.test.ts` | `npm run replay -- suite` | path corpus case PG-048, sdd MCP server from fx-tgz | E-OC | C002-T-041, C002-T-063 |
+| C002-TC-663 | C002-TS-663 | integration | `tests/unit/replay/adapters.test.ts` | `npm test -- unit/replay` | pkg-cp-hooks (classes file with `Write`, `Bash`, `Glob` first in their classes, no `Edit`, `Read`, `Grep`); one corpus case per corpus tool of the Examples | E-W | C002-T-041 |
 | C002-TC-656 | C002-TS-656 | integration | `tests/unit/replay/opencode-decision.test.ts` | `npm test -- unit/replay` | in-process stub OpenCode host answering the `edit` call of PG-050 with each part form of the Examples; replay fixture copy of `README.md` | E-W | C002-T-042 |
 | C002-TC-901 | C002-TS-618 | manual | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step, including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 358, 508 and 516 and the assumption steps of C002-T-046 (the MCP roots step of C002-IF-002 §3 included) (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
 | C002-TC-902 | C002-TS-205 | manual | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/architect-opencode-<version>.zip` and its `INSTALL.md` | REF-WIN, OpenCode tested version | C002-T-051 |

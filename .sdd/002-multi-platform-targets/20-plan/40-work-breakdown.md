@@ -77,6 +77,7 @@ flowchart TB
     C002_T_046["T-046 VS Code checklist"]
     C002_T_047["T-047 Release check"]
     C002_T_056["T-056 OpenCode carried eval runs"]
+    C002_T_063["T-063 Catch-up D-010…D-014: install sources, detector, doctor, replay expectations"]
   end
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
@@ -120,6 +121,7 @@ flowchart TB
   C002_T_013 --> C002_T_022
   C002_T_021 --> C002_T_022
   C002_T_022 --> C002_T_023
+  C002_T_034 --> C002_T_023
   C002_T_061 --> C002_T_023
   C002_T_016 --> C002_T_061
   C002_T_019 --> C002_T_061
@@ -178,6 +180,16 @@ flowchart TB
   C002_T_022 --> C002_T_041
   C002_T_033 --> C002_T_041
   C002_T_040 --> C002_T_041
+  C002_T_063 --> C002_T_041
+  C002_T_019 --> C002_T_063
+  C002_T_027 --> C002_T_063
+  C002_T_029 --> C002_T_063
+  C002_T_035 --> C002_T_063
+  C002_T_038 --> C002_T_063
+  C002_T_040 --> C002_T_063
+  C002_T_042 --> C002_T_063
+  C002_T_058 --> C002_T_063
+  C002_T_061 --> C002_T_063
   C002_T_001 --> C002_T_042
   C002_T_030 --> C002_T_042
   C002_T_040 --> C002_T_042
@@ -187,15 +199,19 @@ flowchart TB
   C002_T_002 --> C002_T_045
   C002_T_044 --> C002_T_045
   C002_T_058 --> C002_T_045
+  C002_T_063 --> C002_T_045
   C002_T_033 --> C002_T_046
   C002_T_037 --> C002_T_046
   C002_T_038 --> C002_T_046
   C002_T_058 --> C002_T_046
+  C002_T_063 --> C002_T_046
   C002_T_034 --> C002_T_047
   C002_T_040 --> C002_T_047
   C002_T_046 --> C002_T_047
+  C002_T_063 --> C002_T_047
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
+  C002_T_063 --> C002_T_056
   C002_T_022 --> C002_T_048
   C002_T_035 --> C002_T_048
   C002_T_037 --> C002_T_048
@@ -242,19 +258,25 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 62 tasks weigh 124 in total (19 S, 24 M, 19 L). The longest chain
-weighs 33 and ends with the Copilot release. The D-004 … D-009 plan update does not change it: the
-catch-up task C002-T-061 (M) finishes at 13 after C002-T-022 (11), so C002-T-023 finishes at 15, still
-far ahead of its dependents C002-T-051, C002-T-052, C002-T-055 and C002-T-057; C002-T-062 (S) finishes
+Weights S = 1, M = 2, L = 3. The 63 tasks weigh 127 in total (19 S, 24 M, 20 L). The longest chain
+weighs 36 and ends with the Copilot release. **The D-010 … D-014 plan update lengthens it by 3**: the
+catch-up task C002-T-063 (L) starts after C002-T-035 and C002-T-042 (both finishing at 22) and
+finishes at 25; C002-T-046 now waits for it and finishes at 27, C002-T-047 at 30, so C002-T-048
+finishes at 32 (before: 29, when it waited for C002-T-045 at 27). C002-T-041 finishes at 27 and
+C002-T-045 at 27, both off the critical path. Most of these tasks are done, so the weights model the
+order, not the remaining calendar. C002-T-023 now also waits for C002-T-034 (its `--spdx` scan of the
+generated folders) and finishes at 19, still ahead of its dependents. The D-004 … D-009 plan update
+did not change the chain: the
+catch-up task C002-T-061 (M) finishes at 13 after C002-T-022 (11), before C002-T-023; C002-T-062 (S) finishes
 at 12 after C002-T-032 (11), before C002-T-058 starts at 18; C002-REQ-217 adds no task. Nor did the
 D-003 plan updates change it: C002-T-032, now L
 for the subagent guard, finishes at 11, before C002-T-031 at 16, so C002-T-033 still finishes at 18
 and C002-T-058 at 21, four units before C002-T-044, and C002-T-045 still starts at 25; C002-T-060,
 the eval auth switch, is already built and finishes at 1, before C002-T-010, C002-T-037, C002-T-038
-and C002-T-048 need it. The OpenCode release ends one unit earlier, at 32, and
+and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
-**Overall (to C002-T-055, weight 33):**
+**Overall (to C002-T-055, weight 36):**
 
 1. C002-T-001 — Spike S-07: OpenCode at its tested version (L)
 2. C002-T-024 — Mapping tables, their schema copy and loader (M)
@@ -263,26 +285,27 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 5. C002-T-028 — Wiring variants, anchors and skill inlining (L)
 6. C002-T-029 — OpenCode emitter: layout, agents, commands, MCP servers and install notes (L)
 7. C002-T-030 — OpenCode permission rules for both modes and the quick-lint plugin (L)
-8. C002-T-042 — OpenCode session driver and the opencode-permissions replay adapter (L)
-9. C002-T-044 — OpenCode eval runner behind the existing case API (L)
-10. C002-T-045 — Copilot CLI eval runner (M)
-11. C002-T-048 — Claude Code regression set run (M)
-12. C002-T-054 — Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals (M)
-13. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
-14. C002-T-055 — P-01: release the Copilot target (S)
+8. C002-T-042 — OpenCode session driver and the opencode-permissions replay adapter (L; C002-T-035, L, finishes at the same 22)
+9. C002-T-063 — Catch-up for revision D-010 … D-014: install sources, plugin-root detector, doctor description and hooks row, replay expectations (L)
+10. C002-T-046 — Manual VS Code checklist and its record template (M)
+11. C002-T-047 — Release check per target and release records (L)
+12. C002-T-048 — Claude Code regression set run (M)
+13. C002-T-054 — Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals (M)
+14. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
+15. C002-T-055 — P-01: release the Copilot target (S)
 
-**OpenCode release (to C002-T-052, weight 32):** items 1 to 11 above, then C002-T-049 — Release
+**OpenCode release (to C002-T-052, weight 35):** items 1 to 12 above, then C002-T-049 — Release
 evidence for OpenCode (M) and C002-T-052 — P-01: publish architect-sdd and release the OpenCode
-target (S). The carried OpenCode eval runs (C002-T-056, L, finishing at 28) have one unit of slack
-against C002-T-048 (finishing at 29).
+target (S). The carried OpenCode eval runs (C002-T-056, L, finishing at 28, after C002-T-044 and
+C002-T-063 at 25) have four units of slack against C002-T-048 (finishing at 32).
 
 The remaining Copilot coupling of the OpenCode chain is shared tooling, not a release decision:
-C002-T-048 waits for C002-T-045 (shared `evals/harness/session.mjs`, critic CR-7), C002-T-047 for the
-checklist template of C002-T-046 (which now waits for C002-T-058 and finishes at 23; C002-T-047 at
-26, one unit before C002-T-045), and C002-T-039 and C002-T-041 for C002-T-033. The Copilot defer
+C002-T-048 waits for C002-T-045 (shared `evals/harness/session.mjs`, critic CR-7, finishing at 27)
+and for C002-T-047, which waits for the checklist template of C002-T-046 (finishing at 27 after
+C002-T-063; C002-T-047 at 30); C002-T-039 and C002-T-041 wait for C002-T-033. The Copilot defer
 branch is not taken (signed-off S-08 record, `10-strategy.md` §4); only a later record would remove
-these dependencies (`75-rollout.md` §5), and the OpenCode chain would then end at 31 (through
-C002-T-044, C002-T-056, C002-T-049 and C002-T-052).
+these dependencies (`75-rollout.md` §5), and the OpenCode chain would then end at 33 (through
+C002-T-063, C002-T-047, C002-T-048, C002-T-049 and C002-T-052; 31 before the D-010 … D-014 update).
 
 C002-T-002 (S-08) has the same weight as C002-T-001 and is equally critical: C002-T-024 waits for both
 spike records. C002-T-053 (finishing at 1) and C002-T-006 (at 3) finish together with the spikes.
@@ -291,8 +314,8 @@ C002-T-026 (C002-M-04) also waits for C002-T-040 (C002-M-06), so that `scripts/t
 before C002-T-025 at 8, so the critical path does not move.
 Slack: C002-T-021 finishes at 8 and C002-T-031 starts at 13; C002-T-022 finishes at 11 and C002-T-029
 starts at 13 (C002-T-034 at 16); C002-T-059 finishes at 8, so C002-T-019 finishes at 11 and
-C002-T-020 at 13, and C002-T-041 starts at 18. The guard, CLI and MCP work of C002-M-02 and C002-M-03
-can therefore slip by 2 to 5 units without moving the end date.
+C002-T-020 at 13, and C002-T-041 starts at 25 (after C002-T-063). The guard, CLI and MCP work of
+C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving the end date.
 
 ## Tasks by milestone
 
@@ -324,7 +347,7 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-03 | C002-T-021 | Build: two bundles and the licence check over both | M | T-004, T-016 |
 | C002-M-03 | C002-T-022 | architect-sdd: staging, template CLI lines and npm pack | L | T-003, T-012, T-013, T-021 |
 | C002-M-03 | C002-T-061 | Catch-up for revision D-004 … D-009: build and server print forms, ERR-MCP-006 cases, npm README and own templates | M | T-016, T-019, T-021, T-022 |
-| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022, T-061 |
+| C002-M-03 | C002-T-023 | architect-sdd: install smoke test and manifest check | M | T-022, T-034, T-061 |
 | C002-M-04 | C002-T-024 | Mapping tables, their schema copy and loader | M | T-001, T-002, T-006, T-015 |
 | C002-M-04 | C002-T-025 | Generator: entry, source reader, writer and manifest | L | T-004, T-024 |
 | C002-M-04 | C002-T-026 | Translator: agent frontmatter | M | T-025, T-040 |
@@ -344,14 +367,15 @@ can therefore slip by 2 to 5 units without moving the end date.
 | C002-M-05 | C002-T-038 | Doctor host rows, version checks and the toolchain record per host | L | T-013, T-014, T-028, T-060 |
 | C002-M-05 | C002-T-039 | README sections for OpenCode and Copilot VS Code | S | T-030, T-033 |
 | C002-M-06 | C002-T-040 | Corpus replay suite: framework, expectations, report and its own command | L | T-006, T-007 |
-| C002-M-06 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | M | T-020, T-022, T-033, T-040 |
+| C002-M-06 | C002-T-063 | Catch-up for revision D-010 … D-014: install sources, plugin-root detector, doctor description and hooks row, replay expectations | L | T-019, T-027, T-029, T-035, T-038, T-040, T-042, T-058, T-061 |
+| C002-M-06 | C002-T-041 | Replay adapters: sdd MCP server and Copilot guard hooks | M | T-020, T-022, T-033, T-040, T-063 |
 | C002-M-06 | C002-T-042 | OpenCode session driver and the opencode-permissions replay adapter | L | T-001, T-030, T-040 |
 | C002-M-06 | C002-T-043 | S-07 record: final replay outcomes and the OpenCode enforcement mode | S | T-042 |
 | C002-M-06 | C002-T-044 | OpenCode eval runner behind the existing case API | L | T-037, T-042 |
-| C002-M-06 | C002-T-045 | Copilot CLI eval runner | M | T-002, T-044, T-058 |
-| C002-M-06 | C002-T-046 | Manual VS Code checklist and its record template | M | T-033, T-037, T-038, T-058 |
-| C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046 |
-| C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044 |
+| C002-M-06 | C002-T-045 | Copilot CLI eval runner | M | T-002, T-044, T-058, T-063 |
+| C002-M-06 | C002-T-046 | Manual VS Code checklist and its record template | M | T-033, T-037, T-038, T-058, T-063 |
+| C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046, T-063 |
+| C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044, T-063 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-036, T-041, T-043, T-044, T-048, T-056 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |

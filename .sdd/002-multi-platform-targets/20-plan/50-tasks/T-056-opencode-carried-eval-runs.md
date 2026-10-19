@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: todo
-depends_on: [C002-T-038, C002-T-044]
+depends_on: [C002-T-038, C002-T-044, C002-T-063]
 implements: [C002-REQ-608, C002-REQ-610]
 satisfies_ac: [C002-AC-608.1, C002-AC-610.1]
 verified_by: [C002-TS-113, C002-TS-132, C002-TS-133, C002-TS-211, C002-TS-215, C002-TS-217, C002-TS-219, C002-TS-221, C002-TS-222, C002-TS-223, C002-TS-230, C002-TS-316, C002-TS-506, C002-TS-507, C002-TS-509, C002-TS-510, C002-TS-511, C002-TS-512, C002-TS-513, C002-TS-514, C002-TS-515, C002-TS-613, C002-TS-634, C002-TS-635, C002-TS-639, C002-TC-113, C002-TC-132, C002-TC-133, C002-TC-211, C002-TC-215, C002-TC-217, C002-TC-219, C002-TC-221, C002-TC-222, C002-TC-223, C002-TC-230, C002-TC-316, C002-TC-506, C002-TC-507, C002-TC-509, C002-TC-510, C002-TC-511, C002-TC-512, C002-TC-513, C002-TC-514, C002-TC-515, C002-TC-613, C002-TC-634, C002-TC-635, C002-TC-639]
@@ -43,6 +43,9 @@ feasible), so C002-TC-133, 211, 222 and 223 stay replay cases of C002-T-042 and 
 
 - C002-T-038 (doctor case files) and C002-T-044 (runner, gate case files) done; C002-T-026,
   C002-T-027 and C002-T-037 done through them.
+- C002-T-063 done: the case files of C002-TC-509 and C002-TC-515 follow the revised scenarios (the
+  OpenCode rows that need a PATH `sdd` use the package generated for native permission enforcement),
+  so no paid session runs an outdated row.
 - OpenCode at its tested version (1.18.31, started as the pinned host binary with its own
   `OPENCODE_DB`, C002-ADR-005) with the Claude model tiers of the S-07 record, through P-01's
   OpenRouter account (C002-T-001 step 1); REF-WIN on Node.js 22.22.2 or later.
