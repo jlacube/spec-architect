@@ -21,6 +21,7 @@ import { parseHookInput } from "../hooks/input.ts";
 import { postWriteFeedback } from "../hooks/post-write.ts";
 import { changeLine } from "../hooks/session-start.ts";
 import { HOOK_ROWS, HOSTS_SESSION, traceActiveChanges } from "./hook-cmds.ts";
+import { installCopilot } from "./install-copilot.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { writeSerenaConfig } from "../workspace/serena-config.ts";
 import { readOnlyModeFile, serenaLaunch, type LaunchOptions } from "../workspace/serena-launch.ts";
@@ -535,6 +536,9 @@ const ROWS: readonly Omit<CommandSpec, "writes">[] = [
   { name: "host-version", usage: "opencode|vscode|vscode-insiders [--json]", summary: "Print the host's versions (and, for VS Code, Copilot Chat and the hooks state)", positionals: [P("host")], options: {}, workspace: false, sampleArgs: ["--help"], run: hostVersionCmd },
   { name: "template show", usage: "<profile>/<path>", summary: "Print a template: the repository override, else the shipped one", positionals: [P("template")], options: {}, workspace: false, sampleArgs: ["full/10-spec/70-dod.md"], run: templateShow },
   { name: "template list", usage: "<profile>", summary: "List the template paths of a profile", positionals: [P("profile-name")], options: {}, workspace: false, sampleArgs: ["lite"], run: templateList },
+  // `install` takes the target `copilot` only; `sdd install <other>` is ERR-CLI-003 (unknown command, C002-IF-007).
+  // The sample package does not exist under the test's working folder: a refusal (ERR-CLI-022) that writes nothing.
+  { name: "install copilot", usage: "[--package <dir>]", summary: "Install the Copilot target package into this repository (P-03's terminal only)", positionals: [], options: { package: S }, workspace: false, sampleArgs: ["--package", "fx-pkg-cp"], run: installCopilot },
   { name: "version", usage: "—", summary: "Print architect-plugin@<semver>", positionals: [], options: {}, workspace: false, sampleArgs: [], run: version },
 ];
 

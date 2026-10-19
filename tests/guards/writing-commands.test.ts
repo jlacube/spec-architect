@@ -19,9 +19,7 @@ import { loadBashCorpus } from "./fixture.ts";
 
 // Writing subcommands not registered in `COMMANDS` yet, with the task that registers each; that task
 // removes its entry here.
-const PENDING_COMMANDS: Record<string, string> = {
-  "install copilot": "C002-T-058",
-};
+const PENDING_COMMANDS: Record<string, string> = {};
 
 interface SpecRow {
   name: string;

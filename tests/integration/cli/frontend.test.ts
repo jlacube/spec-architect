@@ -21,13 +21,8 @@ const SDD_CLI_MD = [specFile("001", `${IF}sdd-cli.md`), specFile("002", `${IF}sd
 
 // CHG-002 rows not implemented yet, with the task that implements each. That task adds the code or
 // the `COMMANDS` row (with `sampleArgs` that neither hang nor read a real stdin) and removes it here.
-const PENDING_CODES: Record<string, string> = {
-  "ERR-CLI-021": "C002-T-058",
-  "ERR-CLI-022": "C002-T-058",
-};
-const PENDING_COMMANDS: Record<string, string> = {
-  "install copilot": "C002-T-058",
-};
+const PENDING_CODES: Record<string, string> = {};
+const PENDING_COMMANDS: Record<string, string> = {};
 
 test("the catalogue mirrors every ERR-CLI and WARN-CLI row of the CHG-001 and CHG-002 errors.md", () => {
   const rows = ERRORS_MD.flatMap((f) => readFileSync(f, "utf8").split("\n").filter((l) => /^\| (ERR|WARN)-CLI-\d{3} \|/.test(l)).map(splitCells));
