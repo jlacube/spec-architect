@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-04
-status: todo
+status: done
 depends_on: [C002-T-005, C002-T-009, C002-T-031, C002-T-033, C002-T-062]
 implements: [C002-REQ-322, C002-REQ-323, C002-REQ-324, C002-REQ-326, C002-REQ-327]
 satisfies_ac: [C002-AC-322.1, C002-AC-323.1, C002-AC-324.1, C002-AC-326.1, C002-AC-327.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-341, C002-TS-342, C002-TS-343, C002-TS-344, C002-TS-345, C
 components: [C002-COMP-018, C002-COMP-004]
 risk_refs: [C002-RISK-003, C002-RISK-030, C002-RISK-032, C002-RISK-033]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e0ba862, completed_at: 2026-10-19, notes: "cap03/install 18, hook-adapter 75 (x3 forms, ~74 s), cli 49, guards 44; npm run check 3m12s. Candidate defects (D-013 batch): ERR-CLI-021 reason for non-object mcp.json/servers; agent list source = manifest files; extra ERR-CLI-022 reasons; scripts/sdd.mjs not a required source file (hooks fail closed) - safer to refuse; ERR-CLI-017 already-written list in <file>; output line for new mcp.json; sampleArgs refusal." }
 ---
 
 # C002-T-058 — CLI: Copilot install command (sdd install copilot)
