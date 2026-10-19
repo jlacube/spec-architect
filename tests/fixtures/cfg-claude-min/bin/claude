@@ -1,0 +1,7 @@
+#!/bin/sh
+# Machine configuration with Claude Code at exactly the minimum version (C002-TC-510, Claude Code row 2.1.295).
+case "$*" in
+  *--version*|*-v*) echo "2.1.295 (Claude Code)"; exit 0 ;;
+esac
+echo "claude 2.1.295 shim: only --version is supported" >&2
+exit 1

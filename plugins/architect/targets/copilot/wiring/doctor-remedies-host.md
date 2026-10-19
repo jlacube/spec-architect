@@ -1,3 +1,4 @@
-| {{host_name}} | `sdd host-version vscode`: VS Code {{tested_version:vscode}}, GitHub Copilot Chat {{tested_version:copilot-chat}} | tested versions: VS Code {{tested_version:vscode}}, GitHub Copilot Chat {{tested_version:copilot-chat}} |
-| sdd CLI | `sdd --version` = {{package_version}} | `npm install -g architect-sdd@{{package_version}}` |
-| Copilot hooks | the `hooks` line of `sdd host-version vscode` is `enabled` | `disabled`: enable chat.useHooks and trust the workspace; `unknown`: check chat.useHooks and Workspace Trust by hand |
+| {{host_name}} | `sdd host-version {{host_version_arg}}`: VS Code {{tested_version:vscode}}, GitHub Copilot Chat {{tested_version:copilot-chat}} | tested versions: VS Code {{tested_version:vscode}}, GitHub Copilot Chat {{tested_version:copilot-chat}} |
+| sdd CLI | `sdd --version` = {{package_version}} (major, minor and patch) | `npm install -g architect-sdd@{{package_version}}` |
+| Copilot hooks | the `hooks` line of `sdd host-version {{host_version_arg}}` is `enabled`, and Workspace Trust and organisation policy are read as allowing hooks | `disabled`: `enable chat.useHooks and trust the workspace`; cannot be read: `check chat.useHooks and Workspace Trust by hand` |
+| ast-grep (native executable) | `ast-grep --version` started without a shell (sdd MCP server enforcement) | `pip install ast-grep-cli` (installs a native `ast-grep.exe`; `npm install -g @ast-grep/cli` gives only a `.cmd` shim) |

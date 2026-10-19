@@ -5,7 +5,8 @@
 // The Bash tool of a session rebuilds PATH from the user's shell profile, so the PATH of the child
 // process alone does not reach it: each configuration also writes a shell file that Claude Code sources
 // before every Bash command (CLAUDE_ENV_FILE) and that applies the same drops and prepends.
-import { existsSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import { ROOT } from "./fixtures.mjs";
@@ -25,6 +26,28 @@ const NO_AST_GREP = [{ js: /Python\d*[\\/]Scripts/i, ere: "Python[0-9]*/Scripts"
 // Serena and other uv tools live in ~/.local/bin: cfg-bare has no Serena at all (C001-TS-121).
 const NO_UV_TOOLS = [{ js: /[\\/]\.local[\\/]bin$/i, ere: "/\\.local/bin$" }];
 
+/** ERE-escaped text (Git Bash PATH drops). */
+const ere = (s) => s.replace(/[.[\]()*+?{}|^$\\]/g, "\\$&");
+const reEscape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Drops for every PATH entry that holds an `sdd` executable (`sdd`, `sdd.cmd`, `sdd.exe`, `sdd.ps1`), so
+ * that no bare `sdd` resolves in the session (C002-TC-509, "no sdd executable on PATH").
+ */
+function noSddDrops() {
+  const names = new Set(["sdd", "sdd.cmd", "sdd.exe", "sdd.ps1", "sdd.bat"]);
+  const dirs = String(process.env[pathKey()] ?? "")
+    .split(delimiter)
+    .filter((p) => {
+      try {
+        return p && readdirSync(p).some((n) => names.has(n.toLowerCase()));
+      } catch {
+        return false;
+      }
+    });
+  return dirs.map((d) => ({ js: new RegExp(`^${reEscape(d.replace(/[\\/]+$/, ""))}[\\\\/]?$`, "i"), ere: `^${ere(posix(d))}/?$` }));
+}
+
 function withPath(cfg, { prepend = [], drop = [] } = {}) {
   const key = pathKey();
   const parts = String(process.env[key] ?? "").split(delimiter).filter((p) => p && !drop.some((d) => d.js.test(p)));
@@ -38,26 +61,41 @@ function withPath(cfg, { prepend = [], drop = [] } = {}) {
   return { [key]: [...prepend, ...parts].join(delimiter), CLAUDE_ENV_FILE: envFile, MCP_TIMEOUT: "60000" };
 }
 
-/** `{ env, plugins }` for a configuration name. */
-export function machine(cfg) {
+/**
+ * `{ env, plugins }` for a configuration name. `prepend` adds folders (version shims of a case) before
+ * the configuration's own PATH entries.
+ */
+export function machine(cfg, { prepend: extra = [], without = [] } = {}) {
+  const dropOf = { "ast-grep": NO_AST_GREP };
+  for (const w of without) if (!dropOf[w]) throw new Error(`machine ${cfg}: cannot drop ${w}`);
+  const extraDrops = without.flatMap((w) => dropOf[w]);
+  // A configuration with case shims or drops gets its own env file (one per variant, not per name).
+  const variant = extra.length > 0 || without.length > 0 ? `-${createHash("sha256").update(JSON.stringify([extra, without])).digest("hex").slice(0, 10)}` : "";
+  const withPathOf = (name, { prepend = [], drop = [] } = {}) => withPath(name + variant, { prepend: [...extra, ...prepend], drop: [...drop, ...extraDrops] });
   switch (cfg) {
     case "cfg-full":
       if (!existsSync(join(RIPWIRE_DIR, "ripwire.exe"))) throw new Error(`cfg-full needs ripwire at ${RIPWIRE_DIR}`);
-      return { env: withPath(cfg, { prepend: [RIPWIRE_DIR], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+      return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-no-ripwire":
-      return { env: withPath(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+      return { env: withPathOf(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-bare":
-      return { env: withPath(cfg, { drop: [...NO_RIPWIRE, ...NO_AST_GREP, ...NO_UV_TOOLS] }), plugins: [architectWithout("serena")] };
+      return { env: withPathOf(cfg, { drop: [...NO_RIPWIRE, ...NO_AST_GREP, ...NO_UV_TOOLS] }), plugins: [architectWithout("serena")] };
     case "cfg-ripwire-crash":
-      return { env: withPath(cfg, { prepend: [SHIMS("cfg-ripwire-crash")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+      return { env: withPathOf(cfg, { prepend: [SHIMS("cfg-ripwire-crash")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-ripwire-exit4":
-      return { env: { ...withPath(cfg, { prepend: [SHIMS("cfg-ripwire-exit4")], drop: NO_RIPWIRE }), RIPWIRE_REAL: RIPWIRE_DIR }, plugins: [architectWithStubs] };
+      return { env: { ...withPathOf(cfg, { prepend: [SHIMS("cfg-ripwire-exit4")], drop: NO_RIPWIRE }), RIPWIRE_REAL: RIPWIRE_DIR }, plugins: [architectWithStubs] };
+    case "cfg-claude-min":
+      if (!existsSync(join(RIPWIRE_DIR, "ripwire.exe"))) throw new Error(`cfg-claude-min needs ripwire at ${RIPWIRE_DIR}`);
+      return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR, SHIMS("cfg-claude-min")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+    case "cfg-no-sdd":
+      if (!existsSync(join(RIPWIRE_DIR, "ripwire.exe"))) throw new Error(`cfg-no-sdd needs ripwire at ${RIPWIRE_DIR}`);
+      return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR], drop: [...NO_RIPWIRE, ...noSddDrops()] }), plugins: [architectWithStubs] };
     case "cfg-old-claude":
-      return { env: withPath(cfg, { prepend: [SHIMS("cfg-old-claude")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
+      return { env: withPathOf(cfg, { prepend: [SHIMS("cfg-old-claude")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-node18":
-      return { env: { ...withPath(cfg, { prepend: [SHIMS("cfg-node18")], drop: NO_RIPWIRE }), NODE_REAL: process.execPath }, plugins: [architectWithStubs] };
+      return { env: { ...withPathOf(cfg, { prepend: [SHIMS("cfg-node18")], drop: NO_RIPWIRE }), NODE_REAL: process.execPath }, plugins: [architectWithStubs] };
     case "cfg-deepwiki-down":
-      return { env: withPath(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithUrls({ deepwiki: "https://deepwiki-unreachable.invalid/mcp" })] };
+      return { env: withPathOf(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithUrls({ deepwiki: "https://deepwiki-unreachable.invalid/mcp" })] };
     default:
       throw new Error(`unknown machine configuration ${cfg}`);
   }

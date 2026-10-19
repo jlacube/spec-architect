@@ -8,7 +8,7 @@ is generated from the Architect plugin, version {{package_version}}, for {{enfor
 
 - Node.js 20 or later (`node -v`).
 - VS Code {{tested_version:vscode}} with GitHub Copilot Chat {{tested_version:copilot-chat}}, the
-  tested versions (`sdd host-version vscode` prints both). Another version is untested; the doctor
+  tested versions (`sdd host-version {{host_version_arg}}` prints both). Another version is untested; the doctor
   prompt reports it.
 - Access to the Claude models of the three tiers (Opus, Sonnet and Haiku) in GitHub Copilot Chat,
   under the model ids that the `model` field of each file in `agents/` names.

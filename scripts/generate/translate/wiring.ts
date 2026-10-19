@@ -136,11 +136,22 @@ function packageVersion(source: SourcePlugin): string {
   return VERSION;
 }
 
-/** The values of the tokens of C002-IF-001 §4 for one target and mode. */
+/**
+ * The argument of `sdd host-version` that reads this target's host (C002-IF-007, C002-T-038): `opencode`;
+ * for Copilot `vscode-insiders` while the table's tested VS Code version is an Insiders build (it ends in
+ * `-insider`, as the build S-08 tested does), else `vscode`.
+ */
+export function hostVersionArg(table: Pick<MappingTable, "target" | "host">): string {
+  if (table.target === "opencode") return "opencode";
+  return (table.host.tested_versions["vscode"] ?? "").endsWith("-insider") ? "vscode-insiders" : "vscode";
+}
+
+/** The values of the tokens of C002-IF-001 §4 for one target and mode (and `{{host_version_arg}}`, C002-T-038). */
 export function tokenValues(source: SourcePlugin, table: MappingTable, mode: Mode): Map<string, string> {
   const call = (server: string, tool: string) => table.mcp_tool_names.target_pattern.replaceAll("{server}", server).replaceAll("{tool}", tool);
   const values = new Map<string, string>([
     ["host_name", table.host.name],
+    ["host_version_arg", hostVersionArg(table)],
     ["package_version", packageVersion(source)],
     ["enforcement_mode", MODE_NAME[mode]],
     ["server_files", call("sdd-files", "write_file")],
