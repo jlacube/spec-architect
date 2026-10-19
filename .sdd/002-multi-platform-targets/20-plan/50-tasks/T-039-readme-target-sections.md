@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-05
-status: todo
+status: done
 depends_on: [C002-T-030, C002-T-033]
 implements: [C002-REQ-205, C002-REQ-305, C002-REQ-310]
 satisfies_ac: [C002-AC-205.1, C002-AC-305.1, C002-AC-310.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-206, C002-TS-307, C002-TS-315, C002-TC-206, C002-TC-307, C
 components: [C002-COMP-017]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8b3f9b9, completed_at: 2026-10-19, notes: "cap02 93/93, cap11 67 pass + 1 todo. Both tables sdd-mcp-server, so no hooks-off warning. Candidate defects: target-packages.md §5 link targets/<t>/wiring/install-notes.md vs code targets/<t>/install.md (D-010); README link does not resolve inside the Claude Code package (targets/ excluded); mode glossary names duplicated in test." }
 ---
 
 # C002-T-039 — README sections for OpenCode and Copilot VS Code
