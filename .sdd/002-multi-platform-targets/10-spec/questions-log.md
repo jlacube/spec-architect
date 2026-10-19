@@ -143,3 +143,10 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Rejected:** none beyond the options
 - **Answer:** P-01: "Confirm three deny rows (Recommended)"
 - **Extracted instructions:** none
+
+### Q-release-hooks-01 — Release check against an inconsistent hooks record (C002-IF-009 §5, C002-REQ-615, C002-REQ-629)
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 5
+- **Options:** 1. Release check refuses a checklist record whose `hooks_state` contradicts its `hooks_sources`, under ERR-REL-010 (Recommended) · 2. Leave it to the review of the record (C002-TC-618)
+- **Rejected:** derive `hooks_state` in the check and ignore the stored field (two sources of truth); new error code (ERR-REL-010 covers it); drop `hooks_state` from the record (format just revised)
+- **Answer:** P-01: "Refuse under ERR-REL-010 (Recommended)"
+- **Extracted instructions:** none
