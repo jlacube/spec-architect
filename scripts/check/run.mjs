@@ -15,8 +15,10 @@ import readme from "./readme.mjs";
 import { msg001, rules001, ver001 } from "./rules.mjs";
 import size from "./size.mjs";
 import tools from "./tools.mjs";
+import variants from "./variants.mjs";
 
-export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, ver001, readme, hooks, ci, evals, mcp];
+// PLG-VAR-001 (C002-IF-005 §6, C002-T-035) runs with the plugin checks of C001-IF-08 §3.
+export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, ver001, readme, hooks, ci, evals, mcp, variants];
 
 /** Runs every check; each finding gets `severity` error, or pending while its owner task is open. */
 export function runChecks(ctx = context(), checks = CHECKS) {
@@ -39,7 +41,8 @@ export function format(f) {
 
 // Script entry only: bundled into a test, import.meta.url is the test file, so match the file name too.
 if (fileURLToPath(import.meta.url) === process.argv[1] && /[\\/]check[\\/]run\.mjs$/.test(process.argv[1] ?? "")) {
-  const findings = runChecks();
+  // SDD_CHECK_PLUGIN: the plugin folder to check (a copy, in tests); default plugins/architect.
+  const findings = runChecks(process.env.SDD_CHECK_PLUGIN ? context({ plugin: process.env.SDD_CHECK_PLUGIN }) : context());
   if (process.argv.includes("--json")) console.log(JSON.stringify(findings, null, 2));
   else for (const f of findings) console.log(format(f));
   const errors = findings.filter((f) => f.severity === "error").length;

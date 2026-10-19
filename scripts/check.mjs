@@ -1,7 +1,9 @@
 // `npm run check` (C001-REQ-1117): typecheck, `claude plugin validate`, the test suites (unit and
 // integration), the lint fixture suite and the plugin structure checks of C001-IF-08 §3. Every step
-// runs and prints its result; the exit code is non-zero when any step failed.
-//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,structure]
+// runs and prints its result; the exit code is non-zero when any step failed. The step `targets`
+// (C002-REQ-601, C002-IF-005 §6) generates the OpenCode and Copilot packages from the current source
+// plugin into a fresh temporary folder and runs the target structure checks on them.
+//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,structure,targets]
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -33,6 +35,7 @@ const STEPS = {
     run: () => run(node, [join(root, "scripts", "test.mjs"), "tests/unit/lint/fixtures"], { SDD_TEST_OUTDIR: join(root, "build", "tests-fixtures") }),
   },
   structure: { title: "plugin structure checks", run: () => run(node, [join(root, "scripts", "check", "run.mjs")]) },
+  targets: { title: "target structure checks (opencode, copilot)", run: () => run(node, [join(root, "scripts", "check", "targets", "run.mjs")]) },
 };
 
 const i = process.argv.indexOf("--steps");
