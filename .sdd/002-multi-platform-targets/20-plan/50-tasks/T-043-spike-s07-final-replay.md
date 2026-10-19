@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-042]
 implements: []
 satisfies_ac: [C002-AC-206.1, C002-AC-207.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-207, C002-TS-209, C002-TS-620, C002-TC-207, C002-TC-209, C
 components: [C002-COMP-002, C002-COMP-008]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e04a27d, completed_at: 2026-10-19, notes: "Full replay both shells: Git Bash 147, PowerShell 7 159 of 691 differing; identity/memory 0; mode sdd-mcp-server final (table unchanged). Signed under P-01 standing waiver 2026-10-19. agent_tools_closed true, no defect." }
 ---
 
 # C002-T-043 — S-07 record: final replay outcomes and the OpenCode enforcement mode
