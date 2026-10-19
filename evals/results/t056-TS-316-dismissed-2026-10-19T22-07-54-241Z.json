@@ -1,0 +1,163 @@
+{
+  "scenario": "TS-316-dismissed",
+  "title": "No choice at gate G2 on OpenCode (dismissed): no approval, nothing recorded (TS-316)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:08:52.997Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2283304,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2283304,
+        "session_ms": 55797,
+        "api_ms": null,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 18,
+            "output": 1664,
+            "cache_read": 190917,
+            "cache_write": 30887,
+            "cost_usd": 0.22833039999999996
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 1664,
+              "cache_read": 190917,
+              "cache_write": 30887
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "read": 9,
+          "glob": 2,
+          "sdd-shell_run_command": 4,
+          "question": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 9510
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 9510
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 9510
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2364
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4437
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4437
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2836
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2836
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 4209
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4209
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4209
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 5435
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 5435
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 5435
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 2819
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 7673
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 8,
+        "usd": 0.2283304
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-316-dismissed-2026-10-19T22-07-54-241Z-run1.json"
+    }
+  ]
+}

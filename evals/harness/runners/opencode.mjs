@@ -275,6 +275,15 @@ function modelUsage(all) {
   return out;
 }
 
+/** One line for the error of an assistant message (`{ name, data: { message, statusCode, … } }`). */
+export function messageError(e) {
+  if (typeof e === "string") return e;
+  const data = e?.data ?? {};
+  const status = data.statusCode ? ` (HTTP ${data.statusCode})` : "";
+  const text = data.message ?? e?.message ?? JSON.stringify(e);
+  return `assistant message error ${e?.name ?? "Error"}${status}: ${String(text).slice(0, 500)}`;
+}
+
 const SUBTYPE = { completed: "success", "turn cap": "error_max_turns", "spend cap": "error_max_budget_usd", "question unanswerable": "error_during_execution", error: "error_during_execution" };
 
 // --- Package and project --------------------------------------------------------------------------
@@ -514,6 +523,12 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
       },
     });
     if (r.error && !r.aborted) error = typeof r.error === "string" ? r.error : JSON.stringify(r.error);
+    // A provider or host error ends the prompt without a call error: OpenCode stores it on the
+    // assistant message (`info.error`, e.g. an OpenRouter APIError) and the message has no parts.
+    if (!error && !r.aborted) {
+      const failed = (r.messages ?? []).find((m) => m.info?.role === "assistant" && m.info?.error);
+      if (failed) error = messageError(failed.info.error);
+    }
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
     stamp({ event: "error", message: error });

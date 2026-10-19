@@ -1,0 +1,98 @@
+{
+  "scenario": "TS-639-opencode",
+  "title": "ast-grep only as a .cmd shim under sdd MCP server enforcement (TS-639)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:18:37.402Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.130846,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-639: ast-grep status \"undefined\"",
+        "TS-639: ast-grep version \"undefined\", expected \"—\"",
+        "TS-639: ast-grep fallback \"undefined\"",
+        "TS-639: ast-grep Fix \"undefined\"",
+        "TS-639: ast-grep Fix \"undefined\" lacks the server-mode install command",
+        "TS-639: outcome \"null\""
+      ],
+      "metrics": {
+        "cost_usd": 0.130846,
+        "session_ms": 21398,
+        "api_ms": null,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 4,
+            "output": 120,
+            "cache_read": 0,
+            "cache_write": 25546,
+            "cost_usd": 0.130846
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 120,
+              "cache_read": 0,
+              "cache_write": 25546
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "sdd-shell_run_command": 1,
+          "glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 8561
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8561
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 1,
+        "usd": 0.130846
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-639-opencode-2026-10-19T22-18-15-527Z-run1.json"
+    }
+  ]
+}

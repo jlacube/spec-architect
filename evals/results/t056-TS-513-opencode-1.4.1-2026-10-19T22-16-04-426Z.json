@@ -1,0 +1,94 @@
+{
+  "scenario": "TS-513-opencode-1.4.1",
+  "title": "OpenCode 1.4.1 against tested 1.4.2 → untested (TS-513)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:16:27.862Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.131066,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-513 OpenCode 1.4.1: status \"undefined\", expected untested",
+        "TS-513 OpenCode 1.4.1: Fix \"undefined\" does not name 1.4.2"
+      ],
+      "metrics": {
+        "cost_usd": 0.131066,
+        "session_ms": 23017,
+        "api_ms": null,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 4,
+            "output": 120,
+            "cache_read": 0,
+            "cache_write": 25546,
+            "cost_usd": 0.131066
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 120,
+              "cache_read": 0,
+              "cache_write": 25546
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "sdd-shell_run_command": 1,
+          "glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10710
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 10710
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 1,
+        "usd": 0.131066
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-513-opencode-1.4.1-2026-10-19T22-16-04-426Z-run1.json"
+    }
+  ]
+}

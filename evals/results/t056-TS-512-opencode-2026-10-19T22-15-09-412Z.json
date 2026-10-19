@@ -1,0 +1,79 @@
+{
+  "scenario": "TS-512-opencode",
+  "title": "toolchain.md written by init on OpenCode (TS-512)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:15:25.353Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-512 opencode: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-eval-mgJfcv\\.sdd\\_constitution\\toolchain.md not written"
+      ],
+      "metrics": {
+        "cost_usd": 0,
+        "session_ms": 15816,
+        "api_ms": null,
+        "turns": 0,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": []
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 0,
+        "usd": null
+      },
+      "spend": "unreported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-512-opencode-2026-10-19T22-15-09-412Z-run1.json"
+    }
+  ]
+}

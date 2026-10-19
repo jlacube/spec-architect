@@ -1,0 +1,80 @@
+{
+  "scenario": "TS-509-opencode-no-sdd",
+  "title": "Doctor outcome on opencode (no-sdd → failed: sdd CLI not reachable) (TS-509)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:14:27.036Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-509 opencode no-sdd: outcome \"null\", expected \"failed: sdd CLI not reachable\"",
+        "TS-509 opencode no-sdd: sdd CLI status \"undefined\""
+      ],
+      "metrics": {
+        "cost_usd": 0,
+        "session_ms": 17350,
+        "api_ms": null,
+        "turns": 0,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": []
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 0,
+        "usd": null
+      },
+      "spend": "unreported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-509-opencode-no-sdd-2026-10-19T22-14-09-272Z-run1.json"
+    }
+  ]
+}

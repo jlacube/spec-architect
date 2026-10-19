@@ -326,6 +326,762 @@
         "endpoint": "GET /api/v1/key (usage of the key-file key)"
       },
       "note": "Smoke of C002-T-044 step 6: 7 turns, opus 5.5 via OpenRouter (16 input, 2147 output, 158597 cache-read, 28759 cache-write tokens). Runner cost (OpenCode step costs) 0.2262 USD; OpenRouter key usage 0 before, 0.2108 USD about 20 minutes after the session (the usage view lagged ~15 min). The runner figure is 7.3 % above OpenRouter's, within the 10 % rule of T-044 step 6, so cost_usd keeps the runner figure and later OpenCode sessions keep the runner figures."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-113",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "cost_usd": 0.2072124,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-113-2026-10-19T21-59-23-929Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-132",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 3,
+      "cost_usd": 0.145517,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-132-2026-10-19T22-00-03-130Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-215-opencode-4",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 6,
+      "cost_usd": 0.2394072,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-215-opencode-4-2026-10-19T22-01-10-144Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-215-opencode-5",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "cost_usd": 0.2646876,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-215-opencode-5-2026-10-19T22-02-19-795Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-217-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 11,
+      "cost_usd": 0.2632524,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-217-opencode-2026-10-19T22-03-27-554Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-219-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 10,
+      "cost_usd": 0.2434962,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-219-opencode-2026-10-19T22-04-35-876Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-221",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "cost_usd": 0.251414,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-221-2026-10-19T22-05-39-875Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-230",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 8,
+      "cost_usd": 0.2147804,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-230-2026-10-19T22-06-56-732Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-316-dismissed",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 8,
+      "cost_usd": 0.2283304,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-316-dismissed-2026-10-19T22-07-54-241Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-316-empty",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 9,
+      "cost_usd": 0.2426456,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-316-empty-2026-10-19T22-08-52-998Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-506-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 3,
+      "cost_usd": 0.2291173,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-506-opencode-2026-10-19T22-10-33-291Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-507-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "cost_usd": 0.2049762,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-507-opencode-2026-10-19T22-11-27-537Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-deepwiki-down",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "cost_usd": 0.2622476,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-509-opencode-deepwiki-down-2026-10-19T22-12-22-041Z.json"
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-bare",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.130946,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-509-opencode-bare-2026-10-19T22-13-30-404Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-node18",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.130666,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-509-opencode-node18-2026-10-19T22-13-46-884Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-no-sdd",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-509-opencode-no-sdd-2026-10-19T22-14-09-272Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-510-opencode-2.0.76",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.130806,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-510-opencode-2.0.76-2026-10-19T22-14-27-037Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-511-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-511-opencode-2026-10-19T22-14-48-205Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-512-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-512-opencode-2026-10-19T22-15-09-412Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.4.2",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-513-opencode-1.4.2-2026-10-19T22-15-25-354Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.5.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.131346,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-513-opencode-1.5.0-2026-10-19T22-15-43-127Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.4.1",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.131066,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-513-opencode-1.4.1-2026-10-19T22-16-04-426Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-514-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-514-opencode-2026-10-19T22-16-27-863Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.3.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-515-opencode-0.3.0-2026-10-19T22-16-44-188Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.2.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-515-opencode-0.2.0-2026-10-19T22-17-01-738Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.3.1",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-515-opencode-0.3.1-2026-10-19T22-17-19-174Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.4.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-515-opencode-0.4.0-2026-10-19T22-17-36-671Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-1.3.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.140566,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-515-opencode-1.3.0-2026-10-19T22-17-53-658Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-639-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 1,
+      "cost_usd": 0.130846,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-639-opencode-2026-10-19T22-18-15-527Z.json",
+      "valid_run": false,
+      "note": "OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect. Recorded end_reason corrected from completed to error: the runner dropped the assistant message error (fixed in evals/harness/runners/opencode.mjs during C002-T-056)."
+    },
+    {
+      "date": "2026-10-19",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-bare",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "turns": 0,
+      "cost_usd": 0,
+      "cost_source": "unreported by the host",
+      "pass": false,
+      "result": "evals/results/t056-TS-509-opencode-bare-2026-10-19T22-22-10-553Z.json",
+      "valid_run": false,
+      "note": "Diagnostic rerun after the runner fix (assistant-message errors now end the session as error): OpenRouter refused the request with HTTP 402 (insufficient credits on P-01's account: \"requires more credits, or fewer max_tokens\"), so the doctor row was not exercised; the failure is neither product behaviour nor a case defect."
     }
   ]
 }

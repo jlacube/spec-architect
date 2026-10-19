@@ -1,0 +1,93 @@
+{
+  "scenario": "TS-510-opencode-2.0.76",
+  "title": "Claude Code 2.0.76 on OpenCode: no Claude Code row (TS-510)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:14:48.204Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.130806,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-510 OpenCode: no doctor table in the reply"
+      ],
+      "metrics": {
+        "cost_usd": 0.130806,
+        "session_ms": 20751,
+        "api_ms": null,
+        "turns": 1,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 4,
+            "output": 120,
+            "cache_read": 0,
+            "cache_write": 25546,
+            "cost_usd": 0.130806
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 120,
+              "cache_read": 0,
+              "cache_write": 25546
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "sdd-shell_run_command": 1,
+          "glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 8477
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8477
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 1,
+        "usd": 0.130806
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-510-opencode-2.0.76-2026-10-19T22-14-27-037Z-run1.json"
+    }
+  ]
+}

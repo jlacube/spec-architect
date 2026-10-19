@@ -1,0 +1,79 @@
+{
+  "scenario": "TS-509-opencode-bare",
+  "title": "Doctor outcome on opencode (bare → completed with warnings) (TS-509)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-19T22:22:23.441Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-509 opencode bare: outcome \"null\", expected \"completed with warnings\""
+      ],
+      "metrics": {
+        "cost_usd": 0,
+        "session_ms": 12448,
+        "api_ms": null,
+        "turns": 0,
+        "result_subtype": "error_during_execution",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": []
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "error",
+      "usage": {
+        "turns": 0,
+        "usd": null
+      },
+      "spend": "unreported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-509-opencode-bare-2026-10-19T22-22-10-553Z-run1.json"
+    }
+  ]
+}

@@ -76,6 +76,36 @@ test("a session that ends by itself ends with completed and its host version rec
   assert.deepEqual(s.host_versions, { opencode: "1.18.99" });
 });
 
+test("an assistant message that carries a provider error ends the session with the reason error, not completed (C002-T-056)", async () => {
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-"));
+  const info = (id: string, extra: Record<string, unknown> = {}) => ({ id, sessionID: "ses_1", role: "assistant", time: { created: Date.now() }, modelID: "m", providerID: "p", cost: 0, tokens: { input: 0, output: 0, cache: { read: 0, write: 0 } }, ...extra });
+  const host = {
+    needsPackage: false,
+    async start() {
+      return {
+        version: "1.18.31",
+        async run() {
+          const messages = [
+            { info: info("msg_1"), parts: [{ type: "text", text: "first" }] },
+            { info: info("msg_2", { error: { name: "APIError", data: { message: "Provider returned error", statusCode: 429, isRetryable: true } } }), parts: [] },
+          ];
+          return { sessionID: "ses_1", messages, parts: [], events: [], children: [], error: null, aborted: false };
+        },
+        async stop() {},
+      };
+    },
+  };
+  try {
+    const s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host });
+    assert.equal(s.end_reason, "error");
+    assert.equal(s.result.subtype, "error_during_execution");
+    assert.match(String(s.error), /APIError \(HTTP 429\): Provider returned error/);
+    assert.ok(s.transcript.some((r: any) => r.type === "harness" && r.event === "error" && /HTTP 429/.test(r.message)));
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test("a subagent's spend counts toward the spend cap but its turns do not count as session turns", () => {
   const caps = createCaps({ maxTurns: 3, maxBudgetUsd: 0.5 });
   assert.equal(caps.spend(0.2), null);
