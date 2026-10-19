@@ -17,7 +17,10 @@ existing decision changes, C002-REQ-325), and adds the Copilot hook input used b
 subagent guard hook in both Copilot enforcement modes, by the Copilot hooks fallback and by the
 Copilot session hooks, revised for defect D-003 after spike S-08 (`docs/spikes/S-08-copilot-vscode.md
 §2.2`, §2.3, §3, §3.1, §5) and after the critic's D-003 review (Q-safety-06, Q-safety-07; CR-37,
-CR-38). Owner: C002-COMP-012.
+CR-38). Revised for defect D-010 (items 2 and 5: the tool shown for option-parser faults, and
+`--read-only` optional for `serena-launch`) and defect D-014 (item 4: the literal
+`${CLAUDE_PLUGIN_DATA}` is not expanded where the command runs without a shell). Owner:
+C002-COMP-012.
 
 ## §1 Allowlist rows changed (C001-IF-07 §3)
 
@@ -51,19 +54,32 @@ guard cannot resolve (<word>)`:
 
 1. **Shape.** Before the first `--`, the words after the CLI prefix (`sdd`, or `node <path>/sdd.mjs`
    as the script form allows) are exactly the subcommand, one data-folder argument and, for
-   `serena-launch` only, `--read-only`, in any order. Any other word there (another option such as
-   `--cwd` or `--cwd=<dir>`, a second folder) denies the command, so a Serena command never takes
+   `serena-launch` only, at most one `--read-only`, in any order. `--read-only` is optional: a
+   launch without it is allowed (BG-381, `sdd serena-launch --user-data -- start-mcp-server`), since
+   the data folder alone decides where the command writes; the target packages always pass it
+   (TGT-SERENA-001), while the Claude Code plugin's `.mcp.json` names the read-only mode file
+   itself (revised for defect D-010 item 5: the code and BG-381 allow a launch without it). Any other word there (another option such as
+   `--cwd` or `--cwd=<dir>`, a second folder, a second `--read-only`, `--read-only` with
+   `serena-config`) denies the command, so a Serena command never takes
    the `--cwd` that §1.2 allows inside the repository root. The words after `--` are Serena's arguments and are
    not checked: Serena keeps its project data in the data folder (C001-REQ-1013), so the data folder
    decides where the command writes.
 2. **Data-folder argument.** One of:
    - `--user-data`: allowed. The CLI itself refuses a per-user data folder that cannot be determined,
      is relative or resolves inside the repository (C002-REQ-516, ERR-CLI-020, C002-IF-007).
-   - the literal `${CLAUDE_PLUGIN_DATA}`, alone or in double quotes, in the Bash dialect only: the
-     guard replaces it by the value of the environment variable `CLAUDE_PLUGIN_DATA` of its own
-     process and decides that folder as below; an unset or empty variable denies the command. This
-     is the spelling of step 1 of `commands/doctor.md` and of `commands/init.md:9` when Claude Code
-     has not substituted the variable in the command text (current-state E-22).
+   - the literal `${CLAUDE_PLUGIN_DATA}`, alone or in double quotes, in the Bash dialect only, and
+     only where the command runs through a shell that expands it (the Claude Code Bash tool, and
+     the terminal tool that the Copilot guard hook decides): the guard replaces it by the value of
+     the environment variable `CLAUDE_PLUGIN_DATA` of its own process and decides that folder as
+     below; an unset or empty variable denies the command. This is the spelling of step 1 of
+     `commands/doctor.md` and of `commands/init.md:9` when Claude Code has not substituted the
+     variable in the command text (current-state E-22). The sdd MCP server runs a command without a
+     shell (C002-IF-002 §5.2), so the CLI would receive the literal text as a folder name relative
+     to the repository root; the server therefore calls the core with expansion off, the literal
+     is a word that holds `$` and is denied by the next item, whatever the server's environment
+     holds (revised for defect D-014 item 4: before, the server's guard call expanded the literal
+     from the server's environment, and the CLI then created a folder named `${CLAUDE_PLUGIN_DATA}`
+     inside the repository).
      [ASSUMPTION: C002-TS-537 — Claude Code at its tested version substitutes CLAUDE_PLUGIN_DATA in the command text before the PreToolUse hook runs, or sets it in the environment of the hook process]
      The only host evidence so far is the variable's expansion in `.mcp.json`
      (`docs/spikes/S-06-skills-mcp.md:138`). C002-TS-528 stubs the variable; C002-TS-537 checks it
@@ -91,7 +107,8 @@ literal is accepted as in C001-IF-07 §3, current-state E-5). The plugin data fo
 user's Claude configuration folder (for example `C:/Users/fx/.claude/plugins/data/architect-inline`),
 outside every repository, so both spellings pass: the substituted absolute path by rule 2 (folder),
 the literal by rule 2 (environment variable). The generated targets pass `--user-data` instead
-(C002-REQ-116), and their hosts set no `CLAUDE_PLUGIN_DATA`, so the literal is denied there.
+(C002-REQ-116), and their hosts set no `CLAUDE_PLUGIN_DATA`, so the literal is denied there; on the
+sdd MCP server it is denied whatever the environment holds (rule 2, expansion off).
 
 ### §1.2 Writing sdd subcommands
 
@@ -228,7 +245,12 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
    `copilot-hooks`, `--agents` missing or empty, or any other error of the command's options →
    deny GUARD-HOOK-001 (`hook command usage: <option>`), whatever the input, never a usage error
    without a deny decision (revised for defect D-007: `--host`); a generated command always holds
-   the three (TGT-HOOK-001).
+   the three (TGT-HOOK-001). A missing, unknown or empty `--host`, `--mode` or `--agents` value is
+   found after standard input is read, so the message names the input's tool; a fault that the
+   option parser finds first (an option without its value, an unknown option, an extra argument)
+   and an internal error outside the decision stop the command before standard input is read, so
+   their message names `tool call` and `<option>` is the parser's detail (accepted as the fault
+   text for defect D-010 item 2; `errors.md` GUARD-HOOK-001).
 2. Standard input empty, not JSON, or not a JSON object → deny GUARD-HOOK-001, whoever calls
    (C002-REQ-309, C002-REQ-328: unreadable input; no identity can be read).
 3. No `agent_type` → allow, exit 0, in both modes, without reading the classes file or the file

@@ -17,12 +17,18 @@ implementation starts from. The tables and variants are data of C002-COMP-002.
 
 ```text
 plugins/architect/targets/
+├── mapping-table.schema.json     copy of the schema above
 ├── opencode.json                 mapping table of the OpenCode target (schema above)
 ├── copilot.json                  mapping table of the Copilot VS Code target
-├── opencode/wiring/*.md          OpenCode wiring variants and install notes
-└── copilot/wiring/*.md           Copilot wiring variants and install notes
+├── opencode/wiring/*.md          OpenCode wiring variants (§2.1)
+├── opencode/install.md           OpenCode install-notes source
+├── copilot/wiring/*.md           Copilot wiring variants (§2.1)
+└── copilot/install.md            Copilot install-notes source
 ```
 
+- The install-notes source `targets/<target>/install.md` becomes `INSTALL.md` at the root of the
+  target package (`placement.install_notes`), with the tokens of §4 resolved (C002-IF-005 §5;
+  revised for defect D-010 item 6: the notes are no wiring variant and have no anchor).
 - The folder is part of the source plugin (C002-CON-01; C002-REQ-111 keeps variants in the source
   plugin) and outside every `SKILL.md` body (C002-REQ-113). The Claude Code staging of
   `npm run package` leaves it out, so the Claude Code plugin package stays as before CHG-002
@@ -45,23 +51,25 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 |---|---|---|---|---|
 | tool name | agent `tools` field | `tools` entry; an empty list drops the tool on purpose | per §6.1 | per §6.1 |
 | MCP tool name | agent `tools`, skill bodies | `mcp_tool_names.target_pattern` (bodies) and `grant_pattern` (`tools` lists) | `serena_find_symbol` | body: `serena-find_symbol`, a deferred tool loaded through `tool_search_tool` (S-08 §3.2, fact F-7); grant: `serena/*` (per-server; `serena/find_symbol` per-tool works on Copilot CLI only, S-08 §2.1) |
-| `Agent(...)` grant | conductor `tools` | `agent_start` | `permission.task`: `"*": deny`, nine `sdd-*` specialists `allow` | `agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`). Unlike `Agent(...)` and `permission.task`, the list does not bound the starts: the local agent host also offered its host built-in agents (`explore`, `task`, `general-purpose`, …) to such a parent (S-08 §3), and they run with the host's tools (§3.2); their write and terminal calls are denied by the Copilot subagent guard hook in repositories with `.sdd/` (C002-IF-008 §2 rule 6; C002-REQ-327; assumptions: C002-IF-005 §3) |
+| `Agent(...)` grant | conductor `tools` | `agent_start` | `permission.task`: `"*": deny`, nine `sdd-*` specialists `allow`; and the tool `task` turned on in the conductor's tool map (`agent_start.tools`), because the catch-all `"*": false` of §6.1 would otherwise switch off the tool that starts the specialists (revised for defect D-010 item 1) | `agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`). Unlike `Agent(...)` and `permission.task`, the list does not bound the starts: the local agent host also offered its host built-in agents (`explore`, `task`, `general-purpose`, …) to such a parent (S-08 §3), and they run with the host's tools (§3.2); their write and terminal calls are denied by the Copilot subagent guard hook in repositories with `.sdd/` (C002-IF-008 §2 rule 6; C002-REQ-327; assumptions: C002-IF-005 §3) |
 | model name | agent `model` | `models` by tier; any other value is ERR-GEN-003 | opus `openrouter/anthropic/claude-opus-5.5`, sonnet `openrouter/anthropic/claude-sonnet-5.5`, haiku `openrouter/anthropic/claude-haiku-5.5` (S-07 record `host_versions.models`, §7: listed by `opencode models openrouter` on 1.18.31, accepted in a paid session on 1.15.10; the floating `~anthropic/…-latest` aliases are not used) | Copilot model name per tier (the S-08 record shows only the default `claude-sonnet-5.5` of agents without `model`, §2.4) |
 | `effort`, `color` | agent frontmatter | `agent_fields` | `drop` (OpenCode passes unknown agent options to the provider, C002-R-001 C-08) | `drop` (no such field, C002-R-001 A-11) |
 | `memory` | agent frontmatter | always dropped | dropped | dropped |
 | `skills` | agent frontmatter | always inlined (§3 step 5) | inlined | inlined |
-| `${CLAUDE_PLUGIN_ROOT}` | bodies, hooks, MCP | `variables` per context; in bodies only through the CLI-line variants and the template construct | body: not allowed | not allowed in any context (`body`, `hook-command`, `mcp-config` all `null`; C002-REQ-326, C002-REQ-602): hook commands use the install token `@CLI_COPY@` (C002-IF-008 §4), and the MCP servers are workspace entries that run `sdd` and `sdd-mcp` from PATH. The construct `plugin-root` also detects `${PLUGIN_ROOT}`, accepted nowhere (S-08 §3, fact F-3) |
+| `${CLAUDE_PLUGIN_ROOT}` | bodies, hooks, MCP | `variables` per context; in bodies only through the CLI-line variants and the template construct | body: not allowed | not allowed in any context (`body`, `hook-command`, `mcp-config` all `null`; C002-REQ-326, C002-REQ-602): hook commands use the install token `@CLI_COPY@` (C002-IF-008 §4), and the MCP servers are workspace entries that run `sdd` and `sdd-mcp` from PATH. The construct `plugin-root` also detects `${PLUGIN_ROOT}`, accepted nowhere (S-08 §3, fact F-3), whatever follows it, `/templates/` and `/scripts/sdd.mjs` included: the construct leaves out those two spellings only for `${CLAUDE_PLUGIN_ROOT}`, whose spellings the constructs `plugin-root-templates` and `cli-invocation` own, and no construct owns a `${PLUGIN_ROOT}` spelling, so `${PLUGIN_ROOT}/scripts/sdd.mjs` is a leak in every context (revised for defect D-013 item 1) |
 | `${CLAUDE_PLUGIN_ROOT}/templates/<path>` | agent and command bodies | construct `plugin-root-templates` | `sdd template show <path>` (C002-IF-007) | same |
 | `${CLAUDE_PLUGIN_DATA}` | command bodies | `variables` | `--user-data` (C002-IF-007) | same |
 | `$ARGUMENTS` | command bodies | `variables` | kept (OpenCode supports it, C002-R-001 C-08) | "the text P-01 typed after the command" (C002-R-001 A-10) |
 | `architect:` agent reference | bodies, descriptions | `references.agent` | prefix `architect:` removed (`sdd-critic`) | prefix `architect:` removed. Copilot CLI names a plugin agent `<plugin>:<agent>` on its command line and in hook input (`architect:sdd-critic`, the package's plugin name being `architect`; S-08 §2.3, fact F-6); only the eval runner (C002-IF-010 §2) and the hook commands (C002-IF-007) use that form |
 | `/architect:<name>` command reference | bodies, README excerpts | `references.command` | `/architect:` → `/architect-` (avoids the built-in `/new` and `/init`) | `/architect:` → `/` unless the manual VS Code checklist shows a collision (the S-08 record does not cover prompt files; C002-REQ-317), then `/architect-` |
 | `claude --agent` guard line | line 6 of every command | construct `guard-line`, `drop_line` (the `agent` field binds the command, C002-REQ-203, C002-REQ-303) | dropped | dropped |
+| conductor start `(claude --agent architect:sdd-conductor)` | conductor `description` | construct `conductor-start`, context `frontmatter`, `replace` | "(select the `sdd-conductor` primary agent: press Tab until it is selected, or start `opencode --agent sdd-conductor`)" | "(select `sdd-conductor` as the session agent in the Chat agent picker of a Local session)" |
+| host list of the doctor `(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)` | `doctor.md` `description` | construct `doctor-description`, context `frontmatter`, `replace` (decided for defect D-010 item 4, below) | "(node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI)" | "(node, git, VS Code with GitHub Copilot Chat, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI, Copilot hooks)" |
 | AskUserQuestion | bodies | construct `ask-user-question` | "the `question` tool" | "the `ask_user` tool" (S-08 §3.2, fact F-5) |
 | TaskCreate, TaskUpdate, TaskList | conductor body | construct `task-tools` | "the `todowrite` tool" | "the `todo` tool" |
 | ToolSearch | bodies | construct `tool-search` | "(MCP tools are loaded at start)" | "the `tool_search_tool` tool (MCP tools are deferred: load a `<server>-<tool>` tool through it before its first call)" (S-08 §3.2) |
 | CLI invocation line | `sdd-conventions` l.13, `sdd-conductor.md` l.19, `sdd-auditor.md` l.13 | `variant_required` (C002-REQ-111) | variant | variant |
-| Claude Code host probe `claude --version` | `doctor.md` l.21 and l.33; the other host-row lines (the probe list at l.12, the code-discovery toolchain section) are anchors of the same variants (§3 step 3) | construct `claude-host`, `variant_required` (C002-REQ-111, C002-REQ-112) | variant with the OpenCode host row (C002-IF-006) | variant with the VS Code with GitHub Copilot Chat host row |
+| Claude Code host probe `claude --version` | `doctor.md` l.21 and l.33; the other host-row lines (the probe list at l.12, the code-discovery toolchain section) are anchors of the same variants (§2.1, §3 step 3) | construct `claude-host`, `variant_required` (C002-REQ-111, C002-REQ-112) | variant with the OpenCode host row (C002-IF-006) | variant with the VS Code with GitHub Copilot Chat host row |
 | `Bash` in prose | agent bodies | construct `bash-prose`, `replace.by_mode` | native: "the `bash` tool"; server: "the `sdd-shell` command tool" | server: "the `sdd-shell` command tool"; hooks: "the terminal tool" |
 
 Agents and commands take variants by the same mechanism as the skills' wiring sections
@@ -71,6 +79,46 @@ AskUserQuestion outside a wiring section (`sdd-conductor.md` l.61, l.66; `archiv
 construct `ask-user-question` (C002-REQ-118); template paths the construct `plugin-root-templates`
 (C002-REQ-115); the `${CLAUDE_PLUGIN_DATA}` argument of the Serena step the variable rule
 (C002-REQ-116).
+
+**Frontmatter text** (decided for defect D-010 item 4). Variants replace body text only (§3 step 2).
+A Claude Code mention in a text field of the frontmatter (`description`, `argument-hint`) is
+therefore a construct of context `frontmatter` with a `replace` action, the mechanism the table
+already uses for the conductor start (`conductor-start`): each table writes its own replacement
+text, and the tokens of §4 are not resolved there. The doctor description gets the construct
+`doctor-description` on both targets, so its host list names the target's host and the generated
+rows (C002-IF-006 §1). Both constructs have a stand-in detector in the generator, as every
+construct of the glossary has, so a table without the entry stops generation with ERR-GEN-001 on
+the description instead of leaving the Claude Code text (C002-REQ-104). No other frontmatter text of
+the source plugin names Claude Code; model names are translated by `models` (step 4).
+
+### §2.1 Wiring anchors
+
+The anchors of the `variants` entries. Both tables name the same thirteen variants; by §3 step 3
+each anchor is required for every generated target. A `lines` anchor is matched exactly against
+the source text; tests take the anchors from the tables, never from this list (revised for defect
+D-010 item 4: the gate-protocol reference line, the task-tools remedies row and the doctor probe
+and report blocks were used by the tables but not listed here).
+
+| Variant `id` | Source file | Anchor | The variant holds |
+|---|---|---|---|
+| `cli-conductor` | `agents/sdd-conductor.md` | line: the CLI invocation line (`The CLI is …`) | the target's CLI line (construct `cli-invocation`, C002-REQ-111) |
+| `cli-auditor` | `agents/sdd-auditor.md` | line: the end of the command-form sentence that names `sdd` | the same |
+| `cli-conventions` | `skills/sdd-conventions/SKILL.md` | line: `` `sdd` means … `` | the same |
+| `doctor-probe` | `commands/doctor.md` | lines: the six lines of step 2 (Probe) | the rows and probes of C002-IF-006 §1, §2, the host probe through `sdd host-version {{host_version_arg}}` |
+| `doctor-report` | `commands/doctor.md` | lines: the eleven lines of steps 3 and 4 (Report, Outcome) | the statuses of C002-IF-006 §2, the `.cmd`-shim rule, the fallbacks and the outcome lines of §3 |
+| `doctor-remedies-host` | `commands/doctor.md` | line: the Claude Code row of the remedies table | the host, sdd CLI and native ast-grep rows; on Copilot also the Copilot hooks row |
+| `doctor-remedies-task-tools` | `commands/doctor.md` | line: the Task tools row of the remedies table (`CLAUDE_CODE_ENABLE_TODO_TOOLS`) | the row of the host's todo tool (`todowrite`, `todo`) |
+| `code-discovery-toolchain` | `skills/code-discovery/SKILL.md` | lines: the five lines of the toolchain record item | the toolchain record rows of C002-IF-006 §1 (C002-REQ-507) |
+| `code-discovery` | `skills/code-discovery/SKILL.md` | section "Claude Code wiring" | the target's code-discovery wiring |
+| `gate-protocol-reference` | `skills/gate-protocol/SKILL.md` | line: `The presentation goes into the gate question itself (see Claude Code wiring), …` | the same sentence naming the target's wiring section (`{{host_name}} wiring`) |
+| `gate-protocol` | `skills/gate-protocol/SKILL.md` | section "Claude Code wiring" | the gate through the host question tool |
+| `interview-protocol` | `skills/interview-protocol/SKILL.md` | section "Claude Code wiring" | the interview through the host question tool |
+| `research-protocol` | `skills/research-protocol/SKILL.md` | section "Claude Code wiring" | the research wiring |
+
+A variant applies to every enforcement mode of its target: the table has one variant per anchor,
+not one per mode. Text that depends on the mode uses the token `{{enforcement_mode}}` or states the
+rule for every mode; the `.cmd`-shim rule of `doctor-report`, for example, is printed in every
+mode and names the package's mode (C002-IF-006 §2).
 
 ## §3 Processing order
 
@@ -102,6 +150,7 @@ target; the exit code is 1 if any error was found (C002-IF-004).
 | Token | Value |
 |---|---|
 | `{{host_name}}` | `host.name` |
+| `{{host_version_arg}}` | the argument of `sdd host-version` (C002-IF-007) that reads the target's host: `opencode` on OpenCode; on Copilot `vscode-insiders` when `host.tested_versions.vscode` ends in `-insider` (the Insiders build that S-08 tested), else `vscode` (C002-IF-006 §2; revised for defect D-012) |
 | `{{tested_version:<part>}}` | `host.tested_versions.<part>` (`opencode`, `vscode`, `copilot-chat`) |
 | `{{package_version}}` | version of the source plugin, which is also the `architect-sdd` version of the same run (C002-INV-11) |
 | `{{enforcement_mode}}` | glossary name of the table's enforcement mode |
@@ -230,7 +279,7 @@ defect D-009); the full corpus replay settles them (C002-IF-009 §2):
 | a trailing `;` and arithmetic expansion `$((…))` are GUARD-BASH-002 | none | S-07 (F-3): `git status;` and `git log $((1+1))` are allowed (false allows, BG-215, BG-221); `$(…)`, `<(…)`, `;` and `\|\|` between two commands are split and denied, as the guard denies them |
 | pipe position: a pipe-only entry is allowed only after `\|` (C001-IF-07 §3) | the pipe-only entries as exact patterns | S-07 (F-3): every part of a pipe is evaluated alone, so a pipe-only entry also allows the command on its own (`tail -n 5 x`, BG-176: false allow); spellings the exact patterns do not name (`head`, `head -5`, `tail -2`, `sort -r`, `uniq -c`; BG-010, BG-167, BG-170, BG-173) are false denies, and a wider pattern adds standalone false allows |
 | script form `node <path>/sdd.mjs` (no `sdd.mjs` under `.sdd/`, no expansion characters, no node options before the script) | none: the generated agents call bare `sdd` (C002-GOAL-04) | allowed script-form cases are denied (false denies) |
-| Serena data folder outside the repository (C002-REQ-517, C002-IF-008 §1.1) | `sdd serena-config *` and `sdd serena-launch *` denied, then `sdd serena-config --user-data` and `sdd serena-launch --user-data *` allowed | the repository is unknown when the package is generated, so a positional folder outside it is denied (false denies) |
+| Serena data folder outside the repository (C002-REQ-517, C002-IF-008 §1.1) | `sdd serena-config *` and `sdd serena-launch *` denied, then `sdd serena-config --user-data` and `sdd serena-launch --user-data *` allowed | the repository is unknown when the package is generated, so a positional folder outside it is denied (false denies), and so is the literal `${CLAUDE_PLUGIN_DATA}` that the guard resolves from its environment on Claude Code (BG-374, BG-403; C002-IF-009 §2.1) |
 | git output options (`-o`, `--output…`, `-O…`, `--open-files-in-pager`, `--ext-diff`) | `git * -o *`, `git * --output*`, `git * -O*`, `git * --open-files-in-pager*`, `git * --ext-diff*` denied | spellings a pattern misses are false allows that the replay finds |
 | `--cwd` of a writing `sdd` subcommand only with a folder at or under the repository root (C002-REQ-521, C002-IF-008 §1.2) | `sdd *--cwd*` denied, written after every `allow` rule of an `sdd` form, the Serena `--user-data` rules included (the last matching rule wins) | the repository root is unknown when the package is generated, so every `sdd` command with `--cwd` is denied, also with a folder inside the root and for subcommands that write no file (false denies; for example the inside-root `--cwd` case of C002-REQ-607); no false allow |
 | ripwire: one read verb, bounded flags only (C001-IF-14 §2) | one `allow` rule per read verb (`ripwire *--for=*`, `ripwire *--situ*`, …); any other ripwire command falls to the catch-all deny | a command with two read verbs or another flag still matches an `allow` rule (false allows the replay finds) |

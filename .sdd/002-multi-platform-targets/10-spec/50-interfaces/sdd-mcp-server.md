@@ -107,6 +107,8 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
    `old_text`; any count other than 1 → refused with ERR-MCP-004 and `occurrences` (C002-REQ-404).
 4. Write atomically: a temporary file in the target folder, then rename (C001-REQ-126). Any I/O
    error → failed with ERR-MCP-003; the file keeps its previous content (C002-REQ-402, C002-INV-07).
+   ERR-MCP-003 (here, or in step 3 when the file to edit cannot be read) therefore follows only a
+   call that step 2 allowed; the corpus replay reads it as `allow` (C002-IF-009 §2.3).
 5. Lint: run the quick-lint check of the written file in-process (the rules of C001-COMP-04 loaded
    once at start) and return the findings (C002-REQ-408). A fault here → the write stands and the
    result carries `findings_unavailable` with WARN-MCP-001 (C002-REQ-409).
@@ -121,9 +123,14 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
    shell. Deny → refused with the core's rule (GUARD-BASH-001 or GUARD-BASH-002) and message
    (C002-REQ-405). The core applies the allowlist of C002-IF-008 §1, including the Serena-command
    confinement of §1.1 and the `--cwd` confinement of the writing subcommands of §1.2, with `cwd` =
-   root (C002-REQ-517, C002-REQ-521); the server's environment has no
-   `CLAUDE_PLUGIN_DATA`, so only `--user-data` or a folder outside the repository passes. The
-   corpus replay feeds PowerShell cases with `dialect: powershell` (C002-IF-009 §2.2).
+   root (C002-REQ-517, C002-REQ-521). The server calls the core with variable expansion off,
+   because step 3 runs the command without a shell: the literal `${CLAUDE_PLUGIN_DATA}` (C002-IF-008
+   §1.1 rule 2) is not replaced by the value of any environment variable, the server's own
+   included, and is denied as a word the guard cannot resolve, so only `--user-data` or a folder
+   outside the repository passes (revised for defect D-014 item 4: before, the guard call expanded
+   the literal from the server's environment, and the CLI, which received the literal text, then
+   created a folder named `${CLAUDE_PLUGIN_DATA}` inside the repository). The corpus replay feeds
+   PowerShell cases with `dialect: powershell` (C002-IF-009 §2.2).
 3. Execute without a shell (C002-CON-07): take the words of each pipe segment from the guard core's
    tokeniser of that dialect; run the first segment as a child process with `shell: false`, working
    folder = root.

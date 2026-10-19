@@ -92,7 +92,9 @@ model: <models.opus>
   has no top-level `permission` key and `agent` entries for the ten Architect agents only
   (C002-REQ-208, C002-TS-210).
 - The conductor's `permission.task` is `{"*": "deny", "sdd-researcher": "allow", …}` with the nine
-  specialists; every specialist has `"task": "deny"` (C002-REQ-107).
+  specialists; every specialist has `"task": "deny"` (C002-REQ-107). The conductor's `tools` map
+  also sets `"task": true` (`agent_start.tools` of the table): after the catch-all `"*": false` the
+  conductor could otherwise not start a specialist (C002-IF-001 §2; revised for defect D-010 item 1).
 - The conductor's `permission` holds `"question": "allow"` in both enforcement modes; every specialist
   has `"question": "deny"` (C002-REQ-217, C002-REQ-108). OpenCode's default rule in SDK and
   `opencode serve` sessions is `question: deny`, and an agent without the rule gets an "unavailable
@@ -125,7 +127,7 @@ dist/copilot/
 ├── install/mcp.json                      workspace MCP configuration (placement.config_file), merged into .vscode/mcp.json by the install command
 ├── install/hooks.template.json           hook declarations whose commands hold the token @CLI_COPY@ (placement.hooks_file)
 ├── hooks/tool-classes.json               tool classes file, both modes (C002-REQ-318; C002-IF-008 §2)
-└── scripts/sdd.mjs                       copy of the plugin's bundled CLI (placement.cli_copy, C002-CON-14)
+└── scripts/sdd.mjs                       copy of the plugin's bundled CLI (placement.cli_copy, C002-CON-14); a required source of the install command (ERR-CLI-022)
 ```
 
 The generated package has no `.mcp.json`, no `hooks.json` and no `plugin.json` at its root. No plugin
@@ -150,6 +152,12 @@ in the order of C002-IF-007 §Install step 5, the guard hook before the agents:
 | `agents/<agent name>.agent.md` (10 files) | `<repo>/.github/agents/<agent name>.agent.md` | byte copy |
 | every entry of `servers` in `install/mcp.json` | `<repo>/.vscode/mcp.json`, key `servers` | merged: the package's entries added or replaced, every other entry and key kept |
 | — | `<repo>/.github/architect-install.json` | install record: package version and the SHA-256 of each agent file, of the workspace hook file and of each server entry written |
+
+The install reads its agent list from the `files` of `architect-target.json` (the files
+`agents/<agent name>.agent.md` listed there), and requires every source of this table and the CLI
+copy `scripts/sdd.mjs`, whose absolute path the hook commands name: without the copy the hooks would
+error and the hosts deny every tool call, so the install refuses the package before any write
+(ERR-CLI-022; C002-IF-007 §Install step 1, decided for defect D-013 item 8).
 
 **Why the guard hook is written twice** (critic CR-38). The workspace agents are files of the
 repository: every VS Code that opens it loads them, with or without the plugin part. The plugin-level
@@ -292,7 +300,9 @@ receives `replace_text`, which writes under the same boundary. Question tool on 
 
 ## §5 Install notes
 
-`INSTALL.md` is the table's `install_notes` variant with its tokens resolved. It states: Node.js 20 or
+`INSTALL.md` (`placement.install_notes`) is the install-notes source `targets/<target>/install.md`
+of the plugin with the tokens of C002-IF-001 §4 resolved; it is no wiring variant and replaces no
+anchor (C002-IF-001 §1; revised for defect D-010 item 6). It states: Node.js 20 or
 later; the host at its tested version (`{{tested_version:…}}`); access to the Claude models of the
 three tiers; `npm install -g architect-sdd@{{package_version}}`; where the package files go
 (OpenCode: `.opencode/` and the `opencode.json` merge); how to start the conductor; the enforcement
@@ -325,9 +335,13 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304). Copilot, in this order (
    session agent are not affected, and repositories without `.sdd/` are not affected
    (C002-REQ-304, C002-REQ-327, C002-REQ-329).
 
-The README
-sections of C002-REQ-205 and C002-REQ-305 link the install-notes source
-`targets/<target>/wiring/install-notes.md` of the plugin.
+The README sections of C002-REQ-205 and C002-REQ-305 link the install-notes source
+`targets/<target>/install.md` of the plugin and name `INSTALL.md` as its copy in the target
+package. The link is for the repository copy of the plugin (the source tree and its page on the
+repository host): the Claude Code plugin package leaves `targets/` out (C002-CON-10), so inside an
+installed Claude Code plugin the link does not resolve, and a reader there finds the notes as
+`INSTALL.md` of each target package (accepted for defects D-010 item 6 and D-013, found in
+C002-T-039).
 
 ## §6 Target structure checks
 
@@ -349,10 +363,33 @@ finding is printed in the format of C001-IF-08 §3 with the target name.
 | TGT-AGENT-001 | Only the conductor holds an agent-start grant, admitting exactly the nine specialists | C002-REQ-107 |
 | TGT-MODE-001 | Conductor primary, specialists subagent; every command or prompt file bound to the conductor | C002-REQ-202, C002-REQ-203, C002-REQ-303 |
 | TGT-MEM-001 | No agent has a `memory` field | C002-REQ-106 |
-| TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2, the shipped templates included | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519 |
+| TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2, the shipped templates included (step `tarball` of `npm run check`, `scripts/check/tarball.mjs`) | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519 |
 | PLG-VAR-001 | On the source plugin: no agent file (`agents/*.md`), command file (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`ask_user`, `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is not in the source text its anchor replaces. The finding names the file, the line and the name or the variant file found | C002-REQ-113 (C002-TS-121, C002-TS-122) |
 | PLG-VER-001 | On the repository (revised for defect D-005): the `version` of the root `package.json` equals the `version` of `plugins/architect/.claude-plugin/plugin.json`, the single version source of a packaging run, which the build no longer reads from `package.json` (C002-ADR-004). One finding naming the file: `plugin.json has no version`, `root package.json has no version`, or `root package.json version <have> differs from plugin.json version <want>; set both to the same version` (`scripts/check/rules.mjs` › `ver001`) | C002-CON-16, C002-INV-11 |
 
 PLG-VAR-001 and PLG-VER-001 extend the plugin structure checks of C001-IF-08 §3 and run with them
-(C002-COMP-013 runs PLG-VER-001; C002-COMP-007 runs PLG-VAR-001); the 14 existing checks are
-unchanged (C002-REQ-601).
+(C002-COMP-013 runs PLG-VER-001; C002-COMP-007 runs PLG-VAR-001). The 14 checks of C001-IF-08 §3 are
+unchanged, so the plugin structure checks number 16 (C002-REQ-601; revised for defect D-013 item 3:
+the earlier text counted the CHG-001 checks only).
+
+**SPDX header scan** (revised for defect D-013 item 9). The step `tarball` of `npm run check` also
+scans every file of the tarball for an `SPDX-License-Identifier` (or `@license <id>`) outside the
+license allowlist of C001-REQ-1114. Its findings carry the code `C002-NFR-801`, the requirement the
+scan verifies, in the finding format of C001-IF-08 §3; it has no catalogue code of its own. Other
+folders are scanned only when named: `node scripts/check/tarball.mjs --spdx dist/opencode --spdx
+dist/copilot` scans the two target packages as well, the form that the evidence of C002-DOD-020
+takes; `npm run check` does not scan them.
+
+### §6.1 Generic edit and terminal tools (TGT-GRANT-001)
+
+TGT-GRANT-001 finds a generic edit or terminal tool granted by name, through a tool set, or through
+a pattern with `*` that matches one (revised for defect D-013 item 5: the sets were not listed).
+
+| Target | Generic tools by name | Tool sets that contain one (a grant `<set>` or `<set>/*` grants them all) |
+|---|---|---|
+| OpenCode | the table's grants of Write, Edit and Bash under `native-permissions` (`write`, `edit`, `bash`), and `patch`, `multiedit` | none |
+| Copilot | the table's grants of Write, Edit and Bash under `copilot-hooks` (`edit`, `execute`), and the VS Code and Copilot CLI tool names `create`, `createFile`, `createDirectory`, `editFiles`, `editNotebook`, `shell`, `powershell`, `bash`, `runInTerminal`, `terminal`, `runTask`, `createAndRunTask`, `runCommand` | `edit` (`create`, `edit`, `createFile`, `createDirectory`, `editFiles`, `editNotebook`), `execute` (`shell`, `powershell`, `runInTerminal`, `runTask`, `createAndRunTask`), `new` (`createFile`, `createDirectory`), `runCommands` (`runInTerminal`), `runTasks` (`runTask`, `createAndRunTask`), `vscode` (`runCommand`) |
+
+A grant `<set>/<tool>` is generic when `<tool>` is a generic tool or a member of the set. The list
+is the check's data (`scripts/check/targets/grant.mjs`); a host tool or set found later is added
+there and here together.

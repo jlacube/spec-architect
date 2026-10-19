@@ -72,6 +72,17 @@ F-8, F-10). The OpenCode runner, and the corpus replay suite for `opencode-permi
 - **Node.js.** The machine that runs the runner or the replay with the OpenCode JS SDK has Node.js
   22.22.2 or later (F-10; `../10-context/scope.md` §5); the adopter's floor stays Node.js 20
   (C002-IF-006 §2).
+- **Start-up network conditions** (F-9; C002-ADR-005). Auto-update, sharing and the LSP download
+  are switched off (`OPENCODE_DISABLE_AUTOUPDATE`, `OPENCODE_DISABLE_SHARE`,
+  `OPENCODE_DISABLE_LSP_DOWNLOAD`) in every run. The corpus replay, which must reach no network,
+  also switches the model catalogue fetch off (`OPENCODE_DISABLE_MODELS_FETCH`), runs npm offline
+  with `@opencode-ai/plugin` of the tested version ready in the project `.opencode/` folder and the
+  isolated global configuration folder, and sends every non-loopback request to a closed proxy port.
+  At start OpenCode 1.18.31 also tries to download ripgrep from GitHub; in the replay the closed
+  proxy blocks the attempt, the session goes on, and its `grep` and `glob` tools run without it
+  (S-07 §4). No ripgrep is provisioned, and neither the replay nor the eval runner depends on the
+  download: the replay keeps it blocked as one more network request at start (revised for defect
+  D-011 item 3).
 
 Eval spend stays within the project budget: dev tier on every target, milestone tier on Claude Code
 and on the first port only, the first generated target that is released (ideation §9, C002-US-603).

@@ -13,7 +13,9 @@ Extends the doctor remedies table of C001-IF-10 §3 and the doctor and toolchain
 (`commands/doctor.md`, `skills/code-discovery/SKILL.md`, current-state E-14 … E-21). On Claude Code
 every row, probe and outcome stays as today (C002-GOAL-05); the generated targets receive the host
 rows below through wiring variants of `doctor.md` and of the code-discovery toolchain section
-(C002-IF-001 §2). The doctor table and `toolchain.md` have the same rows (C002-REQ-507).
+(C002-IF-001 §2.1), and the doctor command's description names the same rows through the
+frontmatter construct `doctor-description` (C002-IF-001 §2). The doctor table and `toolchain.md`
+have the same rows (C002-REQ-507).
 
 ## §1 Rows and order
 
@@ -40,14 +42,23 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 | node | Claude Code: `node -v`; generated targets: `node --version` | version ≥ 20 (the floor of `architect-sdd`, C002-NFR-401; the Node.js 22.22.2 floor of the OpenCode JS SDK binds only the machine of the eval runner and the corpus replay, `../10-context/scope.md` §5) | `missing`; `error` below 20 | `winget install OpenJS.NodeJS.LTS` |
 | Claude Code | `claude --version` | ≥ 2.1.295 | `error` below 2.1.295, on Claude Code only (C002-REQ-506) | `claude update`, or update the Claude desktop app |
 | OpenCode | `sdd host-version opencode`: the `opencode` that PATH resolves for the CLI's process, so with two installs the one first on that PATH is reported (`docs/spikes/S-07-opencode.md §9`, fact F-7) | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
-| VS Code with GitHub Copilot Chat | `sdd host-version vscode` | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
+| VS Code with GitHub Copilot Chat | `sdd host-version {{host_version_arg}}`: `vscode-insiders` while the tested VS Code version is an Insiders build, as the one S-08 tested is, else `vscode` (C002-IF-001 §4) | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
 | sdd CLI | `sdd --version` (C002-IF-007, C002-REQ-511) | its major, minor and patch numbers equal those of `{{package_version}}` (exact match, Q-cli-03) | `missing` when not reachable; `error` when any of the three numbers differs, older or newer (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
-| Copilot hooks | the `hooks` line of `sdd host-version vscode` | `enabled` | `error` when `disabled (<source>)` with the source `chat.useHooks`, Workspace Trust or organisation policy, and `error` when `hooks unknown` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
+| Copilot hooks | the `hooks` line of `sdd host-version {{host_version_arg}}`, which reads `chat.useHooks` only (C002-IF-007 Output) | `hooks enabled`, with the Version text `chat.useHooks on; Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist` (C002-REQ-510) | `error` when `hooks disabled (chat.useHooks)`, Version `disabled (chat.useHooks)`; `error` when `hooks unknown` or no `hooks` line, Version `cannot be read` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
 
 The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states.
-How each disabling source of the Copilot hooks row is read is open for spike S-08 (C002-REQ-510).
-A hooks state that the doctor cannot read (`hooks unknown`) is never shown as `ok` (C002-REQ-510,
-C002-TS-526).
+
+**Copilot hooks row** (revised for defect D-012; P-01 decision of 2026-10-19, "ok + caveat"). The
+row reads `chat.useHooks` alone: the `hooks` line of `sdd host-version` takes it from the workspace
+settings, then from the user settings of the VS Code build it probes (C002-IF-007 Output).
+Workspace Trust and organisation policy, the two other sources that can disable hooks, are read by
+neither the CLI nor the doctor. The row is therefore `ok` when `chat.useHooks` is on, and its
+Version text names the two sources it did not read; the manual VS Code checklist records all three
+sources in both Copilot enforcement modes before each release (C002-REQ-616, C002-IF-009 §4). A
+hooks state read as disabled, or one the doctor cannot read (`hooks unknown`), is `error`, never
+`ok`, so an unread `chat.useHooks` is not reported as protected (C002-REQ-510, C002-TS-526). The
+remedies-table row of the Copilot variant states the same check: `chat.useHooks` on, Workspace
+Trust and organisation policy not read.
 
 **Tools started through the sdd MCP server.** Under sdd MCP server enforcement the probes of the
 command-line tools run through the `sdd-shell` command tool, which does not start a `.cmd` or `.bat`
@@ -55,7 +66,12 @@ shim (ERR-MCP-006, C002-IF-002 §5.2). A probe refused for that reason shows the
 `error`, version `—`, its fallback, and the fix `install a native executable of <tool>` followed by
 the remedies-table command of the server-mode variant, which names an installer that provides a
 native executable (for ast-grep, whose npm install gives only a `.cmd` shim). A probe refused
-because the executable is not found shows `missing`, as today.
+because the executable is not found shows `missing`, as today. The `doctor-report` variant prints
+this rule in every enforcement mode of its target and names the package's mode through
+`{{enforcement_mode}}`, because one variant serves every mode (C002-IF-001 §2.1); under native
+permission enforcement and the Copilot hooks fallback the probes run through the host's own shell or
+terminal tool, so no probe is refused with ERR-MCP-006 there and the rule has no effect (revised for
+defect D-012).
 
 ## §3 Outcome line
 
