@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-001, C002-T-030, C002-T-040]
 implements: [C002-REQ-606, C002-REQ-626, C002-REQ-632, C002-NFR-201, C002-NFR-202]
 satisfies_ac: [C002-AC-606.1, C002-AC-626.1, C002-AC-632.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-630, C002-TS-646, C002-TS-647, C002-TS-652, C002-TS-655, C
 components: [C002-COMP-008, C002-COMP-009]
 risk_refs: [C002-RISK-020]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a9ea014, completed_at: 2026-10-19, notes: "Driver + replay adapter; replay 691 cases 0 errors, identity/memory 0 differing, 147/159 shell+path differences (OpenCode native rules, for T-043); TC-133/211/213/655/656 pass; TC-630/646/647/652 skipped (server mode); TC-226 fails on spec assumption (D-011); no paid sessions" }
 ---
 
 # C002-T-042 — OpenCode session driver and the opencode-permissions replay adapter

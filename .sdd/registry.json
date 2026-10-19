@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-18T23:28:21Z",
+  "generated_at": "2026-10-19T01:14:47Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 62,
-          "done": 40,
+          "done": 41,
           "blocked": 0,
           "in_progress": 0
         },
@@ -289,6 +289,16 @@
           "summary": "Found in C002-T-026: (1) the OpenCode mapping needs the 'task' tool in agent_start — the conductor's closed tool map (\"*\": false) switches it off otherwise, and the conductor could not start specialists; IF-001 §2 does not list it. (2) Option-parser faults of hook guard (missing --mode value, unknown option, extra argument) still print 'tool call' (C002-T-062). (3) TS-502 assumes the new change is 002 though fx-bootstrap already holds change 002 (C002-T-061). Batch for the next revision.",
           "reporter": "jerome.lacube",
           "date": "2026-10-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-011",
+          "ref": "C002-TS-226",
+          "summary": "Found in C002-T-042: (1) TS-226 assumes OpenCode built-in commands /new and /init clash with the plugin's; OpenCode 1.18.31 lists built-ins init, review, customize-opencode — no 'new'; (2) IF-009 §2.2 gives no mapping for shell-corpus cases whose tool is not a shell (BG-268…270) — implemented as the command fed as that tool's argument (BG-268 Write reads deny); (3) OpenCode tries to download ripgrep from GitHub at start (blocked by the closed proxy) — record in IF-010 §4 start-up conditions. Batch with D-010.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-19",
           "status": "open",
           "resolution": null,
           "closed_at": null
