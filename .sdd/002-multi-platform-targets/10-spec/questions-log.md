@@ -127,3 +127,19 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Rejected:** none beyond the options
 - **Answer:** Accept (Recommended)
 - **Extracted instructions:** none
+
+## Round 2026-10-19 — revision D-010 … D-014
+
+### Q-hooks-row-01 — Copilot doctor hooks row when Workspace Trust and policy cannot be read (D-012, C002-REQ-510)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. ok + caveat: `ok` when `chat.useHooks` is on, the row text says Workspace Trust and organisation policy were not read, the manual VS Code checklist confirms them (Recommended) · 2. New `warning` status · 3. Read trust and policy (VS Code internal storage, new spike)
+- **Rejected:** none beyond the options
+- **Answer:** P-01: "ok + caveat (Recommended)"
+- **Extracted instructions:** none
+
+### Q-safety-08 — Per-mechanism replay expectations for D-014 (C002-IF-009 §2.1)
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. Confirm the three deny rows: shell-corpus write-tool cases (BG-268 class) on every mechanism; on the sdd MCP server the Serena cases with the literal `${CLAUDE_PLUGIN_DATA}` (no shell, no expansion) and PG-135/PG-136 (cwd through a junction) (Recommended) · 2. Replay PG-135/PG-136 with a server rooted at the junction
+- **Rejected:** none beyond the options
+- **Answer:** P-01: "Confirm three deny rows (Recommended)"
+- **Extracted instructions:** none
