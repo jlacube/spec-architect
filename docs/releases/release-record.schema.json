@@ -74,7 +74,7 @@
               "properties": {
                 "path": { "type": "string" },
                 "host_versions": { "$ref": "#/$defs/hostVersions" },
-                "hooks_state": { "description": "Required in the record under the Copilot hooks fallback (C002-REQ-615); null under sdd MCP server enforcement.", "enum": ["enabled", "disabled", null] },
+                "hooks_state": { "description": "Hooks state of the checklist record, required there in both Copilot enforcement modes (C002-REQ-615, C002-REQ-616; verification-records.md §4); null when the record has none, which refuses the release (ERR-REL-010).", "enum": ["enabled", "disabled", null] },
                 "injection_cases_missing": { "description": "Copilot injection cases of the dev tier without a step in the record (ERR-REL-011).", "type": "array", "items": { "type": "string" } },
                 "failed_steps": { "type": "array", "items": { "type": "string" } }
               }
@@ -123,7 +123,7 @@
     {
       "if": { "properties": { "target": { "const": "copilot" }, "outcome": { "const": "released" } } },
       "then": {
-        "properties": { "evidence": { "required": ["checklist"], "properties": { "checklist": { "type": "object" } } } }
+        "properties": { "evidence": { "required": ["checklist"], "properties": { "checklist": { "type": "object", "properties": { "hooks_state": { "const": "enabled" } }, "required": ["hooks_state"] } } } }
       }
     },
     {
@@ -209,7 +209,7 @@
               "expected": { "enum": ["allow", "deny"] },
               "expected_source": {
                 "description": "The rule of verification-records.md §2.1 that gave the expected decision.",
-                "enum": ["corpus", "C002-REQ-625", "C002-REQ-630", "C002-REQ-632"]
+                "enum": ["corpus", "C002-REQ-625", "C002-REQ-630", "C002-REQ-632", "C001-REQ-1103", "C002-REQ-401", "C002-REQ-517"]
               },
               "actual": { "enum": ["allow", "deny", "error"] },
               "detail": { "description": "Free text; for an error, its cause, for example the host capability the replay host lacks (verification-records.md §2.1).", "type": "string" }
@@ -237,6 +237,18 @@
                     "fed_as": { "properties": { "caller": { "const": "adopter-agent" } } }
                   }
                 }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C001-REQ-1103" } }, "required": ["expected_source"] },
+                "then": { "properties": { "expected": { "const": "deny" }, "corpus": { "const": "shell" } } }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-401" } }, "required": ["expected_source"] },
+                "then": { "properties": { "expected": { "const": "deny" }, "corpus": { "const": "path" }, "category": { "const": "cwd" } } }
+              },
+              {
+                "if": { "properties": { "expected_source": { "const": "C002-REQ-517" } }, "required": ["expected_source"] },
+                "then": { "properties": { "expected": { "const": "deny" }, "corpus": { "const": "shell" } } }
               }
             ]
           }
@@ -258,9 +270,18 @@
         "applicable": { "type": "integer", "minimum": 0 },
         "differing": { "type": "integer", "minimum": 0 }
       },
-      "if": { "properties": { "mechanism": { "const": "opencode-permissions" } }, "required": ["mechanism"] },
-      "then": { "properties": { "not_applicable": { "maxItems": 0 } } },
-      "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "const": "C002-REQ-632" } } } } } } }
+      "allOf": [
+        {
+          "if": { "properties": { "mechanism": { "const": "opencode-permissions" } }, "required": ["mechanism"] },
+          "then": { "properties": { "not_applicable": { "maxItems": 0 } } },
+          "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "const": "C002-REQ-632" } } } } } } }
+        },
+        {
+          "description": "The expectations of C002-REQ-401 and C002-REQ-517 apply to the sdd MCP server only (verification-records.md §2.1).",
+          "if": { "properties": { "mechanism": { "const": "sdd-mcp-server" } }, "required": ["mechanism"] },
+          "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "enum": ["C002-REQ-401", "C002-REQ-517"] } } } } } } }
+        }
+      ]
     },
     "corpusRef": {
       "type": "object",
