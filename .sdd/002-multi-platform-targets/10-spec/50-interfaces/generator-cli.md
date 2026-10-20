@@ -93,3 +93,8 @@ Run semantics:
 
 The manifest holds no time stamp and no machine path (C002-NFR-301). `files` lists every other file
 of the package; the release check compares it with a regeneration (C002-NFR-501).
+`package_version` is the `version` of `<source>/.claude-plugin/plugin.json`, the source plugin the
+run reads, and so the value of the wiring token `{{package_version}}` in the same package
+(C002-IF-001 §4, C002-CON-16); it is never taken from the version built into the generator, which
+can differ when `--source` names another plugin folder, such as a fixture of version 0.3.0 (revised
+for defect D-016 item 6).

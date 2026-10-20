@@ -11,8 +11,8 @@ status: draft
 
 The sdd MCP server (C002-COMP-005) gives Architect agents that have no generic edit or terminal tool
 their write and command operations, under the decisions of the path and bash guard cores
-(C002-DEC-001, C002-CON-06). Tool input and output schemas: `sdd-mcp-tools.schema.json`. Error and
-warning codes: `errors.md` §2 and §6.
+(C002-DEC-001, C002-CON-06). Tool input and success output schemas: `sdd-mcp-tools.schema.json`.
+Error and warning codes: `errors.md` §2 and §6; error results carry them as text only (§6.1).
 
 ## §1 Process
 
@@ -85,10 +85,19 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
   capabilities `{ "tools": { "listChanged": false } }`; no resources, prompts, sampling or
   logging capability.
 - `tools/list` → the tools of the profile, with `inputSchema` and `outputSchema` taken from
-  `sdd-mcp-tools.schema.json` (`$defs/writeFileInput`, … ).
-- `tools/call` → a `CallToolResult` with `content` (one text item, §6) and `structuredContent`
-  (the tool's output or `$defs/errorResult`); `isError: true` exactly when the structured content
-  is an error result.
+  `sdd-mcp-tools.schema.json` (`$defs/writeFileInput`, … ); the `outputSchema` describes the
+  success output of the tool only.
+- `tools/call` → a `CallToolResult` of one of two forms (revised for defect D-017, P-01 answer to
+  Q-mcp-errors-01 "No structured error"):
+  - **success**: `content` with one text item (§6) and `structuredContent` that validates against
+    the tool's advertised `outputSchema` (`$defs/writeFileOutput`, `$defs/replaceTextOutput`,
+    `$defs/runCommandOutput`); no `isError`, or `isError: false`;
+  - **error result** (a refused or failed call, §6.1): `isError: true` and `content` with one text
+    item whose text starts with `<code>: ` (§6.1), and **no** `structuredContent`.
+  A client that validates every `structuredContent` against the advertised `outputSchema`, as
+  OpenCode 1.18.31 does, therefore accepts both forms (defect D-017: before this revision an error
+  result carried `structuredContent` of an error shape that `tools/list` did not advertise, and
+  OpenCode turned every refused or failed `run_command` into the JSON-RPC error `-32602`).
 - An unknown tool name is a JSON-RPC error `-32602`; a malformed message is `-32700` or `-32600`. No
   tool runs in either case.
 - The server handles one `tools/call` at a time, in arrival order; one session writes a change at a
@@ -104,7 +113,8 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
    and call the path guard core with the memory folder off (C002-IF-008 §5). Deny → refused with
    GUARD-PATH-001 and the core's message. An exception → failed with ERR-MCP-002 (C002-CON-08).
 3. `replace_text` only: read the file (missing → ERR-MCP-005), count the occurrences of
-   `old_text`; any count other than 1 → refused with ERR-MCP-004 and `occurrences` (C002-REQ-404).
+   `old_text`; any count other than 1 → refused with ERR-MCP-004, whose message gives the count
+   (C002-REQ-404).
 4. Write atomically: a temporary file in the target folder, then rename (C001-REQ-126). Any I/O
    error → failed with ERR-MCP-003; the file keeps its previous content (C002-REQ-402, C002-INV-07).
    ERR-MCP-003 (here, or in step 3 when the file to edit cannot be read) therefore follows only a
@@ -170,7 +180,46 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
 |---|---|
 | write success | `wrote <path> (<bytes> bytes)`, then the findings block of C001-IF-07 §4 (`sdd quick lint of <path>: <n> finding(s)` and up to 15 lines), or `quick-lint findings unavailable: <reason>` |
 | command | `exit <code>` (or `timed out after <ms> ms`), then `--- stdout ---` and `--- stderr ---` sections |
-| error result | the `message` of the structured content |
+| error result | the print form of `errors.md`, and nothing else (§6.1) |
+
+### §6.1 Error results (revised for defect D-017)
+
+An error result carries its code and message in its text only. The text is exactly:
+
+- for an `ERR-MCP-*` code: `<code>: <message>`, the print form of `errors.md` (the code, a colon, a
+  space, then the Message cell of `errors.md` §2 with its placeholders filled), without a fix;
+- for a `GUARD-*` code: the guard core's deny message as the core returns it (C001-IF-07 §4), which
+  starts with its code (`GUARD-PATH-001: <tool> on <target> denied — …`), so the code is never
+  written twice.
+
+The message is literal (`errors.md`, print form): no text is added before the code or after the
+message. The text can span lines only where a value that the message quotes does (for example a
+command with a line break in a GUARD-BASH-002 message); the first line always starts with
+`<code>: `, and a caller reads the code as the characters before the first `: ` of the text (no
+code contains a colon).
+
+What replaces the fields of the former `$defs/errorResult`, which a caller (the corpus replay
+adapter, the doctor, a test) read:
+
+| Former field | Read now from |
+|---|---|
+| `code` | the text before its first `: ` |
+| `message` | the text after that first `: `; for a `GUARD-*` code the whole text is the deny message |
+| `status` (`refused`, `failed`) | the code, by the table below |
+| `tool` | the tool the caller called (the request's `name`) |
+| `path` | the message, which names the path for GUARD-PATH-001, ERR-MCP-003, ERR-MCP-004 and ERR-MCP-005 |
+| `occurrences` (ERR-MCP-004) | the count `<n>` in the message of ERR-MCP-004 |
+
+| Code | Class | Meaning |
+|---|---|---|
+| GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 | refused | the boundary said no; nothing was changed and no process started |
+| ERR-MCP-004, ERR-MCP-005 | refused | a tool rule said no after the boundary allowed the call; the file is unchanged |
+| ERR-MCP-001, ERR-MCP-002 | failed | the arguments were invalid, or a fault occurred; the call was refused and nothing was changed (C002-CON-08) |
+| ERR-MCP-003, ERR-MCP-006 | failed | the allowed write or command could not complete; the file keeps its previous content, or no process started (C002-REQ-402) |
+
+WARN-MCP-001 is no error result: it accompanies a successful write in `structuredContent`
+(`findings_unavailable.code`) and in the text (§6 table). ERR-MCP-007 is no tool result either: the
+process prints it on standard error before any MCP message (§1).
 
 ## §7 Performance budget
 

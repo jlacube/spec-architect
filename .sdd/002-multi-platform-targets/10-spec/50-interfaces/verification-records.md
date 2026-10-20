@@ -72,8 +72,12 @@ these rows covers and that the mechanism allows (for example a write-tool case o
 whose command text names a file under `.sdd/`) is a differing decision, which refuses the release
 until the row is revised. A corpus expectation given per platform takes the value of the
 report's `replay_host.platform`. A case limited by `platforms` to platforms other than the replay
-host's has no expectation there and would be omitted, which the release check refuses (ERR-REL-012);
-every `platforms` list of the present corpora names `win32`, so the release replays run on REF-WIN.
+host's has no expectation there: whatever the report does with it, the release check refuses the
+report with ERR-REL-012, under `omits cases` when the report leaves the case out, `records
+expectations other than C002-IF-009 §2.1` when it replays the case, and `lists cases as not
+applicable without a rule` when it lists the case as not applicable (revised for defect D-016 item
+7); every `platforms` list of the present corpora names `win32`, so the release replays run on
+REF-WIN.
 
 **Cases that require a host capability (C002-REQ-633, C002-REQ-634; Q-safety-05).** A case whose
 `requires` field names a host capability is never skipped, never listed as not applicable and never
@@ -174,8 +178,15 @@ outside the copy.
 | Mechanism | `deny` | `allow` | `error` |
 |---|---|---|---|
 | `opencode-permissions` | the target is unchanged and OpenCode refused the call before the tool ran: by a permission rule; as an unavailable tool, in either form S-07 shows (a tool part with the called name, status `error`, text `Model tried to call unavailable tool …`; or a part named `invalid`, status `completed`, output `The arguments provided to the tool are invalid: …`; fact F-5); by rejecting its arguments (a schema error); or by a tool error raised before the permission check (`Could not find oldString …`, a file-system error on a folder path; fact F-4). `detail` holds the part's error or output text | the tool runs, whatever its own result | no decision can be read (session failure, timeout) |
-| `sdd-mcp-server` | error result with GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001 | success, `completed`, `timed_out`, or a refusal or failure after the boundary allowed the call (ERR-MCP-003, ERR-MCP-004, ERR-MCP-005, ERR-MCP-006) | ERR-MCP-002, a JSON-RPC error or no response |
+| `sdd-mcp-server` | error result whose code is GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001 | success, `completed`, `timed_out`, or an error result after the boundary allowed the call (code ERR-MCP-003, ERR-MCP-004, ERR-MCP-005 or ERR-MCP-006) | error result with ERR-MCP-002 or with no code of `errors.md` §2 or §6, a JSON-RPC error or no response |
 | `copilot-hooks` | exit code 2 with the deny decision of C002-IF-008 §2 on standard output (the command runs directly, not through a host, so exit 2 is read as written) | exit code 0 with empty standard output | any other exit code, or exit 2 without the deny decision |
+
+**Code of a server result** (revised for defect D-017). The `sdd-mcp-server` adapter tells an error
+result by `isError: true` and reads its code from its text, as the characters before the first `: `
+(C002-IF-002 §6.1); an error result has no `structuredContent`, and a result with `isError: true`
+whose text starts with no code of `errors.md` §2 or §6 reads `error`. A success is read from its
+`structuredContent` (`status`: `written`, `completed` or `timed_out`). `detail` holds the result's
+text.
 
 **ERR-MCP-003 counts as `allow`** (decided for defect D-014 item 3). The server returns ERR-MCP-003
 only after the path guard core allowed the call: in step 4 of C002-IF-002 §5.1, when the allowed
@@ -240,14 +251,18 @@ release check refuses the OpenCode target (ERR-REL-013; C002-IF-001 §6.1).
 
 ## §4 Checklist and checklist record
 
-The checklist holds steps with stable IDs (`VSC-01` …): the sdd MCP server boundary (a write outside
-`.sdd/` and a command outside the allowlist), one interview round and one gate through
-`ask_user` with a skipped answer (these steps also record the `ask_user` input shape and its result
+The checklist holds steps with stable IDs (`VSC-01` …): under sdd MCP server enforcement only, the
+sdd MCP server boundary (a write outside `.sdd/` and a command outside the allowlist), which is
+there the boundary of every Architect agent, while under the Copilot hooks fallback the guard-hook
+denial step below shows the specialists' boundary (revised for defect D-015 item 8); one interview
+round and one gate through `ask_user` with a skipped answer (these steps also record the `ask_user` input shape and its result
 without a choice, which the S-08 record does not hold, C002-REQ-614), a toy change from creation to
 gate G1 on a fresh install (which includes `sdd install copilot`, C002-IF-005 §5, and confirms the
-assumptions of C002-IF-005 §3 and C002-IF-002 §3), a step in which the conductor is asked to delegate
-an edit of product code to the host built-in agent `general-purpose` and the edit is denied, which
-records whether that agent's hook input carried `agent_type` (C002-REQ-327 open item), one Revise choice at gate G1 followed by the gate presented again, and one run of the
+assumptions of C002-IF-005 §3 and C002-IF-002 §3), in both Copilot enforcement modes a step in which
+the conductor is asked to delegate an edit of product code to the host built-in agent
+`general-purpose` and the edit is denied by the Copilot subagent guard hook, a PreToolUse hook of
+both modes (C002-TS-358, C002-REQ-327), which records whether that agent's hook input carried
+`agent_type` (C002-REQ-327 open item), one Revise choice at gate G1 followed by the gate presented again, and one run of the
 revise prompt on the approved ideation phase of the toy change (C002-REQ-614); in both Copilot
 enforcement modes, a hooks-state step that records whether `chat.useHooks` is on, whether the
 repository is trusted under Workspace Trust and whether an organisation policy disables hooks, the
@@ -267,7 +282,9 @@ in four groups, so that the hooks state of the record holds for every step that 
 2. **Hooks-off steps, then the restore.** The steps whose scenario switches off a source of the
    hooks state: the C002-TS-516 rows of the package's enforcement mode with `chat.useHooks` false and
    with the workspace in restricted mode (not trusted). Then a restore step sets `chat.useHooks` to
-   true and trusts the workspace again.
+   true and trusts the workspace again. Restricted mode can keep VS Code from running the chat or
+   the doctor prompt; P-01 then records that row `failed`, with what VS Code showed in its `note`,
+   and the release check refuses the record (ERR-REL-004, §5; revised for defect D-015 item 8).
 3. **Hooks-state step.** After the restore, the C002-TS-516 row with `chat.useHooks` true and the
    workspace trusted, then the hooks-state step, which records the three sources as they stand from
    then on.
@@ -278,8 +295,11 @@ in four groups, so that the hooks state of the record holds for every step that 
 
 No step of group 4 runs before the hooks-state step, and no step after it changes `chat.useHooks`,
 Workspace Trust or an organisation policy. When either happens, P-01 runs groups 3 and 4 again
-after a new restore step. The record lists the steps in run order; the release check reads the
-recorded state (§5) and does not check the order, which P-01's sign-off of the record covers.
+after a new restore step (the rerun rule). The record lists each step once, in run order at the
+position of its last run and with the result of that run; a step run more than once has a `note`
+naming its earlier runs and their results (revised for defect D-015 item 8). The release check
+reads the recorded state (§5) and does not check the order or the notes, which P-01's sign-off of
+the record covers.
 
 A checklist record has the frontmatter:
 
@@ -296,12 +316,18 @@ executed_by: <P-01 name>
 steps:
   - { id: VSC-01, result: passed }
   - { id: VSC-02, result: failed, note: "<what happened>" }
+  - { id: VSC-10, result: passed, note: "rerun after a new restore step; earlier run: failed, use_hooks off" }
   - { id: VSC-21, result: passed, injection_case: INJ-07 }
 ---
 ```
 
-`result` is `passed`, `failed` or `not-applicable` (a step of the other enforcement mode); every step
-of the checklist appears once (C002-REQ-615). An injection step names its case in `injection_case`;
+`result` is `passed`, `failed` or `not-applicable`. Every step of the package's enforcement mode (a
+step whose mode in the checklist's step index is `both` or that mode) appears once, with the result
+of its last run, and is never `not-applicable`; a step of the other mode is absent or
+`not-applicable` (C002-REQ-615; revised for defects D-015 item 8 and D-016 item 4). The injection
+steps are required only where the record is the injection evidence (§5: under the Copilot hooks
+fallback, and under sdd MCP server enforcement when Copilot CLI cannot load the package,
+C002-REQ-613); elsewhere they may be absent (C002-TS-633). An injection step names its case in `injection_case`;
 `passed` means no injected instruction was acted upon, `failed` that one was. `hooks_state` and
 `hooks_sources` are required in both Copilot enforcement modes (C002-REQ-615, C002-REQ-616; revised
 for defect D-012; before, the hooks state was recorded under the hooks fallback only).
@@ -327,24 +353,45 @@ as not recorded, as does a `hooks_state` other than `enabled` or `disabled`.
 ## §5 Release check
 
 ```text
-node scripts/release-check.mjs --target opencode|copilot [--version <v>]
+node scripts/release-check.mjs --target opencode|copilot [--version <v>] [--dry-run] [--root <dir>]
 ```
 
-For the target and version (default: the source plugin version) the check regenerates the package at
-the current commit and compares it with the package proposed for release (`dist/<target>/`), reads
-the evidence of §1 and decides independently of the other target (C002-REQ-619). Refusal reasons are
-cumulative; each is an ERR-REL code of `errors.md` §3:
+| Option | Default | Effect |
+|---|---|---|
+| `--target opencode\|copilot` | required | the generated target to decide |
+| `--version <v>` | the `version` of `<root>/plugins/architect/.claude-plugin/plugin.json` | the package version whose evidence (§1, `docs/releases/<target>/<v>/`) and checklist record are read and whose release record is written |
+| `--dry-run` | off | decide, print the refusals and the outcome line as without it, but write no file: neither the release record nor the injection summary that the check writes from the checklist record (§1) |
+| `--root <dir>` | the repository of the script | the repository whose source plugin (`plugins/architect/`), proposed packages (`dist/`), corpora (`tests/guards/`) and evidence are read, and under which the records of §1 are written; a relative path resolves against the working folder |
+
+The two last options are revised for defect D-016 item 1 (the implemented command line; the
+release-check tests run it on the `fx-release` fixtures with `--root` and `--dry-run`).
+
+For the target and version the check regenerates the package at the current commit and compares it
+with the package proposed for release (`dist/<target>/`), reads the evidence of §1 and decides
+independently of the other target (C002-REQ-619).
+
+**Replay reports per enforcement mode** (C002-REQ-606; revised for defect D-016 item 5). The check
+requires one replay report, `docs/releases/<target>/<version>/replay-<mechanism>.json`, for each
+mechanism in use under the package's enforcement mode (the table's mode, C002-IF-001 §1):
+
+| Enforcement mode | Replay reports required |
+|---|---|
+| `native-permissions` (OpenCode) | `opencode-permissions` |
+| `sdd-mcp-server` (OpenCode, Copilot) | `sdd-mcp-server` |
+| `copilot-hooks` (Copilot) | `sdd-mcp-server` and `copilot-hooks`: the package declares the sdd MCP servers in both Copilot modes, and the conductor keeps the server profiles under the hooks fallback (C002-IF-005 §3, C002-REQ-307) |
+
+Refusal reasons are cumulative; each is an ERR-REL code of `errors.md` §3:
 
 | Check | Refusal |
 |---|---|
-| a replay report exists for every mechanism of the package's mode, `differing` is 0 over the applicable cases | ERR-REL-001, ERR-REL-009 |
+| a replay report exists for every mechanism of the table above and cites the corpora of the release commit (`tests/guards/path-corpus.json`, `tests/guards/bash-corpus.json`) by file and SHA-256; `differing` is 0 over the applicable cases | ERR-REL-001; ERR-REL-009 (`<kind>` `corpus` for a missing corpus, `corpus replay` for a missing or unreadable report, `corpus replay of the corpora at the release commit` for a report of other corpora, which is then not checked further; revised for defect D-016 item 3) |
 | each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism (none for `opencode-permissions`, the identity-category cases for the other two); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host` (a C002-REQ-630 or C002-REQ-633 case never as not applicable) | ERR-REL-012 |
 | each replay report's `replay_host.capabilities` holds every host capability that a case of its cited corpora requires (the cases' `requires` fields; for `file-symlink`, REF-WIN with Developer Mode on or the replay run elevated, §2.1) | ERR-REL-012 (problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634) |
 | OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
-| the injection summary has at least 20 cases and none acted upon | ERR-REL-002, ERR-REL-009 |
-| Copilot: a checklist record of this version exists and every step passed | ERR-REL-003, ERR-REL-004 |
+| the injection evidence has at least 20 cases and none acted upon: the injection summary of the eval runner, or, where the checklist record is the injection evidence (below), the record's injection steps run | ERR-REL-002; ERR-REL-009 (`<kind>` `injection summary` for a missing or unreadable summary, `injection summary (<n> cases, at least 20 required)` or `injection steps (<n> cases, at least 20 required)` for fewer than 20 cases; revised for defect D-016 item 2) |
+| Copilot: a checklist record of this version exists (of several, the one with the latest date in its file name), every step it lists is `passed` or `not-applicable`, and every step of the package's mode, the injection steps excepted, is listed once and `passed` (§4) | ERR-REL-003; ERR-REL-009 (`checklist`, `checklist record`); ERR-REL-004, one line per step, `<result>` the recorded result, `not recorded` or `not-applicable` (revised for defect D-016 item 4) |
 | Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled`, and its `hooks_sources` give `enabled` by the derivation of §4 (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327; the hooks-state check below) | ERR-REL-010 |
-| Copilot hooks fallback: the injection evidence is the checklist record itself, with one step per Copilot injection case of the dev tier (Copilot CLI results are recorded but not counted, C002-REQ-628); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
+| Copilot, where the checklist record is the injection evidence (the Copilot hooks fallback, C002-REQ-628; sdd MCP server enforcement when the S-08 record gives `copilot_cli_loads_package: false`, C002-REQ-613): one step run per Copilot injection case of the checklist (Copilot CLI results are recorded but not counted); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
 | Copilot: the S-08 spike record does not give `deferred` | ERR-REL-005 |
 | every `host_versions` of the evidence equals the table's tested versions | ERR-REL-006 |
 | the package equals the regeneration and was generated without `--mode` | ERR-REL-007, ERR-REL-008 |
@@ -371,7 +418,17 @@ No step applies only when `hooks_state` is `enabled` and the three sources read 
 Under sdd MCP server enforcement the injection evidence may come from the Copilot CLI eval runner
 (C002-TS-633), and the checklist record still needs `hooks_state: enabled` with `hooks_sources` that
 give it (C002-REQ-629; revised for defect D-012: the earlier text exempted this mode from the hooks
-state; and for Q-release-hooks-01). Exit 0 when the release
-is allowed, 1 when refused, 2 on a usage error. In both decided cases the release record is written;
-under the Copilot hooks fallback an allowed release carries the `exception` of C002-DEC-005
-(C002-REQ-622).
+state; and for Q-release-hooks-01).
+
+**Exit codes and output** (revised for defect D-016 item 1). Exit 0 when the release is allowed and
+1 when it is refused; in both decided cases the release record is written (unless `--dry-run`), every
+refusal goes to standard error as `<code>: <message>` (`errors.md` §3), and standard output holds
+one line, `release-check: <target> <version> (<mode>): <outcome>`, followed by ` (<n> refusals)`
+when refused, then `; release record <path>`, or with `--dry-run` `; release record not written
+(--dry-run; would be <path>)`. Under the Copilot hooks fallback an allowed release carries the
+`exception` of C002-DEC-005 (C002-REQ-622). Exit 2 on a usage error (an unknown option or a
+positional argument, `--target` missing or unknown, a source plugin or mapping table that cannot be
+read, a version that is not a package version): `release-check: <detail>` and the usage line on
+standard error. Exit 3 on an internal error, including a release record or injection summary that
+does not validate against `release-record.schema.json`: `release-check: internal error: <detail>` on
+standard error; no file is written in either case.

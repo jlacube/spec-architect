@@ -74,7 +74,11 @@ shim (ERR-MCP-006, C002-IF-002 §5.2). A probe refused for that reason shows the
 `error`, version `—`, its fallback, and the fix `install a native executable of <tool>` followed by
 the remedies-table command of the server-mode variant, which names an installer that provides a
 native executable (for ast-grep, whose npm install gives only a `.cmd` shim). A probe refused
-because the executable is not found shows `missing`, as today. The `doctor-report` variant prints
+because the executable is not found shows `missing`, as today. The doctor reads the refusal from
+the text of the error result, the only content the server returns for it (C002-IF-002 §6.1; revised
+for defect D-017): `ERR-MCP-006: could not start "<executable>": only a .cmd or .bat shim was
+found` gives `error`, `ERR-MCP-006: could not start "<executable>": not found on PATH` gives
+`missing`; no structured field is read. The `doctor-report` variant prints
 this rule in every enforcement mode of its target and names the package's mode through
 `{{enforcement_mode}}`, because one variant serves every mode (C002-IF-001 §2.1); under native
 permission enforcement and the Copilot hooks fallback the probes run through the host's own shell or

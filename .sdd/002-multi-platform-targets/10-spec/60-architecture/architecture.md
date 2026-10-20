@@ -29,7 +29,12 @@ with a caveat and the hooks state in the checklist in both Copilot modes (P-01 o
 wiring anchors and frontmatter constructs as the tables hold them, the install command's refusal of
 a package without its CLI copy, the server's guard call without variable expansion, and the
 per-mechanism replay expectations that a correct `sdd-mcp-server` and `copilot-hooks` meet with 0
-differing (§6.2).
+differing (§6.2). Revised for defects D-015 … D-017 (findings of C002-T-044, C002-T-046, C002-T-047
+and C002-T-056): error results of the sdd MCP server as text only, without structured content (P-01
+on Q-mcp-errors-01); the eval runner's names per case row, `answer` option, rows per host, key file
+with isolated data folders, permission-only `allowTools` and direct relay; the checklist's
+mode-specific steps and one entry per step; the release check's command line, replay reports per
+mode and the problem texts of its refusals; the generator's version stamp from the source plugin.
 
 ## 1. Context and scope
 
@@ -70,7 +75,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-001 — Target generator
 - **Name:** Target generator (`scripts/generate.mjs` and `scripts/generate/`: source reader, translator, OpenCode emitter, Copilot emitter, writer)
 - **Status:** new
-- **Responsibility:** read the source plugin once into the neutral model, translate it with each target's mapping table and variants, write every selected target package with its generation manifest, or none on any error
+- **Responsibility:** read the source plugin once into the neutral model, translate it with each target's mapping table and variants, write every selected target package with its generation manifest (its `package_version` the version of the source plugin read, C002-IF-004), or none on any error
 - **Realizes:** C002-REQ-101, C002-REQ-102, C002-REQ-103, C002-REQ-104, C002-REQ-105, C002-REQ-106, C002-REQ-107, C002-REQ-108, C002-REQ-109, C002-REQ-111, C002-REQ-112, C002-REQ-114, C002-REQ-115, C002-REQ-116, C002-REQ-117, C002-REQ-118, C002-REQ-216, C002-REQ-317, C002-REQ-321, C002-REQ-326; C002-NFR-103, C002-NFR-301
 - **Interfaces:** provides C002-IF-004; reads C002-IF-001; writes C002-IF-005
 - **Depends on:** C002-COMP-002, C002-COMP-017
@@ -106,7 +111,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-005 — sdd MCP server
 - **Name:** `src/mcp/` bundled to `scripts/sdd-mcp.mjs` of `architect-sdd`; profiles `files` and `shell`
 - **Status:** new
-- **Responsibility:** write and edit files under `.sdd/` (profile `files`) and run allowlisted commands (profile `shell`) for agents without generic tools, without a shell and so without variable expansion (`sdd` as its own package's CLI; the guard call does not expand `${CLAUDE_PLUGIN_DATA}` either, C002-IF-002 §5.2), listing only the tools of its profile, deciding every call with the guard cores, failing closed, and returning quick-lint findings with each write
+- **Responsibility:** write and edit files under `.sdd/` (profile `files`) and run allowlisted commands (profile `shell`) for agents without generic tools, without a shell and so without variable expansion (`sdd` as its own package's CLI; the guard call does not expand `${CLAUDE_PLUGIN_DATA}` either, C002-IF-002 §5.2), listing only the tools of its profile, deciding every call with the guard cores, failing closed, returning quick-lint findings with each write, structured content only for a success (matching the advertised output schema) and an error result as text `<code>: <message>` only (C002-IF-002 §6.1)
 - **Realizes:** C002-REQ-401, C002-REQ-402, C002-REQ-403, C002-REQ-404, C002-REQ-405, C002-REQ-406, C002-REQ-407, C002-REQ-408, C002-REQ-409, C002-REQ-410, C002-REQ-411, C002-REQ-415; C002-NFR-101, C002-NFR-102, C002-NFR-204, C002-NFR-205
 - **Interfaces:** C002-IF-002
 - **Depends on:** C002-COMP-012 (guard cores, tokeniser), C002-COMP-018 (its own `sdd` entry), C001-COMP-04 (quick lint), C001-COMP-03 (workspace lookup)
@@ -133,7 +138,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-008 — Corpus replay suite
 - **Name:** `tests/replay/` with one adapter per mechanism (OpenCode permission rules, sdd MCP server, Copilot guard hooks)
 - **Status:** new
-- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to (a case with a `cwd` other than the repository root through its own `cwd`), with the expectation of that mechanism (cases without a `cwd` or a tool name fed as malformed calls and `deny`; unknown `architect:sdd-*` callers `allow` on OpenCode; memory cases `deny`; write-tool cases of the shell corpus `deny`; on the server, Serena commands with the literal `${CLAUDE_PLUGIN_DATA}` and cases whose `cwd` reaches the repository through a link `deny`; identity cases on OpenCode only), read ERR-MCP-003 as the server's `allow`, feed Copilot hook input under the hook names of the classes file, replay a case that requires a host capability with its own input on a fixture built with that capability (`error` on a replay host that lacks it), report the decisions that differ, record the replay host with its capabilities, and list the cases not replayed; on OpenCode, start the pinned host binary of the tested version with a database of its own and no network at start, and give every Edit case a fixture file whose text the call names (C002-IF-009 §2.2, C002-IF-010 §4)
+- **Responsibility:** feed every applicable case of the path and shell corpora to each enforcement mechanism in use, as the input C002-IF-009 §2.2 maps it to (a case with a `cwd` other than the repository root through its own `cwd`), with the expectation of that mechanism (cases without a `cwd` or a tool name fed as malformed calls and `deny`; unknown `architect:sdd-*` callers `allow` on OpenCode; memory cases `deny`; write-tool cases of the shell corpus `deny`; on the server, Serena commands with the literal `${CLAUDE_PLUGIN_DATA}` and cases whose `cwd` reaches the repository through a link `deny`; identity cases on OpenCode only), read ERR-MCP-003 as the server's `allow`, feed Copilot hook input under the hook names of the classes file, replay a case that requires a host capability with its own input on a fixture built with that capability (`error` on a replay host that lacks it), report the decisions that differ, record the replay host with its capabilities, and list the cases not replayed; read the code of a server error result from its text; on OpenCode, start the pinned host binary of the tested version with a database of its own and no network at start, and give every Edit case a fixture file whose text the call names (C002-IF-009 §2.2, §2.3, C002-IF-010 §4)
 - **Realizes:** C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-NFR-201, C002-NFR-202
 - **Interfaces:** C002-IF-009 §2 (replay report)
 - **Depends on:** C002-COMP-013 (corpora), C002-COMP-005, C002-COMP-012, C002-COMP-003, C002-COMP-004, C002-COMP-006
@@ -142,7 +147,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-009 — Eval runners for the generated targets
 - **Name:** `evals/harness/runners/opencode.mjs`, `evals/harness/runners/copilot-cli.mjs`, stub runner; host selection in `runSession`
 - **Status:** new
-- **Responsibility:** run the existing eval cases on OpenCode and Copilot CLI through the unchanged case API, within the turn and spend caps, and produce the injection summaries; for OpenCode, start the pinned host binary of the tested version with a database of its own and answer `question` calls through the SDK (C002-IF-010 §4); for Copilot CLI, install a copy of the Copilot package into the case workspace, give the session the sdd MCP servers of its workspace MCP configuration and name agents `architect:<agent>`
+- **Responsibility:** run the existing eval cases on OpenCode and Copilot CLI through the unchanged case API, within the turn and spend caps, and produce the injection summaries; run a case row that names a host only on that host and report its calls in that host's names, every other row in the source names (C002-IF-010 §1, §3); for OpenCode, start the pinned host binary of the tested version with a database and data folders of its own, give it the OpenRouter key from P-01's key file and no other credential, answer permission requests under `allowTools` and `question` calls through the SDK from the case's `answer` function, and start a relayed specialist directly (C002-IF-010 §2, §4); for Copilot CLI, install a copy of the Copilot package into the case workspace, give the session the sdd MCP servers of its workspace MCP configuration and name agents `architect:<agent>`
 - **Realizes:** C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611, C002-REQ-612; C002-NFR-105, C002-NFR-203
 - **Interfaces:** C002-IF-010; C002-IF-009 (injection summary); calls `install copilot` of C002-IF-007
 - **Depends on:** C002-COMP-003, C002-COMP-004, C002-COMP-002 (name mapping), C002-COMP-013 (existing harness), C002-COMP-018 (install command)
@@ -151,7 +156,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-010 — Release check
 - **Name:** `scripts/release-check.mjs` and release records under `docs/releases/`
 - **Status:** new
-- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (completeness of the not-applicable list, the expected decision of every case, and a replay host with every capability the corpora's cases require), injection, checklist (hooks state in both Copilot modes, injection steps under the hooks fallback) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record
+- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (one report per mechanism of the package's mode, citing the corpora of the release commit; completeness of the not-applicable list, the expected decision of every case, and a replay host with every capability the corpora's cases require), injection (at least 20 cases), checklist (every step of the package's mode once and passed, hooks state in both Copilot modes, injection steps where the record is the injection evidence) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record, or with `--dry-run` decide without writing; `--root` names the repository read (C002-IF-009 §5)
 - **Realizes:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-NFR-501
 - **Interfaces:** C002-IF-009 §5
 - **Depends on:** C002-COMP-001, C002-COMP-002, C002-COMP-008, C002-COMP-009, C002-COMP-011
@@ -160,7 +165,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-011 — Manual VS Code checklist
 - **Name:** `docs/checklists/vscode-copilot.md` and records under `docs/checklists/records/`
 - **Status:** new
-- **Responsibility:** verify by hand what no script can drive in VS Code (boundary, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot` with the assumptions of C002-IF-005 §3, an edit delegated to the host built-in agent `general-purpose` and denied by the Copilot subagent guard hook, Revise at G1 and the revise prompt, the hooks state in both Copilot modes with its three sources `chat.useHooks`, Workspace Trust and organisation policy, the last two being those the doctor does not read, a guard-hook denial under the hooks fallback, injection cases when Copilot CLI cannot load the package and always under the hooks fallback), in the run order of C002-IF-009 §4 (the steps that switch hooks off first, then the restore, the hooks-state step and every step a hook decides), and keep one record per run, with the hooks state and its sources
+- **Responsibility:** verify by hand what no script can drive in VS Code (the sdd MCP server boundary under server enforcement only, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot` with the assumptions of C002-IF-005 §3, an edit delegated to the host built-in agent `general-purpose` and denied by the Copilot subagent guard hook in both Copilot modes, Revise at G1 and the revise prompt, the hooks state in both Copilot modes with its three sources `chat.useHooks`, Workspace Trust and organisation policy, the last two being those the doctor does not read, a guard-hook denial under the hooks fallback, injection cases when Copilot CLI cannot load the package and always under the hooks fallback), in the run order of C002-IF-009 §4 (the steps that switch hooks off first, then the restore, the hooks-state step and every step a hook decides), and keep one record per run, with the hooks state and its sources and each step once at its last run, a note naming earlier runs; a step that VS Code keeps from running (the doctor in restricted mode) is recorded failed
 - **Realizes:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-628; C002-NFR-601
 - **Interfaces:** C002-IF-009 §4
 - **Depends on:** C002-COMP-004
@@ -283,7 +288,7 @@ packages. Generated files are rebuildable at any commit (C002-NFR-301).
 
 | Node | Runs | Started by | Lifetime |
 |---|---|---|---|
-| Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check; a corpus replay for a release runs with Developer Mode on or elevated, so that the `file-symlink` capability is present (C002-REQ-634, C002-IF-009 §2.1); the OpenCode replay and the OpenCode eval runner start the pinned OpenCode binary of the tested version by its absolute path with a database of their own, and need Node.js 22.22.2 or later for the OpenCode JS SDK (C002-IF-010 §4; `../10-context/scope.md` §3.1, §5) | P-01 (`npm run …`) | per command |
+| Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check; a corpus replay for a release runs with Developer Mode on or elevated, so that the `file-symlink` capability is present (C002-REQ-634, C002-IF-009 §2.1); the OpenCode replay and the OpenCode eval runner start the pinned OpenCode binary of the tested version by its absolute path with a database and data folders of their own, and need Node.js 22.22.2 or later for the OpenCode JS SDK; paid OpenCode eval sessions read P-01's OpenRouter key file `%USERPROFILE%\.architect-evals\openrouter-key.txt` (C002-IF-010 §4; `../10-context/scope.md` §3.1, §5) | P-01 (`npm run …`) | per command |
 | Adopter machine, Claude Code | plugin as today; hooks call `node <plugin-root>/scripts/sdd.mjs` | Claude Code | per session; per hook call |
 | Adopter machine, OpenCode | `.opencode/` and `opencode.json` of the OpenCode package (project or global placement); `sdd` from `architect-sdd`; under server mode one `sdd-mcp --profile files` and one `--profile shell` process per session; `sdd serena-launch` for Serena | OpenCode | per session (C002-CON-04) |
 | Adopter machine, VS Code | the Copilot package's plugin part as a local plugin (`chat.pluginLocations`; loadable once the install has written its `plugin.json`; VS Code loads it from its own copy, S-08 §3); in each repository, after `sdd install copilot` run by P-03, the ten agents in `.github/agents/`, the workspace hook file in `.github/hooks/` and the servers in `.vscode/mcp.json`; one `sdd-mcp --profile files` and one `--profile shell` process per Local chat session, started after its first message; hook commands `node "<package>/scripts/sdd.mjs" …` with the absolute path written at install, the PreToolUse command once per loaded hooks file | VS Code (local agent host); P-03 for the install | per chat session; per hook call; per install |
@@ -310,7 +315,7 @@ it then reads.
 | Fail closed | Server faults refuse and change nothing; guard-hook faults write a deny decision and exit 2, and both Copilot hosts deny a call whose hook errors (C002-CON-08; S-08 §2.2, §3); the Copilot hook denies a tool it cannot class (C002-REQ-328) and is installed beside the agents it guards, before them, and the package is no plugin until then (C002-IF-005 §3); a hook command whose CLI copy is missing errors, so every call is denied; a generator error leaves no package (C002-INV-02); a missing `sdd-mcp`, or a session before its first message, leaves agents without write tools, never with generic ones; an install conflict writes nothing (ERR-CLI-021) |
 | Shell surface | The server never starts a shell (C002-CON-07); compound commands are refused by the core before any process starts |
 | Untrusted content | Unchanged rule (C001-NFR-205); injection evals per target (C002-NFR-203) |
-| Error handling | Stable codes with fixes: ERR-GEN, ERR-MCP, WARN-MCP, ERR-REL (001 … 013), ERR-BLD (001, 002), ERR-CLI-019 … 022, GUARD-HOOK-001, GUARD-HOOK-002, and the TGT-*, PLG-VAR-001 and PLG-VER-001 check codes (`../50-interfaces/errors.md`, C002-IF-005 §6); every code of `errors.md` §1 … §6 is shown as `<code>: <message>`; the §7 check codes keep the finding format of C001-IF-08 §3 (C002-IF-005 §6) (with `. Fix: <fix>` from the CLI and the generator), or as separate code and message fields in structured results (`errors.md` print form) |
+| Error handling | Stable codes with fixes: ERR-GEN, ERR-MCP, WARN-MCP, ERR-REL (001 … 013), ERR-BLD (001, 002), ERR-CLI-019 … 022, GUARD-HOOK-001, GUARD-HOOK-002, and the TGT-*, PLG-VAR-001 and PLG-VER-001 check codes (`../50-interfaces/errors.md`, C002-IF-005 §6); every code of `errors.md` §1 … §6 is shown as `<code>: <message>`; the §7 check codes keep the finding format of C001-IF-08 §3 (C002-IF-005 §6) (with `. Fix: <fix>` from the CLI and the generator), or as separate code and message fields in the generator's `--json` diagnostics and the release record's refusals (`errors.md` print form); the sdd MCP server's error results carry `<code>: <message>` as their only text and no structured content, since a host client validates every structured content against the advertised success schema (C002-IF-002 §6.1; defect D-017) |
 | Configuration | Mapping tables (mode, tested versions, models, tools) are the only per-target configuration; P-03 sets host settings named by the install notes and runs the install command, whose only machine-specific output is the package path in `hooks.json` and in the workspace hook file (generated files hold none, C002-CON-09) |
 | Observability | `SDD_DEBUG=1` decision logs of the server on standard error; generator diagnostics; replay reports and release records as evidence |
 | Determinism and versioning | Byte-identical generation (C002-CON-09); one version per packaging run (C002-CON-16); manifests carry `source_digest` and file hashes |
@@ -355,7 +360,10 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Under the sdd MCP server, `.cmd` shims are not run; the doctor reports `error` with a native-install fix | C002-CON-07 | run shims through `cmd.exe` (a shell, and `%`/`^` expansion of agent text) |
 | The CLI takes its shipped templates from the folder above its own bundle first, and from `CLAUDE_PLUGIN_ROOT` only when that folder has none (C002-IF-003 §1; defect D-004) | C002-REQ-512, C002-REQ-518: the npm `sdd`, started inside a Claude Code session that sets `CLAUDE_PLUGIN_ROOT`, must read its translated templates; on Claude Code both name the plugin folder | `CLAUDE_PLUGIN_ROOT` first (the npm `sdd` would read another package's untranslated templates) |
 | One print form for every code, `<code>: <message>`, the Message column holding only the printed text (`errors.md`; defects D-004, D-008) | C001-NFR-601; C002-TS-530 reads the code from the build line; the CLI catalogue mirrors the column character for character | message lines without the code for build and release errors (a reader cannot tell the codes apart) |
-| The OpenCode replay and eval runner start the pinned host binary with their own `OPENCODE_DB` (C002-IF-010 §4) | C002-REQ-606, C002-REQ-621; S-07 facts F-7, F-8 | the `opencode` that PATH resolves (another install is found first in Git Bash, and the tested version would migrate the user's shared database) |
+| The OpenCode replay and eval runner start the pinned host binary with their own `OPENCODE_DB` and data folders; paid eval sessions take the OpenRouter key from P-01's key file only (C002-IF-010 §4; defect D-015 item 4) | C002-REQ-606, C002-REQ-621; S-07 facts F-7, F-8; P-01's key file replaced the credential store for OpenCode evals | the `opencode` that PATH resolves (another install is found first in Git Bash, and the tested version would migrate the user's shared database); the user's OpenCode credential store (the tested version would read the user's data folders) |
+| Error results of the sdd MCP server are text only: `isError: true`, one text item `<code>: <message>` (a guard rule's deny message as it is), no `structuredContent`; a success keeps the structured content that `tools/list` advertises as `outputSchema` (C002-IF-002 §4, §6.1) | P-01 answer to Q-mcp-errors-01 (defect D-017): OpenCode 1.18.31 validates every structured content against the advertised `outputSchema` and turned every refused or failed `run_command` into the JSON-RPC error `-32602`; C002-CON-08 (a refusal stays a refusal) | an `outputSchema` that is a union of the success and the error shape (not chosen by P-01) |
+| A case row that names a host runs only on that host and reads that host's tool and agent names; `allowTools` answers permission requests only, and a tool the package lets the host run without asking is decided by the package's own rules (C002-IF-010 §1 … §3; defect D-015 items 1, 5, 7) | C002-REQ-608: the CHG-002 host rows (C002-T-037, C002-T-038) are written in OpenCode names; the package under test, not the runner, is the boundary | Claude Code names for every row (the host rows would need rewriting); a runner-side gate on tools run without asking (the eval would then measure the runner's policy, not the package's rules) |
+| The release check requires the replay reports of the package's mode (`native-permissions`: `opencode-permissions`; `sdd-mcp-server`: `sdd-mcp-server`; `copilot-hooks`: `sdd-mcp-server` and `copilot-hooks`), and reports a replay of other corpora and fewer than 20 injection cases as missing evidence (ERR-REL-009 with a `<kind>` naming the condition) (C002-IF-009 §5; defect D-016 items 2, 3, 5) | C002-REQ-606, C002-REQ-617, C002-NFR-203; the implemented check of C002-T-047 | new ERR-REL codes for the two conditions (a second code for the same refusal: the evidence the release needs is absent) |
 
 ## 7. Constraints
 
@@ -545,21 +553,22 @@ sequenceDiagram
   C002_COMP_004->>VSC: tool_search_tool loads the deferred tool sdd-files-write_file
   C002_COMP_004->>VSC: sdd-files-write_file with path and content
   VSC->>C002_COMP_005: tools/call write_file
-  C002_COMP_005->>C002_COMP_005: validate arguments, else failed ERR-MCP-001
+  C002_COMP_005->>C002_COMP_005: validate arguments, else error result text ERR-MCP-001
   C002_COMP_005->>C002_COMP_012: decide Write of path, cwd root, memory folder off
   alt deny
     C002_COMP_012-->>C002_COMP_005: GUARD-PATH-001 and message
-    C002_COMP_005-->>VSC: isError, refused, file unchanged
+    C002_COMP_005-->>VSC: isError, text is the GUARD-PATH-001 deny message, no structuredContent, file unchanged
   else allow
     C002_COMP_005->>FS: temporary file then rename
     alt I/O error
-      C002_COMP_005-->>VSC: isError, failed ERR-MCP-003, previous content kept
+      C002_COMP_005-->>VSC: isError, text ERR-MCP-003 code and message, no structuredContent, previous content kept
     else renamed
       C002_COMP_005->>C001_COMP_04: quick lint of the written file
       C001_COMP_04-->>C002_COMP_005: findings, or a fault
-      C002_COMP_005-->>VSC: written with up to 15 findings, or WARN-MCP-001
+      C002_COMP_005-->>VSC: written, structuredContent of the advertised output schema with up to 15 findings, or WARN-MCP-001
     end
   end
+  Note over VSC,C002_COMP_005: a client that validates structuredContent against the output schema accepts both forms, defect D-017
   VSC-->>C002_COMP_004: tool result
   VSC->>C002_COMP_005: close standard input at session end
   C002_COMP_005-->>VSC: exit 0
@@ -581,11 +590,11 @@ sequenceDiagram
   C002_COMP_005->>C002_COMP_012: decide Bash command, cwd root
   alt deny
     C002_COMP_012-->>C002_COMP_005: GUARD-BASH-001 or GUARD-BASH-002
-    C002_COMP_005-->>VSC: isError, refused, no process started
+    C002_COMP_005-->>VSC: isError, text is the deny message, no structuredContent, no process started
   else allow
     C002_COMP_005->>C002_COMP_005: words from the guard tokeniser, no shell, no variable expanded
     alt executable cannot start: own sdd.mjs not beside the server, not on PATH, only a cmd or bat shim
-      C002_COMP_005-->>VSC: isError, failed ERR-MCP-006 with the reason, no process started
+      C002_COMP_005-->>VSC: isError, text ERR-MCP-006 code, message and reason, no structuredContent, no process started
     else first word is sdd
       C002_COMP_005->>C002_COMP_018: node package scripts/sdd.mjs lint 002
       C002_COMP_018-->>C002_COMP_005: exit code, stdout, stderr
@@ -759,22 +768,24 @@ sequenceDiagram
   participant C002_COMP_008 as Corpus replay reports
   participant C002_COMP_009 as Injection summary
   participant C002_COMP_011 as Checklist records
-  P01->>C002_COMP_010: release-check, target copilot
+  P01->>C002_COMP_010: release-check, target copilot, optional version, dry-run and root
   C002_COMP_010->>C002_COMP_001: regenerate at the release commit and compare with dist/copilot
   C002_COMP_010->>C002_COMP_002: enforcement mode, tested versions, S-08 outcome
+  Note over C002_COMP_010,C002_COMP_008: reports per mode, native-permissions opencode-permissions, sdd-mcp-server sdd-mcp-server, copilot-hooks both sdd-mcp-server and copilot-hooks
+  C002_COMP_010->>C002_COMP_008: each report cites the corpora of the release commit by SHA-256, else missing evidence ERR-REL-009
   C002_COMP_010->>C002_COMP_008: differing decisions over the applicable cases, not-applicable list, expectations, host versions per mechanism
   C002_COMP_010->>C002_COMP_008: replay host capabilities against the requires fields of the cited corpora, C002-REQ-634
-  C002_COMP_010->>C002_COMP_011: checklist record of the version, failed steps, host versions, hooks state enabled in both Copilot modes
-  alt Copilot hooks fallback
-    C002_COMP_010->>C002_COMP_011: one injection step per Copilot injection case
+  C002_COMP_010->>C002_COMP_011: checklist record of the version, every step of the mode once and passed, host versions, hooks state enabled in both Copilot modes
+  alt Copilot hooks fallback, or Copilot CLI cannot load the package
+    C002_COMP_010->>C002_COMP_011: one injection step run per Copilot injection case, at least 20
     C002_COMP_010->>C002_COMP_009: write the injection summary from the checklist record, hooks enabled required
   else other modes
-    C002_COMP_010->>C002_COMP_009: injection cases acted upon and host versions
+    C002_COMP_010->>C002_COMP_009: at least 20 injection cases, none acted upon, host versions
   end
   alt every check passes
-    C002_COMP_010-->>P01: released, release record, exception flag under the hooks fallback
+    C002_COMP_010-->>P01: released, exit 0, release record unless dry-run, exception flag under the hooks fallback
   else any check fails
-    C002_COMP_010-->>P01: refused with ERR-REL codes, release record
+    C002_COMP_010-->>P01: refused with ERR-REL lines, exit 1, release record unless dry-run
   end
 ```
 
@@ -844,7 +855,7 @@ sequenceDiagram
         C002_COMP_003-->>C002_COMP_008: refused by a rule, unavailable tool in either form, error before the rule, or tool ran
       else sdd MCP server
         C002_COMP_008->>C002_COMP_005: write_file, replace_text or run_command with its dialect
-        C002_COMP_005-->>C002_COMP_008: result code, ERR-MCP-003 to ERR-MCP-006 read as allow
+        C002_COMP_005-->>C002_COMP_008: success, or an error result whose code starts its text, ERR-MCP-003 to ERR-MCP-006 read as allow
       else Copilot guard hooks
         C002_COMP_008->>C002_COMP_008: rewrite the classes file of the installed package copy, every terminal entry in the case dialect, set the case env for the hook process
         C002_COMP_008->>C002_COMP_012: Copilot hook input on standard input, agent_type of the playing agent, tool_name Write, Bash or Glob from the classes file
