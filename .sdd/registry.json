@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T17:36:08Z",
+  "generated_at": "2026-10-20T17:36:34Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -392,6 +392,16 @@
           "status": "closed",
           "resolution": "Revision D-018…D-020 (2026-10-20): spec 4c0f7c6…5e8d331, plan 011e46d…b7274b7; P-01 Q-cli-model-01, Q-opencode-glob-01, Q-ts634-budget-01, Q-capped-runs-01, Q-copilot-pool-01, Q-rerun-scope-01, Q-exec-lookup-01; code follow-ups in C002-T-065",
           "closed_at": "2026-10-20"
+        },
+        {
+          "id": "D-021",
+          "ref": "C002-TS-673",
+          "summary": "Found in C002-T-065 (minor, editorial): (1) TS-673/test plan put the planted line on line 30 of agents/sdd-critic.md, which has 26 lines (fixture pads it); (2) TC-637 says 16 rows, TS-637 Examples has 13; (3) TC-684 names an fx-gate builder that does not exist (CHG-001 gate fixture used); (4) TC-681 OpenCode row is not applicable while the OpenCode mode is sdd-mcp-server; (5) TS-306 note names the conductor's model field, no wiring token prints the value. Batch for the next revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-20",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
