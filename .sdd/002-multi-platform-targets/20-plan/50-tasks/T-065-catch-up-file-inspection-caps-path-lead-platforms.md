@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-028, C002-T-038, C002-T-044, C002-T-045, C002-T-047, C002-T-064]
 implements: [C002-REQ-111, C002-REQ-112, C002-REQ-304, C002-REQ-405, C002-REQ-501, C002-REQ-507, C002-REQ-508, C002-REQ-515, C002-REQ-606, C002-REQ-608, C002-REQ-610, C002-REQ-611, C002-REQ-612, C002-REQ-618, C002-REQ-627, C002-REQ-634, C002-NFR-105]
 satisfies_ac: [C002-AC-111.1, C002-AC-112.1, C002-AC-304.1, C002-AC-405.1, C002-AC-501.1, C002-AC-507.1, C002-AC-508.1, C002-AC-515.1, C002-AC-606.1, C002-AC-608.1, C002-AC-610.1, C002-AC-611.1, C002-AC-612.1, C002-AC-618.1, C002-AC-627.1, C002-AC-634.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-673, C002-TS-674, C002-TS-120, C002-TS-675, C002-TS-676, C
 components: [C002-COMP-001, C002-COMP-002, C002-COMP-003, C002-COMP-004, C002-COMP-005, C002-COMP-008, C002-COMP-009, C002-COMP-010, C002-COMP-015, C002-COMP-016, C002-COMP-018]
 risk_refs: [C002-RISK-034, C002-RISK-035, C002-RISK-022, C002-RISK-015, C002-RISK-026]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 880f9ea, completed_at: 2026-10-20, notes: "npm test 1465 pass + 1 skip; replay suite 44 + 2 skip; confirmation replay sdd-mcp-server/copilot-hooks 0 differing; C001 gate tests unchanged and green. No paid session. Candidates: TS-673 line 30 vs 26-line sdd-critic.md; TC-637 16 vs 13 rows; no fx-gate builder (C001 gate fixture used); TC-681 OpenCode row skipped (server mode); TC-306 note names the model field, not the value." }
 ---
 
 # C002-T-065 — Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule, PATH-only executable lookup
