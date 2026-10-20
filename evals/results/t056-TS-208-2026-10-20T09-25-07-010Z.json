@@ -1,0 +1,152 @@
+{
+  "scenario": "TS-208",
+  "title": "Options analysis behind a material question",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:26:12.532Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.2337564,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "no AskUserQuestion call",
+        "the persistence question was not asked",
+        "Q-persistence-01 not in questions-log.md",
+        "entry does not record candidates considered 4 or 5:\n",
+        "entry does not list both rejected candidates with reasons"
+      ],
+      "metrics": {
+        "cost_usd": 0.2337564,
+        "session_ms": 64890,
+        "api_ms": null,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 14,
+            "output": 1531,
+            "cache_read": 134452,
+            "cache_write": 29450,
+            "cost_usd": 0.23375639999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 1531,
+              "cache_read": 134452,
+              "cache_write": 29450
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 11,
+          "Glob": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16062
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16062
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16062
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16062
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 5111
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 5111
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3777
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3777
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3777
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2846
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2846
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2846
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 12783
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 6,
+        "usd": 0.2337564
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-208-2026-10-20T09-25-07-010Z-run1.json"
+    }
+  ]
+}

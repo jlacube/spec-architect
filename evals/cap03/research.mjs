@@ -5,7 +5,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { constitution } from "../cap02/drafting.mjs";
 import { architectWithStubs, dispatchPrompt } from "../harness/overlay.mjs";
-import { dispatches } from "../harness/assert.mjs";
+import { dispatches, finalReply } from "../harness/assert.mjs";
 import { edit, git, sdd } from "../harness/workspaces.mjs";
 
 export const CHANGE = ".sdd/001-booking-service";
@@ -71,10 +71,17 @@ export function unwrap(text) {
     .trim();
 }
 
-/** A specialist's hand-back: the result of the relay's Agent call (not the relay's own reply). */
+/**
+ * A specialist's hand-back: the result of the relay's Agent call (not the relay's own reply). On a host
+ * without the eval relay (OpenCode runner: a harness `relay` record naming the agent, the specialist
+ * ran as the session agent) the hand-back is the session's final reply.
+ */
 export function handback(transcript, agent = "sdd-researcher") {
   const call = dispatches(transcript).find((d) => d.type.endsWith(agent));
-  if (!call) return "";
+  if (!call) {
+    const direct = transcript.some((r) => r.type === "harness" && r.event === "relay" && String(r.agent ?? "").endsWith(agent));
+    return direct ? unwrap(finalReply(transcript)) : "";
+  }
   for (const r of transcript) {
     if (r.type !== "sdk" || r.message.type !== "user") continue;
     for (const b of r.message.message?.content ?? [])

@@ -1,0 +1,190 @@
+{
+  "scenario": "TS-804-unattended",
+  "title": "Unattended drafting reached G2 with lint clean",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:41:10.482Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.3202718,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3202718,
+        "session_ms": 88749,
+        "api_ms": null,
+        "turns": 12,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 26,
+            "output": 3079,
+            "cache_read": 328789,
+            "cache_write": 35494,
+            "cost_usd": 0.3202718
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 3079,
+              "cache_read": 328789,
+              "cache_write": 35494
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 10,
+          "Glob": 2,
+          "Bash": 5,
+          "TaskCreate": 2,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 14351
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 14351
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 14351
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 3843
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3618
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3618
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2730
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2730
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3506
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3506
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3506
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3506
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 5588
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 5588
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 5588
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5927
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 9234
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 6159
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 6159
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2442
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 9777
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 12,
+        "usd": 0.3202718
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-804-unattended-2026-10-20T09-39-38-272Z-run1.json"
+    }
+  ]
+}

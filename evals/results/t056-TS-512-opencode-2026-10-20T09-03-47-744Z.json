@@ -1,0 +1,277 @@
+{
+  "scenario": "TS-512-opencode",
+  "title": "toolchain.md written by init on OpenCode (TS-512)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:06:21.050Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.5111889,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.5111889,
+        "session_ms": 153140,
+        "api_ms": null,
+        "turns": 11,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 24,
+            "output": 7894,
+            "cache_read": 309449,
+            "cache_write": 37719,
+            "cost_usd": 0.41706079999999995
+          },
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 12,
+            "output": 2719,
+            "cache_read": 74066,
+            "cache_write": 23283,
+            "cost_usd": 0.0941281
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 24,
+              "output": 7894,
+              "cache_read": 309449,
+              "cache_write": 37719
+            },
+            "output": "derived"
+          },
+          "sdd-cartographer": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 74066,
+              "cache_write": 23283
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-cartographer",
+            "task_id": "ses_ea771ff5effeG81UdG44h52r1b",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "sdd-shell_run_command": 17,
+          "glob": 2,
+          "todowrite": 3,
+          "task": 1,
+          "read": 2,
+          "serena_get_symbols_overview": 1,
+          "sdd-files_write_file": 3,
+          "question": 2,
+          "sdd-files_replace_text": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 8736
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 8736
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2181
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 44253
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-cartographer",
+            "ms": 44253
+          },
+          {
+            "tool": "glob",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3311
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "serena_get_symbols_overview",
+            "agent": "sdd-cartographer",
+            "ms": 3775
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 9072
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 9072
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 9072
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "sdd-cartographer",
+            "ms": 6867
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 4981
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 10324
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "main",
+            "ms": 12806
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 12806
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 6941
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "main",
+            "ms": 21239
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "main",
+            "ms": 21239
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 2286
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 5499
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "usage": {
+        "turns": 11,
+        "usd": 0.5111889
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-512-opencode-2026-10-20T09-03-47-744Z-run1.json"
+    }
+  ]
+}

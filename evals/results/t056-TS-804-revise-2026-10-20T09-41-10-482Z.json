@@ -1,0 +1,195 @@
+{
+  "scenario": "TS-804-revise",
+  "title": "P-01 answered \"Revise\" at G2",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:42:53.152Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.3362524,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3362524,
+        "session_ms": 99226,
+        "api_ms": null,
+        "turns": 15,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 32,
+            "output": 3228,
+            "cache_read": 425997,
+            "cache_write": 35209,
+            "cost_usd": 0.3362524
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 32,
+              "output": 3228,
+              "cache_read": 425997,
+              "cache_write": 35209
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 9,
+          "Glob": 2,
+          "Bash": 7,
+          "Edit": 1,
+          "AskUserQuestion": 2,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 8522
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 8522
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 8522
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 4166
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3271
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2842
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2842
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3673
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3673
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3673
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 5796
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 5796
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5796
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 4562
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 3597
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3597
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 8605
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2764
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2411
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 6779
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 8532
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 4683
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 15,
+        "usd": 0.3362524
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-804-revise-2026-10-20T09-41-10-482Z-run1.json"
+    }
+  ]
+}

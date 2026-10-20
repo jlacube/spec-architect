@@ -1,0 +1,202 @@
+{
+  "scenario": "TS-634",
+  "title": "Scripted Revise at a gate on OpenCode (TS-634)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:21:18.309Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.3572674,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-634: 1 gate question call(s); a second gate G2 question after the rework expected"
+      ],
+      "metrics": {
+        "cost_usd": 0.3572674,
+        "session_ms": 108875,
+        "api_ms": null,
+        "turns": 16,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 34,
+            "output": 3198,
+            "cache_read": 444932,
+            "cache_write": 35017,
+            "cost_usd": 0.3572674
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 34,
+              "output": 3198,
+              "cache_read": 444932,
+              "cache_write": 35017
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "read": 9,
+          "glob": 4,
+          "sdd-shell_run_command": 6,
+          "question": 2,
+          "sdd-files_replace_text": 1,
+          "sdd-files_write_file": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 8433
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8433
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2406
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2721
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 8635
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 8635
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 8635
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3970
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3970
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3970
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3190
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3190
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 2466
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 6530
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3790
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "main",
+            "ms": 3688
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3688
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2471
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8437
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2606
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 15231
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2736
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "main",
+            "ms": 6153
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "usage": {
+        "turns": 16,
+        "usd": 0.3572674
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-634-2026-10-20T09-19-26-471Z-run1.json"
+    }
+  ]
+}

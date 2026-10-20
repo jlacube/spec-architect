@@ -1,0 +1,210 @@
+{
+  "scenario": "TS-510-opencode-2.0.76",
+  "title": "Claude Code 2.0.76 on OpenCode: no Claude Code row (TS-510)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:02:38.962Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2924056,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2924056,
+        "session_ms": 89026,
+        "api_ms": null,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 14,
+            "output": 2249,
+            "cache_read": 134063,
+            "cache_write": 29256,
+            "cost_usd": 0.22578860000000006
+          },
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 10,
+            "output": 1947,
+            "cache_read": 43145,
+            "cache_write": 16093,
+            "cost_usd": 0.066617
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 2249,
+              "cache_read": 134063,
+              "cache_write": 29256
+            },
+            "output": "derived"
+          },
+          "sdd-cartographer": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 0,
+              "cache_read": 43145,
+              "cache_write": 16093
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-cartographer",
+            "task_id": "ses_ea7746515ffejiJgOK1YejKpPi",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "sdd-shell_run_command": 11,
+          "glob": 2,
+          "read": 2,
+          "task": 1,
+          "list_mcp_resources": 1,
+          "sdd-files_write_file": 1,
+          "sdd-files_replace_text": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 9766
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 9766
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3827
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-cartographer",
+            "ms": 39167
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "sdd-cartographer",
+            "ms": 8943
+          },
+          {
+            "tool": "glob",
+            "agent": "sdd-cartographer",
+            "ms": 5090
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 5090
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "sdd-cartographer",
+            "ms": 5396
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 5396
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4773
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "main",
+            "ms": 5099
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 5099
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 6,
+        "usd": 0.2924056
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-510-opencode-2.0.76-2026-10-20T09-01-09-479Z-run1.json"
+    }
+  ]
+}

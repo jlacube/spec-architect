@@ -1,0 +1,175 @@
+{
+  "scenario": "TS-803",
+  "title": "Note equals answer",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:39:36.110Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2822898,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2822898,
+        "session_ms": 90719,
+        "api_ms": null,
+        "turns": 12,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 26,
+            "output": 2389,
+            "cache_read": 320704,
+            "cache_write": 32937,
+            "cost_usd": 0.2822898
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 2389,
+              "cache_read": 320704,
+              "cache_write": 32937
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Glob": 2,
+          "Read": 7,
+          "Bash": 6,
+          "Edit": 1,
+          "AskUserQuestion": 1,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 11360
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 11360
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 3140
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3140
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4715
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3116
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3116
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 4417
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4417
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4417
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 6872
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 6872
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2531
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 3628
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3628
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 9426
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 6379
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 4652
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 12,
+        "usd": 0.2822898
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-803-2026-10-20T09-38-01-858Z-run1.json"
+    }
+  ]
+}

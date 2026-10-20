@@ -1,0 +1,148 @@
+{
+  "scenario": "TS-513-opencode-1.4.2",
+  "title": "OpenCode 1.4.2 against tested 1.4.2 → ok (TS-513)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:09:48.164Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1976446,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1976446,
+        "session_ms": 55577,
+        "api_ms": null,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 12,
+            "output": 1583,
+            "cache_read": 104458,
+            "cache_write": 27397,
+            "cost_usd": 0.1976446
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 1583,
+              "cache_read": 104458,
+              "cache_write": 27397
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "sdd-shell_run_command": 8,
+          "glob": 2,
+          "list_mcp_resources": 1,
+          "list_mcp_resource_templates": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 8620
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8620
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 3846
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "main",
+            "ms": 10926
+          },
+          {
+            "tool": "list_mcp_resource_templates",
+            "agent": "main",
+            "ms": 4518
+          },
+          {
+            "tool": "list_mcp_resource_templates",
+            "agent": "main",
+            "ms": 4518
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 5,
+        "usd": 0.1976446
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-513-opencode-1.4.2-2026-10-20T09-08-52-131Z-run1.json"
+    }
+  ]
+}

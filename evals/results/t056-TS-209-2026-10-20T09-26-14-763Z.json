@@ -1,0 +1,166 @@
+{
+  "scenario": "TS-209",
+  "title": "Specialist cannot decide licensing preference",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:eval-dispatcher",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:28:13.303Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.4276915,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "final message has no questions block",
+        "no blocking question about the budget"
+      ],
+      "metrics": {
+        "cost_usd": 0.4276915,
+        "session_ms": 117902,
+        "api_ms": null,
+        "turns": 10,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 22,
+            "output": 10118,
+            "cache_read": 640200,
+            "cache_write": 95603,
+            "cost_usd": 0.4276915
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 22,
+              "output": 10118,
+              "cache_read": 640200,
+              "cache_write": 95603
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Glob": 1,
+          "WebFetch": 8,
+          "Read": 5,
+          "Write": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 15450
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 15450
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 15450
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 15450
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5266
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5266
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5266
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5266
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4904
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 4904
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4147
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2833
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2210
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 4288
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 35344
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 17735
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 10,
+        "usd": 0.4276915
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-209-2026-10-20T09-26-14-763Z-run1.json"
+    }
+  ]
+}

@@ -22,6 +22,9 @@ export default {
   title: "Scripted Revise at a gate on OpenCode (TS-634)",
   ...OPENCODE,
   maxTurns: 30,
+  // The rework between the two gate questions does not fit 0.35 USD (C002-T-056: spend cap after 16
+  // turns, before the second question); 0.50 USD is the per-session cap of every eval session.
+  maxBudgetUsd: 0.5,
   fixture: (root) => fxGate(root),
   prompt: "/architect-gate 002",
   get answer() {

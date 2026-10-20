@@ -5,8 +5,9 @@
 // The Bash tool of a session rebuilds PATH from the user's shell profile, so the PATH of the child
 // process alone does not reach it: each configuration also writes a shell file that Claude Code sources
 // before every Bash command (CLAUDE_ENV_FILE) and that applies the same drops and prepends.
+import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import { ROOT } from "./fixtures.mjs";
@@ -25,6 +26,29 @@ const NO_RIPWIRE = [{ js: /ripwire/i, ere: "ripwire" }];
 const NO_AST_GREP = [{ js: /Python\d*[\\/]Scripts/i, ere: "Python[0-9]*/Scripts" }, { js: /ast-grep/i, ere: "ast-grep" }];
 // Serena and other uv tools live in ~/.local/bin: cfg-bare has no Serena at all (C001-TS-121).
 const NO_UV_TOOLS = [{ js: /[\\/]\.local[\\/]bin$/i, ere: "/\\.local/bin$" }];
+
+const CSC = join(process.env.SystemRoot ?? "C:\\Windows", "Microsoft.NET", "Framework64", "v4.0.30319", "csc.exe");
+
+/**
+ * Windows only: the folder of the native `node.exe` version shim of cfg-node18
+ * (tests/fixtures/cfg-node18/node-shim.cs), compiled once per source hash into the temporary folder. The
+ * sdd MCP server's command tool runs native executables only (C002-IF-002 §5.2), so the `sh` shim
+ * `bin/node` alone never answers an OpenCode doctor probe (C002-TC-509 row node18). Elsewhere: none.
+ */
+function nativeNodeShim() {
+  if (process.platform !== "win32") return [];
+  const src = join(ROOT, "tests", "fixtures", "cfg-node18", "node-shim.cs");
+  const hash = createHash("sha256").update(readFileSync(src)).digest("hex").slice(0, 10);
+  const dir = join(tmpdir(), "sdd-eval-shims", `cfg-node18-native-${hash}`);
+  const exe = join(dir, "node.exe");
+  if (!existsSync(exe)) {
+    if (!existsSync(CSC)) throw new Error(`cfg-node18 needs the .NET Framework compiler at ${CSC} for its native node.exe shim`);
+    mkdirSync(dir, { recursive: true });
+    const r = spawnSync(CSC, ["/nologo", "/target:exe", `/out:${exe}`, src], { encoding: "utf8", windowsHide: true });
+    if (r.status !== 0 || !existsSync(exe)) throw new Error(`cfg-node18: compiling ${src} failed: ${(r.stdout ?? "") + (r.stderr ?? "") || r.error?.message}`);
+  }
+  return [dir];
+}
 
 /** ERE-escaped text (Git Bash PATH drops). */
 const ere = (s) => s.replace(/[.[\]()*+?{}|^$\\]/g, "\\$&");
@@ -93,7 +117,7 @@ export function machine(cfg, { prepend: extra = [], without = [] } = {}) {
     case "cfg-old-claude":
       return { env: withPathOf(cfg, { prepend: [SHIMS("cfg-old-claude")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-node18":
-      return { env: { ...withPathOf(cfg, { prepend: [SHIMS("cfg-node18")], drop: NO_RIPWIRE }), NODE_REAL: process.execPath }, plugins: [architectWithStubs] };
+      return { env: { ...withPathOf(cfg, { prepend: [SHIMS("cfg-node18"), ...nativeNodeShim()], drop: NO_RIPWIRE }), NODE_REAL: process.execPath }, plugins: [architectWithStubs] };
     case "cfg-deepwiki-down":
       return { env: withPathOf(cfg, { drop: NO_RIPWIRE }), plugins: [architectWithUrls({ deepwiki: "https://deepwiki-unreachable.invalid/mcp" })] };
     default:

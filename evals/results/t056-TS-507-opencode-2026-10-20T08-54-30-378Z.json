@@ -1,0 +1,172 @@
+{
+  "scenario": "TS-507-opencode",
+  "title": "Missing tool on OpenCode: ripwire missing with fallback and install command (TS-507)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T08:55:40.028Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.240692,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.240692,
+        "session_ms": 68961,
+        "api_ms": null,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 10,
+            "output": 1597,
+            "cache_read": 77351,
+            "cache_write": 27658,
+            "cost_usd": 0.1891602
+          },
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 6,
+            "output": 1387,
+            "cache_read": 13323,
+            "cache_write": 14223,
+            "cost_usd": 0.0515318
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1597,
+              "cache_read": 77351,
+              "cache_write": 27658
+            },
+            "output": "derived"
+          },
+          "sdd-cartographer": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 13323,
+              "cache_write": 14223
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-cartographer",
+            "task_id": "ses_ea77a6685ffezlD1EG05oprDlM",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "sdd-shell_run_command": 8,
+          "glob": 2,
+          "task": 1,
+          "list_mcp_resources": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 9702
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 9702
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2925
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-cartographer",
+            "ms": 24600
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "sdd-cartographer",
+            "ms": 7987
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 4,
+        "usd": 0.240692
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-507-opencode-2026-10-20T08-54-30-378Z-run1.json"
+    }
+  ]
+}

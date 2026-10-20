@@ -1335,6 +1335,886 @@
       "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
       "pass": true,
       "result": "evals/results/t045-TS-526-copilot-sdd-mcp-server-non-boolean-2026-10-20T08-24-20-887Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-507-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.240692,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-507-opencode-2026-10-20T08-54-30-378Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-639-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2499892,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-639-opencode-2026-10-20T08-56-10-758Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-bare",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2298131,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-509-opencode-bare-2026-10-20T08-57-31-279Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-node18",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "cost_usd": 0.1929974,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-509-opencode-node18-2026-10-20T08-58-50-069Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-no-sdd",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2638082,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-509-opencode-no-sdd-2026-10-20T08-59-57-990Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-510-opencode-2.0.76",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 6,
+      "cost_usd": 0.2924056,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-510-opencode-2.0.76-2026-10-20T09-01-09-479Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-511-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2332835,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-511-opencode-2026-10-20T09-02-41-214Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-512-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 11,
+      "cost_usd": 0.5111889,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-512-opencode-2026-10-20T09-03-47-744Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-514-opencode",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2547246,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-514-opencode-2026-10-20T09-06-30-410Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.4.1",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2321551,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-513-opencode-1.4.1-2026-10-20T09-07-51-703Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.4.2",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "cost_usd": 0.1976446,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-513-opencode-1.4.2-2026-10-20T09-08-52-131Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-513-opencode-1.5.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2435433,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-513-opencode-1.5.0-2026-10-20T09-09-50-429Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.2.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2462836,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-515-opencode-0.2.0-2026-10-20T09-11-07-183Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.3.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.1958102,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-515-opencode-0.3.0-2026-10-20T09-12-06-273Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.3.1",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2609881,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-515-opencode-0.3.1-2026-10-20T09-12-58-685Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-0.4.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2493186,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-515-opencode-0.4.0-2026-10-20T09-14-18-249Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-515-opencode-1.3.0",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2643553,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-515-opencode-1.3.0-2026-10-20T09-15-19-399Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 2,
+      "case": "TS-509-opencode-node18",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "cost_usd": 0.2399168,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-509-opencode-node18-2026-10-20T09-16-53-238Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-613",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 11,
+      "cost_usd": 0.247944,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-613-2026-10-20T09-18-16-451Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-634",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 16,
+      "cost_usd": 0.3572674,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-634-2026-10-20T09-19-26-471Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-635",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 12,
+      "cost_usd": 0.3727572,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-635-2026-10-20T09-21-27-897Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-206",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 12,
+      "cost_usd": 0.3701604,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-206-2026-10-20T09-23-26-453Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-208",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 6,
+      "cost_usd": 0.2337564,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-208-2026-10-20T09-25-07-010Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-209",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 10,
+      "cost_usd": 0.4276915,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-209-2026-10-20T09-26-14-763Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-210",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "cost_usd": 0.2443966,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-210-2026-10-20T09-30-12-312Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-211",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "cost_usd": 0.2505478,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-211-2026-10-20T09-31-19-181Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-212",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 6,
+      "cost_usd": 0.2195378,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-212-2026-10-20T09-32-28-473Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-222",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 9,
+      "cost_usd": 0.3235358,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-222-2026-10-20T09-33-30-998Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-802",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 16,
+      "cost_usd": 0.525031,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-802-2026-10-20T09-35-00-150Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-803",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 12,
+      "cost_usd": 0.2822898,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-803-2026-10-20T09-38-01-858Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-804-unattended",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 12,
+      "cost_usd": 0.3202718,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-804-unattended-2026-10-20T09-39-38-272Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-804-revise",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 15,
+      "cost_usd": 0.3362524,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-804-revise-2026-10-20T09-41-10-482Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-804-injection",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 11,
+      "cost_usd": 0.2626118,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-804-injection-2026-10-20T09-42-53-153Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-209",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 8,
+      "cost_usd": 0.3889242,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-209-2026-10-20T09-44-57-486Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-208",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "turns": 8,
+      "cost_usd": 0.2947796,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": true,
+      "result": "evals/results/t056-TS-208-2026-10-20T09-47-02-752Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": 3,
+      "case": "TS-634",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 13,
+      "cost_usd": 0.510907,
+      "cost_source": "runner (OpenCode step cost)",
+      "pass": false,
+      "result": "evals/results/t056-TS-634-2026-10-20T09-48-23-544Z.json"
     }
   ]
 }

@@ -1,0 +1,251 @@
+{
+  "scenario": "TS-635",
+  "title": "Revise command on OpenCode with a scripted reason (TS-635)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:23:16.659Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.3727572,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3727572,
+        "session_ms": 106840,
+        "api_ms": null,
+        "turns": 12,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 30,
+            "output": 3386,
+            "cache_read": 309686,
+            "cache_write": 43436,
+            "cost_usd": 0.37275719999999996
+          },
+          "openrouter/anthropic/claude-haiku-5.5": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 3386,
+              "cache_read": 309686,
+              "cache_write": 32116
+            },
+            "output": "derived"
+          },
+          "sdd-critic": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 11320
+            },
+            "output": "derived"
+          },
+          "sdd-auditor": {
+            "models": [
+              "openrouter/anthropic/claude-haiku-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-critic",
+            "task_id": "ses_ea760d2d3ffevG3TaREqJByAe9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "sdd-auditor",
+            "task_id": "ses_ea760cd08ffeIAzBDW6R7NWZJ0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "read": 10,
+          "glob": 2,
+          "question": 2,
+          "sdd-shell_run_command": 2,
+          "sdd-files_replace_text": 2,
+          "todowrite": 2,
+          "sdd-files_write_file": 1,
+          "task": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 7875
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 7875
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 7875
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 2158
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3437
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2603
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2603
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3734
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3734
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 10506
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 4074
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "main",
+            "ms": 5259
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 6321
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 6971
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "main",
+            "ms": 8243
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "main",
+            "ms": 6757
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 13994
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-critic",
+            "ms": 13994
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-auditor",
+            "ms": 13994
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 5148
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 5148
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 5148
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-critic",
+            "ms": 5148
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "usage": {
+        "turns": 12,
+        "usd": 0.3727572
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-haiku-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-635-2026-10-20T09-21-27-897Z-run1.json"
+    }
+  ]
+}

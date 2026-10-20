@@ -1,0 +1,172 @@
+{
+  "scenario": "TS-515-opencode-1.3.0",
+  "title": "sdd --version 1.3.0 against package 0.3.0 → error (TS-515)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:16:35.683Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2643553,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2643553,
+        "session_ms": 75837,
+        "api_ms": null,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 10,
+            "output": 1397,
+            "cache_read": 83082,
+            "cache_write": 29589,
+            "cost_usd": 0.19944140000000002
+          },
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 18,
+            "output": 1265,
+            "cache_read": 110629,
+            "cache_write": 16226,
+            "cost_usd": 0.0649139
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1397,
+              "cache_read": 83082,
+              "cache_write": 29589
+            },
+            "output": "derived"
+          },
+          "sdd-cartographer": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 0,
+              "cache_read": 110629,
+              "cache_write": 16226
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-cartographer",
+            "task_id": "ses_ea7676a34ffeAg4Grx5KR9TIx7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "bash": 8,
+          "glob": 2,
+          "task": 1,
+          "list_mcp_resources": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 8937
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8937
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 3205
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-cartographer",
+            "ms": 37770
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 1884
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 1450
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 1905
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 1437
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 6019
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 1873
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "sdd-cartographer",
+            "ms": 1873
+          },
+          {
+            "tool": "bash",
+            "agent": "sdd-cartographer",
+            "ms": 2963
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 4,
+        "usd": 0.2643553
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-515-opencode-1.3.0-2026-10-20T09-15-19-399Z-run1.json"
+    }
+  ]
+}

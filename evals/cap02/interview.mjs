@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { askUserQuestions, checker } from "../harness/assert.mjs";
 import { edit, git, sdd, write } from "../harness/workspaces.mjs";
+import { constitution } from "./drafting.mjs";
 
 export const CHANGE = ".sdd/001-booking-service";
 export const LOG = `${CHANGE}/00-ideation/questions-log.md`;
@@ -40,6 +41,9 @@ export function interviewFixture(handbacks, { rounds = 0 } = {}) {
   return (root) => {
     git(root, "init", "-q");
     sdd(root, "init");
+    // Ideation's entry check needs gate G0 (phase-ideation skill): without an approved constitution
+    // the conductor rightly stops before the interview (C002-T-056, OpenCode run of C001-TS-208).
+    constitution(root, "approved");
     sdd(root, "change", "new", "Booking service");
     edit(root, `${CHANGE}/change.md`, (t) => t.replace(/^( {2}00-ideation: \{ status: )not-started/m, "$1draft"));
     sdd(root, "status", "--write");

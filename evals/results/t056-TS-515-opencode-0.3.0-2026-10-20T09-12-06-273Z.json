@@ -1,0 +1,138 @@
+{
+  "scenario": "TS-515-opencode-0.3.0",
+  "title": "sdd --version 0.3.0 against package 0.3.0 → ok (TS-515)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:12:56.455Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1958102,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1958102,
+        "session_ms": 49743,
+        "api_ms": null,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 10,
+            "output": 1335,
+            "cache_read": 83926,
+            "cache_write": 28797,
+            "cost_usd": 0.1958102
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1335,
+              "cache_read": 83926,
+              "cache_write": 28797
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "bash": 8,
+          "glob": 1,
+          "list_mcp_resources": 1,
+          "list_mcp_resource_templates": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 8808
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 8808
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "bash",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "main",
+            "ms": 12606
+          },
+          {
+            "tool": "list_mcp_resource_templates",
+            "agent": "main",
+            "ms": 4438
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 4,
+        "usd": 0.1958102
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-515-opencode-0.3.0-2026-10-20T09-12-06-273Z-run1.json"
+    }
+  ]
+}

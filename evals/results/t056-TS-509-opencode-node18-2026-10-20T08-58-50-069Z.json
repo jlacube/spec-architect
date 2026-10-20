@@ -1,0 +1,146 @@
+{
+  "scenario": "TS-509-opencode-node18",
+  "title": "Doctor outcome on opencode (node18 → failed: node ≥ 20 required) (TS-509)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T08:59:55.758Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.1929974,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-509 opencode node18: outcome \"completed with warnings\", expected \"failed: node ≥ 20 required\"",
+        "TS-509 opencode node18: node status \"ok\""
+      ],
+      "metrics": {
+        "cost_usd": 0.1929974,
+        "session_ms": 65221,
+        "api_ms": null,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 12,
+            "output": 1433,
+            "cache_read": 104447,
+            "cache_write": 27184,
+            "cost_usd": 0.19299740000000004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 1433,
+              "cache_read": 104447,
+              "cache_write": 27184
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "sdd-shell_run_command": 8,
+          "glob": 2,
+          "list_mcp_resources": 1,
+          "list_mcp_resource_templates": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 9397
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 9397
+          },
+          {
+            "tool": "glob",
+            "agent": "main",
+            "ms": 6423
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "list_mcp_resources",
+            "agent": "main",
+            "ms": 14941
+          },
+          {
+            "tool": "list_mcp_resource_templates",
+            "agent": "main",
+            "ms": 4429
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 5,
+        "usd": 0.1929974
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-509-opencode-node18-2026-10-20T08-58-50-069Z-run1.json"
+    }
+  ]
+}

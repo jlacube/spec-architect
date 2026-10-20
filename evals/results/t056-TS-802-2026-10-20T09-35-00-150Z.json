@@ -1,0 +1,303 @@
+{
+  "scenario": "TS-802",
+  "title": "Gate question",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T09:37:51.994Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.525031,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.525031,
+        "session_ms": 168266,
+        "api_ms": null,
+        "turns": 16,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 50,
+            "output": 5047,
+            "cache_read": 550955,
+            "cache_write": 54008,
+            "cost_usd": 0.525031
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 34,
+              "output": 5047,
+              "cache_read": 459825,
+              "cache_write": 35244
+            },
+            "output": "derived"
+          },
+          "architect:sdd-spec-writer": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 91130,
+              "cache_write": 18764
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-spec-writer",
+            "task_id": "ses_ea7544a9bffehtNm2fx3swpFlT",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Glob": 4,
+          "Read": 14,
+          "Bash": 10,
+          "Edit": 6,
+          "AskUserQuestion": 2,
+          "Write": 1,
+          "TaskCreate": 1,
+          "Agent": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 7776
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 7776
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 2647
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2647
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3406
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2655
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2655
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3942
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3942
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3942
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3942
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3253
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3253
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2522
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 3503
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 3503
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 6877
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2612
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2243
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 5736
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 5267
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 6551
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 2220
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 7113
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 71881
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-spec-writer",
+            "ms": 71881
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 4681
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 4681
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 4681
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 4681
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 6867
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 2793
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 17737
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 3979
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9937
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9937
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 9937
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 7668
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-spec-writer",
+            "ms": 7668
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "usage": {
+        "turns": 16,
+        "usd": 0.525031
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-802-2026-10-20T09-35-00-150Z-run1.json"
+    }
+  ]
+}
