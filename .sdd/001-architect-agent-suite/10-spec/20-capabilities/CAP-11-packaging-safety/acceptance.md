@@ -89,12 +89,44 @@ Scenario Outline: C001-TS-1107 — bash guard
     | node C:/p/scripts/sdd.mjs lint --json                    | 0    |
     | ripwire . --for="payment method" --token-budget=4000     | 0    |
     | ripwire . --callers=createIntent --limit=50              | 0    |
+    | ripwire . --max-tokens=4000                              | 0    |
+    | ripwire . --test-gate=src/checkout/payments.ts --limit=50 | 0   |
     | git log --oneline -20                                    | 0    |
     | ast-grep run --pattern 'app.get($A, $B)'                 | 0    |
     | git commit -m x                                          | 2    |
     | npm install                                              | 2    |
     | rm -rf src                                               | 2    |
     | ast-grep run --pattern 'x' --rewrite 'y' -U              | 2    |
+    | ripwire .                                                | 2    |
+```
+
+```gherkin
+Scenario Outline: C001-TS-1125 — ripwire forms in the bash guard corpus
+  The rows below join the bash guard corpus "tests/guards/bash-corpus.json" (test data the
+  implementer writes, category "ripwire") and apply the ripwire forms of C001-IF-07 §3.1 (defect D-012).
+  Given an Architect agent requests the <tool> command "<cmd>"
+  When the bash guard evaluates it
+  Then the exit code is <code>
+  And standard error <stderr>
+  Examples:
+    | tool       | cmd                                                                  | code | stderr                     |
+    | Bash       | ripwire . --max-tokens=4000                                          | 0    | is empty                   |
+    | Bash       | ripwire --max-tokens=4000                                            | 0    | is empty                   |
+    | Bash       | ripwire . --max-tokens=4000 --json                                   | 0    | is empty                   |
+    | Bash       | ripwire . --token-budget=4000                                        | 0    | is empty                   |
+    | Bash       | ripwire . --test-gate=src/checkout/payments.ts --limit=50            | 0    | is empty                   |
+    | Bash       | ripwire . --test-gate=src/checkout/payments.ts --limit=50 \| head -n 40 | 0 | is empty                   |
+    | Bash       | ripwire . --max-tokens=x                                             | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --max-tokens                                               | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --limit=50                                                 | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --json                                                     | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire a b --max-tokens=4000                                        | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --max-tokens=4000 --edit=src/a.ts:1-2                      | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --test-gate= --limit=50                                    | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --test-gate src/a.ts --limit=50                            | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --test-gate=src/a.ts --situ                                | 2    | contains "GUARD-BASH-001"  |
+    | Bash       | ripwire . --test-gate=a --test-gate=b                                | 2    | contains "GUARD-BASH-001"  |
+    | PowerShell | ripwire . --max-tokens=4000                                          | 2    | contains "GUARD-BASH-001"  |
 ```
 
 ## C001-REQ-1107
@@ -291,7 +323,7 @@ Scenario: C001-TS-1124 — Claude Code below the minimum version
 | C001-REQ-1102 | TS-1102 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1103 | TS-1103 | TS-1103 (non-architect agent) | n/a | TS-1104 | TS-1103 | n/a | TS-1105 |
 | C001-REQ-1104 | TS-1105 | n/a | TS-1105 (case) | n/a | TS-1105 | n/a | TS-1105 |
-| C001-REQ-1106 | TS-1107 | n/a | n/a | TS-1107 | TS-1107 | n/a | TS-1107 |
+| C001-REQ-1106 | TS-1107, TS-1125 | TS-1125 (default map without path, `--token-budget` map bound) | TS-1125 (bound without digits, empty `--test-gate=`) | TS-1107, TS-1125 | TS-1107, TS-1125 (PowerShell) | n/a | TS-1107, TS-1125 (span edit appended to a bounded map) |
 | C001-REQ-1107 | TS-1108 | TS-1108 (pipe to head) | n/a | TS-1108 | n/a | n/a | TS-1108 |
 | C001-REQ-1108 | TS-1109 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1109 | TS-1110 | n/a | n/a | n/a | TS-1110 | n/a | n/a |

@@ -65,6 +65,10 @@ Scenario Outline: C001-TS-1004 — ripwire budget flag per verb family
     | --hotspots        | --limit=        | 50   |
 ```
 
+The command lines of C001-TS-1004 reach ripwire only through the forms the bash guard admits,
+C001-IF-07 §3.1 (defect D-012): the default map needs a map bound, and `--test-gate` takes its file
+as `--test-gate=<file>`.
+
 ## C001-REQ-1004
 
 #### C001-AC-1004.1 — Disclosures copied

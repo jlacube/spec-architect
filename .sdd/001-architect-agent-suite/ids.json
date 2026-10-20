@@ -12,7 +12,7 @@
     { "type": "US|REQ|TS", "from": 801, "to": 899, "capability": "C001-CAP-08", "allocated": { "REQ": 817, "TS": 819 } },
     { "type": "US|REQ|TS", "from": 901, "to": 999, "capability": "C001-CAP-09" },
     { "type": "US|REQ|TS", "from": 1001, "to": 1099, "capability": "C001-CAP-10" },
-    { "type": "US|REQ|TS", "from": 1101, "to": 1199, "capability": "C001-CAP-11" },
+    { "type": "US|REQ|TS", "from": 1101, "to": 1199, "capability": "C001-CAP-11", "allocated": { "TS": 1125 } },
     { "type": "NFR", "from": 101, "to": 899, "capability": "by category (see 30-nfr/nfr.md)" }
   ],
   "tombstones": [
