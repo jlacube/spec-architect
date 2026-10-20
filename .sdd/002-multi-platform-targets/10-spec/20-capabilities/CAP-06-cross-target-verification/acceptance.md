@@ -398,7 +398,7 @@ Scenario: C002-TS-634 — scripted Revise at a gate on OpenCode
   Then the transcript shows one "sdd gate record 002 10-spec --decision revise" command with those words as its note
   And it shows no "sdd gate approve" command in the same turn
   And after the rework the transcript shows a second gate G2 question offering "Approve", "Approve with waivers", "Revise" and "Stop"
-  And the session ran with a spend cap of 1.00 USD
+  And the session's result record gives "caps.usd" 1.00
 ```
 
 The gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056); P-01
@@ -421,16 +421,22 @@ Scenario: C002-TS-635 — revise command on OpenCode
 #### C002-AC-611.1 — Sessions end at the turn cap or the spend cap
 ```gherkin
 Scenario Outline: C002-TS-614 — caps with a stub host
-  Given the <runner> with a stub host that never ends a session and reports <spend> USD per turn
+  Given the <runner> with a stub host that never ends a session and <spend>
+  And a case row without "maxTurns" and "maxBudgetUsd", so that the caps are 30 turns and 0.50 USD
   When the runner runs one eval session
   Then the session ends after <turns> turns with the reason "<reason>"
+  And the session's result record gives "caps.turns" 30 and "caps.usd" 0.50
   Examples:
-    | runner                   | spend | turns | reason    |
-    | OpenCode eval runner     | 0.01  | 30    | turn cap  |
-    | Copilot CLI eval runner  | 0.01  | 30    | turn cap  |
-    | OpenCode eval runner     | 0.10  | 5     | spend cap |
-    | Copilot CLI eval runner  | 0.10  | 5     | spend cap |
+    | runner                   | spend                                                                                          | turns | reason    |
+    | OpenCode eval runner     | gives a cost of 0.01 USD in the step-finish event of each turn                                 | 30    | turn cap  |
+    | Copilot CLI eval runner  | counts 1 AI Credit per turn, below its "--max-ai-credits" limit of 50 for the whole session    | 30    | turn cap  |
+    | OpenCode eval runner     | gives a cost of 0.10 USD in the step-finish event of each turn                                 | 5     | spend cap |
 ```
+
+The spend-cap row runs on OpenCode only, whose host reports the cost of each step. Copilot CLI
+reports the AI Credits of the whole session only, so its spend cap is the host's `--max-ai-credits`
+limit on the session total, which C002-TS-678 checks (C002-IF-010 §2.2 spend-cap rule, per session;
+C002-NFR-105; critic CR-64).
 
 ```gherkin
 Scenario Outline: C002-TS-677 — spend cap checked after each step on OpenCode
@@ -463,28 +469,36 @@ Scenario Outline: C002-TS-678 — spend cap on Copilot CLI through the host's AI
     | whose "maxBudgetUsd" is 0.20  | 25      | 30    | completed | 0.25 |
 ```
 
-The spend cap is checked after each step, never before it; the step that reaches the cap is the last
-one started and counts in full, with a step already running, so a session that ends with `spend cap`
-records a spend at or above its cap (C002-NFR-105; C002-IF-010 §2.2 spend-cap rule; defect D-020 item
-3). Copilot CLI 1.0.98 accepts no limit below 30 AI Credits (0.30 USD) and gives the usage per
-session only.
+No runner checks the spend cap before a step (C002-NFR-105; C002-IF-010 §2.2 spend-cap rule; defect
+D-020 item 3; critic CR-64). On OpenCode the cap is checked after each step (C002-TS-677): the step
+that reaches the cap is the last one started and counts in full, with a step already running, so a
+session that ends with `spend cap` records a spend at or above its cap. On Copilot CLI the cap is the
+host's `--max-ai-credits` limit on the session total, read from the usage file after the session
+(C002-TS-678): no step's cost is known there, so the per-step measure does not apply. Copilot CLI
+1.0.98 accepts no limit below 30 AI Credits (0.30 USD).
 
 ```gherkin
 Scenario Outline: C002-TS-679 — a case cap above 0.50 USD only for a listed cap exception
-  Given the fixture "fx-evals-caps", whose case file holds one row with the ID "<row>", no "host" field and "maxBudgetUsd" <cap>
-  And the cap exceptions of C002-IF-010 §2.2, which list "TS-634" on "opencode" at 1.00 USD only
+  Given the fixture "fx-evals-caps", whose case file "<file>" holds one row with the ID "<row>", no "host" field and "maxBudgetUsd" <cap>
+  And the cap exceptions of C002-IF-010 §2.2, which list the row "TS-634" of the case file "evals/targets/gate/TS-634.eval.mjs" on "opencode" at 1.00 USD only
   And a stub host in place of the host of "--host <host>"
   When P-01 runs "npm run eval -- --host <host> --only <row>" on that fixture
   Then <outcome>
   Examples:
-    | row    | cap  | host        | outcome                                                                                      |
-    | TS-634 | 1.00 | opencode    | one session runs, with a spend cap of 1.00 USD                                               |
-    | TS-634 | 0.80 | opencode    | one session runs, with a spend cap of 0.80 USD                                               |
-    | TS-634 | 1.20 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634"         |
-    | TS-634 | 1.00 | copilot-cli | the run ends before any session, with exit code 1 and a message that names "TS-634"         |
-    | TS-613 | 0.75 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-613"         |
-    | TS-613 | 0.50 | opencode    | one session runs, with a spend cap of 0.50 USD                                               |
+    | file                                  | row    | cap  | host        | outcome                                                                                                                               |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.00 | opencode    | one session runs, the stub is given a spend cap of 1.00 USD and the result record gives "caps.usd" 1.00                               |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 0.80 | opencode    | one session runs, the stub is given a spend cap of 0.80 USD and the result record gives "caps.usd" 0.80                               |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.20 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.00 | copilot-cli | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
+    | evals/targets/other/TS-634.eval.mjs   | TS-634 | 1.00 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/other/TS-634.eval.mjs"        |
+    | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.75 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-613" and "evals/targets/gate/TS-613.eval.mjs"         |
+    | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.50 | opencode    | one session runs, the stub is given a spend cap of 0.50 USD and the result record gives "caps.usd" 0.50                               |
 ```
+
+An exception matches the row ID, the case file and the host together, so a row of the same ID in
+another case file gets no exception (C002-IF-010 §2.2, critic CR-68). The harness does not count runs;
+the run limit of an exception row is checked by the done-check of the task that runs it (C002-T-056
+for C002-TS-634; P-01 answer to Q-capped-runs-01).
 
 ## C002-REQ-612
 
@@ -915,11 +929,13 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
 
 ```gherkin
 Scenario Outline: C002-TS-681 — a case limited to another platform is listed as not applicable with the rule platforms
-  Given the fixture corpora "fx-corpus-platforms": the guard corpora of the release commit with two added path cases, "PG-900" of category "outside" and "PG-901" of category "memory", each limited by "platforms" to "linux"
+  Given the fixture corpora "fx-corpus-platforms": the guard corpora of the release commit with three added path cases, "PG-900" of category "outside" and "PG-901" of category "memory", each limited by "platforms" to "posix", and "PG-902" of category "symlink", limited by "platforms" to "posix" and with "requires" "file-symlink"
   When the corpus replay suite writes the replay report of <mechanism> on REF-WIN, whose "replay_host.platform" is "win32"
   Then the report lists "PG-900" under "not_applicable" with the rule "platforms" and not among its replayed cases
+  And it lists "PG-902" under "not_applicable" with the rule "platforms" and not among its replayed cases
   And it lists "PG-901" as a replayed case with the expected decision "deny" and the expected-decision source "C002-REQ-625"
-  And its not-applicable list holds, besides "PG-900", exactly <other not applicable>
+  And it lists "PG-163", which requires "file-symlink" and has no "platforms" list, as a replayed case
+  And its not-applicable list holds, besides "PG-900" and "PG-902", exactly <other not applicable>
   Examples:
     | mechanism                                                                                 | other not applicable                                                              |
     | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | no case                                                                           |
@@ -929,8 +945,12 @@ Scenario Outline: C002-TS-681 — a case limited to another platform is listed a
 
 The platform rule excludes only a case that falls to the last row of C002-IF-009 §2.1; a case of an
 earlier row, such as the memory case `PG-901`, keeps its `deny` expectation on every replay host
-(defect D-018 item 2). Every `platforms` list of the present corpora names `win32`, so the release
-replays on REF-WIN exclude no case by this rule.
+(defect D-018 item 2). The platform rule comes before C002-REQ-633: `PG-902`, which both requires a
+host capability and is limited to another platform, is not applicable by the rule `platforms`, while
+`PG-163`, which the platform rule leaves applicable, is replayed (C002-IF-009 §2.1 precedence; critic
+CR-61). A `platforms` list names `win32`, `posix` or both, the values of `replay_host.platform`
+(critic CR-66). Every `platforms` list of the present corpora is `["win32"]`, so the release replays
+on REF-WIN exclude no case by this rule.
 
 ```gherkin
 Scenario Outline: C002-TS-637 — incomplete replay report refused at release
@@ -948,23 +968,29 @@ Scenario Outline: C002-TS-637 — incomplete replay report refused at release
     | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the memory case "PG-205" with the expected decision "allow" and the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-205 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" capabilities "file-symlink" and lists "PG-163" with "fed_as.malformed" true and the expected-decision source "C002-REQ-630" | records expectations other than C002-IF-009 §2.1 | PG-163 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" with capabilities that do not include "file-symlink", and lists "PG-163" with the decision "deny" | replay host lacks file-symlink                | PG-163 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and leaves out the case "PG-900", which the corpora limit by "platforms" to "linux" | omits cases                                   | PG-900 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
-    | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the memory case "PG-901", which the corpora limit by "platforms" to "linux", under "not_applicable" with the rule "platforms" | lists cases as not applicable without a rule  | PG-901 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and leaves out the case "PG-900", which the corpora limit by "platforms" to "posix" | omits cases                                   | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "posix", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
+    | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "posix", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the memory case "PG-901", which the corpora limit by "platforms" to "posix", under "not_applicable" with the rule "platforms" | lists cases as not applicable without a rule  | PG-901 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "posix", under "not_applicable" with the rule "C002-REQ-626" | lists cases as not applicable without a rule  | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "posix" with the capabilities "file-symlink" and lists the 35 path cases limited by "platforms" to "win32" under "not_applicable" with the rule "platforms" | was replayed on posix, not on win32           | PG-112 |
 ```
 
 `PG-900` (category `outside`) and `PG-901` (category `memory`) are cases of the corpora of
-`fx-release` only, each limited by `platforms` to `linux`: every `platforms` list of the present
-corpora names `win32`. By the platform rule of C002-IF-009 §2.1, `PG-900` belongs under
+`fx-release` only, each limited by `platforms` to `posix`: every `platforms` list of the present
+corpora is `["win32"]`. By the platform rule of C002-IF-009 §2.1, `PG-900` belongs under
 `not_applicable` with the rule `platforms` on a `win32` replay host, which the release check accepts
-(C002-TS-682); a report that replays it or leaves it out is refused. `PG-901` falls to the memory row
-before the platform rule applies, so listing it as not applicable hides a `deny` case (`errors.md`
-ERR-REL-012; revised for defect D-018 item 2, before which every handling of `PG-900` refused).
+(C002-TS-682); a report that replays it, leaves it out or lists it with another rule is refused
+(Q-replay-rule-01; critic CR-62). `PG-901` falls to the memory row before the platform rule applies,
+so listing it as not applicable hides a `deny` case (`errors.md` ERR-REL-012; revised for defect
+D-018 item 2, before which every handling of `PG-900` refused). A report replayed on `posix` is no
+release evidence, whatever it lists: `PG-112` is the first of the 35 path cases limited to `win32`
+that such a report lists as not applicable (C002-REQ-634; C002-TS-683 checks the full message and
+that the report is not checked further; critic CR-60).
 
 ```gherkin
 Scenario Outline: C002-TS-682 — a case of the platform rule listed as not applicable is accepted at release
-  Given "fx-release" where the OpenCode target package uses <mode>, every other piece of OpenCode evidence is clean and the corpora of the release commit hold the case "PG-900", limited by "platforms" to "linux"
+  Given "fx-release" where the OpenCode target package uses <mode>, every other piece of OpenCode evidence is clean and the corpora of the release commit hold the case "PG-900", limited by "platforms" to "posix"
   And its replay report "<report>" gives the "replay_host" platform "win32", reports 0 differing decisions and lists "PG-900" under "not_applicable" with the rule "platforms"
   When the release check runs for the OpenCode target
   Then standard error holds no ERR-REL-012 line
@@ -1128,7 +1154,7 @@ Scenario: C002-TS-650 — PG-163 on a host without file-symlink is an error that
 
 ## C002-REQ-634
 
-#### C002-AC-634.1 — The release check refuses a replay report whose replay host lacks a required capability
+#### C002-AC-634.1 — The release check refuses a replay report whose replay host is not `win32` or lacks a required capability
 ```gherkin
 Scenario Outline: C002-TS-651 — replay host capabilities at release
   Given "fx-release" where the <target> target package is generated for <mode> and every other piece of its evidence is clean
@@ -1142,6 +1168,29 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
     | OpenCode           | sdd MCP server enforcement | replay-sdd-mcp-server.json   | no capability                          | the decision "error"            | the release is refused with ERR-REL-012 with the problem "replay host lacks file-symlink" naming "PG-163", and with ERR-REL-001 naming "PG-163"; the release record has the outcome "refused" |
     | Copilot VS Code    | the Copilot hooks fallback (@mode-hooks) | replay-copilot-hooks.json    | no capability                          | the decision "error"            | the release is refused with ERR-REL-012 with the problem "replay host lacks file-symlink" naming "PG-163", and with ERR-REL-001 naming "PG-163"; the release record has the outcome "refused" |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-683 — a replay report replayed on posix is refused at release and not checked further
+  Given "<fixture>" where the OpenCode target package uses sdd MCP server enforcement and every other piece of OpenCode evidence is clean
+  And its replay report "replay-sdd-mcp-server.json" cites the corpora of the release commit and gives the "replay_host" platform "posix" with the capabilities "file-symlink"
+  And the report records the decision "allow" for the memory case "PG-205", so that it reports 1 differing decision, and it does not list the case "PG-224"
+  When the release check runs for the OpenCode target
+  Then standard error holds exactly one ERR-REL-012 line, which starts with "ERR-REL-012: opencode: replay report ", names "replay-sdd-mcp-server.json" and "(sdd-mcp-server)", and holds "was replayed on posix, not on win32: "
+  And the case list of that line is <case ids>
+  And standard error holds no ERR-REL-001 line and no ERR-REL-006 line
+  And the release record has the outcome "refused" and lists ERR-REL-012 among its refusals
+  Examples:
+    | fixture                                                                                         | case ids                                                                                                                              |
+    | fx-release                                                                                      | the 35 IDs of the path cases whose "platforms" list is ["win32"] (from "PG-112" to "PG-203" in the path corpus), each once and no other ID, comma-separated |
+    | fx-release-no-platforms, a copy of "fx-release" whose corpora of the release commit hold no "platforms" list | "none"                                                                                                                                |
+```
+
+Release replays run on REF-WIN, the environment of C002-NFR-201 and C002-NFR-202: a report replayed
+on `posix` would list the path cases limited to `win32` as not applicable and meet the thresholds
+without them, so it is refused, and its other defects (a differing decision, an omitted case) give no
+further line, since its expectations are those of another platform (C002-IF-009 §2.1 "Release
+replays run on `win32`", §5; `errors.md` ERR-REL-012; critic CR-60). Such a report stays valid for
+development.
 
 ## Coverage table
 
@@ -1157,7 +1206,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-608 | TS-611 | TS-676 (PATH lead of the pinned OpenCode binary: no case PATH, a case PATH with version shims) | TS-676 (an `opencode missing` row gets no PATH lead) | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-611 | TS-614 | TS-614 (two runners), TS-677 (OpenCode: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI: `--max-ai-credits` and the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 1.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, or uses the exception on another host or above its value) |
+| C002-REQ-611 | TS-614 | TS-614 (turn cap on both runners; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 1.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row, case file and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file) |
 | C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`, the conductor on its own model), TS-680 (`--model` from the session agent's file, or the case's model) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
@@ -1172,13 +1221,13 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode), TS-681 (a case limited by `platforms` to another platform listed with the rule `platforms` on each mechanism), TS-682 (that listing accepted at release in both OpenCode modes) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-681 (a memory case limited to another platform still replayed), TS-637 (a case limited by `platforms` to another platform: omitted or replayed) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, a memory case hidden under the rule `platforms`, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode), TS-681 (a case limited by `platforms` to another platform listed with the rule `platforms` on each mechanism), TS-682 (that listing accepted at release in both OpenCode modes) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-681 (a memory case limited to another platform still replayed), TS-637 (a case limited by `platforms` to another platform: omitted, replayed or listed under the rule `C002-REQ-626`), TS-681 (a case with both `platforms` and `requires`: the platform rule first) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, a memory case hidden under the rule `platforms`, a platform-rule case listed under another rule, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement: injection evidence from Copilot CLI, hooks state and its sources still required) | TS-633 (`hooks_state` other than `enabled`/`disabled`, a boolean source value, `hooks_sources` not a mapping; first applicable step of the hooks-state check) | TS-633 (`disabled`, `not recorded`, sources not recorded in full, contradiction in both directions) | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only; a record stating `enabled` while its sources give `disabled`) |
 | C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name; `fed_as.malformed`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept), TS-643 (PG-163 not a malformed call) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 | C002-REQ-633 | TS-649 | TS-649 (three mechanisms) | TS-650 (replay host without `file-symlink`: `error`, counted as differing) | TS-650 | n/a | n/a | TS-637 (PG-163 recorded as a malformed call with the source C002-REQ-630), TS-643 (PG-163 not fed as a malformed call) |
-| C002-REQ-634 | TS-651 | TS-651 (OpenCode and Copilot VS Code reports) | n/a | TS-651 (ERR-REL-012 `replay host lacks file-symlink`) | n/a | n/a | TS-637 (report showing `deny` for PG-163 on a host without `file-symlink`) |
+| C002-REQ-634 | TS-651 | TS-651 (OpenCode and Copilot VS Code reports), TS-683 (`posix` report of corpora with and without cases limited to `win32`) | TS-683 (case list `none`) | TS-651 (ERR-REL-012 `replay host lacks file-symlink`), TS-683 (ERR-REL-012 `was replayed on posix, not on win32`; no further line for that report), TS-637 (`posix` row) | n/a | n/a | TS-637 (report showing `deny` for PG-163 on a host without `file-symlink`), TS-683 (a `posix` replay that lists the `win32` path cases as not applicable to pass) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on

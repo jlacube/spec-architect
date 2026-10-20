@@ -128,7 +128,13 @@ Scenario: C002-TS-306 — Copilot install notes
   And they state that the chat uses the Local session type with "sdd-conductor" selected as the session agent
   And they state that the workspace MCP servers start only after the first message of a session
   And they state that, in a repository that contains ".sdd/" and while hooks are enabled, every subagent that is not an Architect agent, the host built-in agents and the adopter's own agents included, can call only the read-only tools of the tool classes file
+  And after those steps they hold one note for Copilot CLI, which states that Copilot CLI is no supported host of the package, that Copilot CLI runs a session agent started with "--agent architect:sdd-conductor" on its default model, and that the conductor runs on its tier only with "--model" followed by the "model" field of "agents/sdd-conductor.agent.md"
+  And they do not contain "GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS"
 ```
+
+The Copilot CLI note stays although Copilot CLI is no adopter host: it states a host behaviour that
+runs the conductor a tier below its own, without promising support or a setup step, and the install
+notes name no other Copilot CLI setting (C002-IF-005 §5; P-01 answer to Q-cli-model-01; critic CR-69).
 
 ## C002-REQ-305
 
@@ -1073,7 +1079,7 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-301 | TS-301 | n/a | n/a | TS-302 | n/a | n/a | TS-301 (no `.mcp.json`, `hooks.json` or `plugin.json` at the package root, so the folder is no plugin before the install; no hook command runs a PATH "sdd") |
 | C002-REQ-302 | TS-303 | n/a | n/a | TS-304 | TS-303 | n/a | TS-304 (Claude hooks file copied; a second PreToolUse entry, the other mode's `--mode`, the entry removed, PreToolUse in agent frontmatter) |
 | C002-REQ-303 | TS-305 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-304 | TS-306 | TS-306 (restriction of non-Architect subagents in repositories with `.sdd/`) | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-304 | TS-306 | TS-306 (restriction of non-Architect subagents in repositories with `.sdd/`; Copilot CLI model note, no other Copilot CLI setting) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-305 | TS-307 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-306 | TS-308 | TS-308 (tool sets) | n/a | n/a | TS-308 | n/a | TS-309 |
 | C002-REQ-307 | TS-310 | TS-310 (both modes) | n/a | TS-327 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | TS-327 (server declared in a plugin MCP configuration) |

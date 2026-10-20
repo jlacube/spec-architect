@@ -410,11 +410,16 @@ Scenario Outline: C002-TS-673 — a body line that names the Glob tool without a
     | line 30 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the Copilot table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 30 and the target "opencode" |
     | line 30 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the OpenCode table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 30 and the target "copilot" |
     | "Glob" is named only in the frontmatter "tools" field of "agents/sdd-critic.md" (line 7), as in the source plugin                                         | the exit code is 0, no ERR-GEN-002 message names "agents/sdd-critic.md", and the generated agent grants the tool that each target's table maps "Glob" to |
+    | line 30 of the body of "agents/sdd-critic.md" reads "Check the Global items of the DoD." and neither table has a variant for that line                   | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
+    | line 30 of the body of "agents/sdd-critic.md" reads "On OpenCode the glob tool lists no dot folder." and neither table has a variant for that line        | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
 ```
 
 The construct `glob-prose` makes every body line that names the Glob tool a wiring anchor on every
 target (C002-IF-001 §2, `errors.md` ERR-GEN-002; defect D-020 item 1); a frontmatter `tools` entry is
-translated by the tool mapping and is no anchor.
+translated by the tool mapping and is no anchor. Its detector `\bGlob\b` matches the whole,
+case-sensitive word only, so a line with `Global` (as `commands/init.md:26` and the `## Global items`
+heading of the dod-catalogue skill) or the host tool name `glob` is no anchor (C002-IF-001 §2;
+critic CR-67).
 
 ## C002-REQ-113
 
@@ -573,7 +578,7 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 | C002-REQ-109 | TS-115 | TS-115 (two targets) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-110 | TS-116 | TS-116 (per-skill and per-agent budget) | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
 | C002-REQ-111 | TS-117, TS-118, TS-123, TS-674 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows), TS-674 (file-inspection rule on both targets, OpenCode doctor test for `.sdd/`) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
-| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring, doctor host rows, file-inspection rule), TS-673 (a new body line naming the Glob tool) | TS-673 (Glob only in the frontmatter `tools` field: no anchor) | TS-119, TS-120, TS-673 | n/a | n/a | n/a |
+| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring, doctor host rows, file-inspection rule), TS-673 (a new body line naming the Glob tool) | TS-673 (Glob only in the frontmatter `tools` field: no anchor; `Global` and the host tool name `glob` in a body line: no anchor) | TS-119, TS-120, TS-673 | n/a | n/a | n/a |
 | C002-REQ-113 | TS-121 | TS-122 (agent, command, skill) | n/a | TS-122 | n/a | n/a | n/a |
 | C002-REQ-114 | TS-124 | TS-124 (two targets) | n/a | TS-126 | TS-125 (read-only tool list) | n/a | TS-125 (no `.serena/` in the repository) |
 | C002-REQ-115 | TS-127 | TS-127 (agent and commands, two targets) | n/a | n/a: a template the CLI does not ship is refused at run time (C002-REQ-514, C002-TS-521) | n/a | n/a | n/a |

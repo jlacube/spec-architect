@@ -189,6 +189,40 @@ Scenario Outline: C002-TS-642 — allowed command whose executable cannot be sta
 ```
 
 ```gherkin
+Scenario Outline: C002-TS-686 — the command tool starts an executable from the PATH folders only
+  Given the server instance "sdd-shell" runs in a copy of "fx-srv" at "C:/fx/srv" on REF-WIN, its repository root and working folder
+  And "C:/fx/srv" holds the stub "git.exe", which prints "planted" and records each start
+  And the server's PATH is "<path>" followed by the folder of the real "node.exe", where "C:/fx/git-bin" holds <bin>, and no other folder of that PATH holds a "git" executable
+  When an agent calls the command tool with "git --version"
+  Then <result>
+  And the stub "C:/fx/srv/git.exe" records no start
+  Examples:
+    | path               | bin                                                                    | result                                                                                                     |
+    | C:/fx/git-bin      | the stub "git.exe", which prints "git version 2.51.0.windows.1"        | the result holds exit code 0 and standard output "git version 2.51.0.windows.1"                            |
+    | .;C:/fx/git-bin    | the stub "git.exe", which prints "git version 2.51.0.windows.1"        | the result holds exit code 0 and standard output "git version 2.51.0.windows.1"                            |
+    | ;C:/fx/git-bin     | the stub "git.exe", which prints "git version 2.51.0.windows.1"        | the result holds exit code 0 and standard output "git version 2.51.0.windows.1"                            |
+    | C:/fx/git-bin      | no file named "git" with any extension                                 | the result is an error result whose text is 'ERR-MCP-006: could not start "git": not found on PATH'        |
+    | .                  | no file named "git" with any extension                                 | the result is an error result whose text is 'ERR-MCP-006: could not start "git": not found on PATH'        |
+    | C:/fx/git-bin      | only "git.cmd", a stub that records each start                         | the result is an error result whose text is 'ERR-MCP-006: could not start "git": only a .cmd or .bat shim was found', and the stub "C:/fx/git-bin/git.cmd" records no start |
+```
+
+```gherkin
+Scenario: C002-TS-687 — the process tree is killed by the taskkill of the PATH folders
+  Given the server instance "sdd-shell" runs in a copy of "fx-srv" at "C:/fx/srv" on REF-WIN, whose root holds the stub "taskkill.exe", which records each start
+  And the server's PATH holds "C:/fx/git-bin", whose stub "git.exe" never ends and starts one child process that never ends, and "C:/Windows/System32", whose "taskkill.exe" is the one of Windows
+  When an agent calls the command tool with "git --version" and "timeout_ms" 2000
+  Then the result has the "status" "timed_out"
+  And neither the stub "git.exe" nor its child process runs 5 seconds after the result
+  And the stub "C:/fx/srv/taskkill.exe" records no start
+```
+
+The server resolves every allowlisted executable other than `sdd`, and `taskkill` at a timeout, by
+the executable lookup of C002-IF-007: the folders of its PATH only, an empty or relative entry
+skipped, never its working folder or the repository, and starts the first native match by its
+absolute path (C002-IF-002 §5.2 steps 3 and 4, C002-CON-17; critic CR-63, P-01 answer to
+Q-exec-lookup-01).
+
+```gherkin
 Scenario Outline: C002-TS-666 — OpenCode 1.18.31 accepts refused and failed calls of the server's tools
   Given OpenCode 1.18.31 started as the pinned host binary with a database and data folders of its own, in a copy of "fx-srv" with the OpenCode target package generated with "--mode opencode=sdd-mcp-server"
   And a stub model whose first step makes "sdd-conductor" call "<host tool>" with <arguments>, and whose second step answers "done"
@@ -418,7 +452,7 @@ Scenario Outline: C002-TS-422 — missing or unknown profile
 | C002-REQ-402 | TS-402 | n/a | n/a | TS-402 (ERR-MCP-001, 002, 003), TS-665 (error results as text only, no `structuredContent`) | n/a | n/a | TS-402 (missing argument) |
 | C002-REQ-403 | TS-403, TS-404 | n/a | n/a | n/a: refused spans are C002-REQ-404 | n/a | n/a | n/a |
 | C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405, TS-665 (ERR-MCP-004 text with the count) | n/a | n/a | n/a |
-| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect), TS-660 (Serena literal with and without the variable set), TS-666 (refused and failed calls accepted by OpenCode 1.18.31) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH), TS-665 (GUARD-BASH-001, GUARD-BASH-002, ERR-MCP-006 as text, no `structuredContent`), TS-666 (no JSON-RPC error `-32602` on OpenCode) | TS-406, TS-641, TS-660 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository), TS-660 (literal `${CLAUDE_PLUGIN_DATA}` never expanded from the server's environment; no folder of that name created) |
+| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect), TS-660 (Serena literal with and without the variable set), TS-666 (refused and failed calls accepted by OpenCode 1.18.31), TS-686 (the executable of the PATH folders, also after an empty or relative entry), TS-687 (`taskkill` of the PATH folders at a timeout) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH), TS-686 (not on PATH, only `.` on the PATH, only a `.cmd` shim), TS-665 (GUARD-BASH-001, GUARD-BASH-002, ERR-MCP-006 as text, no `structuredContent`), TS-666 (no JSON-RPC error `-32602` on OpenCode) | TS-406, TS-641, TS-660 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository), TS-660 (literal `${CLAUDE_PLUGIN_DATA}` never expanded from the server's environment; no folder of that name created), TS-686 (a `git.exe` planted in the repository never runs), TS-687 (a `taskkill.exe` planted in the repository never runs) |
 | C002-REQ-406 | TS-407 | TS-408 (failing command), TS-424 (plugin-root literal not expanded: ordinary non-zero result), TS-666 (success read by OpenCode 1.18.31 against the advertised output schema) | n/a | TS-408, TS-424 | n/a | n/a | TS-424 (a variable never expands to another CLI without a shell) |
 | C002-REQ-407 | TS-409 | n/a | n/a | TS-423 (ERR-MCP-006 `not found beside the server`) | n/a | n/a | TS-409 (PATH shadowing), TS-423 (no fallback to a PATH `sdd` when the own CLI is missing) |
 | C002-REQ-408 | TS-410 | TS-412 (no finding) | TS-411 (15 of 20) | n/a: C002-REQ-409 | n/a | n/a | n/a |

@@ -51,6 +51,30 @@ Scenario: C002-TS-502 — same files as the bundled CLI, apart from the translat
   And each file of "fx-a" has the same lines as its counterpart in "fx-b", except the lines of "20-plan/handoff.md" in which "fx-b" holds "node <plugin-root>/scripts/sdd.mjs" and "fx-a" holds "sdd" in its place, the rest of each such line being equal
 ```
 
+```gherkin
+Scenario Outline: C002-TS-684 — the gate commands start git from the PATH folders only
+  Given the "architect-sdd" tarball is installed globally into a clean prefix
+  And a copy of "fx-gate" at "C:/fx/repo", a git repository whose change "002" has phase "10-spec" in review, and whose root holds the stub "git.exe", which prints "Mallory" for "config user.name" and records each start
+  And the PATH of the "sdd" process is "<path>" followed by the folder of the real "node.exe", where "C:/fx/git-bin" holds <bin>, and no other folder of that PATH holds a "git" executable
+  When P-01 runs "<command>" in "C:/fx/repo" on REF-WIN
+  Then <outcome>
+  And the stub "C:/fx/repo/git.exe" records no start
+  Examples:
+    | path                   | bin                                                                                           | command                                                       | outcome                                                                                                                     |
+    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "Alice"                                                    |
+    | .;C:/fx/git-bin        | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "Alice"                                                    |
+    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok" --commit             | the exit code is 0, and the last commit of the copy holds the approval of "002" with the author name "Alice"              |
+    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "unknown"                                                  |
+    | C:/fx/git-bin          | only "git.cmd", a stub that prints "Mallory" for "config user.name" and records each start    | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0, "change.md" of "002" gives "approved_by" "unknown", and the stub "C:/fx/git-bin/git.cmd" records no start |
+    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 002 10-spec --note "ok" --commit             | the exit code is 2, standard error contains "ERR-CLI-018" and "not a git repository", and "change.md" of "002" still shows "10-spec" as not approved |
+```
+
+The gate commands are CHG-001's (C001-IF-01); CHG-002 changes only how the shared CLI starts `git`:
+over the PATH folders only, an empty or relative entry skipped, never the working folder, by the
+absolute path of the first native match (C002-IF-007 §Executable lookup, C002-CON-17; critic CR-63).
+A name found only as a `.cmd` or `.bat` shim, or not at all, gives the C001-IF-01 behaviour of a
+missing git. The scenario runs the npm `sdd`; the bundled CLI is the same program (C002-TS-502).
+
 ## C002-REQ-502
 
 #### C002-AC-502.1 — Packaging writes the unscoped tarball at the plugin version
@@ -247,24 +271,36 @@ Scenario: C002-TS-514 — untested is a warning
 ```
 
 ```gherkin
-Scenario Outline: C002-TS-675 — host-version reports the opencode first on the PATH
+Scenario Outline: C002-TS-675 — host-version reports the opencode first in the PATH folders
   Given the folder "C:/fx/path-a" holds "<file a>", which reports the version "<version a>", and the folder "C:/fx/path-b" holds "opencode.exe", which reports the version "<version b>"
-  And the PATH of the "sdd" process lists "C:/fx/path-a" before "C:/fx/path-b", and no other folder of that PATH and not the working folder holds an "opencode" executable
-  When P-01 runs "sdd host-version opencode" on REF-WIN
+  And the working folder "C:/fx/repo" of the "sdd" process holds <planted>
+  And the PATH of the "sdd" process is "<path>" followed by the folder of the real "node.exe", and no other folder of that PATH holds an "opencode" executable
+  When P-01 runs "sdd host-version opencode" in "C:/fx/repo" on REF-WIN
   Then standard output is the one line "opencode <printed>"
-  And the exit code is 0
+  And the exit code is <code>
+  And no stub in "C:/fx/repo" records a start
   Examples:
-    | file a       | version a | version b | printed |
-    | opencode.exe | 2.0.32    | 1.18.31   | 2.0.32  |
-    | opencode.exe | 1.18.31   | 2.0.32    | 1.18.31 |
-    | opencode.cmd | 2.0.32    | 1.18.31   | 2.0.32  |
+    | file a                                                        | version a | version b | planted                                                                                    | path                          | printed | code |
+    | opencode.exe                                                  | 2.0.32    | 1.18.31   | no executable                                                                              | C:/fx/path-a;C:/fx/path-b     | 2.0.32  | 0    |
+    | opencode.exe                                                  | 1.18.31   | 2.0.32    | no executable                                                                              | C:/fx/path-a;C:/fx/path-b     | 1.18.31 | 0    |
+    | opencode.cmd                                                  | 2.0.32    | 1.18.31   | no executable                                                                              | C:/fx/path-a;C:/fx/path-b     | 2.0.32  | 0    |
+    | opencode.exe                                                  | 2.0.32    | 1.18.31   | the stubs "opencode.exe" and "opencode.cmd", which report the version "9.9.9" and record each start | C:/fx/path-a;C:/fx/path-b | 2.0.32  | 0    |
+    | opencode.cmd, an npm shim that starts "node" with its script  | 2.0.32    | 1.18.31   | the stub "node.exe", which records each start                                              | C:/fx/path-a;C:/fx/path-b     | 2.0.32  | 0    |
+    | opencode.exe                                                  | 2.0.32    | 1.18.31   | the stub "opencode.exe", which reports the version "9.9.9" and records each start          | .;C:/fx/path-a;C:/fx/path-b   | 2.0.32  | 0    |
+    | opencode.exe                                                  | 2.0.32    | 1.18.31   | the stub "opencode.exe", which reports the version "9.9.9" and records each start          | ;C:/fx/path-b                 | 1.18.31 | 0    |
+    | opencode.exe                                                  | 2.0.32    | 1.18.31   | the stub "opencode.exe", which reports the version "9.9.9" and records each start          | .                             | missing | 1    |
 ```
 
-The version is that of the `opencode` a terminal of P-03 with the same PATH starts, not necessarily
-the binary that runs the session; `sdd host-version` has no option that names another executable
-(C002-IF-007 `host-version`, C002-IF-006 §2; defect D-020 item 4). A version other than the tested
-one then gives the row `untested` (C002-TS-513). The doctor rows of the eval sessions show the tested
-version because the eval runner puts the pinned host binary first on their PATH (C002-TS-676).
+The version is that of the `opencode` a PowerShell terminal of P-03 with the same PATH starts, not
+necessarily the binary that runs the session; `sdd host-version` has no option that names another
+executable (C002-IF-007 `host-version`, C002-IF-006 §2; defect D-020 item 4). The lookup searches the
+PATH folders only: an empty or relative entry such as `.` is skipped, the working folder is never
+searched, and a probe runs with the folder of its match as working folder, so an `opencode.exe`,
+`opencode.cmd` or `node.exe` placed in the repository never runs (C002-IF-007 §Executable lookup,
+C002-CON-17; critic CR-63). The probes are the one start that takes a `.cmd` shim. A version other
+than the tested one then gives the row `untested` (C002-TS-513). The doctor rows of the eval sessions
+show the tested version because the eval runner puts the pinned host binary first on their PATH
+(C002-TS-676).
 
 ## C002-REQ-509
 
@@ -476,6 +512,26 @@ Scenario: C002-TS-524 — Serena started with the per-user data folder
   And the copy of "fx-bootstrap" has no ".serena/" folder
 ```
 
+```gherkin
+Scenario Outline: C002-TS-685 — serena-launch starts the serena of the PATH folders only
+  Given a Windows user profile with "LOCALAPPDATA" = "C:/fx-home/AppData/Local"
+  And a copy of "fx-bootstrap" at "C:/fx/repo", whose root holds the stub "serena.exe", which records each start
+  And the PATH of the "sdd" process is "<path>" followed by the folder of the real "node.exe", where "C:/fx/serena-bin" holds <bin>, and no other folder of that PATH holds a "serena" executable
+  When P-01 runs "sdd serena-launch --user-data -- start-mcp-server --project ." in "C:/fx/repo" on REF-WIN
+  Then <outcome>
+  And the stub "C:/fx/repo/serena.exe" records no start
+  Examples:
+    | path                  | bin                                                                  | outcome                                                                                                                  |
+    | C:/fx/serena-bin      | the stub "serena.exe", which records each start and its environment | the stub "C:/fx/serena-bin/serena.exe" records one start with "SERENA_HOME" = "C:/fx-home/AppData/Local/architect-sdd/serena" |
+    | .;C:/fx/serena-bin    | the stub "serena.exe", which records each start and its environment | the stub "C:/fx/serena-bin/serena.exe" records one start with "SERENA_HOME" = "C:/fx-home/AppData/Local/architect-sdd/serena" |
+    | C:/fx/serena-bin      | no file named "serena" with any extension                           | the exit code is non-zero and standard error names "serena"                                                             |
+    | C:/fx/serena-bin      | only "serena.cmd", a stub that records each start                   | the exit code is non-zero, standard error names "serena", and the stub "C:/fx/serena-bin/serena.cmd" records no start   |
+```
+
+`serena-launch` resolves `serena` by the executable lookup of C002-IF-007 and starts it by its
+absolute path; a name found only as a shim fails as a missing one, with the launch's start error
+(C002-IF-007 §Executable lookup, C002-CON-17; critic CR-63).
+
 ## C002-REQ-516
 
 #### C002-AC-516.1 — Per-user data folder not determinable, relative or inside the repository: ERR-CLI-020, nothing written, Serena not started
@@ -669,21 +725,21 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-501 | TS-501, TS-502 | n/a | TS-502 (translated hand-off CLI lines are the only difference) | n/a | n/a | n/a | n/a |
+| C002-REQ-501 | TS-501, TS-502 | TS-684 (gate commands of the shared CLI start git from the PATH folders, also with `--commit`) | TS-502 (translated hand-off CLI lines are the only difference), TS-684 (relative PATH entry `.` skipped) | TS-684 (git missing or only a `.cmd` shim: approver `unknown`, ERR-CLI-018) | n/a | n/a | TS-684 (a `git.exe` planted in the repository never runs) |
 | C002-REQ-502 | TS-503 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-503 | TS-504 | TS-504 (PowerShell, node -v) | TS-504 (extra word) | TS-504, TS-505 | TS-504 | n/a | TS-504 (npx, sddx, chaining, redirection) |
 | C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639 | n/a | n/a | n/a |
 | C002-REQ-505 | TS-509 | TS-509 (Claude Code: no sdd CLI row, completed with warnings) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome), TS-675 (two installs on the PATH: the first one's version, also as a `.cmd` shim) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
+| C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome), TS-675 (two installs on the PATH: the first one's version, also as a `.cmd` shim) | TS-513 (equal, older, newer), TS-675 (empty and relative PATH entries skipped; only `.` on the PATH: `opencode missing`) | TS-513, TS-675 (`opencode missing`, exit code 1) | n/a | n/a | TS-675 (an `opencode.exe`, `opencode.cmd` or `node.exe` planted in the working folder never runs) |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
 | C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text; a restricted-mode row whose chat VS Code refused recorded `passed` with a `VS Code refused: ` note), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override), TS-538 (`CLAUDE_PLUGIN_ROOT` set: the npm `sdd` keeps its own templates) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | TS-538 (another package's templates named by `CLAUDE_PLUGIN_ROOT` are not read) |
 | C002-REQ-514 | TS-521 | TS-521 (unknown profile) | TS-522 (`..` that stays inside the profile folder) | TS-521, TS-522 | n/a | n/a | TS-522 (`..` segments and a link leaving the profile's template folder) |
-| C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged) | TS-523 (XDG_DATA_HOME unset) | n/a: a folder that cannot be determined, is relative or lies inside the repository is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository) |
+| C002-REQ-515 | TS-523, TS-524 | TS-523 (four platform rules, positional folder unchanged), TS-685 (the `serena` of the PATH folders, relative entry `.` skipped) | TS-523 (XDG_DATA_HOME unset) | TS-685 (`serena` missing or only a `.cmd` shim: start error); a folder that cannot be determined, is relative or lies inside the repository is C002-REQ-516 (TS-525) | n/a | n/a | TS-523, TS-524 (no `.serena/` in the repository), TS-685 (a `serena.exe` planted in the repository never runs) |
 | C002-REQ-516 | TS-525 | TS-525 (serena-config and serena-launch, four platforms) | TS-525 (case-different path inside the repository), TS-533 (folder beside the repository sharing its name prefix) | TS-525 | n/a | n/a | TS-525 (environment variable pointing into the repository, relative value) |
 | C002-REQ-517 | TS-527 | TS-527 (`--user-data`, script form, PowerShell), TS-528 (Claude Code doctor step), TS-537 (doctor and init on the real Claude Code host, variable set by the host) | TS-527 (`..` leaving and re-entering the repository, sibling folder `C:/repo-data`) | TS-527 | TS-527 | n/a | TS-527 (folder inside the repository through a relative path, a case change, `..` or a link) |
 | C002-REQ-518 | TS-529 | TS-529 (both profiles, `task set` and `defect add`), TS-534 (read through `sdd template show`) | n/a | n/a: a plugin path left in a shipped template is C002-REQ-519 (TS-530) | n/a | n/a | n/a |
