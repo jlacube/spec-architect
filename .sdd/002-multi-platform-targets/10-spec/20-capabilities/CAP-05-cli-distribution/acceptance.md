@@ -12,7 +12,8 @@ status: draft
 Verification: npm-package scenarios are integration tests on the packed tarball installed into a
 clean prefix outside the repository. Allowlist scenarios feed hook-input JSON (C001-IF-07 §1) for an
 Architect agent to `sdd guard-bash` on stdin, as C001-TS-1107 does. The doctor and the toolchain
-record are prompts, so their scenarios are agent behaviour. Tags:
+record are prompts, so their scenarios are agent behaviour; the untagged C002-TS-675 is an
+integration test of `sdd host-version` with version shims on the PATH. Tags:
 
 - `@eval`: run by the existing harness on Claude Code and by the OpenCode eval runner on OpenCode, on
   the machine configurations of C001-CAP-10 extended with the fixtures named here; scenarios that name
@@ -203,6 +204,11 @@ Scenario Outline: C002-TS-511 — toolchain.md per host
     | OpenCode    | node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI          |
 ```
 
+C002-TS-511 keeps its expectation. On OpenCode at its tested version (1.18.31) it relies on the
+variants `file-inspection` and `doctor-probe` (C002-TS-674): that version's `glob` lists no file
+inside `.sdd/`, and a doctor that took an empty `glob` result for no `.sdd/` wrote no
+`toolchain.md` (C002-IF-001 §6.1 Dot folders; defect D-020 item 1).
+
 ```gherkin
 @eval
 Scenario: C002-TS-512 — toolchain record written by init on OpenCode
@@ -239,6 +245,26 @@ Scenario: C002-TS-514 — untested is a warning
   When P-01 runs the doctor command on OpenCode
   Then the doctor run reports "completed with warnings"
 ```
+
+```gherkin
+Scenario Outline: C002-TS-675 — host-version reports the opencode first on the PATH
+  Given the folder "C:/fx/path-a" holds "<file a>", which reports the version "<version a>", and the folder "C:/fx/path-b" holds "opencode.exe", which reports the version "<version b>"
+  And the PATH of the "sdd" process lists "C:/fx/path-a" before "C:/fx/path-b", and no other folder of that PATH and not the working folder holds an "opencode" executable
+  When P-01 runs "sdd host-version opencode" on REF-WIN
+  Then standard output is the one line "opencode <printed>"
+  And the exit code is 0
+  Examples:
+    | file a       | version a | version b | printed |
+    | opencode.exe | 2.0.32    | 1.18.31   | 2.0.32  |
+    | opencode.exe | 1.18.31   | 2.0.32    | 1.18.31 |
+    | opencode.cmd | 2.0.32    | 1.18.31   | 2.0.32  |
+```
+
+The version is that of the `opencode` a terminal of P-03 with the same PATH starts, not necessarily
+the binary that runs the session; `sdd host-version` has no option that names another executable
+(C002-IF-007 `host-version`, C002-IF-006 §2; defect D-020 item 4). A version other than the tested
+one then gives the row `untested` (C002-TS-513). The doctor rows of the eval sessions show the tested
+version because the eval runner puts the pinned host binary first on their PATH (C002-TS-676).
 
 ## C002-REQ-509
 
@@ -650,7 +676,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-505 | TS-509 | TS-509 (Claude Code: no sdd CLI row, completed with warnings) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
+| C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome), TS-675 (two installs on the PATH: the first one's version, also as a `.cmd` shim) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
 | C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text; a restricted-mode row whose chat VS Code refused recorded `passed` with a `VS Code refused: ` note), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |

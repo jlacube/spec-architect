@@ -354,6 +354,25 @@ Scenario Outline: C002-TS-123 — doctor host rows per target
     | Copilot  | VS Code with GitHub Copilot Chat |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-674 — how the generated texts find files under .sdd/
+  Given the source plugin keeps the variants "file-inspection" and "doctor-probe" of both mapping tables
+  When the generator writes the <target> target package
+  Then <generated> holds the <target> variant "<variant>" in place of <anchor>
+  And that variant's text <holds>
+  And it <excludes>
+  Examples:
+    | target   | generated                                                                    | variant         | anchor                                                                                          | holds | excludes |
+    | OpenCode | the generated "sdd-conventions" skill and every agent body that inlines it  | file-inspection | the three lines of the file-inspection rule of "skills/sdd-conventions/SKILL.md" (lines 16 to 18) | names "read", "glob" and "grep" for inspecting files and "sdd status" and "read" for finding files under ".sdd/", states that "glob" is never used to find or to rule out a file under ".sdd/" and that an empty "glob" or "grep" result is no proof that ".sdd/" or a file in it is absent, and gives the command-tool rule (allowlisted commands only, one command per call, no ";", "&&" or redirection) in OpenCode's tool names | contains neither the word "Glob" nor the word "Bash" |
+    | Copilot  | the generated "sdd-conventions" skill and every agent body that inlines it  | file-inspection | the three lines of the file-inspection rule of "skills/sdd-conventions/SKILL.md" (lines 16 to 18) | names "read" and "search" for inspecting files, "sdd status" through the command tool of the package's mode and "read" of a file by its path for finding files under ".sdd/", states that an empty "search" result is no proof that ".sdd/" or a file in it is absent, and gives the command-tool rule (allowlisted commands only, one command per call, no ";", "&&" or redirection) in Copilot's tool names | contains neither the word "Glob" nor the word "Bash" |
+    | OpenCode | the generated doctor command                                                 | doctor-probe    | the six lines of step 2 (Probe) of "commands/doctor.md"                                         | tests whether ".sdd/" exists by "sdd status" or by "read" of ".sdd/" | holds no instruction to call "glob" on ".sdd/" |
+```
+
+OpenCode 1.18.31's `glob` lists no file inside a dot folder when it searches from the project root,
+so the OpenCode texts find `.sdd/` files without it; the Copilot variant states the same finding rule
+as a precaution (C002-IF-001 §2.1, §6.1 Dot folders; P-01 answer to Q-opencode-glob-01; defect D-020
+item 1). C002-TS-511 checks the effect in an OpenCode session.
+
 ## C002-REQ-112
 
 #### C002-AC-112.1 — Missing variant named with file, line and target
@@ -378,7 +397,24 @@ Scenario Outline: C002-TS-120 — CLI invocation line, command wiring or doctor 
     | fx-plugin-novariant-agent  | CLI invocation line                                       | agents/sdd-auditor.md           | 13   | opencode | copilot  |
     | fx-plugin-novariant-cmd    | "Claude Code wiring" heading                              | commands/archive.md             | 20   | opencode | copilot  |
     | fx-plugin-novariant-doctor | doctor host rows (remedies-table row "claude --version")  | commands/doctor.md              | 33   | opencode | copilot  |
+    | fx-plugin-novariant-glob   | file-inspection rule (construct "glob-prose", the line "Inspect files with the Grep, Glob and Read tools, not Bash (…") | skills/sdd-conventions/SKILL.md | 16   | copilot  | opencode |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-673 — a body line that names the Glob tool without a variant
+  Given the fixture "fx-plugin-glob-prose", a copy of the source plugin with every variant of both mapping tables, in which <place>
+  When the generator runs on that fixture
+  Then <outcome>
+  Examples:
+    | place                                                                                                                                                    | outcome |
+    | line 30 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the Copilot table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 30 and the target "opencode" |
+    | line 30 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the OpenCode table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 30 and the target "copilot" |
+    | "Glob" is named only in the frontmatter "tools" field of "agents/sdd-critic.md" (line 7), as in the source plugin                                         | the exit code is 0, no ERR-GEN-002 message names "agents/sdd-critic.md", and the generated agent grants the tool that each target's table maps "Glob" to |
+```
+
+The construct `glob-prose` makes every body line that names the Glob tool a wiring anchor on every
+target (C002-IF-001 §2, `errors.md` ERR-GEN-002; defect D-020 item 1); a frontmatter `tools` entry is
+translated by the tool mapping and is no anchor.
 
 ## C002-REQ-113
 
@@ -536,8 +572,8 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 | C002-REQ-108 | TS-114 | TS-114 (six agent/target pairs) | TS-640 (catch-all entry first, missing, `true` or last) | TS-640 | TS-114, TS-133, TS-640 | n/a | TS-133 (adopter MCP server with a write tool) |
 | C002-REQ-109 | TS-115 | TS-115 (two targets) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-110 | TS-116 | TS-116 (per-skill and per-agent budget) | TS-116 (24,000 / 64,000) | TS-116 | n/a | n/a | n/a |
-| C002-REQ-111 | TS-117, TS-118, TS-123 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
-| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring, doctor host rows) | n/a | TS-119, TS-120 | n/a | n/a | n/a |
+| C002-REQ-111 | TS-117, TS-118, TS-123, TS-674 | TS-117, TS-118 (inlined copies, agents), TS-123 (doctor host rows), TS-674 (file-inspection rule on both targets, OpenCode doctor test for `.sdd/`) | n/a | n/a: a missing variant is C002-REQ-112 (TS-119) | n/a | n/a | n/a |
+| C002-REQ-112 | TS-119 | TS-120 (CLI lines, command wiring, doctor host rows, file-inspection rule), TS-673 (a new body line naming the Glob tool) | TS-673 (Glob only in the frontmatter `tools` field: no anchor) | TS-119, TS-120, TS-673 | n/a | n/a | n/a |
 | C002-REQ-113 | TS-121 | TS-122 (agent, command, skill) | n/a | TS-122 | n/a | n/a | n/a |
 | C002-REQ-114 | TS-124 | TS-124 (two targets) | n/a | TS-126 | TS-125 (read-only tool list) | n/a | TS-125 (no `.serena/` in the repository) |
 | C002-REQ-115 | TS-127 | TS-127 (agent and commands, two targets) | n/a | n/a: a template the CLI does not ship is refused at run time (C002-REQ-514, C002-TS-521) | n/a | n/a | n/a |

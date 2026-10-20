@@ -200,3 +200,9 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. Smaller fixture or shorter rework path within $0.50 (Recommended) · 2. Budget exception: this case up to $1.00 per session, one run plus one rerun on failure · 3. Waive the row
 - **Answer:** P-01: "Budget exception $1"
 - **Extracted instructions:** none
+
+### Q-replay-rule-01 — A platforms-limited case listed with another not-applicable rule (C002-IF-009 §5, TS-637, TS-682)
+- **Blocking:** no · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. Refuse under ERR-REL-012 "lists cases as not applicable without a rule" (Recommended) · 2. Accept any rule value
+- **Answer:** conductor, under P-01's standing rule to continue on the recommended option for non-blocking, non-material questions (feedback 2026-10-11/18): option 1, fail-closed. To be confirmed at G2.
+- **Extracted instructions:** none

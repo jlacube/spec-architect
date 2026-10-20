@@ -247,16 +247,17 @@ Scenario Outline: C002-TS-663 — hook tool name of each corpus tool on the Copi
 
 ```gherkin
 Scenario Outline: C002-TS-667 — the replay adapter reads the code of a server error result from its text
-  Given a stub sdd MCP server that answers the "write_file" call of the path case "PG-050" with <answer>
+  Given a stub sdd MCP server that answers the "replace_text" call of the path case "PG-050", an "Edit" case that C002-IF-009 §2.2 feeds to the server as "replace_text", with <answer>
   When the corpus replay suite reads the decision of that call for the sdd MCP server
-  Then the replay report records for "PG-050" the decision "<decision>"
+  Then the stub received one "replace_text" call for "PG-050" and no "write_file" call
+  And the replay report records for "PG-050" the decision "<decision>"
   And its "detail" holds the result's text
   Examples:
     | answer                                                                                                                                         | decision |
     | "isError" true, the text "GUARD-PATH-001: Write on {repo}/README.md denied — outside .sdd/. Allowed: .sdd/." and no "structuredContent"         | deny     |
-    | "isError" true, the text "ERR-MCP-001: invalid arguments for write_file: content is required" and no "structuredContent"                       | deny     |
+    | "isError" true, the text "ERR-MCP-001: invalid arguments for replace_text: old_text is required" and no "structuredContent"                       | deny     |
     | "isError" true, the text "ERR-MCP-003: could not write {repo}/README.md: EACCES; previous content kept" and no "structuredContent"             | allow    |
-    | "isError" true, the text "ERR-MCP-002: internal fault in write_file: boom; the call was refused" and no "structuredContent"                    | error    |
+    | "isError" true, the text "ERR-MCP-002: internal fault in replace_text: boom; the call was refused" and no "structuredContent"                    | error    |
     | "isError" true, the text "write refused" and no "structuredContent"                                                                            | error    |
     | no "isError", the text "wrote {repo}/README.md (2 bytes)" and a "structuredContent" whose "status" is "written"                                | allow    |
     | "isError" true, the text "ERR-MCP-007: usage: sdd-mcp --profile files\|shell [--root <dir>]: unknown profile" and no "structuredContent"       | error    |
@@ -344,6 +345,25 @@ Scenario: C002-TS-611 — case files untouched
   And every recorded case file has its recorded hash
 ```
 
+```gherkin
+Scenario Outline: C002-TS-676 — the pinned OpenCode binary first on the host's PATH
+  Given the OpenCode eval runner on REF-WIN, whose own PATH lists "C:/Users/p01/.opencode/bin", which holds an "opencode" that reports the version "2.0.32", and whose pinned host binary of the tested version "1.18.31" lies in "C:/fx/opencode-1.18.31"
+  And a doctor case row <row>
+  When the runner starts the host process of that row's session
+  Then the PATH of the host process lists <order>
+  And "sdd host-version opencode" run with that PATH prints "<printed>"
+  Examples:
+    | row                                                                                                                       | order                                                                                                                                         | printed          |
+    | that gives no PATH in "env"                                                                                               | the run's "bin" folder (with "sdd" and "sdd-mcp"), then "C:/fx/opencode-1.18.31", then the folders of the runner's own PATH                   | opencode 1.18.31 |
+    | whose "env" PATH the machine configuration of "doctorCase" builds with the "opencode" shim of C002-TS-513 that reports "1.5.0" | the shim's folder, then "C:/fx/opencode-1.18.31", then the folders of the machine configuration                                               | opencode 1.5.0   |
+    | of an "opencode missing" situation, whose machine configuration removes OpenCode from its PATH                            | no folder that holds an "opencode" executable                                                                                                 | opencode missing |
+```
+
+The PATH lead is part of the runner's `env` option on OpenCode (C002-IF-010 §2, §4 PATH lead; defect
+D-020 item 4): a case's version shims answer first, and otherwise the doctor of an eval session
+reports the tested version, as P-03's doctor does when the tested install is first on their PATH
+(C002-TS-675).
+
 ## C002-REQ-609
 
 #### C002-AC-609.1 — Dev tier on OpenCode runs routing and injection cases
@@ -373,11 +393,18 @@ Scenario: C002-TS-613 — scripted gate approval on OpenCode
 Scenario: C002-TS-634 — scripted Revise at a gate on OpenCode
   Given spike S-07 shows that a script can answer OpenCode's "question" calls
   And change "002" of "fx-gate" has phase "10-spec" in review
+  And the case row "TS-634" sets "maxBudgetUsd" to 1.00, the cap exception of C002-IF-010 §2.2 for this row on "opencode"
   When the OpenCode eval runner answers the gate G2 question with "Revise" and the words "Add an error scenario to C002-REQ-101" through the script
   Then the transcript shows one "sdd gate record 002 10-spec --decision revise" command with those words as its note
   And it shows no "sdd gate approve" command in the same turn
   And after the rework the transcript shows a second gate G2 question offering "Approve", "Approve with waivers", "Revise" and "Stop"
+  And the session ran with a spend cap of 1.00 USD
 ```
+
+The gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056); P-01
+approved 1.00 USD per session for this row, one run and one rerun only when that run fails
+(Q-ts634-budget-01; C002-IF-010 §2.2; defect D-020 item 2). C002-TS-679 checks that no other row or
+host gets a cap above 0.50 USD.
 
 ```gherkin
 @eval
@@ -405,6 +432,60 @@ Scenario Outline: C002-TS-614 — caps with a stub host
     | Copilot CLI eval runner  | 0.10  | 5     | spend cap |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-677 — spend cap checked after each step on OpenCode
+  Given the OpenCode eval runner with a stub OpenCode host that never ends a session and gives a cost of <cost> USD in the step-finish event of each step of the session agent, <subagent>
+  And a case row without "maxBudgetUsd", so that the spend cap is 0.50 USD
+  When the runner runs one eval session
+  Then the session ends with the "end_reason" "spend cap" after <steps> steps of the session agent
+  And no step of the session agent or of a subagent starts after the step whose cost brought the spend to 0.50 USD or above
+  And the session result records a spend of <spend> USD, with "spend" "reported"
+  Examples:
+    | cost | subagent                                                                                                               | steps | spend |
+    | 0.12 | and starts no subagent                                                                                                 | 5     | 0.60  |
+    | 0.25 | and starts no subagent                                                                                                 | 2     | 0.50  |
+    | 0.12 | and whose subagent runs one step of 0.05 USD in parallel with the fifth step, finishing before the abort takes effect   | 5     | 0.65  |
+```
+
+```gherkin
+Scenario Outline: C002-TS-678 — spend cap on Copilot CLI through the host's AI-Credit limit
+  Given the Copilot CLI eval runner with a stub Copilot CLI host and a case row <cap>
+  And the stub ends the session after writing a usage file that gives <credits> AI Credits for the session, and prints no limit text
+  When the runner runs one eval session
+  Then the host's command line holds "--max-ai-credits <limit>" once
+  And the session ends with the "end_reason" "<reason>"
+  And the session result's "usage.usd" is <usd> and its "copilot_usage" gives <credits> AI Credits
+  Examples:
+    | cap                           | credits | limit | reason    | usd  |
+    | without "maxBudgetUsd"        | 53      | 50    | spend cap | 0.53 |
+    | without "maxBudgetUsd"        | 12      | 50    | completed | 0.12 |
+    | whose "maxBudgetUsd" is 0.20  | 30      | 30    | spend cap | 0.30 |
+    | whose "maxBudgetUsd" is 0.20  | 25      | 30    | completed | 0.25 |
+```
+
+The spend cap is checked after each step, never before it; the step that reaches the cap is the last
+one started and counts in full, with a step already running, so a session that ends with `spend cap`
+records a spend at or above its cap (C002-NFR-105; C002-IF-010 §2.2 spend-cap rule; defect D-020 item
+3). Copilot CLI 1.0.98 accepts no limit below 30 AI Credits (0.30 USD) and gives the usage per
+session only.
+
+```gherkin
+Scenario Outline: C002-TS-679 — a case cap above 0.50 USD only for a listed cap exception
+  Given the fixture "fx-evals-caps", whose case file holds one row with the ID "<row>", no "host" field and "maxBudgetUsd" <cap>
+  And the cap exceptions of C002-IF-010 §2.2, which list "TS-634" on "opencode" at 1.00 USD only
+  And a stub host in place of the host of "--host <host>"
+  When P-01 runs "npm run eval -- --host <host> --only <row>" on that fixture
+  Then <outcome>
+  Examples:
+    | row    | cap  | host        | outcome                                                                                      |
+    | TS-634 | 1.00 | opencode    | one session runs, with a spend cap of 1.00 USD                                               |
+    | TS-634 | 0.80 | opencode    | one session runs, with a spend cap of 0.80 USD                                               |
+    | TS-634 | 1.20 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634"         |
+    | TS-634 | 1.00 | copilot-cli | the run ends before any session, with exit code 1 and a message that names "TS-634"         |
+    | TS-613 | 0.75 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-613"         |
+    | TS-613 | 0.50 | opencode    | one session runs, with a spend cap of 0.50 USD                                               |
+```
+
 ## C002-REQ-612
 
 #### C002-AC-612.1 — Copilot CLI runner covers the non-interactive cases
@@ -418,7 +499,27 @@ Scenario: C002-TS-615 — Copilot CLI dev tier
   And every session was started in non-interactive mode with "--no-ask-user"
   And every session named its agent as "--agent architect:<agent>", none by a bare agent name
   And every agent start in the results is reported as "architect:<agent>"
+  And the "models" of every result whose session agent is "architect:sdd-conductor" list "claude-opus-5.5"
 ```
+
+```gherkin
+Scenario Outline: C002-TS-680 — the Copilot CLI runner passes the session agent's model
+  Given the Copilot target package, in whose package copy "agents/sdd-conductor.agent.md" gives the model "claude-opus-5.5" and "agents/sdd-auditor.agent.md" the model "claude-haiku-5.5"
+  And the Copilot CLI eval runner with a stub Copilot CLI host that records its command line
+  And a case row whose "agent" is "<agent>", <model>
+  When the runner runs one eval session of that row
+  Then the host's command line holds "--agent <agent>" once and "--model <passed>" once
+  Examples:
+    | agent                    | model                                  | passed            |
+    | architect:sdd-conductor  | without "model"                        | claude-opus-5.5   |
+    | architect:sdd-auditor    | without "model"                        | claude-haiku-5.5  |
+    | architect:sdd-conductor  | whose "model" is "claude-sonnet-5.5"   | claude-sonnet-5.5 |
+```
+
+Copilot CLI 1.0.98 runs the session agent that `--agent` names on its default model
+(`claude-sonnet-5.5`), not on the `model` of that agent's file, so the runner always passes
+`--model` (P-01 answer to Q-cli-model-01; C002-IF-010 §2 `model`; C002-REQ-105; defect D-019 item
+1).
 
 ## C002-REQ-613
 
@@ -625,6 +726,9 @@ Scenario Outline: C002-TS-668 — step check of the checklist record at release
     | sdd MCP server enforcement | passed                                                                     | "VSC-01" passed, "VSC-02" passed and "VSC-99" passed                                                                               | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-99 is not a step of the checklist" |
     | sdd MCP server enforcement | passed                                                                     | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "repeated"                                        | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is failed in an earlier run not repeated under the rerun rule" |
     | sdd MCP server enforcement | passed with one earlier run "passed" whose cause is "hooks-source-changed" | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "hooks-source-changed"                            | allowed, with no ERR-REL-004 line |
+    | sdd MCP server enforcement | passed with one earlier run "passed" whose cause is "repeated"             | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "hooks-source-changed"                            | allowed, with no ERR-REL-004 line |
+    | sdd MCP server enforcement | passed with one earlier run "failed" whose cause is "repeated"             | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "hooks-source-changed"                            | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-04 is failed in an earlier run not repeated under the rerun rule" |
+    | sdd MCP server enforcement | passed with one earlier run "skipped" whose cause is "hooks-source-changed" | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "hooks-source-changed"                           | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-04 is skipped in an earlier run" |
     | sdd MCP server enforcement | passed                                                                     | "VSC-01" passed and "VSC-02" passed with one earlier run "failed" whose cause is "hooks-source-changed"                            | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is failed in an earlier run not repeated under the rerun rule" |
     | sdd MCP server enforcement | passed with one earlier run "passed" whose cause is "hooks-source-changed" | "VSC-01" passed with one earlier run "failed" whose cause is "hooks-source-changed", and "VSC-02" passed                           | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-01 is failed in an earlier run not repeated under the rerun rule" |
     | sdd MCP server enforcement | passed                                                                     | "VSC-01" passed and "VSC-02" passed with one earlier run "skipped" whose cause is "repeated"                                       | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is skipped in an earlier run" |
@@ -639,7 +743,10 @@ and unknown IDs; Earlier runs), with the `<result>` texts of `errors.md` ERR-REL
 defects D-015 item 8 and D-016 item 4, critic CR-52, CR-54 and CR-55, and Q-checklist-rerun-01). An
 earlier `failed` run is excused only in the rerun-rule row, where the step is of group 4 and the
 restore step has as many earlier runs; the same run with the cause `repeated`, without a restore
-re-run, or on the group-1 step `VSC-01` stays binding although the last run passed. The injection
+re-run, or on the group-1 step `VSC-01` stays binding although the last run passed. Every earlier run
+of the restore step counts towards that number, whatever its `cause` and its `result`, also one that
+gives the restore step its own ERR-REL-004 line (C002-IF-009 §4 Earlier runs rule 2; defect D-018
+item 3): in the last two rows the line names `VSC-04`, and `VSC-02` stays excused. The injection
 steps are exempt from the other-mode rule; ERR-REL-011 and ERR-REL-009 check them where the record
 is the injection evidence (C002-TS-633, C002-TS-669).
 
@@ -807,6 +914,25 @@ Scenario Outline: C002-TS-631 — completeness of the replay report
 ```
 
 ```gherkin
+Scenario Outline: C002-TS-681 — a case limited to another platform is listed as not applicable with the rule platforms
+  Given the fixture corpora "fx-corpus-platforms": the guard corpora of the release commit with two added path cases, "PG-900" of category "outside" and "PG-901" of category "memory", each limited by "platforms" to "linux"
+  When the corpus replay suite writes the replay report of <mechanism> on REF-WIN, whose "replay_host.platform" is "win32"
+  Then the report lists "PG-900" under "not_applicable" with the rule "platforms" and not among its replayed cases
+  And it lists "PG-901" as a replayed case with the expected decision "deny" and the expected-decision source "C002-REQ-625"
+  And its not-applicable list holds, besides "PG-900", exactly <other not applicable>
+  Examples:
+    | mechanism                                                                                 | other not applicable                                                              |
+    | the OpenCode permission rules, evaluated by OpenCode at its tested version (@mode-native) | no case                                                                           |
+    | the sdd MCP server                                                                        | the IDs of the identity-category cases of both corpora, with the rule "C002-REQ-626" |
+    | the Copilot guard hooks (@mode-hooks)                                                      | the IDs of the identity-category cases of both corpora, with the rule "C002-REQ-626" |
+```
+
+The platform rule excludes only a case that falls to the last row of C002-IF-009 §2.1; a case of an
+earlier row, such as the memory case `PG-901`, keeps its `deny` expectation on every replay host
+(defect D-018 item 2). Every `platforms` list of the present corpora names `win32`, so the release
+replays on REF-WIN exclude no case by this rule.
+
+```gherkin
 Scenario Outline: C002-TS-637 — incomplete replay report refused at release
   Given "fx-release" where the OpenCode target package uses <mode> and every other piece of OpenCode evidence is clean
   And its replay report "<report>" reports 0 differing decisions and <defect>
@@ -823,14 +949,31 @@ Scenario Outline: C002-TS-637 — incomplete replay report refused at release
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" capabilities "file-symlink" and lists "PG-163" with "fed_as.malformed" true and the expected-decision source "C002-REQ-630" | records expectations other than C002-IF-009 §2.1 | PG-163 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" with capabilities that do not include "file-symlink", and lists "PG-163" with the decision "deny" | replay host lacks file-symlink                | PG-163 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and leaves out the case "PG-900", which the corpora limit by "platforms" to "linux" | omits cases                                   | PG-900 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | records expectations other than C002-IF-009 §2.1 | PG-900 |
-    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as not applicable | lists cases as not applicable without a rule  | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
+    | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | replays cases that its mechanism excludes     | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the memory case "PG-901", which the corpora limit by "platforms" to "linux", under "not_applicable" with the rule "platforms" | lists cases as not applicable without a rule  | PG-901 |
 ```
 
-`PG-900` is a case of the corpora of `fx-release` only: every `platforms` list of the present corpora
-names `win32`. A case limited by `platforms` to platforms other than the replay host's has no
-expectation there, and the problem named is what the report did with it (C002-IF-009 §2.1,
-`errors.md` ERR-REL-012; defect D-016 item 7).
+`PG-900` (category `outside`) and `PG-901` (category `memory`) are cases of the corpora of
+`fx-release` only, each limited by `platforms` to `linux`: every `platforms` list of the present
+corpora names `win32`. By the platform rule of C002-IF-009 §2.1, `PG-900` belongs under
+`not_applicable` with the rule `platforms` on a `win32` replay host, which the release check accepts
+(C002-TS-682); a report that replays it or leaves it out is refused. `PG-901` falls to the memory row
+before the platform rule applies, so listing it as not applicable hides a `deny` case (`errors.md`
+ERR-REL-012; revised for defect D-018 item 2, before which every handling of `PG-900` refused).
+
+```gherkin
+Scenario Outline: C002-TS-682 — a case of the platform rule listed as not applicable is accepted at release
+  Given "fx-release" where the OpenCode target package uses <mode>, every other piece of OpenCode evidence is clean and the corpora of the release commit hold the case "PG-900", limited by "platforms" to "linux"
+  And its replay report "<report>" gives the "replay_host" platform "win32", reports 0 differing decisions and lists "PG-900" under "not_applicable" with the rule "platforms"
+  When the release check runs for the OpenCode target
+  Then standard error holds no ERR-REL-012 line
+  And the release record has the outcome "released"
+  Examples:
+    | mode                          | report                           |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       |
+    | native permission enforcement | replay-opencode-permissions.json |
+```
 
 ## C002-REQ-628
 
@@ -1011,17 +1154,17 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms), TS-661 (write-tool shell cases, unexpanded Serena literal and linked `cwd` per mechanism), TS-663 (Copilot hook tool names `Write`, `Bash`, `Glob`) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`), TS-662 (ERR-MCP-003 after an allowed call read as `allow`), TS-667 (code of a server error result read from its text) | TS-609, TS-667 (ERR-MCP-002, ERR-MCP-007, GUARD-HOOK-002 or a text without a code; a result with neither `isError` nor `structuredContent`; a `status` other than `written`, `completed` or `timed_out`: each read as `error`) | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases), TS-661 (`rm -rf src` fed as a write path; no folder named `${CLAUDE_PLUGIN_DATA}` created), TS-609 (a write-tool shell case into `.sdd/` and an ERR-MCP-003 allow on a `deny` case are differing decisions) |
 | C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root, `sdd install copilot` in the bare and the script form and with an inside `--cwd`), TS-636 (writing subcommands, each with an outside `--cwd`) |
-| C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-608 | TS-611 | TS-676 (PATH lead of the pinned OpenCode binary: no case PATH, a case PATH with version shims) | TS-676 (an `opencode missing` row gets no PATH lead) | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-611 | TS-614 | TS-614 (two runners) | TS-614 (30 turns, 0.50 USD) | TS-614 | n/a | n/a | n/a |
-| C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
+| C002-REQ-611 | TS-614 | TS-614 (two runners), TS-677 (OpenCode: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI: `--max-ai-credits` and the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 1.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, or uses the exception on another host or above its value) |
+| C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`, the conductor on its own model), TS-680 (`--model` from the session agent's file, or the case's model) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
 | C002-REQ-615 | TS-618 | TS-618 (both Copilot enforcement modes; hooks state with its three sources; each step once with its last run, earlier runs in `earlier_results` with `result` and `cause`; restricted-mode row refused by VS Code recorded `passed` with a `VS Code refused: ` note) | TS-618 (`enabled` only when all three sources read on, trusted, none) | n/a | n/a | n/a | n/a |
 | C002-REQ-616 | TS-619 | TS-619 (both Copilot enforcement modes; guard-denial step under the hooks fallback) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes), TS-669 (replay reports required per enforcement mode), TS-670 (`--dry-run`, default version, relative `--root`) | TS-620 (1 difference, 1 instruction), TS-669 (19 and 20 injection cases) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013), TS-669 (ERR-REL-009 kinds: fewer than 20 injection cases or steps, replay of other corpora, missing report of the mode, unreadable step index), TS-670 (refused dry run writes no file), TS-671 (exit codes 1, 2 and 3; no file on a usage or internal error) | TS-648 (Architect agents' tool set left open) | n/a | TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
-| C002-REQ-618 | TS-621 | TS-668 (steps of the other mode absent or not-applicable; an injection step not-applicable under server enforcement; an earlier failed run excused by the rerun rule; both Copilot modes) | TS-668 (restore step with as many earlier runs as the excused step; the same run without a restore re-run, or on a group-1 step) | TS-621, TS-668 (ERR-REL-004 `not recorded` for an absent step and for an entry without a result, `not-applicable`, `failed`, another value, `passed, but its mode is <mode>`, `listed more than once`, `not a step of the checklist`, `failed in an earlier run not repeated under the rerun rule`, `<earlier result> in an earlier run`), TS-669 (unreadable step index: ERR-REL-009 `checklist`) | n/a | TS-668 (a step listed twice; earlier runs of a re-run step kept in `earlier_results`) | TS-668 (a failed run hidden by a later pass with the cause `repeated`; an other-mode step recorded `passed`; an ID of another checklist) |
+| C002-REQ-618 | TS-621 | TS-668 (steps of the other mode absent or not-applicable; an injection step not-applicable under server enforcement; an earlier failed run excused by the rerun rule; both Copilot modes) | TS-668 (restore step with as many earlier runs as the excused step, each counted whatever its cause and result; the same run without a restore re-run, or on a group-1 step) | TS-621, TS-668 (ERR-REL-004 `not recorded` for an absent step and for an entry without a result, `not-applicable`, `failed`, another value, `passed, but its mode is <mode>`, `listed more than once`, `not a step of the checklist`, `failed in an earlier run not repeated under the rerun rule`, `<earlier result> in an earlier run`), TS-669 (unreadable step index: ERR-REL-009 `checklist`) | n/a | TS-668 (a step listed twice; earlier runs of a re-run step kept in `earlier_results`) | TS-668 (a failed run hidden by a later pass with the cause `repeated`; an other-mode step recorded `passed`; an ID of another checklist) |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-620 | TS-623 | TS-623 (either mode holds) | TS-623 (guard-hook outcome absent from a record whose subagents are not confined) | TS-623 | n/a | n/a | n/a |
 | C002-REQ-621 | TS-624 | TS-624 (Copilot versions) | TS-624 (older and newer) | TS-624 | n/a | n/a | n/a |
@@ -1029,7 +1172,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-637 (a case limited by `platforms` to another platform: omitted, replayed or listed as not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode), TS-681 (a case limited by `platforms` to another platform listed with the rule `platforms` on each mechanism), TS-682 (that listing accepted at release in both OpenCode modes) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-681 (a memory case limited to another platform still replayed), TS-637 (a case limited by `platforms` to another platform: omitted or replayed) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, a memory case hidden under the rule `platforms`, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement: injection evidence from Copilot CLI, hooks state and its sources still required) | TS-633 (`hooks_state` other than `enabled`/`disabled`, a boolean source value, `hooks_sources` not a mapping; first applicable step of the hooks-state check) | TS-633 (`disabled`, `not recorded`, sources not recorded in full, contradiction in both directions) | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only; a record stating `enabled` while its sources give `disabled`) |
 | C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name; `fed_as.malformed`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept), TS-643 (PG-163 not a malformed call) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |
