@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: todo
+status: done
 depends_on: [C001-T-061]
 implements: [C001-REQ-1119]
 satisfies_ac: [C001-AC-1119.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1120, C001-TC-1120]
 components: [C001-COMP-12]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8be8acc, completed_at: 2026-10-20, notes: "TC-1120 pass; TS-1101 TODO cleared (cap11 70/70). Not run remotely (workflow_dispatch only); actionlint not installed, YAML parsed by the test." }
 ---
 
 # C001-T-064 — Dormant cross-platform CI workflows
