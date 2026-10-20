@@ -71,6 +71,7 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 | CLI invocation line | `sdd-conventions` l.13, `sdd-conductor.md` l.19, `sdd-auditor.md` l.13 | `variant_required` (C002-REQ-111) | variant | variant |
 | Claude Code host probe `claude --version` | `doctor.md` l.21 and l.33; the other host-row lines (the probe list at l.12, the code-discovery toolchain section) are anchors of the same variants (§2.1, §3 step 3) | construct `claude-host`, `variant_required` (C002-REQ-111, C002-REQ-112) | variant with the OpenCode host row (C002-IF-006) | variant with the VS Code with GitHub Copilot Chat host row |
 | `Bash` in prose | agent bodies | construct `bash-prose`, `replace.by_mode` | native: "the `bash` tool"; server: "the `sdd-shell` command tool" | server: "the `sdd-shell` command tool"; hooks: "the terminal tool" |
+| `Glob` in prose (the Glob tool named in a body; today `sdd-conventions` l.16) | agent, command and skill bodies | construct `glob-prose`, kind `tool-name`, `variant_required` (decided for defect D-020 item 1): every matched line is a wiring anchor (§3 step 3), so a text that tells agents to glob gets a variant on every target or stops generation with ERR-GEN-002 | variant `file-inspection` (§2.1): `.sdd/` files are found with `sdd status` and `read`, never with `glob` (§6.1 Dot folders) | variant `file-inspection` with the same finding rule, as a precaution (§6.1 Dot folders) |
 
 Agents and commands take variants by the same mechanism as the skills' wiring sections
 (C002-REQ-111, C002-REQ-112): the CLI invocation lines of `sdd-conductor.md` and `sdd-auditor.md`,
@@ -93,18 +94,20 @@ the source plugin names Claude Code; model names are translated by `models` (ste
 
 ### §2.1 Wiring anchors
 
-The anchors of the `variants` entries. Both tables name the same thirteen variants; by §3 step 3
+The anchors of the `variants` entries. Both tables name the same fourteen variants; by §3 step 3
 each anchor is required for every generated target. A `lines` anchor is matched exactly against
 the source text; tests take the anchors from the tables, never from this list (revised for defect
 D-010 item 4: the gate-protocol reference line, the task-tools remedies row and the doctor probe
-and report blocks were used by the tables but not listed here).
+and report blocks were used by the tables but not listed here; revised for defect D-020 item 1:
+the variant `file-inspection` added).
 
 | Variant `id` | Source file | Anchor | The variant holds |
 |---|---|---|---|
 | `cli-conductor` | `agents/sdd-conductor.md` | line: the CLI invocation line (`The CLI is …`) | the target's CLI line (construct `cli-invocation`, C002-REQ-111) |
 | `cli-auditor` | `agents/sdd-auditor.md` | line: the end of the command-form sentence that names `sdd` | the same |
 | `cli-conventions` | `skills/sdd-conventions/SKILL.md` | line: `` `sdd` means … `` | the same |
-| `doctor-probe` | `commands/doctor.md` | lines: the six lines of step 2 (Probe) | the rows and probes of C002-IF-006 §1, §2, the host probe through `sdd host-version {{host_version_arg}}` |
+| `file-inspection` | `skills/sdd-conventions/SKILL.md` | lines: the three lines of the file-inspection rule, from `Inspect files with the Grep, Glob and Read tools, not Bash (…` to `` no `;`, `&&` or redirection. `` (the lines that the construct `glob-prose` matches, l.16, and the two lines of the same sentence pair) | the target's tools for inspecting files instead of a shell (OpenCode `read`, `glob`, `grep`; Copilot `read`, `search`), the command-tool rule in the target's names for every mode (allowlisted commands only, one per call, no `;`, `&&` or redirection) and the dot-folder rule of §6.1 (how `.sdd/` files are found); the text names neither Glob nor Bash, which the constructs would match again (§3 step 8) |
+| `doctor-probe` | `commands/doctor.md` | lines: the six lines of step 2 (Probe) | the rows and probes of C002-IF-006 §1, §2, the host probe through `sdd host-version {{host_version_arg}}`; on OpenCode also the test for `.sdd/` by `sdd status` or `read` of `.sdd/`, never by `glob` (§6.1 Dot folders; revised for defect D-020 item 1) |
 | `doctor-report` | `commands/doctor.md` | lines: the eleven lines of steps 3 and 4 (Report, Outcome) | the statuses of C002-IF-006 §2, the `.cmd`-shim rule, the fallbacks and the outcome lines of §3 |
 | `doctor-remedies-host` | `commands/doctor.md` | line: the Claude Code row of the remedies table | the host, sdd CLI and native ast-grep rows; on Copilot also the Copilot hooks row |
 | `doctor-remedies-task-tools` | `commands/doctor.md` | line: the Task tools row of the remedies table (`CLAUDE_CODE_ENABLE_TODO_TOOLS`) | the row of the host's todo tool (`todowrite`, `todo`) |
@@ -211,6 +214,46 @@ environment sets `OPENCODE_ENABLE_EXA=1` or `OPENCODE_EXPERIMENTAL_LSP_TOOL=1`. 
 tool the host does not offer is no error (S-07 §2). Without these variables the researcher and the
 options analyst search through `webfetch` (and the researcher also through Context7 and DeepWiki),
 and the cartographer reads code through Serena. The corpus replay and the evals run without them.
+
+**Dot folders** (revised for defect D-020 item 1; P-01 answer to Q-opencode-glob-01, "Guide agents
+(Recommended)"). OpenCode 1.18.31 lists files for `glob` through ripgrep without `--hidden`, so a
+`glob` searched from the project root never lists a file inside a dot folder: `.sdd/*`,
+`.sdd/_constitution/*` and `.sdd/002-coupon-codes/**/*` return `No files found` while the files
+exist, and a session that trusts the result decides that the repository has no `.sdd/` (C002-TS-511
+failed so in C002-T-056: result `evals/results/t056-TS-511-opencode-2026-10-20T09-02-41-214Z.json`;
+its transcript, like every transcript under `evals/results/transcripts/`, is kept outside version
+control). Two forms reach `.sdd/` on that version: `read` of a folder returns its entries, dot
+folders included (`<type>directory</type>`; C002-T-056 sessions TS-219 and TS-510, result
+`evals/results/t056-TS-219-opencode-2026-10-19T22-04-35-876Z.json`), and `glob` with `path` set to a
+folder inside `.sdd/` lists that folder's files (session TS-217, result
+`evals/results/t056-TS-217-opencode-2026-10-19T22-03-27-554Z.json`, where the same folder given in the
+pattern, `.sdd/002-coupon-codes/**/*`, listed nothing). The generated OpenCode texts therefore find
+`.sdd/` files without `glob`:
+
+- whether `.sdd/` exists, and which changes and phases it holds: `sdd status` (run through `bash`, or
+  through `{{server_shell}}` under sdd MCP server enforcement), or `read` of `.sdd/`;
+- one file: `read` of its path, taken from the workspace layout of the sdd-conventions skill; the
+  files of a folder: `read` of that folder;
+- text inside `.sdd/`: `grep` with `path` naming a folder or a file inside `.sdd/`
+  [ASSUMPTION: D-020 — OpenCode's grep runs the same ripgrep as glob (S-07 §4), so a grep from the project root leaves .sdd/ out and one whose path lies inside .sdd/ searches it, as glob with such a path does; the T-056 transcripts hold one such grep, without a match, and the T-056 re-run of the carried rows confirms it];
+- never `glob` to find or to rule out a `.sdd/` file; an empty `glob` or `grep` result is never
+  taken as proof that `.sdd/` or a file in it is absent.
+
+The variant `file-inspection` (§2.1) carries this rule into every Architect agent, since all ten
+preload the sdd-conventions skill (§3 step 5), and the OpenCode `doctor-probe` variant tests for
+`.sdd/` the same way. The construct `glob-prose` (§2) keeps it so: a later source line that names the
+Glob tool in a body is a wiring anchor that needs a variant on every target. `glob` itself stays
+granted on OpenCode, for the code outside dot folders (the layer ladder of the code-discovery skill).
+
+**Copilot: not recorded.** The S-08 record lists `glob` and `grep` among the host tools that a
+`search` grant gives (§3.1) and shows `Glob` hook inputs on folders without a dot segment
+(`docs/spikes/s08/logs/hooks.jsonl`), but no result of a search over a dot folder; the seven
+Copilot CLI sessions of C002-T-045 made no `glob` or `grep` call (`evals/results/t045-*.json`: their
+tool calls were `sdd-shell-run_command`, `task`, `view` and `sdd-files-write_file`). Whether the Copilot hosts list `.sdd/` through `search` is
+therefore unknown. The Copilot variant `file-inspection` states the same finding rule in the Copilot
+names (`sdd status` through the command tool of the mode, `read` of a file by its path, no
+conclusion from an empty `search` result), as a precaution that costs a few lines of prompt text; a
+spike record or a checklist step that shows the host's search tools listing `.sdd/` may relax it.
 
 Copilot entries are `tools` grant names; the S-08 probes granted `read`, `search`, `edit` and
 `execute` and recorded the host tools they gave (`docs/spikes/s08/agents/`, record §2.1, §2.2,

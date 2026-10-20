@@ -171,6 +171,14 @@ guard is loaded wherever they are; the plugin-level entry is the one S-08 showed
 and the host denies every tool call of the session (C002-IF-008 §2), so neither place fails open.
 [ASSUMPTION: S-08 — neither the record nor C002-R-001 covers workspace hook files; VS Code and Copilot CLI are taken to load .github/hooks/*.json of the open repository in the hooks-file format of the package's hooks.json, and to give its PreToolUse commands the same input as plugin-level ones, agent_type on subagent calls included; the fresh-install step of the manual VS Code checklist (C002-REQ-614) and the Copilot CLI eval runner (C002-IF-010 §4) confirm both; if a host needs another location or shape, the install command writes that instead; if a host loads no workspace hook file, the plugin-level entry is the only guard there, and the case of workspace agents without the plugin part returns to P-01]
 
+**Workspace hooks on Copilot CLI in prompt mode** (revised for defect D-019 item 5; Copilot CLI
+1.0.98, C002-T-045). In prompt mode (`copilot -p`) Copilot CLI loads `.github/hooks/*.json` of the
+working folder only when the folder is trusted or when the environment sets
+`GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true`; its log then holds the line `Loading repo hooks in
+prompt mode`. Elsewhere in prompt mode the plugin-level entry of the package's `hooks.json` is the
+only guard. The eval runner sets the variable (C002-IF-010 §4, Copilot CLI session); Copilot CLI is
+no adopter host (C002-NG-01), so the install notes do not name the variable.
+
 Agent file (`agents/sdd-spec-writer.agent.md`), sdd MCP server enforcement:
 
 ```markdown
@@ -189,7 +197,9 @@ user-invocable: false
   terminal tools included (S-08 §3.2; C002-REQ-604, TGT-GRANT-001).
 - The `name` is the file name without `.agent.md`; VS Code reports a workspace agent's name as
   `agent_type` (`sdd-spec-writer`), Copilot CLI reports a plugin agent as `architect:sdd-spec-writer`
-  (S-08 §2.3, §3.1). The conductor's `agents` list names the specialists without prefix on both
+  in its hook input (S-08 §2.3, §3.1), while its JSON events name a started subagent by the bare name
+  (`sdd-spec-writer`; C002-T-045, C002-IF-010 §3), so every reader strips an `architect:` prefix
+  before it compares names (C002-IF-007 `hook subagent-stop`). The conductor's `agents` list names the specialists without prefix on both
   hosts, as the S-08 probe parents did (`docs/spikes/s08/agents/probe-parent.agent.md:5`).
 - `user-invocable: false` on the nine specialists (`agent_fields.subagent_flags`).
   [ASSUMPTION: S-08 — the record's workspace subagents carried no user-invocable field; the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that a workspace agent with user-invocable false is still started as a subagent]
@@ -337,6 +347,13 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304). Copilot, in this order (
    subagent) can call only the read-only tools of the tool classes file; the calls of P-03's own
    session agent are not affected, and repositories without `.sdd/` are not affected
    (C002-REQ-304, C002-REQ-327, C002-REQ-329).
+
+After the six steps, one note for Copilot CLI (revised for defect D-019 item 1; P-01 answer to
+Q-cli-model-01): Copilot CLI is no supported host of the package (C002-NG-01), and a P-03 who runs
+the conductor there with `--agent architect:sdd-conductor` chooses its model: Copilot CLI 1.0.98 runs
+the session agent on the CLI's default model, not on the `model` of the agent file, so the conductor
+runs on its tier only with `--model <model>`, `<model>` being the `model` field of
+`agents/sdd-conductor.agent.md`; the specialists it starts run on their own files' models.
 
 The README sections of C002-REQ-205 and C002-REQ-305 link the install-notes source
 `targets/<target>/install.md` of the plugin and name `INSTALL.md` as its copy in the target

@@ -263,7 +263,7 @@
               "id": { "type": "string" },
               "corpus": { "enum": ["path", "shell"] },
               "category": { "type": "string", "minLength": 1 },
-              "rule": { "const": "C002-REQ-626" }
+              "rule": { "description": "C002-REQ-626 for an identity-category case of a mechanism other than opencode-permissions; platforms for a case of the platform rule (verification-records.md §2.1; defect D-018 item 2).", "enum": ["C002-REQ-626", "platforms"] }
             }
           }
         },
@@ -273,7 +273,7 @@
       "allOf": [
         {
           "if": { "properties": { "mechanism": { "const": "opencode-permissions" } }, "required": ["mechanism"] },
-          "then": { "properties": { "not_applicable": { "maxItems": 0 } } },
+          "then": { "properties": { "not_applicable": { "items": { "properties": { "rule": { "const": "platforms" } } } } } },
           "else": { "properties": { "cases": { "items": { "properties": { "expected_source": { "not": { "const": "C002-REQ-632" } } } } } } }
         },
         {

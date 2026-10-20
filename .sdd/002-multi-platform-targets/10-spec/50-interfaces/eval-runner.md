@@ -15,7 +15,12 @@ CHG-002 keeps that call and its options, and puts the host behind it: a runner p
 use the case fields of §2.1. Revised for defect D-015 (findings of C002-T-044 and C002-T-046): the
 names a case reads (§3), the `answer` option (§2), the selection of rows per host (§1), the
 OpenRouter key file with isolated data folders (§4), what `allowTools` gates (§2) and the direct
-relay on OpenCode (§2).
+relay on OpenCode (§2). Revised for defect D-019 (findings of C002-T-045 on Copilot CLI 1.0.98): the
+session agent's model passed with `--model` (P-01 answer to Q-cli-model-01), prompt files in prompt
+mode, the runner's further Copilot CLI options, workspace hooks in prompt mode and the subagent names
+(§2, §3, §4). Revised for defect D-020 (findings of C002-T-056 on OpenCode 1.18.31): the spend-cap
+rule and the caps above 0.50 USD that P-01 approved (§2.2; P-01 answer to Q-ts634-budget-01), the
+dot-folder limit of OpenCode's `glob` (§4) and the PATH lead of the pinned host binary (§4).
 
 ## §1 Selection
 
@@ -31,20 +36,21 @@ question-tool cases, C002-T-037, C002-T-038) gives every row its `host` field, t
 included; a run may also keep rows by ID with `--only <id>,…`. Without either, a Claude Code row of
 such a file would also run under `--host opencode`. Rows for one host live in the case files of their
 scenario, under `evals/targets/<area>/`; there is no case folder per host (no
-`evals/targets/opencode-host/`). A selection that leaves no row for the host ends the run before any
-session, with exit code 1.
+`evals/targets/opencode-host/` and no `evals/targets/copilot-cli/`; revised for defect D-019 item 3).
+A selection that leaves no row for the host ends the run before any session, with exit code 1.
 
 ## §2 `runSession` options (unchanged names)
 
 | Option | Meaning on the generated targets |
 |---|---|
-| `agent` | Architect agent name. OpenCode: the runner removes the `architect:` prefix. Copilot CLI: the runner passes `--agent architect:<agent>`, the `<plugin>:<agent>` form Copilot CLI requires (a bare name fails; `docs/spikes/S-08-copilot-vscode.md §2.3`, fact F-6), `architect` being the package's plugin name (C002-IF-005 §3), so a case's `architect:` name is passed unchanged |
-| `prompt`, `cwd` | as today. OpenCode: a prompt `/architect:<name> <arguments>` or `/architect-<name> <arguments>` runs the package command `architect-<name>` with those arguments. The eval relay (`agent` `architect:eval-dispatcher`, prompt `Dispatch: <agent>` followed by a brief) has no OpenCode counterpart: the runner starts `<agent>`, prefix removed, as the session's agent with the brief as its prompt, and the transcript holds a harness record with `event: "relay"` naming that agent. The relay is therefore `direct` on OpenCode (revised for defect D-015 item 6) |
+| `agent` | Architect agent name. OpenCode: the runner removes the `architect:` prefix. Copilot CLI: the runner passes `--agent architect:<agent>`, the `<plugin>:<agent>` form Copilot CLI requires (a bare name fails; `docs/spikes/S-08-copilot-vscode.md §2.3`, fact F-6), `architect` being the package's plugin name (C002-IF-005 §3), so a case's `architect:` name is passed unchanged, and `--model` with the model of that agent (row `model`) |
+| `model` | as today on Claude Code: the model of the session, when the case gives one. OpenCode: a value `<provider>/<model>` selects the session's model; without it the agent's own `model` of the package applies. Copilot CLI (revised for defect D-019 item 1; P-01 answer to Q-cli-model-01, "Pass --model (Recommended)"): the runner always passes `--model <model>`, `<model>` being the case's value when given, else the `model` field of the session agent's file in the package copy (`agents/<agent>.agent.md`; for the conductor `claude-opus-5.5`, the table's model of its tier, C002-IF-001 §2). Copilot CLI 1.0.98 runs the session agent that `--agent` names on its default model (`claude-sonnet-5.5`), not on the `model` of that agent's file, while the subagents it starts run on the models of their own files (C002-T-045); without `--model` the conductor would run a tier below its own. The session result's `models` lists the models of the steps, so a row can check the conductor's model |
+| `prompt`, `cwd` | as today. OpenCode: a prompt `/architect:<name> <arguments>` or `/architect-<name> <arguments>` runs the package command `architect-<name>` with those arguments. Copilot CLI (revised for defect D-019 item 2): a prompt `/<name> <arguments>`, `/architect:<name> <arguments>` or `/architect-<name> <arguments>` for which the package copy holds `prompts/<name>.prompt.md` runs that prompt file's body, its frontmatter removed, as the prompt of the session agent, followed by a blank line and `Arguments: <arguments>` when arguments are given; the transcript holds a harness record with `event: "prompt-file"` naming the file. Copilot CLI 1.0.98 sends slash text given with `-p` to the model unexpanded (it registers the prompt files as skills named `architect:<name>.prompt`), so a prompt file runs only this way; any other prompt is passed as it is. The eval relay (`agent` `architect:eval-dispatcher`, prompt `Dispatch: <agent>` followed by a brief) has no OpenCode or Copilot CLI counterpart: the runner starts `<agent>` (OpenCode: prefix removed; Copilot CLI: `architect:<agent>`) as the session's agent with the brief as its prompt, and the transcript holds a harness record with `event: "relay"` naming that agent. The relay is therefore `direct` on both (revised for defect D-015 item 6) |
 | `answer` | the case's answer function `answer(question, call)`, called once per question of a question-tool call (revised for defect D-015 item 2: the earlier name `answers` was wrong; `answers` is a field of the session result, §3). It returns the label to choose, an array of labels, or, on OpenCode, `{ reject: true }`, which dismisses the whole call. Default: the label of the first option, which the interview protocol marks "(Recommended)". `question` and `call` are given in the names the row reads (§3). On OpenCode, a return value that is none of these (nothing, an empty string, an exception) leaves the call unanswerable (§4). Used where the host lets a script answer (C002-REQ-610) |
-| `allowTools` | Claude Code tool names. They gate only the permission requests of the host (revised for defect D-015 item 5). OpenCode: the runner answers a permission request `once` when its permission maps to a tool of `allowTools` (through the target's mapping table, C002-IF-001; `edit` for Write, Edit, MultiEdit and NotebookEdit, `bash` for Bash and PowerShell, `task` for Agent) and rejects every other request; it answers the read-only permissions (`read`, `glob`, `grep`, `list`, `lsp`, `todowrite`, `todoread`, `codesearch`) and `question` with `once`, and rejects `external_directory` and `doom_loop`. A tool that the host runs without asking, because the package's own rules allow it (for example the sdd MCP server tools that an Architect agent is granted), is not gated by `allowTools`: the package decides it, as it does for an adopter |
+| `allowTools` | Claude Code tool names. They gate only the permission requests of the host (revised for defect D-015 item 5). OpenCode: the runner answers a permission request `once` when its permission maps to a tool of `allowTools` (through the target's mapping table, C002-IF-001; `edit` for Write, Edit, MultiEdit and NotebookEdit, `bash` for Bash and PowerShell, `task` for Agent) and rejects every other request; it answers the read-only permissions (`read`, `glob`, `grep`, `list`, `lsp`, `todowrite`, `todoread`, `codesearch`) and `question` with `once`, and rejects `external_directory` and `doom_loop`. Copilot CLI (revised for defect D-019 item 6): the runner maps each tool of `allowTools` through the table's grants of the package's mode and passes one `--allow-tool=<permission>` per resulting permission, each once, in sorted order: a grant `<server>/*` gives `<server>`, the grant `edit` gives `write`, the grant `execute` gives `shell`, and a source MCP name `mcp__plugin_architect_<server>__<tool>` gives `<server>(<tool>)`; read-only tools need no permission. A tool that the host runs without asking, because the package's own rules allow it (for example the sdd MCP server tools that an Architect agent is granted), is not gated by `allowTools`: the package decides it, as it does for an adopter |
 | `maxTurns` | default 30 (C002-NFR-105) |
-| `maxBudgetUsd` | default 0.50; applied when the host reports spend, else recorded as `unreported` (C002-NFR-105 open item) |
-| `env` | variables of the host process (for example a machine configuration of a doctor case); a `PATH` given here replaces the runner's own `PATH` for the host |
+| `maxBudgetUsd` | default 0.50; at most 0.50 unless §2.2 lists the row; applied when the host reports spend, else recorded as `unreported` (C002-NFR-105 open item); checked by the spend-cap rule of §2.2 |
+| `env` | variables of the host process (for example a machine configuration of a doctor case); a `PATH` given here replaces the runner's own `PATH` for the host, with the PATH lead of the pinned OpenCode binary placed into it on OpenCode (§4) |
 
 ### §2.1 Case fields of the generated-target runners
 
@@ -56,6 +62,39 @@ C002-T-044); the Claude Code runner ignores them.
 | `host` | the host the row is for (§1); selects the names of §3 |
 | `targetPackage` | `{ target, mode?, tested_versions?, version? }`: the package generated for the session. `mode` is an enforcement mode (`--mode <target>=<mode>`, C002-IF-004); `tested_versions` replaces the table's `host.tested_versions` in a copy of the source plugin; `version` is the package version: the package is generated from a copy of the source plugin whose `.claude-plugin/plugin.json` gives this version, so that the wiring token `{{package_version}}` and the manifest's `package_version` both carry it (C002-IF-004 §Output; the fixture of C002-TS-515) |
 | `mcpOverrides` | `{ <server>: <url> }`: the URL of a remote MCP server replaced in the generated configuration (the unreachable-DeepWiki row of C002-TS-509 on OpenCode) |
+
+### §2.2 Spend cap
+
+**Spend-cap rule** (revised for defect D-020 item 3). The spend cap is checked after each step, never
+before it: no host reports the cost of a step before the step has run (OpenCode gives it on the
+step's end, Copilot CLI only for the whole session), so a pre-step estimate would be a guess the
+runner cannot check. The step whose cost brings the session's spend to `maxBudgetUsd` or above is the
+last step the session starts; its cost is counted in full, and so is the cost of a step that was
+already running when the cap was reached. The session's recorded spend is therefore at or above the
+cap when it ends with `spend cap`, by at most the cost of those last steps (0.511 and 0.525 USD at a
+0.50 USD cap in C002-T-056). Per runner:
+
+| Runner | Check | Overshoot |
+|---|---|---|
+| OpenCode | the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | the step that reached the cap, plus a subagent's step that ran in parallel and finished before the abort took effect |
+| Copilot CLI | the host's own limit `--max-ai-credits <n>`, with `<n>` = the larger of 30 and `maxBudgetUsd` / 0.01 rounded to a whole number (1 AI Credit = 0.01 USD; Copilot CLI 1.0.98 accepts no limit below 30 credits, so a cap below 0.30 USD is applied as 0.30 USD); the host refuses the next model call once the session's credits reached the limit (a soft cap), and the runner reads the session's credits from `--usage-output-file` after the session: a session whose measured credits reached the limit ends with `spend cap` even when the host printed no limit text | the model call that reached the limit; the usage file gives the session total only, never a step's cost, so `usage.usd` is that total |
+| Claude Code | the Agent SDK's `maxBudgetUsd`, as today (test plan §4.1 rule 1) | the turn that reached it |
+
+The pools of the test plan (`20-plan/60-test-plan.md` §4), not the per-session cap, bound what a run
+of many sessions may spend.
+
+**Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
+exception $1"). A case row sets `maxBudgetUsd` above 0.50 only where P-01 approved an exception for
+that row and host; the exceptions in force are the rows of this table. The harness checks it: when a
+selected row sets `maxBudgetUsd` above 0.50 and this table lists no exception for that row and the
+run's `--host` whose cap is at least the row's value, the run ends before any session, with exit code
+1 and the row's ID in the message.
+
+| Row | Host | Cap per session | Runs | Approved |
+|---|---|---|---|---|
+| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 1.00 USD | one run, and one rerun only when that run fails | P-01, Q-ts634-budget-01 (2026-10-20): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056) |
+
+The task that runs an exception row keeps to its runs; the harness does not count them.
 
 ## §3 Session result
 
@@ -74,6 +113,14 @@ tool call also carries `host_tool`, the host's own name. The result's `answers` 
 answered call with its questions and the answers given, and on OpenCode the reply route
 (`question.reply`, or `question.reject` for a dismissed call).
 
+**Agent names on Copilot CLI** (revised for defect D-019 item 7). Copilot CLI 1.0.98 reports a
+subagent it starts by its bare name (`sdd-cartographer` in the `subagent.started` event), although
+its command line and the hook input of S-08 use `architect:sdd-cartographer` (S-08 §2.3). In every
+row, whatever its `host` field, the runner reports a started Architect agent, and the agent that made
+a tool call, as `architect:<agent>`, the form of the Copilot CLI command line, and keeps the host's own
+name in `host_agent`; an agent that is none of the ten Architect agents (a host built-in agent such as
+`general-purpose`) keeps the host's name in both. Tool names follow the row's `host` field as above.
+
 Added fields:
 
 | Field | Value |
@@ -85,19 +132,57 @@ Added fields:
 | `spend` | `reported` when the host reported the cost of the steps, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
-| `api_key_source` | the source of the credential the session ran with, never the credential itself (revised for critic CR-37 of the plan review); the session result carries it as `apiKeySource`, and the harness writes it into each result record and the result file as `api_key_source`, beside `auth`. OpenCode: `openrouter-key-file` for a session on the pinned host binary, whose key comes from P-01's key file (§4 Provider key), and `null` on the stub host, which uses no credential; Claude Code: the `apiKeySource` of the session's init message, as the eval auth switch records it today (for example `none` under the subscription route, C002-T-060); Copilot CLI: the name of the credential source its runner gives the host (C002-T-045), `null` when it gives none |
+| `api_key_source` | the source of the credential the session ran with, never the credential itself (revised for critic CR-37 of the plan review); the session result carries it as `apiKeySource`, and the harness writes it into each result record and the result file as `api_key_source`, beside `auth`. OpenCode: `openrouter-key-file` for a session on the pinned host binary, whose key comes from P-01's key file (§4 Provider key), and `null` on the stub host, which uses no credential; Claude Code: the `apiKeySource` of the session's init message, as the eval auth switch records it today (for example `none` under the subscription route, C002-T-060); Copilot CLI: the name of the credential source its runner gives the host, `copilot-credential-store` for a session on Copilot CLI, which reads P-01's token from the system credential store where `copilot login` keeps it (§4 Copilot CLI session), `null` on the stub host |
+| `copilot_usage` | Copilot CLI only: the measured units of `--usage-output-file` (AI Credits, premium requests, tokens and credits per model) with the USD estimate (credits × 0.01) that `usage.usd` takes (revised for defect D-019 item 6) |
 
 ## §4 Back ends
 
 | Runner | Drives | Caps | Question calls |
 |---|---|---|---|
-| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from message cost when present (S-07 §10); the session is aborted at a cap (C002-REQ-611) | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
-| Copilot CLI | `copilot -p <prompt> --agent architect:<agent> --plugin-dir <package copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user`, run in the case's temporary git workspace with a temporary Copilot home (`COPILOT_HOME`; C002-R-001 D-03; C002-AS-04 settled by S-08 §2.1, §2.4). Preparation per session: copy `dist/copilot/` to a temporary folder and run `sdd install copilot --package <package copy>` in the workspace (C002-IF-007), so that the copy has its `plugin.json` and `hooks.json` and the workspace its agents, its workspace hook file `.github/hooks/architect-guard.json` and `.vscode/mcp.json` (whether Copilot CLI loads the workspace hook file is an assumption of C002-IF-005 §3 that the runner's events confirm; the plugin-level entry holds the same guard); then write the `servers` entries of the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form to the servers file. The servers do not come from a plugin MCP configuration: the package declares none (C002-REQ-307) | turns counted from the JSON events; the process is killed at a cap | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
+| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from the cost of each finished step when present (S-07 §10); the session is aborted at a cap (C002-REQ-611), the spend cap by the rule of §2.2 | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
+| Copilot CLI | `copilot -p <prompt> --agent architect:<agent> --plugin-dir <package copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user`, run in the case's temporary git workspace with a temporary Copilot home (`COPILOT_HOME`; C002-R-001 D-03; C002-AS-04 settled by S-08 §2.1, §2.4). Preparation per session: copy `dist/copilot/` to a temporary folder and run `sdd install copilot --package <package copy>` in the workspace (C002-IF-007), so that the copy has its `plugin.json` and `hooks.json` and the workspace its agents, its workspace hook file `.github/hooks/architect-guard.json` and `.vscode/mcp.json` (whether Copilot CLI loads the workspace hook file is an assumption of C002-IF-005 §3 that the runner's events confirm; the plugin-level entry holds the same guard); then write the `servers` entries of the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form to the servers file. The servers do not come from a plugin MCP configuration: the package declares none (C002-REQ-307). The further options and the environment of the session: Copilot CLI session below | turns counted from the assistant messages of the session agent in the JSON events; at the turn cap the process tree is killed; the spend cap is the host's `--max-ai-credits` limit (§2.2) | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
 | Stub | a scripted host for the runner tests (C002-TS-614) | as the runner under test | scripted |
 
-[ASSUMPTION: S-08 — the record shows Copilot CLI 1.0.98 loading a plugin's .mcp.json (§2.4) but no per-session MCP option; the runner task confirms --additional-mcp-config with copilot --help at the tested version, and otherwise writes the same mcpServers entries to mcp-config.json of the temporary Copilot home; if Copilot CLI already starts the servers of the workspace's .vscode/mcp.json, the runner passes no servers file, so that no server name is declared twice (a duplicate name kept a server from being reached in S-08 §3.1)]
+**MCP servers on Copilot CLI** (settled in C002-T-045; before, an assumption on the S-08 record).
+Copilot CLI 1.0.98 accepts `--additional-mcp-config @<file>` and does not read the workspace's
+`.vscode/mcp.json`, so the servers file is the only declaration of the package's servers in the
+session and no server name is declared twice (a duplicate name kept a server from being reached in
+S-08 §3.1).
 A hook deny shows in the JSON events as a fail-closed hook error, not as exit code 2 (S-08 §2.2);
 the runner reports such a call as a tool call that did not run.
+
+**Copilot CLI session** (revised for defect D-019 items 5 and 6; Copilot CLI 1.0.98, C002-T-045).
+Besides the options of the table, the runner starts each session with:
+
+- `--model <model>` (§2 `model`), the session agent's model;
+- `--no-auto-update`, and `COPILOT_AUTO_UPDATE=false` in the environment: the tested version stays
+  the one that runs;
+- `--disable-builtin-mcps`: the host's built-in MCP servers (such as its GitHub server) are not
+  started, so the session's MCP tools are those of the servers file alone;
+- `--max-ai-credits <n>`: the spend cap of §2.2 (at least 30 credits);
+- `--usage-output-file <file>` in the run folder: the session's usage (AI Credits as `totalNanoAiu`
+  / 10^9, premium requests, tokens per model), read after the session into `usage` and
+  `copilot_usage` (§3); Copilot CLI reports usage per session, not per turn;
+- `--log-dir <folder>` in the run folder: the host's logs, read after the session for the
+  workspace-hooks line below;
+- one `--allow-tool=<permission>` per permission that `allowTools` maps to (§2 `allowTools`).
+
+**Workspace hooks in prompt mode.** Copilot CLI 1.0.98 loads the workspace hook files
+`.github/hooks/*.json` in prompt mode (`-p`) only for a trusted folder, or when the environment sets
+`GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true`. The case workspace is a temporary folder that is not
+trusted, so the runner sets the variable; the plugin-level entry of the copy's `hooks.json` loads in
+either case. The runner records whether the host's log holds the line `Loading repo hooks in prompt
+mode` as the harness event `hooks` (`workspace_hooks_loaded`), with the hook sources of the denies
+the session met (C002-IF-005 §3, assumption on workspace hook files).
+
+**Credentials.** The temporary Copilot home holds a `config.json` with the login identity of P-01's
+Copilot CLI login only (host, login and kind, read from P-01's own Copilot configuration), never a
+token; the host then reads the token from the system credential store, where `copilot login` keeps
+it (`api_key_source` `copilot-credential-store`, §3). Token variables (`COPILOT_GITHUB_TOKEN`,
+`GH_TOKEN`, `GITHUB_TOKEN`) and the host's own provider and model variables are removed from its
+environment; after the session the temporary home is scanned for token text, and a session in whose
+home such text is found ends with `error` and is no evidence. Copilot CLI sessions spend from the
+Copilot pool of the test plan (`20-plan/60-test-plan.md` §4).
 
 **OpenCode host process** (revised for defect D-009; `docs/spikes/S-07-opencode.md §9`, facts F-7,
 F-8, F-10; revised for defect D-015 item 4). The OpenCode runner, and the corpus replay suite for
@@ -109,6 +194,25 @@ F-8, F-10; revised for defect D-015 item 4). The OpenCode runner, and the corpus
   (1.15.10) first (F-7). The runner reads the version that binary reports at session start and
   records it in `host_versions.opencode`; a version other than the tested one is recorded as read,
   and the release check refuses that evidence (ERR-REL-006, C002-REQ-621).
+- **PATH lead** (revised for defect D-020 item 4). The doctor's OpenCode row reads the `opencode` that
+  the session's PATH resolves (`sdd host-version opencode`, C002-IF-007; C002-IF-006 §2), not the
+  binary that runs the session, and on REF-WIN the user PATH finds another install first
+  (`~/.opencode/bin`, 2.0.32, in C002-T-056), so the row read `untested`. The harness therefore puts
+  the folder of the pinned binary on the host process's PATH ahead of every other folder that holds
+  an `opencode` executable: the runner places it right after the run's own `bin` folder (`sdd`,
+  `sdd-mcp`) when the case gives no PATH; when the case gives one, the machine configuration that
+  builds it (`evals/harness/machines.mjs`, through `doctorCase` of the doctor cases) places it right
+  after the folders the case prepends (its version shims, such as the `opencode` shim of
+  C002-TS-513 and C002-TS-514, which must answer first) and before the folders of the
+  configuration. The sdd CLI and the `sdd-shell` server inherit that PATH, so a doctor session on the
+  tested host reports the tested version, as P-03's doctor does when the tested install is the first
+  on their PATH. A case that removes OpenCode from its PATH (an `opencode missing` row) gets no PATH
+  lead.
+- **Dot folders** (revised for defect D-020 item 1). OpenCode 1.18.31's `glob` does not list files
+  inside dot folders when it searches from the project root, so `.sdd/` looks empty to it; the
+  generated package's texts find `.sdd/` files with `sdd status` and `read` instead (C002-IF-001 §6.1
+  Dot folders). A session that still globs `.sdd/` spends turns on empty results; the runner does
+  not correct it, since the package's texts are under test.
 - **Own database.** `OPENCODE_DB` names an absolute database file of the run, so the user's shared
   OpenCode database is neither read nor migrated by the tested version (F-8).
 - **Isolated data folders.** The host process gets configuration, data, cache and state folders of

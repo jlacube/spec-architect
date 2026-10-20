@@ -48,6 +48,18 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 
 The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states.
 
+**Which OpenCode the row reports** (revised for defect D-020 item 4). The OpenCode row reports the
+`opencode` that P-03 would run by that name: the first one that the PATH of the session resolves,
+which the sdd CLI inherits from the host process (directly, or through the `sdd-shell` server under
+sdd MCP server enforcement). It is not necessarily the binary that runs the session: an OpenCode
+started by its absolute path, or from a shortcut, while another install comes first on the PATH,
+shows the version of that other install, and the row is `untested` when that version differs from
+the tested one, a correct report of what a terminal of P-03 would start. The Fix `tested version:
+<tested>` then asks P-03 to install the tested version or to put its folder first on the PATH;
+`sdd host-version` has no option that names another executable (C002-IF-007). The VS Code row reads
+`code` or `code-insiders` the same way. The eval runner gives its doctor sessions a PATH on which the
+pinned host binary comes first (C002-IF-010 §4, PATH lead), so their rows show the tested version.
+
 **Copilot hooks row** (revised for defect D-012; P-01 decision of 2026-10-19, "ok + caveat"; revised
 for critic CR-45). The row reads `chat.useHooks` alone: the `hooks` line of `sdd host-version` takes
 it from the workspace settings `.vscode/settings.json`, then from the user settings of the default
