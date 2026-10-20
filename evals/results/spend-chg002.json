@@ -2336,6 +2336,76 @@
       },
       "note": "Rerun plan X3: the one C002-TS-634 session at the 2.00 USD cap exception (caps.usd 2; Q-ts634-budget-02). Ended with spend cap after 21 turns, 616 s, during the sdd-spec-writer's second revision of the rework, before the second gate G2 question; one sdd gate record 002 10-spec --decision revise with the scripted words, no sdd gate approve. Cap records: cap (spend cap, capping step 0.0291 USD, spend at the cap 2.0044 USD) and one step-after-cap (sdd-conductor, started_before_cap true, step_usd null: the abort ended it without a cost), so spend partial. The key usage delta (2.0606 USD) gives the unreported step about 0.0562 USD; overshoot 0.0606 USD, within the bound 0.0291 + 0.0562 USD. cost_source stays partial until P-01 or the conductor writes the reconciled cost (test plan §4.1 Ledger); the general-pool stop rule says stop until then. Reconciled by the conductor 2026-10-20 from the OpenRouter key usage delta (17.2409 → 19.3016 = 2.0606 USD, settled on a second read).",
       "cost_usd_recorded": 2.004413745
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-048",
+      "step": 4,
+      "case": "doctor-no-ripwire (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3212,
+      "pass": true,
+      "result": "evals/results/t048-doctor-no-ripwire-2026-10-20T20-51-13-955Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-048",
+      "step": 4,
+      "case": "TS-1015 (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.0755,
+      "pass": true,
+      "result": "evals/results/t048-TS-1015-2026-10-20T20-54-26-202Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-048",
+      "step": 4,
+      "case": "TS-1111 (regression-set §5 row 1)",
+      "row": null,
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.2172,
+      "pass": true,
+      "result": "evals/results/t048-TS-1111-2026-10-20T20-56-13-099Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-048",
+      "step": 4,
+      "case": "C002-TC-537",
+      "row": "doctor",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3456,
+      "pass": true,
+      "result": "evals/results/t048-TS-537-doctor-2026-10-20T20-59-30-112Z.json"
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-048",
+      "step": 4,
+      "case": "C002-TC-537",
+      "row": "init",
+      "host": "claude-code",
+      "provider": "claude-max",
+      "auth": "subscription",
+      "api_key_source": "none",
+      "cost_usd": 0.3755,
+      "pass": true,
+      "result": "evals/results/t048-TS-537-init-2026-10-20T21-02-55-941Z.json"
     }
   ]
 }
