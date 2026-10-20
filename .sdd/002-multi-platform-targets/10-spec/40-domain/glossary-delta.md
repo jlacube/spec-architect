@@ -75,6 +75,9 @@ plugin structure check and the others listed there). At archive these terms are 
 | Target package contract | The expected layout, agent tool lists and MCP configuration of one target package, written in `50-interfaces/` |
 | Corpus replay suite | The tests that run the corpus replay against each enforcement mechanism of the generated targets |
 | Checklist record | The record of one run of the manual VS Code checklist |
+| Checklist step index | The list of the steps of the manual VS Code checklist with their stable IDs and, for each step, the enforcement mode it belongs to: `both`, or one Copilot enforcement mode (`sdd-mcp-server`, `copilot-hooks`) (C002-IF-009 §4) |
+| Step of the package's enforcement mode | A step of the manual VS Code checklist, other than an injection step, whose mode in the checklist step index is `both` or the enforcement mode of the Copilot target package proposed for release; a checklist record lists it once, with the result of its last run (C002-REQ-615, C002-REQ-618; C002-IF-009 §4; `50-interfaces/errors.md` ERR-REL-004) |
+| Injection evidence | The evidence the release check reads for the injection condition of C002-REQ-617: the injection summary of the eval runners, or the injection steps of the checklist record under the Copilot hooks fallback and, under sdd MCP server enforcement, when Copilot CLI cannot load the Copilot target package (C002-REQ-613, C002-REQ-628; C002-IF-009 §5) |
 | Release check | The check that decides whether a generated target may be released (C002-DEC-005) |
 | Release record | The record of one release decision for one target: the evidence the release check used and its outcome |
 | Regression set | The CHG-001 tests and evals that pass before CHG-002 and must still pass after it (`20-plan/30-impact/regression-set.md`) |
@@ -85,6 +88,7 @@ plugin structure check and the others listed there). At archive these terms are 
 | Variant token | A placeholder in a wiring variant that the generator fills from the mapping table, such as the tested version (C002-IF-001 §4) |
 | Server profile | One of the two tool sets of the sdd MCP server, declared as its own server: `sdd-files` (write tools) and `sdd-shell` (command tool) (C002-IF-002 §2) |
 | Server repository root | The repository folder an sdd MCP server process serves, fixed when it is initialised (C002-IF-002 §3) |
+| Error result | The result of a refused or failed tool call of the sdd MCP server: `isError: true` and one text item that starts with the code (`<code>: <message>`, or for a `GUARD-*` rule the guard core's deny message, which starts with its code), without structured content (C002-IF-002 §6.1; Q-mcp-errors-01, defect D-017) |
 | Repository with `.sdd/` (Copilot guard) | A repository in which the tool call's working folder, or a folder above it, holds `.sdd/` — the same upward lookup as the sdd CLI (C002-IF-008 §2 rule 6). It includes a repository nested below an Architect workspace, which extends the cost P-01 accepted in Q-safety-06 and Q-safety-07 to such repositories (CR-41) |
 | Tool classes | The classification of a host's tool names into write, terminal and read-only tools that the Copilot guard hooks and the Copilot subagent guard hook use (C002-IF-008 §2) |
 | Tool classes file | The file `hooks/tool-classes.json` of the Copilot target package, in both Copilot enforcement modes, which assigns every tool the host offers to an Architect agent and every recorded generic edit or terminal tool of the host to one of the tool classes `write`, `terminal` and `read_only` (C002-REQ-318) |

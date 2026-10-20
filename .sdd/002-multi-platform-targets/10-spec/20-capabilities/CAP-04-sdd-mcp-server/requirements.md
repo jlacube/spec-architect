@@ -26,7 +26,7 @@ C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-GOAL-05).
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF the sdd MCP server cannot complete a write call (invalid arguments, an exception in the path guard core or an I/O error), THEN THE sdd MCP server SHALL return an error result and leave the target file with its previous content.
-- **Rationale:** C002-US-401 (refuse on any internal error, fail closed); C001-NFR-301 for the CLI's own state files
+- **Rationale:** C002-US-401 (refuse on any internal error, fail closed); C001-NFR-301 for the CLI's own state files; an error result carries its code and message as text only, without structured content, so that a client that validates structured content against the tool's advertised output schema accepts it (glossary "Error result"; Q-mcp-errors-01, round 2026-10-20 of `../../questions-log.md`: "No structured error (Recommended)"; defect D-017; form: C002-IF-002 §6.1)
 - **Stories:** C002-US-401
 - **Priority:** Must
 - **Acceptance:** C002-AC-402.1
@@ -44,7 +44,7 @@ C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-GOAL-05).
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF the text span to replace occurs zero times or more than once in the file, THEN THE sdd MCP server SHALL refuse the edit and report the number of occurrences found.
-- **Rationale:** an edit applies to exactly one place, as with Edit on Claude Code
+- **Rationale:** an edit applies to exactly one place, as with Edit on Claude Code; the number is reported in the text of the error result ERR-MCP-004, which carries no structured content (C002-IF-002 §5.1, §6.1; defect D-017, Q-mcp-errors-01)
 - **Stories:** C002-US-401
 - **Priority:** Must
 - **Acceptance:** C002-AC-404.1
