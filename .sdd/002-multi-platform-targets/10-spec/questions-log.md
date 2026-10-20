@@ -233,3 +233,9 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. One run at 2.00 USD (exception raised to 2.00 for one more run, no further rerun; a failure is recorded and waived) (Recommended) · 2. Smaller fixture (one specialist in the rework), one run within 1.00 · 3. Waive the row
 - **Answer:** P-01: "One run at $2 (Recommended)"
 - **Extracted instructions:** none
+
+### Q-ts634-waiver-01 — Scope and record of the TS-634 waiver (critic CR-70, CR-71)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. Cap-only waiver: only a run that ends at the spend cap (or with a host/provider error) before the final G2 question, with the earlier Then lines met and no step started after the cap; any other failure is a product defect that reopens its task and holds the OpenCode release; the waiver is recorded at this G2 and DOD-007 names it (Recommended) · 2. Any failure of the run waived
+- **Answer:** P-01: "Cap-only waiver (Recommended)"
+- **Extracted instructions:** none
