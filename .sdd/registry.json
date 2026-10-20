@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T22:27:38Z",
+  "generated_at": "2026-10-20T22:27:40Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -157,9 +157,9 @@
           "summary": "Found in C002-T-048 (TS-1004): the bash guard's ripwire rule requires exactly one read verb and --test-gate without a value, so it denies 'ripwire . --max-tokens=4000' (the ranked default map, no verb) and 'ripwire . --test-gate=<file> --limit=N', which C001-IF-14 and the code-discovery skill prescribe; the cartographer then cannot use ripwire. Present since the guard was wired into hooks.json (43d044f); BG-081 'ripwire .' expects deny. Fix: align IF-07 §3 / guard / corpus with IF-14 (read-only forms only).",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-012 (2026-10-20/21): spec 278ef7d…020738d; P-01 Q-ripwire-guard-01 'Allow read-only forms'; code in C001-T-079; CHG-002 follow-up D-024",
+          "closed_at": "2026-10-21"
         }
       ],
       "waivers": []
