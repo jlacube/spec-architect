@@ -116,7 +116,13 @@ Scenario: C002-TS-507 — missing tool on OpenCode
   Given machine configuration "cfg-no-ripwire" on OpenCode
   When P-01 runs the doctor command
   Then the ripwire row shows status "missing", its fallback and the install command from C001-IF-10 §3
+  And the reply names no MCP error "-32602"
 ```
+
+On OpenCode at its tested version (1.18.31, package mode `sdd-mcp-server`) the ripwire probe runs
+through the `sdd-shell` command tool, whose error result `ERR-MCP-006: could not start "ripwire": not
+found on PATH` carries no `structuredContent`; OpenCode accepts it (C002-TS-666) and the doctor reads
+`missing` from its text (C002-IF-006 §2; defect D-017).
 
 ```gherkin
 @eval
@@ -279,7 +285,11 @@ Scenario Outline: C002-TS-516 — Copilot hooks row in the VS Code doctor
 
 The restricted-mode rows show the caveat of the P-01 decision on defect D-012: the doctor reads
 `chat.useHooks` only, so an untrusted workspace still shows `ok` with the text that names the
-sources not read; the manual VS Code checklist records them (C002-TS-619).
+sources not read; the manual VS Code checklist records them (C002-TS-619). Restricted mode can keep
+VS Code from running the chat or the doctor prompt; P-01 then records the restricted-mode row
+`failed`, with what VS Code showed in its `note`, and the release check refuses that record with
+`ERR-REL-004: copilot: checklist step <step id> is failed` (C002-IF-009 §4 Run order, C002-TS-668;
+defect D-015 item 8).
 
 The rows of the package's mode are listed in run order (revised for critic CR-44): the rows that
 switch off `chat.useHooks` or Workspace Trust run first, then the restore step sets `chat.useHooks`

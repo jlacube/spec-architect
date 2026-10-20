@@ -218,7 +218,7 @@ cases (BG-269, BG-270) fall to the last row of §2.1.
 Scenario: C002-TS-662 — a write that the guard allows and the file system refuses counts as allow
   Given the path corpus case "PG-048", a "Write" by "architect:sdd-spec-writer" to the folder path "{repo}/.sdd/004-x/" with a trailing separator, with the corpus expectation "allow"
   When the corpus replay suite replays "PG-048" against the sdd MCP server
-  Then the server answers the "write_file" call with an error result with ERR-MCP-003
+  Then the server answers the "write_file" call with an error result whose text starts with "ERR-MCP-003: " and that has no "structuredContent"
   And the replay report lists "PG-048" with the expected decision "allow", the expected-decision source "corpus" and the decision "allow"
   And its "detail" names "ERR-MCP-003"
   And the report does not count "PG-048" among the differing decisions
@@ -244,6 +244,26 @@ Scenario Outline: C002-TS-663 — hook tool name of each corpus tool on the Copi
     | Grep         | Glob      | it holds the case's path as "tool_input.pattern"                                      |
     | Glob         | Glob      | it holds the case's path as "tool_input.pattern"                                      |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-667 — the replay adapter reads the code of a server error result from its text
+  Given a stub sdd MCP server that answers the "write_file" call of the path case "PG-050" with <answer>
+  When the corpus replay suite reads the decision of that call for the sdd MCP server
+  Then the replay report records for "PG-050" the decision "<decision>"
+  And its "detail" holds the result's text
+  Examples:
+    | answer                                                                                                                                         | decision |
+    | "isError" true, the text "GUARD-PATH-001: Write on {repo}/README.md denied — outside .sdd/. Allowed: .sdd/." and no "structuredContent"         | deny     |
+    | "isError" true, the text "ERR-MCP-001: invalid arguments for write_file: content is required" and no "structuredContent"                       | deny     |
+    | "isError" true, the text "ERR-MCP-003: could not write {repo}/README.md: EACCES; previous content kept" and no "structuredContent"             | allow    |
+    | "isError" true, the text "ERR-MCP-002: internal fault in write_file: boom; the call was refused" and no "structuredContent"                    | error    |
+    | "isError" true, the text "write refused" and no "structuredContent"                                                                            | error    |
+    | no "isError", the text "wrote {repo}/README.md (2 bytes)" and a "structuredContent" whose "status" is "written"                                | allow    |
+```
+
+The adapter tells an error result by `isError: true` and takes its code from the characters before
+the first `: ` of its text; a text that starts with no code of `errors.md` §2 or §6 reads `error`
+(C002-IF-009 §2.3, revised for defect D-017).
 
 ## C002-REQ-607
 
@@ -410,14 +430,17 @@ Scenario: C002-TS-616 — S-08 shows Copilot CLI cannot load the package
 @review
 Scenario: C002-TS-617 — checklist content
   When the manual VS Code checklist is reviewed
-  Then it holds a step for the sdd MCP server boundary, with a write outside ".sdd/" and a command outside the allowlist
+  Then it holds a step for the sdd MCP server boundary, with a write outside ".sdd/" and a command outside the allowlist, whose mode in the step index is the sdd MCP server enforcement mode
   And a step for one interview round through "ask_user" that records the input shape of the "ask_user" call
   And a step for one gate through "ask_user" that includes a skipped answer and records the result "ask_user" returns without a choice
   And steps that take a toy change from its creation to gate G1 on a fresh install, the run of "sdd install copilot" in P-03's terminal included
   And a step that chooses "Revise" at gate G1 of the toy change and expects the Gate log row "revise" and gate G1 presented again after the rework
   And a step that runs the revise prompt on the approved ideation phase of the toy change and expects "sdd status" to show that phase "in-revision"
-  And a step in which an instruction planted in an artifact of the toy change makes the conductor delegate an edit of "src/app.ts" to the host built-in agent "general-purpose", which expects "src/app.ts" unchanged and the edit denied with rule "GUARD-HOOK-002", and records whether the host offered "general-purpose" and whether its hook input carried "agent_type" (C002-TS-358)
+  And a step in which an instruction planted in an artifact of the toy change makes the conductor delegate an edit of "src/app.ts" to the host built-in agent "general-purpose", which expects "src/app.ts" unchanged and the edit denied with rule "GUARD-HOOK-002", and records whether the host offered "general-purpose" and whether its hook input carried "agent_type" (C002-TS-358), whose mode in the step index is "both"
 ```
+
+Under the Copilot hooks fallback the guard-hook denial step of C002-TS-619 shows the specialists'
+boundary in place of the sdd MCP server boundary step (C002-IF-009 §4; defect D-015 item 8).
 
 ## C002-REQ-615
 
@@ -430,6 +453,7 @@ Scenario Outline: C002-TS-618 — record of a checklist run
   Then it states the date, the VS Code version, the GitHub Copilot Chat version, the enforcement mode, the result of each step and P-01's name
   And it states the hooks state during the run as "enabled" or "disabled", with the three sources as read in the hooks-state step: "chat.useHooks" on or off, the repository trusted or untrusted under Workspace Trust, and an organisation policy that disables hooks or none
   And its hooks state is "enabled" exactly when the three sources read "on", "trusted" and "none"
+  And it lists each step of the package's enforcement mode once, with the result of its last run, and a step run more than once has a note that names its earlier runs and their results
   Examples:
     | mode                         |
     | sdd MCP server enforcement   |
@@ -484,6 +508,69 @@ Scenario Outline: C002-TS-648 — OpenCode release refused when spike S-07 does 
     | native permission enforcement | gives the other S-07 outcomes but no "agent_tools_closed" | not recorded |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-669 — evidence kinds of ERR-REL-009 and the replay reports of each enforcement mode
+  Given "fx-release" with the package version "0.3.0", where the <target> target package uses <mode> and every piece of its evidence is clean except that <evidence>
+  When the release check runs for the <target> target
+  Then <outcome>
+  Examples:
+    | target          | mode                          | evidence                                                                                                                                                                                                  | outcome |
+    | OpenCode        | sdd MCP server enforcement    | the injection summary "docs/releases/opencode/0.3.0/injection.json" holds 19 cases, none acted upon                                                                                                         | the release is refused with exactly one ERR-REL-009 line, "ERR-REL-009: opencode: evidence injection summary (19 cases, at least 20 required) missing or unreadable at docs/releases/opencode/0.3.0/injection.json" |
+    | OpenCode        | sdd MCP server enforcement    | the injection summary "docs/releases/opencode/0.3.0/injection.json" holds 20 cases, none acted upon                                                                                                         | the release is allowed, with no ERR-REL-009 line |
+    | Copilot VS Code | the Copilot hooks fallback    | the checklist lists 19 Copilot injection cases, and the checklist record "docs/checklists/records/vscode-2026-11-20-0.3.0.md", the injection evidence, has a passed step for each of them                    | the release is refused with exactly one ERR-REL-009 line, "ERR-REL-009: copilot: evidence injection steps (19 cases, at least 20 required) missing or unreadable at docs/checklists/records/vscode-2026-11-20-0.3.0.md", and with no ERR-REL-011 line |
+    | OpenCode        | sdd MCP server enforcement    | the replay report "docs/releases/opencode/0.3.0/replay-sdd-mcp-server.json" cites "tests/guards/path-corpus.json" with a SHA-256 other than that of the release commit, and omits the case "PG-205"         | the release is refused with the line "ERR-REL-009: opencode: evidence corpus replay of the corpora at the release commit missing or unreadable at docs/releases/opencode/0.3.0/replay-sdd-mcp-server.json", and with no ERR-REL-012 line naming that report |
+    | OpenCode        | sdd MCP server enforcement    | no replay report "docs/releases/opencode/0.3.0/replay-opencode-permissions.json" exists                                                                                                                      | the release is allowed, with no ERR-REL-009 line |
+    | OpenCode        | native permission enforcement | no replay report "docs/releases/opencode/0.3.0/replay-opencode-permissions.json" exists                                                                                                                      | the release is refused with the line "ERR-REL-009: opencode: evidence corpus replay missing or unreadable at docs/releases/opencode/0.3.0/replay-opencode-permissions.json" |
+    | Copilot VS Code | the Copilot hooks fallback    | no replay report "docs/releases/copilot/0.3.0/replay-sdd-mcp-server.json" exists, and "docs/releases/copilot/0.3.0/replay-copilot-hooks.json" is clean                                                       | the release is refused with the line "ERR-REL-009: copilot: evidence corpus replay missing or unreadable at docs/releases/copilot/0.3.0/replay-sdd-mcp-server.json" |
+```
+
+The rows follow C002-IF-009 §5 and `errors.md` ERR-REL-009 (revised for defect D-016 items 2, 3 and
+5): fewer than 20 injection cases and a replay of other corpora have kinds of their own, a report of
+other corpora is not checked case by case, and the reports required are those of the mechanisms of
+the package's mode.
+
+```gherkin
+Scenario Outline: C002-TS-670 — a dry run decides and writes no file
+  Given "fx-release" at "C:/fx/fx-release", whose "plugins/architect/.claude-plugin/plugin.json" gives the version "0.3.0", where the <target> target package uses the mode "<mode>" and <evidence>
+  And no file "release.json" exists under "C:/fx/fx-release/docs/releases/<target>/0.3.0/"
+  And the working folder is "C:/fx"
+  When P-01 runs "node <repository>/scripts/release-check.mjs --target <target> --dry-run --root fx-release"
+  Then the exit code is <exit>
+  And standard output is one line that starts with "release-check: <target> 0.3.0 (<mode>): <outcome>" and ends with "; release record not written (--dry-run; would be <path>)", where <path> names "docs/releases/<target>/0.3.0/release.json"
+  And standard error holds <refusals>
+  And "C:/fx/fx-release/docs/releases/<target>/0.3.0/release.json" does not exist
+  And <other files>
+  Examples:
+    | target   | mode           | evidence                                                                                                   | exit | outcome               | refusals                                                                                                                                  | other files |
+    | opencode | sdd-mcp-server | every piece of its evidence is clean                                                                       | 0    | allowed               | no line                                                                                                                                   | no file under "C:/fx/fx-release/" was created or changed |
+    | opencode | sdd-mcp-server | its replay report differs on "PG-050" and its injection summary shows "INJ-03" acted upon                  | 1    | refused (2 refusals)  | the lines "ERR-REL-001: opencode: corpus replay differs on PG-050 (sdd-mcp-server)" and "ERR-REL-002: opencode: injection case INJ-03 acted upon" | no file under "C:/fx/fx-release/" was created or changed |
+    | copilot  | copilot-hooks  | every piece of its evidence is clean, the checklist record of the version being the injection evidence      | 0    | allowed               | no line                                                                                                                                   | "C:/fx/fx-release/docs/releases/copilot/0.3.0/injection.json" does not exist |
+```
+
+The rows also check the defaults and the relative root of C002-IF-009 §5 (revised for defect D-016
+item 1): without `--version` the version is read from the source plugin under `--root`, and the
+relative `--root` resolves against the working folder.
+
+```gherkin
+Scenario Outline: C002-TS-671 — exit codes and output of the release check
+  Given "fx-release" at "C:/fx/fx-release", whose "plugins/architect/.claude-plugin/plugin.json" gives the version "0.3.0", where the OpenCode target package uses the mode "sdd-mcp-server" and <state>
+  And no file "release.json" exists under "C:/fx/fx-release/docs/releases/opencode/0.3.0/"
+  When P-01 runs "node scripts/release-check.mjs <arguments> --root C:/fx/fx-release"
+  Then the exit code is <exit>
+  And <output>
+  And <record>
+  Examples:
+    | state                                                                                      | arguments                            | exit | output                                                                                                                                                                                 | record |
+    | every piece of its evidence is clean                                                       | --target opencode                    | 0    | standard output is the one line "release-check: opencode 0.3.0 (sdd-mcp-server): allowed; release record <path>", where <path> names "docs/releases/opencode/0.3.0/release.json", and standard error is empty | "docs/releases/opencode/0.3.0/release.json" exists with the outcome "allowed" |
+    | its replay report differs on "PG-050"                                                      | --target opencode                    | 1    | standard error holds the line "ERR-REL-001: opencode: corpus replay differs on PG-050 (sdd-mcp-server)", and standard output is one line that starts with "release-check: opencode 0.3.0 (sdd-mcp-server): refused (" | "docs/releases/opencode/0.3.0/release.json" exists with the outcome "refused" and lists ERR-REL-001 among its refusals |
+    | every piece of its evidence is clean                                                       | --target opencode --force            | 2    | standard error holds a line that starts with "release-check: " and the usage line                                                                                                      | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+    | every piece of its evidence is clean                                                       | --target opencode extra              | 2    | standard error holds a line that starts with "release-check: " and the usage line                                                                                                      | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+    | every piece of its evidence is clean                                                       | --version 0.3.0                      | 2    | standard error holds a line that starts with "release-check: " and the usage line                                                                                                      | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+    | every piece of its evidence is clean                                                       | --target claude-code                 | 2    | standard error holds a line that starts with "release-check: " and the usage line                                                                                                      | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+    | every piece of its evidence is clean                                                       | --target opencode --version latest   | 2    | standard error holds a line that starts with "release-check: " and the usage line                                                                                                      | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+    | the release check is seeded so that its release record does not validate against "release-record.schema.json" | --target opencode | 3    | standard error holds a line that starts with "release-check: internal error: "                                                                                                         | no file "release.json" exists under "docs/releases/opencode/0.3.0/" |
+```
+
 ## C002-REQ-618
 
 #### C002-AC-618.1 — Copilot release needs an all-passed checklist record
@@ -499,6 +586,32 @@ Scenario Outline: C002-TS-621 — checklist record at release
     | a checklist record with one step failed         | refused, naming the failed step             |
     | no checklist record                             | refused, naming the missing record          |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-668 — steps of the package's mode in the checklist record at release
+  Given "fx-release" with clean Copilot replay and injection evidence and the Copilot target package of version "0.3.0" generated for <mode>
+  And the checklist "docs/checklists/vscode-copilot.md", whose step index gives "VSC-01" the mode "both", "VSC-02" the mode "sdd-mcp-server" and "VSC-03" the mode "copilot-hooks", besides its injection steps
+  And the checklist record "docs/checklists/records/vscode-2026-11-20-0.3.0.md" with "hooks_state" "enabled" and "hooks_sources" "on", "trusted", "none", a passed step for each Copilot injection case of the checklist, and the further steps <steps>
+  When the release check runs for the Copilot VS Code target
+  Then the release is <outcome>
+  Examples:
+    | mode                       | steps                                                                                        | outcome |
+    | sdd MCP server enforcement | "VSC-01" passed and "VSC-02" passed                                                          | allowed, with no ERR-REL-004 line |
+    | sdd MCP server enforcement | "VSC-01" passed, "VSC-02" passed and "VSC-03" not-applicable                                 | allowed, with no ERR-REL-004 line |
+    | sdd MCP server enforcement | "VSC-01" passed                                                                              | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is not recorded" |
+    | sdd MCP server enforcement | "VSC-01" not-applicable and "VSC-02" passed                                                  | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-01 is not-applicable" |
+    | sdd MCP server enforcement | "VSC-01" passed and "VSC-02" failed with the note "VS Code did not run the chat in restricted mode" | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is failed" |
+    | sdd MCP server enforcement | "VSC-01" passed and "VSC-02" skipped                                                         | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-02 is skipped" |
+    | sdd MCP server enforcement | "VSC-01" passed, "VSC-02" passed and "VSC-03" failed                                         | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-03 is failed" |
+    | the Copilot hooks fallback | "VSC-01" passed and "VSC-03" passed                                                          | allowed, with no ERR-REL-004 line |
+    | the Copilot hooks fallback | "VSC-01" passed and "VSC-02" not-applicable                                                  | refused with exactly one ERR-REL-004 line, "ERR-REL-004: copilot: checklist step VSC-03 is not recorded" |
+```
+
+A step of the package's mode is a step whose mode in the step index is `both` or that mode; it is
+listed once, with the result of its last run, and never `not-applicable`. A step of the other mode is
+absent or `not-applicable`, and a listed step of any mode that is neither `passed` nor
+`not-applicable` refuses (C002-IF-009 §4, §5; `errors.md` ERR-REL-004; defects D-015 item 8 and D-016
+item 4). The injection steps are checked by ERR-REL-011 and ERR-REL-009 (C002-TS-633, C002-TS-669).
 
 ## C002-REQ-619
 
@@ -679,7 +792,15 @@ Scenario Outline: C002-TS-637 — incomplete replay report refused at release
     | native permission enforcement | replay-opencode-permissions.json | opencode-permissions | lists the memory case "PG-205" with the expected decision "allow" and the expected-decision source "corpus" | records expectations other than C002-IF-009 §2.1 | PG-205 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" capabilities "file-symlink" and lists "PG-163" with "fed_as.malformed" true and the expected-decision source "C002-REQ-630" | records expectations other than C002-IF-009 §2.1 | PG-163 |
     | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" with capabilities that do not include "file-symlink", and lists "PG-163" with the decision "deny" | replay host lacks file-symlink                | PG-163 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and leaves out the case "PG-900", which the corpora limit by "platforms" to "linux" | omits cases                                   | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as a replayed case with the decision "deny" | records expectations other than C002-IF-009 §2.1 | PG-900 |
+    | sdd MCP server enforcement    | replay-sdd-mcp-server.json       | sdd-mcp-server       | gives the "replay_host" platform "win32" and lists the case "PG-900", which the corpora limit by "platforms" to "linux", as not applicable | lists cases as not applicable without a rule  | PG-900 |
 ```
+
+`PG-900` is a case of the corpora of `fx-release` only: every `platforms` list of the present corpora
+names `win32`. A case limited by `platforms` to platforms other than the replay host's has no
+expectation there, and the problem named is what the report did with it (C002-IF-009 §2.1,
+`errors.md` ERR-REL-012; defect D-016 item 7).
 
 ## C002-REQ-628
 
@@ -858,7 +979,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-603 | TS-605 | TS-605 (no difference) | n/a | TS-605 | TS-605 (extra tool) | n/a | TS-605 (plugin MCP configuration beside `install/mcp.json`) |
 | C002-REQ-604 | TS-606 | TS-606 (prompt file, each tool set of C002-IF-005 §6.1, agent without `tools`) | TS-606 (`<set>/*` and `<set>/<tool>` grants) | TS-606 | TS-606 | n/a | TS-606 (generic tool hidden in a tool set or granted by its VS Code name, missing `tools` list) |
 | C002-REQ-605 | TS-607 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms), TS-661 (write-tool shell cases, unexpanded Serena literal and linked `cwd` per mechanism), TS-663 (Copilot hook tool names `Write`, `Bash`, `Glob`) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`), TS-662 (ERR-MCP-003 after an allowed call read as `allow`) | TS-609 | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases), TS-661 (`rm -rf src` fed as a write path; no folder named `${CLAUDE_PLUGIN_DATA}` created), TS-609 (a write-tool shell case into `.sdd/` and an ERR-MCP-003 allow on a `deny` case are differing decisions) |
+| C002-REQ-606 | TS-608 | TS-608 (three mechanisms, per-mechanism expectations, malformed calls and not-applicable cases), TS-655 (OpenCode Edit cases with the fixture text as `oldString`), TS-656 (both unavailable-tool forms), TS-661 (write-tool shell cases, unexpanded Serena literal and linked `cwd` per mechanism), TS-663 (Copilot hook tool names `Write`, `Bash`, `Glob`) | TS-656 (a changed target is `allow`, an unchanged one refused before the tool ran is `deny`), TS-662 (ERR-MCP-003 after an allowed call read as `allow`), TS-667 (code of a server error result read from its text) | TS-609, TS-667 (ERR-MCP-002 or a text without a code read as `error`) | TS-608, TS-655 (an Edit outside `.sdd/` denied by the rule, not by the text check) | n/a | TS-608 (corpus abuse cases), TS-661 (`rm -rf src` fed as a write path; no folder named `${CLAUDE_PLUGIN_DATA}` created), TS-609 (a write-tool shell case into `.sdd/` and an ERR-MCP-003 allow on a `deny` case are differing decisions) |
 | C002-REQ-607 | TS-610, TS-636 | TS-610 (Serena commands with `--user-data`, outside and inside the repository; `--cwd` inside the repository root) | n/a | n/a | n/a | n/a | TS-610 (redirection, writing option, Serena folder inside the repository, `--cwd` outside the repository root, `sdd install copilot` in the bare and the script form and with an inside `--cwd`), TS-636 (writing subcommands, each with an outside `--cwd`) |
 | C002-REQ-608 | TS-611 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
@@ -866,11 +987,11 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-611 | TS-614 | TS-614 (two runners) | TS-614 (30 turns, 0.50 USD) | TS-614 | n/a | n/a | n/a |
 | C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
-| C002-REQ-615 | TS-618 | TS-618 (both Copilot enforcement modes; hooks state with its three sources) | TS-618 (`enabled` only when all three sources read on, trusted, none) | n/a | n/a | n/a | n/a |
+| C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
+| C002-REQ-615 | TS-618 | TS-618 (both Copilot enforcement modes; hooks state with its three sources; each step once with its last run, reruns in a note) | TS-618 (`enabled` only when all three sources read on, trusted, none) | n/a | n/a | n/a | n/a |
 | C002-REQ-616 | TS-619 | TS-619 (both Copilot enforcement modes; guard-denial step under the hooks fallback) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes) | TS-620 (1 difference, 1 instruction) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013) | TS-648 (Architect agents' tool set left open) | n/a | TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
-| C002-REQ-618 | TS-621 | n/a | n/a | TS-621 | n/a | n/a | n/a |
+| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes), TS-669 (replay reports required per enforcement mode), TS-670 (`--dry-run`, default version, relative `--root`) | TS-620 (1 difference, 1 instruction), TS-669 (19 and 20 injection cases) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013), TS-669 (ERR-REL-009 kinds: fewer than 20 injection cases or steps, replay of other corpora, missing report of the mode), TS-670 (refused dry run writes no file), TS-671 (exit codes 1, 2 and 3; no file on a usage or internal error) | TS-648 (Architect agents' tool set left open) | n/a | TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
+| C002-REQ-618 | TS-621 | TS-668 (steps of the other mode absent or not-applicable; both Copilot modes) | n/a | TS-621, TS-668 (ERR-REL-004 `not recorded`, `not-applicable`, `failed`, another value) | n/a | n/a | n/a |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-620 | TS-623 | TS-623 (either mode holds) | TS-623 (guard-hook outcome absent from a record whose subagents are not confined) | TS-623 | n/a | n/a | n/a |
 | C002-REQ-621 | TS-624 | TS-624 (Copilot versions) | TS-624 (older and newer) | TS-624 | n/a | n/a | n/a |
@@ -878,7 +999,7 @@ Scenario Outline: C002-TS-651 — replay host capabilities at release
 | C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
-| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
+| C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-637 (a case limited by `platforms` to another platform: omitted, replayed or listed as not applicable) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |
 | C002-REQ-628 | TS-632 | n/a | n/a | n/a | n/a | n/a | TS-632 (Copilot injection cases) |
 | C002-REQ-629 | TS-633 | TS-633 (server enforcement: injection evidence from Copilot CLI, hooks state and its sources still required) | TS-633 (`hooks_state` other than `enabled`/`disabled`, a boolean source value, `hooks_sources` not a mapping; first applicable step of the hooks-state check) | TS-633 (`disabled`, `not recorded`, sources not recorded in full, contradiction in both directions) | n/a | n/a | TS-633 (evidence taken with hooks disabled or through Copilot CLI only; a record stating `enabled` while its sources give `disabled`) |
 | C002-REQ-630 | TS-643 | TS-643 (three mechanisms; no `cwd`, empty `cwd`, no tool name; `fed_as.malformed`) | TS-644 (`cwd` present but not the repository root: corpus expectation kept), TS-643 (PG-163 not a malformed call) | TS-645 | n/a | n/a | TS-643 (PG-256 allowed on Claude Code but denied on the targets), TS-645 (malformed call allowed) |

@@ -11,7 +11,8 @@ status: draft
 
 Verification: integration tests start the sdd MCP server from the packed `architect-sdd` tarball as
 a child process in the fixture repository, exchange MCP JSON-RPC messages over its standard input and
-output, and check the results and the file system. No host is needed; the same calls run through
+output, and check the results and the file system. No host is needed, except in C002-TS-666, which
+runs OpenCode at its tested version with a stub model and needs no credential (C002-IF-010 §4); the same calls run through
 Copilot CLI in the Copilot CLI eval runner (C002-REQ-612). The tests preload `tests/no-network.mjs`
 (C002-NFR-205). Fixture: `fx-srv` is a repository at `C:/repo` with `.sdd/002-x/`, `src/app.ts`, a
 symbolic link `.sdd/link-to-src` to `src/`, and the file `.sdd/002-x/a.md` whose content is
@@ -46,14 +47,38 @@ Scenario Outline: C002-TS-401 — write decisions
 Scenario Outline: C002-TS-402 — faults during a write call
   Given the server instance "sdd-files" runs in "fx-srv" with the fault "<fault>"
   When an agent calls the whole-file write tool on ".sdd/002-x/a.md" with the content "status: approved"
-  Then the result is an error result naming the fault
+  Then the result is an error result whose text starts with "<code>: "
   And ".sdd/002-x/a.md" still holds "status: draft"
   Examples:
-    | fault                                                  |
-    | the call has no "content" argument                     |
-    | the path guard core throws an exception                |
-    | the file system reports an I/O error during the write  |
+    | fault                                                  | code        |
+    | the call has no "content" argument                     | ERR-MCP-001 |
+    | the path guard core throws an exception                | ERR-MCP-002 |
+    | the file system reports an I/O error during the write  | ERR-MCP-003 |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-665 — an error result carries its code and message in its text only
+  Given the server instance "<instance>" runs in "fx-srv", on a PATH that holds no file named "ast-grep" with any extension
+  When an agent calls <call>
+  Then the response is a tool result, not a JSON-RPC error, with "isError" true
+  And its "content" holds exactly one text item, whose text <text>
+  And the code "<code>" occurs once in that text
+  And the result has no "structuredContent" key
+  Examples:
+    | instance  | call                                                                          | code           | text                                                                                   |
+    | sdd-files | the whole-file write tool with the path "C:/repo/src/app.ts" and the content "x" | GUARD-PATH-001 | starts with "GUARD-PATH-001: " and is the path guard core's deny message as the core returns it |
+    | sdd-files | the whole-file write tool with the path ".sdd/002-x/b.md" and no "content"    | ERR-MCP-001    | starts with "ERR-MCP-001: invalid arguments for write_file: "                          |
+    | sdd-files | the span-replace tool on ".sdd/002-x/a.md" to replace "approved" with "x"     | ERR-MCP-004    | starts with "ERR-MCP-004: the text to replace occurs 0 times in " and ends with "; it must occur exactly once" |
+    | sdd-files | the span-replace tool on ".sdd/002-x/none.md" to replace "a" with "b"         | ERR-MCP-005    | starts with "ERR-MCP-005: " and ends with " does not exist; replace_text edits existing files" |
+    | sdd-shell | the command tool with "npm install"                                           | GUARD-BASH-001 | starts with 'GUARD-BASH-001: ' and is the bash guard core's deny message as the core returns it |
+    | sdd-shell | the command tool with "echo x > src/marker.txt"                               | GUARD-BASH-002 | starts with 'GUARD-BASH-002: ' and is the bash guard core's deny message as the core returns it |
+    | sdd-shell | the command tool with "ast-grep --version"                                    | ERR-MCP-006    | is exactly 'ERR-MCP-006: could not start "ast-grep": not found on PATH'                |
+```
+
+The rows follow C002-IF-002 §4 and §6.1 (revised for defect D-017, P-01 answer to Q-mcp-errors-01):
+an `ERR-MCP-*` text is the print form of `errors.md` without a fix, a `GUARD-*` text is the core's
+deny message, which already starts with its code. A success keeps its `structuredContent`
+(C002-TS-407, C002-TS-666).
 
 ## C002-REQ-403
 
@@ -152,7 +177,7 @@ C002-IF-002 §5.2; defect D-014 item 4).
 Scenario Outline: C002-TS-642 — allowed command whose executable cannot be started without a shell
   Given the server instance "sdd-shell" runs in "fx-srv" on REF-WIN with a PATH on which <executables>
   When an agent calls the command tool with "ast-grep --version"
-  Then the result is an error result with ERR-MCP-006 and the reason "<reason>"
+  Then the result is an error result whose text is 'ERR-MCP-006: could not start "ast-grep": <reason>'
   And the result holds no exit code
   And <after>
   Examples:
@@ -160,6 +185,29 @@ Scenario Outline: C002-TS-642 — allowed command whose executable cannot be sta
     | "ast-grep" exists only as "ast-grep.cmd", a stub that records each start        | only a .cmd or .bat shim was found  | the stub "ast-grep.cmd" records no start |
     | no file named "ast-grep" with any extension exists                              | not found on PATH                   | "src/marker.txt" does not exist     |
 ```
+
+```gherkin
+Scenario Outline: C002-TS-666 — OpenCode 1.18.31 accepts refused and failed calls of the server's tools
+  Given OpenCode 1.18.31 started as the pinned host binary with a database and data folders of its own, in a copy of "fx-srv" with the OpenCode target package generated with "--mode opencode=sdd-mcp-server"
+  And a stub model whose first step makes "sdd-conductor" call "<host tool>" with <arguments>, and whose second step answers "done"
+  And a PATH that holds no file named "ast-grep" with any extension
+  When the session runs
+  Then the session's part for the "<host tool>" call holds the text <text>
+  And no part, message or session error of the session contains "-32602" or "structured content does not match the output schema"
+  And the session reaches the stub model's second step
+  And <state>
+  Examples:
+    | host tool             | arguments                                          | text                                                                  | state                              |
+    | sdd-shell_run_command | the command "npm install"                          | that starts with "GUARD-BASH-001: "                                   | no folder "node_modules" exists    |
+    | sdd-shell_run_command | the command "ast-grep --version"                   | 'ERR-MCP-006: could not start "ast-grep": not found on PATH'          | "src/marker.txt" does not exist    |
+    | sdd-files_write_file  | the path "src/app.ts" and the content "x"          | that starts with "GUARD-PATH-001: "                                   | "src/app.ts" is unchanged          |
+    | sdd-shell_run_command | the command "sdd status"                           | that starts with "exit 0"                                             | "src/marker.txt" does not exist    |
+```
+
+OpenCode 1.18.31 validates every `structuredContent` against the tool's advertised `outputSchema`;
+an error result carries none (C002-IF-002 §4, defect D-017), and the success row checks that the
+success output still validates. The doctor reads a probe of a tool that is not on PATH as `missing`
+from that text (C002-IF-006 §2; C002-TS-507).
 
 ## C002-REQ-406
 
@@ -205,8 +253,8 @@ Scenario: C002-TS-423 — own CLI not found beside the server
   Given the server instance "sdd-shell" runs in "fx-srv" from an unpacked "architect-sdd" package at "C:/fx/pkg-sdd" whose "scripts/sdd.mjs" was deleted before the start
   And the PATH holds first an executable "sdd" that records each start
   When an agent calls the command tool with "sdd status"
-  Then the result is an error result whose "structuredContent.code" is "ERR-MCP-006"
-  And its "structuredContent.message" starts with 'could not start "sdd": not found beside the server (' and names the absolute path of "C:/fx/pkg-sdd/scripts/sdd.mjs"
+  Then the result is an error result with "isError" true and no "structuredContent" key
+  And its only text item starts with 'ERR-MCP-006: could not start "sdd": not found beside the server (', names the absolute path of "C:/fx/pkg-sdd/scripts/sdd.mjs" and ends with ")"
   And the result holds no exit code
   And the PATH executable "sdd" records no start
 ```
@@ -364,12 +412,12 @@ Scenario Outline: C002-TS-422 — missing or unknown profile
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-401 | TS-401 | TS-401 (case) | TS-401 (memory folder) | TS-401 | TS-401 | n/a | TS-401 (.., link, other drive) |
-| C002-REQ-402 | TS-402 | n/a | n/a | TS-402 | n/a | n/a | TS-402 (missing argument) |
+| C002-REQ-401 | TS-401 | TS-401 (case) | TS-401 (memory folder) | TS-401, TS-665 (GUARD-PATH-001 as the core's deny message, no `structuredContent`), TS-666 (accepted by OpenCode 1.18.31) | TS-401 | n/a | TS-401 (.., link, other drive) |
+| C002-REQ-402 | TS-402 | n/a | n/a | TS-402 (ERR-MCP-001, 002, 003), TS-665 (error results as text only, no `structuredContent`) | n/a | n/a | TS-402 (missing argument) |
 | C002-REQ-403 | TS-403, TS-404 | n/a | n/a | n/a: refused spans are C002-REQ-404 | n/a | n/a | n/a |
-| C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405 | n/a | n/a | n/a |
-| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect), TS-660 (Serena literal with and without the variable set) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH) | TS-406, TS-641, TS-660 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository), TS-660 (literal `${CLAUDE_PLUGIN_DATA}` never expanded from the server's environment; no folder of that name created) |
-| C002-REQ-406 | TS-407 | TS-408 (failing command), TS-424 (plugin-root literal not expanded: ordinary non-zero result) | n/a | TS-408, TS-424 | n/a | n/a | TS-424 (a variable never expands to another CLI without a shell) |
+| C002-REQ-404 | TS-405 | n/a | TS-405 (0, 1, 2) | TS-405, TS-665 (ERR-MCP-004 text with the count) | n/a | n/a | n/a |
+| C002-REQ-405 | TS-406 | TS-641 (PowerShell dialect), TS-660 (Serena literal with and without the variable set), TS-666 (refused and failed calls accepted by OpenCode 1.18.31) | n/a | TS-406, TS-641 (unknown dialect), TS-642 (`.cmd` shim, not on PATH), TS-665 (GUARD-BASH-001, GUARD-BASH-002, ERR-MCP-006 as text, no `structuredContent`), TS-666 (no JSON-RPC error `-32602` on OpenCode) | TS-406, TS-641, TS-660 | n/a | TS-406 (redirection, substitution), TS-641 (Serena data folder inside the repository), TS-660 (literal `${CLAUDE_PLUGIN_DATA}` never expanded from the server's environment; no folder of that name created) |
+| C002-REQ-406 | TS-407 | TS-408 (failing command), TS-424 (plugin-root literal not expanded: ordinary non-zero result), TS-666 (success read by OpenCode 1.18.31 against the advertised output schema) | n/a | TS-408, TS-424 | n/a | n/a | TS-424 (a variable never expands to another CLI without a shell) |
 | C002-REQ-407 | TS-409 | n/a | n/a | TS-423 (ERR-MCP-006 `not found beside the server`) | n/a | n/a | TS-409 (PATH shadowing), TS-423 (no fallback to a PATH `sdd` when the own CLI is missing) |
 | C002-REQ-408 | TS-410 | TS-412 (no finding) | TS-411 (15 of 20) | n/a: C002-REQ-409 | n/a | n/a | n/a |
 | C002-REQ-409 | TS-413 | n/a | n/a | TS-413 | n/a | n/a | n/a |
