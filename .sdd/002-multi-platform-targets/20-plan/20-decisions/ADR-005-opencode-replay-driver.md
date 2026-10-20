@@ -67,7 +67,11 @@ version (Q-s07-01, Q-s07-02, `../questions-log.md` round 11). Facts F-7 … F-10
 - **Own database (F-8).** `OPENCODE_DB` names an absolute database file of the run, so the tested
   version neither reads nor migrates the user's shared OpenCode database. The stub-model replay also
   points the data, config, cache and state folders at empty run folders, so it reads no credential.
-  The eval runner keeps the user's credential store for the provider key.
+  The eval runner isolates the same folders, so it reads neither the user's OpenCode configuration
+  nor its credential store; a paid session reads the OpenRouter key from P-01's key file
+  `%USERPROFILE%\.architect-evals\openrouter-key.txt`, passes it to the host process as
+  `OPENROUTER_API_KEY` only, and is refused when the file is missing or empty (C002-IF-010 §4,
+  revised for defect D-015 item 4).
 - **Start-up network conditions of the stub replay (F-9).** Three conditions apply:
   - The models fetch is switched off (`OPENCODE_DISABLE_MODELS_FETCH`). Otherwise OpenCode 1.18.31
     fetches the catalogue from `models.opencode.ai` (1.15.10: `models.dev`).

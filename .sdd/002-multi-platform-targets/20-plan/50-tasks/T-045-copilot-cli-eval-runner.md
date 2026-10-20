@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: todo
-depends_on: [C002-T-002, C002-T-044, C002-T-058, C002-T-063]
+depends_on: [C002-T-002, C002-T-044, C002-T-058, C002-T-063, C002-T-064]
 implements: [C002-REQ-611, C002-REQ-612, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1, C002-AC-612.1, C002-AC-308.1, C002-AC-327.1]
 verified_by: [C002-TS-513, C002-TS-526, C002-TS-614, C002-TS-615, C002-TS-336, C002-TS-359, C002-TC-513, C002-TC-526, C002-TC-614, C002-TC-615, C002-TC-336, C002-TC-359]
@@ -48,6 +48,10 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
   `.vscode/settings.json`, a non-boolean `chat.useHooks`; the probe of C002-T-063 (h)), and the
   install command that prepares each workspace requires `scripts/sdd.mjs` and takes its agents from
   the guard hook's `--agents` (C002-T-063 (i)).
+- C002-T-064 done: the sdd MCP server's error results are text-only (defect D-017), so the Copilot
+  CLI sessions of steps 4 and 5 do not run against the error shape that OpenCode rejected; every row
+  of `evals/targets/doctor/doctor-cases.mjs` carries its `host` field (C002-IF-010 §1), and the
+  `copilot-cli` rows this task adds follow it.
 - The Copilot subscription named in C002-T-002 has allowance left for the sessions of steps 4 and 5
   (C002-RISK-026). These sessions are not billed to the prepaid API key.
 

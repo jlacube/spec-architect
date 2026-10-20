@@ -25,10 +25,18 @@ Run the existing eval cases on the OpenCode target package through the unchanged
 interview, gate and revise scenarios use scripted `question` answers (C002-REQ-610). Every session
 ends at 30 turns or $0.50 (C002-REQ-611, C002-NFR-105). The runner also writes the injection summary
 of C002-IF-009. It drives `opencode serve` of the pinned host binary through the C002-T-042 driver,
-with a database of its own (`OPENCODE_DB`); the provider key stays in the credential store of the
-user's data folder (C002-IF-010 §4 "OpenCode host process"; C002-ADR-005 as revised for D-009).
+with a database of its own (`OPENCODE_DB`) and isolated configuration, data, cache and state
+folders, so the user's OpenCode credential store is not read; a paid session reads the OpenRouter key
+from P-01's key file `%USERPROFILE%\.architect-evals\openrouter-key.txt` and is refused without it
+(C002-IF-010 §4 "OpenCode host process", revised for defect D-015 item 4; C002-ADR-005).
 Scripted answers go through the SDK's reply route (`question.reply`), which works because the
 conductor holds `question: allow` (C002-REQ-217, C002-TS-230).
+
+**Follow-up (revision D-015 … D-017), not a reopening.** The candidate defects of this task's report
+went into C002-IF-010 (defect D-015 items 1 … 7). The runner code they still need, the `host` field
+of the Claude Code doctor rows, the package version written into the source copy's
+`.claude-plugin/plugin.json` (C002-TS-515) and the runner cases C002-TC-906 … C002-TC-908 (rows by
+`host`, refusal without the key file, direct relay) are done by C002-T-064.
 
 ## Targets
 
@@ -87,8 +95,8 @@ conductor holds `question: allow` (C002-REQ-217, C002-TS-230).
 
 - `npm test -- cap06` (stub host, no spend; includes the option cases of step 2)
 - `node evals/harness/run.mjs --filter evals/does-not-exist --tier dev` exits non-zero without a session
-- `node evals/harness/run.mjs --host opencode --tier dev <one routing case file under evals/targets/opencode-host/> --only <its row>`
-  (one paid smoke run, ≤ $0.50)
+- `node evals/harness/run.mjs --host opencode --tier dev evals/cap02/TS-207.eval.mjs` (one routing
+  case, the paid smoke run, ≤ $0.50; the run of commit d78c99f)
 
 ## Done when
 

@@ -26,6 +26,12 @@ command runs **without a shell**, from the guard tokeniser's words. `sdd` runs a
 package CLI (C002-REQ-407), and the result returns the exit code, standard output and standard error
 (C002-REQ-406).
 
+**Follow-up (revision D-015 … D-017), not a reopening.** Defect D-017 (found in C002-T-056: OpenCode
+1.18.31 turned every refused or failed `run_command` into the MCP error `-32602`) and P-01's answer
+to Q-mcp-errors-01 ("No structured error") make every error result of the server text-only, without
+`structuredContent` (C002-IF-002 §4, §6.1). That change to `src/mcp/results.ts`, `src/mcp/server.ts`,
+the schema copies and the tests of this task is done by C002-T-064.
+
 ## Targets
 
 | Kind | Target | Change |

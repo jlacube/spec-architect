@@ -35,6 +35,11 @@ regenerates the reports under `docs/releases/`. This task owns the Copilot hook 
 `Bash`, `Glob`, §2.2) in its Copilot-hooks adapter. It then proves the revised rows with C002-TS-661, C002-TS-662 and C002-TS-663 and the two new planted rows of
 C002-TS-609, and closes with 0 differing decisions.
 
+**Follow-up (revision D-015 … D-017), not a reopening.** With error results text-only (defect D-017,
+C002-IF-009 §2.3 revised), the `sdd-mcp-server` adapter reads the code of an error result from its
+text, as the characters before the first `: `. That change to `readServerDecision`, C002-TC-667 and
+the regenerated `replay-sdd-mcp-server.json` reports (0 differing decisions) are done by C002-T-064.
+
 ## Targets
 
 | Kind | Target | Change |

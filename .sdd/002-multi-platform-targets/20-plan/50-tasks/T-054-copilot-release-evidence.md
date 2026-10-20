@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-036, C002-T-041, C002-T-045, C002-T-048]
+depends_on: [C002-T-036, C002-T-041, C002-T-045, C002-T-048, C002-T-064]
 implements: [C002-NFR-201, C002-NFR-202, C002-NFR-203]
 satisfies_ac: [C002-AC-606.1, C002-AC-612.1, C002-AC-327.1]
 verified_by: [C002-TS-608, C002-TS-615, C002-TS-359, C002-TC-608, C002-TC-615, C002-TC-359]
@@ -42,6 +42,11 @@ checklist record of C002-T-050, with its delegated-edit step (C002-TC-358).
 
 - C002-T-036, C002-T-041, C002-T-045 and C002-T-048 done; VS Code Insiders, Copilot Chat and
   Copilot CLI at their S-08 tested versions (scope §3.1).
+- C002-T-064 done: the server's error results are text-only, so a client that validates
+  `structuredContent` against the advertised output schema accepts refused and failed calls
+  (defect D-017), and the `sdd-mcp-server` adapter reads their code from the text; the release check
+  requires `replay-sdd-mcp-server.json` in both Copilot modes and `replay-copilot-hooks.json` under
+  the hooks fallback (C002-IF-009 §5, revised for D-016 item 5).
 - The release-candidate commit is the commit recorded by C002-T-048 (re-run its step 5 first if a
   source, harness or root file changed since).
 - The Copilot subscription named in C002-T-002 has allowance for about 41 sessions (test plan §4.2,

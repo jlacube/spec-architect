@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-023, C002-T-036, C002-T-041, C002-T-043, C002-T-044, C002-T-048, C002-T-056]
+depends_on: [C002-T-023, C002-T-036, C002-T-041, C002-T-043, C002-T-044, C002-T-048, C002-T-056, C002-T-064]
 implements: [C002-NFR-201, C002-NFR-202, C002-NFR-203, C002-NFR-801]
 satisfies_ac: [C002-AC-606.1, C002-AC-609.1]
 verified_by: [C002-TS-608, C002-TS-609, C002-TS-612, C002-TC-608, C002-TC-609, C002-TC-612]
@@ -42,6 +42,11 @@ writes both folders, so the scan needs no Copilot release task.
 
 - C002-T-023 (the tarball check with its `--spdx` option), C002-T-036, C002-T-041, C002-T-043,
   C002-T-044, C002-T-048 and C002-T-056 done; OpenCode at its tested version.
+- C002-T-064 done: the server's error results are text-only and the `sdd-mcp-server` adapter reads
+  their code from the text (C002-IF-009 §2.3); the release check requires the replay reports of the
+  mechanisms of the package's mode only (C002-IF-009 §5, revised for D-016 item 5: under
+  `sdd-mcp-server`, `replay-sdd-mcp-server.json`; under `native-permissions`,
+  `replay-opencode-permissions.json`).
 - The release-candidate commit is the commit recorded by C002-T-048. If a source, harness or root
   file changed since, C002-T-048 step 5 is re-run first.
 - The OpenRouter reserve of test plan §4.1 still covers the sessions of step 3; OpenCode uses P-01's

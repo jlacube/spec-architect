@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-022, C002-T-035, C002-T-037, C002-T-038, C002-T-042, C002-T-044, C002-T-045, C002-T-047, C002-T-060]
+depends_on: [C002-T-022, C002-T-035, C002-T-037, C002-T-038, C002-T-042, C002-T-044, C002-T-045, C002-T-047, C002-T-060, C002-T-064]
 implements: [C002-REQ-623]
 satisfies_ac: [C002-AC-623.1, C002-AC-517.1]
 verified_by: [C002-TS-626, C002-TS-627, C002-TS-537, C002-TC-626, C002-TC-627, C002-TC-537]
@@ -39,8 +39,9 @@ C002-T-049 and C002-T-054 package.
 
 ## Preconditions
 
-- C002-T-022, C002-T-035, C002-T-037, C002-T-038, C002-T-042, C002-T-044, C002-T-045 and C002-T-047
-  done (the last tasks that change source, harness or root files).
+- C002-T-022, C002-T-035, C002-T-037, C002-T-038, C002-T-042, C002-T-044, C002-T-045, C002-T-047
+  and C002-T-064 done (the last tasks that change source, harness or root files; C002-T-064 changes
+  the sdd MCP server, the generator, the release check and the OpenCode runner).
 - C002-T-053 done, so that the approved-phase lint loop of `frontend.test.ts` passes with CHG-002's
   waivers in force.
 - C002-T-060 (eval auth switch) done. The 5 sessions of step 4 run with `--auth subscription` (test

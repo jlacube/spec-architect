@@ -47,8 +47,13 @@ not wait for it.
 ## Step outline (no production code)
 
 1. **P-01 step:** use a fresh Windows user profile with only Node.js and OpenCode at its tested
-   version installed, and OpenCode's OpenRouter provider configured with P-01's key (OpenCode's own
-   set-up, before the timer starts; the key stays in OpenCode's credential store).
+   version installed, and OpenCode's OpenRouter provider configured with P-01's key, read from P-01's
+   key file `%USERPROFILE%\.architect-evals\openrouter-key.txt` (P-01's decision for the eval key,
+   C002-IF-010 §4, defect D-015 item 4) and given to OpenCode as `OPENROUTER_API_KEY` for this
+   profile's OpenCode process (set-up before the timer starts). The fresh profile's OpenCode
+   configuration, data, cache and state folders are its own, so the OpenCode data folders and
+   credential store of P-01's usual profile are neither read nor written, and the key is never
+   written to the repository or to the record.
 2. **P-01 step:** extract `dist/architect-opencode-<version>.zip` and follow its `INSTALL.md`. Time
    each phase from the first install command to the first question.
 3. **P-01 step — paid, reserve (about 4 agent sessions on E-OCE, test plan §4.2):** continue the toy

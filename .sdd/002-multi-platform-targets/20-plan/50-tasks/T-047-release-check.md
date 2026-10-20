@@ -38,6 +38,14 @@ with hooks enabled` and the `<problem>` texts of `../../10-spec/50-interfaces/er
 sdd MCP server enforcement a record without a hooks state is refused (`shows hooks not recorded`), and
 one with hooks `enabled`, sources that give `enabled` and no Copilot injection step is allowed, the
 injection evidence coming from the Copilot CLI runner (C002-TS-633).
+
+**Follow-up (revision D-015 … D-017), not a reopening.** The candidate defects of this task's report
+went into C002-IF-009 §4, §5 and `errors.md` (defect D-016 items 1 … 5 and 7: `--dry-run` and
+`--root`, the evidence kinds of ERR-REL-009, the checklist step rules of ERR-REL-004, the replay
+reports per mode, the `platforms` rows of ERR-REL-012); the catalogue mirror is done (commit
+e0ade13). The rows of C002-TS-668 … C002-TS-671 and the three `PG-900` rows of C002-TS-637, with any
+code change a failing row needs, and the generator's `package_version` stamp (item 6) are done by
+C002-T-064.
 The replay recomputation accepts the `expected_source` values `C001-REQ-1103`, `C002-REQ-401` and
 `C002-REQ-517` of the revised C002-IF-009 §2.1, the last two on `sdd-mcp-server` only, and reads
 ERR-MCP-003 as `allow` (§2.3); both come from `tests/replay/expect.ts` as C002-T-063 leaves it, and
