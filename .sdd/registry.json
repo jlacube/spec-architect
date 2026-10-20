@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T15:56:27Z",
+  "generated_at": "2026-10-20T15:56:30Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -369,9 +369,9 @@
           "summary": "Found in C002-T-064: (1) TS-667/TC-667 say 'the write_file call of PG-050' but PG-050 is an Edit case that IF-009 §2.2 feeds as replace_text (test asserts replace_text); (2) IF-009 §2.1 + ERR-REL-012: a case limited by platforms to another platform refuses the release however the report handles it — such a case can never be released on that host (no present case is affected, all name win32); (3) IF-009 §4 Earlier runs rule 2 'at least as many earlier runs' of the restore step: all earlier runs or only rerun-caused ones (code counts all). Batch for the next revision.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-018…D-020 (2026-10-20): spec 4c0f7c6…5e8d331, plan 011e46d…b7274b7; P-01 Q-cli-model-01, Q-opencode-glob-01, Q-ts634-budget-01, Q-capped-runs-01, Q-copilot-pool-01, Q-rerun-scope-01, Q-exec-lookup-01; code follow-ups in C002-T-065",
+          "closed_at": "2026-10-20"
         },
         {
           "id": "D-019",
@@ -379,9 +379,9 @@
           "summary": "Found in C002-T-045 (Copilot CLI 1.0.98): (1) the --agent architect:sdd-conductor session runs on claude-sonnet-5.5, not the agent file's claude-opus-5.5 (subagents do get their models) — decide whether the runner passes --model from the agent file (cost) or the spec accepts it; (2) prompt files in -p mode are sent as plain text — IF-010 §2 does not say how a prompt runs (runner substitutes the body); (3) Verification names evals/targets/copilot-cli/ vs IF-010 §1 no per-host folder; (4) test plan names no Copilot pool or limit (P-01: $30, pool copilot); (5) workspace hooks load in -p mode only for a trusted folder or with GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true — IF-010 §4 / IF-005 §3 must name it; (6) extra options --no-auto-update, --disable-builtin-mcps, --max-ai-credits (soft cap, min 30), --usage-output-file, --log-dir, --allow-tool mapping; usage per session, not per turn; (7) subagents reported without the architect: prefix (S-08 saw prefixed names in hook input).",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-018…D-020 (2026-10-20): spec 4c0f7c6…5e8d331, plan 011e46d…b7274b7; P-01 Q-cli-model-01, Q-opencode-glob-01, Q-ts634-budget-01, Q-capped-runs-01, Q-copilot-pool-01, Q-rerun-scope-01, Q-exec-lookup-01; code follow-ups in C002-T-065",
+          "closed_at": "2026-10-20"
         },
         {
           "id": "D-020",
@@ -389,9 +389,9 @@
           "summary": "Found in C002-T-056 (OpenCode 1.18.31): (1) OpenCode's glob runs ripgrep without --hidden, so files in dot folders are never listed — .sdd/ globs return 'No files found' in every transcript; TS-511 fails (doctor decides there is no .sdd/), and most sessions waste turns. The generated OpenCode package must tell agents to find .sdd/ with read or sdd status (or the sdd MCP server tool), not glob — mapping/wiring change; (2) TS-634 (gate rework) cannot finish within 0.50 USD on OpenCode — cheaper rework path, smaller fixture, or a P-01 budget exception; (3) the spend cap is checked after each step, so a session can overshoot 0.50 (0.511, 0.525 seen) — NFR-105 wording or a pre-step check; (4) sdd host-version opencode reports the opencode first on PATH (~/.opencode/bin, 2.0.32), not the pinned 1.18.31 — doctor rows show 'untested' on REF-WIN; host PATH order / doctor guidance.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-018…D-020 (2026-10-20): spec 4c0f7c6…5e8d331, plan 011e46d…b7274b7; P-01 Q-cli-model-01, Q-opencode-glob-01, Q-ts634-budget-01, Q-capped-runs-01, Q-copilot-pool-01, Q-rerun-scope-01, Q-exec-lookup-01; code follow-ups in C002-T-065",
+          "closed_at": "2026-10-20"
         }
       ],
       "waivers": [
