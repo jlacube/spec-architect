@@ -165,3 +165,15 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. P-01 tops up the account; the $40 stop rule stays · 2. Pause OpenCode evals
 - **Answer:** P-01: "Topped up / will top up"
 - **Extracted instructions:** none
+
+### Q-checklist-rerun-01 — Re-runs of checklist steps (critic CR-52; C002-REQ-615, C002-REQ-618, C002-IF-009 §4/§5)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. Failures stay binding: earlier runs in a structured field; a step with an earlier `failed` run refuses the release (ERR-REL-004) unless the re-run is the allowed one (a hooks source changed, settings restored, group re-run) (Recommended) · 2. Last run wins (earlier failures only in a free-text note)
+- **Answer:** P-01: "Failures stay binding (Recommended)"
+- **Extracted instructions:** none
+
+### Q-checklist-restricted-01 — TS-516 restricted-mode row when VS Code blocks the chat (critic CR-53; D-015 item 8)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. The row passes when VS Code itself refuses the chat or the doctor prompt in restricted mode, the note quoting what VS Code showed; if VS Code runs the prompt, the doctor row must read `ok` + caveat (Recommended) · 2. Drop the restricted-mode rows · 3. Keep failed
+- **Answer:** P-01: "Blocked chat passes (Recommended)"
+- **Extracted instructions:** none
