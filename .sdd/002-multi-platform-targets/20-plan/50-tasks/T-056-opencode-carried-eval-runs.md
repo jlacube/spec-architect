@@ -122,7 +122,10 @@ planning rates.
 two, which raised defect D-020: C002-TC-511 (OpenCode 1.18.31's `glob` lists no file inside `.sdd/`,
 so the doctor decided there was no `.sdd/` and wrote no `toolchain.md`) and C002-TC-634 (the gate
 rework reached the 0.50 USD spend cap in its run and its rerun). The ledger's general pool held
-14.79 USD of 30 on 2026-10-20. The rows that passed are not run again.
+14.79 USD of 30 on 2026-10-20. The rows that passed are not run again, also after the variant
+`file-inspection` changes the generated OpenCode texts: P-01 limited the reruns to C002-TC-511 and
+C002-TC-634 (Q-rerun-scope-01, "TS-511 and TS-634 (Recommended)"); C002-T-049 replays routing and
+injection on the release candidate.
 
 **Precondition.** C002-T-065 done: the generated OpenCode package carries the variant
 `file-inspection` and the OpenCode `doctor-probe` test for `.sdd/` without `glob` (C002-TC-674), the
@@ -135,12 +138,18 @@ TS-634 session, test plan §4.1 rule 1):
 - X1. C002-TC-511, one run: the rerun its failure allows. A failure here is the row's second and
   reopens C002-T-065 (test plan §4.3); report the transcript's file-finding calls with it.
 - X2. C002-TC-634 at the cap exception of 1.00 USD, one run, and one rerun only when that run fails
-  (P-01, Q-ts634-budget-01). The two 0.50 USD sessions of the resumed run are not counted against
-  this allowance. A second failure is reported to P-01, who decides (C002-IF-010 §2.2).
+  (P-01, Q-ts634-budget-01). The two sessions of the resumed run ended with `spend cap` at 0.50 USD,
+  a cap that the exception later raised, so they are no runs of the row by the rule for capped
+  sessions of test plan §4.1 (ledger bullet; P-01 answer to Q-capped-runs-01, "Don't count them";
+  C002-IF-010 §2.2 Runs): before X2 starts, their ledger entries get `valid_run: false`, keeping
+  their `cost_usd` in the general-pool total. X2 is therefore the row's first run at its cap, with
+  one rerun after a failure. A second failure is reported to P-01, who decides (C002-IF-010 §2.2).
 
-**Spend.** 0.25 USD for X1 and 1.00 USD for each X2 session at its cap: 1.25 USD without the rerun,
-at most about 2.35 USD with it and the overshoot of the spend-cap rule, so the general pool reaches
-about 16.0 … 17.2 of 30 USD (test plan §4.2).
+**Spend.** Estimate at the §4.2 rates: 0.25 USD for X1 and 1.00 USD for the first X2 session at its
+cap, 1.25 USD; the general pool then reaches about 16.0 of 30 USD (14.79 + 1.25). Upper bound, the
+one of test plan §4.2: X1 at the 0.65 USD upper-bound rate and both X2 sessions at 1.05 USD each (the
+1.00 USD cap plus the 0.05 USD overshoot allowance of the spend-cap rule, §4.1 rule 1), 2.75 USD; the
+general pool then reaches about 17.5 of 30 USD (14.79 + 2.75).
 
 ## Verification
 
@@ -154,5 +163,5 @@ about 16.0 … 17.2 of 30 USD (test plan §4.2).
 - [ ] Every carried OpenCode row passes, or is reported not applicable with its record cited
 - [ ] Every session is in the ledger; the sessions refused with HTTP 402 keep `valid_run: false` and none of them is counted as a run or a rerun of its row
 - [ ] The C002-TC-613 results cite the C002-T-044 smoke result for `evals/cap02/TS-207.eval.mjs` instead of a new session
-- [ ] C002-TC-511 and C002-TC-634 pass in the rerun plan after C002-T-065, C002-TC-634 with a spend cap of 1.00 USD in its result and no session beyond one run and one rerun
+- [ ] C002-TC-511 and C002-TC-634 pass in the rerun plan after C002-T-065, C002-TC-634 with `caps.usd` 1.00 in its result record and, counted by the rule for capped sessions of test plan §4.1, no session beyond one run and one rerun at that cap; the two 0.50 USD capped sessions of the resumed run carry `valid_run: false` in the ledger
 - [ ] Progress reported: `sdd task set C002-T-056 --status done --commit <sha>`

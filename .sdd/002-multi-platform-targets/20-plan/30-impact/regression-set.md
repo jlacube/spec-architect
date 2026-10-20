@@ -149,6 +149,29 @@ New checks (TGT-*, PLG-VAR-001) are additions and have no existing test.
 | `tests/unit/workspace/templates.test.ts`, `tests/integration/cap01/TS-123.test.ts` | none: they must stay green without edits | C002-T-012 puts the path confinement inside `resolveTemplate`, so `change new` and `upgrade` inherit it. Their callers pass constant template names, and the confinement allows the profile folder and the `.sdd/_templates` override exactly as today, refusing only `..` and links out of them. A failure of either test is a regression (C002-RISK-028), not an update |
 | `tests/integration/cli/template.test.ts` (new) | addition: the `template show`/`list` cases, including the `.sdd/_templates` override (C002-TC-532) | new commands |
 
+### 4.6 Executable lookup (C002-T-065, C002-CON-17, hotspot ranks 9 and 20)
+
+C002-T-065 moves every start of C002-IF-007 §Executable lookup onto one resolver in `src/io/paths.ts`:
+the `host-version` probes, `git` of CHG-001's `gate` code (`src/gate/gate.ts` `gitUser`,
+`src/gate/commit.ts` `git`), `serena` of `src/workspace/serena-launch.ts`, and the sdd MCP server's
+`run_command` executables and `taskkill` (`src/mcp/tools/shell.ts`). The arguments, outputs, errors and
+exit codes of these starts stay as they are; only the lookup changes (PATH folders only, absolute
+path). Every existing test below therefore stays green **without edits**; a failure is a regression
+of C002-T-065 (C002-RISK-035), not an update.
+
+| Test | What it pins | Note |
+|---|---|---|
+| `tests/integration/cap08/TS-801`, `TS-805`, `TS-808`, `TS-809`, `TS-810`, `TS-813`, `TS-814`, `TS-816`, `TS-818`, `TS-819` (C001-TC-801, 805, 808, 809, 810, 813, 814, 816, 818, 819) | CHG-001's `gate show`, `gate approve` (status, hash, `approved_by` from `git config user.name`, refusals, waivers), `gate record`/revise, per-ID hashes, `gate approve --commit` and its ERR-CLI-018 preconditions (C001-IF-01, C001-REQ-816, C001-REQ-817) | `approved_by` (`TS-805.test.ts`, "defaults to git user.name") and the `--commit` tests (`TS-818.test.ts`, `TS-819.test.ts`) start `git`; they run on REF-WIN with the Git for Windows `git.exe` on the test runner's PATH, which the resolver finds |
+| `tests/integration/cli/frontend.test.ts` | the command loop with `sampleArgs` (gate and `serena-launch` rows included) | `serena-launch`'s sample `data -- --version` must still give a start error or a start, as today |
+| `tests/integration/mcp/shell.test.ts` (C002-TC-409, 423, 641, 642, the output-cap and timeout test with `fakeGit`) | the server's lookup reasons, its own `sdd`, the `.cmd` refusal, the timeout kill | `fakeGit` puts an absolute stub folder first on PATH, which the resolver keeps |
+| `tests/integration/cli/serena-user-data.test.ts` (C002-TC-523 … 525), `tests/integration/cap10/TS-1006` … `TS-1009`, `tests/integration/cap11/TS-1109` | the per-user data folder, `SERENA_HOME`, the Claude Code `.mcp.json` launch | the `Spawner` seam of `serena-launch.ts` stays |
+| the existing tests of `tests/integration/cli/host-version.test.ts` (the `cfg-hosts` and `cfg-vscode-no-chat` shims, the `.cmd`-only host test) | probe output parsing, the hooks state, a host installed only as a `.cmd` shim | the probes keep taking a shim (C002-IF-007 `host-version`) |
+| `tests/unit/io/paths.test.ts`, `tests/guards/path-corpus.test.ts`, `bench/guards.mjs` | `normalisePath`, `pathKey`, `realPath` of the guards | the resolver is added beside these functions; they do not change |
+
+Additions: the resolver's unit cases in `tests/unit/io/paths.test.ts`, C002-TC-675 (eight rows),
+C002-TC-684 (`tests/integration/cli/exec-lookup.test.ts`, new), C002-TC-685, C002-TC-686 and
+C002-TC-687, and the fixture `stub-exe` (test plan §2).
+
 ## 5. Evals that exercise the changed code
 
 Claude Code sessions run the shipped bundle through `hooks.json`, so a guard defect shows in any eval

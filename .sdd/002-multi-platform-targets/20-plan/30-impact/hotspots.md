@@ -79,6 +79,13 @@ of direct references found in `blast-radius.md`.
 6. **Test-harness files with fan-in.** `tests/integration/cli/helpers.ts` (7 commits) and
    `scripts/test.mjs` (5) are test infrastructure used by every suite; changes there run through all
    1,000-plus tests, so keep their edits additive (new options, new helpers).
+7. **The executable lookup reaches CHG-001 code** (added for the D-018 … D-020 critic follow-up;
+   C002-CON-17, C002-T-065). The shared resolver lands in `src/io/paths.ts` (rank 9, both guards) and
+   the starts it serves sit in `serena-launch.ts` (rank 20), `src/mcp/tools/shell.ts`,
+   `src/cli/host-version.ts` and CHG-001's `src/gate/gate.ts` and `src/gate/commit.ts`, which were not
+   ranked because CHG-002 did not touch them at `85bee21`. Add the resolver beside the guards'
+   functions without editing them, move one start at a time, and keep CHG-001's gate tests unedited
+   (`regression-set.md` §4.6; C002-RISK-035).
 
 ## Evidence
 

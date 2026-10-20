@@ -956,8 +956,10 @@ Scope: `git diff ee18c33 011e46d -- .sdd/002-multi-platform-targets/20-plan/` (p
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-38 | major | T-056 X1/X2, DOD-007, test plan §4.1/§4.3 | the rerun limit is counted two ways (TS-511's failed run counts, TS-634's two capped sessions do not) | §4.1 rule: sessions ended by a cap that a later exception raised are not runs (`valid_run: false`), cite in T-056; or P-01 confirms at G3 | open |
-| CR-39 | minor | T-056 Spend, test plan §4.2 | two upper bounds for X1/X2 (2.35 vs 2.75 USD) | use 2.75 USD or state the basis | open |
-| CR-40 | minor | test plan §4.1 Copilot pool, handoff | `[ASSUMPTION: Q-copilot-pool-01]` refers to a question not in the questions log | log it with options, or answer at G3 | open |
+| CR-38 | major | T-056 X1/X2, DOD-007, test plan §4.1/§4.3 | the rerun limit is counted two ways (TS-511's failed run counts, TS-634's two capped sessions do not) | §4.1 rule: sessions ended by a cap that a later exception raised are not runs (`valid_run: false`), cite in T-056; or P-01 confirms at G3 | fixed |
+| CR-39 | minor | T-056 Spend, test plan §4.2 | two upper bounds for X1/X2 (2.35 vs 2.75 USD) | use 2.75 USD or state the basis | fixed |
+| CR-40 | minor | test plan §4.1 Copilot pool, handoff | `[ASSUMPTION: Q-copilot-pool-01]` refers to a question not in the questions log | log it with options, or answer at G3 | fixed |
 
 Checked, no finding: T-065 covers every architect follow-up (a)–(e); graph acyclic, 65 tasks, critical path 44; TC-673…682 and TC-912…916 mapped; RISK-034/015/026; budget figures.
+
+All findings of this section fixed: planner (CR-38…40; P-01 Q-capped-runs-01, Q-copilot-pool-01) in the commit after 5e8d331.

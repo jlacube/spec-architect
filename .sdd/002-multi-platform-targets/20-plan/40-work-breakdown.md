@@ -79,7 +79,7 @@ flowchart TB
     C002_T_056["T-056 OpenCode carried eval runs"]
     C002_T_063["T-063 Catch-up D-010…D-014: install sources, detector, doctor, replay expectations"]
     C002_T_064["T-064 Catch-up D-015…D-017: text-only MCP errors, package version, release-check rows, runner rules"]
-    C002_T_065["T-065 Catch-up D-018…D-020: file-inspection variant, cap exceptions, PATH lead, Copilot CLI model, platform rule"]
+    C002_T_065["T-065 Catch-up D-018…D-020: file-inspection variant, cap exceptions, PATH lead, Copilot CLI model, platform rule, executable lookup"]
   end
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
@@ -330,7 +330,7 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 11. C002-T-047 — Release check per target and release records (L)
 12. C002-T-064 — Catch-up for revision D-015 … D-017: text-only MCP error results, generator package version, release-check rows, eval-runner rules (L)
 13. C002-T-045 — Copilot CLI eval runner (M)
-14. C002-T-065 — Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule (L)
+14. C002-T-065 — Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule, PATH-only executable lookup (L)
 15. C002-T-048 — Claude Code regression set run (M)
 16. C002-T-054 — Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals (M)
 17. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
@@ -422,7 +422,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-047 | Release check per target and release records | L | T-034, T-040, T-046, T-063 |
 | C002-M-06 | C002-T-064 | Catch-up for revision D-015 … D-017: text-only MCP error results, generator package version, release-check rows, eval-runner rules | L | T-019, T-020, T-025, T-038, T-041, T-044, T-046, T-047, T-063 |
 | C002-M-06 | C002-T-045 | Copilot CLI eval runner | M | T-002, T-044, T-058, T-063, T-064 |
-| C002-M-06 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule | L | T-028, T-038, T-044, T-045, T-047, T-064 |
+| C002-M-06 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule, PATH-only executable lookup | L | T-028, T-038, T-044, T-045, T-047, T-064 |
 | C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044, T-063, T-064, T-065 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |

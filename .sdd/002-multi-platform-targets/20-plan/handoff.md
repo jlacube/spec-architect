@@ -41,8 +41,13 @@ D-020 (the OpenCode agents find `.sdd/` files without `glob`, P-01's Q-opencode-
 spend cap checked after each step and the 1.00 USD cap exception for C002-TS-634 on OpenCode,
 Q-ts634-budget-01; the doctor's host version from the PATH with the runner's PATH lead; the Copilot
 CLI runner's `--model` from the agent file, Q-cli-model-01, and its other options; the platform rule
-of the replay reports; the restore-run count) lands in the catch-up task C002-T-065, after
-C002-T-045 and before the C002-T-056 reruns, C002-T-048 and C002-T-054.
+of the replay reports; the restore-run count), with the critic fixes that followed it (release replays
+on `win32` only, the platform rule before C002-REQ-633, one rule per not-applicable entry, the spend
+cap per session on Copilot CLI, the result field `caps`, the cap exception matched by row ID, case
+file and host, and the PATH-only lookup of every executable the CLI and the server start, P-01's
+Q-exec-lookup-01 answer, which also changes how CHG-001's `gate` code starts `git`), lands in the
+catch-up task C002-T-065, after C002-T-045 and before the C002-T-056 reruns, C002-T-048 and
+C002-T-054.
 
 ## Reading order
 
@@ -89,8 +94,10 @@ C002-T-045 and before the C002-T-056 reruns, C002-T-048 and C002-T-054.
   subscription in AI Credits (C002-T-002 preconditions); the Copilot CLI sessions spend from the
   30 USD Copilot pool, whose stop rule `run.mjs` checks before each session (test plan §4.1 rule 8).
   A case row's spend cap is 0.50 USD, checked after each step; a higher cap runs only for a cap
-  exception of C002-IF-010 §2.2 (in force: C002-TS-634 on OpenCode, 1.00 USD, one run and one rerun
-  on failure), which `run.mjs` checks from C002-T-065 on. Never store the Claude OAuth token or the
+  exception of C002-IF-010 §2.2 (in force: C002-TS-634 of `evals/targets/gate/TS-634.eval.mjs` on
+  OpenCode, 1.00 USD, one run and one rerun on failure), which `run.mjs` checks from C002-T-065 on; a
+  session ended by a cap that such an exception later raised is no run (`valid_run: false`, test
+  plan §4.1). Never store the Claude OAuth token or the
   OpenRouter key in the repository.
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
@@ -150,7 +157,10 @@ Insiders builds): record the version before each run.
 | OpenCode model inference through OpenRouter (Q-opencode-01, `questions-log.md` round 6) | C002-T-001 | settled: Claude models of the C002-REQ-105 tiers through OpenRouter, billed to P-01's OpenRouter account; stop at 40 USD of OpenRouter spend and ask P-01 (test plan §4.1); S-07 records the model id per tier |
 | OpenCode tested version and the Node.js of REF-WIN (Q-s07-01, Q-s07-02, `questions-log.md` round 11) | C002-T-042, C002-T-044 | settled: OpenCode 1.18.31 as the pinned host binary; P-01 upgrades REF-WIN to Node.js 22.22.2 or later before C002-T-042 runs |
 | Q-replay-rule-01: a case of the platform rule listed with another not-applicable rule is refused (`../10-spec/questions-log.md` round 2026-10-20 (2)) | C002-T-065 | conductor's answer (option 1, fail-closed); P-01 confirms at G2 |
-| Q-copilot-pool-01: whether the 30 USD Copilot pool also counts P-01's VS Code runs (test plan §4.1) | C002-T-050, C002-T-057 | open; the plan counts the Copilot CLI sessions only until P-01 answers |
+| Q-copilot-pool-01: whether the 30 USD Copilot pool also counts P-01's VS Code runs (test plan §4.1) | C002-T-050, C002-T-057 | settled: P-01 answered "CLI evals only (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (2)); the pool counts the Copilot CLI eval sessions of the ledger only, and the VS Code runs run under P-01's own watch of GitHub's usage view |
+| Q-capped-runs-01: whether the C002-TS-634 sessions ended by the 0.50 USD cap that the exception later raised count as runs (plan critic CR-38) | C002-T-056 | settled: P-01 answered "Don't count them (Recommended)"; test plan §4.1 rule for capped sessions, `valid_run: false` |
+| Q-rerun-scope-01: which OpenCode rows rerun after the variant `file-inspection` | C002-T-056 | settled: P-01 answered "TS-511 and TS-634 (Recommended)"; C002-T-056 rerun plan X1, X2 |
+| Q-exec-lookup-01: PATH-only lookup for every executable the sdd CLI and the sdd MCP server start (C002-CON-17) | C002-T-065 | settled: P-01 answered "Fix everywhere now (Recommended)"; C002-T-065 part (f), CHG-001's gate tests unchanged (`30-impact/regression-set.md` §4.6) |
 
 ## CLI commands
 
@@ -236,7 +246,7 @@ C002-T-055) are independent of each other.
 | 52 | C002-T-047 | Release check per target and release records | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-047-release-check.md` |
 | 53 | C002-T-064 | Catch-up for revision D-015 … D-017: text-only MCP error results, generator package version, release-check rows, eval-runner rules | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-064-catch-up-text-only-error-results-release-check-runner.md` |
 | 54 | C002-T-045 | Copilot CLI eval runner | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-045-copilot-cli-eval-runner.md` |
-| 55 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-065-catch-up-file-inspection-caps-path-lead-platforms.md` |
+| 55 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule, PATH-only executable lookup | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-065-catch-up-file-inspection-caps-path-lead-platforms.md` |
 | 56 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
 | 57 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
 | 58 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
