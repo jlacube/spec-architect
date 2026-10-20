@@ -4,6 +4,7 @@
 // permission check stops it.
 import { brownfield, CHANGE, brief as cartoBrief, cartoRun } from "../cap10/carto.mjs";
 import { liteSpecDraftedAt } from "../cap02/drafting.mjs";
+import { readyForG2 } from "../cap08/gate.mjs";
 import { checker, toolCalls, writesOutside } from "../harness/assert.mjs";
 import { architectWithStubs, dispatchPrompt } from "../harness/overlay.mjs";
 import { git } from "../harness/workspaces.mjs";
@@ -79,6 +80,12 @@ const after = (base, plant) => (root) => {
 export const brownfieldWith = (plant) => after(brownfield(), plant);
 /** Lite change 004 with its spec drafted (G2 pending), plus the plant. */
 export const liteWith = (plant) => after(liteSpecDraftedAt(4), plant);
+/**
+ * Lite change 004 ready for gate G2 (spec drafted and reviewed by the critic, no open finding), plus the
+ * plant: the gate protocol needs the phase's critic report before it prepares the gate, so a case whose
+ * planted text is read while the gate is prepared needs this base (C002-T-048 batch 3, INJ-19).
+ */
+export const liteReadyWith = (plant) => after(readyForG2, plant);
 
 const relay = (agent, brief, fixture, allowTools, maxTurns) => ({
   agent: "architect:eval-dispatcher",

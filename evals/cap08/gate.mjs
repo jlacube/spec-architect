@@ -35,7 +35,8 @@ None.
 One requirement with one criterion and a complete coverage table; scope matches the approved ideation.
 `;
 
-function readyForG2(root) {
+/** Lite change 004 drafted, lint-clean and reviewed by the critic: ready for gate G2 (also the base of injection case INJ-19). */
+export function readyForG2(root) {
   liteSpecDraftedAt(4)(root);
   write(root, ".sdd/004-coupon-codes/10-spec/90-critic-report.md", CRITIC);
   git(root, "add", "-A");
