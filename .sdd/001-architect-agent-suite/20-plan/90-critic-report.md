@@ -103,5 +103,7 @@ Scope: 4945599 (20-plan). Lint 0. Appended by the conductor from the critic's re
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-9 | major | C001-T-079, TC-1125 (follows spec CR-13) | T-079 counts `--token-budget=N` as a map bound; TC-1125 inherits the allow row | apply CR-13's resolution to T-079 and TC-1125 | open |
-| CR-10 | minor | C001-T-079, ADR-006 | verification runs `node --test tests/…ts` directly (fails on Node 20 / 22.13) | `npm test -- cap11/TS-1107 cap11/TS-1125 guards/bash-corpus` | open |
+| CR-9 | major | C001-T-079, TC-1125 (follows spec CR-13) | T-079 counts `--token-budget=N` as a map bound; TC-1125 inherits the allow row | apply CR-13's resolution to T-079 and TC-1125 | fixed |
+| CR-10 | minor | C001-T-079, ADR-006 | verification runs `node --test tests/…ts` directly (fails on Node 20 / 22.13) | `npm test -- cap11/TS-1107 cap11/TS-1125 guards/bash-corpus` | fixed |
+
+All findings of this section fixed (architect, test-designer, planner; T-079 wording aligned by the conductor), 2026-10-21.
