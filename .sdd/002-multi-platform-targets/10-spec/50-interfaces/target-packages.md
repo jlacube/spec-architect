@@ -355,6 +355,15 @@ the session agent on the CLI's default model, not on the `model` of the agent fi
 runs on its tier only with `--model <model>`, `<model>` being the `model` field of
 `agents/sdd-conductor.agent.md`; the specialists it starts run on their own files' models.
 
+The note stays, though Copilot CLI is no adopter host (revised for critic CR-69): P-01's answer to
+Q-cli-model-01 ("Pass --model (Recommended)", whose option text says that the spec notes CLI users
+choose the model themselves) asks for it, and it states a host behaviour that silently runs the
+conductor a tier below its own, without promising support, a setup or a boundary. The install notes
+name no other Copilot CLI setting: the variable that loads workspace hooks in prompt mode (above,
+"Workspace hooks on Copilot CLI in prompt mode") is not named, because the plugin-level entry of
+`hooks.json` carries the same guard there, so leaving it out costs no protection, and naming it would
+add a setup step for a host that the package does not support.
+
 The README sections of C002-REQ-205 and C002-REQ-305 link the install-notes source
 `targets/<target>/install.md` of the plugin and name `INSTALL.md` as its copy in the target
 package. The link is for the repository copy of the plugin (the source tree and its page on the

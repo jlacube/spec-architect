@@ -166,7 +166,7 @@
         "package_version": { "$ref": "#/$defs/version" },
         "host_versions": { "$ref": "#/$defs/hostVersions" },
         "replay_host": {
-          "description": "Platform of the replay host and the host capabilities it provides, recorded while the fixture is built (file-symlink when file symbolic links could be created). The release check recomputes per-platform expectations from it and refuses the report when a case of the cited corpora requires a capability missing here (C002-REQ-633, C002-REQ-634; verification-records.md §2.1, §5).",
+          "description": "Platform of the replay host and the host capabilities it provides, recorded while the fixture is built (file-symlink when file symbolic links could be created). The release check recomputes per-platform expectations from it, refuses the report when a case of the cited corpora requires a capability missing here (C002-REQ-633, C002-REQ-634), and accepts only the platform win32 as release evidence; a posix report is valid for development only (verification-records.md §2.1 Release replays run on win32, §5; ERR-REL-012; critic CR-60).",
           "type": "object",
           "additionalProperties": false,
           "required": ["platform", "capabilities"],
@@ -263,7 +263,7 @@
               "id": { "type": "string" },
               "corpus": { "enum": ["path", "shell"] },
               "category": { "type": "string", "minLength": 1 },
-              "rule": { "description": "C002-REQ-626 for an identity-category case of a mechanism other than opencode-permissions; platforms for a case of the platform rule (verification-records.md §2.1; defect D-018 item 2).", "enum": ["C002-REQ-626", "platforms"] }
+              "rule": { "description": "C002-REQ-626 for an identity-category case of a mechanism other than opencode-permissions; platforms for a case of the platform rule (verification-records.md §2.1; defect D-018 item 2). The release check refuses a case listed with a rule other than the one that excludes it, or without one (ERR-REL-012, lists cases as not applicable without a rule; Q-replay-rule-01).", "enum": ["C002-REQ-626", "platforms"] }
             }
           }
         },

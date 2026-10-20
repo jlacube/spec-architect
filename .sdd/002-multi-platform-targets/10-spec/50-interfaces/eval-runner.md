@@ -20,7 +20,11 @@ session agent's model passed with `--model` (P-01 answer to Q-cli-model-01), pro
 mode, the runner's further Copilot CLI options, workspace hooks in prompt mode and the subagent names
 (§2, §3, §4). Revised for defect D-020 (findings of C002-T-056 on OpenCode 1.18.31): the spend-cap
 rule and the caps above 0.50 USD that P-01 approved (§2.2; P-01 answer to Q-ts634-budget-01), the
-dot-folder limit of OpenCode's `glob` (§4) and the PATH lead of the pinned host binary (§4).
+dot-folder limit of OpenCode's `glob` (§4) and the PATH lead of the pinned host binary (§4). After
+the critic's D-018 … D-020 review: the spend cap checked per step only where the host reports step
+costs, per session on Copilot CLI (CR-64); the result field `caps` (CR-65); the cap exception matched
+by row ID, case file and host, the run limit checked by the owning task, and capped sessions that a
+later exception raised counted as no runs (CR-68; P-01 answer to Q-capped-runs-01).
 
 ## §1 Selection
 
@@ -65,19 +69,32 @@ C002-T-044); the Claude Code runner ignores them.
 
 ### §2.2 Spend cap
 
-**Spend-cap rule** (revised for defect D-020 item 3). The spend cap is checked after each step, never
-before it: no host reports the cost of a step before the step has run (OpenCode gives it on the
-step's end, Copilot CLI only for the whole session), so a pre-step estimate would be a guess the
-runner cannot check. The step whose cost brings the session's spend to `maxBudgetUsd` or above is the
-last step the session starts; its cost is counted in full, and so is the cost of a step that was
-already running when the cap was reached. The session's recorded spend is therefore at or above the
-cap when it ends with `spend cap`, by at most the cost of those last steps (0.511 and 0.525 USD at a
-0.50 USD cap in C002-T-056). Per runner:
+**Spend-cap rule** (revised for defect D-020 item 3 and for critic CR-64). No runner checks the spend
+cap before a step: no host reports the cost of a step before the step has run, so a pre-step
+estimate would be a guess the runner cannot check. What the runner checks depends on what its host
+reports:
+
+- **Per step**, on a runner whose host reports the cost of each step (OpenCode, at the step's end):
+  the runner checks the cap after each step. The step whose cost brings the session's spend to
+  `maxBudgetUsd` or above is the last step the session starts; its cost is counted in full, and so
+  is the cost of a step that was already running when the cap was reached. The session's recorded
+  spend is therefore at or above the cap when it ends with `spend cap`, by at most the cost of those
+  last steps (0.511 and 0.525 USD at a 0.50 USD cap in C002-T-056). The per-step metric of
+  C002-NFR-105 (steps started after the step that reached the cap) is decided on these runners only,
+  from the step costs of the session.
+- **Per session**, on Copilot CLI, whose host reports the AI Credits of the whole session only: the
+  cap is the host's own limit `--max-ai-credits`, which the host applies to its own count of the
+  session's credits, and the runner checks the session total that the usage file gives after the
+  session; a session whose measured credits reached the limit ends with `spend cap`. No step's cost
+  is known there, so the per-step metric does not apply: the measure is the session total against
+  the limit.
+
+Per runner:
 
 | Runner | Check | Overshoot |
 |---|---|---|
-| OpenCode | the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | the step that reached the cap, plus a subagent's step that ran in parallel and finished before the abort took effect |
-| Copilot CLI | the host's own limit `--max-ai-credits <n>`, with `<n>` = the larger of 30 and `maxBudgetUsd` / 0.01 rounded to a whole number (1 AI Credit = 0.01 USD; Copilot CLI 1.0.98 accepts no limit below 30 credits, so a cap below 0.30 USD is applied as 0.30 USD); the host refuses the next model call once the session's credits reached the limit (a soft cap), and the runner reads the session's credits from `--usage-output-file` after the session: a session whose measured credits reached the limit ends with `spend cap` even when the host printed no limit text | the model call that reached the limit; the usage file gives the session total only, never a step's cost, so `usage.usd` is that total |
+| OpenCode | per step: the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | the step that reached the cap, plus a subagent's step that ran in parallel and finished before the abort took effect |
+| Copilot CLI | per session: the host's own limit `--max-ai-credits <n>`, with `<n>` = the larger of 30 and `maxBudgetUsd` / 0.01 rounded to a whole number (1 AI Credit = 0.01 USD; Copilot CLI 1.0.98 accepts no limit below 30 credits, so a cap below 0.30 USD is applied as 0.30 USD); the host refuses the next model call once the session's credits reached the limit (a soft cap), and the runner reads the session's credits from `--usage-output-file` after the session: a session whose measured credits reached the limit ends with `spend cap` even when the host printed no limit text | the model call that reached the limit; the usage file gives the session total only, never a step's cost, so `usage.usd` is that total |
 | Claude Code | the Agent SDK's `maxBudgetUsd`, as today (test plan §4.1 rule 1) | the turn that reached it |
 
 The pools of the test plan (`20-plan/60-test-plan.md` §4), not the per-session cap, bound what a run
@@ -85,16 +102,27 @@ of many sessions may spend.
 
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
 exception $1"). A case row sets `maxBudgetUsd` above 0.50 only where P-01 approved an exception for
-that row and host; the exceptions in force are the rows of this table. The harness checks it: when a
-selected row sets `maxBudgetUsd` above 0.50 and this table lists no exception for that row and the
-run's `--host` whose cap is at least the row's value, the run ends before any session, with exit code
-1 and the row's ID in the message.
+that row and host; the exceptions in force are the rows of this table. The harness checks it before
+any session (revised for critic CR-68): a selected row that sets `maxBudgetUsd` above 0.50 runs only
+when an exception of this table matches all three of its row ID (the row's `id`), its case file (the
+repository-relative path with `/` separators of the file that defines the row) and the run's
+`--host`, with a cap at least the row's value. Otherwise the run ends before any session, with exit
+code 1 and the row's ID and case file in the message. Because the case file is part of the match, a
+row of the same ID in another case file gets no exception from this table; row IDs need not be unique
+across case files. The harness then passes the row's `maxBudgetUsd` unchanged to `runSession`, and
+the result records it (`caps`, §3).
 
 | Row | Host | Cap per session | Runs | Approved |
 |---|---|---|---|---|
 | `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 1.00 USD | one run, and one rerun only when that run fails | P-01, Q-ts634-budget-01 (2026-10-20): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056) |
 
-The task that runs an exception row keeps to its runs; the harness does not count them.
+**Runs** (revised for critic CR-68 and for P-01's answer to Q-capped-runs-01, "Don't count them").
+The Runs column counts the sessions of the row that are runs by the ledger rule of the test plan
+(`20-plan/60-test-plan.md` §4.1, `valid_run`). A session of the row that ended with `spend cap`
+under a cap below the one that an exception of this table later approved for the row and host is no
+run: the ledger records it with `valid_run: false` and its cost, which counts toward its pool. The
+harness does not count runs; the done-check of the task that runs the exception row checks the run
+limit (C002-T-056 for C002-TS-634).
 
 ## §3 Session result
 
@@ -129,6 +157,7 @@ Added fields:
 | `host_versions` | versions read at session start (C002-IF-009, release evidence); on OpenCode the version of the pinned host binary (§4) |
 | `end_reason` | `completed`, `turn cap`, `spend cap`, `question unanswerable`, `error` (C002-TS-614); `error` also when the provider refuses a step of the session, for example an OpenRouter error with HTTP status 402 stored on an assistant message |
 | `usage` | `{ "turns": n, "usd": number or null }` |
+| `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (1.00 for C002-TS-634 on OpenCode). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
 | `spend` | `reported` when the host reported the cost of the steps, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
@@ -139,8 +168,8 @@ Added fields:
 
 | Runner | Drives | Caps | Question calls |
 |---|---|---|---|
-| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from the cost of each finished step when present (S-07 §10); the session is aborted at a cap (C002-REQ-611), the spend cap by the rule of §2.2 | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
-| Copilot CLI | `copilot -p <prompt> --agent architect:<agent> --plugin-dir <package copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user`, run in the case's temporary git workspace with a temporary Copilot home (`COPILOT_HOME`; C002-R-001 D-03; C002-AS-04 settled by S-08 §2.1, §2.4). Preparation per session: copy `dist/copilot/` to a temporary folder and run `sdd install copilot --package <package copy>` in the workspace (C002-IF-007), so that the copy has its `plugin.json` and `hooks.json` and the workspace its agents, its workspace hook file `.github/hooks/architect-guard.json` and `.vscode/mcp.json` (whether Copilot CLI loads the workspace hook file is an assumption of C002-IF-005 §3 that the runner's events confirm; the plugin-level entry holds the same guard); then write the `servers` entries of the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form to the servers file. The servers do not come from a plugin MCP configuration: the package declares none (C002-REQ-307). The further options and the environment of the session: Copilot CLI session below | turns counted from the assistant messages of the session agent in the JSON events; at the turn cap the process tree is killed; the spend cap is the host's `--max-ai-credits` limit (§2.2) | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
+| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from the cost of each finished step when present (S-07 §10); the session is aborted at a cap (C002-REQ-611), the spend cap by the per-step rule of §2.2 | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
+| Copilot CLI | `copilot -p <prompt> --agent architect:<agent> --plugin-dir <package copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user`, run in the case's temporary git workspace with a temporary Copilot home (`COPILOT_HOME`; C002-R-001 D-03; C002-AS-04 settled by S-08 §2.1, §2.4). Preparation per session: copy `dist/copilot/` to a temporary folder and run `sdd install copilot --package <package copy>` in the workspace (C002-IF-007), so that the copy has its `plugin.json` and `hooks.json` and the workspace its agents, its workspace hook file `.github/hooks/architect-guard.json` and `.vscode/mcp.json` (whether Copilot CLI loads the workspace hook file is an assumption of C002-IF-005 §3 that the runner's events confirm; the plugin-level entry holds the same guard); then write the `servers` entries of the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form to the servers file. The servers do not come from a plugin MCP configuration: the package declares none (C002-REQ-307). The further options and the environment of the session: Copilot CLI session below | turns counted from the assistant messages of the session agent in the JSON events; at the turn cap the process tree is killed; the spend cap is the host's `--max-ai-credits` limit, checked per session on the measured total (§2.2) | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
 | Stub | a scripted host for the runner tests (C002-TS-614) | as the runner under test | scripted |
 
 **MCP servers on Copilot CLI** (settled in C002-T-045; before, an assumption on the S-08 record).

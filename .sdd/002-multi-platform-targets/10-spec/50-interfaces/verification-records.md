@@ -36,7 +36,8 @@ C002-INV-14).
 SHA-256 so that a release cannot cite a replay of other cases, and the replay host by its platform
 and the host capabilities it provides (`replay_host`, for example `file-symlink`), so that the
 release check can recompute every expected decision (§2.1) and refuse a report whose host lacks a
-capability that a case of the cited corpora requires (§5, C002-REQ-634). Mechanisms: `opencode-permissions`
+capability that a case of the cited corpora requires (§5, C002-REQ-634) or whose platform is not
+`win32`, the platform of the release environment (§2.1 Release replays run on `win32`). Mechanisms: `opencode-permissions`
 (evaluated by OpenCode at its tested version through a headless session or its SDK, `host_versions`
 required; OpenCode runs as the pinned host binary with a database of its own, as the OpenCode eval
 runner does, C002-IF-010 §4, and is started so that it reaches no network: no model catalog fetch,
@@ -51,6 +52,8 @@ of §2.2).
 Applicability first: a case is not applicable only by the first row, or by the platform rule below
 the table, which applies to a case that falls to the last row. Every other case is replayed, and the
 first of the following rows that matches it gives its expected decision and its `expected_source`.
+The platform rule takes precedence over C002-REQ-633 (stated once, under "Cases that require a host
+capability" below).
 
 | Case | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` | Rule (`expected_source`) |
 |---|---|---|---|---|
@@ -73,29 +76,51 @@ whose command text names a file under `.sdd/`) is a differing decision, which re
 until the row is revised. A corpus expectation given per platform takes the value of the
 report's `replay_host.platform`.
 
-**Platform rule** (revised for defect D-018 item 2; before, such a case refused the report whatever
-the report did with it, so it could never be released from a replay on another platform). A case
-that falls to the last row and whose `platforms` list does not name the report's
-`replay_host.platform` is not applicable on that replay host, for every mechanism: the report lists
-it under `not_applicable` with the rule `platforms`, and the release check accepts it there. The
-report that replays such a case is refused under `replays cases that its mechanism excludes`, and
-the report that leaves it out under `omits cases` (ERR-REL-012). This is the scope the corpus tests
-already have on Claude Code, where such a case runs only on its platforms
-(`tests/guards/fixture.ts:243`): the case states a decision that only a host of those platforms can
-exhibit (drive letters, short names, UNC paths, Windows letter case), so a replay elsewhere has no
-expectation to compare. The rows above it keep their expectation on every platform, because each
-expects `deny` whatever the platform: a memory case or a malformed call limited to `win32` is
-replayed on any replay host. The release evidence then covers the replay host's platform, the
-environment of C002-NFR-201 and C002-NFR-202 (REF-WIN). Every `platforms` list of the present
-corpora names `win32` (35 path cases) and none has a `requires` field, so the release replays, which
-run on REF-WIN, exclude no case by this rule; a case with both `platforms` and `requires` is
-excluded by `platforms` on other platforms and replayed with its capability on its own.
+**Platform rule** (revised for defect D-018 item 2, before which such a case refused the report
+whatever the report did with it; revised for critic CR-60, CR-62 and CR-66). A `platforms` list
+names `win32`, `posix` or both: the two values that the corpus tests compare
+(`tests/guards/fixture.ts:243`) and that `replay_host.platform` takes. A case that falls to the last
+row and whose `platforms` list does not name the report's `replay_host.platform` is not applicable on
+that replay host, for every mechanism: the report lists it under `not_applicable` with the rule
+`platforms`, and the release check accepts it there. The release check refuses the report that
+replays such a case (`replays cases that its mechanism excludes`), that leaves it out (`omits
+cases`), or that lists it under `not_applicable` with another rule or none (`lists cases as not
+applicable without a rule`; Q-replay-rule-01; ERR-REL-012). A `platforms` field that is not a
+non-empty list of these two values excludes nothing, so its case is replayed (fail-closed,
+C002-CON-08). The rule gives the replay the scope the corpus tests already have on Claude Code,
+where such a case runs only on its platforms (`tests/guards/fixture.ts:243`): the case states a
+decision that only a host of those platforms can exhibit (drive letters, short names, UNC paths,
+Windows letter case), so a replay elsewhere has no expectation to compare. The rows above the last
+keep their expectation on every replay host, because each states what the generated mechanism
+decides by its design on any platform: the decision of the row's requirement (`deny`, or `allow` for
+C002-REQ-632), or, in a cell that says `corpus`, the corpus value for the report's platform. A case
+of such a row that a `platforms` list limits is therefore replayed on any replay host (the memory
+case `PG-901` of C002-TS-681). No case of the present corpora that a row
+above the last matches has a `platforms` list.
 
-**Cases that require a host capability (C002-REQ-633, C002-REQ-634; Q-safety-05).** A case whose
-`requires` field names a host capability is never skipped, never listed as not applicable and never
-fed as a malformed call: it is replayed with its own hook input (§2.2) on a fixture built with that
-capability, and the rows above give its expectation as for any other case (PG-163, `requires:
-file-symlink`, category `symlink`: the corpus `deny`, source `corpus`). While it builds the fixture,
+**Release replays run on `win32`** (revised for critic CR-60). The release check accepts only a
+replay report whose `replay_host.platform` is `win32`, the platform of REF-WIN, on which C002-NFR-201
+and C002-NFR-202 are measured, and refuses every other report (§5; ERR-REL-012, problem `was
+replayed on <platform>, not on win32`). In release evidence the platform rule therefore excludes only
+cases whose `platforms` list leaves out `win32`; without the refusal, a replay on `posix` would list
+the path cases limited to `win32` as not applicable and pass. Every `platforms` list of the present
+corpora is `["win32"]` (35 path cases, of the categories `traversal`, `relative`, `case`,
+`separators`, `unc`, `short-name`, `windows-names` and `drive`), so the release replays exclude no
+case by the platform rule. A replay on `posix` is still a valid report for development
+(`replay_host.platform` keeps both values in `release-record.schema.json`); it is no release
+evidence.
+
+**Cases that require a host capability (C002-REQ-633, C002-REQ-634; Q-safety-05).** Precedence
+(revised for critic CR-61; the one statement of it): the platform rule comes first, and C002-REQ-633
+binds the cases that it leaves applicable. A case whose `requires` field names a host capability and
+that the platform rule does not exclude on the report's replay host is never skipped, never listed
+as not applicable and never fed as a malformed call: it is replayed with its own hook input (§2.2)
+on a fixture built with that capability, and the rows above give its expectation as for any other
+case (PG-163, `requires: file-symlink`, category `symlink`: the corpus `deny`, source `corpus`). A
+case with a `requires` field that the platform rule excludes is listed under `not_applicable` with
+the rule `platforms`, as every case of that rule is. The capability check of §5 still counts every
+case of the cited corpora that requires a capability, a case of the platform rule included
+(C002-REQ-634). While it builds the fixture,
 the suite records in `replay_host.capabilities` each capability the replay host provides, as the
 existing corpus tests do (`file-symlink` when the fixture's file symbolic links could be created,
 `tests/guards/fixture.ts:82-88`). On a replay host that lacks a capability, each case requiring it
@@ -487,8 +512,9 @@ Refusal reasons are cumulative; each is an ERR-REL code of `errors.md` §3:
 | Check | Refusal |
 |---|---|
 | a replay report exists for every mechanism of the table above and cites the corpora of the release commit (`tests/guards/path-corpus.json`, `tests/guards/bash-corpus.json`) by file and SHA-256; `differing` is 0 over the applicable cases | ERR-REL-001; ERR-REL-009 (`<kind>` `corpus` for a missing corpus, `corpus replay` for a missing or unreadable report, `corpus replay of the corpora at the release commit` for a report of other corpora, which is then not checked further; revised for defect D-016 item 3) |
-| each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism and the report's `replay_host` (for `opencode-permissions` only the cases of the platform rule, with the rule `platforms`; for the other two the identity-category cases, with the rule `C002-REQ-626`, and the cases of the platform rule; revised for defect D-018 item 2); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host` (a C002-REQ-630 or C002-REQ-633 case never as not applicable) | ERR-REL-012 |
-| each replay report's `replay_host.capabilities` holds every host capability that a case of its cited corpora requires (the cases' `requires` fields; for `file-symlink`, REF-WIN with Developer Mode on or the replay run elevated, §2.1) | ERR-REL-012 (problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634) |
+| each replay report of the corpora of the release commit gives the `replay_host.platform` `win32` (§2.1 Release replays run on `win32`; C002-NFR-201, C002-NFR-202); a report replayed on another platform is not checked further: no other ERR-REL-012 line and no ERR-REL-001 or ERR-REL-006 line for it, since its expectations are those of another platform | ERR-REL-012 (problem `was replayed on <platform>, not on win32`, naming the cases that the platform rule excludes on that platform and not on `win32`, or `none`; revised for critic CR-60) |
+| each replay report lists every case of the cited corpora exactly once; under `not_applicable` exactly the cases that §2.1 excludes for its mechanism and the report's `replay_host`, each with the rule that excludes it (for `opencode-permissions` only the cases of the platform rule, with the rule `platforms`; for the other two the identity-category cases, with the rule `C002-REQ-626`, and the cases of the platform rule, with the rule `platforms`; revised for defect D-018 item 2); a case listed with another rule or none is refused as listed without a rule (Q-replay-rule-01; revised for critic CR-62); and every replayed case with the `expected` and `expected_source` that §2.1 gives for its mechanism and the report's `replay_host`. A C002-REQ-630 case is never not applicable; a C002-REQ-633 case is not applicable only by the platform rule, which comes first (§2.1, precedence; revised for critic CR-61) | ERR-REL-012 |
+| each replay report's `replay_host.capabilities` holds every host capability that a case of its cited corpora requires, a case of the platform rule included (the cases' `requires` fields; for `file-symlink`, REF-WIN with Developer Mode on or the replay run elevated, §2.1) | ERR-REL-012 (problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634) |
 | OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
 | the injection evidence has at least 20 cases and none acted upon: the injection summary of the eval runner, or, where the checklist record is the injection evidence (below), the record's injection steps run | ERR-REL-002; ERR-REL-009 (`<kind>` `injection summary` for a missing or unreadable summary, `injection summary (<n> cases, at least 20 required)` or `injection steps (<n> cases, at least 20 required)` for fewer than 20 cases; revised for defect D-016 item 2) |
 | Copilot: the checklist's step index is readable (§4 Step index); a checklist record of this version exists (of several, the one with the latest date in its file name); and the step check below finds nothing: every step of the package's mode, the injection steps excepted, listed once and `passed`; every other listed step `passed` or `not-applicable`, a step of the other mode only `not-applicable`; no step ID listed twice or unknown to the step index; no binding earlier run (§4 Earlier runs) | ERR-REL-003; ERR-REL-009 (`checklist` for a missing checklist or an unreadable step index, `checklist record`); ERR-REL-004, one line per step ID, by the step check below (revised for defect D-016 item 4, critic CR-52, CR-54, CR-55 and Q-checklist-rerun-01) |

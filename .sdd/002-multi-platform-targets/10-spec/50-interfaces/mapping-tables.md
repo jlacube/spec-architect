@@ -71,7 +71,7 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 | CLI invocation line | `sdd-conventions` l.13, `sdd-conductor.md` l.19, `sdd-auditor.md` l.13 | `variant_required` (C002-REQ-111) | variant | variant |
 | Claude Code host probe `claude --version` | `doctor.md` l.21 and l.33; the other host-row lines (the probe list at l.12, the code-discovery toolchain section) are anchors of the same variants (§2.1, §3 step 3) | construct `claude-host`, `variant_required` (C002-REQ-111, C002-REQ-112) | variant with the OpenCode host row (C002-IF-006) | variant with the VS Code with GitHub Copilot Chat host row |
 | `Bash` in prose | agent bodies | construct `bash-prose`, `replace.by_mode` | native: "the `bash` tool"; server: "the `sdd-shell` command tool" | server: "the `sdd-shell` command tool"; hooks: "the terminal tool" |
-| `Glob` in prose (the Glob tool named in a body; today `sdd-conventions` l.16) | agent, command and skill bodies | construct `glob-prose`, kind `tool-name`, `variant_required` (decided for defect D-020 item 1): every matched line is a wiring anchor (§3 step 3), so a text that tells agents to glob gets a variant on every target or stops generation with ERR-GEN-002 | variant `file-inspection` (§2.1): `.sdd/` files are found with `sdd status` and `read`, never with `glob` (§6.1 Dot folders) | variant `file-inspection` with the same finding rule, as a precaution (§6.1 Dot folders) |
+| `Glob` in prose (the Glob tool named in a body; today `sdd-conventions` l.16) | agent, command and skill bodies | construct `glob-prose`, kind `tool-name`, `detect` `\bGlob\b`, `variant_required` (decided for defect D-020 item 1). The detector matches the whole, case-sensitive word `Glob` only, as `bash-prose` matches `Bash` (revised for critic CR-67): `Global` (`commands/init.md:26`, the `## Global items` heading of the dod-catalogue skill) and the host tool name `glob` do not match. Every matched line is a wiring anchor (§3 step 3), so a text that tells agents to glob gets a variant on every target or stops generation with ERR-GEN-002 | variant `file-inspection` (§2.1): `.sdd/` files are found with `sdd status` and `read`, never with `glob` (§6.1 Dot folders) | variant `file-inspection` with the same finding rule, as a precaution (§6.1 Dot folders) |
 
 Agents and commands take variants by the same mechanism as the skills' wiring sections
 (C002-REQ-111, C002-REQ-112): the CLI invocation lines of `sdd-conductor.md` and `sdd-auditor.md`,
@@ -242,7 +242,8 @@ pattern, `.sdd/002-coupon-codes/**/*`, listed nothing). The generated OpenCode t
 The variant `file-inspection` (§2.1) carries this rule into every Architect agent, since all ten
 preload the sdd-conventions skill (§3 step 5), and the OpenCode `doctor-probe` variant tests for
 `.sdd/` the same way. The construct `glob-prose` (§2) keeps it so: a later source line that names the
-Glob tool in a body is a wiring anchor that needs a variant on every target. `glob` itself stays
+Glob tool in a body (the whole, case-sensitive word `Glob`) is a wiring anchor that needs a variant
+on every target. `glob` itself stays
 granted on OpenCode, for the code outside dot folders (the layer ladder of the code-discovery skill).
 
 **Copilot: not recorded.** The S-08 record lists `glob` and `grep` among the host tools that a
