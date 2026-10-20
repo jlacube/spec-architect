@@ -6,13 +6,15 @@
 // included), or when the server started a process. The server runs as a child process (the built
 // bundle, tests/integration/mcp/client.ts); faults come from the SDD_TEST_FAULT switches of the guard
 // cores and of the atomic writer, and, for the command tool's I/O error, from a preload that exists
-// only in this test: it replaces `node:child_process` so that starting a process fails.
+// only in this test: it replaces `node:child_process` so that starting a process fails. An error result is
+// text only (C002-IF-002 §6.1, revised for defect D-017; C002-T-064): each one is asserted to hold one text
+// item that starts with `<code>: ` and no structuredContent key, and its code is read from that text.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { McpSession, serverWorkspace, type RpcMessage } from "./client.ts";
+import { errorText, McpSession, serverWorkspace, type RpcMessage } from "./client.ts";
 
 type Profile = "files" | "shell";
 
@@ -115,9 +117,11 @@ async function faultRun(
         assert.equal(m.result, undefined, `${c.what}: ${JSON.stringify(m)}`);
         outcome = { what: c.what, status: "error", code: m.error.code };
       } else {
-        const r = m.result as { isError?: boolean; structuredContent?: { status?: string; code?: string } };
+        const r = m.result as { isError?: boolean };
         assert.equal(r.isError, true, `${c.what}: allowed: ${JSON.stringify(m)}`);
-        outcome = { what: c.what, status: r.structuredContent?.status ?? "", code: r.structuredContent?.code };
+        const e = errorText(r, c.what);
+        assert.ok(e.text.startsWith(`${e.code}: `), `${c.what}: ${e.text}`);
+        outcome = { what: c.what, status: e.status, code: e.code };
       }
       assert.ok(outcome.status === "error" || outcome.status === "failed" || outcome.status === "refused", `${c.what}: ${JSON.stringify(m)}`);
       assert.deepEqual(snapshot(fx.root), before, `${c.what}: the fixture changed`);

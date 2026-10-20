@@ -19,12 +19,18 @@ steps:
     result: <passed | failed | not-applicable>
   - id: VSC-04   # sdd-mcp-server
     result: <passed | failed | not-applicable>
+    note: "VS Code refused: <text as VS Code showed it>"   # only when VS Code itself refused the chat or the doctor prompt (result passed); else, when the row differs, the row as shown (result failed)
   - id: VSC-05   # copilot-hooks
     result: <passed | failed | not-applicable>
   - id: VSC-06   # copilot-hooks
     result: <passed | failed | not-applicable>
+    note: "VS Code refused: <text as VS Code showed it>"   # only when VS Code itself refused the chat or the doctor prompt (result passed); else, when the row differs, the row as shown (result failed)
   - id: VSC-07   # both
     result: <passed | failed | not-applicable>
+    # earlier_results: only for a step run more than once (rerun rule); one entry per earlier run,
+    # oldest first, with the cause of the run that followed it; remove the key for a step run once.
+    earlier_results:
+      - { result: <passed | failed>, cause: <hooks-source-changed | ran-before-hooks-state | repeated>, note: "<what happened in that run>" }
   - id: VSC-08   # sdd-mcp-server
     result: <passed | failed | not-applicable>
   - id: VSC-09   # copilot-hooks
@@ -172,11 +178,23 @@ field counts as not recorded.
   (`none` or `disables`). `hooks_state` is `enabled` exactly when they read `on`, `trusted` and
   `none`, and `disabled` otherwise. Write the words as they are; a YAML boolean (`true`, `false`) is
   not a recorded value.
-- `steps`: every step of the checklist appears once, in run order (rerun rule of the checklist: a
-  step that ran twice stays at the position of its last run, with a `note` naming the earlier run).
-  The comment after each ID names the mode the step applies to. `result` is `passed`, `failed` (add
-  `note: "<what happened>"`) or `not-applicable` (a step of the other enforcement mode; the injection
-  steps under sdd MCP server enforcement unless C002-REQ-613 applies).
+- `steps`: every step of the checklist appears once, in run order, at the position of its last run,
+  with the result of that run in `result`. The comment after each ID names the mode the step applies
+  to. `result` is `passed`, `failed` (add `note: "<what happened>"`) or `not-applicable` (a step of
+  the other enforcement mode; the injection steps under sdd MCP server enforcement unless
+  C002-REQ-613 applies).
+- `earlier_results`: a step run more than once (the rerun rule of the checklist) keeps its earlier
+  runs here, oldest first, one mapping per run: `result` (`passed` or `failed`), `cause` (why the
+  step ran again after that run: `hooks-source-changed` when `chat.useHooks`, Workspace Trust or an
+  organisation policy changed after VSC-10, or VSC-10 read a source off and you put it right;
+  `ran-before-hooks-state` when a group-4 step ran before VSC-10; `repeated` for any other rerun)
+  and an optional `note`. Never name an earlier run in a free-text `note` instead. The VSC-07 entry
+  above shows the shape; remove the key from every step that ran once. An earlier `failed` run that
+  the rerun rule did not repeat refuses the release (C002-IF-009 §4, §5).
+- VSC-04 and VSC-06 (restricted mode): when VS Code itself refused the chat or the doctor prompt and no
+  tool call of the package ran, the step is `passed` with `note: "VS Code refused: <text as VS Code
+  showed it>"`; when VS Code ran the prompt, `passed` only with the row `ok`, the caveat Version text
+  and an empty Fix, else `failed` with the row as shown in `note`. Remove the `note` otherwise.
 - `observed`: the outcome of the assumption and observation steps: the `ask_user` input shape
   (VSC-18), the result `ask_user` returns without a choice (VSC-20, VSC-29), the `.sdd/` path of the
   roots step (VSC-17), the offered agents and the `agent_type` of the delegated-edit steps (VSC-27,
@@ -186,6 +204,6 @@ field counts as not recorded.
 
 ## Notes
 
-<Anything the frontmatter does not hold: refuted assumptions raised as spec defects, reruns.>
+<Anything the frontmatter does not hold: refuted assumptions raised as spec defects. Earlier runs belong in earlier_results, not here.>
 
 Signed off: <P-01 name>, <YYYY-MM-DD>

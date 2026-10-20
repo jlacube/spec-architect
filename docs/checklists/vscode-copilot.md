@@ -33,6 +33,15 @@ it, in both Copilot enforcement modes (C002-REQ-629).
 - Run the steps of your mode **in the run order below**, one at a time. For each step, do what
   **Do** says, compare with **Expect**, and write the result (`passed` or `failed`, with a `note`
   when failed) and what **Record** asks into the record's `steps` entry of that step ID.
+- Each step appears once in the record, at the position of its last run, with the result of that run
+  in `result`. When a step runs again (the rerun rule below), move its earlier run into the step's
+  `earlier_results` list, oldest first: `{ result: passed | failed, cause: <cause>, note: "<what
+  happened>" }`, with the `cause` of the run that followed it (`hooks-source-changed`,
+  `ran-before-hooks-state` or `repeated`; C002-IF-009 §4 Earlier runs). Never record an earlier run
+  in a `note` only. An earlier `failed` run is excused only when the rerun rule repeated the step
+  (cause `hooks-source-changed` or `ran-before-hooks-state`, with a new restore step VSC-07 for each
+  such rerun); any other earlier `failed` run stays binding, and the release needs a new run of the
+  checklist under a later date.
 - A step whose assumption is refuted (an assumption step, see the table below) is recorded `failed`
   with what was seen; it is raised as a spec defect (C002-T-050), never passed.
 - Hooks must stay enabled from the restore step VSC-07 on: `chat.useHooks` on, the toy workspace
@@ -63,12 +72,18 @@ Run order, sdd-mcp-server: VSC-01, VSC-02, VSC-03, VSC-04, VSC-07, VSC-08, VSC-1
 Run order, copilot-hooks: VSC-01, VSC-02, VSC-05, VSC-06, VSC-07, VSC-09, VSC-10, VSC-11, VSC-12, VSC-13, VSC-14, VSC-15, VSC-16, VSC-17, VSC-18, VSC-19, VSC-20, VSC-21, VSC-22, VSC-25, VSC-26, VSC-27, VSC-28, VSC-29, VSC-30, VSC-31, VSC-32, VSC-33, VSC-34, VSC-35, VSC-36, VSC-37, VSC-38, VSC-39, VSC-40, VSC-41, VSC-42, VSC-43, VSC-44, VSC-45, VSC-46, VSC-47, VSC-48, VSC-49, VSC-50, VSC-51, VSC-52, VSC-53
 
 **Rerun rule.** No step of group 4 runs before the hooks-state step VSC-10, and no step after VSC-10
-changes `chat.useHooks`, Workspace Trust or an organisation policy. When either happens (a group-4
-step ran early, or a hooks source changed after VSC-10), P-01 runs a new restore step (VSC-07 again)
-and then groups 3 and 4 again (the true-and-trusted row of the mode, VSC-10 and every group-4 step).
-The record lists the steps in run order: each step once, at the position of its last run, with a
-`note` naming the earlier run. The release check reads the recorded hooks state and does not check
-the order; P-01's sign-off of the record covers it.
+changes `chat.useHooks`, Workspace Trust or an organisation policy. When any of three things
+happens (a group-4 step ran early; a hooks source changed after VSC-10; or VSC-10 read a source off
+and P-01 put it right), P-01 runs a new restore step (VSC-07 again) and then groups 3 and 4 again
+(the true-and-trusted row of the mode, VSC-10 and every group-4 step).
+The record lists the steps in run order: each step once, at the position of its last run, with the
+result of that run in `result`; each earlier run goes into the step's `earlier_results`, oldest first, with its `result`
+and the `cause` of the run that followed it: `hooks-source-changed` (a source changed after VSC-10,
+or VSC-10 read one off and P-01 put it right), `ran-before-hooks-state` (a group-4 step ran before
+VSC-10) or `repeated` (any other rerun), never in a `note`. The release check reads the recorded
+results, the earlier runs and the hooks state (an earlier `failed` run that the rerun rule did not
+repeat refuses the release, C002-IF-009 §5); it does not check the order, which P-01's sign-off of
+the record covers.
 
 ## Step index
 
@@ -206,8 +221,11 @@ step and a spec defect.
 - **Row:** "chat.useHooks" is true and the workspace is in restricted mode (not trusted)
 - **Do:** Set `chat.useHooks` to true; run Workspaces: Manage Workspace Trust and choose not to trust
   the workspace (restricted mode); reload the window. In a Local chat with `sdd-conductor` send
-  `/doctor`. When restricted mode keeps the chat or the doctor from running, record the step failed
-  with what VS Code showed.
+  `/doctor`. When VS Code itself refuses the chat or the doctor prompt in restricted mode (VS Code
+  shows its own message and no tool call of the package runs), record the step `passed` with
+  `note: "VS Code refused: <text as VS Code showed it>"`. When VS Code runs the prompt, record the
+  step `passed` only when the Copilot hooks row shows the status `ok`, the Version text below and an
+  empty Fix; otherwise record it `failed`, with the row as shown in `note`.
 - **Expected status:** `ok`
 - **Expected Version:** `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist`
 - **Expected Fix:** empty
@@ -225,7 +243,12 @@ step and a spec defect.
 ### VSC-06 — Copilot hooks row, workspace in restricted mode (Copilot hooks fallback)
 
 - **Row:** "chat.useHooks" is true and the workspace is in restricted mode (not trusted)
-- **Do:** As VSC-04, with the package generated for the Copilot hooks fallback.
+- **Do:** As VSC-04, with the package generated for the Copilot hooks fallback. When VS Code itself
+  refuses the chat or the doctor prompt in restricted mode (VS Code shows its own message and no tool
+  call of the package runs), record the step `passed` with `note: "VS Code refused: <text as VS Code
+  showed it>"`. When VS Code runs the prompt, record the step `passed` only when the Copilot hooks
+  row shows the status `ok`, the Version text below and an empty Fix; otherwise record it `failed`,
+  with the row as shown in `note`.
 - **Expected status:** `ok`
 - **Expected Version:** `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist`
 - **Expected Fix:** empty
@@ -238,7 +261,10 @@ step and a spec defect.
   workspace (both folders); reload the window.
 - **Expect:** the status bar shows no Restricted Mode indicator and the Settings editor shows
   `chat.useHooks` checked.
-- **Record:** `passed`; on a rerun (rerun rule) a `note` naming the run it restores.
+- **Record:** `passed`. On a rerun (rerun rule) the earlier run of VSC-07 goes into its
+  `earlier_results`, with `cause` `hooks-source-changed` (a source changed after VSC-10, or VSC-10
+  read one off and P-01 put it right) or `ran-before-hooks-state` (a group-4 step ran before VSC-10);
+  VSC-07 then has as many earlier runs as the reruns it started.
 
 ### VSC-08 — Copilot hooks row, `chat.useHooks` true and workspace trusted (sdd MCP server enforcement)
 
@@ -277,8 +303,11 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 - **Expect:** `use_hooks: on`, `workspace_trust: trusted`, `policy: none`.
 - **Record:** `hooks_sources` as read, and `hooks_state` derived from them: `enabled` exactly when
   they read `on`, `trusted` and `none`, else `disabled` (C002-IF-009 §4). The step passes when
-  `hooks_state` is `enabled`; otherwise record it `failed`, put the source right, and rerun from
-  VSC-07 (rerun rule).
+  `hooks_state` is `enabled`. When VSC-10 reads a source off, put the source right and rerun from
+  VSC-07 (rerun rule): this run of VSC-10 is recorded as an earlier `failed` run of VSC-10, in its
+  `earlier_results` with `cause` `hooks-source-changed` and a `note` naming the source, before the
+  new restore step; the new restore step VSC-07 gets an earlier run of its own with the same cause,
+  and `hooks_sources` and `hooks_state` hold the values of the last VSC-10 run.
 
 ### VSC-11 — Workspace MCP servers and Serena after the first message
 

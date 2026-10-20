@@ -58,6 +58,10 @@ export interface SentCall extends ScriptedCall {
 export interface HostResult {
   parts: unknown[];
   error?: unknown;
+  /** The session's messages (the driver host; C002-TC-666 reads their errors). */
+  messages?: unknown[];
+  /** The session's events (the driver host). */
+  events?: unknown[];
 }
 
 /**
@@ -413,13 +417,27 @@ function placePluginModules(dest: string): string {
 
 // --- Host through the session driver --------------------------------------------------------------------
 
+/**
+ * Options of the driver host. Default: the inert PATH shims before the caller's PATH, every permission
+ * request rejected. C002-TC-666 gives `path` (the PATH folders after the shims, instead of the
+ * caller's PATH), `shims: false` (no shim folder: a PATH without any `ast-grep` file) and its own
+ * `permission` policy.
+ */
+export interface DriverHostOptions {
+  bin?: string;
+  path?: string[];
+  shims?: boolean;
+  permission?: (request: unknown) => "once" | "always" | "reject";
+}
+
 /** The pinned host binary through the session driver, its model the loopback stub. */
-export function driverHost(opts: { bin?: string } = {}): OpenCodeHost & { links: string[] } {
+export function driverHost(opts: DriverHostOptions = {}): OpenCodeHost & { links: string[]; stubRequests(): unknown[] } {
   let driver: Awaited<ReturnType<typeof startOpenCode>> | undefined;
   let stub: Awaited<ReturnType<typeof startStubModel>> | undefined;
   const links: string[] = [];
   return {
     links,
+    stubRequests: () => [...(stub?.requests ?? [])],
     async start(project, runDir) {
       stub = await startStubModel();
       // Isolated global config folder: the stub provider, auto-update, sharing and snapshots off, and the
@@ -436,14 +454,18 @@ export function driverHost(opts: { bin?: string } = {}): OpenCodeHost & { links:
       // was started from). `sdd lint …` alone runs the real CLI, for the quick-lint plugin, which starts
       // `sdd lint --quick` through cmd.exe (C002-TS-222).
       const shims = join(runDir, "bin");
-      mkdirSync(shims, { recursive: true });
-      const sdd = join(repoRoot(), "plugins", "architect", "scripts", "sdd.mjs");
-      for (const exe of INERT) {
-        writeFileSync(join(shims, exe), "#!/bin/sh\nexit 0\n", { mode: 0o755 });
-        if (WIN && exe !== "sdd") writeFileSync(join(shims, `${exe}.cmd`), "@exit /b 0\r\n");
+      if (opts.shims !== false) {
+        mkdirSync(shims, { recursive: true });
+        const sdd = join(repoRoot(), "plugins", "architect", "scripts", "sdd.mjs");
+        for (const exe of INERT) {
+          writeFileSync(join(shims, exe), "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+          if (WIN && exe !== "sdd") writeFileSync(join(shims, `${exe}.cmd`), "@exit /b 0\r\n");
+        }
+        if (WIN) writeFileSync(join(shims, "sdd.cmd"), `@if /i not "%~1"=="lint" exit /b 0\r\n@"${process.execPath}" "${sdd}" %*\r\n`);
       }
-      if (WIN) writeFileSync(join(shims, "sdd.cmd"), `@if /i not "%~1"=="lint" exit /b 0\r\n@"${process.execPath}" "${sdd}" %*\r\n`);
       const pathKey = Object.keys(process.env).find((k) => k.toUpperCase() === "PATH") ?? "PATH";
+      const sep = WIN ? ";" : ":";
+      const rest = opts.path ? opts.path.join(sep) : (process.env[pathKey] ?? "");
       // The per-user data folder of an allowed `node <sdd.mjs> serena-launch --user-data …` points into
       // the run folder, so that no case writes the user's own data folder.
       const local = join(runDir, "localappdata");
@@ -452,7 +474,7 @@ export function driverHost(opts: { bin?: string } = {}): OpenCodeHost & { links:
       // runs the real CLI, which starts the real Serena without SERENA_HOME: its home goes to the run
       // folder too, never the user's ~/.serena.
       const env = {
-        [pathKey]: `${shims}${WIN ? ";" : ":"}${process.env[pathKey] ?? ""}`,
+        [pathKey]: opts.shims === false ? rest : `${shims}${sep}${rest}`,
         SERENA_HOME: join(runDir, "serena-home"),
         ...(WIN ? { LOCALAPPDATA: local } : {}),
       };
@@ -467,11 +489,11 @@ export function driverHost(opts: { bin?: string } = {}): OpenCodeHost & { links:
         text: `replay case ${token}`,
         model: { providerID: STUB_PROVIDER, modelID: STUB_MODEL },
         title: `replay ${token}`,
-        permission: () => "reject",
+        permission: opts.permission ?? (() => "reject"),
         question: () => null,
         timeoutMs: CASE_TIMEOUT_MS,
       });
-      return { parts: r.parts, error: r.error };
+      return { parts: r.parts, error: r.error, messages: r.messages, events: r.events };
     },
     shell() {
       return driver?.shell() ?? null;

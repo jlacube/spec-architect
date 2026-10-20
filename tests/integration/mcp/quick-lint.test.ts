@@ -2,14 +2,15 @@
 // the write result of the sdd MCP server (C002-IF-002 §5.1 step 5, §6; C002-REQ-408), at most 15 in the
 // post-write feedback format of C001-IF-07 §4; when the lint cannot run, the write stands and the result
 // carries `findings_unavailable` with WARN-MCP-001 (C002-REQ-409). The server runs as a child process in
-// the `fx-srv` fixture; every structuredContent is checked against sdd-mcp-tools.schema.json.
+// the `fx-srv` fixture; every success's structuredContent is checked against sdd-mcp-tools.schema.json, and an
+// error result is text only (C002-IF-002 §6.1, revised for defect D-017; C002-T-064).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
-import { McpSession, serverWorkspace } from "./client.ts";
+import { errorText, McpSession, serverWorkspace } from "./client.ts";
 
 const schema = JSON.parse(readFileSync(join(repoRoot(), "src", "mcp", "tools.schema.json"), "utf8")) as object;
 const validateResult = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
@@ -39,6 +40,11 @@ async function withServer(fn: (call: Call, root: string) => Promise<void>, env: 
       const r = await s.request("tools/call", { name, arguments: args });
       assert.ok(r.result !== undefined && r.error === undefined, JSON.stringify(r));
       const res = r.result as unknown as ToolResult;
+      // An error result is text only (C002-IF-002 §6.1); the output schema describes successes only.
+      if (res.isError === true) {
+        errorText(res);
+        return res;
+      }
       assert.ok(validateResult(res.structuredContent), `structuredContent does not match the schema: ${JSON.stringify(validateResult.errors)} in ${JSON.stringify(res)}`);
       return res;
     };

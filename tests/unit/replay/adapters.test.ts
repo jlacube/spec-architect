@@ -4,7 +4,8 @@
 // shell corpus, raw stdin, the C002-REQ-630 cases), a case with its own cwd, memory cases, environment
 // stubs and identity cases (not applicable). The server is the built bundle with the CLI beside it
 // (tests/integration/mcp/client.ts) instead of an install of the tarball; the Copilot hooks adapter
-// generates and installs the hooks-fallback package as in the release run.
+// generates and installs the hooks-fallback package as in the release run. C002-TC-667 (C002-T-064): the
+// server decision read from the text of a text-only error result, against a stub server per Examples row.
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -130,15 +131,89 @@ test("C002-T-041 — copilot-hooks adapter: Copilot-shaped hook input run throug
   assert.match(entry(result.report, "PG-050").detail ?? "", /^GUARD-PATH-001/);
 });
 
-test("C002-T-041 — decision reading of the server (C002-IF-009 §2.3)", () => {
-  const err = (code: string) => ({ id: 1, result: { isError: true, content: [{ type: "text", text: code }], structuredContent: { code } } });
+test("C002-T-041 — decision reading of the server (C002-IF-009 §2.3, text-only error results of D-017)", () => {
+  const err = (code: string) => ({ id: 1, result: { isError: true, content: [{ type: "text", text: `${code}: a message` }] } });
   for (const code of ["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-001"]) assert.equal(readServerDecision(err(code)).actual, "deny", code);
   for (const code of ["ERR-MCP-003", "ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]) assert.equal(readServerDecision(err(code)).actual, "allow", code);
-  assert.match(readServerDecision(err("ERR-MCP-003")).detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/, "the I/O error in detail");
-  for (const code of ["ERR-MCP-002"]) assert.equal(readServerDecision(err(code)).actual, "error", code);
+  assert.equal(readServerDecision(err("ERR-MCP-003")).detail, "ERR-MCP-003: a message", "detail holds the result's text");
+  for (const code of ["ERR-MCP-002", "ERR-MCP-007", "GUARD-HOOK-001"]) assert.equal(readServerDecision(err(code)).actual, "error", code);
+  // A former structured error result: its structuredContent code is not read (§2.3: the code is in the text).
+  assert.equal(readServerDecision({ id: 1, result: { isError: true, content: [{ type: "text", text: "denied" }], structuredContent: { code: "GUARD-PATH-001" } } }).actual, "error");
   assert.equal(readServerDecision({ id: 1, result: { content: [{ type: "text", text: "exit 0" }], structuredContent: { status: "timed_out" } } }).actual, "allow");
+  assert.equal(readServerDecision({ id: 1, result: { content: [{ type: "text", text: "exit 0" }], structuredContent: { status: "completed" } } }).actual, "allow");
   assert.equal(readServerDecision({ id: 1, error: { code: -32602, message: "unknown tool" } }).actual, "error");
+  assert.equal(readServerDecision({ id: 1 }).actual, "error", "no result");
 });
+
+// C002-TC-667 (C002-T-064): a stub sdd MCP server answers the write_file call of PG-050 with each answer
+// of the Examples; the replay report records the decision and the result's text as its detail. `{repo}`
+// is the stub's working folder, the replay fixture's repository.
+const TS667: { answer: string; result: Record<string, unknown>; decision: "deny" | "allow" | "error" }[] = [
+  { answer: "GUARD-PATH-001 text", result: { isError: true, content: [{ type: "text", text: "GUARD-PATH-001: Write on {repo}/README.md denied — outside .sdd/. Allowed: .sdd/." }] }, decision: "deny" },
+  { answer: "ERR-MCP-001 text", result: { isError: true, content: [{ type: "text", text: "ERR-MCP-001: invalid arguments for write_file: content is required" }] }, decision: "deny" },
+  { answer: "ERR-MCP-003 text", result: { isError: true, content: [{ type: "text", text: "ERR-MCP-003: could not write {repo}/README.md: EACCES; previous content kept" }] }, decision: "allow" },
+  { answer: "ERR-MCP-002 text", result: { isError: true, content: [{ type: "text", text: "ERR-MCP-002: internal fault in write_file: boom; the call was refused" }] }, decision: "error" },
+  { answer: "a text without a code", result: { isError: true, content: [{ type: "text", text: "write refused" }] }, decision: "error" },
+  { answer: "a success with status written", result: { content: [{ type: "text", text: "wrote {repo}/README.md (2 bytes)" }], structuredContent: { status: "written", tool: "write_file", path: "{repo}/README.md", bytes: 2 } }, decision: "allow" },
+  { answer: "ERR-MCP-007 text", result: { isError: true, content: [{ type: "text", text: "ERR-MCP-007: usage: sdd-mcp --profile files|shell [--root <dir>]: unknown profile" }] }, decision: "error" },
+  { answer: "GUARD-HOOK-002 text", result: { isError: true, content: [{ type: "text", text: "GUARD-HOOK-002: Write denied — subagent general-purpose is not an Architect agent, and this repository contains .sdd/. Allowed: read-only tools." }] }, decision: "error" },
+  { answer: "no isError and no structuredContent", result: { content: [{ type: "text", text: "wrote {repo}/README.md (2 bytes)" }] }, decision: "error" },
+  { answer: 'a structuredContent whose status is "pending"', result: { content: [{ type: "text", text: "wrote {repo}/README.md (2 bytes)" }], structuredContent: { status: "pending" } }, decision: "error" },
+  { answer: "a structuredContent without a status", result: { content: [{ type: "text", text: "wrote {repo}/README.md (2 bytes)" }], structuredContent: { tool: "write_file" } }, decision: "error" },
+];
+
+/** A stub server: answers initialize, and every tools/call with `result` ({repo} = its working folder). */
+function stubServer(result: Record<string, unknown>): string {
+  const file = join(dir, `stub-${Math.random().toString(36).slice(2)}.mjs`);
+  writeFileSync(
+    file,
+    `const RESULT = ${JSON.stringify(JSON.stringify(result))};
+const repo = process.cwd().split(String.fromCharCode(92)).join("/");
+const NL = String.fromCharCode(10);
+let buf = "";
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (s) => {
+  buf += s;
+  for (let i = buf.indexOf(NL); i >= 0; i = buf.indexOf(NL)) {
+    const line = buf.slice(0, i);
+    buf = buf.slice(i + 1);
+    let m;
+    try { m = JSON.parse(line); } catch { continue; }
+    if (m.id === undefined) continue;
+    const reply = m.method === "initialize"
+      ? { protocolVersion: "2025-06-18", capabilities: { tools: { listChanged: false } }, serverInfo: { name: "sdd-mcp", version: "0.0.0" } }
+      : JSON.parse(RESULT.split("{repo}").join(repo));
+    process.stdout.write(JSON.stringify({ jsonrpc: "2.0", id: m.id, result: reply }) + NL);
+  }
+});
+process.stdin.on("end", () => process.exit(0));
+`,
+  );
+  return file;
+}
+
+for (const row of TS667) {
+  test(`C002-TS-667: the stub answers the write call of PG-050 with ${row.answer} → ${row.decision}, detail holds the text`, async () => {
+    const p = JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus;
+    p.cases = p.cases.filter((c) => c.id === "PG-050");
+    const one = join(dir, "pg050-corpus.json");
+    const noShell = join(dir, "no-shell-corpus.json");
+    writeFileSync(one, JSON.stringify(p));
+    const s = JSON.parse(readFileSync(DEFAULT_SHELL_CORPUS, "utf8")) as { cases: BashCase[] };
+    s.cases = [];
+    writeFileSync(noShell, JSON.stringify(s));
+    const adapter: McpServerAdapter = createMcpServerAdapter({ serverEntry: stubServer(row.result) });
+    let repo = "";
+    const { report } = await runReplay(adapter, { pathCorpus: one, shellCorpus: noShell, afterRun: (fx) => (repo = fx.repo) });
+    const e = entry(report, "PG-050");
+    // PG-050 is an Edit case, which §2.2 feeds as replace_text (the scenario says "the write_file call"):
+    // the stub answers whichever write tool is called.
+    assert.equal(adapter.calls.find((c) => c.id === "PG-050")?.tool, "replace_text");
+    assert.equal(e.actual, row.decision, JSON.stringify(e));
+    const text = ((row.result["content"] as { text: string }[])[0]!.text).split("{repo}").join(repo);
+    assert.equal(e.detail, text, "detail holds the result's text");
+  });
+}
 
 test("C002-T-041 — decision reading of the Copilot hook (C002-IF-009 §2.3)", () => {
   const deny = JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: "m" }, permissionDecision: "deny", permissionDecisionReason: "m" });

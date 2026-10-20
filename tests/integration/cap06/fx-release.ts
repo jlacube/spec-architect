@@ -3,7 +3,10 @@
 // into its own dist/ with the target zip, as `npm run package` does (C002-T-034). An evidence root holds
 // what the release check reads per Examples row: the corpora of the release commit, the record schema
 // copy, the manual VS Code checklist, the spike records, the replay reports (clean by default, built from
-// the rules of tests/replay/expect.ts), the injection summary and the checklist record.
+// the rules of tests/replay/expect.ts), the injection summary and the checklist record. C002-T-064: an
+// evidence root may add cases to its path corpus (the case PG-900 that `platforms` limits to linux,
+// C002-TC-637) and replace the checklist (the step indexes of C002-TC-668 and C002-TC-669); its clean
+// reports then cite and replay the root's corpora.
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -103,8 +106,18 @@ export interface ReportJson {
 
 const corpora = loadCorpora(ROOT);
 
-/** A clean replay report of `mechanism`: every case with the expectation of §2.1, actual = expected, host win32 with file-symlink. */
-export function cleanReport(target: Target, mechanism: Mechanism, tested: Record<string, string>): ReportJson {
+/**
+ * The fx-release case PG-900 (C002-TS-637): limited by `platforms` to linux, so it has no expectation on
+ * the win32 replay host; every `platforms` list of the repository's corpora names win32.
+ */
+export const PG_900: AnyCase = { id: "PG-900", category: "traversal", tool: "Write", agent: "architect:sdd-spec-writer", path: "{repo}/.sdd/004-x/linux-only.md", expect: "allow", platforms: ["linux"] } as unknown as AnyCase;
+
+/**
+ * A clean replay report of `mechanism`: every case with the expectation of §2.1, actual = expected, host
+ * win32 with file-symlink; a case without an expectation on win32 (`platforms`) is left out. `cs`: the
+ * corpora the report cites (default: the repository's).
+ */
+export function cleanReport(target: Target, mechanism: Mechanism, tested: Record<string, string>, cs: ReturnType<typeof loadCorpora> = corpora): ReportJson {
   const report: ReportJson = {
     mechanism,
     target,
@@ -118,13 +131,13 @@ export function cleanReport(target: Target, mechanism: Mechanism, tested: Record
   };
   if (mechanism === "opencode-permissions") report.host_versions = { opencode: tested["opencode"] ?? "" };
   for (const name of ["path", "shell"] as const) {
-    const corpus = corpora[name];
+    const corpus = cs[name];
     if (corpus === null) throw new Error(`fx-release: corpus ${name} unreadable`);
     report.corpora[name] = { file: corpus.file, cases: corpus.cases.length, sha256: corpus.sha256 };
     for (const c of corpus.cases as AnyCase[]) {
       const exp = expectationOf(c, mechanism, "win32", name);
       if (!exp.applicable) report.not_applicable.push({ id: c.id, corpus: name, category: c.category, rule: exp.rule });
-      else if ("omitted" in exp) throw new Error(`fx-release: ${c.id} has no expectation on win32`);
+      else if ("omitted" in exp) continue;
       else report.cases.push({ id: c.id, corpus: name, category: c.category, fed_as: { tool: c.tool ?? "write", caller: callerOf(c, mechanism), malformed: exp.malformed }, expected: exp.expected, expected_source: exp.source, actual: exp.expected });
     }
   }
@@ -231,6 +244,10 @@ export interface Evidence {
   s08?: string | null;
   /** An existing evidence root to add this target's evidence to (C002-TS-622). */
   into?: string;
+  /** Cases appended to the root's path corpus (C002-TC-637: PG-900); the clean reports cite that corpus. */
+  pathCases?: AnyCase[];
+  /** The text of `docs/checklists/vscode-copilot.md` in the root (C002-TC-668, C002-TC-669); null for none. */
+  checklistFile?: string | null;
 }
 
 /** An evidence root for one Examples row, with the package variant it is checked against. */
@@ -244,8 +261,15 @@ export function evidenceRoot(e: Evidence): { root: string; pkg: Package } {
     writeFileSync(file, typeof data === "string" ? data : JSON.stringify(data, null, 2) + "\n");
   };
   for (const f of Object.values(CORPUS_FILES)) put(f, readFileSync(join(ROOT, ...f.split("/")), "utf8"));
+  if (e.pathCases?.length) {
+    const corpus = JSON.parse(readFileSync(join(ROOT, ...CORPUS_FILES.path.split("/")), "utf8")) as { cases: AnyCase[] };
+    corpus.cases.push(...e.pathCases);
+    put(CORPUS_FILES.path, corpus as unknown as Json);
+  }
+  const rootCorpora = loadCorpora(root);
   put("docs/releases/release-record.schema.json", readFileSync(join(ROOT, "docs", "releases", "release-record.schema.json"), "utf8"));
-  put("docs/checklists/vscode-copilot.md", readFileSync(join(ROOT, "docs", "checklists", "vscode-copilot.md"), "utf8"));
+  const checklistText = e.checklistFile === undefined ? readFileSync(join(ROOT, "docs", "checklists", "vscode-copilot.md"), "utf8") : e.checklistFile;
+  if (checklistText !== null) put("docs/checklists/vscode-copilot.md", checklistText);
   if (target === "opencode") {
     const s07 = e.s07 === undefined ? s07Record(mode, pkg.tested) : e.s07;
     if (s07 !== null) put("docs/spikes/S-07-opencode.md", s07);
@@ -257,7 +281,7 @@ export function evidenceRoot(e: Evidence): { root: string; pkg: Package } {
   for (const m of MECHANISMS_OF_MODE[mode]) {
     const given = e.reports?.[m];
     if (given === null) continue;
-    const r = given ?? cleanReport(target, m, pkg.tested);
+    const r = given ?? cleanReport(target, m, pkg.tested, rootCorpora);
     e.mutate?.[m]?.(r);
     put(`${dir}/replay-${m}.json`, r as unknown as Json);
   }

@@ -336,7 +336,7 @@ for (const [label, plant, id] of [
     assert.equal(report.mechanism, "sdd-mcp-server");
     assert.deepEqual([e.expected, e.actual], [expected, actual]);
     if (caseId === "BG-900") assert.deepEqual([e.expected_source, e.fed_as.tool], ["C001-REQ-1103", "write_file"]);
-    if (caseId === "PG-901") assert.match(e.detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/);
+    if (caseId === "PG-901") assert.match(e.detail ?? "", /^ERR-MCP-003: could not write /);
     assert.equal(report.differing, 1);
     assert.ok(log.some((l) => l.includes(`differing ${caseId}`) && l.includes(`expected ${expected}`) && l.includes(`got ${actual}`)), log.join("\n"));
     assert.notEqual(code, 0, "the suite exits non-zero");
@@ -412,6 +412,8 @@ interface Sent {
   tool: string;
   args: Record<string, unknown>;
   agent?: string;
+  /** sdd MCP server: the JSON-RPC response to the call. */
+  response?: { result?: Record<string, unknown>; error?: unknown };
 }
 
 interface RowRun {
@@ -464,7 +466,7 @@ function rowReplay(m: RowMechanism): Promise<RowRun> {
         },
       });
       const sent = new Map<string, Sent>();
-      if (m === "sdd-mcp-server") for (const c of (adapter as McpServerAdapter).calls) sent.set(c.id, { tool: c.tool, args: (c.args ?? {}) as Record<string, unknown> });
+      if (m === "sdd-mcp-server") for (const c of (adapter as McpServerAdapter).calls) sent.set(c.id, { tool: c.tool, args: (c.args ?? {}) as Record<string, unknown>, ...(c.response ? { response: c.response as Sent["response"] } : {}) });
       else if (m === "copilot-hooks")
         for (const c of (adapter as CopilotHooksAdapter).calls) {
           const input = JSON.parse(c.stdin) as Record<string, unknown>;
@@ -494,7 +496,7 @@ interface Row {
 }
 
 const toolInput = (s: Sent | undefined): Record<string, unknown> => (s?.args["tool_input"] ?? {}) as Record<string, unknown>;
-const serverRunCommand = (id: string) => (r: RowRun) => assert.deepEqual(r.sent.get(id), { tool: "run_command", args: { command: commandOf(id), dialect: "bash" } });
+const serverRunCommand = (id: string) => (r: RowRun) => assert.deepEqual({ tool: r.sent.get(id)?.tool, args: r.sent.get(id)?.args }, { tool: "run_command", args: { command: commandOf(id), dialect: "bash" } });
 const noPluginDataEntry = (r: RowRun) => assert.deepEqual(r.pluginDataNamed, [], `the replay fixture holds no file or folder named ${PLUGIN_DATA_LITERAL}`);
 const srcKeptNoRmFile = (r: RowRun) => assert.deepEqual([r.srcExists, r.rmNamed], [true, []], '"{repo}/src" still exists and no file "rm -rf src" exists in the replay fixture');
 
@@ -606,7 +608,14 @@ test("C002-TS-662 — PG-048, a write the guard allows and the file system refus
   assert.deepEqual([c.tool, c.agent, c.path, c.expect], ["Write", "architect:sdd-spec-writer", "{repo}/.sdd/004-x/", "allow"]);
   assert.deepEqual([r.sent.get("PG-048")?.tool, r.sent.get("PG-048")?.args["path"]], ["write_file", `${r.repo}/.sdd/004-x/`]);
   const e = entry(r.report, "PG-048");
-  assert.match(e.detail ?? "", /^ERR-MCP-003 after the boundary allowed the call/, "the server's error result with ERR-MCP-003, named in detail");
+  // The server answers with a text-only error result (C002-IF-002 §6.1, revised for defect D-017).
+  const res = r.sent.get("PG-048")?.response?.result as { isError?: boolean; content?: { type: string; text: string }[] } | undefined;
+  assert.ok(res, JSON.stringify(r.sent.get("PG-048")));
+  assert.equal(res.isError, true, JSON.stringify(res));
+  assert.equal(res.content?.length, 1, JSON.stringify(res));
+  assert.ok(res.content[0]!.text.startsWith("ERR-MCP-003: "), JSON.stringify(res));
+  assert.equal(Object.prototype.hasOwnProperty.call(res, "structuredContent"), false, JSON.stringify(res));
+  assert.match(e.detail ?? "", /^ERR-MCP-003: could not write /, "the server's error result with ERR-MCP-003, named in detail");
   assert.deepEqual([e.expected, e.expected_source, e.actual], ["allow", "corpus", "allow"]);
   assert.equal(r.report.differing, 0, "PG-048 is not among the differing decisions (nor is any other case of the run)");
 });

@@ -15,10 +15,13 @@
 //   raw stdin, C002-REQ-630 case        the tool of the case with {} as arguments
 //
 // A shell-corpus case of a write tool (BG-268) is fed as write_file with its command text as the path,
-// as the OpenCode adapter feeds it. The decision is read per §2.3: deny on GUARD-PATH-001,
-// GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001; allow on success, `completed`, `timed_out` or a
-// refusal or failure after the boundary allowed the call (ERR-MCP-003 … ERR-MCP-006, the I/O error in
-// `detail`); error on ERR-MCP-002, a JSON-RPC error or no response. Allowed commands run for real inside the replay
+// as the OpenCode adapter feeds it. The decision is read per §2.3 (revised for defect D-017 and critic
+// CR-58), a total mapping: an error result (isError true, text only) gives its code as the text before
+// the first ": "; deny on GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001; allow on a
+// refusal or failure after the boundary allowed the call (ERR-MCP-003 … ERR-MCP-006) and on a success
+// whose structuredContent gives the status written, completed or timed_out; error on everything else
+// (any other code or none, a result without a success status, a JSON-RPC error, no response). detail
+// holds the result text. Allowed commands run for real inside the replay
 // fixture, in the sandbox of ./package.ts (inert stubs on PATH, per-user data folders in the run folder).
 import { type ChildProcess, execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -48,7 +51,7 @@ export interface McpServerAdapterOptions {
   serverEntry?: string;
 }
 
-interface RpcMessage {
+export interface RpcMessage {
   id?: number | string | null;
   result?: { content?: { type: string; text?: string }[]; structuredContent?: Record<string, unknown>; isError?: boolean };
   error?: { code: number; message: string };
@@ -172,20 +175,32 @@ export function serverCallOf(input: ReplayInput): ServerCall {
 const DENY = new Set(["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-001"]);
 const ALLOWED_REFUSAL = new Set(["ERR-MCP-003", "ERR-MCP-004", "ERR-MCP-005", "ERR-MCP-006"]);
 
-/** The decision of one tool call from the server's response (C002-IF-009 §2.3). */
+const SUCCESS = new Set(["written", "completed", "timed_out"]);
+
+/**
+ * The decision of one tool call from the server's response (C002-IF-009 §2.3, revised for defect D-017
+ * and critic CR-58). The mapping is total: an error result is told by `isError: true` and its code is the
+ * text before the first `: ` (C002-IF-002 §6.1); `deny` for the codes of DENY, `allow` for those of
+ * ALLOWED_REFUSAL; `allow` for a success only (no `isError: true`, a `structuredContent` whose
+ * `status` is `written`, `completed` or `timed_out`); every other result reads `error`. `detail`
+ * holds the result's text.
+ */
 export function readServerDecision(m: RpcMessage): { actual: Actual; detail: string } {
   if (m.error) return { actual: "error", detail: clip(`no decision: JSON-RPC error ${m.error.code}: ${m.error.message}`) };
   const r = m.result;
   if (!r) return { actual: "error", detail: "no decision: a response without result" };
-  const sc = r.structuredContent ?? {};
-  const text = r.content?.[0]?.text ?? "";
-  const code = typeof sc["code"] === "string" ? sc["code"] : undefined;
+  const first = r.content?.[0];
+  const text = first?.type === "text" && typeof first.text === "string" ? first.text : "";
   if (r.isError === true) {
-    if (code !== undefined && DENY.has(code)) return { actual: "deny", detail: clip(text || code) };
-    if (code !== undefined && ALLOWED_REFUSAL.has(code)) return { actual: "allow", detail: clip(`${code} after the boundary allowed the call: ${text}`) };
-    return { actual: "error", detail: clip(`no decision: ${code ?? "error result without a code"}: ${text}`) };
+    const at = text.indexOf(": ");
+    const code = at > 0 ? text.slice(0, at) : undefined;
+    if (code !== undefined && DENY.has(code)) return { actual: "deny", detail: clip(text) };
+    if (code !== undefined && ALLOWED_REFUSAL.has(code)) return { actual: "allow", detail: clip(text) };
+    return { actual: "error", detail: clip(text || "no decision: an error result without text") };
   }
-  return { actual: "allow", detail: clip(text) };
+  const status = r.structuredContent?.["status"];
+  if (typeof status === "string" && SUCCESS.has(status)) return { actual: "allow", detail: clip(text) };
+  return { actual: "error", detail: clip(text || "no decision: a result without isError, text or a success status") };
 }
 
 /** Installs the tarball into `<runDir>/prefix` with npm offline; returns the installed `scripts/sdd-mcp.mjs`. */
@@ -210,7 +225,7 @@ function installTarball(tgz: string, sandbox: Sandbox): string {
 
 export interface McpServerAdapter extends ReplayAdapter {
   /** Every call sent, in order. */
-  readonly calls: { id: string; profile: Profile | null; tool: string; args: unknown }[];
+  readonly calls: { id: string; profile: Profile | null; tool: string; args: unknown; response?: RpcMessage }[];
 }
 
 export function createMcpServerAdapter(opts: McpServerAdapterOptions = {}): McpServerAdapter {
@@ -259,10 +274,12 @@ export function createMcpServerAdapter(opts: McpServerAdapterOptions = {}): McpS
         return { actual: ok ? "allow" : "deny", tool, detail: `not sent to the server (C002-IF-009 §2.2): the ${target} package ${ok ? "grants" : "does not grant"} ${input.caller} the tool ${call.local} maps to` };
       }
       const profile = PROFILE[call.tool];
-      calls.push({ id: input.id, profile, tool: call.tool, args: call.args });
+      const sent: McpServerAdapter["calls"][number] = { id: input.id, profile, tool: call.tool, args: call.args };
+      calls.push(sent);
       const stub = input.env === undefined ? undefined : Object.fromEntries(Object.entries(input.env).map(([k, v]) => [k, v === null ? null : input.resolve(v)]));
       const s = await session(profile, stub);
       const m = await s.request("tools/call", { name: call.tool, arguments: call.args });
+      sent.response = m;
       // A call without a response leaves the session's queue blocked: the next case gets a new one.
       if (m.error && m.error.code < 0) s.kill();
       const d = readServerDecision(m);

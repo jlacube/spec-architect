@@ -6,7 +6,8 @@
 // and the repository must hold no serena/ folder. Examples rows: doctor on a copy of fx-bootstrap, init
 // in an empty git repository. The log line names the spelling Claude Code passed to the guard (the
 // C002-TS-537 assumption of C002-IF-008 §1.1: substituted path or the literal resolved from the hook's
-// environment). C002-T-038 adds the other doctor cases beside this file; C002-T-048 re-runs it.
+// environment). C002-T-038 adds the other doctor cases beside this file; C002-T-048 re-runs it. Both rows
+// carry `host: "claude-code"` (C002-IF-010 §1, D-015 item 7; C002-T-064): `--host opencode` leaves them out.
 import { cpSync, existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { checker, toolCalls } from "../../harness/assert.mjs";
@@ -63,6 +64,7 @@ export default [
   {
     id: "TS-537-doctor",
     title: "Serena step of /architect:doctor passes the bash guard on Claude Code (TS-537, doctor)",
+    host: "claude-code",
     ...doctorRun("cfg-full"),
     fixture: (root) => {
       clearConfig();
@@ -75,6 +77,7 @@ export default [
   {
     id: "TS-537-init",
     title: "Serena step of /architect:init passes the bash guard on Claude Code (TS-537, init)",
+    host: "claude-code",
     ...doctorRun("cfg-full", { prompt: "/architect:init", maxTurns: 12 }),
     fixture: (root) => {
       clearConfig();

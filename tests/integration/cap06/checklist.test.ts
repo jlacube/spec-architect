@@ -9,6 +9,10 @@
 // it); the rerun rule; the hooks-state step with its three sources in both modes; the template's
 // `hooks_state` and `hooks_sources` in both modes. Spec files are found through the locator.
 // The checklist run itself is C002-TC-901 (P-01, C002-T-050); C002-TC-358 and C002-TC-516 are its steps.
+// C002-T-064: the revised C002-TS-617 Then lines (boundary step `sdd-mcp-server`, delegated edit `both`,
+// C002-TS-358 in each mode), and the supporting checks of C002-TC-516 (the `VS Code refused: ` pass rule
+// of VSC-04 and VSC-06) and C002-TC-618 (the rerun rule with `earlier_results` and its causes, the
+// template's `earlier_results` example).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -336,4 +340,69 @@ test("the record template parses and carries the fields of C002-IF-009 §4, hook
     ...observed((s) => ["C002-TS-216", "C002-TS-317", "C002-TS-318"].some((t) => s.scenarios.includes(t))),
   ]) assert.ok(typeof r.observed === "string" && r.observed.length > 0, `${r.id} has no observed field`);
   for (const k of ["executed_by", "date", "package_version", "enforcement_mode"]) assert.ok(typeof fm[k] === "string", k);
+});
+
+// --- C002-T-064: the revised C002-TS-617 Then lines, and the checklist text of C002-TC-516 and C002-TC-618 ---
+
+test("C002-TS-617 Then 1: the sdd MCP server boundary step (write outside .sdd/, command outside the allowlist) has the mode sdd-mcp-server in the step index", () => {
+  const boundary = STEPS.filter((s) => s.kind === "boundary");
+  assert.equal(boundary.length, 1);
+  const s = at(boundary, 0);
+  assert.equal(s.mode, "sdd-mcp-server", `${s.id} applies to ${s.mode}`);
+  assert.ok(/outside `\.sdd\/`/.test(s.body) && /outside the allowlist/.test(s.body), s.id);
+});
+
+test("C002-TS-617 Then 7: the delegated-edit step of C002-TS-358 has the mode both; C002-TS-358, an outline over both modes without a mode tag, maps to a step of each mode", () => {
+  const de = STEPS.filter((s) => s.kind === "delegated-edit" && s.scenarios.includes("C002-TS-358"));
+  assert.ok(de.length > 0);
+  for (const s of de) assert.equal(s.mode, "both", s.id);
+  const ts358 = scenarios(acceptance("CAP-03-copilot-target")).find((s) => s.id === "C002-TS-358");
+  assert.ok(ts358, "C002-TS-358 is in the CAP-03 acceptance file");
+  assert.ok(!ts358.tags.includes("@mode-server") && !ts358.tags.includes("@mode-hooks"), "no mode tag");
+  for (const mode of MODES) assert.ok(inMode(mode).some((s) => s.scenarios.includes("C002-TS-358")), `C002-TS-358 has no step under ${mode}`);
+});
+
+test("C002-TC-516 (supporting): VSC-04 and VSC-06 state the VS Code refused pass rule of the restricted-mode rows", () => {
+  const restricted = STEPS.filter((s) => s.kind === "hooks-row" && /restricted mode/.test(field(s, "Row") ?? ""));
+  assert.deepEqual(restricted.map((s) => s.id), ["VSC-04", "VSC-06"]);
+  for (const s of restricted) {
+    const doText = (/- \*\*Do:\*\* ([\s\S]*?)\n- \*\*/.exec(s.body)?.[1] ?? "").replace(/\s+/g, " ");
+    assert.ok(/VS Code itself refuses the chat or the doctor prompt/.test(doText), `${s.id}: ${doText}`);
+    assert.ok(/no tool call of the package runs/.test(doText), s.id);
+    assert.ok(doText.includes('`passed` with `note: "VS Code refused: <text as VS Code showed it>"`'), s.id);
+    assert.ok(/`passed` only when the Copilot hooks row shows the status `ok`/.test(doText) && /empty Fix/.test(doText) && /otherwise record it `failed`, with the row as shown in `note`/.test(doText), s.id);
+    assert.ok(!/record the step failed with what VS Code showed/.test(doText), `${s.id}: the earlier failed rule is gone`);
+  }
+});
+
+test("C002-TC-618 (supporting): the rerun rule names earlier_results, its three causes and the third trigger; VSC-07 and VSC-10 record earlier runs there", () => {
+  const rule = (/\*\*Rerun rule\.\*\*([\s\S]*?)\n\n/.exec(CHECKLIST)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(rule.includes("`earlier_results`"), rule);
+  for (const cause of ["hooks-source-changed", "ran-before-hooks-state", "repeated"]) assert.ok(rule.includes(`\`${cause}\``), `${cause}: ${rule}`);
+  assert.ok(/VSC-10 read a source off and P-01 put it right/.test(rule), "the third trigger");
+  assert.ok(/never in a `note`/.test(rule), rule);
+  const how = (/## How to run and record\n([\s\S]*?)\n## /.exec(CHECKLIST)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(how.includes("`earlier_results`") && /Never record an earlier run in a `note` only/.test(how), how);
+  const record = (id: string) => (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(STEPS.find((s) => s.id === id)!.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/`earlier_results`/.test(record("VSC-07")) && /`hooks-source-changed`/.test(record("VSC-07")) && /`ran-before-hooks-state`/.test(record("VSC-07")), record("VSC-07"));
+  assert.ok(/earlier `failed` run of VSC-10/.test(record("VSC-10")) && /before the new restore step/.test(record("VSC-10")), record("VSC-10"));
+});
+
+test("C002-TC-618 (supporting): the record template has an earlier_results example with cause and the VS Code refused note of VSC-04 and VSC-06; no free-text rerun note remains", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const recorded = doc.data!["steps"] as { id: string; note?: string; earlier_results?: { result: string; cause: string; note?: string }[] }[];
+  const withEarlier = recorded.filter((s) => s.earlier_results !== undefined);
+  assert.ok(withEarlier.length >= 1, "an earlier_results example");
+  for (const s of withEarlier) {
+    assert.ok(Array.isArray(s.earlier_results) && s.earlier_results.length > 0, s.id);
+    for (const e of s.earlier_results) {
+      assert.ok(/passed/.test(e.result) && /failed/.test(e.result), `${s.id} result ${e.result}`);
+      for (const cause of ["hooks-source-changed", "ran-before-hooks-state", "repeated"]) assert.ok(e.cause.includes(cause), `${s.id} cause ${e.cause}`);
+      assert.ok("note" in e, `${s.id}: the optional note`);
+    }
+  }
+  for (const id of ["VSC-04", "VSC-06"]) assert.ok(recorded.find((s) => s.id === id)?.note?.startsWith("VS Code refused: "), id);
+  assert.ok(!/with a `note` naming the earlier run/.test(TEMPLATE), "no free-text rerun note");
+  assert.ok(/Never name an earlier run in a free-text `note`/.test(TEMPLATE));
 });

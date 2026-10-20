@@ -18,19 +18,23 @@
 //   C002-TC-646 (C002-T-042)  @mode-native: unknown architect:sdd-* callers expect allow
 //   C002-TC-647 (C002-T-042)  @mode-native: rules that also bind adopter agents are a difference
 //   C002-TC-652 (C002-T-042)  @mode-native: the identity case BG-265 played by sdd-conductor
+//   C002-TC-666 (C002-T-064)  refused and failed calls of the sdd MCP server tools accepted (no -32602)
 // A `@mode-*` scenario runs only when the OpenCode table's enforcement mode (copied from the S-07
 // record) is its mode; otherwise it is skipped as not applicable, citing the record (test plan §1).
-import { test, type TestContext } from "node:test";
+import { after, test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { main as generate } from "../../../scripts/generate/main.ts";
 import { loadTargetTable, type Mode } from "../../../scripts/generate/tables.ts";
+import { cleanupFxTgz, fxTgz } from "../../fixtures/fx-tgz.ts";
 import type { BashCase, Corpus, CorpusCase } from "../../guards/fixture.ts";
 import { repoRoot } from "../../helpers.ts";
 import type { ReplayAdapter, ReplayFixture, ReplayInput } from "../adapter.ts";
 import { ARCHITECT_AGENTS, type Mechanism } from "../expect.ts";
-import type { SentCall } from "../adapters/opencode-permissions.ts";
+import { driverHost, type SentCall } from "../adapters/opencode-permissions.ts";
 import { ADAPTERS, type AdapterOptions, main } from "../main.ts";
 import type { ReplayReport, ReportCase } from "../report.ts";
 import { buildReplayFixture, DEFAULT_PATH_CORPUS, DEFAULT_SHELL_CORPUS, loadCorpora, runReplay } from "../suite.ts";
@@ -505,3 +509,188 @@ test("C002-TC-652 (C002-TS-652) @mode-native: the identity case BG-265 runs as s
   assert.deepEqual([e.expected, e.expected_source, e.actual], ["deny", "corpus", "deny"], e.detail);
   assert.ok(srcAfter, "{repo}/src still exists");
 });
+
+// --- C002-TC-666 (C002-T-064): OpenCode accepts the text-only error results of the sdd MCP server ------
+
+/**
+ * One OpenCode 1.18.31 host for the rows of C002-TS-666: a copy of fx-srv (`.sdd/002-x/a.md`,
+ * `src/app.ts`, a git root commit) with the OpenCode package generated with `--mode
+ * opencode=sdd-mcp-server`, whose two sdd MCP servers run the `scripts/sdd-mcp.mjs` of fx-tgz (the packed
+ * tarball installed into a temporary prefix) with this Node.js; the other MCP servers of the package
+ * (remote documentation servers, Serena) are left out of the session, which needs none. The host's PATH
+ * holds no file named `ast-grep` (no inert shims, every PATH folder holding one dropped). The stub model's
+ * first step makes `sdd-conductor` call the row's host tool, its second step answers `done.`. No
+ * credential, no spend (C002-DOD-005).
+ */
+interface Ts666Host {
+  repo: string;
+  host: ReturnType<typeof driverHost>;
+  cleanup: () => Promise<void>;
+}
+
+let ts666: Promise<Ts666Host> | undefined;
+
+function noAstGrepPath(): string[] {
+  const key = Object.keys(process.env).find((k) => k.toUpperCase() === "PATH") ?? "PATH";
+  return (process.env[key] ?? "")
+    .split(WIN ? ";" : ":")
+    .filter((d) => d.trim() !== "")
+    .filter((d) => {
+      try {
+        return !readdirSync(d).some((n) => /^ast-grep(\.|$)/i.test(n));
+      } catch {
+        return false;
+      }
+    });
+}
+
+function ts666Host(): Promise<Ts666Host> {
+  ts666 ??= (async () => {
+    const base = mkdtempSync(join(tmpdir(), "sdd-oc-ts666-"));
+    const repo = join(base, "fx-srv").split("\\").join("/");
+    const files: Record<string, string> = { ".sdd/SDD.md": "# SDD workspace\n", ".sdd/002-x/a.md": "status: draft\n", "src/app.ts": "export const app = 1;\n" };
+    for (const [rel, content] of Object.entries(files)) {
+      mkdirSync(dirname(join(repo, rel)), { recursive: true });
+      writeFileSync(join(repo, rel), content);
+    }
+    const git = (args: string[]) => {
+      const r = spawnSync("git", args, { cwd: repo, encoding: "utf8", windowsHide: true });
+      if (r.status !== 0) throw new Error(`git ${args.join(" ")}: ${r.stderr}`);
+    };
+    git(["-c", "init.defaultBranch=main", "init", "-q"]);
+    git(["-c", "user.name=replay", "-c", "user.email=replay@localhost", "-c", "commit.gpgsign=false", "commit", "--allow-empty", "-q", "-m", "fx-srv"]);
+    const out = join(base, "pkg");
+    const lines: string[] = [];
+    const code = generate(["--target", "opencode", "--mode", "opencode=sdd-mcp-server", "--source", join(repoRoot(), "plugins", "architect"), "--out", out, "--quiet"], {
+      cwd: repoRoot(),
+      stdout: (l) => lines.push(l),
+      stderr: (l) => lines.push(l),
+    });
+    if (code !== 0) throw new Error(`generating the OpenCode package (sdd-mcp-server) failed (exit ${code}):\n${lines.join("\n")}`);
+    const pkg = join(out, "opencode");
+    cpSync(join(pkg, ".opencode"), join(repo, ".opencode"), { recursive: true });
+    const config = JSON.parse(readFileSync(join(pkg, "opencode.json"), "utf8")) as { mcp?: Record<string, { command?: string[] }> };
+    const server = join(fxTgz().pkgDir, "scripts", "sdd-mcp.mjs");
+    const mcp: Record<string, unknown> = {};
+    for (const name of ["sdd-files", "sdd-shell"]) {
+      const entry = config.mcp?.[name];
+      assert.ok(entry?.command?.[0] === "sdd-mcp", `the package declares ${name} as sdd-mcp: ${JSON.stringify(entry)}`);
+      mcp[name] = { ...entry, command: [process.execPath, server, ...entry.command.slice(1)] };
+    }
+    writeFileSync(join(repo, "opencode.json"), JSON.stringify({ ...config, mcp }, null, 2) + "\n");
+    const runDir = join(base, "run");
+    mkdirSync(runDir, { recursive: true });
+    const host = driverHost({ shims: false, path: noAstGrepPath(), permission: () => "once" });
+    const version = (await host.start(repo, runDir)).version;
+    const tested = loadTargetTable(repoRoot(), "opencode").host.tested_versions["opencode"];
+    const cleanup = async () => {
+      await host.stop();
+      for (const l of host.links) {
+        try {
+          if (lstatSync(l).isSymbolicLink()) unlinkSync(l);
+        } catch {
+          // gone
+        }
+      }
+      if (process.env["SDD_REPLAY_KEEP_RUN"]) {
+        console.log(`C002-TC-666: run folder kept: ${base}`);
+        return;
+      }
+      for (let i = 0; i < 10; i++) {
+        try {
+          rmSync(base, { recursive: true, force: true });
+          return;
+        } catch {
+          await new Promise((r) => setTimeout(r, 300));
+        }
+      }
+    };
+    if (version !== tested) {
+      await cleanup();
+      throw new Error(`OpenCode ${version} is not the tested version ${tested} (set SDD_OPENCODE_BIN to the pinned binary)`);
+    }
+    return { repo, host, cleanup };
+  })();
+  return ts666;
+}
+
+after(async () => {
+  if (ts666) await (await ts666.catch(() => null))?.cleanup();
+  cleanupFxTgz();
+});
+
+interface Ts666Row {
+  hostTool: string;
+  arguments: string;
+  args: Record<string, unknown>;
+  text: string;
+  check: (t: string) => void;
+  state: string;
+  after: (repo: string) => void;
+}
+
+const TS_666: Ts666Row[] = [
+  {
+    hostTool: "sdd-shell_run_command",
+    arguments: 'the command "npm install"',
+    args: { command: "npm install" },
+    text: 'that starts with "GUARD-BASH-001: "',
+    check: (t) => assert.ok(t.startsWith("GUARD-BASH-001: "), t),
+    state: 'no folder "node_modules" exists',
+    after: (repo) => assert.equal(existsSync(join(repo, "node_modules")), false),
+  },
+  {
+    hostTool: "sdd-shell_run_command",
+    arguments: 'the command "ast-grep --version"',
+    args: { command: "ast-grep --version" },
+    text: `'ERR-MCP-006: could not start "ast-grep": not found on PATH'`,
+    check: (t) => assert.equal(t, 'ERR-MCP-006: could not start "ast-grep": not found on PATH'),
+    state: '"src/marker.txt" does not exist',
+    after: (repo) => assert.equal(existsSync(join(repo, "src", "marker.txt")), false),
+  },
+  {
+    hostTool: "sdd-files_write_file",
+    arguments: 'the path "src/app.ts" and the content "x"',
+    args: { path: "src/app.ts", content: "x" },
+    text: 'that starts with "GUARD-PATH-001: "',
+    check: (t) => assert.ok(t.startsWith("GUARD-PATH-001: "), t),
+    state: '"src/app.ts" is unchanged',
+    after: (repo) => assert.equal(readFileSync(join(repo, "src", "app.ts"), "utf8"), "export const app = 1;\n"),
+  },
+  {
+    hostTool: "sdd-shell_run_command",
+    arguments: 'the command "sdd status"',
+    args: { command: "sdd status" },
+    text: 'that starts with "exit 0"',
+    check: (t) => assert.ok(t.startsWith("exit 0"), t),
+    state: '"src/marker.txt" does not exist',
+    after: (repo) => assert.equal(existsSync(join(repo, "src", "marker.txt")), false),
+  },
+];
+
+const FORBIDDEN = ["-32602", "structured content does not match the output schema"];
+
+for (const [i, row] of TS_666.entries()) {
+  test(`C002-TS-666: sdd-conductor calls ${row.hostTool} with ${row.arguments} → the part holds the text ${row.text}, no -32602, the second step reached, ${row.state}`, async () => {
+    const fx = await ts666Host();
+    const token = `TS-666-${i + 1}`;
+    const r = await fx.host.call("sdd-conductor", { tool: row.hostTool, args: row.args }, token);
+    const parts = r.parts as { type?: string; tool?: string; text?: string; state?: { status?: string; output?: unknown; error?: unknown } }[];
+    const part = parts.find((p) => p?.type === "tool" && p.tool === row.hostTool);
+    assert.ok(part, `the session holds a part for ${row.hostTool}: ${JSON.stringify(parts).slice(0, 2000)}`);
+    const state = part.state ?? {};
+    const shown = typeof state.output === "string" && state.output !== "" ? state.output : typeof state.error === "string" ? state.error : JSON.stringify(state.output ?? state.error ?? "");
+    row.check(shown);
+    // No part, message or session error names the JSON-RPC error of a rejected structuredContent (D-017).
+    const errors = ((r.messages ?? []) as { info?: { error?: unknown } }[]).map((m) => m.info?.error).filter((e) => e !== undefined);
+    const haystack = JSON.stringify({ parts, errors, sessionError: r.error ?? null });
+    for (const f of FORBIDDEN) assert.ok(!haystack.includes(f), `"${f}" occurs in the session: ${haystack.slice(0, 2000)}`);
+    assert.equal(r.error ?? null, null, `session error: ${JSON.stringify(r.error)}`);
+    assert.deepEqual(errors, [], "no message error");
+    // The second step: the stub model got the tool result and answered "done.".
+    const requests = fx.host.stubRequests() as { token: string | null; answered: boolean; reply: { text?: string } }[];
+    assert.ok(requests.some((q) => q.token === token && q.answered && q.reply.text === "done."), `the stub model's second step was not reached: ${JSON.stringify(requests.filter((q) => q.token === token))}`);
+    assert.ok(parts.some((p) => p?.type === "text" && (p.text ?? "").includes("done.")), "the session holds the second step's answer");
+    row.after(fx.repo);
+  });
+}

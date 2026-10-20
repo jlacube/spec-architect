@@ -27,6 +27,7 @@ import { normalisePath } from "../io/paths.ts";
 import { VERSION } from "../version.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { HANDLERS, type ToolContext } from "./handlers.ts";
+import { errorCode } from "./results.ts";
 import { loadToolSchemas, PROFILE_TOOLS, StartError, type Profile, type ToolName, type ToolSchemas } from "./schemas.ts";
 
 const USAGE = "usage: sdd-mcp --profile files|shell [--root <dir>]";
@@ -198,7 +199,7 @@ export function createServer(opts: Options, schemas: ToolSchemas, debug: (event:
       const ctx: ToolContext = { root: await root, schemas, debug };
       debug("tools/call", { tool });
       const result = await HANDLERS[tool]((request.params.arguments ?? {}) as Record<string, unknown>, ctx);
-      const code = (result.structuredContent as { code?: string } | undefined)?.code;
+      const code = errorCode(result);
       debug("tools/call-done", { tool, isError: result.isError === true, code });
       return result;
     });

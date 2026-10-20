@@ -133,12 +133,13 @@ function killTree(child) {
  *   env           extra variables of the host process
  *   startTimeoutMs  default 90 s
  */
-export async function startOpenCode(options) {
-  const bin = options.bin ?? resolveOpenCodeBinary();
-  if (!isAbsolute(bin)) throw new Error(`the pinned OpenCode binary must be an absolute path: ${bin}`);
-  if (!existsSync(bin)) throw new Error(`pinned OpenCode binary not found: ${bin}`);
-  const { project, runDir } = options;
-  mkdirSync(runDir, { recursive: true });
+/**
+ * The environment of the host process of `startOpenCode` (`runDir`, `isolate`, `paid`, `env` as there):
+ * a paid session takes the OpenRouter key from the key file's one line as OPENROUTER_API_KEY and is
+ * refused, before any process starts, when the file is missing or empty (C002-IF-010 §4 Provider key).
+ */
+export function hostProcessEnv(options) {
+  mkdirSync(options.runDir, { recursive: true });
   const extra = { ...(options.env ?? {}) };
   if (options.paid) {
     const keyFile = options.paid.keyFile ?? defaultOpenRouterKeyFile();
@@ -146,7 +147,15 @@ export async function startOpenCode(options) {
     if (!key) throw new Error(`paid OpenCode session refused: no OpenRouter key in ${keyFile}`);
     extra.OPENROUTER_API_KEY = key;
   }
-  const env = hostEnv({ runDir, isolate: options.isolate === true, extra });
+  return hostEnv({ runDir: options.runDir, isolate: options.isolate === true, extra });
+}
+
+export async function startOpenCode(options) {
+  const bin = options.bin ?? resolveOpenCodeBinary();
+  if (!isAbsolute(bin)) throw new Error(`the pinned OpenCode binary must be an absolute path: ${bin}`);
+  if (!existsSync(bin)) throw new Error(`pinned OpenCode binary not found: ${bin}`);
+  const { project, runDir } = options;
+  const env = hostProcessEnv(options);
   const version = readOpenCodeVersion(bin, env);
   const { createOpencodeClient } = await import("@opencode-ai/sdk/v2/client");
 

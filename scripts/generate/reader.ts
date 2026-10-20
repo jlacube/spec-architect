@@ -1,7 +1,10 @@
 // Source reader (C002-COMP-001): loads the source plugin once into the neutral model. It only reads
 // (readFileSync, readdirSync, statSync); no source file is ever opened for writing (C002-REQ-102,
 // C002-INV-03). Frontmatter is split by the CLI's own parser (src/model/frontmatter.ts, C002-ADR-003).
-// A file that cannot be read or whose frontmatter or JSON does not parse is ERR-GEN-007.
+// A file that cannot be read or whose frontmatter or JSON does not parse is ERR-GEN-007, and so is a
+// source manifest `.claude-plugin/plugin.json` that is missing or gives no non-empty string `version`,
+// the package version of the run (C002-IF-004 Output "Source without a version"; errors.md ERR-GEN-007,
+// revised for critic CR-36): one diagnostic for the run, for no target.
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -25,6 +28,29 @@ export function sourceDigest(files: readonly SourceFile[]): string {
 export interface ReadResult {
   source: SourcePlugin;
   diagnostics: Diagnostic[];
+  /** The `version` of the source manifest, the package version of the run; null when ERR-GEN-007 reports it. */
+  version: string | null;
+}
+
+/** The source manifest, whose `version` is the package version of every target package (C002-INV-11). */
+export const MANIFEST_FILE = ".claude-plugin/plugin.json";
+
+/** Reason of ERR-GEN-007 for a manifest without a usable `version` (errors.md ERR-GEN-007). */
+export const NO_VERSION = "version missing or not a non-empty string";
+
+/**
+ * The `version` of the source manifest among `files`: a non-empty string, else null (no manifest, one
+ * that does not parse, or one without such a `version`). No built-in version stands in (D-016 item 6).
+ */
+export function manifestVersion(files: readonly SourceFile[]): string | null {
+  const manifest = files.find((f) => f.path === MANIFEST_FILE);
+  if (!manifest) return null;
+  try {
+    const v = (JSON.parse(manifest.text) as { version?: unknown } | null)?.version;
+    return typeof v === "string" && v !== "" ? v : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Reads the source plugin at `root` into the neutral model. */
@@ -91,6 +117,24 @@ export function readSource(root: string): ReadResult {
   const mcp = json(".mcp.json") as { mcpServers?: Record<string, unknown> } | null;
   const files = paths.map((path) => ({ path, text: texts.get(path)! }));
 
+  // The package version of the run: one ERR-GEN-007 for a manifest that is missing or gives no
+  // non-empty string version; a manifest that does not parse gets its parse error only; one the reader
+  // could not read is already reported above.
+  const version = manifestVersion(files);
+  if (version === null && !diagnostics.some((d) => d.file === MANIFEST_FILE)) {
+    let parsed = true;
+    const text = texts.get(MANIFEST_FILE);
+    if (text !== undefined) {
+      try {
+        JSON.parse(text);
+      } catch (e) {
+        parsed = false;
+        diagnostics.push(diagnostic("ERR-GEN-007", `${MANIFEST_FILE}: ${reason(e)}`, { file: MANIFEST_FILE }));
+      }
+    }
+    if (parsed) diagnostics.push(diagnostic("ERR-GEN-007", `${MANIFEST_FILE}: ${NO_VERSION}`, { file: MANIFEST_FILE }));
+  }
+
   // The bundled CLI, as bytes, for the packages that carry a copy of it (C002-ADR-004); a build output,
   // so neither part of `files` nor of the digest. Absent: the emitter that needs it reports ERR-GEN-007.
   let cli: Buffer | undefined;
@@ -112,5 +156,6 @@ export function readSource(root: string): ReadResult {
       ...(cli === undefined ? {} : { cli }),
     },
     diagnostics,
+    version,
   };
 }

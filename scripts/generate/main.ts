@@ -6,7 +6,6 @@
 import { readdirSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
-import { VERSION } from "../../src/version.ts";
 import { diagnostic, formatDiagnostic, sortDiagnostics, type Diagnostic } from "./diagnostics.ts";
 import { emitCopilot } from "./emit/copilot.ts";
 import { emitOpenCode } from "./emit/opencode.ts";
@@ -16,6 +15,7 @@ import { loadTable, TableError, type MappingTable, type Mode, type Target } from
 import { translateBodies } from "./translate/constructs.ts";
 import { mergeTierDiagnostics, translateAgents } from "./translate/frontmatter.ts";
 import { inlineSkills } from "./translate/inline.ts";
+import { packageVersion } from "./translate/wiring.ts";
 import { discard, fsOps, publish, targetDir, type WriteOps } from "./writer.ts";
 
 const USAGE =
@@ -192,6 +192,13 @@ export function main(argv: readonly string[], options: MainOptions = {}): number
 
     const read = readSource(source);
     diagnostics.push(...read.diagnostics);
+    // A source without a package version (ERR-GEN-007, C002-IF-004 Output): the run stops here, so the
+    // diagnostic is the run's one and no emitter runs without the version (no built-in fallback).
+    if (read.version === null) {
+      discard(out, selected, ops);
+      report(mergeTierDiagnostics(diagnostics), null, modes);
+      return EXIT.diagnostics;
+    }
 
     const packages: TargetPackage[] = [];
     for (const t of selected) {
@@ -211,7 +218,7 @@ export function main(argv: readonly string[], options: MainOptions = {}): number
       return EXIT.diagnostics;
     }
 
-    const published = publish(out, packages, read.source.digest, VERSION, ops, display);
+    const published = publish(out, packages, read.source.digest, packageVersion(read.source), ops, display);
     if (!published.ok) {
       report([published.diagnostic], null, modes);
       return EXIT.write;

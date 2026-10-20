@@ -21,6 +21,7 @@ import {
   recordSteps,
   s07Mode,
   s08Mode,
+  stepCheck,
   type SpikeMode,
 } from "./evidence.ts";
 import { compareWithRegeneration } from "./regeneration.ts";
@@ -246,20 +247,11 @@ export function releaseCheck(opts: CheckOptions): CheckResult {
         const hv = hostVersions(fm["host_versions"]);
         const hooks = hooksState(fm);
         checklist = { path: recordPath, host_versions: recordable(hv), hooks_state: hooks.stored, failed_steps: [] };
-        // Every recorded step passed or does not apply (C002-REQ-618).
-        for (const s of list) {
-          if (s.result === "passed" || s.result === "not-applicable") continue;
-          if (s.result === "failed") checklist.failed_steps.push(s.id);
-          refusals.push(refusal("ERR-REL-004", { "step id": s.id, result: String(s.result) }));
-        }
-        // Every step of the package's mode appears and passed; the injection steps are the injection evidence below.
-        const byId = new Map(list.map((s) => [s.id, s]));
-        for (const step of steps ?? []) {
-          if (step.kind === "injection" || (step.mode !== "both" && step.mode !== mode)) continue;
-          const s = byId.get(step.id);
-          if (s === undefined) refusals.push(refusal("ERR-REL-004", { "step id": step.id, result: "not recorded" }));
-          else if (s.result === "not-applicable") refusals.push(refusal("ERR-REL-004", { "step id": step.id, result: "not-applicable" }));
-        }
+        // The step check of §5 (C002-REQ-618; critic CR-52, CR-55): one ERR-REL-004 line per step ID for
+        // the first of rules 1 … 6, then `not recorded` per unlisted step of the mode (the injection steps
+        // are the injection evidence below); with an unreadable index only rules 1, 3 and 6.
+        for (const s of list) if (s.result === "failed" && !checklist.failed_steps.includes(s.id)) checklist.failed_steps.push(s.id);
+        for (const line of stepCheck(list, steps, mode)) refusals.push(refusal("ERR-REL-004", { "step id": line.id, result: line.result }));
         // Hooks-state check of §5, both Copilot modes (C002-REQ-629): one line, the first problem that applies.
         if (hooks.problem !== null) refusals.push(refusal("ERR-REL-010", { path: recordPath, problem: hooks.problem }));
         versions(`checklist record ${recordPath}`, hv, tested);
@@ -325,6 +317,9 @@ export function releaseCheck(opts: CheckOptions): CheckResult {
     refusals: refusals.map((r) => ({ code: r.code, message: r.message })),
   };
 
+  // Test-only injection point (C002-TC-671, exit 3): `SDD_TEST_FAULT=release-record-invalid` gives the
+  // record an outcome the schema does not allow, so the validation below fails and no file is written.
+  if (/(?:^|,)release-record-invalid(?:,|$)/.test(process.env["SDD_TEST_FAULT"] ?? "")) (record as { outcome: string }).outcome = "allowed";
   const schema = schemaOf(root);
   if (!schema.record(record)) throw new Error(`the release record does not validate against ${SCHEMA_FILE}: ${schemaErrors(schema.record)}`);
   if (injectionToWrite !== null && !schema.injection(injectionToWrite)) throw new Error(`the injection summary does not validate against ${SCHEMA_FILE}: ${schemaErrors(schema.injection)}`);

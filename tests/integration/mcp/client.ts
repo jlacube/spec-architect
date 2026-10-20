@@ -175,3 +175,34 @@ export function serverWorkspace(): { root: string; cleanup: () => void } {
   }
   return { root, cleanup: () => rmSync(root, { recursive: true, force: true }) };
 }
+
+/** The fields of an error result, read from its text (C002-IF-002 §6.1, revised for defect D-017). */
+export interface ErrorText {
+  /** The whole text of the one text item. */
+  text: string;
+  /** The characters before the first `: `. */
+  code: string;
+  /** The text after the first `: `; for a `GUARD-*` code the whole text (the core's deny message). */
+  message: string;
+  /** The class of the code (§6.1): `refused` or `failed`. */
+  status: "refused" | "failed";
+}
+
+const REFUSED = new Set(["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-004", "ERR-MCP-005"]);
+
+/**
+ * Asserts the text-only form of an error result (C002-IF-002 §4, §6.1): `isError` true, exactly one text
+ * item whose text starts with `<code>: `, and no `structuredContent` key; returns what the text gives.
+ */
+export function errorText(res: unknown, what = ""): ErrorText {
+  const r = res as { isError?: unknown; content?: { type: string; text: string }[] };
+  const shown = `${what}${what ? ": " : ""}${JSON.stringify(res)}`;
+  if (r.isError !== true) throw new Error(`not an error result: ${shown}`);
+  if (Object.prototype.hasOwnProperty.call(res, "structuredContent")) throw new Error(`an error result carries structuredContent: ${shown}`);
+  if (!Array.isArray(r.content) || r.content.length !== 1 || r.content[0]!.type !== "text") throw new Error(`an error result without exactly one text item: ${shown}`);
+  const text = r.content[0]!.text;
+  const m = /^((?:ERR-MCP|GUARD-[A-Z]+)-\d{3}): /.exec(text);
+  if (!m) throw new Error(`an error result whose text does not start with "<code>: ": ${shown}`);
+  const code = m[1]!;
+  return { text, code, message: code.startsWith("GUARD-") ? text : text.slice(m[0].length), status: REFUSED.has(code) ? "refused" : "failed" };
+}

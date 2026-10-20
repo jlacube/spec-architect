@@ -3,21 +3,26 @@
 // evals/harness/runners/stub.mjs (C002-T-044): the caps end a session that never ends by itself at 30
 // turns and at 0.50 USD; the OpenCode runner answers, dismisses or gives up on `question` calls, maps
 // names back to Claude Code's, and answers permission requests by `allowTools`; the run.mjs options of
-// step 2 (default host, unknown host, a `--filter` that selects no case). No paid session, no network.
+// step 2 (default host, unknown host, a `--filter` that selects no case). C002-TC-906 … C002-TC-911
+// (C002-T-064; C002-IF-010 §1 … §4, revised for defect D-015): rows by host, the provider key with a
+// stubbed host start, the direct relay, names per host row, `answer` and `allowTools`; and the
+// runner's version stamp of `targetPackage.version` (supports C002-TC-515). No paid session, no network.
 // The run.mjs cases run in a child process from the source files (the fixtures resolve paths from their
 // own location, which a bundled test would move).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createCaps } from "../../../evals/harness/caps.mjs";
-import { nameMaps, permissionReply, replyFor, runOpenCodeSession, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
+import { hostProcessEnv } from "../../../evals/harness/opencode/driver.mjs";
+import { driverHost as runnerDriverHost, generatedPackage, nameMaps, permissionReply, replyFor, runOpenCodeSession, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
+import { namesOf } from "../../../evals/harness/session.mjs";
 import { stubHost } from "../../../evals/harness/runners/stub.mjs";
-import { injectionSummary, ledgerEntry, stopRule } from "../../../evals/harness/run.mjs";
+import { injectionSummary, ledgerEntry, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = repoRoot();
@@ -317,4 +322,245 @@ test("C002-TS-611 the routing case of sdd-critic runs through the case API on a 
   const after = caseHashes();
   assert.equal(after.size, before.size);
   for (const [f, h] of before) assert.equal(after.get(f), h, `${f} changed`);
+});
+
+// --- C002-TC-906 … C002-TC-911 (C002-T-064; C002-IF-010 §1 … §4, revised for defect D-015) -----------
+// Stub host or a stubbed host start only: no opencode serve, no network, no paid session.
+
+type Block = { type: string; name?: string; input?: Record<string, unknown>; host_tool?: string; id?: string };
+const toolUses = (s: Session): Block[] =>
+  s.transcript.flatMap((r: { type: string; message?: { type: string; message?: { content?: Block[] } } }) =>
+    r.type === "sdk" && r.message?.type === "assistant" ? (r.message.message?.content ?? []).filter((b) => b.type === "tool_use") : [],
+  );
+
+test("C002-TC-906 rows by host: --host opencode keeps the opencode row and the row without host, --host claude-code the claude-code row and the row without host", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-run-906-"));
+  try {
+    const caseFile = join(dir, "rows.eval.mjs");
+    writeFileSync(
+      caseFile,
+      [
+        "const row = (id, host) => ({ id, title: id, agent: 'architect:sdd-conductor', fixture: null, prompt: 'hi', assert: () => [], ...(host ? { host } : {}) });",
+        "export default [row('ROW-CC', 'claude-code'), row('ROW-OC', 'opencode'), row('ROW-ANY')];",
+      ].join("\n"),
+    );
+    const ids = async (host: string) => (await selectScenarios([caseFile], { host })).scenarios.map((x: { scenario: { id: string } }) => x.scenario.id);
+    assert.deepEqual(await ids("opencode"), ["ROW-OC", "ROW-ANY"]);
+    assert.deepEqual(await ids("claude-code"), ["ROW-CC", "ROW-ANY"]);
+    // A selection that leaves no row for the host exits 1 before any session.
+    const only = join(dir, "only-cc.eval.mjs");
+    writeFileSync(only, "export default [{ id: 'ROW-CC', title: 'cc', host: 'claude-code', agent: 'architect:sdd-conductor', fixture: null, prompt: 'hi', assert: () => [] }];\n");
+    const r = runStubbed([only, "--host", "opencode", "--tier", "dev", "--results-dir", join(dir, "results")]);
+    assert.equal(r.status, 1, r.out);
+    assert.match(r.out, /holds no case for host opencode \(1 file\(s\); 1 row\(s\) of another host, 0 row\(s\) left out by --only\); no session started/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("C002-TC-906 every Claude Code row of the doctor case files carries host claude-code, so --host opencode selects none of them", async () => {
+  const dir = join(ROOT, "evals", "targets", "doctor");
+  const files = readdirSync(dir).filter((f) => f.endsWith(".eval.mjs")).map((f) => join(dir, f));
+  const all: { scenario: { id: string; host?: string; plugins?: unknown } }[] = [];
+  for (const f of files) {
+    const exported = (await import(pathToFileURL(f).href)).default;
+    for (const scenario of Array.isArray(exported) ? exported : [exported]) all.push({ scenario });
+  }
+  // A Claude Code row loads the plugin folders (`plugins`); every row names its host.
+  const claude = all.filter((x) => x.scenario.plugins !== undefined);
+  assert.ok(claude.length > 0, "the doctor case files hold Claude Code rows");
+  for (const x of all) assert.ok(typeof x.scenario.host === "string", `${x.scenario.id} has no host field`);
+  for (const x of claude) assert.equal(x.scenario.host, "claude-code", x.scenario.id);
+  const opencode = (await selectScenarios(files, { host: "opencode" })).scenarios.map((x: { scenario: { id: string; host?: string } }) => x.scenario);
+  assert.ok(opencode.length > 0);
+  for (const s of opencode) assert.equal(s.host, "opencode", `--host opencode selects ${s.id}`);
+});
+
+/** A fake driver start: computes the host environment as the real start does, then runs a stub session. */
+function fakeStart(seen: { env?: Record<string, string>; started: boolean }) {
+  return async (o: Record<string, unknown>) => {
+    const env = hostProcessEnv(o) as Record<string, string>;
+    seen.env = env;
+    seen.started = true;
+    const inner = await stubHost({ endAfter: 1 }).start();
+    return { version: "1.18.31", run: inner.run, stop: async () => {} };
+  };
+}
+
+test("C002-TC-907 the provider key: a missing or empty key file refuses the session before the host starts; a key reaches the host as OPENROUTER_API_KEY only, the folders are isolated, api_key_source is openrouter-key-file, the key is written nowhere", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-runner-907-"));
+  const saved: Record<string, string | undefined> = {};
+  const set = (k: string, v: string | undefined) => {
+    if (!(k in saved)) saved[k] = process.env[k];
+    if (v === undefined) delete process.env[k];
+    else process.env[k] = v;
+  };
+  try {
+    // Staged scripts for the package's sdd servers (no npm run package needed).
+    const scripts = join(dir, "scripts");
+    mkdirSync(scripts);
+    for (const f of ["sdd.mjs", "sdd-mcp.mjs"]) writeFileSync(join(scripts, f), "process.exit(0);\n");
+    set("SDD_EVAL_SDD_SCRIPTS", scripts);
+    set("OPENROUTER_API_KEY", "caller-openrouter");
+    set("OPENROUTER_BASE_URL", "http://caller.invalid");
+    set("ANTHROPIC_API_KEY", "caller-anthropic");
+    set("OPENAI_API_KEY", "caller-openai");
+    const run = async (keyFile: string) => {
+      const seen: { env?: Record<string, string>; started: boolean } = { started: false };
+      const cwd = mkdtempSync(join(dir, "ws-"));
+      try {
+        const s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host: runnerDriverHost({ keyFile, bin: process.execPath, start: fakeStart(seen) }) });
+        return { s, seen };
+      } catch (e) {
+        return { error: e instanceof Error ? e.message : String(e), seen };
+      }
+    };
+    const missing = await run(join(dir, "no-such-key.txt"));
+    assert.match(missing.error ?? "", /paid OpenCode session refused: no OpenRouter key/);
+    assert.equal(missing.seen.started, false, "the host did not start");
+    writeFileSync(join(dir, "empty.txt"), "\n");
+    const empty = await run(join(dir, "empty.txt"));
+    assert.match(empty.error ?? "", /paid OpenCode session refused/);
+    assert.equal(empty.seen.started, false);
+    const KEY = "sk-or-v1-dummy-0123456789";
+    writeFileSync(join(dir, "key.txt"), `${KEY}\n`);
+    const ok = await run(join(dir, "key.txt"));
+    assert.ok(ok.s, ok.error);
+    const env = ok.seen.env!;
+    assert.equal(env["OPENROUTER_API_KEY"], KEY);
+    for (const k of Object.keys(env)) {
+      if (k === "OPENROUTER_API_KEY") continue;
+      assert.ok(!/^(OPENROUTER|ANTHROPIC|OPENAI)_/i.test(k), `the caller's ${k} reached the host`);
+    }
+    const runDir = (p: string) => p.toLowerCase().includes("sdd-eval-oc-run-");
+    for (const k of ["XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_STATE_HOME", "SERENA_HOME", "OPENCODE_DB"]) assert.ok(runDir(env[k] ?? ""), `${k} = ${env[k]} is not under the run folder`);
+    if (process.platform === "win32") assert.ok(runDir(env["LOCALAPPDATA"] ?? ""), "LOCALAPPDATA under the run folder");
+    assert.equal(ok.s!.apiKeySource, "openrouter-key-file");
+    assert.ok(!JSON.stringify(ok.s).includes(KEY), "the key text occurs in the result or transcript");
+  } finally {
+    for (const [k, v] of Object.entries(saved)) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("C002-TC-907 run.mjs records api_key_source in each result record and the result file: null on the stub host", () => {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-run-907-"));
+  try {
+    const caseFile = join(dir, "case.eval.mjs");
+    writeFileSync(caseFile, "export default { id: 'STUB-907', title: 'stub', host: 'opencode', agent: 'architect:sdd-conductor', fixture: null, prompt: 'hi', assert: () => [] };\n");
+    const res = join(dir, "results");
+    const r = runStubbed([caseFile, "--host", "opencode", "--tier", "dev", "--results-dir", res]);
+    assert.equal(r.status, 0, r.out);
+    const [doc] = resultDocs(res);
+    assert.ok(doc && "api_key_source" in doc, JSON.stringify(doc));
+    assert.equal(doc["api_key_source"], null);
+    for (const rec of doc["records"] as Record<string, unknown>[]) assert.equal(rec["api_key_source"], null);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("C002-TC-908 the eval relay runs directly on OpenCode: sdd-critic is the session's agent with the brief as its prompt, one relay record, no eval-dispatcher", async () => {
+  const host = stubHost({ endAfter: 1 });
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-908-"));
+  try {
+    const s = await runOpenCodeSession({ cwd, prompt: "Dispatch: sdd-critic\nBrief — review the spec of change 002", agent: "architect:eval-dispatcher", allowTools: [] }, { host });
+    assert.deepEqual(host.calls.map((c: { agent: string; text?: string }) => [c.agent, c.text]), [["sdd-critic", "Brief — review the spec of change 002"]]);
+    const relays = s.transcript.filter((r: { event?: string }) => r.event === "relay") as { agent: string }[];
+    assert.equal(relays.length, 1);
+    assert.equal(relays[0]!.agent, "sdd-critic");
+    assert.ok(!host.calls.some((c: { agent: string }) => /eval-dispatcher/.test(c.agent)), "no eval-dispatcher agent started");
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+const NAMES_SCRIPT = [
+  [
+    { tool: "sdd-files_write_file", input: { path: ".sdd/x.md", content: "x" } },
+    { tool: "question", input: { questions: [QUESTION] } },
+    { tool: "codesearch", input: { query: "x" } },
+    { tool: "task", input: { subagent_type: "sdd-critic", prompt: "review", description: "review" } },
+  ],
+];
+
+test("C002-TC-909 names per host row: a row with host opencode reads the host's names, a row without host the source names; every call carries host_tool", async () => {
+  assert.equal(nameMaps().toSource("codesearch"), null, "codesearch is a host tool the table does not map");
+  assert.equal(namesOf({ host: "opencode" }), "host");
+  assert.equal(namesOf({}), "source");
+  assert.equal(namesOf({ host: "claude-code" }), "source");
+  const host = await session({ endAfter: 1, script: NAMES_SCRIPT }, { names: namesOf({ host: "opencode" }) });
+  const h = toolUses(host);
+  assert.deepEqual(h.map((b) => b.name), ["sdd-files_write_file", "question", "codesearch", "task"]);
+  assert.deepEqual(h[0]!.input, { path: ".sdd/x.md", content: "x" }, "the host's input");
+  assert.equal(h[3]!.input?.["subagent_type"], "sdd-critic");
+  const src = await session({ endAfter: 1, script: NAMES_SCRIPT }, { names: namesOf({}) });
+  const s = toolUses(src);
+  assert.deepEqual(s.map((b) => b.name), ["Write", "AskUserQuestion", "codesearch", "Agent"]);
+  assert.equal(s[0]!.input?.["file_path"], ".sdd/x.md");
+  assert.equal(s[3]!.input?.["subagent_type"], "architect:sdd-critic");
+  for (const b of [...h, ...s]) assert.ok(typeof b.host_tool === "string" && b.host_tool !== "", JSON.stringify(b));
+  assert.deepEqual(s.map((b) => b.host_tool), ["sdd-files_write_file", "question", "codesearch", "task"]);
+});
+
+test("C002-TC-910 answer: without answer the first (Recommended) label through question.reply; { reject: true } dismisses through question.reject, recorded with null for a source row; a throwing answer ends the session with question unanswerable", async () => {
+  const first = await session({ endAfter: 1, script: asks });
+  assert.deepEqual(first.answers.map((a: { route: string; answers: unknown }) => [a.route, a.answers]), [["question.reply", { "Which profile?": "lite (Recommended)" }]]);
+  const dismissed = await session({ endAfter: 1, script: asks }, { answer: () => ({ reject: true }) });
+  assert.equal(dismissed.end_reason, "completed");
+  assert.equal(dismissed.answers.length, 1);
+  assert.equal(dismissed.answers[0].route, "question.reject");
+  assert.equal(dismissed.answers[0].answers, null, "a dismissed call has no answer");
+  assert.equal(toolUses(dismissed)[0]?.name, "AskUserQuestion", "a row without host reads AskUserQuestion");
+  const thrown = await session({ endAfter: 1, script: asks }, {
+    answer: () => {
+      throw new Error("no rule");
+    },
+  });
+  assert.equal(thrown.end_reason, "question unanswerable");
+});
+
+test("C002-TC-911 allowTools answers permission requests only: edit, bash, task by allowTools; read-only and question once; external_directory and doom_loop rejected; a call run without a request is neither answered nor denied", async () => {
+  const m = nameMaps();
+  for (const [permission, tool] of [["edit", "Write"], ["edit", "Edit"], ["bash", "Bash"], ["task", "Agent"]] as const) {
+    assert.equal(permissionReply(permission, [tool], m), "once", `${permission} with ${tool}`);
+    assert.equal(permissionReply(permission, [], m), "reject", `${permission} without ${tool}`);
+  }
+  for (const p of ["read", "glob", "grep", "list", "lsp", "todowrite", "todoread", "codesearch", "question"]) assert.equal(permissionReply(p, [], m), "once", p);
+  for (const p of ["external_directory", "doom_loop"]) assert.equal(permissionReply(p, ["Write", "Edit", "Bash", "Agent"], m), "reject", p);
+  // The package's own rules let the host run the sdd MCP server tool without asking: the runner neither
+  // answers nor records it.
+  const asked: string[] = [];
+  const base = stubHost({ endAfter: 1, script: [[{ tool: "sdd-files_write_file", input: { path: ".sdd/x.md", content: "x" } }]] });
+  const counting = {
+    needsPackage: false,
+    async start() {
+      const h = await base.start();
+      return { ...h, run: (o: { permission: (req: { permission: string }) => unknown }) => h.run({ ...o, permission: (req: { permission: string }) => (asked.push(req.permission), o.permission(req)) }) };
+    },
+  };
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-911-"));
+  let s: Session;
+  try {
+    s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host: counting });
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+  assert.deepEqual(asked, [], "no permission request was answered");
+  assert.ok(!s.transcript.some((r: { event?: string }) => r.event === "denied"), "not recorded as denied");
+  assert.deepEqual(toolUses(s).map((b) => b.name), ["Write"]);
+});
+
+test("the runner's version stamp (supports C002-TC-515): targetPackage.version goes into the source copy's plugin.json, so the manifest and the {{package_version}} token carry it", () => {
+  const manifestFile = join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json");
+  const before = readFileSync(manifestFile);
+  const dir = generatedPackage({ target: "opencode", version: "0.3.0" });
+  const manifest = JSON.parse(readFileSync(join(dir, "architect-target.json"), "utf8")) as { package_version: string };
+  assert.equal(manifest.package_version, "0.3.0");
+  const install = readFileSync(join(dir, "INSTALL.md"), "utf8");
+  assert.ok(install.includes("architect-sdd@0.3.0"), "the {{package_version}} token carries 0.3.0");
+  assert.ok(readFileSync(manifestFile).equals(before), "the repository's plugin.json is not touched");
 });

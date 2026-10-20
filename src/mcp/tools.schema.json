@@ -2,12 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:architect:c002:sdd-mcp-tools:1",
   "title": "sdd MCP server tools (C002-IF-002)",
-  "description": "Input and output schemas of the sdd MCP server tools. tools/list returns $defs/<tool>Input as inputSchema and $defs/<tool>Output as outputSchema. The document itself validates the structuredContent of any tools/call result: a success output of one tool, or an error result (isError: true). Process and protocol: sdd-mcp-server.md.",
+  "description": "Input and output schemas of the sdd MCP server tools. tools/list returns $defs/<tool>Input as inputSchema and $defs/<tool>Output as outputSchema. The document itself validates the structuredContent of any successful tools/call result: the success output of one tool. An error result (isError: true) carries no structuredContent; its one text item starts with '<code>: ' (sdd-mcp-server.md §6.1; revised for defect D-017). Process and protocol: sdd-mcp-server.md.",
   "oneOf": [
     { "$ref": "#/$defs/writeFileOutput" },
     { "$ref": "#/$defs/replaceTextOutput" },
-    { "$ref": "#/$defs/runCommandOutput" },
-    { "$ref": "#/$defs/errorResult" }
+    { "$ref": "#/$defs/runCommandOutput" }
   ],
   "$defs": {
     "path": {
@@ -154,51 +153,6 @@
         },
         "duration_ms": { "type": "integer", "minimum": 0 }
       }
-    },
-    "errorResult": {
-      "title": "error result",
-      "description": "structuredContent of a result with isError: true. refused: the boundary or a tool rule said no; failed: a fault, and nothing was changed (C002-REQ-402, C002-CON-08).",
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["status", "tool", "code", "message"],
-      "properties": {
-        "status": { "enum": ["refused", "failed"] },
-        "tool": { "enum": ["write_file", "replace_text", "run_command"] },
-        "code": {
-          "enum": [
-            "GUARD-PATH-001",
-            "GUARD-BASH-001",
-            "GUARD-BASH-002",
-            "ERR-MCP-001",
-            "ERR-MCP-002",
-            "ERR-MCP-003",
-            "ERR-MCP-004",
-            "ERR-MCP-005",
-            "ERR-MCP-006"
-          ]
-        },
-        "message": {
-          "description": "For GUARD-* codes the guard core's deny message (C001-IF-07 §4); otherwise the catalogue message of errors.md.",
-          "type": "string",
-          "minLength": 1
-        },
-        "path": { "type": "string" },
-        "occurrences": { "description": "ERR-MCP-004 only.", "type": "integer", "minimum": 0 }
-      },
-      "allOf": [
-        {
-          "if": { "properties": { "code": { "enum": ["GUARD-PATH-001", "GUARD-BASH-001", "GUARD-BASH-002", "ERR-MCP-004", "ERR-MCP-005"] } } },
-          "then": { "properties": { "status": { "const": "refused" } } }
-        },
-        {
-          "if": { "properties": { "code": { "enum": ["ERR-MCP-001", "ERR-MCP-002", "ERR-MCP-003", "ERR-MCP-006"] } } },
-          "then": { "properties": { "status": { "const": "failed" } } }
-        },
-        {
-          "if": { "properties": { "code": { "const": "ERR-MCP-004" } } },
-          "then": { "required": ["occurrences"] }
-        }
-      ]
     }
   }
 }

@@ -233,7 +233,7 @@ async function run(args: Record<string, unknown>, ctx: ToolContext): Promise<Cal
   const problems = ctx.schemas.validateInput("run_command", args);
   if (problems.length > 0) {
     ctx.debug("invalid-arguments", { tool: "run_command", code: "ERR-MCP-001" });
-    return errorResult("run_command", "failed", "ERR-MCP-001", `invalid arguments for run_command: ${problems.join("; ")}`);
+    return errorResult("ERR-MCP-001", `invalid arguments for run_command: ${problems.join("; ")}`);
   }
   const command = args["command"] as string;
   const dialect = (args["dialect"] as Dialect | undefined) ?? "bash";
@@ -246,32 +246,32 @@ async function run(args: Record<string, unknown>, ctx: ToolContext): Promise<Cal
     decision = decideBash({ hook_event_name: "PreToolUse", tool_name: toolOfDialect(dialect), tool_input: { command }, cwd: ctx.root, agent_type: AGENT_TYPE }, { expands: false });
   } catch (e) {
     ctx.debug("guard-bash", { tool: "run_command", code: "ERR-MCP-002", reason: reason(e) });
-    return errorResult("run_command", "failed", "ERR-MCP-002", `internal fault in run_command: the bash guard core failed: ${reason(e)}; the call was refused`);
+    return errorResult("ERR-MCP-002", `internal fault in run_command: the bash guard core failed: ${reason(e)}; the call was refused`);
   }
   if (!decision.allow) {
     const code = denyCode(decision.message);
     ctx.debug("guard-bash", { tool: "run_command", dialect, decision: "deny", code });
-    return errorResult("run_command", "refused", code, decision.message);
+    return errorResult(code, decision.message);
   }
   ctx.debug("guard-bash", { tool: "run_command", dialect, decision: "allow" });
 
   // Step 3: the words the guard core decided on, run without a shell.
   const t = tokenise(command.trim(), dialect);
-  if ("error" in t) return errorResult("run_command", "failed", "ERR-MCP-002", `internal fault in run_command: ${t.error}; the call was refused`);
+  if ("error" in t) return errorResult("ERR-MCP-002", `internal fault in run_command: ${t.error}; the call was refused`);
   const [first, ...filters] = t.segments;
   const [exe, ...rest] = first!.words;
   let file: string;
   let argv: string[];
   if (exe === "sdd") {
     const cli = ownCli();
-    if (!existsSync(cli)) return errorResult("run_command", "failed", "ERR-MCP-006", `could not start "sdd": not found beside the server (${cli})`);
+    if (!existsSync(cli)) return errorResult("ERR-MCP-006", `could not start "sdd": not found beside the server (${cli})`);
     file = process.execPath;
     argv = [cli, ...rest];
   } else {
     const r = resolveOnPath(exe!);
     if ("error" in r) {
       ctx.debug("resolve", { tool: "run_command", exe, code: "ERR-MCP-006", reason: r.error });
-      return errorResult("run_command", "failed", "ERR-MCP-006", `could not start "${exe}": ${r.error}`);
+      return errorResult("ERR-MCP-006", `could not start "${exe}": ${r.error}`);
     }
     file = r.file;
     argv = rest;
@@ -281,7 +281,7 @@ async function run(args: Record<string, unknown>, ctx: ToolContext): Promise<Cal
   const duration = Date.now() - started;
   if ("spawnError" in r) {
     ctx.debug("spawn-failed", { tool: "run_command", exe, code: "ERR-MCP-006", reason: r.spawnError.message });
-    return errorResult("run_command", "failed", "ERR-MCP-006", `could not start "${exe}": ${r.spawnError.message}`);
+    return errorResult("ERR-MCP-006", `could not start "${exe}": ${r.spawnError.message}`);
   }
   let stdoutText = r.stdout.toString("utf8");
   for (const f of filters) stdoutText = applyFilter(stdoutText, f.words);
@@ -304,6 +304,6 @@ export const runCommand: ToolHandler = async (args, ctx) => {
     return await run(args, ctx);
   } catch (e) {
     ctx.debug("internal-fault", { tool: "run_command", code: "ERR-MCP-002", reason: reason(e) });
-    return errorResult("run_command", "failed", "ERR-MCP-002", `internal fault in run_command: ${reason(e)}; the call was refused`);
+    return errorResult("ERR-MCP-002", `internal fault in run_command: ${reason(e)}; the call was refused`);
   }
 };

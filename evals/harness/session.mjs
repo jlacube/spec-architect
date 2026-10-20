@@ -40,6 +40,12 @@ export function currentHost() {
 }
 
 /**
+ * The names a session result reads (C002-IF-010 §3): "host" for a row whose `host` field names the
+ * OpenCode host, the host's own names; "source" for every other row, the names mapped back.
+ */
+export const namesOf = (options) => (options?.host === "opencode" ? "host" : "source");
+
+/**
  * Runs one session on the host of the harness context (signature unchanged). A case written for one
  * host (`host` option, from the case's `host` field) reads that host's own tool names (runners/opencode.mjs).
  */
@@ -50,7 +56,7 @@ export async function runSession(options) {
   if (host === "claude-code") return runClaudeCodeSession(options);
   if (host === "opencode") {
     const { runOpenCodeSession } = await import("./runners/opencode.mjs");
-    return runOpenCodeSession({ ...options, names: options.host === "opencode" ? "host" : "source" });
+    return runOpenCodeSession({ ...options, names: namesOf(options) });
   }
   throw new Error(`eval host ${host}: no runner yet (the Copilot CLI runner is C002-T-045)`);
 }

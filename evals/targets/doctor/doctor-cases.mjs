@@ -145,6 +145,8 @@ export function doctorCase(host, cfg, { prepend = [], without = [], env = {}, ..
     maxBudgetUsd: 0.5,
     prompt: h.prompt,
   };
-  if (host === "claude-code") return { ...base, plugins: m.plugins, startDelayMs: 15000, ...extra };
+  // Every row carries its `host`, the Claude Code rows included (C002-IF-010 §1, D-015 item 7): `--host
+  // opencode` and `--host copilot-cli` leave them out.
+  if (host === "claude-code") return { ...base, host, plugins: m.plugins, startDelayMs: 15000, ...extra };
   return { ...base, host, ...extra };
 }

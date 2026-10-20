@@ -5,6 +5,8 @@
 // (C002-INV-02) on a planted diagnostic and on a planted write error during the second target's rename,
 // each starting from an earlier `<out>/<target>/` that must be gone afterwards; byte-identical runs with
 // stable file order and LF line endings (C002-NFR-301); exit codes and print forms of C002-IF-004.
+// C002-TC-672 (C002-T-064): a source without a package version fails the run with one ERR-GEN-007 for
+// no target; the package version and its token come from the source plugin.json, never a built-in one.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -305,5 +307,76 @@ test("usage errors exit 2: unknown option, unknown target, malformed --mode", ()
     assert.equal(r.code, 2, args.join(" "));
     assert.match(r.stderr, /^generate: .+\nusage: node scripts\/generate\.mjs /, args.join(" "));
     assert.equal(r.stdout, "");
+  }
+});
+
+// --- C002-TC-672 (C002-T-064; C002-IF-004 Output "Source without a version", errors.md ERR-GEN-007) ---
+
+const TS672: { manifest: string; write: ((file: string) => void) | null; parse: boolean }[] = [
+  { manifest: "does not exist", write: null, parse: false },
+  { manifest: 'parses and has no "version" key', write: (f) => writeFileSync(f, JSON.stringify({ name: "architect" }, null, 2) + "\n"), parse: false },
+  { manifest: 'parses and gives "version" the number 3', write: (f) => writeFileSync(f, JSON.stringify({ name: "architect", version: 3 }, null, 2) + "\n"), parse: false },
+  { manifest: 'parses and gives "version" the empty string ""', write: (f) => writeFileSync(f, JSON.stringify({ name: "architect", version: "" }, null, 2) + "\n"), parse: false },
+  { manifest: `holds the text '{ "name": "architect", ' and does not parse`, write: (f) => writeFileSync(f, '{ "name": "architect", '), parse: true },
+];
+
+for (const row of TS672) {
+  test(`C002-TS-672: a source whose .claude-plugin/plugin.json ${row.manifest} fails the run with one ERR-GEN-007 for no target`, () => {
+    const base = tmp();
+    try {
+      const src = join(base, "src-noversion");
+      cpSync(PLUGIN, src, { recursive: true });
+      const manifest = join(src, ".claude-plugin", "plugin.json");
+      rmSync(manifest);
+      row.write?.(manifest);
+      const out = join(base, "out");
+      const before = tree(src);
+      const r = cli(["--source", src, "--out", out, "--json"]);
+      assert.equal(r.code, 1, r.stdout + r.stderr);
+      const doc = JSON.parse(r.stdout) as { targets: { target: string; written: boolean }[]; diagnostics: { code: string; file: string | null; target: string | null; message: string }[] };
+      assert.equal(doc.diagnostics.length, 1, JSON.stringify(doc.diagnostics));
+      const d = doc.diagnostics[0]!;
+      assert.deepEqual([d.code, d.file, d.target], ["ERR-GEN-007", ".claude-plugin/plugin.json", null]);
+      if (row.parse) {
+        assert.ok(!d.message.includes("version missing"), d.message);
+        assert.match(d.message, /^\.claude-plugin\/plugin\.json: .*JSON/i, d.message);
+      } else assert.equal(d.message, ".claude-plugin/plugin.json: version missing or not a non-empty string");
+      assert.ok(doc.targets.length > 0);
+      for (const t of doc.targets) assert.equal(t.written, false, t.target);
+      assert.equal(existsSync(join(out, "opencode")), false);
+      assert.equal(existsSync(join(out, "copilot")), false);
+      assert.deepEqual(tree(src), before, "every source file keeps its SHA-256");
+    } finally {
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+}
+
+test("the package version comes from the source plugin.json (supports C002-TC-515, C002-TC-670, C002-TC-671): 0.3.0 in both manifests and the {{package_version}} token; the repository's plugin gives its own", () => {
+  const base = tmp();
+  try {
+    const src = fxSrc(base);
+    const manifestFile = join(src, ".claude-plugin", "plugin.json");
+    const m = JSON.parse(readFileSync(manifestFile, "utf8")) as { version: string };
+    const own = m.version;
+    assert.notEqual(own, "0.3.0", "the fixture changes the version");
+    writeFileSync(manifestFile, JSON.stringify({ ...m, version: "0.3.0" }, null, 2) + "\n");
+    const out = join(base, "out");
+    const r = run(["--source", src, "--out", out, "--quiet"]);
+    assert.equal(r.code, 0, r.stderr);
+    for (const t of SORTED) {
+      const target = JSON.parse(readFileSync(join(out, t, MANIFEST), "utf8")) as { package_version: string };
+      assert.equal(target.package_version, "0.3.0", t);
+      const install = readFileSync(join(out, t, "INSTALL.md"), "utf8");
+      assert.ok(install.includes("0.3.0"), `${t}/INSTALL.md carries the token value 0.3.0`);
+      assert.ok(!install.includes(`architect-sdd@${own}`), `${t}/INSTALL.md does not carry the built-in version ${own}`);
+      for (const [path] of tree(join(out, t))) assert.ok(!readFileSync(join(out, t, ...path.split("/")), "latin1").includes("{{package_version}}"), `${t}/${path}`);
+    }
+    // The repository's plugin gives its own version.
+    const out2 = join(base, "out-repo");
+    assert.equal(run(["--source", PLUGIN, "--out", out2, "--quiet"]).code, 0);
+    for (const t of SORTED) assert.equal((JSON.parse(readFileSync(join(out2, t, MANIFEST), "utf8")) as { package_version: string }).package_version, own, t);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
   }
 });

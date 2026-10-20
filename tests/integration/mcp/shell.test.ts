@@ -4,7 +4,9 @@
 // sources with the package CLI `sdd.mjs` beside it (tests/integration/mcp/client.ts). A preload wraps
 // every `node:child_process` function of the server process and records the options of each call, so
 // that each test checks that no process started with a shell (C002-CON-07) and that a refused command
-// started no process at all. Every structuredContent is checked against sdd-mcp-tools.schema.json.
+// started no process at all. Every success's structuredContent is checked against sdd-mcp-tools.schema.json;
+// an error result is text only (C002-IF-002 §6.1, revised for defect D-017; C002-T-064): its code and
+// message are read from the text, and it carries no structuredContent key.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -14,7 +16,7 @@ import { delimiter, dirname, isAbsolute, join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
 import { applyFilter, STREAM_CAP } from "../../../src/mcp/tools/shell.ts";
-import { McpSession, serverBundle, serverWorkspace, VERSION } from "./client.ts";
+import { errorText, McpSession, serverBundle, serverWorkspace, VERSION, type ErrorText } from "./client.ts";
 
 const schema = JSON.parse(readFileSync(join(repoRoot(), "src", "mcp", "tools.schema.json"), "utf8")) as object;
 const validateResult = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
@@ -121,6 +123,8 @@ interface ToolResult {
   content: { type: string; text: string }[];
   structuredContent: Record<string, unknown>;
   isError?: boolean;
+  /** For an error result: what its text gives (no structuredContent, C002-IF-002 §6.1). */
+  error?: ErrorText;
 }
 
 type Call = (args: Record<string, unknown>) => Promise<ToolResult>;
@@ -138,11 +142,12 @@ async function withServer(
       const r = await s.request("tools/call", { name: "run_command", arguments: args });
       assert.ok(r.result !== undefined && r.error === undefined, JSON.stringify(r));
       const res = r.result as unknown as ToolResult;
+      assert.equal(res.content.length, 1);
+      if (res.isError === true) return { ...res, error: errorText(res) };
+      // The output schema describes the success output only (C002-IF-002 §4).
       assert.ok(validateResult(res.structuredContent), `structuredContent does not match the schema: ${JSON.stringify(validateResult.errors)} in ${JSON.stringify(res)}`);
       const ok = res.structuredContent["status"] === "completed" || res.structuredContent["status"] === "timed_out";
-      assert.equal(res.isError === true, !ok, JSON.stringify(res));
-      assert.equal(res.content.length, 1);
-      if (res.isError) assert.equal(res.content[0]!.text, res.structuredContent["message"]);
+      assert.ok(ok, JSON.stringify(res));
       return res;
     };
     await fn(call, f, s);
@@ -162,9 +167,14 @@ function callsSince(s: McpSession, mark: number): SpawnCall[] {
 
 function assertRefused(r: ToolResult, code: string): void {
   assert.equal(r.isError, true, JSON.stringify(r));
-  assert.equal(r.structuredContent["code"], code, JSON.stringify(r));
-  assert.equal(r.structuredContent["status"], code.startsWith("GUARD-") ? "refused" : "failed", JSON.stringify(r));
-  assert.equal("exit_code" in r.structuredContent, false);
+  assert.ok(r.error, JSON.stringify(r));
+  assert.equal("structuredContent" in r, false, JSON.stringify(r));
+  assert.equal(r.error.code, code, JSON.stringify(r));
+  assert.equal(r.error.status, code.startsWith("GUARD-") ? "refused" : "failed", JSON.stringify(r));
+  // The code occurs once in the text: a GUARD-* text is the core's message, which starts with it.
+  assert.equal(r.error.text.split(code).length - 1, 1, r.error.text);
+  // No exit code: the error result has no structuredContent, and its text is no command result.
+  assert.ok(!r.error.text.includes("--- stdout ---"), r.error.text);
 }
 
 function assertCompleted(r: ToolResult): void {
@@ -197,7 +207,7 @@ test("C002-TS-406: command decisions — allowed commands run, others refused wi
         assert.ok(callsSince(s, mark).length >= 1, `${row.command}: no process was started`);
       } else {
         assertRefused(r, row.result);
-        assert.match(r.structuredContent["message"] as string, new RegExp(`^${row.result}: Bash on .+ denied — .+\\. Allowed: `));
+        assert.match(r.error!.message, new RegExp(`^${row.result}: Bash on .+ denied — .+\\. Allowed: `));
         assert.deepEqual(callsSince(s, mark), [], `${row.command}: a refused command started a process`);
       }
       assert.equal(fx.exists("src/marker.txt"), false, row.command);
@@ -293,8 +303,8 @@ test("C002-TS-641: command decisions with the dialect argument; src/app.ts uncha
         assertRefused(r, row.result);
         if (row.result !== "ERR-MCP-001") {
           const tool = row.dialect === "powershell" ? "PowerShell" : "Bash";
-          assert.match(r.structuredContent["message"] as string, new RegExp(`^${row.result}: ${tool} on `));
-        } else assert.match(r.structuredContent["message"] as string, /^invalid arguments for run_command: \/dialect /);
+          assert.match(r.error!.message, new RegExp(`^${row.result}: ${tool} on `));
+        } else assert.match(r.error!.message, /^invalid arguments for run_command: \/dialect /);
         assert.deepEqual(callsSince(s, mark), [], `${command}: a refused command started a process`);
       }
       assert.equal(fx.read("src/app.ts"), "export const app = 1;\n", command);
@@ -313,7 +323,7 @@ test("C002-TS-642: ast-grep only as a .cmd shim → ERR-MCP-006, the shim record
         const mark = spawnCalls(s.stderr).length;
         const r = await call({ command: "ast-grep --version" });
         assertRefused(r, "ERR-MCP-006");
-        assert.equal(r.structuredContent["message"], 'could not start "ast-grep": only a .cmd or .bat shim was found');
+        assert.equal(r.error!.text, 'ERR-MCP-006: could not start "ast-grep": only a .cmd or .bat shim was found');
         assert.deepEqual(callsSince(s, mark), []);
         assert.equal(existsSync(join(stub.dir, "starts.txt")), false, "the shim was started");
       },
@@ -332,7 +342,7 @@ test("C002-TS-642: ast-grep not on PATH → ERR-MCP-006 'not found on PATH', no 
         const mark = spawnCalls(s.stderr).length;
         const r = await call({ command: "ast-grep --version" });
         assertRefused(r, "ERR-MCP-006");
-        assert.equal(r.structuredContent["message"], 'could not start "ast-grep": not found on PATH');
+        assert.equal(r.error!.text, 'ERR-MCP-006: could not start "ast-grep": not found on PATH');
         assert.deepEqual(callsSince(s, mark), []);
         assert.equal(fx.exists("src/marker.txt"), false);
       },
@@ -416,7 +426,9 @@ test("C002-TS-423: the package's scripts/sdd.mjs deleted → ERR-MCP-006 'not fo
         const mark = spawnCalls(s.stderr).length;
         const r = await call({ command: "sdd status" });
         assertRefused(r, "ERR-MCP-006");
-        const message = r.structuredContent["message"] as string;
+        const message = r.error!.message;
+        assert.ok(r.error!.text.startsWith('ERR-MCP-006: could not start "sdd": not found beside the server ('), r.error!.text);
+        assert.ok(r.error!.text.endsWith(")"), r.error!.text);
         assert.ok(message.startsWith('could not start "sdd": not found beside the server ('), message);
         assert.equal(message, `could not start "sdd": not found beside the server (${join(pkg, "scripts", "sdd.mjs")})`);
         assert.ok(isAbsolute(message.slice(message.indexOf("(") + 1, -1)), message);
@@ -465,7 +477,7 @@ test("C002-TS-352: sdd install copilot through run_command → GUARD-BASH-001, n
       const mark = spawnCalls(s.stderr).length;
       const r = await call({ command: `sdd install copilot --package ${pkg}` });
       assertRefused(r, "GUARD-BASH-001");
-      assert.match(r.structuredContent["message"] as string, /sdd install writes outside \.sdd\/; P-03 runs it in their own terminal/);
+      assert.match(r.error!.message, /sdd install writes outside \.sdd\/; P-03 runs it in their own terminal/);
       assert.deepEqual(callsSince(s, mark), [], "the install command started a process");
       assert.equal(fx.exists(".github"), false);
       assert.equal(fx.exists(".vscode"), false);

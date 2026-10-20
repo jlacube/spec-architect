@@ -294,7 +294,9 @@ const packages = new Map();
  * The OpenCode package generated from plugins/architect (once per process and `targetPackage`), as
  * `npm run generate` writes it. `targetPackage` (case field of C002-T-038): `mode` the enforcement mode
  * (`--mode opencode=<mode>`); `tested_versions` replaces `host.tested_versions` in a copy of the mapping
- * table; `version` replaces `package_version` in `architect-target.json`.
+ * table; `version` is written into the `.claude-plugin/plugin.json` of that copy before generation, so
+ * that the manifest's `package_version` and the `{{package_version}}` token both carry it (C002-IF-010
+ * §2.1, C002-TS-515; C002-T-064).
  */
 export function generatedPackage(targetPackage = {}, root = ROOT) {
   const key = JSON.stringify(targetPackage ?? {});
@@ -302,13 +304,22 @@ export function generatedPackage(targetPackage = {}, root = ROOT) {
   const out = mkdtempSync(join(tmpdir(), "sdd-eval-ocpkg-"));
   process.once("exit", () => rmSync(out, { recursive: true, force: true }));
   let source = join(root, "plugins", "architect");
-  if (targetPackage?.tested_versions) {
+  if (targetPackage?.tested_versions || targetPackage?.version) {
     const copy = join(out, "source");
     cpSync(source, copy, { recursive: true, filter: (p) => !/[\\/]node_modules([\\/]|$)/.test(p) });
-    const tableFile = join(copy, "targets", "opencode.json");
-    const t = JSON.parse(readFileSync(tableFile, "utf8"));
-    t.host.tested_versions = { ...t.host.tested_versions, ...targetPackage.tested_versions };
-    writeFileSync(tableFile, JSON.stringify(t, null, 2) + "\n");
+    if (targetPackage.tested_versions) {
+      const tableFile = join(copy, "targets", "opencode.json");
+      const t = JSON.parse(readFileSync(tableFile, "utf8"));
+      t.host.tested_versions = { ...t.host.tested_versions, ...targetPackage.tested_versions };
+      writeFileSync(tableFile, JSON.stringify(t, null, 2) + "\n");
+    }
+    if (targetPackage.version) {
+      // The version stamp of C002-IF-010 §2.1: the generator takes the package version and the
+      // {{package_version}} token from the source manifest (C002-IF-004 Output).
+      const manifestFile = join(copy, ".claude-plugin", "plugin.json");
+      const m = JSON.parse(readFileSync(manifestFile, "utf8"));
+      writeFileSync(manifestFile, JSON.stringify({ ...m, version: targetPackage.version }, null, 2) + "\n");
+    }
     source = copy;
   }
   const args = [join(root, "scripts", "generate.mjs"), "--target", "opencode", "--source", source, "--out", join(out, "pkg"), "--quiet"];
@@ -316,11 +327,6 @@ export function generatedPackage(targetPackage = {}, root = ROOT) {
   const r = spawnSync(process.execPath, args, { cwd: root, encoding: "utf8", windowsHide: true });
   if (r.status !== 0) throw new Error(`generating the OpenCode package failed (exit ${r.status}): ${(r.stderr || r.stdout).slice(-800)}`);
   const dir = join(out, "pkg", "opencode");
-  if (targetPackage?.version) {
-    const rec = join(dir, "architect-target.json");
-    const j = JSON.parse(readFileSync(rec, "utf8"));
-    writeFileSync(rec, JSON.stringify({ ...j, package_version: targetPackage.version }, null, 2) + "\n");
-  }
   packages.set(key, dir);
   return dir;
 }
@@ -380,11 +386,12 @@ function removeLink(path) {
  * The real host: the pinned binary through the driver, paid (OpenRouter key file), with the package in
  * the project. `start({ project, runDir })` → `{ version, run(options), stop() }`.
  */
-export function driverHost({ keyFile, bin } = {}) {
+export function driverHost({ keyFile, bin, start } = {}) {
   return {
     needsPackage: true,
     async start({ project, runDir, env: caseEnv = {} }) {
-      const { startOpenCode } = await import("../opencode/driver.mjs");
+      // `start` replaces the driver's startOpenCode in the runner tests (C002-TC-907: no opencode serve).
+      const startOpenCode = start ?? (await import("../opencode/driver.mjs")).startOpenCode;
       const links = [];
       const xdg = join(runDir, "xdg");
       for (const d of ["config", "data", "cache", "state"]) mkdirSync(join(xdg, d), { recursive: true });
@@ -517,7 +524,8 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
         const given = {};
         if (reply.kind === "reply") view.forEach((q, i) => (given[q.question] = (reply.answers[i] ?? []).join(", ")));
         const route = reply.kind === "reply" ? "question.reply" : "question.reject";
-        answers.push({ toolUseId: req.tool?.callID ?? null, questions: view, answers: given, route });
+        // A dismissed call has no answer: null (C002-IF-010 §3, "AskUserQuestion with null").
+        answers.push({ toolUseId: req.tool?.callID ?? null, questions: view, answers: reply.kind === "reply" ? given : null, route });
         stamp({ event: "answer", questions: view, answers: given, route, ...(reply.kind === "reject" ? { dismissed: true } : {}) });
         return reply.kind === "reply" ? reply.answers : null;
       },

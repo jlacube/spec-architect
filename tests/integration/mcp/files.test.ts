@@ -1,15 +1,16 @@
 // C002-TC-401, C002-TC-403, C002-TC-404, C002-TC-405 and the C002-TS-402 rows (C002-T-017): the write
 // tools of the sdd MCP server's `files` profile (C002-IF-002 §5.1; C002-REQ-401 … C002-REQ-404). The
 // server runs as a child process in the `fx-srv` fixture of the CAP-04 acceptance file, bundled from the
-// sources (the packed-tarball run of C002-TC-401 comes with C002-T-022). Every structuredContent is
-// checked against sdd-mcp-tools.schema.json.
+// sources (the packed-tarball run of C002-TC-401 comes with C002-T-022). Every success's structuredContent is
+// checked against sdd-mcp-tools.schema.json; an error result is text only (C002-IF-002 §6.1, revised for
+// defect D-017; C002-T-064): its code, message, path and count are read from the text.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, mkdirSync, readdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
-import { McpSession, serverWorkspace } from "./client.ts";
+import { errorText, McpSession, serverWorkspace, type ErrorText } from "./client.ts";
 
 const schema = JSON.parse(readFileSync(join(repoRoot(), "src", "mcp", "tools.schema.json"), "utf8")) as object;
 const validateResult = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
@@ -40,6 +41,8 @@ interface ToolResult {
   content: { type: string; text: string }[];
   structuredContent: Record<string, unknown>;
   isError?: boolean;
+  /** For an error result: what its text gives (no structuredContent, C002-IF-002 §6.1). */
+  error?: ErrorText;
 }
 
 async function withServer(fn: (call: (name: string, args: Record<string, unknown>) => Promise<ToolResult>, fx: Fx, s: McpSession) => Promise<void>, env: Record<string, string> = {}): Promise<void> {
@@ -51,10 +54,11 @@ async function withServer(fn: (call: (name: string, args: Record<string, unknown
       const r = await s.request("tools/call", { name, arguments: args });
       assert.ok(r.result !== undefined && r.error === undefined, JSON.stringify(r));
       const res = r.result as unknown as ToolResult;
-      assert.ok(validateResult(res.structuredContent), `structuredContent does not match the schema: ${JSON.stringify(validateResult.errors)} in ${JSON.stringify(res)}`);
-      assert.equal(res.isError === true, res.structuredContent["status"] !== "written", JSON.stringify(res));
       assert.equal(res.content.length, 1);
-      if (res.isError) assert.equal(res.content[0]!.text, res.structuredContent["message"]);
+      if (res.isError === true) return { ...res, error: errorText(res) };
+      // The output schema describes the success output only (C002-IF-002 §4).
+      assert.ok(validateResult(res.structuredContent), `structuredContent does not match the schema: ${JSON.stringify(validateResult.errors)} in ${JSON.stringify(res)}`);
+      assert.equal(res.structuredContent["status"], "written", JSON.stringify(res));
       return res;
     };
     await fn(call, fx, s);
@@ -67,7 +71,10 @@ async function withServer(fn: (call: (name: string, args: Record<string, unknown
 
 function assertRefused(r: ToolResult, code: string): void {
   assert.equal(r.isError, true, JSON.stringify(r));
-  assert.equal(r.structuredContent["code"], code, JSON.stringify(r));
+  assert.ok(r.error, JSON.stringify(r));
+  assert.equal("structuredContent" in r, false, JSON.stringify(r));
+  assert.equal(r.error.code, code, JSON.stringify(r));
+  assert.ok(r.error.text.startsWith(`${code}: `), r.error.text);
 }
 
 // C002-TS-401 — write decisions.
@@ -97,8 +104,8 @@ test("C002-TS-401: write_file decisions — inside .sdd/ written, everything els
         assert.match(r.content[0]!.text, /^wrote .+ \(1 bytes\)\n/);
       } else {
         assertRefused(r, "GUARD-PATH-001");
-        assert.equal(r.structuredContent["status"], "refused");
-        assert.match(r.structuredContent["message"] as string, /^GUARD-PATH-001: Write on .+ denied — .+ Allowed: files under .+\/\.sdd\/ \(Architect agents write only inside \.sdd\/\)\.$/);
+        assert.equal(r.error!.status, "refused");
+        assert.match(r.error!.message, /^GUARD-PATH-001: Write on .+ denied — .+ Allowed: files under .+\/\.sdd\/ \(Architect agents write only inside \.sdd\/\)\.$/);
       }
       if (row.state === "x") assert.equal(readFileSync(target, "utf8"), "x", path);
       else if (row.state === "unchanged") assert.equal(readFileSync(target, "utf8"), before, path);
@@ -137,12 +144,12 @@ for (const [fault, env, args, code] of [
     await withServer(async (call, fx) => {
       const r = await call("write_file", { ...args });
       assertRefused(r, code);
-      assert.equal(r.structuredContent["status"], "failed");
+      assert.equal(r.error!.status, "failed");
       assert.equal(fx.read(".sdd/002-x/a.md"), "status: draft\n");
       assert.deepEqual(readdirSync(join(fx.root, ".sdd", "002-x")), ["a.md"], "no temporary file is left");
-      if (code === "ERR-MCP-001") assert.match(r.structuredContent["message"] as string, /^invalid arguments for write_file: .*content/);
-      if (code === "ERR-MCP-002") assert.match(r.structuredContent["message"] as string, /^internal fault in write_file: .+; the call was refused$/);
-      if (code === "ERR-MCP-003") assert.match(r.structuredContent["message"] as string, /^could not write .+\/\.sdd\/002-x\/a\.md: .+; previous content kept$/);
+      if (code === "ERR-MCP-001") assert.match(r.error!.message, /^invalid arguments for write_file: .*content/);
+      if (code === "ERR-MCP-002") assert.match(r.error!.message, /^internal fault in write_file: .+; the call was refused$/);
+      if (code === "ERR-MCP-003") assert.match(r.error!.message, /^could not write .+\/\.sdd\/002-x\/a\.md: .+; previous content kept$/);
     }, env);
   });
 }
@@ -158,7 +165,7 @@ test("C002-TS-402: arguments outside the input schema → ERR-MCP-001 before any
     ] as const) {
       const r = await call(tool, { ...args });
       assertRefused(r, "ERR-MCP-001");
-      assert.equal(r.structuredContent["status"], "failed");
+      assert.equal(r.error!.status, "failed");
     }
     assert.equal(fx.read(".sdd/002-x/a.md"), "status: draft\n");
   });
@@ -196,8 +203,8 @@ test("replace_text on a file that does not exist → refused with ERR-MCP-005 (C
   await withServer(async (call, fx) => {
     const r = await call("replace_text", { path: ".sdd/002-x/none.md", old_text: "a", new_text: "b" });
     assertRefused(r, "ERR-MCP-005");
-    assert.equal(r.structuredContent["status"], "refused");
-    assert.match(r.structuredContent["message"] as string, /\/\.sdd\/002-x\/none\.md does not exist; replace_text edits existing files$/);
+    assert.equal(r.error!.status, "refused");
+    assert.match(r.error!.message, /\/\.sdd\/002-x\/none\.md does not exist; replace_text edits existing files$/);
     assert.equal(existsSync(join(fx.root, ".sdd", "002-x", "none.md")), false);
   });
 });
@@ -219,9 +226,9 @@ for (const [count, ok] of [
         assert.equal(fx.read(".sdd/002-x/b.md"), before.replace("TS-101", "TS-102"));
       } else {
         assertRefused(r, "ERR-MCP-004");
-        assert.equal(r.structuredContent["status"], "refused");
-        assert.equal(r.structuredContent["occurrences"], count);
-        assert.match(r.structuredContent["message"] as string, new RegExp(`^the text to replace occurs ${count} times in .+/\\.sdd/002-x/b\\.md; it must occur exactly once$`));
+        assert.equal(r.error!.status, "refused");
+        assert.ok(r.error!.message.startsWith(`the text to replace occurs ${count} times in `), r.error!.message);
+        assert.match(r.error!.message, new RegExp(`^the text to replace occurs ${count} times in .+/\\.sdd/002-x/b\\.md; it must occur exactly once$`));
         assert.equal(fx.read(".sdd/002-x/b.md"), before);
       }
     });
@@ -233,7 +240,7 @@ test("C002-TS-405: overlapping occurrences count, so the span is ambiguous", asy
     writeFileSync(join(fx.root, ".sdd", "002-x", "b.md"), "aaa\n");
     const r = await call("replace_text", { path: ".sdd/002-x/b.md", old_text: "aa", new_text: "b" });
     assertRefused(r, "ERR-MCP-004");
-    assert.equal(r.structuredContent["occurrences"], 2);
+    assert.match(r.error!.text, /^ERR-MCP-004: the text to replace occurs 2 times in .+\/\.sdd\/002-x\/b\.md; it must occur exactly once$/);
     assert.equal(fx.read(".sdd/002-x/b.md"), "aaa\n");
   });
 });

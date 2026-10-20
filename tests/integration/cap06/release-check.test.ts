@@ -9,21 +9,27 @@
 //   C002-TC-633 (C002-TS-633)  the hooks-state check, every row of both Copilot modes (ERR-REL-010, -011, -002, -004)
 //   C002-TC-637 (C002-TS-637)  incomplete replay reports (ERR-REL-012)
 //   C002-TC-651 (C002-TS-651)  replay host capabilities (ERR-REL-012 `replay host lacks file-symlink`, ERR-REL-001)
+//   C002-T-064: the PG-900 rows of C002-TC-637; C002-TC-668 (step check, 21 rows), C002-TC-669 (evidence
+//   kinds of ERR-REL-009, the unreadable step index), C002-TC-670 (--dry-run), C002-TC-671 (exit codes and
+//   output); the step index reader on the repository's checklist and on each unreadable condition
 // plus: a target zip whose content differs from the regeneration (ERR-REL-007, C002-NFR-501), a package
 // generated with --mode (ERR-REL-008), the committed replay reports pass the recomputation, the ERR-REL
 // catalogue mirrors errors.md §3, and the script entry with --dry-run.
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { stringify } from "yaml";
 import { splitCells } from "../../../src/model/blocks.ts";
 import { main as generate } from "../../../scripts/generate/main.ts";
 import { zipDir } from "../../../scripts/package.mjs";
 import type { Target } from "../../../scripts/generate/tables.ts";
 import { MECHANISMS_OF_MODE } from "../../../scripts/release/check.ts";
 import { REL_CATALOGUE } from "../../../scripts/release/errors.ts";
+import { readChecklistSteps } from "../../../scripts/release/evidence.ts";
 import { main } from "../../../scripts/release/main.ts";
 import { checkReport, loadCorpora, parseReport, type Corpus } from "../../../scripts/release/replay.ts";
 import type { Mechanism } from "../../replay/expect.ts";
@@ -38,6 +44,7 @@ import {
   FX_VERSION,
   injectionSummary,
   packageVariant,
+  PG_900,
   RECORD_PATH,
   recount,
   ROOT,
@@ -151,7 +158,8 @@ test("C002-TC-621 (C002-TS-621): Copilot checklist record at release", () => {
   // A step of the package's mode that the record leaves out, or gives as not applicable, did not pass.
   const steps = checklistRecord("sdd-mcp-server", tested).replace(/\n {2}- id: VSC-23\n {4}result: passed/, "").replace(/(id: VSC-24\n {4}result: )passed/, "$1not-applicable");
   const gaps = check({ variant: CP_SDD, checklist: steps });
-  assert.deepEqual(gaps.err, ["ERR-REL-004: copilot: checklist step VSC-23 is not recorded", "ERR-REL-004: copilot: checklist step VSC-24 is not-applicable"]);
+  // The step check of §5 (C002-T-064): the listed steps in record order, then the unlisted ones.
+  assert.deepEqual(gaps.err, ["ERR-REL-004: copilot: checklist step VSC-24 is not-applicable", "ERR-REL-004: copilot: checklist step VSC-23 is not recorded"]);
 });
 
 test("C002-TC-622 (C002-TS-622): Copilot refused, OpenCode clean, in one evidence folder", () => {
@@ -442,3 +450,401 @@ test("node scripts/release-check.mjs --target opencode --dry-run on fx-release; 
   assert.match(u.stderr, /release-check: --target is required/);
   assert.equal(spawnSync(process.execPath, [script, "--target", "claude-code"], { encoding: "utf8" }).status, 2);
 });
+
+// --- C002-T-064: PG-900 rows of C002-TC-637, C002-TC-668 … C002-TC-671, the repository's step index ----
+
+{
+  type R = ReturnType<typeof cleanReport>;
+  const report = `docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`;
+  const rows: { defect: string; mutate: (r: R) => void; part: string }[] = [
+    { defect: "leaves out PG-900", mutate: () => undefined, part: "omits cases" },
+    {
+      defect: "lists PG-900 as a replayed case with the decision deny",
+      mutate: (r) => {
+        r.cases.push({ id: "PG-900", corpus: "path", category: "traversal", fed_as: { tool: "Write", caller: "sdd-spec-writer", malformed: false }, expected: "deny", expected_source: "corpus", actual: "deny" });
+        recount(r);
+      },
+      part: "records expectations other than C002-IF-009 §2.1",
+    },
+    {
+      defect: "lists PG-900 as not applicable",
+      mutate: (r) => void r.not_applicable.push({ id: "PG-900", corpus: "path", category: "traversal", rule: "C002-REQ-626" }),
+      part: "lists cases as not applicable without a rule",
+    },
+  ];
+  for (const row of rows)
+    test(`C002-TS-637 PG-900 row: the sdd-mcp-server report on a win32 replay host ${row.defect}, which the corpora limit by platforms to linux → ERR-REL-012 ${row.part}`, () => {
+      const r = check({ variant: OC_SDD, pathCases: [PG_900], mutate: { "sdd-mcp-server": (x) => (assert.equal(x.replay_host.platform, "win32"), row.mutate(x)) } });
+      refused(r, row.defect);
+      assert.deepEqual(r.err, [`ERR-REL-012: opencode: replay report ${report} (sdd-mcp-server) ${row.part}: PG-900`], row.defect);
+    });
+}
+
+test("the repository's docs/checklists/vscode-copilot.md reads as a step index with one restore step (VSC-07)", () => {
+  const steps = readChecklistSteps(join(ROOT, "docs", "checklists", "vscode-copilot.md"));
+  assert.ok(steps, "readable");
+  assert.deepEqual(steps.filter((s) => s.kind === "restore").map((s) => s.id), ["VSC-07"]);
+  assert.equal(steps.find((s) => s.id === "VSC-10")?.kind, "hooks-state");
+  assert.deepEqual([...new Set(steps.map((s) => s.group))].sort(), [1, 2, 3, 4]);
+  assert.equal(steps.filter((s) => s.kind === "injection").length, 22);
+  assert.ok(steps.every((s) => /^VSC-\d+$/.test(s.id)), "the assumption table's rows are no steps");
+});
+
+/** A checklist whose `## Step index` holds `rows` ([step, group, mode, kind, title]). */
+function checklistText(rows: [string, number | string, string, string, string][], { heading = "## Step index", header = "| Step | Group | Mode | Kind | Hook | Scenarios | Title |" } = {}): string {
+  return [
+    "# Manual VS Code checklist (fx-release)",
+    "",
+    heading,
+    "",
+    header,
+    "|---|---|---|---|---|---|---|",
+    ...rows.map(([id, g, m, k, t]) => `| ${id} | ${g} | ${m} | ${k} | no | - | ${t} |`),
+    "",
+    "## Assumption steps",
+    "",
+    "| Assumption | Statement | Spec | Step |",
+    "|---|---|---|---|",
+    "| A-1 | x | y | VSC-77 |",
+    "",
+  ].join("\n");
+}
+
+const INJ = (n: number) => `INJ-${String(n).padStart(2, "0")}`;
+/** The step index of C002-TS-668: VSC-01 … VSC-05 and the injection steps VSC-11 … VSC-30 (INJ-01 … INJ-20). */
+const TS668_INDEX: [string, number, string, string, string][] = [
+  ["VSC-01", 1, "both", "install", "Install"],
+  ["VSC-02", 4, "sdd-mcp-server", "boundary", "Boundary"],
+  ["VSC-03", 4, "copilot-hooks", "guard-denial", "Guard denial"],
+  ["VSC-04", 2, "both", "restore", "Restore"],
+  ["VSC-05", 3, "both", "hooks-state", "Hooks state"],
+  ...Array.from({ length: 20 }, (_, i) => [`VSC-${11 + i}`, 4, "copilot-hooks", "injection", `Injection case ${INJ(i + 1)}`] as [string, number, string, string, string]),
+];
+
+type Entry = Record<string, unknown>;
+/** A checklist record with hooks enabled (on, trusted, none) and the given steps, in this order. */
+function recordText(mode: string, tested: Record<string, string>, steps: Entry[]): string {
+  const fm = {
+    checklist: "docs/checklists/vscode-copilot.md",
+    date: "2026-11-20",
+    package_version: FX_VERSION,
+    host_versions: { vscode: tested["vscode"], "copilot-chat": tested["copilot-chat"] },
+    enforcement_mode: mode,
+    hooks_state: "enabled",
+    hooks_sources: { use_hooks: "on", workspace_trust: "trusted", policy: "none" },
+    executed_by: "P-01",
+    steps,
+  };
+  return `---\n${stringify(fm)}---\n\n# Checklist record (fx-release)\n`;
+}
+
+const passed = (id: string, extra: Entry = {}): Entry => ({ id, result: "passed", ...extra });
+const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{ result, cause }] });
+
+{
+  const S = "sdd-mcp-server" as const;
+  const H = "copilot-hooks" as const;
+  const line = (id: string, result: string) => `ERR-REL-004: copilot: checklist step ${id} is ${result}`;
+  type Row = { mode: typeof S | typeof H; restore?: Entry; steps: Entry[]; err: string[] | "ERR-REL-011" };
+  const rows: Row[] = [
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02")], err: [] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), { id: "VSC-03", result: "not-applicable" }], err: [] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), { id: "VSC-11", result: "not-applicable" }], err: [] },
+    { mode: S, steps: [passed("VSC-01")], err: [line("VSC-02", "not recorded")] },
+    { mode: S, steps: [{ id: "VSC-01", result: "not-applicable" }, passed("VSC-02")], err: [line("VSC-01", "not-applicable")] },
+    { mode: S, steps: [passed("VSC-01"), { id: "VSC-02", result: "failed", note: "the write to src/app.ts was not denied" }], err: [line("VSC-02", "failed")] },
+    { mode: S, steps: [passed("VSC-01"), { id: "VSC-02", result: "skipped" }], err: [line("VSC-02", "skipped")] },
+    { mode: S, steps: [passed("VSC-01"), { id: "VSC-02" }], err: [line("VSC-02", "not recorded")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), { id: "VSC-03", result: "failed" }], err: [line("VSC-03", "failed")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), passed("VSC-03")], err: [line("VSC-03", "passed, but its mode is copilot-hooks")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), passed("VSC-02")], err: [line("VSC-02", "listed more than once")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), passed("VSC-99")], err: [line("VSC-99", "not a step of the checklist")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "repeated"))], err: [line("VSC-02", "failed in an earlier run not repeated under the rerun rule")] },
+    { mode: S, restore: earlier("passed", "hooks-source-changed"), steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [line("VSC-02", "failed in an earlier run not repeated under the rerun rule")] },
+    { mode: S, restore: earlier("passed", "hooks-source-changed"), steps: [passed("VSC-01", earlier("failed", "hooks-source-changed")), passed("VSC-02")], err: [line("VSC-01", "failed in an earlier run not repeated under the rerun rule")] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("skipped", "repeated"))], err: [line("VSC-02", "skipped in an earlier run")] },
+    { mode: H, steps: [passed("VSC-01"), passed("VSC-03")], err: [] },
+    { mode: H, steps: [passed("VSC-01"), { id: "VSC-02", result: "not-applicable" }], err: [line("VSC-03", "not recorded")] },
+    { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), passed("VSC-02")], err: [line("VSC-02", "passed, but its mode is sdd-mcp-server")] },
+    { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), { id: "VSC-11", result: "not-applicable", injection_case: "INJ-01" }], err: "ERR-REL-011" },
+  ];
+  assert.equal(rows.length, 21);
+  for (const [i, row] of rows.entries())
+  test(`C002-TS-668 row ${i + 1} (${row.mode}): restore ${JSON.stringify(row.restore ?? {})}, steps ${JSON.stringify(row.steps)} → ${row.err === "ERR-REL-011" ? "ERR-REL-011" : row.err.length === 0 ? "allowed" : row.err.join("; ")}`, () => {
+    const variant = row.mode === S ? CP_SDD : CP_HOOKS;
+    const tested = packageVariant(variant).tested;
+    // VSC-11 … VSC-30 and VSC-05 passed, the restore step VSC-04 as the row gives it; the row's steps
+    // replace the entry of a step they name.
+    const base: Entry[] = [passed("VSC-04", row.restore ?? {}), passed("VSC-05"), ...Array.from({ length: 20 }, (_, k) => passed(`VSC-${11 + k}`, { injection_case: INJ(k + 1) }))];
+    const named = new Set(row.steps.map((s) => s.id));
+    const steps = [...base.filter((s) => !named.has(s.id as string)), ...row.steps];
+    const r = check({ variant, checklistFile: checklistText(TS668_INDEX), checklist: recordText(row.mode, tested, steps) });
+    const what = `row ${i + 1} (${row.mode}): ${JSON.stringify(row.steps)}`;
+    if (row.err === "ERR-REL-011") {
+      refused(r, what);
+      assert.deepEqual(r.err, [`ERR-REL-011: copilot: checklist record ${RECORD_PATH} lacks the Copilot injection cases INJ-01`], what);
+      return;
+    }
+    if (row.err.length === 0) allowed(r, what);
+    else {
+      refused(r, what);
+      assert.deepEqual(r.err, row.err, what);
+    }
+    assert.equal(r.err.filter((l) => l.startsWith("ERR-REL-004")).length, row.err.length, `${what}: exactly the row's ERR-REL-004 lines`);
+  });
+}
+
+{
+  // C002-TC-669 (C002-TS-669): evidence kinds of ERR-REL-009 and the replay reports of each enforcement mode.
+  const nine = (r: Run) => r.err.filter((l) => l.startsWith("ERR-REL-009"));
+  const oc = (n: number) => injectionSummary("opencode", "opencode-runner", { opencode: "1.18.31" }, n);
+  const repoChecklist = () => readFileSync(join(ROOT, "docs", "checklists", "vscode-copilot.md"), "utf8");
+  const report = `docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`;
+
+  test("C002-TS-669 OpenCode sdd MCP server enforcement: an injection summary of 19 cases → exactly one ERR-REL-009 (19 cases, at least 20 required)", () => {
+    const r = check({ variant: OC_SDD, injection: oc(19) });
+    refused(r, "19 injection cases");
+    assert.deepEqual(r.err, [`ERR-REL-009: opencode: evidence injection summary (19 cases, at least 20 required) missing, unreadable or insufficient at docs/releases/opencode/${FX_VERSION}/injection.json`]);
+  });
+
+  test("C002-TS-669 OpenCode sdd MCP server enforcement: an injection summary of 20 cases → allowed, no ERR-REL-009", () => {
+    const r = check({ variant: OC_SDD, injection: oc(20) });
+    allowed(r, "20 injection cases");
+    assert.deepEqual(nine(r), []);
+  });
+
+  test("C002-TS-669 Copilot hooks fallback: a checklist of 19 injection cases, each passed in the record → exactly one ERR-REL-009 (injection steps), no ERR-REL-011", () => {
+    const nineteen = repoChecklist().replace(/^\| VSC-5[123] \|.*\n/gm, "");
+    const index = readChecklistStepsText(nineteen);
+    assert.equal(index.filter((s) => s.kind === "injection").length, 19);
+    const tested = packageVariant(CP_HOOKS).tested;
+    const steps = index.map((s) =>
+      s.kind === "injection" ? passed(s.id, { injection_case: s.injectionCase }) : s.mode === "both" || s.mode === "copilot-hooks" ? passed(s.id) : { id: s.id, result: "not-applicable" },
+    );
+    const r = check({ variant: CP_HOOKS, checklistFile: nineteen, checklist: recordText("copilot-hooks", tested, steps) });
+    refused(r, "19 injection steps");
+    assert.deepEqual(nine(r), [`ERR-REL-009: copilot: evidence injection steps (19 cases, at least 20 required) missing, unreadable or insufficient at ${RECORD_PATH}`]);
+    assert.ok(!r.err.some((l) => l.startsWith("ERR-REL-011")), r.err.join("\n"));
+  });
+
+  test("C002-TS-669 OpenCode sdd MCP server enforcement: a replay report of another path-corpus SHA-256 that omits PG-205 → ERR-REL-009 corpus replay of the corpora at the release commit, no ERR-REL-012 naming it", () => {
+    const r = check({
+      variant: OC_SDD,
+      mutate: {
+        "sdd-mcp-server": (x) => {
+          (x.corpora["path"] as { sha256: string }).sha256 = "0".repeat(64);
+          x.cases = x.cases.filter((c) => c.id !== "PG-205");
+          recount(x);
+        },
+      },
+    });
+    refused(r, "other corpora");
+    assert.ok(r.err.includes(`ERR-REL-009: opencode: evidence corpus replay of the corpora at the release commit missing, unreadable or insufficient at ${report}`), r.err.join("\n"));
+    assert.ok(!r.err.some((l) => l.startsWith("ERR-REL-012") && l.includes(report)), r.err.join("\n"));
+  });
+
+  test("C002-TS-669 OpenCode sdd MCP server enforcement: no replay-opencode-permissions.json → allowed, no ERR-REL-009", () => {
+    const r = check({ variant: OC_SDD, reports: { "opencode-permissions": null } });
+    allowed(r, "no opencode-permissions report under sdd-mcp-server");
+    assert.deepEqual(nine(r), []);
+  });
+
+  test("C002-TS-669 OpenCode native permission enforcement: no replay-opencode-permissions.json → ERR-REL-009 corpus replay", () => {
+    const r = check({ variant: OC_NATIVE, reports: { "opencode-permissions": null } });
+    refused(r, "native without its report");
+    assert.ok(r.err.includes(`ERR-REL-009: opencode: evidence corpus replay missing, unreadable or insufficient at docs/releases/opencode/${FX_VERSION}/replay-opencode-permissions.json`), r.err.join("\n"));
+  });
+
+  test("C002-TS-669 Copilot hooks fallback: no replay-sdd-mcp-server.json, a clean replay-copilot-hooks.json → ERR-REL-009 corpus replay", () => {
+    const r = check({ variant: CP_HOOKS, reports: { "sdd-mcp-server": null } });
+    refused(r, "hooks fallback without the sdd-mcp-server report");
+    assert.ok(r.err.includes(`ERR-REL-009: copilot: evidence corpus replay missing, unreadable or insufficient at docs/releases/copilot/${FX_VERSION}/replay-sdd-mcp-server.json`), r.err.join("\n"));
+  });
+
+  for (const [what, change] of [
+    ["the step index gives the Kind restore to two steps", (t: string) => t.replace(/^(\| VSC-08 \| 3 \| sdd-mcp-server \| )hooks-row( \|)/m, "$1restore$2")],
+    ['the checklist has no heading "## Step index"', (t: string) => t.replace(/^## Step index$/m, "## Index")],
+  ] as const)
+    test(`C002-TS-669 Copilot sdd MCP server enforcement: ${what}, the record lists every step of the mode passed → exactly one ERR-REL-009 checklist, no ERR-REL-004`, () => {
+      const text = change(repoChecklist());
+      assert.notEqual(text, repoChecklist());
+      const r = check({ variant: CP_SDD, checklistFile: text });
+      refused(r, what);
+      assert.deepEqual(r.err, ["ERR-REL-009: copilot: evidence checklist missing, unreadable or insufficient at docs/checklists/vscode-copilot.md"], what);
+    });
+}
+
+/** The step index of a checklist text (through a temporary file). */
+function readChecklistStepsText(text: string): NonNullable<ReturnType<typeof readChecklistSteps>> {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-fx-checklist-"));
+  try {
+    writeFileSync(join(dir, "c.md"), text);
+    const steps = readChecklistSteps(join(dir, "c.md"));
+    assert.ok(steps, "readable");
+    return steps;
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test("readChecklistSteps refuses every unreadable condition of C002-IF-009 §4 Step index", () => {
+  const ok = checklistText(TS668_INDEX);
+  assert.equal(readChecklistStepsText(ok).length, 25);
+  const bad: [string, string | null][] = [
+    ["no file", null],
+    ["no heading", ok.replace("## Step index", "## Steps")],
+    ["no step row", checklistText([])],
+    ["another header", checklistText(TS668_INDEX, { header: "| Step | Mode | Group | Kind | Hook | Scenarios | Title |" })],
+    ["a repeated step ID", checklistText([...TS668_INDEX, ["VSC-01", 1, "both", "install", "again"]])],
+    ["a Group outside 1 … 4", checklistText([...TS668_INDEX, ["VSC-40", 5, "both", "scenario", "x"]])],
+    ["a Mode outside the values", checklistText([...TS668_INDEX, ["VSC-40", 4, "hooks", "scenario", "x"]])],
+    ["a Kind outside the values", checklistText([...TS668_INDEX, ["VSC-40", 4, "both", "manual", "x"]])],
+    ["an injection step without a case ID", checklistText([...TS668_INDEX, ["VSC-40", 4, "copilot-hooks", "injection", "Injection case"]])],
+    ["a repeated case ID", checklistText([...TS668_INDEX, ["VSC-40", 4, "copilot-hooks", "injection", "Injection case INJ-01"]])],
+    ["no restore step", checklistText(TS668_INDEX.filter((r) => r[3] !== "restore"))],
+    ["two restore steps", checklistText([...TS668_INDEX, ["VSC-40", 2, "both", "restore", "Restore again"]])],
+  ];
+  for (const [what, text] of bad) {
+    const dir = mkdtempSync(join(tmpdir(), "sdd-fx-checklist-"));
+    try {
+      if (text !== null) writeFileSync(join(dir, "c.md"), text);
+      assert.equal(readChecklistSteps(join(dir, "c.md")), null, what);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+/** An fx-release folder named `fx-release` under a temporary parent: the evidence, the source plugin and dist/. */
+function fxReleaseFolder(e: Evidence): { parent: string; root: string } {
+  const { root, pkg } = evidenceRoot(e);
+  const parent = mkdtempSync(join(tmpdir(), "sdd-fx-parent-"));
+  const fx = join(parent, "fx-release");
+  cpSync(root, fx, { recursive: true });
+  cpSync(pkg.source, join(fx, "plugins", "architect"), { recursive: true });
+  cpSync(pkg.dist, join(fx, "dist"), { recursive: true });
+  return { parent, root: fx };
+}
+
+/** Every file under `dir` with its size and SHA-256. */
+function snapshot(dir: string): Map<string, string> {
+  const out = new Map<string, string>();
+  const walk = (abs: string, rel: string) => {
+    for (const e of readdirSync(abs, { withFileTypes: true })) {
+      const p = join(abs, e.name);
+      const r = rel ? `${rel}/${e.name}` : e.name;
+      if (e.isDirectory()) walk(p, r);
+      else {
+        const data = readFileSync(p);
+        out.set(r, `${data.length}:${createHash("sha256").update(data).digest("hex")}`);
+      }
+    }
+  };
+  walk(dir, "");
+  return out;
+}
+
+const SCRIPT = join(ROOT, "scripts", "release-check.mjs");
+const lines = (s: string) => s.split(/\r?\n/).filter((l) => l !== "");
+
+{
+  type Row = { e: Evidence; target: Target; mode: string; exit: number; outcome: string; err: string[] };
+  const rows: Row[] = [
+    { e: { variant: OC_SDD }, target: "opencode", mode: "sdd-mcp-server", exit: 0, outcome: "released", err: [] },
+    {
+      e: { variant: OC_SDD, mutate: { "sdd-mcp-server": flip("PG-050") }, injection: injectionSummary("opencode", "opencode-runner", { opencode: "1.18.31" }, 20, ["INJ-03"]) },
+      target: "opencode",
+      mode: "sdd-mcp-server",
+      exit: 1,
+      outcome: "refused (2 refusals)",
+      err: ["ERR-REL-001: opencode: corpus replay differs on PG-050 (sdd-mcp-server)", "ERR-REL-002: opencode: injection case INJ-03 acted upon"],
+    },
+    // The checklist record is the injection evidence; the fixture holds no injection.json.
+    { e: { variant: CP_HOOKS, injection: null }, target: "copilot", mode: "copilot-hooks", exit: 0, outcome: "released", err: [] },
+  ];
+  for (const row of rows)
+  test(`C002-TS-670 ${row.target} ${row.mode}: --dry-run --root fx-release → exit ${row.exit}, ${row.outcome}, no file written`, () => {
+    const { parent, root } = fxReleaseFolder(row.e);
+    try {
+      const before = snapshot(root);
+      const r = spawnSync(process.execPath, [SCRIPT, "--target", row.target, "--dry-run", "--root", "fx-release"], { cwd: parent, encoding: "utf8" });
+      const what = `${row.target} ${row.mode} ${row.outcome}`;
+      assert.equal(r.status, row.exit, `${what}: ${r.stderr}`);
+      const out = lines(r.stdout);
+      assert.equal(out.length, 1, r.stdout);
+      assert.ok(out[0]!.startsWith(`release-check: ${row.target} ${FX_VERSION} (${row.mode}): ${row.outcome}`), out[0]);
+      assert.ok(out[0]!.endsWith(`; release record not written (--dry-run; would be docs/releases/${row.target}/${FX_VERSION}/release.json)`), out[0]);
+      assert.ok(!out[0]!.includes("allowed"), out[0]);
+      assert.deepEqual(lines(r.stderr), row.err, what);
+      assert.equal(existsSync(join(root, "docs", "releases", row.target, FX_VERSION, "release.json")), false);
+      if (row.target === "copilot") assert.equal(existsSync(join(root, "docs", "releases", "copilot", FX_VERSION, "injection.json")), false, "no injection.json");
+      assert.deepEqual(snapshot(root), before, `${what}: no file created or changed`);
+    } finally {
+      rmSync(parent, { recursive: true, force: true });
+    }
+  });
+}
+
+{
+  const releaseFile = (root: string) => join(root, "docs", "releases", "opencode", FX_VERSION, "release.json");
+  const usage = (r: ReturnType<typeof spawnSync>) => {
+    const err = lines(String(r.stderr));
+    assert.ok(err.some((l) => l.startsWith("release-check: ")), String(r.stderr));
+    assert.ok(err.some((l) => l.startsWith("usage: node scripts/release-check.mjs --target opencode|copilot")), String(r.stderr));
+  };
+  type Row = { e: Evidence; args: string[]; env?: Record<string, string>; exit: number; check: (r: ReturnType<typeof spawnSync>, root: string) => void };
+  const rows: Row[] = [
+    {
+      e: { variant: OC_SDD },
+      args: ["--target", "opencode"],
+      exit: 0,
+      check: (r, root) => {
+        assert.deepEqual(lines(String(r.stdout)), [`release-check: opencode ${FX_VERSION} (sdd-mcp-server): released; release record docs/releases/opencode/${FX_VERSION}/release.json`]);
+        assert.equal(String(r.stderr), "");
+        assert.equal((JSON.parse(readFileSync(releaseFile(root), "utf8")) as { outcome: string }).outcome, "released");
+      },
+    },
+    {
+      e: { variant: OC_SDD, mutate: { "sdd-mcp-server": flip("PG-050") } },
+      args: ["--target", "opencode"],
+      exit: 1,
+      check: (r, root) => {
+        assert.ok(lines(String(r.stderr)).includes("ERR-REL-001: opencode: corpus replay differs on PG-050 (sdd-mcp-server)"), String(r.stderr));
+        const out = lines(String(r.stdout));
+        assert.equal(out.length, 1);
+        assert.ok(out[0]!.startsWith(`release-check: opencode ${FX_VERSION} (sdd-mcp-server): refused (`), out[0]);
+        const rec = JSON.parse(readFileSync(releaseFile(root), "utf8")) as { outcome: string; refusals: { code: string }[] };
+        assert.equal(rec.outcome, "refused");
+        assert.ok(rec.refusals.some((x) => x.code === "ERR-REL-001"));
+      },
+    },
+    ...[["--target", "opencode", "--force"], ["--target", "opencode", "extra"], ["--version", FX_VERSION], ["--target", "claude-code"], ["--target", "opencode", "--version", "latest"]].map(
+      (args): Row => ({ e: { variant: OC_SDD }, args, exit: 2, check: (r, root) => (usage(r), assert.equal(existsSync(releaseFile(root)), false)) }),
+    ),
+    {
+      e: { variant: OC_SDD },
+      args: ["--target", "opencode"],
+      env: { SDD_TEST_FAULT: "release-record-invalid" },
+      exit: 3,
+      check: (r, root) => {
+        assert.ok(lines(String(r.stderr)).some((l) => l.startsWith("release-check: internal error: ")), String(r.stderr));
+        assert.equal(existsSync(releaseFile(root)), false);
+      },
+    },
+  ];
+  for (const row of rows)
+  test(`C002-TS-671 ${row.args.join(" ")}${row.env ? " (release record seeded invalid)" : ""} → exit ${row.exit}`, () => {
+    const { parent, root } = fxReleaseFolder(row.e);
+    try {
+      const env: Record<string, string | undefined> = { ...process.env, ...row.env };
+      if (!row.env) delete env["SDD_TEST_FAULT"];
+      const r = spawnSync(process.execPath, [SCRIPT, ...row.args, "--root", root], { cwd: ROOT, encoding: "utf8", env });
+      assert.equal(r.status, row.exit, `${row.args.join(" ")}: ${r.stderr}`);
+      assert.ok(!String(r.stdout).includes("allowed"), String(r.stdout));
+      row.check(r, root);
+    } finally {
+      rmSync(parent, { recursive: true, force: true });
+    }
+  });
+}

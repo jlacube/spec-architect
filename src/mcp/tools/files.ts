@@ -85,7 +85,7 @@ function admit(tool: WriteTool, args: Record<string, unknown>, ctx: ToolContext)
   const problems = ctx.schemas.validateInput(tool, args);
   if (problems.length > 0) {
     ctx.debug("invalid-arguments", { tool, code: "ERR-MCP-001" });
-    return { error: errorResult(tool, "failed", "ERR-MCP-001", `invalid arguments for ${tool}: ${problems.join("; ")}`) };
+    return { error: errorResult("ERR-MCP-001", `invalid arguments for ${tool}: ${problems.join("; ")}`) };
   }
   const raw = args["path"] as string;
   const path = normalisePath(raw, { cwd: ctx.root });
@@ -98,11 +98,11 @@ function admit(tool: WriteTool, args: Record<string, unknown>, ctx: ToolContext)
     );
   } catch (e) {
     ctx.debug("guard-path", { tool, path, code: "ERR-MCP-002", reason: reason(e) });
-    return { error: errorResult(tool, "failed", "ERR-MCP-002", `internal fault in ${tool}: the path guard core failed: ${reason(e)}; the call was refused`, { path }) };
+    return { error: errorResult("ERR-MCP-002", `internal fault in ${tool}: the path guard core failed: ${reason(e)}; the call was refused`) };
   }
   if (!decision.allow) {
     ctx.debug("guard-path", { tool, path, decision: "deny", code: RULE });
-    return { error: errorResult(tool, "refused", RULE, decision.message, { path }) };
+    return { error: errorResult(RULE, decision.message) };
   }
   ctx.debug("guard-path", { tool, path, decision: "allow" });
   return { path };
@@ -116,7 +116,7 @@ function writeAtomic(tool: WriteTool, path: string, bytes: Uint8Array, ctx: Tool
     return null;
   } catch (e) {
     ctx.debug("write-failed", { tool, path, code: "ERR-MCP-003", reason: reason(e) });
-    return errorResult(tool, "failed", "ERR-MCP-003", `could not write ${path}: ${reason(e)}; previous content kept`, { path });
+    return errorResult("ERR-MCP-003", `could not write ${path}: ${reason(e)}; previous content kept`);
   }
 }
 
@@ -142,7 +142,7 @@ function guarded(tool: WriteTool, fn: ToolHandler): ToolHandler {
       return await fn(args, ctx);
     } catch (e) {
       ctx.debug("internal-fault", { tool, code: "ERR-MCP-002", reason: reason(e) });
-      return errorResult(tool, "failed", "ERR-MCP-002", `internal fault in ${tool}: ${reason(e)}; the call was refused`);
+      return errorResult("ERR-MCP-002", `internal fault in ${tool}: ${reason(e)}; the call was refused`);
     }
   };
 }
@@ -165,20 +165,20 @@ export const replaceText: ToolHandler = guarded("replace_text", async (args, ctx
   const { path } = admitted;
   if (!isFile(path)) {
     ctx.debug("replace-missing", { tool: "replace_text", path, code: "ERR-MCP-005" });
-    return errorResult("replace_text", "refused", "ERR-MCP-005", `${path} does not exist; replace_text edits existing files`, { path });
+    return errorResult("ERR-MCP-005", `${path} does not exist; replace_text edits existing files`);
   }
   let before: Buffer;
   try {
     before = readFileSync(path);
   } catch (e) {
-    return errorResult("replace_text", "failed", "ERR-MCP-003", `could not write ${path}: ${reason(e)}; previous content kept`, { path });
+    return errorResult("ERR-MCP-003", `could not write ${path}: ${reason(e)}; previous content kept`);
   }
   // The span is matched on the file's bytes, so every byte outside it is kept as it is.
   const old = Buffer.from(args["old_text"] as string, "utf8");
   const n = occurrences(before, old);
   if (n !== 1) {
     ctx.debug("replace-span", { tool: "replace_text", path, occurrences: n, code: "ERR-MCP-004" });
-    return errorResult("replace_text", "refused", "ERR-MCP-004", `the text to replace occurs ${n} times in ${path}; it must occur exactly once`, { path, occurrences: n });
+    return errorResult("ERR-MCP-004", `the text to replace occurs ${n} times in ${path}; it must occur exactly once`);
   }
   const at = before.indexOf(old);
   const after = Buffer.concat([before.subarray(0, at), Buffer.from(args["new_text"] as string, "utf8"), before.subarray(at + old.length)]);

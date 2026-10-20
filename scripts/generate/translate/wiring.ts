@@ -9,7 +9,7 @@
 // matches, and each anchor that a variants entry of any generated target's table names. The table's
 // variant rules of §5 (text file present, unique ids, no overlapping anchors) are ERR-GEN-004.
 // The source files are only read; their text is never changed (C002-CON-10).
-import { VERSION } from "../../../src/version.ts";
+import { MANIFEST_FILE, manifestVersion } from "../reader.ts";
 import { diagnostic, type Diagnostic } from "../diagnostics.ts";
 import type { EmitInput, SourceDoc, SourceFile, SourcePlugin } from "../model.ts";
 import type { MappingTable, Mode, Target } from "../tables.ts";
@@ -124,16 +124,16 @@ const anchorLabel = (f: BodyFile, v: Variant, r: Range) => ("section" in v.ancho
 /** Path of a variant's text file inside the source plugin. */
 export const variantPath = (target: Target, v: Pick<Variant, "text_file">) => `targets/${target}/wiring/${v.text_file}`;
 
-/** Version of the source plugin (`.claude-plugin/plugin.json`), which is also the `architect-sdd` version (C002-INV-11). */
-function packageVersion(source: SourcePlugin): string {
-  const manifest = source.files.find((f) => f.path === ".claude-plugin/plugin.json");
-  try {
-    const v = (JSON.parse(manifest?.text ?? "{}") as { version?: unknown }).version;
-    if (typeof v === "string" && v !== "") return v;
-  } catch {
-    // The reader reports a manifest that does not parse; the CLI version stands in.
-  }
-  return VERSION;
+/**
+ * Version of the source plugin (`.claude-plugin/plugin.json`), which is also the `architect-sdd` version
+ * (C002-INV-11): the `{{package_version}}` token and the manifest's `package_version` (C002-IF-004
+ * Output, revised for D-016 item 6 and critic CR-36). No built-in version stands in: a source without a
+ * version is ERR-GEN-007 of the reader, and the run stops before any emitter.
+ */
+export function packageVersion(source: SourcePlugin): string {
+  const v = manifestVersion(source.files);
+  if (v === null) throw new Error(`${MANIFEST_FILE} gives no package version (ERR-GEN-007 of the reader)`);
+  return v;
 }
 
 /**

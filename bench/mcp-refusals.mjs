@@ -56,7 +56,8 @@ export async function benchMcpRefusals() {
     // Warm-up: every case once; each must be refused by the guard core.
     for (const c of [...paths, ...commands]) {
       const { result } = await server[c.name].call(c.name, c.args);
-      if (result.structuredContent?.status !== "refused") throw new Error(`${c.id} was not refused: ${JSON.stringify(result)}`);
+      // A refusal is a text-only error result whose text starts with the guard rule (C002-IF-002 §6.1).
+      if (result.isError !== true || "structuredContent" in result || !/^GUARD-(PATH|BASH)-00\d: /.test(result.content?.[0]?.text ?? "")) throw new Error(`${c.id} was not refused: ${JSON.stringify(result)}`);
     }
     const calls = paths.flatMap((p, i) => [p, commands[i]]);
     const times = [];
