@@ -204,7 +204,7 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-replay-rule-01 — A platforms-limited case listed with another not-applicable rule (C002-IF-009 §5, TS-637, TS-682)
 - **Blocking:** no · **Material:** no · **Candidates considered:** 2
 - **Options:** 1. Refuse under ERR-REL-012 "lists cases as not applicable without a rule" (Recommended) · 2. Accept any rule value
-- **Answer:** conductor, under P-01's standing rule to continue on the recommended option for non-blocking, non-material questions (feedback 2026-10-11/18): option 1, fail-closed. To be confirmed at G2.
+- **Answer:** conductor recommendation (option 1, fail-closed), confirmed by P-01 at G2 on 2026-10-20 ("Approve with waivers").
 - **Extracted instructions:** none
 
 ### Q-capped-runs-01 — TS-634 sessions ended by a cap a later exception raised (plan critic CR-38)
