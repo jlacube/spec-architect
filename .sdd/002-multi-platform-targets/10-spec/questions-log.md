@@ -177,3 +177,12 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. The row passes when VS Code itself refuses the chat or the doctor prompt in restricted mode, the note quoting what VS Code showed; if VS Code runs the prompt, the doctor row must read `ok` + caveat (Recommended) · 2. Drop the restricted-mode rows · 3. Keep failed
 - **Answer:** P-01: "Blocked chat passes (Recommended)"
 - **Extracted instructions:** none
+
+### Q-cli-model-01 — Conductor model on Copilot CLI non-interactive sessions (D-019 item 1, C002-IF-010)
+- **Blocking:** yes (for C002-T-054) · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. The runner passes `--model` from the agent file so the conductor runs on its tier; the spec notes CLI users choose the model themselves (Recommended) · 2. Accept the host default (sonnet) as a known host limitation
+- **Answer:** P-01: "Pass --model (Recommended)"
+- **Extracted instructions:** none
+
+### Q-openrouter-03 — OpenRouter top-up before resuming C002-T-056
+- **Answer:** P-01: "Yes, topped up" (2026-10-20)
