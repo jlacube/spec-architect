@@ -1295,3 +1295,25 @@ Scope: `git diff f397b6f 6596d90 -- .sdd/002-multi-platform-targets/10-spec/` (a
 Checked, no finding: text-only error results consistent (schema `oneOf`, adapter, doctor ERR-MCP-006, ERR-MCP-003 allow); ERR-REL-012 platforms rows; reports per mode; `--dry-run`/`--root`/exit codes (apart from CR-51); ERR-REL-011 widening; REQ-614 split; IF-010 runner facts; IF-004 version stamp.
 
 All findings of this section fixed: architect c03942a (CR-51…55, 57, 58; CR-52 and CR-53 per P-01 Q-checklist-rerun-01 and Q-checklist-restricted-01), spec-writer 4a54064 and aec6049 (CR-56, CR-59, REQ-615/618), test-designer 8a27ccb.
+
+
+## Revision D-018…D-020 (2026-10-20)
+
+Scope: `git diff ee18c33 011e46d -- .sdd/002-multi-platform-targets/10-spec/` (architect 4c0f7c6, spec-writer 92c9e14, test-designer 8999559), read against D-018…D-020, Q-cli-model-01, Q-opencode-glob-01, Q-ts634-budget-01 and the conductor's Q-replay-rule-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 5 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-60 | blocker | IF-009 §2.1 platform rule, §5, ERR-REL-012, schema `replay_host.platform`, NFR-201/202, DOD-008 | nothing bounds the platform rule: a `posix` replay would list all 35 win32 path cases as not applicable and be released — loosens a fail-closed rule | §5/ERR-REL-012: refuse a report whose `replay_host.platform` is not `win32` (problem text), or require the excluded cases replayed in another report; TS-637 posix row; T-065 target | open |
+| CR-61 | major | IF-009 §2.1, §5, REQ-633, TS-631 | `platforms` + `requires` precedence contradicts "a `requires` case is never not applicable" | state precedence once (platform rule first; REQ-633 for applicable cases); TS-681 row | open |
+| CR-62 | major | Q-replay-rule-01, ERR-REL-012, §5, TS-637/682 | the conductor's answer (refuse a platform-rule case under another rule) is not in the contract or a scenario | ERR-REL-012/§5 text; TS-637 row (PG-900 under rule C002-REQ-626) | open |
+| CR-63 | major | IF-007 host-version, IF-006 §2, TS-675 | Windows resolution "looks in the working folder first": an `opencode.cmd` committed in the adopter's repository would run during the doctor | resolve over PATH folders only and run by absolute path (no working folder); TS-675 row | open |
+| CR-64 | major | NFR-105, REQ-611, IF-010 §2.2, DOD-012, TS-614, TS-678 | Copilot CLI reports session totals only; TS-614's Copilot row and DOD-012's per-step metric cannot be decided there | TS-614 Copilot row → credits limit (30) or move to TS-678; per-step metric only for runners that report step costs | open |
+| CR-65 | major | IF-010 §3, TS-634, TC-634, T-056 | "ran with a spend cap of 1.00 USD" — no result field records the cap | add `caps: { turns, usd }` to the result (run.mjs), T-065 target; or rephrase | open |
+| CR-66 | minor | IF-009 §2.1, TS-681/637/682, fixtures | (a) rationale "each expects deny whatever the platform" is wrong for some rows; (b) fixtures use `linux`, outside `win32`/`posix` | fix the sentence; use `posix`, name the allowed values | open |
+| CR-67 | minor | IF-001 `glob-prose`, ERR-GEN-002, TS-673 | substring match would hit "Global" (init.md:26, dod-catalogue) | whole, case-sensitive word `Glob`; TS-673 "Global" row | open |
+| CR-68 | minor | IF-010 §2.2, TS-679, NFR-105 | exception check matches row ID only; run limit unchecked | state row ID + host and unique row IDs; name the T-056 done-check as the run-limit check | open |
+| CR-69 | minor | IF-005 §5, TS-306, T-065 (d) | the Copilot CLI model note in the install notes has no scenario and sits next to "Copilot CLI is no adopter host" | TS-306 Then + TC-306, or explain | open |
