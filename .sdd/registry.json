@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T08:36:49Z",
+  "generated_at": "2026-10-20T10:01:53Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -377,6 +377,16 @@
           "id": "D-019",
           "ref": "C002-IF-010",
           "summary": "Found in C002-T-045 (Copilot CLI 1.0.98): (1) the --agent architect:sdd-conductor session runs on claude-sonnet-5.5, not the agent file's claude-opus-5.5 (subagents do get their models) — decide whether the runner passes --model from the agent file (cost) or the spec accepts it; (2) prompt files in -p mode are sent as plain text — IF-010 §2 does not say how a prompt runs (runner substitutes the body); (3) Verification names evals/targets/copilot-cli/ vs IF-010 §1 no per-host folder; (4) test plan names no Copilot pool or limit (P-01: $30, pool copilot); (5) workspace hooks load in -p mode only for a trusted folder or with GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true — IF-010 §4 / IF-005 §3 must name it; (6) extra options --no-auto-update, --disable-builtin-mcps, --max-ai-credits (soft cap, min 30), --usage-output-file, --log-dir, --allow-tool mapping; usage per session, not per turn; (7) subagents reported without the architect: prefix (S-08 saw prefixed names in hook input).",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-20",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-020",
+          "ref": "C002-TS-511",
+          "summary": "Found in C002-T-056 (OpenCode 1.18.31): (1) OpenCode's glob runs ripgrep without --hidden, so files in dot folders are never listed — .sdd/ globs return 'No files found' in every transcript; TS-511 fails (doctor decides there is no .sdd/), and most sessions waste turns. The generated OpenCode package must tell agents to find .sdd/ with read or sdd status (or the sdd MCP server tool), not glob — mapping/wiring change; (2) TS-634 (gate rework) cannot finish within 0.50 USD on OpenCode — cheaper rework path, smaller fixture, or a P-01 budget exception; (3) the spend cap is checked after each step, so a session can overshoot 0.50 (0.511, 0.525 seen) — NFR-105 wording or a pre-step check; (4) sdd host-version opencode reports the opencode first on PATH (~/.opencode/bin, 2.0.32), not the pinned 1.18.31 — doctor rows show 'untested' on REF-WIN; host PATH order / doctor guidance.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
           "status": "open",
