@@ -11665,18 +11665,20 @@ function ripwire(words) {
   if (!exe(words[0], "ripwire")) return false;
   let verbs = 0;
   let paths = 0;
+  let mapBounds = 0;
   for (const w of words.slice(1)) {
     const eq = w.indexOf("=");
     const name = eq < 0 ? w : w.slice(0, eq);
     const value2 = eq < 0 ? void 0 : w.slice(eq + 1);
-    if (RIPWIRE_VALUE_VERBS.includes(name) && value2) verbs++;
+    if ((RIPWIRE_VALUE_VERBS.includes(name) || name === "--test-gate") && value2) verbs++;
     else if (RIPWIRE_FLAG_VERBS.includes(w)) verbs++;
+    else if (name === "--max-tokens" && num2(value2)) mapBounds++;
     else if (RIPWIRE_BOUNDS.includes(name) && num2(value2)) continue;
     else if (w === "--json") continue;
     else if (!w.startsWith("-") && w !== "") paths++;
     else return false;
   }
-  return verbs === 1 && paths <= 1;
+  return paths <= 1 && (verbs === 1 || verbs === 0 && mapBounds >= 1);
 }
 var AST_GREP_RUN = { subcommand: "run", pattern: ["--pattern", "-p"] };
 function astGrep(words) {

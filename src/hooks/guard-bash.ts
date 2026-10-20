@@ -297,23 +297,33 @@ export const RIPWIRE_VALUE_VERBS: readonly string[] = ["--for", "--pack-task", "
 export const RIPWIRE_FLAG_VERBS: readonly string[] = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
 const RIPWIRE_BOUNDS = ["--token-budget", "--max-tokens", "--limit", "--offset", "--top-k"];
 
-/** `ripwire [<path>] <one read verb> [bounding flags] [--json]` (C001-IF-14 §2). */
+/**
+ * The two ripwire forms of C001-IF-07 §3.1 (defect D-012; flags per C001-IF-14 §2), words in any order:
+ * - verb form: `ripwire [<path>] <one read verb> [bounds] [--json]`, where a verb is a value verb
+ *   `--<verb>=<v>` (including `--test-gate=<file>`) or a flag verb (including bare `--test-gate`);
+ * - default-map form: `ripwire [<path>] --max-tokens=N [bounds] [--json]`, no verb; `--max-tokens=N`
+ *   is the only map bound, so `--token-budget=N` alone does not admit it.
+ * A bound needs `=N` with digits only. At most one path word. A word that fits no class denies (fail closed).
+ */
 function ripwire(words: string[]): boolean {
   if (!exe(words[0], "ripwire")) return false;
   let verbs = 0;
   let paths = 0;
+  let mapBounds = 0;
   for (const w of words.slice(1)) {
     const eq = w.indexOf("=");
     const name = eq < 0 ? w : w.slice(0, eq);
     const value = eq < 0 ? undefined : w.slice(eq + 1);
-    if (RIPWIRE_VALUE_VERBS.includes(name) && value) verbs++;
+    // `--test-gate=<file>` is a value verb here only; the exported lists stay as CHG-002 reads them.
+    if ((RIPWIRE_VALUE_VERBS.includes(name) || name === "--test-gate") && value) verbs++;
     else if (RIPWIRE_FLAG_VERBS.includes(w)) verbs++;
+    else if (name === "--max-tokens" && num(value)) mapBounds++;
     else if (RIPWIRE_BOUNDS.includes(name) && num(value)) continue;
     else if (w === "--json") continue;
     else if (!w.startsWith("-") && w !== "") paths++;
     else return false;
   }
-  return verbs === 1 && paths <= 1;
+  return paths <= 1 && (verbs === 1 || (verbs === 0 && mapBounds >= 1));
 }
 
 /** The ast-grep entry: its subcommand and the pattern option it needs (long form first). */

@@ -3926,6 +3926,180 @@
    "command": "sdd trace 002 --write --cwd {repo}/pkg",
    "expect": "allow",
    "note": "other sdd commands keep their decision, --cwd inside the root (C002-TS-353)"
+  },
+  {
+   "id": "BG-436",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens=4000",
+   "expect": "allow",
+   "note": "default map bounded by --max-tokens (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-437",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire --max-tokens=4000",
+   "expect": "allow",
+   "note": "default map without path word (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-438",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens=4000 --json",
+   "expect": "allow",
+   "note": "default map with output word (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-439",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate=src/checkout/payments.ts --limit=50",
+   "expect": "allow",
+   "note": "--test-gate=<file> is a value verb (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-440",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate=src/checkout/payments.ts --limit=50 | head -n 40",
+   "expect": "allow",
+   "note": "--test-gate=<file> piped to head (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-441",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire --test-gate src/a.ts",
+   "expect": "allow",
+   "note": "bare --test-gate flag verb with the file as the only path word (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-442",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --token-budget=4000",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--token-budget is no map bound: no verb, no --max-tokens (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-443",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens=x",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "map bound without digits (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-444",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "map bound without =N (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-445",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --limit=50",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "default map under an other bound only (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-446",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --json",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "unbounded default map (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-447",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire a b --max-tokens=4000",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "default map with two path words (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-448",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens=4000 --edit=src/a.ts:1-2",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "span edit appended to a bounded map (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-449",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate= --limit=50",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "--test-gate= with an empty value fits no class (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-450",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate src/a.ts --limit=50",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "the file after the directory word is a second path word (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-451",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate=src/a.ts --situ",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "two verb words (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-452",
+   "category": "ripwire",
+   "tool": "Bash",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --test-gate=a --test-gate=b",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "two --test-gate value verbs (C001-IF-07 §3.1, C001-TS-1125, D-012)"
+  },
+  {
+   "id": "BG-453",
+   "category": "ripwire",
+   "tool": "PowerShell",
+   "agent": "architect:sdd-cartographer",
+   "command": "ripwire . --max-tokens=4000",
+   "expect": "deny",
+   "rule": "GUARD-BASH-001",
+   "note": "PowerShell allows no ripwire command (C001-IF-07 §3, C001-TS-1125, D-012)"
   }
  ]
 }

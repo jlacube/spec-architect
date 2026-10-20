@@ -20,13 +20,13 @@ function countByType(phase: string): Record<string, number> {
 
 test("CHG-001 specification definitions match the prototype counts", () => {
   assert.deepEqual(countByType("10-spec"), {
-    US: 80, REQ: 212, AC: 234, TS: 235, NFR: 27, INV: 24, DOD: 21, CON: 16, IF: 14, COMP: 13,
+    US: 80, REQ: 212, AC: 234, TS: 236, NFR: 27, INV: 24, DOD: 21, CON: 16, IF: 14, COMP: 13,
     SC: 10, GOAL: 8, AS: 4, NG: 2, CAP: 11,
   });
 });
 
 test("CHG-001 plan definitions are found in their defining files", () => {
-  assert.deepEqual(countByType("20-plan"), { T: 61, TC: 235, RISK: 13, M: 7, ADR: 7, RB: 4, OA: 2 });
+  assert.deepEqual(countByType("20-plan"), { T: 62, TC: 236, RISK: 13, M: 7, ADR: 7, RB: 4, OA: 2 });
 });
 
 test("no ID is defined twice in CHG-001", () => {
@@ -82,7 +82,8 @@ test("references resolve to a definition or a tombstone, except example IDs in c
   const tomb = new Set((JSON.parse(readFileSync(join(changeDir, "ids.json"), "utf8")) as { tombstones: { id: string }[] }).tombstones.map((t) => t.id));
   // Since the C001-T-028 revision, ideation labels are written IDEA-NG/IDEA-AS and example IDs sit in
   // backticks, so every text reference of the change resolves.
-  const unresolved = graph.edges.filter((e) => e.context === "text" && !graph.byId.has(e.to) && !tomb.has(e.to));
+  const unresolved = graph.edges.filter((e) => e.context === "text" && !graph.byId.has(e.to) && !tomb.has(e.to) && e.to.startsWith("C001-"));
+  // References to another change's IDs (such as C002-T-048 in the D-012 revision) resolve in that change.
   assert.deepEqual([...new Set(unresolved.map((e) => e.to))].sort(), []);
 });
 

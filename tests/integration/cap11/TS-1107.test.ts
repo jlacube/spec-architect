@@ -15,12 +15,16 @@ const examples: [string, number][] = [
   ["node C:/p/scripts/sdd.mjs lint --json", 0],
   ['ripwire . --for="payment method" --token-budget=4000', 0],
   ["ripwire . --callers=createIntent --limit=50", 0],
+  // Rows of revision D-012 (C001-IF-07 §3.1, C001-T-079).
+  ["ripwire . --max-tokens=4000", 0],
+  ["ripwire . --test-gate=src/checkout/payments.ts --limit=50", 0],
   ["git log --oneline -20", 0],
   ["ast-grep run --pattern 'app.get($A, $B)'", 0],
   ["git commit -m x", 2],
   ["npm install", 2],
   ["rm -rf src", 2],
   ["ast-grep run --pattern 'x' --rewrite 'y' -U", 2],
+  ["ripwire .", 2],
 ];
 
 for (const [cmd, code] of examples) {
