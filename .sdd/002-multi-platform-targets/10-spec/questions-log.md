@@ -218,3 +218,10 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-rerun-scope-01 — OpenCode rows to rerun after the file-inspection variant (D-020)
 - **Options:** 1. TS-511 and TS-634 only; T-049 reruns routing and injection on the release candidate (Recommended) · 2. Also the passed doctor rows (~17 sessions)
 - **Answer:** P-01: "TS-511 and TS-634 (Recommended)"
+
+### Q-exec-lookup-01 — PATH-only lookup for every executable the sdd CLI starts (critic CR-63 follow-up)
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 4
+- **Options:** 1. Extend the rule to every executable the CLI starts (git in `sdd gate`, serena in `sdd serena-launch`, the probes): resolved over the PATH folders only, run by absolute path (Recommended) · 2. Separate defect after this revision
+- **Rejected:** accept as a known platform condition (repository content is untrusted); only set NoDefaultCurrentDirectoryInExePath (unverified for Node/libuv)
+- **Answer:** P-01: "Fix everywhere now (Recommended)"
+- **Extracted instructions:** none
