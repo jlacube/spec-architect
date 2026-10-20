@@ -1270,3 +1270,26 @@ allow; the three D-014 deny rows; ERR-CLI-021/022 reasons; `doctor-description` 
 `{{host_version_arg}}`; `plugin-root` detector; MSIX condition. No new row moves a case towards allow.
 
 All findings of this section fixed: architect ad664e3 (CR-44…48, CR-50), spec-writer a38a847 (CR-49), test-designer df0d9e6.
+
+
+## Revision D-015…D-017 (2026-10-20)
+
+Scope: `git diff f397b6f 6596d90 -- .sdd/002-multi-platform-targets/10-spec/` (architect 937c0e6, catalogue e0ade13, test-designer 626e5fb, spec-writer d77372c), read against D-015 … D-017 and Round 2026-10-20 (Q-mcp-errors-01, Q-openrouter-02). Lint: the 9 waived LINT-DELTA-001 only. Trace 100 % (265 TS). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 3 | 5 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-51 | blocker | TS-670, TS-671, IF-009 §5, release-record schema, INV-10 | scenarios expect outcome `allowed`; schema, INV-10 and `scripts/release/check.ts` use `released` | use `released`; IF-009 §5 says `<outcome>` is the record's `outcome` | open |
+| CR-52 | major | REQ-615, REQ-618, IF-009 §4, ERR-REL-004, DOD-004, TS-618 | "last run wins" lets a failed safety step be re-run until it passes; the failure survives only in a free-text note no check reads — loosens a fail-closed rule | earlier runs in a structured field; refuse an earlier `failed` not followed by a restore under the rerun rule; or P-01 decides | open |
+| CR-53 | major | TS-516, TC-516, IF-009 §4, ERR-REL-004, DOD-004 | if VS Code blocks chat in restricted mode, the row is `failed` and every Copilot release is refused; DOD-004 unreachable | P-01 decides: pass the row when VS Code refuses the chat (note quotes VS Code), or drop the restricted-mode rows | open |
+| CR-54 | major | IF-009 §4, ERR-REL-004/009/011, TS-668 | the checklist step index drives refusals but its format is defined only in code | define heading, columns (Step, Group, Mode, Kind incl. injection + case ID) and "unreadable" in IF-009 §4 | open |
+| CR-55 | minor | IF-009 §4/§5, REQ-618, ERR-REL-004, DOD-004 | other-mode step recorded `passed`: forbidden by §4/DOD-004, accepted by REQ-618/ERR-REL-004; duplicate or unknown step IDs have no refusal text | one rule + TS-668 row; `listed more than once` result; unknown IDs | open |
+| CR-56 | minor | DOD-004, ERR-REL-011, glossary | DOD-004 names only the hooks fallback for injection steps | "where the record is the injection evidence" | open |
+| CR-57 | minor | ERR-REL-009, TS-669 | message says "missing or unreadable" for a present but insufficient file | "missing, unreadable or insufficient" (and the catalogue mirror) | open |
+| CR-58 | minor | IF-009 §2.3, TS-667, T-064 | server decision mapping not total (other §2/§6 codes, results with neither isError nor structuredContent) | "any other result reads `error`"; TS-667 row | open |
+| CR-59 | minor | DOD-005, CAP-04 header, TS-666 | TS-666 runs at replay level without the no-network preload; DOD-005/CAP-04 header say integration | DOD-005 "in the replay suite"; exempt TS-666 in the header | open |
+
+Checked, no finding: text-only error results consistent (schema `oneOf`, adapter, doctor ERR-MCP-006, ERR-MCP-003 allow); ERR-REL-012 platforms rows; reports per mode; `--dry-run`/`--root`/exit codes (apart from CR-51); ERR-REL-011 widening; REQ-614 split; IF-010 runner facts; IF-004 version stamp.

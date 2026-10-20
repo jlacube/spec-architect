@@ -925,3 +925,20 @@ Checked, no finding: T-063 covers every code follow-up of the digest; ERR-CLI-02
 T-047 four-step order and stored-value rule; TC-621/623…625 fixtures; level counts; critical path 36.
 
 All findings of this section fixed: planner (CR-30…34), conductor commit after df0d9e6.
+
+
+## Revision D-015…D-017 (2026-10-20)
+
+Scope: `git diff f397b6f 6596d90 -- .sdd/002-multi-platform-targets/20-plan/` (planner 6596d90). Lint 0; trace TR-06 133/133, TR-07 64/64, TR-08 265/265, TR-11 acyclic. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-35 | major | T-064, TC-670, TC-671, spec CR-51 | done-check would push the implementer to emit `allowed` and break the schema | after spec CR-51: TC-670/671 name `released`; T-064 says the outcome word is the record's `outcome` | open |
+| CR-36 | minor | T-064 step 6, IF-004 Output | T-064 keeps a fallback to the built-in version that the revised IF-004 forbids | spec names the refusal for a source without a string `version`; T-064 implements it | open |
+| CR-37 | minor | TC-906…908, IF-010 §2–§4 | several runner rules lack TCs; TC-907 asserts `api_key_source`, not defined in IF-010 §3 | add `api_key_source` to IF-010 §3; TC rows or cite the T-044 runner-caps tests | open |
+
+Checked, no finding: T-064 covers every architect code follow-up; level counts and critical path 41; T-056 resume plan (30 sessions, 8.80 USD, pool ≈ 13.0 of 30); key-file wording consistent; RISK-020.
