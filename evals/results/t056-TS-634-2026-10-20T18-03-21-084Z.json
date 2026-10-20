@@ -1,0 +1,443 @@
+{
+  "scenario": "TS-634",
+  "title": "Scripted Revise at a gate on OpenCode (TS-634)",
+  "tier": "dev",
+  "label": "t056",
+  "agent": "sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-20T18:09:24.575Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 1.1136774,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "TS-634: 1 gate question call(s); a second gate G2 question after the rework expected"
+      ],
+      "metrics": {
+        "cost_usd": 1.1136774,
+        "session_ms": 360426,
+        "api_ms": null,
+        "turns": 13,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 74,
+            "output": 17124,
+            "cache_read": 616682,
+            "cache_write": 96921,
+            "cost_usd": 1.1136774000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 28,
+              "output": 17124,
+              "cache_read": 366953,
+              "cache_write": 37204
+            },
+            "output": "derived"
+          },
+          "sdd-spec-writer": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 92005,
+              "cache_write": 18339
+            },
+            "output": "derived"
+          },
+          "sdd-test-designer": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 73413,
+              "cache_write": 15896
+            },
+            "output": "derived"
+          },
+          "sdd-critic": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 0,
+              "cache_read": 84311,
+              "cache_write": 25482
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "sdd-spec-writer",
+            "task_id": "ses_ea58309a0ffeN6dA0ITi0oZnN2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "sdd-test-designer",
+            "task_id": "ses_ea582032fffel0a68Nmwk6AWgU",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "sdd-critic",
+            "task_id": "ses_ea58113b7ffeIUPBT1xzWE3EUE",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "read": 26,
+          "sdd-shell_run_command": 18,
+          "question": 2,
+          "sdd-files_write_file": 2,
+          "todowrite": 1,
+          "task": 3,
+          "sdd-files_replace_text": 6
+        },
+        "tool_timings": [
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 9113
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 9113
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3750
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3750
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3750
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 4795
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 4795
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 4795
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3461
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3461
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 3461
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 7620
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "main",
+            "ms": 3007
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 2477
+          },
+          {
+            "tool": "read",
+            "agent": "main",
+            "ms": 7279
+          },
+          {
+            "tool": "question",
+            "agent": "main",
+            "ms": 8800
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "main",
+            "ms": 12713
+          },
+          {
+            "tool": "todowrite",
+            "agent": "main",
+            "ms": 4661
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-spec-writer",
+            "ms": 64548
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-spec-writer",
+            "ms": 4615
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-spec-writer",
+            "ms": 4615
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-spec-writer",
+            "ms": 9246
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-spec-writer",
+            "ms": 9246
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-spec-writer",
+            "ms": 7650
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-spec-writer",
+            "ms": 3026
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-spec-writer",
+            "ms": 10275
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-spec-writer",
+            "ms": 10275
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-spec-writer",
+            "ms": 3651
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-test-designer",
+            "ms": 63378
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-test-designer",
+            "ms": 3827
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-test-designer",
+            "ms": 3827
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-test-designer",
+            "ms": 6145
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-test-designer",
+            "ms": 6145
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-test-designer",
+            "ms": 3452
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-test-designer",
+            "ms": 6399
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-test-designer",
+            "ms": 11101
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-test-designer",
+            "ms": 11101
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-test-designer",
+            "ms": 11101
+          },
+          {
+            "tool": "sdd-files_replace_text",
+            "agent": "sdd-test-designer",
+            "ms": 11101
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-test-designer",
+            "ms": 4782
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-test-designer",
+            "ms": 4782
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "sdd-critic",
+            "ms": 140349
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 6238
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 6238
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 6238
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 6238
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 6238
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 3165
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 3165
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-critic",
+            "ms": 3165
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 3192
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 3192
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 3192
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-critic",
+            "ms": 4147
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-critic",
+            "ms": 4147
+          },
+          {
+            "tool": "sdd-shell_run_command",
+            "agent": "sdd-critic",
+            "ms": 5960
+          },
+          {
+            "tool": "read",
+            "agent": "sdd-critic",
+            "ms": 5960
+          },
+          {
+            "tool": "sdd-files_write_file",
+            "agent": "sdd-critic",
+            "ms": 105888
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "usage": {
+        "turns": 13,
+        "usd": 1.1136774
+      },
+      "caps": {
+        "turns": 30,
+        "usd": 1
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-634-2026-10-20T18-03-21-084Z-run1.json"
+    }
+  ]
+}

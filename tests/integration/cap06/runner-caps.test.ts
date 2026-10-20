@@ -703,3 +703,18 @@ for (const row of [
       }
     });
 }
+
+// --- C002-T-056 harness fix: the driver's SDK requests carry no 300 s fetch timeout ------------------
+// Node's fetch drops a request whose response headers take longer than 300 s (undici headersTimeout),
+// and a prompt request answers only when the prompt has ended: a TS-634 session ended with the error
+// "{}" at 300 s. The driver's client uses untimedFetch (node:http, no timeout; exercised on loopback by
+// the replay, `npm run replay`, since the tests block the network); errorText keeps the error's message.
+test("C002-T-056 errorText: an SDK fetch error keeps its message and cause instead of \"{}\"; a provider error object stays JSON", async () => {
+  const { errorText, untimedFetch } = await import("../../../evals/harness/opencode/driver.mjs");
+  assert.equal(typeof untimedFetch, "function");
+  const e = new TypeError("fetch failed", { cause: Object.assign(new Error("Headers Timeout Error"), { name: "HeadersTimeoutError" }) });
+  assert.equal(JSON.stringify(e), "{}");
+  assert.equal(errorText(e), "fetch failed (cause: HeadersTimeoutError: Headers Timeout Error)");
+  assert.equal(errorText({ name: "APIError", data: { message: "402" } }), '{"name":"APIError","data":{"message":"402"}}');
+  assert.equal(errorText("session timed out"), "session timed out");
+});

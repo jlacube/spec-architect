@@ -16,12 +16,52 @@
 //   - the driver only reads and returns the binary's version (`hostVersions()`); refusing another
 //     version is the caller's decision (the replay adapter refuses, the eval runner records it).
 // The SDK (Node.js 22.22.2 or later, F-10) is imported when a host starts, so that importing this
-// module never needs it.
+// module never needs it. The SDK's requests go through `untimedFetch` (node:http without timeouts):
+// a prompt request answers only when the prompt has ended, and Node's own fetch drops a request whose
+// response headers take longer than 300 s (undici `headersTimeout`; C002-T-056, a TS-634 session that
+// ended with an empty error at 300 s). The session timeout of the caller bounds a session instead.
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, createWriteStream } from "node:fs";
+import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { homedir } from "node:os";
 import { isAbsolute, join } from "node:path";
+import { Readable } from "node:stream";
+
+/**
+ * `fetch` for the SDK client over node:http with no headers or body timeout (loopback `opencode serve`
+ * only). Honours the request's abort signal; the response body streams (the event stream included).
+ * @param {Request} req
+ * @returns {Promise<Response>}
+ */
+export async function untimedFetch(req) {
+  const body = req.body ? Buffer.from(await req.arrayBuffer()) : null;
+  const headers = Object.fromEntries(req.headers);
+  if (body) headers["content-length"] = String(body.length);
+  return new Promise((resolve, reject) => {
+    const r = httpRequest(new URL(req.url), { method: req.method, headers, signal: req.signal ?? undefined }, (res) => {
+      const h = new Headers();
+      for (const [k, v] of Object.entries(res.headers)) for (const x of [v].flat()) if (x !== undefined) h.append(k, String(x));
+      const empty = req.method === "HEAD" || [204, 205, 304].includes(res.statusCode ?? 0);
+      if (empty) res.resume();
+      resolve(new Response(empty ? null : /** @type {any} */ (Readable.toWeb(res)), { status: res.statusCode, statusText: res.statusMessage, headers: h }));
+    });
+    r.setTimeout(0);
+    r.on("error", reject);
+    r.end(body ?? undefined);
+  });
+}
+
+/** A readable message of an SDK error value (an Error stringifies to "{}"), its cause included. */
+export function errorText(e) {
+  if (typeof e === "string") return e;
+  if (e instanceof Error) {
+    const cause = /** @type {any} */ (e).cause;
+    return cause ? `${e.message} (cause: ${cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause)})` : e.message;
+  }
+  const s = JSON.stringify(e);
+  return s === "{}" || s === undefined ? String(e) : s;
+}
 
 /** Configuration variable naming the pinned host binary (absolute path). */
 export const OPENCODE_BIN_VAR = "SDD_OPENCODE_BIN";
@@ -188,7 +228,7 @@ export async function startOpenCode(options) {
     }
     await sleep(250);
   }
-  const client = createOpencodeClient({ baseUrl, directory: project });
+  const client = createOpencodeClient({ baseUrl, directory: project, fetch: untimedFetch });
 
   // One event stream; permission and question requests go to the policy of the session that asked.
   // A child session (a subagent started by the `task` tool, `info.parentID` set) shares the context of
@@ -286,7 +326,7 @@ export async function startOpenCode(options) {
           aborted = true;
           await abortAll();
           await Promise.race([call.catch(() => {}), sleep(10_000)]);
-        } else if (r?.error) error = r.error;
+        } else if (r?.error) error = errorText(r.error);
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
       } finally {
