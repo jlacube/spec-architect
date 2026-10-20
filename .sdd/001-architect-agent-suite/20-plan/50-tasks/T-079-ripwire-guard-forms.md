@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: todo
+status: done
 depends_on: [C001-T-051]
 implements: [C001-REQ-1106]
 satisfies_ac: [C001-AC-1106.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1107, C001-TS-1125, C001-TC-1107, C001-TC-1125]
 components: [C001-COMP-08]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 2af02a7, completed_at: 2026-10-21, notes: "Before fix 5 of 6 allow rows denied; after 51/51; all 453 corpus cases correct. Replays: sdd-mcp-server 683/26/0 (both targets), copilot-hooks 0; OpenCode native 709/0/165 (7 new = D-024). Skill wording left unchanged (avoids re-triggering the regression rule). C002-T-048 TS-1004 rerun unblocked." }
 ---
 
 # C001-T-079 — Bash guard: ripwire verb and bounded default-map forms (D-012)
