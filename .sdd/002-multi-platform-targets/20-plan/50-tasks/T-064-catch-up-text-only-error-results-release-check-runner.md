@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-019, C002-T-020, C002-T-025, C002-T-038, C002-T-041, C002-T-044, C002-T-046, C002-T-047, C002-T-063]
 implements: [C002-REQ-101, C002-REQ-402, C002-REQ-405, C002-REQ-407, C002-REQ-504, C002-REQ-509, C002-REQ-510, C002-REQ-606, C002-REQ-608, C002-REQ-614, C002-REQ-615, C002-REQ-617, C002-REQ-618, C002-REQ-627]
 satisfies_ac: [C002-AC-101.2, C002-AC-402.1, C002-AC-405.1, C002-AC-407.1, C002-AC-504.1, C002-AC-509.1, C002-AC-510.1, C002-AC-606.1, C002-AC-608.1, C002-AC-614.1, C002-AC-615.1, C002-AC-617.1, C002-AC-618.1, C002-AC-627.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-402, C002-TS-665, C002-TS-423, C002-TS-642, C002-TS-666, C
 components: [C002-COMP-005, C002-COMP-006, C002-COMP-008, C002-COMP-009, C002-COMP-010, C002-COMP-001, C002-COMP-002, C002-COMP-011]
 risk_refs: [C002-RISK-020]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 868f63f, completed_at: 2026-10-20, notes: "npm run check 1353 pass; replay suite 42 + 1 skip; sdd-mcp-server copilot/opencode 665/26/0, copilot-hooks 0 (scratch); TS-666 4 rows pass on pinned OpenCode + stub. No paid session. Follow-up of T-019/T-041/T-044/T-046/T-047. Candidates: TS-667 PG-050 is replace_text not write_file; platforms-limited cases can never be released on that host; restore-run count rule ambiguity." }
 ---
 
 # C002-T-064 — Catch-up for revision D-015 … D-017: text-only MCP error results, generator package version, release-check rows, eval-runner rules
