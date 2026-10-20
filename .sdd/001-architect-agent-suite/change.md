@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:a13c62012b890c59f085c25d2da4298a228d235bf21b34e39664f6c3eedf4585", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:c2bda82f3400cfb4d43dc1ade5886cc0180ce61a6c5726bafd98e1b3ff3637dd", approved_at: 2026-10-13, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:c6d25a604c877cf501952fec2e7c962f69f1bc4a71ea14fbc50d63cb9b22ded9", approved_at: 2026-10-21, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -67,3 +67,4 @@ defects:
 | 2026-10-13 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-20 | G2 (spec) | **Revise** | "Revision for CHG-001 defect D-012: bash guard ripwire rule vs C001-IF-14 (P-01: allow the read-only IF-14 forms)" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
