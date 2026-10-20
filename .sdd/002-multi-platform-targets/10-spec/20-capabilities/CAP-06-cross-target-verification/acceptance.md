@@ -403,10 +403,20 @@ Scenario: C002-TS-634 — scripted Revise at a gate on OpenCode
 
 The gate rework between the two gate questions does not fit 0.50 USD on OpenCode, nor 1.00 USD
 (C002-T-056); P-01 raised the exception for this row to 2.00 USD for one further run, with no further
-rerun: a failure of that run is recorded and the row is waived for the OpenCode release
-(Q-ts634-budget-02, replacing the 1.00 USD run and rerun of Q-ts634-budget-01; C002-IF-010 §2.2;
+rerun (Q-ts634-budget-02, replacing the 1.00 USD run and rerun of Q-ts634-budget-01; C002-IF-010 §2.2;
 defects D-020 item 2 and D-022 item 1). C002-TS-679 checks that no other row or host gets a cap above
 0.50 USD.
+
+A failure of that run is waived for the OpenCode release only when the session ended with the
+`end_reason` `spend cap`, or `error` with a host or provider error, before the second gate G2
+question, with the first two Then lines met and no step started after the capping step, as its `cap`
+and `step-after-cap` records show (C002-IF-010 §2.2; C002-TS-677). The waiver is recorded at gate G2
+of this revision (P-01 answer to Q-ts634-waiver-01, "Cap-only waiver (Recommended)"; critic CR-70,
+CR-71). Any other failure, for example an "sdd gate approve" command after "Revise", is a product
+defect: it reopens the task that owns the failing behaviour and holds the OpenCode release. A session
+ended by the session timeout of 20 minutes (C002-TS-690), by `turn cap` or by `question
+unanswerable` is such a failure and not within the waiver (C002-IF-010 §2.2 waiver conditions; P-01
+to confirm at gate G2 when recording the waiver).
 
 ```gherkin
 @eval
@@ -441,6 +451,23 @@ limit on the session total, which C002-TS-678 checks (C002-IF-010 §2.2 spend-ca
 C002-NFR-105; critic CR-64).
 
 ```gherkin
+Scenario Outline: C002-TS-690 — session timeout of 20 minutes with a stub host
+  Given the <runner> with a stub host that accepts the session's prompt and then sends no event and ends no session, so that no turn ends and no cost is given
+  And a case row without "maxTurns" and "maxBudgetUsd"
+  When the runner runs one eval session and 20 minutes pass from <start>
+  Then the session ends with the "end_reason" "error" and an "error" text <text>
+  And <stopped>
+  And the transcript holds no harness record with "event" "cap"
+  Examples:
+    | runner                  | start                                         | text                                                         | stopped                                                                    |
+    | OpenCode eval runner    | the moment the runner sent the prompt          | that begins with "session timed out" ("session timed out after 1200000 ms") | the runner has aborted the session and its subagents' sessions through the SDK |
+    | Copilot CLI eval runner | the start of the host process                  | that reads "session exceeded 20 minutes"                     | the host process has ended                                                  |
+```
+
+The session timeout is neither a cap nor a host or provider error (C002-IF-010 §4 "Session timeout";
+critic CR-74), so a session of C002-TS-634 that it ends is not within the waiver of that row.
+
+```gherkin
 Scenario Outline: C002-TS-677 — spend cap checked after each step on OpenCode
   Given the OpenCode eval runner with a stub OpenCode host that never ends a session and gives a cost of <cost> USD in the step-finish event of each step of the session agent, <subagent>
   And a case row without "maxBudgetUsd", so that the spend cap is 0.50 USD
@@ -448,12 +475,60 @@ Scenario Outline: C002-TS-677 — spend cap checked after each step on OpenCode
   Then the session ends with the "end_reason" "spend cap" after <steps> steps of the session agent
   And no step of the session agent or of a subagent starts after the step whose cost brought the spend to 0.50 USD or above
   And the session result records a spend of <spend> USD, with "spend" "reported"
+  And the transcript holds one harness record with "event" "cap", whose "step_usd" is <cost> and whose session spend is <capped> USD
+  And it holds <after>
   Examples:
-    | cost | subagent                                                                                                               | steps | spend |
-    | 0.12 | and starts no subagent                                                                                                 | 5     | 0.60  |
-    | 0.25 | and starts no subagent                                                                                                 | 2     | 0.50  |
-    | 0.12 | and whose subagent runs one step of 0.05 USD in parallel with the fifth step, finishing before the abort takes effect   | 5     | 0.65  |
+    | cost | subagent                                                                                                               | steps | spend | capped | after                                                                                                                                                   |
+    | 0.12 | and starts no subagent                                                                                                 | 5     | 0.60  | 0.60   | no harness record with "event" "step-after-cap"                                                                                                         |
+    | 0.25 | and starts no subagent                                                                                                 | 2     | 0.50  | 0.50   | no harness record with "event" "step-after-cap"                                                                                                         |
+    | 0.12 | and whose subagent runs one step of 0.05 USD in parallel with the fifth step, finishing before the abort takes effect   | 5     | 0.65  | 0.60   | one harness record with "event" "step-after-cap", whose "step_usd" is 0.05, whose agent is the subagent and whose "started_before_cap" is true          |
 ```
+
+The `cap` record is written for the capping step, and one `step-after-cap` record for each step
+that finishes after it (C002-IF-010 §2.2 overshoot rule; critic CR-72). A record with
+`started_before_cap` false marks a step that started after the capping step, a breach of the
+per-step metric of C002-NFR-105; the cap-only waiver of C002-TS-634 does not apply to a session that
+holds one.
+
+```gherkin
+Scenario: C002-TS-689 — a running step that the abort ends without a reported cost
+  Given the OpenCode eval runner with a stub OpenCode host that never ends a session and gives a cost of 0.12 USD in the step-finish event of each step of the session agent
+  And the session agent starts a subagent whose one step runs in parallel with the fifth step and is ended by the abort without a step-finish event or any other reported cost
+  And a case row without "maxBudgetUsd", so that the spend cap is 0.50 USD
+  When the runner runs one eval session
+  Then the session ends with the "end_reason" "spend cap" after 5 steps of the session agent
+  And the session result records a spend of 0.60 USD, with "spend" "partial"
+```
+
+A step whose cost the host never reports does not count as zero: the session reads `spend`
+`partial`, so the recorded spend is a lower bound (C002-IF-010 §2.2, §3; critic CR-73). How the
+ledger books such a session until it is reconciled with the provider's usage view is the test
+plan's rule (`20-plan/60-test-plan.md` §4.1).
+
+```gherkin
+Scenario Outline: C002-TS-688 — reserve H of a cap-exception session in the stop rule
+  Given a ledger whose general pool, of limit 30 USD, holds OpenRouter entries totalling <total> USD
+  And among them an entry of 1.11 USD of the row "TS-634" with "caps_usd" 1.00, a session of a cap-exception row
+  And the highest cost of its ordinary sessions, the entries with "caps_usd" 0.50, is <ordinary> USD
+  And the selected row "<row>" of the case file "evals/targets/gate/<row>.eval.mjs" <exception>
+  When the harness checks the stop rule before the row's paid session on "--host opencode"
+  Then the reserve H is <reserve> USD
+  And <outcome>
+  Examples:
+    | row    | exception                                                       | total | ordinary | reserve | outcome                                                                                                                                       |
+    | TS-634 | is matched on "opencode" by the cap exception of 2.00 USD       | 17.14 | 0.40     | 2.65    | the session starts                                                                                                                            |
+    | TS-634 | is matched on "opencode" by the cap exception of 2.00 USD       | 27.35 | 0.40     | 2.65    | the session starts                                                                                                                            |
+    | TS-634 | is matched on "opencode" by the cap exception of 2.00 USD       | 27.36 | 0.40     | 2.65    | no session starts, the message names the stop rule, the pool "general", the total 27.36, H 2.65 and the limit 30, and the ledger is unchanged |
+    | TS-634 | is matched on "opencode" by the cap exception of 2.00 USD       | 17.14 | 0.80     | 2.80    | the session starts                                                                                                                            |
+    | TS-613 | is matched by no cap exception and runs at the cap of 0.50 USD  | 27.36 | 0.40     | 0.65    | the session starts                                                                                                                            |
+```
+
+For a cap-exception session H is the exception's cap plus the larger of 0.65 USD and the highest
+ordinary session cost; for an ordinary session H is that larger value alone. The sessions of a
+cap-exception row (ledger field `caps_usd` above 0.50, here the 1.11 USD entry) are left out of the
+highest ordinary session cost (C002-IF-010 §2.2 "Reserve of a cap-exception session";
+`20-plan/60-test-plan.md` §4.1 rules 1 and 3; critic CR-72; plan critic CR-41). The session starts
+only if T + H ≤ L, so 27.35 + 2.65 = 30.00 starts and 27.36 + 2.65 = 30.01 is refused.
 
 ```gherkin
 Scenario Outline: C002-TS-678 — spend cap on Copilot CLI through the host's AI-Credit limit
@@ -1210,7 +1285,7 @@ development.
 | C002-REQ-608 | TS-611 | TS-676 (PATH lead of the pinned OpenCode binary: no case PATH, a case PATH with version shims) | TS-676 (an `opencode missing` row gets no PATH lead) | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-611 | TS-614 | TS-614 (turn cap on both runners; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 2.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row, case file and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file) |
+| C002-REQ-611 | TS-614 | TS-614 (turn cap on both runners; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step; `cap` and `step-after-cap` records), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file), TS-688 (reserve H of a cap-exception row and of an ordinary row), TS-689 (a running step ended by the abort without a reported cost: `spend` `partial`) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 2.00 USD and below it), TS-688 (T + H = L starts, 0.01 USD above refused; highest ordinary cost below and above 0.65 USD; a cap-exception session left out of it) | TS-614, TS-690 (session timeout of 20 minutes on both runners: `end_reason` `error`, no `cap` record), TS-679 (cap above 0.50 USD without an exception for the row, case file and host: exit code 1 before any session), TS-688 (stop rule refuses the exception session: no session, ledger unchanged) | n/a | n/a | TS-679 (a row that raises its own cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file) |
 | C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`, the conductor on its own model), TS-680 (`--model` from the session agent's file, or the case's model) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |

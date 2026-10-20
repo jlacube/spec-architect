@@ -975,5 +975,9 @@ Scope: 7a84bfa (20-plan). Lint 0. Appended by the conductor from the critic's re
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-41 | major | test plan §4.1 rules 1/6, §4.3, T-056 X3, DOD-021 | after X3, H (highest session cost) becomes ~2–3 USD and the T-051 step 3 stop check (6.50 + 1.40 + H ≤ 10) fails | ordinary sessions' H from sessions at the 0.50 cap only; or recompute §4.3 | open |
-| CR-42 | minor | RISK-015, T-065 | RISK-015 still 1.00 USD / one rerun / H 1.05; T-065 still "16 rows" and "fx-gate" | update RISK-015; annotate T-065 lines | open |
+| CR-41 | major | test plan §4.1 rules 1/6, §4.3, T-056 X3, DOD-021 | after X3, H (highest session cost) becomes ~2–3 USD and the T-051 step 3 stop check (6.50 + 1.40 + H ≤ 10) fails | ordinary sessions' H from sessions at the 0.50 cap only; or recompute §4.3 | fixed |
+| CR-42 | minor | RISK-015, T-065 | RISK-015 still 1.00 USD / one rerun / H 1.05; T-065 still "16 rows" and "fx-gate" | update RISK-015; annotate T-065 lines | fixed |
+
+All findings of this section fixed: planner (CR-41, CR-42; with P-01's Q-ts634-waiver-01 answer in test plan §6 and C002-T-056 X3, and C002-TC-917, C002-TC-918 for C002-TS-688, C002-TS-689) in the commit after 79fc837.
+
+All findings of this section fixed: planner (CR-41, CR-42) in the commit after 84601f0.

@@ -407,15 +407,16 @@ Scenario Outline: C002-TS-673 — a body line that names the Glob tool without a
   Then <outcome>
   Examples:
     | place                                                                                                                                                    | outcome |
-    | line 26 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the Copilot table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 26 and the target "opencode" |
-    | line 26 of the body of "agents/sdd-critic.md" reads "List the change's files with the Glob tool." and only the OpenCode table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 26 and the target "copilot" |
+    | line 26 of "agents/sdd-critic.md" (the last of the file's 26 lines, in its body) reads "List the change's files with the Glob tool." and only the Copilot table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 26 and the target "opencode" |
+    | line 26 of "agents/sdd-critic.md" (the last of the file's 26 lines, in its body) reads "List the change's files with the Glob tool." and only the OpenCode table has a variant for that line | the exit code is non-zero, and an ERR-GEN-002 message names "agents/sdd-critic.md", line 26 and the target "copilot" |
     | "Glob" is named only in the frontmatter "tools" field of "agents/sdd-critic.md" (line 7), as in the source plugin                                         | the exit code is 0, no ERR-GEN-002 message names "agents/sdd-critic.md", and the generated agent grants the tool that each target's table maps "Glob" to |
-    | line 26 of the body of "agents/sdd-critic.md" reads "Check the Global items of the DoD." and neither table has a variant for that line                   | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
-    | line 26 of the body of "agents/sdd-critic.md" reads "On OpenCode the glob tool lists no dot folder." and neither table has a variant for that line        | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
+    | line 26 of "agents/sdd-critic.md" (the last of the file's 26 lines, in its body) reads "Check the Global items of the DoD." and neither table has a variant for that line                   | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
+    | line 26 of "agents/sdd-critic.md" (the last of the file's 26 lines, in its body) reads "On OpenCode the glob tool lists no dot folder." and neither table has a variant for that line        | the exit code is 0, and no ERR-GEN-002 message names "agents/sdd-critic.md" |
 ```
 
-Line 26 is the last line of the source agent's body (26 lines); the fixture replaces its text, so
-the file keeps its 26 lines (defect D-021 item 1).
+Line 26 is the last of the 26 lines of the source agent file, in its body (lines 10 to 26, after the
+frontmatter of lines 1 to 9); the fixture replaces its text, so the file keeps its 26 lines (defect
+D-021 item 1; critic CR-75).
 
 The construct `glob-prose` makes every body line that names the Glob tool a wiring anchor on every
 target (C002-IF-001 §2, `errors.md` ERR-GEN-002; defect D-020 item 1); a frontmatter `tools` entry is

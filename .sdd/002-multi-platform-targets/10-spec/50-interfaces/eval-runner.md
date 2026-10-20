@@ -29,7 +29,13 @@ defect D-022 (findings of C002-T-056): the cap exception of C002-TS-634 on OpenC
 2.00 USD for one further run without a rerun (P-01 answer to Q-ts634-budget-02), the overshoot of
 the per-step spend cap bounded by the steps running when the cap is reached, with no fixed
 allowance, the reserve of the stop rule for a cap-exception session (§2.2), and the SDK client's
-requests without a headers timeout (§4).
+requests without a headers timeout (§4). After the critic's D-021 … D-022 review: the waiver of
+C002-TS-634 on OpenCode limited to a session that the spend cap or a host or provider error ends
+before the second gate question, recorded by P-01 at the G2 of that revision (CR-70, CR-71; P-01
+answer to Q-ts634-waiver-01); the `cap` and `step-after-cap` records from which the overshoot bound
+is decided, and the reserve of a cap-exception session as a formula (CR-72); a step whose cost the
+host does not report making the session's spend `partial` (CR-73); the session timeout of
+20 minutes (CR-74).
 
 ## §1 Selection
 
@@ -85,9 +91,13 @@ reports:
   above; it is the last step the session starts. The **steps running when the cap is reached** are
   the capping step and every other step of the session or of its subagents that had started but not
   finished when the runner received the capping step's finish. Each of them counts with the cost
-  that the host reports for it, in full (a running step that the abort ends counts with the cost the
-  host reports for it, if any). The per-step metric of C002-NFR-105 (steps started after the
-  capping step) is decided on these runners only, from the step events of the session.
+  that the host reports for it, in full, the cost of a running step that the abort ends included.
+  A step whose cost the host does not report (a step that the abort ends before its step-finish, or
+  a step-finish without a cost) never counts as zero: the session's `spend` reads `partial` (§3),
+  and the ledger books the session by the test plan's rule for a `partial` spend until it is
+  reconciled with OpenRouter's usage view (cap records below; revised for critic CR-73). The
+  per-step metric of C002-NFR-105 (steps started after the capping step) is decided on these
+  runners only, from the cap records of the session.
 - **Per session**, on Copilot CLI, whose host reports the AI Credits of the whole session only: the
   cap is the host's own limit `--max-ai-credits`, which the host applies to its own count of the
   session's credits, and the runner checks the session total that the usage file gives after the
@@ -109,10 +119,36 @@ The runner honours the rule by aborting the session as soon as it receives the c
 finish, by counting every cost the host reports, the costs reported after the abort included, and
 by adding no allowance in the cap check; no grader, ledger check or stop rule adds one either. The
 bound is verified where the per-step metric is, by the runner tests with the stub host
-(C002-TS-677, a parallel subagent step included). On a paid session the transcript shows the
-overshoot after the session: the runner writes the harness record `event: "cap"` for the capping
-step and for each step that finishes after it, each with the session's spend at that point
-(`usage`).
+(C002-TS-677, a parallel subagent step included); on a paid session it is decided after the
+session from the cap records.
+
+**Cap records** (revised for critic CR-72). A per-step runner writes these harness records into the
+transcript (§3):
+
+- `{ "event": "cap", "reason", "step_usd", "usage" }`, once per session, for the step whose finish
+  reached a cap: `reason` `spend cap` (the capping step) or `turn cap`; `step_usd` the cost that the
+  step's finish gives, `null` when it gives none; `usage` the session's `{ turns, usd }` with that
+  cost counted, that is the session's spend at the cap.
+- `{ "event": "step-after-cap", "step_usd", "agent", "started_before_cap" }`, one per step of the
+  session or of its subagents that finishes after the `cap` record, and one per step that had
+  started and has no finish when the session ends (the abort ended it; `step_usd` `null`):
+  `step_usd` the cost that the step's finish gives, `null` when it gives none; `agent` the agent
+  that ran the step, in the names of the row (§3); `started_before_cap` `true` when the runner
+  received the step's start (its `step-start` part) before the capping step's finish, else `false`.
+
+The overshoot bound holds for a session that ended with `spend cap` when every `step-after-cap`
+record gives `started_before_cap` `true`, neither the `cap` record nor any `step-after-cap` record
+gives `step_usd` `null`, and the session's `usage.usd` equals the `cap` record's `usage.usd` plus the
+`step_usd` of every `step-after-cap` record; the overshoot (`usage.usd` minus `caps.usd`) is then at
+most the `cap` record's `step_usd` plus those `step_usd`. A record with `started_before_cap`
+`false` breaches the per-step metric of C002-NFR-105. A `step_usd` `null` leaves the bound
+undecided: the session's `spend` reads `partial` (§3), its `usage.usd` is a lower bound of its
+cost, and the ledger books the session by the test plan's rule for a `partial` spend
+(`20-plan/60-test-plan.md` §4.1 Ledger) until the entry is reconciled with the session's cost in
+OpenRouter's usage view; the generations listed there for the session give the missing `step_usd`,
+from which the bound is then decided. The Copilot CLI runner writes `cap` records with `reason` and
+either the session's `usage`, the host's limit text (`host_text`) or the measured credits against
+the limit (`ai_credits`, `limit`), and no `step-after-cap` record: no step's cost is known there.
 
 Per runner:
 
@@ -140,7 +176,7 @@ the result records it (`caps`, §3).
 
 | Row | Host | Cap per session | Runs | Approved |
 |---|---|---|---|---|
-| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 2.00 USD | one further run at 2.00 USD and no rerun: a failure of that run is recorded, and the row is waived on OpenCode for the OpenCode release; no further session of the row runs at any cap | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
+| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 2.00 USD | one further run at 2.00 USD and no rerun; no further session of the row runs at any cap. A failure of that run is waived only when it is of the kind that the waiver below names; any other failure is a defect that is not waived | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
 
 **Runs** (revised for critic CR-68 and for P-01's answer to Q-capped-runs-01, "Don't count them").
 The Runs column counts the sessions of the row that are runs by the ledger rule of the test plan
@@ -152,16 +188,51 @@ limit (C002-T-056 for C002-TS-634). For C002-TS-634 the limit is the one session
 sessions of C002-T-056 at 0.50 and 1.00 USD do not count toward it, and after it no session of the
 row runs, whatever its result (P-01 answer to Q-ts634-budget-02).
 
-**Reserve of a cap-exception session** (revised for defect D-022 item 3). Before each paid session,
-`evals/harness/run.mjs` checks the stop rule of the test plan (`20-plan/60-test-plan.md` §4.1,
-rule 1, and rule 8, which takes H as rule 1 does): the session starts only if the pool's total T
-plus the reserve H stays within the pool's limit. For a session of a row that an exception of this
-table matches, H is at least the exception's cap plus its overshoot bound: `run.mjs` takes the cap
-from the exception that matched the row (this table), not from the largest ledger entry alone. The
-overshoot is the cost of the steps running when the cap is reached (overshoot rule above) and is
-known only after those steps end, so the bound that the reserve takes before the session is the
-estimate that the test plan's rule 1 defines from the recorded sessions; no fixed allowance applies
-(the 0.05 USD of the earlier test plan, 1.05 USD for C002-TS-634, no longer does).
+**Waiver of C002-TS-634 on OpenCode** (revised for critics CR-70 and CR-71; P-01 answer to
+Q-ts634-waiver-01, "Cap-only waiver (Recommended)"). The waiver covers one failure kind of the
+session at 2.00 USD (C002-T-056 rerun plan X3, its result record giving `caps.usd` 2.00), and only
+when all of these hold:
+
+1. the session ends with `end_reason` `spend cap`, or with `error` whose `error` text is the host's
+   or the provider's (for example an OpenRouter refusal, §3), not an error of the harness and not
+   the session timeout (§4);
+2. it ends before the transcript shows the second gate G2 question (the third Then line of
+   C002-TS-634);
+3. the first two Then lines of C002-TS-634 are met: one `sdd gate record 002 10-spec --decision
+   revise` command with the scripted words as its note, and no `sdd gate approve` command in the
+   same turn;
+4. no step started after the cap: every `step-after-cap` record of the session gives
+   `started_before_cap` `true` (cap records above); a session ended with `error` before any cap has
+   no such record and meets this condition.
+
+Any other failure of that session is not waived, for example a `gate approve` after the Revise, a
+missing gate record or one with other words, a step started after the cap, an end by `turn cap`,
+`question unanswerable`, the session timeout or a harness error, or a second gate question with
+other options. Such a failure is a defect of CHG-002: it reopens the task that owns the failing
+behaviour (the package's, or the harness's when the harness ended the session) and holds the
+OpenCode release (test plan §6 "Exit (release, per target)") until P-01 decides how the row is
+verified after the fix, since the run limit above allows no further session. P-01 records the
+waiver at the G2 of revision D-021 … D-022, decision "Approve with waivers", item C002-TS-634
+(OpenCode), conditional on this failure kind; the done-check of C002-T-056 decides from the result
+record and the cap records whether a failure of the X3 session is of this kind.
+
+**Reserve of a cap-exception session** (revised for defect D-022 item 3 and for critic CR-72).
+Before each paid session, `evals/harness/run.mjs` checks the stop rule of the test plan
+(`20-plan/60-test-plan.md` §4.1, rule 1, and rule 8, which takes H as rule 1 does): the session
+starts only if the pool's total T plus the reserve H stays within the pool's limit. For an ordinary
+session, one not of a row that an exception of this table matches, H is the larger of 0.65 USD and
+the highest cost of the ordinary sessions seen so far; the sessions of a cap-exception row are left
+out of that highest cost, since their cost measures the exception (rule 1, by the ledger field
+`caps_usd`). For a session of a row that an exception of this table matches:
+
+H = exception cap + max(0.65 USD, highest ordinary session cost)
+
+`run.mjs` takes the cap from the exception that matched the row (this table), not from the largest
+ledger entry, and the second term, the H of an ordinary session, stands for the overshoot bound:
+the overshoot is the cost of the steps running when the cap is reached (overshoot rule above) and
+is known only after those steps end. For C002-TS-634 this gives the 2.65 USD of test plan §4.1
+rule 1 (2.00 USD plus 0.65 USD). No fixed allowance applies (the 0.05 USD of the earlier test
+plan, 1.05 USD for C002-TS-634, no longer does).
 
 ## §3 Session result
 
@@ -194,10 +265,10 @@ Added fields:
 |---|---|
 | `target` | `claude-code`, `opencode` or `copilot` (C002-TS-611, C002-TS-612, C002-TS-615) |
 | `host_versions` | versions read at session start (C002-IF-009, release evidence); on OpenCode the version of the pinned host binary (§4) |
-| `end_reason` | `completed`, `turn cap`, `spend cap`, `question unanswerable`, `error` (C002-TS-614); `error` also when the provider refuses a step of the session, for example an OpenRouter error with HTTP status 402 stored on an assistant message |
+| `end_reason` | `completed`, `turn cap`, `spend cap`, `question unanswerable`, `error` (C002-TS-614); `error` also when the provider refuses a step of the session, for example an OpenRouter error with HTTP status 402 stored on an assistant message, and when the session timeout of §4 ends the session |
 | `usage` | `{ "turns": n, "usd": number or null }` |
 | `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (2.00 for C002-TS-634 on OpenCode). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
-| `spend` | `reported` when the host reported the cost of the steps, else `unreported` |
+| `spend` | on a per-step runner (§2.2): `reported` when the host reported the cost of every step of the session and of its subagents that started; `partial` (revised for critic CR-73) when it reported the cost of some of them but not of every one, a step that the abort at a cap, the session timeout (§4) or another end stopped before its step-finish, or a step-finish without a cost, being one it did not report; `unreported` when it reported the cost of none. `usage.usd` sums the reported costs, so under `partial` it is a lower bound of the session's cost, and the ledger books the session by the test plan's rule for a `partial` spend (§2.2 cap records). On Copilot CLI: `reported` when the usage file gives the session's credits, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
 | `api_key_source` | the source of the credential the session ran with, never the credential itself (revised for critic CR-37 of the plan review); the session result carries it as `apiKeySource`, and the harness writes it into each result record and the result file as `api_key_source`, beside `auth`. OpenCode: `openrouter-key-file` for a session on the pinned host binary, whose key comes from P-01's key file (§4 Provider key), and `null` on the stub host, which uses no credential; Claude Code: the `apiKeySource` of the session's init message, as the eval auth switch records it today (for example `none` under the subscription route, C002-T-060); Copilot CLI: the name of the credential source its runner gives the host, `copilot-credential-store` for a session on Copilot CLI, which reads P-01's token from the system credential store where `copilot login` keeps it (§4 Copilot CLI session), `null` on the stub host |
@@ -207,9 +278,18 @@ Added fields:
 
 | Runner | Drives | Caps | Question calls |
 |---|---|---|---|
-| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from the cost of each finished step when present (S-07 §10); the session is aborted at a cap (C002-REQ-611), the spend cap by the per-step rule of §2.2 | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
+| OpenCode | the OpenCode server (`opencode serve`) of the pinned host binary and the JS SDK of the same version, with the generated OpenCode package in a temporary project (C002-R-001 D-01, D-02; host process below); permission requests answered under `allowTools` (§2) | turns counted from assistant steps; spend from the cost of each finished step when present (S-07 §10); the session is aborted at a cap (C002-REQ-611), the spend cap by the per-step rule of §2.2, and at the session timeout (below) | answered from `answer` through the SDK's reply route (`question.reply`, S-07 §5), or dismissed through `question.reject` when `answer` returns `{ reject: true }`; this works because the conductor holds `question: allow` (C002-REQ-217); a `question` call that `answer` does not cover ends the session with `question unanswerable` |
 | Copilot CLI | `copilot -p <prompt> --agent architect:<agent> --plugin-dir <package copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user`, run in the case's temporary git workspace with a temporary Copilot home (`COPILOT_HOME`; C002-R-001 D-03; C002-AS-04 settled by S-08 §2.1, §2.4). Preparation per session: copy `dist/copilot/` to a temporary folder and run `sdd install copilot --package <package copy>` in the workspace (C002-IF-007), so that the copy has its `plugin.json` and `hooks.json` and the workspace its agents, its workspace hook file `.github/hooks/architect-guard.json` and `.vscode/mcp.json` (whether Copilot CLI loads the workspace hook file is an assumption of C002-IF-005 §3 that the runner's events confirm; the plugin-level entry holds the same guard); then write the `servers` entries of the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form to the servers file. The servers do not come from a plugin MCP configuration: the package declares none (C002-REQ-307). The further options and the environment of the session: Copilot CLI session below | turns counted from the assistant messages of the session agent in the JSON events; at the turn cap the process tree is killed; the spend cap is the host's `--max-ai-credits` limit, checked per session on the measured total (§2.2) | none: `--no-ask-user`; only non-interactive scenarios run (C002-REQ-612) |
 | Stub | a scripted host for the runner tests (C002-TS-614) | as the runner under test | scripted |
+
+**Session timeout** (revised for critic CR-74). Each generated-target runner bounds a session by a
+session timeout of 20 minutes: the OpenCode runner counts from the moment it sends the session's
+prompt, the Copilot CLI runner from the start of the host process. At the timeout the OpenCode
+runner aborts the session and its subagents' sessions through the SDK, and the Copilot CLI runner
+ends the host process; the session ends with `end_reason` `error`, its `error` text beginning with
+`session timed out` on OpenCode (`session timed out after 1200000 ms`) and reading `session
+exceeded 20 minutes` on Copilot CLI. The timeout is no cap (neither `turn cap` nor `spend cap`) and
+no host or provider error (§2.2, waiver of C002-TS-634).
 
 **MCP servers on Copilot CLI** (settled in C002-T-045; before, an assumption on the S-08 record).
 Copilot CLI 1.0.98 accepts `--additional-mcp-config @<file>` and does not read the workspace's
@@ -288,8 +368,8 @@ F-8, F-10; revised for defect D-015 item 4). The OpenCode runner, and the corpus
   built-in `fetch` (undici, `headersTimeout` 300 s) drops a request whose response headers take
   longer than 300 s, which ended a C002-TS-634 session at 300 s with an empty error (C002-T-056,
   fixed in commit `f87d885`). The fetch honours the request's abort signal, so the abort at a cap
-  (§2.2) still ends the request, and the event stream still streams; the runner's session timeout
-  bounds a session instead. An error that the SDK returns is recorded in `error` (§3) by its
+  (§2.2) still ends the request, and the event stream still streams; the session timeout of
+  20 minutes (above) bounds a session instead. An error that the SDK returns is recorded in `error` (§3) by its
   message and cause, never as an empty object.
 - **Own database.** `OPENCODE_DB` names an absolute database file of the run, so the user's shared
   OpenCode database is neither read nor migrated by the tested version (F-8).

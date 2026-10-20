@@ -62,7 +62,10 @@ not wait for it.
    before each interview round and before the gate checks the reserve condition of the stop rule (test
    plan §4.1): reserve total + the outstanding estimate of C002-T-049 step 3 (a
    step in progress counts its estimate minus its spend so far, not below 0) + the run's spend so far
-   + H ≤ 10 USD; otherwise the run pauses and P-01 decides. After the run, its spend goes into the
+   + H ≤ 10 USD, with H the H of an ordinary session (test plan §4.1 rule 1: cap-exception sessions
+   such as the C002-TS-634 sessions of C002-T-056 left out; 0.65 USD on 2026-10-20, so the check
+   before the run is 0 + 6.50 + 1.40 + 0.65 = 8.55 USD, test plan §4.3); otherwise the run pauses
+   and P-01 decides. After the run, its spend goes into the
    ledger (one entry, pool `reserve`, with the usage reading and the session count), before any other
    paid session starts; H for later sessions is that entry's spend divided by its session count. A failed run is repeated only after the stop rule allows it again.
 

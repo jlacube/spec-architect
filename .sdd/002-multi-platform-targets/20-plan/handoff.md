@@ -50,7 +50,9 @@ catch-up task C002-T-065, after C002-T-045 and before the C002-T-056 reruns, C00
 C002-T-054. The revision for defects D-021 (editorial test-plan rows) and D-022 (the cap exception
 for C002-TS-634 on OpenCode raised to 2.00 USD for one run with no further rerun, P-01's
 Q-ts634-budget-02 answer; the overshoot bounded by the cost of the steps running at the cap; the
-stop rule's H for an exception row; the runner's `cap` and `step-after-cap` records) adds no task:
+stop rule's H for an exception row, without exception sessions in the H of the others; the
+runner's `cap` and `step-after-cap` records, `spend` `partial` and the 20-minute session timeout; the cap-only waiver of P-01's
+Q-ts634-waiver-01 answer) adds no task:
 C002-T-056 rerun plan step X0 changes the harness and the C002-TC-673 test before its one X3 run.
 
 ## Reading order
@@ -100,11 +102,13 @@ C002-T-056 rerun plan step X0 changes the harness and the C002-TC-673 test befor
   A case row's spend cap is 0.50 USD, checked after each step; a higher cap runs only for a cap
   exception of C002-IF-010 §2.2 (in force: C002-TS-634 of `evals/targets/gate/TS-634.eval.mjs` on
   OpenCode, 2.00 USD, one run and no further rerun, a failure recorded and the row waived for the
-  OpenCode release; P-01 answer to Q-ts634-budget-02), which `run.mjs` checks from C002-T-065 on, at
+  OpenCode release only within the cap-only waiver of test plan §6, any other failure a defect that
+  reopens its owning task; P-01 answers to Q-ts634-budget-02 and Q-ts634-waiver-01), which `run.mjs` checks from C002-T-065 on, at
   2.00 USD from C002-T-056 step X0 on; a session ended by a cap that such an exception later raised
   is no run (`valid_run: false`, test plan §4.1). A capped session can end above its cap by the cost
   of the steps running when the cap is reached; before an exception session, H is at least its
-  exception cap plus the overshoot bound of test plan §4.1 rule 1. Never store the Claude OAuth token or the
+  exception cap plus the overshoot bound of test plan §4.1 rule 1, and exception sessions stay out of
+  the H of every other session (plan critic CR-41). Never store the Claude OAuth token or the
   OpenRouter key in the repository.
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
@@ -167,7 +171,8 @@ Insiders builds): record the version before each run.
 | Q-copilot-pool-01: whether the 30 USD Copilot pool also counts P-01's VS Code runs (test plan §4.1) | C002-T-050, C002-T-057 | settled: P-01 answered "CLI evals only (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (2)); the pool counts the Copilot CLI eval sessions of the ledger only, and the VS Code runs run under P-01's own watch of GitHub's usage view |
 | Q-capped-runs-01: whether the C002-TS-634 sessions ended by the 0.50 USD cap that the exception later raised count as runs (plan critic CR-38) | C002-T-056 | settled: P-01 answered "Don't count them (Recommended)"; test plan §4.1 rule for capped sessions, `valid_run: false` |
 | Q-rerun-scope-01: which OpenCode rows rerun after the variant `file-inspection` | C002-T-056 | settled: P-01 answered "TS-511 and TS-634 (Recommended)"; C002-T-056 rerun plan X1, X2 |
-| Q-ts634-budget-02: C002-TS-634 on OpenCode still above its 1.00 USD cap exception (defect D-022) | C002-T-056 | settled: P-01 answered "One run at $2 (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); C002-T-056 rerun plan X0, X3; a failure is recorded and the row waived for the OpenCode release |
+| Q-ts634-budget-02: C002-TS-634 on OpenCode still above its 1.00 USD cap exception (defect D-022) | C002-T-056 | settled: P-01 answered "One run at $2 (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); C002-T-056 rerun plan X0, X3; a failure is recorded and the row waived for the OpenCode release within the cap-only waiver of test plan §6 |
+| Q-ts634-waiver-01: scope and record of the C002-TS-634 waiver (spec critic CR-70, CR-71) | C002-T-056 | settled: P-01 answered "Cap-only waiver (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); test plan §6 "Cap-only waiver of C002-TS-634", C002-T-056 rerun plan X3; recorded at the G2 of revision D-021 … D-022 |
 | Q-exec-lookup-01: PATH-only lookup for every executable the sdd CLI and the sdd MCP server start (C002-CON-17) | C002-T-065 | settled: P-01 answered "Fix everywhere now (Recommended)"; C002-T-065 part (f), CHG-001's gate tests unchanged (`30-impact/regression-set.md` §4.6) |
 
 ## CLI commands
