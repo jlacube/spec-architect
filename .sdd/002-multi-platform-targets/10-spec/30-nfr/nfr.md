@@ -59,13 +59,13 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 ### C002-NFR-105 — Eval session caps
 - **Category:** Performance efficiency / resource utilisation
 - **Statement:** WHILE an eval runner of a generated target runs one eval session, THE eval runner SHALL keep the session within the threshold.
-- **Metric:** turns per session; API spend per session where the host reports it
-- **Threshold:** ≤ 30 turns and ≤ 0.50 USD per session
-- **Method:** runner tests with a stub host that never ends a session; spend read from the host's usage report in each eval result
+- **Metric:** turns per session; steps started after the step that brought the session's spend to its spend cap or above, the spend being checked after each step (spend-cap rule, C002-IF-010 §2.2); API spend per session where the host reports it
+- **Threshold:** ≤ 30 turns per session; spend cap 0.50 USD per session, or for a case row and host listed in C002-IF-010 §2.2 "Caps above 0.50 USD" the cap of that cap exception (in force: C002-TS-634 on OpenCode, 1.00 USD per session; P-01 answer to Q-ts634-budget-01); 0 steps started after the step whose cost brought the spend to the spend cap or above. That step and every step already running when the cap was reached count in full, so the recorded spend of a session that ends with `spend cap` is at or above its spend cap by at most the cost of those steps
+- **Method:** runner tests with a stub host that never ends a session; harness test of the cap-exception check of C002-IF-010 §2.2; spend, and on OpenCode the cost of each step, read from the host's usage report in each eval result
 - **Environment:** REF-WIN, dev-tier eval runs
-- **Rationale:** the defaults of `runSession` on Claude Code (current-state E-9: `maxTurns` 30, `maxBudgetUsd` 0.5); three harnesses multiply eval cost (ideation §9)
+- **Rationale:** the defaults of `runSession` on Claude Code (current-state E-9: `maxTurns` 30, `maxBudgetUsd` 0.5); three harnesses multiply eval cost (ideation §9); checked after each step because no host reports the cost of a step before the step has run (defect D-020 item 3; C002-IF-010 §2.2); cap exception for C002-TS-634 on OpenCode: P-01 answer to Q-ts634-budget-01 (defect D-020 item 2)
 - **DoD:** C002-DOD-012
-- **Open items:** OpenCode reports the cost of each session (`docs/spikes/S-07-opencode.md §10`, measured on OpenCode 1.15.10 only; no paid session ran on 1.18.31); Copilot CLI reports the AI Credits and tokens of a run (`docs/spikes/S-08-copilot-vscode.md §2.4`: 9.03 credits, 0.09 USD).
+- **Open items:** OpenCode reports the cost of each finished step (`docs/spikes/S-07-opencode.md §10` on OpenCode 1.15.10; on 1.18.31 in the paid sessions of C002-T-056, C002-IF-010 §2.2); Copilot CLI reports the AI Credits and tokens of a whole session only (`docs/spikes/S-08-copilot-vscode.md §2.4`: 9.03 credits, 0.09 USD; C002-IF-010 §2.2).
 
 ## 2. Security and safety
 

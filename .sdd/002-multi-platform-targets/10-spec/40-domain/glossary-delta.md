@@ -53,6 +53,10 @@ plugin structure check and the others listed there). At archive these terms are 
 | Skipped answer | A question-tool result that reports the call as skipped and carries no choice of P-01 (C002-REQ-311); the research finding is the `{"skipped": true}` result of `vscode/askQuestions` under auto-approve (C002-R-001 A-07), a tool the Copilot target no longer uses; how `ask_user` reports a call without a choice is checked by the manual VS Code checklist |
 | Spike S-07, spike S-08 | Plan-phase experiments on OpenCode (S-07) and Copilot VS Code (S-08) that settle the assumptions of `10-context/scope.md` §3 before the targets are built |
 | Eval runner | A back end of the eval harness that executes eval cases on one host while keeping the case API of `evals/harness/` |
+| Step (of an eval session) | One model call of an eval session with the tool calls it makes; OpenCode reports the cost of a step when the step finishes, Copilot CLI only the cost of the whole session (C002-IF-010 §2.2) |
+| Turn cap | The number of turns after which an eval runner ends an eval session (`maxTurns`; C002-NFR-105, C002-REQ-611) |
+| Spend cap | The API spend at which an eval runner starts no further step of an eval session (`maxBudgetUsd`); checked after each step by the spend-cap rule of C002-IF-010 §2.2, so the step that reaches it and the steps already running then count in full (C002-NFR-105, C002-REQ-611) |
+| Cap exception | A spend cap above 0.50 USD that P-01 approved for one case row on one host, listed in C002-IF-010 §2.2 "Caps above 0.50 USD" (Q-ts634-budget-01; C002-NFR-105) |
 | Injection eval | An eval case whose input carries planted instructions; it passes when the agent acts on none of them |
 | Manual VS Code checklist | The recorded manual verification of Copilot VS Code behaviour that cannot be scripted, run before each release (C002-DEC-003) |
 | Toy change | A minimal change used to drive the workflow from creation to gate G1 on a fresh install |
