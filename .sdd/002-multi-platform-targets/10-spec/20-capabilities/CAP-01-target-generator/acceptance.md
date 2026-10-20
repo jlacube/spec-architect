@@ -38,6 +38,29 @@ Scenario: C002-TS-102 — generator error fails the packaging run
   And the output contains the generator message of C002-TS-108
 ```
 
+```gherkin
+Scenario Outline: C002-TS-672 — a source plugin without a package version fails the run
+  Given a copy of the source plugin "plugins/architect" at "C:/fx/src-noversion", whose ".claude-plugin/plugin.json" <manifest>
+  And no folder "C:/fx/out" exists
+  When P-01 runs "node scripts/generate.mjs --source C:/fx/src-noversion --out C:/fx/out --json"
+  Then the exit code is 1
+  And the "diagnostics" list holds exactly one entry with the code "ERR-GEN-007", the file ".claude-plugin/plugin.json", no "target" and <message>
+  And each entry of "targets" has "written" false
+  And no folder "C:/fx/out/opencode" or "C:/fx/out/copilot" exists
+  And every file under "C:/fx/src-noversion" has the SHA-256 it had before the run
+  Examples:
+    | manifest                                                        | message |
+    | does not exist                                                  | a "message" that contains "version missing or not a non-empty string" |
+    | parses and has no "version" key                                 | a "message" that contains "version missing or not a non-empty string" |
+    | parses and gives "version" the number 3                         | a "message" that contains "version missing or not a non-empty string" |
+    | parses and gives "version" the empty string ""                  | a "message" that contains "version missing or not a non-empty string" |
+    | holds the text "{ \"name\": \"architect\", " and does not parse | a "message" that holds the JSON parse error and not "version missing" |
+```
+
+The rows follow C002-IF-004 Output (Source without a version) and `errors.md` ERR-GEN-007 (revised
+for critic CR-36): the version built into the generator never stands in, and the manifest problem is
+reported once per run, for no target.
+
 #### C002-AC-101.3 — A second run leaves no stale file
 ```gherkin
 Scenario: C002-TS-103 — files of an earlier run are not kept
@@ -503,7 +526,7 @@ Scenario: C002-TS-132 — archive confirmation through the OpenCode question too
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-101 | TS-101 | n/a | n/a | TS-102 | n/a | TS-103 | n/a |
+| C002-REQ-101 | TS-101 | n/a | TS-672 (version absent, a number, the empty string) | TS-102, TS-672 (ERR-GEN-007: manifest missing, without a string version or unparsable; no target written) | n/a | TS-103 | n/a |
 | C002-REQ-102 | TS-104 | TS-105 (failed run) | n/a | TS-105 | n/a | TS-104 | n/a |
 | C002-REQ-103 | TS-106, TS-107 | TS-106 (two targets), TS-134 (Copilot call form in bodies, grant form in `tools`), TS-657 (frontmatter construct `doctor-description`) | n/a | n/a: an unmapped construct is C002-REQ-104 (TS-108, TS-658) | n/a | n/a | n/a |
 | C002-REQ-104 | TS-108 | TS-108 (one target of two), TS-658 (frontmatter construct `doctor-description`) | n/a | TS-108, TS-658 | n/a | n/a | n/a |

@@ -12,9 +12,11 @@ status: draft
 Verification: integration tests start the sdd MCP server from the packed `architect-sdd` tarball as
 a child process in the fixture repository, exchange MCP JSON-RPC messages over its standard input and
 output, and check the results and the file system. No host is needed, except in C002-TS-666, which
-runs OpenCode at its tested version with a stub model and needs no credential (C002-IF-010 §4); the same calls run through
-Copilot CLI in the Copilot CLI eval runner (C002-REQ-612). The tests preload `tests/no-network.mjs`
-(C002-NFR-205). Fixture: `fx-srv` is a repository at `C:/repo` with `.sdd/002-x/`, `src/app.ts`, a
+runs in the replay suite, not the integration suite: OpenCode at its tested version (the pinned host
+binary) with a loopback stub model, needing no credential (C002-IF-010 §4; C002-DOD-005); the same
+calls run through Copilot CLI in the Copilot CLI eval runner (C002-REQ-612). The integration tests
+preload `tests/no-network.mjs` (C002-NFR-205); C002-TS-666 does not, because the host talks to its
+stub model over loopback (revised for critic CR-59). Fixture: `fx-srv` is a repository at `C:/repo` with `.sdd/002-x/`, `src/app.ts`, a
 symbolic link `.sdd/link-to-src` to `src/`, and the file `.sdd/002-x/a.md` whose content is
 `status: draft`. Server instances: "sdd-files" is the server started as `sdd-mcp --profile files`
 and "sdd-shell" the server started as `sdd-mcp --profile shell`, each as the target packages

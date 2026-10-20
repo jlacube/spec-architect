@@ -286,10 +286,14 @@ Scenario Outline: C002-TS-516 — Copilot hooks row in the VS Code doctor
 The restricted-mode rows show the caveat of the P-01 decision on defect D-012: the doctor reads
 `chat.useHooks` only, so an untrusted workspace still shows `ok` with the text that names the
 sources not read; the manual VS Code checklist records them (C002-TS-619). Restricted mode can keep
-VS Code from running the chat or the doctor prompt; P-01 then records the restricted-mode row
-`failed`, with what VS Code showed in its `note`, and the release check refuses that record with
-`ERR-REL-004: copilot: checklist step <step id> is failed` (C002-IF-009 §4 Run order, C002-TS-668;
-defect D-015 item 8).
+VS Code from running the chat or the doctor prompt (revised for Q-checklist-restricted-01, P-01
+2026-10-20, and critic CR-53; before, such a row was recorded `failed`): when VS Code itself refuses
+them, showing its own message while no tool call of the package runs, P-01 records the
+restricted-mode row `passed`, with a `note` that starts with `VS Code refused: ` and quotes what VS
+Code showed (C002-TS-618). When VS Code runs the doctor prompt, the row passes only when it shows
+the status `ok`, the caveat Version text and an empty Fix of its Examples row, and is recorded
+`failed` otherwise, which the release check refuses with `ERR-REL-004: copilot: checklist step <step
+id> is failed` (C002-IF-009 §4 Run order, C002-TS-668).
 
 The rows of the package's mode are listed in run order (revised for critic CR-44): the rows that
 switch off `chat.useHooks` or Workspace Trust run first, then the restore step sets `chat.useHooks`
@@ -648,7 +652,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome) | TS-513 (equal, older, newer) | TS-513 | n/a | n/a | n/a |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
-| C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
+| C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text; a restricted-mode row whose chat VS Code refused recorded `passed` with a `VS Code refused: ` note), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
 | C002-REQ-511 | TS-517 | TS-517 (bundled CLI), TS-518 (`sdd version` unchanged) | TS-517 (exactly one line) | n/a | n/a | n/a | n/a |
 | C002-REQ-512 | TS-519 | n/a | n/a | n/a: a missing file fails TS-519 and makes the lookup of C002-REQ-514 refuse it (TS-521) | n/a | n/a | n/a |
 | C002-REQ-513 | TS-520 | TS-520 (repository override), TS-538 (`CLAUDE_PLUGIN_ROOT` set: the npm `sdd` keeps its own templates) | TS-520 (override folder without that file) | n/a: no template anywhere is C002-REQ-514 (TS-521) | n/a | n/a | TS-538 (another package's templates named by `CLAUDE_PLUGIN_ROOT` are not read) |
