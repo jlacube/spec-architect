@@ -1319,3 +1319,21 @@ Scope: `git diff ee18c33 011e46d -- .sdd/002-multi-platform-targets/10-spec/` (a
 | CR-69 | minor | IF-005 §5, TS-306, T-065 (d) | the Copilot CLI model note in the install notes has no scenario and sits next to "Copilot CLI is no adopter host" | TS-306 Then + TC-306, or explain | fixed |
 
 All findings of this section fixed: architect f495222 and f877250 (CR-60…69; CR-63 widened per P-01 Q-exec-lookup-01), spec-writer 7e57d72, test-designer 5e8d331.
+
+
+## Revision D-021…D-022 (2026-10-20)
+
+Scope: reopen bcb70e3 and revision 7a84bfa, against D-021, D-022 and Q-ts634-budget-02. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 4 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-70 | major | IF-010 §2.2, NFR-105, TS-634; T-056 X3, test plan §6 | the waiver covers every failure of X3, incl. a gate approve after Revise or a step started after the cap — loosens gate integrity | waive only an X3 run ended by spend cap (or host/provider error) before the second gate question with Then 1–2 met and no step after the cap; any other failure reopens the owning task | open |
+| CR-71 | major | DOD-007, IF-010 §2.2, test plan §6, change.md waivers | no gate and no record named for the waiver; DOD-007 still requires every CAP-06 scenario | record the waiver at G2 (conditional on the CR-70 failure kind); DOD-007 names the exception | open |
+| CR-72 | major | IF-010 §2.2/§3, TS-677; T-056 X0/X3, TC-677 | spec (`event: "cap"` with usage) and plan (`step-after-cap` with step_usd, started_before_cap) describe different records; reserve of an exception session has no scenario | define the plan's records in IF-010; Then line in TS-677; TS + TC for the exception-row reserve | open |
+| CR-73 | major | IF-010 §2.2, §3 spend, test plan §4.1 | "counts with the cost the host reports for it, if any": an aborted step without a reported cost counts as zero | drop "if any"; such a session reads spend `partial` and is booked at cap + H until reconciled with OpenRouter | open |
+| CR-74 | minor | IF-010 §4 | "the runner's session timeout" is undefined in spec (code: 20 min) | state 20 minutes, end_reason error | open |
+| CR-75 | minor | TS-673 | "line 26 of the body" ambiguous (body is lines 10–26) | "line 26 of agents/sdd-critic.md (last line, in its body)" | open |
