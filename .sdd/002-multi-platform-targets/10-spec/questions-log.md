@@ -225,3 +225,11 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Rejected:** accept as a known platform condition (repository content is untrusted); only set NoDefaultCurrentDirectoryInExePath (unverified for Node/libuv)
 - **Answer:** P-01: "Fix everywhere now (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-20 (3) — revision D-021, D-022
+
+### Q-ts634-budget-02 — TS-634 on OpenCode still exceeds its 1.00 USD cap exception (C002-T-056)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. One run at 2.00 USD (exception raised to 2.00 for one more run, no further rerun; a failure is recorded and waived) (Recommended) · 2. Smaller fixture (one specialist in the rework), one run within 1.00 · 3. Waive the row
+- **Answer:** P-01: "One run at $2 (Recommended)"
+- **Extracted instructions:** none
