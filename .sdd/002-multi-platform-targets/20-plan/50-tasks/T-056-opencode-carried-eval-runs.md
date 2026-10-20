@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-038, C002-T-044, C002-T-063, C002-T-064, C002-T-065]
 implements: [C002-REQ-608, C002-REQ-610, C002-REQ-611, C002-REQ-112]
 satisfies_ac: [C002-AC-608.1, C002-AC-610.1, C002-AC-611.1, C002-AC-112.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-673, C002-TC-673, C002-TS-677, C002-TC-677, C002-TS-679, C
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-015]
 estimate: L
-report: { commit: null, completed_at: null, notes: "Partial edd5fa9: 12 pass, TS-507 fail (run_command error results rejected by OpenCode MCP client, -32602, defect D-017), 18 sessions 402 (OpenRouter account credit out; valid_run false). T-056 spend 3.92 USD, OpenRouter total 4.22 of 40. Remaining ~31 sessions after top-up and the D-017 fix." }
+report: { commit: f60a9ad, completed_at: 2026-10-20, notes: "All carried OpenCode rows pass except TS-634, waived at G2 4e86507 (X3 ended by spend cap before the second G2 question; all four waiver conditions hold). TS-511 passes with the file-inspection variant. T-056 spend 18.84 USD; OpenRouter total 19.14 of 40 (key usage 19.30). Observations: capped sessions with subagents read partial (manual reconcile); gate rework after a one-line Revise runs a full critic re-review + options + interview (product, worth a look)." }
 ---
 
 # C002-T-056 — OpenCode dev-tier runs of the carried eval rows
