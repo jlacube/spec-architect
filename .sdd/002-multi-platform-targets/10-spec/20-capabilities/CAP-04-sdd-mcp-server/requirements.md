@@ -53,7 +53,7 @@ C002-REQ-503, C002-REQ-517 and C002-REQ-521 (C002-GOAL-05).
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN an agent calls the command tool of the sdd MCP server, THE sdd MCP server SHALL run the command only if the bash guard core allows it for an Architect agent, and refuse the call with the guard's rule (`GUARD-BASH-001` or `GUARD-BASH-002`) otherwise.
-- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9), `sdd serena-config` or `sdd serena-launch` with a folder inside the repository is refused (Q-guards-04), and so is a writing `sdd` subcommand whose `--cwd` folder lies outside the repository root (Q-guards-05)
+- **Rationale:** C002-DEC-001; the decision is that of C001-REQ-1106 (as changed by C002-REQ-503, C002-REQ-517 and C002-REQ-521) and C001-REQ-1107; the server's shell surface is the allowlist only (ideation §9), `sdd serena-config` or `sdd serena-launch` with a folder inside the repository is refused (Q-guards-04), and so is a writing `sdd` subcommand whose `--cwd` folder lies outside the repository root (Q-guards-05); an allowed command runs the executable that the PATH-only executable lookup finds, by its absolute path, never one of the working folder or the repository (C002-CON-17; Q-exec-lookup-01, P-01: "Fix everywhere now (Recommended)"; C002-IF-007 §Executable lookup)
 - **Stories:** C002-US-402
 - **Priority:** Must
 - **Acceptance:** C002-AC-405.1

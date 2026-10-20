@@ -89,7 +89,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** ADDED
 - **Pattern:** complex
 - **Statement:** WHILE the conductor runs on a generated target, IF a detected host version (the OpenCode version; in VS Code, the VS Code version or the GitHub Copilot Chat version) differs from its tested version recorded for that target in the doctor remedies table, THEN THE conductor SHALL show the host row with status `untested` and the tested versions in its fix column.
-- **Rationale:** Q-versions-01 (spec round 1): "Pin spike-tested versions" — the tested version is the host version recorded by the spike that validated the target, shown by the doctor and re-checked before each release (C002-REQ-621); for Copilot VS Code both versions are pinned, so a difference in either one is untested; `untested` is a warning, not a failure (C002-REQ-505)
+- **Rationale:** Q-versions-01 (spec round 1): "Pin spike-tested versions" — the tested version is the host version recorded by the spike that validated the target, shown by the doctor and re-checked before each release (C002-REQ-621); for Copilot VS Code both versions are pinned, so a difference in either one is untested; `untested` is a warning, not a failure (C002-REQ-505); the detected version is that of the executable the PATH-only executable lookup finds, so an `opencode` or `code` placed in the adopter's repository never runs during the doctor (C002-CON-17; Q-exec-lookup-01, P-01: "Fix everywhere now (Recommended)"; C002-IF-007 `host-version`, §Executable lookup)
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-508.1
