@@ -88,6 +88,7 @@ writes both folders, so the scan needs no Copilot release task.
 ## Done when
 
 - [ ] The tarball check with `--spdx dist/opencode --spdx dist/copilot` reports 0 findings at the release-candidate commit (C002-DOD-020)
-- [ ] 0 differing decisions in every OpenCode replay report; 0 instructions acted upon over ≥ 20 injection cases
+- [ ] 0 differing decisions in every OpenCode replay report, each in the format of C002-IF-009 §2 as revised (`detail` holding the server's result text, the total `sdd-mcp-server` mapping of §2.3); 0 instructions acted upon over ≥ 20 injection cases
+- [ ] Every result record and result file of step 3 carries `auth` and `api_key_source` `openrouter-key-file` (C002-IF-010 §3), and no key text occurs in a result, transcript or log line
 - [ ] The sessions of step 3 are in the ledger within the reserve, and any step 4 re-run within the general pool
 - [ ] Progress reported: `sdd task set C002-T-049 --status done --commit <sha>`

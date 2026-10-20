@@ -32,7 +32,10 @@ Q-hooks-row-01 answer, the per-mechanism replay expectations of Q-safety-08) lan
 task C002-T-063, before C002-T-041, C002-T-045, C002-T-046, C002-T-047 and C002-T-056. The revision
 for defects D-015 … D-017 (text-only MCP error results of P-01's Q-mcp-errors-01 answer, the
 generator's `package_version`, the release-check rows, the eval-runner rules of C002-IF-010 and the
-checklist step rules) lands in the catch-up task C002-T-064, after C002-T-047 and before C002-T-045,
+checklist step rules, with the critic fixes that followed: the total server decision mapping,
+ERR-GEN-007 for a source without a version, the step index format, the step check with earlier runs
+of P-01's Q-checklist-rerun-01 answer, and the restricted-mode rows of Q-checklist-restricted-01)
+lands in the catch-up task C002-T-064, after C002-T-047 and before C002-T-045,
 C002-T-048, C002-T-049, C002-T-054 and the resumed C002-T-056.
 
 ## Reading order

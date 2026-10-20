@@ -67,7 +67,10 @@ does not wait for it.
    (C002-T-046 "Run order"), step 1's install being group 1, and record each result in run order:
    - group 2: the C002-TC-516 row with `chat.useHooks` false, then the row with the workspace in
      restricted mode, each with the doctor's Copilot hooks row as shown (status, Version text, Fix);
-     then the restore step (`chat.useHooks` true, workspace trusted);
+     when VS Code itself refuses the chat or the doctor prompt in restricted mode and no tool call of
+     the package runs, that row is `passed` with `note: "VS Code refused: <text as VS Code showed
+     it>"` (Q-checklist-restricted-01; C002-IF-009 §4 Run order); then the restore step
+     (`chat.useHooks` true, workspace trusted);
    - group 3: the C002-TC-516 row with `chat.useHooks` true and the workspace trusted (`ok`, Version
      `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy
      not read, confirmed by the manual VS Code checklist`), then the hooks-state step with its three
@@ -80,11 +83,18 @@ does not wait for it.
      hook output, that `src/app.ts` is unchanged and the subagent guard hook's deny message
      (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed edit tool); then the same step with the
      plugin part disabled.
-   If a group-4 step ran before the hooks-state step, or `chat.useHooks`, Workspace Trust or an
-   organisation policy changed after it, run a new restore step and then groups 3 and 4 again; the
-   record lists every step in run order.
-3. A failed step reopens the owning task; the run is repeated after the fix. A refuted assumption is
-   a spec defect (`sdd defect add`), not a fix in place. In particular:
+   If a group-4 step ran before the hooks-state step, if `chat.useHooks`, Workspace Trust or an
+   organisation policy changed after it, or if the hooks-state step read a source off and P-01 put
+   it right, run a new restore step and then groups 3 and 4 again (the rerun rule). The record lists
+   each step once, at the position of its last run with that run's result, and keeps every earlier
+   run in the step's `earlier_results` with its `result` and the `cause` of the run that followed
+   (`hooks-source-changed`, `ran-before-hooks-state` or `repeated`; C002-IF-009 §4 Earlier runs,
+   Q-checklist-rerun-01); the restore step lists one earlier run per rerun.
+3. A failed step reopens the owning task. An earlier `failed` run stays binding unless the rerun rule
+   repeated the step, so after the fix the checklist runs again in full and is recorded under a later
+   date (C002-REQ-618); repeating only the failed step (cause `repeated`) does not make the record
+   releasable. A refuted assumption is a spec defect (`sdd defect add`), not a fix in place. In
+   particular:
    - a built-in agent's calls without `agent_type`, or `general-purpose` not denied: defect against
      C002-REQ-327 (Q-safety-06 returns to P-01; C002-RISK-032);
    - the workspace hook file not loaded: defect against C002-IF-005 §3;
@@ -96,10 +106,11 @@ does not wait for it.
 ## Verification
 
 - `node scripts/release-check.mjs --target copilot --dry-run` reads the record without a checklist
-  error and with hooks enabled
+  error (no ERR-REL-004 line from the step check of C002-IF-009 §5, no ERR-REL-009 `checklist` or
+  `checklist record`) and with hooks enabled
 
 ## Done when
 
-- [ ] Record committed with every step passed and listed in the run order of C002-IF-009 §4 (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), `hooks_state: enabled` with `hooks_sources` reading
+- [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, the assumption outcomes and P-01's name
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

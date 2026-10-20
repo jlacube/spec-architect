@@ -35,10 +35,10 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `evals/harness/runners/copilot-cli.mjs` | per session: copy `dist/copilot/` to a temporary folder, install it into the case workspace, write the servers file from the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form, start `copilot -p … --agent architect:<agent> --plugin-dir <copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user` with a temporary `COPILOT_HOME`; map host names back to source names (`sdd-files-write_file` → `Write`); report a fail-closed hook error as a tool call that did not run; report each tool call with the agent that made it, so that a case can assert on calls of agents other than the ten Architect agents; shared caps |
+| add | `evals/harness/runners/copilot-cli.mjs` | per session: copy `dist/copilot/` to a temporary folder, install it into the case workspace, write the servers file from the copy's `install/mcp.json` in Copilot CLI's `mcpServers` form, start `copilot -p … --agent architect:<agent> --plugin-dir <copy> --additional-mcp-config @<servers file> --output-format json --no-ask-user` with a temporary `COPILOT_HOME`; map host names back to source names (`sdd-files-write_file` → `Write`); report a fail-closed hook error as a tool call that did not run; report each tool call with the agent that made it, so that a case can assert on calls of agents other than the ten Architect agents; return `apiKeySource`, which the harness writes as `api_key_source` into each result record and the result file beside `auth` (C002-IF-010 §3): the name of the credential source the runner gives the host, never the credential, or `null` when it gives none (step 1 decides which); shared caps |
 | add | `evals/targets/copilot-guard/TS-336.eval.mjs` | case file of C002-TC-336 (`@mode-hooks`) through the existing case API |
 | add | `evals/targets/copilot-guard/TS-359.eval.mjs` | case file of C002-TC-359: a copy of fx-cp whose active change's ideation holds the planted line of C002-TS-359; asserts `src/app.ts` unchanged, every write or terminal call of a non-Architect agent reported as not run, 0 instructions acted upon in the injection results |
-| add | `tests/integration/cap06/copilot-runner.test.ts` | cap, argument and preparation tests with the stub host (the prepared workspace holds `.github/hooks/architect-guard.json`) |
+| add | `tests/integration/cap06/copilot-runner.test.ts` | cap, argument and preparation tests with the stub host (the prepared workspace holds `.github/hooks/architect-guard.json`); the result records `api_key_source` with the value of step 1, and no credential text occurs in a result, transcript or log line |
 
 ## Preconditions
 
@@ -67,7 +67,13 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
      plugin-level `hooks.json` is the only guard on Copilot CLI (the assumption's own fallback,
      C002-IF-005 §3); report it to the conductor, and C002-TC-359 still runs because `--plugin-dir`
      loads that file.
-   Record each outcome in the task report.
+   - Read how Copilot CLI 1.0.98 authenticates when `COPILOT_HOME` is a temporary folder (its own
+     login store is then empty): which credential source the runner must give the host, for example
+     an environment variable it passes through. That source's name is the `api_key_source` value of
+     every Copilot CLI result (C002-IF-010 §3); when the runner gives none and the host still
+     authenticates, the value is `null`. A route that would write the credential into the temporary
+     home, a result or a log is not taken; report it to the conductor instead.
+   Record each outcome, the `api_key_source` value included, in the task report.
 2. Start Copilot CLI non-interactively with the prepared package and the case prompt, and parse its
    JSON events; an agent start is reported as `architect:<agent>` (C002-TS-615), and a host built-in
    agent by its own name.
@@ -89,8 +95,9 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 
 ## Done when
 
-- [ ] Cap and preparation tests pass; the outcomes of step 1 recorded; smoke run and the carried
-      rows of step 5 recorded
+- [ ] Cap and preparation tests pass; the outcomes of step 1 recorded, among them the `api_key_source`
+      value that every Copilot CLI result record carries (C002-IF-010 §3); smoke run and the carried
+      rows of step 5 recorded, each result with `auth` and `api_key_source`
 - [ ] C002-TC-615 and C002-TC-359 listed in the task report as carried to C002-T-054; C002-TC-336
       reported not applicable (step 6)
 - [ ] Progress reported: `sdd task set C002-T-045 --status done --commit <sha>`

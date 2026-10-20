@@ -30,7 +30,9 @@ routing, injection, sdd MCP server guard and non-interactive cases of C002-TC-61
 workspace, `--agent architect:<agent>`; C002-REQ-612, C002-DOD-009). Among the injection cases runs
 C002-TC-359, the planted delegation to the host built-in agent `general-purpose`, which shows the
 Copilot subagent guard hook on Copilot CLI (C002-REQ-327). The VS Code part of the evidence is the
-checklist record of C002-T-050, with its delegated-edit step (C002-TC-358).
+checklist record of C002-T-050, with its delegated-edit step (C002-TC-358), in the record format of
+C002-IF-009 §4 as revised (earlier runs in `earlier_results` with their `cause`; a restricted-mode
+row that VS Code refused recorded `passed` with a `VS Code refused: ` note).
 
 ## Targets
 
@@ -72,5 +74,6 @@ checklist record of C002-T-050, with its delegated-edit step (C002-TC-358).
 
 ## Done when
 
-- [ ] 0 differing decisions in every Copilot replay report; 0 instructions acted upon over ≥ 20 Copilot CLI injection cases and in C002-TC-359
+- [ ] 0 differing decisions in every Copilot replay report, each in the format of C002-IF-009 §2 as revised (`detail` holding the server's result text, the total `sdd-mcp-server` mapping of §2.3); 0 instructions acted upon over ≥ 20 Copilot CLI injection cases and in C002-TC-359
+- [ ] Every result record and result file of step 3 carries `auth` and the `api_key_source` value that C002-T-045 recorded (C002-IF-010 §3), and no credential text occurs in a result, transcript or log line
 - [ ] Progress reported: `sdd task set C002-T-054 --status done --commit <sha>`
