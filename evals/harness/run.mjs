@@ -24,7 +24,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { capRefusal, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
+import { capException, capRefusal, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
 import { checkHostEnv, resolveAuth } from "./env.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
@@ -246,14 +246,46 @@ export async function selectScenarios(files, { host = DEFAULT_HOST, only } = {})
 /** Highest session cost the stop rule assumes for the next session (§4.1 rule 1). */
 export const MIN_H = 0.65;
 
-/** Stop-rule check for one OpenRouter session of `pool`: `{ ok, T, H, L }`. */
-export function stopRule(ledger, pool = "general") {
+/**
+ * An ordinary session of the stop rule (test plan §4.1 rule 1, plan critic CR-41): every entry except
+ * those of a cap-exception row, whose `caps_usd` is above the 0.50 USD cap of C002-NFR-105. An entry
+ * without `caps_usd` (written before C002-T-056 step X0) is ordinary.
+ */
+const ordinary = (e) => !(Number(e.caps_usd) > DEFAULT_MAX_BUDGET_USD + 1e-9);
+
+/**
+ * H of the stop rule (test plan §4.1 rule 1; C002-IF-010 §2.2 "Reserve of a cap-exception session"): the
+ * ordinary H = max(0.65 USD, the highest cost of the ordinary sessions); for a session of a row that a cap
+ * exception matches, H = that exception's cap + the ordinary H.
+ */
+/** @param {any[]} entries @param {number | null} [exceptionCap] */
+export function reserveH(entries, exceptionCap = null) {
+  const h = Math.max(MIN_H, ...entries.filter(ordinary).map((e) => Number(e.cost_usd) || 0));
+  return Math.round(((typeof exceptionCap === "number" ? exceptionCap : 0) + h) * 1e6) / 1e6;
+}
+
+/**
+ * Stop-rule check for one OpenRouter session of `pool`: `{ ok, T, H, L }`, plus `partial` (the cases of
+ * the pool's entries whose `cost_source` is still `partial`) when there are any: such a pool says stop
+ * until the entries are reconciled with OpenRouter's usage view (test plan §4.1 Ledger). `exceptionCap`
+ * is the cap of the cap exception that matches the session's row (null for an ordinary session).
+ */
+/** @param {any} ledger @param {string} [pool] @param {{ exceptionCap?: number | null }} [options] */
+export function stopRule(ledger, pool = "general", { exceptionCap = null } = {}) {
   const entries = ledger.entries ?? [];
-  const T = entries.filter((e) => e.provider === "openrouter" && e.pool === pool).reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
-  const H = Math.max(MIN_H, ...entries.map((e) => Number(e.cost_usd) || 0));
+  const mine = entries.filter((e) => e.provider === "openrouter" && e.pool === pool);
+  const T = mine.reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
+  const H = reserveH(entries, exceptionCap);
   const L = Number(ledger.pools?.[pool]);
   if (!Number.isFinite(L)) throw new Error(`ledger has no limit for pool ${pool}`);
-  return { ok: T + H <= L + 1e-9, T: Math.round(T * 1e6) / 1e6, H, L };
+  const partial = mine.filter((e) => e.cost_source === "partial").map((e) => e.case ?? "?");
+  return { ok: T + H <= L + 1e-9 && partial.length === 0, T: Math.round(T * 1e6) / 1e6, H, L, ...(partial.length > 0 ? { partial } : {}) };
+}
+
+/** The refusal text of a stop rule's result (`stopRule`, `copilotStopRule`). */
+function stopText(name, pool, r) {
+  if (r.partial) return `${name}: pool ${pool} holds ${r.partial.length} entr${r.partial.length === 1 ? "y" : "ies"} with cost_source partial (${r.partial.join(", ")}); read the session's cost from OpenRouter's usage view and write it as cost_usd with cost_source "provider usage view" first (test plan §4.1 Ledger); ask P-01`;
+  return `${name}: pool ${pool} total ${r.T} + H ${r.H} > ${r.L} USD; ask P-01`;
 }
 
 const readLedger = (file) => JSON.parse(readFileSync(file, "utf8"));
@@ -276,7 +308,10 @@ export function ledgerEntry({ scenario, record, resultFile, task, step, pool }) 
     end_reason: record.end_reason ?? null,
     turns: record.usage?.turns ?? null,
     cost_usd: record.metrics.cost_usd,
-    cost_source: record.spend === "unreported" ? "unreported by the host" : "runner (OpenCode step cost)",
+    // The spend cap the session ran with (its result record's `caps.usd`, test plan §4.1 Ledger); a
+    // `partial` spend is a lower bound until it is reconciled with OpenRouter's usage view.
+    caps_usd: record.caps?.usd ?? null,
+    cost_source: record.spend === "partial" ? "partial" : record.spend === "unreported" ? "unreported by the host" : "runner (OpenCode step cost)",
     pass: record.pass,
     result: posix(relative(ROOT, resultFile)),
   };
@@ -289,14 +324,19 @@ export const COPILOT_POOL = "copilot";
 export const COPILOT_LIMIT_USD = 30;
 
 /**
- * Stop-rule check for one Copilot CLI session: T = the `copilot` entries' cost (AI Credits × 0.01 USD),
- * H = the highest session cost seen in any entry, at least MIN_H; the session starts only if T + H ≤ L.
+ * Stop-rule check for one Copilot CLI session (test plan §4.1 rule 8, H as rule 1 takes it): T = the
+ * `copilot` entries' cost (AI Credits × 0.01 USD), H = max(MIN_H, the highest cost of the ordinary
+ * sessions of any entry), plus the cap of a cap exception matching the session's row (`exceptionCap`);
+ * the session starts only if T + H ≤ L and no `copilot` entry is still `partial`.
  */
-export function copilotStopRule(ledger, limit = COPILOT_LIMIT_USD) {
+/** @param {any} ledger @param {number} [limit] @param {{ exceptionCap?: number | null }} [options] */
+export function copilotStopRule(ledger, limit = COPILOT_LIMIT_USD, { exceptionCap = null } = {}) {
   const entries = ledger.entries ?? [];
-  const T = entries.filter((e) => e.provider === "copilot").reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
-  const H = Math.max(MIN_H, ...entries.map((e) => Number(e.cost_usd) || 0));
-  return { ok: T + H <= limit + 1e-9, T: Math.round(T * 1e6) / 1e6, H, L: limit };
+  const mine = entries.filter((e) => e.provider === "copilot");
+  const T = mine.reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
+  const H = reserveH(entries, exceptionCap);
+  const partial = mine.filter((e) => e.cost_source === "partial").map((e) => e.case ?? "?");
+  return { ok: T + H <= limit + 1e-9 && partial.length === 0, T: Math.round(T * 1e6) / 1e6, H, L: limit, ...(partial.length > 0 ? { partial } : {}) };
 }
 
 /** The ledger entry of one Copilot CLI session: measured units and the USD estimate, each named. */
@@ -321,6 +361,7 @@ export function copilotLedgerEntry({ scenario, record, resultFile, task, step })
     premium_requests: u?.premium_requests ?? null,
     tokens: u ? Object.fromEntries(Object.entries(u.models ?? {}).map(([m, x]) => [m, { input: x.input_tokens, output: x.output_tokens, cache_read: x.cache_read_tokens, cache_write: x.cache_write_tokens, ai_credits: x.ai_credits }])) : null,
     cost_usd: record.metrics.cost_usd,
+    caps_usd: record.caps?.usd ?? null,
     cost_source: u?.ai_credits === null || u === null ? "unreported by the host" : "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
     pass: record.pass,
     result: posix(relative(ROOT, resultFile)),
@@ -393,16 +434,25 @@ export async function main(argv, deps = {}) {
   if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}`);
   else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : " (GitHub Copilot plan, AI Credits; Copilot stop rule checked before each session)"}`);
 
-  const paid = host === "opencode" && !runners[host];
-  const paidCopilot = host === "copilot-cli" && !runners[host];
+  // `deps.stopRule`: the ledger's stop rule and entries also for a replaced runner (the stop-rule tests
+  // of C002-TC-917 with the stub host and a ledger of their own); no paid session either way.
+  const ledgerHooks = !runners[host] || deps.stopRule === true;
+  const paid = host === "opencode" && ledgerHooks;
+  const paidCopilot = host === "copilot-cli" && ledgerHooks;
   const ledgerFile = deps.ledger ?? LEDGER;
   const pool = opts.pool ?? "general";
+  // The cap of the exception that matches a selected row (C002-IF-010 §2.2 "Reserve of a cap-exception
+  // session"): H = that cap + the ordinary H; null for an ordinary row.
+  const fileOf = new Map(picked.scenarios.map(({ file, scenario }) => [scenario, posix(relative(root, file))]));
+  const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host })?.usd ?? null;
+  const hText = (cap, r) => (cap === null ? `H ${r.H}` : `H ${r.H} (cap exception ${cap.toFixed(2)} USD + ordinary H ${Math.round((r.H - cap) * 1e6) / 1e6})`);
   const hooks = paidCopilot
     ? {
-        before() {
-          const r = copilotStopRule(readLedger(ledgerFile));
-          if (!r.ok) throw new Error(`Copilot stop rule (P-01, 2026-10-19): pool ${COPILOT_POOL} total ${r.T} + H ${r.H} > ${r.L} USD; ask P-01`);
-          log(`Copilot stop rule ok: pool ${COPILOT_POOL} total ${r.T} + H ${r.H} ≤ ${r.L} USD`);
+        before({ scenario }) {
+          const cap = exceptionCap(scenario);
+          const r = copilotStopRule(readLedger(ledgerFile), COPILOT_LIMIT_USD, { exceptionCap: cap });
+          if (!r.ok) throw new Error(stopText("Copilot stop rule (P-01, 2026-10-19)", COPILOT_POOL, r));
+          log(`Copilot stop rule ok: pool ${COPILOT_POOL} total ${r.T} + ${hText(cap, r)} ≤ ${r.L} USD`);
         },
         after({ scenario, record, resultFile }) {
           const ledger = readLedger(ledgerFile);
@@ -414,16 +464,18 @@ export async function main(argv, deps = {}) {
       }
     : paid
     ? {
-        before() {
-          const r = stopRule(readLedger(ledgerFile), pool);
-          if (!r.ok) throw new Error(`stop rule of test plan §4.1: pool ${pool} total ${r.T} + H ${r.H} > ${r.L} USD; ask P-01`);
-          log(`stop rule ok: pool ${pool} total ${r.T} + H ${r.H} ≤ ${r.L} USD`);
+        before({ scenario }) {
+          const cap = exceptionCap(scenario);
+          const r = stopRule(readLedger(ledgerFile), pool, { exceptionCap: cap });
+          if (!r.ok) throw new Error(stopText("stop rule of test plan §4.1", pool, r));
+          log(`stop rule ok: pool ${pool} total ${r.T} + ${hText(cap, r)} ≤ ${r.L} USD`);
         },
         after({ scenario, record, resultFile }) {
           const ledger = readLedger(ledgerFile);
-          ledger.entries.push(ledgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null, pool }));
+          const entry = ledgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null, pool });
+          ledger.entries.push(entry);
           writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2) + "\n");
-          log(`ledger: ${scenario.id} ${record.metrics.cost_usd.toFixed(4)} USD added to pool ${pool}`);
+          log(`ledger: ${scenario.id} ${record.metrics.cost_usd.toFixed(4)} USD added to pool ${pool}${entry.cost_source === "partial" ? " (cost_source partial: a lower bound; the stop rule says stop for this pool until it is reconciled with OpenRouter's usage view)" : ""}`);
         },
       }
     : {};
@@ -443,7 +495,7 @@ export async function main(argv, deps = {}) {
   if (host === "opencode") {
     const hv = docs.find((d) => d.host_versions)?.host_versions;
     const summary = injectionSummary(docs, { hostVersions: hv ?? {} });
-    if (summary && paid) {
+    if (summary && paid && !runners[host]) {
       const { version } = JSON.parse(readFileSync(join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8"));
       const out = join(ROOT, "docs", "releases", "opencode", version, "injection.json");
       mkdirSync(join(out, ".."), { recursive: true });

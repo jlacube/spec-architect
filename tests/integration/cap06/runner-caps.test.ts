@@ -6,10 +6,12 @@
 // step 2 (default host, unknown host, a `--filter` that selects no case). C002-TC-906 … C002-TC-911
 // (C002-T-064; C002-IF-010 §1 … §4, revised for defect D-015): rows by host, the provider key with a
 // stubbed host start, the direct relay, names per host row, `answer` and `allowTools`; and the
-// runner's version stamp of `targetPackage.version` (supports C002-TC-515). No paid session, no network.
+// runner's version stamp of `targetPackage.version` (supports C002-TC-515). C002-T-056 step X0: the `cap`
+// and `step-after-cap` records of C002-TC-677, the stop rule's H of C002-TC-917, the `spend` `partial` of
+// C002-TC-918 and the OpenCode row of the session timeout C002-TC-919. No paid session, no network.
 // The run.mjs cases run in a child process from the source files (the fixtures resolve paths from their
 // own location, which a bundled test would move).
-import { test } from "node:test";
+import { mock, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -19,14 +21,14 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createCaps } from "../../../evals/harness/caps.mjs";
 import { hostProcessEnv } from "../../../evals/harness/opencode/driver.mjs";
-import { driverHost as runnerDriverHost, generatedPackage, nameMaps, permissionReply, replyFor, runOpenCodeSession, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
+import { driverHost as runnerDriverHost, generatedPackage, nameMaps, permissionReply, replyFor, runOpenCodeSession, SESSION_TIMEOUT_MS, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
 import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
 import { doctorCase as doctorCaseJs, shims as shimsJs } from "../../../evals/targets/doctor/doctor-cases.mjs";
 const doctorCase = doctorCaseJs as unknown as (host: string, cfg: string, o: Record<string, unknown>) => { env: Record<string, string> };
 const shims = shimsJs as unknown as (name: string, o: Record<string, unknown>) => string;
 import { runBundled } from "../cli/helpers.ts";
 import { envWithPath, nodeOnlyDir, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
-import { stubHost } from "../../../evals/harness/runners/stub.mjs";
+import { sdkStubHost, stubHost } from "../../../evals/harness/runners/stub.mjs";
 import { injectionSummary, ledgerEntry, runScenario, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
 import { repoRoot } from "../../helpers.ts";
 
@@ -593,13 +595,18 @@ for (const [spend, turns, reason] of [[0.01, 30, "turn cap"], [0.1, 5, "spend ca
   });
 }
 
-// --- C002-TC-677 (C002-TS-677; C002-T-065): the spend cap checked after each step on OpenCode ---------
+// --- C002-TC-677 (C002-TS-677; C002-T-065, cap records from C002-T-056 step X0): the spend cap checked
+// after each step on OpenCode, with the `cap` and `step-after-cap` records of C002-IF-010 §2.2.
+type CapRecord = { event: string; reason?: string; step_usd: number | null; usage?: { turns: number; usd: number | null }; agent?: string; started_before_cap?: boolean };
+const capRecords = (s: Session) => s.transcript.filter((r: any) => r.type === "harness" && r.event === "cap") as CapRecord[];
+const afterCapRecords = (s: Session) => s.transcript.filter((r: any) => r.type === "harness" && r.event === "step-after-cap") as CapRecord[];
+const near = (a: number | null | undefined, b: number) => typeof a === "number" && Math.abs(a - b) < 1e-9;
 for (const row of [
-  { cost: 0.12, subagent: undefined, steps: 5, spend: 0.6 },
-  { cost: 0.25, subagent: undefined, steps: 2, spend: 0.5 },
-  { cost: 0.12, subagent: { step: 5, cost: 0.05 }, steps: 5, spend: 0.65 },
+  { cost: 0.12, subagent: undefined, steps: 5, spend: 0.6, capped: 0.6, after: [] as { step_usd: number; agent: string; started_before_cap: boolean }[] },
+  { cost: 0.25, subagent: undefined, steps: 2, spend: 0.5, capped: 0.5, after: [] },
+  { cost: 0.12, subagent: { step: 5, cost: 0.05 }, steps: 5, spend: 0.65, capped: 0.6, after: [{ step_usd: 0.05, agent: "architect:sdd-critic", started_before_cap: true }] },
 ]) {
-  test(`C002-TS-677 — ${row.cost} USD per step${row.subagent ? ", a 0.05 USD subagent step in parallel with the fifth" : ""}: spend cap after ${row.steps} steps, ${row.spend} USD reported`, async () => {
+  test(`C002-TS-677 — ${row.cost} USD per step${row.subagent ? ", a 0.05 USD subagent step in parallel with the fifth" : ""}: spend cap after ${row.steps} steps, ${row.spend} USD reported, one cap record at ${row.capped} USD, ${row.after.length} step-after-cap record(s)`, async () => {
     const stub = stubHost({ spendPerTurn: row.cost, ...(row.subagent ? { subagent: row.subagent } : {}) });
     const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-"));
     try {
@@ -620,11 +627,210 @@ for (const row of [
       assert.ok(reached >= 0, JSON.stringify(log));
       assert.deepEqual(log.slice(reached + 1).filter((e) => e.kind === "start"), [], `no step started after the cap: ${JSON.stringify(log)}`);
       assert.equal(log.filter((e) => e.kind === "start" && e.who === "session").length, row.steps);
+      // One cap record: the capping step's step_usd (the row's cost) and the session's spend at the cap.
+      const caps = capRecords(s);
+      assert.equal(caps.length, 1, JSON.stringify(caps));
+      assert.equal(caps[0]!.reason, "spend cap");
+      assert.ok(near(caps[0]!.step_usd, row.cost), `cap step_usd ${caps[0]!.step_usd}`);
+      assert.ok(near(caps[0]!.usage?.usd, row.capped), `spend at the cap ${caps[0]!.usage?.usd}`);
+      const after = afterCapRecords(s);
+      assert.equal(after.length, row.after.length, JSON.stringify(after));
+      row.after.forEach((want, i) => {
+        assert.ok(near(after[i]!.step_usd, want.step_usd), `step_usd ${after[i]!.step_usd}`);
+        assert.equal(after[i]!.agent, want.agent);
+        assert.equal(after[i]!.started_before_cap, want.started_before_cap);
+      });
+      // Overshoot rule: the recorded spend minus the cap is not above the sum of those step_usd.
+      const bound = (caps[0]!.step_usd ?? 0) + after.reduce((sum, a) => sum + (a.step_usd ?? 0), 0);
+      assert.ok((s.usage.usd ?? 0) - 0.5 <= bound + 1e-9, `overshoot ${(s.usage.usd ?? 0) - 0.5} above ${bound}`);
+      assert.ok(near(s.usage.usd, (caps[0]!.usage?.usd ?? 0) + after.reduce((sum, a) => sum + (a.step_usd ?? 0), 0)), "usage.usd = the cap record's spend + the step-after-cap costs");
     } finally {
       rmSync(cwd, { recursive: true, force: true });
     }
   });
 }
+
+// --- C002-TC-918 (C002-TS-689; C002-T-056 step X0): a running step that the abort ends without a cost ---
+test("C002-TS-689 — 0.12 USD per step, a subagent step in parallel with the fifth that the abort ends without a step-finish: spend cap after 5 steps, 0.60 USD with spend partial", async () => {
+  const stub = stubHost({ spendPerTurn: 0.12, subagent: { step: 5, cost: 0.05, finish: false } });
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-918-"));
+  try {
+    const s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host: stub });
+    assert.equal(s.end_reason, "spend cap");
+    assert.equal(s.usage.turns, 5, "steps of the session agent");
+    assert.ok(near(s.usage.usd, 0.6), `usd ${s.usage.usd}`);
+    assert.equal(s.spend, "partial");
+    // The unfinished step's record: started before the cap, no reported cost.
+    assert.deepEqual(afterCapRecords(s).map((a) => [a.step_usd, a.agent, a.started_before_cap]), [[null, "architect:sdd-critic", true]]);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test("C002-TS-689 (supporting): the ledger entry of a spend partial session gets cost_source partial and the caps_usd of its result record", () => {
+  const record = { pass: false, metrics: { cost_usd: 0.6 }, usage: { turns: 5, usd: 0.6 }, caps: { turns: 30, usd: 0.5 }, provider: "openrouter", models: [], end_reason: "spend cap", spend: "partial" };
+  const e = ledgerEntry({ scenario: { id: "TS-689" }, record, resultFile: join(ROOT, "evals", "results", "x.json"), task: "C002-T-056", step: "X0", pool: "general" });
+  assert.equal(e.cost_source, "partial");
+  assert.equal(e.caps_usd, 0.5);
+  assert.equal(e.cost_usd, 0.6);
+  const reported = ledgerEntry({ scenario: { id: "TS-614" }, record: { ...record, spend: "reported" }, resultFile: join(ROOT, "evals", "results", "x.json"), task: null, step: null, pool: "general" });
+  assert.equal(reported.cost_source, "runner (OpenCode step cost)");
+});
+
+test("the OpenCode runner counts a step cost that appears only in the messages read after the abort, as a step-after-cap record not received before the cap", async () => {
+  const base = stubHost({ spendPerTurn: 0.25 });
+  const late = { id: "prt_late_finish", sessionID: "ses_late", messageID: "msg_late", type: "step-finish", reason: "stop", cost: 0.07, tokens: { input: 1, output: 1, reasoning: 0, cache: { read: 0, write: 0 } } };
+  const host = {
+    needsPackage: false,
+    async start() {
+      const h = await base.start();
+      return {
+        ...h,
+        run: async (o: Record<string, unknown>) => {
+          const r = await h.run(o as never);
+          const info = { id: "msg_late", sessionID: "ses_late", role: "assistant", agent: "sdd-auditor", time: { created: Date.now() }, cost: 0.07, tokens: late.tokens };
+          return { ...r, children: [...r.children, { sessionID: "ses_late", messages: [{ info, parts: [{ id: "prt_late_start", sessionID: "ses_late", messageID: "msg_late", type: "step-start" }, late] }] }] };
+        },
+      };
+    },
+  };
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-late-"));
+  try {
+    const s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host });
+    assert.equal(s.end_reason, "spend cap");
+    assert.ok(near(s.usage.usd, 0.57), `usd ${s.usage.usd}`);
+    assert.equal(s.spend, "reported");
+    assert.deepEqual(afterCapRecords(s).map((a) => [a.step_usd, a.agent, a.started_before_cap]), [[0.07, "architect:sdd-auditor", false]]);
+    assert.equal(capRecords(s).length, 1);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+// --- C002-TC-917 (C002-TS-688; C002-T-056 step X0): the stop rule's H for a cap-exception row ----------
+// fx-evals-caps with the rows TS-634 (2.00 USD) and TS-613; a ledger in a temporary folder; run.mjs main
+// in a child process with the stub host (OpenCode) and the ledger's stop rule switched on for it.
+function runStopRule(fxRoot: string, file: string, row: string, ledger: string): { status: number | null; out: string; started: number } {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-stop-run-"));
+  const script = join(dir, "driver.mjs");
+  const startLog = join(dir, "started.log");
+  const url = (p: string) => pathToFileURL(join(ROOT, "evals", "harness", p)).href;
+  writeFileSync(
+    script,
+    [
+      `import { appendFileSync } from "node:fs";`,
+      `import { main } from ${JSON.stringify(url("run.mjs"))};`,
+      `import { runOpenCodeSession } from ${JSON.stringify(url("runners/opencode.mjs"))};`,
+      `import { stubHost } from ${JSON.stringify(url("runners/stub.mjs"))};`,
+      `const stub = (o) => { appendFileSync(${JSON.stringify(startLog)}, "started\\n"); return runOpenCodeSession(o, { host: stubHost({ endAfter: 1 }) }); };`,
+      `process.exitCode = await main(JSON.parse(process.argv[2]), { runners: { opencode: stub }, stopRule: true, ledger: ${JSON.stringify(ledger)}, root: ${JSON.stringify(fxRoot)} });`,
+    ].join("\n"),
+  );
+  try {
+    const r = spawnSync(process.execPath, [script, JSON.stringify([join(fxRoot, ...file.split("/")), "--host", "opencode", "--only", row, "--results-dir", join(dir, "results"), "--task", "TEST", "--step", "X0"])], { cwd: ROOT, encoding: "utf8", windowsHide: true, timeout: 120_000 });
+    const started = existsSync(startLog) ? readFileSync(startLog, "utf8").split("\n").filter((l) => l !== "").length : 0;
+    return { status: r.status, out: `${r.stdout}\n${r.stderr}`, started };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+/** A general-pool ledger totalling `total` USD: the TS-634 entry of 1.11 USD at caps_usd 1.00 and ordinary entries (caps_usd 0.50) whose highest is `ordinary`. */
+function stopLedger(total: number, ordinary: number, extra: Record<string, unknown>[] = []) {
+  const entry = (c: string, cost: number, caps: number) => ({ provider: "openrouter", pool: "general", case: c, cost_usd: cost, caps_usd: caps });
+  const entries = [entry("TS-634", 1.11, 1.0), entry("ORD-MAX", ordinary, 0.5)];
+  let rest = Math.round((total - 1.11 - ordinary) * 100);
+  let i = 0;
+  while (rest > 0) {
+    const cents = Math.min(rest, Math.round(ordinary * 100));
+    entries.push(entry(`ORD-${++i}`, cents / 100, 0.5));
+    rest -= cents;
+  }
+  return { budget_usd: 40, pools: { general: 30, reserve: 10 }, entries: [...entries, ...extra] };
+}
+
+for (const row of [
+  { row: "TS-634", total: 17.14, ordinary: 0.4, H: 2.65, starts: true },
+  { row: "TS-634", total: 27.35, ordinary: 0.4, H: 2.65, starts: true },
+  { row: "TS-634", total: 27.36, ordinary: 0.4, H: 2.65, starts: false },
+  { row: "TS-634", total: 17.14, ordinary: 0.8, H: 2.8, starts: true },
+  { row: "TS-613", total: 27.36, ordinary: 0.4, H: 0.65, starts: true },
+]) {
+  test(`C002-TS-688 — ${row.row}, general pool total ${row.total}, highest ordinary cost ${row.ordinary}: H ${row.H}, ${row.starts ? "the session starts" : "no session starts and the ledger is unchanged"}`, () => {
+    const fx = mkdtempSync(join(tmpdir(), "sdd-fx-evals-caps-688-"));
+    try {
+      const files: Record<string, string> = { "TS-634": "evals/targets/gate/TS-634.eval.mjs", "TS-613": "evals/targets/gate/TS-613.eval.mjs" };
+      for (const [id, f] of Object.entries(files)) {
+        const p = join(fx, ...f.split("/"));
+        mkdirSync(join(p, ".."), { recursive: true });
+        writeFileSync(p, `export default { id: ${JSON.stringify(id)}, title: "fx-evals-caps", host: "opencode", agent: "architect:sdd-conductor", fixture: null, prompt: "hi", ${id === "TS-634" ? "maxBudgetUsd: 2.0, " : ""}assert: () => [] };\n`);
+      }
+      const ledgerFile = join(fx, "spend-chg002.json");
+      const ledger = stopLedger(row.total, row.ordinary);
+      writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2) + "\n");
+      assert.ok(Math.abs(stopRule(ledger, "general").T - row.total) < 1e-6, "the fixture ledger's total");
+      const before = readFileSync(ledgerFile);
+      const r = runStopRule(fx, files[row.row]!, row.row, ledgerFile);
+      const h = /H (\d+(?:\.\d+)?)/.exec(r.out);
+      assert.ok(h, r.out);
+      assert.equal(Number(h![1]), row.H, r.out);
+      if (row.starts) {
+        assert.equal(r.started, 1, r.out);
+        assert.match(r.out, new RegExp(`stop rule ok: pool general total ${row.total} \\+ H ${row.H}`));
+        const after = JSON.parse(readFileSync(ledgerFile, "utf8")) as { entries: { case: string; caps_usd: number }[] };
+        const added = after.entries[after.entries.length - 1]!;
+        assert.equal(added.case, row.row);
+        assert.equal(added.caps_usd, row.row === "TS-634" ? 2.0 : 0.5, "caps_usd from the result record's caps.usd");
+      } else {
+        assert.equal(r.started, 0, "the stub never started");
+        assert.match(r.out, /stop rule of test plan §4\.1: pool general total 27\.36 \+ H 2\.65 > 30 USD/);
+        assert.ok(readFileSync(ledgerFile).equals(before), "the ledger is byte-for-byte unchanged");
+      }
+    } finally {
+      rmSync(fx, { recursive: true, force: true });
+    }
+  });
+}
+
+test("C002-TS-688 (supporting): stopRule leaves cap-exception entries out of the ordinary H, adds the exception cap, and says stop for a pool holding a partial entry", () => {
+  const ledger = stopLedger(17.14, 0.4);
+  assert.equal(stopRule(ledger, "general").H, 0.65, "the 1.11 USD entry at caps_usd 1.00 does not raise the ordinary H");
+  assert.equal(stopRule(ledger, "general", { exceptionCap: 2.0 }).H, 2.65);
+  assert.equal(stopRule(stopLedger(17.14, 0.8), "general", { exceptionCap: 2.0 }).H, 2.8);
+  const partial = stopLedger(17.14, 0.4, [{ provider: "openrouter", pool: "general", case: "TS-689", cost_usd: 0.6, caps_usd: 0.5, cost_source: "partial" }]);
+  const r = stopRule(partial, "general");
+  assert.equal(r.ok, false, "a partial entry says stop for its pool");
+  assert.deepEqual(r.partial, ["TS-689"]);
+  assert.equal(stopRule(partial, "reserve").ok, true, "the other pool is not stopped");
+});
+
+// --- C002-TC-919 (C002-TS-690; C002-T-056 step X0): the 20-minute session timeout, OpenCode row -------
+test("C002-TS-690 — OpenCode eval runner: a stub server that accepts the prompt and then sends nothing ends at 20 minutes from the prompt with error \"session timed out after 1200000 ms\", the session and its subagent's session aborted through the SDK, no cap record", async () => {
+  assert.equal(SESSION_TIMEOUT_MS, 1_200_000, "the default session timeout");
+  const host = sdkStubHost({ subagents: 1 });
+  const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-919-"));
+  mock.timers.enable({ apis: ["setTimeout", "Date"], now: 1_000_000 });
+  try {
+    const pending = runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host });
+    for (let i = 0; i < 1000 && host.calls[0]?.promptAt == null; i++) await new Promise((r) => setImmediate(r));
+    const call = host.calls[0]!;
+    assert.ok(call.promptAt !== null, "the prompt was sent");
+    mock.timers.tick(1_199_999);
+    for (let i = 0; i < 20; i++) await new Promise((r) => setImmediate(r));
+    assert.equal(call.aborts.length, 0, "nothing aborted before 20 minutes");
+    mock.timers.tick(1);
+    const s = await pending;
+    assert.equal(s.end_reason, "error");
+    assert.match(String(s.error), /^session timed out/);
+    assert.equal(s.error, "session timed out after 1200000 ms");
+    assert.deepEqual(call.aborts.map((a: { sessionID: string }) => a.sessionID).sort(), [call.sessionID, ...call.children].sort(), "the session and each subagent session aborted");
+    for (const a of call.aborts) assert.equal(a.at - call.promptAt!, 1_200_000, "the timer started when the prompt was sent");
+    assert.deepEqual(capRecords(s), [], "no cap record");
+  } finally {
+    mock.timers.reset();
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
 
 // --- C002-TC-676 (C002-TS-676; C002-T-065): the pinned OpenCode binary first on the host's PATH --------
 // A stubbed host start records the host process's environment (no opencode serve). The runner's PATH

@@ -78,8 +78,13 @@ export const COPILOT_CONFIG_VAR = "SDD_EVAL_COPILOT_CONFIG";
 export const USD_PER_CREDIT = 0.01;
 /** Minimum of `--max-ai-credits` (Copilot CLI 1.0.98, `copilot help limits`). */
 export const MIN_AI_CREDITS = 30;
-/** Wall-clock limit of one session (a hung host must not hold the run). */
-const SESSION_TIMEOUT_MS = 20 * 60_000;
+/**
+ * Session timeout (C002-IF-010 §4, critic CR-74): 20 minutes from the start of the host process; at it the
+ * runner ends the host process and the session ends with `error` `session exceeded 20 minutes`, no cap
+ * record. A test sets another value (`deps.sessionTimeoutMs`); the text names the contract's 20 minutes.
+ */
+export const SESSION_TIMEOUT_MS = 20 * 60_000;
+export const SESSION_TIMEOUT_TEXT = "session exceeded 20 minutes";
 /** Token shapes of GitHub credentials; text that matches is never written to a result or a log. */
 export const TOKEN_PATTERN = /\b(?:gh[opsur]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/g;
 
@@ -618,7 +623,7 @@ export function usageOf(file) {
  * `deps.identity` the login identity, `deps.pkg` the package, `deps.scripts` the sdd scripts folder and
  * `deps.extraEnv` variables added last (tests).
  * @param {Record<string, any>} options
- * @param {{ host?: any, identity?: any, extraEnv?: Record<string, string>, table?: any, pkg?: string, scripts?: string }} [deps]
+ * @param {{ host?: any, identity?: any, extraEnv?: Record<string, string>, table?: any, pkg?: string, scripts?: string, sessionTimeoutMs?: number }} [deps]
  */
 export async function runCopilotCliSession(options, deps = {}) {
   const { cwd, prompt, agent, maxTurns = 30, maxBudgetUsd = 0.5, model, allowTools = [], names = "source" } = options;
@@ -628,6 +633,13 @@ export async function runCopilotCliSession(options, deps = {}) {
   const t0 = Date.now();
   const harness = [];
   const stamp = (record) => harness.push({ t: Date.now() - t0, type: "harness", ...record });
+  // The `cap` record is written once per session, for the first cap reached (C002-IF-010 §2.2 cap records).
+  let capped = false;
+  const capRecord = (record) => {
+    if (capped) return;
+    capped = true;
+    stamp({ event: "cap", ...record });
+  };
   const runDir = mkdtempSync(join(tmpdir(), "sdd-eval-cp-run-"));
   const events = [];
   let endReason = null;
@@ -671,10 +683,11 @@ export async function runCopilotCliSession(options, deps = {}) {
     // The command line without the prompt text and the run folder's paths (the case's own data).
     stamp({ event: "start", agent: start.agent, flags: args.filter((a, i) => a.startsWith("--") || args[i - 1] === "--agent" || args[i - 1] === "--max-ai-credits" || args[i - 1] === "--model") });
     started = true;
+    // The timeout counts from the start of the host process (host.run spawns it).
     const timer = setTimeout(() => {
-      error = `session exceeded ${SESSION_TIMEOUT_MS / 60000} minutes`;
+      error = SESSION_TIMEOUT_TEXT;
       end("error");
-    }, SESSION_TIMEOUT_MS);
+    }, deps.sessionTimeoutMs ?? SESSION_TIMEOUT_MS);
     let r;
     try {
       r = await host.run({
@@ -689,14 +702,14 @@ export async function runCopilotCliSession(options, deps = {}) {
           if (ev.type === "assistant.message" && !ev.agentId) {
             const reason = caps.turn(null);
             if (reason) {
-              stamp({ event: "cap", reason, usage: caps.usage() });
+              capRecord({ reason, usage: caps.usage() });
               end(reason);
             }
           }
           if (ev.type === "session.error" || ev.type === "session.warning" || (ev.type === "session.info" && d.infoType !== "model_retry")) {
             const text = String(d.message ?? "");
             if (LIMIT_TEXT.test(text)) {
-              stamp({ event: "cap", reason: "spend cap", host_text: redact(text) });
+              capRecord({ reason: "spend cap", host_text: redact(text) });
               if (endReason === null) endReason = "spend cap";
             } else if (ev.type === "session.error" && error === null) error = redact(text);
           }
@@ -709,7 +722,7 @@ export async function runCopilotCliSession(options, deps = {}) {
     // The host's limit blocks the next model call; a session whose measured credits reached it ended there.
     const limit = maxAiCredits(maxBudgetUsd);
     if (endReason === null && usage?.ai_credits !== null && usage?.ai_credits !== undefined && usage.ai_credits + 1e-9 >= limit) {
-      stamp({ event: "cap", reason: "spend cap", ai_credits: usage.ai_credits, limit });
+      capRecord({ reason: "spend cap", ai_credits: usage.ai_credits, limit });
       endReason = "spend cap";
     }
     if (r && r.exitCode !== 0 && endReason === null && error === null) error = redact(`Copilot CLI exit ${r.exitCode}: ${String(r.stderr ?? "").trim().slice(-800)}`);

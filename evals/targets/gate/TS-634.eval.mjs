@@ -24,8 +24,9 @@ export default {
   maxTurns: 30,
   // The rework between the two gate questions does not fit 0.35 USD (C002-T-056: spend cap after 16
   // turns, before the second question), nor 0.50 USD: the cap exception of C002-IF-010 §2.2 (P-01,
-  // Q-ts634-budget-01, 2026-10-20) gives this row of this file 1.00 USD on OpenCode.
-  maxBudgetUsd: 1.0,
+  // Q-ts634-budget-01, 2026-10-20) gave this row of this file 1.00 USD on OpenCode; at 1.00 USD a rerun
+  // ended by the cap at 1.11 USD, so P-01 raised it to 2.00 USD for one run (Q-ts634-budget-02, D-022 item 1).
+  maxBudgetUsd: 2.0,
   fixture: (root) => fxGate(root),
   prompt: "/architect-gate 002",
   get answer() {

@@ -8,14 +8,14 @@
 // names its agent; the result records `api_key_source` "copilot-credential-store" and no credential text
 // occurs in a result, transcript, host environment or log line. Also run.mjs: the Copilot stop rule, the
 // ledger entry and a not-applicable row (C002-TC-336). No paid session, no network, no Copilot CLI.
-import { test, after } from "node:test";
+import { test, after, mock } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { allowToolArgs, API_KEY_SOURCE, copilotPackage, hostAgent, loginIdentity, mapCall, maxAiCredits, runCopilotCliSession, serversConfig, sessionStart, tokenFiles, usageOf } from "../../../evals/harness/runners/copilot-cli.mjs";
+import { allowToolArgs, API_KEY_SOURCE, copilotPackage, hostAgent, loginIdentity, mapCall, maxAiCredits, runCopilotCliSession, serversConfig, SESSION_TIMEOUT_MS, sessionStart, tokenFiles, usageOf } from "../../../evals/harness/runners/copilot-cli.mjs";
 import { copilotStubHost } from "../../../evals/harness/runners/stub.mjs";
 import { copilotLedgerEntry, copilotStopRule, runScenario, selectScenarios } from "../../../evals/harness/run.mjs";
 import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
@@ -306,6 +306,38 @@ test("loginIdentity copies host, login and kind only; tokenFiles finds token tex
   assert.equal(usage.usd_estimate, 0.0903);
   assert.equal((usage.models as Record<string, { cache_read_tokens: number }>)["claude-sonnet-5.5"]!.cache_read_tokens, 42_400);
   assert.deepEqual((serversConfig(pkg(), SCRIPTS, { deepwiki: "https://deepwiki-unreachable.invalid/mcp" }).mcpServers as Record<string, unknown>)["deepwiki"], { type: "http", url: "https://deepwiki-unreachable.invalid/mcp", tools: ["*"] });
+});
+
+// --- C002-TC-919 (C002-TS-690; C002-T-056 step X0): the 20-minute session timeout, Copilot CLI row -----
+test("C002-TS-690 — Copilot CLI eval runner: a host process that starts and then writes nothing ends at 20 minutes from its start with error \"session exceeded 20 minutes\", the process ended, no cap record", async () => {
+  assert.equal(SESSION_TIMEOUT_MS, 1_200_000, "the default session timeout");
+  const cwd = tmp("sdd-cp-919-");
+  const host = copilotStubHost({ hang: true });
+  mock.timers.enable({ apis: ["setTimeout", "Date"], now: 1_000_000 });
+  try {
+    const pending = runCopilotCliSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host, pkg: pkg(), scripts: SCRIPTS, identity: IDENTITY });
+    for (let i = 0; i < 1000 && host.calls.length === 0; i++) await new Promise((r) => setImmediate(r));
+    const call = host.calls[0] as unknown as { startedAt: number; endedAt: number | null };
+    assert.ok(call, "the host process started");
+    mock.timers.tick(1_199_999);
+    for (let i = 0; i < 20; i++) await new Promise((r) => setImmediate(r));
+    assert.equal(call.endedAt, null, "still running before 20 minutes");
+    mock.timers.tick(1);
+    const s = await pending;
+    assert.equal(s.end_reason, "error");
+    assert.equal(s.error, "session exceeded 20 minutes");
+    assert.notEqual(call.endedAt, null, "the host process has ended");
+    assert.equal(call.endedAt! - call.startedAt, 1_200_000, "the timer started when the host process started");
+    assert.deepEqual(s.transcript.filter((r: any) => r.type === "harness" && r.event === "cap"), [], "no cap record");
+  } finally {
+    mock.timers.reset();
+  }
+});
+
+test("the Copilot CLI runner writes one cap record per session: the turn cap, not again for later turns or a limit text", async () => {
+  const { s } = await session({ creditsPerTurn: 1 }, { maxTurns: 3 });
+  assert.equal(s.end_reason, "turn cap");
+  assert.equal(s.transcript.filter((r: any) => r.type === "harness" && r.event === "cap").length, 1);
 });
 
 // --- run.mjs: Copilot stop rule, ledger entry, not-applicable rows -----------------------------------

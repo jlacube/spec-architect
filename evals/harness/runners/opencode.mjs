@@ -23,7 +23,11 @@
 //     (no answer) ends the session with `question unanswerable` (C002-IF-010 §4);
 //   - the caps of ../caps.mjs end the session at `maxTurns` turns (assistant steps of the main session)
 //     or at `maxBudgetUsd` (spend of every step, subagents included, from the steps' `cost`); a host that
-//     reports no spend leaves the turn cap alone (`spend: "unreported"`).
+//     reports no spend leaves the turn cap alone (`spend: "unreported"`); the capping step's finish writes
+//     one `cap` record, every step finishing after it (or never) a `step-after-cap` record, and a step
+//     without a reported cost makes the spend `partial` (C002-IF-010 §2.2, §3);
+//   - the session timeout of 20 minutes from the prompt sent (C002-IF-010 §4) ends a hung session with
+//     `error` `session timed out after 1200000 ms`.
 //
 // Session result (C002-IF-010 §3): the shape the graders read (`transcript` of `{ t, type: "sdk",
 // message }` and `{ t, type: "harness", event }` records, `answers`, `result`, `wallMs`) plus `target`,
@@ -53,8 +57,12 @@ const WIN = process.platform === "win32";
 export const TARGET = "opencode";
 /** Provider of the OpenCode eval sessions (test plan E-OCE). */
 export const PROVIDER = "openrouter";
-/** Wall-clock limit of one session (a hung host must not hold the run). */
-const SESSION_TIMEOUT_MS = 20 * 60_000;
+/**
+ * Session timeout (C002-IF-010 §4, critic CR-74): 20 minutes from the moment the prompt is sent; at it the
+ * session and its subagents' sessions are aborted through the SDK and the session ends with `error`
+ * `session timed out after 1200000 ms`. A test sets another value (`deps.sessionTimeoutMs`).
+ */
+export const SESSION_TIMEOUT_MS = 20 * 60_000;
 
 /** The OpenCode mapping table (C002-IF-001). */
 export function openCodeTable(root = ROOT) {
@@ -464,11 +472,12 @@ function keepRunDir() {
  * @param {Record<string, any>} options
  * @param {{ host?: { needsPackage?: boolean, start: (o: any) => Promise<any> }, table?: any }} [deps]
  */
-export async function runOpenCodeSession(options, { host = driverHost(), table = openCodeTable() } = {}) {
+export async function runOpenCodeSession(options, { host = driverHost(), table = openCodeTable(), sessionTimeoutMs = SESSION_TIMEOUT_MS } = {}) {
   const { cwd, prompt, agent, answer, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, names = "source" } = options;
   const maps = nameMaps(table);
   const caps = createCaps({ maxTurns, maxBudgetUsd });
   const t0 = Date.now();
+  /** @type {any[]} */
   const harness = [];
   const answers = [];
   const stamp = (record) => harness.push({ t: Date.now() - t0, type: "harness", ...record });
@@ -481,7 +490,46 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
     if (endReason === null) endReason = reason;
     if (!stopper.signal.aborted) stopper.abort();
   };
-  const seenSteps = new Set();
+  // Step accounting (C002-IF-010 §2.2 spend-cap rule and cap records; critics CR-72, CR-73): each step is
+  // a `step-start` part and a `step-finish` part of one assistant message, of the session or of a
+  // subagent's session. The capping step's finish writes the one `cap` record; every step that finishes
+  // after it, and every step that started and never finished, gets a `step-after-cap` record. A step
+  // whose cost the host does not report makes the session's spend `partial`.
+  const seenParts = new Set();
+  const open = new Map(); // sessionID + messageID → started steps without a finish: [{ before }]
+  const agentOf = new Map(); // sessionID → host agent name
+  /** @type {{ t: number, step_usd: number | null, sessionID: string, started_before_cap: boolean }[]} */
+  const afterCap = [];
+  let capped = false;
+  let partial = false;
+  const stepKey = (p) => `${p.sessionID}\u0000${p.messageID}`;
+  const stepCost = (p) => (typeof p.cost === "number" && !(p.cost === 0 && (p.tokens?.output ?? 0) > 0) ? p.cost : null);
+  /** A step's start; `received`: the runner got it as an event (not from the messages read after the session). */
+  const stepStart = (p, received) => {
+    if (seenParts.has(p.id)) return;
+    seenParts.add(p.id);
+    const list = open.get(stepKey(p)) ?? [];
+    list.push({ before: received && !capped });
+    open.set(stepKey(p), list);
+  };
+  const stepFinish = (p, root) => {
+    if (seenParts.has(p.id)) return;
+    seenParts.add(p.id);
+    const started = (open.get(stepKey(p)) ?? []).shift();
+    const cost = stepCost(p);
+    if (cost === null) partial = true;
+    const wasCapped = capped;
+    const reason = !root || p.sessionID === root ? caps.turn(cost) : caps.spend(cost);
+    if (wasCapped) {
+      afterCap.push({ t: Date.now() - t0, step_usd: cost, sessionID: p.sessionID, started_before_cap: started ? started.before : false });
+      return;
+    }
+    if (reason) {
+      capped = true;
+      stamp({ event: "cap", reason, step_usd: cost, usage: caps.usage() });
+      end(reason);
+    }
+  };
   let version = null;
   let h;
   let r = null;
@@ -497,19 +545,14 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
       ...(start.command ? { command: start.command } : { text: start.text }),
       ...(modelRef ? { model: modelRef } : {}),
       title: `eval ${String(prompt ?? "").slice(0, 40)}`,
-      timeoutMs: SESSION_TIMEOUT_MS,
+      timeoutMs: sessionTimeoutMs,
       signal: stopper.signal,
       onEvent(ev, root) {
         const props = ev?.properties ?? {};
-        if (ev.type !== "message.part.updated" || props.part?.type !== "step-finish" || seenSteps.has(props.part.id)) return;
-        const part = props.part;
-        seenSteps.add(part.id);
-        const cost = typeof part.cost === "number" && !(part.cost === 0 && (part.tokens?.output ?? 0) > 0) ? part.cost : null;
-        const reason = !root || part.sessionID === root ? caps.turn(cost) : caps.spend(cost);
-        if (reason) {
-          stamp({ event: "cap", reason, usage: caps.usage() });
-          end(reason);
-        }
+        if (ev.type === "message.updated" && props.info?.role === "assistant" && props.info.agent) agentOf.set(props.info.sessionID, props.info.agent);
+        if (ev.type !== "message.part.updated" || !props.part) return;
+        if (props.part.type === "step-start") stepStart(props.part, true);
+        else if (props.part.type === "step-finish") stepFinish(props.part, root);
       },
       permission(req) {
         const reply = permissionReply(req.permission, allowTools, maps);
@@ -555,6 +598,31 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
   if (error && endReason === "error") stamp({ event: "error", message: error });
   const messages = r?.messages ?? [];
   const children = r?.children ?? [];
+  // The messages read after the session (after an abort included) may hold steps whose events the runner
+  // did not get: their reported costs count too (C002-IF-010 §2.2 overshoot rule), and a step started
+  // there was not received before the cap.
+  if (r) {
+    for (const s of [{ sessionID: r.sessionID, messages }, ...children])
+      for (const m of s.messages ?? []) {
+        if (m.info?.role === "assistant" && m.info.agent && !agentOf.has(m.info.sessionID ?? s.sessionID)) agentOf.set(m.info.sessionID ?? s.sessionID, m.info.agent);
+        for (const p of m.parts ?? []) {
+          if (p.type === "step-start") stepStart(p, false);
+          else if (p.type === "step-finish") stepFinish(p, r.sessionID ?? null);
+        }
+      }
+  }
+  // A step that started and has no finish when the session ends: its cost is not reported.
+  for (const [key, list] of open)
+    for (const s of list) {
+      partial = true;
+      if (capped) afterCap.push({ t: Date.now() - t0, step_usd: null, sessionID: key.split("\u0000")[0], started_before_cap: s.before });
+    }
+  const rootID = r?.sessionID ?? null;
+  const agentName = (sessionID) => {
+    const a = agentOf.get(sessionID) ?? (sessionID === rootID ? start.agent : null) ?? "subagent";
+    return names === "host" ? a : `architect:${hostAgent(a)}`;
+  };
+  for (const a of afterCap) harness.push({ t: a.t, type: "harness", event: "step-after-cap", step_usd: a.step_usd, agent: agentName(a.sessionID), started_before_cap: a.started_before_cap });
   const transcript = [...toTranscript({ messages, children }, { t0, names, maps }), ...harness].sort((a, b) => a.t - b.t);
   const usage = caps.usage();
   const all = [...messages, ...children.flatMap((c) => c.messages ?? [])];
@@ -581,7 +649,7 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
     host_versions: { opencode: version },
     end_reason: endReason,
     usage,
-    spend: caps.reportsSpend ? "reported" : "unreported",
+    spend: caps.reportsSpend ? (partial ? "partial" : "reported") : "unreported",
     provider: host.needsPackage ? PROVIDER : "stub",
     models: Object.keys(byModel),
     ...(error ? { error } : {}),

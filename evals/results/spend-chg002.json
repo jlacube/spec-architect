@@ -2241,6 +2241,7 @@
       "end_reason": "completed",
       "turns": 3,
       "cost_usd": 0.2410168,
+      "caps_usd": 0.5,
       "cost_source": "runner (OpenCode step cost)",
       "pass": true,
       "result": "evals/results/t056-TS-511-opencode-2026-10-20T17-38-42-574Z.json"
@@ -2265,6 +2266,7 @@
       "end_reason": "error",
       "turns": 15,
       "cost_usd": 0.9916524,
+      "caps_usd": 1,
       "cost_source": "runner (OpenCode step cost)",
       "pass": false,
       "result": "evals/results/t056-TS-634-2026-10-20T17-41-15-545Z.json",
@@ -2290,10 +2292,50 @@
       "end_reason": "spend cap",
       "turns": 13,
       "cost_usd": 1.1136774,
+      "caps_usd": 1,
       "cost_source": "runner (OpenCode step cost)",
       "pass": false,
       "result": "evals/results/t056-TS-634-2026-10-20T18-03-21-084Z.json",
-      "note": "Rerun plan X2, the one rerun at the 1.00 USD cap (caps.usd 1), after the harness fix of untimedFetch (ran 360 s, past the old 300 s limit). Ended with spend cap at 1.1137 USD during the sdd-critic re-review, before the second gate G2 question: the row's second failure at its cap, reported to P-01, who decides (C002-IF-010 §2.2). Overshoot 0.1137 USD exceeds the 0.05 USD allowance of test plan §4.1 rule 1."
+      "valid_run": false,
+      "note": "Rerun plan X2, the one rerun at the 1.00 USD cap (caps.usd 1), after the harness fix of untimedFetch (ran 360 s, past the old 300 s limit). Ended with spend cap at 1.1137 USD during the sdd-critic re-review, before the second gate G2 question: the row's second failure at its cap, reported to P-01, who decides (C002-IF-010 §2.2). Overshoot 0.1137 USD exceeds the 0.05 USD allowance of test plan §4.1 rule 1. C002-T-056 step X0: valid_run false by the rule for capped sessions of test plan §4.1 (ended with spend cap under the 1.00 USD cap, below the 2.00 USD that Q-ts634-budget-02 approved for the row on OpenCode); caps_usd 1.00 from its result record, so it is left out of the ordinary H; cost_usd stays in the general-pool total."
+    },
+    {
+      "date": "2026-10-20",
+      "task": "C002-T-056",
+      "step": "X3",
+      "case": "TS-634",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5",
+        "openrouter/anthropic/claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 21,
+      "cost_usd": 2.0606,
+      "caps_usd": 2,
+      "cost_source": "provider usage view",
+      "pass": false,
+      "result": "evals/results/t056-TS-634-2026-10-20T20-16-58-305Z.json",
+      "openrouter_usage": {
+        "before": 17.2409289,
+        "after": 19.301578845,
+        "delta": 2.060649945,
+        "read_at": [
+          "2026-10-20, before the session start (about 20:06:40Z)",
+          "2026-10-20T20:30:05Z"
+        ],
+        "source": "OpenRouter key usage (GET /api/v1/key), read before and after the session; no other session ran on the key in between"
+      },
+      "note": "Rerun plan X3: the one C002-TS-634 session at the 2.00 USD cap exception (caps.usd 2; Q-ts634-budget-02). Ended with spend cap after 21 turns, 616 s, during the sdd-spec-writer's second revision of the rework, before the second gate G2 question; one sdd gate record 002 10-spec --decision revise with the scripted words, no sdd gate approve. Cap records: cap (spend cap, capping step 0.0291 USD, spend at the cap 2.0044 USD) and one step-after-cap (sdd-conductor, started_before_cap true, step_usd null: the abort ended it without a cost), so spend partial. The key usage delta (2.0606 USD) gives the unreported step about 0.0562 USD; overshoot 0.0606 USD, within the bound 0.0291 + 0.0562 USD. cost_source stays partial until P-01 or the conductor writes the reconciled cost (test plan §4.1 Ledger); the general-pool stop rule says stop until then. Reconciled by the conductor 2026-10-20 from the OpenRouter key usage delta (17.2409 → 19.3016 = 2.0606 USD, settled on a second read).",
+      "cost_usd_recorded": 2.004413745
     }
   ]
 }

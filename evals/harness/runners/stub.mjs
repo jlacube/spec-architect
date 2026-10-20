@@ -34,8 +34,8 @@ const sleep = () => new Promise((r) => setImmediate(r));
  * AI Credits the usage file gives for the whole session (C002-TC-678); `limitText: false` stops at the limit
  * without printing the host's limit text; `hostLog` is written as the host's log file into `--log-dir` (C002-TC-915).
  */
-/** @param {{ creditsPerTurn?: number, sessionCredits?: number, limitText?: boolean, hostLog?: string, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, onRun?: (o: any) => void }} [options] */
-export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText = true, hostLog, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, onRun } = {}) {
+/** @param {{ creditsPerTurn?: number, sessionCredits?: number, limitText?: boolean, hostLog?: string, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, hang?: boolean, onRun?: (o: any) => void }} [options] */
+export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText = true, hostLog, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, hang = false, onRun } = {}) {
   const calls = [];
   let seq = 0;
   const id = (p) => `${p}-${String(++seq).padStart(6, "0")}`;
@@ -46,8 +46,16 @@ export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText 
     calls,
     version: () => version,
     async run({ args, cwd, env, onEvent, signal }) {
-      calls.push({ args, cwd, env });
+      const call = { args, cwd, env, startedAt: Date.now(), endedAt: null };
+      calls.push(call);
       onRun?.({ args, cwd, env });
+      // `hang`: the host process starts, then writes nothing and does not exit until the runner ends it
+      // (C002-TC-919, the session timeout).
+      if (hang) {
+        await new Promise((resolve) => (signal?.aborted ? resolve(null) : signal?.addEventListener("abort", resolve, { once: true })));
+        call.endedAt = Date.now();
+        return { exitCode: null, stderr: "" };
+      }
       if (hostLog !== undefined) {
         const logDir = args[args.indexOf("--log-dir") + 1];
         mkdirSync(logDir, { recursive: true });
@@ -120,11 +128,15 @@ export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText 
  * The stub host factory: `{ needsPackage: false, start() }`, as `driverHost()` of ./opencode.mjs.
  * `calls` records every session the stub ran (agent, text or command), for the tests, with `steps`: the
  * start and finish of each step in order (`{ kind: "start" | "finish", who: "session" | "subagent", step,
- * cost }`). `costs` gives the cost of each step of the session agent (default `spendPerTurn`);
- * `subagent` (`{ step, cost }`, C002-TC-677) runs one subagent step in parallel with that step of the
- * session agent, finishing before it (so before an abort that step's finish would cause takes effect).
+ * cost }`). Each step sends its `step-start` part, then its `step-finish` part, as OpenCode's
+ * `message.part.updated` events (C002-IF-010 §2.2 cap records). `costs` gives the cost of each step of
+ * the session agent (default `spendPerTurn`); `subagent` (`{ step, cost, agent?, finish? }`, C002-TC-677,
+ * C002-TC-918) runs one step of a subagent (host agent name `agent`, default `sdd-critic`) in parallel
+ * with that step of the session agent: it starts before that step finishes and, with `finish` true (the
+ * default), finishes right after it, before the abort that the step's finish may cause takes effect; with
+ * `finish` false it never finishes (the abort ends it without a step-finish or any reported cost).
  */
-/** @param {{ spendPerTurn?: number, costs?: number[], subagent?: { step: number, cost: number }, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: { providerID: string, modelID: string } }} [options] */
+/** @param {{ spendPerTurn?: number, costs?: number[], subagent?: { step: number, cost: number, agent?: string, finish?: boolean }, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: { providerID: string, modelID: string } }} [options] */
 export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = true, endAfter = null, script = [], version = "1.18.31", maxTurns = 10_000, model = { providerID: "stub", modelID: "stub-model" } } = {}) {
   const calls = [];
   return {
@@ -141,7 +153,9 @@ export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = 
           const steps = [];
           calls.push({ sessionID, agent, ...(command ? { command } : { text }), steps });
           const messages = [];
+          const children = [];
           let aborted = false;
+          const part = (p, now) => onEvent?.({ id: id("evt"), type: "message.part.updated", properties: { sessionID: p.sessionID, part: p, time: now } }, sessionID);
           for (let turn = 1; turn <= maxTurns; turn++) {
             if (signal?.aborted) {
               aborted = true;
@@ -152,6 +166,7 @@ export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = 
             const now = Date.now();
             steps.push({ kind: "start", who: "session", step: turn });
             const parts = [{ id: id("prt"), sessionID, messageID, type: "step-start" }];
+            part(parts[0], now);
             for (const action of script[turn - 1] ?? []) {
               if (action.text !== undefined) {
                 parts.push({ id: id("prt"), sessionID, messageID, type: "text", text: action.text });
@@ -171,25 +186,93 @@ export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = 
             }
             const cost = reportsSpend ? (costs?.[turn - 1] ?? spendPerTurn) : 0;
             const tokens = { input: 100, output: 10, reasoning: 0, cache: { read: 0, write: 0 } };
-            // A subagent step in parallel with this step: it starts and finishes while this step runs.
+            // A subagent step in parallel with this step: it starts while this step runs and (with
+            // `finish`) finishes right after this step's finish, before an abort that finish causes takes effect.
+            let sub = null;
             if (subagent && subagent.step === turn) {
               const child = id("ses");
+              const subAgent = subagent.agent ?? "sdd-critic";
+              const subMessage = id("msg");
+              const info = { id: subMessage, sessionID: child, role: "assistant", time: { created: now }, parentID: "", modelID: model.modelID, providerID: model.providerID, mode: subAgent, agent: subAgent, path: { cwd: "", root: "" }, cost: 0, tokens };
+              onEvent?.({ id: id("evt"), type: "message.updated", properties: { sessionID: child, info } }, sessionID);
               steps.push({ kind: "start", who: "subagent", step: 1 });
-              const sub = { id: id("prt"), sessionID: child, messageID: id("msg"), type: "step-finish", reason: "stop", cost: reportsSpend ? subagent.cost : 0, tokens };
-              steps.push({ kind: "finish", who: "subagent", step: 1, cost: sub.cost });
-              onEvent?.({ id: id("evt"), type: "message.part.updated", properties: { sessionID: child, part: sub, time: now } }, sessionID);
+              const start = { id: id("prt"), sessionID: child, messageID: subMessage, type: "step-start" };
+              part(start, now);
+              sub = { child, info, parts: [start] };
+              children.push({ sessionID: child, messages: [{ info, parts: sub.parts }] });
             }
             const finish = { id: id("prt"), sessionID, messageID, type: "step-finish", reason: "tool-calls", cost, tokens };
             steps.push({ kind: "finish", who: "session", step: turn, cost });
             parts.push(finish);
             messages.push({ info: { id: messageID, sessionID, role: "assistant", time: { created: now, completed: now }, parentID: "", modelID: model.modelID, providerID: model.providerID, mode: agent, agent, path: { cwd: "", root: "" }, cost, tokens }, parts });
-            onEvent?.({ id: id("evt"), type: "message.part.updated", properties: { sessionID, part: finish, time: now } }, sessionID);
+            part(finish, now);
+            if (sub && subagent.finish !== false) {
+              const end = { id: id("prt"), sessionID: sub.child, messageID: sub.info.id, type: "step-finish", reason: "stop", cost: reportsSpend ? subagent.cost : 0, tokens };
+              steps.push({ kind: "finish", who: "subagent", step: 1, cost: end.cost });
+              sub.parts.push(end);
+              sub.info.cost = end.cost;
+              part(end, now);
+            }
             await sleep();
           }
-          return { sessionID, messages, parts: messages.flatMap((m) => m.parts), events: [], children: [], error: null, aborted };
+          return { sessionID, messages, parts: messages.flatMap((m) => m.parts), events: [], children, error: null, aborted };
         },
         async stop() {},
       };
+    },
+  };
+}
+
+/**
+ * Stub OpenCode server behind the driver's own session code (`runOnClient` of ../opencode/driver.mjs) for
+ * the session-timeout test (C002-TC-919, C002-TS-690): a stub SDK client that accepts the session's prompt,
+ * announces `subagents` child sessions (`session.created` with the root as `parentID`, as a `task` call
+ * would) and then sends no event and ends no session. `calls` records, per session, the root and child
+ * session IDs, when the prompt was sent (`promptAt`, `Date.now()`) and each `session.abort` the driver sent
+ * (`aborts`: `{ sessionID, at }`).
+ * @param {{ subagents?: number, version?: string }} [options]
+ */
+export function sdkStubHost({ subagents = 1, version = "1.18.31" } = {}) {
+  /** @type {{ sessionID: string, children: string[], promptAt: number | null, aborts: { sessionID: string, at: number }[] }[]} */
+  const calls = [];
+  return {
+    needsPackage: false,
+    calls,
+    async start() {
+      const { routeEvent, runOnClient } = await import("../opencode/driver.mjs");
+      let seq = 0;
+      const id = (p) => `${p}_${String(++seq).padStart(6, "0")}`;
+      const contexts = new Map();
+      /** @type {any} */
+      let current = null;
+      const prompt = async ({ sessionID }) => {
+        current.promptAt = Date.now();
+        for (let i = 0; i < subagents; i++) {
+          const child = id("ses");
+          current.children.push(child);
+          await routeEvent(client, contexts, { type: "session.created", properties: { info: { id: child, parentID: sessionID } } });
+        }
+        return new Promise(() => {}); // the prompt never ends
+      };
+      const client = {
+        session: {
+          create: async () => {
+            current = { sessionID: id("ses"), children: [], promptAt: null, aborts: [] };
+            calls.push(current);
+            return { data: { id: current.sessionID } };
+          },
+          prompt,
+          command: prompt,
+          abort: async ({ sessionID }) => {
+            current.aborts.push({ sessionID, at: Date.now() });
+            return { data: true };
+          },
+          messages: async () => ({ data: [] }),
+        },
+        permission: { reply: async () => ({}) },
+        question: { reply: async () => ({}), reject: async () => ({}) },
+      };
+      return { version, run: (o) => runOnClient(client, contexts, o), async stop() {} };
     },
   };
 }

@@ -67,12 +67,21 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 
 /**
  * Cap exceptions in force (C002-IF-010 §2.2 "Caps above 0.50 USD"; P-01 answer to Q-ts634-budget-01,
- * 2026-10-20): a row sets `maxBudgetUsd` above DEFAULT_MAX_BUDGET_USD only where an exception matches its
+ * 2026-10-20, 1.00 USD, raised to 2.00 USD for one run by Q-ts634-budget-02, defect D-022 item 1): a row sets `maxBudgetUsd` above DEFAULT_MAX_BUDGET_USD only where an exception matches its
  * row ID, its case file (repository-relative, `/` separators) and the run's `--host` together, at a cap
  * of at least the row's value (critic CR-68). The harness does not count the exception's runs (§2.2 Runs:
  * the owning task's done-check does, C002-T-056 for TS-634).
  */
-export const CAP_EXCEPTIONS = Object.freeze([Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 1.0 })]);
+export const CAP_EXCEPTIONS = Object.freeze([Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 2.0 })]);
+
+/**
+ * The cap exception that matches a row's ID, its case file and the run's host (C002-IF-010 §2.2), or
+ * null. The stop rule takes the cap of a matched row's reserve from it ("Reserve of a cap-exception
+ * session").
+ */
+export function capException({ id, file, host }, exceptions = CAP_EXCEPTIONS) {
+  return exceptions.find((e) => e.row === id && e.file === file && e.host === host) ?? null;
+}
 
 /**
  * The cap-exception check of one selected row before any session: null when the row may run (its cap is

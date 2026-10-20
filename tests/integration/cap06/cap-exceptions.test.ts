@@ -1,4 +1,4 @@
-// C002-TC-679 (C002-TS-679; C002-T-065): a case cap above 0.50 USD runs only for a listed cap exception
+// C002-TC-679 (C002-TS-679; C002-T-065; the 2.00 USD exception from C002-T-056 step X0 on): a case cap above 0.50 USD runs only for a listed cap exception
 // (C002-IF-010 §2.2 "Caps above 0.50 USD", critic CR-68). fx-evals-caps: a temporary case folder with one
 // case file per row at the row's `file` path, relative to the fixture root, which run.mjs takes as the
 // repository root for the case-file match; `node evals/harness/run.mjs --host <host> --only <row>` runs in
@@ -46,11 +46,11 @@ function runCaps(fxRoot: string, file: string, host: string, row: string): { sta
 }
 
 const ROWS: { file: string; row: string; cap: number; host: string; runs: boolean }[] = [
-  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 1.0, host: "opencode", runs: true },
+  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 2.0, host: "opencode", runs: true },
   { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 0.8, host: "opencode", runs: true },
-  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 1.2, host: "opencode", runs: false },
-  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 1.0, host: "copilot-cli", runs: false },
-  { file: "evals/targets/other/TS-634.eval.mjs", row: "TS-634", cap: 1.0, host: "opencode", runs: false },
+  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 2.2, host: "opencode", runs: false },
+  { file: "evals/targets/gate/TS-634.eval.mjs", row: "TS-634", cap: 2.0, host: "copilot-cli", runs: false },
+  { file: "evals/targets/other/TS-634.eval.mjs", row: "TS-634", cap: 2.0, host: "opencode", runs: false },
   { file: "evals/targets/gate/TS-613.eval.mjs", row: "TS-613", cap: 0.75, host: "opencode", runs: false },
   { file: "evals/targets/gate/TS-613.eval.mjs", row: "TS-613", cap: 0.5, host: "opencode", runs: true },
 ];
@@ -81,8 +81,8 @@ ROWS.forEach((row, i) => {
   });
 });
 
-test("C002-TS-679 (supporting): the exceptions in force are TS-634 of evals/targets/gate/TS-634.eval.mjs on opencode at 1.00 USD only", () => {
-  assert.deepEqual(CAP_EXCEPTIONS, [{ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 1.0 }]);
+test("C002-TS-679 (supporting): the exceptions in force are TS-634 of evals/targets/gate/TS-634.eval.mjs on opencode at 2.00 USD only (Q-ts634-budget-02)", () => {
+  assert.deepEqual(CAP_EXCEPTIONS, [{ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 2.0 }]);
 });
 
 test("C002-TS-679 (supporting): no case file under evals/ sets a cap above 0.50 USD but the TS-634 OpenCode row of the gate case file", () => {
@@ -99,7 +99,7 @@ test("C002-TS-679 (supporting): no case file under evals/ sets a cap above 0.50 
     }
   };
   walk(join(ROOT, "evals"));
-  assert.deepEqual(above, ["evals/targets/gate/TS-634.eval.mjs: 1.0"]);
+  assert.deepEqual(above, ["evals/targets/gate/TS-634.eval.mjs: 2.0"]);
   // The TS-634 row is an OpenCode row (its host field), so the exception's host matches it.
   const text = readFileSync(join(ROOT, "evals", "targets", "gate", "TS-634.eval.mjs"), "utf8");
   assert.match(text, /\.\.\.OPENCODE/);

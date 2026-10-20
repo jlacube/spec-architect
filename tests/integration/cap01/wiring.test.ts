@@ -321,16 +321,19 @@ const CRITIC = "agents/sdd-critic.md";
 /** The grants each table maps Glob to in its own mode. */
 const globTools = (t: Target) => toolGrants(tables[t].tools["Glob"]!, tables[t].enforcement_mode)!;
 const GLOB_LINE = "List the change's files with the Glob tool.";
+/** The planted line of the revised C002-TS-673: line 26, the last body line of the 26-line critic agent. */
+const CRITIC_LINE = 26;
 /**
- * Sets line 30 of the critic agent to `text`. The source agent has 26 lines today, so the lines between
- * are left blank (the scenario's "line 30 of the body" names a line the source does not have yet).
+ * Replaces the text of line 26 of the critic agent with `text`; the copy keeps its 26 lines, no padding
+ * (defect D-021 item 1, revised C002-TS-673; C002-T-056 step X0).
  */
 function plantCriticLine(src: string, text: string) {
   const path = join(src, ...CRITIC.split("/"));
   const lines = readFileSync(path, "utf8").replace(/\r\n/g, "\n").replace(/\n+$/, "").split("\n");
-  while (lines.length < 29) lines.push("");
-  lines[29] = text;
+  assert.equal(lines.length, CRITIC_LINE, `the source ${CRITIC} has ${lines.length} lines, the scenario names line ${CRITIC_LINE} as its last`);
+  lines[CRITIC_LINE - 1] = text;
   writeFileSync(path, lines.join("\n") + "\n");
+  assert.equal(readFileSync(path, "utf8").replace(/\n$/, "").split("\n").length, CRITIC_LINE, "the copy keeps its 26 lines");
 }
 /** A variant for the planted critic line in the table of `t` only. */
 function criticVariant(src: string, t: Target) {
@@ -348,7 +351,7 @@ const dropConstruct = (src: string, id: string) => {
 const criticDiags = (ds: JsonDiag[]) => ds.filter((d) => d.code === "ERR-GEN-002" && d.file === CRITIC);
 
 for (const [present, missing] of [["copilot", "opencode"], ["opencode", "copilot"]] as const) {
-  test(`C002-TS-673 — line 30 names the Glob tool and only the ${NAME[present]} table has a variant: ERR-GEN-002 for ${missing}`, () => {
+  test(`C002-TS-673 — line 26 names the Glob tool and only the ${NAME[present]} table has a variant: ERR-GEN-002 for ${missing}`, () => {
     for (const withConstruct of [true, false]) {
       const r = onFixtureJson((src) => {
         plantCriticLine(src, GLOB_LINE);
@@ -359,7 +362,7 @@ for (const [present, missing] of [["copilot", "opencode"], ["opencode", "copilot
       assert.notEqual(r.code, 0);
       assert.deepEqual(
         criticDiags(r.diagnostics).map((d) => [d.line, d.target]),
-        [[30, missing]],
+        [[CRITIC_LINE, missing]],
         `${withConstruct ? "construct" : "stand-in"}: ${JSON.stringify(r.diagnostics)}`,
       );
     }
@@ -377,7 +380,7 @@ test("C002-TS-673 — Glob only in the frontmatter tools field (line 7): exit 0;
 });
 
 for (const line of ["Check the Global items of the DoD.", "On OpenCode the glob tool lists no dot folder."]) {
-  test(`C002-TS-673 — line 30 reads "${line}" without a variant: exit 0, no ERR-GEN-002 for the critic`, () => {
+  test(`C002-TS-673 — line 26 reads "${line}" without a variant: exit 0, no ERR-GEN-002 for the critic`, () => {
     const r = onFixtureJson((src) => plantCriticLine(src, line));
     assert.equal(r.code, 0, JSON.stringify(r.diagnostics));
     assert.deepEqual(criticDiags(r.diagnostics), []);
@@ -390,7 +393,7 @@ test("the stand-in detector glob-prose: a table without the construct still make
     dropConstruct(src, "glob-prose");
   });
   assert.notEqual(r.code, 0);
-  assert.deepEqual(criticDiags(r.diagnostics).map((d) => [d.line, d.target]).sort(), [[30, "copilot"], [30, "opencode"]]);
+  assert.deepEqual(criticDiags(r.diagnostics).map((d) => [d.line, d.target]).sort(), [[CRITIC_LINE, "copilot"], [CRITIC_LINE, "opencode"]]);
 });
 
 // --- C002-TC-674 (C002-T-065) ---
