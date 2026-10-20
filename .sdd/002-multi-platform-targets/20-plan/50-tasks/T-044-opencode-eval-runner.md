@@ -42,9 +42,11 @@ of the Claude Code doctor rows, the package version written into the source copy
 **Follow-up (revision D-018 … D-020), not a reopening.** Defect D-020 items 2 … 4 (found in
 C002-T-056) revised C002-IF-010 §2.2 and §4: the spend cap checked after each step, a cap above
 0.50 USD only for a listed cap exception (P-01 answer to Q-ts634-budget-01: C002-TS-634 on OpenCode
-at 1.00 USD), and the PATH lead of the pinned host binary. The exception check in `run.mjs`, the
-TS-634 case cap, the PATH lead in `driverHost` and the machine configurations, and C002-TC-676,
-C002-TC-677 and C002-TC-679 are done by C002-T-065.
+at 1.00 USD, raised to 2.00 USD for one run by Q-ts634-budget-02, defect D-022), and the PATH lead of
+the pinned host binary. The exception check in `run.mjs`, the TS-634 case cap, the PATH lead in
+`driverHost` and the machine configurations, and C002-TC-676, C002-TC-677 and C002-TC-679 are done by
+C002-T-065; the 2.00 USD cap, its C002-TC-679 rows and the stop rule's H for an exception row by
+C002-T-056 rerun plan step X0.
 
 ## Targets
 

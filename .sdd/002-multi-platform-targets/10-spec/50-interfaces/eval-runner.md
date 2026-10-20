@@ -24,7 +24,12 @@ dot-folder limit of OpenCode's `glob` (§4) and the PATH lead of the pinned host
 the critic's D-018 … D-020 review: the spend cap checked per step only where the host reports step
 costs, per session on Copilot CLI (CR-64); the result field `caps` (CR-65); the cap exception matched
 by row ID, case file and host, the run limit checked by the owning task, and capped sessions that a
-later exception raised counted as no runs (CR-68; P-01 answer to Q-capped-runs-01).
+later exception raised counted as no runs (CR-68; P-01 answer to Q-capped-runs-01). Revised for
+defect D-022 (findings of C002-T-056): the cap exception of C002-TS-634 on OpenCode raised to
+2.00 USD for one further run without a rerun (P-01 answer to Q-ts634-budget-02), the overshoot of
+the per-step spend cap bounded by the steps running when the cap is reached, with no fixed
+allowance, the reserve of the stop rule for a cap-exception session (§2.2), and the SDK client's
+requests without a headers timeout (§4).
 
 ## §1 Selection
 
@@ -75,13 +80,14 @@ estimate would be a guess the runner cannot check. What the runner checks depend
 reports:
 
 - **Per step**, on a runner whose host reports the cost of each step (OpenCode, at the step's end):
-  the runner checks the cap after each step. The step whose cost brings the session's spend to
-  `maxBudgetUsd` or above is the last step the session starts; its cost is counted in full, and so
-  is the cost of a step that was already running when the cap was reached. The session's recorded
-  spend is therefore at or above the cap when it ends with `spend cap`, by at most the cost of those
-  last steps (0.511 and 0.525 USD at a 0.50 USD cap in C002-T-056). The per-step metric of
-  C002-NFR-105 (steps started after the step that reached the cap) is decided on these runners only,
-  from the step costs of the session.
+  the runner checks the cap after each step. The **capping step** is the step whose finish brings
+  the sum of the costs of the finished steps, the session's and its subagents', to `maxBudgetUsd` or
+  above; it is the last step the session starts. The **steps running when the cap is reached** are
+  the capping step and every other step of the session or of its subagents that had started but not
+  finished when the runner received the capping step's finish. Each of them counts with the cost
+  that the host reports for it, in full (a running step that the abort ends counts with the cost the
+  host reports for it, if any). The per-step metric of C002-NFR-105 (steps started after the
+  capping step) is decided on these runners only, from the step events of the session.
 - **Per session**, on Copilot CLI, whose host reports the AI Credits of the whole session only: the
   cap is the host's own limit `--max-ai-credits`, which the host applies to its own count of the
   session's credits, and the runner checks the session total that the usage file gives after the
@@ -89,11 +95,30 @@ reports:
   is known there, so the per-step metric does not apply: the measure is the session total against
   the limit.
 
+**Overshoot rule** (revised for defect D-022 item 2). The overshoot of a session that ends with
+`spend cap` is its recorded spend minus its cap. On a per-step runner it is at most the sum of the
+costs of the steps running when the cap is reached, and no fixed allowance applies: no amount is
+added to the cap, and none is accepted on top of it. Since the spend before the capping step is
+below the cap, the bound holds whenever no step starts after the capping step; a step that starts
+later breaches the per-step metric of C002-NFR-105, and its cost is recorded too. Why no fixed
+allowance: the cost of one step grows with the context it sends and the cache it writes (a
+subagent's first step writes its whole context), so no fixed amount bounds it; the 0.05 USD
+allowance of the earlier test plan held at a 0.50 USD cap (0.511 and 0.525 USD in C002-T-056) and
+failed at a 1.00 USD cap (1.114 USD, a session ended during the critic's re-review in C002-T-056).
+The runner honours the rule by aborting the session as soon as it receives the capping step's
+finish, by counting every cost the host reports, the costs reported after the abort included, and
+by adding no allowance in the cap check; no grader, ledger check or stop rule adds one either. The
+bound is verified where the per-step metric is, by the runner tests with the stub host
+(C002-TS-677, a parallel subagent step included). On a paid session the transcript shows the
+overshoot after the session: the runner writes the harness record `event: "cap"` for the capping
+step and for each step that finishes after it, each with the session's spend at that point
+(`usage`).
+
 Per runner:
 
 | Runner | Check | Overshoot |
 |---|---|---|
-| OpenCode | per step: the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | the step that reached the cap, plus a subagent's step that ran in parallel and finished before the abort took effect |
+| OpenCode | per step: the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | at most the costs of the steps running when the cap is reached: the capping step, plus a subagent's step that ran in parallel and reported its cost before the abort took effect; no fixed allowance (overshoot rule above) |
 | Copilot CLI | per session: the host's own limit `--max-ai-credits <n>`, with `<n>` = the larger of 30 and `maxBudgetUsd` / 0.01 rounded to a whole number (1 AI Credit = 0.01 USD; Copilot CLI 1.0.98 accepts no limit below 30 credits, so a cap below 0.30 USD is applied as 0.30 USD); the host refuses the next model call once the session's credits reached the limit (a soft cap), and the runner reads the session's credits from `--usage-output-file` after the session: a session whose measured credits reached the limit ends with `spend cap` even when the host printed no limit text | the model call that reached the limit; the usage file gives the session total only, never a step's cost, so `usage.usd` is that total |
 | Claude Code | the Agent SDK's `maxBudgetUsd`, as today (test plan §4.1 rule 1) | the turn that reached it |
 
@@ -101,7 +126,8 @@ The pools of the test plan (`20-plan/60-test-plan.md` §4), not the per-session 
 of many sessions may spend.
 
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
-exception $1"). A case row sets `maxBudgetUsd` above 0.50 only where P-01 approved an exception for
+exception $1"; raised for defect D-022 item 1, P-01 answer to Q-ts634-budget-02, "One run at $2
+(Recommended)"). A case row sets `maxBudgetUsd` above 0.50 only where P-01 approved an exception for
 that row and host; the exceptions in force are the rows of this table. The harness checks it before
 any session (revised for critic CR-68): a selected row that sets `maxBudgetUsd` above 0.50 runs only
 when an exception of this table matches all three of its row ID (the row's `id`), its case file (the
@@ -114,7 +140,7 @@ the result records it (`caps`, §3).
 
 | Row | Host | Cap per session | Runs | Approved |
 |---|---|---|---|---|
-| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 1.00 USD | one run, and one rerun only when that run fails | P-01, Q-ts634-budget-01 (2026-10-20): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056) |
+| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 2.00 USD | one further run at 2.00 USD and no rerun: a failure of that run is recorded, and the row is waived on OpenCode for the OpenCode release; no further session of the row runs at any cap | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
 
 **Runs** (revised for critic CR-68 and for P-01's answer to Q-capped-runs-01, "Don't count them").
 The Runs column counts the sessions of the row that are runs by the ledger rule of the test plan
@@ -122,7 +148,20 @@ The Runs column counts the sessions of the row that are runs by the ledger rule 
 under a cap below the one that an exception of this table later approved for the row and host is no
 run: the ledger records it with `valid_run: false` and its cost, which counts toward its pool. The
 harness does not count runs; the done-check of the task that runs the exception row checks the run
-limit (C002-T-056 for C002-TS-634).
+limit (C002-T-056 for C002-TS-634). For C002-TS-634 the limit is the one session at 2.00 USD: the
+sessions of C002-T-056 at 0.50 and 1.00 USD do not count toward it, and after it no session of the
+row runs, whatever its result (P-01 answer to Q-ts634-budget-02).
+
+**Reserve of a cap-exception session** (revised for defect D-022 item 3). Before each paid session,
+`evals/harness/run.mjs` checks the stop rule of the test plan (`20-plan/60-test-plan.md` §4.1,
+rule 1, and rule 8, which takes H as rule 1 does): the session starts only if the pool's total T
+plus the reserve H stays within the pool's limit. For a session of a row that an exception of this
+table matches, H is at least the exception's cap plus its overshoot bound: `run.mjs` takes the cap
+from the exception that matched the row (this table), not from the largest ledger entry alone. The
+overshoot is the cost of the steps running when the cap is reached (overshoot rule above) and is
+known only after those steps end, so the bound that the reserve takes before the session is the
+estimate that the test plan's rule 1 defines from the recorded sessions; no fixed allowance applies
+(the 0.05 USD of the earlier test plan, 1.05 USD for C002-TS-634, no longer does).
 
 ## §3 Session result
 
@@ -157,7 +196,7 @@ Added fields:
 | `host_versions` | versions read at session start (C002-IF-009, release evidence); on OpenCode the version of the pinned host binary (§4) |
 | `end_reason` | `completed`, `turn cap`, `spend cap`, `question unanswerable`, `error` (C002-TS-614); `error` also when the provider refuses a step of the session, for example an OpenRouter error with HTTP status 402 stored on an assistant message |
 | `usage` | `{ "turns": n, "usd": number or null }` |
-| `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (1.00 for C002-TS-634 on OpenCode). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
+| `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (2.00 for C002-TS-634 on OpenCode). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
 | `spend` | `reported` when the host reported the cost of the steps, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
@@ -242,6 +281,16 @@ F-8, F-10; revised for defect D-015 item 4). The OpenCode runner, and the corpus
   generated package's texts find `.sdd/` files with `sdd status` and `read` instead (C002-IF-001 §6.1
   Dot folders). A session that still globs `.sdd/` spends turns on empty results; the runner does
   not correct it, since the package's texts are under test.
+- **SDK requests without a headers timeout** (revised for defect D-022 item 4). The JS SDK client
+  sends its requests to the loopback `opencode serve` through a fetch with no headers or body
+  timeout (`untimedFetch` of `evals/harness/opencode/driver.mjs`, over `node:http`), never through
+  Node.js's built-in `fetch`: a prompt request answers only when the prompt has ended, and the
+  built-in `fetch` (undici, `headersTimeout` 300 s) drops a request whose response headers take
+  longer than 300 s, which ended a C002-TS-634 session at 300 s with an empty error (C002-T-056,
+  fixed in commit `f87d885`). The fetch honours the request's abort signal, so the abort at a cap
+  (§2.2) still ends the request, and the event stream still streams; the runner's session timeout
+  bounds a session instead. An error that the SDK returns is recorded in `error` (§3) by its
+  message and cause, never as an empty object.
 - **Own database.** `OPENCODE_DB` names an absolute database file of the run, so the user's shared
   OpenCode database is neither read nor migrated by the tested version (F-8).
 - **Isolated data folders.** The host process gets configuration, data, cache and state folders of

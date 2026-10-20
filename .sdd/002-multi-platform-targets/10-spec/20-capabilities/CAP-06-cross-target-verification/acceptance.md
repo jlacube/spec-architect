@@ -393,18 +393,20 @@ Scenario: C002-TS-613 — scripted gate approval on OpenCode
 Scenario: C002-TS-634 — scripted Revise at a gate on OpenCode
   Given spike S-07 shows that a script can answer OpenCode's "question" calls
   And change "002" of "fx-gate" has phase "10-spec" in review
-  And the case row "TS-634" sets "maxBudgetUsd" to 1.00, the cap exception of C002-IF-010 §2.2 for this row on "opencode"
+  And the case row "TS-634" sets "maxBudgetUsd" to 2.00, the cap exception of C002-IF-010 §2.2 for this row on "opencode"
   When the OpenCode eval runner answers the gate G2 question with "Revise" and the words "Add an error scenario to C002-REQ-101" through the script
   Then the transcript shows one "sdd gate record 002 10-spec --decision revise" command with those words as its note
   And it shows no "sdd gate approve" command in the same turn
   And after the rework the transcript shows a second gate G2 question offering "Approve", "Approve with waivers", "Revise" and "Stop"
-  And the session's result record gives "caps.usd" 1.00
+  And the session's result record gives "caps.usd" 2.00
 ```
 
-The gate rework between the two gate questions does not fit 0.50 USD on OpenCode (C002-T-056); P-01
-approved 1.00 USD per session for this row, one run and one rerun only when that run fails
-(Q-ts634-budget-01; C002-IF-010 §2.2; defect D-020 item 2). C002-TS-679 checks that no other row or
-host gets a cap above 0.50 USD.
+The gate rework between the two gate questions does not fit 0.50 USD on OpenCode, nor 1.00 USD
+(C002-T-056); P-01 raised the exception for this row to 2.00 USD for one further run, with no further
+rerun: a failure of that run is recorded and the row is waived for the OpenCode release
+(Q-ts634-budget-02, replacing the 1.00 USD run and rerun of Q-ts634-budget-01; C002-IF-010 §2.2;
+defects D-020 item 2 and D-022 item 1). C002-TS-679 checks that no other row or host gets a cap above
+0.50 USD.
 
 ```gherkin
 @eval
@@ -480,17 +482,17 @@ host's `--max-ai-credits` limit on the session total, read from the usage file a
 ```gherkin
 Scenario Outline: C002-TS-679 — a case cap above 0.50 USD only for a listed cap exception
   Given the fixture "fx-evals-caps", whose case file "<file>" holds one row with the ID "<row>", no "host" field and "maxBudgetUsd" <cap>
-  And the cap exceptions of C002-IF-010 §2.2, which list the row "TS-634" of the case file "evals/targets/gate/TS-634.eval.mjs" on "opencode" at 1.00 USD only
+  And the cap exceptions of C002-IF-010 §2.2, which list the row "TS-634" of the case file "evals/targets/gate/TS-634.eval.mjs" on "opencode" at 2.00 USD only
   And a stub host in place of the host of "--host <host>"
   When P-01 runs "npm run eval -- --host <host> --only <row>" on that fixture
   Then <outcome>
   Examples:
     | file                                  | row    | cap  | host        | outcome                                                                                                                               |
-    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.00 | opencode    | one session runs, the stub is given a spend cap of 1.00 USD and the result record gives "caps.usd" 1.00                               |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 2.00 | opencode    | one session runs, the stub is given a spend cap of 2.00 USD and the result record gives "caps.usd" 2.00                               |
     | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 0.80 | opencode    | one session runs, the stub is given a spend cap of 0.80 USD and the result record gives "caps.usd" 0.80                               |
-    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.20 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
-    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 1.00 | copilot-cli | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
-    | evals/targets/other/TS-634.eval.mjs   | TS-634 | 1.00 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/other/TS-634.eval.mjs"        |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 2.20 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
+    | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 2.00 | copilot-cli | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"         |
+    | evals/targets/other/TS-634.eval.mjs   | TS-634 | 2.00 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/other/TS-634.eval.mjs"        |
     | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.75 | opencode    | the run ends before any session, with exit code 1 and a message that names "TS-613" and "evals/targets/gate/TS-613.eval.mjs"         |
     | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.50 | opencode    | one session runs, the stub is given a spend cap of 0.50 USD and the result record gives "caps.usd" 0.50                               |
 ```
@@ -950,7 +952,9 @@ host capability and is limited to another platform, is not applicable by the rul
 `PG-163`, which the platform rule leaves applicable, is replayed (C002-IF-009 §2.1 precedence; critic
 CR-61). A `platforms` list names `win32`, `posix` or both, the values of `replay_host.platform`
 (critic CR-66). Every `platforms` list of the present corpora is `["win32"]`, so the release replays
-on REF-WIN exclude no case by this rule.
+on REF-WIN exclude no case by this rule. The OpenCode permission rules row carries the tag
+`@mode-native`: it is not applicable while the OpenCode target package uses the mode
+`sdd-mcp-server`, and the row of the sdd MCP server covers OpenCode then (defect D-021 item 4).
 
 ```gherkin
 Scenario Outline: C002-TS-637 — incomplete replay report refused at release
@@ -1206,7 +1210,7 @@ development.
 | C002-REQ-608 | TS-611 | TS-676 (PATH lead of the pinned OpenCode binary: no case PATH, a case PATH with version shims) | TS-676 (an `opencode missing` row gets no PATH lead) | n/a | n/a | n/a | n/a |
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-611 | TS-614 | TS-614 (turn cap on both runners; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 1.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row, case file and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file) |
+| C002-REQ-611 | TS-614 | TS-614 (turn cap on both runners; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 2.00 USD and below it) | TS-614, TS-679 (cap above 0.50 USD without an exception for the row, case file and host: exit code 1 before any session) | n/a | n/a | TS-679 (a row that raises its own cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file) |
 | C002-REQ-612 | TS-615 | TS-615 (`architect:<agent>` agent names, workspace prepared by `sdd install copilot`, the conductor on its own model), TS-680 (`--model` from the session agent's file, or the case's model) | n/a | n/a | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |

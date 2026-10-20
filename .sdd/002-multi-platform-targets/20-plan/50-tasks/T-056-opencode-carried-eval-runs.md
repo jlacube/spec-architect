@@ -7,9 +7,9 @@ artifact: plan/task
 milestone: C002-M-06
 status: in-progress
 depends_on: [C002-T-038, C002-T-044, C002-T-063, C002-T-064, C002-T-065]
-implements: [C002-REQ-608, C002-REQ-610]
-satisfies_ac: [C002-AC-608.1, C002-AC-610.1]
-verified_by: [C002-TS-113, C002-TS-132, C002-TS-133, C002-TS-211, C002-TS-215, C002-TS-217, C002-TS-219, C002-TS-221, C002-TS-222, C002-TS-223, C002-TS-230, C002-TS-316, C002-TS-506, C002-TS-507, C002-TS-509, C002-TS-510, C002-TS-511, C002-TS-512, C002-TS-513, C002-TS-514, C002-TS-515, C002-TS-613, C002-TS-634, C002-TS-635, C002-TS-639, C002-TC-113, C002-TC-132, C002-TC-133, C002-TC-211, C002-TC-215, C002-TC-217, C002-TC-219, C002-TC-221, C002-TC-222, C002-TC-223, C002-TC-230, C002-TC-316, C002-TC-506, C002-TC-507, C002-TC-509, C002-TC-510, C002-TC-511, C002-TC-512, C002-TC-513, C002-TC-514, C002-TC-515, C002-TC-613, C002-TC-634, C002-TC-635, C002-TC-639]
+implements: [C002-REQ-608, C002-REQ-610, C002-REQ-611, C002-REQ-112]
+satisfies_ac: [C002-AC-608.1, C002-AC-610.1, C002-AC-611.1, C002-AC-112.1]
+verified_by: [C002-TS-673, C002-TC-673, C002-TS-677, C002-TC-677, C002-TS-679, C002-TC-679, C002-TS-113, C002-TS-132, C002-TS-133, C002-TS-211, C002-TS-215, C002-TS-217, C002-TS-219, C002-TS-221, C002-TS-222, C002-TS-223, C002-TS-230, C002-TS-316, C002-TS-506, C002-TS-507, C002-TS-509, C002-TS-510, C002-TS-511, C002-TS-512, C002-TS-513, C002-TS-514, C002-TS-515, C002-TS-613, C002-TS-634, C002-TS-635, C002-TS-639, C002-TC-113, C002-TC-132, C002-TC-133, C002-TC-211, C002-TC-215, C002-TC-217, C002-TC-219, C002-TC-221, C002-TC-222, C002-TC-223, C002-TC-230, C002-TC-316, C002-TC-506, C002-TC-507, C002-TC-509, C002-TC-510, C002-TC-511, C002-TC-512, C002-TC-513, C002-TC-514, C002-TC-515, C002-TC-613, C002-TC-634, C002-TC-635, C002-TC-639]
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-015]
 estimate: L
@@ -34,6 +34,12 @@ release evidence (Q-evalbudget-03, Q-opencode-01).
 | add | `evals/results/t056-*.json` | one result per session (host, host version, model IDs, tokens, spend, transcript path) |
 | modify | `evals/results/spend-chg002.json` | the spend of every session |
 | modify | `evals/targets/**/*.eval.mjs` | only to fix a case defect found here, never to weaken an assertion (case files of C002-T-026, C002-T-027, C002-T-037, C002-T-038, C002-T-044); a product defect reopens the owning task instead |
+| modify | `evals/harness/caps.mjs` › `CAP_EXCEPTIONS` | rerun plan step X0 (defect D-022 item 1): the `TS-634` exception of `evals/targets/gate/TS-634.eval.mjs` on `opencode` at 2.00 USD, the cap of C002-IF-010 §2.2 after P-01's answer to Q-ts634-budget-02 |
+| modify | `evals/targets/gate/TS-634.eval.mjs` | rerun plan step X0: the OpenCode row's `maxBudgetUsd` 2.00, nothing else |
+| modify | `evals/harness/run.mjs` › `stopRule` | rerun plan step X0 (defect D-022 item 3; C002-IF-010 §2.2 "Reserve of a cap-exception session"): for a selected cap-exception row, H = the row's exception cap + max(0.65 USD, highest recorded session cost) |
+| modify | `evals/harness/runners/opencode.mjs` (the `cap` record, about line 510) | rerun plan step X0 (defect D-022 item 2; C002-IF-010 §2.2 overshoot rule): the `cap` record carries the capping step's `step_usd`; one `step-after-cap` record per step that finishes after it, with `step_usd`, its agent and `started_before_cap` |
+| modify | `tests/integration/cap06/cap-exceptions.test.ts`, `tests/integration/cap06/runner-caps.test.ts` | rerun plan step X0: C002-TC-679 at the 2.00 USD exception (rows of the revised C002-TS-679); C002-TC-677 asserts the `cap` and `step-after-cap` records; the stop-rule test gains a case for an exception row's H |
+| modify | `tests/integration/cap01/wiring.test.ts` (the planted critic line, about line 325) | rerun plan step X0 (defect D-021 item 1): C002-TC-673 plants on line 26 of `agents/sdd-critic.md` and keeps its 26 lines, no padding (revised C002-TS-673) |
 
 The infeasible-driver branch of `10-strategy.md` §4 is not taken (S-07 §4: the stub-model driver is
 feasible), so C002-TC-133, 211, 222 and 223 stay replay cases of C002-T-042 and none of their branch
@@ -130,38 +136,64 @@ injection on the release candidate.
 **Precondition.** C002-T-065 done: the generated OpenCode package carries the variant
 `file-inspection` and the OpenCode `doctor-probe` test for `.sdd/` without `glob` (C002-TC-674), the
 runner puts the pinned binary first on the host's PATH (C002-TC-676), and `run.mjs` runs the
-`TS-634` OpenCode row at its cap exception of 1.00 USD (C002-TC-679; C002-IF-010 §2.2).
+`TS-634` OpenCode row at its cap exception of 1.00 USD (C002-TC-679; C002-IF-010 §2.2), which step
+X0 raises to 2.00 USD for X3 (defect D-022, Q-ts634-budget-02).
 
-**Order** (each session after the stop-rule check of step 5, with H of at least 1.05 USD for a
-TS-634 session, test plan §4.1 rule 1):
+**Order** (each session after the stop-rule check of step 5; for a TS-634 session H is at least its
+exception cap plus its overshoot bound, test plan §4.1 rule 1):
 
-- X1. C002-TC-511, one run: the rerun its failure allows. A failure here is the row's second and
-  reopens C002-T-065 (test plan §4.3); report the transcript's file-finding calls with it.
-- X2. C002-TC-634 at the cap exception of 1.00 USD, one run, and one rerun only when that run fails
-  (P-01, Q-ts634-budget-01). The two sessions of the resumed run ended with `spend cap` at 0.50 USD,
-  a cap that the exception later raised, so they are no runs of the row by the rule for capped
-  sessions of test plan §4.1 (ledger bullet; P-01 answer to Q-capped-runs-01, "Don't count them";
-  C002-IF-010 §2.2 Runs): before X2 starts, their ledger entries get `valid_run: false`, keeping
-  their `cost_usd` in the general-pool total. X2 is therefore the row's first run at its cap, with
-  one rerun after a failure. A second failure is reported to P-01, who decides (C002-IF-010 §2.2).
+- X1 (ran, commit f87d885). C002-TC-511, one run: the rerun its failure allows. It passed on the
+  variant `file-inspection` (the doctor read `.sdd/` without `glob`; 0.24 USD,
+  `evals/results/t056-TS-511-opencode-2026-10-20T17-38-42-574Z.json`).
+- X2 (ran, commit f87d885). C002-TC-634 at the cap exception of 1.00 USD (P-01, Q-ts634-budget-01);
+  before it, the two 0.50 USD capped sessions of the resumed run got `valid_run: false` by the rule
+  for capped sessions of test plan §4.1 (P-01 answer to Q-capped-runs-01). Its run ended with
+  `end_reason` `error` after 308 s at 0.99 USD, before the second gate question: Node fetch's 300 s
+  headers timeout cut the SDK's prompt request, a harness defect fixed in
+  `evals/harness/opencode/driver.mjs` (untimed fetch for the SDK client, real error text) in the same
+  commit (defect D-022 item 4); the ledger counts it as the row's run. Its rerun failed: it ended with
+  `spend cap` at 1.11 USD during the critic re-review, before the second gate G2 question, 0.11 USD
+  above its cap (defect D-022 items 1 and 2).
+- X0. Before X3, the harness follows the revised contract (defect D-022; P-01 answer to
+  Q-ts634-budget-02, "One run at $2 (Recommended)"): set the `TS-634` exception of `caps.mjs` and the
+  OpenCode row of `TS-634.eval.mjs` to 2.00 USD; make `stopRule` of `run.mjs` take, for a selected
+  cap-exception row, H = the row's exception cap + max(0.65 USD, highest recorded session cost) (test
+  plan §4.1 rule 1); make the OpenCode runner write the capping step's `step_usd` into its `cap`
+  record and a `step-after-cap` record per step that finishes after it (C002-IF-010 §2.2 overshoot
+  rule); bring C002-TC-679 to the revised C002-TS-679 rows, C002-TC-677 to the records and
+  C002-TC-673 to line 26 of the revised C002-TS-673 (defect D-021 item 1), and add a stop-rule test of
+  an exception row's H. No paid session; `npm test` stays green. Then the X2 rerun's ledger entry
+  gets `valid_run: false` by the rule for capped sessions (ended by the 1.00 USD cap that the
+  exception raised to 2.00), keeping its `cost_usd` in the general-pool total; the X2 run's entry
+  stays as recorded. Neither is a session at the 2.00 USD cap.
+- X3. C002-TC-634 at the cap exception of 2.00 USD, **one run, no further rerun** (P-01,
+  Q-ts634-budget-02). Before it, `run.mjs` checks the general pool's stop rule with H = 3.11 USD
+  (2.00 + 1.11; 17.14 + 3.11 ≤ 30 USD on 2026-10-20). After it, check the overshoot bound of a
+  session ended with `spend cap` from its `cap` and `step-after-cap` records. A pass closes the row.
+  A failure is recorded in the ledger, the result file and the task report, with the transcript's
+  last gate step and the spend at the cap, and the row is waived for the OpenCode release (test plan
+  §6 "Exit (release, per target)"); it neither reopens a task nor buys another session.
 
-**Spend.** Estimate at the §4.2 rates: 0.25 USD for X1 and 1.00 USD for the first X2 session at its
-cap, 1.25 USD; the general pool then reaches about 16.0 of 30 USD (14.79 + 1.25). Upper bound, the
-one of test plan §4.2: X1 at the 0.65 USD upper-bound rate and both X2 sessions at 1.05 USD each (the
-1.00 USD cap plus the 0.05 USD overshoot allowance of the spend-cap rule, §4.1 rule 1), 2.75 USD; the
-general pool then reaches about 17.5 of 30 USD (14.79 + 2.75).
+**Spend.** Measured for X1 and X2: 0.24 + 0.99 + 1.11 = 2.35 USD; the general pool held 17.14 of
+30 USD after them. Estimate for X3 at its cap: 2.00 USD, so the general pool reaches about 19.1 of
+30 USD. Upper bound, the one of test plan §4.2: X3 at 3.11 USD (its 2.00 USD cap plus the overshoot
+bound of §4.1 rule 1); the general pool then reaches about 20.3 of 30 USD (17.14 + 3.11).
 
 ## Verification
 
 - `node evals/harness/run.mjs --host opencode --tier dev` with the case files of steps 2 and 3
 - `node evals/harness/run.mjs --host opencode --tier dev --filter evals/targets/doctor/TS-511.eval.mjs` and
-  `--filter evals/targets/gate/TS-634.eval.mjs` (rerun plan X1, X2)
+  `--filter evals/targets/gate/TS-634.eval.mjs` (rerun plan X1, X2, X3)
+- `npm test -- cap06/cap-exceptions`, `npm test -- cap06/runner-caps` and `npm test -- cap01/wiring` (rerun plan X0), then `npm test`
 - The general-pool total of the ledger stays within 30 USD
 
 ## Done when
 
-- [ ] Every carried OpenCode row passes, or is reported not applicable with its record cited
+- [ ] Every carried OpenCode row passes, or is reported not applicable with its record cited (C002-TC-634: passes, or is waived after its one X3 run failed)
 - [ ] Every session is in the ledger; the sessions refused with HTTP 402 keep `valid_run: false` and none of them is counted as a run or a rerun of its row
 - [ ] The C002-TC-613 results cite the C002-T-044 smoke result for `evals/cap02/TS-207.eval.mjs` instead of a new session
-- [ ] C002-TC-511 and C002-TC-634 pass in the rerun plan after C002-T-065, C002-TC-634 with `caps.usd` 1.00 in its result record and, counted by the rule for capped sessions of test plan §4.1, no session beyond one run and one rerun at that cap; the two 0.50 USD capped sessions of the resumed run carry `valid_run: false` in the ledger
+- [x] C002-TC-511 passes in the rerun plan after C002-T-065 (X1)
+- [ ] Step X0 is done: the `TS-634` exception and case file at 2.00 USD, the stop rule's H for an exception row and the runner's `cap` and `step-after-cap` records; C002-TC-673, 677, 679 and the stop-rule test pass
+- [ ] C002-TC-634 has exactly one session at 2.00 USD (X3), with `caps.usd` 2.00 in its result record, counted by the rule for capped sessions of test plan §4.1; it passes, or its failure is recorded in the ledger and the task report and the row is reported waived for the OpenCode release (Q-ts634-budget-02)
+- [ ] The two 0.50 USD capped sessions of the resumed run and the X2 rerun ended at 1.00 USD carry `valid_run: false` in the ledger
 - [ ] Progress reported: `sdd task set C002-T-056 --status done --commit <sha>`

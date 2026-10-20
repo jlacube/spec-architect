@@ -38,8 +38,8 @@ of P-01's Q-checklist-rerun-01 answer, and the restricted-mode rows of Q-checkli
 lands in the catch-up task C002-T-064, after C002-T-047 and before C002-T-045,
 C002-T-048, C002-T-049, C002-T-054 and the resumed C002-T-056. The revision for defects D-018 …
 D-020 (the OpenCode agents find `.sdd/` files without `glob`, P-01's Q-opencode-glob-01 answer; the
-spend cap checked after each step and the 1.00 USD cap exception for C002-TS-634 on OpenCode,
-Q-ts634-budget-01; the doctor's host version from the PATH with the runner's PATH lead; the Copilot
+spend cap checked after each step and the cap exception for C002-TS-634 on OpenCode, 1.00 USD at
+Q-ts634-budget-01 and 2.00 USD since Q-ts634-budget-02; the doctor's host version from the PATH with the runner's PATH lead; the Copilot
 CLI runner's `--model` from the agent file, Q-cli-model-01, and its other options; the platform rule
 of the replay reports; the restore-run count), with the critic fixes that followed it (release replays
 on `win32` only, the platform rule before C002-REQ-633, one rule per not-applicable entry, the spend
@@ -47,7 +47,11 @@ cap per session on Copilot CLI, the result field `caps`, the cap exception match
 file and host, and the PATH-only lookup of every executable the CLI and the server start, P-01's
 Q-exec-lookup-01 answer, which also changes how CHG-001's `gate` code starts `git`), lands in the
 catch-up task C002-T-065, after C002-T-045 and before the C002-T-056 reruns, C002-T-048 and
-C002-T-054.
+C002-T-054. The revision for defects D-021 (editorial test-plan rows) and D-022 (the cap exception
+for C002-TS-634 on OpenCode raised to 2.00 USD for one run with no further rerun, P-01's
+Q-ts634-budget-02 answer; the overshoot bounded by the cost of the steps running at the cap; the
+stop rule's H for an exception row; the runner's `cap` and `step-after-cap` records) adds no task:
+C002-T-056 rerun plan step X0 changes the harness and the C002-TC-673 test before its one X3 run.
 
 ## Reading order
 
@@ -95,9 +99,12 @@ C002-T-054.
   30 USD Copilot pool, whose stop rule `run.mjs` checks before each session (test plan §4.1 rule 8).
   A case row's spend cap is 0.50 USD, checked after each step; a higher cap runs only for a cap
   exception of C002-IF-010 §2.2 (in force: C002-TS-634 of `evals/targets/gate/TS-634.eval.mjs` on
-  OpenCode, 1.00 USD, one run and one rerun on failure), which `run.mjs` checks from C002-T-065 on; a
-  session ended by a cap that such an exception later raised is no run (`valid_run: false`, test
-  plan §4.1). Never store the Claude OAuth token or the
+  OpenCode, 2.00 USD, one run and no further rerun, a failure recorded and the row waived for the
+  OpenCode release; P-01 answer to Q-ts634-budget-02), which `run.mjs` checks from C002-T-065 on, at
+  2.00 USD from C002-T-056 step X0 on; a session ended by a cap that such an exception later raised
+  is no run (`valid_run: false`, test plan §4.1). A capped session can end above its cap by the cost
+  of the steps running when the cap is reached; before an exception session, H is at least its
+  exception cap plus the overshoot bound of test plan §4.1 rule 1. Never store the Claude OAuth token or the
   OpenRouter key in the repository.
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
@@ -160,6 +167,7 @@ Insiders builds): record the version before each run.
 | Q-copilot-pool-01: whether the 30 USD Copilot pool also counts P-01's VS Code runs (test plan §4.1) | C002-T-050, C002-T-057 | settled: P-01 answered "CLI evals only (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (2)); the pool counts the Copilot CLI eval sessions of the ledger only, and the VS Code runs run under P-01's own watch of GitHub's usage view |
 | Q-capped-runs-01: whether the C002-TS-634 sessions ended by the 0.50 USD cap that the exception later raised count as runs (plan critic CR-38) | C002-T-056 | settled: P-01 answered "Don't count them (Recommended)"; test plan §4.1 rule for capped sessions, `valid_run: false` |
 | Q-rerun-scope-01: which OpenCode rows rerun after the variant `file-inspection` | C002-T-056 | settled: P-01 answered "TS-511 and TS-634 (Recommended)"; C002-T-056 rerun plan X1, X2 |
+| Q-ts634-budget-02: C002-TS-634 on OpenCode still above its 1.00 USD cap exception (defect D-022) | C002-T-056 | settled: P-01 answered "One run at $2 (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); C002-T-056 rerun plan X0, X3; a failure is recorded and the row waived for the OpenCode release |
 | Q-exec-lookup-01: PATH-only lookup for every executable the sdd CLI and the sdd MCP server start (C002-CON-17) | C002-T-065 | settled: P-01 answered "Fix everywhere now (Recommended)"; C002-T-065 part (f), CHG-001's gate tests unchanged (`30-impact/regression-set.md` §4.6) |
 
 ## CLI commands

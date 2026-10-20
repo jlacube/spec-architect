@@ -54,19 +54,19 @@ Scenario: C002-TS-502 — same files as the bundled CLI, apart from the translat
 ```gherkin
 Scenario Outline: C002-TS-684 — the gate commands start git from the PATH folders only
   Given the "architect-sdd" tarball is installed globally into a clean prefix
-  And a copy of "fx-gate" at "C:/fx/repo", a git repository whose change "002" has phase "10-spec" in review, and whose root holds the stub "git.exe", which prints "Mallory" for "config user.name" and records each start
+  And a copy of the CHG-001 gate fixture at "C:/fx/repo", a git repository whose change "004" has phase "00-ideation" approved and phase "10-spec" not approved, and whose root holds the stub "git.exe", which prints "Mallory" for "config user.name" and records each start
   And the PATH of the "sdd" process is "<path>" followed by the folder of the real "node.exe", where "C:/fx/git-bin" holds <bin>, and no other folder of that PATH holds a "git" executable
   When P-01 runs "<command>" in "C:/fx/repo" on REF-WIN
   Then <outcome>
   And the stub "C:/fx/repo/git.exe" records no start
   Examples:
     | path                   | bin                                                                                           | command                                                       | outcome                                                                                                                     |
-    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "Alice"                                                    |
-    | .;C:/fx/git-bin        | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "Alice"                                                    |
-    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 002 10-spec --note "ok" --commit             | the exit code is 0, and the last commit of the copy holds the approval of "002" with the author name "Alice"              |
-    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "002" gives "approved_by" "unknown"                                                  |
-    | C:/fx/git-bin          | only "git.cmd", a stub that prints "Mallory" for "config user.name" and records each start    | sdd gate approve 002 10-spec --note "ok"                      | the exit code is 0, "change.md" of "002" gives "approved_by" "unknown", and the stub "C:/fx/git-bin/git.cmd" records no start |
-    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 002 10-spec --note "ok" --commit             | the exit code is 2, standard error contains "ERR-CLI-018" and "not a git repository", and "change.md" of "002" still shows "10-spec" as not approved |
+    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 004 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "004" gives "10-spec" the "approved_by" "Alice"                                                    |
+    | .;C:/fx/git-bin        | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 004 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "004" gives "10-spec" the "approved_by" "Alice"                                                    |
+    | C:/fx/git-bin          | the real "git.exe" of Git for Windows, whose "user.name" for the copy is "Alice"             | sdd gate approve 004 10-spec --note "ok" --commit             | the exit code is 0, and the last commit of the copy holds the approval of "004" with the author name "Alice"              |
+    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 004 10-spec --note "ok"                      | the exit code is 0 and "change.md" of "004" gives "10-spec" the "approved_by" "unknown"                                                  |
+    | C:/fx/git-bin          | only "git.cmd", a stub that prints "Mallory" for "config user.name" and records each start    | sdd gate approve 004 10-spec --note "ok"                      | the exit code is 0, "change.md" of "004" gives "10-spec" the "approved_by" "unknown", and the stub "C:/fx/git-bin/git.cmd" records no start |
+    | C:/fx/git-bin          | no file named "git" with any extension                                                        | sdd gate approve 004 10-spec --note "ok" --commit             | the exit code is 2, standard error contains "ERR-CLI-018" and "not a git repository", and "change.md" of "004" still shows "10-spec" as not approved |
 ```
 
 The gate commands are CHG-001's (C001-IF-01); CHG-002 changes only how the shared CLI starts `git`:
@@ -74,6 +74,8 @@ over the PATH folders only, an empty or relative entry skipped, never the workin
 absolute path of the first native match (C002-IF-007 §Executable lookup, C002-CON-17; critic CR-63).
 A name found only as a `.cmd` or `.bat` shim, or not at all, gives the C001-IF-01 behaviour of a
 missing git. The scenario runs the npm `sdd`; the bundled CLI is the same program (C002-TS-502).
+Its workspace is the CHG-001 gate fixture (`tests/integration/cap08/gate-fixture.ts`, change 004 with
+00-ideation approved), which CHG-001's own gate tests use (defect D-021 item 3).
 
 ## C002-REQ-502
 

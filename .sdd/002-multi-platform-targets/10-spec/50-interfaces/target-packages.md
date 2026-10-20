@@ -353,7 +353,11 @@ Q-cli-model-01): Copilot CLI is no supported host of the package (C002-NG-01), a
 the conductor there with `--agent architect:sdd-conductor` chooses its model: Copilot CLI 1.0.98 runs
 the session agent on the CLI's default model, not on the `model` of the agent file, so the conductor
 runs on its tier only with `--model <model>`, `<model>` being the `model` field of
-`agents/sdd-conductor.agent.md`; the specialists it starts run on their own files' models.
+`agents/sdd-conductor.agent.md`; the specialists it starts run on their own files' models. The note
+names that field and that file, not the model's value (confirmed for defect D-021 item 5): no token
+of C002-IF-001 §4 prints an agent's model, so the install notes, which resolve those tokens only,
+cannot carry the value, and the agent file is where P-03 reads it; C002-TS-306 checks the field name
+and the file path, not a model ID.
 
 The note stays, though Copilot CLI is no adopter host (revised for critic CR-69): P-01's answer to
 Q-cli-model-01 ("Pass --model (Recommended)", whose option text says that the spec notes CLI users
