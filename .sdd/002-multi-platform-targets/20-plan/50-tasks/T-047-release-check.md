@@ -46,6 +46,14 @@ reports per mode, the `platforms` rows of ERR-REL-012); the catalogue mirror is 
 e0ade13). The rows of C002-TS-668 … C002-TS-671 and the three `PG-900` rows of C002-TS-637, with any
 code change a failing row needs, and the generator's `package_version` stamp (item 6) are done by
 C002-T-064.
+
+**Follow-up (revision D-018 … D-020), not a reopening.** Defect D-018 item 2 (found in C002-T-064)
+replaced the `platforms` rows of ERR-REL-012: a case of the platform rule of C002-IF-009 §2.1 belongs
+under `not_applicable` with the rule `platforms`, which the check accepts (the catalogue mirror and
+the schema copy are done, commit 4c0f7c6; Q-replay-rule-01 for another rule value). The change to
+`scripts/release/replay.ts`, the fx-release cases `PG-900` and `PG-901`, the platform rows of
+C002-TC-637, C002-TC-682 and the three restore-count rows of C002-TC-668 (item 3) are done by
+C002-T-065.
 The replay recomputation accepts the `expected_source` values `C001-REQ-1103`, `C002-REQ-401` and
 `C002-REQ-517` of the revised C002-IF-009 §2.1, the last two on `sdd-mcp-server` only, and reads
 ERR-MCP-003 as `allow` (§2.3); both come from `tests/replay/expect.ts` as C002-T-063 leaves it, and

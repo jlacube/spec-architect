@@ -35,6 +35,14 @@ Workspace Trust and organisation policy as not read. That wiring, the `doctor-de
 of the doctor command's description, and the revised case files of C002-TS-509, C002-TS-515 and
 C002-TS-526 are done by C002-T-063.
 
+**Follow-up (revision D-018 … D-020), not a reopening.** Defect D-020 items 1 and 4 (found in
+C002-T-056) revised the doctor's OpenCode texts and runs: the OpenCode `doctor-probe` variant tests
+for `.sdd/` with `sdd status` or `read`, never `glob` (C002-IF-001 §2.1; the cause of the C002-TS-511
+failure), and the doctor's OpenCode row reports the `opencode` first on the session's PATH, which the
+eval runner's PATH lead makes the pinned binary (C002-IF-006 §2, C002-IF-010 §4). The variant, the
+lead in `doctorCase` and `evals/harness/machines.mjs`, C002-TC-675 and C002-TC-676 are done by
+C002-T-065; the paid rerun of C002-TC-511 is C002-T-056's.
+
 ## Targets
 
 | Kind | Target | Change |

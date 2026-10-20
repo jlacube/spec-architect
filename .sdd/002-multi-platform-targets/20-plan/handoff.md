@@ -36,7 +36,13 @@ checklist step rules, with the critic fixes that followed: the total server deci
 ERR-GEN-007 for a source without a version, the step index format, the step check with earlier runs
 of P-01's Q-checklist-rerun-01 answer, and the restricted-mode rows of Q-checklist-restricted-01)
 lands in the catch-up task C002-T-064, after C002-T-047 and before C002-T-045,
-C002-T-048, C002-T-049, C002-T-054 and the resumed C002-T-056.
+C002-T-048, C002-T-049, C002-T-054 and the resumed C002-T-056. The revision for defects D-018 …
+D-020 (the OpenCode agents find `.sdd/` files without `glob`, P-01's Q-opencode-glob-01 answer; the
+spend cap checked after each step and the 1.00 USD cap exception for C002-TS-634 on OpenCode,
+Q-ts634-budget-01; the doctor's host version from the PATH with the runner's PATH lead; the Copilot
+CLI runner's `--model` from the agent file, Q-cli-model-01, and its other options; the platform rule
+of the replay reports; the restore-run count) lands in the catch-up task C002-T-065, after
+C002-T-045 and before the C002-T-056 reruns, C002-T-048 and C002-T-054.
 
 ## Reading order
 
@@ -80,7 +86,11 @@ C002-T-048, C002-T-049, C002-T-054 and the resumed C002-T-056.
   for the release evidence that only C002-T-049 step 3 and P-01's OpenCode run to G1 (C002-T-051
   step 3) may spend (Q-evalbudget-03, Q-evalbudget-04); each pool has its own stop; at the stop,
   pause and ask P-01. Copilot sessions, in Copilot CLI and in VS Code, bill P-01's Copilot
-  subscription in AI Credits (C002-T-002 preconditions). Never store the Claude OAuth token or the
+  subscription in AI Credits (C002-T-002 preconditions); the Copilot CLI sessions spend from the
+  30 USD Copilot pool, whose stop rule `run.mjs` checks before each session (test plan §4.1 rule 8).
+  A case row's spend cap is 0.50 USD, checked after each step; a higher cap runs only for a cap
+  exception of C002-IF-010 §2.2 (in force: C002-TS-634 on OpenCode, 1.00 USD, one run and one rerun
+  on failure), which `run.mjs` checks from C002-T-065 on. Never store the Claude OAuth token or the
   OpenRouter key in the repository.
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
@@ -139,6 +149,8 @@ Insiders builds): record the version before each run.
 | The assumptions left to the checklist and the runner (`10-strategy.md` §4, "Open assumptions"), the MCP roots of C002-IF-002 §3 and the subagent guard assumptions of C002-IF-005 §3 and C002-REQ-327 included | C002-T-045, C002-T-046, C002-T-050, C002-T-054 | settled by those tasks |
 | OpenCode model inference through OpenRouter (Q-opencode-01, `questions-log.md` round 6) | C002-T-001 | settled: Claude models of the C002-REQ-105 tiers through OpenRouter, billed to P-01's OpenRouter account; stop at 40 USD of OpenRouter spend and ask P-01 (test plan §4.1); S-07 records the model id per tier |
 | OpenCode tested version and the Node.js of REF-WIN (Q-s07-01, Q-s07-02, `questions-log.md` round 11) | C002-T-042, C002-T-044 | settled: OpenCode 1.18.31 as the pinned host binary; P-01 upgrades REF-WIN to Node.js 22.22.2 or later before C002-T-042 runs |
+| Q-replay-rule-01: a case of the platform rule listed with another not-applicable rule is refused (`../10-spec/questions-log.md` round 2026-10-20 (2)) | C002-T-065 | conductor's answer (option 1, fail-closed); P-01 confirms at G2 |
+| Q-copilot-pool-01: whether the 30 USD Copilot pool also counts P-01's VS Code runs (test plan §4.1) | C002-T-050, C002-T-057 | open; the plan counts the Copilot CLI sessions only until P-01 answers |
 
 ## CLI commands
 
@@ -156,8 +168,10 @@ Topological order of `depends_on` (not numeric order: C002-T-053 comes first, C0
 C002-T-026 because it takes `tests/replay/` out of `npm test` before the first replay test file lands,
 and the tasks added in plan round 4, for defect D-003 and for the D-004 … D-009 and D-010 … D-014
 revisions, C002-T-059, C002-T-058, C002-T-061, C002-T-062 and C002-T-063, and for the D-015 … D-017
-revision C002-T-064, sit after their dependencies (C002-T-063 after C002-T-042 and before C002-T-041;
-C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-023 needs only C002-T-022 and
+revision C002-T-064, and for the D-018 … D-020 revision C002-T-065, sit after their dependencies
+(C002-T-063 after C002-T-042 and before C002-T-041;
+C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-065 after C002-T-045 and
+before C002-T-056, C002-T-048 and C002-T-054; C002-T-023 needs only C002-T-022 and
 C002-T-061, and the `--spdx` scan of the generated folders is run by C002-T-049, which comes after
 C002-T-023); C002-T-060, the eval auth switch already built in commits 98e6353 and 6de8656, comes
 right after C002-T-053, before any task with a paid Claude Code step). Tasks may run in another order when their dependencies
@@ -222,15 +236,16 @@ C002-T-055) are independent of each other.
 | 52 | C002-T-047 | Release check per target and release records | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-047-release-check.md` |
 | 53 | C002-T-064 | Catch-up for revision D-015 … D-017: text-only MCP error results, generator package version, release-check rows, eval-runner rules | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-064-catch-up-text-only-error-results-release-check-runner.md` |
 | 54 | C002-T-045 | Copilot CLI eval runner | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-045-copilot-cli-eval-runner.md` |
-| 55 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
-| 56 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
-| 57 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
-| 58 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
-| 59 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 60 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 61 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 62 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 63 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 55 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-065-catch-up-file-inspection-caps-path-lead-platforms.md` |
+| 56 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
+| 57 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
+| 58 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
+| 59 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
+| 60 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+| 61 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 62 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 63 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 64 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 

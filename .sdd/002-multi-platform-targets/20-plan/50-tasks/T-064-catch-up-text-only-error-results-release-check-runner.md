@@ -41,6 +41,15 @@ ERR-GEN-007) and the release-check rows: step index, step check, earlier runs, e
 printed outcome (C002-IF-009 §4, §5); **(c)** D-015, the eval-runner rules (C002-IF-010 §1 … §4)
 and the checklist and record template (C002-IF-009 §4 Run order, Earlier runs).
 
+**Follow-up (revision D-018 … D-020), not a reopening.** The candidates of this task's report became
+defect D-018: C002-TS-667 names the `replace_text` call of `PG-050` (item 1), a case of the platform
+rule is listed under `not_applicable` with the rule `platforms` and accepted at release instead of
+refusing every handling (item 2, which replaces this task's three `PG-900` rows of C002-TC-637), and
+every earlier run of the restore step counts (item 3, as this task's code already does). The tests and
+code for them, in `tests/unit/replay/adapters.test.ts`, `tests/replay/expect.ts`, the replay suite
+writer, `scripts/release/replay.ts` and `tests/integration/cap06/fx-release.ts`, are done by
+C002-T-065.
+
 ## Targets
 
 | Kind | Target | Change |

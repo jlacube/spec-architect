@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-036, C002-T-041, C002-T-045, C002-T-048, C002-T-064]
+depends_on: [C002-T-036, C002-T-041, C002-T-045, C002-T-048, C002-T-064, C002-T-065]
 implements: [C002-NFR-201, C002-NFR-202, C002-NFR-203]
 satisfies_ac: [C002-AC-606.1, C002-AC-612.1, C002-AC-327.1]
 verified_by: [C002-TS-608, C002-TS-615, C002-TS-359, C002-TC-608, C002-TC-615, C002-TC-359]
@@ -51,8 +51,15 @@ row that VS Code refused recorded `passed` with a `VS Code refused: ` note).
   the hooks fallback (C002-IF-009 §5, revised for D-016 item 5).
 - The release-candidate commit is the commit recorded by C002-T-048 (re-run its step 5 first if a
   source, harness or root file changed since).
+- C002-T-065 done: the Copilot CLI runner passes `--model` with the session agent's model from its
+  agent file (P-01 answer to Q-cli-model-01, "Pass --model"), so the conductor runs on
+  `claude-opus-5.5` and not on the host default `claude-sonnet-5.5` (C002-TC-680; defect D-019 item 1).
 - The Copilot subscription named in C002-T-002 has allowance for about 41 sessions (test plan §4.2,
-  C002-RISK-026). These sessions are not billed to the prepaid API key.
+  C002-RISK-026). These sessions are not billed to the prepaid API key. They spend from the Copilot
+  pool of test plan §4.1 (30 USD, P-01, defect D-019 item 4); `run.mjs` checks its stop rule before
+  every Copilot CLI session and writes each session to the ledger with `provider` `copilot` and pool `copilot`.
+  With the session agents on their own tiers the step costs about 9.6 USD instead of about 5.7 USD
+  (test plan §4.4, Q-cli-model-01 estimate).
 
 ## Step outline (no production code)
 
@@ -64,7 +71,11 @@ row that VS Code refused recorded `passed` with a `VS Code refused: ` note).
    C002-TC-359), sdd MCP server guard and non-interactive cases, one run each, at most one rerun after
    a failure. C002-TC-336 (`@mode-hooks`) is reported not applicable with the S-08 record cited. A
    C002-TC-359 run in which `general-purpose` edits `src/app.ts` or runs a command is a release
-   blocker and a defect against C002-REQ-327 (C002-RISK-032), never a rerun reason.
+   blocker and a defect against C002-REQ-327 (C002-RISK-032), never a rerun reason. Check over the
+   result files that every result whose session agent is `architect:sdd-conductor` lists
+   `claude-opus-5.5` in its `models` (C002-TC-615, revised C002-TS-615). After the first three
+   sessions, compare their mean measured cost with the 0.23 USD of test plan §4.4; above 0.35 USD,
+   re-estimate the remaining sessions and show P-01 before going on.
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
 
 ## Verification

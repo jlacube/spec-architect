@@ -24,8 +24,9 @@ them. The evidence of this file continues the numbering at `E-21`.
   the selection.
 - Tests that run the bundled CLI (`runBundled`, 66 test files, 141 calls) reach every CLI symbol
   transitively. They are not listed one by one; they are covered by `npm test` (section 2).
-- Evals are paid, capped at 0.50 USD per session; the cap is checked after a turn and can be overrun
-  (`60-test-plan.md` §4.1). The spend rule for CHG-002 is that of
+- Evals are paid, with a spend cap of 0.50 USD per session checked after each step, so a session can
+  end above it by its last steps; a higher cap only for a cap exception of C002-IF-010 §2.2
+  (C002-TS-634 on OpenCode, 1.00 USD) (`60-test-plan.md` §4.1). The spend rule for CHG-002 is that of
   `60-test-plan.md` §4.1 (CHG-002 eval budget 40 USD with a reserve for the release evidence,
   Q-evalbudget-03); the paid runs of the named evals belong to the task steps listed in
   `10-strategy.md` §3a, never repeated per task.

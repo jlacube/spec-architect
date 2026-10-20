@@ -31,6 +31,14 @@ recorded `copilot_cli_loads_package: true`, so the injection cases stay on this 
 also writes the case file of the planted delegation to `general-purpose` (C002-TS-359), the Copilot
 CLI half of the evidence for the subagent guard (C002-REQ-327); its release run is C002-T-054.
 
+**Follow-up (revision D-018 … D-020), not a reopening.** The candidate defects of this task's report
+went into C002-IF-010 §1 … §4 and C002-IF-005 §3, §5 (defect D-019 items 1 … 7). The code they still
+need, `--model` from the session agent's file (P-01 answer to Q-cli-model-01, "Pass --model"), the
+Copilot CLI model note of the Copilot install notes, and C002-TC-678, C002-TC-680 and the runner cases
+C002-TC-912 … C002-TC-916 (prompt files, session options, agent names, workspace hooks in prompt mode,
+credentials), which extend this task's tests, are done by C002-T-065. The Copilot pool of item 4 (P-01:
+30 USD, pool `copilot`) is in test plan §4.1; this task's `run.mjs` stop rule already applies it.
+
 ## Targets
 
 | Kind | Target | Change |
@@ -89,8 +97,10 @@ CLI half of the evidence for the subagent guard (C002-REQ-327); its release run 
 ## Verification
 
 - `npm test -- cap06/copilot-runner`
-- `node evals/harness/run.mjs --host copilot-cli --tier dev --filter <one routing case file under evals/targets/copilot-cli/> --only <its row>`
-  (one smoke run; `--host` and `--filter` of C002-T-044 step 2)
+- `node evals/harness/run.mjs --host copilot-cli --tier dev --filter evals/targets/routing/ROUTE-auditor.eval.mjs`
+  (one smoke run; `--host` and `--filter` of C002-T-044 step 2; the case files live under
+  `evals/targets/<area>/` of their scenario, and there is no `evals/targets/copilot-cli/` folder,
+  C002-IF-010 §1, revised for defect D-019 item 3)
 - `node evals/harness/run.mjs --host copilot-cli --tier dev` with `evals/targets/doctor/TS-513.eval.mjs` and `TS-526.eval.mjs`
 
 ## Done when

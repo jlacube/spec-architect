@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
 status: in-progress
-depends_on: [C002-T-038, C002-T-044, C002-T-063, C002-T-064]
+depends_on: [C002-T-038, C002-T-044, C002-T-063, C002-T-064, C002-T-065]
 implements: [C002-REQ-608, C002-REQ-610]
 satisfies_ac: [C002-AC-608.1, C002-AC-610.1]
 verified_by: [C002-TS-113, C002-TS-132, C002-TS-133, C002-TS-211, C002-TS-215, C002-TS-217, C002-TS-219, C002-TS-221, C002-TS-222, C002-TS-223, C002-TS-230, C002-TS-316, C002-TS-506, C002-TS-507, C002-TS-509, C002-TS-510, C002-TS-511, C002-TS-512, C002-TS-513, C002-TS-514, C002-TS-515, C002-TS-613, C002-TS-634, C002-TS-635, C002-TS-639, C002-TC-113, C002-TC-132, C002-TC-133, C002-TC-211, C002-TC-215, C002-TC-217, C002-TC-219, C002-TC-221, C002-TC-222, C002-TC-223, C002-TC-230, C002-TC-316, C002-TC-506, C002-TC-507, C002-TC-509, C002-TC-510, C002-TC-511, C002-TC-512, C002-TC-513, C002-TC-514, C002-TC-515, C002-TC-613, C002-TC-634, C002-TC-635, C002-TC-639]
@@ -116,9 +116,37 @@ not run again.
 19.50 USD, about 23.7 USD). The measured mean of the 13 valid T-056 sessions, about 0.23 USD, is below the
 planning rates.
 
+### Rerun plan (after the resumed run of commit 5777115 and C002-T-065)
+
+**State.** The resumed run (36 sessions, 10.57 USD; commit 5777115) passed every carried row except
+two, which raised defect D-020: C002-TC-511 (OpenCode 1.18.31's `glob` lists no file inside `.sdd/`,
+so the doctor decided there was no `.sdd/` and wrote no `toolchain.md`) and C002-TC-634 (the gate
+rework reached the 0.50 USD spend cap in its run and its rerun). The ledger's general pool held
+14.79 USD of 30 on 2026-10-20. The rows that passed are not run again.
+
+**Precondition.** C002-T-065 done: the generated OpenCode package carries the variant
+`file-inspection` and the OpenCode `doctor-probe` test for `.sdd/` without `glob` (C002-TC-674), the
+runner puts the pinned binary first on the host's PATH (C002-TC-676), and `run.mjs` runs the
+`TS-634` OpenCode row at its cap exception of 1.00 USD (C002-TC-679; C002-IF-010 §2.2).
+
+**Order** (each session after the stop-rule check of step 5, with H of at least 1.05 USD for a
+TS-634 session, test plan §4.1 rule 1):
+
+- X1. C002-TC-511, one run: the rerun its failure allows. A failure here is the row's second and
+  reopens C002-T-065 (test plan §4.3); report the transcript's file-finding calls with it.
+- X2. C002-TC-634 at the cap exception of 1.00 USD, one run, and one rerun only when that run fails
+  (P-01, Q-ts634-budget-01). The two 0.50 USD sessions of the resumed run are not counted against
+  this allowance. A second failure is reported to P-01, who decides (C002-IF-010 §2.2).
+
+**Spend.** 0.25 USD for X1 and 1.00 USD for each X2 session at its cap: 1.25 USD without the rerun,
+at most about 2.35 USD with it and the overshoot of the spend-cap rule, so the general pool reaches
+about 16.0 … 17.2 of 30 USD (test plan §4.2).
+
 ## Verification
 
 - `node evals/harness/run.mjs --host opencode --tier dev` with the case files of steps 2 and 3
+- `node evals/harness/run.mjs --host opencode --tier dev --filter evals/targets/doctor/TS-511.eval.mjs` and
+  `--filter evals/targets/gate/TS-634.eval.mjs` (rerun plan X1, X2)
 - The general-pool total of the ledger stays within 30 USD
 
 ## Done when
@@ -126,4 +154,5 @@ planning rates.
 - [ ] Every carried OpenCode row passes, or is reported not applicable with its record cited
 - [ ] Every session is in the ledger; the sessions refused with HTTP 402 keep `valid_run: false` and none of them is counted as a run or a rerun of its row
 - [ ] The C002-TC-613 results cite the C002-T-044 smoke result for `evals/cap02/TS-207.eval.mjs` instead of a new session
+- [ ] C002-TC-511 and C002-TC-634 pass in the rerun plan after C002-T-065, C002-TC-634 with a spend cap of 1.00 USD in its result and no session beyond one run and one rerun
 - [ ] Progress reported: `sdd task set C002-T-056 --status done --commit <sha>`

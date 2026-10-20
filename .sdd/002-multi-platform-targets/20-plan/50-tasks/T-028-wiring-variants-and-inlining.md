@@ -26,6 +26,13 @@ the other anchors of C002-IF-001 §2–§3. A missing variant stops generation (
 live under `plugins/architect/targets/<target>/wiring/` and never in the files Claude Code loads
 (C002-REQ-113). Preloaded skills are inlined into the agent body (C002-REQ-109).
 
+**Follow-up (revision D-018 … D-020), not a reopening.** Defect D-020 item 1 (found in C002-T-056:
+OpenCode 1.18.31's `glob` lists no file inside `.sdd/`) and P-01's answer to Q-opencode-glob-01
+("Guide agents") add the construct `glob-prose` and the fourteenth variant `file-inspection` of the
+sdd-conventions file-inspection lines (C002-IF-001 §2, §2.1, §6.1 Dot folders). The tables, the two
+variant texts, the stand-in detector, C002-TC-673, C002-TC-674 and the `fx-plugin-novariant-glob`
+row of C002-TC-120 are done by C002-T-065.
+
 ## Targets
 
 | Kind | Target | Change |

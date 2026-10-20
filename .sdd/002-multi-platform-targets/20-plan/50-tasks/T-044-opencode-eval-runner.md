@@ -23,7 +23,8 @@ report: { commit: d78c99f, completed_at: 2026-10-19, notes: "cap06 163 pass (run
 Run the existing eval cases on the OpenCode target package through the unchanged case API
 (C002-REQ-608, C002-IF-010). The dev tier covers routing and injection (C002-REQ-609), and the
 interview, gate and revise scenarios use scripted `question` answers (C002-REQ-610). Every session
-ends at 30 turns or $0.50 (C002-REQ-611, C002-NFR-105). The runner also writes the injection summary
+ends at 30 turns or at its spend cap, checked after each step: 0.50 USD, or the cap of a cap exception
+that C002-IF-010 §2.2 lists for the row and host (C002-REQ-611, C002-NFR-105). The runner also writes the injection summary
 of C002-IF-009. It drives `opencode serve` of the pinned host binary through the C002-T-042 driver,
 with a database of its own (`OPENCODE_DB`) and isolated configuration, data, cache and state
 folders, so the user's OpenCode credential store is not read; a paid session reads the OpenRouter key
@@ -37,6 +38,13 @@ went into C002-IF-010 (defect D-015 items 1 … 7). The runner code they still n
 of the Claude Code doctor rows, the package version written into the source copy's
 `.claude-plugin/plugin.json` (C002-TS-515) and the runner cases C002-TC-906 … C002-TC-908 (rows by
 `host`, refusal without the key file, direct relay) are done by C002-T-064.
+
+**Follow-up (revision D-018 … D-020), not a reopening.** Defect D-020 items 2 … 4 (found in
+C002-T-056) revised C002-IF-010 §2.2 and §4: the spend cap checked after each step, a cap above
+0.50 USD only for a listed cap exception (P-01 answer to Q-ts634-budget-01: C002-TS-634 on OpenCode
+at 1.00 USD), and the PATH lead of the pinned host binary. The exception check in `run.mjs`, the
+TS-634 case cap, the PATH lead in `driverHost` and the machine configurations, and C002-TC-676,
+C002-TC-677 and C002-TC-679 are done by C002-T-065.
 
 ## Targets
 
