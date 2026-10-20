@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T21:39:21Z",
+  "generated_at": "2026-10-20T21:41:20Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -9,7 +9,7 @@
       "kind": "greenfield",
       "profile": "full",
       "status": "active",
-      "phase": "20-plan",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -18,13 +18,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:a58bd1045285ce9215ebe90473f4c14f98b394f050a05c6a9cf9613b355ae6c1",
           "approved_at": "2026-10-13",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "stale",
           "approved_hash": "sha256:c2bda82f3400cfb4d43dc1ade5886cc0180ce61a6c5726bafd98e1b3ff3637dd",
           "approved_at": "2026-10-13",
           "approved_by": "jerome.lacube"

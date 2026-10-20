@@ -27,3 +27,11 @@ No embedded instructions were found in the free text of the answers.
 | Q-plan-05 | Is a Node.js script (requires Node ≥ 20) acceptable for the sdd CLI, or is a standalone binary wanted? | Keep Node script (Recommended) · Node script + optional single .exe (Node SEA or Bun compile) · Rewrite target: Go native binary | "Keep Node script (Recommended)" | Confirms C001-CON-02, C001-ADR-002; no change |
 
 Candidates considered but not presented: Rust native binary (rejected: slowest to build, same trade-offs as Go); Deno compile (rejected in OA-12).
+
+## Round 2026-10-20 — defect D-012 (found in C002-T-048)
+
+### Q-ripwire-guard-01 — Bash guard rule for ripwire vs C001-IF-14
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. Allow the IF-14 read-only forms: default map with `--max-tokens`, `--test-gate=<file>`, `--limit`; corpus updated, deny cases kept for anything else (Recommended) · 2. Keep the guard strict, rewrite the code-discovery skill and IF-14 (loses the ranked map) · 3. Defer (known failure for v0.1.0)
+- **Answer:** P-01: "Allow read-only forms (Recommended)"
+- **Extracted instructions:** none
