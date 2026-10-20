@@ -206,3 +206,15 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. Refuse under ERR-REL-012 "lists cases as not applicable without a rule" (Recommended) · 2. Accept any rule value
 - **Answer:** conductor, under P-01's standing rule to continue on the recommended option for non-blocking, non-material questions (feedback 2026-10-11/18): option 1, fail-closed. To be confirmed at G2.
 - **Extracted instructions:** none
+
+### Q-capped-runs-01 — TS-634 sessions ended by a cap a later exception raised (plan critic CR-38)
+- **Options:** 1. Not runs: a written rule marks sessions ended by a cap that a later approved exception raised `valid_run: false`; TS-634 gets one run at $1 plus one rerun on failure (Recommended) · 2. Count them
+- **Answer:** P-01: "Don't count them (Recommended)"
+
+### Q-copilot-pool-01 — Scope of the $30 Copilot stop
+- **Options:** 1. Copilot CLI eval sessions the harness records only; the manual VS Code runs (T-050, T-057) stay under P-01's watch of GitHub's usage view (Recommended) · 2. CLI and VS Code sessions in one total
+- **Answer:** P-01: "CLI evals only (Recommended)"
+
+### Q-rerun-scope-01 — OpenCode rows to rerun after the file-inspection variant (D-020)
+- **Options:** 1. TS-511 and TS-634 only; T-049 reruns routing and injection on the release candidate (Recommended) · 2. Also the passed doctor rows (~17 sessions)
+- **Answer:** P-01: "TS-511 and TS-634 (Recommended)"
