@@ -150,3 +150,18 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Rejected:** derive `hooks_state` in the check and ignore the stored field (two sources of truth); new error code (ERR-REL-010 covers it); drop `hooks_state` from the record (format just revised)
 - **Answer:** P-01: "Refuse under ERR-REL-010 (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-20 — revision D-015 … D-017
+
+### Q-mcp-errors-01 — MCP error results and the advertised output schema (D-017, C002-IF-002 §3)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. Error results carry text content only (`isError: true`, first line `ERR-MCP-nnn: …`), no `structuredContent` (Recommended) · 2. Advertise an output schema that is a union of the success and the error shape
+- **Rejected:** none beyond the options
+- **Answer:** P-01: "No structured error (Recommended)"
+- **Extracted instructions:** none
+
+### Q-openrouter-02 — OpenRouter account balance exhausted during C002-T-056 (HTTP 402)
+- **Blocking:** yes · **Material:** no · **Candidates considered:** 2
+- **Options:** 1. P-01 tops up the account; the $40 stop rule stays · 2. Pause OpenCode evals
+- **Answer:** P-01: "Topped up / will top up"
+- **Extracted instructions:** none
