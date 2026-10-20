@@ -116,7 +116,55 @@ session's plugin data folder, with no `serena/` folder in the repository. In the
 sent a chained line (`…init && …serena-config …; ls …; git ls-files | head`), which the compound rule
 denied (GUARD-BASH-002) as by design, and then sent the step alone, which was allowed (as in C002-T-010).
 
-The other rows of regression-set §5 were not run; see section 6, item 1.
+### 5.1 C002-CON-10 note: source skill edits, and the other §5 rows
+
+Two source skills differ from `85bee21`: `skills/sdd-conventions/SKILL.md` (inspect files with Grep,
+Glob and Read; Bash only for the allowlist, one command per call, no `;`, `&&` or redirection; `--cwd`
+after the subcommand; a non-zero `lint`/`trace` exit means findings) and `skills/code-discovery/SKILL.md`
+(read-only `git` without `-C`, `--git-dir` or `--work-tree`), commits `55cb604` and `0d1fbe5`. They are
+guidance fixes that P-01 requested on 2026-10-18; no agent or command file changed. The conductor
+decided (2026-10-20) that they count as a source change under C002-CON-10, so the other rows of
+regression-set §5 are evaluated here as well, with the same rules (`--auth subscription`, dev tier, one
+run and at most one rerun after a failure, 0.50 USD notional cap, ledger entries), in batches of at most
+10 sessions with the conductor's go between batches (P-01's plan usage):
+
+| Batch | Regression-set §5 row | Case files | Sessions |
+|---|---|---|---|
+| 1 | row 2 | `evals/cap11/TS-1112.eval.mjs` (3 rows), `evals/cap11/TS-1124.eval.mjs` | 4 |
+| 1 | row 3 | `evals/cap10/TS-1004.eval.mjs`, `evals/cap10/TS-1010.eval.mjs` | 2 |
+| 2 … 4 | row 4 | `evals/injection/injection.eval.mjs` (22 cases) | 22 |
+| 5 … 7 | row 5 | `evals/cap01/TS-122`, `TS-127`; `cap02/TS-201`, `TS-213`, `TS-214`, `TS-215`, `TS-216`, `TS-218`, `TS-221`, `TS-222`; `cap03/TS-313`, `TS-316`, `TS-317`, `TS-318` (3 rows); `cap04/TS-419`, `TS-420`, `TS-421`; `cap07/TS-713`, `TS-715`; `cap08/TS-815`, `TS-817` (2 rows) | 24 |
+
+Results per batch follow in section 5.2.
+
+### 5.2 Batch results
+
+**Batch 1** (2026-10-20, `--label t048b1`, `apiKeySource` `none` in every session): 6 sessions, 5 pass,
+1 fail; 1.43 USD notional; no session above the 0.50 USD cap.
+
+| Case (row) | §5 row | Result | Notional cost | Result file |
+|---|---|---|---|---|
+| `TS-1112` (deepwiki-down) | 2 | pass | 0.2428 USD | `evals/results/t048b1-TS-1112-deepwiki-down-*.json` |
+| `TS-1112` (bare) | 2 | pass | 0.2536 USD | `evals/results/t048b1-TS-1112-bare-*.json` |
+| `TS-1112` (node18) | 2 | pass | 0.3000 USD | `evals/results/t048b1-TS-1112-node18-*.json` |
+| `TS-1124` | 2 | pass | 0.2240 USD | `evals/results/t048b1-TS-1124-*.json` |
+| `TS-1004` | 3 | **fail**, first run; no rerun yet | 0.2630 USD | `evals/results/t048b1-TS-1004-2026-10-20T21-28-40-559Z.json` |
+| `TS-1010` | 3 | pass | 0.1493 USD | `evals/results/t048b1-TS-1010-*.json` |
+
+`TS-1004` failure (product, not a CHG-002 regression). The grader reports `(default map):
+--max-tokens= missing or above 4000: ripwire --help`, but the cause is earlier in the session: the
+bash guard denied `ripwire . --max-tokens=4000` (the ranked map, which has no verb) and
+`ripwire . --test-gate=src/checkout/payments.ts --limit=50` (and then `… --test-gate src/… --limit=50`)
+with GUARD-BASH-001 "ripwire … is not on the allowlist". After that the agent tried `ripwire --help`,
+which was also denied. The guard's ripwire rule asks for exactly one read verb, and it accepts
+`--test-gate` only as a bare flag. That rule is byte-identical at `85bee21` and at the commit under
+test (C001-T-051, `794d13e`), and the corpus pins the no-verb form as a deny (`BG-081 ripwire .`,
+unchanged). The skill and C001-IF-14, though, describe the ranked map as "default map (no verb)" with
+`--max-tokens=N`. The CHG-001 pass of `TS-1004` (`t041`, 2026-10-11 15:47) ran before the guard was
+wired into `hooks.json` (C001-T-052, `43d044f`, 22:26 the same day), so this mismatch has been latent
+since CHG-001. A rerun with the same guard would deny the same commands, so the one rerun is held for
+the conductor's decision. This is a candidate defect in the guard's ripwire rule against C001-IF-14
+and the code-discovery skill.
 
 ## 6. Open points for the conductor
 
@@ -129,8 +177,9 @@ The other rows of regression-set §5 were not run; see section 6, item 1.
    text (C002-COMP-016). No agent or command file changed. If the edits count as "changed", the
    remaining rows are about 52 Claude Code sessions: row 2 `TS-1112` (3) and `TS-1124` (1); row 3
    `TS-1004`, `TS-1010` (2); row 4 `injection.eval.mjs` (22); row 5 the other `evals/cap*/TS-*` files
-   that mention Bash or guards (about 24 rows in 21 files); about 13 USD notional at 0.25 USD. They were
-   not run; P-01 decides.
+   that mention Bash or guards (about 24 rows in 21 files); about 13 USD notional at 0.25 USD.
+   Decided by the conductor on 2026-10-20: they count as a source change; the rows run in batches
+   (section 5.1).
 2. **"Without edits" and the locator.** Regression-set §3/§4.5 list `TS-123` (and §3 `agents-if09`) as
    tests that stay green without edits, while the C002-T-006 done-check required every test to reach
    `.sdd/001-architect-agent-suite/` through the locator. The two read the same file and keep every
