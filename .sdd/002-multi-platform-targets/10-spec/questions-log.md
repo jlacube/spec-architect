@@ -186,3 +186,17 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 
 ### Q-openrouter-03 — OpenRouter top-up before resuming C002-T-056
 - **Answer:** P-01: "Yes, topped up" (2026-10-20)
+
+## Round 2026-10-20 (2) — revision D-018 … D-020
+
+### Q-opencode-glob-01 — OpenCode glob does not list dot folders (D-020 item 1)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2
+- **Options:** 1. Guide agents: the generated OpenCode agent and skill texts find `.sdd/` files with `sdd status`, `read` or the sdd MCP server's tools, never `glob` (wiring variant) (Recommended) · 2. Known host limitation, TS-511 waived
+- **Answer:** P-01: "Guide agents (Recommended)"
+- **Extracted instructions:** none
+
+### Q-ts634-budget-01 — TS-634 on OpenCode exceeds the session cap (D-020 item 2)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. Smaller fixture or shorter rework path within $0.50 (Recommended) · 2. Budget exception: this case up to $1.00 per session, one run plus one rerun on failure · 3. Waive the row
+- **Answer:** P-01: "Budget exception $1"
+- **Extracted instructions:** none

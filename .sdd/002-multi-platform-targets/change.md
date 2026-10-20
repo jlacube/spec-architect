@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:f2a0f5faba7804f5e01175fb515270af3c4587f4c6b291afcfae330f936a8b17", approved_at: 2026-10-20, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:1608b15bb2ca73c30575decd64f38b3c8347b7a798b48f20f75418166d47ce54", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:f2a0f5faba7804f5e01175fb515270af3c4587f4c6b291afcfae330f936a8b17", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:1608b15bb2ca73c30575decd64f38b3c8347b7a798b48f20f75418166d47ce54", approved_at: 2026-10-20, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -137,3 +137,4 @@ waivers:
 | 2026-10-20 | G2 (spec) | **Revise** | "Revision for D-015, D-016, D-017 (eval runner, checklist and release-check findings; MCP error results: P-01 'No structured error (Recommended)')" | none | unavailable |
 | 2026-10-20 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01 | unavailable |
 | 2026-10-20 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-20 | G2 (spec) | **Revise** | "Revision for D-018, D-019, D-020 (T-064, Copilot CLI runner and T-056 findings); P-01: Q-cli-model-01 pass --model, Q-opencode-glob-01 guide agents, Q-ts634-budget-01 budget exception $1" | none | unavailable |
