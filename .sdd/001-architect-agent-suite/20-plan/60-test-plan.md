@@ -15,7 +15,7 @@ the same number (`C001-TS-n` → `C001-TC-n`), so coverage stays mechanically ch
 
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
-| integration | CLI, hooks, files and schemas, run against fixture repositories | 153 | `node --test` (C001-ADR-006) |
+| integration | CLI, hooks, files and schemas, run against fixture repositories | 156 | `node --test` (C001-ADR-006) |
 | eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 78 | eval harness (T-029), tiers of C001-ADR-003 |
 | manual | Needs a human-controlled environment | 2 | checklists under `tests/manual/` |
 | unit | Module-level tests supporting the above (not mapped to TS) | as needed | `node --test` |
@@ -29,7 +29,7 @@ the same number (`C001-TS-n` → `C001-TC-n`), so coverage stays mechanically ch
 | fx-brownfield-ts | Small TypeScript service with `src/billing`, `src/auth`, `src/checkout/payments.ts`, tests, git history with churn | T-027 |
 | fx-large | Generated: 20 changes, 500 artifact files, 2,000 IDs | T-027 (`tests/fixtures/gen-large.mjs`) |
 | lint fixtures | One `bad/` and one `good/` per rule code | T-018 … T-022 |
-| guard corpora | ≥ 200 path cases; bash allow/deny cases | T-050, T-051 |
+| guard corpora | ≥ 200 path cases; bash allow/deny cases (ripwire forms of C001-IF-07 §3.1 added by T-079) | T-050, T-051, T-079 |
 | secrets fixtures | ≥ 60 positives, ≥ 100 negatives | T-054 |
 | injection evals | ≥ 20 cases | T-054 |
 | cfg-full / cfg-no-ripwire / cfg-bare | PATH shims controlling which tools are visible | T-041 |
@@ -300,7 +300,7 @@ run before every task commit.
 | C001-TC-1103 | C001-TS-1103 | integration | `tests/integration/cap11/TS-1103.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |
 | C001-TC-1104 | C001-TS-1104 | integration | `tests/integration/cap11/TS-1104.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |
 | C001-TC-1105 | C001-TS-1105 | integration | `tests/integration/cap11/TS-1105.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |
-| C001-TC-1107 | C001-TS-1107 | integration | `tests/integration/cap11/TS-1107.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-051 |
+| C001-TC-1107 | C001-TS-1107 | integration | `tests/integration/cap11/TS-1107.test.ts` | inline fixture from scenario Given/Examples (12 rows, incl. the three D-012 rows: `ripwire . --max-tokens=4000` and `ripwire . --test-gate=src/checkout/payments.ts --limit=50` allowed, `ripwire .` denied) | REF-WIN, Node 20 and 22 | C001-T-051, C001-T-079 |
 | C001-TC-1108 | C001-TS-1108 | integration | `tests/integration/cap11/TS-1108.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-051 |
 | C001-TC-1109 | C001-TS-1109 | integration | `tests/integration/cap11/TS-1109.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-1110 | C001-TS-1110 | integration | `tests/integration/cap11/TS-1110.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
@@ -318,3 +318,4 @@ run before every task commit.
 | C001-TC-1122 | C001-TS-1122 | integration | `tests/integration/cap11/TS-1122.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-052 |
 | C001-TC-1123 | C001-TS-1123 | integration | `tests/integration/cap11/TS-1123.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1124 | C001-TS-1124 | eval | `evals/cap11/TS-1124.eval.mjs` | scenario Given data on fx-empty (PATH shim reporting Claude Code 2.0.76) | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044 |
+| C001-TC-1125 | C001-TS-1125 | integration | `tests/integration/cap11/TS-1125.test.ts` | the 17 Examples rows of C001-TS-1125, also present as category `ripwire` cases of `tests/guards/bash-corpus.json` (checked by the test); bundled `sdd guard-bash` with hook input as in TS-1107.test.ts, the PowerShell row with `tool_name` PowerShell | REF-WIN, Node 20 and 22 | C001-T-079 |
