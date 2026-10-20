@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T07:27:55Z",
+  "generated_at": "2026-10-20T08:36:49Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -186,7 +186,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 64,
-          "done": 54,
+          "done": 55,
           "blocked": 0,
           "in_progress": 1
         },
@@ -367,6 +367,16 @@
           "id": "D-018",
           "ref": "C002-TS-667",
           "summary": "Found in C002-T-064: (1) TS-667/TC-667 say 'the write_file call of PG-050' but PG-050 is an Edit case that IF-009 §2.2 feeds as replace_text (test asserts replace_text); (2) IF-009 §2.1 + ERR-REL-012: a case limited by platforms to another platform refuses the release however the report handles it — such a case can never be released on that host (no present case is affected, all name win32); (3) IF-009 §4 Earlier runs rule 2 'at least as many earlier runs' of the restore step: all earlier runs or only rerun-caused ones (code counts all). Batch for the next revision.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-20",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-019",
+          "ref": "C002-IF-010",
+          "summary": "Found in C002-T-045 (Copilot CLI 1.0.98): (1) the --agent architect:sdd-conductor session runs on claude-sonnet-5.5, not the agent file's claude-opus-5.5 (subagents do get their models) — decide whether the runner passes --model from the agent file (cost) or the spec accepts it; (2) prompt files in -p mode are sent as plain text — IF-010 §2 does not say how a prompt runs (runner substitutes the body); (3) Verification names evals/targets/copilot-cli/ vs IF-010 §1 no per-host folder; (4) test plan names no Copilot pool or limit (P-01: $30, pool copilot); (5) workspace hooks load in -p mode only for a trusted folder or with GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true — IF-010 §4 / IF-005 §3 must name it; (6) extra options --no-auto-update, --disable-builtin-mcps, --max-ai-credits (soft cap, min 30), --usage-output-file, --log-dir, --allow-tool mapping; usage per session, not per turn; (7) subagents reported without the architect: prefix (S-08 saw prefixed names in hook input).",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
           "status": "open",

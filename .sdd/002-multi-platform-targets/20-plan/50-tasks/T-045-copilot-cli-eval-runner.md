@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-002, C002-T-044, C002-T-058, C002-T-063, C002-T-064]
 implements: [C002-REQ-611, C002-REQ-612, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1, C002-AC-612.1, C002-AC-308.1, C002-AC-327.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-513, C002-TS-526, C002-TS-614, C002-TS-615, C002-TS-336, C
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-026, C002-RISK-031, C002-RISK-032]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7cba62b, completed_at: 2026-10-20, notes: "copilot-runner 18/18. api_key_source copilot-credential-store. Smoke + TS-513 x3 + TS-526 x3 (sdd-mcp-server) pass first run; 94.27 credits ~0.94 USD of 30. Carried TC-615, TC-359 to T-054; TC-336 and copilot-hooks TS-526 rows not applicable (S-08). Candidates (D-019): session agent model not applied (conductor ran sonnet); prompt files in -p mode; case folder; Copilot pool not in test plan; workspace hooks need flag in -p; extra CLI options; subagent names without prefix." }
 ---
 
 # C002-T-045 — Copilot CLI eval runner
