@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T21:41:20Z",
+  "generated_at": "2026-10-20T21:52:03Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -427,6 +427,16 @@
           "id": "D-023",
           "ref": "C002-TS-634",
           "summary": "Found in C002-T-056 X3 (observations, not blocking): (1) after a one-line Revise at G2 the conductor runs spec-writer, auditor, a full critic re-review, an options analysis and a second interview round before showing the gate again — the rework does not fit 0.50/1.00/2.00 USD on OpenCode; consider a proportionate rework path in the gate-protocol / revise skills; (2) a capped session with a running subagent leaves the conductor's step without a cost, so most such sessions read spend partial and block their pool until reconciled by hand — consider reconciling automatically from OpenRouter's key usage delta.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-20",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-024",
+          "ref": "C002-IF-001",
+          "summary": "Follow-up of CHG-001 D-012 (C001-IF-07 §3.1 ripwire forms): C002-IF-001 §6.3 OpenCode native bash rules need the bounded default-map form (globs like 'ripwire *--max-tokens=*', '*--token-budget=*') with a gap row (such a glob also matches a map command with a span-edit or unknown option — false allow under native-permissions); generator bashRules(), opencode.json permissions, permissions test and golden files follow; C002-IF-008 deny-summary wording 'ripwire read verbs or the bounded default map'. No effect in the current sdd-mcp-server mode.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
           "status": "open",
