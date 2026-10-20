@@ -1,0 +1,184 @@
+{
+  "scenario": "TS-526-copilot-sdd-mcp-server-unparsable",
+  "title": "Hooks state that cannot be read (sdd-mcp-server, unparsable) is error, never ok (TS-526)",
+  "tier": "dev",
+  "label": "t045",
+  "agent": "architect:sdd-conductor",
+  "host": "copilot-cli",
+  "target": "copilot",
+  "host_versions": {
+    "copilot-cli": "1.0.98"
+  },
+  "auth": null,
+  "api_key_source": "copilot-credential-store",
+  "measured_at": "2026-10-20T08:24:20.886Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.137047,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.137047,
+        "session_ms": 61799,
+        "api_ms": null,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-sonnet-5.5": {
+            "input": 204873,
+            "output": 3184,
+            "cache_read": 169449,
+            "cache_write": 34828,
+            "cost_usd": 0.137047
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 46485,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "8f968bb3-fb9f-4bb3-a7f7-f8ee35dc3f90",
+            "ms": 10358,
+            "tool_uses": 2,
+            "total_tokens": 46485
+          }
+        ],
+        "tool_calls": {
+          "sdd-shell-run_command": 8,
+          "task": 2,
+          "view": 1,
+          "sdd-files-write_file": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 9919
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 9734
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 10009
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 10092
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 15019
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 10179
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 15381
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 15528
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "ms": 1205
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 11578
+          },
+          {
+            "tool": "view",
+            "agent": "architect:sdd-cartographer",
+            "ms": 1199
+          },
+          {
+            "tool": "sdd-files-write_file",
+            "agent": "architect:sdd-cartographer",
+            "ms": 1147
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "copilot-credential-store",
+      "target": "copilot",
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 4,
+        "usd": 0.137047
+      },
+      "spend": "reported",
+      "provider": "github-copilot",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "copilot_usage": {
+        "source": "copilot --usage-output-file",
+        "ai_credits": 13.70469,
+        "nano_aiu": 13704690000,
+        "ai_credits_status": "complete",
+        "premium_requests": 1,
+        "usd_estimate": 0.137047,
+        "usd_estimate_rule": "AI Credits × 0.01 USD (test plan §4.4)",
+        "models": {
+          "claude-sonnet-5.5": {
+            "requests": 7,
+            "input_tokens": 204873,
+            "output_tokens": 3184,
+            "cache_read_tokens": 169449,
+            "cache_write_tokens": 34828,
+            "ai_credits": 13.70469,
+            "usd_estimate": 0.137047
+          }
+        }
+      },
+      "transcript": "evals/results/transcripts/TS-526-copilot-sdd-mcp-server-unparsable-2026-10-20T08-23-18-686Z-run1.json"
+    }
+  ]
+}

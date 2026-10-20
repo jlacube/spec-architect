@@ -1,0 +1,179 @@
+{
+  "scenario": "TS-513-copilot-equal",
+  "title": "VS Code 1.105.1 and GitHub Copilot Chat 0.32.4 against tested 1.105.1 and 0.32.4 → ok (TS-513)",
+  "tier": "dev",
+  "label": "t045",
+  "agent": "architect:sdd-conductor",
+  "host": "copilot-cli",
+  "target": "copilot",
+  "host_versions": {
+    "copilot-cli": "1.0.98"
+  },
+  "auth": null,
+  "api_key_source": "copilot-credential-store",
+  "measured_at": "2026-10-20T08:20:12.915Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.161294,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.161294,
+        "session_ms": 62251,
+        "api_ms": null,
+        "turns": 3,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-sonnet-5.5": {
+            "input": 163874,
+            "output": 2790,
+            "cache_read": 115015,
+            "cache_write": 48349,
+            "cost_usd": 0.161294
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 46572,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "b9497d2a-e1f3-430e-9fe4-a5814cfd9758",
+            "ms": 11905,
+            "tool_uses": 2,
+            "total_tokens": 46572
+          }
+        ],
+        "tool_calls": {
+          "sdd-shell-run_command": 8,
+          "task": 1,
+          "view": 1,
+          "sdd-files-write_file": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16204
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16304
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16419
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 10225
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16001
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16513
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 16914
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "main",
+            "ms": 17071
+          },
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 13103
+          },
+          {
+            "tool": "view",
+            "agent": "architect:sdd-cartographer",
+            "ms": 1234
+          },
+          {
+            "tool": "sdd-files-write_file",
+            "agent": "architect:sdd-cartographer",
+            "ms": 1243
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "copilot-credential-store",
+      "target": "copilot",
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 3,
+        "usd": 0.161294
+      },
+      "spend": "reported",
+      "provider": "github-copilot",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "copilot_usage": {
+        "source": "copilot --usage-output-file",
+        "ai_credits": 16.1294,
+        "nano_aiu": 16129400000,
+        "ai_credits_status": "complete",
+        "premium_requests": 1,
+        "usd_estimate": 0.161294,
+        "usd_estimate_rule": "AI Credits × 0.01 USD (test plan §4.4)",
+        "models": {
+          "claude-sonnet-5.5": {
+            "requests": 6,
+            "input_tokens": 163874,
+            "output_tokens": 2790,
+            "cache_read_tokens": 115015,
+            "cache_write_tokens": 48349,
+            "ai_credits": 16.1294,
+            "usd_estimate": 0.161294
+          }
+        }
+      },
+      "transcript": "evals/results/transcripts/TS-513-copilot-equal-2026-10-20T08-19-10-211Z-run1.json"
+    }
+  ]
+}

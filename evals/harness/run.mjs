@@ -18,6 +18,9 @@
 // ledger (evals/results/spend-chg002.json) is checked for `--pool` (default general), and after it the
 // session is added to the ledger with `--task`/`--step`. The injection cases (`INJ-*`) of an OpenCode
 // run also give the injection summary of C002-IF-009 (docs/releases/opencode/<version>/injection.json).
+// Copilot CLI sessions (runners/copilot-cli.mjs, C002-T-045) bill P-01's GitHub Copilot plan in AI
+// Credits: before each session the Copilot stop rule (pool `copilot`, 30 USD, P-01 2026-10-19) is checked
+// against the ledger, and after it the session is added with its measured AI Credits and the USD estimate.
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -107,6 +110,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         target,
         ...(session.host_versions ? { host_versions: session.host_versions } : {}),
         ...(session.end_reason ? { end_reason: session.end_reason, usage: session.usage, spend: session.spend, provider: session.provider, models: session.models } : {}),
+        ...(session.copilot_usage !== undefined ? { copilot_usage: session.copilot_usage } : {}),
+        ...(session.error ? { error: session.error } : {}),
         transcript: `evals/results/transcripts/${basename(transcriptFile)}`,
       };
       records.push(record);
@@ -207,10 +212,15 @@ export function selectFiles(files, filters, root = ROOT) {
   return out;
 }
 
-/** The scenarios of the selected files that run on `host` (rows of another host left out) and that `only` keeps. */
+/**
+ * The scenarios of the selected files that run on `host` (rows of another host left out) and that `only`
+ * keeps. A row with a `notApplicable` reason (an `@mode-*` row of the mode the spike record did not
+ * select, test plan §1) runs no session: it is returned in `notApplicable` instead.
+ */
 export async function selectScenarios(files, { host = DEFAULT_HOST, only } = {}) {
   const out = [];
   const skipped = { host: 0, only: 0 };
+  const notApplicable = [];
   for (const f of files) {
     if (!existsSync(f)) throw new Error(`case file not found: ${f}`);
     // A scenario outline exports an array: one scenario per Examples row.
@@ -218,10 +228,11 @@ export async function selectScenarios(files, { host = DEFAULT_HOST, only } = {})
     for (const scenario of Array.isArray(exported) ? exported : [exported]) {
       if (scenario.host && scenario.host !== host) skipped.host++;
       else if (only && !only.includes(scenario.id)) skipped.only++;
+      else if (scenario.notApplicable) notApplicable.push({ file: f, id: scenario.id, reason: String(scenario.notApplicable) });
       else out.push({ file: f, scenario });
     }
   }
-  return { scenarios: out, skipped };
+  return { scenarios: out, skipped, notApplicable };
 }
 
 // --- CHG-002 ledger: stop rule and entries (test plan §4.1) -------------------------------------------
@@ -260,6 +271,51 @@ export function ledgerEntry({ scenario, record, resultFile, task, step, pool }) 
     turns: record.usage?.turns ?? null,
     cost_usd: record.metrics.cost_usd,
     cost_source: record.spend === "unreported" ? "unreported by the host" : "runner (OpenCode step cost)",
+    pass: record.pass,
+    result: posix(relative(ROOT, resultFile)),
+  };
+}
+
+// --- Copilot CLI sessions: stop rule and ledger entries (P-01, 2026-10-19; test plan §4.4) ---------
+
+/** Pool of the Copilot CLI sessions in the ledger, and its stop (P-01, 2026-10-19: 30 USD of Copilot CLI spend for CHG-002). */
+export const COPILOT_POOL = "copilot";
+export const COPILOT_LIMIT_USD = 30;
+
+/**
+ * Stop-rule check for one Copilot CLI session: T = the `copilot` entries' cost (AI Credits × 0.01 USD),
+ * H = the highest session cost seen in any entry, at least MIN_H; the session starts only if T + H ≤ L.
+ */
+export function copilotStopRule(ledger, limit = COPILOT_LIMIT_USD) {
+  const entries = ledger.entries ?? [];
+  const T = entries.filter((e) => e.provider === "copilot").reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
+  const H = Math.max(MIN_H, ...entries.map((e) => Number(e.cost_usd) || 0));
+  return { ok: T + H <= limit + 1e-9, T: Math.round(T * 1e6) / 1e6, H, L: limit };
+}
+
+/** The ledger entry of one Copilot CLI session: measured units and the USD estimate, each named. */
+export function copilotLedgerEntry({ scenario, record, resultFile, task, step }) {
+  const u = record.copilot_usage ?? null;
+  return {
+    date: new Date().toISOString().slice(0, 10),
+    task: task ?? null,
+    step: step !== undefined && step !== null && /^\d+$/.test(String(step)) ? Number(step) : (step ?? null),
+    case: scenario.id,
+    row: null,
+    host: "copilot-cli",
+    provider: "copilot",
+    pool: COPILOT_POOL,
+    auth: "subscription",
+    api_key_source: record.api_key_source ?? null,
+    models: record.models ?? [],
+    host_versions: record.host_versions ?? null,
+    end_reason: record.end_reason ?? null,
+    turns: record.usage?.turns ?? null,
+    ai_credits: u?.ai_credits ?? null,
+    premium_requests: u?.premium_requests ?? null,
+    tokens: u ? Object.fromEntries(Object.entries(u.models ?? {}).map(([m, x]) => [m, { input: x.input_tokens, output: x.output_tokens, cache_read: x.cache_read_tokens, cache_write: x.cache_write_tokens, ai_credits: x.ai_credits }])) : null,
+    cost_usd: record.metrics.cost_usd,
+    cost_source: u?.ai_credits === null || u === null ? "unreported by the host" : "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
     pass: record.pass,
     result: posix(relative(ROOT, resultFile)),
   };
@@ -305,6 +361,8 @@ export async function main(argv, deps = {}) {
   } catch (e) {
     return fail(`eval: ${e instanceof Error ? e.message : String(e)}`);
   }
+  for (const na of picked.notApplicable) log(`${na.id}: not applicable, no session (${na.reason})`);
+  if (picked.scenarios.length === 0 && picked.notApplicable.length > 0) return 0;
   if (picked.scenarios.length === 0)
     return fail(`eval: the selection holds no case for host ${host} (${selected.length} file(s); ${picked.skipped.host} row(s) of another host, ${picked.skipped.only} row(s) left out by --only); no session started`);
 
@@ -319,12 +377,28 @@ export async function main(argv, deps = {}) {
   setHarnessContext({ host, runners });
   const auth = host === "claude-code" ? resolveAuth(opts.auth) : null;
   if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}`);
-  else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : ""}`);
+  else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : " (GitHub Copilot plan, AI Credits; Copilot stop rule checked before each session)"}`);
 
   const paid = host === "opencode" && !runners[host];
+  const paidCopilot = host === "copilot-cli" && !runners[host];
   const ledgerFile = deps.ledger ?? LEDGER;
   const pool = opts.pool ?? "general";
-  const hooks = paid
+  const hooks = paidCopilot
+    ? {
+        before() {
+          const r = copilotStopRule(readLedger(ledgerFile));
+          if (!r.ok) throw new Error(`Copilot stop rule (P-01, 2026-10-19): pool ${COPILOT_POOL} total ${r.T} + H ${r.H} > ${r.L} USD; ask P-01`);
+          log(`Copilot stop rule ok: pool ${COPILOT_POOL} total ${r.T} + H ${r.H} ≤ ${r.L} USD`);
+        },
+        after({ scenario, record, resultFile }) {
+          const ledger = readLedger(ledgerFile);
+          const entry = copilotLedgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null });
+          ledger.entries.push(entry);
+          writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2) + "\n");
+          log(`ledger: ${scenario.id} ${entry.ai_credits ?? "unreported"} AI Credits (measured), ${record.metrics.cost_usd.toFixed(4)} USD (estimate) added to pool ${COPILOT_POOL}`);
+        },
+      }
+    : paid
     ? {
         before() {
           const r = stopRule(readLedger(ledgerFile), pool);

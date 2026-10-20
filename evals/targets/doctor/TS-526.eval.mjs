@@ -11,7 +11,8 @@
 // Each expects the Copilot hooks row with status `error`, the Version text `cannot be read`, the Fix
 // `check chat.useHooks and Workspace Trust by hand`, never `ok`, and "completed with warnings".
 // Ids TS-526-copilot-<mode>-<row>; on Copilot CLI, carried to C002-T-045; the rows of the mode spike S-08
-// did not select are recorded as not applicable (`@mode-*` rule of C002-CAP-03).
+// did not select are recorded as not applicable (`@mode-*` rule of C002-CAP-03): they carry a
+// `notApplicable` reason, so run.mjs reports them and starts no session (C002-T-045).
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -19,6 +20,9 @@ import { checker } from "../../harness/assert.mjs";
 import { ROOT } from "../../harness/fixtures.mjs";
 import { workspace } from "../../cap11/doctor.mjs";
 import { doctorCase, outcomeOf, tableRows } from "./doctor-cases.mjs";
+import { s08Mode } from "../copilot-guard/guard-cases.mjs";
+
+const S08_MODE = s08Mode();
 
 const HOSTS_SHIMS = join(ROOT, "tests", "fixtures", "cfg-hosts", "bin");
 const USER_TRUE = '{ "chat.useHooks": true }';
@@ -49,6 +53,7 @@ function row(mode, name) {
   return {
     id: `TS-526-copilot-${mode}-${name}`,
     title: `Hooks state that cannot be read (${mode}, ${name}) is error, never ok (TS-526)`,
+    ...(mode !== S08_MODE ? { notApplicable: `@mode-*: the signed-off S-08 record (docs/spikes/S-08-copilot-vscode.md) gives enforcement_mode ${S08_MODE}, not ${mode}` } : {}),
     ...doctorCase("copilot-cli", "cfg-full", {
       prepend: [HOSTS_SHIMS],
       env: { APPDATA: dir, XDG_CONFIG_HOME: dir },

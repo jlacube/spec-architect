@@ -9,8 +9,104 @@
 //   { tool, input }                             a call that runs without a request
 //   { text }                                    assistant text of that turn
 // No process, socket, network or model is involved; the stub needs no package in the project.
+import { writeFileSync } from "node:fs";
 
 const sleep = () => new Promise((r) => setImmediate(r));
+
+/**
+ * Stub Copilot CLI host for the runner tests (C002-IF-010 §4 "Stub", C002-TS-614; C002-T-045): a
+ * scripted, in-process stand-in for `cliHost()` of ./copilot-cli.mjs that emits Copilot CLI 1.0.98 JSON
+ * events (the shapes recorded in step 1 of C002-T-045) through the runner's `onEvent`. Each turn is one
+ * `assistant.message` of the session agent; the session never ends by itself until the runner aborts it
+ * or `endAfter` turns have run. At the end it writes the `--usage-output-file` of the arguments with
+ * `creditsPerTurn` AI Credits per turn (`aiCreditsStatus` "unavailable" when `reportsSpend` is false).
+ * `script[i]` adds to turn i + 1:
+ *   { text }                                  session agent text
+ *   { tool, input, deny?, error?, result? }   a call of the session agent; `deny: "hook"` makes it a
+ *                                             fail-closed hook deny of `hookSource`, `deny: "permission"`
+ *                                             a permission refusal
+ *   { subagent, calls: [{ tool, input, deny? }], text? }  a `task` call that starts `subagent` (its
+ *                                             host name, e.g. "sdd-auditor" or "general-purpose") with
+ *                                             those calls
+ *   { error: "…" , session: true }            a `session.error` event with that text
+ * `calls` records each run's arguments, working folder and environment, for the tests.
+ */
+/** @param {{ creditsPerTurn?: number, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, onRun?: (o: any) => void }} [options] */
+export function copilotStubHost({ creditsPerTurn = 1, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, onRun } = {}) {
+  const calls = [];
+  let seq = 0;
+  const id = (p) => `${p}-${String(++seq).padStart(6, "0")}`;
+  return {
+    paid: false,
+    // `credential`: the runner gives this host its credential source as for the real host (no paid session).
+    credential,
+    calls,
+    version: () => version,
+    async run({ args, cwd, env, onEvent, signal }) {
+      calls.push({ args, cwd, env });
+      onRun?.({ args, cwd, env });
+      const limit = Number(args[args.indexOf("--max-ai-credits") + 1]);
+      const ts = () => new Date().toISOString();
+      const emit = (type, data, extra = {}) => onEvent({ type, data, id: id("evt"), timestamp: ts(), ...extra });
+      const usageFile = args[args.indexOf("--usage-output-file") + 1];
+      const complete = (call, agentId, parentToolCallId) => {
+        const base = { toolCallId: call.toolCallId, model, ...(parentToolCallId ? { parentToolCallId } : {}) };
+        const extra = agentId ? { agentId } : {};
+        emit("tool.execution_start", { toolCallId: call.toolCallId, toolName: call.tool, arguments: call.input ?? {}, ...(parentToolCallId ? { parentToolCallId } : {}) }, extra);
+        if (call.deny === "hook") emit("tool.execution_complete", { ...base, success: false, error: { message: `Denied by preToolUse hook from "${hookSource}" (hook errored)`, code: "denied" } }, extra);
+        else if (call.deny === "permission") emit("tool.execution_complete", { ...base, success: false, error: { message: "Permission denied because no interactive user response was available.", code: "denied" } }, extra);
+        else emit("tool.execution_complete", { ...base, success: true, result: { content: call.result ?? "ok" } }, extra);
+      };
+      emit("session.mcp_servers_loaded", { servers: [] });
+      let turns = 0;
+      for (let turn = 1; turn <= maxTurns; turn++) {
+        if (signal?.aborted) break;
+        if (endAfter !== null && turn > endAfter) break;
+        turns = turn;
+        const actions = script[turn - 1] ?? [];
+        const text = actions.filter((a) => a.text !== undefined && !a.subagent).map((a) => a.text).join("");
+        const requests = [];
+        for (const a of actions) {
+          if (a.tool) requests.push({ toolCallId: id("call"), name: a.tool, arguments: a.input ?? {}, action: a });
+          if (a.subagent) requests.push({ toolCallId: id("call"), name: "task", arguments: { name: a.subagent, agent_type: a.subagent, prompt: "brief", description: "task" }, action: a });
+        }
+        emit("assistant.message", { messageId: id("msg"), model, content: text, toolRequests: requests.map(({ action, ...r }) => r), turnId: String(turn - 1) });
+        for (const r of requests) {
+          const a = r.action;
+          if (!a.subagent) {
+            complete({ toolCallId: r.toolCallId, tool: a.tool, input: a.input, deny: a.deny, result: a.result });
+            continue;
+          }
+          const agentId = id("agent");
+          emit("tool.execution_start", { toolCallId: r.toolCallId, toolName: "task", arguments: r.arguments });
+          emit("subagent.started", { toolCallId: r.toolCallId, agentName: a.subagent, agentDisplayName: a.subagent, agentType: a.subagent, model }, { agentId });
+          const sub = (a.calls ?? []).map((c) => ({ toolCallId: id("call"), tool: c.tool, input: c.input ?? {}, deny: c.deny }));
+          emit("assistant.message", { messageId: id("msg"), model, content: "", toolRequests: sub.map((c) => ({ toolCallId: c.toolCallId, name: c.tool, arguments: c.input })), parentToolCallId: r.toolCallId }, { agentId });
+          for (const c of sub) complete(c, agentId, r.toolCallId);
+          emit("assistant.message", { messageId: id("msg"), model, content: a.text ?? "sub done", toolRequests: [], parentToolCallId: r.toolCallId }, { agentId });
+          emit("subagent.completed", { toolCallId: r.toolCallId, agentName: a.subagent, totalToolCalls: sub.length, totalTokens: 100, durationMs: 1 }, { agentId });
+          emit("tool.execution_complete", { toolCallId: r.toolCallId, model, success: true, result: { content: a.text ?? "sub done" } });
+        }
+        for (const a of actions) if (a.session) emit("session.error", { errorType: "query", message: a.error });
+        // The host's session limit (`--max-ai-credits`): the next model call is blocked.
+        if (reportsSpend && Number.isFinite(limit) && turn * creditsPerTurn + 1e-9 >= limit) {
+          emit("session.error", { errorType: "limits", message: `Session limits reached: ${turn * creditsPerTurn}/${limit} AI credits used. Increase or unset the session limit to continue.` });
+          break;
+        }
+        await sleep();
+      }
+      if (usageFile) {
+        const nano = Math.round(turns * creditsPerTurn * 1e9);
+        writeFileSync(
+          usageFile,
+          JSON.stringify({ totalPremiumRequestCost: 0, totalNanoAiu: reportsSpend ? nano : 0, aiCreditsStatus: reportsSpend ? "ok" : "unavailable", modelMetrics: { [model]: { requests: { count: turns, cost: 0 }, usage: { inputTokens: 100 * turns, outputTokens: 10 * turns, cacheReadTokens: 0, cacheWriteTokens: 0 }, totalNanoAiu: reportsSpend ? nano : 0 } } }),
+        );
+      }
+      onEvent({ type: "result", timestamp: ts(), exitCode: 0, usage: { premiumRequests: 0 } });
+      return { exitCode: signal?.aborted ? null : 0, stderr: "" };
+    },
+  };
+}
 
 /**
  * The stub host factory: `{ needsPackage: false, start() }`, as `driverHost()` of ./opencode.mjs.
