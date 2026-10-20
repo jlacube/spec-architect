@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-20T19:41:00Z",
+  "generated_at": "2026-10-20T19:41:04Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -161,7 +161,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "10-spec",
+      "phase": "20-plan",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -176,8 +176,8 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "stale",
-          "approved_hash": "sha256:ca5782da586dd7487a4a09af649f85a64d049fff02d1a178061cdd3b05b2bdac",
+          "status": "approved",
+          "approved_hash": "sha256:063dab1215fe394c77b4eb5e50a229a6d916df968e0c7ff32610fb1cfc140ac3",
           "approved_at": "2026-10-20",
           "approved_by": "jerome.lacube"
         }

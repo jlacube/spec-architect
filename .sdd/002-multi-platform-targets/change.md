@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:734f72e1896a2a9c855b21b318e3d45aa8e6cf4d66060539a4ba451244836dc2", approved_at: 2026-10-20, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:ca5782da586dd7487a4a09af649f85a64d049fff02d1a178061cdd3b05b2bdac", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:063dab1215fe394c77b4eb5e50a229a6d916df968e0c7ff32610fb1cfc140ac3", approved_at: 2026-10-20, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -165,3 +165,4 @@ waivers:
 | 2026-10-20 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-20 | G2 (spec) | **Revise** | "Revision for D-021 (editorial, T-065) and D-022 (TS-634 cap exception 2.00 USD per P-01 Q-ts634-budget-02, overshoot allowance, reserve H, fetch timeout)" | none | unavailable |
 | 2026-10-20 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-10-20 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
