@@ -127,3 +127,18 @@ folder and the rubric) as a second opinion.
 | No summaries posing as detail; index navigation-only | pass |
 | Testability of agent behaviour | CR-1 (resolved) |
 | External claims sourced or marked | pass; CR-2 |
+
+
+## Revision D-012 (2026-10-21)
+
+Scope: `git diff 278ef7d~1 4945599 -- .sdd/001-architect-agent-suite/` (architect 278ef7d, test-designer 73130b7, planner 4945599), against D-012 and Q-ripwire-guard-01. Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-13 | major | C001-IF-07 §3.1, IF-14 §2, TS-1125, REQ-1106 coverage | `--token-budget=N` accepted as a map bound goes beyond P-01's "default map with --max-tokens", IF-14 §2 and the skill ("Never put --token-budget on the ranked map") | `--max-tokens=N` the only map bound; TS-1125 `--token-budget` map row → deny | open |
+| CR-14 | minor | IF-07 §3.1, TS-1125 | `ripwire --test-gate src/a.ts` (no directory word) is admitted with the file read as the path word; not stated, not pinned | state it in §3.1; TS-1125 row → 0; counts 17 → 18 | open |
+| CR-15 | minor | IF-07 §3.1, REQ-1003 | the guard checks only presence and digits; the size limit (≤ 4000 tokens, ≤ 50 rows) belongs to REQ-1003 / TS-1004 — not stated for both forms | one sentence in §3.1 | open |
