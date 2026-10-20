@@ -322,7 +322,7 @@ test("C002-TC-637 (C002-TS-637): incomplete replay reports refused at release", 
   assert.deepEqual(moved.err, [`ERR-REL-012: opencode: replay report docs/releases/opencode/${FX_VERSION}/replay-opencode-permissions.json (opencode-permissions) records expectations other than C002-IF-009 §2.1: PG-135`]);
   // A missing report is missing evidence.
   const gone = check({ variant: OC_SDD, reports: { "sdd-mcp-server": null } });
-  assert.deepEqual(gone.err, [`ERR-REL-009: opencode: evidence corpus replay missing or unreadable at docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`]);
+  assert.deepEqual(gone.err, [`ERR-REL-009: opencode: evidence corpus replay missing, unreadable or insufficient at docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`]);
 });
 
 // --- C002-TC-651 ---------------------------------------------------------------------------------
