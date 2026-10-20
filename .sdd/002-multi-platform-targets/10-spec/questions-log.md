@@ -239,3 +239,7 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Options:** 1. Cap-only waiver: only a run that ends at the spend cap (or with a host/provider error) before the final G2 question, with the earlier Then lines met and no step started after the cap; any other failure is a product defect that reopens its task and holds the OpenCode release; the waiver is recorded at this G2 and DOD-007 names it (Recommended) · 2. Any failure of the run waived
 - **Answer:** P-01: "Cap-only waiver (Recommended)"
 - **Extracted instructions:** none
+
+### Q-waiver-01 — Turn-cap or session-timeout end of the TS-634 X3 run
+- **Options:** 1. Keep cap-only: a turn-cap or 20-minute timeout end is not waived (Recommended) · 2. Also waive a turn-cap or timeout end
+- **Answer:** conductor recommendation (option 1), confirmed by P-01 at G2 on 2026-10-20 ("Approve with waivers").
