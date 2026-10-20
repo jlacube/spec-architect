@@ -157,9 +157,13 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
      C002-TS-409); a PATH `sdd` is never used. When that file is not found beside the server's
      bundle, the call fails with ERR-MCP-006, reason `not found beside the server (<path>)`, and no
      process starts.
-   - Any other executable is resolved on PATH; one that resolves only to a `.cmd` or `.bat` file is
-     not run (ERR-MCP-006, reason `only a .cmd or .bat shim was found`), because running it needs a
-     shell. The allowlisted executables are expected as native executables on Windows: `node`,
+   - Any other executable is resolved by the executable lookup of C002-IF-007 (§Executable lookup;
+     C002-CON-17; revised for critic CR-63 and P-01's answer to Q-exec-lookup-01): over the folders
+     of the server's PATH only, an empty or relative entry skipped, with the extensions of `PATHEXT`
+     on Windows, never in the working folder or the repository, and started by the absolute path of
+     its first native match. One that resolves only to a `.cmd` or `.bat` file is not run (ERR-MCP-006,
+     reason `only a .cmd or .bat shim was found`), because running it needs a shell; one that does not
+     resolve fails with ERR-MCP-006, reason `not found on PATH`. The allowlisted executables are expected as native executables on Windows: `node`,
      `git` (Git for Windows), `uv` and `serena` (uv installs `.exe` launchers), `ripwire` (release
      archive), and `ast-grep`, whose npm install (`npm install -g @ast-grep/cli`, C001-IF-10 §3)
      gives only a `.cmd` shim. Under sdd MCP server enforcement the doctor therefore reports such a
@@ -171,7 +175,8 @@ them is refused with GUARD-PATH-001 (C002-REQ-401 open item, settled here).
    - The pipe-only segments (`head -n N`, `tail -n N`, `wc -l`, `sort`, `uniq` with the flags of
      C001-IF-07 §3) are applied in-process to the standard output, line by line.
 4. Return `exit_code`, `stdout` and `stderr` (C002-REQ-406). A non-zero exit code is a normal
-   result. At `timeout_ms` the process tree is killed and `status` is `timed_out`. Each stream is
+   result. At `timeout_ms` the process tree is killed and `status` is `timed_out`; on Windows through
+   `taskkill`, found by the same executable lookup and started by its absolute path (C002-IF-007). Each stream is
    cut at 1,048,576 characters with `truncated` set.
 
 ## §6 Text content of results

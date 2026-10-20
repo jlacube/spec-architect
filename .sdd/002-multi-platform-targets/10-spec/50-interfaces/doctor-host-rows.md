@@ -53,7 +53,7 @@ The `untested` and `error` statuses of the host and sdd CLI rows are warnings, e
 which the sdd CLI inherits from the host process (directly, or through the `sdd-shell` server under
 sdd MCP server enforcement). The CLI looks for it in the PATH folders only, never in the working
 folder or the repository, and runs it by its absolute path from the folder that holds it (C002-IF-007
-`host-version`, Executable resolution; revised for critic CR-63), so an `opencode.cmd` or a
+`host-version` and §Executable lookup, C002-CON-17; revised for critic CR-63), so an `opencode.cmd` or a
 `node.exe` placed in the adopter's repository is neither reported nor started by the doctor. It is not necessarily the binary that runs the session: an OpenCode
 started by its absolute path, or from a shortcut, while another install comes first on the PATH,
 shows the version of that other install, and the row is `untested` when that version differs from
