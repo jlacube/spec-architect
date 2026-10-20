@@ -98,3 +98,13 @@ run reads, and so the value of the wiring token `{{package_version}}` in the sam
 (C002-IF-001 §4, C002-CON-16); it is never taken from the version built into the generator, which
 can differ when `--source` names another plugin folder, such as a fixture of version 0.3.0 (revised
 for defect D-016 item 6).
+
+**Source without a version** (revised for critic CR-36). When `<source>/.claude-plugin/plugin.json`
+is missing, or parses but gives no non-empty string `version`, the run has the generation error
+ERR-GEN-007 `.claude-plugin/plugin.json: version missing or not a non-empty string`, one diagnostic
+for the run (no `target` in `--json`); no target package is written and the exit code is 1 (run
+semantics, step 2). A manifest that does not parse is the reader's ERR-GEN-007 with its parse
+error, reported once. The built-in version never stands in, neither for the manifest's
+`package_version` nor for the `{{package_version}}` token. PLG-VER-001 checks the same version on
+the repository in `npm run check` (C002-IF-005 §6), but not on the folder that `--source` names, so
+the generator refuses on its own.

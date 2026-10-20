@@ -85,6 +85,7 @@ Added fields:
 | `spend` | `reported` when the host reported the cost of the steps, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
+| `api_key_source` | the source of the credential the session ran with, never the credential itself (revised for critic CR-37 of the plan review); the session result carries it as `apiKeySource`, and the harness writes it into each result record and the result file as `api_key_source`, beside `auth`. OpenCode: `openrouter-key-file` for a session on the pinned host binary, whose key comes from P-01's key file (§4 Provider key), and `null` on the stub host, which uses no credential; Claude Code: the `apiKeySource` of the session's init message, as the eval auth switch records it today (for example `none` under the subscription route, C002-T-060); Copilot CLI: the name of the credential source its runner gives the host (C002-T-045), `null` when it gives none |
 
 ## §4 Back ends
 

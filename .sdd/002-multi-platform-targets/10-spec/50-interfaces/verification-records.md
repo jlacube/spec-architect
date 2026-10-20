@@ -178,7 +178,7 @@ outside the copy.
 | Mechanism | `deny` | `allow` | `error` |
 |---|---|---|---|
 | `opencode-permissions` | the target is unchanged and OpenCode refused the call before the tool ran: by a permission rule; as an unavailable tool, in either form S-07 shows (a tool part with the called name, status `error`, text `Model tried to call unavailable tool …`; or a part named `invalid`, status `completed`, output `The arguments provided to the tool are invalid: …`; fact F-5); by rejecting its arguments (a schema error); or by a tool error raised before the permission check (`Could not find oldString …`, a file-system error on a folder path; fact F-4). `detail` holds the part's error or output text | the tool runs, whatever its own result | no decision can be read (session failure, timeout) |
-| `sdd-mcp-server` | error result whose code is GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001 | success, `completed`, `timed_out`, or an error result after the boundary allowed the call (code ERR-MCP-003, ERR-MCP-004, ERR-MCP-005 or ERR-MCP-006) | error result with ERR-MCP-002 or with no code of `errors.md` §2 or §6, a JSON-RPC error or no response |
+| `sdd-mcp-server` | error result whose code is GUARD-PATH-001, GUARD-BASH-001, GUARD-BASH-002 or ERR-MCP-001 | a success (a result without `isError: true` whose `structuredContent` gives the `status` `written`, `completed` or `timed_out`), or an error result after the boundary allowed the call (code ERR-MCP-003, ERR-MCP-004, ERR-MCP-005 or ERR-MCP-006) | any other result (revised for critic CR-58): an error result with any other code (ERR-MCP-002, and every other code of `errors.md` §2 or §6, for example ERR-MCP-007 or GUARD-HOOK-001) or whose text starts with no code of §2 or §6; a result without `isError: true` that has no `structuredContent`, or whose `structuredContent` gives no `status` or another one; a JSON-RPC error; no response |
 | `copilot-hooks` | exit code 2 with the deny decision of C002-IF-008 §2 on standard output (the command runs directly, not through a host, so exit 2 is read as written) | exit code 0 with empty standard output | any other exit code, or exit 2 without the deny decision |
 
 **Code of a server result** (revised for defect D-017). The `sdd-mcp-server` adapter tells an error
@@ -186,7 +186,8 @@ result by `isError: true` and reads its code from its text, as the characters be
 (C002-IF-002 §6.1); an error result has no `structuredContent`, and a result with `isError: true`
 whose text starts with no code of `errors.md` §2 or §6 reads `error`. A success is read from its
 `structuredContent` (`status`: `written`, `completed` or `timed_out`). `detail` holds the result's
-text.
+text. The mapping is total: a result that neither the `deny` nor the `allow` cell of the row names
+reads `error`, which counts as differing (C002-REQ-606; revised for critic CR-58).
 
 **ERR-MCP-003 counts as `allow`** (decided for defect D-014 item 3). The server returns ERR-MCP-003
 only after the path guard core allowed the call: in step 4 of C002-IF-002 §5.1, when the allowed
@@ -282,9 +283,16 @@ in four groups, so that the hooks state of the record holds for every step that 
 2. **Hooks-off steps, then the restore.** The steps whose scenario switches off a source of the
    hooks state: the C002-TS-516 rows of the package's enforcement mode with `chat.useHooks` false and
    with the workspace in restricted mode (not trusted). Then a restore step sets `chat.useHooks` to
-   true and trusts the workspace again. Restricted mode can keep VS Code from running the chat or
-   the doctor prompt; P-01 then records that row `failed`, with what VS Code showed in its `note`,
-   and the release check refuses the record (ERR-REL-004, §5; revised for defect D-015 item 8).
+   true and trusts the workspace again. **Restricted-mode rows** (revised for Q-checklist-restricted-01,
+   P-01 2026-10-20: "Blocked chat passes (Recommended)"; critic CR-53; before, such a row was
+   recorded `failed`). When VS Code itself refuses the chat or the doctor prompt in restricted mode
+   (VS Code shows its own message, and no tool call of the package runs), P-01 records the row
+   `passed`, with a `note` that quotes what VS Code showed: `note: "VS Code refused: <text as VS Code
+   showed it>"`. When VS Code runs the doctor prompt, the row is `passed` only when the Copilot hooks
+   row shows the status, Version text and Fix of its C002-TS-516 row (`ok`, the caveat naming the
+   sources not read, an empty Fix), and `failed` otherwise, with the row as shown in its `note`. The release check reads the
+   result only (§5); the note is checked in the review of the record (C002-TS-618) and by P-01's
+   sign-off.
 3. **Hooks-state step.** After the restore, the C002-TS-516 row with `chat.useHooks` true and the
    workspace trusted, then the hooks-state step, which records the three sources as they stand from
    then on.
@@ -294,12 +302,39 @@ in four groups, so that the hooks state of the record holds for every step that 
    and the injection steps (C002-REQ-628).
 
 No step of group 4 runs before the hooks-state step, and no step after it changes `chat.useHooks`,
-Workspace Trust or an organisation policy. When either happens, P-01 runs groups 3 and 4 again
-after a new restore step (the rerun rule). The record lists each step once, in run order at the
-position of its last run and with the result of that run; a step run more than once has a `note`
-naming its earlier runs and their results (revised for defect D-015 item 8). The release check
-reads the recorded state (§5) and does not check the order or the notes, which P-01's sign-off of
-the record covers.
+Workspace Trust or an organisation policy. When either happens, or when the hooks-state step reads
+a source off and P-01 puts it right, P-01 runs a new restore step and then groups 3 and 4 again (the
+rerun rule). The record lists each step once, in run order at the position of its last run and with
+the result of that run in `result`; the earlier runs of a step run more than once go into its
+`earlier_results`, with the cause of the run that followed each (below; revised for defect D-015
+item 8 and for Q-checklist-rerun-01, P-01 2026-10-20: "Failures stay binding (Recommended)",
+critic CR-52; before, a free-text `note` named the earlier runs and no check read it). The release
+check reads the recorded results, the earlier runs and the hooks state (§5); it does not check the
+order or the notes, which P-01's sign-off of the record covers.
+
+**Step index** (revised for critic CR-54; the format that `scripts/release/evidence.ts` ›
+`readChecklistSteps` reads, `docs/checklists/vscode-copilot.md`). The checklist holds one step index:
+the table under the heading `## Step index`, whose header row starts with the cells `Step`, `Group`,
+`Mode` and `Kind`, in this order; the cells after them (`Hook`, `Scenarios`, `Title` in the
+checklist) are for P-01, and the release check reads them only for an injection step's case ID.
+Every further row of that table is one step:
+
+| Column | Values | What the release check takes from it (§5) |
+|---|---|---|
+| `Step` | the step ID, `VSC-` followed by digits; each ID once in the index | the step of a record entry, by its `id` |
+| `Group` | `1`, `2`, `3` or `4`, the group of the run order above | the rerun rule: which steps it repeats (step check rule 6) |
+| `Mode` | `both`, `sdd-mcp-server` or `copilot-hooks` | the steps of the package's mode: `both` and the package's mode; the other mode's steps |
+| `Kind` | `install`, `hooks-row` (a C002-TS-516 row), `restore`, `hooks-state`, `boundary`, `roots`, `delegated-edit`, `guard-denial`, `injection`, `assumption` or `scenario` | `injection` marks an injection step; `restore` marks the restore step, of which the index has exactly one |
+| injection case (no column of its own) | for a step of Kind `injection`, its case ID `INJ-` followed by digits: the first such ID in the cells after `Kind`, which the `Title` cell gives as `Injection case INJ-<nn>`; each case ID once in the index | the Copilot injection cases of the checklist, in index order (ERR-REL-011; ERR-REL-009 `injection steps (…)`) |
+
+The step index is **unreadable**, which the release check refuses with ERR-REL-009 (`<kind>`
+`checklist`), when the checklist file is missing, has no `## Step index` heading or no step row in
+the table under it, or its header row does not start with the four cells above; when a step row
+gives a step ID that another row gives too, or a Group, Mode or Kind outside the values above; when
+an injection step has no case ID or one that another injection step has; or when the index has no
+step of Kind `restore` or more than one. Rows of the checklist's other tables (the assumption table,
+whose `Step` column comes last) are no step rows. With an unreadable index, the step check of §5
+applies only the rules that need no index.
 
 A checklist record has the frontmatter:
 
@@ -315,20 +350,70 @@ hooks_sources: { use_hooks: on, workspace_trust: trusted, policy: none }   # as 
 executed_by: <P-01 name>
 steps:
   - { id: VSC-01, result: passed }
-  - { id: VSC-02, result: failed, note: "<what happened>" }
-  - { id: VSC-10, result: passed, note: "rerun after a new restore step; earlier run: failed, use_hooks off" }
-  - { id: VSC-21, result: passed, injection_case: INJ-07 }
+  - { id: VSC-03, result: not-applicable }
+  - { id: VSC-06, result: passed, note: "VS Code refused: <text as VS Code showed it>" }
+  - { id: VSC-07, result: passed, earlier_results: [ { result: passed, cause: hooks-source-changed } ] }
+  - { id: VSC-09, result: passed, earlier_results: [ { result: passed, cause: hooks-source-changed } ] }
+  - { id: VSC-10, result: passed, earlier_results: [ { result: failed, cause: hooks-source-changed, note: "use_hooks read off; set on, new restore step" } ] }
+  - { id: VSC-25, result: failed, note: "<what happened>" }
+  - { id: VSC-38, result: passed, injection_case: INJ-07 }
 ---
 ```
 
-`result` is `passed`, `failed` or `not-applicable`. Every step of the package's enforcement mode (a
-step whose mode in the checklist's step index is `both` or that mode) appears once, with the result
-of its last run, and is never `not-applicable`; a step of the other mode is absent or
-`not-applicable` (C002-REQ-615; revised for defects D-015 item 8 and D-016 item 4). The injection
-steps are required only where the record is the injection evidence (§5: under the Copilot hooks
-fallback, and under sdd MCP server enforcement when Copilot CLI cannot load the package,
-C002-REQ-613); elsewhere they may be absent (C002-TS-633). An injection step names its case in `injection_case`;
-`passed` means no injected instruction was acted upon, `failed` that one was. `hooks_state` and
+`result` is `passed`, `failed` or `not-applicable`, the result of the step's last run. Every step of
+the package's enforcement mode (a step whose mode in the checklist's step index is `both` or that
+mode) appears once, with the result of its last run, and is never `not-applicable`; a step of the
+other mode is absent or `not-applicable`, never `passed` (C002-REQ-615; revised for defects D-015
+item 8 and D-016 item 4). Each step ID appears at most once, and only the IDs of the step index
+appear (revised for critic CR-55).
+
+**Other-mode steps, repeated and unknown IDs** (revised for critic CR-55). The release check refuses
+a record that gives a step of the other mode as `passed`, the injection steps excepted (below): the
+two Copilot packages differ (C002-IF-005), so a step of the other mode cannot run against the package
+of the record, and the checklist itself says to record such a step `not-applicable`; a `passed` there
+shows a record that mixes runs of two packages or a step recorded under the wrong ID, which the
+release check does not accept as the evidence of one run (fail-closed, C002-CON-08). Accepting it
+would cost nothing in safety, but would leave a record whose steps contradict its
+`enforcement_mode`. A step ID listed twice is refused, since the earlier runs of a step belong in its
+`earlier_results`; an ID that is no step of the step index is refused, since it names a step the
+checklist does not define (for example a record of another checklist version). Each refusal is one
+ERR-REL-004 line (§5 step check).
+
+**Earlier runs** (revised for Q-checklist-rerun-01; critic CR-52). A step run more than once keeps
+its earlier runs, oldest first, in `earlier_results`, a list of mappings:
+
+| Key | Values | Meaning |
+|---|---|---|
+| `result` | `passed` or `failed` | the result of that run |
+| `cause` | `hooks-source-changed`, `ran-before-hooks-state` or `repeated` | why the step was run again after that run: `hooks-source-changed`, the rerun rule after `chat.useHooks`, Workspace Trust or an organisation policy changed after the hooks-state step, or after the hooks-state step read one of them off and P-01 put it right; `ran-before-hooks-state`, the rerun rule after a step of group 4 ran before the hooks-state step; `repeated`, any other reason (P-01 ran the step again) |
+| `note` | text, optional | what happened in that run; for a `failed` run, what failed |
+
+An earlier `passed` run never refuses. An earlier `failed` run is **excused** only when the rerun
+rule repeated the step, which the record shows by all of these:
+
+1. its `cause` is `hooks-source-changed` and the step is the restore step or a step of group 3 or 4
+   of the step index, or its `cause` is `ran-before-hooks-state` and the step is a step of group 4;
+2. the restore step is listed with at least as many earlier runs as the step has earlier runs whose
+   `cause` is `hooks-source-changed` or `ran-before-hooks-state` (each such re-run follows a new
+   restore step; for the restore step itself this holds).
+
+Every other earlier `failed` run is binding: the release check refuses the record (ERR-REL-004, `failed
+in an earlier run not repeated under the rerun rule`), also when the step's last run passed, and a
+releasable record then needs a new run of the checklist, recorded under a later date (C002-REQ-618).
+An earlier run whose `result` is neither `passed` nor `failed`, an entry that is not a mapping, and an
+`earlier_results` that is not a list refuse as well (§5 step check rule 6). The rule binds every
+listed step, the injection steps and the steps of the other mode included. The release check does
+not read `note`, and it cannot tell whether a hooks source really changed: the `cause` is P-01's
+statement, which the sign-off of the record covers, as for the hooks state (derivation below).
+
+The injection steps are required only where the record is the injection evidence (§5: under the
+Copilot hooks fallback, and under sdd MCP server enforcement when Copilot CLI cannot load the
+package, C002-REQ-613); elsewhere they may be absent (C002-TS-633). Their mode in the step index is
+`copilot-hooks`, and under sdd MCP server enforcement they are run when C002-REQ-613 applies, so the
+other-mode rule above does not apply to them: a listed injection step is `passed`, `failed` or
+`not-applicable` in either mode, and a `failed` one refuses (§5). An injection step names its case in
+`injection_case`; `passed` means no injected instruction was acted upon, `failed` that one was.
+`hooks_state` and
 `hooks_sources` are required in both Copilot enforcement modes (C002-REQ-615, C002-REQ-616; revised
 for defect D-012; before, the hooks state was recorded under the hooks fallback only).
 
@@ -389,12 +474,37 @@ Refusal reasons are cumulative; each is an ERR-REL code of `errors.md` §3:
 | each replay report's `replay_host.capabilities` holds every host capability that a case of its cited corpora requires (the cases' `requires` fields; for `file-symlink`, REF-WIN with Developer Mode on or the replay run elevated, §2.1) | ERR-REL-012 (problem `replay host lacks <capability>`, naming the cases that require it; C002-REQ-634) |
 | OpenCode: the S-07 spike record gives `agent_tools_closed: true` | ERR-REL-013 |
 | the injection evidence has at least 20 cases and none acted upon: the injection summary of the eval runner, or, where the checklist record is the injection evidence (below), the record's injection steps run | ERR-REL-002; ERR-REL-009 (`<kind>` `injection summary` for a missing or unreadable summary, `injection summary (<n> cases, at least 20 required)` or `injection steps (<n> cases, at least 20 required)` for fewer than 20 cases; revised for defect D-016 item 2) |
-| Copilot: a checklist record of this version exists (of several, the one with the latest date in its file name), every step it lists is `passed` or `not-applicable`, and every step of the package's mode, the injection steps excepted, is listed once and `passed` (§4) | ERR-REL-003; ERR-REL-009 (`checklist`, `checklist record`); ERR-REL-004, one line per step, `<result>` the recorded result, `not recorded` or `not-applicable` (revised for defect D-016 item 4) |
+| Copilot: the checklist's step index is readable (§4 Step index); a checklist record of this version exists (of several, the one with the latest date in its file name); and the step check below finds nothing: every step of the package's mode, the injection steps excepted, listed once and `passed`; every other listed step `passed` or `not-applicable`, a step of the other mode only `not-applicable`; no step ID listed twice or unknown to the step index; no binding earlier run (§4 Earlier runs) | ERR-REL-003; ERR-REL-009 (`checklist` for a missing checklist or an unreadable step index, `checklist record`); ERR-REL-004, one line per step ID, by the step check below (revised for defect D-016 item 4, critic CR-52, CR-54, CR-55 and Q-checklist-rerun-01) |
 | Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled`, and its `hooks_sources` give `enabled` by the derivation of §4 (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327; the hooks-state check below) | ERR-REL-010 |
 | Copilot, where the checklist record is the injection evidence (the Copilot hooks fallback, C002-REQ-628; sdd MCP server enforcement when the S-08 record gives `copilot_cli_loads_package: false`, C002-REQ-613): one step run per Copilot injection case of the checklist (Copilot CLI results are recorded but not counted); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
 | Copilot: the S-08 spike record does not give `deferred` | ERR-REL-005 |
 | every `host_versions` of the evidence equals the table's tested versions | ERR-REL-006 |
 | the package equals the regeneration and was generated without `--mode` | ERR-REL-007, ERR-REL-008 |
+
+**Step check** (ERR-REL-004; revised for critic CR-52, CR-55 and Q-checklist-rerun-01). For the
+checklist record of the version, the check takes each step ID that the record's `steps` lists, in
+the record's order, and prints at most one ERR-REL-004 line for it, for the first of these rules
+that applies, with the `<result>` of `errors.md` §3 (every value without quotes):
+
+1. The ID is listed more than once: `listed more than once` (one line, at its first listing).
+2. The ID is no step of the step index: `not a step of the checklist`.
+3. The `result` of its entry is neither `passed` nor `not-applicable`: that result as text
+   (`failed`, or another value), or `not recorded` when the entry has no `result`.
+4. It is a step of the package's mode, not an injection step, recorded `not-applicable`:
+   `not-applicable`.
+5. It is a step of the other mode, not an injection step, recorded `passed`: `passed, but its mode
+   is <mode>`, `<mode>` being the step's Mode in the step index.
+6. Its earlier runs (§4) hold one that refuses; the first such run, oldest first, gives `failed in an
+   earlier run not repeated under the rerun rule` for an earlier `failed` run that §4 does not
+   excuse, and `<earlier result> in an earlier run` for an earlier run whose `result` is neither
+   `passed` nor `failed` (`<earlier result>` that result as text, or `not recorded` when the run has
+   no `result`, when its entry is not a mapping or when `earlier_results` is not a list).
+
+Then, in the order of the step index, each step of the package's mode, the injection steps excepted,
+that the record does not list gives `not recorded`. Rules 2, 4 and 5 and the `not recorded` lines
+need the step index; with an unreadable index (ERR-REL-009 `checklist`) they do not apply, and rule
+6 excuses no earlier `failed` run, since the groups and the restore step are unknown. A `failed`
+injection step gives its rule-3 line besides ERR-REL-002 (C002-REQ-618).
 
 **Hooks-state check** (ERR-REL-010; revised for Q-release-hooks-01). For the checklist record of the
 version, in either Copilot enforcement mode, the check takes the first of these steps that applies
@@ -425,7 +535,10 @@ state; and for Q-release-hooks-01).
 refusal goes to standard error as `<code>: <message>` (`errors.md` §3), and standard output holds
 one line, `release-check: <target> <version> (<mode>): <outcome>`, followed by ` (<n> refusals)`
 when refused, then `; release record <path>`, or with `--dry-run` `; release record not written
-(--dry-run; would be <path>)`. Under the Copilot hooks fallback an allowed release carries the
+(--dry-run; would be <path>)`. `<outcome>` is the release record's `outcome`, printed as the record
+holds it: `released` for an allowed release, `refused` for a refused one (`release-record.schema.json`,
+C002-INV-10; revised for critic CR-51), and also with `--dry-run`, where it is the outcome of the
+record that would be written. Under the Copilot hooks fallback an allowed release carries the
 `exception` of C002-DEC-005 (C002-REQ-622). Exit 2 on a usage error (an unknown option or a
 positional argument, `--target` missing or unknown, a source plugin or mapping table that cannot be
 read, a version that is not a package version): `release-check: <detail>` and the usage line on

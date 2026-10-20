@@ -35,6 +35,11 @@ on Q-mcp-errors-01); the eval runner's names per case row, `answer` option, rows
 with isolated data folders, permission-only `allowTools` and direct relay; the checklist's
 mode-specific steps and one entry per step; the release check's command line, replay reports per
 mode and the problem texts of its refusals; the generator's version stamp from the source plugin.
+After the critic's review of that revision: earlier runs of a checklist step kept in the record and
+binding unless the rerun rule excuses them (P-01 on Q-checklist-rerun-01), a restricted-mode doctor
+row that VS Code refuses to run passing with VS Code's text (P-01 on Q-checklist-restricted-01), the
+step index format, one rule for other-mode, repeated and unknown steps, a total server decision
+mapping, and the generator's refusal of a source plugin without a version (ERR-GEN-007).
 
 ## 1. Context and scope
 
@@ -156,7 +161,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-010 — Release check
 - **Name:** `scripts/release-check.mjs` and release records under `docs/releases/`
 - **Status:** new
-- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (one report per mechanism of the package's mode, citing the corpora of the release commit; completeness of the not-applicable list, the expected decision of every case, and a replay host with every capability the corpora's cases require), injection (at least 20 cases), checklist (every step of the package's mode once and passed, hooks state in both Copilot modes, injection steps where the record is the injection evidence) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record, or with `--dry-run` decide without writing; `--root` names the repository read (C002-IF-009 §5)
+- **Responsibility:** decide, per generated target and independently of the other, whether a package may be released, from regeneration, replay (one report per mechanism of the package's mode, citing the corpora of the release commit; completeness of the not-applicable list, the expected decision of every case, and a replay host with every capability the corpora's cases require), injection (at least 20 cases), checklist (a readable step index; every step of the package's mode once and passed, a step of the other mode only not applicable, no step ID repeated or unknown, no earlier failed run that the rerun rule does not excuse; hooks state in both Copilot modes; injection steps where the record is the injection evidence) and spike evidence at the tested versions (a closed OpenCode tool set included, ERR-REL-013), and write the release record, or with `--dry-run` decide without writing; `--root` names the repository read (C002-IF-009 §5)
 - **Realizes:** C002-REQ-617, C002-REQ-618, C002-REQ-619, C002-REQ-620, C002-REQ-621, C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-NFR-501
 - **Interfaces:** C002-IF-009 §5
 - **Depends on:** C002-COMP-001, C002-COMP-002, C002-COMP-008, C002-COMP-009, C002-COMP-011
@@ -165,7 +170,7 @@ Architect agent (C002-REQ-325).
 ### C002-COMP-011 — Manual VS Code checklist
 - **Name:** `docs/checklists/vscode-copilot.md` and records under `docs/checklists/records/`
 - **Status:** new
-- **Responsibility:** verify by hand what no script can drive in VS Code (the sdd MCP server boundary under server enforcement only, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot` with the assumptions of C002-IF-005 §3, an edit delegated to the host built-in agent `general-purpose` and denied by the Copilot subagent guard hook in both Copilot modes, Revise at G1 and the revise prompt, the hooks state in both Copilot modes with its three sources `chat.useHooks`, Workspace Trust and organisation policy, the last two being those the doctor does not read, a guard-hook denial under the hooks fallback, injection cases when Copilot CLI cannot load the package and always under the hooks fallback), in the run order of C002-IF-009 §4 (the steps that switch hooks off first, then the restore, the hooks-state step and every step a hook decides), and keep one record per run, with the hooks state and its sources and each step once at its last run, a note naming earlier runs; a step that VS Code keeps from running (the doctor in restricted mode) is recorded failed
+- **Responsibility:** verify by hand what no script can drive in VS Code (the sdd MCP server boundary under server enforcement only, interview, gate with a skipped answer through `ask_user`, recording its input shape and no-choice result, toy change to G1 on a fresh install through `sdd install copilot` with the assumptions of C002-IF-005 §3, an edit delegated to the host built-in agent `general-purpose` and denied by the Copilot subagent guard hook in both Copilot modes, Revise at G1 and the revise prompt, the hooks state in both Copilot modes with its three sources `chat.useHooks`, Workspace Trust and organisation policy, the last two being those the doctor does not read, a guard-hook denial under the hooks fallback, injection cases when Copilot CLI cannot load the package and always under the hooks fallback), in the run order of C002-IF-009 §4 (the steps that switch hooks off first, then the restore, the hooks-state step and every step a hook decides), and keep one record per run, with the hooks state and its sources and each step once at its last run, its earlier runs listed with their results and the cause of each re-run (C002-IF-009 §4 Earlier runs); a restricted-mode doctor row that VS Code itself refuses to run passes, with a note quoting VS Code; the step index gives each step its group, mode and kind (C002-IF-009 §4 Step index)
 - **Realizes:** C002-REQ-613, C002-REQ-614, C002-REQ-615, C002-REQ-616, C002-REQ-628; C002-NFR-601
 - **Interfaces:** C002-IF-009 §4
 - **Depends on:** C002-COMP-004
@@ -260,7 +265,7 @@ Architect agent (C002-REQ-325).
 | F6 | Copilot session-start brief and SubagentStop trace refresh, through hook commands with the absolute CLI path written at install | C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-326; C002-TS-320, C002-TS-322, C002-TS-323, C002-TS-324, C002-TS-325 |
 | F7 | Gate through the host question tool on a generated target (`question` on OpenCode, allowed for the conductor; `ask_user` on Copilot) | C002-REQ-211, C002-REQ-212, C002-REQ-217, C002-REQ-311, C002-REQ-312; C002-TS-217, C002-TS-218, C002-TS-316, C002-TS-318, C002-TS-319 |
 | F8 | Doctor on a generated target | C002-REQ-504, C002-REQ-505, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516 |
-| F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633 |
+| F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-668, C002-TS-669, C002-TS-670, C002-TS-671 |
 | F10 | `npm run check` with the target structure checks | C002-REQ-601 … C002-REQ-605; C002-TS-601, C002-TS-602, C002-TS-603, C002-TS-604, C002-TS-605 |
 | F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd`, cases that require a host capability, and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
 | F12 | Serena command, or writing `sdd` subcommand with `--cwd`, decided by the bash guard core on every host, then run by the sdd CLI | C002-REQ-517, C002-REQ-521, C002-REQ-515, C002-REQ-516; C002-TS-525, C002-TS-527, C002-TS-528, C002-TS-536, C002-TS-537 |
@@ -364,6 +369,8 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Error results of the sdd MCP server are text only: `isError: true`, one text item `<code>: <message>` (a guard rule's deny message as it is), no `structuredContent`; a success keeps the structured content that `tools/list` advertises as `outputSchema` (C002-IF-002 §4, §6.1) | P-01 answer to Q-mcp-errors-01 (defect D-017): OpenCode 1.18.31 validates every structured content against the advertised `outputSchema` and turned every refused or failed `run_command` into the JSON-RPC error `-32602`; C002-CON-08 (a refusal stays a refusal) | an `outputSchema` that is a union of the success and the error shape (not chosen by P-01) |
 | A case row that names a host runs only on that host and reads that host's tool and agent names; `allowTools` answers permission requests only, and a tool the package lets the host run without asking is decided by the package's own rules (C002-IF-010 §1 … §3; defect D-015 items 1, 5, 7) | C002-REQ-608: the CHG-002 host rows (C002-T-037, C002-T-038) are written in OpenCode names; the package under test, not the runner, is the boundary | Claude Code names for every row (the host rows would need rewriting); a runner-side gate on tools run without asking (the eval would then measure the runner's policy, not the package's rules) |
 | The release check requires the replay reports of the package's mode (`native-permissions`: `opencode-permissions`; `sdd-mcp-server`: `sdd-mcp-server`; `copilot-hooks`: `sdd-mcp-server` and `copilot-hooks`), and reports a replay of other corpora and fewer than 20 injection cases as missing evidence (ERR-REL-009 with a `<kind>` naming the condition) (C002-IF-009 §5; defect D-016 items 2, 3, 5) | C002-REQ-606, C002-REQ-617, C002-NFR-203; the implemented check of C002-T-047 | new ERR-REL codes for the two conditions (a second code for the same refusal: the evidence the release needs is absent) |
+| A checklist record keeps the earlier runs of a step in `earlier_results`, each with its result and the cause of the run that followed; the release check refuses an earlier `failed` run unless the rerun rule repeated the step (a rerun-rule cause, a step of the groups the rule repeats, and a new run of the restore step for each such re-run), and refuses a step of the other mode recorded `passed`, a step ID listed twice and an ID outside the step index, each under ERR-REL-004; the step index format is part of the contract (C002-IF-009 §4, §5) | P-01 answer to Q-checklist-rerun-01 ("Failures stay binding"; critic CR-52); C002-CON-08 (fail-closed); critic CR-54, CR-55 | last run wins with the earlier runs in a free-text note (rejected by P-01: a failed safety step could be re-run until it passes); accepting an other-mode `passed` (harmless for safety, but the record would contradict its own `enforcement_mode`) |
+| A restricted-mode doctor row of the checklist passes when VS Code itself refuses the chat or the doctor prompt, the note quoting VS Code; when VS Code runs the prompt, the row must show `ok` with the caveat (C002-IF-009 §4 Run order) | P-01 answer to Q-checklist-restricted-01 ("Blocked chat passes"; critic CR-53): no tool call of the package runs there, so a blocked chat says nothing about the package | drop the restricted-mode rows; keep them `failed` (every Copilot release refused while VS Code blocks the chat) |
 
 ## 7. Constraints
 
@@ -756,11 +763,11 @@ sequenceDiagram
   end
 ```
 
-### 8.10 F9 — Release check of one target (realizes C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633)
+### 8.10 F9 — Release check of one target (realizes C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-668, C002-TS-669, C002-TS-670, C002-TS-671)
 
 ```mermaid
 sequenceDiagram
-  %% F9 release check. Realizes C002-TS-620 C002-TS-621 C002-TS-622 C002-TS-623 C002-TS-624 C002-TS-625 C002-TS-633
+  %% F9 release check. Realizes C002-TS-620 C002-TS-621 C002-TS-622 C002-TS-623 C002-TS-624 C002-TS-625 C002-TS-633 C002-TS-668 C002-TS-669 C002-TS-670 C002-TS-671
   actor P01 as P-01
   participant C002_COMP_010 as Release check
   participant C002_COMP_001 as Target generator
@@ -775,7 +782,8 @@ sequenceDiagram
   C002_COMP_010->>C002_COMP_008: each report cites the corpora of the release commit by SHA-256, else missing evidence ERR-REL-009
   C002_COMP_010->>C002_COMP_008: differing decisions over the applicable cases, not-applicable list, expectations, host versions per mechanism
   C002_COMP_010->>C002_COMP_008: replay host capabilities against the requires fields of the cited corpora, C002-REQ-634
-  C002_COMP_010->>C002_COMP_011: checklist record of the version, every step of the mode once and passed, host versions, hooks state enabled in both Copilot modes
+  C002_COMP_010->>C002_COMP_011: step index of the checklist readable, else missing evidence ERR-REL-009
+  C002_COMP_010->>C002_COMP_011: checklist record of the version, every step of the mode once and passed, other-mode steps only not applicable, no repeated or unknown step, no earlier failed run outside the rerun rule, host versions, hooks state enabled in both Copilot modes
   alt Copilot hooks fallback, or Copilot CLI cannot load the package
     C002_COMP_010->>C002_COMP_011: one injection step run per Copilot injection case, at least 20
     C002_COMP_010->>C002_COMP_009: write the injection summary from the checklist record, hooks enabled required
