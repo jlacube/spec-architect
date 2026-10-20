@@ -1,0 +1,27 @@
+# Dormant cross-platform check (C001-T-064, C001-REQ-1120 Spec-Q4): runs `npm run check` on the three
+# reference operating systems, only when started by hand from the Actions tab. No push or pull_request
+# trigger: the repository is not checked remotely until P-01 decides otherwise.
+name: check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        node: ["20", "22"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check
