@@ -185,7 +185,7 @@ for (const m of MECHANISMS) {
     const { result } = await replayed(m);
     const { report } = result;
     assert.deepEqual(result.problems, [], "schema-valid, every case once, counts consistent");
-    assert.deepEqual(result.omitted, []);
+    assert.equal(result.report.not_applicable.filter((n) => n.rule === "platforms").length, 0, "no case of the present corpora is limited away from this platform");
     const { path, shell } = loadCorpora();
     const listed = [...report.cases, ...report.not_applicable].map((c) => c.id).sort();
     assert.deepEqual(listed, [...path.corpus.cases, ...shell.cases].map((c) => c.id).sort(), "every case ID exactly once");
@@ -359,8 +359,8 @@ function realReplay(mechanism: "sdd-mcp-server" | "copilot-hooks"): Promise<Repl
 for (const m of ["sdd-mcp-server", "copilot-hooks"] as const) {
   test(`C002-TS-628, C002-TS-638, C002-TS-643, C002-TS-644 — mechanism rows against the real ${m} adapter`, async (t) => {
     if (m === "sdd-mcp-server" && !haveTarball(t)) return;
-    const { report, problems, omitted } = await realReplay(m);
-    assert.deepEqual([problems, omitted], [[], []]);
+    const { report, problems } = await realReplay(m);
+    assert.deepEqual(problems, []);
     // C002-TS-628, C002-TS-638: memory cases deny, a non-Architect caller's memory case played by the conductor.
     for (const id of ["PG-205", "PG-224"]) assert.deepEqual([entry(report, id).expected, entry(report, id).expected_source, entry(report, id).actual], ["deny", "C002-REQ-625", "deny"], id);
     assert.equal(entry(report, "PG-224").fed_as.caller, "sdd-conductor");
@@ -619,3 +619,60 @@ test("C002-TS-662 — PG-048, a write the guard allows and the file system refus
   assert.deepEqual([e.expected, e.expected_source, e.actual], ["allow", "corpus", "allow"]);
   assert.equal(r.report.differing, 0, "PG-048 is not among the differing decisions (nor is any other case of the run)");
 });
+
+// --- C002-TC-681 (C002-TS-681; C002-T-065): the platform rule on fx-corpus-platforms ---------------------
+// The corpora of the commit under test with three path cases limited by `platforms` to `posix` (PG-900,
+// category outside; PG-901, category memory; PG-902, category symlink with requires file-symlink), in a
+// temporary corpus folder; replay host win32 (REF-WIN). PG-900 and PG-902 are not applicable by the
+// platform rule (before C002-REQ-633 for PG-902), PG-901 keeps the memory row's deny, PG-163 is replayed.
+const PLATFORM_CASES = (path: Corpus) => {
+  const of = (id: string) => path.cases.find((c) => c.id === id)!;
+  return [
+    { ...of("PG-049"), id: "PG-900", platforms: ["posix"] },
+    { ...of("PG-205"), id: "PG-901", platforms: ["posix"] },
+    { ...of("PG-163"), id: "PG-902", platforms: ["posix"] },
+  ];
+};
+const platformRuns = new Map<RowMechanism, Promise<{ report: ReplayReport; problems: string[]; before: string[]; after: string[] }>>();
+function platformReplay(m: RowMechanism) {
+  let r = platformRuns.get(m);
+  if (r) return r;
+  r = (async () => {
+    const dir = mkdtempSync(join(tmpdir(), "sdd-tc681-"));
+    try {
+      const p = JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus;
+      p.cases = [...p.cases, ...PLATFORM_CASES(p)] as Corpus["cases"];
+      writeFileSync(join(dir, "path-corpus.json"), JSON.stringify(p, null, 2));
+      writeFileSync(join(dir, "bash-corpus.json"), readFileSync(DEFAULT_SHELL_CORPUS));
+      const files = [join(dir, "path-corpus.json"), join(dir, "bash-corpus.json")];
+      const before = files.map(digest);
+      const adapter: ReplayAdapter =
+        m === "sdd-mcp-server" ? createMcpServerAdapter() : m === "copilot-hooks" ? createCopilotHooksAdapter() : await ADAPTERS["opencode-permissions"]!({ mode: "native-permissions" });
+      const { report, problems } = await runReplay(adapter, { pathCorpus: files[0], shellCorpus: files[1] });
+      return { report, problems, before, after: files.map(digest) };
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  })();
+  platformRuns.set(m, r);
+  return r;
+}
+
+for (const m of ["opencode-permissions", "sdd-mcp-server", "copilot-hooks"] as const) {
+  test(`C002-TS-681 — ${m}: PG-900 and PG-902 not applicable (platforms), PG-901 replayed deny (C002-REQ-625), PG-163 replayed`, async (t) => {
+    if (!rowRunnable(t, m)) return;
+    const { report, problems, before, after } = await platformReplay(m);
+    assert.equal(report.replay_host.platform, "win32", "replayed on REF-WIN");
+    assert.deepEqual(problems, [], "the report validates against the release-record schema and lists every case once");
+    const platformEntries = report.not_applicable.filter((n) => n.rule === "platforms").map((n) => n.id).sort();
+    assert.deepEqual(platformEntries, ["PG-900", "PG-902"], "no other platforms entry");
+    for (const id of ["PG-900", "PG-902"]) assert.ok(!report.cases.some((c) => c.id === id), `${id} is not among the cases`);
+    const e901 = entry(report, "PG-901");
+    assert.deepEqual([e901.expected, e901.expected_source], ["deny", "C002-REQ-625"]);
+    entry(report, "PG-163");
+    const identity = [...loadCorpora().path.corpus.cases, ...loadCorpora().shell.cases].filter((c) => c.category === "identity").map((c) => c.id).sort();
+    const ruled = report.not_applicable.filter((n) => n.rule === "C002-REQ-626").map((n) => n.id).sort();
+    assert.deepEqual(ruled, m === "opencode-permissions" ? [] : identity);
+    assert.deepEqual(after, before, "the fixture's corpus files read back unchanged");
+  });
+}

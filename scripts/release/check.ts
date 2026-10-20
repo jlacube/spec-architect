@@ -211,6 +211,9 @@ export function releaseCheck(opts: CheckOptions): CheckResult {
     entry.applicable = r.applicable;
     entry.not_applicable = r.notApplicable;
     entry.differing = r.differing;
+    // A report replayed on another platform than win32 is not checked further (§5 first row): no
+    // ERR-REL-006 host-version check of its opencode-permissions host either.
+    if (r.otherPlatform !== undefined) continue;
     // OpenCode evaluates the rules at its tested version (§2): the report's host version is evidence.
     if (mechanism === "opencode-permissions") versions(`corpus replay ${path}`, hostVersions(report.host_versions), { ...(tested["opencode"] !== undefined ? { opencode: tested["opencode"] } : {}) });
   }

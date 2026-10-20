@@ -4,9 +4,12 @@
 // what the release check reads per Examples row: the corpora of the release commit, the record schema
 // copy, the manual VS Code checklist, the spike records, the replay reports (clean by default, built from
 // the rules of tests/replay/expect.ts), the injection summary and the checklist record. C002-T-064: an
-// evidence root may add cases to its path corpus (the case PG-900 that `platforms` limits to linux,
-// C002-TC-637) and replace the checklist (the step indexes of C002-TC-668 and C002-TC-669); its clean
-// reports then cite and replay the root's corpora.
+// evidence root may add cases to its path corpus and replace the checklist (the step indexes of
+// C002-TC-668 and C002-TC-669); its clean reports then cite and replay the root's corpora. C002-T-065:
+// the cases PG-900 (category outside) and PG-901 (category memory), both limited by `platforms` to
+// `posix` (C002-TC-637, C002-TC-682, C002-TC-683): the clean reports list PG-900 under not_applicable
+// with the rule `platforms` and replay PG-901 with deny (C002-REQ-625); and fx-release-no-platforms
+// (`noPlatforms`), whose corpora hold no `platforms` list (C002-TC-683).
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -107,15 +110,18 @@ export interface ReportJson {
 const corpora = loadCorpora(ROOT);
 
 /**
- * The fx-release case PG-900 (C002-TS-637): limited by `platforms` to linux, so it has no expectation on
- * the win32 replay host; every `platforms` list of the repository's corpora names win32.
+ * The fx-release cases of the platform rule (C002-TS-637, C002-TS-682, C002-TS-683; defect D-018 item 2,
+ * critic CR-66): PG-900, category outside, falls to the last row of C002-IF-009 §2.1 and is not applicable
+ * on the win32 replay host (rule `platforms`); PG-901, category memory, is limited the same way but keeps
+ * the memory row's deny (C002-REQ-625) on every host.
  */
-export const PG_900: AnyCase = { id: "PG-900", category: "traversal", tool: "Write", agent: "architect:sdd-spec-writer", path: "{repo}/.sdd/004-x/linux-only.md", expect: "allow", platforms: ["linux"] } as unknown as AnyCase;
+export const PG_900: AnyCase = { id: "PG-900", category: "outside", tool: "Write", agent: "architect:sdd-spec-writer", path: "{repo}/src/posix-only.ts", expect: "deny", platforms: ["posix"] } as unknown as AnyCase;
+export const PG_901: AnyCase = { id: "PG-901", category: "memory", tool: "Write", agent: "architect:sdd-cartographer", path: "{repo}/.claude/agent-memory/architect-sdd-cartographer/POSIX.md", expect: "allow", platforms: ["posix"] } as unknown as AnyCase;
 
 /**
  * A clean replay report of `mechanism`: every case with the expectation of §2.1, actual = expected, host
- * win32 with file-symlink; a case without an expectation on win32 (`platforms`) is left out. `cs`: the
- * corpora the report cites (default: the repository's).
+ * win32 with file-symlink; the identity cases and the cases of the platform rule under not_applicable with
+ * their rule. `cs`: the corpora the report cites (default: the repository's).
  */
 export function cleanReport(target: Target, mechanism: Mechanism, tested: Record<string, string>, cs: ReturnType<typeof loadCorpora> = corpora): ReportJson {
   const report: ReportJson = {
@@ -137,7 +143,6 @@ export function cleanReport(target: Target, mechanism: Mechanism, tested: Record
     for (const c of corpus.cases as AnyCase[]) {
       const exp = expectationOf(c, mechanism, "win32", name);
       if (!exp.applicable) report.not_applicable.push({ id: c.id, corpus: name, category: c.category, rule: exp.rule });
-      else if ("omitted" in exp) continue;
       else report.cases.push({ id: c.id, corpus: name, category: c.category, fed_as: { tool: c.tool ?? "write", caller: callerOf(c, mechanism), malformed: exp.malformed }, expected: exp.expected, expected_source: exp.source, actual: exp.expected });
     }
   }
@@ -244,8 +249,10 @@ export interface Evidence {
   s08?: string | null;
   /** An existing evidence root to add this target's evidence to (C002-TS-622). */
   into?: string;
-  /** Cases appended to the root's path corpus (C002-TC-637: PG-900); the clean reports cite that corpus. */
+  /** Cases appended to the root's path corpus (C002-TC-637: PG-900, PG-901); the clean reports cite that corpus. */
   pathCases?: AnyCase[];
+  /** fx-release-no-platforms (C002-TC-683): the root's corpora hold no `platforms` list. */
+  noPlatforms?: boolean;
   /** The text of `docs/checklists/vscode-copilot.md` in the root (C002-TC-668, C002-TC-669); null for none. */
   checklistFile?: string | null;
 }
@@ -261,9 +268,10 @@ export function evidenceRoot(e: Evidence): { root: string; pkg: Package } {
     writeFileSync(file, typeof data === "string" ? data : JSON.stringify(data, null, 2) + "\n");
   };
   for (const f of Object.values(CORPUS_FILES)) put(f, readFileSync(join(ROOT, ...f.split("/")), "utf8"));
-  if (e.pathCases?.length) {
+  if (e.pathCases?.length || e.noPlatforms) {
     const corpus = JSON.parse(readFileSync(join(ROOT, ...CORPUS_FILES.path.split("/")), "utf8")) as { cases: AnyCase[] };
-    corpus.cases.push(...e.pathCases);
+    corpus.cases.push(...(e.pathCases ?? []));
+    if (e.noPlatforms) for (const c of corpus.cases) delete (c as { platforms?: unknown }).platforms;
     put(CORPUS_FILES.path, corpus as unknown as Json);
   }
   const rootCorpora = loadCorpora(root);

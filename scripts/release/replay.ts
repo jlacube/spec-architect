@@ -39,6 +39,7 @@ export function loadCorpora(root: string): Record<CorpusName, Corpus | null> {
 interface ReportEntry {
   id?: unknown;
   corpus?: unknown;
+  rule?: unknown;
   expected?: unknown;
   expected_source?: unknown;
   actual?: unknown;
@@ -80,6 +81,8 @@ export interface ReplayResult {
   applicable: number;
   notApplicable: string[];
   differing: number;
+  /** Set when the report was replayed on another platform than `win32` and was not checked further (§5). */
+  otherPlatform?: Platform;
 }
 
 const ids = (list: string[]) => list.join(", ");
@@ -94,6 +97,20 @@ export function checkReport(target: string, mechanism: Mechanism, path: string, 
     if (cases.length > 0) refusals.push(refusal("ERR-REL-012", { target, path, mechanism, problem: p, "case ids": ids(cases) }));
   };
   const platform = report.replay_host.platform;
+  // §5, first: release replays run on win32 (critic CR-60). A report of another platform gives one
+  // ERR-REL-012 line naming the cases the platform rule excludes there and not on win32 (or none), and
+  // is checked no further: no other ERR-REL-012 line, no ERR-REL-001 from its differing count.
+  if (platform !== "win32") {
+    const moved: string[] = [];
+    for (const name of ["path", "shell"] as const)
+      for (const c of corpora[name].cases) {
+        const there = expectationOf(c, mechanism, platform, name);
+        const onWin = expectationOf(c, mechanism, "win32", name);
+        if (!there.applicable && there.rule === "platforms" && !(!onWin.applicable && onWin.rule === "platforms")) moved.push(String(c.id));
+      }
+    refusals.push(refusal("ERR-REL-012", { target, path, mechanism, problem: `was replayed on ${platform}, not on win32`, "case ids": moved.length > 0 ? ids(moved) : "none" }));
+    return { refusals, applicable: 0, notApplicable: [], differing: 0, otherPlatform: platform };
+  }
   const capabilities = new Set(report.replay_host.capabilities.filter((c): c is string => typeof c === "string"));
 
   const key = (corpus: unknown, id: unknown) => `${String(corpus)}\u0000${String(id)}`;
@@ -125,6 +142,8 @@ export function checkReport(target: string, mechanism: Mechanism, path: string, 
       if (!exp.applicable) {
         if (asCase.length === 1) excludedReplayed.push(c.id);
         else if (asNa.length === 0) omitted.push(c.id);
+        // Each not-applicable entry carries the rule that excludes its case (Q-replay-rule-01, critic CR-62).
+        else if (asNa[0]!.rule !== exp.rule) naWithoutRule.push(c.id);
         continue;
       }
       if (asNa.length === 1) {
@@ -136,8 +155,7 @@ export function checkReport(target: string, mechanism: Mechanism, path: string, 
         omitted.push(c.id);
         continue;
       }
-      // A case limited by `platforms` to other platforms has no expectation on this host (§2.1).
-      if ("omitted" in exp || entry.expected !== exp.expected || entry.expected_source !== exp.source) otherExpectations.push(c.id);
+      if (entry.expected !== exp.expected || entry.expected_source !== exp.source) otherExpectations.push(c.id);
     }
   }
   // Entries that are no case of the corpora carry an expectation that §2.1 does not give.

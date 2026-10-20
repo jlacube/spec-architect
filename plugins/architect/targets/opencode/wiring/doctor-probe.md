@@ -6,4 +6,6 @@
    (the CLI reads the host version; never run `opencode` itself); sdd CLI: `sdd --version`;
    Context7 and DeepWiki: load one of their tools and make one small call (unreachable when it
    fails). Pass each probe's output and any refusal (an error code with its reason) back to the
-   report. Without `.sdd/`, probe the same way and skip the file.
+   report. Test whether `.sdd/` exists with `sdd status` or with `read` of `.sdd/`, never with
+   `glob`, which lists no file inside a dot folder. Without `.sdd/`, probe the same way and skip
+   the file.

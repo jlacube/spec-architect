@@ -7,16 +7,18 @@
 // started no process at all. Every success's structuredContent is checked against sdd-mcp-tools.schema.json;
 // an error result is text only (C002-IF-002 §6.1, revised for defect D-017; C002-T-064): its code and
 // message are read from the text, and it carries no structuredContent key.
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync, existsSync, linkSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { delimiter, dirname, isAbsolute, join } from "node:path";
+import { basename, delimiter, dirname, isAbsolute, join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { repoRoot } from "../../helpers.ts";
 import { applyFilter, STREAM_CAP } from "../../../src/mcp/tools/shell.ts";
 import { errorText, McpSession, serverBundle, serverWorkspace, VERSION, type ErrorText } from "./client.ts";
+import { cleanupFxTgz, fxTgz } from "../../fixtures/fx-tgz.ts";
+import { cmdStarts, envWithPath, exeStarts, nodeOnlyDir, plantCmd, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
 
 const schema = JSON.parse(readFileSync(join(repoRoot(), "src", "mcp", "tools.schema.json"), "utf8")) as object;
 const validateResult = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
@@ -573,5 +575,96 @@ test("output caps and timeout: each stream cut at 1,048,576 characters; at timeo
     );
   } finally {
     g.cleanup();
+  }
+});
+
+after(() => cleanupFxTgz());
+
+// --- C002-TC-686, C002-TC-687 (C002-TS-686, C002-TS-687; C002-T-065): the executable lookup of the
+// command tool and of the process-tree kill (C002-IF-002 §5.2 steps 3 and 4, C002-IF-007 §Executable
+// lookup). The server of fx-tgz runs in a copy of fx-srv whose root holds a recording git.exe (stub-exe)
+// that prints `planted`; per row a folder standing for C:/fx/git-bin; the PATH of the row with that
+// folder substituted (`.` and empty entries kept), followed by a folder holding only the real node.exe.
+const ROWS_686: { path: string; bin: "exe" | "none" | "cmd"; text?: string }[] = [
+  { path: "BIN", bin: "exe" },
+  { path: ".;BIN", bin: "exe" },
+  { path: ";BIN", bin: "exe" },
+  { path: "BIN", bin: "none", text: 'ERR-MCP-006: could not start "git": not found on PATH' },
+  { path: ".", bin: "none", text: 'ERR-MCP-006: could not start "git": not found on PATH' },
+  { path: "BIN", bin: "cmd", text: 'ERR-MCP-006: could not start "git": only a .cmd or .bat shim was found' },
+];
+ROWS_686.forEach((row, i) => {
+  test(`C002-TS-686 row ${i + 1} — PATH ${row.path}, git-bin ${row.bin}: ${row.text ?? "exit 0, git version 2.51.0.windows.1"}`, { skip: STUB_EXE_SKIP }, async () => {
+    const f = fxSrv();
+    const bin = join(dirname(f.root), `${basename(f.root)}-git-bin`);
+    try {
+      plantExe(f.root, "git", { print: "planted" });
+      mkdirSync(bin, { recursive: true });
+      if (row.bin === "exe") plantExe(bin, "git", { on: { "--version": "git version 2.51.0.windows.1" } });
+      if (row.bin === "cmd") plantCmd(bin, "git", { print: "git version 2.51.0.windows.1" });
+      const path = [...row.path.split(";").map((e) => (e === "BIN" ? bin : e)), nodeOnlyDir()].join(";");
+      await withServer(
+        async (call) => {
+          const r = await call({ command: "git --version" });
+          if (row.text === undefined) {
+            assertCompleted(r);
+            assert.equal(r.structuredContent["exit_code"], 0);
+            assert.equal(r.structuredContent["stdout"], "git version 2.51.0.windows.1\n");
+          } else {
+            assert.equal(r.isError, true, JSON.stringify(r));
+            assert.equal(r.error!.text, row.text);
+            assert.equal(Object.prototype.hasOwnProperty.call(r, "structuredContent"), false);
+          }
+        },
+        { fixture: () => ({ ...f, cleanup: () => {} }), env: envWithPath(path), serverFile: join(fxTgz().pkgDir, "scripts", "sdd-mcp.mjs") },
+      );
+      assert.deepEqual(exeStarts(f.root, "git"), [], "the planted git.exe records no start");
+      if (row.bin === "cmd") assert.deepEqual(cmdStarts(bin, "git"), [], "git.cmd records no start");
+    } finally {
+      f.cleanup();
+      rmSync(bin, { recursive: true, force: true });
+    }
+  });
+});
+
+test("C002-TS-687 — at timeout_ms the process tree is killed by the taskkill of the PATH folders, not the planted one", { skip: STUB_EXE_SKIP }, async () => {
+  const f = fxSrv();
+  const bin = join(dirname(f.root), `${basename(f.root)}-git-bin`);
+  try {
+    plantExe(f.root, "taskkill", { print: "planted" });
+    plantExe(bin, "git", { neverEnding: true });
+    const system32 = join(process.env["SystemRoot"] ?? "C:\Windows", "System32");
+    const path = [bin, system32, nodeOnlyDir()].join(";");
+    let calls: { file: string; args: string[] }[] = [];
+    await withServer(
+      async (call, _fx, s) => {
+        const r = await call({ command: "git --version", timeout_ms: 2000 });
+        assert.equal(r.structuredContent["status"], "timed_out", JSON.stringify(r));
+        calls = spawnCalls(s.stderr).filter((c) => /taskkill/i.test(c.file));
+      },
+      { fixture: () => ({ ...f, cleanup: () => {} }), env: envWithPath(path), serverFile: join(fxTgz().pkgDir, "scripts", "sdd-mcp.mjs") },
+    );
+    const started = exeStarts(bin, "git");
+    assert.equal(started.length, 1);
+    const { pid, child } = started[0]!;
+    assert.ok(pid > 0 && child > 0, JSON.stringify(started[0]));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const alive = (p: number) => {
+      try {
+        process.kill(p, 0);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    assert.equal(alive(pid), false, "the stub git.exe still runs");
+    assert.equal(alive(child), false, "its child still runs");
+    assert.deepEqual(exeStarts(f.root, "taskkill"), [], "the planted taskkill.exe records no start");
+    // taskkill started once, by its absolute path in System32 (no shell: checked by withServer).
+    assert.equal(calls.length, 1, JSON.stringify(calls));
+    assert.equal(calls[0]!.file.toLowerCase(), join(system32, "taskkill.exe").toLowerCase());
+  } finally {
+    f.cleanup();
+    rmSync(bin, { recursive: true, force: true });
   }
 });

@@ -5,9 +5,17 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { CliError } from "../cli/errors.ts";
+import { nativeExecutable } from "../io/paths.ts";
 
+/**
+ * Runs `git` in `root`: the first native match on PATH, started by its absolute path without a shell
+ * (C002-IF-007 §Executable lookup, C002-CON-17). No native match fails as a missing git does, so the first
+ * precondition gives ERR-CLI-018 `not a git repository`.
+ */
 function git(root: string, args: string[]): { ok: boolean; out: string } {
-  const r = spawnSync("git", args, { cwd: root, encoding: "utf8", windowsHide: true });
+  const exe = nativeExecutable("git");
+  if ("error" in exe) return { ok: false, out: exe.error };
+  const r = spawnSync(exe.file, args, { cwd: root, encoding: "utf8", windowsHide: true });
   return { ok: !r.error && r.status === 0, out: `${r.stdout ?? ""}${r.stderr ?? ""}`.trim() };
 }
 

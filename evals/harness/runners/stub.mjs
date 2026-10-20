@@ -9,7 +9,8 @@
 //   { tool, input }                             a call that runs without a request
 //   { text }                                    assistant text of that turn
 // No process, socket, network or model is involved; the stub needs no package in the project.
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const sleep = () => new Promise((r) => setImmediate(r));
 
@@ -29,10 +30,12 @@ const sleep = () => new Promise((r) => setImmediate(r));
  *                                             host name, e.g. "sdd-auditor" or "general-purpose") with
  *                                             those calls
  *   { error: "…" , session: true }            a `session.error` event with that text
- * `calls` records each run's arguments, working folder and environment, for the tests.
+ * `calls` records each run's arguments, working folder and environment, for the tests. `sessionCredits` replaces the
+ * AI Credits the usage file gives for the whole session (C002-TC-678); `limitText: false` stops at the limit
+ * without printing the host's limit text; `hostLog` is written as the host's log file into `--log-dir` (C002-TC-915).
  */
-/** @param {{ creditsPerTurn?: number, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, onRun?: (o: any) => void }} [options] */
-export function copilotStubHost({ creditsPerTurn = 1, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, onRun } = {}) {
+/** @param {{ creditsPerTurn?: number, sessionCredits?: number, limitText?: boolean, hostLog?: string, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, onRun?: (o: any) => void }} [options] */
+export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText = true, hostLog, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, onRun } = {}) {
   const calls = [];
   let seq = 0;
   const id = (p) => `${p}-${String(++seq).padStart(6, "0")}`;
@@ -45,6 +48,11 @@ export function copilotStubHost({ creditsPerTurn = 1, reportsSpend = true, endAf
     async run({ args, cwd, env, onEvent, signal }) {
       calls.push({ args, cwd, env });
       onRun?.({ args, cwd, env });
+      if (hostLog !== undefined) {
+        const logDir = args[args.indexOf("--log-dir") + 1];
+        mkdirSync(logDir, { recursive: true });
+        writeFileSync(join(logDir, "process-stub.log"), hostLog);
+      }
       const limit = Number(args[args.indexOf("--max-ai-credits") + 1]);
       const ts = () => new Date().toISOString();
       const emit = (type, data, extra = {}) => onEvent({ type, data, id: id("evt"), timestamp: ts(), ...extra });
@@ -90,13 +98,13 @@ export function copilotStubHost({ creditsPerTurn = 1, reportsSpend = true, endAf
         for (const a of actions) if (a.session) emit("session.error", { errorType: "query", message: a.error });
         // The host's session limit (`--max-ai-credits`): the next model call is blocked.
         if (reportsSpend && Number.isFinite(limit) && turn * creditsPerTurn + 1e-9 >= limit) {
-          emit("session.error", { errorType: "limits", message: `Session limits reached: ${turn * creditsPerTurn}/${limit} AI credits used. Increase or unset the session limit to continue.` });
+          if (limitText) emit("session.error", { errorType: "limits", message: `Session limits reached: ${turn * creditsPerTurn}/${limit} AI credits used. Increase or unset the session limit to continue.` });
           break;
         }
         await sleep();
       }
       if (usageFile) {
-        const nano = Math.round(turns * creditsPerTurn * 1e9);
+        const nano = Math.round((sessionCredits ?? turns * creditsPerTurn) * 1e9);
         writeFileSync(
           usageFile,
           JSON.stringify({ totalPremiumRequestCost: 0, totalNanoAiu: reportsSpend ? nano : 0, aiCreditsStatus: reportsSpend ? "ok" : "unavailable", modelMetrics: { [model]: { requests: { count: turns, cost: 0 }, usage: { inputTokens: 100 * turns, outputTokens: 10 * turns, cacheReadTokens: 0, cacheWriteTokens: 0 }, totalNanoAiu: reportsSpend ? nano : 0 } } }),
@@ -110,10 +118,14 @@ export function copilotStubHost({ creditsPerTurn = 1, reportsSpend = true, endAf
 
 /**
  * The stub host factory: `{ needsPackage: false, start() }`, as `driverHost()` of ./opencode.mjs.
- * `calls` records every session the stub ran (agent, text or command), for the tests.
+ * `calls` records every session the stub ran (agent, text or command), for the tests, with `steps`: the
+ * start and finish of each step in order (`{ kind: "start" | "finish", who: "session" | "subagent", step,
+ * cost }`). `costs` gives the cost of each step of the session agent (default `spendPerTurn`);
+ * `subagent` (`{ step, cost }`, C002-TC-677) runs one subagent step in parallel with that step of the
+ * session agent, finishing before it (so before an abort that step's finish would cause takes effect).
  */
-/** @param {{ spendPerTurn?: number, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: { providerID: string, modelID: string } }} [options] */
-export function stubHost({ spendPerTurn = 0.01, reportsSpend = true, endAfter = null, script = [], version = "1.18.31", maxTurns = 10_000, model = { providerID: "stub", modelID: "stub-model" } } = {}) {
+/** @param {{ spendPerTurn?: number, costs?: number[], subagent?: { step: number, cost: number }, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: { providerID: string, modelID: string } }} [options] */
+export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = true, endAfter = null, script = [], version = "1.18.31", maxTurns = 10_000, model = { providerID: "stub", modelID: "stub-model" } } = {}) {
   const calls = [];
   return {
     needsPackage: false,
@@ -126,7 +138,8 @@ export function stubHost({ spendPerTurn = 0.01, reportsSpend = true, endAfter = 
         /** @param {{ agent?: string, text?: string, command?: { name: string, arguments?: string }, model?: { providerID: string, modelID: string }, permission?: (req: any) => any, question?: (req: any) => any, onEvent?: (ev: any, root: string) => void, signal?: AbortSignal, title?: string, timeoutMs?: number }} options */
         async run({ agent, text, command, permission, question, onEvent, signal }) {
           const sessionID = id("ses");
-          calls.push({ sessionID, agent, ...(command ? { command } : { text }) });
+          const steps = [];
+          calls.push({ sessionID, agent, ...(command ? { command } : { text }), steps });
           const messages = [];
           let aborted = false;
           for (let turn = 1; turn <= maxTurns; turn++) {
@@ -137,6 +150,7 @@ export function stubHost({ spendPerTurn = 0.01, reportsSpend = true, endAfter = 
             if (endAfter !== null && turn > endAfter) break;
             const messageID = id("msg");
             const now = Date.now();
+            steps.push({ kind: "start", who: "session", step: turn });
             const parts = [{ id: id("prt"), sessionID, messageID, type: "step-start" }];
             for (const action of script[turn - 1] ?? []) {
               if (action.text !== undefined) {
@@ -155,9 +169,18 @@ export function stubHost({ spendPerTurn = 0.01, reportsSpend = true, endAfter = 
               }
               parts.push(part);
             }
-            const cost = reportsSpend ? spendPerTurn : 0;
+            const cost = reportsSpend ? (costs?.[turn - 1] ?? spendPerTurn) : 0;
             const tokens = { input: 100, output: 10, reasoning: 0, cache: { read: 0, write: 0 } };
+            // A subagent step in parallel with this step: it starts and finishes while this step runs.
+            if (subagent && subagent.step === turn) {
+              const child = id("ses");
+              steps.push({ kind: "start", who: "subagent", step: 1 });
+              const sub = { id: id("prt"), sessionID: child, messageID: id("msg"), type: "step-finish", reason: "stop", cost: reportsSpend ? subagent.cost : 0, tokens };
+              steps.push({ kind: "finish", who: "subagent", step: 1, cost: sub.cost });
+              onEvent?.({ id: id("evt"), type: "message.part.updated", properties: { sessionID: child, part: sub, time: now } }, sessionID);
+            }
             const finish = { id: id("prt"), sessionID, messageID, type: "step-finish", reason: "tool-calls", cost, tokens };
+            steps.push({ kind: "finish", who: "session", step: turn, cost });
             parts.push(finish);
             messages.push({ info: { id: messageID, sessionID, role: "assistant", time: { created: now, completed: now }, parentID: "", modelID: model.modelID, providerID: model.providerID, mode: agent, agent, path: { cwd: "", root: "" }, cost, tokens }, parts });
             onEvent?.({ id: id("evt"), type: "message.part.updated", properties: { sessionID, part: finish, time: now } }, sessionID);

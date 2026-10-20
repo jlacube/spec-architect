@@ -55,11 +55,12 @@ const ere = (s) => s.replace(/[.[\]()*+?{}|^$\\]/g, "\\$&");
 const reEscape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
- * Drops for every PATH entry that holds an `sdd` executable (`sdd`, `sdd.cmd`, `sdd.exe`, `sdd.ps1`), so
- * that no bare `sdd` resolves in the session (C002-TC-509, "no sdd executable on PATH").
+ * Drops for every PATH entry that holds an executable named `tool` (`<tool>`, `.cmd`, `.exe`, `.ps1`,
+ * `.bat`), so that no bare `<tool>` resolves in the session (C002-TC-509, "no sdd executable on PATH";
+ * an `opencode missing` configuration, C002-TC-676).
  */
-function noSddDrops() {
-  const names = new Set(["sdd", "sdd.cmd", "sdd.exe", "sdd.ps1", "sdd.bat"]);
+function noToolDrops(tool) {
+  const names = new Set(["", ".cmd", ".exe", ".ps1", ".bat"].map((e) => tool + e));
   const dirs = String(process.env[pathKey()] ?? "")
     .split(delimiter)
     .filter((p) => {
@@ -87,15 +88,20 @@ function withPath(cfg, { prepend = [], drop = [] } = {}) {
 
 /**
  * `{ env, plugins }` for a configuration name. `prepend` adds folders (version shims of a case) before
- * the configuration's own PATH entries.
+ * the configuration's own PATH entries. `lead` (C002-IF-010 §4 PATH lead, defect D-020 item 4): folders
+ * placed right after the case's `prepend` folders and before the configuration's own folders (the
+ * folder of the pinned OpenCode binary on the OpenCode rows); the Git Bash env file applies the same
+ * order. `without: ["opencode"]` removes every folder that holds an `opencode` executable and takes no
+ * lead (an `opencode missing` configuration).
  */
-export function machine(cfg, { prepend: extra = [], without = [] } = {}) {
-  const dropOf = { "ast-grep": NO_AST_GREP };
+export function machine(cfg, { prepend: extra = [], without = [], lead = [] } = {}) {
+  const dropOf = { "ast-grep": () => NO_AST_GREP, opencode: () => noToolDrops("opencode") };
   for (const w of without) if (!dropOf[w]) throw new Error(`machine ${cfg}: cannot drop ${w}`);
-  const extraDrops = without.flatMap((w) => dropOf[w]);
-  // A configuration with case shims or drops gets its own env file (one per variant, not per name).
-  const variant = extra.length > 0 || without.length > 0 ? `-${createHash("sha256").update(JSON.stringify([extra, without])).digest("hex").slice(0, 10)}` : "";
-  const withPathOf = (name, { prepend = [], drop = [] } = {}) => withPath(name + variant, { prepend: [...extra, ...prepend], drop: [...drop, ...extraDrops] });
+  const extraDrops = without.flatMap((w) => dropOf[w]());
+  const leads = without.includes("opencode") ? [] : lead;
+  // A configuration with case shims, a lead or drops gets its own env file (one per variant, not per name).
+  const variant = extra.length > 0 || without.length > 0 || leads.length > 0 ? `-${createHash("sha256").update(JSON.stringify([extra, without, leads])).digest("hex").slice(0, 10)}` : "";
+  const withPathOf = (name, { prepend = [], drop = [] } = {}) => withPath(name + variant, { prepend: [...extra, ...leads, ...prepend], drop: [...drop, ...extraDrops] });
   switch (cfg) {
     case "cfg-full":
       if (!existsSync(join(RIPWIRE_DIR, "ripwire.exe"))) throw new Error(`cfg-full needs ripwire at ${RIPWIRE_DIR}`);
@@ -113,7 +119,7 @@ export function machine(cfg, { prepend: extra = [], without = [] } = {}) {
       return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR, SHIMS("cfg-claude-min")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-no-sdd":
       if (!existsSync(join(RIPWIRE_DIR, "ripwire.exe"))) throw new Error(`cfg-no-sdd needs ripwire at ${RIPWIRE_DIR}`);
-      return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR], drop: [...NO_RIPWIRE, ...noSddDrops()] }), plugins: [architectWithStubs] };
+      return { env: withPathOf(cfg, { prepend: [RIPWIRE_DIR], drop: [...NO_RIPWIRE, ...noToolDrops("sdd")] }), plugins: [architectWithStubs] };
     case "cfg-old-claude":
       return { env: withPathOf(cfg, { prepend: [SHIMS("cfg-old-claude")], drop: NO_RIPWIRE }), plugins: [architectWithStubs] };
     case "cfg-node18":

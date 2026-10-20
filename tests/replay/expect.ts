@@ -14,8 +14,13 @@
 //                                                                         (C002-REQ-401; D-014 item 2)
 //   8. every other case                                                 → the corpus value (corpus), per
 //                                                                         platform of the replay host
-// A case that requires a host capability (C002-REQ-633) is never not applicable and never a malformed
-// call: rule 2 does not apply to it, and the other rules give its expectation as for any other case.
+// Platform rule (§2.1; defect D-018 item 2, critic CR-60, CR-61, CR-66): a case that falls to rule 8 and
+// whose `platforms` list (a non-empty list of `win32` and `posix`) does not name the replay host's
+// platform is not applicable, rule `platforms`, on every mechanism; a `platforms` field that is not such
+// a list excludes nothing (fail-closed). The rows above rule 8 keep their expectation on every host.
+// A case that requires a host capability (C002-REQ-633) is never a malformed call and, apart from the
+// platform rule, which comes first, never not applicable: rule 2 does not apply to it, and the other
+// rules give its expectation as for any other case.
 import type { BashCase, CorpusCase } from "../guards/fixture.ts";
 
 export type Mechanism = "opencode-permissions" | "sdd-mcp-server" | "copilot-hooks";
@@ -35,11 +40,26 @@ export const CONDUCTOR = "sdd-conductor";
 /** The replay fixture's adopter agent: none of the ten, no rule of the target package (C002-REQ-626). */
 export const ADOPTER_AGENT = "adopter-agent";
 
-export type Expectation =
-  | { applicable: false; rule: "C002-REQ-626" }
-  | { applicable: true; expected: Decision; source: ExpectedSource; malformed: boolean }
-  /** A case limited by `platforms` to other platforms has no expectation on this host (§2.1, ERR-REL-012). */
-  | { applicable: true; omitted: string };
+/** The rule of a not-applicable entry (§2.1): the identity row, or the platform rule. */
+export type NotApplicableRule = "C002-REQ-626" | "platforms";
+
+export type Expectation = { applicable: false; rule: NotApplicableRule } | { applicable: true; expected: Decision; source: ExpectedSource; malformed: boolean };
+
+/** The values a `platforms` list may name: those of `replay_host.platform` (§2.1 Platform rule). */
+export const PLATFORMS: readonly Platform[] = ["win32", "posix"];
+
+/** The platforms a case is limited to, or null when its `platforms` field is absent or no non-empty list of `win32`/`posix` (excludes nothing). */
+export function platformsOf(c: AnyCase): Platform[] | null {
+  const p = (c as { platforms?: unknown }).platforms;
+  if (!Array.isArray(p) || p.length === 0 || !p.every((v) => typeof v === "string" && (PLATFORMS as readonly string[]).includes(v))) return null;
+  return p as Platform[];
+}
+
+/** True when the platform rule excludes a case that falls to the last row on `platform`. */
+export const platformExcluded = (c: AnyCase, platform: Platform): boolean => {
+  const p = platformsOf(c);
+  return p !== null && !p.includes(platform);
+};
 
 /** The generated agent of an `architect:<name>` caller that is one of the ten, else null. */
 export function architectAgent(agent: unknown): string | null {
@@ -91,8 +111,8 @@ export function expectationOf(c: AnyCase, mechanism: Mechanism, platform: Platfo
   if (corpus === "shell" && c.tool !== null && WRITE_TOOLS.includes(c.tool)) return { applicable: true, expected: "deny", source: "C001-REQ-1103", malformed: c.stdin !== undefined };
   if (mechanism === "sdd-mcp-server" && serenaPluginDataCase(c, corpus)) return { applicable: true, expected: "deny", source: "C002-REQ-517", malformed: c.stdin !== undefined };
   if (mechanism === "sdd-mcp-server" && linkedCwdCase(c, corpus)) return { applicable: true, expected: "deny", source: "C002-REQ-401", malformed: c.stdin !== undefined };
-  const platforms = (c as CorpusCase).platforms;
-  if (platforms && !platforms.includes(platform)) return { applicable: true, omitted: `limited to ${platforms.join(", ")}; no expectation on ${platform}` };
+  // The platform rule, for a case of the last row only; it is decided before C002-REQ-633 (a `requires` field).
+  if (platformExcluded(c, platform)) return { applicable: false, rule: "platforms" };
   return { applicable: true, expected: corpusValue(c, platform), source: "corpus", malformed: c.stdin !== undefined };
 }
 

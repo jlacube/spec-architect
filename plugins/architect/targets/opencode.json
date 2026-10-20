@@ -99,7 +99,8 @@
     { "id": "task-tools", "kind": "task-tool-name", "detect": "`?\\bTask(?:Create|Update|List)\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "the `todowrite` tool" } },
     { "id": "tool-search", "kind": "other", "detect": "`?\\bToolSearch\\b`?", "contexts": ["body"], "accepted_in": [], "action": { "replace": "(MCP tools are loaded at start)" } },
     { "id": "mcp-tool-name", "kind": "mcp-tool-name", "detect": "\\bmcp__plugin_architect_[a-z0-9]+__[A-Za-z0-9_-]+", "contexts": ["frontmatter", "body"], "accepted_in": [], "action": { "replace": "{server}_{tool}" } },
-    { "id": "bash-prose", "kind": "tool-name", "detect": "\\bBash\\b", "contexts": ["body"], "accepted_in": [], "action": { "replace": { "by_mode": { "native-permissions": "the `bash` tool", "sdd-mcp-server": "the `sdd-shell` command tool" } } } }
+    { "id": "bash-prose", "kind": "tool-name", "detect": "\\bBash\\b", "contexts": ["body"], "accepted_in": [], "action": { "replace": { "by_mode": { "native-permissions": "the `bash` tool", "sdd-mcp-server": "the `sdd-shell` command tool" } } } },
+    { "id": "glob-prose", "kind": "tool-name", "detect": "\bGlob\b", "contexts": ["body"], "accepted_in": [], "action": { "variant_required": true } }
   ],
   "variants": [
     {
@@ -242,6 +243,18 @@
         ]
       },
       "text_file": "cli-conventions.md"
+    },
+    {
+      "id": "file-inspection",
+      "file": "skills/sdd-conventions/SKILL.md",
+      "anchor": {
+        "lines": [
+          "Inspect files with the Grep, Glob and Read tools, not Bash (`grep`, `cat`, `head`, `ls` are",
+          "denied by the bash guard). Use Bash only for the allowlisted commands, one command per call, with",
+          "no `;`, `&&` or redirection."
+        ]
+      },
+      "text_file": "file-inspection.md"
     }
   ],
   "permissions": {

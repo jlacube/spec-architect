@@ -53,6 +53,9 @@ export const GLOSSARY: readonly GlossaryDetector[] = [
   { id: "tool-search", kind: "other", detect: "\\bToolSearch\\b" },
   { id: "mcp-tool-name", kind: "mcp-tool-name", detect: "\\bmcp__plugin_architect_[a-z0-9]+__[A-Za-z0-9_-]+" },
   { id: "bash-prose", kind: "tool-name", detect: "\\bBash\\b" },
+  // The Glob tool named in a body is a wiring anchor on every target (C002-IF-001 §2 row "`Glob` in prose",
+  // defect D-020 item 1): the whole, case-sensitive word only, so `Global` and the host tool `glob` are no anchor.
+  { id: "glob-prose", kind: "tool-name", detect: "\\bGlob\\b", anchor: true },
 ];
 
 /** Words of a diagnostic per construct kind (`<kind> "<construct>"` of ERR-GEN-001). */

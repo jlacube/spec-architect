@@ -24,6 +24,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
+import { capRefusal, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
 import { checkHostEnv, resolveAuth } from "./env.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
@@ -65,6 +66,9 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       break;
     }
     const ws = makeWorkspace(scenario.fixture ?? null);
+    // The row's caps, unchanged: a cap above 0.50 USD got here only through the cap-exception check of
+    // main (C002-IF-010 §2.2); each result record carries them as `caps` (§3, critic CR-65).
+    const caps = { turns: scenario.maxTurns ?? DEFAULT_MAX_TURNS, usd: scenario.maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD };
     try {
       const prompt = typeof scenario.prompt === "function" ? scenario.prompt(ws.root) : scenario.prompt;
       const session = await runSession({
@@ -75,8 +79,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         plugins: host === "claude-code" ? (scenario.plugins ?? [join(ROOT, "plugins", "architect")]).map((p) => (typeof p === "function" ? p() : resolve(ROOT, p))) : [],
         answer: scenario.answer,
         allowTools: scenario.allowTools ?? [],
-        maxTurns: scenario.maxTurns ?? 30,
-        maxBudgetUsd: Math.min(scenario.maxBudgetUsd ?? 0.5, 0.5),
+        maxTurns: caps.turns,
+        maxBudgetUsd: caps.usd,
         model: scenario.model,
         env: scenario.env ?? {},
         startDelayMs: scenario.startDelayMs ?? 0,
@@ -109,7 +113,9 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         api_key_source: session.apiKeySource,
         target,
         ...(session.host_versions ? { host_versions: session.host_versions } : {}),
-        ...(session.end_reason ? { end_reason: session.end_reason, usage: session.usage, spend: session.spend, provider: session.provider, models: session.models } : {}),
+        ...(session.end_reason ? { end_reason: session.end_reason, usage: session.usage } : {}),
+        caps,
+        ...(session.end_reason ? { spend: session.spend, provider: session.provider, models: session.models } : {}),
         ...(session.copilot_usage !== undefined ? { copilot_usage: session.copilot_usage } : {}),
         ...(session.error ? { error: session.error } : {}),
         transcript: `evals/results/transcripts/${basename(transcriptFile)}`,
@@ -334,7 +340,8 @@ export function injectionSummary(docs, { hostVersions }) {
 
 /**
  * Runs the selection; returns the exit code. `deps.runners` replaces host runners (the stub host of
- * the runner tests: no paid session, no ledger), `deps.ledger` the ledger file, `deps.log` the output.
+ * the runner tests: no paid session, no ledger), `deps.ledger` the ledger file, `deps.log` the output,
+ * `deps.root` the repository root that the case files of the cap-exception check are relative to.
  */
 export async function main(argv, deps = {}) {
   const log = deps.log ?? console.log;
@@ -365,6 +372,13 @@ export async function main(argv, deps = {}) {
   if (picked.scenarios.length === 0 && picked.notApplicable.length > 0) return 0;
   if (picked.scenarios.length === 0)
     return fail(`eval: the selection holds no case for host ${host} (${selected.length} file(s); ${picked.skipped.host} row(s) of another host, ${picked.skipped.only} row(s) left out by --only); no session started`);
+  // Cap exceptions (C002-IF-010 §2.2, critic CR-68): before any session, every selected row above 0.50 USD
+  // needs an exception matching its row ID, its case file (relative to the repository root) and the host.
+  const root = deps.root ?? ROOT;
+  const refusals = picked.scenarios
+    .map(({ file, scenario }) => capRefusal({ id: scenario.id, file: posix(relative(root, file)), host, maxBudgetUsd: scenario.maxBudgetUsd }))
+    .filter((r) => r !== null);
+  if (refusals.length > 0) return fail(`eval: ${refusals.join("; ")}; no session started`);
 
   const runners = deps.runners ?? {};
   if (!runners[host]) {

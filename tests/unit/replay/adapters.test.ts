@@ -8,7 +8,7 @@
 // server decision read from the text of a text-only error result, against a stub server per Examples row.
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { BashCase, Corpus } from "../../guards/fixture.ts";
@@ -145,9 +145,11 @@ test("C002-T-041 — decision reading of the server (C002-IF-009 §2.3, text-onl
   assert.equal(readServerDecision({ id: 1 }).actual, "error", "no result");
 });
 
-// C002-TC-667 (C002-T-064): a stub sdd MCP server answers the write_file call of PG-050 with each answer
-// of the Examples; the replay report records the decision and the result's text as its detail. `{repo}`
-// is the stub's working folder, the replay fixture's repository.
+// C002-TC-667 (C002-T-064; revised for defect D-018 item 1 by C002-T-065): a stub sdd MCP server answers
+// the replace_text call of PG-050, an Edit case that C002-IF-009 §2.2 feeds as replace_text, with each
+// answer of the Examples; the replay report records the decision and the result's text as its detail, and
+// the stub records the tools it was called with (one replace_text call, no write_file call). `{repo}` is
+// the stub's working folder, the replay fixture's repository.
 const TS667: { answer: string; result: Record<string, unknown>; decision: "deny" | "allow" | "error" }[] = [
   { answer: "GUARD-PATH-001 text", result: { isError: true, content: [{ type: "text", text: "GUARD-PATH-001: Write on {repo}/README.md denied — outside .sdd/. Allowed: .sdd/." }] }, decision: "deny" },
   { answer: "ERR-MCP-001 text", result: { isError: true, content: [{ type: "text", text: "ERR-MCP-001: invalid arguments for write_file: content is required" }] }, decision: "deny" },
@@ -162,12 +164,14 @@ const TS667: { answer: string; result: Record<string, unknown>; decision: "deny"
   { answer: "a structuredContent without a status", result: { content: [{ type: "text", text: "wrote {repo}/README.md (2 bytes)" }], structuredContent: { tool: "write_file" } }, decision: "error" },
 ];
 
-/** A stub server: answers initialize, and every tools/call with `result` ({repo} = its working folder). */
-function stubServer(result: Record<string, unknown>): string {
+/** A stub server: answers initialize, and every tools/call with `result` ({repo} = its working folder); appends each called tool name to `log`. */
+function stubServer(result: Record<string, unknown>, log: string): string {
   const file = join(dir, `stub-${Math.random().toString(36).slice(2)}.mjs`);
   writeFileSync(
     file,
-    `const RESULT = ${JSON.stringify(JSON.stringify(result))};
+    `import { appendFileSync } from "node:fs";
+const LOG = ${JSON.stringify(log)};
+const RESULT = ${JSON.stringify(JSON.stringify(result))};
 const repo = process.cwd().split(String.fromCharCode(92)).join("/");
 const NL = String.fromCharCode(10);
 let buf = "";
@@ -180,6 +184,7 @@ process.stdin.on("data", (s) => {
     let m;
     try { m = JSON.parse(line); } catch { continue; }
     if (m.id === undefined) continue;
+    if (m.method === "tools/call") appendFileSync(LOG, String(m.params && m.params.name) + NL);
     const reply = m.method === "initialize"
       ? { protocolVersion: "2025-06-18", capabilities: { tools: { listChanged: false } }, serverInfo: { name: "sdd-mcp", version: "0.0.0" } }
       : JSON.parse(RESULT.split("{repo}").join(repo));
@@ -193,7 +198,7 @@ process.stdin.on("end", () => process.exit(0));
 }
 
 for (const row of TS667) {
-  test(`C002-TS-667: the stub answers the write call of PG-050 with ${row.answer} → ${row.decision}, detail holds the text`, async () => {
+  test(`C002-TS-667: the stub answers the replace_text call of PG-050 with ${row.answer} → ${row.decision}, detail holds the text`, async () => {
     const p = JSON.parse(readFileSync(DEFAULT_PATH_CORPUS, "utf8")) as Corpus;
     p.cases = p.cases.filter((c) => c.id === "PG-050");
     const one = join(dir, "pg050-corpus.json");
@@ -202,13 +207,15 @@ for (const row of TS667) {
     const s = JSON.parse(readFileSync(DEFAULT_SHELL_CORPUS, "utf8")) as { cases: BashCase[] };
     s.cases = [];
     writeFileSync(noShell, JSON.stringify(s));
-    const adapter: McpServerAdapter = createMcpServerAdapter({ serverEntry: stubServer(row.result) });
+    const log = join(dir, `stub-calls-${Math.random().toString(36).slice(2)}.log`);
+    const adapter: McpServerAdapter = createMcpServerAdapter({ serverEntry: stubServer(row.result, log) });
     let repo = "";
     const { report } = await runReplay(adapter, { pathCorpus: one, shellCorpus: noShell, afterRun: (fx) => (repo = fx.repo) });
     const e = entry(report, "PG-050");
-    // PG-050 is an Edit case, which §2.2 feeds as replace_text (the scenario says "the write_file call"):
-    // the stub answers whichever write tool is called.
+    // PG-050 is an Edit case, which §2.2 feeds as replace_text (D-018 item 1).
     assert.equal(adapter.calls.find((c) => c.id === "PG-050")?.tool, "replace_text");
+    const received = existsSync(log) ? readFileSync(log, "utf8").split(/\r?\n/).filter((l) => l !== "") : [];
+    assert.deepEqual(received, ["replace_text"], "the stub received one replace_text call and no write_file call");
     assert.equal(e.actual, row.decision, JSON.stringify(e));
     const text = ((row.result["content"] as { text: string }[])[0]!.text).split("{repo}").join(repo);
     assert.equal(e.detail, text, "detail holds the result's text");

@@ -463,6 +463,21 @@ export function hostEnv({ runDir, home, scripts, caseEnv = {}, extra = {}, base 
   return { ...env, ...extra };
 }
 
+/**
+ * The `model` field of the session agent's file `agents/<agent>.agent.md` in the package copy (the
+ * `architect:` prefix removed for the file name), or null when the file or the field is missing
+ * (C002-IF-010 §2 `model`, defect D-019 item 1). Copilot CLI 1.0.98 runs the session agent that
+ * `--agent` names on its default model, so the runner passes this model with `--model`.
+ */
+export function agentModel(copy, agent) {
+  const name = String(agent ?? "").replace(/^architect:/, "");
+  const file = join(copy, "agents", `${name}.agent.md`);
+  if (!name || !existsSync(file)) return null;
+  const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(readFileSync(file, "utf8"));
+  const m = fm ? /^model:\s*["']?([^"'\r\n]+?)["']?\s*$/m.exec(fm[1]) : null;
+  return m ? m[1] : null;
+}
+
 /** The Copilot CLI arguments of one session (C002-IF-010 §4 plus the runner's own options). */
 export function cliArgs({ text, agent, copy, serversFile, maxAiCredits, model, allow = [], logDir, usageFile }) {
   return [
@@ -650,7 +665,9 @@ export async function runCopilotCliSession(options, deps = {}) {
     const logDir = join(runDir, "logs");
     const usageFile = join(runDir, "usage.json");
     const allow = allowToolArgs(allowTools, { table, mode: options.targetPackage?.mode ?? table.enforcement_mode });
-    const args = cliArgs({ text: start.text, agent: start.agent, copy, serversFile, maxAiCredits: maxAiCredits(maxBudgetUsd), model, allow, logDir, usageFile });
+    // --model: the case's model, else the session agent's own model (C002-IF-010 §2), passed once, also for a relayed agent.
+    const sessionModel = model ?? agentModel(copy, start.agent);
+    const args = cliArgs({ text: start.text, agent: start.agent, copy, serversFile, maxAiCredits: maxAiCredits(maxBudgetUsd), model: sessionModel, allow, logDir, usageFile });
     // The command line without the prompt text and the run folder's paths (the case's own data).
     stamp({ event: "start", agent: start.agent, flags: args.filter((a, i) => a.startsWith("--") || args[i - 1] === "--agent" || args[i - 1] === "--max-ai-credits" || args[i - 1] === "--model") });
     started = true;

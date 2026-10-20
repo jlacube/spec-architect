@@ -16,8 +16,9 @@
 //                  (the cfg-deepwiki-down row of C002-TS-509 on OpenCode).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { finalReply } from "../../harness/assert.mjs";
+import { resolveOpenCodeBinary } from "../../harness/opencode/driver.mjs";
 import { ROOT } from "../../harness/fixtures.mjs";
 import { machine } from "../../harness/machines.mjs";
 import { MCP, SERENA, workspace } from "../../cap11/doctor.mjs";
@@ -129,13 +130,27 @@ export function shims(name, { opencode, sdd, claude, code, astGrepCmdOnly = fals
 }
 
 /**
+ * The PATH lead of the OpenCode rows (C002-IF-010 §4, defect D-020 item 4): the folder of the pinned host
+ * binary of the harness configuration (C002-ADR-005; `SDD_OPENCODE_BIN`, else the REF-WIN default), or
+ * none when no pinned binary is configured here (the runner then refuses the session at its start).
+ */
+export function openCodeLead(env = process.env) {
+  try {
+    return [dirname(resolveOpenCodeBinary(env))];
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Scenario fields of a doctor run on `host` and machine configuration `cfg`: `prepend` adds shim
- * folders before the configuration's PATH, `without` drops tools from it (`ast-grep`), `env` adds
- * variables, `extra` overrides any field.
+ * folders before the configuration's PATH, `without` drops tools from it (`ast-grep`, `opencode`), `env`
+ * adds variables, `extra` overrides any field. The OpenCode rows put the pinned binary's folder right
+ * after the `prepend` folders (PATH lead); the Claude Code and Copilot CLI rows take no lead.
  */
 export function doctorCase(host, cfg, { prepend = [], without = [], env = {}, ...extra } = {}) {
   const h = HOSTS[host];
-  const m = machine(cfg, { prepend, without });
+  const m = machine(cfg, { prepend, without, lead: host === "opencode" ? openCodeLead() : [] });
   const base = {
     agent: h.agent,
     env: { ...m.env, ...env },

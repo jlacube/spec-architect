@@ -13,16 +13,21 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createCaps } from "../../../evals/harness/caps.mjs";
 import { hostProcessEnv } from "../../../evals/harness/opencode/driver.mjs";
 import { driverHost as runnerDriverHost, generatedPackage, nameMaps, permissionReply, replyFor, runOpenCodeSession, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
-import { namesOf } from "../../../evals/harness/session.mjs";
+import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
+import { doctorCase as doctorCaseJs, shims as shimsJs } from "../../../evals/targets/doctor/doctor-cases.mjs";
+const doctorCase = doctorCaseJs as unknown as (host: string, cfg: string, o: Record<string, unknown>) => { env: Record<string, string> };
+const shims = shimsJs as unknown as (name: string, o: Record<string, unknown>) => string;
+import { runBundled } from "../cli/helpers.ts";
+import { envWithPath, nodeOnlyDir, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
 import { stubHost } from "../../../evals/harness/runners/stub.mjs";
-import { injectionSummary, ledgerEntry, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
+import { injectionSummary, ledgerEntry, runScenario, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = repoRoot();
@@ -564,3 +569,137 @@ test("the runner's version stamp (supports C002-TC-515): targetPackage.version g
   assert.ok(install.includes("architect-sdd@0.3.0"), "the {{package_version}} token carries 0.3.0");
   assert.ok(readFileSync(manifestFile).equals(before), "the repository's plugin.json is not touched");
 });
+
+// --- C002-TC-614 (OpenCode rows; caps of the result record, critic CR-65; C002-T-065) ----------------
+// The harness (run.mjs runScenario) writes the caps it passed to runSession into each result record.
+async function harnessRecord(stub: Parameters<typeof stubHost>[0]): Promise<Record<string, any>> {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-caps-record-"));
+  const prev = setHarnessContext({ host: "opencode", runners: { opencode: (o: Record<string, unknown>) => runOpenCodeSession(o, { host: stubHost(stub) }) } });
+  try {
+    const scenario = { id: "STUB-CAPS", title: "caps", agent: "architect:sdd-conductor", fixture: null, prompt: "hi", assert: () => [] };
+    const doc = (await runScenario(scenario, { host: "opencode", resultsDir: dir, log: () => undefined })) as Record<string, any>;
+    return doc["records"][0];
+  } finally {
+    setHarnessContext(prev);
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+for (const [spend, turns, reason] of [[0.01, 30, "turn cap"], [0.1, 5, "spend cap"]] as const) {
+  test(`C002-TS-614 OpenCode eval runner, ${spend} USD per turn, a row without maxTurns and maxBudgetUsd: ${turns} turns, ${reason}, caps { turns: 30, usd: 0.50 } in the result record`, async () => {
+    const record = await harnessRecord({ spendPerTurn: spend });
+    assert.equal(record["end_reason"], reason);
+    assert.equal(record["usage"].turns, turns);
+    assert.deepEqual(record["caps"], { turns: 30, usd: 0.5 });
+  });
+}
+
+// --- C002-TC-677 (C002-TS-677; C002-T-065): the spend cap checked after each step on OpenCode ---------
+for (const row of [
+  { cost: 0.12, subagent: undefined, steps: 5, spend: 0.6 },
+  { cost: 0.25, subagent: undefined, steps: 2, spend: 0.5 },
+  { cost: 0.12, subagent: { step: 5, cost: 0.05 }, steps: 5, spend: 0.65 },
+]) {
+  test(`C002-TS-677 — ${row.cost} USD per step${row.subagent ? ", a 0.05 USD subagent step in parallel with the fifth" : ""}: spend cap after ${row.steps} steps, ${row.spend} USD reported`, async () => {
+    const stub = stubHost({ spendPerTurn: row.cost, ...(row.subagent ? { subagent: row.subagent } : {}) });
+    const cwd = mkdtempSync(join(tmpdir(), "sdd-caps-"));
+    try {
+      const s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host: stub });
+      assert.equal(s.end_reason, "spend cap");
+      assert.equal(s.usage.turns, row.steps, "steps of the session agent");
+      assert.ok(Math.abs((s.usage.usd ?? 0) - row.spend) < 1e-9, `usd ${s.usage.usd}`);
+      assert.equal(s.spend, "reported");
+      // No step of the session agent or of a subagent starts after the step that brought the spend to 0.50 USD.
+      const log = (stub.calls[0] as unknown as { steps: { kind: string; who: string; cost?: number }[] }).steps;
+      let sum = 0;
+      let reached = -1;
+      log.forEach((e, i) => {
+        if (e.kind !== "finish" || reached >= 0) return;
+        sum += e.cost ?? 0;
+        if (sum + 1e-9 >= 0.5) reached = i;
+      });
+      assert.ok(reached >= 0, JSON.stringify(log));
+      assert.deepEqual(log.slice(reached + 1).filter((e) => e.kind === "start"), [], `no step started after the cap: ${JSON.stringify(log)}`);
+      assert.equal(log.filter((e) => e.kind === "start" && e.who === "session").length, row.steps);
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
+  });
+}
+
+// --- C002-TC-676 (C002-TS-676; C002-T-065): the pinned OpenCode binary first on the host's PATH --------
+// A stubbed host start records the host process's environment (no opencode serve). The runner's PATH
+// holds a folder standing for C:/Users/p01/.opencode/bin with an opencode reporting 2.0.32; the pinned
+// binary (SDD_OPENCODE_BIN) is a stub-exe opencode.exe reporting 1.18.31 in a folder standing for
+// C:/fx/opencode-1.18.31. Then the bundled `sdd host-version opencode` runs with the host's PATH.
+{
+  const PATH_KEY = Object.keys(process.env).find((k) => k.toUpperCase() === "PATH") ?? "PATH";
+  const SEP = process.platform === "win32" ? ";" : ":";
+  const norm = (p: string) => p.replace(/[\\/]+$/, "").replace(/\\/g, "/").toLowerCase();
+  type Folders = { pinned: string; user: string };
+  type Row = { name: string; caseEnv: () => Record<string, string>; order: (f: Folders, entries: string[]) => void; printed: string };
+  const rows: Row[] = [
+    {
+      name: "a doctor row with no PATH in env",
+      caseEnv: () => ({}),
+      order: (f, e) => {
+        assert.ok(norm(e[0]!).includes("sdd-eval-oc-run-") && norm(e[0]!).endsWith("/bin"), `the run's bin folder first: ${e[0]}`);
+        assert.deepEqual(e.slice(1, 3).map(norm), [f.pinned, f.user].map(norm), "then the pinned folder, then the runner's own PATH");
+      },
+      printed: "opencode 1.18.31",
+    },
+    {
+      name: "a doctorCase row whose machine configuration prepends the C002-TS-513 shim reporting 1.5.0",
+      caseEnv: () => doctorCase("opencode", "cfg-no-ripwire", { prepend: [shims("tc676-opencode-1.5.0", { opencode: "1.5.0" })] }).env,
+      order: (f, e) => {
+        assert.ok(norm(e[0]!).endsWith("/tc676-opencode-1.5.0"), `the shim's folder first: ${e[0]}`);
+        assert.equal(norm(e[1]!), norm(f.pinned), "then the pinned folder");
+        assert.ok(e.slice(2).map(norm).includes(norm(f.user)), "then the configuration's folders");
+      },
+      printed: "opencode 1.5.0",
+    },
+    {
+      name: "an opencode missing row, whose machine configuration removes OpenCode",
+      caseEnv: () => doctorCase("opencode", "cfg-no-ripwire", { without: ["opencode"] }).env,
+      order: (_f, e) => {
+        for (const d of e.filter((x) => x !== "")) for (const n of ["opencode", "opencode.exe", "opencode.cmd"]) assert.ok(!existsSync(join(d, n)), `${d} holds ${n}`);
+      },
+      printed: "opencode missing",
+    },
+  ];
+  for (const row of rows)
+    test(`C002-TS-676 — ${row.name}: host PATH order, then sdd host-version opencode prints ${row.printed}`, { skip: STUB_EXE_SKIP }, async () => {
+      const dir = mkdtempSync(join(tmpdir(), "sdd-runner-676-"));
+      const saved: Record<string, string | undefined> = {};
+      const set = (k: string, v: string | undefined) => {
+        if (!(k in saved)) saved[k] = process.env[k];
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      };
+      try {
+        const user = join(dir, "Users", "p01", ".opencode", "bin");
+        plantExe(user, "opencode", { on: { "--version": "2.0.32" } });
+        const pinnedDir = join(dir, "fx", "opencode-1.18.31");
+        const pinned = plantExe(pinnedDir, "opencode", { on: { "--version": "1.18.31" } });
+        const scripts = join(dir, "scripts");
+        mkdirSync(scripts);
+        for (const f of ["sdd.mjs", "sdd-mcp.mjs"]) writeFileSync(join(scripts, f), "process.exit(0);\n");
+        set("SDD_EVAL_SDD_SCRIPTS", scripts);
+        set("SDD_OPENCODE_BIN", pinned);
+        set(PATH_KEY, [user, nodeOnlyDir(), join(process.env["SystemRoot"] ?? "C:\\Windows", "System32")].join(SEP));
+        const caseEnv = row.caseEnv();
+        const cwd = mkdtempSync(join(dir, "ws-"));
+        const seen: { env?: Record<string, string>; started: boolean } = { started: false };
+        await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [], env: caseEnv }, { host: runnerDriverHost({ bin: pinned, start: fakeStart(seen) }) });
+        const hostPath = Object.entries(seen.env!).find(([k]) => k.toUpperCase() === "PATH")?.[1] ?? "";
+        row.order({ pinned: pinnedDir, user }, hostPath.split(SEP));
+        const r = runBundled(["host-version", "opencode"], { cwd, env: envWithPath(hostPath) });
+        assert.equal(r.stdout, `${row.printed}\n`, r.stderr);
+      } finally {
+        for (const [k, v] of Object.entries(saved)) {
+          if (v === undefined) delete process.env[k];
+          else process.env[k] = v;
+        }
+        rmSync(dir, { recursive: true, force: true });
+      }
+    });
+}

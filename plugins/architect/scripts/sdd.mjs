@@ -7485,7 +7485,7 @@ function writeTextAtomic(path, text, options2 = {}) {
 }
 
 // src/io/paths.ts
-import { realpathSync } from "node:fs";
+import { accessSync, constants, realpathSync, statSync as statSync2 } from "node:fs";
 import { posix, win32 } from "node:path";
 var CURRENT = process.platform === "win32" ? "win32" : "posix";
 var IS_WINDOWS = CURRENT === "win32";
@@ -7594,6 +7594,78 @@ function ambiguousWindowsPath(p, platform = CURRENT) {
 function isCommand(word, name) {
   return word !== void 0 && (word === name || word.toLowerCase() === `${name}.exe`);
 }
+var DEFAULT_PATHEXT = ".COM;.EXE;.BAT;.CMD";
+function envValue(env, name, platform = CURRENT) {
+  if (platform !== "win32" || env[name] !== void 0) return env[name];
+  const key = Object.keys(env).find((k) => k.toUpperCase() === name.toUpperCase());
+  return key === void 0 ? void 0 : env[key];
+}
+var pathValue = (env, platform = CURRENT) => envValue(env, "PATH", platform) ?? "";
+function pathFolders(path, platform = CURRENT) {
+  const out = [];
+  for (const raw of path.split(platform === "win32" ? ";" : ":")) {
+    const entry = platform === "win32" ? raw.trim().replace(/^"(.*)"$/, "$1") : raw;
+    if (entry === "") continue;
+    const absolute = platform === "win32" ? /^([A-Za-z]:[\\/]|[\\/]{2}[^\\/])/.test(entry) : entry.startsWith("/");
+    if (absolute) out.push(entry);
+  }
+  return out;
+}
+function windowsKind(file) {
+  const ext = win32.extname(file).toLowerCase();
+  if (ext === ".exe" || ext === ".com") return "native";
+  if (ext === ".bat" || ext === ".cmd") return "shim";
+  return null;
+}
+function executableNames(name, platform = CURRENT, pathext = DEFAULT_PATHEXT) {
+  if (platform !== "win32") return [{ name, kind: "native" }];
+  const candidates = win32.extname(name) !== "" ? [name] : (pathext.trim() === "" ? DEFAULT_PATHEXT : pathext).split(";").map((e) => e.trim()).filter((e) => e !== "").map((e) => `${name}${e.startsWith(".") ? e : `.${e}`}`.replace(/\.[^.\\/]+$/, (x) => x.toLowerCase()));
+  return candidates.flatMap((n) => {
+    const kind = windowsKind(n);
+    return kind === null ? [] : [{ name: n, kind }];
+  });
+}
+function isExecutableFile(file, platform) {
+  try {
+    if (!statSync2(file).isFile()) return false;
+    if (platform !== "win32") accessSync(file, constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function* matches(name, path, options2) {
+  const platform = options2.platform ?? CURRENT;
+  if (/[\\/]/.test(name) || name === "") return;
+  const pathext = options2.pathext ?? (options2.env ? envValue(options2.env, "PATHEXT", platform) : void 0) ?? DEFAULT_PATHEXT;
+  const names = executableNames(name, platform, pathext);
+  const join33 = platform === "win32" ? win32.join : posix.join;
+  for (const dir2 of pathFolders(path, platform))
+    for (const n of names) {
+      const file = join33(dir2, n.name);
+      if (isExecutableFile(file, platform)) yield { file, kind: n.kind };
+    }
+}
+function findOnPath(name, path, options2 = {}) {
+  for (const m of matches(name, path, options2)) return m;
+  return null;
+}
+function findNativeOnPath(name, path, options2 = {}) {
+  let shim = false;
+  for (const m of matches(name, path, options2)) {
+    if (m.kind === "native") return { file: m.file };
+    shim = true;
+  }
+  return { error: shim ? "only a .cmd or .bat shim was found" : "not found on PATH" };
+}
+function nativeExecutable(name, env = process.env, platform = CURRENT) {
+  return findNativeOnPath(name, pathValue(env, platform), { env, platform });
+}
+function windowsShell(env = process.env) {
+  const spec = envValue(env, "ComSpec", "win32");
+  if (spec !== void 0 && /^[A-Za-z]:[\\/]/.test(spec)) return spec;
+  return win32.join(envValue(env, "SystemRoot", "win32") ?? "C:\\Windows", "System32", "cmd.exe");
+}
 function isInside(root, target, options2 = {}) {
   const key = (p) => options2.real ? pathKey(realPath(p)) : pathKey(p, options2);
   const r = key(root);
@@ -7609,7 +7681,7 @@ function relativePath(root, target, options2 = {}) {
 }
 
 // src/cli/commands.ts
-import { existsSync as existsSync21, readdirSync as readdirSync10, readFileSync as readFileSync22, statSync as statSync12 } from "node:fs";
+import { existsSync as existsSync21, readdirSync as readdirSync10, readFileSync as readFileSync22, statSync as statSync13 } from "node:fs";
 import { basename as basename10, join as join32, resolve as resolve2 } from "node:path";
 
 // src/model/ids.ts
@@ -9526,7 +9598,7 @@ var RULES = [
 ];
 
 // src/lint/engine.ts
-import { existsSync as existsSync5, readdirSync as readdirSync4, readFileSync as readFileSync6, statSync as statSync4 } from "node:fs";
+import { existsSync as existsSync5, readdirSync as readdirSync4, readFileSync as readFileSync6, statSync as statSync5 } from "node:fs";
 import { join as join8 } from "node:path";
 
 // src/cli/errors.ts
@@ -9706,7 +9778,7 @@ function normalizeForHash(text) {
 
 // src/model/graph.ts
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, statSync as statSync2 } from "node:fs";
+import { readdirSync, readFileSync, statSync as statSync3 } from "node:fs";
 import { basename as basename2, join as join3, relative, sep } from "node:path";
 var TABLE_DEFINED = {
   GOAL: ["10-context/problem-and-goals.md"],
@@ -9741,7 +9813,7 @@ function listMarkdown(dir2) {
   const out = [];
   for (const name of readdirSync(dir2).sort()) {
     const p = join3(dir2, name);
-    if (statSync2(p).isDirectory()) out.push(...listMarkdown(p));
+    if (statSync3(p).isDirectory()) out.push(...listMarkdown(p));
     else if (name.endsWith(".md")) out.push(p);
   }
   return out;
@@ -9999,7 +10071,7 @@ function tombstoneId(dir2, id, reason, date = /* @__PURE__ */ new Date()) {
 }
 
 // src/workspace/status.ts
-import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync3 } from "node:fs";
+import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync4, statSync as statSync4 } from "node:fs";
 import { basename as basename4, join as join6 } from "node:path";
 
 // src/workspace/adopt.ts
@@ -10151,7 +10223,7 @@ function listChanges(sddDir) {
     if (!existsSync3(base)) continue;
     for (const name of readdirSync2(base)) {
       const dir2 = join6(base, name);
-      if (/^\d{3}-/.test(name) && statSync3(dir2).isDirectory() && existsSync3(join6(dir2, "change.md"))) out.push({ dir: dir2, folder: name, archived });
+      if (/^\d{3}-/.test(name) && statSync4(dir2).isDirectory() && existsSync3(join6(dir2, "change.md"))) out.push({ dir: dir2, folder: name, archived });
     }
   }
   return out.sort((a, b) => a.folder.localeCompare(b.folder));
@@ -10295,7 +10367,7 @@ function changeFolders(sdd) {
     if (!existsSync5(base)) continue;
     for (const name of readdirSync4(base).sort()) {
       const dir2 = join8(base, name);
-      if (/^\d{3}-/.test(name) && statSync4(dir2).isDirectory()) out.push({ name, dir: dir2, archived });
+      if (/^\d{3}-/.test(name) && statSync5(dir2).isDirectory()) out.push({ name, dir: dir2, archived });
     }
   }
   return out;
@@ -10317,7 +10389,7 @@ function filesOf(dir2) {
   const walk = (d) => {
     for (const name of readdirSync4(d).sort()) {
       const p = join8(d, name);
-      if (statSync4(p).isDirectory()) walk(p);
+      if (statSync5(p).isDirectory()) walk(p);
       else if (name.endsWith(".md")) out.push(p);
     }
   };
@@ -10473,9 +10545,9 @@ function lintWorkspace(root, options2) {
 var PHASES = ["00-ideation", "10-spec", "20-plan"];
 
 // src/workspace/init.ts
-import { existsSync as existsSync6, mkdirSync, readFileSync as readFileSync7, statSync as statSync5 } from "node:fs";
+import { existsSync as existsSync6, mkdirSync, readFileSync as readFileSync7, statSync as statSync6 } from "node:fs";
 import { dirname as dirname3, join as join9 } from "node:path";
-var isDir = (p) => existsSync6(p) && statSync5(p).isDirectory();
+var isDir = (p) => existsSync6(p) && statSync6(p).isDirectory();
 function initRoot(start) {
   for (const marker of [".sdd", ".git"]) {
     let dir2 = start;
@@ -10519,11 +10591,11 @@ function initWorkspace(root, options2 = {}) {
 }
 
 // src/workspace/change.ts
-import { existsSync as existsSync8, mkdirSync as mkdirSync2, readdirSync as readdirSync6, statSync as statSync7 } from "node:fs";
+import { existsSync as existsSync8, mkdirSync as mkdirSync2, readdirSync as readdirSync6, statSync as statSync8 } from "node:fs";
 import { join as join11 } from "node:path";
 
 // src/workspace/templates.ts
-import { existsSync as existsSync7, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync6 } from "node:fs";
+import { existsSync as existsSync7, readdirSync as readdirSync5, readFileSync as readFileSync8, statSync as statSync7 } from "node:fs";
 import { dirname as dirname4, join as join10 } from "node:path";
 import { fileURLToPath } from "node:url";
 var TEMPLATE_PROFILES = ["full", "lite", "constitution"];
@@ -10554,7 +10626,7 @@ function confined(root, candidate) {
 }
 function isFile(p) {
   try {
-    return statSync6(p).isFile();
+    return statSync7(p).isFile();
   } catch {
     return false;
   }
@@ -10581,7 +10653,7 @@ function confinedFiles(root) {
       if (!confined(root, p)) continue;
       let st;
       try {
-        st = statSync6(p);
+        st = statSync7(p);
       } catch {
         continue;
       }
@@ -10621,7 +10693,7 @@ function nextChangeNumber(sddDir) {
     if (!existsSync8(dir2)) continue;
     for (const name of readdirSync6(dir2)) {
       const m = /^(\d{3})-/.exec(name);
-      if (m?.[1] && statSync7(join11(dir2, name)).isDirectory()) max = Math.max(max, Number(m[1]));
+      if (m?.[1] && statSync8(join11(dir2, name)).isDirectory()) max = Math.max(max, Number(m[1]));
     }
   }
   return String(max + 1).padStart(3, "0");
@@ -11332,12 +11404,12 @@ var WRITING_COMMANDS = [
 ];
 
 // src/io/repo-root.ts
-import { existsSync as existsSync12, statSync as statSync8 } from "node:fs";
+import { existsSync as existsSync12, statSync as statSync9 } from "node:fs";
 import { dirname as dirname7 } from "node:path";
 function holds(dir2, name, folderOnly) {
   const p = dir2.endsWith("/") ? dir2 + name : dir2 + "/" + name;
   try {
-    return folderOnly ? statSync8(p).isDirectory() : existsSync12(p);
+    return folderOnly ? statSync9(p).isDirectory() : existsSync12(p);
   } catch {
     return false;
   }
@@ -11683,7 +11755,7 @@ function decideBash(input, options2 = {}) {
 }
 
 // src/hooks/guard-path.ts
-import { statSync as statSync9 } from "node:fs";
+import { statSync as statSync10 } from "node:fs";
 var RULE = "GUARD-PATH-001";
 var WRITE_TOOLS = /* @__PURE__ */ new Set(["Write", "Edit", "MultiEdit", "NotebookEdit"]);
 function below(dir2, target) {
@@ -11692,7 +11764,7 @@ function below(dir2, target) {
 }
 function hardLinkCount(p) {
   try {
-    const s = statSync9(p);
+    const s = statSync10(p);
     return s.isFile() ? s.nlink : 0;
   } catch {
     return 0;
@@ -12394,7 +12466,7 @@ var HOOK_ROWS = [
 
 // src/cli/install-copilot.ts
 import { createHash as createHash2 } from "node:crypto";
-import { existsSync as existsSync15, mkdirSync as mkdirSync5, readFileSync as readFileSync13, statSync as statSync10 } from "node:fs";
+import { existsSync as existsSync15, mkdirSync as mkdirSync5, readFileSync as readFileSync13, statSync as statSync11 } from "node:fs";
 import { basename as basename8, dirname as dirname10, join as join20 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 var PACKAGE_FILES = {
@@ -12465,7 +12537,7 @@ function loadPackage(given, cwd, cli = runningCli()) {
   const dir2 = resolvePackage(given, cwd, cli);
   const bad = unusablePathReason(dir2);
   if (bad !== null) throw refuse(dir2, bad);
-  if (!existsSync15(dir2) || !statSync10(dir2).isDirectory()) throw refuse(dir2, "the folder does not exist");
+  if (!existsSync15(dir2) || !statSync11(dir2).isDirectory()) throw refuse(dir2, "the folder does not exist");
   const manifest = readManifest(dir2);
   if (typeof manifest === "string") throw refuse(dir2, manifest);
   if (manifest.target !== "copilot") throw refuse(dir2, `${PACKAGE_FILES.manifest} names the target ${JSON.stringify(manifest.target ?? null)}, not "copilot"`);
@@ -12524,7 +12596,7 @@ function guardAgents(preToolUse) {
 }
 function isFile2(p) {
   try {
-    return statSync10(p).isFile();
+    return statSync11(p).isFile();
   } catch {
     return false;
   }
@@ -12696,7 +12768,11 @@ function writeSerenaConfig(dataDir) {
 import { spawnSync } from "node:child_process";
 import { dirname as dirname11, join as join22 } from "node:path";
 import { fileURLToPath as fileURLToPath4 } from "node:url";
-var defaultSpawner = (command, args, env) => spawnSync(command, args, { stdio: "inherit", windowsHide: true, ...env ? { env: { ...env } } : {} });
+var defaultSpawner = (command, args, env) => {
+  const found = nativeExecutable(command);
+  if ("error" in found) return { status: null, error: new Error(found.error) };
+  return spawnSync(found.file, args, { stdio: "inherit", windowsHide: true, ...env ? { env: { ...env } } : {} });
+};
 var spawner = defaultSpawner;
 function readOnlyModeFile(cliDir = dirname11(fileURLToPath4(import.meta.url))) {
   return normalisePath(join22(cliDir, "..", "serena", "architect-read-only.yml"));
@@ -12730,7 +12806,9 @@ import { spawnSync as spawnSync2 } from "node:child_process";
 import { existsSync as existsSync17 } from "node:fs";
 import { join as join23, relative as relative2 } from "node:path";
 function git(root, args) {
-  const r = spawnSync2("git", args, { cwd: root, encoding: "utf8", windowsHide: true });
+  const exe2 = nativeExecutable("git");
+  if ("error" in exe2) return { ok: false, out: exe2.error };
+  const r = spawnSync2(exe2.file, args, { cwd: root, encoding: "utf8", windowsHide: true });
   return { ok: !r.error && r.status === 0, out: `${r.stdout ?? ""}${r.stderr ?? ""}`.trim() };
 }
 var refuse2 = (reason) => new CliError("ERR-CLI-018", { reason });
@@ -12752,7 +12830,7 @@ function commitApproval(root, changeDir, message) {
 
 // src/gate/hash.ts
 import { createHash as createHash3 } from "node:crypto";
-import { existsSync as existsSync18, readdirSync as readdirSync8, readFileSync as readFileSync15, statSync as statSync11 } from "node:fs";
+import { existsSync as existsSync18, readdirSync as readdirSync8, readFileSync as readFileSync15, statSync as statSync12 } from "node:fs";
 import { join as join24 } from "node:path";
 var GENERATED2 = /* @__PURE__ */ new Set(["80-traceability.md", "85-open-items.md"]);
 var PHASES2 = ["00-ideation", "10-spec", "20-plan"];
@@ -12763,7 +12841,7 @@ function phaseFiles(phaseDir) {
     for (const name of readdirSync8(dir2)) {
       const abs = join24(dir2, name);
       const rel = prefix + name;
-      if (statSync11(abs).isDirectory()) walk(abs, rel + "/");
+      if (statSync12(abs).isDirectory()) walk(abs, rel + "/");
       else if (!GENERATED2.has(rel)) out.push(rel);
     }
   };
@@ -12915,8 +12993,10 @@ function gateSummary(ctx) {
   ].join("\n");
 }
 function gitUser(root) {
+  const git2 = nativeExecutable("git");
+  if ("error" in git2) return "unknown";
   try {
-    return execFileSync("git", ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
+    return execFileSync(git2.file, ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
   } catch {
     return "unknown";
   }
@@ -13150,7 +13230,7 @@ function staleCheck(changeDir, write2) {
 import { spawnSync as spawnSync3 } from "node:child_process";
 import { readFileSync as readFileSync21 } from "node:fs";
 import { homedir } from "node:os";
-import { join as join30 } from "node:path";
+import { dirname as dirname12, join as join30 } from "node:path";
 var HOSTS = ["opencode", "vscode", "vscode-insiders"];
 var PROBES = {
   opencode: { command: "opencode", args: ["--version"] },
@@ -13161,8 +13241,10 @@ var PROBES = {
 };
 var VERSION2 = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
 function run(p) {
-  const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, stdio: ["ignore", "pipe", "pipe"] };
-  const r = IS_WINDOWS ? spawnSync3([p.command, ...p.args].join(" "), { ...opts, shell: true }) : spawnSync3(p.command, [...p.args], opts);
+  const match = findOnPath(p.command, pathValue(process.env), { env: process.env });
+  if (match === null) return null;
+  const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, cwd: dirname12(match.file), stdio: ["ignore", "pipe", "pipe"] };
+  const r = match.kind === "shim" ? spawnSync3(windowsShell(), ["/d", "/s", "/c", `""${match.file}" ${p.args.join(" ")}"`], { ...opts, windowsVerbatimArguments: true }) : spawnSync3(match.file, [...p.args], opts);
   if (r.error || r.status !== 0) return null;
   return r.stdout;
 }
@@ -13285,7 +13367,7 @@ var B = { type: "boolean" };
 var P = (name, optional = false) => optional ? { name, optional } : { name };
 function changeFolders2(root) {
   const sdd = join32(root, ".sdd");
-  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync12(join32(sdd, n)).isDirectory()).sort();
+  return readdirSync10(sdd).filter((n) => /^\d{3}-/.test(n) && statSync13(join32(sdd, n)).isDirectory()).sort();
 }
 function lint(ctx) {
   const { out, root, values } = ctx;

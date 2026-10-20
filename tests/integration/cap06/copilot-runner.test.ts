@@ -17,8 +17,8 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { allowToolArgs, API_KEY_SOURCE, copilotPackage, hostAgent, loginIdentity, mapCall, maxAiCredits, runCopilotCliSession, serversConfig, sessionStart, tokenFiles, usageOf } from "../../../evals/harness/runners/copilot-cli.mjs";
 import { copilotStubHost } from "../../../evals/harness/runners/stub.mjs";
-import { copilotLedgerEntry, copilotStopRule, selectScenarios } from "../../../evals/harness/run.mjs";
-import { namesOf } from "../../../evals/harness/session.mjs";
+import { copilotLedgerEntry, copilotStopRule, runScenario, selectScenarios } from "../../../evals/harness/run.mjs";
+import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = repoRoot();
@@ -371,3 +371,133 @@ test("run.mjs records api_key_source copilot-credential-store and the measured u
   assert.equal(doc.records[0].metrics.cost_usd, 0.04);
   assert.equal(doc.records[0].end_reason, "completed");
 });
+
+// --- C002-T-065: C002-TC-614 (Copilot CLI row, caps), C002-TC-678, C002-TC-680, C002-TC-912 … 916 ---------
+
+const once = (args: string[], flag: string) => args.filter((a) => a === flag).length;
+const valueOf = (args: string[], flag: string) => args[args.indexOf(flag) + 1];
+
+test("C002-TS-614 Copilot CLI eval runner, 1 AI Credit per turn below the limit of 50, a row without maxTurns and maxBudgetUsd: 30 turns, turn cap, caps { turns: 30, usd: 0.50 } in the result record", async () => {
+  const dir = tmp("sdd-cp-caps-record-");
+  const host = copilotStubHost({ creditsPerTurn: 1 });
+  const prev = setHarnessContext({ host: "copilot-cli", runners: { "copilot-cli": (o: Record<string, unknown>) => runCopilotCliSession(o, { host, pkg: pkg(), scripts: SCRIPTS, identity: IDENTITY }) } });
+  try {
+    const scenario = { id: "STUB-CP-CAPS", title: "caps", agent: "architect:sdd-conductor", fixture: null, prompt: "hi", assert: () => [] };
+    const doc = (await runScenario(scenario, { host: "copilot-cli", resultsDir: dir, log: () => undefined })) as Record<string, any>;
+    const record = doc["records"][0];
+    assert.equal(record["end_reason"], "turn cap");
+    assert.equal(record["usage"].turns, 30);
+    assert.deepEqual(record["caps"], { turns: 30, usd: 0.5 });
+    assert.equal(valueOf(host.calls[0]!.args as string[], "--max-ai-credits"), "50");
+  } finally {
+    setHarnessContext(prev);
+  }
+});
+
+for (const row of [
+  { cap: undefined, credits: 53, limit: 50, reason: "spend cap", usd: 0.53 },
+  { cap: undefined, credits: 12, limit: 50, reason: "completed", usd: 0.12 },
+  { cap: 0.2, credits: 30, limit: 30, reason: "spend cap", usd: 0.3 },
+  { cap: 0.2, credits: 25, limit: 30, reason: "completed", usd: 0.25 },
+]) {
+  test(`C002-TS-678 — ${row.cap === undefined ? "a row without maxBudgetUsd" : `maxBudgetUsd ${row.cap}`}, ${row.credits} AI Credits in the usage file, no limit text: --max-ai-credits ${row.limit}, ${row.reason}, usage.usd ${row.usd}`, async () => {
+    const { s, host } = await session({ endAfter: 1, sessionCredits: row.credits, limitText: false }, row.cap === undefined ? {} : { maxBudgetUsd: row.cap });
+    const args = host.calls[0]!.args as string[];
+    assert.equal(once(args, "--max-ai-credits"), 1);
+    assert.equal(valueOf(args, "--max-ai-credits"), String(row.limit));
+    assert.equal(s.end_reason, row.reason);
+    assert.ok(Math.abs((s.usage.usd ?? -1) - row.usd) < 1e-9, `usd ${s.usage.usd}`);
+    assert.equal(s.copilot_usage?.ai_credits, row.credits);
+  });
+}
+
+/** The `model` field of a generated agent file of the package (read, never written into the test). */
+const packageModel = (agent: string) => {
+  const m = /^model:\s*(\S+)\s*$/m.exec(readFileSync(join(pkg(), "agents", `${agent}.agent.md`), "utf8"));
+  assert.ok(m, `${agent}: a model field`);
+  return m[1]!;
+};
+
+for (const row of [
+  { agent: "architect:sdd-conductor", model: undefined as string | undefined, file: "sdd-conductor" },
+  { agent: "architect:sdd-auditor", model: undefined as string | undefined, file: "sdd-auditor" },
+  { agent: "architect:sdd-conductor", model: "claude-sonnet-5.5", file: null },
+]) {
+  test(`C002-TS-680 — agent ${row.agent}${row.model ? `, model ${row.model}` : ", no model"}: --agent once and --model of ${row.model ? "the case" : "the agent file"} once`, async () => {
+    const passed = row.model ?? packageModel(row.file!);
+    if (row.file === "sdd-conductor") assert.equal(passed, "claude-opus-5.5", "the conductor's tier model of the package");
+    if (row.file === "sdd-auditor") assert.equal(passed, "claude-haiku-5.5");
+    const { host } = await session({ endAfter: 1 }, { agent: row.agent, ...(row.model ? { model: row.model } : {}) });
+    const args = host.calls[0]!.args as string[];
+    assert.equal(once(args, "--agent"), 1);
+    assert.equal(valueOf(args, "--agent"), row.agent);
+    assert.equal(once(args, "--model"), 1);
+    assert.equal(valueOf(args, "--model"), passed);
+  });
+}
+
+test("C002-TS-680 (supporting): a relayed session agent gets its own model once", async () => {
+  const { host } = await session({ endAfter: 1 }, { agent: "architect:eval-dispatcher", prompt: "Dispatch: sdd-auditor\nBrief — lint 001" });
+  const args = host.calls[0]!.args as string[];
+  assert.equal(valueOf(args, "--agent"), "architect:sdd-auditor");
+  assert.equal(once(args, "--model"), 1);
+  assert.equal(valueOf(args, "--model"), packageModel("sdd-auditor"));
+});
+
+test("C002-TC-912: a prompt-file prompt runs the file's body with its arguments and the transcript holds one prompt-file record; any other prompt is passed as it is", async () => {
+  for (const [prompt, file, args] of [["/doctor", "prompts/doctor.prompt.md", null], ['/architect:new "Coupon codes"', "prompts/new.prompt.md", '"Coupon codes"'], ["/architect-doctor", "prompts/doctor.prompt.md", null]] as const) {
+    const { s, host } = await session({ endAfter: 1 }, { prompt });
+    const text = valueOf(host.calls[0]!.args as string[], "-p")!;
+    const body = readFileSync(join(pkg(), ...file.split("/")), "utf8").replace(/\r\n/g, "\n").replace(/^---\n[\s\S]*?\n---\n/, "").trim();
+    assert.ok(text.startsWith(body.slice(0, 40)), `${prompt}: the prompt file's body without its frontmatter`);
+    assert.ok(!text.startsWith("---"));
+    if (args) assert.ok(text.endsWith(`\n\nArguments: ${args}`), text.slice(-80));
+    else assert.ok(!text.includes("Arguments:"), prompt);
+    const records = s.transcript.filter((r: any) => r.type === "harness" && r.event === "prompt-file");
+    assert.equal(records.length, 1, prompt);
+    assert.equal((records[0] as any).file, file);
+  }
+  const { s, host } = await session({ endAfter: 1 }, { prompt: "/no-such-prompt" });
+  assert.equal(valueOf(host.calls[0]!.args as string[], "-p"), "/no-such-prompt");
+  assert.equal(s.transcript.filter((r: any) => r.type === "harness" && r.event === "prompt-file").length, 0);
+});
+
+test("C002-TC-913: --no-auto-update with COPILOT_AUTO_UPDATE=false, --disable-builtin-mcps, --max-ai-credits, --usage-output-file and --log-dir in the run folder, each once; sorted --allow-tool per permission, both modes; usage from the usage file", async () => {
+  const { s, host } = await session({ endAfter: 2, creditsPerTurn: 3 }, { allowTools: ["Write", "Edit", "Bash", "Read", "mcp__plugin_architect_serena__find_symbol"] });
+  const args = host.calls[0]!.args as string[];
+  for (const flag of ["--no-auto-update", "--disable-builtin-mcps", "--max-ai-credits", "--usage-output-file", "--log-dir"]) assert.equal(once(args, flag), 1, flag);
+  assert.equal((host.calls[0]!.env as Record<string, string>)["COPILOT_AUTO_UPDATE"], "false");
+  for (const flag of ["--usage-output-file", "--log-dir"]) assert.match(valueOf(args, flag)!, /sdd-eval-cp-run-/, `${flag} inside the run folder`);
+  const allow = args.filter((a) => a.startsWith("--allow-tool"));
+  assert.deepEqual(allow, [...allow].sort(), "sorted");
+  assert.equal(new Set(allow).size, allow.length, "each once");
+  assert.deepEqual(allow, ["--allow-tool=sdd-files", "--allow-tool=sdd-shell", "--allow-tool=serena(find_symbol)"]);
+  assert.ok(!args.includes("--allow-all-tools") && !args.includes("--yolo"));
+  assert.deepEqual(allowToolArgs(["Write", "Edit", "Bash", "Read", "mcp__plugin_architect_serena__find_symbol"], { mode: "copilot-hooks" }), ["--allow-tool=serena(find_symbol)", "--allow-tool=shell", "--allow-tool=write"]);
+  assert.equal(s.copilot_usage?.ai_credits, 6);
+  assert.ok(Math.abs((s.usage.usd ?? 0) - 0.06) < 1e-9);
+});
+
+test("C002-TC-914: Architect subagents are reported as architect:<agent> with host_agent, host built-in agents by their own name, in a host row and a row without host", async () => {
+  const script = [[{ subagent: "sdd-auditor", calls: [{ tool: "sdd-shell-run_command", input: { command: "sdd lint 001" } }] }, { subagent: "general-purpose", calls: [{ tool: "view", input: { path: "a" } }] }]];
+  for (const names of [namesOf({ host: "copilot-cli" }), namesOf({})]) {
+    const { s } = await session({ endAfter: 1, script }, { names });
+    const starts = s.transcript.filter((r: any) => r.type === "sdk" && r.message.subtype === "task_started").map((r: any) => [r.message.subagent_type, r.message.host_agent]);
+    assert.deepEqual(starts, [["architect:sdd-auditor", "sdd-auditor"], ["general-purpose", "general-purpose"]], names);
+    const lint = toolUses(s).find((b: any) => b.host_tool === "sdd-shell-run_command");
+    assert.equal(lint.agent, "architect:sdd-auditor", names);
+    assert.equal(toolUses(s).find((b: any) => b.host_tool === "view").agent, "general-purpose", names);
+  }
+});
+
+for (const loaded of [true, false]) {
+  test(`C002-TC-915: the hooks event gives workspace_hooks_loaded ${loaded} as the host log gives it, with the deny's hook source; the variable is set`, async () => {
+    const hostLog = `${loaded ? "2026-10-20T10:00:00Z [INFO] Loading repo hooks in prompt mode\n" : ""}2026-10-20T10:00:01Z [INFO] session started\n`;
+    const { s, host } = await session({ endAfter: 1, hostLog, script: [[{ tool: "create", input: { path: "src/app.ts", file_text: "x" }, deny: "hook" }]] });
+    assert.equal((host.calls[0]!.env as Record<string, string>)["GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS"], "true");
+    const hooks = s.transcript.filter((r: any) => r.type === "harness" && r.event === "hooks") as any[];
+    assert.equal(hooks.length, 1);
+    assert.equal(hooks[0].workspace_hooks_loaded, loaded);
+    assert.deepEqual(hooks[0].hook_deny_sources, [".github_hooks_architect-guard.json"]);
+  });
+}

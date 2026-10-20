@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 import Ajv2020, { type ValidateFunction } from "ajv/dist/2020.js";
 import { repoRoot } from "../helpers.ts";
 import type { Actual, Target } from "./adapter.ts";
-import type { CorpusName, Decision, ExpectedSource, Mechanism, Platform } from "./expect.ts";
+import type { CorpusName, Decision, ExpectedSource, Mechanism, NotApplicableRule, Platform } from "./expect.ts";
 import type { Dialect } from "../guards/fixture.ts";
 
 export interface CorpusRef {
@@ -31,7 +31,8 @@ export interface NotApplicable {
   id: string;
   corpus: CorpusName;
   category: string;
-  rule: "C002-REQ-626";
+  /** C002-REQ-626 (identity row) or `platforms` (the platform rule; C002-IF-009 §2.1, defect D-018 item 2). */
+  rule: NotApplicableRule;
 }
 
 export interface ReplayReport {

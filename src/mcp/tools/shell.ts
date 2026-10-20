@@ -10,12 +10,12 @@
 // standard output in process. (4) The result holds the exit code and both streams, each cut at
 // 1,048,576 characters; at `timeout_ms` the process tree is killed (C002-REQ-406).
 import { spawn, type ChildProcess } from "node:child_process";
-import { accessSync, constants, existsSync, statSync } from "node:fs";
-import { delimiter, dirname, join } from "node:path";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { decideBash, RULE_ALLOWLIST, RULE_COMPOUND, tokenise, toolOfDialect, type Dialect } from "../../hooks/guard-bash.ts";
-import { executableNames, IS_WINDOWS } from "../../io/paths.ts";
+import { findNativeOnPath, IS_WINDOWS, nativeExecutable, pathValue, type LookupFailure } from "../../io/paths.ts";
 import type { ToolContext, ToolHandler } from "../handlers.ts";
 import { errorResult } from "../results.ts";
 import { AGENT_TYPE } from "./files.ts";
@@ -41,37 +41,17 @@ export function ownCli(): string {
   return join(dirname(fileURLToPath(import.meta.url)), "sdd.mjs");
 }
 
-function env(name: string): string {
-  // process.env is case-insensitive on Windows; elsewhere PATH is spelt in capitals.
-  return process.env[name] ?? "";
-}
-
-function isNativeFile(p: string, checkMode: boolean): boolean {
-  try {
-    if (!statSync(p).isFile()) return false;
-    if (checkMode) accessSync(p, constants.X_OK);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export type Resolved = { file: string } | { error: "not found on PATH" | "only a .cmd or .bat shim was found" };
+export type Resolved = { file: string } | { error: LookupFailure };
 
 /**
- * Resolves an executable name on PATH, without a shell (C002-IF-002 §5.2 step 3): the first native file
- * in PATH order (src/io/paths.ts executableNames). A Windows `.cmd` or `.bat` match needs the command interpreter and
- * is never run; when it is the only match the reason says so (ERR-MCP-006).
+ * Resolves an executable name on the server's PATH, without a shell (C002-IF-002 §5.2 step 3): a thin call of
+ * the shared executable lookup (src/io/paths.ts, C002-IF-007 §Executable lookup): PATH order, empty and
+ * relative entries skipped, PATHEXT order on Windows, the first native match. A Windows `.cmd` or `.bat`
+ * match needs the command interpreter and is never run; when it is the only match the reason says so
+ * (ERR-MCP-006).
  */
-export function resolveOnPath(name: string, path = env("PATH")): Resolved {
-  const dirs = path.split(delimiter).filter((d) => d !== "");
-  const { native, shims, checkMode } = executableNames(name);
-  let shim = false;
-  for (const dir of dirs) {
-    for (const n of native) if (isNativeFile(join(dir, n), checkMode)) return { file: join(dir, n) };
-    if (shims.some((n) => existsSync(join(dir, n)))) shim = true;
-  }
-  return { error: shim ? "only a .cmd or .bat shim was found" : "not found on PATH" };
+export function resolveOnPath(name: string, path = pathValue(process.env)): Resolved {
+  return findNativeOnPath(name, path, { env: process.env });
 }
 
 // --- pipe-only filters (C001-IF-07 §3), applied to the standard output line by line ---
@@ -152,11 +132,20 @@ function cut(s: string): { text: string; truncated: boolean } {
   return s.length > STREAM_CAP ? { text: s.slice(0, STREAM_CAP), truncated: true } : { text: s, truncated: false };
 }
 
-/** Kills the child and its descendants: `taskkill /T` on Windows (no shell), the process group elsewhere. */
+/**
+ * Kills the child and its descendants: `taskkill /T` on Windows, resolved by the executable lookup and
+ * started by its absolute path without a shell (C002-IF-002 §5.2 step 4), the process group elsewhere.
+ * Without a native `taskkill` on PATH, or when it fails to start, the server kills the child itself.
+ */
 function killTree(child: ChildProcess): void {
   if (child.pid === undefined) return;
   if (WIN) {
-    const k = spawn("taskkill", ["/PID", String(child.pid), "/T", "/F"], { shell: false, windowsHide: true, stdio: "ignore" });
+    const taskkill = nativeExecutable("taskkill");
+    if ("error" in taskkill) {
+      child.kill("SIGKILL");
+      return;
+    }
+    const k = spawn(taskkill.file, ["/PID", String(child.pid), "/T", "/F"], { shell: false, windowsHide: true, stdio: "ignore" });
     k.on("error", () => child.kill("SIGKILL"));
     return;
   }

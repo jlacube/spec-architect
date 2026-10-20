@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { CliError } from "../cli/errors.ts";
 import { writeTextAtomic } from "../io/atomic.ts";
+import { nativeExecutable } from "../io/paths.ts";
 import { lintWorkspace } from "../lint/engine.ts";
 import type { Finding, LintRule, Phase } from "../lint/types.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
@@ -109,10 +110,16 @@ export interface ApproveOptions {
   today?: string;
 }
 
-/** git user.name in `root`, or "unknown". */
+/**
+ * git user.name in `root`, or "unknown". `git` is the first native match on PATH, started by its absolute
+ * path (C002-IF-007 §Executable lookup, C002-CON-17): a planted git executable in the repository is never started; no
+ * native match gives "unknown", as a missing git does.
+ */
 export function gitUser(root: string): string {
+  const git = nativeExecutable("git");
+  if ("error" in git) return "unknown";
   try {
-    return execFileSync("git", ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
+    return execFileSync(git.file, ["config", "user.name"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
   } catch {
     return "unknown";
   }

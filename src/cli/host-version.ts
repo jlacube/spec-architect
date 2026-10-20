@@ -2,10 +2,14 @@
 // on a generated target reads the host versions through the CLI, so no probe of `opencode`, `code` or
 // a VS Code setting is added to the bash allowlist (C002-IF-006 §2, architecture §6.2).
 //
-// Each probe is a fixed command line (architecture §6.1 Portability): on Windows it runs through the
-// platform shell, which starts the `.cmd` shims that `opencode` (npm) and `code`/`code-insiders`
-// install; elsewhere the executable runs directly with a fixed argument list. Nothing from the
-// command line or the environment is placed in a probe.
+// Each probe is a fixed command line (architecture §6.1 Portability). Its executable is found by the
+// executable lookup of C002-IF-007 (src/io/paths.ts `findOnPath`: PATH order, empty and relative entries
+// skipped, PATHEXT order; the first match, native or shim) and started by the absolute path of the match,
+// with the folder of the match as working folder, never the repository: a native match without a shell;
+// a `.cmd` or `.bat` match (the shims that `opencode` (npm) and `code`/`code-insiders` install) through
+// the platform shell with the match's absolute path quoted and the fixed arguments after it, the only use
+// of a shell. No match is `<host> missing` without anything started. Nothing from the command line or
+// the environment is placed in a probe (C002-CON-17).
 //
 // The hooks line reads `chat.useHooks` only (C002-IF-007 host-version Output, revised for critic CR-45):
 // first the workspace settings (`.vscode/settings.json` at the repository root), which take precedence;
@@ -19,8 +23,8 @@
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
-import { IS_WINDOWS, userConfigDir } from "../io/paths.ts";
+import { dirname, join } from "node:path";
+import { findOnPath, pathValue, userConfigDir, windowsShell } from "../io/paths.ts";
 import { findRepositoryRoot } from "../io/repo-root.ts";
 
 export const HOSTS = ["opencode", "vscode", "vscode-insiders"] as const;
@@ -54,8 +58,14 @@ const VERSION = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
 
 /** Standard output of a probe, or null when the executable is missing or fails. */
 function run(p: Probe): string | null {
-  const opts = { encoding: "utf8" as const, windowsHide: true, timeout: 30_000, stdio: ["ignore", "pipe", "pipe"] as ["ignore", "pipe", "pipe"] };
-  const r = IS_WINDOWS ? spawnSync([p.command, ...p.args].join(" "), { ...opts, shell: true }) : spawnSync(p.command, [...p.args], opts);
+  const match = findOnPath(p.command, pathValue(process.env), { env: process.env });
+  if (match === null) return null;
+  const opts = { encoding: "utf8" as const, windowsHide: true, timeout: 30_000, cwd: dirname(match.file), stdio: ["ignore", "pipe", "pipe"] as ["ignore", "pipe", "pipe"] };
+  // A shim: the platform shell `/d /s /c ""<absolute shim>" <fixed arguments>"`, the shell itself by its absolute path.
+  const r =
+    match.kind === "shim"
+      ? spawnSync(windowsShell(), ["/d", "/s", "/c", `""${match.file}" ${p.args.join(" ")}"`], { ...opts, windowsVerbatimArguments: true })
+      : spawnSync(match.file, [...p.args], opts);
   if (r.error || r.status !== 0) return null;
   return r.stdout;
 }

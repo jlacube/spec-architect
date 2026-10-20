@@ -14,7 +14,9 @@ import { readOnlyModeFile, setSpawner } from "../../../src/workspace/serena-laun
 import { userDataDir } from "../../../src/workspace/user-data.ts";
 import { CliError } from "../../../src/cli/errors.ts";
 import { repoRoot } from "../../helpers.ts";
-import { CLI, runInProcess } from "./helpers.ts";
+import { fxBootstrap } from "../../fixtures/fixtures.ts";
+import { cmdStarts, envWithPath, exeStarts, nodeOnlyDir, plantCmd, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
+import { CLI, runBundled, runInProcess } from "./helpers.ts";
 
 interface Start {
   command: string;
@@ -237,4 +239,47 @@ test("the read-only mode file is found beside the CLI in the plugin layout and i
   } finally {
     rmSync(base, { recursive: true, force: true });
   }
+});
+
+// --- C002-TC-685 (C002-TS-685; C002-T-065): serena-launch starts the serena of the PATH folders only ---
+// The bundled CLI in a copy of fx-bootstrap whose root holds a recording serena.exe (stub-exe);
+// LOCALAPPDATA a temporary folder; per row a folder standing for C:/fx/serena-bin with a recording
+// serena.exe that also records SERENA_HOME, nothing named serena, or only a recording serena.cmd; the
+// PATH of the row with that folder substituted, followed by a folder holding only the real node.exe.
+const ROWS_685: { path: string; bin: "exe" | "none" | "cmd" }[] = [
+  { path: "BIN", bin: "exe" },
+  { path: ".;BIN", bin: "exe" },
+  { path: "BIN", bin: "none" },
+  { path: "BIN", bin: "cmd" },
+];
+ROWS_685.forEach((row, i) => {
+  test(`C002-TS-685 row ${i + 1} — PATH ${row.path}, serena-bin ${row.bin}: ${row.bin === "exe" ? "one start with SERENA_HOME" : "non-zero exit naming serena"}`, { skip: STUB_EXE_SKIP }, () => {
+    const fx = fxBootstrap();
+    const home = normalisePath(realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-fx-home-"))));
+    try {
+      plantExe(fx.root, "serena", { print: "planted" });
+      const bin = join(home, "fx-serena-bin");
+      mkdirSync(bin, { recursive: true });
+      if (row.bin === "exe") plantExe(bin, "serena", { env: ["SERENA_HOME"] });
+      if (row.bin === "cmd") plantCmd(bin, "serena", { print: "serena.cmd" });
+      const local = `${home}/AppData/Local`;
+      const path = [...row.path.split(";").map((e) => (e === "BIN" ? bin : e)), nodeOnlyDir()].join(";");
+      const r = runBundled(["serena-launch", "--user-data", "--", "start-mcp-server", "--project", "."], { cwd: fx.root, env: envWithPath(path, { LOCALAPPDATA: local }) });
+      if (row.bin === "exe") {
+        assert.equal(r.code, 0, r.stderr);
+        const starts = exeStarts(bin, "serena");
+        assert.equal(starts.length, 1);
+        assert.deepEqual(starts[0]!.args, ["start-mcp-server", "--project", "."]);
+        assert.equal(normalisePath(starts[0]!.env["SERENA_HOME"]!), `${local}/architect-sdd/serena`);
+      } else {
+        assert.notEqual(r.code, 0);
+        assert.match(r.stderr, /\bserena\b/);
+      }
+      assert.deepEqual(exeStarts(fx.root, "serena"), [], "the planted serena.exe records no start");
+      if (row.bin === "cmd") assert.deepEqual(cmdStarts(bin, "serena"), [], "serena.cmd records no start");
+    } finally {
+      fx.cleanup();
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
 });

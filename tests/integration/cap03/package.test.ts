@@ -297,6 +297,20 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   // Order of C002-IF-005 §5: unpack, install, settings, session, servers, subagents.
   const order = ["Unpack this package", "sdd install copilot --package", "`chat.plugins.enabled`", "**Local**", "start only", "can call only the read-only"].map((s) => notes.indexOf(s));
   assert.deepEqual([...order].sort((a, b) => a - b), order, "steps in the order of C002-IF-005 §5");
+  // C002-T-065 (defect D-019 item 1, critic CR-69): after the steps, exactly one Copilot CLI note.
+  const cli = notes.split(/\n\s*\n/).filter((p) => /Copilot CLI/.test(p) && !/session type/.test(p));
+  assert.equal(cli.length, 1, `one Copilot CLI note: ${JSON.stringify(cli)}`);
+  const note = cli[0]!.replace(/\s+/g, " ");
+  assert.ok(notes.indexOf(cli[0]!) > order[order.length - 1]!, "the note comes after the six steps");
+  assert.match(note, /Copilot CLI is no supported host of this package/);
+  assert.match(note, /`--agent architect:sdd-conductor`/);
+  assert.match(note, /on its own default model/);
+  assert.match(note, /the conductor runs on its tier only with `--model <model>`, where `<model>` is the `model` field of `agents\/sdd-conductor\.agent\.md`/);
+  // The model field that the note points to, read from the generated agent file.
+  const conductor = text(fxDist(table.enforcement_mode), "agents/sdd-conductor.agent.md");
+  const model = /^model:\s*(\S+)\s*$/m.exec(conductor)?.[1];
+  assert.ok(model && Object.values(table.models).includes(model), `the conductor's model field ${model} is a model of the table`);
+  assert.ok(!notes.includes("GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS"), "the workspace-hooks variable is not named");
 });
 
 for (const row of ["agents/sdd-critic.agent.md", "scripts/sdd.mjs", "install/plugin.json", "install/mcp.json", "install/hooks.template.json", "hooks/tool-classes.json"]) {

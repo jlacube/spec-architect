@@ -8,7 +8,7 @@
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { normalisePath } from "../io/paths.ts";
+import { nativeExecutable, normalisePath } from "../io/paths.ts";
 import { writeSerenaConfig } from "./serena-config.ts";
 
 export interface LaunchResult {
@@ -28,7 +28,16 @@ export interface LaunchOptions {
 
 export type Spawner = (command: string, args: string[], env: Readonly<Record<string, string | undefined>> | undefined) => { status: number | null; error?: Error };
 
-const defaultSpawner: Spawner = (command, args, env) => spawnSync(command, args, { stdio: "inherit", windowsHide: true, ...(env ? { env: { ...env } } : {}) });
+/**
+ * Starts `command` by the absolute path of its first native match on the CLI's PATH (C002-IF-007 §Executable
+ * lookup, C002-CON-17), never by its bare name, so a planted serena executable in the working folder or the repository
+ * is never started; no native match is a start error without any process started.
+ */
+const defaultSpawner: Spawner = (command, args, env) => {
+  const found = nativeExecutable(command);
+  if ("error" in found) return { status: null, error: new Error(found.error) };
+  return spawnSync(found.file, args, { stdio: "inherit", windowsHide: true, ...(env ? { env: { ...env } } : {}) });
+};
 let spawner: Spawner = defaultSpawner;
 
 /** Replaces how Serena is started (tests); `null` restores the default. */

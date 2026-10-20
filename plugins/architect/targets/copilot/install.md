@@ -73,6 +73,12 @@ This puts `sdd` (the workflow CLI) and `sdd-mcp` (the sdd MCP server) on PATH. C
    (`hooks/tool-classes.json`); its write and terminal calls are denied. The calls of your own session
    agent are not affected, and repositories without `.sdd/` are not affected.
 
+**Note on Copilot CLI.** Copilot CLI is no supported host of this package. If you start the conductor
+there with `--agent architect:sdd-conductor`, Copilot CLI runs that session agent on its own default
+model, not on the model of the agent file; the conductor runs on its tier only with `--model <model>`,
+where `<model>` is the `model` field of `agents/sdd-conductor.agent.md`. The specialists it starts run
+on the models of their own files.
+
 Run `/doctor` first: it checks node, {{host_name}}, the sdd CLI, the hooks setting, ripwire, Serena,
 ast-grep, Context7 and DeepWiki, and sets up Serena's data folder outside the repository. Then run
 `/init` to set up `.sdd/` in the repository.

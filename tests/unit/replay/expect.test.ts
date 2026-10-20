@@ -47,7 +47,34 @@ test("rule 4: a memory case expects deny on every mechanism (C002-REQ-625); rule
   assert.equal((expectationOf(perPlatform, "sdd-mcp-server", "win32") as { expected: string }).expected, "deny");
   assert.equal((expectationOf(perPlatform, "sdd-mcp-server", "posix") as { expected: string }).expected, "allow");
   assert.deepEqual(expectationOf(pc({ stdin: "not json" }), "copilot-hooks", "win32"), { applicable: true, expected: "deny", source: "corpus", malformed: true });
-  assert.ok("omitted" in expectationOf(pc({ platforms: ["win32"] }), "sdd-mcp-server", "posix"));
+});
+
+// --- The platform rule of C002-IF-009 §2.1 (defect D-018 item 2, critic CR-61, CR-66; C002-T-065) ---
+test("platform rule: a last-row case whose platforms list leaves out the host platform is not applicable, rule platforms, on every mechanism", () => {
+  for (const m of MECHANISMS) {
+    assert.deepEqual(expectationOf(pc({ platforms: ["win32"] }), m, "posix"), { applicable: false, rule: "platforms" });
+    assert.deepEqual(expectationOf(pc({ platforms: ["posix"] }), m, "win32"), { applicable: false, rule: "platforms" });
+    assert.equal(expectationOf(pc({ platforms: ["win32", "posix"] }), m, "win32").applicable, true);
+    assert.equal(expectationOf(pc({ platforms: ["win32"] }), m, "win32").applicable, true);
+  }
+});
+
+test("platform rule before C002-REQ-633: a [\"posix\"] case with requires on win32 is not applicable (platforms); a [\"win32\"] one is replayed", () => {
+  const sym = (platforms: string[]) => pc({ category: "symlink", requires: "file-symlink", platforms });
+  for (const m of MECHANISMS) {
+    assert.deepEqual(expectationOf(sym(["posix"]), m, "win32"), { applicable: false, rule: "platforms" });
+    assert.deepEqual(expectationOf(sym(["win32"]), m, "win32"), { applicable: true, expected: "deny", source: "corpus", malformed: false });
+  }
+});
+
+test("platform rule: a platforms value outside win32/posix, or an empty list, excludes nothing (fail-closed)", () => {
+  for (const platforms of [["linux"], [], ["win32", "linux"], "posix" as unknown as string[]])
+    for (const m of MECHANISMS) assert.equal(expectationOf(pc({ platforms }), m, "win32").applicable, true, JSON.stringify(platforms));
+});
+
+test("platform rule: the rows above the last keep their expectation on any host (a memory case limited to posix stays deny)", () => {
+  for (const m of MECHANISMS) assert.deepEqual(expectationOf(pc({ category: "memory", expect: "allow", platforms: ["posix"] }), m, "win32"), { applicable: true, expected: "deny", source: "C002-REQ-625", malformed: false });
+  assert.deepEqual(expectationOf(pc({ category: "identity", platforms: ["posix"] }), "sdd-mcp-server", "win32"), { applicable: false, rule: "C002-REQ-626" });
 });
 
 const bc = (o: Partial<BashCase>): BashCase => ({ id: "BG-X", category: "tool", tool: "Bash", agent: "architect:sdd-planner", command: "git status", expect: "allow", ...o });

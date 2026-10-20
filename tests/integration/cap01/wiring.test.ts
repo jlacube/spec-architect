@@ -21,7 +21,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { main } from "../../../scripts/generate/main.ts";
 import { readSource } from "../../../scripts/generate/reader.ts";
-import { loadTargetTable, TARGETS, type MappingTable, type Target } from "../../../scripts/generate/tables.ts";
+import { loadTargetTable, TARGETS, toolGrants, type MappingTable, type Target } from "../../../scripts/generate/tables.ts";
 import { translateBodies, type TranslatedDoc } from "../../../scripts/generate/translate/constructs.ts";
 import { listField } from "../../../scripts/generate/translate/frontmatter.ts";
 import { inlineSkills, skillHeading, type InlinedAgent } from "../../../scripts/generate/translate/inline.ts";
@@ -278,6 +278,8 @@ for (const [fixture, file, line, present, missing, plant] of [
     },
   ],
   ["fx-plugin-novariant-doctor", "commands/doctor.md", 33, "opencode", "copilot", (src: string) => dropVariant(src, "copilot", "doctor-remedies-host")],
+  // Defect D-020 item 1 (C002-T-065): the file-inspection rule, construct glob-prose on line 16.
+  ["fx-plugin-novariant-glob", "skills/sdd-conventions/SKILL.md", 16, "copilot", "opencode", (src: string) => dropVariant(src, "opencode", "file-inspection")],
 ] as const) {
   test(`C002-TC-120 (C002-TS-120): ${fixture} — ${file}:${line} with a ${present} variant and no ${missing} variant`, () => {
     const r = onFixture(plant);
@@ -288,6 +290,156 @@ for (const [fixture, file, line, present, missing, plant] of [
     assert.ok(!r.stderr[0]!.includes(present), "the present target is not named");
   });
 }
+
+// --- C002-TC-673 (fx-plugin-glob-prose; C002-T-065) ---
+interface JsonDiag {
+  code: string;
+  file: string | null;
+  line: number | null;
+  target: string | null;
+}
+/** Runs the generator with --json on fx-src after `plant`; returns the exit code, the diagnostics and (on success) the output folder's critic agents. */
+function onFixtureJson(plant: (src: string) => void) {
+  const base = mkdtempSync(join(tmpdir(), "sdd-wr-"));
+  try {
+    const src = fxSrc(base);
+    plant(src);
+    const r = run(["--source", src, "--out", join(base, "out"), "--json"]);
+    const report = JSON.parse(r.stdout.join("\n")) as { diagnostics: JsonDiag[] };
+    const critic = r.code === 0
+      ? {
+          opencode: JSON.parse(readFileSync(join(base, "out", "opencode", "opencode.json"), "utf8")) as { agent: Record<string, { tools: Record<string, boolean> }> },
+          copilot: readFileSync(join(base, "out", "copilot", "agents", "sdd-critic.agent.md"), "utf8"),
+        }
+      : null;
+    return { code: r.code, diagnostics: report.diagnostics, critic };
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+const CRITIC = "agents/sdd-critic.md";
+/** The grants each table maps Glob to in its own mode. */
+const globTools = (t: Target) => toolGrants(tables[t].tools["Glob"]!, tables[t].enforcement_mode)!;
+const GLOB_LINE = "List the change's files with the Glob tool.";
+/**
+ * Sets line 30 of the critic agent to `text`. The source agent has 26 lines today, so the lines between
+ * are left blank (the scenario's "line 30 of the body" names a line the source does not have yet).
+ */
+function plantCriticLine(src: string, text: string) {
+  const path = join(src, ...CRITIC.split("/"));
+  const lines = readFileSync(path, "utf8").replace(/\r\n/g, "\n").replace(/\n+$/, "").split("\n");
+  while (lines.length < 29) lines.push("");
+  lines[29] = text;
+  writeFileSync(path, lines.join("\n") + "\n");
+}
+/** A variant for the planted critic line in the table of `t` only. */
+function criticVariant(src: string, t: Target) {
+  writeFileSync(join(src, "targets", t, "wiring", "critic-glob.md"), `List the change's files with the \`${globTools(t)[0]}\` tool.\n`);
+  editJson(join(src, "targets", `${t}.json`), (d) =>
+    (d["variants"] as unknown[]).push({ id: "critic-glob", file: CRITIC, anchor: { lines: [GLOB_LINE] }, text_file: "critic-glob.md" }),
+  );
+}
+const dropConstruct = (src: string, id: string) => {
+  for (const t of TARGETS)
+    editJson(join(src, "targets", `${t}.json`), (d) => {
+      d["constructs"] = (d["constructs"] as { id: string }[]).filter((c) => c.id !== id);
+    });
+};
+const criticDiags = (ds: JsonDiag[]) => ds.filter((d) => d.code === "ERR-GEN-002" && d.file === CRITIC);
+
+for (const [present, missing] of [["copilot", "opencode"], ["opencode", "copilot"]] as const) {
+  test(`C002-TS-673 — line 30 names the Glob tool and only the ${NAME[present]} table has a variant: ERR-GEN-002 for ${missing}`, () => {
+    for (const withConstruct of [true, false]) {
+      const r = onFixtureJson((src) => {
+        plantCriticLine(src, GLOB_LINE);
+        criticVariant(src, present);
+        // The second run: no glob-prose construct in the tables; the stand-in detector of constructs.ts still finds the line.
+        if (!withConstruct) dropConstruct(src, "glob-prose");
+      });
+      assert.notEqual(r.code, 0);
+      assert.deepEqual(
+        criticDiags(r.diagnostics).map((d) => [d.line, d.target]),
+        [[30, missing]],
+        `${withConstruct ? "construct" : "stand-in"}: ${JSON.stringify(r.diagnostics)}`,
+      );
+    }
+  });
+}
+
+test("C002-TS-673 — Glob only in the frontmatter tools field (line 7): exit 0; the generated critic grants the tool each table maps Glob to", () => {
+  assert.match(sourceLine(CRITIC, 7), /^tools: .*\bGlob\b/);
+  const r = onFixtureJson(() => {});
+  assert.equal(r.code, 0, JSON.stringify(r.diagnostics));
+  assert.deepEqual(criticDiags(r.diagnostics), []);
+  for (const tool of globTools("opencode")) assert.equal(r.critic!.opencode.agent["sdd-critic"]!.tools[tool], true, `opencode grants ${tool}`);
+  const tools = /^tools: (.*)$/m.exec(r.critic!.copilot)![1]!;
+  for (const tool of globTools("copilot")) assert.ok(tools.includes(`'${tool}'`), `copilot grants ${tool}: ${tools}`);
+});
+
+for (const line of ["Check the Global items of the DoD.", "On OpenCode the glob tool lists no dot folder."]) {
+  test(`C002-TS-673 — line 30 reads "${line}" without a variant: exit 0, no ERR-GEN-002 for the critic`, () => {
+    const r = onFixtureJson((src) => plantCriticLine(src, line));
+    assert.equal(r.code, 0, JSON.stringify(r.diagnostics));
+    assert.deepEqual(criticDiags(r.diagnostics), []);
+  });
+}
+
+test("the stand-in detector glob-prose: a table without the construct still makes a Glob body line an anchor, and a Global line none", () => {
+  const r = onFixtureJson((src) => {
+    plantCriticLine(src, GLOB_LINE);
+    dropConstruct(src, "glob-prose");
+  });
+  assert.notEqual(r.code, 0);
+  assert.deepEqual(criticDiags(r.diagnostics).map((d) => [d.line, d.target]).sort(), [[30, "copilot"], [30, "opencode"]]);
+});
+
+// --- C002-TC-674 (C002-T-065) ---
+const SOURCE_HASHES = new Map(source.source.files.map((f) => [f.path, createHash("sha256").update(f.text).digest("hex")]));
+for (const t of TARGETS) {
+  test(`C002-TS-674 — ${NAME[t]}: the sdd-conventions skill and every agent that inlines it hold the file-inspection variant`, () => {
+    const path = "skills/sdd-conventions/SKILL.md";
+    const v = tables[t].variants.find((x) => x.id === "file-inspection")!;
+    assert.equal(v.file, path);
+    assert.ok("lines" in v.anchor);
+    const anchor = (v.anchor as { lines: string[] }).lines;
+    assert.deepEqual([16, 17, 18].map((n) => sourceLine(path, n).trimEnd()), anchor.map((l) => l.trimEnd()), "lines 16 … 18 of the source");
+    const g = generated(t);
+    // The variant text as generated (tokens resolved, constructs applied): the lines from source line 16.
+    const expected = linesFrom(g.docs.get(path)!, 16);
+    assert.ok(expected.length > 0);
+    const raw = variantText(t, "file-inspection");
+    assert.equal(expected, raw, "the variant text takes the anchor's place unchanged by the constructs");
+    const agents = inliners("sdd-conventions");
+    assert.equal(agents.length, 10, "all ten agents inline sdd-conventions");
+    for (const name of agents) assert.ok(inlinedPart(g.agents.get(name)!, "sdd-conventions").includes(expected), `${t}: ${name}`);
+    for (const word of ["Glob", "Bash"]) assert.ok(!new RegExp(`\\b${word}\\b`).test(expected), `no word ${word}`);
+    const text = expected.replace(/\s+/g, " ");
+    for (const piece of ["`sdd status`", "allowlisted commands", "one command per call", "no `;`, `&&` or redirection"]) assert.ok(text.includes(piece), piece);
+    if (t === "opencode") {
+      for (const tool of ["`read`", "`glob`", "`grep`", "`bash` tool", SHELL.opencode]) assert.ok(text.includes(tool), tool);
+      assert.match(text, /Never use `glob` to find or to rule out a file under `\.sdd\/`/);
+      assert.match(text, /never take an empty `glob` or `grep` result as proof that `\.sdd\/` or a file in it is absent/);
+      assert.match(text, /`read` of `\.sdd\/`/);
+      assert.match(text, /`grep` whose `path` names a folder or a file inside `\.sdd\/`/);
+    } else {
+      for (const tool of ["`read`", "`search`", SHELL.copilot, "terminal tool"]) assert.ok(text.includes(tool), tool);
+      assert.match(text, /`read` of a file by its path/);
+      assert.match(text, /Never take an empty `search` result as proof that `\.sdd\/` or a file in it is absent/);
+    }
+    for (const f of source.source.files) assert.equal(createHash("sha256").update(f.text).digest("hex"), SOURCE_HASHES.get(f.path), `${f.path} unchanged`);
+  });
+}
+
+test("C002-TS-674 — OpenCode: the generated doctor command tests .sdd/ by sdd status or read, never by glob", () => {
+  const path = "commands/doctor.md";
+  const g = generated("opencode");
+  const probe = linesFrom(g.docs.get(path)!, 11);
+  assert.equal(probe, variantText("opencode", "doctor-probe"), "the doctor-probe variant in place of step 2");
+  const text = probe.replace(/\s+/g, " ");
+  assert.match(text, /Test whether `\.sdd\/` exists with `sdd status` or with `read` of `\.sdd\/`/);
+  for (const l of g.docs.get(path)!.body.split("\n"))
+    assert.ok(!/\b(call|use|run|with) `glob` (on|of|for) `?\.sdd/i.test(l) && !/`glob` `?\.sdd/.test(l), `no instruction to glob .sdd/: ${l}`);
+});
 
 // --- Stale anchors, tokens, table rules, leaks in variant text ---
 test("a variant whose anchor is no longer in the source is ERR-GEN-005; the anchor line it left is ERR-GEN-002", () => {
@@ -333,7 +485,8 @@ test("a missing variant file, a duplicate id and overlapping anchors break the t
   assert.equal(r.code, 1);
   const lines = r.stderr.map((l) => l.slice(0, l.indexOf(". Fix:")));
   assert.ok(lines.includes("ERR-GEN-004: targets/opencode.json: /variants/2/text_file: targets/opencode/wiring/doctor-probe.md does not exist"), lines.join("\n"));
-  assert.ok(lines.some((l) => l.startsWith('ERR-GEN-004: targets/copilot.json: /variants/13/id: variant id "doctor-probe" is not unique')), lines.join("\n"));
+  const dup = tables.copilot.variants.length;
+  assert.ok(lines.some((l) => l.startsWith(`ERR-GEN-004: targets/copilot.json: /variants/${dup}/id: variant id "doctor-probe" is not unique`)), lines.join("\n"));
   assert.ok(lines.some((l) => l.startsWith('ERR-GEN-004: targets/copilot.json: variants "doctor-probe" and "doctor-probe-again" overlap in commands/doctor.md')), lines.join("\n"));
 });
 

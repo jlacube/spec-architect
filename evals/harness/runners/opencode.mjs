@@ -412,10 +412,15 @@ export function driverHost({ keyFile, bin, start } = {}) {
       const local = join(runDir, "localappdata");
       mkdirSync(local, { recursive: true });
       // A case that sets PATH (a machine configuration, C002-T-038) keeps it as given: the sdd MCP servers
-      // run the staged scripts by path, and `sdd` must not appear on a PATH the case left it off.
+      // run the staged scripts by path, and `sdd` must not appear on a PATH the case left it off; the
+      // machine configuration has already placed the PATH lead in it (evals/harness/machines.mjs).
       const casePathKey = Object.keys(caseEnv).find((k) => k.toUpperCase() === "PATH");
+      // PATH lead (C002-IF-010 §4, defect D-020 item 4): without a case PATH, the folder of the pinned host
+      // binary comes right after the run's own bin folder, so `sdd host-version opencode` in the session
+      // reads the tested install before any other `opencode` of the user's PATH.
+      const lead = casePathKey ? [] : [dirname(bin ?? (await import("../opencode/driver.mjs")).resolveOpenCodeBinary())];
       const env = {
-        [pathKey]: `${bindir}${WIN ? ";" : ":"}${process.env[pathKey] ?? ""}`,
+        [pathKey]: [bindir, ...lead, process.env[pathKey] ?? ""].join(WIN ? ";" : ":"),
         XDG_CONFIG_HOME: join(xdg, "config"),
         XDG_DATA_HOME: join(xdg, "data"),
         XDG_CACHE_HOME: join(xdg, "cache"),

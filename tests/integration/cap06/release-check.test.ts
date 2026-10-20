@@ -45,6 +45,7 @@ import {
   injectionSummary,
   packageVariant,
   PG_900,
+  PG_901,
   RECORD_PATH,
   recount,
   ROOT,
@@ -95,6 +96,7 @@ function refused(r: Run, what: string) {
   );
 }
 
+type R637 = ReturnType<typeof cleanReport>;
 const OC_NATIVE = { target: "opencode", mode: "native-permissions" } as const;
 const OC_SDD = { target: "opencode", mode: "sdd-mcp-server" } as const;
 const CP_SDD = { target: "copilot", mode: "sdd-mcp-server" } as const;
@@ -283,32 +285,33 @@ test("C002-TC-633 (C002-TS-633): hooks state and injection results of the checkl
 
 // --- C002-TC-637 ---------------------------------------------------------------------------------
 
-test("C002-TC-637 (C002-TS-637): incomplete replay reports refused at release", () => {
-  type R = ReturnType<typeof cleanReport>;
-  const toNa = (id: string) => (r: R) => {
+// C002-TC-637: one test per Examples row of C002-TS-637 (13 rows; the platform rows on PG-900 and PG-901 of
+// fx-release, limited by `platforms` to `posix`, revised for defect D-018 item 2 and critic CR-66 by
+// C002-T-065), then the supporting checks of C002-T-047.
+{
+  const toNa = (id: string, rule = "C002-REQ-626") => (r: R637) => {
     const c = caseOf(r, id);
     r.cases = r.cases.filter((x) => x !== c);
-    r.not_applicable.push({ id: c.id, corpus: c.corpus, category: c.category, rule: "C002-REQ-626" });
+    r.not_applicable.push({ id: c.id, corpus: c.corpus, category: c.category, rule });
     recount(r);
   };
-  const rows: { variant: typeof OC_NATIVE | typeof OC_SDD; mutate: (r: R) => void; part: string; id: string }[] = [
-    { variant: OC_SDD, mutate: (r) => void recount(Object.assign(r, { cases: r.cases.filter((c) => c.id !== "PG-205") })), part: "omits cases", id: "PG-205" },
-    { variant: OC_SDD, mutate: toNa("PG-205"), part: "lists cases as not applicable without a rule", id: "PG-205" },
-    { variant: OC_NATIVE, mutate: toNa("BG-258"), part: "lists cases as not applicable without a rule", id: "BG-258" },
+  const naToCase = (id: string, tool: string) => (r: R637) => {
+    const na = r.not_applicable.find((x) => x.id === id)!;
+    r.not_applicable = r.not_applicable.filter((x) => x !== na);
+    r.cases.push({ id: na.id, corpus: na.corpus, category: na.category, fed_as: { tool, caller: "sdd-conductor", malformed: false }, expected: "deny", expected_source: "corpus", actual: "deny" });
+    recount(r);
+  };
+  const win32Only = loadCorpora(ROOT).path!.cases.filter((c) => JSON.stringify((c as { platforms?: unknown }).platforms) === JSON.stringify(["win32"])).map((c) => c.id);
+  type Row = { variant: typeof OC_NATIVE | typeof OC_SDD; defect: string; mutate: (r: R637) => void; part: string; id: string; platformCases?: boolean; ids?: string };
+  const rows: Row[] = [
+    { variant: OC_SDD, defect: "does not list the memory case PG-205", mutate: (r) => void recount(Object.assign(r, { cases: r.cases.filter((c) => c.id !== "PG-205") })), part: "omits cases", id: "PG-205" },
+    { variant: OC_SDD, defect: "lists the memory case PG-205 as not applicable", mutate: toNa("PG-205"), part: "lists cases as not applicable without a rule", id: "PG-205" },
+    { variant: OC_NATIVE, defect: "lists the identity case BG-258 as not applicable", mutate: toNa("BG-258"), part: "lists cases as not applicable without a rule", id: "BG-258" },
+    { variant: OC_SDD, defect: "lists the identity case BG-258 as a replayed case", mutate: naToCase("BG-258", "Bash"), part: "replays cases that its mechanism excludes", id: "BG-258" },
+    { variant: OC_NATIVE, defect: "lists PG-205 with allow and the source corpus", mutate: (r) => void Object.assign(caseOf(r, "PG-205"), { expected: "allow", expected_source: "corpus", actual: "allow" }), part: "records expectations other than C002-IF-009 §2.1", id: "PG-205" },
     {
       variant: OC_SDD,
-      mutate: (r) => {
-        const na = r.not_applicable.find((x) => x.id === "BG-258")!;
-        r.not_applicable = r.not_applicable.filter((x) => x !== na);
-        r.cases.push({ id: na.id, corpus: na.corpus, category: na.category, fed_as: { tool: "Bash", caller: "sdd-conductor", malformed: false }, expected: "deny", expected_source: "corpus", actual: "deny" });
-        recount(r);
-      },
-      part: "replays cases that its mechanism excludes",
-      id: "BG-258",
-    },
-    { variant: OC_NATIVE, mutate: (r) => void Object.assign(caseOf(r, "PG-205"), { expected: "allow", expected_source: "corpus", actual: "allow" }), part: "records expectations other than C002-IF-009 §2.1", id: "PG-205" },
-    {
-      variant: OC_SDD,
+      defect: "lists PG-163 as malformed with the source C002-REQ-630",
       mutate: (r) => {
         const c = caseOf(r, "PG-163");
         c.fed_as.malformed = true;
@@ -317,14 +320,46 @@ test("C002-TC-637 (C002-TS-637): incomplete replay reports refused at release", 
       part: "records expectations other than C002-IF-009 §2.1",
       id: "PG-163",
     },
-    { variant: OC_SDD, mutate: (r) => void (r.replay_host = { platform: "win32", capabilities: [] }), part: "replay host lacks file-symlink", id: "PG-163" },
+    { variant: OC_SDD, defect: "gives win32 without file-symlink and lists PG-163 with deny", mutate: (r) => void (r.replay_host = { platform: "win32", capabilities: [] }), part: "replay host lacks file-symlink", id: "PG-163" },
+    { variant: OC_SDD, defect: "gives win32 and leaves out PG-900 (platforms posix)", mutate: (r) => void (r.not_applicable = r.not_applicable.filter((x) => x.id !== "PG-900")), part: "omits cases", id: "PG-900", platformCases: true },
+    { variant: OC_SDD, defect: "gives win32 and replays PG-900 (platforms posix) with deny", mutate: naToCase("PG-900", "Write"), part: "replays cases that its mechanism excludes", id: "PG-900", platformCases: true },
+    { variant: OC_NATIVE, defect: "gives win32 and replays PG-900 (platforms posix) with deny", mutate: naToCase("PG-900", "Write"), part: "replays cases that its mechanism excludes", id: "PG-900", platformCases: true },
+    { variant: OC_SDD, defect: "gives win32 and lists the memory case PG-901 (platforms posix) under not_applicable with the rule platforms", mutate: toNa("PG-901", "platforms"), part: "lists cases as not applicable without a rule", id: "PG-901", platformCases: true },
+    {
+      variant: OC_SDD,
+      defect: "gives win32 and lists PG-900 (platforms posix) under not_applicable with the rule C002-REQ-626",
+      mutate: (r) => void (r.not_applicable.find((x) => x.id === "PG-900")!.rule = "C002-REQ-626"),
+      part: "lists cases as not applicable without a rule",
+      id: "PG-900",
+      platformCases: true,
+    },
+    {
+      variant: OC_SDD,
+      defect: "gives posix with file-symlink and lists the 35 path cases limited to win32 under not_applicable with the rule platforms",
+      mutate: (r) => {
+        r.replay_host = { platform: "posix", capabilities: ["file-symlink"] };
+        for (const id of win32Only) toNa(id, "platforms")(r);
+      },
+      part: "was replayed on posix, not on win32",
+      id: "PG-112",
+      platformCases: true,
+      ids: win32Only.join(", "),
+    },
   ];
-  for (const row of rows) {
+  assert.equal(rows.length, 13);
+  assert.equal(win32Only.length, 35);
+  for (const [i, row] of rows.entries()) {
     const mech = MECHANISMS_OF_MODE[row.variant.mode][0] as Mechanism;
-    const r = check({ variant: row.variant, mutate: { [mech]: row.mutate } });
-    refused(r, `${mech}: ${row.part}`);
-    assert.deepEqual(r.err, [`ERR-REL-012: opencode: replay report docs/releases/opencode/${FX_VERSION}/replay-${mech}.json (${mech}) ${row.part}: ${row.id}`], row.part);
+    test(`C002-TS-637 row ${i + 1} — ${mech} report ${row.defect} → ERR-REL-012 ${row.part}: ${row.id}`, () => {
+      const r = check({ variant: row.variant, ...(row.platformCases ? { pathCases: [PG_900, PG_901] } : {}), mutate: { [mech]: row.mutate } });
+      refused(r, `${mech}: ${row.part}`);
+      assert.deepEqual(r.err, [`ERR-REL-012: opencode: replay report docs/releases/opencode/${FX_VERSION}/replay-${mech}.json (${mech}) ${row.part}: ${row.ids ?? row.id}`], row.part);
+      assert.ok(r.err[0]!.includes(row.id));
+    });
   }
+}
+
+test("C002-TC-637 (supporting): C002-REQ-401 holds on sdd-mcp-server only; a missing report is missing evidence", () => {
   // C002-REQ-401 and C002-REQ-517 hold on sdd-mcp-server only (revised C002-IF-009 §2.1).
   const moved = check({ variant: OC_NATIVE, mutate: { "opencode-permissions": (r) => void Object.assign(caseOf(r, "PG-135"), { expected: "deny", expected_source: "C002-REQ-401", actual: "deny" }) } });
   assert.deepEqual(moved.err, [`ERR-REL-012: opencode: replay report docs/releases/opencode/${FX_VERSION}/replay-opencode-permissions.json (opencode-permissions) records expectations other than C002-IF-009 §2.1: PG-135`]);
@@ -332,6 +367,62 @@ test("C002-TC-637 (C002-TS-637): incomplete replay reports refused at release", 
   const gone = check({ variant: OC_SDD, reports: { "sdd-mcp-server": null } });
   assert.deepEqual(gone.err, [`ERR-REL-009: opencode: evidence corpus replay missing, unreadable or insufficient at docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`]);
 });
+
+// --- C002-TC-682 (C002-TS-682; C002-T-065): a case of the platform rule listed as not applicable is accepted ---
+for (const variant of [OC_SDD, OC_NATIVE]) {
+  const mech = MECHANISMS_OF_MODE[variant.mode][0] as Mechanism;
+  test(`C002-TS-682 — ${variant.mode}: replay-${mech}.json on win32 lists PG-900 (platforms posix) under not_applicable with the rule platforms → released`, () => {
+    const r = check({
+      variant,
+      pathCases: [PG_900],
+      mutate: {
+        [mech]: (x: R637) => {
+          assert.equal(x.replay_host.platform, "win32");
+          assert.deepEqual(x.not_applicable.filter((n) => n.id === "PG-900"), [{ id: "PG-900", corpus: "path", category: "outside", rule: "platforms" }]);
+          assert.equal(x.differing, 0);
+        },
+      },
+    });
+    assert.deepEqual(r.err.filter((l) => l.startsWith("ERR-REL-012")), []);
+    allowed(r, variant.mode);
+  });
+}
+
+// --- C002-TC-683 (C002-TS-683; C002-T-065): a report replayed on posix is refused and not checked further ---
+for (const [fixture, e] of <[string, Partial<Evidence>][]>[
+  ["fx-release", { pathCases: [PG_900, PG_901] }],
+  ["fx-release-no-platforms", { noPlatforms: true }],
+]) {
+  test(`C002-TS-683 — ${fixture}: replay-sdd-mcp-server.json replayed on posix → one ERR-REL-012 line, no ERR-REL-001 or ERR-REL-006`, () => {
+    const { root, pkg } = evidenceRoot({
+      variant: OC_SDD,
+      ...e,
+      mutate: {
+        "sdd-mcp-server": (x) => {
+          x.replay_host = { platform: "posix", capabilities: ["file-symlink"] };
+          caseOf(x, "PG-205").actual = "allow";
+          x.cases = x.cases.filter((c) => c.id !== "PG-224");
+          recount(x);
+          assert.equal(x.differing, 1);
+        },
+      },
+    });
+    const r = run("opencode", root, pkg);
+    const pathCases = (JSON.parse(readFileSync(join(root, "tests", "guards", "path-corpus.json"), "utf8")) as { cases: { id: string; platforms?: unknown }[] }).cases;
+    const expected = pathCases.filter((c) => JSON.stringify(c.platforms) === JSON.stringify(["win32"])).map((c) => c.id);
+    assert.equal(expected.length, fixture === "fx-release" ? 35 : 0);
+    const twelve = r.err.filter((l) => l.startsWith("ERR-REL-012"));
+    assert.equal(twelve.length, 1, r.err.join("\n"));
+    const prefix = `ERR-REL-012: opencode: replay report docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json (sdd-mcp-server) was replayed on posix, not on win32: `;
+    assert.ok(twelve[0]!.startsWith(prefix), twelve[0]);
+    const list = twelve[0]!.slice(prefix.length);
+    assert.deepEqual(list.split(", "), expected.length > 0 ? expected : ["none"]);
+    assert.equal(new Set(list.split(", ")).size, list.split(", ").length, "each once");
+    assert.deepEqual(r.err.filter((l) => l.startsWith("ERR-REL-001") || l.startsWith("ERR-REL-006")), []);
+    refused(r, fixture);
+    assert.ok((r.record?.["refusals"] as { code: string }[]).some((x) => x.code === "ERR-REL-012"));
+  });
+}
 
 // --- C002-TC-651 ---------------------------------------------------------------------------------
 
@@ -451,34 +542,7 @@ test("node scripts/release-check.mjs --target opencode --dry-run on fx-release; 
   assert.equal(spawnSync(process.execPath, [script, "--target", "claude-code"], { encoding: "utf8" }).status, 2);
 });
 
-// --- C002-T-064: PG-900 rows of C002-TC-637, C002-TC-668 … C002-TC-671, the repository's step index ----
-
-{
-  type R = ReturnType<typeof cleanReport>;
-  const report = `docs/releases/opencode/${FX_VERSION}/replay-sdd-mcp-server.json`;
-  const rows: { defect: string; mutate: (r: R) => void; part: string }[] = [
-    { defect: "leaves out PG-900", mutate: () => undefined, part: "omits cases" },
-    {
-      defect: "lists PG-900 as a replayed case with the decision deny",
-      mutate: (r) => {
-        r.cases.push({ id: "PG-900", corpus: "path", category: "traversal", fed_as: { tool: "Write", caller: "sdd-spec-writer", malformed: false }, expected: "deny", expected_source: "corpus", actual: "deny" });
-        recount(r);
-      },
-      part: "records expectations other than C002-IF-009 §2.1",
-    },
-    {
-      defect: "lists PG-900 as not applicable",
-      mutate: (r) => void r.not_applicable.push({ id: "PG-900", corpus: "path", category: "traversal", rule: "C002-REQ-626" }),
-      part: "lists cases as not applicable without a rule",
-    },
-  ];
-  for (const row of rows)
-    test(`C002-TS-637 PG-900 row: the sdd-mcp-server report on a win32 replay host ${row.defect}, which the corpora limit by platforms to linux → ERR-REL-012 ${row.part}`, () => {
-      const r = check({ variant: OC_SDD, pathCases: [PG_900], mutate: { "sdd-mcp-server": (x) => (assert.equal(x.replay_host.platform, "win32"), row.mutate(x)) } });
-      refused(r, row.defect);
-      assert.deepEqual(r.err, [`ERR-REL-012: opencode: replay report ${report} (sdd-mcp-server) ${row.part}: PG-900`], row.defect);
-    });
-}
+// --- C002-T-064: C002-TC-668 … C002-TC-671, the repository's step index ----
 
 test("the repository's docs/checklists/vscode-copilot.md reads as a step index with one restore step (VSC-07)", () => {
   const steps = readChecklistSteps(join(ROOT, "docs", "checklists", "vscode-copilot.md"));
@@ -561,6 +625,11 @@ const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02"), passed("VSC-99")], err: [line("VSC-99", "not a step of the checklist")] },
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "repeated"))], err: [line("VSC-02", "failed in an earlier run not repeated under the rerun rule")] },
     { mode: S, restore: earlier("passed", "hooks-source-changed"), steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [] },
+    // Defect D-018 item 3 (C002-T-065): every earlier restore run counts, so VSC-02 stays excused; a failed
+    // or skipped earlier restore run gives VSC-04 its own line.
+    { mode: S, restore: earlier("passed", "repeated"), steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [] },
+    { mode: S, restore: earlier("failed", "repeated"), steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [line("VSC-04", "failed in an earlier run not repeated under the rerun rule")] },
+    { mode: S, restore: earlier("skipped", "hooks-source-changed"), steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [line("VSC-04", "skipped in an earlier run")] },
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [line("VSC-02", "failed in an earlier run not repeated under the rerun rule")] },
     { mode: S, restore: earlier("passed", "hooks-source-changed"), steps: [passed("VSC-01", earlier("failed", "hooks-source-changed")), passed("VSC-02")], err: [line("VSC-01", "failed in an earlier run not repeated under the rerun rule")] },
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("skipped", "repeated"))], err: [line("VSC-02", "skipped in an earlier run")] },
@@ -569,7 +638,7 @@ const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{
     { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), passed("VSC-02")], err: [line("VSC-02", "passed, but its mode is sdd-mcp-server")] },
     { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), { id: "VSC-11", result: "not-applicable", injection_case: "INJ-01" }], err: "ERR-REL-011" },
   ];
-  assert.equal(rows.length, 21);
+  assert.equal(rows.length, 24);
   for (const [i, row] of rows.entries())
   test(`C002-TS-668 row ${i + 1} (${row.mode}): restore ${JSON.stringify(row.restore ?? {})}, steps ${JSON.stringify(row.steps)} → ${row.err === "ERR-REL-011" ? "ERR-REL-011" : row.err.length === 0 ? "allowed" : row.err.join("; ")}`, () => {
     const variant = row.mode === S ? CP_SDD : CP_HOOKS;

@@ -9,7 +9,7 @@
 // One report per mechanism and package version, written to docs/releases/<target>/<version>/
 // replay-<mechanism>.json (C002-IF-009 §1); the stub's report goes to build/replay/reports/ and never
 // under docs/releases/. Exit 0 when every report validates, lists every case once and has 0 differing
-// decisions; 1 otherwise (a differing decision, an `error`, an omitted case, a missing adapter); 2 on a
+// decisions; 1 otherwise (a differing decision, an `error`, a missing or repeated case, a missing adapter); 2 on a
 // usage error.
 import { join } from "node:path";
 import { repoRoot } from "../helpers.ts";
@@ -151,7 +151,7 @@ export async function main(argv: readonly string[], log: (line: string) => void 
         return 2;
       }
     }
-    const { report, omitted, problems } = await runReplay(adapter, {
+    const { report, problems } = await runReplay(adapter, {
       ...(args.target ? { target: args.target } : {}),
       ...(args.version ? { version: args.version } : {}),
       ...(args.pathCorpus ? { pathCorpus: args.pathCorpus } : {}),
@@ -170,9 +170,8 @@ export async function main(argv: readonly string[], log: (line: string) => void 
     );
     for (const c of report.cases.filter((x) => x.actual !== x.expected))
       log(`  differing ${c.id} (${c.corpus}, ${c.category}): expected ${c.expected} (${c.expected_source}), got ${c.actual}${c.detail ? ` — ${c.detail}` : ""}`);
-    for (const o of omitted) log(`  omitted ${o}`);
     for (const p of problems) log(`  report problem ${p}`);
-    if (report.differing > 0 || omitted.length > 0 || problems.length > 0) failed = true;
+    if (report.differing > 0 || problems.length > 0) failed = true;
   }
   return failed ? 1 : 0;
 }

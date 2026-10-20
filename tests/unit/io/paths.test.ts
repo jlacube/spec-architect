@@ -1,10 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync } from "node:fs";
+import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isInside, normalisePath, pathKey, realPath } from "../../../src/io/paths.ts";
+import { envValue, executableNames, findNativeOnPath, findOnPath, isInside, normalisePath, pathFolders, pathKey, pathValue, realPath } from "../../../src/io/paths.ts";
 
 // Lexical normalisation tables, testable on any OS (C001-NFR-402: simulated POSIX paths).
 const WIN: [string, string][] = [
@@ -85,4 +85,86 @@ test("realPath expands Windows 8.3 short names", { skip: process.platform !== "w
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+// --- The executable lookup (C002-IF-007 §Executable lookup, C002-CON-17; C002-T-065) ---
+
+test("lookup: PATH folders keep their order; empty, `.` and relative entries are skipped", () => {
+  assert.deepEqual(pathFolders("C:\\a;;.;b\\c;C:x;\\root;D:/d;\\\\srv\\share\\bin", "win32"), ["C:\\a", "D:/d", "\\\\srv\\share\\bin"]);
+  assert.deepEqual(pathFolders('"C:\\Program Files\\x";..', "win32"), ["C:\\Program Files\\x"]);
+  assert.deepEqual(pathFolders("/usr/bin::.:bin:/opt/x", "posix"), ["/usr/bin", "/opt/x"]);
+  assert.deepEqual(pathFolders("", "win32"), []);
+});
+
+test("lookup: the names tried follow PATHEXT in its order, the default when unset or empty; a name with an extension is tried as given", () => {
+  const names = (n: string, ext?: string) => executableNames(n, "win32", ext).map((x) => `${x.name}:${x.kind}`);
+  assert.deepEqual(names("git"), ["git.com:native", "git.exe:native", "git.bat:shim", "git.cmd:shim"]);
+  assert.deepEqual(names("git", ""), names("git"), "an empty PATHEXT is the default");
+  assert.deepEqual(names("git", ".CMD;.EXE;.VBS;.JS"), ["git.cmd:shim", "git.exe:native"], "PATHEXT order; other extensions passed over");
+  assert.deepEqual(names("git.exe"), ["git.exe:native"]);
+  assert.deepEqual(names("opencode.cmd"), ["opencode.cmd:shim"]);
+  assert.deepEqual(names("tool.ps1"), [], "any other extension is passed over");
+  assert.deepEqual(executableNames("git", "posix"), [{ name: "git", kind: "native" }]);
+});
+
+test("lookup: the PATH key matches whatever its letter case on Windows only", () => {
+  assert.equal(pathValue({ Path: "C:\a" }, "win32"), "C:\a");
+  assert.equal(pathValue({ path: "C:\b" }, "win32"), "C:\b");
+  assert.equal(pathValue({ Path: "/a" }, "posix"), "");
+  assert.equal(envValue({ pathext: ".EXE" }, "PATHEXT", "win32"), ".EXE");
+  assert.equal(pathValue({}, "win32"), "");
+});
+
+/** Temporary folders `a`, `b`, `cwd` with the given empty files. */
+function lookupDirs(files: Record<"a" | "b" | "cwd", string[]>, fn: (d: Record<"a" | "b" | "cwd", string>) => void): void {
+  const base = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-lookup-")));
+  try {
+    const d = { a: join(base, "a"), b: join(base, "b"), cwd: join(base, "cwd") };
+    for (const k of ["a", "b", "cwd"] as const) {
+      mkdirSync(d[k]);
+      for (const f of files[k]) {
+        writeFileSync(join(d[k], f), "#!/bin/sh\n");
+        if (process.platform !== "win32") chmodSync(join(d[k], f), 0o755);
+      }
+    }
+    fn(d);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+const WINDOWS = process.platform === "win32";
+
+test("lookup (Windows): the first match in PATH order, native or shim; the native answer passes over shims", { skip: !WINDOWS && "Windows only" }, () => {
+  lookupDirs({ a: ["opencode.cmd"], b: ["opencode.exe"], cwd: ["opencode.exe"] }, (d) => {
+    const path = `.;${d.a};${d.b}`;
+    assert.deepEqual(findOnPath("opencode", path, { pathext: "" }), { file: join(d.a, "opencode.cmd"), kind: "shim" });
+    assert.deepEqual(findNativeOnPath("opencode", path, { pathext: "" }), { file: join(d.b, "opencode.exe") });
+    assert.equal(findOnPath("opencode", ".", {}), null, "the working folder through `.` is never searched");
+    assert.deepEqual(findOnPath("opencode", `${d.cwd}`, {}), { file: join(d.cwd, "opencode.exe"), kind: "native" }, "only by its absolute path");
+  });
+  lookupDirs({ a: ["git.exe", "git.com"], b: [], cwd: [] }, (d) => {
+    assert.deepEqual(findNativeOnPath("git", d.a, {}), { file: join(d.a, "git.com") }, "PATHEXT order: .COM before .EXE");
+    assert.deepEqual(findNativeOnPath("git", d.a, { pathext: ".EXE;.COM" }), { file: join(d.a, "git.exe") });
+    assert.deepEqual(findNativeOnPath("git", d.a, { env: { PATHEXT: ".EXE" } }), { file: join(d.a, "git.exe") }, "PATHEXT of the environment");
+  });
+  lookupDirs({ a: ["git.cmd", "git.bat"], b: ["git.ps1", "git"], cwd: [] }, (d) => {
+    assert.deepEqual(findNativeOnPath("git", `${d.a};${d.b}`, {}), { error: "only a .cmd or .bat shim was found" });
+    assert.deepEqual(findNativeOnPath("git", d.b, {}), { error: "not found on PATH" }, "a file without a known extension is passed over");
+    assert.deepEqual(findOnPath("git", d.a, {}), { file: join(d.a, "git.bat"), kind: "shim" });
+    assert.deepEqual(findNativeOnPath("git", "", {}), { error: "not found on PATH" });
+  });
+  lookupDirs({ a: [], b: [], cwd: [] }, (d) => {
+    mkdirSync(join(d.a, "git.exe"));
+    assert.deepEqual(findNativeOnPath("git", d.a, {}), { error: "not found on PATH" }, "a folder named git.exe is no match");
+  });
+});
+
+test("lookup (POSIX): a regular file with execute permission", { skip: WINDOWS && "POSIX only" }, () => {
+  lookupDirs({ a: [], b: ["git"], cwd: ["git"] }, (d) => {
+    writeFileSync(join(d.a, "git"), "");
+    chmodSync(join(d.a, "git"), 0o644);
+    assert.deepEqual(findNativeOnPath("git", `.:${d.a}:${d.b}`, {}), { file: join(d.b, "git") });
+    assert.deepEqual(findOnPath("git", `${d.b}`, {}), { file: join(d.b, "git"), kind: "native" });
+  });
 });

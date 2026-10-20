@@ -64,3 +64,23 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
     },
   };
 }
+
+/**
+ * Cap exceptions in force (C002-IF-010 §2.2 "Caps above 0.50 USD"; P-01 answer to Q-ts634-budget-01,
+ * 2026-10-20): a row sets `maxBudgetUsd` above DEFAULT_MAX_BUDGET_USD only where an exception matches its
+ * row ID, its case file (repository-relative, `/` separators) and the run's `--host` together, at a cap
+ * of at least the row's value (critic CR-68). The harness does not count the exception's runs (§2.2 Runs:
+ * the owning task's done-check does, C002-T-056 for TS-634).
+ */
+export const CAP_EXCEPTIONS = Object.freeze([Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 1.0 })]);
+
+/**
+ * The cap-exception check of one selected row before any session: null when the row may run (its cap is
+ * at most the default, or an exception matches), else the refusal message naming the row and its case file.
+ */
+export function capRefusal({ id, file, host, maxBudgetUsd }, exceptions = CAP_EXCEPTIONS) {
+  const usd = maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD;
+  if (!(typeof usd === "number" && usd > DEFAULT_MAX_BUDGET_USD + EPS)) return null;
+  if (exceptions.some((e) => e.row === id && e.file === file && e.host === host && e.usd + EPS >= usd)) return null;
+  return `row ${id} of ${file} sets maxBudgetUsd ${usd} USD, above ${DEFAULT_MAX_BUDGET_USD.toFixed(2)} USD, and no cap exception of C002-IF-010 §2.2 matches its row ID, case file and host ${host}`;
+}

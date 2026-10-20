@@ -76,8 +76,6 @@ export interface ReplayOptions {
 
 export interface ReplayResult {
   report: ReplayReport;
-  /** Cases left out of the report: no expectation on this platform (C002-IF-009 §2.1; ERR-REL-012). */
-  omitted: string[];
   /** Schema and completeness problems of the report (none expected). */
   problems: string[];
 }
@@ -108,7 +106,6 @@ export async function runReplay(adapter: ReplayAdapter, options: ReplayOptions =
   const fx = buildReplayFixture(corpora.path.corpus.fixture, options.denyCapabilities);
   const cases: ReportCase[] = [];
   const notApplicable: NotApplicable[] = [];
-  const omitted: string[] = [];
   try {
     await adapter.setup(fx);
     try {
@@ -118,12 +115,9 @@ export async function runReplay(adapter: ReplayAdapter, options: ReplayOptions =
       ];
       for (const [corpus, c] of all) {
         const e = expectationOf(c, mechanism, platform, corpus);
+        // The identity row and the platform rule (C002-IF-009 §2.1): listed with their rule, every mechanism.
         if (!e.applicable) {
           notApplicable.push({ id: c.id, corpus, category: c.category, rule: e.rule });
-          continue;
-        }
-        if ("omitted" in e) {
-          omitted.push(`${c.id}: ${e.omitted}`);
           continue;
         }
         let caller = callerOf(c, mechanism);
@@ -180,10 +174,6 @@ export async function runReplay(adapter: ReplayAdapter, options: ReplayOptions =
     differing: cases.filter((c) => c.actual !== c.expected).length,
   };
   const ids = { path: corpora.path.corpus.cases.map((c) => c.id), shell: corpora.shell.cases.map((c) => c.id) };
-  const omittedIds = new Set(omitted.map((o) => o.split(":")[0]!));
-  const problems = [
-    ...validateReport(report).map((p) => `schema: ${p}`),
-    ...completenessProblems(report, { path: ids.path.filter((i) => !omittedIds.has(i)), shell: ids.shell.filter((i) => !omittedIds.has(i)) }),
-  ];
-  return { report, omitted, problems };
+  const problems = [...validateReport(report).map((p) => `schema: ${p}`), ...completenessProblems(report, ids)];
+  return { report, problems };
 }

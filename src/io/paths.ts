@@ -7,7 +7,7 @@
 // - realPath: resolves symbolic links, junctions, subst/UNC aliases and 8.3 short names through the
 //   file system, for the longest existing prefix; segments that do not exist yet (a file about to
 //   be written) are appended lexically.
-import { realpathSync } from "node:fs";
+import { accessSync, constants, realpathSync, statSync } from "node:fs";
 import { posix, win32 } from "node:path";
 
 export type Platform = "win32" | "posix";
@@ -170,18 +170,157 @@ export function isCommand(word: string | undefined, name: string): boolean {
   return word !== undefined && (word === name || word.toLowerCase() === `${name}.exe`);
 }
 
+// --- Executable lookup (C002-IF-007 §Executable lookup, C002-IF-002 §5.2 steps 3 and 4, C002-CON-17) ---
+//
+// Every executable the sdd CLI and the sdd MCP server start (the host probes, `git` of the `gate`
+// commands, `serena`, the server's commands and `taskkill`) is resolved here and started by the absolute
+// path of its match, never by its bare name: on Windows `cmd.exe`, and Node.js's process start without
+// a shell, look for a bare name in the working folder before the PATH folders, and those starts run from
+// the repository, whose content is untrusted.
+//
+// Lookup rule: the folders of the given PATH in their order (on Windows the environment's `Path` key,
+// whatever its letter case: `pathValue`); an empty entry, or one that is not an absolute path, is
+// skipped, so the working folder is searched only where the PATH names it by an absolute path. On
+// Windows each folder is tried for the name with each extension of PATHEXT in its order
+// (`.COM;.EXE;.BAT;.CMD` when unset or empty); a name that already ends in an extension is tried as
+// given. A `.com` or `.exe` match is `native`, a `.bat` or `.cmd` match a `shim`, and any other extension
+// is passed over. On other platforms a regular file with execute permission is a native match.
+//
+// Two answers: `findOnPath` gives the first match, native or shim (the probes of `host-version`, which
+// run a shim through the platform shell by its quoted absolute path); `findNativeOnPath` gives the first
+// native match, passing over shims, with the reason `not found on PATH` or `only a .cmd or .bat shim was
+// found` (every other start). The resolver only reads the file system; it never starts a process.
+
+/** The kind of a PATH match: a file a process starts without a shell, or a Windows `.cmd`/`.bat` shim. */
+export type ExecutableKind = "native" | "shim";
+
+export interface ExecutableMatch {
+  /** Absolute path of the match. */
+  file: string;
+  kind: ExecutableKind;
+}
+
+/** Why no native match was found (ERR-MCP-006 reasons, C002-IF-002 §5.2 step 3). */
+export type LookupFailure = "not found on PATH" | "only a .cmd or .bat shim was found";
+
+export interface LookupOptions {
+  platform?: Platform;
+  /** Windows: the PATHEXT value (default: `PATHEXT` of `env`, then `.COM;.EXE;.BAT;.CMD`). */
+  pathext?: string;
+}
+
+type Env = Readonly<Record<string, string | undefined>>;
+
+const DEFAULT_PATHEXT = ".COM;.EXE;.BAT;.CMD";
+
+/** The value of the environment variable `name`; on Windows the key matches whatever its letter case (`Path`). */
+export function envValue(env: Env, name: string, platform: Platform = CURRENT): string | undefined {
+  if (platform !== "win32" || env[name] !== undefined) return env[name];
+  const key = Object.keys(env).find((k) => k.toUpperCase() === name.toUpperCase());
+  return key === undefined ? undefined : env[key];
+}
+
+/** The PATH of an environment (on Windows `Path`, `PATH` or any other letter case); `""` when unset. */
+export const pathValue = (env: Env, platform: Platform = CURRENT): string => envValue(env, "PATH", platform) ?? "";
+
+/** The PATH folders the lookup searches, in order: empty and non-absolute entries left out. */
+export function pathFolders(path: string, platform: Platform = CURRENT): string[] {
+  const out: string[] = [];
+  for (const raw of path.split(platform === "win32" ? ";" : ":")) {
+    // Windows allows an entry in double quotes (a folder whose name holds the separator).
+    const entry = platform === "win32" ? raw.trim().replace(/^"(.*)"$/, "$1") : raw;
+    if (entry === "") continue;
+    // Windows: a drive letter with its root, or a UNC path; `C:x`, `\x` and `.` depend on the current drive or folder.
+    const absolute = platform === "win32" ? /^([A-Za-z]:[\\/]|[\\/]{2}[^\\/])/.test(entry) : entry.startsWith("/");
+    if (absolute) out.push(entry);
+  }
+  return out;
+}
+
+/** The kind of a Windows file by its extension; null for any extension other than `.com`, `.exe`, `.bat`, `.cmd`. */
+function windowsKind(file: string): ExecutableKind | null {
+  const ext = win32.extname(file).toLowerCase();
+  if (ext === ".exe" || ext === ".com") return "native";
+  if (ext === ".bat" || ext === ".cmd") return "shim";
+  return null;
+}
+
 /**
- * The file names a PATH folder may hold for the executable `name` (C002-IF-002 §5.2 step 3): `native`
- * files a process can start without a shell (on Windows `.exe` and `.com`; elsewhere the name itself,
- * which must also be executable), and `shims`, Windows `.cmd` and `.bat` files that need `cmd.exe`.
+ * The file names a PATH folder is tried for, in order, for the executable `name`: on Windows the name
+ * with each PATHEXT extension (or the name as given when it already has an extension), each with its
+ * kind; other extensions are left out. Elsewhere the name itself, native.
  */
-export function executableNames(name: string, platform: Platform = CURRENT): { native: string[]; shims: string[]; checkMode: boolean } {
-  if (platform !== "win32") return { native: [name], shims: [], checkMode: true };
-  const ext = win32.extname(name).toLowerCase();
-  if (ext === ".exe" || ext === ".com") return { native: [name], shims: [], checkMode: false };
-  if (ext === ".cmd" || ext === ".bat") return { native: [], shims: [name], checkMode: false };
-  if (ext !== "") return { native: [], shims: [], checkMode: false };
-  return { native: [`${name}.exe`, `${name}.com`], shims: [`${name}.cmd`, `${name}.bat`], checkMode: false };
+export function executableNames(name: string, platform: Platform = CURRENT, pathext: string = DEFAULT_PATHEXT): { name: string; kind: ExecutableKind }[] {
+  if (platform !== "win32") return [{ name, kind: "native" }];
+  const candidates =
+    win32.extname(name) !== ""
+      ? [name]
+      : (pathext.trim() === "" ? DEFAULT_PATHEXT : pathext)
+          .split(";")
+          .map((e) => e.trim())
+          .filter((e) => e !== "")
+          .map((e) => `${name}${e.startsWith(".") ? e : `.${e}`}`.replace(/\.[^.\\/]+$/, (x) => x.toLowerCase()));
+  return candidates.flatMap((n) => {
+    const kind = windowsKind(n);
+    return kind === null ? [] : [{ name: n, kind }];
+  });
+}
+
+/** True when `file` is a regular file (and, on POSIX, executable). */
+function isExecutableFile(file: string, platform: Platform): boolean {
+  try {
+    if (!statSync(file).isFile()) return false;
+    if (platform !== "win32") accessSync(file, constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Every match of `name` on `path`, in lookup order (folders, then PATHEXT). */
+function* matches(name: string, path: string, options: LookupOptions & { env?: Env }): Generator<ExecutableMatch> {
+  const platform = options.platform ?? CURRENT;
+  // A name with a folder in it is no PATH lookup; the starts of the table only pass bare names.
+  if (/[\\/]/.test(name) || name === "") return;
+  const pathext = options.pathext ?? (options.env ? envValue(options.env, "PATHEXT", platform) : undefined) ?? DEFAULT_PATHEXT;
+  const names = executableNames(name, platform, pathext);
+  const join = platform === "win32" ? win32.join : posix.join;
+  for (const dir of pathFolders(path, platform))
+    for (const n of names) {
+      const file = join(dir, n.name);
+      if (isExecutableFile(file, platform)) yield { file, kind: n.kind };
+    }
+}
+
+/** The first match of `name` on `path`, native or shim (the host probes); null when nothing matches. */
+export function findOnPath(name: string, path: string, options: LookupOptions & { env?: Env } = {}): ExecutableMatch | null {
+  for (const m of matches(name, path, options)) return m;
+  return null;
+}
+
+/** The first native match of `name` on `path`, shims passed over (every start but the probes). */
+export function findNativeOnPath(name: string, path: string, options: LookupOptions & { env?: Env } = {}): { file: string } | { error: LookupFailure } {
+  let shim = false;
+  for (const m of matches(name, path, options)) {
+    if (m.kind === "native") return { file: m.file };
+    shim = true;
+  }
+  return { error: shim ? "only a .cmd or .bat shim was found" : "not found on PATH" };
+}
+
+/** `findNativeOnPath` over an environment's PATH and PATHEXT (default: this process's). */
+export function nativeExecutable(name: string, env: Env = process.env, platform: Platform = CURRENT): { file: string } | { error: LookupFailure } {
+  return findNativeOnPath(name, pathValue(env, platform), { env, platform });
+}
+
+/**
+ * The platform shell for the probes' shims (Windows): `ComSpec` when it is an absolute path, else
+ * `%SystemRoot%\System32\cmd.exe`, so the shell itself is not looked up by its bare name either.
+ */
+export function windowsShell(env: Env = process.env): string {
+  const spec = envValue(env, "ComSpec", "win32");
+  if (spec !== undefined && /^[A-Za-z]:[\\/]/.test(spec)) return spec;
+  return win32.join(envValue(env, "SystemRoot", "win32") ?? "C:\\Windows", "System32", "cmd.exe");
 }
 
 export interface InsideOptions extends PathOptions {

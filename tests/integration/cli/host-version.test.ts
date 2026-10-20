@@ -3,9 +3,11 @@
 // PATH restricted to that folder; the user settings folders point into the throwaway workspace.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { chmodSync, copyFileSync, mkdirSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { chmodSync, copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { normalisePath } from "../../../src/io/paths.ts";
 import { repoRoot } from "../../helpers.ts";
+import { cmdStarts, envWithPath, exeStarts, nodeOnlyDir, plantCmd, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
 import { makeWorkspace, runBundled, type Result } from "./helpers.ts";
 
 const FIXTURES = join(repoRoot(), "tests", "fixtures");
@@ -200,4 +202,58 @@ test("on Windows a host installed only as a `.cmd` shim is found and run", { ski
   } finally {
     ws.cleanup();
   }
+});
+
+// --- C002-TC-675 (C002-TS-675; C002-T-065): host-version reports the opencode first in the PATH folders ---
+// The executable lookup of C002-IF-007 §Executable lookup: PATH order, `.` and empty entries skipped,
+// the match started by its absolute path with its own folder as working folder. Per row an `opencode.exe`
+// (stub-exe) or `opencode.cmd` in path-a, an `opencode.exe` in path-b, the row's planted stubs in the
+// working folder (standing for C:/fx/repo), and the PATH of the row followed by a folder holding only the
+// real node.exe. No stub in the working folder may record a start.
+type Planted = "none" | "exe+cmd" | "node" | "exe";
+const ROWS_675: { file: "exe" | "cmd" | "npm"; a: string; b: string; planted: Planted; path: string; printed: string; code: number }[] = [
+  { file: "exe", a: "2.0.32", b: "1.18.31", planted: "none", path: "A;B", printed: "2.0.32", code: 0 },
+  { file: "exe", a: "1.18.31", b: "2.0.32", planted: "none", path: "A;B", printed: "1.18.31", code: 0 },
+  { file: "cmd", a: "2.0.32", b: "1.18.31", planted: "none", path: "A;B", printed: "2.0.32", code: 0 },
+  { file: "exe", a: "2.0.32", b: "1.18.31", planted: "exe+cmd", path: "A;B", printed: "2.0.32", code: 0 },
+  { file: "npm", a: "2.0.32", b: "1.18.31", planted: "node", path: "A;B", printed: "2.0.32", code: 0 },
+  { file: "exe", a: "2.0.32", b: "1.18.31", planted: "exe", path: ".;A;B", printed: "2.0.32", code: 0 },
+  { file: "exe", a: "2.0.32", b: "1.18.31", planted: "exe", path: ";B", printed: "1.18.31", code: 0 },
+  { file: "exe", a: "2.0.32", b: "1.18.31", planted: "exe", path: ".", printed: "missing", code: 1 },
+];
+ROWS_675.forEach((row, i) => {
+  const what = `${row.file === "npm" ? "npm opencode.cmd" : `opencode.${row.file}`} ${row.a} | ${row.b} | planted ${row.planted} | PATH ${row.path}`;
+  test(`C002-TS-675 row ${i + 1} — ${what}: opencode ${row.printed}`, { skip: STUB_EXE_SKIP }, () => {
+    const ws = workspace();
+    try {
+      const a = join(ws.root, "fx", "path-a");
+      const b = join(ws.root, "fx", "path-b");
+      const repo = join(ws.root, "fx", "repo");
+      mkdirSync(repo, { recursive: true });
+      if (row.file === "exe") plantExe(a, "opencode", { on: { "--version": row.a } });
+      else if (row.file === "cmd") plantCmd(a, "opencode", { print: row.a });
+      else {
+        // An npm-style shim: it starts `node` by its bare name with the package script beside it.
+        mkdirSync(a, { recursive: true });
+        writeFileSync(join(a, "opencode.js"), `process.stdout.write(${JSON.stringify(row.a + "\n")});\n`);
+        plantCmd(a, "opencode", { body: ['node "%~dp0opencode.js" %*'] });
+      }
+      plantExe(b, "opencode", { on: { "--version": row.b } });
+      if (row.planted === "exe+cmd" || row.planted === "exe") plantExe(repo, "opencode", { print: "9.9.9" });
+      if (row.planted === "exe+cmd") plantCmd(repo, "opencode", { print: "9.9.9" });
+      if (row.planted === "node") plantExe(repo, "node", { print: "9.9.9" });
+      const path = [...row.path.split(";").map((e) => (e === "A" ? a : e === "B" ? b : e)), nodeOnlyDir()].join(";");
+      const r = runBundled(["host-version", "opencode"], { cwd: repo, env: envWithPath(path) });
+      assert.equal(r.stdout, `opencode ${row.printed}\n`, r.stderr);
+      assert.equal(r.code, row.code);
+      for (const name of ["opencode", "node"]) {
+        assert.deepEqual(exeStarts(repo, name), [], `no start of ${name}.exe in the working folder`);
+        assert.deepEqual(cmdStarts(repo, name), [], `no start of ${name}.cmd in the working folder`);
+      }
+      // The match ran by its absolute path, in its own folder.
+      for (const s of [...exeStarts(a, "opencode"), ...exeStarts(b, "opencode")]) assert.equal(normalisePath(s.cwd).toLowerCase(), normalisePath(dirname(s.path)).toLowerCase(), "the working folder of a probe is the folder of its match");
+    } finally {
+      ws.cleanup();
+    }
+  });
 });
