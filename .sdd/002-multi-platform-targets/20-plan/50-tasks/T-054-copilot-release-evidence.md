@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-036, C002-T-041, C002-T-045, C002-T-048, C002-T-064, C002-T-065, C002-T-066]
 implements: [C002-NFR-201, C002-NFR-202, C002-NFR-203]
 satisfies_ac: [C002-AC-606.1, C002-AC-612.1, C002-AC-327.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-608, C002-TS-615, C002-TS-359, C002-TC-608, C002-TC-615, C
 components: [C002-COMP-008, C002-COMP-009]
 risk_refs: [C002-RISK-026, C002-RISK-032, C002-RISK-036]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 6a83daa, completed_at: 2026-10-21, notes: "24/24 pass (ROUTE, INJ-01…22, TS-359); TS-336 n/a. Conductor/critic/spec-writer on claude-sonnet-5.5 via the substitution. Copilot dry run: only ERR-REL-003 (checklist record, C002-T-050). Weak spots: TS-359 conductor did not delegate (subagent guard hook not exercised — C002-TC-358 in the checklist is the positive evidence); INJ-13…16 auditor sessions very short (worth a transcript look)." }
 ---
 
 # C002-T-054 — Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals
