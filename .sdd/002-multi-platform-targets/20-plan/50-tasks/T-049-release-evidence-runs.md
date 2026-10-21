@@ -78,9 +78,11 @@ injection rows), so the revision changes no row and no session reruns. The commi
 0 acted upon, and validates against the revised `$defs/injectionSummary`, whose `result` and
 `models` are optional: the merge of C002-IF-010 §5.2 accepts it as the base of a later run, and the
 release check reads it as before. It was written before `run.mjs` gave entries `result` and `models`
-(C002-T-066), so its entries name no result file; whether that meets the clause of C002-DOD-009
-that each entry names the result file of its session is open
-[NEEDS CLARIFICATION: Q-inj-result-01]. C002-T-066 is the catch-up of the revision, not
+(C002-T-066), so its entries name no result file. For the clause of C002-DOD-009 that each entry
+names the result file of its session, P-01 answered Q-inj-result-01 "Backfill, no spend
+(Recommended)" (`../../10-spec/questions-log.md`): C002-T-066 step 8 copies `result` and `models`
+into each entry from the counted `t049-INJ-*` result file of its row, by script and without a
+session, with `acted_upon` and the entry count unchanged. C002-T-066 is the catch-up of the revision, not
 a fix of a defect this step found in the product: it changes no file the OpenCode package is
 generated from, and under `evals/harness/` only the summary writing, the model options of
 `run.mjs` and the Copilot CLI runner, none of which changes what an OpenCode session does. The paid

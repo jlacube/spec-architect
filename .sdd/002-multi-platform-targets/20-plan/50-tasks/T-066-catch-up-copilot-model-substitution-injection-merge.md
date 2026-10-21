@@ -30,7 +30,9 @@ runner case uses a stub host; the Copilot CLI release rows belong to C002-T-054.
 `docs/releases/release-record.schema.json` (entries with `result` and `models`) was done by the
 architect in commit 68bd52c; this task does not touch it.
 
-The work has four parts: **(a)** the run's model substitution `--copilot-model` and
+The work has five parts, the fifth **(e)** the backfill of `result` and `models` into the committed
+OpenCode injection summary of C002-T-049, without a session (P-01 answer to Q-inj-result-01,
+"Backfill, no spend (Recommended)"; C002-DOD-009). The first four: **(a)** the run's model substitution `--copilot-model` and
 `SDD_EVAL_COPILOT_MODEL` with its checks before any session (C002-IF-010 §1); **(b)** the model rule
 of the Copilot CLI runner with `session_model` and `agent_models` in its results (C002-IF-010 §2
 model rule, §3); **(c)** the injection summary from the per-host injection case sets, merged
@@ -54,6 +56,7 @@ statement and the refusal sentence of the Copilot install notes (C002-IF-005 §5
 | modify | `tests/integration/cap03/package.test.ts` | (d) C002-TC-306: the two models lines, the models statement without `claude-opus-5.5` and `claude-sonnet-5.5`, and the refusal sentence of the Copilot CLI note, on the generated `dist/copilot/INSTALL.md` |
 | modify | `docs/checklists/vscode-copilot.md` | (d) the fresh-install step records in `models_used` the model ID that VS Code showed for the turns of `sdd-conductor`, or `not shown`, and whether VS Code showed it where the install notes say it does (C002-TS-617); no step added, removed or renumbered, so the step index and the release check's step check are unchanged |
 | modify | `docs/checklists/records/TEMPLATE.md` | (d) the field `models_used` (mapping from agent name as VS Code shows it to a model ID or `not shown`) with the key `sdd-conductor`, in the place C002-IF-009 §4 shows it |
+| modify | `docs/releases/opencode/0.0.1/injection.json` | (e) backfill, no session (P-01 answer to Q-inj-result-01, "Backfill, no spend (Recommended)"): each of the 22 entries gets `result`, the repository-relative path of its row's counted `t049-INJ-*` result file under `evals/results/`, and `models`, the `models` of that result record; `id`, `acted_upon`, the entry count, their order and every other field unchanged |
 | modify | `tests/integration/cap06/checklist.test.ts` | (d) C002-TC-617 (the fresh-install step's `models_used` Then line) and the template check of C002-TC-618 (`models_used` holds the key `sdd-conductor`) |
 
 ## Preconditions
@@ -99,6 +102,21 @@ statement and the refusal sentence of the Copilot install notes (C002-IF-005 §5
 7. Run `npm test`, `npm run replay -- suite` and `npm run check`. Report the commit: it moves the
    release-candidate commit of C002-T-048 (harness and Copilot package changed), so C002-T-054 re-runs
    C002-T-048 step 5 and its own steps 1 and 2 at it before its paid step 3.
+8. **(e) Backfill of the OpenCode summary** (P-01 answer to Q-inj-result-01; C002-DOD-009). With a
+   one-off script run from the repository root (kept out of the shipped code; no session, no ledger
+   entry): for each entry of `docs/releases/opencode/0.0.1/injection.json`, find its row's counted
+   session of C002-T-049 step 3, the `openrouter` ledger entry of `evals/results/spend-chg002.json`
+   for task C002-T-049 and that row whose `valid_run` is not `false` (one per `INJ-*` row, none was
+   rerun), and its result file `evals/results/t049-<id>-*.json`; refuse when a row has no such file
+   or more than one, or when the file's pass result does not give the entry's `acted_upon`. Copy the
+   file's repository-relative path (`/` separators) into `result` and its record's `models` into
+   `models`. Before writing, check that the entry count (22), the `id` values, their order and every
+   `acted_upon` value equal the committed file's, and validate the summary against
+   `$defs/injectionSummary` of `docs/releases/release-record.schema.json` with the release check's
+   validator; write nothing on any mismatch. Then run `node scripts/release-check.mjs --target
+   opencode --dry-run` (outcome `released`, as in C002-T-049). The task report lists the 22 `result`
+   paths, the `models` per entry, the check results and the dry-run outcome, and states that no
+   session ran.
 
 ## Verification
 
@@ -106,6 +124,7 @@ statement and the refusal sentence of the Copilot install notes (C002-IF-005 §5
 - `npm test -- cap06/runner-caps`, `npm test -- cap06/cap-exceptions`
 - `npm test -- cap03/package`, `npm test -- cap06/checklist`, `npm test -- cap06/release-check`
 - `npm run package`, `npm test`, `npm run check`
+- Step 8: `node scripts/release-check.mjs --target opencode --dry-run` after the backfill
 
 ## Done when
 
@@ -114,6 +133,7 @@ statement and the refusal sentence of the Copilot install notes (C002-IF-005 §5
 - [ ] `run.mjs` writes the injection summary from the host's injection case set (`TS-359` on Copilot CLI), merges a run of fewer rows into the existing summary, refuses a base it cannot merge with nothing written and exit code 1, gives each entry `result` and `models`, validates before the write, writes no Copilot summary under `copilot-hooks` and none on `claude-code`, and honours `deps.releasesRoot` only for a stub-host run; C002-TC-691, 692 and 693 pass, with the supporting seam-refusal test
 - [ ] `dist/copilot/INSTALL.md` carries the models statement (tier named, no model ID) and the refusal sentence of the Copilot CLI note; C002-TC-306 passes; the Claude Code text is unchanged and `npm run check` is green
 - [ ] The checklist's fresh-install step records `models_used` and the record template holds it with the key `sdd-conductor`; C002-TC-617 and the template check of C002-TC-618 pass; the release-check tests pass unchanged
+- [ ] `docs/releases/opencode/0.0.1/injection.json` gives every one of its 22 entries the `result` and `models` of its row's counted C002-T-049 session, with the entry count, the `id` values and every `acted_upon` value unchanged, validates against `$defs/injectionSummary`, and the OpenCode release-check dry run still gives `released`; the backfill and its checks are in the task report
 - [ ] Carried: C002-TC-615 and C002-TC-359 (paid Copilot CLI rows) to C002-T-054; the review of the executed record for C002-TC-618 to C002-T-050
 - [ ] The task report names this task as the follow-up of C002-T-045, C002-T-046, C002-T-047 and C002-T-065, and lists the items that needed no code change
 - [ ] Progress reported: `sdd task set C002-T-066 --status done --commit <sha>`
