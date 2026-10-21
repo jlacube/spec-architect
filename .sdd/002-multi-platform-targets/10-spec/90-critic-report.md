@@ -1358,3 +1358,19 @@ Scope: reopen 7966c89, architect 33eba95, questions fce1000 and 888ea1b (10-spec
 | CR-80 | minor | architecture §6.1 | "1.50 USD and 40 turns for the regression rows" — 40 turns is for TS-213/TS-221 only | reword | fixed |
 
 All findings of this section fixed (architect, spec-writer, test-designer, planner), 2026-10-21.
+
+
+## Revision D-026…D-027 (2026-10-21)
+
+Scope: 68bd52c, 177bcb4, 3f0a1ec (10-spec), against D-026, D-027, Q-copilot-opus-01, Q-copilot-map-01, Q-inj-result-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-81 | major | TS-615, TC-615, DOD-009, IF-010 §5.1 | session_model checked only for conductor and auditor; 14 of 24 sessions (incl. substituted critic and spec-writer) unchecked though DOD-009 claims every agent | one Then over every result: passed = <to> when chosen is claude-opus-5.5, else chosen; used exactly [passed]; mirror in TC-615 and T-054 | open |
+| CR-82 | major | TS-691, TS-692, TC-691, IF-010 §5.2 rule 1 | coverage claims "no base file" but no row has it (first-write path untested); no target/tier mismatch rows in TS-692 | add the no-base row (1 entry); add target and tier rows to TS-692; TC counts follow | open |
+| CR-83 | minor | NFR-203, DOD-009, DOD-G-01, IF-009 §4 | model exception scoped to Copilot CLI only; VS Code on the same plan runs Sonnet too | scope to P-01's Copilot plan on Copilot CLI and in VS Code, models_used as VS Code evidence | open |
+| CR-84 | minor | D-026 item 3 | TS-208 fixture placeholder options neither fixed nor deferred | record the outcome in the D-026 resolution | open |

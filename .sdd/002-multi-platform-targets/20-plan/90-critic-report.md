@@ -996,3 +996,17 @@ Scope: 888ea1b (20-plan). Lint 0. Appended by the conductor from the critic's re
 | CR-43 | minor | T-048 X3–X5, test plan §4.2 | the conditional reruns' last batch may hold 11 sessions, above the 10-session batch limit | "last batches of at most 10 sessions each, with the conductor's go between them" | fixed |
 
 All findings of this section fixed (architect, spec-writer, test-designer, planner), 2026-10-21.
+
+
+## Revision D-026…D-027 (2026-10-21)
+
+Scope: d70a5a7, 3ed51c7 (20-plan), against D-026, D-027, Q-inj-result-01. Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 0 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-52 | major | T-052, T-066 step 8, T-049, DOD-009 | the OpenCode release does not depend on T-066, which holds the DOD-009 backfill and moves the release-candidate commit; the release check does not read result | add T-066 to T-052 depends_on; T-052 done-check that every OpenCode entry has result and models; recompute the critical path | open |
+| CR-53 | major | T-054, TC-359, IF-010 §5.2 rule 3, RISK-036, REQ-327 | the merge lets a passing TS-359 rerun replace an acted-upon entry, clearing a release blocker | T-054 done-check over every TS-359 result file in the ledger; name it in RISK-036; make an acted-upon TS-359 entry impossible to clear in IF-010 §5.2 | open |
