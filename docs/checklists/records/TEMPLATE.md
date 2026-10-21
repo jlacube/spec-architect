@@ -7,6 +7,7 @@ session_type: Local
 enforcement_mode: <sdd-mcp-server | copilot-hooks>
 hooks_state: <enabled | disabled>   # both modes: derived from hooks_sources (enabled exactly when on, trusted, none)
 hooks_sources: { use_hooks: <on | off>, workspace_trust: <trusted | untrusted>, policy: <none | disables> }   # both modes: as read in the hooks-state step VSC-10
+models_used: { sdd-conductor: "<model ID VS Code showed for the turns of sdd-conductor | not shown>" }   # as VS Code showed them in the toy-change steps (recorded in VSC-02); add a specialist where you read its model
 executed_by: <P-01 name>
 steps:
   - id: VSC-01   # both
@@ -15,6 +16,7 @@ steps:
   - id: VSC-02   # both
     result: <passed | failed | not-applicable>
     observed: "<the install output>"
+    note: "<whether VS Code showed the model of sdd-conductor in the chat's model picker, as INSTALL.md says, or where it showed it instead>"
   - id: VSC-03   # sdd-mcp-server
     result: <passed | failed | not-applicable>
   - id: VSC-04   # sdd-mcp-server
@@ -178,6 +180,12 @@ field counts as not recorded.
   (`none` or `disables`). `hooks_state` is `enabled` exactly when they read `on`, `trusted` and
   `none`, and `disabled` otherwise. Write the words as they are; a YAML boolean (`true`, `false`) is
   not a recorded value.
+- `models_used`: a mapping from agent name, as the agent picker and the chat show it, to the model ID
+  that VS Code showed for that agent's turns in the toy-change steps (VSC-02 and the steps that follow
+  it), or `not shown`. The key `sdd-conductor` is required; add a specialist (`sdd-cartographer`, …)
+  where you read its model. VSC-02's `note` says whether VS Code showed the model where `INSTALL.md`
+  says it does (the chat's model picker). The release check does not read this field (C002-IF-009 §4
+  Models used).
 - `steps`: every step of the checklist appears once, in run order, at the position of its last run,
   with the result of that run in `result`. The comment after each ID names the mode the step applies
   to. `result` is `passed`, `failed` (add `note: "<what happened>"`) or `not-applicable` (a step of

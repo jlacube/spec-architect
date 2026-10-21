@@ -12,6 +12,11 @@ is generated from the Architect plugin, version {{package_version}}, for {{enfor
   prompt reports it.
 - Access to the Claude models of the three tiers (Opus, Sonnet and Haiku) in GitHub Copilot Chat,
   under the model ids that the `model` field of each file in `agents/` names.
+- On a Copilot plan that does not offer the model an agent file names (for example a plan without
+  Opus models), the host runs that agent on its default model, Sonnet at the tested versions, so the
+  agents of the Opus tier then run a tier below their own.
+- You see which model ran: in VS Code, the model that the chat's model picker shows for the session;
+  on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes.
 - Optional: Serena 1.7 or later (`serena --version`) for symbol-level code discovery.
 
 ## Install the sdd CLI
@@ -77,7 +82,8 @@ This puts `sdd` (the workflow CLI) and `sdd-mcp` (the sdd MCP server) on PATH. C
 there with `--agent architect:sdd-conductor`, Copilot CLI runs that session agent on its own default
 model, not on the model of the agent file; the conductor runs on its tier only with `--model <model>`,
 where `<model>` is the `model` field of `agents/sdd-conductor.agent.md`. The specialists it starts run
-on the models of their own files.
+on the models of their own files. Copilot CLI refuses a `--model` that your plan does not offer before
+the session starts; then name a model your plan offers, and the conductor runs on that model.
 
 Run `/doctor` first: it checks node, {{host_name}}, the sdd CLI, the hooks setting, ripwire, Serena,
 ast-grep, Context7 and DeepWiki, and sets up Serena's data folder outside the repository. Then run

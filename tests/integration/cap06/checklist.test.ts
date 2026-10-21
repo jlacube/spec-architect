@@ -12,7 +12,8 @@
 // C002-T-064: the revised C002-TS-617 Then lines (boundary step `sdd-mcp-server`, delegated edit `both`,
 // C002-TS-358 in each mode), and the supporting checks of C002-TC-516 (the `VS Code refused: ` pass rule
 // of VSC-04 and VSC-06) and C002-TC-618 (the rerun rule with `earlier_results` and its causes, the
-// template's `earlier_results` example).
+// template's `earlier_results` example). C002-T-066 (revision D-026/D-027): the `models_used` Then line
+// of C002-TS-617 and the template check of C002-TC-618 (`models_used` with the key `sdd-conductor`).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -360,6 +361,33 @@ test("C002-TS-617 Then 7: the delegated-edit step of C002-TS-358 has the mode bo
   assert.ok(ts358, "C002-TS-358 is in the CAP-03 acceptance file");
   assert.ok(!ts358.tags.includes("@mode-server") && !ts358.tags.includes("@mode-hooks"), "no mode tag");
   for (const mode of MODES) assert.ok(inMode(mode).some((s) => s.scenarios.includes("C002-TS-358")), `C002-TS-358 has no step under ${mode}`);
+});
+
+// --- C002-T-066 (revision D-026/D-027): models_used in the fresh-install step and the record template ---
+
+test("C002-TS-617 Then 5: the fresh-install step records in models_used the model ID VS Code showed for the turns of sdd-conductor, or not shown, and whether VS Code showed it where the install notes say", () => {
+  const install = STEPS.filter((s) => s.kind === "install" && s.body.includes("sdd install copilot --package"));
+  assert.equal(install.length, 1);
+  const record = (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(at(install, 0).body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/record in `models_used` under the key `sdd-conductor` the model ID that VS Code showed for those turns, or `not shown`/.test(record), record);
+  assert.ok(/for the turns of `sdd-conductor`/.test(record), record);
+  assert.ok(/whether VS Code showed the model where `INSTALL\.md` says it does \(the chat's model picker\)/.test(record), record);
+  // The install notes name the chat's model picker as that place (C002-IF-005 §5 Models).
+  assert.ok(/the model that the chat's model picker shows for the session/.test(read("plugins/architect/targets/copilot/install.md").replace(/\s+/g, " ")));
+  assert.deepEqual(STEPS.map((s) => s.id), STEPS.map((_, i) => `VSC-${String(i + 1).padStart(2, "0")}`), "no step added, removed or renumbered");
+});
+
+test("C002-TC-618 (template check): the record template holds models_used, a mapping with the key sdd-conductor, where C002-IF-009 §4 shows it", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const fm = doc.data!;
+  const used = fm["models_used"] as Record<string, string>;
+  assert.ok(used !== null && typeof used === "object" && !Array.isArray(used), "models_used is a mapping");
+  assert.ok("sdd-conductor" in used, "the key sdd-conductor");
+  assert.match(String(used["sdd-conductor"]), /not shown/);
+  const keys = Object.keys(fm);
+  assert.equal(keys.indexOf("models_used"), keys.indexOf("hooks_sources") + 1, "after hooks_sources, as in C002-IF-009 §4");
+  assert.equal(keys.indexOf("executed_by"), keys.indexOf("models_used") + 1, "before executed_by, as in C002-IF-009 §4");
 });
 
 test("C002-TC-516 (supporting): VSC-04 and VSC-06 state the VS Code refused pass rule of the restricted-mode rows", () => {

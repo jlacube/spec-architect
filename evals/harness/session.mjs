@@ -20,13 +20,17 @@ export const DEFAULT_HOST = "claude-code";
  * of a host (the stub host of the runner tests). `query` replaces the Agent SDK's `query` on the Claude
  * Code path (the Agent SDK stub sdk-stub of the runner tests, C002-T-048 step X0; test seam only: the
  * Claude Code path, `runSession`'s signature and its defaults are unchanged, C002-RISK-009).
+ * `copilotModel` is the run's model substitution on Copilot CLI (C002-IF-010 §1, revision D-027):
+ * `{ "<from>": "<to>" }` or null; run.mjs sets it from `--copilot-model` (else
+ * `SDD_EVAL_COPILOT_MODEL`) and `runSession` hands it to the Copilot CLI runner.
  */
-const context = { host: undefined, runners: {}, query: undefined };
+const context = { host: undefined, runners: {}, query: undefined, copilotModel: null };
 
-/** Sets the harness context: `{ host?, runners?, query? }`; returns the previous one. */
-export function setHarnessContext({ host, runners, query } = {}) {
-  const prev = { host: context.host, runners: context.runners, query: context.query };
+/** Sets the harness context: `{ host?, runners?, query?, copilotModel? }`; returns the previous one. */
+export function setHarnessContext({ host, runners, query, copilotModel } = {}) {
+  const prev = { host: context.host, runners: context.runners, query: context.query, copilotModel: context.copilotModel };
   if (query !== undefined) context.query = query;
+  if (copilotModel !== undefined) context.copilotModel = copilotModel;
   if (host !== undefined) {
     if (!HOSTS.includes(host)) throw new Error(`unknown eval host ${host}; use ${HOSTS.join(", ")}`);
     context.host = host;
@@ -57,6 +61,8 @@ export const namesOf = (options) => (options?.host === "opencode" || options?.ho
 export async function runSession(options) {
   const host = currentHost();
   const own = context.runners[host];
+  // The Copilot CLI runner gets the run's model substitution (C002-IF-010 §1, §2 model rule).
+  if (host === "copilot-cli" && context.copilotModel) options = { ...options, copilotModel: context.copilotModel };
   if (own) return own(options);
   if (host === "claude-code") return runClaudeCodeSession(options);
   if (host === "opencode") {

@@ -6,7 +6,7 @@
 // that completes). `script[i]` adds tool calls to turn i + 1:
 //   { tool: "question", input: { questions } }  answered through the runner's question policy
 //   { tool, input, permission }                 a call that asks `permission` first (e.g. "edit")
-//   { tool, input }                             a call that runs without a request
+//   { tool, input, output? }                    a call that runs without a request (its output, default "ok")
 //   { text }                                    assistant text of that turn
 // No process, socket, network or model is involved; the stub needs no package in the project.
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -33,9 +33,14 @@ const sleep = () => new Promise((r) => setImmediate(r));
  * `calls` records each run's arguments, working folder and environment, for the tests. `sessionCredits` replaces the
  * AI Credits the usage file gives for the whole session (C002-TC-678); `limitText: false` stops at the limit
  * without printing the host's limit text; `hostLog` is written as the host's log file into `--log-dir` (C002-TC-915).
+ * Models (revision D-027, C002-TC-680): the session agent's assistant messages give `model`, else the
+ * `--model` of the arguments, else "stub-model"; a subagent's give the `model` of its script entry, else
+ * `subagentModels[<host name>]`, else the session agent's. `refuseModel` is Copilot CLI 1.0.98's refusal
+ * of a `--model` the plan does not offer: no event, a usage file of 0 AI Credits without models, exit
+ * code 1 and `Error: Model "<model>" from --model flag is not available.` on standard error.
  */
-/** @param {{ creditsPerTurn?: number, sessionCredits?: number, limitText?: boolean, hostLog?: string, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, hookSource?: string, credential?: boolean, hang?: boolean, onRun?: (o: any) => void }} [options] */
-export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText = true, hostLog, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model = "stub-model", hookSource = ".github_hooks_architect-guard.json", credential = false, hang = false, onRun } = {}) {
+/** @param {{ creditsPerTurn?: number, sessionCredits?: number, limitText?: boolean, hostLog?: string, reportsSpend?: boolean, endAfter?: number | null, script?: any[][], version?: string, maxTurns?: number, model?: string, subagentModels?: Record<string, string>, refuseModel?: boolean, hookSource?: string, credential?: boolean, hang?: boolean, onRun?: (o: any) => void }} [options] */
+export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText = true, hostLog, reportsSpend = true, endAfter = null, script = [], version = "1.0.98", maxTurns = 10_000, model: fixedModel, subagentModels = {}, refuseModel = false, hookSource = ".github_hooks_architect-guard.json", credential = false, hang = false, onRun } = {}) {
   const calls = [];
   let seq = 0;
   const id = (p) => `${p}-${String(++seq).padStart(6, "0")}`;
@@ -65,6 +70,13 @@ export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText 
       const ts = () => new Date().toISOString();
       const emit = (type, data, extra = {}) => onEvent({ type, data, id: id("evt"), timestamp: ts(), ...extra });
       const usageFile = args[args.indexOf("--usage-output-file") + 1];
+      const passed = args.includes("--model") ? args[args.indexOf("--model") + 1] : undefined;
+      const model = fixedModel ?? passed ?? "stub-model";
+      if (refuseModel) {
+        if (usageFile) writeFileSync(usageFile, JSON.stringify({ totalPremiumRequestCost: 0, totalNanoAiu: 0, modelMetrics: {} }));
+        call.endedAt = Date.now();
+        return { exitCode: 1, stderr: `Error: Model "${passed}" from --model flag is not available.\n` };
+      }
       const complete = (call, agentId, parentToolCallId) => {
         const base = { toolCallId: call.toolCallId, model, ...(parentToolCallId ? { parentToolCallId } : {}) };
         const extra = agentId ? { agentId } : {};
@@ -94,12 +106,13 @@ export function copilotStubHost({ creditsPerTurn = 1, sessionCredits, limitText 
             continue;
           }
           const agentId = id("agent");
+          const subModel = a.model ?? subagentModels[a.subagent] ?? model;
           emit("tool.execution_start", { toolCallId: r.toolCallId, toolName: "task", arguments: r.arguments });
-          emit("subagent.started", { toolCallId: r.toolCallId, agentName: a.subagent, agentDisplayName: a.subagent, agentType: a.subagent, model }, { agentId });
+          emit("subagent.started", { toolCallId: r.toolCallId, agentName: a.subagent, agentDisplayName: a.subagent, agentType: a.subagent, model: subModel }, { agentId });
           const sub = (a.calls ?? []).map((c) => ({ toolCallId: id("call"), tool: c.tool, input: c.input ?? {}, deny: c.deny }));
-          emit("assistant.message", { messageId: id("msg"), model, content: "", toolRequests: sub.map((c) => ({ toolCallId: c.toolCallId, name: c.tool, arguments: c.input })), parentToolCallId: r.toolCallId }, { agentId });
+          emit("assistant.message", { messageId: id("msg"), model: subModel, content: "", toolRequests: sub.map((c) => ({ toolCallId: c.toolCallId, name: c.tool, arguments: c.input })), parentToolCallId: r.toolCallId }, { agentId });
           for (const c of sub) complete(c, agentId, r.toolCallId);
-          emit("assistant.message", { messageId: id("msg"), model, content: a.text ?? "sub done", toolRequests: [], parentToolCallId: r.toolCallId }, { agentId });
+          emit("assistant.message", { messageId: id("msg"), model: subModel, content: a.text ?? "sub done", toolRequests: [], parentToolCallId: r.toolCallId }, { agentId });
           emit("subagent.completed", { toolCallId: r.toolCallId, agentName: a.subagent, totalToolCalls: sub.length, totalTokens: 100, durationMs: 1 }, { agentId });
           emit("tool.execution_complete", { toolCallId: r.toolCallId, model, success: true, result: { content: a.text ?? "sub done" } });
         }
@@ -173,7 +186,7 @@ export function stubHost({ spendPerTurn = 0.01, costs, subagent, reportsSpend = 
                 continue;
               }
               const callID = id("call");
-              const part = { id: id("prt"), sessionID, messageID, type: "tool", callID, tool: action.tool, state: { status: "completed", input: action.input ?? {}, output: "ok", title: action.tool, metadata: {}, time: { start: now, end: now } } };
+              const part = { id: id("prt"), sessionID, messageID, type: "tool", callID, tool: action.tool, state: { status: "completed", input: action.input ?? {}, output: action.output ?? "ok", title: action.tool, metadata: {}, time: { start: now, end: now } } };
               if (action.tool === "question") {
                 const a = await question?.({ id: id("que"), sessionID, questions: action.input?.questions ?? [], tool: { messageID, callID } });
                 if (a === null || a === undefined) part.state = { status: "error", input: action.input ?? {}, error: "The user dismissed this question", time: { start: now, end: now } };

@@ -6,7 +6,7 @@
 //                              no plugin.json/.mcp.json/hooks.json at the root, the CLI copy's SHA-256
 //   C002-TC-302 (C002-TS-302)  fx-dist-bad: a required file removed is reported naming it (TGT-LAYOUT-001)
 //   C002-TC-305 (C002-TS-305)  every prompt file bound to the conductor, no guard line
-//   C002-TC-306 (C002-TS-306)  install notes
+//   C002-TC-306 (C002-TS-306)  install notes (models statement and refused --model: C002-T-066)
 //   C002-TC-308 (C002-TS-308)  server mode: every agent has a tools list, none grants a generic edit or terminal tool
 //   C002-TC-310 (C002-TS-310)  both modes: sdd-files and sdd-shell in install/mcp.json only
 //   C002-TC-327 (C002-TS-327)  fx-dist-bad: a server profile removed, or declared in a root .mcp.json (TGT-MCP-001)
@@ -297,8 +297,18 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   // Order of C002-IF-005 §5: unpack, install, settings, session, servers, subagents.
   const order = ["Unpack this package", "sdd install copilot --package", "`chat.plugins.enabled`", "**Local**", "start only", "can call only the read-only"].map((s) => notes.indexOf(s));
   assert.deepEqual([...order].sort((a, b) => a - b), order, "steps in the order of C002-IF-005 §5");
-  // C002-T-065 (defect D-019 item 1, critic CR-69): after the steps, exactly one Copilot CLI note.
-  const cli = notes.split(/\n\s*\n/).filter((p) => /Copilot CLI/.test(p) && !/session type/.test(p));
+  // C002-T-066 (defect D-027, C002-IF-005 §5 Models): with the prerequisites, the two models lines: the
+  // default-model fallback on a plan without an agent file's model, and where P-03 sees the model that ran.
+  const prereq = notes.slice(notes.indexOf("## Prerequisites"), notes.indexOf("## Install the sdd CLI"));
+  const models = prereq.split(/\n(?=- )/).filter((l) => /default model|which model ran/.test(l)).map((l) => l.replace(/\s+/g, " "));
+  assert.equal(models.length, 2, `two models lines: ${JSON.stringify(models)}`);
+  assert.match(models[0]!, /On a Copilot plan that does not offer the model an agent file names \(for example a plan without Opus models\), the host runs that agent on its default model, Sonnet at the tested versions, so the agents of the Opus tier then run a tier below their own/);
+  assert.match(models[1]!, /You see which model ran: in VS Code, the model that the chat's model picker shows for the session; on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes/);
+  for (const line of models) for (const id of ["claude-opus-5.5", "claude-sonnet-5.5"]) assert.ok(!line.includes(id), `the models statement names no model ID (${id})`);
+  assert.ok(models.join(" ").includes("Sonnet"), "the models statement names the tier Sonnet");
+  // C002-T-065 (defect D-019 item 1, critic CR-69): after the steps, exactly one Copilot CLI note (the
+  // prerequisites' models line, which names where Copilot CLI shows the model, is no note).
+  const cli = notes.slice(notes.indexOf("## Install the sdd CLI")).split(/\n\s*\n/).filter((p) => /Copilot CLI/.test(p) && !/session type/.test(p));
   assert.equal(cli.length, 1, `one Copilot CLI note: ${JSON.stringify(cli)}`);
   const note = cli[0]!.replace(/\s+/g, " ");
   assert.ok(notes.indexOf(cli[0]!) > order[order.length - 1]!, "the note comes after the six steps");
@@ -306,6 +316,9 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   assert.match(note, /`--agent architect:sdd-conductor`/);
   assert.match(note, /on its own default model/);
   assert.match(note, /the conductor runs on its tier only with `--model <model>`, where `<model>` is the `model` field of `agents\/sdd-conductor\.agent\.md`/);
+  // C002-T-066 (defect D-027): the refused --model and the model P-03 names instead.
+  assert.match(note, /Copilot CLI refuses a `--model` that your plan does not offer before the session starts; then name a model your plan offers, and the conductor runs on that model/);
+  assert.equal(notes.split("Copilot CLI refuses a").length - 1, 1, "the refusal sentence once, in the note");
   // The model field that the note points to, read from the generated agent file.
   const conductor = text(fxDist(table.enforcement_mode), "agents/sdd-conductor.agent.md");
   const model = /^model:\s*(\S+)\s*$/m.exec(conductor)?.[1];

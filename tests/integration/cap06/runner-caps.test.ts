@@ -29,7 +29,7 @@ const shims = shimsJs as unknown as (name: string, o: Record<string, unknown>) =
 import { runBundled } from "../cli/helpers.ts";
 import { envWithPath, nodeOnlyDir, plantExe, STUB_EXE_SKIP } from "../stub-exe.ts";
 import { sdkStubHost, stubHost } from "../../../evals/harness/runners/stub.mjs";
-import { injectionSummary, ledgerEntry, runScenario, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
+import { inInjectionSet, INJECTION_CASE_SETS, ledgerEntry, runScenario, selectScenarios, stopRule } from "../../../evals/harness/run.mjs";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = repoRoot();
@@ -222,16 +222,17 @@ test("the stop rule counts the pool's OpenRouter entries and H of at least 0.65 
   assert.match(e.result, /(^|\/)evals\/results\/x\.json$/);
 });
 
-test("the injection summary lists each INJ case with acted_upon from its pass", () => {
-  const s = injectionSummary([{ scenario: "INJ-01", runs: 1, pass: true }, { scenario: "INJ-02", runs: 1, pass: false }, { scenario: "TS-207", runs: 1, pass: true }], { hostVersions: { opencode: "1.18.31" } });
-  assert.deepEqual(s, { target: "opencode", tier: "dev", source: "opencode-runner", host_versions: { opencode: "1.18.31" }, cases: [{ id: "INJ-01", acted_upon: false }, { id: "INJ-02", acted_upon: true }] });
-  assert.equal(injectionSummary([{ scenario: "TS-207", runs: 1, pass: true }], { hostVersions: {} }), null);
-});
-
-test("the injection summary of a Copilot CLI run has target copilot and source copilot-cli-runner (C002-IF-009 §5)", () => {
-  const s = injectionSummary([{ scenario: "INJ-01", runs: 1, pass: true }, { scenario: "TS-359", runs: 1, pass: true }], { hostVersions: { "copilot-cli": "1.0.98" }, host: "copilot-cli" });
-  assert.deepEqual(s, { target: "copilot", tier: "dev", source: "copilot-cli-runner", host_versions: { "copilot-cli": "1.0.98" }, cases: [{ id: "INJ-01", acted_upon: false }] });
-  assert.equal(injectionSummary([{ scenario: "INJ-01", runs: 1, pass: true }], { hostVersions: {}, host: "claude-code" }), null);
+// Revised by C002-T-066 (defect D-026): the injection summary comes from the host's injection case set by
+// row ID and case file and is merged fail-closed (C002-IF-010 §5.1, §5.2; tests in injection-summary.test.ts).
+test("the injection case set by row ID and case file: INJ-01 … INJ-22 on OpenCode, these and TS-359 on Copilot CLI, none on Claude Code", () => {
+  const inj = "evals/injection/injection.eval.mjs";
+  assert.ok(inInjectionSet("opencode", "INJ-01", inj) && inInjectionSet("opencode", "INJ-22", inj));
+  assert.ok(!inInjectionSet("opencode", "INJ-23", inj), "no INJ-23");
+  assert.ok(!inInjectionSet("opencode", "INJ-01", "evals/other/injection.eval.mjs"), "a row of the same ID in another case file is not in the set");
+  assert.ok(!inInjectionSet("opencode", "TS-359", "evals/targets/copilot-guard/TS-359.eval.mjs"), "TS-359 on Copilot CLI only");
+  assert.ok(inInjectionSet("copilot-cli", "TS-359", "evals/targets/copilot-guard/TS-359.eval.mjs"));
+  assert.equal(INJECTION_CASE_SETS["copilot-cli"].length, 23);
+  assert.ok(!inInjectionSet("claude-code", "INJ-01", inj));
 });
 
 // --- run.mjs options (step 2) and C002-TS-611, in a child process on the stub host ------------------

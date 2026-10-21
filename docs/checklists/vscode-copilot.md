@@ -204,7 +204,12 @@ step and a spec defect.
   `.vscode/mcp.json` and `.github/architect-install.json`, and ends with
   `next: select sdd-conductor in a Local chat (INSTALL.md step 4)`; after the reload the agent picker
   offers `sdd-conductor`.
-- **Record:** the install output as `observed`.
+- **Record:** the install output as `observed`. Then, for the turns of `sdd-conductor` in this chat and
+  in the toy-change steps that follow, record in `models_used` under the key `sdd-conductor` the model
+  ID that VS Code showed for those turns, or `not shown` when it showed none, and add a specialist
+  under its agent name where you read its model; and in this step's `note` whether VS Code showed the
+  model where `INSTALL.md` says it does (the chat's model picker), or where it showed it instead. The
+  release check does not read `models_used`.
 
 ### VSC-03 — Copilot hooks row, `chat.useHooks` false (sdd MCP server enforcement)
 

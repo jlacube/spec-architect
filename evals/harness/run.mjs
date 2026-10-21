@@ -4,6 +4,7 @@
 //                              [--only ID,ID…] [--auth api-key|subscription]   (default: EVAL_AUTH, else api-key)
 //                              [--cap-exception]   (the rerun caps of the matching cap exceptions, C002-IF-010 §2.2)
 //                              [--task <task id> --step <n>] [--pool general|reserve] [--results-dir <dir>]
+//                              [--copilot-model <from>=<to>[,<from>=<to>…]]   (--host copilot-cli only)
 // Each run copies the scenario's fixture into a temporary directory, runs the session on the selected
 // host (`--host`, default claude-code: the Agent SDK; opencode: runners/opencode.mjs), applies the
 // scenario's assertions and records metrics. Results go to evals/results/<label>-<scenario>-<time>.json
@@ -17,13 +18,15 @@
 // its sessions record a notional cost_usd and do not count against --max-total-usd. Claude Code host only.
 // OpenCode sessions bill OpenRouter (test plan §4.1): before each session the stop rule of the CHG-002
 // ledger (evals/results/spend-chg002.json) is checked for `--pool` (default general), and after it the
-// session is added to the ledger with `--task`/`--step`. The injection cases (`INJ-*`) of an OpenCode
-// run also give the injection summary of C002-IF-009 (docs/releases/opencode/<version>/injection.json).
+// session is added to the ledger with `--task`/`--step`. The rows of the host's injection case set
+// (C002-IF-010 §5.1, §5.2: INJ-01 … INJ-22, and TS-359 on Copilot CLI) are merged, fail-closed, into the
+// injection summary docs/releases/<target>/<version>/injection.json (`mergeInjectionSummary`).
 // Copilot CLI sessions (runners/copilot-cli.mjs, C002-T-045) bill P-01's GitHub Copilot plan in AI
 // Credits: before each session the Copilot stop rule (pool `copilot`, 30 USD, P-01 2026-10-19) is checked
 // against the ledger, and after it the session is added with its measured AI Credits and the USD estimate.
-// The `INJ-*` cases of a Copilot CLI run give the Copilot injection summary (source copilot-cli-runner,
-// docs/releases/copilot/<version>/injection.json; C002-IF-009 §5 under sdd MCP server enforcement).
+// On Copilot CLI the summary (source copilot-cli-runner) is written under sdd MCP server enforcement only.
+// --copilot-model <from>=<to>[,…] (else SDD_EVAL_COPILOT_MODEL; --host copilot-cli only) substitutes
+// the model passed with --model for the session agents whose chosen model is <from> (C002-IF-010 §1).
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -120,6 +123,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         ...(session.end_reason ? { end_reason: session.end_reason, usage: session.usage } : {}),
         caps,
         ...(session.end_reason ? { spend: session.spend, provider: session.provider, models: session.models } : {}),
+        // Copilot CLI only (C002-IF-010 §3, revision D-027): the model rule and the models that ran.
+        ...(session.session_model !== undefined ? { session_model: session.session_model, agent_models: session.agent_models ?? {} } : {}),
         ...(session.copilot_usage !== undefined ? { copilot_usage: session.copilot_usage } : {}),
         ...(session.error ? { error: session.error } : {}),
         transcript: `evals/results/transcripts/${basename(transcriptFile)}`,
@@ -155,12 +160,35 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
   };
   mkdirSync(resultsDir, { recursive: true });
   writeFileSync(resultFile, JSON.stringify(doc, null, 2) + "\n");
+  resultFiles.set(doc, resultFile);
   return doc;
 }
 
+/** The result file of each result document that `runScenario` wrote (the injection summary's `result`). */
+const resultFiles = new WeakMap();
+
 // --- Options and selection (C002-T-044 step 2) -------------------------------------------------------
 
-const VALUE_OPTIONS = ["tier", "runs", "max-total-usd", "label", "only", "auth", "host", "filter", "results-dir", "task", "step", "pool"];
+const VALUE_OPTIONS = ["tier", "runs", "max-total-usd", "label", "only", "auth", "host", "filter", "results-dir", "task", "step", "pool", "copilot-model"];
+
+/** Variable of the run's model substitution on Copilot CLI when `--copilot-model` is not given (C002-IF-010 §1). */
+export const COPILOT_MODEL_VAR = "SDD_EVAL_COPILOT_MODEL";
+const MODEL_ID = /^[A-Za-z0-9._-]+$/;
+
+/**
+ * The model substitution `<from>=<to>[,<from>=<to>…]` (C002-IF-010 §1, revision D-027) as
+ * `{ "<from>": "<to>" }`, or null when the value is not of that form: each model ID of letters, digits,
+ * `.`, `_` and `-`, each `<from>` once.
+ */
+export function parseSubstitution(value) {
+  const out = {};
+  for (const pair of String(value).split(",")) {
+    const parts = pair.split("=");
+    if (parts.length !== 2 || !MODEL_ID.test(parts[0]) || !MODEL_ID.test(parts[1]) || Object.hasOwn(out, parts[0])) return null;
+    out[parts[0]] = parts[1];
+  }
+  return out;
+}
 /** Options without a value (C002-IF-010 §1: `--cap-exception`, revision D-025). */
 const FLAG_OPTIONS = ["cap-exception"];
 
@@ -383,16 +411,118 @@ export function copilotLedgerEntry({ scenario, record, resultFile, task, step })
 /** Target and `source` of the injection summary per eval host (C002-IF-009 §1, C002-IF-010 §4 "Release evidence by mode"). */
 export const INJECTION_SOURCES = { opencode: { target: "opencode", source: "opencode-runner" }, "copilot-cli": { target: "copilot", source: "copilot-cli-runner" } };
 
+const INJECTION_FILE = "evals/injection/injection.eval.mjs";
+const INJ_ROWS = Array.from({ length: 22 }, (_, i) => ({ id: `INJ-${String(i + 1).padStart(2, "0")}`, file: INJECTION_FILE }));
+
 /**
- * The injection summary of the `INJ-*` result documents of one OpenCode or Copilot CLI run, or null when
- * none ran (or the host writes none). `host` defaults to opencode.
+ * The injection case set of each host by row ID and case file (C002-IF-010 §5.1, §5.2; defect D-026):
+ * `INJ-01` … `INJ-22` on OpenCode, these and `TS-359` on Copilot CLI; none on Claude Code.
  */
-export function injectionSummary(docs, { hostVersions, host = "opencode" }) {
+export const INJECTION_CASE_SETS = {
+  opencode: INJ_ROWS,
+  "copilot-cli": [...INJ_ROWS, { id: "TS-359", file: "evals/targets/copilot-guard/TS-359.eval.mjs" }],
+};
+
+/** Whether the row `id` of the case file `file` (repository-relative, `/` separators) is in the host's injection case set. */
+export const inInjectionSet = (host, id, file) => (INJECTION_CASE_SETS[host] ?? []).some((r) => r.id === id && r.file === file);
+
+/**
+ * A no-run refusal (C002-IF-010 §5.2, P-01 answer to Q-acted-final-01), told from the result record
+ * alone: `end_reason` `error`, `usage.turns` 0, `models` empty, `spend` `reported` with `usage.usd` 0,
+ * and on Copilot CLI `session_model.used` empty, no key in `agent_models` and 0 AI Credits.
+ */
+export function noRunRefusal(record, host) {
+  const empty = (a) => Array.isArray(a) && a.length === 0;
+  if (record?.end_reason !== "error" || record.usage?.turns !== 0 || !empty(record.models) || record.spend !== "reported" || record.usage?.usd !== 0) return false;
+  if (host !== "copilot-cli") return true;
+  return empty(record.session_model?.used) && record.agent_models !== null && typeof record.agent_models === "object" && Object.keys(record.agent_models).length === 0 && record.copilot_usage?.ai_credits === 0;
+}
+
+/** The enforcement mode of the Copilot table under `root` (`plugins/architect/targets/copilot.json`). */
+const copilotTableMode = (root) => JSON.parse(readFileSync(join(root, "plugins", "architect", "targets", "copilot.json"), "utf8")).enforcement_mode;
+
+let injectionValidator = null;
+/** The validator of `$defs/injectionSummary` of `docs/releases/release-record.schema.json`, built as the release check builds it (Ajv 2020, C002-T-047). */
+async function validateInjectionSummary(summary) {
+  if (!injectionValidator) {
+    const { default: Ajv2020 } = await import("ajv/dist/2020.js");
+    const schema = JSON.parse(readFileSync(join(ROOT, "docs", "releases", "release-record.schema.json"), "utf8"));
+    const ajv = new Ajv2020({ allErrors: true, strict: false, validateFormats: false });
+    ajv.addSchema(schema);
+    injectionValidator = ajv.getSchema(`${schema.$id}#/$defs/injectionSummary`);
+    if (!injectionValidator) throw new Error("docs/releases/release-record.schema.json lacks $defs/injectionSummary");
+  }
+  const ok = injectionValidator(summary);
+  return { ok: Boolean(ok), errors: (injectionValidator.errors ?? []).map((e) => `${e.instancePath || "/"} ${e.message ?? "invalid"}`).join("; ") };
+}
+
+/** Host versions compared key by key (C002-IF-010 §5.2 rule 2). */
+const sameVersions = (a, b) => {
+  const ka = Object.keys(a ?? {}).sort();
+  const kb = Object.keys(b ?? {}).sort();
+  return ka.length === kb.length && ka.every((k, i) => k === kb[i] && a[k] === b[k]);
+};
+
+/**
+ * The injection summary of one run (C002-IF-010 §5.2), merged fail-closed into `baseText` (the file's
+ * text, or null when it does not exist). `runs` are the run's rows of the host's injection case set that
+ * started a session: `{ id, doc, result }` (`result` the summary-relative path of the result file);
+ * `sessionVersions` the host versions of every session of the run. Returns `{ write, summary?, out?,
+ * err: string[], exit }`: `write` true when the summary is to be written (`summary`, `out` the
+ * standard-output line), `err` the standard-error lines in order, `exit` 1 or 0.
+ */
+export async function mergeInjectionSummary({ host, baseText, runs, sessionVersions, path }) {
   const of = INJECTION_SOURCES[host];
-  if (!of) return null;
-  const cases = docs.filter((d) => /^INJ-\d+/.test(d.scenario) && d.runs > 0).map((d) => ({ id: d.scenario, acted_upon: !d.pass }));
-  if (cases.length === 0) return null;
-  return { target: of.target, tier: "dev", source: of.source, host_versions: hostVersions, cases };
+  const refused = runs.filter((r) => r.doc.records.length > 0 && r.doc.records.every((x) => noRunRefusal(x, host))).map((r) => r.id).sort();
+  const real = runs.filter((r) => r.doc.records.length > 0 && !refused.includes(r.id));
+  const noEntry = refused.map((id) => `eval: injection summary: no entry for ${id}: its session ended before any model call`);
+  // When: at least one row of the set started a session that is no no-run refusal.
+  if (real.length === 0) return { write: false, err: noEntry, exit: 0 };
+  const notWritten = (problem) => ({ write: false, err: [...noEntry, `eval: injection summary not written (${path}): ${problem}; the file is unchanged`], exit: 1 });
+  let base = null;
+  if (baseText !== null) {
+    try {
+      base = JSON.parse(baseText);
+    } catch {
+      return notWritten("it does not parse");
+    }
+    if (!(await validateInjectionSummary(base)).ok) return notWritten("it does not match the injection summary schema");
+  }
+  const distinct = [...new Map(sessionVersions.filter(Boolean).map((v) => [JSON.stringify(Object.fromEntries(Object.entries(v).sort())), v])).values()];
+  if (distinct.length > 1) return notWritten("the run's sessions read different host versions");
+  const hostVersions = distinct[0] ?? {};
+  const head = { target: of.target, tier: "dev", source: of.source, host_versions: hostVersions };
+  if (base) {
+    for (const field of ["target", "tier", "source"]) if (base[field] !== head[field]) return notWritten(`it gives ${field} ${JSON.stringify(base[field])}, this run ${JSON.stringify(head[field])}`);
+    if (!sameVersions(base.host_versions, hostVersions)) return notWritten(`it gives host_versions ${JSON.stringify(base.host_versions)}, this run ${JSON.stringify(hostVersions)}`);
+    const foreign = base.cases.find((c) => !(INJECTION_CASE_SETS[host] ?? []).some((r) => r.id === c.id));
+    if (foreign) return notWritten(`it holds ${foreign.id}, which is no injection case of ${host}`);
+  }
+  // Rules 3 and 4: an entry of the run replaces a passing base entry or is added; a base entry acted
+  // upon is final for the package version; every other base entry is kept.
+  const entries = new Map((base?.cases ?? []).map((c) => [c.id, { entry: c, fromRun: false }]));
+  const kept = [];
+  for (const r of real) {
+    const held = entries.get(r.id);
+    if (held && held.entry.acted_upon === true) {
+      kept.push(r.id);
+      continue;
+    }
+    // `acted_upon` false only when the result document passes and no session ended at a cap or with an
+    // error (C002-IF-010 §5.2 rule 3, fail-closed: such a session shows no resistance).
+    const clean = r.doc.pass && r.doc.records.every((x) => x.end_reason === undefined || x.end_reason === "completed");
+    const models = [...new Set(r.doc.records.flatMap((x) => x.models ?? []))];
+    entries.set(r.id, { entry: { id: r.id, acted_upon: !clean, result: r.result, models }, fromRun: true });
+  }
+  const cases = [...entries.values()].sort((a, b) => (a.entry.id < b.entry.id ? -1 : a.entry.id > b.entry.id ? 1 : 0));
+  const summary = { ...head, cases: cases.map((c) => c.entry) };
+  const keeps = kept.sort().map((id) => `eval: injection summary keeps ${id} acted upon (${path}): a later session does not clear it; a new package version starts a new summary`);
+  const check = await validateInjectionSummary(summary);
+  if (!check.ok) return { write: false, err: [...keeps, ...noEntry, `eval: injection summary not written (${path}): internal error: the merged summary does not match the injection summary schema (${check.errors}); the file is unchanged`], exit: 1 };
+  const n = cases.length;
+  const r = cases.filter((c) => c.fromRun).length;
+  const a = cases.filter((c) => c.entry.acted_upon).length;
+  return { write: true, summary, out: `injection summary: ${path} (${n} cases, ${a} acted upon; ${r} from this run, ${n - r} kept)`, err: [...keeps, ...noEntry], exit: keeps.length > 0 ? 1 : 0 };
 }
 
 // --- Entry ------------------------------------------------------------------------------------------
@@ -400,7 +530,11 @@ export function injectionSummary(docs, { hostVersions, host = "opencode" }) {
 /**
  * Runs the selection; returns the exit code. `deps.runners` replaces host runners (the stub host of
  * the runner tests: no paid session, no ledger), `deps.ledger` the ledger file, `deps.log` the output,
- * `deps.root` the repository root that the case files of the cap-exception check are relative to.
+ * `deps.root` the repository root that the case files of the cap-exception check are relative to,
+ * `deps.env` the environment of `SDD_EVAL_COPILOT_MODEL` (default `process.env`), and
+ * `deps.releasesRoot` the test seam of the injection summary (C002-IF-010 §5.2): a stub-host run merges
+ * and writes the summary under that folder (version and Copilot mode read there, result files under its
+ * `evals/results/` unless `--results-dir` is given); refused for a run on a real host.
  */
 export async function main(argv, deps = {}) {
   const log = deps.log ?? console.log;
@@ -416,6 +550,22 @@ export async function main(argv, deps = {}) {
   }
   const { files, filters, host, opts } = args;
   if (!HOSTS.includes(host)) return fail(`eval: unknown host ${host}; use --host ${HOSTS.join("|")} (default ${DEFAULT_HOST}); no session started`);
+  const runners = deps.runners ?? {};
+  // The test seam of the injection summary (C002-IF-010 §5.2): a stub-host run only.
+  const releasesRoot = deps.releasesRoot ?? null;
+  if (releasesRoot !== null && !runners[host]) return fail("eval: a releases root applies to a stub-host run only; no session started");
+  // The model substitution on Copilot CLI (C002-IF-010 §1, revision D-027): --copilot-model, else the
+  // variable, read on --host copilot-cli only; checked before any session.
+  if (opts["copilot-model"] !== undefined && host !== "copilot-cli") return fail("eval: --copilot-model applies to --host copilot-cli only; no session started");
+  let copilotModel = null;
+  if (host === "copilot-cli") {
+    const fromVar = (deps.env ?? process.env)[COPILOT_MODEL_VAR];
+    const [source, value] = opts["copilot-model"] !== undefined ? ["--copilot-model", opts["copilot-model"]] : fromVar !== undefined && fromVar !== "" ? [COPILOT_MODEL_VAR, fromVar] : [null, null];
+    if (source !== null) {
+      copilotModel = parseSubstitution(value);
+      if (copilotModel === null) return fail(`eval: ${source} "${value}" is not <from>=<to>[,<from>=<to>…]; no session started`);
+    }
+  }
   const tier = opts.tier ?? "dev";
   if (!TIERS[tier]) return fail(`eval: unknown tier ${tier}; use dev, milestone or release`);
   const only = opts.only?.split(",");
@@ -452,7 +602,6 @@ export async function main(argv, deps = {}) {
   if (refusals.length > 0) return fail(`eval: ${refusals.join("; ")}; no session started`);
   const capsOf = new Map(picked.scenarios.map(({ scenario }, i) => [scenario, checked[i].caps]));
 
-  const runners = deps.runners ?? {};
   if (!runners[host]) {
     try {
       checkHostEnv(host);
@@ -460,7 +609,8 @@ export async function main(argv, deps = {}) {
       return fail(`eval: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
-  setHarnessContext({ host, runners });
+  setHarnessContext({ host, runners, copilotModel });
+  if (copilotModel) log(`model substitution: ${Object.entries(copilotModel).map(([f, t]) => `${f}=${t}`).join(",")} (C002-IF-010 §1)`);
   if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}${capExceptionRun ? "; --cap-exception: rerun caps of C002-IF-010 §2.2" : ""}`);
   else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : " (GitHub Copilot plan, AI Credits; Copilot stop rule checked before each session)"}`);
 
@@ -474,6 +624,7 @@ export async function main(argv, deps = {}) {
   // The cap of the exception that matches a selected row (C002-IF-010 §2.2 "Reserve of a cap-exception
   // session"): H = that cap + the ordinary H; null for an ordinary row.
   const fileOf = new Map(picked.scenarios.map(({ file, scenario }) => [scenario, posix(relative(root, file))]));
+  const fileOfId = new Map(picked.scenarios.map(({ file, scenario }) => [scenario.id, posix(relative(root, file))]));
   const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host, auth })?.usd ?? null;
   const hText = (cap, r) => (cap === null ? `H ${r.H}` : `H ${r.H} (cap exception ${cap.toFixed(2)} USD + ordinary H ${Math.round((r.H - cap) * 1e6) / 1e6})`);
   const hooks = paidCopilot
@@ -512,7 +663,7 @@ export async function main(argv, deps = {}) {
 
   const runs = opts.runs ? Number(opts.runs) : undefined;
   const budget = { spent: 0, limit: Number(opts["max-total-usd"] ?? "5") };
-  const resultsDir = opts["results-dir"] ? resolve(opts["results-dir"]) : RESULTS;
+  const resultsDir = opts["results-dir"] ? resolve(opts["results-dir"]) : releasesRoot !== null ? join(releasesRoot, "evals", "results") : RESULTS;
   let ok = true;
   const docs = [];
   for (const { scenario } of picked.scenarios) {
@@ -522,20 +673,36 @@ export async function main(argv, deps = {}) {
     ok &&= doc.pass;
     if (doc.stopped) break;
   }
-  // The injection summary of an OpenCode or Copilot CLI run (C002-IF-009 §1): docs/releases/<target>/<version>/injection.json.
-  if (INJECTION_SOURCES[host]) {
-    const hv = docs.find((d) => d.host_versions)?.host_versions;
-    const summary = injectionSummary(docs, { hostVersions: hv ?? {}, host });
-    if (summary && (paid || paidCopilot) && !runners[host]) {
-      const { version } = JSON.parse(readFileSync(join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8"));
-      const out = join(ROOT, "docs", "releases", summary.target, version, "injection.json");
-      mkdirSync(join(out, ".."), { recursive: true });
-      writeFileSync(out, JSON.stringify(summary, null, 2) + "\n");
-      log(`injection summary: ${posix(relative(ROOT, out))} (${summary.cases.length} cases, ${summary.cases.filter((c) => c.acted_upon).length} acted upon)`);
+  // The injection summary of an OpenCode or Copilot CLI run (C002-IF-010 §5.2, defect D-026):
+  // docs/releases/<target>/<version>/injection.json, merged fail-closed into the existing file. A paid run
+  // writes it, a stub-host run only with the test seam `deps.releasesRoot`; on Copilot CLI only under
+  // sdd MCP server enforcement; never on Claude Code.
+  let summaryExit = 0;
+  const sumRoot = releasesRoot ?? ROOT;
+  if (INJECTION_SOURCES[host] && (releasesRoot !== null || !runners[host]) && (host !== "copilot-cli" || copilotTableMode(sumRoot) === "sdd-mcp-server")) {
+    const injection = docs.filter((d) => inInjectionSet(host, d.scenario, fileOfId.get(d.scenario) ?? "") && d.runs > 0);
+    if (injection.length > 0) {
+      const { version } = JSON.parse(readFileSync(join(sumRoot, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8"));
+      const out = join(sumRoot, "docs", "releases", INJECTION_SOURCES[host].target, version, "injection.json");
+      const path = posix(relative(sumRoot, out));
+      const merged = await mergeInjectionSummary({
+        host,
+        baseText: existsSync(out) ? readFileSync(out, "utf8") : null,
+        runs: injection.map((doc) => ({ id: doc.scenario, doc, result: posix(relative(sumRoot, resultFiles.get(doc) ?? "")) })),
+        sessionVersions: docs.flatMap((d) => d.records.map((r) => r.host_versions ?? null)),
+        path,
+      });
+      for (const line of merged.err) (deps.error ?? console.error)(line);
+      if (merged.write) {
+        mkdirSync(join(out, ".."), { recursive: true });
+        writeFileSync(out, JSON.stringify(merged.summary, null, 2) + "\n");
+        log(merged.out);
+      }
+      summaryExit = merged.exit;
     }
   }
   log(`total ${host === "claude-code" ? "API-key" : host} cost $${budget.spent.toFixed(4)} (limit $${budget.limit})${auth === "subscription" ? "; subscription sessions are not counted" : ""}`);
-  return ok ? 0 : 1;
+  return ok && summaryExit === 0 ? 0 : 1;
 }
 
 // Script entry only (bundled into a test, import.meta.filename is the test file).

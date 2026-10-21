@@ -41,7 +41,8 @@
 //
 // Session result (C002-IF-010 §3): the graders' shape (`transcript` of `{ t, type: "sdk", message }` and
 // `{ t, type: "harness", event }` records, `answers`, `result`, `wallMs`) plus `target` "copilot",
-// `host_versions`, `end_reason`, `usage`, `spend`, `provider`, `models`, `apiKeySource` and
+// `host_versions`, `end_reason`, `usage`, `spend`, `provider`, `models`, `session_model` and
+// `agent_models` (the model rule and the models that ran, revision D-027), `apiKeySource` and
 // `copilot_usage` (the measured units). Every tool call carries `host_tool` and `agent`, the agent that
 // made it (`architect:<agent>` for the ten Architect agents, a host built-in agent by its own name); a
 // call that a PreToolUse hook denied (a fail-closed hook error, S-08 §2.2) is reported as not run
@@ -483,6 +484,45 @@ export function agentModel(copy, agent) {
   return m ? m[1] : null;
 }
 
+/** Thrown inside the session to end it before the host starts (the model rule found no model). */
+class ModelRefusal extends Error {}
+
+/**
+ * The model rule of C002-IF-010 §2 (revision D-027): `{ agent, chosen, source, substitution, passed }`.
+ * The chosen model is the case's `model` (source `case`), else `fileModel`, the `model` field of the
+ * session agent's file (source `agent file`); the passed model is the `<to>` of `substitution`
+ * (`{ "<from>": "<to>" }`, the run's `--copilot-model`) whose `<from>` is the chosen model, else the
+ * chosen model. `chosen` and `passed` are null when neither gives a model.
+ */
+export function modelRule({ agent, model, fileModel, substitution }) {
+  const chosen = model ?? fileModel ?? null;
+  const to = chosen !== null && substitution && Object.hasOwn(substitution, chosen) ? substitution[chosen] : null;
+  return { agent: hostAgent(agent), chosen, source: model ? "case" : "agent file", substitution: to === null ? null : `${chosen}=${to}`, passed: to ?? chosen };
+}
+
+/**
+ * The models the agents ran on, from the JSON events' assistant messages (C002-IF-010 §3, revision
+ * D-027): `session` the distinct models of the session agent's messages in the order of first use, and
+ * `byAgent` one key per agent with at least one assistant message (an Architect agent as
+ * `architect:<agent>`, a host built-in agent by its own name), each with its distinct models.
+ */
+export function agentModels(events, { architect = [], sessionAgent = "architect:sdd-conductor" } = {}) {
+  const names = new Map();
+  for (const ev of events) if (ev.type === "subagent.started") names.set(ev.agentId, agentName(ev.data?.agentName ?? ev.data?.agentType, architect));
+  const byAgent = {};
+  const session = [];
+  for (const ev of events) {
+    if (ev.type !== "assistant.message") continue;
+    const name = ev.agentId ? (names.get(ev.agentId) ?? "subagent") : agentName(sessionAgent, architect);
+    const list = (byAgent[name] ??= []);
+    const m = ev.data?.model;
+    if (!m) continue;
+    if (!list.includes(m)) list.push(m);
+    if (!ev.agentId && !session.includes(m)) session.push(m);
+  }
+  return { session, byAgent };
+}
+
 /** The Copilot CLI arguments of one session (C002-IF-010 §4 plus the runner's own options). */
 export function cliArgs({ text, agent, copy, serversFile, maxAiCredits, model, allow = [], logDir, usageFile }) {
   return [
@@ -654,6 +694,10 @@ export async function runCopilotCliSession(options, deps = {}) {
     if (!stopper.signal.aborted) stopper.abort();
   };
   let start = { agent: hostAgent(agent), text: String(prompt ?? "") };
+  /** The session agent's models by the model rule (`session_model` without `used`), once decided. */
+  let sessionModel = null;
+  // A session that the model rule ends before the host starts (no model field, C002-IF-010 §2).
+  let refused = false;
   try {
     const identity = deps.identity !== undefined ? deps.identity : loginIdentity();
     if ((host.paid || host.credential) && !identity) throw new Error("no Copilot CLI login: run `copilot login` once (P-01); the runner copies the login identity, never a token");
@@ -677,9 +721,17 @@ export async function runCopilotCliSession(options, deps = {}) {
     const logDir = join(runDir, "logs");
     const usageFile = join(runDir, "usage.json");
     const allow = allowToolArgs(allowTools, { table, mode: options.targetPackage?.mode ?? table.enforcement_mode });
-    // --model: the case's model, else the session agent's own model (C002-IF-010 §2), passed once, also for a relayed agent.
-    const sessionModel = model ?? agentModel(copy, start.agent);
-    const args = cliArgs({ text: start.text, agent: start.agent, copy, serversFile, maxAiCredits: maxAiCredits(maxBudgetUsd), model: sessionModel, allow, logDir, usageFile });
+    // The model rule (C002-IF-010 §2, revision D-027): the chosen model from the case, else from the
+    // session agent's file; the passed model after the run's substitution; `--model` once, also for a
+    // relayed agent. A session agent whose file has no model field, in a row without one, ends here.
+    sessionModel = modelRule({ agent: start.agent, model, fileModel: model ? null : agentModel(copy, start.agent), substitution: options.copilotModel });
+    if (sessionModel.passed === null) {
+      error = `no model field in agents/${start.agent.replace(/^architect:/, "")}.agent.md`;
+      stamp({ event: "error", message: error });
+      refused = true;
+      throw new ModelRefusal();
+    }
+    const args = cliArgs({ text: start.text, agent: start.agent, copy, serversFile, maxAiCredits: maxAiCredits(maxBudgetUsd), model: sessionModel.passed, allow, logDir, usageFile });
     // The command line without the prompt text and the run folder's paths (the case's own data).
     stamp({ event: "start", agent: start.agent, flags: args.filter((a, i) => a.startsWith("--") || args[i - 1] === "--agent" || args[i - 1] === "--max-ai-credits" || args[i - 1] === "--model") });
     started = true;
@@ -735,13 +787,15 @@ export async function runCopilotCliSession(options, deps = {}) {
       end("error");
     }
   } catch (e) {
-    error = redact(e instanceof Error ? e.message : String(e));
-    stamp({ event: "error", message: error });
+    if (!(e instanceof ModelRefusal)) {
+      error = redact(e instanceof Error ? e.message : String(e));
+      stamp({ event: "error", message: error });
+    }
   } finally {
     if (!process.env.SDD_EVAL_KEEP_RUN) rmSync(runDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
     else stamp({ event: "run-dir", path: runDir });
   }
-  if (!started && error !== null) throw new Error(`Copilot CLI eval session not started: ${error}`);
+  if (!started && !refused && error !== null) throw new Error(`Copilot CLI eval session not started: ${error}`);
   if (endReason === null) endReason = error ? "error" : "completed";
   if (error && endReason === "error" && !harness.some((h) => h.event === "error")) stamp({ event: "error", message: error });
   const usd = usage?.usd_estimate ?? null;
@@ -751,6 +805,7 @@ export async function runCopilotCliSession(options, deps = {}) {
   const modelUsage = {};
   for (const [m, u] of Object.entries(usage?.models ?? {})) modelUsage[m] = { inputTokens: u.input_tokens, outputTokens: u.output_tokens, cacheReadInputTokens: u.cache_read_tokens, cacheCreationInputTokens: u.cache_write_tokens, costUSD: u.usd_estimate ?? 0 };
   const sessionModels = [...new Set(events.filter((e) => e.type === "assistant.message" && e.data?.model).map((e) => e.data.model))];
+  const ran = agentModels(events, { architect, sessionAgent: start.agent });
   const result = { type: "result", subtype: SUBTYPE[endReason], result: redact(lastText), total_cost_usd: usd ?? 0, num_turns: caps.usage().turns, duration_api_ms: null, modelUsage };
   transcript.push({ t: Date.now() - t0, type: "sdk", message: result });
   return {
@@ -767,6 +822,10 @@ export async function runCopilotCliSession(options, deps = {}) {
     spend: usd !== null ? "reported" : "unreported",
     provider: host.paid ? PROVIDER : "stub",
     models: Object.keys(modelUsage).length > 0 ? Object.keys(modelUsage) : sessionModels,
+    // C002-IF-010 §3 (revision D-027): the session agent's models by the model rule, with the models it
+    // actually ran on, and the models every agent with an assistant message ran on.
+    session_model: { ...(sessionModel ?? modelRule({ agent: start.agent, model, fileModel: null, substitution: options.copilotModel })), used: ran.session },
+    agent_models: ran.byAgent,
     copilot_usage: usage,
     ...(error ? { error } : {}),
   };

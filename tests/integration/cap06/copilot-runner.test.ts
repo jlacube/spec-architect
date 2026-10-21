@@ -7,11 +7,14 @@
 // `.github/hooks/architect-guard.json`); a hook deny is reported as a call that did not run; each call
 // names its agent; the result records `api_key_source` "copilot-credential-store" and no credential text
 // occurs in a result, transcript, host environment or log line. Also run.mjs: the Copilot stop rule, the
-// ledger entry and a not-applicable row (C002-TC-336). No paid session, no network, no Copilot CLI.
+// ledger entry and a not-applicable row (C002-TC-336). C002-T-066 (revision D-026/D-027): C002-TC-680,
+// thirteen rows through run.mjs main (the model rule, `--copilot-model` and `SDD_EVAL_COPILOT_MODEL`,
+// `session_model`), and its supporting tests (no model field, `agent_models`, the refused `--model`).
+// No paid session, no network, no Copilot CLI.
 import { test, after, mock } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -450,23 +453,124 @@ const packageModel = (agent: string) => {
   return m[1]!;
 };
 
-for (const row of [
-  { agent: "architect:sdd-conductor", model: undefined as string | undefined, file: "sdd-conductor" },
-  { agent: "architect:sdd-auditor", model: undefined as string | undefined, file: "sdd-auditor" },
-  { agent: "architect:sdd-conductor", model: "claude-sonnet-5.5", file: null },
-]) {
-  test(`C002-TS-680 — agent ${row.agent}${row.model ? `, model ${row.model}` : ", no model"}: --agent once and --model of ${row.model ? "the case" : "the agent file"} once`, async () => {
-    const passed = row.model ?? packageModel(row.file!);
-    if (row.file === "sdd-conductor") assert.equal(passed, "claude-opus-5.5", "the conductor's tier model of the package");
-    if (row.file === "sdd-auditor") assert.equal(passed, "claude-haiku-5.5");
-    const { host } = await session({ endAfter: 1 }, { agent: row.agent, ...(row.model ? { model: row.model } : {}) });
-    const args = host.calls[0]!.args as string[];
+// --- C002-TC-680 (C002-TS-680; C002-T-066, revision D-026/D-027): the model rule and the run's model
+// substitution, thirteen rows through main of run.mjs in a child process, with the stub Copilot CLI host
+// (recording its command line) and the stub OpenCode host for the two --host opencode rows.
+interface MainRun { status: number | null; stdout: string; stderr: string; started: number; args: string[] | null; records: Record<string, any>[] }
+
+function runMain(args: string[], { agent, model, variable }: { agent: string; model?: string; variable?: string }): MainRun {
+  const dir = tmp("sdd-tc680-");
+  const caseFile = join(dir, "case.eval.mjs");
+  writeFileSync(caseFile, `export default { id: "TC-680-ROW", title: "TC-680", agent: ${JSON.stringify(agent)}, ${model ? `model: ${JSON.stringify(model)}, ` : ""}fixture: null, prompt: "hi", assert: () => [] };\n`);
+  const startLog = join(dir, "started.log");
+  const argsFile = join(dir, "args.json");
+  const url = (p: string) => pathToFileURL(join(ROOT, "evals", "harness", p)).href;
+  const driver = join(dir, "driver.mjs");
+  writeFileSync(
+    driver,
+    [
+      `import { appendFileSync, writeFileSync } from "node:fs";`,
+      `import { main } from ${JSON.stringify(url("run.mjs"))};`,
+      `import { runCopilotCliSession } from ${JSON.stringify(url("runners/copilot-cli.mjs"))};`,
+      `import { runOpenCodeSession } from ${JSON.stringify(url("runners/opencode.mjs"))};`,
+      `import { copilotStubHost, stubHost } from ${JSON.stringify(url("runners/stub.mjs"))};`,
+      `const started = () => appendFileSync(${JSON.stringify(startLog)}, "started\\n");`,
+      `const copilot = (o) => runCopilotCliSession(o, { host: copilotStubHost({ endAfter: 1, onRun: ({ args }) => { started(); writeFileSync(${JSON.stringify(argsFile)}, JSON.stringify(args)); } }), pkg: ${JSON.stringify(pkg())}, scripts: ${JSON.stringify(SCRIPTS)}, identity: ${JSON.stringify(IDENTITY)} });`,
+      `const opencode = (o) => { started(); return runOpenCodeSession(o, { host: stubHost({ endAfter: 1 }) }); };`,
+      `process.exitCode = await main(JSON.parse(process.argv[2]), { runners: { "copilot-cli": copilot, opencode }, ledger: "unused" });`,
+    ].join("\n"),
+  );
+  const env: Record<string, string | undefined> = { ...process.env };
+  delete env["SDD_EVAL_COPILOT_MODEL"];
+  if (variable !== undefined) env["SDD_EVAL_COPILOT_MODEL"] = variable;
+  const res = join(dir, "results");
+  const r = spawnSync(process.execPath, [driver, JSON.stringify([caseFile, ...args, "--tier", "dev", "--results-dir", res])], { cwd: ROOT, encoding: "utf8", env, windowsHide: true, timeout: 120_000 });
+  const records = existsSync(res) ? readdirSync(res).filter((f) => f.endsWith(".json")).flatMap((f) => (JSON.parse(readFileSync(join(res, f), "utf8")) as { records: Record<string, any>[] }).records) : [];
+  return { status: r.status, stdout: r.stdout, stderr: r.stderr, started: existsSync(startLog) ? readFileSync(startLog, "utf8").split("\n").filter(Boolean).length : 0, args: existsSync(argsFile) ? (JSON.parse(readFileSync(argsFile, "utf8")) as string[]) : null, records };
+}
+
+const SUB = "claude-opus-5.5=claude-sonnet-5.5";
+const FORM = "is not <from>=<to>[,<from>=<to>…]; no session started";
+type Row680 = { n: number; agent: string; model?: string; variable?: string; args: string[]; passed?: string; session?: Record<string, unknown>; error?: string; title: string };
+const ROWS_680: Row680[] = [
+  { n: 1, agent: "architect:sdd-conductor", args: ["--host", "copilot-cli"], passed: "claude-opus-5.5", session: { chosen: "claude-opus-5.5", source: "agent file", substitution: null, passed: "claude-opus-5.5" }, title: "conductor without model, no substitution: --model claude-opus-5.5 from the agent file" },
+  { n: 2, agent: "architect:sdd-auditor", args: ["--host", "copilot-cli"], passed: "claude-haiku-5.5", session: { chosen: "claude-haiku-5.5", source: "agent file", substitution: null, passed: "claude-haiku-5.5" }, title: "auditor without model: --model claude-haiku-5.5 from the agent file" },
+  { n: 3, agent: "architect:sdd-conductor", model: "claude-sonnet-5.5", args: ["--host", "copilot-cli"], passed: "claude-sonnet-5.5", session: { chosen: "claude-sonnet-5.5", source: "case", substitution: null, passed: "claude-sonnet-5.5" }, title: "conductor with the case model claude-sonnet-5.5" },
+  { n: 4, agent: "architect:sdd-conductor", args: ["--host", "copilot-cli", "--copilot-model", SUB], passed: "claude-sonnet-5.5", session: { chosen: "claude-opus-5.5", source: "agent file", substitution: SUB, passed: "claude-sonnet-5.5" }, title: "conductor under --copilot-model: --model claude-sonnet-5.5, no --model claude-opus-5.5" },
+  { n: 5, agent: "architect:sdd-auditor", args: ["--host", "copilot-cli", "--copilot-model", SUB], passed: "claude-haiku-5.5", session: { chosen: "claude-haiku-5.5", substitution: null, passed: "claude-haiku-5.5" }, title: "auditor under --copilot-model keeps claude-haiku-5.5" },
+  { n: 6, agent: "architect:sdd-conductor", model: "claude-opus-5.5", args: ["--host", "copilot-cli", "--copilot-model", SUB], passed: "claude-sonnet-5.5", session: { chosen: "claude-opus-5.5", source: "case", substitution: SUB, passed: "claude-sonnet-5.5" }, title: "case model claude-opus-5.5 substituted" },
+  { n: 7, agent: "architect:sdd-conductor", variable: SUB, args: ["--host", "copilot-cli"], passed: "claude-sonnet-5.5", session: { substitution: SUB, passed: "claude-sonnet-5.5" }, title: "the variable SDD_EVAL_COPILOT_MODEL substitutes" },
+  { n: 8, agent: "architect:sdd-conductor", variable: "claude-opus-5.5=claude-haiku-5.5", args: ["--host", "copilot-cli", "--copilot-model", SUB], passed: "claude-sonnet-5.5", session: { substitution: SUB, passed: "claude-sonnet-5.5" }, title: "the option comes before the variable" },
+  { n: 9, agent: "architect:sdd-conductor", args: ["--host", "opencode", "--copilot-model", SUB], error: "eval: --copilot-model applies to --host copilot-cli only; no session started", title: "--copilot-model on --host opencode is refused" },
+  { n: 10, agent: "architect:sdd-conductor", args: ["--host", "copilot-cli", "--copilot-model", "claude-opus-5.5"], error: `eval: --copilot-model "claude-opus-5.5" ${FORM}`, title: "a value without =<to> is refused" },
+  { n: 11, agent: "architect:sdd-conductor", args: ["--host", "copilot-cli", "--copilot-model", `${SUB},claude-opus-5.5=claude-haiku-5.5`], error: `eval: --copilot-model "${SUB},claude-opus-5.5=claude-haiku-5.5" ${FORM}`, title: "a <from> given twice is refused" },
+  { n: 12, agent: "architect:sdd-conductor", variable: "claude opus=claude-sonnet-5.5", args: ["--host", "copilot-cli"], error: `eval: SDD_EVAL_COPILOT_MODEL "claude opus=claude-sonnet-5.5" ${FORM}`, title: "a variable value with a space is refused" },
+  { n: 13, agent: "architect:sdd-conductor", variable: "claude opus=claude-sonnet-5.5", args: ["--host", "opencode"], title: "a run on --host opencode does not read the variable" },
+];
+
+for (const row of ROWS_680) {
+  test(`C002-TS-680 row ${row.n} — ${row.title}`, () => {
+    if (row.n === 1) assert.equal(packageModel("sdd-conductor"), "claude-opus-5.5", "the conductor's tier model of the package");
+    if (row.n === 2) assert.equal(packageModel("sdd-auditor"), "claude-haiku-5.5");
+    const r = runMain(row.args, { agent: row.agent, ...(row.model ? { model: row.model } : {}), ...(row.variable !== undefined ? { variable: row.variable } : {}) });
+    if (row.error) {
+      assert.equal(r.status, 1, r.stdout + r.stderr);
+      assert.ok(r.stderr.split(/\r?\n/).includes(row.error), r.stderr);
+      assert.equal(r.started, 0, "the stub host was not started");
+      assert.equal(r.records.length, 0, "no result written");
+      return;
+    }
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.equal(r.started, 1, "one session");
+    if (row.n === 13) {
+      assert.equal(r.args, null, "no Copilot CLI session");
+      assert.equal(r.records[0]!["target"], "opencode");
+      return;
+    }
+    const args = r.args!;
     assert.equal(once(args, "--agent"), 1);
     assert.equal(valueOf(args, "--agent"), row.agent);
     assert.equal(once(args, "--model"), 1);
-    assert.equal(valueOf(args, "--model"), passed);
+    assert.equal(valueOf(args, "--model"), row.passed);
+    if (row.args.includes("--copilot-model") || row.variable) assert.ok(!args.some((a, i) => a === "--model" && args[i + 1] === "claude-opus-5.5"), "no --model claude-opus-5.5");
+    const sm = r.records[0]!["session_model"] as Record<string, unknown>;
+    assert.equal(sm["agent"], row.agent);
+    for (const [k, v] of Object.entries(row.session!)) assert.deepEqual(sm[k], v, `session_model.${k}`);
+    assert.deepEqual(sm["used"], [row.passed], "the stub ran the session agent on the passed model");
+    assert.deepEqual(r.records[0]!["agent_models"], { [row.agent]: [row.passed] });
   });
 }
+
+test("C002-TS-680 (supporting): a session agent whose agent file has no model field, in a row without one, ends before the host starts with error \"no model field in agents/<agent>.agent.md\"", async () => {
+  const copy = tmp("sdd-cp-nomodel-");
+  cpSync(pkg(), copy, { recursive: true });
+  const file = join(copy, "agents", "sdd-auditor.agent.md");
+  writeFileSync(file, readFileSync(file, "utf8").replace(/^model:.*\r?\n/m, ""));
+  const cwd = tmp("sdd-cp-nomodel-ws-");
+  const host = copilotStubHost({ endAfter: 1 });
+  const s = await runCopilotCliSession({ cwd, prompt: "hi", agent: "architect:sdd-auditor", allowTools: [] }, { host, pkg: copy, scripts: SCRIPTS, identity: IDENTITY });
+  assert.equal(host.calls.length, 0, "the host did not start");
+  assert.equal(s.end_reason, "error");
+  assert.equal(s.error, "no model field in agents/sdd-auditor.agent.md");
+  assert.equal(s.usage.turns, 0);
+  assert.deepEqual(s.session_model, { agent: "architect:sdd-auditor", chosen: null, source: "agent file", substitution: null, passed: null, used: [] });
+  assert.deepEqual(s.agent_models, {});
+  // With a case model the agent file's missing field does not matter.
+  const t = await runCopilotCliSession({ cwd: tmp("sdd-cp-nomodel-ws2-"), prompt: "hi", agent: "architect:sdd-auditor", model: "claude-haiku-5.5", allowTools: [] }, { host: copilotStubHost({ endAfter: 1 }), pkg: copy, scripts: SCRIPTS, identity: IDENTITY });
+  assert.equal(t.end_reason, "completed");
+});
+
+test("C002-TS-680 (supporting): agent_models holds the session agent and every subagent with assistant messages, each with its distinct models in the order of first use", async () => {
+  const script = [[{ subagent: "sdd-auditor", calls: [{ tool: "sdd-shell-run_command", input: { command: "sdd lint 001" } }] }], [{ subagent: "general-purpose", model: "gpt-x", calls: [] }], [{ subagent: "sdd-auditor", model: "claude-sonnet-5.5", calls: [] }]];
+  const { s } = await session({ endAfter: 3, script, subagentModels: { "sdd-auditor": "claude-haiku-5.5" } }, { copilotModel: { "claude-opus-5.5": "claude-sonnet-5.5" } });
+  assert.deepEqual(s.agent_models, { "architect:sdd-conductor": ["claude-sonnet-5.5"], "architect:sdd-auditor": ["claude-haiku-5.5", "claude-sonnet-5.5"], "general-purpose": ["gpt-x"] });
+  assert.deepEqual(s.session_model, { agent: "architect:sdd-conductor", chosen: "claude-opus-5.5", source: "agent file", substitution: "claude-opus-5.5=claude-sonnet-5.5", passed: "claude-sonnet-5.5", used: ["claude-sonnet-5.5"] });
+  // The host's refusal of the passed model: no model call, used empty, no key in agent_models.
+  const refused = await session({ refuseModel: true });
+  assert.equal(refused.s.end_reason, "error");
+  assert.match(String(refused.s.error), /Error: Model "claude-opus-5\.5" from --model flag is not available\./);
+  assert.deepEqual([refused.s.usage.turns, refused.s.usage.usd, refused.s.spend, refused.s.models, refused.s.session_model.used, refused.s.agent_models, refused.s.copilot_usage?.ai_credits], [0, 0, "reported", [], [], {}, 0]);
+});
 
 test("C002-TS-680 (supporting): a relayed session agent gets its own model once", async () => {
   const { host } = await session({ endAfter: 1 }, { agent: "architect:eval-dispatcher", prompt: "Dispatch: sdd-auditor\nBrief — lint 001" });
