@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-21T16:55:40Z",
+  "generated_at": "2026-10-21T16:56:09Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -482,6 +482,16 @@
           "status": "closed",
           "resolution": "Revision D-026/D-027 (2026-10-21): Copilot CLI model substitution, Sonnet evidence on P-01's Copilot Pro plan (Q-copilot-opus-01), package keeps opus with the fallback note (Q-copilot-map-01), models_used; code in C002-T-066",
           "closed_at": "2026-10-21"
+        },
+        {
+          "id": "D-028",
+          "ref": "C002-IF-010",
+          "summary": "Found in C002-T-066 (minor): (1) IF-009 §4 'fresh-install step' records models_used but VSC-02 has no conductor turns (instruction placed in VSC-02's Record); (2) no field for 'model shown where the install notes say' (recorded in VSC-02 note); (3) IF-010 §5.2 rule 3 ambiguous for capped sessions (implemented fail-closed: false only if the document passes and every session ended completed); (4) rule 2 gives no check order (implemented parse, schema, run host versions, target, tier, source, host versions, foreign ids); (5) no text for the internal-error line of a merged summary failing validation; (6) a missing-model refusal still reads copilot --version first. Batch with D-023/D-024.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-21",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
