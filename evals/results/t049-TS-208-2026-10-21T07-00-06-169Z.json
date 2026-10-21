@@ -1,0 +1,134 @@
+{
+  "scenario": "TS-208",
+  "title": "Options analysis behind a material question",
+  "tier": "dev",
+  "label": "t049",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-21T07:01:21.459Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.2701446,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "entry does not record candidates considered 4 or 5:\nQ-persistence-01; sdd-researcher:\nQ-reminders-01). No duplicates to merge. Blocking questions first.\n\nConductor notes on the hand-backs:\n- Q-persistence-01 cites OA-001, but no `00-ideation/options/` file exists; the scores are as\n  reported in the hand-back and were not verified against an analysis file.\n- Q-reminders-01 came back with placeholder options (\"Option A for reminders\", \"Option B for\n  reminders\") and a generic why-it-matters. It was not asked as given; the conductor asked\n  Q-reminders-02 about how to settle it instead. Q-reminders-01 stays unanswered.\n",
+        "entry does not list both rejected candidates with reasons"
+      ],
+      "metrics": {
+        "cost_usd": 0.2701446,
+        "session_ms": 74517,
+        "api_ms": null,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 12,
+            "output": 2622,
+            "cache_read": 109908,
+            "cache_write": 31359,
+            "cost_usd": 0.27014459999999996
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 2622,
+              "cache_read": 109908,
+              "cache_write": 31359
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 7,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17893
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17893
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17893
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17893
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17893
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5846
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5846
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 21764
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 9188
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 5,
+        "usd": 0.2701446
+      },
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-208-2026-10-21T07-00-06-169Z-run1.json"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "scenario": "TS-210",
+  "title": "Merging questions from two specialists",
+  "tier": "dev",
+  "label": "t049",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-21T07:03:52.676Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2057532,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2057532,
+        "session_ms": 52403,
+        "api_ms": null,
+        "turns": 4,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 10,
+            "output": 1878,
+            "cache_read": 76741,
+            "cache_write": 27609,
+            "cost_usd": 0.20575319999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1878,
+              "cache_read": 76741,
+              "cache_write": 27609
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 3,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16172
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16172
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 16172
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 10118
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 6491
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 4,
+        "usd": 0.2057532
+      },
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-210-2026-10-21T07-02-59-617Z-run1.json"
+    }
+  ]
+}

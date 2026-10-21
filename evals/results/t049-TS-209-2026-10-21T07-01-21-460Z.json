@@ -1,0 +1,168 @@
+{
+  "scenario": "TS-209",
+  "title": "Specialist cannot decide licensing preference",
+  "tier": "dev",
+  "label": "t049",
+  "agent": "architect:eval-dispatcher",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-21T07:02:59.617Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2770502,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2770502,
+        "session_ms": 97430,
+        "api_ms": null,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-sonnet-5.5": {
+            "input": 16,
+            "output": 6588,
+            "cache_read": 216382,
+            "cache_write": 70756,
+            "cost_usd": 0.27705019999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 6588,
+              "cache_read": 216382,
+              "cache_write": 70756
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 7,
+          "mcp__plugin_architect_context7__resolve-library-id": 1,
+          "mcp__plugin_architect_context7__query-docs": 1,
+          "WebFetch": 6,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17890
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 17890
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "main",
+            "ms": 17890
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5692
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5692
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 5692
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__query-docs",
+            "agent": "main",
+            "ms": 5692
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3738
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 3738
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 3738
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 3738
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5723
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5723
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 5723
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "main",
+            "ms": 4447
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 33559
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 7,
+        "usd": 0.2770502
+      },
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-sonnet-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-209-2026-10-21T07-01-21-460Z-run1.json"
+    }
+  ]
+}

@@ -36,7 +36,10 @@ export default {
     const { failures, check, calls } = roundChecks(transcript, optionProblems);
     check(calls.flatMap((c) => c.questions).some((x) => /persist|database|store/i.test(x.question)), "the persistence question was not asked");
     const log = readLog(root);
-    const at = log.indexOf("Q-persistence-01");
+    // The entry is the section headed by the question ID; the first mention may sit in the round's
+    // preamble (C002-T-049 on OpenCode: "Collected from … Q-persistence-01"), so the heading comes first.
+    const heading = /^#{2,4} Q-persistence-01\b/m.exec(log);
+    const at = heading ? heading.index : log.indexOf("Q-persistence-01");
     check(at >= 0, "Q-persistence-01 not in questions-log.md");
     const entry = at >= 0 ? log.slice(at, (log.indexOf("\n### ", at) + 1 || log.length + 1) - 1) : "";
     check(/candidates[ _]considered[^\n]*\b[45]\b/i.test(entry), `entry does not record candidates considered 4 or 5:\n${entry}`);
