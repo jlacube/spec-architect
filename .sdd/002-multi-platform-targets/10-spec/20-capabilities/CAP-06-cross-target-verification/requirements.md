@@ -109,8 +109,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-611 — Caps per eval session
 - **Delta:** ADDED
 - **Pattern:** state-driven
-- **Statement:** WHILE an eval runner of a generated target runs a session, THE eval runner SHALL end the session when it reaches the turn cap or the spend cap of C002-NFR-105.
-- **Rationale:** `runSession` caps turns and spend today (current-state E-9); three harnesses multiply eval cost (ideation §9); how each runner checks the spend cap: C002-IF-010 §2.2 (after each step on OpenCode, which reports each step's cost; on Copilot CLI the host's `--max-ai-credits` limit, checked on the session total; critic CR-64)
+- **Statement:** WHILE an eval runner of the eval harness, the Claude Code eval runner included, runs a session, THE eval runner SHALL end the session when it reaches the turn cap or the spend cap of C002-NFR-105.
+- **Rationale:** `runSession` caps turns and spend today (current-state E-9); three harnesses multiply eval cost (ideation §9); the statement covers every eval runner of the eval harness, the Claude Code eval runner included, because the Claude Code subscription class of C002-IF-010 §2.2 sets caps for that runner's sessions (defect D-025); how each runner checks the spend cap: C002-IF-010 §2.2 (after each step on OpenCode, which reports each step's cost; on Copilot CLI the host's `--max-ai-credits` limit, checked on the session total; critic CR-64; on Claude Code the Agent SDK's `maxBudgetUsd`, applied to the notional cost under `--auth subscription`)
 - **Stories:** C002-US-603, C002-US-604
 - **Priority:** Must
 - **Acceptance:** C002-AC-611.1

@@ -73,7 +73,8 @@ counts above are those of the main branch.
 | fx-plugin-novariant-glob | Copy of fx-src whose OpenCode mapping table has no `file-inspection` entry, the Copilot table keeping its own (the `fx-plugin-novariant-glob` row of C002-TC-120) | C002-T-065 |
 | fx-plugin-glob-prose | Copy of fx-src with every variant of both tables; per C002-TS-673 row, line 30 of the body of `agents/sdd-critic.md` replaced by `List the change's files with the Glob tool.` and a variant for that line in the Copilot table only, or in the OpenCode table only; or the source unchanged (`Glob` only in the frontmatter `tools` field, line 7); or line 30 replaced by `Check the Global items of the DoD.` or by `On OpenCode the glob tool lists no dot folder.` with no variant for it (rows 4 and 5) | C002-T-065 |
 | fx-corpus-platforms | The guard corpora of the commit under test with three added path cases limited by `platforms` to `posix`: `PG-900` (category `outside`), `PG-901` (category `memory`) and `PG-902` (category `symlink`, with `requires` `file-symlink`), in a temporary corpus folder that the replay suite is pointed at; the repository's corpora unchanged (C002-TC-681) | C002-T-065 |
-| fx-evals-caps | A temporary case folder holding one case file per C002-TS-679 row, at the row's `file` path (`evals/targets/gate/TS-634.eval.mjs`, `evals/targets/other/TS-634.eval.mjs`, `evals/targets/gate/TS-613.eval.mjs`) relative to the fixture root, which the harness takes as the repository root for the case-file match: one row with the row's ID (`TS-634` or `TS-613`), no `host` field and the row's `maxBudgetUsd`; a stub host for `opencode` and `copilot-cli` that records the cap it is given (C002-TC-679) | C002-T-065 |
+| fx-evals-caps | A temporary case folder holding one case file per C002-TS-679 row, at the row's `file` path (`evals/targets/gate/TS-634.eval.mjs`, `evals/targets/other/TS-634.eval.mjs`, `evals/targets/gate/TS-613.eval.mjs`, and from revision D-025 on `evals/cap02/TS-214.eval.mjs` and `evals/cap02/TS-213.eval.mjs`) relative to the fixture root, which the harness takes as the repository root for the case-file match: one row with the row's ID (`TS-634`, `TS-613`, `TS-214` or `TS-213`), no `host` field, the row's `maxBudgetUsd` and the row's `maxTurns`; a stub host for `opencode` and `copilot-cli` that records the caps it is given, and the Agent SDK stub (sdk-stub) for `claude-code` (C002-TC-679) | C002-T-065; the D-025 rows C002-T-048 step X0 |
+| sdk-stub | An Agent SDK stub put in place of the SDK's `query` through the harness context of `evals/harness/session.mjs` (a test seam; `runSession`'s signature and defaults unchanged, C002-RISK-009): it records the options it receives (`maxTurns`, `maxBudgetUsd`), sends an `init` message with `apiKeySource` `none` under `--auth subscription` and the key's source under `--auth api-key`, then one turn after another with the row's (notional) cost per turn, and ends the session only at a cap, with a `result` message of subtype `error_max_turns` at `maxTurns` or `error_max_budget_usd` when the cost reaches `maxBudgetUsd`; the tests give a dummy OAuth token through `EVAL_CLAUDE_OAUTH_TOKEN`, a temporary `EVAL_CLAUDE_CONFIG_DIR` and a dummy `CLAUDE_CODE_EXECPATH`, so no Claude Code process starts and nothing is billed (C002-TC-614, C002-TC-679) | C002-T-048 step X0 |
 | fx-oc | OpenCode replay fixture of C002-ADR-005: generated package, adopter agent `my-build`, adopter MCP server `fx-fs`, auto-update and sharing off | C002-T-042 |
 | fx-gate | Change 002 with phase 10-spec in review; variant with 00-ideation approved; variant ready to archive | C002-T-037 (from the CHG-001 gate helpers) |
 | fx-bootstrap | CHG-001 fixture (copy of `.sdd/` at its G2) | CHG-001 |
@@ -124,10 +125,26 @@ counts above are those of the main branch.
   of §6 allows, and any other failure reopens the owning task and holds the OpenCode release**
   (C002-T-056 rerun plan X3; defect D-022 item 1; P-01 answer to Q-ts634-waiver-01). The earlier cap of 1.00 USD (rerun plan X2) is
   superseded. An exception matches
-  the row ID, the case file and the host together (critic CR-68). The harness does not count the
-  exception's runs and writes the caps each session ran with into its result record (`caps`,
-  C002-IF-010 §3); the owning task's done-check counts the runs by the ledger rule for capped
-  sessions below.
+  the row ID, the case file, the host and the run's auth mode together (critic CR-68; defect D-025),
+  and a turn cap above 30 needs a matching exception as a spend cap above 0.50 USD does. The harness
+  does not count the exception's runs and writes the caps each session ran with into its result
+  record (`caps`, C002-IF-010 §3); the owning task's done-check counts the runs by the ledger rule
+  for capped sessions below. These are the exceptions of the **paid class** (sessions that spend
+  from a pool).
+- **Claude Code subscription class of cap exceptions** (C002-IF-010 §2.2; defect D-025; P-01
+  answers to Q-claude-cap-01, "Raise notional cap (Recommended)", and Q-claude-cap-02, "Same rule as
+  batch 7 (Recommended)", 2026-10-21). For `--host claude-code` with `--auth subscription` only: the
+  cost of these sessions is notional and spends from **no pool** (rule 7), so no stop rule and no
+  reserve apply to them; P-01's watch of the Max plan's usage limits bounds them ("Eval auth"). The
+  class never applies to a Claude Code session run with `--auth api-key` (it bills the prepaid key),
+  to an OpenCode session (OpenRouter pool) or to a Copilot CLI session (Copilot pool); `run.mjs`
+  refuses such a run before any session (C002-TC-679). In force, for C002-T-048 step 4 only: the
+  rerun cap of **1.50 USD** for the rows that table lists, applied only by a run started with
+  `--cap-exception` (one rerun per row, after a failed session of the row that the 0.50 USD cap ended,
+  `metrics.result_subtype` `error_max_budget_usd`), and the case files' own **40 turns** for `TS-213`
+  and `TS-221`. The rows, their Runs limits and the order are those of C002-IF-010 §2.2 and
+  `50-tasks/T-048-claude-regression-run.md` step 4 (X2 … X5); the done-check of C002-T-048 counts
+  the sessions per row from the result records and the ledger. No waiver is approved for these rows.
 - Paid sessions run only at the task steps that `10-strategy.md` §3a names, never elsewhere. An eval
   case whose runner does not exist yet is carried (§6): OpenCode rows to C002-T-056 (runner of
   C002-T-044), Copilot CLI rows to C002-T-045, the release rows to C002-T-049 (OpenCode) and C002-T-054
@@ -148,7 +165,8 @@ counts above are those of the main branch.
   session runs with `--auth api-key` only when P-01 decides it for that session (for example when the
   plan's usage limit stops a run and P-01 chooses not to wait for its reset). Such a session bills the
   key, is recorded with `provider` `anthropic-key`, and draws on no OpenRouter pool. The caps of
-  C002-NFR-105 apply in both modes. P-01 watches the plan's usage limits.
+  C002-NFR-105 apply in both modes; only under `--auth subscription` may the Claude Code subscription
+  class of cap exceptions (above) raise them. P-01 watches the plan's usage limits.
 - **Budget** (Q-evalbudget-03, `questions-log.md` round 4; Q-opencode-01, round 6): **40 USD of
   OpenRouter spend** for the CHG-002 sessions that bill P-01's OpenRouter account: the S-07 probes and
   the OpenCode sessions on E-OCE. At 40 USD the runs stop and P-01 is asked; there is no monthly cap
@@ -181,7 +199,10 @@ counts above are those of the main branch.
   measured AI Credits × 0.01 USD, with the credits beside it), **`caps_usd`** (the spend cap the
   session ran with, its result record's `caps.usd`; written by `ledgerEntry` of `run.mjs` from
   C002-T-056 step X0 on, which also sets it from their result files on the two C002-TS-634 entries at
-  1.00 USD; an entry without it is an ordinary session of rule 1), result file or, for the S-07
+  1.00 USD; on the `claude-max` entries, which the person running the sessions writes by hand, it is
+  copied from the result file's record (`records[].caps.usd`), on the entries written before
+  revision D-025 too (C002-T-048 step X1), and every `claude-max` entry written later carries it; an
+  entry without it is an ordinary session of rule 1), result file or, for the S-07
   probes and the C002-T-051 run, the OpenRouter usage reading). A `copilot` entry counts toward the Copilot pool
   only, not toward the 40 USD. A `claude-max` entry keeps its notional `cost_usd` (as `run.mjs`
   records it); `claude-max` and `anthropic-key` entries count toward no pool total and not toward the
@@ -206,7 +227,15 @@ counts above are those of the main branch.
   X1 is its one rerun). In force for the two 0.50 USD sessions of C002-TS-634 in C002-T-056 (rerun
   plan X2) and for its X2 rerun, which ended with `spend cap` at 1.00 USD, below the 2.00 USD that
   Q-ts634-budget-02 approved (rerun plan X3). The run of C002-TS-634 at 2.00 USD is counted from the
-  sessions at that cap only.
+  sessions at that cap only. **Claude Code subscription class** (defect D-025): a `claude-max`
+  session at the 0.50 USD cap that ended at the spend cap and that a session of its row at the
+  1.50 USD rerun cap replaces gets `valid_run: false` and keeps its notional `cost_usd`; it adds no
+  session to the row, so the 1.50 USD session is the row's one further session, whatever its result
+  (C002-IF-010 §2.2 Runs). In force for the five 0.50 USD sessions of `TS-214`, `TS-215` and
+  `TS-318` ×3 of C002-T-048 batches 5 and 6, marked when the exception was approved (C002-T-048
+  step X1), and for a later 0.50 USD session of `TS-213`, `TS-221`, a batch 7 row or the fixed
+  `INJ-19` when its 1.50 USD rerun is started (steps X3 … X5). A failed session that another end
+  stopped (a wrong step, the turn cap) is a run and counts against the one-rerun limit as above.
 - **Stop rule, per pool, checked before every paid OpenRouter session** by the runner, or by
   the person who starts the session when the runner does not read the ledger itself (critic CR-20):
   1. The session's pool is that of its owning step (§4.2, `10-strategy.md` §3a). T = the ledger total
@@ -220,7 +249,10 @@ counts above are those of the main branch.
        notional cost measures the same token use), and the hand-driven entries (the S-07 probes; the
        C002-T-051 run, per session as rule 6 says). The sessions of a cap-exception row run at a cap
        above 0.50 USD (ledger field `caps_usd` above 0.50) are left out (plan critic CR-41): their
-       cost measures the exception, not the next ordinary session. On 2026-10-20 the highest ordinary
+       cost measures the exception, not the next ordinary session. This holds for every class: a
+       `claude-max` entry with `caps_usd` 1.50 (Claude Code subscription class, defect D-025) never
+       counts in an ordinary H, while a `claude-max` entry at the 0.50 USD cap does, its notional
+       cost included (C002-IF-010 §2.2). On 2026-10-20 the highest ordinary
        session cost is 0.525 USD (`t056-TS-802`), so H = 0.65 USD; the C002-TS-634 sessions at
        1.00 USD (0.99 and 1.11 USD) and its X3 session at 2.00 USD do not raise it.
      - **Cap-exception session**: H is at least the row's exception cap plus its overshoot bound
@@ -249,8 +281,9 @@ counts above are those of the main branch.
      run pauses for a decision. The run is one ledger entry with its session count; for later sessions,
      H is that entry's spend divided by its session count (CR-22).
   7. **Claude Code sessions** (`claude-max`, and `anthropic-key` after P-01's decision) are not
-     checked by rules 1 to 6; they are added to the ledger with their `provider` and `auth` after they
-     end.
+     checked by rules 1 to 6; they are added to the ledger with their `provider`, `auth` and
+     `caps_usd` after they end. The rerun cap of the Claude Code subscription class (1.50 USD)
+     therefore takes no reserve from any pool.
   8. **Copilot CLI sessions** (pool `copilot`): before each session `run.mjs` takes T = the ledger
      total of the `copilot` entries and H as in rule 1, and starts the session only if T + H ≤ 30 USD;
      otherwise no further Copilot CLI session starts and P-01 is asked. After the session, its entry is
@@ -303,13 +336,14 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-06 | C002-T-056 rerun plan X1 … X3 (after C002-T-065) | 3 on E-OCE, 4 with the X2 rerun: X1 C002-TC-511 (1 at 0.25; ran, 0.24 USD); X2 C002-TC-634 at the cap of 1.00 USD (1 at 1.00, and its rerun after the failure, counted in the room of §4.3; ran, 0.99 and 1.11 USD); X3 C002-TC-634 at its cap exception of 2.00 USD (1 at 2.00, no rerun; Q-ts634-budget-02) | 3.25 USD | 5.41 USD (X1 at 0.65; the two X2 sessions at their measured 2.11 USD; X3 at 2.65 USD, its 2.00 cap plus the overshoot bound of §4.1 rule 1, the H of an ordinary session) | 0 | 0 |
 | C002-M-06 | C002-T-063 step 5, only if the Claude Code row "no `sdd` executable on PATH" of `TS-509.eval.mjs` changes its assertion | 0 | 0 | 0 | 0 or 1 on E-CC at 0.25: that row of C002-TC-509; at most 0.25 USD notional | 0 |
 | C002-M-06 | C002-T-056 step 4: not used, the S-07 infeasible-driver branch (§8.1) is not taken | 0 (C002-TC-133, 211, 222, 223 stay replay cases) | 0 | 0 | 0 | 0 |
-| C002-M-07 | C002-T-048 step 4 | 0 | 0 | 0 | 5 on E-CC at 0.25: regression-set §5 row 1 (3 cases), C002-TC-537 (2 rows); 1.25 USD | 0 |
+| C002-M-07 | C002-T-048 step 4 (ran, 2026-10-20 and 2026-10-21) | 0 | 0 | 0 | 52 on E-CC, measured: regression-set §5 row 1 (3 cases) and C002-TC-537 (2 rows), 5 sessions, 1.34 USD (estimate 1.25 USD); the other §5 rows of C002-CON-10 in batches 1 … 6 (`docs/releases/regression-CHG-002.md` §5.1, §5.2), 47 sessions, 12.47 USD; 13.81 USD notional | 0 |
+| C002-M-07 | C002-T-048 step 4, steps X2 … X5 (defect D-025, Claude Code subscription class) | 0 | 0 | 0 | 16 on E-CC, notional estimate 12.35 USD: X2 the five reruns at the 1.50 USD rerun cap (`TS-214`, `TS-215`, `TS-318` ×3), 7.50 USD, each taken at its cap, since no CHG-001 session measured these rows with their real specialists (the CHG-001 results ran Haiku stand-ins) and their 0.50 USD sessions ended before the checked step; X3 `TS-213` and `TS-221` at 40 turns and 0.50 USD, 2 at the cap, 1.00 USD (the interview rows `TS-216` and `TS-218` of batch 5 reached it); X4 batch 7, 8 rows at 0.45 USD (the mean of the 14 row-5 sessions of batches 5 and 6, 6.11 USD), 3.60 USD; X5 the fixed `INJ-19` at the injection rate, 0.25 USD. **Conditional reruns**, not in the estimate: at most 11 (`TS-213`, `TS-221`, the 8 batch 7 rows and `INJ-19`), each at 1.50 USD when its run ended at the spend cap, else at 0.50 USD (`INJ-19`: only at the cap), at most 16.50 USD. Upper bound at the caps 29.50 USD (13.00 + 16.50), plus each session's overshoot, the turn that reached the cap (at most 0.055 USD at the 0.50 USD cap in batches 1 … 6; not yet measured at 1.50 USD). Counts toward no pool and not toward the 40 USD (§4.1 rule 7); bounded by P-01's watch of the Max plan's usage limits, in batches of at most 10 sessions with the conductor's go between them | 0 |
 | C002-M-07, reserve | C002-T-049 step 3 | 30 on E-OCE: C002-TC-612 routing (about 10 at 0.15) and injection (20 at 0.25) | 6.50 USD | 19.50 USD | 0 | 0 |
 | C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 | 0 |
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 41: C002-TC-615 and C002-TC-359, each session agent on its own tier through `--model` (Copilot pool; about 9.6 USD, §4.4) |
 | C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
 | C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
-| **Total** | | **96** | **31.10 USD** | 65.86 USD | **20** (5.30 USD notional), 21 with the conditional row of C002-T-063 step 5 | **about 85** |
+| **Total** | | **96** | **31.10 USD** | 65.86 USD | **83** (30.21 USD notional: measured for C002-T-048 step 4 batches 1 … 6, estimated for the other rows), 84 with the conditional row of C002-T-063 step 5; at most 11 more with the conditional reruns of C002-T-048 steps X3 … X5 (at most 16.50 USD notional) | **about 85** |
 
 ### 4.3 Budget, reserve and room for reruns
 
@@ -357,9 +391,11 @@ estimate; they are not part of the OpenRouter totals.
 - Without reruns, the general pool reaches its 30 USD stop when its sessions cost about 30 % more than
   the planning rates. The upper bounds (65.86 USD) show that the stop rule, not the estimate, keeps
   CHG-002 within 40 USD of OpenRouter spend.
-- The 20 Claude subscription sessions (5.30 USD notional, 13.00 USD upper) bill P-01's Claude Max
-  plan, not the key and not OpenRouter; the ledger keeps them with `provider` `claude-max` and `auth`
-  `subscription` (§4.1).
+- The 83 Claude subscription sessions of §4.2 (30.21 USD notional; at most 11 more conditional reruns
+  of C002-T-048) bill P-01's Claude Max plan, not the key and not OpenRouter; the ledger keeps them
+  with `provider` `claude-max`, `auth` `subscription` and `caps_usd` (§4.1). On 2026-10-21 the
+  ledger holds 69 of them, 18.33 USD notional. The sessions at the 1.50 USD rerun cap of defect
+  D-025 draw on no pool and take no reserve (§4.1 rule 7).
 
 ### 4.4 Copilot AI Credits
 
@@ -493,6 +529,14 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   2.00 USD), C002-TC-679, the `cap` and `step-after-cap` records of C002-TC-677, the stop rule's H
   (C002-TC-917), the `spend` `partial` of a step ended without a reported cost (C002-TC-918) and the 20-minute session timeout of both runners (C002-TC-919, C002-IF-010 §4) are
   changed in C002-T-056 step X0, before its one X3 run; no task is reopened.
+- **Revision D-025** (findings of C002-T-048 batches 5 and 6; P-01 answers to Q-claude-cap-01,
+  Q-claude-cap-02 and Q-inj19-01, `../10-spec/questions-log.md` round 2026-10-21). The Claude Code
+  subscription class of cap exceptions (§4.1), the four-key match with the auth mode, the turn cap
+  above 30, the option `--cap-exception` (C002-TC-679, 18 rows) and the three Claude Code rows of
+  C002-TC-614 (the Agent SDK stub, sdk-stub) are written in C002-T-048 step X0, before its paid
+  reruns X2 … X5, with the per-agent output split of `evals/harness/metrics.mjs` and the `INJ-19`
+  case fix. C002-T-048 is the task that runs these rows and the only one whose sessions use the
+  class; no done task is reopened (C002-T-060, whose auth switch the class relies on, stays done).
 - **Cap-only waiver of C002-TS-634** (P-01 answer to Q-ts634-waiver-01, "Cap-only waiver
   (Recommended)"; spec critic CR-70, CR-71). The waiver and its four conditions are those of
   C002-IF-010 §2.2 "Waiver of C002-TS-634 on OpenCode": in short, only a failed X3 run of
@@ -772,10 +816,10 @@ branch.
 | C002-TC-676 | C002-TS-676 | integration | `tests/integration/cap06/runner-caps.test.ts` | `npm test -- cap06/runner-caps` | the OpenCode runner with a stubbed host start that records the host process's environment; a runner PATH with a folder holding an `opencode` shim reporting `2.0.32` (standing for `C:/Users/p01/.opencode/bin`) and a pinned-binary folder with a shim reporting `1.18.31`, both cfg-* shims; per Examples row: a doctor row with no PATH in `env`, a `doctorCase` row whose machine configuration prepends the C002-TS-513 shim reporting `1.5.0`, and an `opencode missing` row; one test per row asserting the folder order of the host's PATH (the run's `bin` folder, the pinned folder, then the rest; or the shim folder, the pinned folder, then the configuration's folders; or no folder with an `opencode` executable) and the line that the bundled `sdd host-version opencode` prints with that PATH; no `opencode serve`, no paid session | E-W | C002-T-065 |
 | C002-TC-612 | C002-TS-612 | eval | routing cases and `evals/injection/injection.eval.mjs` | `run.mjs --host opencode --tier dev` | case fixtures | E-OCE | C002-T-044, C002-T-049 |
 | C002-TC-613 | C002-TS-613 | eval | `evals/targets/gate/TS-613.eval.mjs` and the C001-CAP-02 interview and gate cases | `run.mjs --host opencode` | fx-gate | E-OCE | C002-T-044, C002-T-056 |
-| C002-TC-614 | C002-TS-614 | integration | `tests/integration/cap06/runner-caps.test.ts`, `tests/integration/cap06/copilot-runner.test.ts` | `npm test -- cap06/runner-caps`, `npm test -- cap06/copilot-runner` | stub-host; a case row without `maxTurns` and `maxBudgetUsd`; three rows (revised for critic CR-64): the OpenCode stub giving 0.01 USD, then 0.10 USD in the step-finish event of each turn (turn cap after 30, spend cap after 5), and the Copilot CLI stub counting 1 AI Credit per turn in its usage file, below its `--max-ai-credits` limit of 50 for the session (turn cap after 30; the Copilot CLI spend cap is C002-TC-678); one test per row asserting the turn count, the `end_reason` and the result record's `caps` `{ turns: 30, usd: 0.50 }` (critic CR-65) | E-W | C002-T-044, C002-T-045, C002-T-065 |
+| C002-TC-614 | C002-TS-614 | integration | `tests/integration/cap06/runner-caps.test.ts`, `tests/integration/cap06/copilot-runner.test.ts`, `tests/integration/cap06/claude-runner.test.ts` (the three Claude Code rows, revision D-025) | `npm test -- cap06/runner-caps`, `npm test -- cap06/copilot-runner`, `npm test -- cap06/claude-runner` | stub-host and sdk-stub; a case row without `maxTurns` and `maxBudgetUsd`; six rows: (revised for critic CR-64) the OpenCode stub giving 0.01 USD, then 0.10 USD in the step-finish event of each turn (turn cap after 30, spend cap after 5), and the Copilot CLI stub counting 1 AI Credit per turn in its usage file, below its `--max-ai-credits` limit of 50 for the session (turn cap after 30; the Copilot CLI spend cap is C002-TC-678); (revision D-025) the Claude Code eval runner (`runSession` with `--host claude-code`, through `node evals/harness/run.mjs`, with `EVAL_HOST` and `EVAL_AUTH` unset) on the Agent SDK stub, run with `--auth subscription` at a notional 0.01 USD per turn (`error_max_turns` after 30 turns) and at 0.10 USD per turn (`error_max_budget_usd` after 5 turns), and with `--auth api-key` at 0.10 USD per turn (`error_max_budget_usd` after 5 turns); one test per row asserting the turn count, the `end_reason` (generated-target rows) or `metrics.result_subtype` (Claude Code rows), the result record's `caps` `{ turns: 30, usd: 0.50 }` (critic CR-65), and for the Claude Code rows that the stub received `maxTurns` 30 and `maxBudgetUsd` 0.50 | E-W | C002-T-044, C002-T-045, C002-T-065; the Claude Code rows C002-T-048 step X0 |
 | C002-TC-677 | C002-TS-677 | integration | `tests/integration/cap06/runner-caps.test.ts` | `npm test -- cap06/runner-caps` | stub-host (OpenCode) that never ends a session and gives the row's cost in the step-finish event of each step of the session agent; row 3 adds a subagent step of 0.05 USD that runs in parallel with the fifth step and finishes before the abort takes effect; a case row without `maxBudgetUsd`; one test per Examples row asserting the `end_reason` `spend cap` after the row's number of session-agent steps, that no step of the session agent or a subagent starts after the step that brought the spend to 0.50 USD or above (step start times from the stub's log), and the recorded spend with `spend` `reported` (0.60, 0.50 and 0.65 USD); from C002-T-056 step X0 on, the two Then lines added to C002-TS-677 (critic CR-72): each test also asserts the transcript's one `cap` record with the capping step's `step_usd` (the row's cost) and the session spend at that point (0.60, 0.50 and 0.60 USD), no `step-after-cap` record in rows 1 and 2, and in row 3 one `step-after-cap` record of the subagent's 0.05 USD step, with the subagent as its agent and `started_before_cap` true; the recorded spend minus the cap is not above the sum of those `step_usd` (C002-IF-010 §2.2 overshoot rule, defect D-022 item 2) | E-W | C002-T-065, C002-T-044, C002-T-056 |
 | C002-TC-678 | C002-TS-678 | integration | `tests/integration/cap06/copilot-runner.test.ts` | `npm test -- cap06/copilot-runner` | stub-host (Copilot CLI) that records its command line, writes a usage file with the row's AI Credits for the session and prints no limit text; case rows without `maxBudgetUsd` and with `maxBudgetUsd` 0.20; one test per Examples row asserting `--max-ai-credits <limit>` once (50 or 30), the `end_reason` (`spend cap` when the measured credits reach the limit, else `completed`), `usage.usd` and the credits of `copilot_usage`; extends the C002-T-045 tests "C002-TS-614 Copilot CLI runner, 0.10 USD (10 AI Credits) per turn: …" and "the caps default to 30 turns and 0.50 USD; a case's lower caps apply; the host's minimum of 30 AI Credits holds" | E-W | C002-T-065, C002-T-045 |
-| C002-TC-679 | C002-TS-679 | integration | `tests/integration/cap06/cap-exceptions.test.ts` | `npm test -- cap06/cap-exceptions` | fx-evals-caps; `node evals/harness/run.mjs --host <host> --only <row>` with the case folder of the fixture and the stub host in place of the host of `--host`, no ledger write; one test per Examples row (seven rows) asserting one session with the row's cap given to the stub and the result record's `caps.usd` equal to it (2.00, 0.80, 0.50 USD; 2.00 the exception's cap, P-01 answer to Q-ts634-budget-02), or exit code 1 before any session (the stub never started) with a message naming the row's ID and its case file (`TS-634` of `evals/targets/gate/TS-634.eval.mjs` at 2.20 on `opencode` and at 2.00 on `copilot-cli`; `TS-634` of `evals/targets/other/TS-634.eval.mjs` at 2.00 on `opencode`, the row of critic CR-68 that takes the exception's row ID in another case file; `TS-613` at 0.75); the test table follows the 2.00 USD exception from C002-T-056 step X0 on; a supporting test reads every case file under `evals/` and finds no row above 0.50 USD other than the `TS-634` OpenCode row of `evals/targets/gate/TS-634.eval.mjs` | E-W | C002-T-065, C002-T-056 |
+| C002-TC-679 | C002-TS-679 | integration | `tests/integration/cap06/cap-exceptions.test.ts` | `npm test -- cap06/cap-exceptions` | fx-evals-caps (with sdk-stub for `claude-code`); `node evals/harness/run.mjs <args>` with the row's `args` of the four options `--host`, `--auth`, `--cap-exception` and `--only` (as `npm run eval -- <args>` passes them), the case folder of the fixture, `EVAL_HOST` and `EVAL_AUTH` unset, and the stub in place of the host that `--host` selects (the Agent SDK stub on `claude-code`), no ledger write; one test per Examples row (**18 rows**: the 7 rows of revision D-021 … D-022 and the 11 rows of revision D-025). A session row asserts one session with the row's spend cap and turn cap given to the stub and the result record's `caps.usd` and `caps.turns` equal to them: `TS-634` at 2.00 and 0.80 USD on `opencode` (2.00 the exception's cap, P-01 answer to Q-ts634-budget-02), `TS-613` at 0.50 USD on `opencode`; `TS-214` at 1.50 USD and 30 turns with `--auth subscription --cap-exception` (the rerun cap), at its own 0.50 USD without `--cap-exception` under `--auth subscription` and under `--auth api-key`; `TS-213` at 0.50 USD and 40 turns under `--auth subscription` (P-01 answers to Q-claude-cap-01, Q-claude-cap-02). A refusal row asserts exit code 1 before any session (the stub never started) with a message naming the row's ID and its case file: `TS-634` of `evals/targets/gate/TS-634.eval.mjs` at 2.20 on `opencode`, at 2.00 on `copilot-cli` and with `--cap-exception` on `opencode` (no rerun cap); `TS-634` of `evals/targets/other/TS-634.eval.mjs` at 2.00 on `opencode` (critic CR-68: the exception's row ID in another case file); `TS-613` at 0.75 USD, and at 40 turns, on `opencode`, and with `--auth subscription --cap-exception` on `claude-code`; `TS-214` with `--cap-exception` under `--auth api-key`, under the default auth (no `--auth`, so `api-key`) and on `opencode`; `TS-213` at 40 turns under `--auth api-key`. The auth mode is resolved before the cap-exception check, so a refusal names it. Supporting tests: every case file under `evals/` holds no row above 0.50 USD other than the `TS-634` OpenCode row of `evals/targets/gate/TS-634.eval.mjs`, and no row above 30 turns other than `TS-213` and `TS-221` of `evals/cap02/`; `CAP_EXCEPTIONS` of `evals/harness/caps.mjs` holds exactly the rows of the C002-IF-010 §2.2 table (row ID, case file, host, auth, own caps, rerun cap) | E-W | C002-T-065, C002-T-056; the D-025 rows C002-T-048 step X0 |
 | C002-TC-917 | C002-TS-688 | integration | `tests/integration/cap06/runner-caps.test.ts` (the stop-rule tests of `run.mjs` › `stopRule`) | `npm test -- cap06/runner-caps` | fx-evals-caps with the rows `TS-634` of `evals/targets/gate/TS-634.eval.mjs` and `TS-613` of `evals/targets/gate/TS-613.eval.mjs`; a ledger in a temporary folder whose general pool has the limit 30 and whose OpenRouter entries total the row's total, among them the `TS-634` entry of 1.11 USD with `caps_usd` 1.00 (a cap-exception session, left out of the ordinary H, §4.1 rule 1, plan critic CR-41) and, as the highest of the ordinary entries (`caps_usd` 0.50), one of the row's ordinary cost (0.40 or 0.80 USD); `node evals/harness/run.mjs --host opencode --only <row>` with the stub host (OpenCode); one test per Examples row (five rows) asserting H (2.65, 2.65, 2.65, 2.80, 0.65 USD), that the stub starts one session (totals 17.14, 27.35, 17.14 and, for `TS-613`, 27.36), or, in row 3 (total 27.36), that the stub never starts, the message names the stop rule, the pool `general`, the total 27.36, H 2.65 and the limit 30, and the ledger file is byte-for-byte unchanged; a supporting test: a ledger holding an entry with `cost_source` `partial` says stop for its pool (§4.1 Ledger) | E-W | C002-T-056 |
 | C002-TC-918 | C002-TS-689 | integration | `tests/integration/cap06/runner-caps.test.ts` | `npm test -- cap06/runner-caps` | stub-host (OpenCode) that never ends a session and gives 0.12 USD in the step-finish event of each step of the session agent, and starts a subagent whose one step runs in parallel with the fifth step and ends with the abort without a step-finish event or any other reported cost; a case row without `maxBudgetUsd` (cap 0.50 USD); one test asserting the `end_reason` `spend cap` after 5 session-agent steps and the recorded spend 0.60 USD with `spend` `partial`; a supporting test asserting that the session's ledger entry gets `cost_source` `partial` (§4.1 Ledger) | E-W | C002-T-056 |
 | C002-TC-919 | C002-TS-690 | integration | `tests/integration/cap06/runner-caps.test.ts` (OpenCode row) and `tests/integration/cap06/copilot-runner.test.ts` (Copilot CLI row) | `npm test -- cap06/runner-caps`, `npm test -- cap06/copilot-runner` | stub-host (OpenCode) that accepts the prompt and then sends no event and ends no session; stub-host (Copilot CLI) whose host process starts and then writes nothing and does not exit; a case row without `maxTurns` and `maxBudgetUsd`; the 20-minute timeout driven by an injected clock (fake timers, or a runner option that sets the timeout in ms, default 1,200,000), so that no test waits 20 minutes, with an assertion that the default is 1,200,000 ms; one test per Examples row (two rows) asserting `end_reason` `error`, the `error` text (OpenCode: begins with `session timed out`, here `session timed out after 1200000 ms`; Copilot CLI: `session exceeded 20 minutes`), that the OpenCode stub received the SDK abort of the session and of each subagent session, or that the Copilot CLI stub's process has ended, that the timer starts when the prompt is sent (OpenCode) or when the host process starts (Copilot CLI), and that the transcript holds no `cap` record | E-W | C002-T-056 |

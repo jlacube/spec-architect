@@ -258,3 +258,8 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-claude-cap-02 — TS-213/TS-221 when the 0.50 USD notional cap ends them
 - **Options:** 1. Same rule as batch 7: one rerun at 1.50 USD only after a failure the 0.50 cap ended (Recommended) · 2. Turn cap only
 - **Answer:** P-01: "Same rule as batch 7 (Recommended)"
+
+### Q-t048-estimate-01 — Estimate of C002-T-048 after D-025
+- **Blocking:** no · **Material:** no
+- **Options:** 1. Raise to L and update the work breakdown · 2. Keep M (most of T-048 already ran; weights model order, not calendar)
+- **Answer:** conductor: option 2, keep M (no schedule effect; avoids a critical-path rewrite).
