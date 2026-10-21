@@ -23,6 +23,49 @@ function atG1(root) {
   sdd(root, "status", "--write");
 }
 
+// The ideation readiness review with no finding and the verdict `go`: the gate protocol needs the phase's
+// critic report before it presents G1 (C002-T-048 step 4: without it the conductor did not present G1).
+const IDEATION_CRITIC = `---
+artifact: critic-report
+change: CHG-005
+phase: 00-ideation
+reviewed_ids: all
+---
+# Critic report — CHG-005 00-ideation
+
+## Summary
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 0 |
+
+## Findings
+
+None.
+
+## Rubric
+
+| Rubric | Item | Result |
+|---|---|---|
+| ideation | I1 Problem stated and evidenced | pass |
+| ideation | I5 Open questions classified | pass |
+
+## Why no further findings
+
+A one-paragraph idea with a stated problem and no open question; nothing else to check at this size.
+
+## Verdict
+
+go — no blocker.
+`;
+
+/** atG1 with the ideation critic report (the Stop row). */
+function atG1Reviewed(root) {
+  atG1(root);
+  write(root, `${DIR}/00-ideation/critic-report.md`, IDEATION_CRITIC);
+  sdd(root, "status", "--write");
+}
+
 function stopped(root) {
   atG1(root);
   sdd(root, "change", "stop", "005", "--reason", "superseded by 006");
@@ -36,7 +79,7 @@ export default [
     id: "TS-817-stop",
     title: "Stop at G1",
     ...base,
-    fixture: atG1,
+    fixture: atG1Reviewed,
     prompt: "/architect:gate 005",
     answer: (q) => (isGate(q) ? "Stop — superseded by 006" : q.options[0].label),
     assert({ root }) {

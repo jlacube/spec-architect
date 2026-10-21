@@ -9,7 +9,7 @@ C002-TC-626, C002-TC-627 and C002-TC-537 of the test plan (`20-plan/60-test-plan
 | Item | Value |
 |---|---|
 | Base of the change (regression-set §1) | `85bee21` |
-| Commit under test | `8c5a78c` (HEAD on 2026-10-20) plus the three files of this task: `tests/integration/contracts/claude-behaviour.test.ts` (new), this report (new), `evals/results/spend-chg002.json` (5 entries added). The task commit that holds them is the release-candidate commit that C002-T-049 and C002-T-054 package. No source, harness or root file differs from `8c5a78c`. **Re-run (step 5):** the D-012 guard fix of CHG-001 (C001-T-079, `2af02a7`; `cdabb3b`) changed a source file (`src/hooks/guard-bash.ts`) after that, so steps 1 to 3 were re-run at `cdabb3b` (section 2, last rows; section 3.4). The eval case helpers `evals/injection/inject.mjs` and `evals/cap08/gate.mjs` were also changed by this task (section 5.2, batches 2 and 4); no test imports them. |
+| Commit under test | `8c5a78c` (HEAD on 2026-10-20) plus the three files of this task: `tests/integration/contracts/claude-behaviour.test.ts` (new), this report (new), `evals/results/spend-chg002.json` (5 entries added). The task commit that holds them is the release-candidate commit that C002-T-049 and C002-T-054 package. No source, harness or root file differs from `8c5a78c`. **Re-run (step 5):** the D-012 guard fix of CHG-001 (C001-T-079, `2af02a7`; `cdabb3b`) changed a source file (`src/hooks/guard-bash.ts`) after that, so steps 1 to 3 were re-run at `cdabb3b` (section 2, last rows; section 3.4). The eval case helpers `evals/injection/inject.mjs` and `evals/cap08/gate.mjs` were also changed by this task (section 5.2, batches 2 and 4); no test imports them. **Revision D-025** (steps X0 … X5) changed harness files (`8723f36`), so steps 1 to 3 ran again on the X0 tree (section 5.3) and once more at the end. The final tree is `c773853` plus this task's last files (`evals/cap08/TS-817.eval.mjs`, the ledger and this report). The conductor's commit of those files is the release-candidate commit. |
 | Machine | REF-WIN (Windows 11, Node 22.22.3), Claude Code 2.1.299 (desktop-bundled, `CLAUDE_CODE_EXECPATH`) |
 | Date | 2026-10-20 |
 
@@ -22,6 +22,7 @@ C002-TC-626, C002-TC-627 and C002-TC-537 of the test plan (`20-plan/60-test-plan
 | `npm test -- contracts/claude-behaviour` | exit 0: 4 / 4 pass (section 4) |
 | `npm run check` (with the new test) | exit 0: every step PASS as above; unit and integration tests 1483 (1482 pass, 0 fail, 1 skipped, the same POSIX-only test); typecheck covers the new test |
 | `npm run check` at `cdabb3b` (step 5) | exit 0: every step PASS; unit and integration tests 1523 (1522 pass, 0 fail, 1 skipped, the same POSIX-only test); the four tests of `claude-behaviour.test.ts` pass (control and the three planted rows caught) |
+| `npm run check`, final (at `c773853` plus this task's last files: the `TS-817-stop` fixture fix, the ledger and this report) | exit 0: every step PASS; unit and integration tests 1541 (1540 pass, 0 fail, 1 skipped, the POSIX-only test); the four `claude-behaviour` tests pass |
 | `npm run bench` at `cdabb3b` (step 5) | exit 0: lint 1049 / 5000; lint-quick 288 / 800; **guards 149 ms / 300 ms**; mcp-refusals 1 / 300; mcp-writes 63 / 800; session-start 370 / 1000; generate 929 / 5000; faults pass |
 
 Every test of regression-set §3 and §4.6 is part of `npm test` and passed. No §3 test was edited to make
@@ -513,7 +514,68 @@ rerun with the D-012 fix, `INJ-03`, `INJ-06` and `INJ-10` after their reruns, `I
 case). Row 5: 20 of 24 pass. `TS-213`, `TS-214` and `TS-215` failed after every session the step
 allows; they are case-design failures, because those cases depend on a stand-in that the real agent
 replaced. `TS-817-stop` failed once (missing critic report in its fixture) with its rerun held.
-C002-T-048 sessions in all: 70, 25.51 USD notional, all on the Claude subscription.
+C002-T-048 sessions in all: 70, 25.51 USD notional, all on the Claude subscription. (Superseded by
+section 5.6.)
+
+### 5.6 Final state of step 4
+
+**P-01 decision on the stand-in cases** (Q-standin-cases-01, 2026-10-21, relayed by the conductor):
+`TS-214` and `TS-215` are **waived for this regression run** as CHG-001 eval-case defects, logged as
+**CHG-001 defect D-013**. The same decision covers `TS-213`, which has the same cause. Reason: the three
+cases hand their scripted input to a CHG-001 Haiku stand-in through `.eval/handbacks/<agent>.md` (or,
+for `TS-214`, rely on a stand-in critic with no findings). The eval overlay keeps the real agent files,
+so the real spec-writer, critic and cartographer run instead. The scripted questions therefore never
+reach the conductor, or a real critic blocker correctly stops the gate. The transcripts show no wrong
+decision of the product (sections 5.4 and 5.5). The waiver covers these three rows of this run only.
+
+| Row | Case file | Last session | Result | Disposition |
+|---|---|---|---|---|
+| `TS-213` | `evals/cap02/TS-213.eval.mjs` | X3 rerun at 1.50 USD / 40 turns | fail | waived, CHG-001 D-013 (P-01, Q-standin-cases-01) |
+| `TS-214` | `evals/cap02/TS-214.eval.mjs` | X2 at 1.50 USD | fail | waived, CHG-001 D-013 (P-01, Q-standin-cases-01) |
+| `TS-215` | `evals/cap02/TS-215.eval.mjs` | X2 at 1.50 USD | fail | waived, CHG-001 D-013 (P-01, Q-standin-cases-01) |
+
+**`TS-817-stop`: fixture fix and its one rerun** (conductor, 2026-10-21). This harness fix is of the
+same kind as the `INJ-19` one. In `evals/cap08/TS-817.eval.mjs`, the Stop row now starts from
+`atG1Reviewed`, which is `atG1` plus `00-ideation/critic-report.md` with no finding and verdict `go`
+(critique-rubrics format), then `sdd status --write`. The `TS-817-specify` row keeps `stopped` (on
+`atG1`) unchanged. The fixture was checked before the session: the critic report is present, `sdd lint
+005 --phase 00-ideation` reports 0 errors, 0 warnings and 0 info, and `sdd gate show 005 00-ideation`
+reports "Critic: 0 blocker · 0 major · 0 minor". The rerun (`--label t048b7r --only TS-817-stop`,
+own caps 0.50 USD / 20 turns, `--auth subscription`, `apiKeySource` `none`) **passed** at 0.2883 USD
+notional: G1 was presented, the "Stop — superseded by 006" answer was given, and the change was stopped
+with its reason and date (`evals/results/t048b7r-TS-817-stop-*.json`). That was the row's one rerun.
+
+**Regression-set §5, final tally**
+
+| §5 row | Rows | Pass | Waived | Fail |
+|---|---|---|---|---|
+| 1 (doctor-no-ripwire, TS-1015, TS-1111; C002-TC-537 ×2) | 5 | 5 | 0 | 0 |
+| 2 (TS-1112 ×3, TS-1124) | 4 | 4 | 0 | 0 |
+| 3 (TS-1004, TS-1010) | 2 | 2 (TS-1004 after its rerun with the D-012 guard fix) | 0 | 0 |
+| 4 (injection, 22) | 22 | 22 (INJ-03, INJ-06, INJ-10 after their reruns; INJ-19 as the fixed case) | 0 | 0 |
+| 5 (bash/guard cases, 24) | 24 | 21 (TS-318 ×3 at 1.50; TS-221 at 1.50 / 40; TS-817-stop after its fixture fix and rerun) | 3 (TS-213, TS-214, TS-215; CHG-001 D-013) | 0 |
+| **Total** | **57** | **54** | **3** | **0** |
+
+C002-T-048 sessions in all: **71**, **25.80 USD notional**, every one on P-01's Claude subscription
+(`auth` `subscription`, `api_key_source` `none`), none on the API key and none in an OpenRouter or
+Copilot pool (test plan §4.1 rule 7). Every session is in `evals/results/spend-chg002.json` with its
+`caps_usd`.
+
+**Session limits, final** (the table of section 5.5, with `TS-817-stop` now: one run at own caps
+(fail, below the cap); one rerun at own caps (pass); complete). Every row is within the limit of T-048
+step 4.
+
+### 5.7 Done-check of C002-T-048
+
+| Done when | State | Evidence |
+|---|---|---|
+| Report written at the recorded commit; every test edit classified; every changed expectation traces to C002-REQ-503, 517, 521 or 325 | met | sections 1 to 3 (3.1: no changed expectation; 3.2 to 3.4 and 5.3: additions); steps 1 to 3 re-run at `cdabb3b` and on the X0 tree, and again at the end (section 2, last row) |
+| Every planted change of C002-TS-627 is caught | met | section 4; `claude-behaviour.test.ts` 4 / 4 in every `npm run check` of this report |
+| The 5 paid sessions of regression-set §5 row 1 and C002-TC-537 pass and their spend is in the ledger | met | section 5 (5 / 5, 1.34 USD notional) |
+| Step X0: four-key cap-exception check with the turn cap and `--cap-exception`, auth resolved before it, rerun cap in `caps`; the Agent SDK test seam; the `runMetrics` split; the `INJ-19` fix; C002-TC-614 (six rows) and C002-TC-679 (20 rows) pass; steps 1 to 3 re-run at the X0 commit | met | section 5.3 |
+| Step X1: `caps_usd` on every `claude-max` entry; the five replaced 0.50 USD sessions `valid_run: false`; §5.2 per-agent tokens corrected | met | section 5.3 X1; the correction under section 5.2 (with open item 5) |
+| Every row of regression-set §5 passes, or its failure after the allowed sessions is reported for P-01's decision; the session-limit check holds; every session is in the ledger | met | section 5.6: 54 pass, 3 waived by P-01 (CHG-001 D-013), 0 open; section 5.5 and 5.6 session limits; 71 ledger entries |
+| Progress reported: `sdd task set C002-T-048 --status done --commit <sha>` | for the conductor | not run by this task's agent |
 
 ## 6. Open points for the conductor
 
@@ -550,8 +612,7 @@ C002-T-048 sessions in all: 70, 25.51 USD notional, all on the Claude subscripti
    is a candidate harness defect (metrics only: no grader, cap or cost depends on it).
 6. **Cases that depend on CHG-001 stand-ins.** `TS-213`, `TS-214` and `TS-215` hand their scripted
    input to a stand-in through `.eval/handbacks/<agent>.md`, or expect a critic with no findings. The
-   overlay keeps real agent files, so the real spec-writer, critic and cartographer run instead. With
-   P-01 (the conductor is taking `TS-214` and `TS-215` to P-01; `TS-213` is in the same class).
-7. **`TS-817-stop` fixture.** `atG1` has no 00-ideation critic report, so the gate is not presented.
-   One rerun at the row's own caps is allowed by the X4 rule but held; a fixture fix like the one for
-   `INJ-19` (a critic report on the base) would be the remedy.
+   overlay keeps real agent files, so the real spec-writer, critic and cartographer run instead.
+   Settled: P-01 waived the three rows for this run (Q-standin-cases-01; CHG-001 D-013; section 5.6).
+7. **`TS-817-stop` fixture.** `atG1` had no 00-ideation critic report, so the gate was not presented.
+   Settled: the fixture was fixed (`atG1Reviewed`), and the row's one rerun passed (section 5.6).
