@@ -319,7 +319,8 @@ anchor (C002-IF-001 §1; revised for defect D-010 item 6). It states: Node.js 20
 later; the host at its tested version (`{{tested_version:…}}`); access to the Claude models of the
 three tiers; `npm install -g architect-sdd@{{package_version}}`; where the package files go
 (OpenCode: `.opencode/` and the `opencode.json` merge); how to start the conductor; the enforcement
-mode by its glossary name (C002-REQ-204, C002-REQ-304). Copilot, in this order (C002-REQ-304):
+mode by its glossary name (C002-REQ-204, C002-REQ-304); on Copilot, the models statement below
+(Models). Copilot, in this order (C002-REQ-304):
 
 1. Unpack the package into a folder outside the repository (its path written into `hooks.json` and
    into the repository's `.github/hooks/architect-guard.json`, so a path holding `"`, `$`, `%` or a
@@ -348,12 +349,33 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304). Copilot, in this order (
    session agent are not affected, and repositories without `.sdd/` are not affected
    (C002-REQ-304, C002-REQ-327, C002-REQ-329).
 
+**Models** (added for defect D-027; P-01 answer to Q-copilot-map-01, "Keep opus, note fallback
+(Recommended)"). The Copilot package keeps `claude-opus-5.5` as the model of the opus tier
+(C002-IF-001 §2, model name), also for an adopter whose Copilot plan does not offer it; mapping the
+opus tier to `claude-sonnet-5.5` was the option P-01 did not choose. With the prerequisite on the
+Claude models of the three tiers, the install notes state:
+
+- that on a Copilot plan that does not offer the model an agent file names (for example a plan
+  without Opus models), the host runs that agent on its default model, Sonnet at the tested versions,
+  so the agents of the opus tier then run a tier below their own (P-01 answer to Q-copilot-map-01;
+  the S-08 record shows the default on agents without a `model`, `docs/spikes/S-08-copilot-vscode.md`
+  §2.4, §3);
+- where P-03 sees which model ran: in VS Code, the model that the chat's model picker shows for the
+  session [ASSUMPTION: D-027 — VS Code shows in the chat's model picker the model that a session of an agent with a `model` field runs on, also when the host runs it on its default model; the fresh-install step of the manual VS Code checklist records the models shown (C002-IF-009 §4 Models used) and confirms it; if VS Code shows the model elsewhere, the install notes name that place]; on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes
+  (C002-IF-010 §4).
+
+The notes name the tier (Sonnet), not a model ID: no token of C002-IF-001 §4 prints a model (as for
+the Copilot CLI note below). The doctor reports no model (C002-IF-006 §1, No model row).
+
 After the six steps, one note for Copilot CLI (revised for defect D-019 item 1; P-01 answer to
 Q-cli-model-01): Copilot CLI is no supported host of the package (C002-NG-01), and a P-03 who runs
 the conductor there with `--agent architect:sdd-conductor` chooses its model: Copilot CLI 1.0.98 runs
 the session agent on the CLI's default model, not on the `model` of the agent file, so the conductor
 runs on its tier only with `--model <model>`, `<model>` being the `model` field of
 `agents/sdd-conductor.agent.md`; the specialists it starts run on their own files' models. The note
+also states (revised for defect D-027) that Copilot CLI refuses a `--model` that the plan does not
+offer before the session starts (C002-IF-010 §2 model rule), and that P-03 then names a model the
+plan offers, on which the conductor runs. The note
 names that field and that file, not the model's value (confirmed for defect D-021 item 5): no token
 of C002-IF-001 §4 prints an agent's model, so the install notes, which resolve those tokens only,
 cannot carry the value, and the agent file is where P-03 reads it; C002-TS-306 checks the field name

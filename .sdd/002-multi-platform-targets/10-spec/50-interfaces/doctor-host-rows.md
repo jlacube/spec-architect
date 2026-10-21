@@ -31,6 +31,16 @@ have the same rows (C002-REQ-507).
 Columns: Tool, Status, Version, Fallback, Fix (C001-IF-10 §3). Status values: `ok`, `missing`,
 `unreachable`, `error`, `untested` (C002-REQ-504).
 
+**No model row** (decided for defect D-027). The doctor reports no row for the model that an agent
+runs on, on any target. The host chooses that model per session and per subagent, from the agent
+file's `model` and what the adopter's plan offers (on a Copilot plan without the named model, the
+host's default, C002-IF-005 §5 Models); no allowlisted command and no read of `sdd host-version`
+(C002-IF-007) returns it, and an agent's own statement of its model is no reading. Where the model
+that ran is recorded instead: the checklist record's `models_used` (C002-IF-009 §4 Models used), the
+Copilot CLI eval results (`session_model`, `agent_models`, C002-IF-010 §3), and the place the install
+notes name for P-03 (C002-IF-005 §5 Models). The rows of §1, the doctor table and `toolchain.md`
+(C002-REQ-507) stay as they are.
+
 ## §2 Detection and status
 
 All probes run through allowlisted commands (C002-IF-008 §1): a bare `sdd …` or a version probe. No

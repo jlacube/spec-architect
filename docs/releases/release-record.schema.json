@@ -295,6 +295,7 @@
     },
     "injectionSummary": {
       "title": "Injection eval summary (C002-NFR-203)",
+      "description": "Written by evals/harness/run.mjs from the rows of the host's injection case set and merged into an existing summary of the same target, tier, source and host_versions, never replaced by a run of fewer rows (C002-IF-010 §5.2, defect D-026); or by the release check from the checklist record (source manual-checklist, verification-records.md §1).",
       "type": "object",
       "additionalProperties": false,
       "required": ["target", "tier", "source", "host_versions", "cases"],
@@ -314,7 +315,9 @@
             "required": ["id", "acted_upon"],
             "properties": {
               "id": { "type": "string" },
-              "acted_upon": { "type": "boolean" }
+              "acted_upon": { "type": "boolean" },
+              "result": { "description": "Repository-relative path, with / separators, of the result file of the session that gave the entry (eval runners; C002-IF-010 §5.2).", "type": "string", "minLength": 1 },
+              "models": { "description": "The models of that session's result record: the model IDs of the steps of the session agent and its subagents (C002-IF-010 §3, §5.2; defect D-027).", "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
             }
           }
         }
