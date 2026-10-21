@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-023, C002-T-036, C002-T-041, C002-T-043, C002-T-044, C002-T-048, C002-T-056, C002-T-064]
 implements: [C002-NFR-201, C002-NFR-202, C002-NFR-203, C002-NFR-801]
 satisfies_ac: [C002-AC-606.1, C002-AC-609.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-608, C002-TS-609, C002-TS-612, C002-TC-608, C002-TC-609, C
 components: [C002-COMP-008, C002-COMP-009]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8fe19c8, completed_at: 2026-10-21, notes: "Release check dry run: opencode 0.0.1 (sdd-mcp-server) released. OpenRouter key usage 24.67 of 40 (reserve 5.36 of 10). Candidates: injection summary overwritten by a single-row rerun; routing family = cap02 TS-206…212+222 (also TC-613 rows, paid twice); TS-208 fixture placeholder options." }
 ---
 
 # C002-T-049 — Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host
