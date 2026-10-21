@@ -267,3 +267,12 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-standin-cases-01 — Regression rows built for CHG-001 stand-in specialists (C002-T-048)
 - **Options:** 1. Log a CHG-001 eval-case defect, waive TS-214 and TS-215 for this regression, fix the cases in C001-T-063 (Recommended) · 2. Fix the cases now and rerun at 1.50 USD
 - **Answer:** P-01: "Log case defect, waive (Recommended)". The conductor applies the same decision to TS-213, which failed for the same cause (its case relies on a stand-in spec-writer reading a planted hand-back file).
+
+## Round 2026-10-21 (2) — revision D-027 (Copilot without Opus)
+
+### Q-copilot-opus-01 — Copilot CLI refuses claude-opus-5.5 for P-01's account (C002-T-054)
+- **Answer:** P-01: "accept Sonnet. I have a Pro licence, which sadly doesn't support Opus anymore, only Sonnet"
+
+### Q-copilot-map-01 — Opus tier in the Copilot package
+- **Options:** 1. Keep `claude-opus-5.5`; the install notes say that on plans without Opus the host uses its default model (Sonnet); the doctor/checklist records which model ran; evidence runs on Sonnet (Recommended) · 2. Map the opus tier to `claude-sonnet-5.5`
+- **Answer:** P-01: "Keep opus, note fallback (Recommended)"

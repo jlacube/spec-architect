@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:ae020f2780a02949ce4d17078baeaf5c8725118a4c678e0a35400cc405918620", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:32490df4e02b1a7d311dea5f19275a761cceb77daff8cc5ad2c590fccb7b4ac6", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:ae020f2780a02949ce4d17078baeaf5c8725118a4c678e0a35400cc405918620", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:32490df4e02b1a7d311dea5f19275a761cceb77daff8cc5ad2c590fccb7b4ac6", approved_at: 2026-10-21, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -39,6 +39,7 @@ defects:
   - { id: D-024, ref: C002-IF-001, summary: "Follow-up of CHG-001 D-012 (C001-IF-07 §3.1 ripwire forms): C002-IF-001 §6.3 OpenCode native bash rules need the bounded default-map form (globs like 'ripwire *--max-tokens=*', '*--token-budget=*') with a gap row (such a glob also matches a map command with a span-edit or unknown option — false allow under native-permissions); generator bashRules(), opencode.json permissions, permissions test and golden files follow; C002-IF-008 deny-summary wording 'ripwire read verbs or the bounded default map'. No effect in the current sdd-mcp-server mode.", reporter: jerome.lacube, date: 2026-10-20, status: open, resolution: null, closed_at: null }
   - { id: D-025, ref: C002-NFR-105, summary: "Found in C002-T-048: Claude Code regression rows (TS-214, TS-215, TS-318 x3) end at the 0.50 USD notional cap before their checked step — sessions now write ~4x the output of CHG-001; TS-213/TS-221 case files set maxTurns 40. P-01 Q-claude-cap-01: for Claude Code sessions on the subscription (notional cost, no money) a cap exception of 1.50 USD for the regression rows (one rerun each) and the case's own turn cap (40) for TS-213/TS-221; batch 7 and INJ-19 under the same rule. IF-010 §2.2 exception table and NFR-105 must carry it; test plan §4.", reporter: jerome.lacube, date: 2026-10-21, status: closed, resolution: "Revision D-025 (2026-10-21): spec/plan 33eba95…7cd5c68; P-01 Q-claude-cap-01/02, Q-inj19-01; code in C002-T-048 X0", closed_at: 2026-10-21 }
   - { id: D-026, ref: C002-IF-009, summary: "Found in C002-T-049: (1) run.mjs builds the injection summary only from the INJ-* rows of one run, so a single-row rerun overwrites injection.json with one case — merge or require all rows; (2) the 'routing cases' of T-049 are the cap02 TS-206…212+TS-222 rows, which are also TC-613's interview cases (paid twice) — name the routing family explicitly or reuse; (3) TS-208 fixture gives Q-reminders-01 placeholder options. Batch with D-023/D-024.", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
+  - { id: D-027, ref: C002-TS-615, summary: "Found in C002-T-054: Copilot CLI 1.0.98 refuses claude-opus-5.5 on P-01's Copilot Pro plan (Opus not offered; falls back to claude-sonnet-5.5), so the --model rule of IF-010 (C002-T-065) blocks every session. P-01: evidence runs with the conductor on Sonnet (Q-copilot-opus-01); the Copilot package keeps claude-opus-5.5 for the opus tier and the install notes state the fallback on plans without Opus (Q-copilot-map-01). Revise IF-010 (--model rule: an eval-run model override / host-available fallback), IF-005 §5 install note, TS-615 conductor-model check, test plan §4.4 estimate and T-054; also name the TC-615 case set (≈24 sessions: routing, INJ-01…22, TS-359; no Copilot rows for the server-guard or non-interactive families) — extends D-026 item 2.", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
@@ -184,3 +185,4 @@ waivers:
 | 2026-10-21 | G2 (spec) | **Revise** | "Revision for D-025 (Claude Code subscription notional cap exception for the T-048 regression rows, P-01 Q-claude-cap-01)" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
 | 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-21 | G2 (spec) | **Revise** | "Revision for D-027 (Copilot without Opus: Sonnet evidence, opus mapping kept with fallback note) and D-026 (TC-615 case set, injection summary, routing family)" | none | unavailable |
