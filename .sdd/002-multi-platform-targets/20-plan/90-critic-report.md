@@ -981,3 +981,16 @@ Scope: 7a84bfa (20-plan). Lint 0. Appended by the conductor from the critic's re
 All findings of this section fixed: planner (CR-41, CR-42; with P-01's Q-ts634-waiver-01 answer in test plan §6 and C002-T-056 X3, and C002-TC-917, C002-TC-918 for C002-TS-688, C002-TS-689) in the commit after 79fc837.
 
 All findings of this section fixed: planner (CR-41, CR-42) in the commit after 84601f0.
+
+
+## Revision D-025 (2026-10-21)
+
+Scope: 888ea1b (20-plan). Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-43 | minor | T-048 X3–X5, test plan §4.2 | the conditional reruns' last batch may hold 11 sessions, above the 10-session batch limit | "last batches of at most 10 sessions each, with the conductor's go between them" | open |

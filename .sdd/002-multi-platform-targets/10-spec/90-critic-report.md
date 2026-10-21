@@ -1339,3 +1339,20 @@ Scope: reopen bcb70e3 and revision 7a84bfa, against D-021, D-022 and Q-ts634-bud
 | CR-75 | minor | TS-673 | "line 26 of the body" ambiguous (body is lines 10–26) | "line 26 of agents/sdd-critic.md (last line, in its body)" | fixed |
 
 All findings of this section fixed: architect (CR-70…74; CR-70/71 per P-01 Q-ts634-waiver-01) and test-designer (CR-70…72, CR-75, TS-688…690) in the commit after 84601f0.
+
+
+## Revision D-025 (2026-10-21)
+
+Scope: reopen 7966c89, architect 33eba95, questions fce1000 and 888ea1b (10-spec), against D-025, Q-claude-cap-01/02, Q-inj19-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 5 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-76 | minor | NFR-105, REQ-611, glossary, COMP-009 | "eval runner" in the glossary still means a runner of a generated target; no "Claude Code eval runner" row; COMP-009 names no Claude Code path | widen the glossary row, add "Claude Code eval runner", add REQ-611/NFR-105 to its component | open |
+| CR-77 | minor | DOD-012, NFR-105 Method, TS-614, TS-690 | DOD-012 reads as if the 20-minute timeout applied to Claude Code; api-key row missing; no DoD evidence for the subscription class; Method names no Agent SDK stub | own sentence for Claude Code (both auth modes); dev-tier evidence clause for the subscription class; Agent SDK stub in Method | open |
+| CR-78 | minor | TS-679, TC-679 | no row for TS-213 with --cap-exception (1.50 + 40 turns) and no row for another case file of a subscription-class row ID | add the two rows; TC-679 and T-048 to 20 rows | open |
+| CR-79 | minor | IF-010 §2.2 Runs, test plan §4.1 | "adds no session to the row" ambiguous | "is no run (valid_run false) and opens no further session" | open |
+| CR-80 | minor | architecture §6.1 | "1.50 USD and 40 turns for the regression rows" — 40 turns is for TS-213/TS-221 only | reword | open |
