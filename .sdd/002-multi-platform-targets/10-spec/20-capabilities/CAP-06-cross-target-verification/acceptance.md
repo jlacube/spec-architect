@@ -608,7 +608,7 @@ Q-capped-runs-01, Q-claude-cap-01 and Q-claude-cap-02).
 
 ## C002-REQ-612
 
-#### C002-AC-612.1 — Copilot CLI runner covers the non-interactive cases
+#### C002-AC-612.1 — Copilot CLI runner runs the routing and injection cases of its case set
 ```gherkin
 @eval
 Scenario: C002-TS-615 — Copilot CLI dev tier
@@ -625,11 +625,10 @@ Scenario: C002-TS-615 — Copilot CLI dev tier
   And every result gives "agent_models" with a key for its session agent and one for every agent with an assistant message in the session's JSON events
 ```
 
-The case set is that of C002-IF-010 §5.1 (defect D-026): C002-REQ-612 also names the sdd MCP server
-guard cases and the non-interactive scenarios, but C002-TC-615 runs no row of either family. The
-guard cases are verified by the corpus replay `sdd-mcp-server` of the Copilot package (C002-TS-608,
-C002-DOD-008), and no non-interactive scenario has a Copilot CLI row (C002-IF-010 §5.1 "Families of
-C002-REQ-612 with no Copilot CLI row"). P-01's Copilot Pro plan offers no Opus model, so the release
+The case set is the one that C002-IF-010 §5.1 names for Copilot CLI and C002-REQ-612 runs (defect
+D-026): the routing row and the injection rows, `TS-359` among them. The sdd MCP server guard cases
+have no Copilot CLI row: the server decides them in the same way under every host, so the corpus
+replay `sdd-mcp-server` of the Copilot package verifies them (C002-TS-608, C002-DOD-008). P-01's Copilot Pro plan offers no Opus model, so the release
 run substitutes `claude-sonnet-5.5` for `claude-opus-5.5` (P-01 answer to Q-copilot-opus-01;
 C002-IF-010 §1, §2 model rule; defect D-027); the agents whose own model the plan offers keep it.
 
@@ -912,12 +911,10 @@ host's injection case set, is never merged: the release check reads a summary of
 host version (C002-IF-009 §5; ERR-REL-006). `TS-359` is an injection case on Copilot CLI only
 (C002-IF-010 §5.1). Under the Copilot hooks fallback the summary comes from the checklist record
 (`source` `manual-checklist`, C002-REQ-628), and the Copilot CLI runner's injection results stay in
-their result files (C002-IF-010 §4 Release evidence by mode). [ASSUMPTION: D-026-stub-summary —
-C002-IF-010 §5.2 "When" writes no summary after a run on the stub host of the runner tests, and
-`evals/harness/run.mjs` writes it under the real repository root; these three scenarios need a test
-option of the harness, in the way the stop-rule tests of C002-TC-917 run the ledger with the stub
-host, that lets a stub run write and merge the summary under the fixture's root. The architect is to
-name that option in C002-IF-010 §5.2.]
+their result files (C002-IF-010 §4 Release evidence by mode). C002-TS-691 to C002-TS-693 run `main`
+of `evals/harness/run.mjs` with the stub host and the test dependency `releasesRoot` set to the root
+of "fx-evals-injection" (C002-IF-010 §5.2, Test seam: the releases root), as the stop-rule tests of
+C002-TC-917 use `deps.ledger`.
 
 ## C002-REQ-618
 

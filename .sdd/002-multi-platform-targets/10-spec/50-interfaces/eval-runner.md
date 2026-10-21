@@ -566,16 +566,16 @@ files (the positional arguments of `run.mjs`), and with `--only` where a file ho
 | Copilot CLI, C002-TC-615 (C002-T-054) | injection | `INJ-01` … `INJ-22` (`evals/injection/injection.eval.mjs`) and `TS-359` (`evals/targets/copilot-guard/TS-359.eval.mjs`, C002-TC-359: the planted delegation to `general-purpose`, which C002-TS-359 records in the Copilot injection results) | 23 |
 | Copilot CLI, C002-TC-615 (C002-T-054) | Copilot hooks fallback only | `TS-336` (`evals/targets/copilot-guard/TS-336.eval.mjs`, `@mode-hooks`): under sdd MCP server enforcement, the mode of the signed-off S-08 record, `run.mjs` reports it not applicable with the record cited and runs no session | 0 (1 under the fallback) |
 
-**Families of C002-REQ-612 with no Copilot CLI row.** C002-REQ-612 also names the sdd MCP server
-guard cases and the non-interactive scenarios; C002-TC-615 runs no row of either family. The sdd
-MCP server decides its guard cases in the same way under every host, so they are verified by the
-corpus replay `sdd-mcp-server` of the Copilot package (C002-IF-009 §2; C002-T-054 step 2), not by
-eval sessions. No case row of `evals/` is written as a non-interactive scenario for Copilot CLI: the
-rows with `host` `copilot-cli` are those of the table and the doctor rows of
-`evals/targets/doctor/TS-513.eval.mjs` and `evals/targets/doctor/TS-526.eval.mjs`, which verify the
-runner in C002-T-045 and are no release evidence; rows without a `host` field are not in the set. The
-CHG-001 interview cases of the OpenCode routing family need the host question tool, which
-`--no-ask-user` removes (§4), so they have no Copilot CLI row either.
+**Families no longer named by C002-REQ-612** (defect D-026). The earlier wording of C002-REQ-612
+also named the sdd MCP server guard cases and the non-interactive scenarios, families for which no
+Copilot CLI row exists; the requirement now names the routing and injection cases of this section
+only, `TS-359` included. The sdd MCP server decides its guard cases in the same way under every
+host, so they are verified by the corpus replay `sdd-mcp-server` of the Copilot package (C002-IF-009
+§2; C002-T-054 step 2), not by eval sessions. The other rows with `host` `copilot-cli`, the doctor
+rows of `evals/targets/doctor/TS-513.eval.mjs` and `evals/targets/doctor/TS-526.eval.mjs`, verify
+the runner in C002-T-045 and are no release evidence; rows without a `host` field are not in the
+set. The CHG-001 interview cases of the OpenCode routing family need the host question tool, which
+`--no-ask-user` removes (§4), so they have no Copilot CLI row.
 
 **Overlap on OpenCode** (defect D-026 item 2). The eight routing rows are also interview cases of
 C002-TC-613 (C002-T-056). The runner does not tell the two uses apart: a row runs in each run that
@@ -604,7 +604,7 @@ these and `TS-359` on Copilot CLI. A run on `--host claude-code` writes no summa
 decides the generated targets only (C002-REQ-617).
 
 **When.** After a run on `--host opencode` or `--host copilot-cli` whose sessions spend from a pool
-of the test plan (never on the stub host of the runner tests) and in which at least one row of the
+of the test plan (on the stub host of the runner tests only with the test seam below) and in which at least one row of the
 host's injection case set started a session, `run.mjs` writes
 `docs/releases/<target>/<version>/injection.json` (`<target>` `opencode` or `copilot`, `<version>`
 the `version` of `plugins/architect/.claude-plugin/plugin.json`) with `target`, `tier` `dev`,
@@ -614,6 +614,24 @@ sessions read at session start (`{ "opencode": "<version>" }` on OpenCode, `{ "c
 `copilot-cli`, C002-IF-009 §3, ERR-REL-006). On Copilot CLI it writes the summary only while the
 Copilot table's enforcement mode is `sdd-mcp-server` (C002-IF-001 §1); under `copilot-hooks` it
 writes none (§4 Release evidence by mode).
+
+**Test seam: the releases root** (added after the test design of D-026; C002-TS-691 … C002-TS-693).
+The runner tests call `main(argv, deps)` of `evals/harness/run.mjs` with a stub host in `deps.runners`,
+as the stop-rule tests of C002-TC-917 do with `deps.ledger` and `deps.stopRule`. The dependency
+`deps.releasesRoot`, an absolute folder, makes such a run write and merge the summary by this
+section as a paid run does, with that folder in place of the repository root for the summary only:
+`run.mjs` reads the version from `<releasesRoot>/plugins/architect/.claude-plugin/plugin.json` and
+the Copilot enforcement mode from `<releasesRoot>/plugins/architect/targets/copilot.json`, writes
+`<releasesRoot>/docs/releases/<target>/<version>/injection.json`, gives the paths in its lines and
+the entries' `result` relative to that folder, and, unless `--results-dir` is given, writes the
+result files to `<releasesRoot>/evals/results/`. The summary does not depend on the ledger: with or
+without `deps.stopRule`, the rules of this section apply as for a paid run (base, refusals, entries,
+log lines, exit code). `releasesRoot` is no command-line option and no variable, so neither a
+command line nor an environment can point a run's summary at another folder; and `main` refuses it
+for a run on a real host: when `deps.releasesRoot` is given and `deps.runners` replaces no runner of
+the run's `--host`, the run ends before any session, with exit code 1 and the line `eval: a releases
+root applies to a stub-host run only; no session started` on standard error. Without
+`deps.releasesRoot` a stub-host run writes no summary, as before.
 
 **Merge, fail-closed** (decided for defect D-026 item 1). A run of fewer rows than the injection
 case set never replaces the summary: `run.mjs` merges the run's results into it.
