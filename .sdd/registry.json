@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-21T16:03:50Z",
+  "generated_at": "2026-10-21T16:03:52Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -469,9 +469,9 @@
           "summary": "Found in C002-T-049: (1) run.mjs builds the injection summary only from the INJ-* rows of one run, so a single-row rerun overwrites injection.json with one case — merge or require all rows; (2) the 'routing cases' of T-049 are the cap02 TS-206…212+TS-222 rows, which are also TC-613's interview cases (paid twice) — name the routing family explicitly or reuse; (3) TS-208 fixture gives Q-reminders-01 placeholder options. Batch with D-023/D-024.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-026/D-027 (2026-10-21): injection summary merge (fail-closed, acted-upon final per version, no-run refusals give no entry), case sets per host, routing family named; item 3 (TS-208 fixture placeholder options) carried to the D-023/D-024 batch; code in C002-T-066",
+          "closed_at": "2026-10-21"
         },
         {
           "id": "D-027",
@@ -479,9 +479,9 @@
           "summary": "Found in C002-T-054: Copilot CLI 1.0.98 refuses claude-opus-5.5 on P-01's Copilot Pro plan (Opus not offered; falls back to claude-sonnet-5.5), so the --model rule of IF-010 (C002-T-065) blocks every session. P-01: evidence runs with the conductor on Sonnet (Q-copilot-opus-01); the Copilot package keeps claude-opus-5.5 for the opus tier and the install notes state the fallback on plans without Opus (Q-copilot-map-01). Revise IF-010 (--model rule: an eval-run model override / host-available fallback), IF-005 §5 install note, TS-615 conductor-model check, test plan §4.4 estimate and T-054; also name the TC-615 case set (≈24 sessions: routing, INJ-01…22, TS-359; no Copilot rows for the server-guard or non-interactive families) — extends D-026 item 2.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-026/D-027 (2026-10-21): Copilot CLI model substitution, Sonnet evidence on P-01's Copilot Pro plan (Q-copilot-opus-01), package keeps opus with the fallback note (Q-copilot-map-01), models_used; code in C002-T-066",
+          "closed_at": "2026-10-21"
         }
       ],
       "waivers": [
