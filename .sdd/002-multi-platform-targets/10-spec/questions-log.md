@@ -280,3 +280,9 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-inj-result-01 — Result paths in the committed OpenCode injection summary (C002-DOD-009, C002-T-049)
 - **Options:** 1. Backfill from the result files, no spend: a scripted step in C002-T-066 copies `result` and `models` from each row's counted t049 result file, checks `acted_upon` and the entry count unchanged, validates (Recommended) · 2. Accept as committed · 3. Rerun the 22 rows
 - **Answer:** P-01: "Backfill, no spend (Recommended)"
+
+### Q-acted-final-01 — Do no-run refusals lock an injection row (IF-010 §5.2 rule 3)?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 5
+- **Options:** 1. Exclude no-run refusals: a session the host refused before any model call (`valid_run` false, 0 credits) gives no summary entry and does not lock; every real non-passing session still locks (Recommended) · 2. Keep strict (refusals lock too)
+- **Rejected:** revert to replace-on-rerun (clears release blockers again, CR-53); hand move-aside with sign-off (forbidden, unauditable)
+- **Answer:** P-01: "Exclude no-run refusals (Recommended)"

@@ -44,6 +44,12 @@ communication steps belong to `75-rollout.md`.
   (package, tarball check, OpenCode replay). No paid OpenCode row reruns: C002-T-066 changes no file
   the OpenCode package is generated from and no OpenCode session (C002-T-049 step 3, revision
   note). When C002-T-054 has already re-run C002-T-048 step 5 at that commit, its record is used.
+- Both generated targets share the one package version of `plugins/architect/.claude-plugin/plugin.json`
+  (C002-IF-009 §5 `--version`). If a Copilot injection entry is locked acted upon (C002-IF-010 §5.2
+  rule 3; C002-T-054 step 4) and P-01 moves to a new version before this task releases OpenCode,
+  OpenCode is released at the new version only, with its evidence taken again at it (C002-T-049
+  step 3, about 30 sessions, OpenRouter reserve; then this task); releasing OpenCode at the old
+  version first keeps its present evidence.
 
 ## Step outline (no production code)
 

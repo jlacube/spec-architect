@@ -88,7 +88,12 @@ generated from, and under `evals/harness/` only the summary writing, the model o
 `run.mjs` and the Copilot CLI runner, none of which changes what an OpenCode session does. The paid
 re-run rule of step 4 therefore does not apply to it, and no OpenCode row reruns; the unpaid re-runs
 of step 4 (C002-T-048 step 5, steps 1 and 2 of this task, the release check) follow the new
-release-candidate commit as usual.
+release-candidate commit as usual; C002-T-052 runs them (plan critic CR-52). The revision of
+C002-IF-010 §5.2 rule 3 for plan critic CR-53 (an entry acted upon is final for the package
+version) adds a done-check to the task that owns the run: from the ledger and the result files,
+every OpenCode session of an `INJ-*` row at the package version whose result does not pass has an
+entry that reads acted upon. This task is done and not reopened; C002-T-052 carries that check
+before the OpenCode release (all 22 `INJ-*` sessions of step 3 passed, none was rerun).
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
    A fix moves the release-candidate commit. Then re-run, at the new commit:
    - always, unpaid: C002-T-048 step 5 and steps 1 and 2 of this task (package and replay); the
