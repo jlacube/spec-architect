@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:e1d403b1ebf84003ad658de1e4ad2e5a7032fcfec83bf147e185b76a581c2b45", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:32490df4e02b1a7d311dea5f19275a761cceb77daff8cc5ad2c590fccb7b4ac6", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:c1dce0147354d7de5232c884eb98795bbe4ce594602f3716ddeba12e0dc9dc5c", approved_at: 2026-10-21, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -198,3 +198,4 @@ waivers:
 | 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Revise** | "Revision for D-027 (Copilot without Opus: Sonnet evidence, opus mapping kept with fallback note) and D-026 (TC-615 case set, injection summary, routing family)" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
