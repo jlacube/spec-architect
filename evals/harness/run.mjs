@@ -2,6 +2,7 @@
 //   node evals/harness/run.mjs [<scenario.eval.mjs>…] [--filter <path>]… [--host claude-code|opencode|copilot-cli]
 //                              [--tier dev|milestone|release] [--runs N] [--max-total-usd X] [--label NAME]
 //                              [--only ID,ID…] [--auth api-key|subscription]   (default: EVAL_AUTH, else api-key)
+//                              [--cap-exception]   (the rerun caps of the matching cap exceptions, C002-IF-010 §2.2)
 //                              [--task <task id> --step <n>] [--pool general|reserve] [--results-dir <dir>]
 // Each run copies the scenario's fixture into a temporary directory, runs the session on the selected
 // host (`--host`, default claude-code: the Agent SDK; opencode: runners/opencode.mjs), applies the
@@ -24,7 +25,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { capException, capRefusal, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
+import { capCheck, capException, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
 import { checkHostEnv, resolveAuth } from "./env.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
@@ -45,7 +46,7 @@ export const LEDGER = join(RESULTS, "spend-chg002.json");
  * host); `hooks.before({ scenario, run })` may refuse a session by throwing; `hooks.after({ scenario,
  * record, resultFile })` sees each finished run.
  */
-export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log, auth, host = DEFAULT_HOST, resultsDir = RESULTS, hooks = {} } = {}) {
+export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log, auth, host = DEFAULT_HOST, resultsDir = RESULTS, hooks = {}, caps: checkedCaps } = {}) {
   const n = runs ?? TIERS[tier].runs;
   const mode = host === "claude-code" ? resolveAuth(auth) : null;
   let apiKeySource = null;
@@ -66,9 +67,10 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       break;
     }
     const ws = makeWorkspace(scenario.fixture ?? null);
-    // The row's caps, unchanged: a cap above 0.50 USD got here only through the cap-exception check of
-    // main (C002-IF-010 §2.2); each result record carries them as `caps` (§3, critic CR-65).
-    const caps = { turns: scenario.maxTurns ?? DEFAULT_MAX_TURNS, usd: scenario.maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD };
+    // The caps of main's cap-exception check (C002-IF-010 §2.2): the row's own caps, or the rerun cap
+    // under --cap-exception; a direct caller without `caps` gets the row's own caps. Each result record
+    // carries them as `caps` (§3, critic CR-65).
+    const caps = checkedCaps ?? { turns: scenario.maxTurns ?? DEFAULT_MAX_TURNS, usd: scenario.maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD };
     try {
       const prompt = typeof scenario.prompt === "function" ? scenario.prompt(ws.root) : scenario.prompt;
       const session = await runSession({
@@ -157,6 +159,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
 // --- Options and selection (C002-T-044 step 2) -------------------------------------------------------
 
 const VALUE_OPTIONS = ["tier", "runs", "max-total-usd", "label", "only", "auth", "host", "filter", "results-dir", "task", "step", "pool"];
+/** Options without a value (C002-IF-010 §1: `--cap-exception`, revision D-025). */
+const FLAG_OPTIONS = ["cap-exception"];
 
 /** Parsed options: positional case files, `--filter` values (repeatable) and every other option. */
 export function parseArgs(argv) {
@@ -167,6 +171,10 @@ export function parseArgs(argv) {
     const a = argv[i];
     if (a.startsWith("--")) {
       const name = a.slice(2);
+      if (FLAG_OPTIONS.includes(name)) {
+        opts[name] = true;
+        continue;
+      }
       if (!VALUE_OPTIONS.includes(name)) throw new Error(`unknown option ${a}`);
       const v = argv[i + 1];
       if (v === undefined || v.startsWith("--")) throw new Error(`option ${a} needs a value`);
@@ -413,13 +421,26 @@ export async function main(argv, deps = {}) {
   if (picked.scenarios.length === 0 && picked.notApplicable.length > 0) return 0;
   if (picked.scenarios.length === 0)
     return fail(`eval: the selection holds no case for host ${host} (${selected.length} file(s); ${picked.skipped.host} row(s) of another host, ${picked.skipped.only} row(s) left out by --only); no session started`);
-  // Cap exceptions (C002-IF-010 §2.2, critic CR-68): before any session, every selected row above 0.50 USD
-  // needs an exception matching its row ID, its case file (relative to the repository root) and the host.
+  // The run's auth mode (C002-IF-010 §1), resolved before the cap-exception check, which matches it:
+  // --auth, else EVAL_AUTH, else api-key on claude-code; none on another host.
+  let auth;
+  try {
+    auth = host === "claude-code" ? resolveAuth(opts.auth) : null;
+  } catch (e) {
+    return fail(`eval: ${e instanceof Error ? e.message : String(e)}; no session started`);
+  }
+  // Cap exceptions (C002-IF-010 §2.2, critic CR-68, defect D-025): before any session, every selected row
+  // above 0.50 USD or 30 turns needs an exception matching its row ID, its case file (relative to the
+  // repository root), the host and the auth mode; under --cap-exception every row needs one with a
+  // rerun cap. The check gives the caps each session runs with.
   const root = deps.root ?? ROOT;
-  const refusals = picked.scenarios
-    .map(({ file, scenario }) => capRefusal({ id: scenario.id, file: posix(relative(root, file)), host, maxBudgetUsd: scenario.maxBudgetUsd }))
-    .filter((r) => r !== null);
+  const capExceptionRun = opts["cap-exception"] === true;
+  const checked = picked.scenarios.map(({ file, scenario }) =>
+    capCheck({ id: scenario.id, file: posix(relative(root, file)), host, auth, maxBudgetUsd: scenario.maxBudgetUsd, maxTurns: scenario.maxTurns, capExceptionRun }),
+  );
+  const refusals = checked.filter((c) => c.refusal).map((c) => c.refusal);
   if (refusals.length > 0) return fail(`eval: ${refusals.join("; ")}; no session started`);
+  const capsOf = new Map(picked.scenarios.map(({ scenario }, i) => [scenario, checked[i].caps]));
 
   const runners = deps.runners ?? {};
   if (!runners[host]) {
@@ -430,8 +451,7 @@ export async function main(argv, deps = {}) {
     }
   }
   setHarnessContext({ host, runners });
-  const auth = host === "claude-code" ? resolveAuth(opts.auth) : null;
-  if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}`);
+  if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}${capExceptionRun ? "; --cap-exception: rerun caps of C002-IF-010 §2.2" : ""}`);
   else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : " (GitHub Copilot plan, AI Credits; Copilot stop rule checked before each session)"}`);
 
   // `deps.stopRule`: the ledger's stop rule and entries also for a replaced runner (the stop-rule tests
@@ -444,7 +464,7 @@ export async function main(argv, deps = {}) {
   // The cap of the exception that matches a selected row (C002-IF-010 §2.2 "Reserve of a cap-exception
   // session"): H = that cap + the ordinary H; null for an ordinary row.
   const fileOf = new Map(picked.scenarios.map(({ file, scenario }) => [scenario, posix(relative(root, file))]));
-  const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host })?.usd ?? null;
+  const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host, auth })?.usd ?? null;
   const hText = (cap, r) => (cap === null ? `H ${r.H}` : `H ${r.H} (cap exception ${cap.toFixed(2)} USD + ordinary H ${Math.round((r.H - cap) * 1e6) / 1e6})`);
   const hooks = paidCopilot
     ? {
@@ -486,7 +506,7 @@ export async function main(argv, deps = {}) {
   let ok = true;
   const docs = [];
   for (const { scenario } of picked.scenarios) {
-    const doc = await runScenario(scenario, { tier, runs, label: opts.label, budget, auth: auth ?? undefined, host, resultsDir, hooks, log });
+    const doc = await runScenario(scenario, { tier, runs, label: opts.label, budget, auth: auth ?? undefined, host, resultsDir, hooks, log, caps: capsOf.get(scenario) });
     docs.push(doc);
     log(`${doc.scenario}: ${doc.passed}/${doc.runs} passed (rule ${doc.pass_rule}) → ${doc.pass ? "PASS" : "FAIL"} · $${doc.cost_usd.toFixed(4)}`);
     ok &&= doc.pass;

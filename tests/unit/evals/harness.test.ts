@@ -67,6 +67,28 @@ test("metrics attribute tokens per model and agent, and time subagents and tool 
   assert.equal(m.turns, 4);
 });
 
+// C002-T-048 step X0 (defect D-025): a subagent still running when the session ended (no
+// task_notification, for example at the spend cap) keeps the output its own messages show; the main
+// thread keeps its own, and the rest of the model's output goes to "unattributed", never to `main`.
+test("metrics: a subagent without a task_notification is not counted under main", () => {
+  const T: Rec[] = [
+    assistant(10, "m1", [{ type: "tool_use", id: "a1", name: "Agent", input: { subagent_type: "architect:sdd-critic", prompt: "x" } }], usage(2, 30, 100, 10)),
+    { t: 11, type: "sdk", message: { type: "system", subtype: "task_started", task_id: "task7", tool_use_id: "a1", subagent_type: "architect:sdd-critic" } },
+    assistant(20, "s1", [{ type: "text", text: "reviewing" }], usage(1, 40, 0, 300), { parent_tool_use_id: "a1", agent_id: "task7" }),
+    assistant(30, "s2", [{ type: "text", text: "still reviewing" }], usage(1, 25, 300, 50), { parent_tool_use_id: "a1", agent_id: "task7" }),
+    { t: 40, type: "sdk", message: { type: "result", subtype: "error_max_budget_usd", total_cost_usd: 0.51, num_turns: 3, modelUsage: { "claude-haiku-5-5": { inputTokens: 4, outputTokens: 1000, cacheReadInputTokens: 400, cacheCreationInputTokens: 360, costUSD: 0.51 } } } },
+  ];
+  const m = runMetrics(T, T.at(-1)!.message as Rec, 1000);
+  const byAgent = m.tokens_by_agent as Record<string, { tokens: Rec; output: string }>;
+  assert.equal(byAgent["architect:sdd-critic"]!.tokens.output, 65, "the critic's own messages: 40 + 25");
+  assert.equal(byAgent.main!.tokens.output, 30, "main keeps only its own 30, not 1000 − 65");
+  assert.equal(byAgent["unattributed"]!.tokens.output, 905, "the rest of the model's 1000");
+  assert.match(byAgent["unattributed"]!.output, /not attributed/);
+  assert.deepEqual(m.tokens_by_model, { "claude-haiku-5-5": { input: 4, output: 1000, cache_read: 400, cache_write: 360, cost_usd: 0.51 } }, "totals per model unchanged");
+  assert.equal(m.cost_usd, 0.51);
+  assert.equal((m.subagents as Rec[])[0]!["notified"], false);
+});
+
 test("plugin eval case files load and deterministic graders score them", () => {
   const cases = loadCases(join(repoRoot(), "evals", "fixtures", "stub-plugin", "evals"));
   assert.deepEqual(cases.map((c: Rec) => c.name), ["route-echo"]);

@@ -66,30 +66,79 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 }
 
 /**
- * Cap exceptions in force (C002-IF-010 §2.2 "Caps above 0.50 USD"; P-01 answer to Q-ts634-budget-01,
- * 2026-10-20, 1.00 USD, raised to 2.00 USD for one run by Q-ts634-budget-02, defect D-022 item 1): a row sets `maxBudgetUsd` above DEFAULT_MAX_BUDGET_USD only where an exception matches its
- * row ID, its case file (repository-relative, `/` separators) and the run's `--host` together, at a cap
- * of at least the row's value (critic CR-68). The harness does not count the exception's runs (§2.2 Runs:
- * the owning task's done-check does, C002-T-056 for TS-634).
+ * Cap exceptions in force: the rows of the C002-IF-010 §2.2 table "Caps above 0.50 USD" (critic CR-68;
+ * revised for defect D-025). Each row gives the row ID, its case file (repository-relative, `/`
+ * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
+ * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
+ * row has none).
+ * - paid class: TS-634 on OpenCode at 2.00 USD, no rerun cap (P-01, Q-ts634-budget-01/02, D-022 item 1);
+ * - Claude Code subscription class (P-01, Q-claude-cap-01/02, 2026-10-21): the five rows of C002-T-048
+ *   batches 5 and 6 that the 0.50 USD notional cap ended, rerun at 1.50 USD; TS-213 and TS-221 at their
+ *   case files' 40 turns, rerun at 1.50 USD; the rows of batch 7 and INJ-19, rerun at 1.50 USD.
+ * The harness does not count the exception's runs (§2.2 Runs: the owning task's done-check does,
+ * C002-T-056 for TS-634, C002-T-048 for the subscription class).
  */
-export const CAP_EXCEPTIONS = Object.freeze([Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", usd: 2.0 })]);
+const SUB = (row, file, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: 1.5 });
+export const CAP_EXCEPTIONS = Object.freeze([
+  Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", auth: null, usd: 2.0, turns: DEFAULT_MAX_TURNS, rerunUsd: null }),
+  SUB("TS-214", "evals/cap02/TS-214.eval.mjs"),
+  SUB("TS-215", "evals/cap02/TS-215.eval.mjs"),
+  SUB("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs"),
+  SUB("TS-318-10-spec", "evals/cap03/TS-318.eval.mjs"),
+  SUB("TS-318-20-plan", "evals/cap03/TS-318.eval.mjs"),
+  SUB("TS-213", "evals/cap02/TS-213.eval.mjs", 40),
+  SUB("TS-221", "evals/cap02/TS-221.eval.mjs", 40),
+  SUB("TS-419", "evals/cap04/TS-419.eval.mjs"),
+  SUB("TS-420", "evals/cap04/TS-420.eval.mjs"),
+  SUB("TS-421-agent", "evals/cap04/TS-421.eval.mjs"),
+  SUB("TS-713", "evals/cap07/TS-713.eval.mjs"),
+  SUB("TS-715", "evals/cap07/TS-715.eval.mjs"),
+  SUB("TS-815", "evals/cap08/TS-815.eval.mjs"),
+  SUB("TS-817-stop", "evals/cap08/TS-817.eval.mjs"),
+  SUB("TS-817-specify", "evals/cap08/TS-817.eval.mjs"),
+  SUB("INJ-19", "evals/injection/injection.eval.mjs"),
+]);
 
 /**
- * The cap exception that matches a row's ID, its case file and the run's host (C002-IF-010 §2.2), or
- * null. The stop rule takes the cap of a matched row's reserve from it ("Reserve of a cap-exception
- * session").
+ * The cap exception that matches a row (C002-IF-010 §2.2): row ID, case file, the run's `--host` and the
+ * run's auth mode all equal (`auth` null or absent on a host without one), or null. The stop rule takes
+ * the cap of a matched row's reserve from it ("Reserve of a cap-exception session").
  */
-export function capException({ id, file, host }, exceptions = CAP_EXCEPTIONS) {
-  return exceptions.find((e) => e.row === id && e.file === file && e.host === host) ?? null;
+export function capException({ id, file, host, auth = null }, exceptions = CAP_EXCEPTIONS) {
+  return exceptions.find((e) => e.row === id && e.file === file && e.host === host && (e.auth ?? null) === (auth ?? null)) ?? null;
+}
+
+const authText = (auth) => (auth ? `auth ${auth}` : "no auth mode");
+
+/**
+ * The cap-exception check of one selected row before any session (C002-IF-010 §2.2): `{ caps }` when the
+ * row may run, with the caps to pass to the session (`turns` the row's `maxTurns`; `usd` the matching
+ * exception's rerun cap under `--cap-exception`, else the row's `maxBudgetUsd`), else `{ refusal }`, the
+ * message naming the row's ID, its case file, the host and the auth mode. A row runs when it sets at most
+ * 0.50 USD and 30 turns (a value it does not set being the default) or a matching exception's own caps
+ * are at least the row's values; under `--cap-exception` only when a matching exception has a rerun cap.
+ */
+export function capCheck({ id, file, host, auth = null, maxBudgetUsd, maxTurns, capExceptionRun = false }, exceptions = CAP_EXCEPTIONS) {
+  const usd = maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD;
+  const turns = maxTurns ?? DEFAULT_MAX_TURNS;
+  const where = `row ${id} of ${file} on host ${host} with ${authText(auth)}`;
+  const e = capException({ id, file, host, auth }, exceptions);
+  const within = usd <= DEFAULT_MAX_BUDGET_USD + EPS && turns <= DEFAULT_MAX_TURNS;
+  if (!within && !(e && e.usd + EPS >= usd && e.turns >= turns)) {
+    const over = [usd > DEFAULT_MAX_BUDGET_USD + EPS ? `maxBudgetUsd ${usd} USD, above ${DEFAULT_MAX_BUDGET_USD.toFixed(2)} USD` : null, turns > DEFAULT_MAX_TURNS ? `maxTurns ${turns}, above ${DEFAULT_MAX_TURNS}` : null].filter(Boolean).join(" and ");
+    return { refusal: `${where} sets ${over}, and no cap exception of C002-IF-010 §2.2 matches its row ID, case file, host and auth mode at those caps` };
+  }
+  if (capExceptionRun) {
+    if (!e || typeof e.rerunUsd !== "number") return { refusal: `${where}: --cap-exception given, but no cap exception of C002-IF-010 §2.2 with a rerun cap matches its row ID, case file, host and auth mode` };
+    return { caps: { turns, usd: e.rerunUsd } };
+  }
+  return { caps: { turns, usd } };
 }
 
 /**
- * The cap-exception check of one selected row before any session: null when the row may run (its cap is
- * at most the default, or an exception matches), else the refusal message naming the row and its case file.
+ * The refusal message of `capCheck` for one selected row, or null when the row may run (kept for the
+ * callers of C002-T-065).
  */
-export function capRefusal({ id, file, host, maxBudgetUsd }, exceptions = CAP_EXCEPTIONS) {
-  const usd = maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD;
-  if (!(typeof usd === "number" && usd > DEFAULT_MAX_BUDGET_USD + EPS)) return null;
-  if (exceptions.some((e) => e.row === id && e.file === file && e.host === host && e.usd + EPS >= usd)) return null;
-  return `row ${id} of ${file} sets maxBudgetUsd ${usd} USD, above ${DEFAULT_MAX_BUDGET_USD.toFixed(2)} USD, and no cap exception of C002-IF-010 §2.2 matches its row ID, case file and host ${host}`;
+export function capRefusal(row, exceptions = CAP_EXCEPTIONS) {
+  return capCheck(row, exceptions).refusal ?? null;
 }

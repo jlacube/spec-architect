@@ -17,13 +17,16 @@ export const DEFAULT_HOST = "claude-code";
 /**
  * Harness context (C002-IF-010 §1, C002-T-044): the host that `runSession` runs on, set by run.mjs from
  * `--host` (else `EVAL_HOST`, else claude-code); a case never names it. `runners` replaces the runner
- * of a host (the stub host of the runner tests).
+ * of a host (the stub host of the runner tests). `query` replaces the Agent SDK's `query` on the Claude
+ * Code path (the Agent SDK stub sdk-stub of the runner tests, C002-T-048 step X0; test seam only: the
+ * Claude Code path, `runSession`'s signature and its defaults are unchanged, C002-RISK-009).
  */
-const context = { host: undefined, runners: {} };
+const context = { host: undefined, runners: {}, query: undefined };
 
-/** Sets the harness context: `{ host?, runners? }`; returns the previous one. */
-export function setHarnessContext({ host, runners } = {}) {
-  const prev = { host: context.host, runners: context.runners };
+/** Sets the harness context: `{ host?, runners?, query? }`; returns the previous one. */
+export function setHarnessContext({ host, runners, query } = {}) {
+  const prev = { host: context.host, runners: context.runners, query: context.query };
+  if (query !== undefined) context.query = query;
   if (host !== undefined) {
     if (!HOSTS.includes(host)) throw new Error(`unknown eval host ${host}; use ${HOSTS.join(", ")}`);
     context.host = host;
@@ -119,7 +122,7 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
     // seconds after session start (Serena) are ready before the first subagent is spawned: a
     // subagent's tool set is fixed when it starts (C001-T-041).
     const input = startDelayMs > 0 ? delayedPrompt(prompt, startDelayMs) : prompt;
-    const { query } = await import("@anthropic-ai/claude-agent-sdk");
+    const query = context.query ?? (await import("@anthropic-ai/claude-agent-sdk")).query;
     for await (const message of query({ prompt: input, options })) {
       stamp({ type: "sdk", message });
       if (message.type === "system" && message.subtype === "init") {
