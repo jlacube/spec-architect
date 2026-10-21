@@ -54,6 +54,14 @@ stop rule's H for an exception row, without exception sessions in the H of the o
 runner's `cap` and `step-after-cap` records, `spend` `partial` and the 20-minute session timeout; the cap-only waiver of P-01's
 Q-ts634-waiver-01 answer) adds no task:
 C002-T-056 rerun plan step X0 changes the harness and the C002-TC-673 test before its one X3 run.
+The revision for defects D-026 and D-027 (Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot
+Pro plan, so the release run substitutes `claude-sonnet-5.5` with `--copilot-model`, P-01's
+Q-copilot-opus-01 answer; the package keeps `claude-opus-5.5` for the opus tier and its install notes
+state the fallback, Q-copilot-map-01; `session_model` and `agent_models` in the Copilot CLI results;
+`models_used` in the checklist record; the release-evidence case sets per host of C002-IF-010 §5.1
+and the fail-closed merge of the injection summary, §5.2) lands in the catch-up task C002-T-066,
+after C002-T-065 and before C002-T-054. C002-T-049 stays done: it ran exactly the OpenCode case set
+that §5.1 now names, and no OpenCode row reruns.
 
 ## Reading order
 
@@ -174,6 +182,8 @@ Insiders builds): record the version before each run.
 | Q-ts634-budget-02: C002-TS-634 on OpenCode still above its 1.00 USD cap exception (defect D-022) | C002-T-056 | settled: P-01 answered "One run at $2 (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); C002-T-056 rerun plan X0, X3; a failure is recorded and the row waived for the OpenCode release within the cap-only waiver of test plan §6 |
 | Q-ts634-waiver-01: scope and record of the C002-TS-634 waiver (spec critic CR-70, CR-71) | C002-T-056 | settled: P-01 answered "Cap-only waiver (Recommended)" (`../10-spec/questions-log.md` round 2026-10-20 (3)); test plan §6 "Cap-only waiver of C002-TS-634", C002-T-056 rerun plan X3; recorded at the G2 of revision D-021 … D-022 |
 | Q-exec-lookup-01: PATH-only lookup for every executable the sdd CLI and the sdd MCP server start (C002-CON-17) | C002-T-065 | settled: P-01 answered "Fix everywhere now (Recommended)"; C002-T-065 part (f), CHG-001's gate tests unchanged (`30-impact/regression-set.md` §4.6) |
+| Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
+| Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-052 | open: asked of P-01 with the D-026/D-027 plan revision (`50-tasks/T-049-release-evidence-runs.md` step 3) |
 
 ## CLI commands
 
@@ -191,7 +201,8 @@ Topological order of `depends_on` (not numeric order: C002-T-053 comes first, C0
 C002-T-026 because it takes `tests/replay/` out of `npm test` before the first replay test file lands,
 and the tasks added in plan round 4, for defect D-003 and for the D-004 … D-009 and D-010 … D-014
 revisions, C002-T-059, C002-T-058, C002-T-061, C002-T-062 and C002-T-063, and for the D-015 … D-017
-revision C002-T-064, and for the D-018 … D-020 revision C002-T-065, sit after their dependencies
+revision C002-T-064, for the D-018 … D-020 revision C002-T-065, and for the D-026, D-027 revision
+C002-T-066 (after C002-T-065 and before C002-T-054), sit after their dependencies
 (C002-T-063 after C002-T-042 and before C002-T-041;
 C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-065 after C002-T-045 and
 before C002-T-056, C002-T-048 and C002-T-054; C002-T-023 needs only C002-T-022 and
@@ -265,10 +276,11 @@ C002-T-055) are independent of each other.
 | 58 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
 | 59 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
 | 60 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 61 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 62 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 63 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 64 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 61 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
+| 62 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 63 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 64 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 65 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 

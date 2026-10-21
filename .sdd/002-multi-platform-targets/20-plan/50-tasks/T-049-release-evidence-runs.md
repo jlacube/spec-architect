@@ -60,10 +60,33 @@ writes both folders, so the scan needs no Copilot release task.
    TGT-NPM-001 and the SPDX scan of the tarball, `dist/opencode/` and `dist/copilot/`); a finding is
    a product defect of the owning task (step 4).
 2. Run `npm run replay` for every OpenCode mechanism in use, under both shells.
-3. **Paid runs on E-OCE (C002-TC-612):** the routing cases (about 10) and at least 20 injection cases,
-   one run each, at most one rerun after a failure. Run them before any optional rerun of an earlier
-   row. Check the ledger before every session by the stop rule of test plan §4.1 and add its spend
-   after it; at the stop, the runs pause and P-01 is asked and decides.
+3. **Paid runs on E-OCE (C002-TC-612):** the OpenCode case set of C002-IF-010 §5.1 (named by
+   revision D-026 item 2): the routing family, the eight rows `TS-206` … `TS-212` and `TS-222`, one in
+   each of `evals/cap02/TS-206.eval.mjs` … `evals/cap02/TS-212.eval.mjs` and
+   `evals/cap02/TS-222.eval.mjs`, and the injection family `INJ-01` … `INJ-22` of
+   `evals/injection/injection.eval.mjs`, 30 sessions; one run each, at most one rerun after a
+   failure. Run them before any optional rerun of an earlier row. Check the ledger before every
+   session by the stop rule of test plan §4.1 and add its spend after it; at the stop, the runs pause
+   and P-01 is asked and decides. The eight routing rows are also interview cases of C002-TC-613
+   (C002-T-056); they run here again at the release-candidate commit (C002-IF-010 §5.1 "Overlap on
+   OpenCode").
+
+**Revision D-026/D-027 (after this task was done).** This step ran in commit 8fe19c8 with exactly
+that case set (the eight routing rows, `TS-208` with one rerun after its assertion fix, and the 22
+injection rows), so the revision changes no row and no session reruns. The committed
+`docs/releases/opencode/0.0.1/injection.json` holds all 22 rows of the OpenCode injection case set,
+0 acted upon, and validates against the revised `$defs/injectionSummary`, whose `result` and
+`models` are optional: the merge of C002-IF-010 §5.2 accepts it as the base of a later run, and the
+release check reads it as before. It was written before `run.mjs` gave entries `result` and `models`
+(C002-T-066), so its entries name no result file; whether that meets the clause of C002-DOD-009
+that each entry names the result file of its session is open
+[NEEDS CLARIFICATION: Q-inj-result-01]. C002-T-066 is the catch-up of the revision, not
+a fix of a defect this step found in the product: it changes no file the OpenCode package is
+generated from, and under `evals/harness/` only the summary writing, the model options of
+`run.mjs` and the Copilot CLI runner, none of which changes what an OpenCode session does. The paid
+re-run rule of step 4 therefore does not apply to it, and no OpenCode row reruns; the unpaid re-runs
+of step 4 (C002-T-048 step 5, steps 1 and 2 of this task, the release check) follow the new
+release-candidate commit as usual.
 4. Fix product defects found here through the owning task (reopen it), never by editing evidence.
    A fix moves the release-candidate commit. Then re-run, at the new commit:
    - always, unpaid: C002-T-048 step 5 and steps 1 and 2 of this task (package and replay); the
@@ -83,7 +106,9 @@ writes both folders, so the scan needs no Copilot release task.
 - `node scripts/check/tarball.mjs dist/architect-sdd-<version>.tgz --spdx dist/opencode --spdx dist/copilot`
   (C002-DOD-020 evidence, at the release-candidate commit)
 - `npm run replay -- --all` for the OpenCode mechanisms
-- `node evals/harness/run.mjs --host opencode --tier dev` with the routing and injection cases
+- `node evals/harness/run.mjs --host opencode --tier dev --pool reserve` with the case files of the
+  OpenCode case set of C002-IF-010 §5.1 (`evals/cap02/TS-206.eval.mjs` … `TS-212.eval.mjs`,
+  `evals/cap02/TS-222.eval.mjs`, `evals/injection/injection.eval.mjs`)
 
 ## Done when
 

@@ -62,7 +62,12 @@ does not wait for it.
    only: unpack outside the toy repository, register the folder and check the picker before the
    install (no Architect entry, C002-T-046 assumption step), run `sdd install copilot --package
    <folder>` in P-01's own terminal, set the three settings, open a Local chat with `sdd-conductor`
-   selected.
+   selected. In the fresh-install step and the toy-change steps after it, record `models_used`: the
+   model ID VS Code showed for the turns of `sdd-conductor` (and of a specialist where P-01 reads
+   it), or `not shown`, and whether VS Code showed it where the install notes say it does
+   (C002-TS-617, C002-TS-618; C002-IF-009 §4 Models used). When VS Code shows the model in another place
+   than the install notes name, or nowhere, the D-027 assumption of C002-IF-005 §5 Models is refuted:
+   a spec defect (`sdd defect add --ref C002-IF-005`), not a failed step.
 2. **P-01 step:** run the checklist steps of the mode in use in the run order of C002-IF-009 §4
    (C002-T-046 "Run order"), step 1's install being group 1, and record each result in run order:
    - group 2: the C002-TC-516 row with `chat.useHooks` false, then the row with the workspace in
@@ -112,5 +117,5 @@ does not wait for it.
 ## Done when
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
-      `on`, `trusted` and `none`, the assumption outcomes and P-01's name
+      `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

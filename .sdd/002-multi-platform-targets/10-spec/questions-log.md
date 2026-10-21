@@ -276,3 +276,7 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-copilot-map-01 — Opus tier in the Copilot package
 - **Options:** 1. Keep `claude-opus-5.5`; the install notes say that on plans without Opus the host uses its default model (Sonnet); the doctor/checklist records which model ran; evidence runs on Sonnet (Recommended) · 2. Map the opus tier to `claude-sonnet-5.5`
 - **Answer:** P-01: "Keep opus, note fallback (Recommended)"
+
+### Q-inj-result-01 — Result paths in the committed OpenCode injection summary (C002-DOD-009, C002-T-049)
+- **Options:** 1. Backfill from the result files, no spend: a scripted step in C002-T-066 copies `result` and `models` from each row's counted t049 result file, checks `acted_upon` and the entry count unchanged, validates (Recommended) · 2. Accept as committed · 3. Rerun the 22 rows
+- **Answer:** P-01: "Backfill, no spend (Recommended)"
