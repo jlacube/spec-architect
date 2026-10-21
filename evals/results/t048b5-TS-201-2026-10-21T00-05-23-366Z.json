@@ -1,0 +1,89 @@
+{
+  "scenario": "TS-201",
+  "title": "Launch the conductor",
+  "tier": "dev",
+  "label": "t048b5",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:05:45.091Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.48136880000000004,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.48136880000000004,
+        "session_ms": 21061,
+        "api_ms": 15469,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 1230,
+            "cache_read": 65924,
+            "cache_write": 55445,
+            "cost_usd": 0.48136880000000004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1230,
+              "cache_read": 65924,
+              "cache_write": 55445
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 3,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 302
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 138
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 12,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-201-2026-10-21T00-05-23-366Z-run1.json"
+    }
+  ]
+}

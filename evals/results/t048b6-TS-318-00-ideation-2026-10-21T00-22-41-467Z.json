@@ -1,0 +1,191 @@
+{
+  "scenario": "TS-318-00-ideation",
+  "title": "Decision artifact type (00-ideation → DEC)",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:25:23.463Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.5140437999999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "no DEC record written (files: none)"
+      ],
+      "metrics": {
+        "cost_usd": 0.5140437999999999,
+        "session_ms": 160969,
+        "api_ms": 119268,
+        "turns": 7,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 24,
+            "output": 10680,
+            "cache_read": 195642,
+            "cache_write": 43843,
+            "cost_usd": 0.5125754
+          },
+          "claude-haiku-5-5": {
+            "input": 9459,
+            "output": 1045,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0014684
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 10680,
+              "cache_read": 92573,
+              "cache_write": 13512
+            },
+            "output": "derived"
+          },
+          "architect:sdd-options-analyst": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 76347,
+              "cache_write": 26722
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bcsvsj91p",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-options-analyst",
+            "task_id": "ada05b915b80dff53",
+            "ms": 103315,
+            "tool_uses": 9,
+            "total_tokens": 31947
+          }
+        ],
+        "tool_calls": {
+          "Bash": 2,
+          "Glob": 3,
+          "Read": 6,
+          "Agent": 1,
+          "WebFetch": 3,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 316
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 150
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 121
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33245
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 48
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-options-analyst",
+            "ms": null
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 135
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 29
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 6282
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 988
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 45
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 602
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 18,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-318-00-ideation-2026-10-21T00-22-41-467Z-run1.json"
+    }
+  ]
+}

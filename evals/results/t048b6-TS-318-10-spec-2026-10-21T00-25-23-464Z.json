@@ -1,0 +1,201 @@
+{
+  "scenario": "TS-318-10-spec",
+  "title": "Decision artifact type (10-spec → DEC)",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:28:22.416Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.5545093000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "no DEC record written (files: none)"
+      ],
+      "metrics": {
+        "cost_usd": 0.5545093000000001,
+        "session_ms": 177910,
+        "api_ms": 137953,
+        "turns": 9,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 13461,
+            "cache_read": 185988,
+            "cache_write": 40724,
+            "cost_usd": 0.5499686
+          },
+          "claude-haiku-5-5": {
+            "input": 37042,
+            "output": 1673,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0045407
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 13461,
+              "cache_read": 119695,
+              "cache_write": 13281
+            },
+            "output": "derived"
+          },
+          "architect:sdd-options-analyst": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 43178,
+              "cache_write": 18612
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "buxqe1xyb",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-options-analyst",
+            "task_id": "a8779fb97343b2176",
+            "ms": 122270,
+            "tool_uses": 9,
+            "total_tokens": 33436
+          }
+        ],
+        "tool_calls": {
+          "Read": 5,
+          "Glob": 5,
+          "Bash": 1,
+          "Agent": 1,
+          "WebFetch": 5,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 94
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 139
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 130
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33241
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 163
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 122
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-options-analyst",
+            "ms": null
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 23
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 128
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 11
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 5538
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 199
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 3922
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 661
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 18,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-318-10-spec-2026-10-21T00-25-23-464Z-run1.json"
+    }
+  ]
+}

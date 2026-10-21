@@ -1,0 +1,180 @@
+{
+  "scenario": "TS-313",
+  "title": "Decision record written",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:18:31.148Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.4080054,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.4080054,
+        "session_ms": 134907,
+        "api_ms": 80642,
+        "turns": 11,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 26,
+            "output": 8394,
+            "cache_read": 217377,
+            "cache_write": 29390,
+            "cost_usd": 0.4080054
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 8394,
+              "cache_read": 177626,
+              "cache_write": 16532
+            },
+            "output": "derived"
+          },
+          "architect:sdd-options-analyst": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 26809,
+              "cache_write": 8439
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bttcg1neg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-options-analyst",
+            "task_id": "a50ba5f811594a198",
+            "ms": 52798,
+            "tool_uses": 4,
+            "total_tokens": 18678
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3miqrvza",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Glob": 3,
+          "Bash": 3,
+          "Read": 4,
+          "Agent": 1,
+          "Write": 2,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 186
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 37267
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 173
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 49
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-options-analyst",
+            "ms": 52805
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 162
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 34
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 706
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 264
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 10928
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 10246
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 609
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-313-2026-10-21T00-16-15-523Z-run1.json"
+    }
+  ]
+}

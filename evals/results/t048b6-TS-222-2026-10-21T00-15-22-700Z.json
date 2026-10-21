@@ -1,0 +1,114 @@
+{
+  "scenario": "TS-222",
+  "title": "Fatigue guard",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:16:15.522Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.2751137,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2751137,
+        "session_ms": 52224,
+        "api_ms": 48441,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1267,
+            "output": 246,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002497
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 4900,
+            "cache_read": 125160,
+            "cache_write": 18973,
+            "cost_usd": 0.274864
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 4900,
+              "cache_read": 125160,
+              "cache_write": 18973
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 3,
+          "Glob": 1,
+          "AskUserQuestion": 1,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 126
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 799
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-222-2026-10-21T00-15-22-700Z-run1.json"
+    }
+  ]
+}

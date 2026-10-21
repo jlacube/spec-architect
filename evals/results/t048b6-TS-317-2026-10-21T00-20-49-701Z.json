@@ -1,0 +1,245 @@
+{
+  "scenario": "TS-317",
+  "title": "Two active changes, no --change",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:22:41.466Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.31892329999999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.31892329999999997,
+        "session_ms": 110731,
+        "api_ms": 72219,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 14,
+            "output": 2110,
+            "cache_read": 138717,
+            "cache_write": 14451,
+            "cost_usd": 0.1856074
+          },
+          "claude-sonnet-5-5": {
+            "input": 14,
+            "output": 5946,
+            "cache_read": 124350,
+            "cache_write": 24050,
+            "cost_usd": 0.132048
+          },
+          "claude-haiku-5-5": {
+            "input": 5724,
+            "output": 1391,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0012679000000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 2110,
+              "cache_read": 138717,
+              "cache_write": 14451
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 100854,
+              "cache_write": 21049
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "btlqgue8j",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a99ac7cdf29280dba",
+            "ms": 50831,
+            "tool_uses": 19,
+            "total_tokens": 27764
+          }
+        ],
+        "tool_calls": {
+          "Read": 3,
+          "AskUserQuestion": 2,
+          "Bash": 2,
+          "Agent": 1,
+          "ToolSearch": 1,
+          "Glob": 2,
+          "mcp__plugin_architect_context7__resolve-library-id": 3,
+          "WebFetch": 9,
+          "WebSearch": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33112
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 50842
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 28
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-researcher",
+            "ms": 123
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 26
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 9
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 9
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7078
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 668
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-researcher",
+            "ms": 138
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 15
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 127
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 10,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-317-2026-10-21T00-20-49-701Z-run1.json"
+    }
+  ]
+}

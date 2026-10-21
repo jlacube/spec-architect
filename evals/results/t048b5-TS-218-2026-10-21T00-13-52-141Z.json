@@ -1,0 +1,387 @@
+{
+  "scenario": "TS-218",
+  "title": "Ideation fan-out",
+  "tier": "dev",
+  "label": "t048b5",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:15:22.522Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.5081054,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.5081054,
+        "session_ms": 89388,
+        "api_ms": 60579,
+        "turns": 28,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1220,
+            "output": 21,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001325
+          },
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 6086,
+            "cache_read": 259344,
+            "cache_write": 32353,
+            "cost_usd": 0.4015708
+          },
+          "claude-sonnet-5-5": {
+            "input": 8,
+            "output": 1560,
+            "cache_read": 30511,
+            "cache_write": 35094,
+            "cost_usd": 0.10640210000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 6086,
+              "cache_read": 259344,
+              "cache_write": 22043
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 48244,
+              "cache_write": 34474
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 17361
+            },
+            "output": "derived"
+          },
+          "architect:sdd-options-analyst": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 0,
+              "cache_read": 0,
+              "cache_write": 10310
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bj21ewp4s",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a9d6db91d3946af68",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a006e79572c82dc9c",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-options-analyst",
+            "task_id": "a01c8a37e414c6943",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bqngk0a17",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Read": 8,
+          "Glob": 4,
+          "Skill": 1,
+          "Grep": 1,
+          "Edit": 1,
+          "TaskCreate": 8,
+          "Bash": 4,
+          "TaskUpdate": 4,
+          "AskUserQuestion": 1,
+          "Write": 1,
+          "Agent": 3,
+          "ToolSearch": 1,
+          "WebSearch": 4,
+          "WebFetch": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 53
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 134
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 162
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 600
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 12
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 9
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 271
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33778
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 629
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 188
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 28
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 32
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 22
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 17
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-researcher",
+            "ms": 197
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 7939
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "ms": 7528
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 14
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 7193
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 11
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 6679
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 11
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-options-analyst",
+            "ms": 22
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 30
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 45
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 31
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 457
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 153
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 18,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-218-2026-10-21T00-13-52-141Z-run1.json"
+    }
+  ]
+}

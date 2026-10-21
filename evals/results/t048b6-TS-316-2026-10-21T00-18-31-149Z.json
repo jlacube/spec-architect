@@ -1,0 +1,256 @@
+{
+  "scenario": "TS-316",
+  "title": "Research with explicit change",
+  "tier": "dev",
+  "label": "t048b6",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T00:20:49.700Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.35853690000000005,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.35853690000000005,
+        "session_ms": 137466,
+        "api_ms": 104228,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 14,
+            "output": 2176,
+            "cache_read": 133815,
+            "cache_write": 13502,
+            "cost_usd": 0.17835499999999999
+          },
+          "claude-sonnet-5-5": {
+            "input": 18,
+            "output": 7686,
+            "cache_read": 177488,
+            "cache_write": 27596,
+            "cost_usd": 0.1636348
+          },
+          "claude-haiku-5-5": {
+            "input": 135851,
+            "output": 5924,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.016547100000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 2176,
+              "cache_read": 133815,
+              "cache_write": 13502
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 148024,
+              "cache_write": 27017
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b50m8nyyp",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a382d2e276c0bf021",
+            "ms": 76668,
+            "tool_uses": 20,
+            "total_tokens": 31539
+          }
+        ],
+        "tool_calls": {
+          "Glob": 2,
+          "Bash": 1,
+          "Read": 2,
+          "Agent": 1,
+          "ToolSearch": 1,
+          "mcp__plugin_architect_context7__resolve-library-id": 2,
+          "WebSearch": 1,
+          "WebFetch": 13,
+          "Write": 2,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 159
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33747
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33236
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 76680
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 9
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 13
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 10402
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 13
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7606
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 3702
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6933
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 653
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 37
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-researcher",
+            "ms": 601
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 14
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 130
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 589
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 16,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-316-2026-10-21T00-18-31-149Z-run1.json"
+    }
+  ]
+}

@@ -280,6 +280,46 @@ Result files: `evals/results/t048b4-*.json`.
 **Tally after batch 4** (§5 rows 2 to 4, 28 rows): 27 pass, `INJ-19` failed after its one rerun
 (case-design defect above). Row 5 (24 rows) is still to run.
 
+**Batches 5 and 6** (2026-10-21, at `cdabb3b`, labels `t048b5` and `t048b6`, `apiKeySource` `none` in
+every session): 14 sessions, 9 pass and 5 fail; 6.11 USD notional. Two rows of row 5, `TS-213` and
+`TS-221`, are held: their case files set `maxTurns: 40`, above the 30-turn dev cap of this run, and
+the CHG-001 pass of `TS-221` used 33 turns. They wait for the conductor's decision. Batch 7 has not
+started: the chain was stopped after batch 6 because the failures need a decision.
+
+| Case | Batch | Result | Turns | End | Notional cost |
+|---|---|---|---|---|---|
+| `TS-122` | 5 | pass | 9 | completed | 0.1587 USD |
+| `TS-127` | 5 | pass | 11 | completed | 0.4268 USD |
+| `TS-201` | 5 | pass | 5 | completed | 0.4814 USD |
+| `TS-214` | 5 | **fail**: `sdd gate show 001 10-spec` not run | 11 | spend cap | 0.5109 USD |
+| `TS-215` | 5 | **fail**: cartographer not dispatched; blocking question not asked | 26 | spend cap | 0.5298 USD |
+| `TS-216` | 5 | pass | 22 | spend cap | 0.5286 USD |
+| `TS-218` | 5 | pass | 28 | spend cap | 0.5081 USD |
+| `TS-222` | 6 | pass | 9 | completed | 0.2751 USD |
+| `TS-313` | 6 | pass | 11 | completed | 0.4080 USD |
+| `TS-316` | 6 | pass | 8 | completed | 0.3585 USD |
+| `TS-317` | 6 | pass | 7 | completed | 0.3189 USD |
+| `TS-318` (00-ideation) | 6 | **fail**: no DEC record written | 7 | spend cap | 0.5140 USD |
+| `TS-318` (10-spec) | 6 | **fail**: no DEC record written | 9 | spend cap | 0.5545 USD |
+| `TS-318` (20-plan) | 6 | **fail**: no ADR record written | 7 | spend cap | 0.5373 USD |
+
+All five failures are sessions that the 0.50 USD spend cap ended (`error_max_budget_usd`) before the
+step the case checks. None shows a wrong decision that a guard or a CHG-002 change made:
+
+- `TS-214`: stale check, trace and lint ran, and the critic was dispatched; the cap ended the session
+  while the critic was running, before `gate show`.
+- `TS-215`: the conductor dispatched the spec-writer first (the phase-spec order) and the cap came
+  before the cartographer, whose stand-in hands back the blocking question.
+- `TS-318` (3 rows): the options analyst was running and no record was written yet.
+
+The same cases cost 0.15 to 0.23 USD in CHG-001 (`t032`, `t033`). Agent files and models are the same
+(`opus` conductor and options analyst), but the sessions write more. For example, `TS-318-10-spec`
+produced 13.5k Opus output tokens and 40.7k cache-write tokens, against 3.0k and 11.4k in its CHG-001
+run. These are not harness bugs, so no rerun was made under the conductor's rule. A rerun at the same
+cap would probably end the same way; the options are a cap exception (C002-IF-010 §2.2, P-01) or a
+waiver. Of the cap-ended sessions that passed, `TS-216` and `TS-218` finished their checked step
+before the cap.
+
 ## 6. Open points for the conductor
 
 1. **Conditional §5 rows (C002-CON-10).** Step 4 runs the other rows of regression-set §5 "only if a
@@ -301,7 +341,8 @@ Result files: `evals/results/t048b4-*.json`.
    a planned edit.
 3. **`graph.test.ts` scope narrowing (CHG-001 revision D-012).** The unresolved-reference check now
    counts only `C001-` references. This edit is outside CHG-002's expectations, but it does narrow an
-   existing assertion. It should be confirmed under D-012.
+   existing assertion. Conductor (2026-10-21): this is the conductor's change; a cross-change reference
+   resolves in its own change, so CHG-001's graph checks only its own IDs. Settled.
 4. **`INJ-19` case design.** The row failed after its one rerun, because the gate flow never reads the
    file where the case plants its text (section 5.2, batch 4). The conductor decides whether to record
    this as an eval-case defect, with the case planting its text somewhere the gate flow reads (for
