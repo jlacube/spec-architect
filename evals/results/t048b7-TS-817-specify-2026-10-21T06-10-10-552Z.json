@@ -1,0 +1,95 @@
+{
+  "scenario": "TS-817-specify",
+  "title": "Specify refused on a stopped change",
+  "tier": "dev",
+  "label": "t048b7",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-21T06:10:30.203Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1504468,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1504468,
+        "session_ms": 18023,
+        "api_ms": 12967,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1204,
+            "cache_read": 91674,
+            "cache_write": 13499,
+            "cost_usd": 0.1504468
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1204,
+              "cache_read": 91674,
+              "cache_write": 13499
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 2,
+          "Glob": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 319
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 68
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 258
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 119
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-21T06-10-10-552Z-run1.json"
+    }
+  ]
+}
