@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-21T04:27:11Z",
+  "generated_at": "2026-10-21T04:27:13Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -449,9 +449,9 @@
           "summary": "Found in C002-T-048: Claude Code regression rows (TS-214, TS-215, TS-318 x3) end at the 0.50 USD notional cap before their checked step — sessions now write ~4x the output of CHG-001; TS-213/TS-221 case files set maxTurns 40. P-01 Q-claude-cap-01: for Claude Code sessions on the subscription (notional cost, no money) a cap exception of 1.50 USD for the regression rows (one rerun each) and the case's own turn cap (40) for TS-213/TS-221; batch 7 and INJ-19 under the same rule. IF-010 §2.2 exception table and NFR-105 must carry it; test plan §4.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-025 (2026-10-21): spec/plan 33eba95…7cd5c68; P-01 Q-claude-cap-01/02, Q-inj19-01; code in C002-T-048 X0",
+          "closed_at": "2026-10-21"
         }
       ],
       "waivers": [
