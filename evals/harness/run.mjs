@@ -22,6 +22,8 @@
 // Copilot CLI sessions (runners/copilot-cli.mjs, C002-T-045) bill P-01's GitHub Copilot plan in AI
 // Credits: before each session the Copilot stop rule (pool `copilot`, 30 USD, P-01 2026-10-19) is checked
 // against the ledger, and after it the session is added with its measured AI Credits and the USD estimate.
+// The `INJ-*` cases of a Copilot CLI run give the Copilot injection summary (source copilot-cli-runner,
+// docs/releases/copilot/<version>/injection.json; C002-IF-009 §5 under sdd MCP server enforcement).
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -378,11 +380,19 @@ export function copilotLedgerEntry({ scenario, record, resultFile, task, step })
 
 // --- Injection summary (C002-IF-009 §1, release-record.schema.json $defs/injectionSummary) ----------
 
-/** The injection summary of the `INJ-*` result documents of one OpenCode run, or null when none ran. */
-export function injectionSummary(docs, { hostVersions }) {
+/** Target and `source` of the injection summary per eval host (C002-IF-009 §1, C002-IF-010 §4 "Release evidence by mode"). */
+export const INJECTION_SOURCES = { opencode: { target: "opencode", source: "opencode-runner" }, "copilot-cli": { target: "copilot", source: "copilot-cli-runner" } };
+
+/**
+ * The injection summary of the `INJ-*` result documents of one OpenCode or Copilot CLI run, or null when
+ * none ran (or the host writes none). `host` defaults to opencode.
+ */
+export function injectionSummary(docs, { hostVersions, host = "opencode" }) {
+  const of = INJECTION_SOURCES[host];
+  if (!of) return null;
   const cases = docs.filter((d) => /^INJ-\d+/.test(d.scenario) && d.runs > 0).map((d) => ({ id: d.scenario, acted_upon: !d.pass }));
   if (cases.length === 0) return null;
-  return { target: "opencode", tier: "dev", source: "opencode-runner", host_versions: hostVersions, cases };
+  return { target: of.target, tier: "dev", source: of.source, host_versions: hostVersions, cases };
 }
 
 // --- Entry ------------------------------------------------------------------------------------------
@@ -512,12 +522,13 @@ export async function main(argv, deps = {}) {
     ok &&= doc.pass;
     if (doc.stopped) break;
   }
-  if (host === "opencode") {
+  // The injection summary of an OpenCode or Copilot CLI run (C002-IF-009 §1): docs/releases/<target>/<version>/injection.json.
+  if (INJECTION_SOURCES[host]) {
     const hv = docs.find((d) => d.host_versions)?.host_versions;
-    const summary = injectionSummary(docs, { hostVersions: hv ?? {} });
-    if (summary && paid && !runners[host]) {
+    const summary = injectionSummary(docs, { hostVersions: hv ?? {}, host });
+    if (summary && (paid || paidCopilot) && !runners[host]) {
       const { version } = JSON.parse(readFileSync(join(ROOT, "plugins", "architect", ".claude-plugin", "plugin.json"), "utf8"));
-      const out = join(ROOT, "docs", "releases", "opencode", version, "injection.json");
+      const out = join(ROOT, "docs", "releases", summary.target, version, "injection.json");
       mkdirSync(join(out, ".."), { recursive: true });
       writeFileSync(out, JSON.stringify(summary, null, 2) + "\n");
       log(`injection summary: ${posix(relative(ROOT, out))} (${summary.cases.length} cases, ${summary.cases.filter((c) => c.acted_upon).length} acted upon)`);

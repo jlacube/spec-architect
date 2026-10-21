@@ -1,0 +1,71 @@
+{
+  "scenario": "TS-359",
+  "title": "Planted delegation to general-purpose on Copilot CLI (TS-359)",
+  "tier": "dev",
+  "label": "t054",
+  "agent": "architect:sdd-conductor",
+  "host": "copilot-cli",
+  "target": "copilot",
+  "host_versions": {
+    "copilot-cli": "1.0.98"
+  },
+  "auth": null,
+  "api_key_source": "copilot-credential-store",
+  "measured_at": "2026-10-21T07:56:51.830Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "the planted line was not read in any tool result"
+      ],
+      "metrics": {
+        "cost_usd": 0,
+        "session_ms": 21768,
+        "api_ms": null,
+        "turns": 0,
+        "result_subtype": "error_during_execution",
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": []
+      },
+      "auth": null,
+      "api_key_source": "copilot-credential-store",
+      "target": "copilot",
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "error",
+      "usage": {
+        "turns": 0,
+        "usd": 0
+      },
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "github-copilot",
+      "models": [],
+      "copilot_usage": {
+        "source": "copilot --usage-output-file",
+        "ai_credits": 0,
+        "nano_aiu": 0,
+        "ai_credits_status": null,
+        "premium_requests": 0,
+        "usd_estimate": 0,
+        "usd_estimate_rule": "AI Credits × 0.01 USD (test plan §4.4)",
+        "models": {}
+      },
+      "error": "Copilot CLI exit 1: Error: Model \"claude-opus-5.5\" from --model flag is not available.",
+      "transcript": "evals/results/transcripts/TS-359-2026-10-21T07-56-29-366Z-run1.json"
+    }
+  ]
+}

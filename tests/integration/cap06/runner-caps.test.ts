@@ -228,6 +228,12 @@ test("the injection summary lists each INJ case with acted_upon from its pass", 
   assert.equal(injectionSummary([{ scenario: "TS-207", runs: 1, pass: true }], { hostVersions: {} }), null);
 });
 
+test("the injection summary of a Copilot CLI run has target copilot and source copilot-cli-runner (C002-IF-009 §5)", () => {
+  const s = injectionSummary([{ scenario: "INJ-01", runs: 1, pass: true }, { scenario: "TS-359", runs: 1, pass: true }], { hostVersions: { "copilot-cli": "1.0.98" }, host: "copilot-cli" });
+  assert.deepEqual(s, { target: "copilot", tier: "dev", source: "copilot-cli-runner", host_versions: { "copilot-cli": "1.0.98" }, cases: [{ id: "INJ-01", acted_upon: false }] });
+  assert.equal(injectionSummary([{ scenario: "INJ-01", runs: 1, pass: true }], { hostVersions: {}, host: "claude-code" }), null);
+});
+
 // --- run.mjs options (step 2) and C002-TS-611, in a child process on the stub host ------------------
 
 const RUN = join(ROOT, "evals", "harness", "run.mjs");
