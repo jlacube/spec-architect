@@ -265,6 +265,7 @@ flowchart TB
   C002_T_048 --> C002_T_052
   C002_T_049 --> C002_T_052
   C002_T_051 --> C002_T_052
+  C002_T_066 --> C002_T_052
   C002_T_036 --> C002_T_054
   C002_T_041 --> C002_T_054
   C002_T_045 --> C002_T_054
@@ -294,7 +295,10 @@ weighs 45 and ends with the Copilot release. **The D-026, D-027 plan update leng
 catch-up task C002-T-066 (L) starts after C002-T-065 (finishing at 38), its latest dependency, and
 finishes at 41; C002-T-054 now waits for it and for C002-T-048 (finishing at 40), so it finishes at
 43, C002-T-050 at 44 and C002-T-055 at 45. C002-T-048 moves off the critical path with one unit of
-slack. The OpenCode release (C002-T-052) does not wait for C002-T-066 and still ends at 44. Before
+slack. The OpenCode release (C002-T-052) now also waits for C002-T-066 (plan critic CR-52: the
+backfill of `result` and `models` into the OpenCode injection summary, C002-DOD-009, and the moved
+release-candidate commit); C002-T-066 finishes at 41, before C002-T-049 at 43, so C002-T-052 still
+starts at 43 and ends at 44, and C002-T-066 has two units of slack on the OpenCode chain. Before
 that, **the D-018 … D-020 plan update lengthened it by 3**: the
 catch-up task C002-T-065 (L) starts after C002-T-045 (finishing at 35), its latest dependency, and
 finishes at 38. C002-T-048 now waits for it (last source change before the release-candidate commit)
@@ -351,14 +355,16 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 dev-tier runs of the carried eval rows (L; its rerun plan after C002-T-065, finishing at 41),
 C002-T-049 — Release evidence for OpenCode (M, 43) and C002-T-052 — P-01: publish architect-sdd and
 release the OpenCode target (S, 44). C002-T-048 (finishing at 40) has one unit of slack against
-C002-T-056. Before the D-018 … D-020 update the carried OpenCode eval runs (resumed after
+C002-T-056, and C002-T-066 (finishing at 41, item 15 above) two units against C002-T-049. Before the D-018 … D-020 update the carried OpenCode eval runs (resumed after
 C002-T-064 at 33, finishing at 36) had one unit of slack against C002-T-048 (then finishing at 37).
 
 The remaining Copilot coupling of the OpenCode chain is shared tooling, not a release decision:
 C002-T-048 waits for C002-T-045 (shared `evals/harness/session.mjs`, critic CR-7, finishing at 35
 after C002-T-064) and for C002-T-047, which waits for the checklist template of C002-T-046 (finishing
 at 27 after C002-T-063; C002-T-047 at 30); C002-T-064 also waits for C002-T-046 (checklist rows of
-C002-TC-617); C002-T-039 and C002-T-041 wait for C002-T-033. The Copilot defer branch is not taken
+C002-TC-617); C002-T-039 and C002-T-041 wait for C002-T-033; C002-T-052 waits for C002-T-066,
+which holds the backfill of the OpenCode injection summary beside its Copilot parts (plan critic
+CR-52). The Copilot defer branch is not taken
 (signed-off S-08 record, `10-strategy.md` §4); only a later record would remove these dependencies
 (`75-rollout.md` §5), and the OpenCode chain would then end at 36 (through C002-T-063, C002-T-047,
 C002-T-064, C002-T-048, C002-T-049 and C002-T-052; 33 before the D-015 … D-017 update, 31 before the
@@ -439,7 +445,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
-| C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051 |
+| C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
 | C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054 |
 | C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058 |

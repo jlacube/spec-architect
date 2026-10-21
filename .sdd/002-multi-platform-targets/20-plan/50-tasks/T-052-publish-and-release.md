@@ -6,12 +6,12 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051, C002-T-066]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
 components: [C002-COMP-006, C002-COMP-010]
-risk_refs: []
+risk_refs: [C002-RISK-036]
 estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -36,12 +36,24 @@ communication steps belong to `75-rollout.md`.
 
 ## Preconditions
 
-- C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049 and C002-T-051 done.
+- C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051 and C002-T-066 done.
+- C002-T-066 step 8 backfilled `result` and `models` into the committed OpenCode injection summary
+  (P-01 answer to Q-inj-result-01; C002-DOD-009), and its commits moved the release-candidate commit
+  recorded by C002-T-048 (plan critic CR-52). So, before step 1, the unpaid re-runs of C002-T-049
+  step 4 are done at the new release-candidate commit: C002-T-048 step 5 and C002-T-049 steps 1 and 2
+  (package, tarball check, OpenCode replay). No paid OpenCode row reruns: C002-T-066 changes no file
+  the OpenCode package is generated from and no OpenCode session (C002-T-049 step 3, revision
+  note). When C002-T-054 has already re-run C002-T-048 step 5 at that commit, its record is used.
 
 ## Step outline (no production code)
 
 1. Run `node scripts/release-check.mjs --target opencode` at the release-candidate commit. It compares
-   the regenerated package with `dist/opencode/` and with the zip (C002-T-047 step 4).
+   the regenerated package with `dist/opencode/` and with the zip (C002-T-047 step 4). The release
+   check reads `acted_upon` and the entry count of the injection summary but not `result` or `models`
+   (C002-IF-009 §5), so check `docs/releases/opencode/<version>/injection.json` before the release as
+   well: every entry gives `result` and `models`, and each `result` names a file that exists under
+   `evals/results/` (C002-DOD-009, C002-TS-691). An entry without them stops the release here; the
+   backfill is redone through C002-T-066 (reopened), never by editing the summary by hand.
 2. **P-01 step:** if the check passes and `npm view architect-sdd@<version>` shows no such version,
    re-check that the name is still P-01's (C002-RISK-017), then publish:
    `npm publish dist/architect-sdd-<version>.tgz` from P-01's account, and check
@@ -58,9 +70,13 @@ communication steps belong to `75-rollout.md`.
 - `npm view architect-sdd version` equals the `plugin.json` version
 - The release record validates against `docs/releases/release-record.schema.json`
 - The SHA-256 of the shared zip equals the `zip.sha256` line
+- `docs/releases/opencode/<version>/injection.json`: every entry gives `result` and `models`, and
+  each `result` path exists (read the file; the release check does not read these fields)
 
 ## Done when
 
+- [ ] C002-T-048 step 5 and C002-T-049 steps 1 and 2 re-run at the release-candidate commit after C002-T-066, with that commit in the task report
+- [ ] Every entry of `docs/releases/opencode/<version>/injection.json` gives `result` and `models`, and each `result` names an existing file under `evals/results/` (C002-DOD-009)
 - [ ] `architect-sdd` published no later than the OpenCode release (or the refusal recorded and no publication)
 - [ ] OpenCode release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-052 --status done --commit <sha>`

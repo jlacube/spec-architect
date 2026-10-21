@@ -101,7 +101,8 @@ statement and the refusal sentence of the Copilot install notes (C002-IF-005 §5
    clean fx-release rows.
 7. Run `npm test`, `npm run replay -- suite` and `npm run check`. Report the commit: it moves the
    release-candidate commit of C002-T-048 (harness and Copilot package changed), so C002-T-054 re-runs
-   C002-T-048 step 5 and its own steps 1 and 2 at it before its paid step 3.
+   C002-T-048 step 5 and its own steps 1 and 2 at it before its paid step 3, and C002-T-052 re-runs
+   C002-T-048 step 5 and C002-T-049 steps 1 and 2 at it before its release check (plan critic CR-52).
 8. **(e) Backfill of the OpenCode summary** (P-01 answer to Q-inj-result-01; C002-DOD-009). With a
    one-off script run from the repository root (kept out of the shipped code; no session, no ledger
    entry): for each entry of `docs/releases/opencode/0.0.1/injection.json`, find its row's counted

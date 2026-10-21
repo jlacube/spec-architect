@@ -20,7 +20,7 @@ repository, outside `.sdd/`, and are committed.
 |---|---|---|
 | Spike record | `docs/spikes/S-07-opencode.md`, `docs/spikes/S-08-copilot-vscode.md` | the implementer (P-02) in the plan's spike task, signed off by P-01; the researcher's findings go into a research note under `.sdd/` that the record cites, because the path guard keeps the researcher inside `.sdd/` (C001-REQ-1103) |
 | Corpus replay report | `docs/releases/<target>/<version>/replay-<mechanism>.json` | corpus replay suite (C002-COMP-008) |
-| Injection eval summary | `docs/releases/<target>/<version>/injection.json` | eval runners (C002-COMP-009): `evals/harness/run.mjs` after a paid OpenCode run (`source: opencode-runner`) or, under sdd MCP server enforcement, a paid Copilot CLI run (`source: copilot-cli-runner`, `host_versions` `{ "copilot-cli": … }`), from the rows of the host's injection case set (`TS-359` included on Copilot CLI), merged into an existing summary by the fail-closed rule of C002-IF-010 §5.2, so that a run of fewer rows never replaces it (revised for defect D-026); for the Copilot cases run in VS Code (C002-REQ-613, C002-REQ-628), the release check writes it from the checklist record (`source: manual-checklist`) |
+| Injection eval summary | `docs/releases/<target>/<version>/injection.json` | eval runners (C002-COMP-009): `evals/harness/run.mjs` after a paid OpenCode run (`source: opencode-runner`) or, under sdd MCP server enforcement, a paid Copilot CLI run (`source: copilot-cli-runner`, `host_versions` `{ "copilot-cli": … }`), from the rows of the host's injection case set (`TS-359` included on Copilot CLI), merged into an existing summary by the fail-closed rule of C002-IF-010 §5.2, so that a run of fewer rows never replaces it (revised for defect D-026) and an entry acted upon stays so for the package version, never moved aside or edited by hand (revised for plan critic CR-53); for the Copilot cases run in VS Code (C002-REQ-613, C002-REQ-628), the release check writes it from the checklist record (`source: manual-checklist`) |
 | Manual VS Code checklist | `docs/checklists/vscode-copilot.md` | maintained with the Copilot target (C002-COMP-011) |
 | Checklist record | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | P-01 after each run (C002-REQ-615) |
 | Release record | `docs/releases/<target>/<version>/release.json` | release check (C002-COMP-010) |
@@ -464,7 +464,13 @@ for defect D-012; before, the hooks state was recorded under the hooks fallback 
 (Recommended)", whose option text has the checklist record which model ran). The package keeps
 `claude-opus-5.5` for the opus tier, and on a Copilot plan that does not offer it the host runs such
 an agent on its default model (C002-IF-005 §5 Models), so the record states which model ran.
-`models_used` is a mapping from agent name, as the agent picker and the chat show it (`sdd-conductor`,
+`models_used` is the VS Code evidence of the model exception on P-01's Copilot plan (revised for
+critic CR-83; before, the exception was stated for Copilot CLI only): that plan offers no Opus
+model, and on it, on Copilot CLI and in VS Code alike, the agents whose chosen model is
+`claude-opus-5.5` run on `claude-sonnet-5.5` and every other agent on its own model (C002-NFR-203
+Environment, C002-DOD-009, DOD-G-01 of `../70-dod.md`); in VS Code the record's `models_used` shows
+the model that ran, on Copilot CLI each result's `session_model` and `agent_models` do (C002-IF-010
+§3, §5.1). `models_used` is a mapping from agent name, as the agent picker and the chat show it (`sdd-conductor`,
 `sdd-cartographer`, …), to the model ID that VS Code showed for that agent's turns in the toy-change
 steps of the run (the fresh-install step and the steps that follow it), or to `not shown` when VS
 Code showed none for that agent. The key `sdd-conductor` is required; a specialist is listed where
@@ -472,9 +478,10 @@ P-01 read its model. P-01 reads the model where the install notes say VS Code sh
 §5 Models), and the fresh-install step records whether it was shown there. The release check does
 not read `models_used` and refuses nothing for it: P-01 accepted the evidence on the model the plan
 offers (Q-copilot-opus-01), and no model is a condition of C002-REQ-617 or C002-REQ-618; the review
-of the record (C002-TS-618) and P-01's sign-off check that the key is there. The Copilot CLI part of
-the evidence records the models in its results (`session_model`, `agent_models`, C002-IF-010 §3) and
-in the injection summary's entries (`models`, C002-IF-010 §5.2).
+of the record (C002-TS-618) and P-01's sign-off check that the key is there, and P-01's sign-off
+reads from it whether the agents ran on the models of the exception. The Copilot CLI part of the
+evidence records the models in its results (`session_model`, `agent_models`, C002-IF-010 §3) and in
+the injection summary's entries (`models`, C002-IF-010 §5.2).
 
 **Derivation of `hooks_state` from `hooks_sources`** (revised for Q-release-hooks-01). In the
 hooks-state step P-01 records the three sources as read, and `hooks_state` as derived from them:

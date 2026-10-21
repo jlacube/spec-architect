@@ -60,7 +60,7 @@ Q-copilot-opus-01 answer; the package keeps `claude-opus-5.5` for the opus tier 
 state the fallback, Q-copilot-map-01; `session_model` and `agent_models` in the Copilot CLI results;
 `models_used` in the checklist record; the release-evidence case sets per host of C002-IF-010 §5.1
 and the fail-closed merge of the injection summary, §5.2) lands in the catch-up task C002-T-066,
-after C002-T-065 and before C002-T-054. C002-T-049 stays done: it ran exactly the OpenCode case set
+after C002-T-065 and before C002-T-052 and C002-T-054. C002-T-049 stays done: it ran exactly the OpenCode case set
 that §5.1 now names, and no OpenCode row reruns.
 
 ## Reading order
@@ -202,7 +202,7 @@ C002-T-026 because it takes `tests/replay/` out of `npm test` before the first r
 and the tasks added in plan round 4, for defect D-003 and for the D-004 … D-009 and D-010 … D-014
 revisions, C002-T-059, C002-T-058, C002-T-061, C002-T-062 and C002-T-063, and for the D-015 … D-017
 revision C002-T-064, for the D-018 … D-020 revision C002-T-065, and for the D-026, D-027 revision
-C002-T-066 (after C002-T-065 and before C002-T-054), sit after their dependencies
+C002-T-066 (after C002-T-065 and before C002-T-052 and C002-T-054), sit after their dependencies
 (C002-T-063 after C002-T-042 and before C002-T-041;
 C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-065 after C002-T-045 and
 before C002-T-056, C002-T-048 and C002-T-054; C002-T-023 needs only C002-T-022 and
@@ -211,7 +211,8 @@ C002-T-023); C002-T-060, the eval auth switch already built in commits 98e6353 a
 right after C002-T-053, before any task with a paid Claude Code step). Tasks may run in another order when their dependencies
 allow; C002-M-02 and C002-M-03 run in parallel with C002-M-01. After C002-T-048, the OpenCode tasks
 (C002-T-049, C002-T-051, C002-T-052) and the Copilot tasks (C002-T-054, C002-T-050, C002-T-057,
-C002-T-055) are independent of each other.
+C002-T-055) are independent of each other; both C002-T-052 and C002-T-054 wait for the catch-up
+C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; plan critic CR-52).
 
 | # | Task | Title | File |
 |---|---|---|---|
@@ -275,8 +276,8 @@ C002-T-055) are independent of each other.
 | 57 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
 | 58 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
 | 59 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
-| 60 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 61 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
+| 60 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
+| 61 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
 | 62 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
 | 63 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
 | 64 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
