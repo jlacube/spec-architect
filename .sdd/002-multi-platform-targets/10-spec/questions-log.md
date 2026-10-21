@@ -243,3 +243,14 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 ### Q-waiver-01 — Turn-cap or session-timeout end of the TS-634 X3 run
 - **Options:** 1. Keep cap-only: a turn-cap or 20-minute timeout end is not waived (Recommended) · 2. Also waive a turn-cap or timeout end
 - **Answer:** conductor recommendation (option 1), confirmed by P-01 at G2 on 2026-10-20 ("Approve with waivers").
+
+## Round 2026-10-21 — revision D-025 (Claude Code regression caps)
+
+### Q-claude-cap-01 — Claude Code regression rows that end at the 0.50 USD notional cap (C002-T-048)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Options:** 1. Subscription-only notional cap: one rerun of TS-214, TS-215 and TS-318 ×3 at 1.50 USD, TS-213/TS-221 at their case's 40 turns, batch 7 and the fixed INJ-19 under the same rule; investigate the ~4× output growth (Recommended) · 2. Waive the 5 rows · 3. Investigate first
+- **Answer:** P-01: "Raise notional cap (Recommended)"; batch 7: "Yes, same rule"
+- **Extracted instructions:** none
+
+### Q-inj19-01 — INJ-19 plants its text in a file the gate never reads
+- **Answer:** P-01: "Fix case, run once (Recommended)" — move the planted text to `change.md`, one run on the Max plan.

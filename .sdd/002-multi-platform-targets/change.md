@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:734f72e1896a2a9c855b21b318e3d45aa8e6cf4d66060539a4ba451244836dc2", approved_at: 2026-10-20, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:063dab1215fe394c77b4eb5e50a229a6d916df968e0c7ff32610fb1cfc140ac3", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:734f72e1896a2a9c855b21b318e3d45aa8e6cf4d66060539a4ba451244836dc2", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:063dab1215fe394c77b4eb5e50a229a6d916df968e0c7ff32610fb1cfc140ac3", approved_at: 2026-10-20, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -37,6 +37,7 @@ defects:
   - { id: D-022, ref: C002-TS-634, summary: "Found in C002-T-056: (1) TS-634 on OpenCode does not finish within its 1.00 USD cap exception (rerun ended by the cap during the critic re-review, 1.11 USD); P-01 Q-ts634-budget-02: one run at 2.00 USD, no further rerun, a failure is recorded and the row waived; (2) the overshoot over the cap (0.11 USD) exceeds the 0.05 USD allowance of test plan §4.1 rule 1 — state the allowance per host step cost, or remove it; (3) the stop rule's reserve H does not apply the 1.05 USD minimum for exception sessions (run.mjs uses the largest ledger entry); (4) driver fix: Node fetch's 300 s headers timeout cut long OpenCode prompts (fixed in f87d885 with an untimed fetch; IF-010 §4 may record the host condition).", reporter: jerome.lacube, date: 2026-10-20, status: closed, resolution: "Revision D-021…D-022 (2026-10-20): spec/plan 7a84bfa…39daec7; P-01 Q-ts634-budget-02, Q-ts634-waiver-01, Q-waiver-01; code in C002-T-056 X0", closed_at: 2026-10-20 }
   - { id: D-023, ref: C002-TS-634, summary: "Found in C002-T-056 X3 (observations, not blocking): (1) after a one-line Revise at G2 the conductor runs spec-writer, auditor, a full critic re-review, an options analysis and a second interview round before showing the gate again — the rework does not fit 0.50/1.00/2.00 USD on OpenCode; consider a proportionate rework path in the gate-protocol / revise skills; (2) a capped session with a running subagent leaves the conductor's step without a cost, so most such sessions read spend partial and block their pool until reconciled by hand — consider reconciling automatically from OpenRouter's key usage delta.", reporter: jerome.lacube, date: 2026-10-20, status: open, resolution: null, closed_at: null }
   - { id: D-024, ref: C002-IF-001, summary: "Follow-up of CHG-001 D-012 (C001-IF-07 §3.1 ripwire forms): C002-IF-001 §6.3 OpenCode native bash rules need the bounded default-map form (globs like 'ripwire *--max-tokens=*', '*--token-budget=*') with a gap row (such a glob also matches a map command with a span-edit or unknown option — false allow under native-permissions); generator bashRules(), opencode.json permissions, permissions test and golden files follow; C002-IF-008 deny-summary wording 'ripwire read verbs or the bounded default map'. No effect in the current sdd-mcp-server mode.", reporter: jerome.lacube, date: 2026-10-20, status: open, resolution: null, closed_at: null }
+  - { id: D-025, ref: C002-NFR-105, summary: "Found in C002-T-048: Claude Code regression rows (TS-214, TS-215, TS-318 x3) end at the 0.50 USD notional cap before their checked step — sessions now write ~4x the output of CHG-001; TS-213/TS-221 case files set maxTurns 40. P-01 Q-claude-cap-01: for Claude Code sessions on the subscription (notional cost, no money) a cap exception of 1.50 USD for the regression rows (one rerun each) and the case's own turn cap (40) for TS-213/TS-221; batch 7 and INJ-19 under the same rule. IF-010 §2.2 exception table and NFR-105 must carry it; test plan §4.", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
@@ -168,3 +169,4 @@ waivers:
 | 2026-10-20 | G2 (spec) | **Revise** | "Revision for D-021 (editorial, T-065) and D-022 (TS-634 cap exception 2.00 USD per P-01 Q-ts634-budget-02, overshoot allowance, reserve H, fetch timeout)" | none | unavailable |
 | 2026-10-20 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
 | 2026-10-20 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-21 | G2 (spec) | **Revise** | "Revision for D-025 (Claude Code subscription notional cap exception for the T-048 regression rows, P-01 Q-claude-cap-01)" | none | unavailable |
