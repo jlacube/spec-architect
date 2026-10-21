@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:ae020f2780a02949ce4d17078baeaf5c8725118a4c678e0a35400cc405918620", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:063dab1215fe394c77b4eb5e50a229a6d916df968e0c7ff32610fb1cfc140ac3", approved_at: 2026-10-20, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:32490df4e02b1a7d311dea5f19275a761cceb77daff8cc5ad2c590fccb7b4ac6", approved_at: 2026-10-21, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -182,3 +182,4 @@ waivers:
 | 2026-10-20 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Revise** | "Revision for D-025 (Claude Code subscription notional cap exception for the T-048 regression rows, P-01 Q-claude-cap-01)" | none | unavailable |
 | 2026-10-21 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
