@@ -617,7 +617,7 @@ sessions read at session start (`{ "opencode": "<version>" }` on OpenCode, `{ "c
 Copilot table's enforcement mode is `sdd-mcp-server` (C002-IF-001 §1); under `copilot-hooks` it
 writes none (§4 Release evidence by mode).
 
-**Test seam: the releases root** (added after the test design of D-026; C002-TS-691 … C002-TS-693).
+**Test seam: the releases root** (added after the test design of D-026; C002-TS-691 … C002-TS-694).
 The runner tests call `main(argv, deps)` of `evals/harness/run.mjs` with a stub host in `deps.runners`,
 as the stop-rule tests of C002-TC-917 do with `deps.ledger` and `deps.stopRule`. The dependency
 `deps.releasesRoot`, an absolute folder, makes such a run write and merge the summary by this
