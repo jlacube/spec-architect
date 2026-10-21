@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: todo
+status: done
 depends_on: [C002-T-045, C002-T-046, C002-T-047, C002-T-065]
 implements: [C002-REQ-304, C002-REQ-612, C002-REQ-614, C002-REQ-615, C002-REQ-617, C002-NFR-203]
 satisfies_ac: [C002-AC-304.1, C002-AC-612.1, C002-AC-614.1, C002-AC-615.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-680, C002-TS-691, C002-TS-692, C002-TS-693, C002-TS-694, C
 components: [C002-COMP-002, C002-COMP-004, C002-COMP-009, C002-COMP-011]
 risk_refs: [C002-RISK-026, C002-RISK-036, C002-RISK-022]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8a8ac3c, completed_at: 2026-10-21, notes: "npm run check 1578 pass; replay suite 44+2 skip. Backfill: 22 entries unchanged in ids/order/acted_upon, result+models added, valid; OpenCode dry run released. Tests written alongside code (no fail-first). Candidates (next batch): models_used step VSC-02 vs conductor turns; no field for 'shown where the notes say'; rule 3 capped sessions (fail-closed reading); rule 2 check order; internal-error text; host version read before a missing-model refusal. T-054 and T-052 re-run T-048 step 5 at the new RC commit." }
 ---
 
 # C002-T-066 — Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used
