@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: todo
+status: done
 depends_on: [C001-T-061, C001-T-052, C001-T-027]
 implements: []
 satisfies_ac: [C001-AC-705.1, C001-AC-1118.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-705, C001-TS-1119, C001-TC-705, C001-TC-1119]
 components: [C001-COMP-12]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3990fc2, completed_at: 2026-10-21, notes: "Report docs/nfr-results.md. Fails: NFR-401/403 on Node 20 (F-1 scripts/package.mjs cpSync filter sees \\?\\ paths on Node 20 so targets/ ships; F-2 shell.test EPERM cleanup), NFR-502 lines 79.99% (F-3). F-4 archive not in fault bench; F-5 encoding/coverage not in npm run check. Logged as CHG-001 D-014. Not measured: macOS/Linux, dogfood/eval NFRs." }
 ---
 
 # C001-T-065 — NFR measurements: performance, coverage, compatibility
