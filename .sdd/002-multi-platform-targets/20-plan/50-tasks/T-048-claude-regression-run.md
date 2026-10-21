@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-022, C002-T-035, C002-T-037, C002-T-038, C002-T-042, C002-T-044, C002-T-045, C002-T-047, C002-T-060, C002-T-064, C002-T-065]
 implements: [C002-REQ-623, C002-REQ-611]
 satisfies_ac: [C002-AC-623.1, C002-AC-517.1, C002-AC-611.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-626, C002-TS-627, C002-TS-537, C002-TS-614, C002-TS-679, C
 components: [C002-COMP-013, C002-COMP-012, C002-COMP-009]
 risk_refs: [C002-RISK-009, C002-RISK-015, C002-RISK-016]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 0743ed6, completed_at: 2026-10-21, notes: "Regression set §5: 57 rows, 54 pass, 3 waived (TS-213/214/215 stand-in-era cases, CHG-001 D-013). Fixed in passing: CHG-001 D-012 ripwire guard (C001-T-079), INJ-10 grader, INJ-19 and TS-817 fixtures, metrics output split. 71 sessions --auth subscription, 25.80 USD notional, no API key. Open: metrics zero-output for notified subagents (harness, candidate). Report docs/releases/regression-CHG-002.md. This commit is the release candidate for T-049/T-054." }
 ---
 
 # C002-T-048 — Claude Code regression set run
