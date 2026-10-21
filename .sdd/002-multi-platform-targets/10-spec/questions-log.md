@@ -263,3 +263,7 @@ Question from the critic's D-003 review (`90-critic-report.md`, CR-37).
 - **Blocking:** no · **Material:** no
 - **Options:** 1. Raise to L and update the work breakdown · 2. Keep M (most of T-048 already ran; weights model order, not calendar)
 - **Answer:** conductor: option 2, keep M (no schedule effect; avoids a critical-path rewrite).
+
+### Q-standin-cases-01 — Regression rows built for CHG-001 stand-in specialists (C002-T-048)
+- **Options:** 1. Log a CHG-001 eval-case defect, waive TS-214 and TS-215 for this regression, fix the cases in C001-T-063 (Recommended) · 2. Fix the cases now and rerun at 1.50 USD
+- **Answer:** P-01: "Log case defect, waive (Recommended)". The conductor applies the same decision to TS-213, which failed for the same cause (its case relies on a stand-in spec-writer reading a planted hand-back file).

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-21T04:27:13Z",
+  "generated_at": "2026-10-21T06:30:30Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -160,6 +160,16 @@
           "status": "closed",
           "resolution": "Revision D-012 (2026-10-20/21): spec 278ef7d…020738d; P-01 Q-ripwire-guard-01 'Allow read-only forms'; code in C001-T-079; CHG-002 follow-up D-024",
           "closed_at": "2026-10-21"
+        },
+        {
+          "id": "D-013",
+          "ref": "C001-TS-213",
+          "summary": "Found in C002-T-048: eval cases TS-213, TS-214 and TS-215 (evals/cap02) were built for the Haiku stand-in specialists of the early CHG-001 runs (overlay.mjs): their checks depend on stand-ins reading planted hand-back files (TS-213 spec-writer, TS-215 cartographer) or on a fixture spec without critic blockers (TS-214). With the real specialists no wrong decision occurs but the checked step is never reached. P-01 (Q-standin-cases-01): waived for the CHG-002 regression; rework the cases in C001-T-063 (delegation eval suite). Also: TS-817-stop's fixture lacks the ideation critic report (gate not presented).",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-21",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []
