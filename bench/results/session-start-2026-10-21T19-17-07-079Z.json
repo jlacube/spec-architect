@@ -1,0 +1,30 @@
+{
+  "benchmark": "session-start",
+  "measured_at": "2026-10-21T19:17:07.079Z",
+  "machine": {
+    "os": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+    "cores": 8,
+    "memory_gb": 16,
+    "node": "v20.20.2"
+  },
+  "nfr": "C001-NFR-104",
+  "fixture": "fx-large",
+  "command": "sdd hook session-start",
+  "threshold_ms": 1000,
+  "runs": 10,
+  "times_ms": [
+    401,
+    417,
+    418,
+    382,
+    377,
+    380,
+    383,
+    409,
+    407,
+    366
+  ],
+  "p95_ms": 417.6189,
+  "pass": true
+}

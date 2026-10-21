@@ -1,0 +1,29 @@
+{
+  "benchmark": "lint",
+  "measured_at": "2026-10-21T20:41:03.813Z",
+  "machine": {
+    "os": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+    "cores": 8,
+    "memory_gb": 16,
+    "node": "v22.22.3"
+  },
+  "nfr": "C001-NFR-101",
+  "fixture": "fx-large",
+  "threshold_ms": 5000,
+  "runs": 10,
+  "times_ms": [
+    939,
+    929,
+    923,
+    971,
+    930,
+    963,
+    922,
+    966,
+    942,
+    944
+  ],
+  "p95_ms": 971.3061,
+  "pass": true
+}
