@@ -146,7 +146,8 @@ Components assigned in the architecture step (`../60-architecture/architecture.m
 | Copilot guard hook | A guard hook of the Copilot hooks fallback, keyed on `agent_type` | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
 | Copilot subagent guard hook | The plugin- and workspace-level PreToolUse hook of both Copilot enforcement modes that denies write and terminal calls of non-Architect subagents in repositories with `.sdd/` | C002-COMP-004 (declaration in `install/hooks.template.json`), C002-COMP-018 (written by `install copilot` into the package's `hooks.json` and the workspace hook file `.github/hooks/architect-guard.json`), C002-COMP-012 (decision, `hook guard --host copilot`, C002-IF-008 §2 rule 6) |
 | agent-scoped guard hook | Former name of the Copilot guard hook (D-003) | C002-COMP-004 (declaration), C002-COMP-012 (decision) |
-| eval runner | An eval runner of a generated target | C002-COMP-009 |
+| eval runner | Any runner of the eval harness: the Claude Code eval runner, the OpenCode eval runner or the Copilot CLI eval runner (critic CR-76) | C002-COMP-009 |
+| Claude Code eval runner | The Claude Code path of `runSession` (`evals/harness/session.mjs`) | C002-COMP-009 |
 | OpenCode eval runner | The eval runner that drives OpenCode | C002-COMP-009 |
 | Copilot CLI eval runner | The eval runner that drives Copilot CLI | C002-COMP-009 |
 | manual VS Code checklist | The recorded manual verification of Copilot VS Code | C002-COMP-011 |

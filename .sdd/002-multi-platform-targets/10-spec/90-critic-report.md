@@ -1351,8 +1351,10 @@ Scope: reopen 7966c89, architect 33eba95, questions fce1000 and 888ea1b (10-spec
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-76 | minor | NFR-105, REQ-611, glossary, COMP-009 | "eval runner" in the glossary still means a runner of a generated target; no "Claude Code eval runner" row; COMP-009 names no Claude Code path | widen the glossary row, add "Claude Code eval runner", add REQ-611/NFR-105 to its component | open |
-| CR-77 | minor | DOD-012, NFR-105 Method, TS-614, TS-690 | DOD-012 reads as if the 20-minute timeout applied to Claude Code; api-key row missing; no DoD evidence for the subscription class; Method names no Agent SDK stub | own sentence for Claude Code (both auth modes); dev-tier evidence clause for the subscription class; Agent SDK stub in Method | open |
-| CR-78 | minor | TS-679, TC-679 | no row for TS-213 with --cap-exception (1.50 + 40 turns) and no row for another case file of a subscription-class row ID | add the two rows; TC-679 and T-048 to 20 rows | open |
-| CR-79 | minor | IF-010 §2.2 Runs, test plan §4.1 | "adds no session to the row" ambiguous | "is no run (valid_run false) and opens no further session" | open |
-| CR-80 | minor | architecture §6.1 | "1.50 USD and 40 turns for the regression rows" — 40 turns is for TS-213/TS-221 only | reword | open |
+| CR-76 | minor | NFR-105, REQ-611, glossary, COMP-009 | "eval runner" in the glossary still means a runner of a generated target; no "Claude Code eval runner" row; COMP-009 names no Claude Code path | widen the glossary row, add "Claude Code eval runner", add REQ-611/NFR-105 to its component | fixed |
+| CR-77 | minor | DOD-012, NFR-105 Method, TS-614, TS-690 | DOD-012 reads as if the 20-minute timeout applied to Claude Code; api-key row missing; no DoD evidence for the subscription class; Method names no Agent SDK stub | own sentence for Claude Code (both auth modes); dev-tier evidence clause for the subscription class; Agent SDK stub in Method | fixed |
+| CR-78 | minor | TS-679, TC-679 | no row for TS-213 with --cap-exception (1.50 + 40 turns) and no row for another case file of a subscription-class row ID | add the two rows; TC-679 and T-048 to 20 rows | fixed |
+| CR-79 | minor | IF-010 §2.2 Runs, test plan §4.1 | "adds no session to the row" ambiguous | "is no run (valid_run false) and opens no further session" | fixed |
+| CR-80 | minor | architecture §6.1 | "1.50 USD and 40 turns for the regression rows" — 40 turns is for TS-213/TS-221 only | reword | fixed |
+
+All findings of this section fixed (architect, spec-writer, test-designer, planner), 2026-10-21.

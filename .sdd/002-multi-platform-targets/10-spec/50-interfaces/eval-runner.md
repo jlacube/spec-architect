@@ -251,8 +251,9 @@ for C002-TS-634, C002-T-048 for the rows of the Claude Code subscription class).
 limit is the one session at 2.00 USD: the sessions of C002-T-056 at 0.50 and 1.00 USD do not count
 toward it, and after it no session of the row runs, whatever its result (P-01 answer to
 Q-ts634-budget-02). For a row with a rerun cap of the Claude Code subscription class the limit is the
-sessions that its Runs cell names: a session at 0.50 USD that the cap ended is no run by the rule
-above, but it adds no session to the row, so the session at 1.50 USD is the row's only further
+sessions that its Runs cell names: a session at 0.50 USD that the cap ended is no run
+(`valid_run: false`, by the rule above) and opens no further session: after it, the row has
+exactly the sessions its Runs cell names, so the session at 1.50 USD is the row's only further
 session, whatever its result (P-01: "one rerun").
 
 **Waiver of C002-TS-634 on OpenCode** (revised for critics CR-70 and CR-71; P-01 answer to

@@ -993,4 +993,6 @@ Scope: 888ea1b (20-plan). Lint 0. Appended by the conductor from the critic's re
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-43 | minor | T-048 X3–X5, test plan §4.2 | the conditional reruns' last batch may hold 11 sessions, above the 10-session batch limit | "last batches of at most 10 sessions each, with the conductor's go between them" | open |
+| CR-43 | minor | T-048 X3–X5, test plan §4.2 | the conditional reruns' last batch may hold 11 sessions, above the 10-session batch limit | "last batches of at most 10 sessions each, with the conductor's go between them" | fixed |
+
+All findings of this section fixed (architect, spec-writer, test-designer, planner), 2026-10-21.

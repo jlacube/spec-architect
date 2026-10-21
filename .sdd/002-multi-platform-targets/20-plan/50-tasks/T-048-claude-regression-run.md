@@ -44,7 +44,7 @@ Code subscription class of cap exceptions (C002-IF-010 §2.2) and the reruns tha
 | modify | `evals/harness/session.mjs` › harness context | step X0: a test seam that puts the Agent SDK stub (test plan §2, sdk-stub) in place of the SDK's `query`; `runSession`'s signature and defaults unchanged (C002-RISK-009) |
 | modify | `evals/harness/metrics.mjs` › `runMetrics` | step X0: per-agent output split, so that a specialist's output never lands under `main` |
 | modify | `evals/injection/injection.eval.mjs` (the `INJ-19` row) | step X0 (P-01 answer to Q-inj19-01): the planted text moved from `.sdd/SDD.md` to the lite change's `change.md`; nothing else in the file |
-| modify | `tests/integration/cap06/cap-exceptions.test.ts` | step X0: C002-TC-679, 18 rows, and its supporting tests; the fixture fx-evals-caps with the D-025 case files and `maxTurns` |
+| modify | `tests/integration/cap06/cap-exceptions.test.ts` | step X0: C002-TC-679, 20 rows, and its supporting tests; the fixture fx-evals-caps with the D-025 case files (among them `evals/targets/other/TS-214.eval.mjs`) and `maxTurns` |
 | add | `tests/integration/cap06/claude-runner.test.ts` | step X0: the three Claude Code rows of C002-TC-614 on the Agent SDK stub |
 | modify | `tests/unit/evals/harness.test.ts` | step X0: the output split of `runMetrics` with a subagent that ended without a `task_notification` |
 
@@ -131,8 +131,12 @@ Code subscription class of cap exceptions (C002-IF-010 §2.2) and the reruns tha
         the same text in the lite change's `change.md`, which the gate flow reads (as `INJ-21`
         does), on the `liteReadyWith` base with its critic report; keep the marker, the prompt and
         the grader; adjust the row's title; no other row changes.
-     f. Tests: C002-TC-679 with its 18 rows and supporting tests, and fx-evals-caps with the D-025
-        case files and `maxTurns` (test plan §2, §8); the three Claude Code rows of C002-TC-614 in
+     f. Tests: C002-TC-679 with its 20 rows and supporting tests, and fx-evals-caps with the D-025
+        case files and `maxTurns` (test plan §2, §8). Among the 20 rows: `TS-213` with
+        `--host claude-code --auth subscription --cap-exception` runs one session at 1.50 USD and
+        40 turns; `TS-214` of `evals/targets/other/TS-214.eval.mjs` with
+        `--host claude-code --auth subscription --cap-exception` is refused before any session (the
+        exception's row ID in another case file). The three Claude Code rows of C002-TC-614 in
         `claude-runner.test.ts` on the Agent SDK stub; the `runMetrics` split with a transcript
         whose subagent has no `task_notification`, asserting that the subagent's output is not
         counted under `main`. `npm test` stays green.
@@ -169,7 +173,8 @@ Code subscription class of cap exceptions (C002-IF-010 §2.2) and the reruns tha
 
    - A conditional rerun repeats its step's command with `--only <row>`, the row's case file, a
      label ending in `r`, and `--cap-exception` when the rule above gives 1.50 USD.
-   - The conditional reruns of X3 … X5 run in a last batch, each started with its own `--only` row.
+   - The conditional reruns of X3 … X5 run in last batches of at most 10 sessions each, with the
+     conductor's go between them, each rerun started with its own `--only` row.
      Every session is added to the ledger by hand after it (`provider` `claude-max`, `auth`
      `subscription`, `api_key_source`, `caps_usd`, `cost_usd`, `pass`, result file, a note naming
      run or rerun). A failure of a session at 1.50 USD or at 40 turns is a failed row: no waiver is
@@ -214,7 +219,7 @@ Code subscription class of cap exceptions (C002-IF-010 §2.2) and the reruns tha
 - [ ] Step X0 is done: the four-key cap-exception check with the turn cap and `--cap-exception`, the
       auth mode resolved before it, the rerun cap in `caps`; the Agent SDK test seam; the
       `runMetrics` output split; the `INJ-19` case fix; C002-TC-614 (six rows) and C002-TC-679
-      (18 rows) pass; steps 1 to 3 re-run at the X0 commit
+      (20 rows) pass; steps 1 to 3 re-run at the X0 commit
 - [ ] Step X1 is done: every `claude-max` entry carries `caps_usd`; the five replaced 0.50 USD
       sessions carry `valid_run: false`; report §5.2 has the corrected per-agent tokens
 - [ ] Every row of regression-set §5 passes, or its failure after the sessions that step 4 allows is
