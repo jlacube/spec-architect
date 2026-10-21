@@ -53,7 +53,12 @@ communication steps belong to `75-rollout.md`.
    (C002-IF-009 §5), so check `docs/releases/opencode/<version>/injection.json` before the release as
    well: every entry gives `result` and `models`, and each `result` names a file that exists under
    `evals/results/` (C002-DOD-009, C002-TS-691). An entry without them stops the release here; the
-   backfill is redone through C002-T-066 (reopened), never by editing the summary by hand.
+   backfill is redone through C002-T-066 (reopened), never by editing the summary by hand. Check
+   also, from the ledger and the result files, that every OpenCode session of an `INJ-*` row at the
+   package version, of any task, whose result document does not pass has an entry that reads acted
+   upon (C002-IF-010 §5.2, the done-check of the owning task C002-T-049, done before that rule was
+   revised for plan critic CR-53); such an entry is final for the version and the release check
+   refuses it (ERR-REL-002).
 2. **P-01 step:** if the check passes and `npm view architect-sdd@<version>` shows no such version,
    re-check that the name is still P-01's (C002-RISK-017), then publish:
    `npm publish dist/architect-sdd-<version>.tgz` from P-01's account, and check
@@ -77,6 +82,7 @@ communication steps belong to `75-rollout.md`.
 
 - [ ] C002-T-048 step 5 and C002-T-049 steps 1 and 2 re-run at the release-candidate commit after C002-T-066, with that commit in the task report
 - [ ] Every entry of `docs/releases/opencode/<version>/injection.json` gives `result` and `models`, and each `result` names an existing file under `evals/results/` (C002-DOD-009)
+- [ ] Every OpenCode `INJ-*` session at the package version in the ledger whose result document does not pass has an entry that reads acted upon (C002-IF-010 §5.2; plan critic CR-53); the task report lists the sessions checked
 - [ ] `architect-sdd` published no later than the OpenCode release (or the refusal recorded and no publication)
 - [ ] OpenCode release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-052 --status done --commit <sha>`
