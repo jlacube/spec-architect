@@ -11,8 +11,10 @@ status: draft
 
 The eval cases under `evals/` call `runSession` of `evals/harness/session.mjs` (current-state E-9).
 CHG-002 keeps that call and its options, and puts the host behind it: a runner per host
-(C002-COMP-009). No case file of CHG-001 changes (C002-REQ-608); the case files that CHG-002 adds
-use the case fields of §2.1. Revised for defect D-015 (findings of C002-T-044 and C002-T-046): the
+(C002-COMP-009). No case file of CHG-001 changes for the runners (C002-REQ-608), and the cap
+exceptions of §2.2 change none either; a defect of a case itself is fixed in its own file, as the
+case `INJ-19` is (P-01 answer to Q-inj19-01). The case files that CHG-002 adds use the case fields of
+§2.1. Revised for defect D-015 (findings of C002-T-044 and C002-T-046): the
 names a case reads (§3), the `answer` option (§2), the selection of rows per host (§1), the
 OpenRouter key file with isolated data folders (§4), what `allowTools` gates (§2) and the direct
 relay on OpenCode (§2). Revised for defect D-019 (findings of C002-T-045 on Copilot CLI 1.0.98): the
@@ -35,13 +37,25 @@ before the second gate question, recorded by P-01 at the G2 of that revision (CR
 answer to Q-ts634-waiver-01); the `cap` and `step-after-cap` records from which the overshoot bound
 is decided, and the reserve of a cap-exception session as a formula (CR-72); a step whose cost the
 host does not report making the session's spend `partial` (CR-73); the session timeout of
-20 minutes (CR-74).
+20 minutes (CR-74). Revised for defect D-025 (findings of C002-T-048 on Claude Code 2.1.299; P-01
+answer to Q-claude-cap-01, "Raise notional cap (Recommended)"): a second class of cap exceptions, for
+Claude Code sessions run with `--auth subscription` only, whose cost is notional and spends from no
+pool. It gives one rerun at 1.50 USD to the regression rows that the 0.50 USD cap ended, lets
+`TS-213` and `TS-221` run at their case files' own turn cap of 40, and gives the rows of the
+regression run's batch 7 and the fixed `INJ-19` the same rerun when the 0.50 USD cap ends them. An
+exception is now matched by row ID, case file, host and auth mode; the option `--cap-exception`
+applies an exception's rerun cap; and a turn cap above 30 needs an exception as a spend cap above
+0.50 USD does (§1, §2, §2.2, §3).
 
 ## §1 Selection
 
 `npm run eval -- --host claude-code|opencode|copilot-cli` (default `claude-code`, the existing
 behaviour; `node evals/harness/run.mjs … --host …` alike). The host is passed to `runSession` through
-the harness context (else the variable `EVAL_HOST`); a case never sets the host a session runs on.
+the harness context (else the variable `EVAL_HOST`); a case never sets the host a session runs on. On
+`--host claude-code`, `--auth api-key|subscription` (else `EVAL_AUTH`, else `api-key`; C002-T-060)
+is the run's auth mode, which bills the prepaid API key or P-01's Claude Max plan; a run on another
+host has no auth mode. `--cap-exception` runs the selected rows at the rerun caps of the cap
+exceptions that match them (§2.2).
 
 **Rows for one host** (revised for defect D-015 items 3 and 7). A case row may carry a `host` field
 (`claude-code`, `opencode` or `copilot-cli`): the row then runs only under that `--host`, and its
@@ -63,8 +77,8 @@ A selection that leaves no row for the host ends the run before any session, wit
 | `prompt`, `cwd` | as today. OpenCode: a prompt `/architect:<name> <arguments>` or `/architect-<name> <arguments>` runs the package command `architect-<name>` with those arguments. Copilot CLI (revised for defect D-019 item 2): a prompt `/<name> <arguments>`, `/architect:<name> <arguments>` or `/architect-<name> <arguments>` for which the package copy holds `prompts/<name>.prompt.md` runs that prompt file's body, its frontmatter removed, as the prompt of the session agent, followed by a blank line and `Arguments: <arguments>` when arguments are given; the transcript holds a harness record with `event: "prompt-file"` naming the file. Copilot CLI 1.0.98 sends slash text given with `-p` to the model unexpanded (it registers the prompt files as skills named `architect:<name>.prompt`), so a prompt file runs only this way; any other prompt is passed as it is. The eval relay (`agent` `architect:eval-dispatcher`, prompt `Dispatch: <agent>` followed by a brief) has no OpenCode or Copilot CLI counterpart: the runner starts `<agent>` (OpenCode: prefix removed; Copilot CLI: `architect:<agent>`) as the session's agent with the brief as its prompt, and the transcript holds a harness record with `event: "relay"` naming that agent. The relay is therefore `direct` on both (revised for defect D-015 item 6) |
 | `answer` | the case's answer function `answer(question, call)`, called once per question of a question-tool call (revised for defect D-015 item 2: the earlier name `answers` was wrong; `answers` is a field of the session result, §3). It returns the label to choose, an array of labels, or, on OpenCode, `{ reject: true }`, which dismisses the whole call. Default: the label of the first option, which the interview protocol marks "(Recommended)". `question` and `call` are given in the names the row reads (§3). On OpenCode, a return value that is none of these (nothing, an empty string, an exception) leaves the call unanswerable (§4). Used where the host lets a script answer (C002-REQ-610) |
 | `allowTools` | Claude Code tool names. They gate only the permission requests of the host (revised for defect D-015 item 5). OpenCode: the runner answers a permission request `once` when its permission maps to a tool of `allowTools` (through the target's mapping table, C002-IF-001; `edit` for Write, Edit, MultiEdit and NotebookEdit, `bash` for Bash and PowerShell, `task` for Agent) and rejects every other request; it answers the read-only permissions (`read`, `glob`, `grep`, `list`, `lsp`, `todowrite`, `todoread`, `codesearch`) and `question` with `once`, and rejects `external_directory` and `doom_loop`. Copilot CLI (revised for defect D-019 item 6): the runner maps each tool of `allowTools` through the table's grants of the package's mode and passes one `--allow-tool=<permission>` per resulting permission, each once, in sorted order: a grant `<server>/*` gives `<server>`, the grant `edit` gives `write`, the grant `execute` gives `shell`, and a source MCP name `mcp__plugin_architect_<server>__<tool>` gives `<server>(<tool>)`; read-only tools need no permission. A tool that the host runs without asking, because the package's own rules allow it (for example the sdd MCP server tools that an Architect agent is granted), is not gated by `allowTools`: the package decides it, as it does for an adopter |
-| `maxTurns` | default 30 (C002-NFR-105) |
-| `maxBudgetUsd` | default 0.50; at most 0.50 unless §2.2 lists the row; applied when the host reports spend, else recorded as `unreported` (C002-NFR-105 open item); checked by the spend-cap rule of §2.2 |
+| `maxTurns` | default 30; at most 30 unless a cap exception of §2.2 matches the row (C002-NFR-105; revised for defect D-025) |
+| `maxBudgetUsd` | default 0.50; at most 0.50 unless a cap exception of §2.2 matches the row, and replaced by the exception's rerun cap when the run gives `--cap-exception` (§2.2; revised for defect D-025); applied when the host reports spend, else recorded as `unreported` (C002-NFR-105 open item); checked by the spend-cap rule of §2.2 |
 | `env` | variables of the host process (for example a machine configuration of a doctor case); a `PATH` given here replaces the runner's own `PATH` for the host, with the PATH lead of the pinned OpenCode binary placed into it on OpenCode (§4) |
 
 ### §2.1 Case fields of the generated-target runners
@@ -156,37 +170,89 @@ Per runner:
 |---|---|---|
 | OpenCode | per step: the runner adds the cost of every finished step, of the session and of its subagents, as the step-finish event gives it, and compares the sum with the cap after each step; when the sum reaches the cap it aborts the session at once (`end_reason` `spend cap`) | at most the costs of the steps running when the cap is reached: the capping step, plus a subagent's step that ran in parallel and reported its cost before the abort took effect; no fixed allowance (overshoot rule above) |
 | Copilot CLI | per session: the host's own limit `--max-ai-credits <n>`, with `<n>` = the larger of 30 and `maxBudgetUsd` / 0.01 rounded to a whole number (1 AI Credit = 0.01 USD; Copilot CLI 1.0.98 accepts no limit below 30 credits, so a cap below 0.30 USD is applied as 0.30 USD); the host refuses the next model call once the session's credits reached the limit (a soft cap), and the runner reads the session's credits from `--usage-output-file` after the session: a session whose measured credits reached the limit ends with `spend cap` even when the host printed no limit text | the model call that reached the limit; the usage file gives the session total only, never a step's cost, so `usage.usd` is that total |
-| Claude Code | the Agent SDK's `maxBudgetUsd`, as today (test plan §4.1 rule 1) | the turn that reached it |
+| Claude Code | the Agent SDK's `maxBudgetUsd`, as today (test plan §4.1 rule 1); under `--auth subscription` the SDK applies it to the session's notional cost (Claude Code subscription class below) | the turn that reached it |
 
 The pools of the test plan (`20-plan/60-test-plan.md` §4), not the per-session cap, bound what a run
 of many sessions may spend.
 
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
 exception $1"; raised for defect D-022 item 1, P-01 answer to Q-ts634-budget-02, "One run at $2
-(Recommended)"). A case row sets `maxBudgetUsd` above 0.50 only where P-01 approved an exception for
-that row and host; the exceptions in force are the rows of this table. The harness checks it before
-any session (revised for critic CR-68): a selected row that sets `maxBudgetUsd` above 0.50 runs only
-when an exception of this table matches all three of its row ID (the row's `id`), its case file (the
-repository-relative path with `/` separators of the file that defines the row) and the run's
-`--host`, with a cap at least the row's value. Otherwise the run ends before any session, with exit
-code 1 and the row's ID and case file in the message. Because the case file is part of the match, a
-row of the same ID in another case file gets no exception from this table; row IDs need not be unique
-across case files. The harness then passes the row's `maxBudgetUsd` unchanged to `runSession`, and
-the result records it (`caps`, §3).
+(Recommended)"; extended to turn caps above 30 and to the Claude Code subscription class for defect
+D-025, P-01 answer to Q-claude-cap-01, "Raise notional cap (Recommended)"). A case row sets
+`maxBudgetUsd` above 0.50 or `maxTurns` above 30, and a run applies a cap above the row's own, only
+where P-01 approved an exception for that row, host and auth mode; the exceptions in force are the
+rows of this table. They fall into two classes: the **paid class**, for sessions that spend from a
+pool of the test plan (an OpenCode session from an OpenRouter pool, a Copilot CLI session from the
+Copilot pool; today C002-TS-634 on OpenCode), and the **Claude Code subscription class** (below),
+for Claude Code sessions whose cost is notional.
 
-| Row | Host | Cap per session | Runs | Approved |
-|---|---|---|---|---|
-| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | 2.00 USD | one further run at 2.00 USD and no rerun; no further session of the row runs at any cap. A failure of that run is waived only when it is of the kind that the waiver below names; any other failure is a defect that is not waived | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
+The harness checks the exceptions before any session (revised for critic CR-68 and for defect
+D-025). An exception **matches** a selected row when all four of these are equal: the row ID (the
+row's `id`), the case file (the repository-relative path with `/` separators of the file that
+defines the row), the run's `--host`, and the run's auth mode (§1): `subscription` or `api-key` on
+`--host claude-code`; on another host the run has no auth mode, and an exception for such a host
+names none (`—`), which matches only a run without one. A selected row runs only when both hold:
+
+1. it sets `maxBudgetUsd` at most 0.50 and `maxTurns` at most 30 (a value it does not set is the
+   default of §2), or an exception matches it whose column "Row's own caps" gives a spend cap and a
+   turn cap at least the row's values;
+2. when the run gives `--cap-exception`, an exception matches it that gives a cap in the column
+   "Rerun cap".
+
+Otherwise the run ends before any session, with exit code 1 and the row's ID and case file in the
+message. Because the case file is part of the match, a row of the same ID in another case file gets
+no exception from this table (`TS-215` and `TS-221` also name rows of
+`evals/targets/question-tool/`, which get none); row IDs need not be unique across case files. The
+harness then passes to `runSession` the row's `maxTurns`, and as `maxBudgetUsd` the exception's rerun
+cap when the run gives `--cap-exception`, else the row's own `maxBudgetUsd`; the result records both
+(`caps`, §3). Without `--cap-exception` no rerun cap applies.
+
+| Rows (row ID, case file) | Host | Auth | Row's own caps | Rerun cap (`--cap-exception`) | Runs | Approved |
+|---|---|---|---|---|---|---|
+| `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | — | 2.00 USD (the row's `maxBudgetUsd`), 30 turns | — | one further run at 2.00 USD and no rerun; no further session of the row runs at any cap. A failure of that run is waived only when it is of the kind that the waiver below names; any other failure is a defect that is not waived | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
+| `TS-214` (`evals/cap02/TS-214.eval.mjs`); `TS-215` (`evals/cap02/TS-215.eval.mjs`); `TS-318-00-ideation`, `TS-318-10-spec`, `TS-318-20-plan` (`evals/cap03/TS-318.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD | one session per row at 1.50 USD, the one rerun after the row's failed session of C002-T-048 batches 5 and 6, which the 0.50 USD cap ended; no further session of the row runs at any cap | P-01, Q-claude-cap-01 (2026-10-21): each of these five sessions ended at the 0.50 USD notional cap before the step its case checks, the sessions writing about four times the output of their CHG-001 runs (`docs/releases/regression-CHG-002.md` §5.2) |
+| `TS-213` (`evals/cap02/TS-213.eval.mjs`); `TS-221` (`evals/cap02/TS-221.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 40 turns (the case files' `maxTurns`) | — (whether a failure that the 0.50 USD cap ends gives these rows a rerun at 1.50 USD: [NEEDS CLARIFICATION: Q-claude-cap-02]) | one run and at most one rerun after a failure, at the row's own caps (C002-T-048 step 4) | P-01, Q-claude-cap-01 (2026-10-21): the case files set `maxTurns` 40, above the 30 turns of C002-NFR-105; the CHG-001 pass of `TS-221` took 33 turns |
+| `TS-419` (`evals/cap04/TS-419.eval.mjs`); `TS-420` (`evals/cap04/TS-420.eval.mjs`); `TS-421-agent` (`evals/cap04/TS-421.eval.mjs`); `TS-713` (`evals/cap07/TS-713.eval.mjs`); `TS-715` (`evals/cap07/TS-715.eval.mjs`); `TS-815` (`evals/cap08/TS-815.eval.mjs`); `TS-817-stop`, `TS-817-specify` (`evals/cap08/TS-817.eval.mjs`); `INJ-19` (`evals/injection/injection.eval.mjs`, the case as fixed after Q-inj19-01) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the rerun of a row whose run at its own caps failed and ended at the spend cap | one run at the row's own caps; after a failure, one rerun: at 1.50 USD when the run ended at the spend cap, else at the row's own caps (C002-T-048 step 4); `INJ-19` gets no rerun after a failure of another kind (one run, Q-inj19-01); no further session of a row runs at any cap | P-01, Q-claude-cap-01 (2026-10-21), batch 7 of C002-T-048 and `INJ-19`: "Yes, same rule" |
+
+**Claude Code subscription class** (defect D-025; P-01 answer to Q-claude-cap-01). The exceptions
+of host `claude-code` and auth `subscription` hold for Claude Code sessions that run on P-01's Claude
+Max plan (`--auth subscription`, C002-T-060; `api_key_source` `none`, §3). Their cost is notional: the
+Agent SDK computes it at API rates and applies `maxBudgetUsd` to it, but that cost is billed to no
+account, and these sessions spend from no pool of the test plan (`20-plan/60-test-plan.md` §4.1 "Eval auth" and
+rule 7); the plan's usage limits, which P-01 watches, bound them. The class therefore applies only to
+`--host claude-code` with `--auth subscription`:
+
+- never to a Claude Code session run with `--auth api-key`, which bills the prepaid API key: its run
+  has the auth mode `api-key`, which no exception of the class names;
+- never to an OpenCode session, which spends from an OpenRouter pool, or to a Copilot CLI session,
+  which spends from the Copilot pool: their runs have another host and no auth mode. The caps of
+  those hosts stay those of the paid class.
+
+A run with `--auth api-key` or on another host therefore ends before any session when it gives
+`--cap-exception` for a row of the class or selects `TS-213` or `TS-221` at all (the check above);
+without the option, the other rows of the class run there at the 0.50 USD and 30-turn caps of
+C002-NFR-105 or below. A session of the class **ended at the spend cap** when its
+result record's `metrics.result_subtype` is `error_max_budget_usd`, the Agent SDK's end at
+`maxBudgetUsd`. The harness does not decide whether a session is a run or a rerun: the done-check of
+C002-T-048 checks, from the result records and the ledger, that each session at 1.50 USD follows a
+failed session of its row that ended at the 0.50 USD cap, and that no row has more sessions than the
+Runs column names. No waiver is approved for these rows: a failure of a session at 1.50 USD or at
+40 turns is a failed row of C002-T-048 step 4, and P-01 decides how it is handled.
 
 **Runs** (revised for critic CR-68 and for P-01's answer to Q-capped-runs-01, "Don't count them").
 The Runs column counts the sessions of the row that are runs by the ledger rule of the test plan
 (`20-plan/60-test-plan.md` §4.1, `valid_run`). A session of the row that ended with `spend cap`
-under a cap below the one that an exception of this table later approved for the row and host is no
-run: the ledger records it with `valid_run: false` and its cost, which counts toward its pool. The
-harness does not count runs; the done-check of the task that runs the exception row checks the run
-limit (C002-T-056 for C002-TS-634). For C002-TS-634 the limit is the one session at 2.00 USD: the
-sessions of C002-T-056 at 0.50 and 1.00 USD do not count toward it, and after it no session of the
-row runs, whatever its result (P-01 answer to Q-ts634-budget-02).
+(on Claude Code, at the spend cap as defined above) under a cap below the one that an exception of
+this table later approved for the row, host and auth mode is no run: the ledger records it with
+`valid_run: false` and its cost, which counts toward its pool, if it has one. The harness does not
+count runs; the done-check of the task that runs the exception row checks the run limit (C002-T-056
+for C002-TS-634, C002-T-048 for the rows of the Claude Code subscription class). For C002-TS-634 the
+limit is the one session at 2.00 USD: the sessions of C002-T-056 at 0.50 and 1.00 USD do not count
+toward it, and after it no session of the row runs, whatever its result (P-01 answer to
+Q-ts634-budget-02). For a row with a rerun cap of the Claude Code subscription class the limit is the
+sessions that its Runs cell names: a session at 0.50 USD that the cap ended is no run by the rule
+above, but it adds no session to the row, so the session at 1.50 USD is the row's only further
+session, whatever its result (P-01: "one rerun").
 
 **Waiver of C002-TS-634 on OpenCode** (revised for critics CR-70 and CR-71; P-01 answer to
 Q-ts634-waiver-01, "Cap-only waiver (Recommended)"). The waiver covers one failure kind of the
@@ -220,10 +286,10 @@ record and the cap records whether a failure of the X3 session is of this kind.
 Before each paid session, `evals/harness/run.mjs` checks the stop rule of the test plan
 (`20-plan/60-test-plan.md` §4.1, rule 1, and rule 8, which takes H as rule 1 does): the session
 starts only if the pool's total T plus the reserve H stays within the pool's limit. For an ordinary
-session, one not of a row that an exception of this table matches, H is the larger of 0.65 USD and
-the highest cost of the ordinary sessions seen so far; the sessions of a cap-exception row are left
-out of that highest cost, since their cost measures the exception (rule 1, by the ledger field
-`caps_usd`). For a session of a row that an exception of this table matches:
+session, one not of a row that an exception of the paid class matches, H is the larger of 0.65 USD
+and the highest cost of the ordinary sessions seen so far; the sessions of a cap-exception row are
+left out of that highest cost, since their cost measures the exception (rule 1, by the ledger field
+`caps_usd`). For a session of a row that an exception of the paid class matches:
 
 H = exception cap + max(0.65 USD, highest ordinary session cost)
 
@@ -233,6 +299,13 @@ the overshoot is the cost of the steps running when the cap is reached (overshoo
 is known only after those steps end. For C002-TS-634 this gives the 2.65 USD of test plan §4.1
 rule 1 (2.00 USD plus 0.65 USD). No fixed allowance applies (the 0.05 USD of the earlier test
 plan, 1.05 USD for C002-TS-634, no longer does).
+
+The stop rule does not apply to the sessions of the Claude Code subscription class, which spend from
+no pool (test plan §4.1 rule 7), so no reserve is taken for them (revised for defect D-025). Their
+ledger entries give `caps_usd`, the result record's `caps.usd`, like every other entry, so that an
+entry at 1.50 USD is left out of the highest ordinary session cost as every cap-exception entry is
+(`caps_usd` above 0.50), while a notional cost at the 0.50 USD cap still counts as an ordinary
+session's cost.
 
 ## §3 Session result
 
@@ -267,7 +340,7 @@ Added fields:
 | `host_versions` | versions read at session start (C002-IF-009, release evidence); on OpenCode the version of the pinned host binary (§4) |
 | `end_reason` | `completed`, `turn cap`, `spend cap`, `question unanswerable`, `error` (C002-TS-614); `error` also when the provider refuses a step of the session, for example an OpenRouter error with HTTP status 402 stored on an assistant message, and when the session timeout of §4 ends the session |
 | `usage` | `{ "turns": n, "usd": number or null }` |
-| `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (2.00 for C002-TS-634 on OpenCode). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
+| `caps` | `{ "turns": n, "usd": number }`: the caps the session ran with (revised for critic CR-65), which the harness (`evals/harness/run.mjs`) writes into each result record beside `usage`: `turns` the `maxTurns` and `usd` the `maxBudgetUsd` that it passed to `runSession`, after the cap-exception check of §2.2 (2.00 for C002-TS-634 on OpenCode; on Claude Code under `--auth subscription`, 1.50 for a row of the subscription class run with `--cap-exception`, and `turns` 40 for `TS-213` and `TS-221`). On every host; on Copilot CLI the host applies `usd` as the credit limit of §2.2, which is 30 credits (0.30 USD) when `usd` is below 0.30 |
 | `spend` | on a per-step runner (§2.2): `reported` when the host reported the cost of every step of the session and of its subagents that started; `partial` (revised for critic CR-73) when it reported the cost of some of them but not of every one, a step that the abort at a cap, the session timeout (§4) or another end stopped before its step-finish, or a step-finish without a cost, being one it did not report; `unreported` when it reported the cost of none. `usage.usd` sums the reported costs, so under `partial` it is a lower bound of the session's cost, and the ledger books the session by the test plan's rule for a `partial` spend (§2.2 cap records). On Copilot CLI: `reported` when the usage file gives the session's credits, else `unreported` |
 | `provider`, `models` | the inference provider (`openrouter` on OpenCode; `stub` for the stub host) and the model IDs of the session's steps |
 | `error` | present when `end_reason` is `error`: the host's or the provider's error text |
