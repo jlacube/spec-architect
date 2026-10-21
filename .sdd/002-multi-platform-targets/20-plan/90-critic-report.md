@@ -1008,5 +1008,7 @@ Scope: d70a5a7, 3ed51c7 (20-plan), against D-026, D-027, Q-inj-result-01. Lint 0
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-52 | major | T-052, T-066 step 8, T-049, DOD-009 | the OpenCode release does not depend on T-066, which holds the DOD-009 backfill and moves the release-candidate commit; the release check does not read result | add T-066 to T-052 depends_on; T-052 done-check that every OpenCode entry has result and models; recompute the critical path | open |
-| CR-53 | major | T-054, TC-359, IF-010 §5.2 rule 3, RISK-036, REQ-327 | the merge lets a passing TS-359 rerun replace an acted-upon entry, clearing a release blocker | T-054 done-check over every TS-359 result file in the ledger; name it in RISK-036; make an acted-upon TS-359 entry impossible to clear in IF-010 §5.2 | open |
+| CR-52 | major | T-052, T-066 step 8, T-049, DOD-009 | the OpenCode release does not depend on T-066, which holds the DOD-009 backfill and moves the release-candidate commit; the release check does not read result | add T-066 to T-052 depends_on; T-052 done-check that every OpenCode entry has result and models; recompute the critical path | fixed |
+| CR-53 | major | T-054, TC-359, IF-010 §5.2 rule 3, RISK-036, REQ-327 | the merge lets a passing TS-359 rerun replace an acted-upon entry, clearing a release blocker | T-054 done-check over every TS-359 result file in the ledger; name it in RISK-036; make an acted-upon TS-359 entry impossible to clear in IF-010 §5.2 | fixed |
+
+All findings of this section fixed (architect: lock rule and models_used; spec-writer: NFR-203; test-designer: TS-615, TS-691…694, DOD-009; planner: T-052 depends on T-066, T-054 done-checks, RISK-036, TC rows; conductor: CR-84 recorded in the D-026 resolution — TS-208 fixture placeholders carried to D-023/D-024), 2026-10-21.

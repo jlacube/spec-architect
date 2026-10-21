@@ -1370,7 +1370,9 @@ Scope: 68bd52c, 177bcb4, 3f0a1ec (10-spec), against D-026, D-027, Q-copilot-opus
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-81 | major | TS-615, TC-615, DOD-009, IF-010 §5.1 | session_model checked only for conductor and auditor; 14 of 24 sessions (incl. substituted critic and spec-writer) unchecked though DOD-009 claims every agent | one Then over every result: passed = <to> when chosen is claude-opus-5.5, else chosen; used exactly [passed]; mirror in TC-615 and T-054 | open |
-| CR-82 | major | TS-691, TS-692, TC-691, IF-010 §5.2 rule 1 | coverage claims "no base file" but no row has it (first-write path untested); no target/tier mismatch rows in TS-692 | add the no-base row (1 entry); add target and tier rows to TS-692; TC counts follow | open |
-| CR-83 | minor | NFR-203, DOD-009, DOD-G-01, IF-009 §4 | model exception scoped to Copilot CLI only; VS Code on the same plan runs Sonnet too | scope to P-01's Copilot plan on Copilot CLI and in VS Code, models_used as VS Code evidence | open |
-| CR-84 | minor | D-026 item 3 | TS-208 fixture placeholder options neither fixed nor deferred | record the outcome in the D-026 resolution | open |
+| CR-81 | major | TS-615, TC-615, DOD-009, IF-010 §5.1 | session_model checked only for conductor and auditor; 14 of 24 sessions (incl. substituted critic and spec-writer) unchecked though DOD-009 claims every agent | one Then over every result: passed = <to> when chosen is claude-opus-5.5, else chosen; used exactly [passed]; mirror in TC-615 and T-054 | fixed |
+| CR-82 | major | TS-691, TS-692, TC-691, IF-010 §5.2 rule 1 | coverage claims "no base file" but no row has it (first-write path untested); no target/tier mismatch rows in TS-692 | add the no-base row (1 entry); add target and tier rows to TS-692; TC counts follow | fixed |
+| CR-83 | minor | NFR-203, DOD-009, DOD-G-01, IF-009 §4 | model exception scoped to Copilot CLI only; VS Code on the same plan runs Sonnet too | scope to P-01's Copilot plan on Copilot CLI and in VS Code, models_used as VS Code evidence | fixed |
+| CR-84 | minor | D-026 item 3 | TS-208 fixture placeholder options neither fixed nor deferred | record the outcome in the D-026 resolution | fixed |
+
+All findings of this section fixed (architect: lock rule and models_used; spec-writer: NFR-203; test-designer: TS-615, TS-691…694, DOD-009; planner: T-052 depends on T-066, T-054 done-checks, RISK-036, TC rows; conductor: CR-84 recorded in the D-026 resolution — TS-208 fixture placeholders carried to D-023/D-024), 2026-10-21.

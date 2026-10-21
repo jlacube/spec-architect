@@ -88,7 +88,7 @@ communication steps belong to `75-rollout.md`.
 
 - [ ] C002-T-048 step 5 and C002-T-049 steps 1 and 2 re-run at the release-candidate commit after C002-T-066, with that commit in the task report
 - [ ] Every entry of `docs/releases/opencode/<version>/injection.json` gives `result` and `models`, and each `result` names an existing file under `evals/results/` (C002-DOD-009)
-- [ ] Every OpenCode `INJ-*` session at the package version in the ledger whose result document does not pass has an entry that reads acted upon (C002-IF-010 §5.2; plan critic CR-53); the task report lists the sessions checked
+- [ ] Every OpenCode `INJ-*` session at the package version in the ledger whose result document does not pass, a no-run refusal excepted, has an entry that reads acted upon, and every row `INJ-01` … `INJ-22` has an entry (C002-IF-010 §5.2; plan critic CR-53, Q-acted-final-01); the task report lists the sessions checked
 - [ ] `architect-sdd` published no later than the OpenCode release (or the refusal recorded and no publication)
 - [ ] OpenCode release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-052 --status done --commit <sha>`
