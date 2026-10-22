@@ -100,6 +100,32 @@ export function addHistory(text: string, cells: [string, string, string, string,
   return tidy(ls);
 }
 
+/** The change and the date of the `- **Source:** <change>, archived <date>` line of an entry, or null. */
+export function entrySource(text: string, id: string): { change: string; date: string } | null {
+  const e = findEntry(text, id);
+  if (!e) return null;
+  for (const l of lines(text).slice(e.start, e.end)) {
+    const m = /^- \*\*Source:\*\*\s*(\S+), archived (\d{4}-\d{2}-\d{2})\s*$/.exec(l);
+    if (m) return { change: m[1]!, date: m[2]! };
+  }
+  return null;
+}
+
+/** History rows (cells ID, Event, Change, Date, Note), header and separator left out. */
+export function historyCells(text: string): string[][] {
+  const ls = lines(text);
+  const s = section(ls, "History");
+  if (!s) return [];
+  return blocks(ls)
+    .tableRows.filter((r) => r.line > s.line && r.line <= s.end && r.cells[0] !== "ID")
+    .map((r) => r.cells);
+}
+
+/** Whether the History table has a row with these ID, Event and Change cells (Date and Note are not compared). */
+export function hasHistory(text: string, id: string, event: string | RegExp, change: string): boolean {
+  return historyCells(text).some((c) => c[0] === id && c[2] === change && (typeof event === "string" ? c[1] === event : event.test(c[1] ?? "")));
+}
+
 /** Collapses runs of blank lines (outside fences) and ends the file with one newline. */
 function tidy(ls: string[]): string {
   const b = blocks(ls);

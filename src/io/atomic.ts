@@ -57,9 +57,10 @@ function sleep(ms: number): void {
 
 /**
  * Renames with a short bounded retry: on Windows a rename over a file that another process
- * (indexer, antivirus) holds open fails transiently with EPERM, EACCES or EBUSY.
+ * (indexer, antivirus) holds open fails transiently with EPERM, EACCES or EBUSY. Also used by
+ * `sdd archive` for the folder move (C001-REQ-920).
  */
-function renameWithRetry(from: string, to: string): void {
+export function renameWithRetry(from: string, to: string): void {
   for (let attempt = 0; ; attempt++) {
     try {
       renameSync(from, to);

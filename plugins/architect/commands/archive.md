@@ -14,5 +14,5 @@ Arguments: `$ARGUMENTS` — the change number and an optional `--dry-run`. Load 
    stop here.
 3. **Confirm** in one AskUserQuestion round: "Apply the archive of CHG-<NNN>?" with the options
    Apply (Recommended) and Cancel. Anything other than Apply ends the command without changes.
-4. **Apply.** Run `sdd archive <NNN>` and report its last line (`archived: …`) and the living
-   files written.
+4. **Apply.** Run `sdd archive <NNN>` and report its last line (`archived: …`) and the living files written.
+   **Recovery after an interrupted archive:** if the change folder is still outside `_archive/` (`.sdd/<NNN>-*` exists), run `/architect:archive <NNN>` again; it finishes the remaining operations and writes nothing twice (C001-REQ-924). If the folder is already under `_archive/`, run `sdd status --write` to regenerate `registry.json` and `SDD.md` (C001-RB-003).

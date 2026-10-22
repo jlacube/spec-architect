@@ -108,6 +108,20 @@ bench exits 1 when any run has a failing file (`tests/unit/bench/faults-rule.tes
 The archive left half-done by such a kill, and the doubled living entries of a re-run, are D-015
 (C001-T-081).
 
+**2026-10-22 (C001-T-081, D-015): archive share rerun.** After the resumable archive (C001-REQ-924:
+already-applied checks, the two-pass write order of CR-11, the folder move with the bounded rename
+retry), `npm run bench` with Node 20.20.2 first in `PATH` (Git Bash; `node -v` → `v20.20.2`), full run
+including the fault campaign: exit 0, 203 s. Commit measured: working tree on `c44d8dc` plus the
+uncommitted T-081 changes (commit pending; the T-081 report gives it). Fault campaign
+(`bench/results/faults-2026-10-22T21-34-59-310Z.json`, rule of C001-TC-1126): 1,000 runs, 250 each of
+`status --write`, `task set`, `gate approve` and `archive`; 672 killed mid-run, 328 completed; **0 failing
+state files**, 0 of them in the 250 `archive` runs; 22 orphan temporary files (next to state files,
+never in place of one). The recorded intermediate versions are unchanged: one, `archive`'s `change.md`
+with `status: archived` before the folder move (fx-large has no cross-capability rename, so the
+first-pass write of CR-11 does not occur there). Other p95 values of the same run: lint 1,327 ms,
+lint-quick 314 ms, guards 174 ms, session-start 392 ms, mcp-refusals 1 ms, mcp-writes 84 ms, generate
+1,098 ms, all within their thresholds.
+
 **2026-10-22 (C001-T-080, round 1, superseded):** `node bench/faults.mjs 1000`, Node 22.22.3, nothing else
 running, with the earlier rule (previous version or final version only): 250 runs each of `status --write`, `task set`, `gate approve` and `archive` (on a copy of
 fx-large made archivable: G3 approved, every task done). 540 killed mid-run, 460 completed, 21 orphan
@@ -311,7 +325,7 @@ folder holds only `sdd.mjs` (`tests/smoke.test.ts`).
 | F-3 (**resolved** by C001-T-080, `5cdae42`; measured on Node 22.22.3) | C001-NFR-502 | Line coverage of `src/` is 79.99% (81.42% without `src/mcp/`), below the 85% threshold; branches 84.36% meet 75%. | §4 |
 | F-4 (**resolved** by C001-T-080, `5cdae42`; campaign of record on Node 20.20.2, §1) | C001-NFR-301 | The fault campaign (`bench/faults.mjs`) and the deterministic fault test (`tests/integration/faults.test.ts`) do not cover `archive`, one of the four commands the NFR's method names; the bench note still says "archive joins with C001-T-053", and T-053 is done. | `bench/faults.mjs` lines 3 and 98 |
 | F-5 (**resolved** by C001-T-080, `5cdae42`) | C001-NFR-404, 502 | The methods name `npm run check` ("post-test scan in `npm run check`", coverage "`npm run check`"), but `scripts/check.mjs` has neither an encoding scan nor a coverage step. Both were measured here by one-off scripts. | `scripts/check.mjs` STEPS |
-| F-6 (**resolved** by C001-T-080 round 2, b606935: the bench applies the C001-TC-1126 rule and exits non-zero on a failing file; the resumable archive is D-015 / C001-T-081) | C001-NFR-301 | A kill of `sdd archive` between its in-place writes (living specs, glossary, `change.md` with `status: archived`) and the move of the change folder leaves a change folder that says `archived` but is not under `_archive/` (1 of 1,000 bench runs; 1 of 400 probe runs). Every file is complete. Re-running `sdd archive` after a failed archive also merges the living entries twice (seen while extending `tests/integration/faults.test.ts`: `C001-REQ-101` twice in `CAP-area-1.md`). Needs a decision: either the bench counts any complete version the command writes, or `archive` gets recovery or idempotent merging. | §1; `bench/results/faults-2026-10-22T09-15-24-050Z.json` |
+| F-6 (**resolved** by C001-T-080 round 2, b606935: the bench applies the C001-TC-1126 rule and exits non-zero on a failing file; D-015 **resolved** by C001-T-081, commit pending (the T-081 report gives it): a re-run of `sdd archive` after an interrupted run finishes the remaining operations without duplicates, C001-REQ-924, C001-TC-1131; fault campaign rerun 0 failing files, §1) | C001-NFR-301 | A kill of `sdd archive` between its in-place writes (living specs, glossary, `change.md` with `status: archived`) and the move of the change folder leaves a change folder that says `archived` but is not under `_archive/` (1 of 1,000 bench runs; 1 of 400 probe runs). Every file is complete. Re-running `sdd archive` after a failed archive also merges the living entries twice (seen while extending `tests/integration/faults.test.ts`: `C001-REQ-101` twice in `CAP-area-1.md`). Needs a decision: either the bench counts any complete version the command writes, or `archive` gets recovery or idempotent merging. | §1; `bench/results/faults-2026-10-22T09-15-24-050Z.json` |
 | F-7 (**resolved** by C001-T-080 round 2, b606935: on Node 20 the coverage step reports skipped with its reason and counts as passed, Q-cov-node20-01) | C001-NFR-401, 502 | On Node 20.20.2 the coverage step cannot produce a figure: Node 20's test runner fails to merge coverage of several processes (`TypeError … reading 'startOffset'`), so `npm run check` exits 1 on Node 20 in both shells, although every test passes. Needs a decision: run the coverage step on Node 22 only (Node 20 reports it as skipped with the reason), or accept the Node 20 failure. | §2, §4 |
 
 Not findings, but open: NFR-503 until C001-T-076; NFR-106, NFR-304 until C001-T-073/T-074; NFR-602

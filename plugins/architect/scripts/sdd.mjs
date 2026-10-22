@@ -10927,22 +10927,26 @@ function upgradeToFull(dir2, tpl = {}) {
 }
 
 // src/archive/apply.ts
-import { existsSync as existsSync10, mkdirSync as mkdirSync4, renameSync as renameSync2 } from "node:fs";
+import { existsSync as existsSync10, mkdirSync as mkdirSync4 } from "node:fs";
 import { dirname as dirname6, join as join13 } from "node:path";
+function moveFails() {
+  return /(?:^|,)archive-move-fail(?:,|$)/.test(process.env["SDD_TEST_FAULT"] ?? "");
+}
 function applyArchive(root, plan2) {
   for (const [path, text] of plan2.writes) {
     mkdirSync4(dirname6(path), { recursive: true });
     writeTextAtomic(path, text);
   }
+  if (moveFails()) throw new Error("SDD_TEST_FAULT: archive folder move failed");
   mkdirSync4(dirname6(plan2.move.to), { recursive: true });
   if (existsSync10(plan2.move.to)) throw new Error(`${plan2.move.to} already exists`);
-  renameSync2(plan2.move.from, plan2.move.to);
+  renameWithRetry(plan2.move.from, plan2.move.to);
   writeStatus(join13(root, ".sdd"));
 }
 
 // src/archive/plan.ts
 import { existsSync as existsSync11, readdirSync as readdirSync7, readFileSync as readFileSync10 } from "node:fs";
-import { basename as basename6, join as join14 } from "node:path";
+import { basename as basename6, dirname as dirname7, join as join14 } from "node:path";
 
 // src/workspace/change-md.ts
 var import_yaml3 = __toESM(require_dist(), 1);
@@ -11133,6 +11137,24 @@ function addHistory(text, cells) {
   ls.splice(last, 0, `| ${cells.map((c) => c.replace(/\|/g, "\\|")).join(" | ")} |`);
   return tidy(ls);
 }
+function entrySource(text, id) {
+  const e = findEntry(text, id);
+  if (!e) return null;
+  for (const l of lines(text).slice(e.start, e.end)) {
+    const m = /^- \*\*Source:\*\*\s*(\S+), archived (\d{4}-\d{2}-\d{2})\s*$/.exec(l);
+    if (m) return { change: m[1], date: m[2] };
+  }
+  return null;
+}
+function historyCells(text) {
+  const ls = lines(text);
+  const s = section(ls, "History");
+  if (!s) return [];
+  return blocks(ls).tableRows.filter((r) => r.line > s.line && r.line <= s.end && r.cells[0] !== "ID").map((r) => r.cells);
+}
+function hasHistory(text, id, event, change) {
+  return historyCells(text).some((c) => c[0] === id && c[2] === change && (typeof event === "string" ? c[1] === event : event.test(c[1] ?? "")));
+}
 function tidy(ls) {
   const b = blocks(ls);
   const out = [];
@@ -11250,6 +11272,7 @@ function upsertRow(text, section2, row2) {
   const rows = b.tableRows.filter((r) => r.line > h.line && r.line <= end);
   const hit = rows.find((r) => !SEPARATOR3.test(ls[r.line - 1].trim()) && !SEPARATOR3.test((ls[r.line] ?? "").trim()) && r.cells[0]?.trim().toLowerCase() === row2[0].toLowerCase());
   if (hit) {
+    if (ls[hit.line - 1] === line || hit.cells.length === row2.length && hit.cells.every((c, i) => c.trim() === row2[i])) return { text, replaced: false, unchanged: true };
     ls[hit.line - 1] = line;
     return { text: ls.join("\n"), replaced: true };
   }
@@ -11258,43 +11281,75 @@ function upsertRow(text, section2, row2) {
   else ls.splice(last, 0, line);
   return { text: ls.join("\n").replace(/\n*$/, "\n"), replaced: false };
 }
-function planArchive(root, changeDir, date) {
+var escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function earlierRunDate(living, ids2, change) {
+  for (const text of living.values()) {
+    if (text === null) continue;
+    for (const id of ids2) {
+      const s = entrySource(text, id);
+      if (s?.change === change) return s.date;
+    }
+    const row2 = historyCells(text).find((c) => c[2] === change && /^\d{4}-\d{2}-\d{2}$/.test(c[3] ?? ""));
+    if (row2) return row2[3];
+  }
+  return null;
+}
+function planArchive(root, changeDir, today) {
   const sdd = join14(root, ".sdd");
   const folder = basename6(changeDir);
   const fm = frontmatter(join14(changeDir, "change.md"));
   const change = String(fm["id"] ?? `CHG-${folder.slice(0, 3)}`);
   const nnn = folder.slice(0, 3);
-  if (fm["status"] === "stopped" || fm["status"] === "archived") throw new CliError("ERR-CLI-014", { NNN: nnn, "stopped|archived": String(fm["status"]) });
+  const resumed = fm["status"] === "archived" && basename6(dirname7(changeDir)) !== "_archive";
+  if (fm["status"] === "stopped" || fm["status"] === "archived" && !resumed) throw new CliError("ERR-CLI-014", { NNN: nnn, "stopped|archived": String(fm["status"]) });
   const blockers = archiveBlockers(changeDir);
   const kind = typeof fm["kind"] === "string" ? fm["kind"] : "greenfield";
-  const reqs = sources(changeDir, folder).flatMap((s) => requirements(readFileSync10(s.req, "utf8"), existsSync11(s.acc) ? readFileSync10(s.acc, "utf8") : "", s.slug, kind, change, date));
+  const srcs = sources(changeDir, folder).map((s) => ({ slug: s.slug, req: readFileSync10(s.req, "utf8"), acc: existsSync11(s.acc) ? readFileSync10(s.acc, "utf8") : "" }));
+  const reqsOn = (d) => srcs.flatMap((s) => requirements(s.req, s.acc, s.slug, kind, change, d));
   const livingDir = join14(sdd, "_living");
   const living = /* @__PURE__ */ new Map();
   if (existsSync11(livingDir)) for (const n of readdirSync7(livingDir).filter((x) => /^CAP-.+\.md$/.test(x)).sort()) living.set(n, readFileSync10(join14(livingDir, n), "utf8"));
   const original = new Map(living);
+  const date = earlierRunDate(living, reqsOn(today).map((r) => r.id), change) ?? today;
+  const reqs = reqsOn(date);
   const ops = [];
   const rel = (n) => `.sdd/_living/${n}`;
   const fileOf = (slug) => `CAP-${slug}.md`;
+  const slugOf = (name) => name.replace(/^CAP-/, "").replace(/\.md$/, "");
+  const text = (name) => original.get(name) ?? "";
+  const present = () => [...original.keys()].filter((n) => original.get(n) !== null);
   const edit = (name, slug, fn) => {
     const cur = living.get(name);
     const base = cur === void 0 || cur === null ? newLivingFile(slug, date) : markUpdated(cur, slug, date);
     living.set(name, fn(base));
   };
+  const moveIns = [];
+  const others = [];
+  const moveTargets = /* @__PURE__ */ new Set();
+  const tagOf = (r) => /^[A-Z]+/.exec(r.delta)?.[0] ?? "";
+  const citedBy = (r) => findIds(r.delta, null).filter((h) => !h.short && h.id.includes("-REQ-")).map((h) => h.id);
+  const MOVED_IN = /^moved from CAP-/;
   const locate = (id) => {
-    for (const [name, text] of living) if (text !== null) {
-      const e = findEntry(text, id);
-      if (e) return { name, ...e };
+    const copies = [];
+    for (const name of present()) {
+      const e = findEntry(text(name), id);
+      if (e) copies.push({ name, ...e });
     }
-    return null;
+    if (copies.length === 0) return null;
+    if (copies.length === 1) return { at: copies[0] };
+    const isMoveIn = (c) => reqs.some((r) => tagOf(r) === "RENAMED" && citedBy(r).includes(id) && c.name === fileOf(r.slug) && c.title === r.title) && hasHistory(text(c.name), id, MOVED_IN, change);
+    const moved = copies.filter(isMoveIn);
+    if (copies.length === 2 && moved.length === 1) return { at: copies.find((c) => c !== moved[0]), moveIn: moved[0] };
+    return { duplicate: `${id} is a requirement heading in ${copies.map((c) => rel(c.name)).join(" and ")}` };
   };
-  const slugOf = (name) => name.replace(/^CAP-/, "").replace(/\.md$/, "");
   for (const r of reqs) {
-    const tag = /^[A-Z]+/.exec(r.delta)?.[0] ?? "";
-    const cited = findIds(r.delta, null).filter((h) => !h.short && h.id.includes("-REQ-")).map((h) => h.id);
+    const tag = tagOf(r);
+    const cited = citedBy(r);
     if (tag === "ADDED") {
       const name = fileOf(r.slug);
+      if (entrySource(text(name), r.id)?.change === change) continue;
       ops.push({ file: rel(name), op: living.has(name) ? "add" : "create+add", id: r.id });
-      edit(name, r.slug, (t) => appendEntry(t, r.entry));
+      others.push(() => edit(name, r.slug, (t) => appendEntry(t, r.entry)));
       continue;
     }
     if (!["MODIFIED", "REMOVED", "RENAMED"].includes(tag)) {
@@ -11306,51 +11361,79 @@ function planArchive(root, changeDir, date) {
       continue;
     }
     for (const old of cited) {
-      const at = locate(old);
-      if (!at) {
-        blockers.push(`${old} (cited by ${r.id}) is not in _living/`);
+      const found = locate(old);
+      if (found && "duplicate" in found) {
+        blockers.push(found.duplicate);
         continue;
       }
+      if (!found) {
+        const applied = tag === "MODIFIED" ? present().some((n) => entrySource(text(n), r.id)?.change === change && hasHistory(text(n), old, `superseded by ${r.id}`, change)) : tag === "REMOVED" && present().some((n) => hasHistory(text(n), old, "removed", change));
+        if (!applied) blockers.push(`${old} (cited by ${r.id}) is not in _living/`);
+        continue;
+      }
+      const at = found.at;
       const slug = slugOf(at.name);
       if (tag === "MODIFIED") {
         ops.push({ file: rel(at.name), op: "replace", id: old, detail: `superseded by ${r.id}` });
-        edit(at.name, slug, (t) => {
-          const e = findEntry(t, old);
-          return addHistory(replaceRange(t, e.start, e.end, r.entry), [old, `superseded by ${r.id}`, change, date, ""]);
-        });
+        others.push(
+          () => edit(at.name, slug, (t) => {
+            const e = findEntry(t, old);
+            return addHistory(replaceRange(t, e.start, e.end, r.entry), [old, `superseded by ${r.id}`, change, date, ""]);
+          })
+        );
       } else if (tag === "REMOVED") {
         ops.push({ file: rel(at.name), op: "remove", id: old, detail: `removed by ${r.id}` });
-        edit(at.name, slug, (t) => {
-          const e = findEntry(t, old);
-          return addHistory(deleteRange(t, e.start, e.end), [old, "removed", change, date, `by ${r.id}`]);
-        });
+        others.push(
+          () => edit(at.name, slug, (t) => {
+            const e = findEntry(t, old);
+            return addHistory(deleteRange(t, e.start, e.end), [old, "removed", change, date, `by ${r.id}`]);
+          })
+        );
       } else {
-        const text = living.get(at.name);
-        const body = text.split("\n").slice(at.start - 1, at.end);
+        const body = text(at.name).split("\n").slice(at.start - 1, at.end);
         const renamed = [`### ${old} — ${r.title}`, ...body.slice(1)];
         const event = `renamed from "${at.title}" to "${r.title}"`;
+        const target = fileOf(r.slug);
         if (r.slug === slug) {
+          if (at.title === r.title && hasHistory(text(at.name), old, MOVED_IN, change)) {
+            const out = new RegExp(`^renamed from ".*" to "${escapeRe(r.title)}", moved to CAP-${escapeRe(r.slug)}$`);
+            if (!present().some((n) => n !== at.name && hasHistory(text(n), old, out, change))) blockers.push(`${old} (cited by ${r.id}) is in ${rel(at.name)} without the History row of its move-out`);
+            continue;
+          }
+          if (at.title === r.title && hasHistory(text(at.name), old, new RegExp(`^renamed from ".*" to "${escapeRe(r.title)}"$`), change)) continue;
           ops.push({ file: rel(at.name), op: "rename", id: old, detail: `"${at.title}" → "${r.title}"` });
-          edit(at.name, slug, (t) => {
-            const e = findEntry(t, old);
-            return addHistory(replaceRange(t, e.start, e.end, renamed), [old, event, change, date, `by ${r.id}`]);
-          });
+          others.push(
+            () => edit(at.name, slug, (t) => {
+              const e = findEntry(t, old);
+              return addHistory(replaceRange(t, e.start, e.end, renamed), [old, event, change, date, `by ${r.id}`]);
+            })
+          );
         } else {
-          const target = fileOf(r.slug);
           ops.push({ file: rel(at.name), op: "move-out", id: old, detail: `to ${rel(target)}, "${at.title}" → "${r.title}"` });
+          others.push(
+            () => edit(at.name, slug, (t) => {
+              const e = findEntry(t, old);
+              return addHistory(deleteRange(t, e.start, e.end), [old, `${event}, moved to CAP-${r.slug}`, change, date, `by ${r.id}`]);
+            })
+          );
+          if (found.moveIn) continue;
           ops.push({ file: rel(target), op: living.has(target) ? "move-in" : "create+move-in", id: old, detail: `from ${rel(at.name)}` });
-          edit(at.name, slug, (t) => {
-            const e = findEntry(t, old);
-            return addHistory(deleteRange(t, e.start, e.end), [old, `${event}, moved to CAP-${r.slug}`, change, date, `by ${r.id}`]);
-          });
-          edit(target, r.slug, (t) => addHistory(appendEntry(t, renamed), [old, `moved from CAP-${slug} (was "${at.title}")`, change, date, `by ${r.id}`]));
+          moveTargets.add(target);
+          moveIns.push(() => edit(target, r.slug, (t) => addHistory(appendEntry(t, renamed), [old, `moved from CAP-${slug} (was "${at.title}")`, change, date, `by ${r.id}`])));
         }
       }
     }
   }
   if (blockers.length > 0) throw new CliError("ERR-CLI-009", { NNN: nnn, list: blockers.join("; ") });
-  const writes2 = /* @__PURE__ */ new Map();
-  for (const [name, text] of living) if (text !== null && text !== original.get(name)) writes2.set(join14(livingDir, name), text);
+  for (const f of moveIns) f();
+  const firstPass = /* @__PURE__ */ new Map();
+  for (const name of [...moveTargets].sort()) firstPass.set(name, living.get(name));
+  for (const f of others) f();
+  const writes2 = [...firstPass].map(([name, t]) => [join14(livingDir, name), t]);
+  for (const name of [...living.keys()].sort()) {
+    const t = living.get(name);
+    if (t !== null && t !== void 0 && t !== original.get(name) && t !== firstPass.get(name)) writes2.push([join14(livingDir, name), t]);
+  }
   const delta = join14(changeDir, "10-spec", "40-domain", "glossary-delta.md");
   if (existsSync11(delta)) {
     const dText = readFileSync10(delta, "utf8");
@@ -11360,14 +11443,17 @@ function planArchive(root, changeDir, date) {
     for (const section2 of GLOSSARY_SECTIONS)
       for (const row2 of tableRows(dText, section2[0])) {
         const r = upsertRow(g, section2, row2);
+        if (r.unchanged) continue;
         g = r.text;
         ops.push({ file: ".sdd/_constitution/glossary.md", op: r.replaced ? "redefine" : "add-term", id: row2[0] });
       }
-    if (g !== before) writes2.set(gPath, setTopLevel(g, "updated", date).replace(/\n*$/, "\n"));
+    if (g !== before) writes2.push([gPath, setTopLevel(g, "updated", date).replace(/\n*$/, "\n")]);
   }
   const changeMd = join14(changeDir, "change.md");
-  writes2.set(changeMd, setTopLevel(readFileSync10(changeMd, "utf8"), "status", "archived"));
-  ops.push({ file: `.sdd/${folder}/change.md`, op: "set-status", id: change, detail: "archived" });
+  if (!resumed) {
+    writes2.push([changeMd, setTopLevel(readFileSync10(changeMd, "utf8"), "status", "archived")]);
+    ops.push({ file: `.sdd/${folder}/change.md`, op: "set-status", id: change, detail: "archived" });
+  }
   const to = join14(sdd, "_archive", folder);
   ops.push({ file: `.sdd/${folder}`, op: "move", id: change, detail: `to .sdd/_archive/${folder}` });
   ops.push({ file: ".sdd/registry.json, .sdd/SDD.md", op: "regenerate", id: change });
@@ -11405,7 +11491,7 @@ var WRITING_COMMANDS = [
 
 // src/io/repo-root.ts
 import { existsSync as existsSync12, statSync as statSync9 } from "node:fs";
-import { dirname as dirname7 } from "node:path";
+import { dirname as dirname8 } from "node:path";
 function holds(dir2, name, folderOnly) {
   const p = dir2.endsWith("/") ? dir2 + name : dir2 + "/" + name;
   try {
@@ -11417,7 +11503,7 @@ function holds(dir2, name, folderOnly) {
 function nearest(dir2, name, folderOnly) {
   for (let d = dir2; ; ) {
     if (holds(d, name, folderOnly)) return d;
-    const parent = normalisePath(dirname7(d));
+    const parent = normalisePath(dirname8(d));
     if (parent === d) return null;
     d = parent;
   }
@@ -11911,7 +11997,7 @@ function sessionBrief(input, fallbackCwd) {
 }
 
 // src/cli/hook-cmds.ts
-import { dirname as dirname9, join as join19, resolve } from "node:path";
+import { dirname as dirname10, join as join19, resolve } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
 
 // src/hooks/copilot.ts
@@ -12098,7 +12184,7 @@ import { existsSync as existsSync14 } from "node:fs";
 import { join as join18 } from "node:path";
 
 // src/trace/model.ts
-import { basename as basename7, dirname as dirname8 } from "node:path";
+import { basename as basename7, dirname as dirname9 } from "node:path";
 import { readFileSync as readFileSync12, existsSync as existsSync13 } from "node:fs";
 import { join as join16 } from "node:path";
 var RELATIONS = {
@@ -12125,7 +12211,7 @@ function compareIds(a, b) {
 }
 function buildTrace(changeDir) {
   const graph = buildChangeGraph(changeDir);
-  const sddDir = dirname8(changeDir);
+  const sddDir = dirname9(changeDir);
   const spec = gatherSpecFacts(sddDir, graph);
   const fm = graph.files.find((f) => f.path === "change.md")?.frontmatter ?? {};
   const profile = fm["profile"] === "lite" ? "lite" : "full";
@@ -12383,7 +12469,7 @@ function trace(changeDir, options2) {
 // src/cli/hook-cmds.ts
 var S = { type: "string" };
 function defaultClassesFile(cliFile = fileURLToPath2(import.meta.url)) {
-  return join19(dirname9(cliFile), "..", "hooks", "tool-classes.json");
+  return join19(dirname10(cliFile), "..", "hooks", "tool-classes.json");
 }
 function traceActiveChanges(ctx, cwd, write2) {
   try {
@@ -12469,7 +12555,7 @@ var HOOK_ROWS = [
 // src/cli/install-copilot.ts
 import { createHash as createHash2 } from "node:crypto";
 import { existsSync as existsSync15, mkdirSync as mkdirSync5, readFileSync as readFileSync13, statSync as statSync11 } from "node:fs";
-import { basename as basename8, dirname as dirname10, join as join20 } from "node:path";
+import { basename as basename8, dirname as dirname11, join as join20 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 var PACKAGE_FILES = {
   manifest: "architect-target.json",
@@ -12528,8 +12614,8 @@ function readManifest(pkg) {
 function resolvePackage(given, cwd, cli) {
   if (given !== void 0) return normalisePath(given, { cwd });
   const file = normalisePath(cli);
-  const pkg = dirname10(dirname10(file));
-  const fromPackage = basename8(file) === "sdd.mjs" && basename8(dirname10(file)) === "scripts";
+  const pkg = dirname11(dirname11(file));
+  const fromPackage = basename8(file) === "sdd.mjs" && basename8(dirname11(file)) === "scripts";
   const manifest = fromPackage ? readManifest(pkg) : null;
   if (manifest === null || typeof manifest === "string" || manifest.target !== "copilot")
     throw refuse(file, "no --package given, and the running CLI is not the scripts/sdd.mjs of a Copilot package");
@@ -12707,7 +12793,7 @@ function installCopilot(ctx) {
   const written = [];
   const write2 = (abs, shown, bytes) => {
     try {
-      mkdirSync5(dirname10(abs), { recursive: true });
+      mkdirSync5(dirname11(abs), { recursive: true });
       writeFileAtomic(abs, bytes);
     } catch {
       const already = written.length > 0 ? written.join(", ") : "none";
@@ -12768,7 +12854,7 @@ function writeSerenaConfig(dataDir) {
 
 // src/workspace/serena-launch.ts
 import { spawnSync } from "node:child_process";
-import { dirname as dirname11, join as join22 } from "node:path";
+import { dirname as dirname12, join as join22 } from "node:path";
 import { fileURLToPath as fileURLToPath4 } from "node:url";
 var defaultSpawner = (command, args, env) => {
   const found = nativeExecutable(command);
@@ -12776,7 +12862,7 @@ var defaultSpawner = (command, args, env) => {
   return spawnSync(found.file, args, { stdio: "inherit", windowsHide: true, ...env ? { env: { ...env } } : {} });
 };
 var spawner = defaultSpawner;
-function readOnlyModeFile(cliDir = dirname11(fileURLToPath4(import.meta.url))) {
+function readOnlyModeFile(cliDir = dirname12(fileURLToPath4(import.meta.url))) {
   return normalisePath(join22(cliDir, "..", "serena", "architect-read-only.yml"));
 }
 function launchArgs(args, modeFile) {
@@ -13232,7 +13318,7 @@ function staleCheck(changeDir, write2) {
 import { spawnSync as spawnSync3 } from "node:child_process";
 import { readFileSync as readFileSync21 } from "node:fs";
 import { homedir } from "node:os";
-import { dirname as dirname12, join as join30 } from "node:path";
+import { dirname as dirname13, join as join30 } from "node:path";
 var HOSTS = ["opencode", "vscode", "vscode-insiders"];
 var PROBES = {
   opencode: { command: "opencode", args: ["--version"] },
@@ -13245,7 +13331,7 @@ var VERSION2 = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
 function run(p) {
   const match = findOnPath(p.command, pathValue(process.env), { env: process.env });
   if (match === null) return null;
-  const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, cwd: dirname12(match.file), stdio: ["ignore", "pipe", "pipe"] };
+  const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, cwd: dirname13(match.file), stdio: ["ignore", "pipe", "pipe"] };
   const r = match.kind === "shim" ? spawnSync3(windowsShell(), ["/d", "/s", "/c", `""${match.file}" ${p.args.join(" ")}"`], { ...opts, windowsVerbatimArguments: true }) : spawnSync3(match.file, [...p.args], opts);
   if (r.error || r.status !== 0) return null;
   return r.stdout;
@@ -13644,7 +13730,8 @@ function guardBash(ctx) {
 }
 function archiveCmd(ctx) {
   const dir2 = resolveChange(ctx, ctx.args["NNN"]);
-  const plan2 = planArchive(ctx.root, dir2, isoDate());
+  const today = ctx.env["SDD_TEST_TODAY"];
+  const plan2 = planArchive(ctx.root, dir2, today !== void 0 && /^\d{4}-\d{2}-\d{2}$/.test(today) ? today : isoDate());
   const dry = ctx.values["dry-run"] === true;
   ctx.out.line(`archive ${plan2.change}${dry ? " (dry run)" : ""}: ${plan2.ops.length} operation(s)`);
   for (const o of plan2.ops) ctx.out.line(formatOp(o));

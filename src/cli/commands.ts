@@ -455,10 +455,14 @@ function guardBash(ctx: CommandContext): number {
   return 2;
 }
 
-/** `sdd archive <NNN> [--dry-run]` (C001-REQ-913 … 921): plan in memory, print every operation, then apply. */
+/**
+ * `sdd archive <NNN> [--dry-run]` (C001-REQ-913 … 921, 924): plan in memory, print every operation, then
+ * apply. `SDD_TEST_TODAY=<YYYY-MM-DD>` replaces today's date (tests only; not a user-facing setting).
+ */
 function archiveCmd(ctx: CommandContext): number {
   const dir = resolveChange(ctx, ctx.args["NNN"]);
-  const plan = planArchive(ctx.root, dir, isoDate());
+  const today = ctx.env["SDD_TEST_TODAY"];
+  const plan = planArchive(ctx.root, dir, today !== undefined && /^\d{4}-\d{2}-\d{2}$/.test(today) ? today : isoDate());
   const dry = ctx.values["dry-run"] === true;
   ctx.out.line(`archive ${plan.change}${dry ? " (dry run)" : ""}: ${plan.ops.length} operation(s)`);
   for (const o of plan.ops) ctx.out.line(formatOp(o));
