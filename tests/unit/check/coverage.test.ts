@@ -1,10 +1,13 @@
 // C001-TC-1130 (C001-NFR-502; C001-T-080, finding F-5): the threshold check of the `coverage` step
 // (scripts/check/coverage.mjs) — lcov records of src/ merged per file, files no test loaded counted as
 // uncovered, 85% lines and 75% branches, and test-only variables that can raise but never lower a threshold.
+// F-7: on Node 20 the step reports skipped with its reason, runs no coverage and counts as passed.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { join } from "node:path";
-import { MIN_BRANCHES, MIN_LINES, parseLcov, srcPath, summarize, thresholds, verdict } from "../../../scripts/check/coverage.mjs";
+import { coverageSkip, MIN_BRANCHES, MIN_LINES, parseLcov, srcPath, summarize, thresholds, verdict } from "../../../scripts/check/coverage.mjs";
+import { repoRoot } from "../../helpers.ts";
 
 const ROOT = process.platform === "win32" ? "C:\\repo" : "/repo";
 const rec = (sf: string, da: [number, number][], brda: [number, number, number, string][] = []) =>
@@ -77,3 +80,35 @@ test("verdict passes at the thresholds and fails when a raised threshold is abov
   assert.equal(verdict(s, thresholds({ SDD_TEST_COVERAGE_MIN_LINES: "85.01" })).ok, false);
   assert.equal(verdict(s, thresholds({ SDD_TEST_COVERAGE_MIN_BRANCHES: "76" })).ok, false);
 });
+
+test("coverageSkip: Node 20 versions skip with the reason, Node 22 and later measure", () => {
+  for (const v of ["20.20.2", "v20.0.0", "20.11.1"]) {
+    const reason = coverageSkip(v);
+    assert.ok(reason !== null, v);
+    assert.match(reason!, /Node 20's test runner crashes while merging coverage/);
+    assert.match(reason!, /measured on Node 22\.22\.3/);
+  }
+  for (const v of ["22.22.3", "v22.13.0", "24.1.0", "18.20.0"]) assert.equal(coverageSkip(v), null, v);
+  assert.equal(coverageSkip(), coverageSkip(process.versions.node), "defaults to the running version");
+});
+
+const NODE20 = Number(process.versions.node.split(".")[0]) === 20;
+
+// Not skipped on any version (C001-TC-1128 allows only POSIX-only skips): on Node 20 the step itself is
+// run end to end; on other versions the step measures, which the four check runs show (C001-TC-1127).
+test(
+  "C001-TC-1130: on Node 20 `check --steps coverage` prints skipped with its reason, starts no coverage run and exits 0; on Node 22 the step measures",
+  () => {
+    if (!NODE20) {
+      assert.equal(coverageSkip(), null, `Node ${process.versions.node} measures`);
+      return;
+    }
+    const env: Record<string, string | undefined> = { ...process.env };
+    delete env["NODE_OPTIONS"];
+    const r = spawnSync(process.execPath, [join(repoRoot(), "scripts", "check.mjs"), "--steps", "coverage"], { cwd: repoRoot(), env, encoding: "utf8", timeout: 60000 });
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /^coverage: skipped — Node 20\./m);
+    assert.match(r.stdout, /^SKIP {2}coverage \(C001-NFR-502\) — Node 20\./m);
+    assert.doesNotMatch(r.stdout, /coverage mode:/, "no coverage run");
+  },
+);

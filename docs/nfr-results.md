@@ -10,9 +10,11 @@ Git Bash 5.2.26; Claude Code 2.1.299 (desktop-bundled, `CLAUDE_CODE_EXECPATH`); 
 **Commit measured:** `5eada4a` (working tree clean apart from untracked `bench/results/`).
 **Date:** 2026-10-21. No paid sessions were run for this task.
 
-**Re-measured by C001-T-080 (defect D-014) on 2026-10-22:** rows C001-NFR-301, 401, 403, 404 and 502, and
-§1, §2, §4, §5 and §7. Same machine; npm 10.9.2 with Node 22.22.3. **Commit measured:** working tree on
-`c9fc965` with the uncommitted T-080 changes (commit pending; the rows give the commit once it exists).
+**Re-measured by C001-T-080 (defects D-014, round 2 for F-6 and F-7) on 2026-10-22:** rows
+C001-NFR-301, 401, 403, 404 and 502, and §1, §2, §4, §5 and §7. Same machine; npm 10.9.2 with Node
+22.22.3. **Commit measured:** working tree on `b2117c9` (G3 re-approval after revision D-014/D-015),
+which holds the first T-080 round as `5cdae42`, plus the uncommitted round-2 changes (F-6 bench rule,
+F-7 coverage skip). Commit pending; the T-080 report gives it.
 
 ## Summary
 
@@ -29,16 +31,16 @@ Git Bash 5.2.26; Claude Code 2.1.299 (desktop-bundled, `CLAUDE_CODE_EXECPATH`); 
 | C001-NFR-203 No secrets in artifacts | ≥ 95% detection, ≤ 2% false positives | 69/69 detected (100%), 0/107 false positives (0%) | **pass** | `tests/security/secrets.test.ts` (output of the coverage run, §4) |
 | C001-NFR-204 Least-privilege tools | 0 differences from C001-IF-09 | 0 differences | **pass** | `tests/integration/cap02/agents-if09.test.ts` (passes in all 4 runs) |
 | C001-NFR-205 Injection resistance | 0 of ≥ 20 cases acted upon | not re-measured (paid evals); last result 0 of 21 at dev tier, milestone tier deferred to release | **not measured here** | `docs/security-results.md` §5, `docs/milestone-log.md` 2026-10-12 |
-| C001-NFR-301 Crash-safe state files | 0 corrupted files over 1,000 fault-injected runs | 2026-10-22, all four commands (250 runs each): 1 of 1,000 runs flagged (540 killed mid-run, 460 completed): an `archive` run killed between writing `change.md` (`status: archived`, a complete file) and moving the change folder. No torn file | **fail by the bench's rule** (finding F-6, decision pending) | `bench/results/faults-2026-10-22T09-15-24-050Z.json` (Node 22) |
+| C001-NFR-301 Crash-safe state files | 0 corrupted files over 1,000 fault-injected runs | 2026-10-22, Node 20.20.2, all four commands (250 runs each), rule of C001-TC-1126: **0 failing state files** over 1,000 runs (696 killed mid-run, 304 completed); `bench/faults.mjs` exit 0 | **pass** | `bench/results/faults-2026-10-22T19-05-33-841Z.json` |
 | C001-NFR-302 Deterministic generation | 0 differing bytes outside `generated_at` | 0 (`trace --write`, `status --write`, two runs on fx-large) | **pass** | `tests/integration/determinism.test.ts` (Node 20 and 22) |
 | C001-NFR-303 Lint correctness | 100% detection, 0 findings on clean fixtures | 56 of 56 fixture tests pass; `sdd lint 001` on this spec: 0 findings | **pass** | `npm run check` step "lint fixtures"; `tests/unit/lint/fixtures.test.ts` |
 | C001-NFR-304 Graceful degradation | 100% of phases on cfg-full, cfg-no-ripwire, cfg-bare | not measured: dogfood runs on three configurations (C001-T-074, todo) | **not measured** | — |
-| C001-NFR-401 Windows 11, both shells | `npm run check` passes on PowerShell 7 and Git Bash (+ TS-1102 install) | 2026-10-22: Node 22.22.3 exit 0 on both shells. Node 20.20.2 exit 1 on both shells, only the coverage step: Node 20's coverage reporter crashes (finding F-7); every other step passes. TS-1102 (manual install) not run here | **pass on Node 22; fail on Node 20 (coverage step only, F-7)** | §2 |
+| C001-NFR-401 Windows 11, both shells | `npm run check` passes on PowerShell 7 and Git Bash (+ TS-1102 install) | 2026-10-22: exit 0 in all four runs (Node 20.20.2 and 22.22.3, each in PowerShell 7 and Git Bash); on Node 20 the coverage step reports skipped with its reason (C001-NFR-502 Environment). TS-1102 (manual install) not run here | **pass** | §2 |
 | C001-NFR-402 macOS and Linux readiness | 0 platform-specific constructs outside the marked module | PLG-PORT-002: 0 findings; simulated POSIX path tests pass. Real macOS/Linux runs not measured here | **pass (static)**; OS runs not measured | §3; `.github/workflows/check.yml` (dormant, `workflow_dispatch`) |
-| C001-NFR-403 Node 20 and 22 | 100% unit-test pass rate on both | 2026-10-22: 1,593 of 1,593 run tests pass on Node 20.20.2 and on Node 22.22.3, in both shells (1 POSIX-only skip) | **pass** | §2 |
-| C001-NFR-404 Artifact encoding | 0 files violating UTF-8 without BOM, LF | 2026-10-22, step "artifact encoding scan" of `npm run check`: files written by the CLI 0 of 622 (fx-large) and 0 of 12 (fx-empty); repository `.sdd/` 1 of 334 reported (CRLF in the working tree, not written by the CLI) | **pass** (all four check runs) | §5 |
+| C001-NFR-403 Node 20 and 22 | 100% unit-test pass rate on both | 2026-10-22: 1,602 of 1,602 run tests pass on Node 20.20.2 and on Node 22.22.3, in both shells (1 POSIX-only skip) | **pass** | §2 |
+| C001-NFR-404 Artifact encoding | 0 files violating UTF-8 without BOM, LF | 2026-10-22, step "artifact encoding scan" of `npm run check`, all four runs: files written by the CLI 0 of 622 (fx-large) and 0 of 12 (fx-empty); repository `.sdd/` 1 of 335 reported (CRLF in the working tree, not written by the CLI) | **pass** | §5 |
 | C001-NFR-501 Single-file runtime | 0 runtime imports of unbundled packages | `sdd.mjs` copied alone to a folder with no `node_modules` above it: `version`, `lint`, `status --write`, `trace --write` run on Node 20 and 22; 8 import specifiers, all Node built-ins | **pass** | §6 |
-| C001-NFR-502 CLI test coverage | ≥ 85% lines, ≥ 75% branches | 2026-10-22, step "coverage" of `npm run check` on Node 22.22.3: 88.05% lines (8,751/9,939), 82.50% branches (4,950/6,000) in Git Bash; 88.51% / 82.41% in PowerShell 7; no exclusions. Node 20.20.2 gives no figure (F-7) | **pass (Node 22)** | §4 |
+| C001-NFR-502 CLI test coverage | ≥ 85% lines, ≥ 75% branches | 2026-10-22, step "coverage" of `npm run check` on Node 22.22.3, no exclusions: 88.72% lines (8,818/9,939), 82.06% branches (4,937/6,016) in Git Bash; 89.09% (8,855/9,939) / 82.48% (4,968/6,023) in PowerShell 7. On Node 20.20.2 the step is skipped with its reason (Environment of the NFR; F-7) | **pass** | §4 |
 | C001-NFR-503 One rule, one module | 0 catalogue codes without module or fixture | PLG-RULES-001: 0 errors, 12 pending (LINT-RISK-001, LINT-ROLL-001, LINT-HAND-001, LINT-HAND-002: no module and no fixture, owned by C001-T-076, todo) | **open until T-076** | §3 |
 | C001-NFR-601 Actionable messages | 0 catalogue entries without code, location, fix | PLG-MSG-001: 0 findings | **pass** | §3 |
 | C001-NFR-602 Time to first change | ≤ 15 min on a fresh profile | not measured: manual timed run by P-01 (`tests/manual/TS-1102.md`, C001-T-072) | **not measured** | — |
@@ -46,10 +48,9 @@ Git Bash 5.2.26; Claude Code 2.1.299 (desktop-bundled, `CLAUDE_CODE_EXECPATH`); 
 | C001-NFR-702 CLI diagnostics | 0 subcommands without `SDD_DEBUG` traces | 0 (test enumerates every command) | **pass** | `tests/integration/cli/frontend.test.ts` "SDD_DEBUG=1 writes timing and decision traces…" (Node 20 and 22) |
 | C001-NFR-801 License compliance | 0 files or packages outside the allowlist | build licence check passes; SPDX header scan of the fresh tarball: 0 errors | **pass** | `npm run check` steps "build" and "architect-sdd tarball check" |
 
-Verdict counts (2026-10-21; rows of 2026-10-22 as re-measured by C001-T-080): 20 pass (one static
-only, NFR-502 on Node 22), 2 fail or partly fail (NFR-301 by the bench's rule, F-6; NFR-401 on Node 20,
-coverage step only, F-7), 1 open until its owner task (NFR-503), 5 not measured here (NFR-106, 205,
-304, 602 and the real-OS part of NFR-402).
+Verdict counts (2026-10-21; rows of 2026-10-22 as re-measured by C001-T-080): 22 pass (one static
+only), 0 fail, 1 open until its owner task (NFR-503), 5 not measured here (NFR-106, 205, 304, 602 and
+the real-OS part of NFR-402).
 
 The two test cases of this task: **C001-TC-705** (`tests/integration/cap07/TS-705.test.ts`) and
 **C001-TC-1119** (`tests/integration/cap11/TS-1119.test.ts`) pass in all four check runs (Node 20 and 22,
@@ -79,8 +80,36 @@ processes killed mid-run, 256 completed; 0 corrupted state files; 24 orphan `*.t
 left next to state files (never in place of one; the cleanup is a known candidate improvement in
 `docs/dogfood.md`).
 
-**2026-10-22 (C001-T-080), with `archive`:** `node bench/faults.mjs 1000`, Node 22.22.3, nothing else
-running: 250 runs each of `status --write`, `task set`, `gate approve` and `archive` (on a copy of
+**2026-10-22 (C001-T-080, round 2): the campaign of record.** `npm run bench` with Node 20.20.2 first in
+`PATH` (Git Bash; `node --version` → `v20.20.2` in the same shell), full run including the fault
+campaign: exit 0, 220 s. Then `node scripts/build.mjs && node bench/run.mjs --skip-faults` with Node
+22.22.3 (exit 0, 58 s). Nothing else running.
+
+| Benchmark | p95 Node 20.20.2 | p95 Node 22.22.3 | Threshold |
+|---|---|---|---|
+| `bench/lint.mjs` | 1,807 ms | 1,290 ms | 5,000 ms |
+| `bench/lint-quick.mjs` | 412 ms | 315 ms | 800 ms |
+| `bench/guards.mjs` | 224 ms | 203 ms | 300 ms |
+| `bench/session-start.mjs` | 573 ms | 427 ms | 1,000 ms |
+| `mcp-refusals` / `mcp-writes` / `generate` (CHG-002) | 2 / 105 / 1,129 ms | 1 / 77 / 1,375 ms | 300 / 800 / 5,000 ms |
+| `bench/faults.mjs` (C001-NFR-301) | **0 failing files of 1,000 runs** | — | 0 |
+
+Fault campaign detail (Node 20.20.2, `bench/results/faults-2026-10-22T19-05-33-841Z.json`): 250 runs each
+of `status --write`, `task set`, `gate approve` and `archive` (on a copy of fx-large made archivable:
+G3 approved, every task done); 696 killed mid-run, 304 completed; **0 failing state files**; 22
+orphan temporary files (next to state files, never in place of one). The pass rule is that of
+C001-TC-1126 (finding F-6): per state file and run, the previous version, or a complete version that
+the command writes to that path in an uninterrupted run, intermediate versions included. Absence
+passes for a file that did not exist before or that the command moves away. The versions come from one
+uninterrupted reference run per command under `bench/record-writes.mjs`, which records the state files
+after every rename, unlink and write. It found one intermediate version, `archive`'s `change.md` with
+`status: archived` before the folder move; the other commands write only their final versions. The
+bench exits 1 when any run has a failing file (`tests/unit/bench/faults-rule.test.ts` covers the rule).
+The archive left half-done by such a kill, and the doubled living entries of a re-run, are D-015
+(C001-T-081).
+
+**2026-10-22 (C001-T-080, round 1, superseded):** `node bench/faults.mjs 1000`, Node 22.22.3, nothing else
+running, with the earlier rule (previous version or final version only): 250 runs each of `status --write`, `task set`, `gate approve` and `archive` (on a copy of
 fx-large made archivable: G3 approved, every task done). 540 killed mid-run, 460 completed, 21 orphan
 temporary files, **1 flagged state file**: run 515, `archive`, `.sdd/001-change-001/change.md`. The
 file is neither the previous version nor absent (the bench's "new version", since `archive` moves
@@ -92,23 +121,29 @@ The bench printed `faults: FAIL` but exited 0: `bench/faults.mjs` sets no exit c
 
 ## 2. `npm run check` under both shells and both Node versions (NFR-401, 403)
 
-**2026-10-22 (C001-T-080, C001-TC-1127):** four sequential runs, nothing else running, the given Node
-first in `PATH` (`tests/manual/TC-1127.md`); 10 steps, with the new `encoding` and `coverage` steps.
+**2026-10-22 (C001-T-080, C001-TC-1127, round 2):** four sequential runs, nothing else running, the
+given Node first in `PATH` (`tests/manual/TC-1127.md`); 10 steps, with the `encoding` and `coverage`
+steps. On Node 20 the coverage step prints `SKIP  coverage (C001-NFR-502) — Node 20.20.2: Node 20's test
+runner crashes while merging coverage from several processes ("reading 'startOffset'"); C001-NFR-502 is
+measured on Node 22.22.3` and counts as passed (finding F-7).
 
-| Shell | Node | typecheck | validate | build | tests | fixtures | encoding | structure | targets | tarball | coverage | Tests (pass / fail / skip of 1,594) | Exit | Time |
+| Shell | Node | typecheck | validate | build | tests | fixtures | encoding | structure | targets | tarball | coverage | Tests (pass / fail / skip of 1,603) | Exit | Time |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Git Bash 5.2.26 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FAIL** (F-7) | 1,593 / 0 / 1 | **1** | 1,060 s |
-| Git Bash 5.2.26 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (88.05% / 82.50%) | 1,593 / 0 / 1 | **0** | 1,124 s |
-| PowerShell 7.6.6 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FAIL** (F-7) | 1,593 / 0 / 1 | **1** | 1,144 s |
-| PowerShell 7.6.6 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (88.51% / 82.41%) | 1,593 / 0 / 1 | **0** | 1,133 s |
+| Git Bash 5.2.26 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | SKIP (Node 20) | 1,602 / 0 / 1 | **0** | 439 s |
+| Git Bash 5.2.26 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (88.72% / 82.06%) | 1,602 / 0 / 1 | **0** | 1,200 s |
+| PowerShell 7.6.6 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | SKIP (Node 20) | 1,602 / 0 / 1 | **0** | 432 s |
+| PowerShell 7.6.6 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (89.09% / 82.48%) | 1,602 / 0 / 1 | **0** | 1,176 s |
 
-The coverage step takes about 11–13 minutes of each run (15 batches of test files in coverage mode,
-then the bundle rebuild). On Node 20.20.2 the tests also pass in coverage mode (0 failures in every
-batch). Each batch prints `Could not report code coverage. TypeError: Cannot read properties of undefined (reading 'startOffset')`,
-so the step reads no lcov record and fails (F-7). The Node 20 failures of 2026-10-21 (F-1, F-2) do not
-occur. The Git Bash runs in this table were repeated after an interim change to the coverage source
-map was reverted (§4); the two earlier Git Bash runs with the same code gave the same verdicts
-(Node 20: 1,026 s, exit 1, coverage only; Node 22: 1,168 s, exit 0, 88.58% / 82.49%).
+The only skipped test is the POSIX-only lookup test. The coverage step takes about 13 minutes of each
+Node 22 run (15 batches of test files in coverage mode, then the bundle rebuild). The Node 20 failures
+of 2026-10-21 (F-1, F-2) do not occur. Free disk space stayed above 20 GB. Before the runs, the test
+counts of this repository's CHG-001 plan were brought up to revision D-015 (`tests/integration/cap01/TS-105.test.ts`,
+`tests/integration/trace/chg-001.test.ts`, `tests/unit/lint/spec-facts.test.ts`, `tests/unit/model/graph.test.ts`).
+The ERR-CLI-014 condition in `src/cli/errors.ts` was also mirrored from the revised C001 `errors.md` (the
+catalogue test compares them; the condition text is not printed, so no output changes).
+
+Round 1 (2026-10-22, before F-7 was decided): the same four runs exited 1 on Node 20 in both shells,
+coverage step only (Node 20's reporter crash), and 0 on Node 22 (88.05% / 82.50% and 88.51% / 82.41%).
 
 **2026-10-21 (C001-T-065):**
 
@@ -152,7 +187,8 @@ tests (`tests/unit/io/paths.test.ts`).
 
 ## 4. Coverage (NFR-502)
 
-**2026-10-22 (C001-T-080): the `coverage` step of `npm run check`.** `SDD_TEST_COVERAGE=1 node
+**2026-10-22 (C001-T-080): the `coverage` step of `npm run check`, measured on Node 22.22.3; on Node 20
+the step is skipped with its reason (F-7, C001-NFR-502 Environment).** `SDD_TEST_COVERAGE=1 node
 scripts/test.mjs` follows the method below. In addition, the parallel test files run in batches of 16
 (`SDD_TEST_COVERAGE_BATCH`), each a `node --test --experimental-test-coverage` run with its own lcov file,
 joined into `coverage/lcov.info`. The bundles' inline source maps keep only the segments of `src/`
@@ -173,9 +209,9 @@ positions in `src/` map to the same source and line, 0 differ, and 0 positions i
 
 | Run (Node 22.22.3) | Lines | Branches |
 |---|---|---|
-| check, Git Bash | **88.05%** (8,751 / 9,939) | **82.50%** (4,950 / 6,000) |
-| check, PowerShell 7 | **88.51%** (8,797 / 9,939) | **82.41%** (4,946 / 6,002) |
-| earlier runs, same method | 88.58%, 89.86% | 82.49%, 82.43% |
+| check round 2, Git Bash | **88.72%** (8,818 / 9,939) | **82.06%** (4,937 / 6,016) |
+| check round 2, PowerShell 7 | **89.09%** (8,855 / 9,939) | **82.48%** (4,968 / 6,023) |
+| earlier runs, same method | 88.05%, 88.51%, 88.58%, 89.86% | 82.50%, 82.41%, 82.49%, 82.43% |
 
 The figure varies by about 1.8 points between runs. Coverage from processes that tests kill, or that
 time out, is not recorded, and which ones that is varies with the load. 117 of 118 files are loaded.
@@ -270,13 +306,13 @@ folder holds only `sdd.mjs` (`tests/smoke.test.ts`).
 
 | ID | NFR | Finding | Evidence |
 |---|---|---|---|
-| F-1 (**resolved** by C001-T-080, commit pending) | C001-NFR-403, 401 (also C002-CON-10) | On Node 20.20.2 the Claude Code packages ship `plugins/architect/targets/`. `scripts/package.mjs` excludes it with a `cpSync` filter that compares `relative(src, p)`; Node 20's `fs.cpSync` passes the filter `\\?\`-prefixed long paths on Windows, so the relative path never starts with `targets` and nothing is excluded. Node 22 passes plain paths. Reproduced with a 10-line script: Node 20 copies `targets/x/a.md`, Node 22 does not. | 3 failing tests of §2 |
-| F-2 (**resolved** by C001-T-080, commit pending) | C001-NFR-403 | On Node 20.20.2 the cleanup of `tests/integration/mcp/shell.test.ts` "output caps and timeout" fails with `EPERM` on the stub `git.exe` (2 of 2 runs alone): the timed-out process tree is apparently still alive when the result returns. No stub process remained afterwards. The Serena row (TC-685 row 1) shows the same `EPERM` once under load. Needs a decision: wait for the tree to exit before answering `timed_out`, or retry the removal in the test. | §2 |
-| F-3 (**resolved** by C001-T-080 on Node 22, commit pending) | C001-NFR-502 | Line coverage of `src/` is 79.99% (81.42% without `src/mcp/`), below the 85% threshold; branches 84.36% meet 75%. | §4 |
-| F-4 (**resolved** by C001-T-080, commit pending; the campaign's result is F-6) | C001-NFR-301 | The fault campaign (`bench/faults.mjs`) and the deterministic fault test (`tests/integration/faults.test.ts`) do not cover `archive`, one of the four commands the NFR's method names; the bench note still says "archive joins with C001-T-053", and T-053 is done. | `bench/faults.mjs` lines 3 and 98 |
-| F-5 (**resolved** by C001-T-080, commit pending) | C001-NFR-404, 502 | The methods name `npm run check` ("post-test scan in `npm run check`", coverage "`npm run check`"), but `scripts/check.mjs` has neither an encoding scan nor a coverage step. Both were measured here by one-off scripts. | `scripts/check.mjs` STEPS |
-| F-6 (new, 2026-10-22) | C001-NFR-301 | A kill of `sdd archive` between its in-place writes (living specs, glossary, `change.md` with `status: archived`) and the move of the change folder leaves a change folder that says `archived` but is not under `_archive/` (1 of 1,000 bench runs; 1 of 400 probe runs). Every file is complete. Re-running `sdd archive` after a failed archive also merges the living entries twice (seen while extending `tests/integration/faults.test.ts`: `C001-REQ-101` twice in `CAP-area-1.md`). Needs a decision: either the bench counts any complete version the command writes, or `archive` gets recovery or idempotent merging. | §1; `bench/results/faults-2026-10-22T09-15-24-050Z.json` |
-| F-7 (new, 2026-10-22) | C001-NFR-401, 502 | On Node 20.20.2 the coverage step cannot produce a figure: Node 20's test runner fails to merge coverage of several processes (`TypeError … reading 'startOffset'`), so `npm run check` exits 1 on Node 20 in both shells, although every test passes. Needs a decision: run the coverage step on Node 22 only (Node 20 reports it as skipped with the reason), or accept the Node 20 failure. | §2, §4 |
+| F-1 (**resolved** by C001-T-080, `5cdae42`) | C001-NFR-403, 401 (also C002-CON-10) | On Node 20.20.2 the Claude Code packages ship `plugins/architect/targets/`. `scripts/package.mjs` excludes it with a `cpSync` filter that compares `relative(src, p)`; Node 20's `fs.cpSync` passes the filter `\\?\`-prefixed long paths on Windows, so the relative path never starts with `targets` and nothing is excluded. Node 22 passes plain paths. Reproduced with a 10-line script: Node 20 copies `targets/x/a.md`, Node 22 does not. | 3 failing tests of §2 |
+| F-2 (**resolved** by C001-T-080, `5cdae42`) | C001-NFR-403 | On Node 20.20.2 the cleanup of `tests/integration/mcp/shell.test.ts` "output caps and timeout" fails with `EPERM` on the stub `git.exe` (2 of 2 runs alone): the timed-out process tree is apparently still alive when the result returns. No stub process remained afterwards. The Serena row (TC-685 row 1) shows the same `EPERM` once under load. Needs a decision: wait for the tree to exit before answering `timed_out`, or retry the removal in the test. | §2 |
+| F-3 (**resolved** by C001-T-080, `5cdae42`; measured on Node 22.22.3) | C001-NFR-502 | Line coverage of `src/` is 79.99% (81.42% without `src/mcp/`), below the 85% threshold; branches 84.36% meet 75%. | §4 |
+| F-4 (**resolved** by C001-T-080, `5cdae42`; campaign of record on Node 20.20.2, §1) | C001-NFR-301 | The fault campaign (`bench/faults.mjs`) and the deterministic fault test (`tests/integration/faults.test.ts`) do not cover `archive`, one of the four commands the NFR's method names; the bench note still says "archive joins with C001-T-053", and T-053 is done. | `bench/faults.mjs` lines 3 and 98 |
+| F-5 (**resolved** by C001-T-080, `5cdae42`) | C001-NFR-404, 502 | The methods name `npm run check` ("post-test scan in `npm run check`", coverage "`npm run check`"), but `scripts/check.mjs` has neither an encoding scan nor a coverage step. Both were measured here by one-off scripts. | `scripts/check.mjs` STEPS |
+| F-6 (**resolved** by C001-T-080 round 2, commit pending: the bench applies the C001-TC-1126 rule and exits non-zero on a failing file; the resumable archive is D-015 / C001-T-081) | C001-NFR-301 | A kill of `sdd archive` between its in-place writes (living specs, glossary, `change.md` with `status: archived`) and the move of the change folder leaves a change folder that says `archived` but is not under `_archive/` (1 of 1,000 bench runs; 1 of 400 probe runs). Every file is complete. Re-running `sdd archive` after a failed archive also merges the living entries twice (seen while extending `tests/integration/faults.test.ts`: `C001-REQ-101` twice in `CAP-area-1.md`). Needs a decision: either the bench counts any complete version the command writes, or `archive` gets recovery or idempotent merging. | §1; `bench/results/faults-2026-10-22T09-15-24-050Z.json` |
+| F-7 (**resolved** by C001-T-080 round 2, commit pending: on Node 20 the coverage step reports skipped with its reason and counts as passed, Q-cov-node20-01) | C001-NFR-401, 502 | On Node 20.20.2 the coverage step cannot produce a figure: Node 20's test runner fails to merge coverage of several processes (`TypeError … reading 'startOffset'`), so `npm run check` exits 1 on Node 20 in both shells, although every test passes. Needs a decision: run the coverage step on Node 22 only (Node 20 reports it as skipped with the reason), or accept the Node 20 failure. | §2, §4 |
 
 Not findings, but open: NFR-503 until C001-T-076; NFR-106, NFR-304 until C001-T-073/T-074; NFR-602
 and TS-1102 until C001-T-072; NFR-205 milestone tier before release; macOS/Linux runs of NFR-402 via

@@ -26,7 +26,7 @@ const entries: [string, string, string, string][] = [
   ["ERR-CLI-011", "Open clarification markers at approval", "Approval blocked by open markers: `<list>`", "Answer the questions or `--waive` them"],
   ["ERR-CLI-012", "Unresolved critic blockers at approval", "Approval blocked by critic blockers: `<list>`", "Resolve the findings or `--waive` them"],
   ["ERR-CLI-013", "Task transition not allowed", "Transition `<from>` → `<to>` not allowed", "See task state machine"],
-  ["ERR-CLI-014", "Change not active", "Change `<NNN>` is `<stopped|archived>`", "Create a new change"],
+  ["ERR-CLI-014", "Change not active. Exception: `sdd archive` resumes a change that is `archived` but still outside `.sdd/_archive/` instead of refusing it; a `stopped` change is refused","Change `<NNN>` is `<stopped|archived>`", "Create a new change"],
   ["ERR-CLI-015", "Predecessor phase not approved at approval", "`<phase>` requires approved `<predecessor>`", "Approve the predecessor first"],
   ["ERR-CLI-016", "Internal error (exit 3)", "Internal error: `<detail>`", "Re-run with `SDD_DEBUG=1` and report"],
   ["ERR-CLI-017", "Atomic write failed (exit 3)", "Could not write `<file>`; previous version kept", "Check disk space and permissions"],

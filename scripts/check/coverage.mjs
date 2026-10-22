@@ -20,6 +20,16 @@ export function thresholds(env = process.env) {
   return { lines: raise(MIN_LINES, env["SDD_TEST_COVERAGE_MIN_LINES"]), branches: raise(MIN_BRANCHES, env["SDD_TEST_COVERAGE_MIN_BRANCHES"]) };
 }
 
+/**
+ * Why the `coverage` step is skipped on this Node.js version, or null when it measures (C001-T-080, F-7;
+ * C001-NFR-502 Environment): on Node 20 the test runner crashes while merging the coverage of several
+ * processes, so C001-NFR-502 is measured on Node 22.22.3. The skipped step counts as passed.
+ */
+export function coverageSkip(version = process.versions.node) {
+  if (Number(String(version).replace(/^v/, "").split(".")[0]) !== 20) return null;
+  return `Node ${String(version).replace(/^v/, "")}: Node 20's test runner crashes while merging coverage from several processes ("reading 'startOffset'"); C001-NFR-502 is measured on Node 22.22.3`;
+}
+
 /** `src/…` path of an lcov SF entry relative to `root`, with `/`; null outside src/. Case-insensitive on Windows. */
 export function srcPath(sf, root) {
   const abs = isAbsolute(sf) ? sf : join(root, sf);

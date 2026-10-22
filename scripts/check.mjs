@@ -8,11 +8,13 @@
 // files the bundled CLI writes for a BOM, CR bytes and invalid UTF-8 (scripts/check/encoding.mjs). The last
 // step `coverage` (C001-NFR-502) runs the tests in coverage mode (scripts/test.mjs, SDD_TEST_COVERAGE=1),
 // checks the thresholds over src/ (scripts/check/coverage.mjs), and always restores the shipped bundles
-// with scripts/build.mjs, also when the tests or the threshold fail (C001-T-080, finding F-5).
+// with scripts/build.mjs, also when the tests or the threshold fail (C001-T-080, finding F-5). On Node 20 the
+// step runs nothing and reports skipped with the reason, counting as passed (finding F-7).
 //   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,encoding,structure,targets,tarball,coverage]
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { coverageSkip } from "./check/coverage.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const node = process.execPath;
@@ -47,6 +49,12 @@ const STEPS = {
   coverage: {
     title: "coverage (C001-NFR-502)",
     run: () => {
+      // F-7: on Node 20 neither the coverage mode nor the threshold check runs; the step counts as passed.
+      const skip = coverageSkip();
+      if (skip !== null) {
+        console.log(`coverage: skipped — ${skip}`);
+        return { status: 0, skipped: skip };
+      }
       let tests = { status: 1 };
       let threshold = { status: 1 };
       try {
