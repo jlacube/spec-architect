@@ -35,3 +35,9 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Allow the IF-14 read-only forms: default map with `--max-tokens`, `--test-gate=<file>`, `--limit`; corpus updated, deny cases kept for anything else (Recommended) · 2. Keep the guard strict, rewrite the code-discovery skill and IF-14 (loses the ranked map) · 3. Defer (known failure for v0.1.0)
 - **Answer:** P-01: "Allow read-only forms (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-22 — defect D-014 (found in C001-T-065)
+
+### Q-coverage-01 — Line coverage 79.99% against C001-NFR-502's 85%
+- **Options:** 1. Write tests to 85%, and fix the Node 20 packaging filter, the Node 20 test cleanup, the archive fault coverage and the npm run check steps in one catch-up task (Recommended) · 2. Lower NFR-502 to 80% lines · 3. Exclude src/mcp from the measure
+- **Answer:** P-01: "Write tests to 85% (Recommended)"
