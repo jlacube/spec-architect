@@ -107,3 +107,21 @@ Scope: 4945599 (20-plan). Lint 0. Appended by the conductor from the critic's re
 | CR-10 | minor | C001-T-079, ADR-006 | verification runs `node --test tests/…ts` directly (fails on Node 20 / 22.13) | `npm test -- cap11/TS-1107 cap11/TS-1125 guards/bash-corpus` | fixed |
 
 All findings of this section fixed (architect, test-designer, planner; T-079 wording aligned by the conductor), 2026-10-21.
+
+
+## Revision D-014 F-6/F-7 and D-015 (2026-10-22)
+
+Scope: c3e7287 (20-plan), against D-014 F-6/F-7, D-015, Q-cov-node20-01, Q-archive-faults-01. Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-11 | major | T-081, REQ-917, RISK-015 | a cross-capability rename cannot resume: files are written in sorted order, so a failure between source and target writes loses the entry (or leaves it in both, and locate picks the wrong one) | write gaining files before losing files; state how an ID found in two living files is resolved; add the split state to RISK-015 | open |
+| CR-12 | major | TC-1131, D-015, REQ-920 | atomic-write-fail-at=k cannot reach "archived, not moved": change.md is the last atomic write and the folder move is a plain renameSync (no EPERM retry) | a fault switch at the folder move (or build the state in the fixture); name the mechanism in TC-1131 | open |
+| CR-13 | major | TC-1131, T-081 | "never key on the date" is untested: the CLI always uses today's date and TC-1131 compares same-date runs | test-only date switch as a T-081 target; a TC-1131 case re-run on a later date (each ID once, each History row once) | open |
+| CR-14 | minor | T-081, REQ-921, TC-922 | step 4 keeps glossary and status ops; step 5 claims dry-run lists only what remains | skip already-matching glossary rows and an already-archived status, or limit the claim to delta ops | open |
+| CR-15 | minor | TC-1126, T-080, NFR-301 | the exact bench pass rule lives only in T-080; TC-1126 has the short form | move the rule into TC-1126's Pass cell; T-080 links to it | open |
+| CR-16 | minor | T-081, REQ-920, RB-003 | the recovery sentence ("run /architect:archive again") is wrong after the folder move (ERR-CLI-002) | cover both cases: before the move re-run archive; if already under _archive/, run sdd status --write | open |

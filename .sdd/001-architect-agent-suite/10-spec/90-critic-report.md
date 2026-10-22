@@ -144,3 +144,17 @@ Scope: `git diff 278ef7d~1 4945599 -- .sdd/001-architect-agent-suite/` (architec
 | CR-15 | minor | IF-07 §3.1, REQ-1003 | the guard checks only presence and digits; the size limit (≤ 4000 tokens, ≤ 50 rows) belongs to REQ-1003 / TS-1004 — not stated for both forms | one sentence in §3.1 | fixed |
 
 All findings of this section fixed (architect, test-designer, planner; T-079 wording aligned by the conductor), 2026-10-21.
+
+
+## Revision D-014 F-7 and D-015 (2026-10-22)
+
+Scope: `git diff c3895f8 c3e7287 -- .sdd/001-architect-agent-suite/` (spec-writer 7bb3fe6), against D-014 F-7, D-015, Q-cov-node20-01, Q-archive-faults-01. Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-16 | minor | NFR-502, NFR-403, REF-WIN | REF-WIN is defined with Node 20 LTS only; NFR-502 now names Node 22.22.3, pinned to a patch | REF-WIN with "Node 20 LTS and 22 LTS (nvm-windows)"; NFR-502 "REF-WIN, Node 22 LTS (measured with 22.22.3)" | open |
+| CR-17 | major | D-015, REQ-914, REQ-920, T-081, TC-1131 | the archive resume changes user-visible behaviour (exit 0 instead of ERR-CLI-014) but no REQ/AC/TS states it; REQ-914 does not forbid duplicates; TC-1131 borrows TS-915 | one CAP-09 unwanted-behaviour REQ (interrupted archive completes on re-run, same result as one run) with AC and TS; TC-1131, T-081 and D-015 point to it | open |
