@@ -39,8 +39,8 @@ of defect D-015 is C001-T-081.
 | modify | `tests/integration/mcp/shell.test.ts › "output caps and timeout…"` | F-2: after the `timed_out` answer, wait until the stub process tree has ended, then remove the stub folder. The `log` stub script writes its `process.pid` to a file in the fixture. The test then polls that PID with the `alive(pid)` helper that the C002-TS-687 test of the same file already uses, under a bounded deadline (for example 10 s). The test fails if the deadline passes, and never retries the removal blindly |
 | modify (only if the EPERM recurs in the runs of step 9) | `tests/integration/cli/serena-user-data.test.ts › C002-TS-685 row 1` | the same wait-before-cleanup for the `serena.exe` stub (`docs/nfr-results.md` §2, flaky under load) |
 | modify | `bench/faults.mjs › COMMANDS`, header comment, `note` | F-4: add `archive` (C001-REQ-913 preconditions met by the fixture). Split the 1,000 runs evenly over `status --write`, `task set`, `gate approve` and `archive` (250 each). The state-file list gains the files `archive` writes: `_living/` specs, `_archive/` change folder, `registry.json`, `SDD.md`. Remove the "joins with C001-T-053" notes |
-| modify | `bench/faults.mjs › pass rule, exit code` | F-6: the C001-TC-1126 pass rule, per state file. A file passes when it is its previous version or a complete version that the command writes to that path in an uninterrupted run, intermediate versions included (for example `change.md` with `status: archived` before the folder move). Absence passes for a file that did not exist before or that the command moves away. The stricter "old version or absent" rule goes. The bench exits non-zero when any run has a failing file (it printed `FAIL` and exited 0) |
-| add | `tests/unit/bench/faults-rule.test.ts` | the pass rule of `bench/faults.mjs` (exported) passes previous, new, intermediate and absent contents as above, and fails a truncated file |
+| modify | `bench/faults.mjs › pass rule, exit code` | F-6: the pass rule and the exit code stated in the Location cell of C001-TC-1126 (`../60-test-plan.md` §8) replace the stricter "old version or absent" rule. Today the bench prints `FAIL` and exits 0 |
+| add | `tests/unit/bench/faults-rule.test.ts` | the pass rule of `bench/faults.mjs` (exported) passes the previous, new, intermediate and absent cases of C001-TC-1126, and fails a truncated file |
 | modify | `tests/integration/faults.test.ts › COMMANDS` | F-4: an `archive` entry with a `prepare` that puts the fixture change into an archivable state. The state check covers the files `archive` writes |
 | add | `scripts/check/encoding.mjs` | F-5, C001-NFR-404: scan for a UTF-8 BOM, any CR byte and invalid UTF-8. Scope (a), which fails the step: a fresh fx-large workspace (`tests/fixtures/gen-large.mjs`) after the bundled CLI runs `status --write` and `trace --write`, plus a workspace that the CLI created from fx-empty (`init`, `change new`). Scope (b), reported only: this repository's `.sdd/` working tree, printed as a count with paths, because those files are not written by the CLI and git normalises them at commit (`.gitattributes` `.sdd/** text eol=lf`). Output: one line per violating file and a total |
 | add | `tests/unit/check/encoding.test.ts` | the scanner flags a seeded BOM file, a CRLF file and an invalid-UTF-8 file, and passes a clean LF file |
@@ -75,9 +75,8 @@ of defect D-015 is C001-T-081.
    `archive` and leave each state file old or new). Then add it to `bench/faults.mjs`.
    Suppose an interrupted `archive` leaves a file that is neither old nor new. That is a defect
    against C001-REQ-126 / C001-NFR-301: report it and stop that part.
-   F-6: write the pass-rule unit test first, then give `bench/faults.mjs` the C001-TC-1126 rule of
-   the Targets and the non-zero exit on failure. A mixed state (some files new, others old, every
-   file complete) passes. Duplicates after a re-run of an interrupted `archive` are D-015
+   F-6: write the pass-rule unit test first, then give `bench/faults.mjs` the pass rule and the
+   non-zero exit of C001-TC-1126. Duplicates after a re-run of an interrupted `archive` are D-015
    (C001-T-081), not a failure of this rule.
 4. F-5 encoding. Write the scanner test first, then `scripts/check/encoding.mjs` with scopes (a)
    and (b) as the Targets give them, then the `encoding` step.
