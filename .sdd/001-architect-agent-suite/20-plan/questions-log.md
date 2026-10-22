@@ -53,3 +53,8 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Align bench/faults.mjs with C001-NFR-301 (any complete version passes) and log a defect for an archive that resumes without duplicates (Recommended) · 2. Make archive recoverable inside C001-T-080 and keep the stricter bench rule
 - **Answer:** P-01: "Align bench, log defect (Recommended)"
 - **Extracted instructions:** none
+
+### Q-archive-resume-01 — state the archive resume in the spec (planner, critic CR-17)
+- **Options:** 1. Add a CAP-09 requirement with AC and scenario: an interrupted archive completes on re-run with the same result as one uninterrupted run (Recommended) · 2. No spec change; D-015, C001-T-081 and C001-TC-1131 are the record
+- **Answer:** P-01: "Add a CAP-09 requirement (Recommended)"
+- **Extracted instructions:** none
