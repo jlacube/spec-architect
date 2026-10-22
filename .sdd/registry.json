@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-22T20:18:58Z",
+  "generated_at": "2026-10-22T21:38:17Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -34,7 +34,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 63,
-          "done": 56,
+          "done": 57,
           "blocked": 0,
           "in_progress": 0
         },
@@ -187,9 +187,9 @@
           "summary": "Found in C001-T-080 (F-6): sdd archive is not idempotent after an interrupted run. Killed between its in-place writes (change.md status archived, _living/ entries appended) and the folder move, it leaves change 001 marked archived outside _archive/; re-running sdd archive appends the same ADDED entries again (C001-REQ-101 twice in CAP-area-1.md). Each file stays a complete version (C001-NFR-301 holds); the re-run must resume without duplicates.",
           "reporter": "jerome.lacube",
           "date": "2026-10-22",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by C001-T-081 (a0c86b3): an interrupted sdd archive resumes on re-run per C001-REQ-924; verified by C001-TC-1131 over the 6 rows of C001-TS-925 on Node 20 and 22.",
+          "closed_at": "2026-10-22"
         }
       ],
       "waivers": []

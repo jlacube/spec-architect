@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: todo
+status: done
 depends_on: [C001-T-080]
 implements: [C001-REQ-924, C001-REQ-914, C001-REQ-915, C001-REQ-916, C001-REQ-917, C001-REQ-919, C001-REQ-920]
 satisfies_ac: [C001-AC-924.1, C001-AC-914.1, C001-AC-915.1, C001-AC-916.1, C001-AC-917.1, C001-AC-919.1, C001-AC-920.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-925, C001-TC-1131, C001-TC-914, C001-TC-915, C001-TC-916, 
 components: [C001-COMP-06]
 risk_refs: [C001-RISK-015]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a0c86b3, completed_at: 2026-10-22, notes: "TC-1131 6/6 TS-925 rows + 2 extra cases on Node 20 and 22; npm run check exit 0 (Node 22: 87.40% lines, 82.12% branches; Node 20: coverage skipped); fault campaign Node 20: 1,000 runs, 0 failing files" }
 ---
 
 # C001-T-081 — Archive resumes after an interrupted run without duplicates (D-015)
