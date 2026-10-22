@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: todo
+status: done
 depends_on: [C001-T-065, C001-T-053]
 implements: [C001-REQ-1117, C001-REQ-126]
 satisfies_ac: [C001-AC-1117.1, C001-AC-126.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1118, C001-TS-132, C001-TC-1118, C001-TC-132, C001-TC-1126
 components: [C001-COMP-12, C001-COMP-06]
 risk_refs: [C001-RISK-014]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b606935, completed_at: 2026-10-22, notes: "Four npm run check runs exit 0 (Node 20.20.2/22.22.3 × PowerShell 7/Git Bash; coverage skipped with reason on Node 20); coverage 88.72–89.09% lines, 82.06–82.48% branches (Node 22, no exclusions); fault campaign Node 20: 1,000 runs, 0 failing files; F-1…F-7 resolved; archive re-run → D-015/T-081" }
 ---
 
 # C001-T-080 — NFR catch-up (D-014): Node 20 package filter and test cleanup, archive faults, check encoding and coverage steps, coverage to 85%

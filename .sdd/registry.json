@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-22T18:49:35Z",
+  "generated_at": "2026-10-22T20:18:58Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -34,11 +34,11 @@
         "status": "in-progress",
         "tasks": {
           "total": 63,
-          "done": 55,
+          "done": 56,
           "blocked": 0,
           "in_progress": 0
         },
-        "last_report": "2026-10-21T00:00:00Z"
+        "last_report": "2026-10-22T00:00:00Z"
       },
       "defects": [
         {
@@ -177,9 +177,9 @@
           "summary": "Found in C001-T-065: F-1 on Node 20 fs.cpSync passes \\?\\-prefixed paths to the filter in scripts/package.mjs, so plugins/architect/targets/ ships in the Claude Code packages (3 tests fail on Node 20); F-2 tests/integration/mcp/shell.test.ts 'output caps and timeout' EPERM on cleanup on Node 20; F-3 line coverage 79.99% (NFR-502 needs 85%); F-4 archive not covered by the fault benchmark/test (NFR-301); F-5 NFR-404/502 claim to be measured in npm run check, which has no encoding scan or coverage step.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by C001-T-080 (5cdae42, b606935): Node 20 package filter strips the \\?\\ prefix (F-1); shell test stub is a copy of node.exe (F-2); coverage 88.7–89.1% lines, 82.1–82.5% branches on Node 22 (F-3; NFR-502 on Node 22 per Q-cov-node20-01); archive in the fault test and 1,000-run bench, 0 failing files (F-4, F-6 rule per TC-1126); encoding and coverage steps in npm run check (F-5); Node 20 coverage step skipped with reason (F-7). Archive re-run idempotency moved to D-015.",
+          "closed_at": "2026-10-22"
         },
         {
           "id": "D-015",
