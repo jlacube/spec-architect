@@ -24,7 +24,7 @@ status: approved
 | `/architect:lint` | `[<NNN>]` | — | `sdd lint` and `sdd trace` without LLM work | C001-REQ-701 |
 | `/architect:decide` | `"<question>" [--change NNN]` | options-analysis, interview-protocol | OA + one question + DEC/ADR | C001-REQ-316 |
 | `/architect:research` | `"<question>" [--change NNN]` | research-protocol | researcher note | C001-REQ-315 |
-| `/architect:archive` | `<NNN> [--dry-run]` | sdd-conventions | preview, confirmation, `sdd archive` | C001-REQ-913 … 921 |
+| `/architect:archive` | `<NNN> [--dry-run]` | sdd-conventions | preview, confirmation, `sdd archive` | C001-REQ-913 … 921, 924 |
 | `/architect:doctor` | — | code-discovery | tool checks, toolchain.md, remedies table, Serena configuration | C001-REQ-115, 1013, 1110, 1111, 1123 |
 
 ## §2 Command body pattern

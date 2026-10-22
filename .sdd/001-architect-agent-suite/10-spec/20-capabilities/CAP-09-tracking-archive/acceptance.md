@@ -271,6 +271,27 @@ Scenario: C001-TS-924 — reopen a closed defect
   And its history list contains the previous resolution and closing date
 ```
 
+## C001-REQ-924
+
+#### C001-AC-924.1 — Re-run completes an interrupted archive exactly once
+```gherkin
+Scenario Outline: C001-TS-925 — re-run after an interrupted archive
+  Given change "004" meets the C001-REQ-913 preconditions and adds "C004-REQ-012" in capability "billing", adds "C004-REQ-013" in capability "payments", modifies "C002-REQ-044" in "billing" (superseded by "C004-REQ-014"), renames "C002-REQ-060" from "Invoice export" in "billing" to "Statement export" in "reporting", and defines "payment intent" in "glossary-delta.md"
+  And workspace copy "reference" is the result of one uninterrupted "$SDD archive 004" run on 2026-11-02 from the same starting workspace
+  And an earlier "$SDD archive 004" run on 2026-11-02 stopped <interrupted at>, leaving change "004" with status "<status>" in ".sdd/004-*"
+  When the user runs "$SDD archive 004" on <re-run date>
+  Then the exit code is <code>
+  And <result>
+  Examples:
+    | interrupted at | status | re-run date | code | result |
+    | after its first living-file write and before its other living-file writes | active | 2026-11-02 | 0 | ".sdd/_living/", ".sdd/_constitution/glossary.md" and ".sdd/_archive/004-*" (including "change.md") are byte-identical to "reference", and ".sdd/004-*" does not exist |
+    | after all living-file writes and the glossary write and before "change.md" | active | 2026-11-02 | 0 | ".sdd/_living/", ".sdd/_constitution/glossary.md" and ".sdd/_archive/004-*" are byte-identical to "reference", and "payment intent" appears once in the glossary |
+    | after writing status "archived" to "change.md" and before the folder move | archived | 2026-11-02 | 0 | standard error does not contain "ERR-CLI-014", ".sdd/_living/", ".sdd/_constitution/glossary.md" and ".sdd/_archive/004-*" are byte-identical to "reference", and ".sdd/004-*" does not exist |
+    | between the rename's writes of the source file "_living/CAP-billing.md" and the target file "_living/CAP-reporting.md" (in the order the CLI writes them) | active | 2026-11-02 | 0 | "C002-REQ-060" is a requirement heading only in "_living/CAP-reporting.md", titled "Statement export", the History row of its move appears once, and ".sdd/_living/" is byte-identical to "reference" |
+    | after its first living-file write and before its other living-file writes | active | 2026-11-05 | 0 | each of "C004-REQ-012", "C004-REQ-013", "C004-REQ-014" and "C002-REQ-060" is a requirement heading exactly once in ".sdd/_living/", each (ID, Event, Change) History row appears exactly once, and ".sdd/_living/", ".sdd/_constitution/glossary.md" and ".sdd/_archive/004-*" differ from "reference" only in History "Date" cells and living-file "updated" values |
+    | (no earlier run; the change was stopped at a gate) | stopped | 2026-11-02 | 2 | standard error contains "ERR-CLI-014" and "Change `004` is `stopped`", and a checksum of all files under ".sdd" is identical before and after |
+```
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -298,5 +319,6 @@ Scenario: C001-TS-924 — reopen a closed defect
 | C001-REQ-921 | TS-922 | n/a | n/a | n/a | n/a | TS-922 (no side effects) | n/a |
 | C001-REQ-922 | TS-923 | TS-923 (reopen done) | n/a | TS-923 | n/a | n/a | n/a |
 | C001-REQ-923 | TS-924 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C001-REQ-924 | TS-925 | TS-925 (`archived` in `change.md`, folder not moved) | TS-925 (rename split between source and target writes) | TS-925 (`stopped`: ERR-CLI-014, no file modified) | n/a | TS-925 (re-run on a later date: each heading and History row once) | n/a |
 
 Per-column n/a reasons: as in CAP-05.

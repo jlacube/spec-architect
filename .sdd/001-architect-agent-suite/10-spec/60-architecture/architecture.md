@@ -88,7 +88,7 @@ approves).
 - **Owned data:** task frontmatter `status`/`report`, defects, `_living/*.md`, `_archive/`
 - **Interfaces:** C001-IF-01, C001-IF-03 §3 and §10
 - **Depends on:** C001-COMP-03, C001-COMP-04, C001-COMP-05
-- **Realizes:** C001-REQ-901 … 904, 907, 908, 910, 913 … 923
+- **Realizes:** C001-REQ-901 … 904, 907, 908, 910, 913 … 924
 - **Status:** new
 
 ### C001-COMP-07 — CLI front-end
@@ -161,7 +161,7 @@ approves).
 | F1 | End-to-end phase run with fan-out, interview, lint, critic and gate | C001-TS-202, 206, 216, 218, 802, 805 |
 | F2 | Guarded write by an author agent | C001-TS-1103, 1105 |
 | F3 | Implementer reports progress and a defect, then revision | C001-TS-901, 908, 910, 814, 815 |
-| F4 | Archive into living specs | C001-TS-914, 915, 916, 921 |
+| F4 | Archive into living specs | C001-TS-914, 915, 916, 921, 925 |
 
 ## 4. Data view
 
@@ -317,7 +317,7 @@ sequenceDiagram
   C001_COMP_01->>P01: impact list at G2 re-approval
 ```
 
-### 8.5 F4 — Archive (realizes C001-TS-914, 915, 916, 921)
+### 8.5 F4 — Archive (realizes C001-TS-914, 915, 916, 921, 925)
 
 ```mermaid
 sequenceDiagram
@@ -328,6 +328,7 @@ sequenceDiagram
   P01->>C001_COMP_01: /architect:archive 004
   C001_COMP_01->>C001_COMP_07: archive 004 --dry-run
   C001_COMP_07->>C001_COMP_06: check preconditions, plan merge
+  Note over C001_COMP_06: archived but outside _archive/ is resumed, only undone operations (C001-REQ-924), stopped gives ERR-CLI-014
   C001_COMP_06-->>C001_COMP_01: planned operations (or ERR-CLI-009)
   C001_COMP_01->>P01: preview, confirm?
   P01-->>C001_COMP_01: confirm

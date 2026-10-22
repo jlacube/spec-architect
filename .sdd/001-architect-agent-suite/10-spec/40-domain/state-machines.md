@@ -44,6 +44,7 @@ stateDiagram-v2
   [*] --> active : sdd change new
   active --> stopped : P-01 chooses Stop at a gate
   active --> archived : sdd archive [G3 approved, tasks done/dropped, no open defects]
+  archived --> archived : sdd archive [folder still outside _archive/, C001-REQ-913 preconditions]
   stopped --> [*]
   archived --> [*]
 ```
@@ -53,6 +54,7 @@ stateDiagram-v2
 | (none) | `sdd change new` | workspace exists | active | folder, manifest, ids.json |
 | active | Stop at a gate | — | stopped | reason and date recorded (C001-REQ-815) |
 | active | `sdd archive` | C001-REQ-913 preconditions | archived | merge into `_living/`, folder moved (C001-REQ-920) |
+| archived | `sdd archive` | folder still outside `_archive/`, C001-REQ-913 preconditions | archived | remaining merges, folder moved (C001-REQ-924) |
 
 ## 3. Task status
 

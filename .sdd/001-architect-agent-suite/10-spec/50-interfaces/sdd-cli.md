@@ -43,7 +43,7 @@ for `init`). Global options: `--cwd <path>`, `--json` (where supported), `--quie
 | `defect add` | `--ref <ID> --summary "<t>" [--by <name>]` | Open spec defect | C001-REQ-907, 908 |
 | `defect close` | `<D-id> --change <NNN> --resolution "<t>"` | Close defect | C001-REQ-910 |
 | `defect reopen` | `<D-id> --change <NNN>` | Reopen defect | C001-REQ-923 |
-| `archive` | `<NNN> [--dry-run]` | Merge into `_living/`, move to `_archive/` | C001-REQ-913 … 921 |
+| `archive` | `<NNN> [--dry-run]` | Merge into `_living/`, move to `_archive/`; a change `archived` but still outside `_archive/` (interrupted run) is resumed, a `stopped` change still gives ERR-CLI-014 | C001-REQ-913 … 921, 924 |
 | `guard-path` | hook JSON on stdin | Allow/deny write (hook) | C001-REQ-1103 … 1105 |
 | `guard-bash` | hook JSON on stdin | Allow/deny shell command (hook) | C001-REQ-1106, 1107 |
 | `hook session-start` | hook JSON on stdin | Print brief | C001-REQ-911, 912 |
