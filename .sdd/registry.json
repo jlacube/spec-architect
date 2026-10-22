@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-22T21:38:17Z",
+  "generated_at": "2026-10-22T23:45:03Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -36,7 +36,7 @@
           "total": 63,
           "done": 57,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-22T00:00:00Z"
       },
@@ -216,7 +216,7 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:c1dce0147354d7de5232c884eb98795bbe4ce594602f3716ddeba12e0dc9dc5c",
           "approved_at": "2026-10-21",
           "approved_by": "jerome.lacube"
@@ -509,6 +509,16 @@
           "summary": "Found in C002-T-066 (minor): (1) IF-009 §4 'fresh-install step' records models_used but VSC-02 has no conductor turns (instruction placed in VSC-02's Record); (2) no field for 'model shown where the install notes say' (recorded in VSC-02 note); (3) IF-010 §5.2 rule 3 ambiguous for capped sessions (implemented fail-closed: false only if the document passes and every session ended completed); (4) rule 2 gives no check order (implemented parse, schema, run host versions, target, tier, source, host versions, foreign ids); (5) no text for the internal-error line of a merged summary failing validation; (6) a missing-model refusal still reads copilot --version first. Batch with D-023/D-024.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-029",
+          "ref": "C002-TC-901",
+          "summary": "Found in C001-T-076: the new plan lint rule LINT-TC-001 (C001-REQ-609) reports 405 errors in 20-plan/60-test-plan.md. 304: the TC table's Fixture column is not a Test data column; 83: Level values outside unit/integration/e2e/eval/manual (structure 53, replay 24, replay (eval in the branch of 8.1) 4, benchmark 1, eval with extra text 1); 18: manual TCs name no executor (no Executor column). No test meaning changes.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-23",
           "status": "open",
           "resolution": null,
           "closed_at": null

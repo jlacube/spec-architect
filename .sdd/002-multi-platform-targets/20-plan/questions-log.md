@@ -147,3 +147,10 @@ Questions on the S-07 record (C002-T-001).
 - **Blocking:** no · **Material:** yes · **Candidates considered:** 2 per question
 - **Answer:** re-test: "Confirm" — OpenCode 1.18.31 is the tested version, the harness pins its binary; Node: "Upgrade Node (Recommended)" — P-01 updates REF-WIN to the current Node 22.x LTS (≥ 22.22.2, F-10); the conductor re-runs `npm run check` afterwards.
 - **Extracted instructions:** none
+
+## Round 2026-10-23 — defect D-029 (found in C001-T-076)
+
+### Q-tc-lint-01 — CHG-002 test plan against LINT-TC-001 (C001-REQ-609)
+- **Options:** 1. CHG-002 plan revision: Fixture column renamed Test data, the CHG-002 levels recorded as integration with the former name kept as a sub-kind, an Executor column for manual cases; no test meaning changes (Recommended) · 2. CHG-001 spec revision widening C001-REQ-609 to the extra levels and a Fixture column
+- **Answer:** P-01: "Revise CHG-002 plan (Recommended)"; commit order: "After the fix (Recommended)" (C001-T-076 lands with the revision)
+- **Extracted instructions:** none
