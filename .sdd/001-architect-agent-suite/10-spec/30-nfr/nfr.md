@@ -232,7 +232,7 @@ All NFRs: `Delta: ADDED`.
 - **Metric:** line coverage and branch coverage reported by `node --test --experimental-test-coverage`
 - **Threshold:** ≥ 85% lines and ≥ 75% branches
 - **Method:** `npm run check`
-- **Environment:** REF-WIN
+- **Environment:** REF-WIN with Node 22.22.3. On Node 20 the `npm run check` coverage step reports skipped with its reason, because Node 20's test runner crashes while merging coverage from several processes (D-014 F-7, Q-cov-node20-01).
 - **Rationale:** the lint is the hard gate; regressions are costly
 - **DoD:** C001-DOD-017
 
