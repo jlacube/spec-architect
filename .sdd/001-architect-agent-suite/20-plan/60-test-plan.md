@@ -13,11 +13,20 @@ status: approved
 Every acceptance scenario (TS) of the approved spec maps to exactly one test case (TC) with
 the same number (`C001-TS-n` → `C001-TC-n`), so coverage stays mechanically checkable (TR-08).
 
+Five NFR cases, C001-TC-1126 … C001-TC-1130, were added by the revision for defect D-014
+(C001-T-080). They verify C001-NFR-301, 401, 403, 404 and 502, which no scenario states. Each
+row names its NFR first in the Location cell. A TC row is defined by the one scenario it
+verifies, so the Verifies cell holds the scenario whose run the case measures. That is
+C001-TS-132 (interrupted write) for C001-NFR-301, and C001-TS-1118 (`npm run check`) for the
+other four. The numbers come from the ID ledger (`sdd id next TC`). Suppose CAP-11 later
+allocates a scenario numbered 1126 … 1130. Its test case then takes the next free TC number, not
+the scenario's own number.
+
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
-| integration | CLI, hooks, files and schemas, run against fixture repositories | 156 | `node --test` (C001-ADR-006) |
+| integration | CLI, hooks, files and schemas, run against fixture repositories | 160 | `node --test` (C001-ADR-006) |
 | eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 78 | eval harness (T-029), tiers of C001-ADR-003 |
-| manual | Needs a human-controlled environment | 2 | checklists under `tests/manual/` |
+| manual | Needs a human-controlled environment | 3 | checklists under `tests/manual/` |
 | unit | Module-level tests supporting the above (not mapped to TS) | as needed | `node --test` |
 
 ## 2. Fixtures
@@ -78,6 +87,7 @@ run before every task commit.
 |---|---|---|
 | C001-TC-621 | P-01 supervises a Superpowers session (T-074) | Count implementer questions tagged missing-info (C001-SC-04) |
 | C001-TC-1102 | P-01 on a fresh Windows user profile (T-072) | Timed for C001-NFR-602 |
+| C001-TC-1127 | Implementer of C001-T-080 on REF-WIN; repeated by the implementer of C001-T-072 at the release commit | Four sequential `npm run check` runs (two shells × two Node versions) for C001-NFR-401 |
 
 ## 8. Test cases
 
@@ -319,3 +329,8 @@ run before every task commit.
 | C001-TC-1123 | C001-TS-1123 | integration | `tests/integration/cap11/TS-1123.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1124 | C001-TS-1124 | eval | `evals/cap11/TS-1124.eval.mjs` | scenario Given data on fx-empty (PATH shim reporting Claude Code 2.0.76) | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044 |
 | C001-TC-1125 | C001-TS-1125 | integration | `tests/integration/cap11/TS-1125.test.ts` | the 18 Examples rows of C001-TS-1125 (`--max-tokens=N` the only map bound: `ripwire . --token-budget=4000` denied, `ripwire --test-gate src/a.ts` allowed), also present as category `ripwire` cases of `tests/guards/bash-corpus.json` (checked by the test); bundled `sdd guard-bash` with hook input as in TS-1107.test.ts, the PowerShell row with `tool_name` PowerShell | REF-WIN, Node 20 and 22 | C001-T-079 |
+| C001-TC-1126 | C001-TS-132 | integration | C001-NFR-301 (C001-DOD-015): `tests/integration/faults.test.ts` fails the write at every write point of `status --write`, `task set`, `gate approve`, `defect add` and `archive`. `bench/faults.mjs` runs 1,000 killed or completed runs, 250 per command (`status --write`, `task set`, `gate approve`, `archive`). Pass: 0 state files that are neither the previous nor the new complete version | the fault fixture of each file, with change 001 put into an archivable state (C001-REQ-913) for the `archive` runs; state files including `_living/` and `_archive/` | REF-WIN, Node 20 and 22 (the 1,000-run campaign on Node 20) | C001-T-080 |
+| C001-TC-1127 | C001-TS-1118 | manual | C001-NFR-401 (C001-DOD-016): `tests/manual/TC-1127.md`. Run `npm run check` from the repository root four times, one after another: Git Bash and PowerShell 7, each with Node 20.20.2 and then 22.22.3 first in `PATH`. Record the step table, test counts, exit code and duration in `docs/nfr-results.md` §2. Pass: exit 0 in all four | this repository at the measured commit; working tree clean apart from untracked `bench/results/` | REF-WIN: PowerShell 7, Git Bash, Node 20.20.2 and 22.22.3 (nvm-windows) | C001-T-080 |
+| C001-TC-1128 | C001-TS-1118 | integration | C001-NFR-403 (C001-DOD-016): the `tests` step of `npm run check` (every test file through `scripts/test.mjs`) on each Node version. It includes `tests/unit/packaging/plugin-filter.test.ts` (F-1), `tests/integration/packaging/package-staging.test.ts`, `tests/integration/cap01/package-flow.test.ts` and `tests/integration/mcp/shell.test.ts` (F-2). Pass: 100% of the run tests pass on each version; only POSIX-only tests are skipped | the repository test suite; plain and `\\?\`-prefixed source roots and paths for the filter test | REF-WIN, Node 20.20.2 and 22.22.3 | C001-T-080 |
+| C001-TC-1129 | C001-TS-1118 | integration | C001-NFR-404 (C001-DOD-016): the `encoding` step of `npm run check` (`scripts/check/encoding.mjs`) and `tests/unit/check/encoding.test.ts`. Pass: 0 files with a BOM, a CR byte or invalid UTF-8 among the files the CLI wrote; a seeded violation makes the step and `npm run check` exit non-zero | fx-large after `status --write` and `trace --write`; fx-empty after `init` and `change new`; seeded BOM, CRLF and invalid-UTF-8 files for the unit test; this repository's `.sdd/` working tree reported only | REF-WIN (git `core.autocrlf=true`), Node 20 and 22 | C001-T-080 |
+| C001-TC-1130 | C001-TS-1118 | integration | C001-NFR-502 (C001-DOD-017): the `coverage` step of `npm run check` (`scripts/test.mjs` coverage mode, then `scripts/check/coverage.mjs`), with the method of `docs/nfr-results.md` §4. Pass: ≥ 85% lines and ≥ 75% branches over every file under `src/`; a threshold above the measured value makes `npm run check` exit non-zero; tracked bundles unchanged after the step | every test file; both bundles rebuilt with inline source maps, so the CLI and MCP processes the tests spawn count | REF-WIN, Node 20 and 22 (the step passes on both; the Node 22 figure goes into `docs/nfr-results.md`) | C001-T-080 |

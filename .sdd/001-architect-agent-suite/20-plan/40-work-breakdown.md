@@ -78,6 +78,7 @@ flowchart TB
     T077["T-077 sdd serena-config command"]
     T078["T-078 Opt-in commit at approval and Serena launcher"]
     T079["T-079 Bash guard: ripwire verb and bounded default-map forms (D-012)"]
+    T080["T-080 NFR catch-up (D-014): Node 20 fixes, archive faults, check encoding and coverage steps"]
   end
   subgraph M7["C001-M-7 Release and dogfood"]
     T070["T-070 Constitution for this repository via /architect:init"]
@@ -201,6 +202,9 @@ flowchart TB
   T078 --> T072
   T051 --> T079
   T079 --> T072
+  T065 --> T080
+  T053 --> T080
+  T080 --> T072
   T054 --> T072
   T053 --> T072
   T070 --> T072
@@ -271,16 +275,17 @@ flowchart TB
 | C001-M-6 | C001-T-077 | sdd serena-config command | S | T-044 |
 | C001-M-6 | C001-T-078 | Opt-in commit at approval and Serena launcher | S | T-025, T-077 |
 | C001-M-6 | C001-T-079 | Bash guard: ripwire verb and bounded default-map forms (D-012) | S | T-051 |
+| C001-M-6 | C001-T-080 | NFR catch-up (D-014): Node 20 package filter and test cleanup, archive faults, check encoding and coverage steps, coverage to 85% | L | T-065, T-053 |
 | C001-M-7 | C001-T-070 | Constitution for this repository via /architect:init | S | T-044, T-060 |
 | C001-M-7 | C001-T-071 | Archify architecture outputs for CHG-001 (dropped 2026-10-10, spike S-03) | S | — |
-| C001-M-7 | C001-T-072 | Release gate v0.1.0 | M | T-061, T-062, T-063, T-064, T-065, T-054, T-053, T-070, T-076, T-077, T-078, T-079 |
+| C001-M-7 | C001-T-072 | Release gate v0.1.0 | M | T-061, T-062, T-063, T-064, T-065, T-054, T-053, T-070, T-076, T-077, T-078, T-079, T-080 |
 | C001-M-7 | C001-T-073 | Dogfood: greenfield change CHG-003 through G1–G3 | M | T-072 |
 | C001-M-7 | C001-T-074 | Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution | L | T-072 |
 | C001-M-7 | C001-T-075 | Archive CHG-001 into living specs | S | T-073, T-074, T-053 |
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3; total weight 43.
+Weights S = 1, M = 2, L = 3; total weight 46 (43 before C001-T-080 joined between T-065 and T-072).
 
 1. C001-T-001 — Repository scaffolding and toolchain
 2. C001-T-010 — Markdown/frontmatter parser and workspace model
@@ -299,6 +304,7 @@ Weights S = 1, M = 2, L = 3; total weight 43.
 15. C001-T-060 — Plugin manifests, marketplace, .mcp.json and agent tool contract
 16. C001-T-061 — Plugin structure checks, license check, npm run check
 17. C001-T-065 — NFR measurements: performance, coverage, compatibility
-18. C001-T-072 — Release gate v0.1.0
-19. C001-T-074 — Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution
-20. C001-T-075 — Archive CHG-001 into living specs
+18. C001-T-080 — NFR catch-up (D-014): Node 20 package filter and test cleanup, archive faults, check encoding and coverage steps, coverage to 85%
+19. C001-T-072 — Release gate v0.1.0
+20. C001-T-074 — Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution
+21. C001-T-075 — Archive CHG-001 into living specs
