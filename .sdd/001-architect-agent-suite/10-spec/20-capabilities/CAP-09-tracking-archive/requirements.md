@@ -181,6 +181,14 @@ manifest frontmatter C001-IF-03 §2–§3, hooks C001-IF-07, living-spec format 
 - **Priority:** Must
 - **Acceptance:** C001-AC-921.1
 
+### C001-REQ-924 — Interrupted archive completes on re-run
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd archive <change>` runs after an earlier `sdd archive` run of that change was interrupted after writing part of its results (living-spec entries, History rows, glossary rows or the `archived` status in `change.md`) and before moving the change folder to `.sdd/_archive/`, and the change's status is `active` or `archived` and the C001-REQ-913 preconditions hold, THEN THE sdd CLI SHALL complete the operations of C001-REQ-914 … C001-REQ-920 that the interrupted run left undone, so that `.sdd/_living/`, `.sdd/_constitution/glossary.md` and `.sdd/_archive/` (including the moved `change.md`) are byte-identical to one uninterrupted run from the same starting workspace on the date of the interrupted run, with no requirement entry and no History row written twice, the only allowed differences being the History `Date` cells and the living-file `updated` values that a re-run on a later date writes.
+- **Rationale:** D-015 (C001-T-080 finding F-6); Q-archive-faults-01, Q-archive-resume-01; critic CR-17. An `archived` status outside `.sdd/_archive/` can only come from an interrupted archive, so `sdd archive` resumes such a change instead of refusing it with ERR-CLI-014; a `stopped` change is still refused with ERR-CLI-014 (C001-INV-06, `../../50-interfaces/errors.md` §1). Operations already applied are recognised without comparing dates, because the re-run can happen on a later day.
+- **Stories:** C001-US-905
+- **Priority:** Must
+- **Acceptance:** C001-AC-924.1
+
 ### C001-REQ-922 — Allowed task transitions only
 - **Pattern:** unwanted-behaviour
 - **Statement:** IF `sdd task set` requests a status transition that the task state machine (`../../40-domain/state-machines.md` §3) does not list, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-013` naming the current and requested statuses.

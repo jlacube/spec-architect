@@ -57,7 +57,7 @@ id_block: { US: 901-999, REQ: 901-999, TS: 901-999 }
 - **Value / outcome:** OQ-07a decided in v1; C001-GOAL-02
 - **Priority:** Must · **Size hint:** L · **Capability:** C001-CAP-09
 - **Context & notes:** Living specs follow C001-IF-03 §10; IDs keep their originating change prefix after the merge, and the History table records what each change added, modified or removed.
-- **Requirements:** C001-REQ-914, C001-REQ-915, C001-REQ-916, C001-REQ-917, C001-REQ-918, C001-REQ-919, C001-REQ-920
+- **Requirements:** C001-REQ-914, C001-REQ-915, C001-REQ-916, C001-REQ-917, C001-REQ-918, C001-REQ-919, C001-REQ-920, C001-REQ-924
 - **Traces to:** OQ-07, OA-09
 
 ### C001-US-906 — Archive only what is really finished, and preview it

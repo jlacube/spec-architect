@@ -66,10 +66,10 @@ status: approved
 | C001-CAP-06 Planning and hand-off | `CAP-06-planning` | 601–608 (8) | 601–618 (18) | 22 | 601–622 (22) |
 | C001-CAP-07 Quality | `CAP-07-quality` | 701–705 (5) | 701–720 (20) | 20 | 701–720 (20) |
 | C001-CAP-08 Gates and revisions | `CAP-08-gates` | 801–806 (6) | 801–815 (15) | 17 | 801–817 (17) |
-| C001-CAP-09 Tracking and archive | `CAP-09-tracking-archive` | 901–906 (6) | 901–923 (23) | 24 | 901–924 (24) |
+| C001-CAP-09 Tracking and archive | `CAP-09-tracking-archive` | 901–906 (6) | 901–924 (24) | 24 | 901–924 (24) |
 | C001-CAP-10 Code intelligence | `CAP-10-code-intelligence` | 1001–1005 (5) | 1001–1013 (13) | 14 | 1001–1015 (15) |
 | C001-CAP-11 Packaging, safety, environment | `CAP-11-packaging-safety` | 1101–1109 (9) | 1101–1123 (22; 1105 tombstoned) | 23 | 1101–1124 (23; 1106 tombstoned) |
-| **Total** | | **80** | **210** | **232** | **233** |
+| **Total** | | **80** | **211** | **232** | **233** |
 
 Other IDs: GOAL 8 · SC 10 · NG 2 (plus IDEA-NG-01 … 06) · AS 4 (plus IDEA-AS-01 … 08) · CON 16 ·
 NFR 27 · INV 24 · IF 14 · COMP 13 · DOD 21 (+ DOD-G 7).
