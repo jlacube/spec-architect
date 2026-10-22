@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: in-revision, approved_hash: "sha256:a13c62012b890c59f085c25d2da4298a228d235bf21b34e39664f6c3eedf4585", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:b00d00455d0b74553c54c335a0dc9f22748a186401304ba9bf71cb21684b5bf9", approved_at: 2026-10-22, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:b00d00455d0b74553c54c335a0dc9f22748a186401304ba9bf71cb21684b5bf9", approved_at: 2026-10-22, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -74,3 +74,4 @@ defects:
 | 2026-10-22 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-014 (catch-up task: Node 20 package filter, Node 20 test cleanup, archive in the fault bench, encoding scan and coverage step in npm run check, tests to 85% lines; P-01 Q-coverage-01)" | none | unavailable |
 | 2026-10-22 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-22 | G2 (spec) | **Revise** | "Revision for CHG-001 D-014 F-7: Node 20's test runner crashes merging coverage; C001-NFR-502 measured on Node 22 (P-01 Q-cov-node20-01: coverage on Node 22 only)" | none | unavailable |
+| 2026-10-22 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-014 F-7 and F-6: coverage step on Node 22 only, skipped with reason on Node 20 (Q-cov-node20-01); fault bench follows C001-NFR-301 (Q-archive-faults-01); fix task for D-015" | none | unavailable |
