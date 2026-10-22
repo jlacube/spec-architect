@@ -41,3 +41,15 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 ### Q-coverage-01 — Line coverage 79.99% against C001-NFR-502's 85%
 - **Options:** 1. Write tests to 85%, and fix the Node 20 packaging filter, the Node 20 test cleanup, the archive fault coverage and the npm run check steps in one catch-up task (Recommended) · 2. Lower NFR-502 to 80% lines · 3. Exclude src/mcp from the measure
 - **Answer:** P-01: "Write tests to 85% (Recommended)"
+
+## Round 2026-10-22 — C001-T-080 findings F-6 and F-7 (defects D-014, D-015)
+
+### Q-cov-node20-01 — Node 20's test runner crashes while merging coverage (F-7)
+- **Options:** 1. The coverage step measures on Node 22 only and reports skipped on Node 20 with the reason, so all four check runs exit 0 (Recommended) · 2. Keep the step on Node 20 and waive the "exit 0 in all four runs" criterion
+- **Answer:** P-01: "Coverage on Node 22 only (Recommended)"
+- **Extracted instructions:** none
+
+### Q-archive-faults-01 — archive killed before its folder move (F-6)
+- **Options:** 1. Align bench/faults.mjs with C001-NFR-301 (any complete version passes) and log a defect for an archive that resumes without duplicates (Recommended) · 2. Make archive recoverable inside C001-T-080 and keep the stricter bench rule
+- **Answer:** P-01: "Align bench, log defect (Recommended)"
+- **Extracted instructions:** none

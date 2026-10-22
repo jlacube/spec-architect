@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:a13c62012b890c59f085c25d2da4298a228d235bf21b34e39664f6c3eedf4585", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:b00d00455d0b74553c54c335a0dc9f22748a186401304ba9bf71cb21684b5bf9", approved_at: 2026-10-22, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:a13c62012b890c59f085c25d2da4298a228d235bf21b34e39664f6c3eedf4585", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:b00d00455d0b74553c54c335a0dc9f22748a186401304ba9bf71cb21684b5bf9", approved_at: 2026-10-22, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -24,6 +24,7 @@ defects:
   - { id: D-012, ref: C001-IF-07, summary: "Found in C002-T-048 (TS-1004): the bash guard's ripwire rule requires exactly one read verb and --test-gate without a value, so it denies 'ripwire . --max-tokens=4000' (the ranked default map, no verb) and 'ripwire . --test-gate=<file> --limit=N', which C001-IF-14 and the code-discovery skill prescribe; the cartographer then cannot use ripwire. Present since the guard was wired into hooks.json (43d044f); BG-081 'ripwire .' expects deny. Fix: align IF-07 §3 / guard / corpus with IF-14 (read-only forms only).", reporter: jerome.lacube, date: 2026-10-20, status: closed, resolution: "Revision D-012 (2026-10-20/21): spec 278ef7d…020738d; P-01 Q-ripwire-guard-01 'Allow read-only forms'; code in C001-T-079; CHG-002 follow-up D-024", closed_at: 2026-10-21 }
   - { id: D-013, ref: C001-TS-213, summary: "Found in C002-T-048: eval cases TS-213, TS-214 and TS-215 (evals/cap02) were built for the Haiku stand-in specialists of the early CHG-001 runs (overlay.mjs): their checks depend on stand-ins reading planted hand-back files (TS-213 spec-writer, TS-215 cartographer) or on a fixture spec without critic blockers (TS-214). With the real specialists no wrong decision occurs but the checked step is never reached. P-01 (Q-standin-cases-01): waived for the CHG-002 regression; rework the cases in C001-T-063 (delegation eval suite). Also: TS-817-stop's fixture lacks the ideation critic report (gate not presented).", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
   - { id: D-014, ref: C001-NFR-403, summary: "Found in C001-T-065: F-1 on Node 20 fs.cpSync passes \\?\\-prefixed paths to the filter in scripts/package.mjs, so plugins/architect/targets/ ships in the Claude Code packages (3 tests fail on Node 20); F-2 tests/integration/mcp/shell.test.ts 'output caps and timeout' EPERM on cleanup on Node 20; F-3 line coverage 79.99% (NFR-502 needs 85%); F-4 archive not covered by the fault benchmark/test (NFR-301); F-5 NFR-404/502 claim to be measured in npm run check, which has no encoding scan or coverage step.", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
+  - { id: D-015, ref: C001-REQ-914, summary: "Found in C001-T-080 (F-6): sdd archive is not idempotent after an interrupted run. Killed between its in-place writes (change.md status archived, _living/ entries appended) and the folder move, it leaves change 001 marked archived outside _archive/; re-running sdd archive appends the same ADDED entries again (C001-REQ-101 twice in CAP-area-1.md). Each file stays a complete version (C001-NFR-301 holds); the re-run must resume without duplicates.", reporter: jerome.lacube, date: 2026-10-22, status: open, resolution: null, closed_at: null }
 ---
 # CHG-001 — Architect agent suite
 
@@ -72,3 +73,4 @@ defects:
 | 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-22 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-014 (catch-up task: Node 20 package filter, Node 20 test cleanup, archive in the fault bench, encoding scan and coverage step in npm run check, tests to 85% lines; P-01 Q-coverage-01)" | none | unavailable |
 | 2026-10-22 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-22 | G2 (spec) | **Revise** | "Revision for CHG-001 D-014 F-7: Node 20's test runner crashes merging coverage; C001-NFR-502 measured on Node 22 (P-01 Q-cov-node20-01: coverage on Node 22 only)" | none | unavailable |
