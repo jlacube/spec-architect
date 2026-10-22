@@ -138,12 +138,13 @@ their dependencies allow.
 | 55 | C001-T-078 | Opt-in commit at approval and Serena launcher | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-078-commit-and-serena-launch.md` |
 | 56 | C001-T-079 | Bash guard: ripwire verb and bounded default-map forms (D-012) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-079-ripwire-guard-forms.md` |
 | 57 | C001-T-080 | NFR catch-up (D-014): Node 20 package filter and test cleanup, archive faults, check encoding and coverage steps, coverage to 85% | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-080-nfr-catch-up.md` |
-| 58 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
-| 59 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
-| 60 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |
-| 61 | C001-T-073 | Dogfood: greenfield change CHG-003 through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
-| 62 | C001-T-074 | Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
-| 63 | C001-T-075 | Archive CHG-001 into living specs | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md` |
+| 58 | C001-T-081 | Archive resumes after an interrupted run without duplicates (D-015) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-081-archive-resume.md` |
+| 59 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
+| 60 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
+| 61 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |
+| 62 | C001-T-073 | Dogfood: greenfield change CHG-003 through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
+| 63 | C001-T-074 | Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
+| 64 | C001-T-075 | Archive CHG-001 into living specs | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md` |
 
 ## Defects (manual)
 

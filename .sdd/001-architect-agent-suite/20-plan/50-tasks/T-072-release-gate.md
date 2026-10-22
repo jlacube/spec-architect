@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
 status: todo
-depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080]
+depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081]
 implements: []
 satisfies_ac: [C001-AC-1102.1]
 verified_by: [C001-TS-1102, C001-TC-1102]
@@ -32,7 +32,7 @@ Run the release gate: all TCs, eval scenarios at release tier (10 runs, ≥ 9/10
 ## Preconditions
 
 - All M-6 tasks
-- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps)
+- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates)
 
 ## Step outline (no production code)
 

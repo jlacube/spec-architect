@@ -31,10 +31,10 @@ status: approved
 | `20-decisions/ADR-004-implementer.md` | Plain Claude Code sessions implement |
 | `20-decisions/OA-005-…`, `ADR-005-…` | Custom line parser + yaml |
 | `20-decisions/OA-006-…`, `ADR-006-…` | `node --test` runner |
-| `40-work-breakdown.md` | Mermaid DAG by milestone; task table; critical path (weight 46) |
-| `50-tasks/T-*.md` | 63 tasks (one dropped) |
-| `60-test-plan.md` | 241 test cases: 160 integration, 78 eval, 3 manual |
-| `70-risks.md` | RISK-001 … 014 |
+| `40-work-breakdown.md` | Mermaid DAG by milestone; task table; critical path (weight 48) |
+| `50-tasks/T-*.md` | 64 tasks (one dropped) |
+| `60-test-plan.md` | 242 test cases: 161 integration, 78 eval, 3 manual |
+| `70-risks.md` | RISK-001 … 015 |
 | `75-rollout.md` | Release model, migration, rollback RB-001 … 004 |
 | `78-observability.md` | NFR → signal → task |
 | `80-traceability.md` | REQ → task → TC → DoD; TR-06/07/08/11 coverage |
@@ -51,6 +51,6 @@ No `30-impact/` folder: CHG-001 is greenfield (no existing code to analyse).
 | C001-M-3 Conductor and ideation/spec agents | 11 |
 | C001-M-4 Code intelligence, architecture, planning | 4 |
 | C001-M-5 Hooks, guards, archive | 5 |
-| C001-M-6 Packaging and quality gates | 11 |
+| C001-M-6 Packaging and quality gates | 12 |
 | C001-M-7 Release and dogfood | 6 |
-| **Total** | **63** |
+| **Total** | **64** |
