@@ -9,11 +9,12 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { main } from "../../../scripts/generate/main.ts";
 import { cleanupFxTgz, fxTgz } from "../../fixtures/fx-tgz.ts";
+import { removeTempDir } from "../../fixtures/temp-dir.ts";
 import { repoRoot } from "../../helpers.ts";
 import { serenaInstalled } from "../cap10/serena-tools.ts";
 
@@ -118,11 +119,10 @@ test(
       assert.ok(existsSync(join(data, "serena", "serena_config.yml")), `${data}/serena/serena_config.yml exists`);
       assert.ok(!existsSync(join(repo, ".serena")), "fx-oc has no .serena/ folder");
     } finally {
-      try {
-        rmSync(base, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
-      } catch {
-        // A language server Serena started may still hold the temporary folder; it is left for the OS.
-      }
+      // A language server Serena started may still hold the temporary folder for a moment; the hook retries.
+      t.after(() => {
+        removeTempDir(base);
+      });
     }
   },
 );

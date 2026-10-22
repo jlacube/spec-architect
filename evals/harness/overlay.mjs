@@ -3,9 +3,9 @@
 // scenarios that dispatch specialists can then run before the specialists are written; a stand-in
 // does the brief in minimal form and can return a scripted hand-back from the workspace
 // (`.eval/handbacks/<agent-name>.md`). Real agent files are always kept.
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { ROOT } from "./fixtures.mjs";
 
 export const SPECIALISTS = ["researcher", "cartographer", "options-analyst", "spec-writer", "test-designer", "architect", "planner", "critic", "auditor"].map((n) => `sdd-${n}`);
@@ -82,10 +82,28 @@ export function evalSerenaHome() {
 
 const cache = new Map();
 
+// The overlays live for the process (the cache above); they are removed when it exits, so repeated runs
+// do not leave one sdd-eval-plugin-* folder per process in the temporary folder.
+let cleanupRegistered = false;
+function removeOnExit() {
+  if (cleanupRegistered) return;
+  cleanupRegistered = true;
+  process.once("exit", () => {
+    for (const dir of cache.values()) {
+      try {
+        rmSync(dirname(dir), { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+      } catch {
+        // A session still holds the folder; it is left.
+      }
+    }
+  });
+}
+
 function build(omitServers, urls = {}) {
   const key = `${omitServers.join(",")}|${JSON.stringify(urls)}`;
   if (cache.has(key) && existsSync(cache.get(key))) return cache.get(key);
   const dir = join(mkdtempSync(join(tmpdir(), "sdd-eval-plugin-")), "architect");
+  removeOnExit();
   cpSync(join(ROOT, "plugins", "architect"), dir, { recursive: true });
   mkdirSync(join(dir, "agents"), { recursive: true });
   for (const name of SPECIALISTS) {

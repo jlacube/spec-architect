@@ -1,9 +1,10 @@
 // Lists the tools a Serena MCP server exposes when started with the plugin's `.mcp.json` launch
 // arguments (C001-TS-1007): JSON-RPC over stdio — initialize, initialized, tools/list.
 import { spawn, spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { removeTempDir } from "../../fixtures/temp-dir.ts";
 import { mcpConfig, PLUGIN } from "../plugin-files.ts";
 
 export function serenaInstalled(): boolean {
@@ -50,10 +51,7 @@ export async function serenaToolNames(project: string, timeoutMs = 90000): Promi
   } finally {
     child.kill();
     if (process.platform === "win32" && child.pid) spawnSync("taskkill", ["/pid", String(child.pid), "/t", "/f"], { stdio: "ignore" });
-    try {
-      rmSync(data, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
-    } catch {
-      // A language server Serena started may still hold the temporary folder; it is left for the OS.
-    }
+    // A language server Serena started may still hold the temporary folder for a moment.
+    removeTempDir(data);
   }
 }

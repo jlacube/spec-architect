@@ -1,7 +1,7 @@
 // fx-large (C001-T-027): a generated workspace of 20 full-profile changes, 500 artifact files and
 // 2,000 IDs, lint-clean, used by the benchmarks of C001-NFR-101 … 104 and the determinism tests.
 // Usage: node tests/fixtures/gen-large.mjs <target directory>  (creates <target>/.sdd/)
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -99,6 +99,24 @@ export function generateLarge(root, changes = CHANGES) {
       count++;
     }
   return count;
+}
+
+/**
+ * Puts generated change `nnn` of a workspace written by generateLarge into a state `sdd archive` accepts
+ * (C001-REQ-913): gate G3 approved and every task `done`; generated changes have no defects. Text edits of
+ * the generated frontmatter only, so the fault campaign can prepare hundreds of copies cheaply.
+ */
+export function makeArchivable(root, nnn = "001") {
+  const dir = join(root, ".sdd", `${nnn}-change-${nnn}`);
+  const changeMd = join(dir, "change.md");
+  const text = readFileSync(changeMd, "utf8");
+  if (!text.includes("20-plan: { status: draft }")) throw new Error(`${changeMd}: not a generated change in the plan phase`);
+  writeFileSync(changeMd, text.replace("20-plan: { status: draft }", "20-plan: { status: approved }"));
+  const tasks = join(dir, "20-plan", "50-tasks");
+  for (const name of readdirSync(tasks)) {
+    const p = join(tasks, name);
+    writeFileSync(p, readFileSync(p, "utf8").replace(/^status: todo$/m, "status: done"));
+  }
 }
 
 // Run as a script only (not when bundled into a test, where import.meta.url is the test file).

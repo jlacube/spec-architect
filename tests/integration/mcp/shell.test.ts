@@ -529,16 +529,45 @@ test("applyFilter: head, tail, wc -l, sort and uniq as C001-IF-07 §3 lists them
   assert.throws(() => applyFilter("x\n", ["cat"]));
 });
 
+/** Whether a process with this PID still runs (signal 0 tests for existence only). */
+function alive(p: number): boolean {
+  try {
+    process.kill(p, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Polls `pid` until it has ended; fails when it still runs after `ms` milliseconds. */
+async function waitEnded(pid: number, ms: number): Promise<void> {
+  const deadline = Date.now() + ms;
+  while (alive(pid)) {
+    assert.ok(Date.now() < deadline, `process ${pid} still runs ${ms} ms after the timed_out answer`);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
 /**
  * A native stand-in for `git` first on PATH: a link to (or copy of) the Node.js executable, so that
  * `git log` runs the script `log` and `git show` the script `show` of the fixture root.
+ * On Windows always a copy (F-2, docs/nfr-results.md): a hard link shares the file of the running
+ * node.exe, and Node 20's `rmSync` (DeleteFileW) cannot unlink a name of an executable image in use
+ * (EPERM), while Node 22's POSIX-semantics delete can. A copy is free once its own process has ended.
  */
 function fakeGit(fxRoot: string, scripts: Record<string, string>): { path: string; cleanup: () => void } {
   const stub = stubDir();
   const target = join(stub.dir, WIN ? "git.exe" : "git");
-  try {
-    linkSync(process.execPath, target);
-  } catch {
+  let linked = false;
+  if (!WIN) {
+    try {
+      linkSync(process.execPath, target);
+      linked = true;
+    } catch {
+      // another volume: copy below
+    }
+  }
+  if (!linked) {
     copyFileSync(process.execPath, target);
     chmodSync(target, 0o755);
   }
@@ -550,7 +579,8 @@ test("output caps and timeout: each stream cut at 1,048,576 characters; at timeo
   const fxf = fxSrv();
   const g = fakeGit(fxf.root, {
     show: `process.stdout.write("a".repeat(${STREAM_CAP + 1000})); process.stderr.write("b".repeat(${STREAM_CAP + 10}));`,
-    log: `process.stdout.write("started\\n"); setInterval(() => {}, 1000);`,
+    // The PID file lets the test wait for this process to end before the stub folder is removed (F-2).
+    log: `require("node:fs").writeFileSync("log.pid", String(process.pid)); process.stdout.write("started\\n"); setInterval(() => {}, 1000);`,
   });
   try {
     await withServer(
@@ -570,6 +600,11 @@ test("output caps and timeout: each stream cut at 1,048,576 characters; at timeo
         assert.match(slow.content[0]!.text, /^timed out after 1000 ms\n--- stdout ---\n/);
         assert.ok(Date.now() - started < 8000, "the timed-out process was not killed in time");
         assert.ok((slow.structuredContent["duration_ms"] as number) >= 900);
+        // F-2 (docs/nfr-results.md): on Node 20 the killed process can outlive the answer for a moment, and
+        // the hard-linked git.exe cannot be removed while it runs. Wait (bounded) for it to end first.
+        const pid = Number(fxf.read("log.pid"));
+        assert.ok(pid > 0, `log.pid: ${pid}`);
+        await waitEnded(pid, 10_000);
       },
       { fixture: () => fxf, env: { [PATH_KEY]: g.path } },
     );
@@ -649,14 +684,6 @@ test("C002-TS-687 — at timeout_ms the process tree is killed by the taskkill o
     const { pid, child } = started[0]!;
     assert.ok(pid > 0 && child > 0, JSON.stringify(started[0]));
     await new Promise((resolve) => setTimeout(resolve, 5000));
-    const alive = (p: number) => {
-      try {
-        process.kill(p, 0);
-        return true;
-      } catch {
-        return false;
-      }
-    };
     assert.equal(alive(pid), false, "the stub git.exe still runs");
     assert.equal(alive(child), false, "its child still runs");
     assert.deepEqual(exeStarts(f.root, "taskkill"), [], "the planted taskkill.exe records no start");

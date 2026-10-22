@@ -4,8 +4,12 @@
 // (C002-REQ-601, C002-IF-005 §6) generates the OpenCode and Copilot packages from the current source
 // plugin into a fresh temporary folder and runs the target structure checks on them. The step `tarball`
 // (C002-T-023, C002-IF-003 §2) stages and packs architect-sdd into a fresh temporary folder and runs the
-// manifest check TGT-NPM-001 and the SPDX header scan on it.
-//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,structure,targets,tarball]
+// manifest check TGT-NPM-001 and the SPDX header scan on it. The step `encoding` (C001-NFR-404) scans the
+// files the bundled CLI writes for a BOM, CR bytes and invalid UTF-8 (scripts/check/encoding.mjs). The last
+// step `coverage` (C001-NFR-502) runs the tests in coverage mode (scripts/test.mjs, SDD_TEST_COVERAGE=1),
+// checks the thresholds over src/ (scripts/check/coverage.mjs), and always restores the shipped bundles
+// with scripts/build.mjs, also when the tests or the threshold fail (C001-T-080, finding F-5).
+//   node scripts/check.mjs [--steps typecheck,validate,build,tests,fixtures,encoding,structure,targets,tarball,coverage]
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,9 +40,29 @@ const STEPS = {
     // A separate output folder, so this run never touches the folder of a test run that started it.
     run: () => run(node, [join(root, "scripts", "test.mjs"), "tests/unit/lint/fixtures"], { SDD_TEST_OUTDIR: join(root, "build", "tests-fixtures") }),
   },
+  encoding: { title: "artifact encoding scan (C001-NFR-404)", run: () => run(node, [join(root, "scripts", "check", "encoding.mjs")]) },
   structure: { title: "plugin structure checks", run: () => run(node, [join(root, "scripts", "check", "run.mjs")]) },
   targets: { title: "target structure checks (opencode, copilot)", run: () => run(node, [join(root, "scripts", "check", "targets", "run.mjs")]) },
   tarball: { title: "architect-sdd tarball check (TGT-NPM-001, SPDX)", run: () => run(node, [join(root, "scripts", "check", "tarball.mjs")]) },
+  coverage: {
+    title: "coverage (C001-NFR-502)",
+    run: () => {
+      let tests = { status: 1 };
+      let threshold = { status: 1 };
+      try {
+        // Its own output folder, so the coverage-mode transpile never touches the tests step's folder.
+        tests = run(node, [join(root, "scripts", "test.mjs")], { SDD_TEST_COVERAGE: "1", SDD_TEST_OUTDIR: join(root, "build", "tests-coverage") });
+        threshold = run(node, [join(root, "scripts", "check", "coverage.mjs")]);
+      } finally {
+        // The coverage run rebuilt both bundles with inline source maps; restore the shipped ones.
+        const restore = run(node, [join(root, "scripts", "build.mjs")]);
+        if (restore.status !== 0) console.error("coverage: restoring the shipped bundles failed (node scripts/build.mjs)");
+        tests = restore.status === 0 ? tests : restore;
+      }
+      if (tests.status !== 0) console.error("coverage: the test run in coverage mode failed; the figures above may be incomplete");
+      return { status: tests.status === 0 && threshold.status === 0 ? 0 : 1 };
+    },
+  },
 };
 
 const i = process.argv.indexOf("--steps");

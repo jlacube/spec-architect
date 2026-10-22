@@ -21,9 +21,22 @@ import { translateAndScanTemplates } from "./template-cli-lines.mjs";
 /** Top-level folders of plugins/architect/ that no Claude Code package holds: targets/ is the generator's input. */
 export const CLAUDE_EXCLUDES = ["targets"];
 
-/** `cpSync` filter of the plugin copy: false for an excluded top-level folder of `src` (and so its content). */
+/** Removes the Windows long-path prefix: `\\?\UNC\server\share` → `\\server\share`, `\\?\C:\x` → `C:\x`. */
+export function stripLongPathPrefix(p) {
+  if (p.startsWith("\\\\?\\UNC\\")) return `\\\\${p.slice(8)}`;
+  if (p.startsWith("\\\\?\\")) return p.slice(4);
+  return p;
+}
+
+/**
+ * `cpSync` filter of the plugin copy: false for an excluded top-level folder of `src` (and so its content).
+ * On Windows, Node 20's `fs.cpSync` passes the filter `\\?\`-prefixed long paths while Node 22 passes plain
+ * ones (docs/nfr-results.md F-1); the prefix is removed from both `src` and the argument before
+ * `relative()`, so the exclusion holds on both versions.
+ */
 export function pluginFilter(src) {
-  return (p) => !CLAUDE_EXCLUDES.includes(relative(src, p).split(sep)[0]);
+  const base = stripLongPathPrefix(src);
+  return (p) => !CLAUDE_EXCLUDES.includes(relative(base, stripLongPathPrefix(p)).split(sep)[0]);
 }
 
 function installText(version, name) {

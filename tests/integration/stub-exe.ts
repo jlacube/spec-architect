@@ -124,9 +124,11 @@ export function envWithPath(path: string, extra: Record<string, string | undefin
 let nodeDir: string | null = null;
 
 /**
- * A folder that holds the real `node.exe` (a hard link, or a copy across volumes) and nothing else: the
- * folder of the test runner's Node.js may also hold npm-installed shims (`opencode.cmd`), which a row's
- * "no other folder holds an opencode executable" leaves out.
+ * A folder that holds the real `node.exe` (a copy on Windows; elsewhere a hard link, or a copy across
+ * volumes) and nothing else: the folder of the test runner's Node.js may also hold npm-installed shims
+ * (`opencode.cmd`), which a row's "no other folder holds an opencode executable" leaves out. On Windows a
+ * hard link to the running node.exe cannot be deleted under Node 20 (EPERM), so the folder (about 80 MB
+ * per test process) was left in the temporary folder; a copy can be deleted once no child runs it.
  */
 export function nodeOnlyDir(): string {
   if (nodeDir !== null) return nodeDir;
@@ -135,6 +137,7 @@ export function nodeOnlyDir(): string {
   if (!existsSync(exe)) {
     mkdirSync(dir, { recursive: true });
     try {
+      if (process.platform === "win32") throw new Error("copy on Windows");
       linkSync(process.execPath, exe);
     } catch {
       copyFileSync(process.execPath, exe);
@@ -142,7 +145,7 @@ export function nodeOnlyDir(): string {
   }
   process.once("exit", () => {
     try {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     } catch {
       // A child still holds the file; the temporary folder is left.
     }

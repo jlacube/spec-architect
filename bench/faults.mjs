@@ -1,13 +1,14 @@
 // C001-NFR-301: kill the CLI at random points of state-writing commands and check that every state
 // file is either its previous or its new complete version. 0 corrupted files over 1,000 runs.
-// `archive` is not implemented yet (C001-T-053) and joins the campaign then.
+// The runs are split evenly over the four commands the NFR's method names: `status --write`, `task set`,
+// `gate approve` and `archive` (250 each for 1,000 runs).
 // Usage: node bench/faults.mjs [runs]
 import { spawn } from "node:child_process";
 import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { generateLarge } from "../tests/fixtures/gen-large.mjs";
+import { generateLarge, makeArchivable } from "../tests/fixtures/gen-large.mjs";
 import { record, SDD, timeCli } from "./lib.mjs";
 
 const TASK = ".sdd/001-change-001/20-plan/50-tasks/T-001-work-1.md";
@@ -15,8 +16,24 @@ const COMMANDS = [
   { name: "status --write", args: ["status", "--write"], prepare: (root) => rmSync(join(root, ".sdd", "registry.json"), { force: true }) },
   { name: "task set", args: ["task", "set", "C001-T-001", "--status", "in-progress"], prepare: () => {} },
   { name: "gate approve", args: ["gate", "approve", "001", "20-plan", "--note", "ok", "--by", "bench"], prepare: () => {} },
+  // G3 approved and every task done (C001-REQ-913), so archive merges into _living/ and moves the change.
+  { name: "archive", args: ["archive", "001"], prepare: (root) => makeArchivable(root) },
 ];
-const STATE = [".sdd/registry.json", ".sdd/SDD.md", ".sdd/001-change-001/change.md", ".sdd/001-change-001/approvals.json", TASK];
+const STATE = [
+  ".sdd/registry.json",
+  ".sdd/SDD.md",
+  ".sdd/001-change-001/change.md",
+  ".sdd/001-change-001/approvals.json",
+  TASK,
+  // Written by `archive`: the living specs, the project glossary and the change folder under _archive/.
+  ".sdd/_living/CAP-area-1.md",
+  ".sdd/_living/CAP-area-2.md",
+  ".sdd/_living/CAP-area-3.md",
+  ".sdd/_living/CAP-area-4.md",
+  ".sdd/_constitution/glossary.md",
+  ".sdd/_archive/001-change-001/change.md",
+  TASK.replace(".sdd/", ".sdd/_archive/"),
+];
 
 /** File contents with volatile timestamps removed, so two complete versions compare equal. */
 function stable(text) {
@@ -95,7 +112,7 @@ export async function benchFaults(runs = 1000, concurrency = 8) {
       nfr: "C001-NFR-301", threshold: "0 corrupted state files", ...results, corrupted_count: results.corrupted.length,
       command_ms: Object.fromEntries(plans.map((p) => [p.name, Math.round(p.ms)])),
       files_written: Object.fromEntries(plans.map((p) => [p.name, p.changed])), pass: results.corrupted.length === 0,
-      note: "kill delays are uniform over 0–1.2 × the command's uninterrupted duration; archive joins with C001-T-053",
+      note: "kill delays are uniform over 0–1.2 × the command's uninterrupted duration; runs split evenly over the four commands",
     });
   } finally {
     rmSync(base, { recursive: true, force: true });
