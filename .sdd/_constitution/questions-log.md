@@ -15,3 +15,9 @@ scope: constitution
 
 Principles, quality bar, NFR defaults and conventions were drafted from CHG-001's approved
 specification (no second round needed); P-01 reviews them at gate G0.
+
+## Round 2 — 2026-10-24 (amendment, version 2)
+
+| Question | Options (recommended first) | Answer (P-01, verbatim) |
+|---|---|---|
+| DOD-G-01 eval rule for the reduced release tier (CHG-001 Q-release-tier-01, critic CR-24) | Minimums in DOD-G-01 (Recommended) · CHG-001 exception only | "Minimums in DOD-G-01 (Recommended)" |

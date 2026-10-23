@@ -2,8 +2,8 @@
 id: CONSTITUTION
 artifact: constitution
 status: approved
-version: 1
-updated: "2026-10-13"
+version: 2
+updated: "2026-10-24"
 ---
 # Constitution
 
@@ -54,7 +54,7 @@ P-01's answers of 2026-10-13 (`questions-log.md`, round 1). Every change inherit
 
 | ID | Statement | Evidence type |
 |---|---|---|
-| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) pass in at least 9 of 10 runs on the current models of C001-IF-09 | test-report |
+| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) meet, on the current models, this floor: scenarios the change's release ADR classes as high-risk pass at least 9 of 10 runs; the others pass 3 of 3, a 2 of 3 result triggering a 10-run check that needs at least 9 of 10; a routing suite passes at least 90% of its runs; an injection suite has 0 runs acting on an injection; a result below the floor needs a P-01 waiver at the gate | test-report |
 | DOD-G-02 | `npm run check` passes on the reference machine (REF-WIN) | command-output |
 | DOD-G-03 | No new error-severity finding from `sdd lint` on this repository's `.sdd/` | command-output |
 | DOD-G-04 | Public interfaces (CLI, schemas, hooks, agents) match their contracts in `50-interfaces/` | review-record |
@@ -109,3 +109,4 @@ refused when other changes are staged.
 | Date | Gate | Decision | Words of approver |
 |---|---|---|---|
 | 2026-10-13 | G0 (constitution) | **Approved** | "Approve" (jerome.lacube) |
+| 2026-10-24 | G0 (constitution, v2 amendment: DOD-G-01 eval floor) | **Approved** | "Approve" (jerome.lacube) |
