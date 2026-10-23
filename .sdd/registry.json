@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T03:55:46Z",
+  "generated_at": "2026-10-23T03:56:11Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -519,9 +519,9 @@
           "summary": "Found in C001-T-076: the new plan lint rule LINT-TC-001 (C001-REQ-609) reports 405 errors in 20-plan/60-test-plan.md. 304: the TC table's Fixture column is not a Test data column; 83: Level values outside unit/integration/e2e/eval/manual (structure 53, replay 24, replay (eval in the branch of 8.1) 4, benchmark 1, eval with extra text 1); 18: manual TCs name no executor (no Executor column). No test meaning changes.",
           "reporter": "jerome.lacube",
           "date": "2026-10-23",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by plan revision e65ad24 and f368750 (G3 31c0b6f): Test data column, Kind column (structure, replay, benchmark as kinds of integration), Executor column for the 18 manual cases; also corrects the §1 integration count from 173 to 177 (CR-57). No test meaning changed; LINT-TC-001 0 findings.",
+          "closed_at": "2026-10-23"
         }
       ],
       "waivers": [
