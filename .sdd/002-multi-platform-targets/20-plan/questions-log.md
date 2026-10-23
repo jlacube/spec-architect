@@ -161,3 +161,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. One CHG-002 revision and one fix task for D-028, D-024 and D-023 item 2 (automatic spend reconciliation); D-023 item 1 (proportionate rework path after a Revise) deferred to a later change, D-023 closed as deferred (Recommended) · 2. Fix all, including the rework path with paid evals on three hosts · 3. Defer all three
 - **Answer:** P-01: "Fix most, defer D-023(1) (Recommended)"
 - **Extracted instructions:** none
+
+### Q-key-redact-01 — OpenRouter key in host- or model-emitted text (C002-REQ-639)
+- **Options:** 1. The runner replaces the key's value with [REDACTED] in every line and file it writes, host and model output included (Recommended) · 2. Runner's own writes only, stated in the REQ-639 rationale
+- **Answer:** P-01: "Redact host text too (Recommended)"
+- **Extracted instructions:** none
