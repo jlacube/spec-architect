@@ -68,7 +68,7 @@ summary, your session date and status `open`. The CLI reconciles both once it ex
 CHG-001 is done when:
 
 - every task below has status `done` or `dropped` (a drop needs P-01's approval through a plan revision);
-- every test case passes at the tier required by C001-ADR-003, with release-tier evals meeting the pass rule of their release class (≥ 9/10 for high-risk scenarios, 3/3 for the rest);
+- every test case passes at the tier required by C001-ADR-003, with release-tier evals meeting the pass rule of their release class there;
 - every item of `10-spec/70-dod.md` (DOD-G-01 … 07 and C001-DOD-001 … 021) has its evidence in
   `docs/release-0.1.0-evidence.md`;
 - no spec defect is open;
