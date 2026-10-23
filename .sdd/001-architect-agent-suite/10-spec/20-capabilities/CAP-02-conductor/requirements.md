@@ -73,9 +73,10 @@ contract C001-IF-05.
 - **Pattern:** event-driven
 - **Statement:** WHEN a specialist agent needs information that only P-01 can provide, THE specialist SHALL return a `questions` block conforming to C001-IF-05 in its final message instead of assuming an answer.
 - **Rationale:** OA-10, IDEA-P-06
+- **Note:** `blocking` is set per C001-IF-05 `questions.md` §1 (D-017; Q-d017-01).
 - **Stories:** C001-US-204
 - **Priority:** Must
-- **Acceptance:** C001-AC-208.1
+- **Acceptance:** C001-AC-208.1, C001-AC-208.2
 
 ### C001-REQ-209 — Merge and order questions
 - **Pattern:** event-driven

@@ -39,7 +39,7 @@ status: approved
 | `50-interfaces/registry.schema.json` | Registry schema (IF-02) |
 | `50-interfaces/artifact-frontmatter.md` | Frontmatter and entry formats (IF-03) |
 | `50-interfaces/id-scheme.md` | IDs, EARS shapes, weak words, traceability rules (IF-04) |
-| `50-interfaces/questions.schema.json` | Interview questions contract (IF-05) |
+| `50-interfaces/questions.schema.json`, `questions.md` | Interview questions contract and field rules (IF-05) |
 | `50-interfaces/workspace-layout.md` | Full and lite layouts (IF-06) |
 | `50-interfaces/hooks-contract.md` | Hooks and Bash allowlist (IF-07) |
 | `50-interfaces/plugin-layout.md` | Plugin tree, manifests, structure checks (IF-08) |
