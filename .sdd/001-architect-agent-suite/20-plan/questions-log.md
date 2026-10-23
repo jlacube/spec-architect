@@ -65,3 +65,9 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Spec note: the conductor counts as routed when the reply hands the user over to `claude --agent architect:sdd-conductor` and no Architect subagent starts (Recommended) · 2. Exempt the conductor from the per-agent minimum · 3. No spec change
 - **Answer:** P-01: "Spec note + accept (Recommended)"
 - **Extracted instructions:** none
+
+### Q-eval-delegation-01 — what the delegation evals measure (C001-T-063)
+- **Context:** with an empty sandbox 32/36 runs routed; with the material inline the main session did the task itself (0/6). The suite measured willingness to delegate, not which agent the descriptions pick.
+- **Options:** 1. Explicit + implicit: every prompt ends with a neutral "Give this to the matching Architect specialist agent" (no agent named), the ≥ 90% target is measured on these; a few implicit cases (no hint) run once and are reported separately (Recommended) · 2. Explicit only · 3. Tune the descriptions ("Use proactively for …") until implicit prompts reach 90%
+- **Answer:** P-01: "Explicit + implicit (Recommended)"
+- **Extracted instructions:** none
