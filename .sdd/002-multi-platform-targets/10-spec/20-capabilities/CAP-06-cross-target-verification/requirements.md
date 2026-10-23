@@ -307,8 +307,8 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 ### C002-REQ-638 — Partial OpenCode spend reconciled from the key usage
 - **Delta:** ADDED
 - **Pattern:** event-driven
-- **Statement:** WHEN a paid OpenCode session ends with a partial spend, THE OpenCode eval runner SHALL, before it checks the stop rule for the next session or ends the run, set the cost of the session's spend ledger entry to the key usage delta if the key usage was read before the session and settled within 20 minutes of the session's end, and otherwise leave the entry with its partial spend.
-- **Rationale:** defect D-023 item 2 (findings of C002-T-056 X3; P-01 answer to Q-c002-defects-01, `../../../20-plan/questions-log.md` round 2026-10-23: "Fix most, defer D-023(1) (Recommended)"): an entry with a partial spend stops its pool until a spend reconciliation (`20-plan/60-test-plan.md` §4.1 Ledger), and most capped OpenCode sessions with a running subagent end with one. Reads, settle rule, fields of the reconciled entry, the cases in which the entry stays partial with their standard-error line, and what the delta counts: C002-IF-010 §2.3. The reconciliation changes the spend ledger entry only; the result record keeps `partial` (C002-IF-010 §3 `spend`). An entry left partial, an entry written without a before-read and an entry of a run that ends during the wait are reconciled by hand, as before. The OpenRouter key in the reads: C002-REQ-639
+- **Statement:** WHEN an after-read of a paid OpenCode session that ended with a partial spend gives a settled key usage, THE OpenCode eval runner SHALL, before it checks the stop rule for the next session or ends the run, book the session's spend ledger entry at the key usage delta, with the fields and the standard-output line of C002-IF-010 §2.3 Reconciled cost.
+- **Rationale:** defect D-023 item 2 (findings of C002-T-056 X3; P-01 answer to Q-c002-defects-01, `../../../20-plan/questions-log.md` round 2026-10-23: "Fix most, defer D-023(1) (Recommended)"): an entry with a partial spend stops its pool until a spend reconciliation (`20-plan/60-test-plan.md` §4.1 Ledger), and most capped OpenCode sessions with a running subagent end with one. Before-read, after-reads, settle rule with its 0.9 factor, order and what the delta counts: C002-IF-010 §2.3 (critics CR-86, CR-87, CR-93). The reconciliation changes the spend ledger entry only; the result record keeps `partial` (C002-IF-010 §3 `spend`). Split from the case in which the entry stays partial, now C002-REQ-640 (critic CR-91). The OpenRouter key in the reads: C002-REQ-639, C002-REQ-641
 - **Stories:** C002-US-603
 - **Priority:** Must
 - **Acceptance:** C002-AC-638.1
@@ -317,7 +317,25 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
 - **Statement:** THE OpenCode eval runner SHALL NOT write the OpenRouter key, or the headers of a request that carries it, to standard output, standard error or any file it writes, its result records, transcripts and spend ledger entries included.
-- **Rationale:** C002-IF-010 §2.3 "The key is never logged" (a failed key usage read is reported by its reason only, never by the request or the response body, and `data.label`, which can show part of the key, is not kept), §4 Provider key (the same rule for the key passed to the host process) and §4 Key redaction (every occurrence of the key's value replaced with `[REDACTED]`, host and model text included; a key under 20 characters or with a character that JSON escapes refused before use; P-01 answer to Q-key-redact-01); a result records the credential's source, never the credential (`api_key_source`, C002-IF-010 §3; critic CR-37 of the plan review). Written as a prohibition that holds at all times, not as an unwanted behaviour: the key passes through the runner on every paid OpenCode session and every key usage read, not only on a fault
+- **Rationale:** C002-IF-010 §2.3 "The key is never logged" (a failed key usage read is reported by its reason only, never by the request or the response body, and `data.label`, which can show part of the key, is not kept), §4 Provider key (the same rule for the key passed to the host process) and §4 Key redaction (every occurrence of the key's value replaced with `[REDACTED]`, host and model text included; P-01 answer to Q-key-redact-01); a result records the credential's source, never the credential (`api_key_source`, C002-IF-010 §3; critic CR-37 of the plan review). The refusal of a key that redaction cannot match safely: C002-REQ-641 (critic CR-90). Written as a prohibition that holds at all times, not as an unwanted behaviour: the key passes through the runner on every paid OpenCode session and every key usage read, not only on a fault
 - **Stories:** C002-US-603
 - **Priority:** Must
 - **Acceptance:** C002-AC-639.1
+
+### C002-REQ-640 — Partial OpenCode spend left for the hand rule
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF a paid OpenCode session ends with a partial spend and its before-read gave no U0 or no after-read gave a settled key usage within 20 minutes of the session's end, THEN THE OpenCode eval runner SHALL leave the session's spend ledger entry with its partial spend and print on standard error the stays-partial line of C002-IF-010 §2.3 with the reason of that case.
+- **Rationale:** critic CR-91 (split from C002-REQ-638); C002-IF-010 §2.3 "When it stays partial" (three cases and their reasons: the before-read failed, the wait before the session did not settle, no after-read settled; critic CR-87); the stop rule then stops the entry's pool until it is reconciled by hand (`20-plan/60-test-plan.md` §4.1 Ledger). A session that ends `reported` or `unreported` needs no reconciliation and gets no line. An entry written without a before-read and an entry of a run that ends during the wait are reconciled by hand, as before (C002-IF-010 §2.3 Order)
+- **Stories:** C002-US-603
+- **Priority:** Must
+- **Acceptance:** C002-AC-640.1
+
+### C002-REQ-641 — Unusable OpenRouter key refused before use
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the OpenRouter key file of a paid OpenCode session is missing, or the OpenRouter key it holds is empty, shorter than 20 characters or holds a character that JSON escapes, THEN THE OpenCode eval runner SHALL refuse the session before any use of the key, with no host process started, no key usage read and the refusal text of C002-IF-010 §4 Key check for that case on standard error.
+- **Rationale:** critic CR-90 (the refusal has its own outcome); C002-IF-010 §4 Key redaction, Key check (one refusal text per case, critic CR-85; P-01 answer to Q-key-redact-01): an exact replacement of a short value would also hit unrelated text, and an escaped key would not match its JSON form, so C002-REQ-639 cannot be met for such a key; the check runs before the before-read of C002-IF-010 §2.3 and before the host process starts; a key file with more than one line holds a line break, a character that JSON escapes
+- **Stories:** C002-US-603
+- **Priority:** Must
+- **Acceptance:** C002-AC-641.1
