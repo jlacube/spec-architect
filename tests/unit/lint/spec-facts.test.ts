@@ -38,7 +38,7 @@ test("the CHG-001 plan is started and every task file is read", () => {
   const change: LintChange = { change: "001", folder: relative(repoRoot(), changeFolder("001")).split(sep).join("/"), profile: "full", graph, spec: facts };
   assert.equal(facts.planStarted, true);
   const all = tasks(change);
-  assert.equal(all.length, 64); // C001-T-079 added by revision D-012, C001-T-080 by D-014, C001-T-081 by D-015
+  assert.equal(all.length, 65); // C001-T-079 added by revision D-012, C001-T-080 by D-014, C001-T-081 by D-015, C001-T-082 by D-017
   assert.ok(all.every((t) => t.implements.length + t.satisfiesAc.length > 0 && t.doc !== undefined));
   assert.ok(all.filter((t) => t.status === "done").every((t) => t.commit !== ""));
 });

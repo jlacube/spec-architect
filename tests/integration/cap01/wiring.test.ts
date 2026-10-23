@@ -230,7 +230,7 @@ for (const t of TARGETS) {
 // --- C002-TC-134 (the inlined-body clause) ---
 for (const [skill, section, sourceName, call, grant] of [
   ["research-protocol", 93, "mcp__plugin_architect_context7__query-docs", "context7-query-docs", "context7/query-docs"],
-  ["code-discovery", 109, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
+  ["code-discovery", 111, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
 ] as const) {
   test(`C002-TC-134 (C002-TS-134): every Copilot agent that inlines ${skill} names "${call}"`, () => {
     const g = generated("copilot");

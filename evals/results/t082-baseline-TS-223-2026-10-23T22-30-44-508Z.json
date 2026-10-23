@@ -1,0 +1,119 @@
+{
+  "scenario": "TS-223",
+  "title": "Cartographer flags an entry-point scope question as blocking",
+  "tier": "dev",
+  "label": "t082-baseline",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-23T22:31:48.170Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.2610007,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "cartographer not dispatched (dispatched: none)"
+      ],
+      "metrics": {
+        "cost_usd": 0.2610007,
+        "session_ms": 61554,
+        "api_ms": 18687,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1190,
+            "output": 19,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.00012850000000000003
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1461,
+            "cache_read": 92701,
+            "cache_write": 26634,
+            "cost_usd": 0.2608722
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1461,
+              "cache_read": 92701,
+              "cache_write": 26634
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bg7b8103b",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 2,
+          "Glob": 1,
+          "Read": 2,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 355
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 154
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 36890
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-223-2026-10-23T22-30-44-508Z-run1.json"
+    }
+  ]
+}

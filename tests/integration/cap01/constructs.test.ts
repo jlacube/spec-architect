@@ -271,7 +271,7 @@ for (const [file, lines, target] of [
 // variant replaces; the variant's MCP names are translated like any body line.
 for (const [file, line, section, sourceName, call, grant] of [
   ["skills/research-protocol/SKILL.md", 96, 93, "mcp__plugin_architect_context7__query-docs", "context7-query-docs", "context7/query-docs"],
-  ["skills/code-discovery/SKILL.md", 111, 109, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
+  ["skills/code-discovery/SKILL.md", 113, 111, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
 ] as const) {
   test(`C002-TC-134 (C002-TS-134): ${file}:${line} names "${call}" on Copilot`, () => {
     assert.ok(sourceLine(file, line).includes(sourceName));

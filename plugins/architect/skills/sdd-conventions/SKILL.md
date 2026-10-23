@@ -127,7 +127,12 @@ Your final message is your hand-back to the conductor. It contains, in this orde
        "source_refs": ["R-004"] } ] }
    ```
 
-   - `blocking: true` when your work cannot be completed correctly without the answer.
+   - `blocking: true` when at least one holds, else `false` (C001-IF-05 `questions.md` §1):
+     (1) **scope** — the answer decides which code paths, entry points or components are in
+     scope of the change; (2) **stated answer** — without it you would have to state the answer
+     in your artifact as a fact or as an assumption. Covering every option (for example,
+     surveying both entry points) counts as an assumption for a scope question, so it stays
+     blocking; for any other question it is no assumption.
    - `material: true` when the answer changes scope, architecture, an interface, an NFR
      threshold or a dependency; then also give `candidates_considered` (4 or 5), the 2–3
      presented `options` (recommendation first, `"recommended": true`) and every other

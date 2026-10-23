@@ -104,7 +104,9 @@ disclosures: `ripwire failed: exit <code>` (or `serena failed: <error>`, `ripwir
 ## Return
 
 Digest of at most **20 lines** (findings, layers used, failures and disclosures worth knowing),
-the paths written, and a `questions` block only for what P-01 alone can decide.
+the paths written, and a `questions` block only for what P-01 alone can decide. A question that
+decides which entry points or code paths are in scope is `blocking: true`, even when your survey
+covers all of them (C001-IF-05 §1, criterion 1).
 
 ## Claude Code wiring
 

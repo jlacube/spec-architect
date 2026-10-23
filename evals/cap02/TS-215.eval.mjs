@@ -6,8 +6,9 @@
 // repository itself holds a question only P-01 can settle: the shop has two live checkouts whose totals
 // work differently (web: net prices in EUR, tax added after; kiosk: tax-inclusive prices in the store's
 // currency, converted to EUR at capture), while the approved ideation says "the checkout applies the
-// discount before tax" without naming one. The evidence cannot be completed correctly without knowing
-// which checkout is in scope (sdd-conventions: blocking).
+// discount before tax" without naming one. Which checkout is in scope decides the entry points of the
+// change, so the question is blocking under C001-IF-05 `questions.md` §1 criterion 1 (scope), even when
+// the cartographer surveys both checkouts (CHG-001 D-017; the cartographer's flag alone is C001-TS-223).
 // The assert reads the real hand-back: if the cartographer returned no blocking question, the case's Given
 // did not occur and the run fails with "Given not met" (distinct from a conductor failure).
 import { askUserQuestions, checker, dispatches, handback, handbackQuestions } from "../harness/assert.mjs";
