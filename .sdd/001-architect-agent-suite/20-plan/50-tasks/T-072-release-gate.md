@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
 status: todo
-depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081]
+depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082]
 implements: []
 satisfies_ac: [C001-AC-1102.1]
 verified_by: [C001-TS-1102, C001-TC-1102]
@@ -33,11 +33,11 @@ Run the release gate: all TCs, eval scenarios at the reduced release tier of C00
 ## Preconditions
 
 - All M-6 tasks
-- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates)
+- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates), C001-T-082 (D-017 closed: blocking criteria of C001-IF-05 §1 in the skills; C001-TC-215 and C001-TC-223 at 10 runs here)
 
 ## Step outline (no production code)
 
-1. Run npm run check. Run the eval TCs by their release class in C001-ADR-003: the 12 high-risk test cases at 10 runs, the other 66 at 3 runs (a 2/3 result triggers a 10-run check), the routing suite (42 cases) and the injection suite (22 cases) at 10 runs per case. Pace by the 5-hour window (≤ 90%) and tell P-01 when weekly usage nears 90%. If the running total heads past 350 USD notional, tell P-01 and apply the cuts of C001-ADR-003 in their order.
+1. Run npm run check. Run the eval TCs by their release class in C001-ADR-003: the 13 high-risk test cases at 10 runs, the other 66 at 3 runs (a 2/3 result triggers a 10-run check), the routing suite (42 cases) and the injection suite (22 cases) at 10 runs per case. Pace by the 5-hour window (≤ 90%) and tell P-01 when weekly usage nears 90%. If the running total heads past 350 USD notional, tell P-01 and apply the cuts of C001-ADR-003 in their order.
 2. Clean-profile install (C001-TC-1102).
 3. Collect evidence; tag v0.1.0 locally (no push).
 

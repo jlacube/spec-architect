@@ -31,7 +31,7 @@ not defined. The Location cell names D-015 first.
 | Level | Meaning | Count | Runner |
 |---|---|---|---|
 | integration | CLI, hooks, files and schemas, run against fixture repositories | 161 | `node --test` (C001-ADR-006) |
-| eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 78 | eval harness (T-029), tiers of C001-ADR-003 |
+| eval | Agent behaviour in scripted Claude Code sessions with transcript assertions | 79 | eval harness (T-029), tiers of C001-ADR-003 |
 | manual | Needs a human-controlled environment | 3 | checklists under `tests/manual/` |
 | unit | Module-level tests supporting the above (not mapped to TS) | as needed | `node --test` |
 
@@ -154,6 +154,7 @@ run before every task commit.
 | C001-TC-220 | C001-TS-220 | integration | `tests/integration/cap02/TS-220.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
 | C001-TC-221 | C001-TS-221 | eval | `evals/cap02/TS-221.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-030 |
 | C001-TC-222 | C001-TS-222 | eval | `evals/cap02/TS-222.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-031 |
+| C001-TC-223 | C001-TS-223 | eval | `evals/cap02/TS-223.eval.mjs` (D-017; built like `evals/cap02/TS-215.eval.mjs`, real cartographer) | brownfield fixture with a web checkout and an in-store kiosk checkout; an ideation that names only "the checkout" | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 (release: 10 runs) | C001-T-082 |
 | C001-TC-301 | C001-TS-301 | eval | `evals/cap03/TS-301.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-035 |
 | C001-TC-302 | C001-TS-302 | integration | `tests/integration/cap03/TS-302.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-035 |
 | C001-TC-303 | C001-TS-303 | eval | `evals/cap03/TS-303.eval.mjs` | scenario Given data on fx-empty or fx-brownfield-ts copy | REF-WIN, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-035 |

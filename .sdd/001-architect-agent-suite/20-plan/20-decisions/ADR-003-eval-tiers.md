@@ -10,7 +10,8 @@ status: approved
 
 ## Context and problem
 
-79 test cases were at level `eval` at G3; the test plan now has 78 (agent behaviour, non-deterministic). DOD-G-01 requires
+79 test cases were at level `eval` (agent behaviour, non-deterministic) at G3. The test plan
+has 79 again after C001-TC-223 (D-017). DOD-G-01 requires
 ≥ 9 of 10 passing runs. Running 10 × 79 sessions at every iteration is expensive.
 
 ## Considered options
@@ -48,8 +49,9 @@ runs plus 420 routing runs, about 450–1,100 USD notional. The dev and mileston
 **Classification rule.** An eval scenario is high-risk when at least one of these holds:
 
 - **G, gates:** it checks that a gate is presented, refused or enforced, or that unattended mode
-  never approves and stops when it must (CAP-08 gate scenarios, G0 enforcement, unattended-mode
-  limits).
+  never approves and stops when it must, including the blocking flag that makes it stop (CAP-08 gate
+  scenarios, G0 enforcement, unattended-mode
+  limits, C001-IF-05 §1 blocking criteria).
 - **S, safety and guards:** it checks that an agent stays inside its write scope, keeps tool data
   outside the user's repository, or refuses to run where the guards cannot work.
 - **I, injection:** it checks that content addressed to the agent is treated as data
@@ -62,16 +64,16 @@ runs plus 420 routing runs, about 450–1,100 USD notional. The dev and mileston
 A scenario that meets none of them is release-standard. A new eval scenario is classified by the
 same rule when it is added to `../60-test-plan.md`.
 
-**Release run count per eval test case** (78 eval rows in `../60-test-plan.md` §8):
+**Release run count per eval test case** (79 eval rows in `../60-test-plan.md` §8):
 
 | Runs at release | Test cases | Class |
 |---|---|---|
-| 10 | C001-TC-133, C001-TC-214, C001-TC-215, C001-TC-802, C001-TC-803, C001-TC-804, C001-TC-815, C001-TC-817 | G |
+| 10 | C001-TC-133, C001-TC-214, C001-TC-215, C001-TC-223, C001-TC-802, C001-TC-803, C001-TC-804, C001-TC-815, C001-TC-817 | G (C001-TC-215 and C001-TC-223 per D-017, Q-d017-01) |
 | 10 | C001-TC-713, C001-TC-1015, C001-TC-1124 | S |
 | 10 | C001-TC-212 (C001-TC-804 also holds the injection row) | I |
 | 3 | C001-TC-119, 120, 121, 122, 127, 201, 202, 203, 206, 207, 208, 209, 210, 211, 213, 216, 217, 218, 221, 222, 301, 303, 304, 305, 306, 307, 309, 312, 313, 315, 316, 317, 318, 319, 320, 401, 418, 419, 420, 423, 424, 507, 508, 511, 515, 609, 612, 613, 622, 710, 711, 712, 714, 715, 910, 1001, 1002, 1004, 1005, 1010, 1011, 1012, 1013, 1014, 1111, 1112 | standard |
 
-That is 12 test cases at 10 runs and 66 at 3. A scenario with variants (Scenario Outline rows,
+That is 13 test cases at 10 runs and 66 at 3. A scenario with variants (Scenario Outline rows,
 configurations such as C001-TC-1002's three configurations) runs all its variants in each run.
 C001-TC-1117 itself is an integration test; the routing runs belong to the routing suite.
 
@@ -80,17 +82,17 @@ Code run per scenario; 8 scenarios without a result are taken at 0.15–0.55 USD
 
 | Part | Runs | Measured basis | With uplift |
 |---|---|---|---|
-| release-high, 12 scenarios × 10 | 120 | 51 USD (5.06 per round) | 69 USD |
+| release-high, 13 scenarios × 10 | 130 | 65 USD (6.46 per round; C001-TC-223 taken at 1.40, like C001-TC-215) | 83 USD |
 | release-standard, 66 scenarios × 3 | 198 | 66 USD (21.90 per round) | 96 USD |
 | routing suite, 42 × 10 | 420 | 50 USD (0.119 per run, `delegation-m6final`) | 105 USD (0.25 per run) |
 | injection suite, 22 × 10 | 220 | 42 USD (4.24 per round, 2026-10-11) | 85 USD |
 | 10-run checks after 2 / 3 results (about 7 standard scenarios) | about 50 | 15 USD | 25 USD |
-| **Total** | **about 1,010** | **about 225 USD** | **about 380 USD** |
+| **Total** | **about 1,020** | **about 240 USD** | **about 395 USD** |
 
 The uplift doubles the figures measured on 2026-10-11, when some specialists still ran as
 Haiku stand-ins (D-013). For example, C001-TS-201 cost 0.11 USD then and 0.48 USD on 2026-10-21.
 It also takes the routing suite at the top of its measured range. The expected cost is about
-300 USD, inside the 200–350 USD target, which is about one weekly reset. The uplifted case can pass
+315 USD, inside the 200–350 USD target, which is about one weekly reset. The uplifted case can pass
 350 USD. If so, cut in this order:
 
 1. The routing suite drops to 5 runs per case (210 runs; C001-SC-05 is a ratio over runs, so 210
