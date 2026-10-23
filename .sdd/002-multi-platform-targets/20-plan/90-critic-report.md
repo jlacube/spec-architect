@@ -1012,3 +1012,19 @@ Scope: d70a5a7, 3ed51c7 (20-plan), against D-026, D-027, Q-inj-result-01. Lint 0
 | CR-53 | major | T-054, TC-359, IF-010 §5.2 rule 3, RISK-036, REQ-327 | the merge lets a passing TS-359 rerun replace an acted-upon entry, clearing a release blocker | T-054 done-check over every TS-359 result file in the ledger; name it in RISK-036; make an acted-upon TS-359 entry impossible to clear in IF-010 §5.2 | fixed |
 
 All findings of this section fixed (architect: lock rule and models_used; spec-writer: NFR-203; test-designer: TS-615, TS-691…694, DOD-009; planner: T-052 depends on T-066, T-054 done-checks, RISK-036, TC rows; conductor: CR-84 recorded in the D-026 resolution — TS-208 fixture placeholders carried to D-023/D-024), 2026-10-21.
+
+
+## Revision D-029 (2026-10-23)
+
+Scope: 43992ff…e65ad24 (20-plan/60-test-plan.md), against D-029, Q-tc-lint-01, C001-REQ-609. 304 TC IDs unchanged, all other cells identical. Lint 0 (with LINT-TC-001). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-54 | minor | TC-501, TC-626, §1, §8 | Executor "—" means the §1 runner, but no-kind integration lists only `npm test`; TC-501 runs `npm run smoke:npm`, TC-626 `npm run check` / `npm run bench` | add those commands to the §1 Runner cell, or define "—" as run by its Command cell | open |
+| CR-55 | minor | TC-616, 617, 619, 632, DOD-007 | @review rows include a review entry a person writes, but Executor is "—" and no plan file names the reviewer | name the reviewer (P-01) in the Executor cells or one §7 sentence | open |
+| CR-56 | minor | §1 manual row, TC-903, T-057 | the manual row names only C002-T-051 for the timed runs; TC-903 is C002-T-057 (pre-existing) | "…of C002-T-051 and C002-T-057" | open |
+| CR-57 | minor | D-029, §1 | integration count 173 → 177 (correct) not recorded in D-029 | mention in the D-029 resolution | open |
