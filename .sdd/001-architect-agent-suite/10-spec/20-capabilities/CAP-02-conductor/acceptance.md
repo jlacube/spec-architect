@@ -110,16 +110,27 @@ Scenario: C001-TS-209 — specialist cannot decide licensing preference
   And the research note does not state a budget as fact
 ```
 
-#### C001-AC-208.2 — Scope questions are blocking
+#### C001-AC-208.2 — Blocking flag follows C001-IF-05 §1
 ```gherkin
 Scenario: C001-TS-223 — cartographer flags an entry-point scope question as blocking
-  Given a brownfield repository with two checkout entry points, "web checkout" and "in-store kiosk checkout"
-  And an ideation whose only reference to the affected flow is "the checkout"
-  When the cartographer finishes its survey
-  Then its final message contains a JSON block valid against C001-IF-05
-  And that block has a question asking which checkout entry point is in scope, with "blocking": true
+  Given the C001-TS-215 brownfield fixture with two checkout entry points, "src/checkout/totals.ts" (web) and "src/kiosk/totals.ts" (in-store kiosk)
+  And its approved lite ideation, whose Design direction reads "A coupon service validates codes; checkout applies the discount before tax."
+  When P-01 tells the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate." and the conductor dispatches the cartographer
+  Then the cartographer's final message contains a questions block valid against C001-IF-05
+  And that block has a question with "blocking": true whose question text or option labels contain both "web" and "kiosk" (case-insensitive)
 ```
-Note: eval-level scenario, run against the real cartographer like C001-TS-215; the expected flag follows C001-IF-05 `questions.md` §1 criterion 1 (scope), which holds even when the cartographer surveys both entry points (D-017).
+Note: eval-level scenario, run against the real cartographer like C001-TS-215; the expected flag follows the scope criterion of C001-IF-05 `questions.md` §1, which holds even when the cartographer surveys both entry points (D-017).
+
+```gherkin
+Scenario: C001-TS-224 — a naming preference comes back non-blocking
+  Given the C001-TS-223 fixture, with the ideation's Design direction reading "A coupon service validates codes; the web checkout applies the discount before tax. The kiosk checkout is out of scope."
+  And the ideation's Open questions section reading "Should the new module be named 'coupons' or 'promotions'? No file or interface depends on the name yet."
+  When P-01 tells the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate." and the conductor dispatches the cartographer
+  Then the cartographer's final message contains a questions block valid against C001-IF-05
+  And that block has a question whose question text or option labels contain both "coupons" and "promotions" (case-insensitive)
+  And that question has "blocking": false
+```
+Note: eval-level scenario, run against the real cartographer like C001-TS-215. The naming question meets no criterion of C001-IF-05 `questions.md` §1: it decides no code path, entry point or component in scope, and the cartographer's survey does not have to state the name as a fact or an assumption.
 
 ## C001-REQ-209
 
@@ -181,7 +192,7 @@ Scenario: C001-TS-215 — blocking question interrupts unattended mode
   When the cartographer returns a question with "blocking": true
   Then the conductor asks it via AskUserQuestion before dispatching further authors
 ```
-Note: the Given's blocking question comes from the real cartographer, which flags a scope question as blocking under C001-IF-05 `questions.md` §1 criterion 1 (see C001-TS-223); C001-TC-215 is retested at release tier in C001-T-072 (D-017; Q-d017-01).
+Note: the Given's blocking question comes from the real cartographer, which flags a scope question as blocking under the scope criterion of C001-IF-05 `questions.md` §1 (see C001-TS-223; D-017).
 
 ## C001-REQ-214
 
@@ -262,7 +273,7 @@ Scenario: C001-TS-222 — fatigue guard
 | C001-REQ-205 | TS-206 | n/a | TS-206 (4 per round) | n/a | n/a | n/a | n/a |
 | C001-REQ-206 | TS-207 | n/a | TS-207 (2–3 options) | n/a | n/a | n/a | n/a |
 | C001-REQ-207 | TS-208 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C001-REQ-208 | TS-209 | TS-223 (scope question, IF-05 §1) | n/a | n/a | n/a | n/a | n/a |
+| C001-REQ-208 | TS-209 | TS-223 (scope question, blocking per IF-05 §1) | TS-224 (no §1 criterion met, not blocking) | n/a | n/a | n/a | n/a |
 | C001-REQ-209 | TS-210 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-210 | TS-211 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-211 | TS-212 | n/a | n/a | n/a | n/a | n/a | n/a |

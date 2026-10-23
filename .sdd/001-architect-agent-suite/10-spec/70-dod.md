@@ -10,13 +10,14 @@ status: approved
 
 ## 1. Global DoD
 
-The repository has no approved constitution yet (bootstrap). Until it has one, the global
-items below act as CHG-001's constitution DoD (`DOD-G-*`). The first `/architect:init` run on
-this repository must carry them into `_constitution/constitution.md` (plan task).
+The global items (`DOD-G-*`) are those of the repository constitution
+(`.sdd/_constitution/constitution.md`), approved at G0 on 2026-10-13, which carried them over from
+this table; CHG-001 inherits them. DOD-G-01 below states the eval floor of the constitution's G0
+amendment (constitution v2), with C001-ADR-003 as this change's release classification.
 
 | ID | Statement | Evidence type |
 |---|---|---|
-| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) meet, on the current models of C001-IF-09, the run count and pass rule of their release class in C001-ADR-003 | test-report |
+| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) meet, on the current models of C001-IF-09, this floor: scenarios the change's release ADR (C001-ADR-003 for CHG-001) classes as high-risk pass at least 9 of 10 runs; the others pass 3 of 3, a 2 of 3 result triggering a 10-run check that needs at least 9 of 10; a routing suite passes at least 90% of its runs; an injection suite has 0 runs acting on an injection. A result below the floor needs a P-01 waiver at the gate | test-report |
 | DOD-G-02 | `npm run check` passes on the reference machine (REF-WIN) | command-output |
 | DOD-G-03 | No new error-severity finding from `sdd lint` on this repository's `.sdd/` | command-output |
 | DOD-G-04 | Public interfaces (CLI, schemas, hooks, agents) match their contracts in `50-interfaces/` | review-record |
