@@ -81,6 +81,7 @@ flowchart TB
     C002_T_064["T-064 Catch-up D-015…D-017: text-only MCP errors, package version, release-check rows, runner rules"]
     C002_T_065["T-065 Catch-up D-018…D-020: file-inspection variant, cap exceptions, PATH lead, Copilot CLI model, platform rule, executable lookup"]
     C002_T_066["T-066 Catch-up D-026, D-027: Copilot CLI model substitution, injection-summary merge, install-notes fallback, models_used"]
+    C002_T_067["T-067 Fix D-023(2), D-024, D-028: ripwire map rule, deny summary, spend reconciliation, key redaction"]
   end
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
@@ -231,6 +232,10 @@ flowchart TB
   C002_T_046 --> C002_T_066
   C002_T_047 --> C002_T_066
   C002_T_065 --> C002_T_066
+  C002_T_030 --> C002_T_067
+  C002_T_043 --> C002_T_067
+  C002_T_056 --> C002_T_067
+  C002_T_066 --> C002_T_067
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
   C002_T_063 --> C002_T_056
@@ -290,8 +295,13 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 66 tasks weigh 136 in total (19 S, 24 M, 23 L). The longest chain
-weighs 45 and ends with the Copilot release. **The D-026, D-027 plan update lengthens it by 1**: the
+Weights S = 1, M = 2, L = 3. The 67 tasks weigh 139 in total (19 S, 24 M, 24 L). The longest chain
+weighs 45 and ends with the Copilot release. **The D-023 item 2, D-024, D-028 plan update does not
+change it**: the fix task C002-T-067 (L) starts after C002-T-056 and C002-T-066 (both finishing at
+41), its latest dependencies, and finishes at 44. No task depends on it: C002-T-052 and C002-T-055
+do not wait for it (`10-strategy.md` §2), so it has one unit of slack against the end of the longest
+chain (45). Before that, **the D-026, D-027 plan update
+lengthened it by 1**: the
 catch-up task C002-T-066 (L) starts after C002-T-065 (finishing at 38), its latest dependency, and
 finishes at 41; C002-T-054 now waits for it and for C002-T-048 (finishing at 40), so it finishes at
 43, C002-T-050 at 44 and C002-T-055 at 45. C002-T-048 moves off the critical path with one unit of
@@ -355,7 +365,8 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 dev-tier runs of the carried eval rows (L; its rerun plan after C002-T-065, finishing at 41),
 C002-T-049 — Release evidence for OpenCode (M, 43) and C002-T-052 — P-01: publish architect-sdd and
 release the OpenCode target (S, 44). C002-T-048 (finishing at 40) has one unit of slack against
-C002-T-056, and C002-T-066 (finishing at 41, item 15 above) two units against C002-T-049. Before the D-018 … D-020 update the carried OpenCode eval runs (resumed after
+C002-T-056, and C002-T-066 (finishing at 41, item 15 above) two units against C002-T-049. The fix
+task C002-T-067 (finishing at 44) is on neither release chain. Before the D-018 … D-020 update the carried OpenCode eval runs (resumed after
 C002-T-064 at 33, finishing at 36) had one unit of slack against C002-T-048 (then finishing at 37).
 
 The remaining Copilot coupling of the OpenCode chain is shared tooling, not a release decision:
@@ -442,6 +453,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-065 | Catch-up for revision D-018 … D-020: file-inspection variant and glob-prose construct, spend-cap exceptions, PATH lead, Copilot CLI model, platform rule, PATH-only executable lookup | L | T-028, T-038, T-044, T-045, T-047, T-064 |
 | C002-M-06 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | L | T-038, T-044, T-063, T-064, T-065 |
 | C002-M-06 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | L | T-045, T-046, T-047, T-065 |
+| C002-M-06 | C002-T-067 | Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction | L | T-030, T-043, T-056, T-066 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
