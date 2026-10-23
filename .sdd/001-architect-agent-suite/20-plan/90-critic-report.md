@@ -127,3 +127,18 @@ Scope: c3e7287 (20-plan), against D-014 F-6/F-7, D-015, Q-cov-node20-01, Q-archi
 | CR-16 | minor | T-081, REQ-920, RB-003 | the recovery sentence ("run /architect:archive again") is wrong after the folder move (ERR-CLI-002) | cover both cases: before the move re-run archive; if already under _archive/, run sdd status --write | fixed: the archive.md sentence covers both cases (re-run before the move, `sdd status --write` after it) |
 
 All findings of this section fixed (planner), 2026-10-22, after C001-REQ-924, C001-AC-924.1 and C001-TS-925 were added (133ab4e, a660c2a); C001-TC-1131 now verifies C001-TS-925.
+
+
+## Revision D-016 (2026-10-23)
+
+Scope: plan against the D-016 spec revision (3a19cef). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-17 | major | TC-1117, TS-1117, T-063 | TC-1117's inline fixture cannot cover the conductor line | test data = the plugin's eval case files (PLG-EVAL-001 input) plus negative fixtures (must-route without hand-over check, without 0-subagent check; must-not-route without hand-over check) | open |
+| CR-18 | minor | T-063, IF-09 | step 1 gives no source for conductor prompts; PLG-EVAL-001 module not a target | "conductor prompts per the C001-REQ-1116 note"; add the PLG-EVAL-001 check module and plugins/architect/evals to targets | open |
+| CR-19 | minor | RISK-005 | mitigation "assertions on tool calls, not prose" vs the conductor's text check | allow the literal command string in the last reply as the one exception (D-016), noting possible flakiness | open |

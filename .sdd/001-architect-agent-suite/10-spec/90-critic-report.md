@@ -158,3 +158,21 @@ Scope: `git diff c3895f8 c3e7287 -- .sdd/001-architect-agent-suite/` (spec-write
 |---|---|---|---|---|---|
 | CR-16 | minor | NFR-502, NFR-403, REF-WIN | REF-WIN is defined with Node 20 LTS only; NFR-502 now names Node 22.22.3, pinned to a patch | REF-WIN with "Node 20 LTS and 22 LTS (nvm-windows)"; NFR-502 "REF-WIN, Node 22 LTS (measured with 22.22.3)" | fixed (133ab4e: REF-WIN Node 20 and 22 LTS; NFR-502 Node 22 LTS) |
 | CR-17 | major | D-015, REQ-914, REQ-920, T-081, TC-1131 | the archive resume changes user-visible behaviour (exit 0 instead of ERR-CLI-014) but no REQ/AC/TS states it; REQ-914 does not forbid duplicates; TC-1131 borrows TS-915 | one CAP-09 unwanted-behaviour REQ (interrupted archive completes on re-run, same result as one run) with AC and TS; TC-1131, T-081 and D-015 point to it | fixed (133ab4e, a660c2a: C001-REQ-924, AC-924.1, TS-925; TC-1131 and T-081 point to them) |
+
+
+## Revision D-016 (2026-10-23)
+
+Scope: `git diff 2fa33de 3a19cef -- .sdd/001-architect-agent-suite/10-spec/` (REQ-1116 note, SC-05 link, TS-1117 line), against D-016 and Q-conductor-route-01. Lint 0. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-18 | major | REQ-1116 note, TS-1117 | no grading rule for the conductor's must-not-route prompt; "not routed to the conductor" is always true, so it can never fail | rule for any prompt ("routed to the conductor when …"); a conductor must-not-route prompt fails when the reply hands over; matching Then line | open |
+| CR-19 | major | TS-1117 | the new Then judges a run, but the When only parses the suite definition | restate as declared checks (last reply contains the literal command; 0 Architect subagent starts), or a new runtime scenario | open |
+| CR-20 | minor | TS-1117, REQ-1116 note | "hands the user over" not mechanical; no "fails otherwise" for the no-hand-over, no-subagent case | "passes when the last reply contains the literal `claude --agent architect:sdd-conductor` and no Architect subagent starts; fails otherwise" | open |
+| CR-21 | minor | REQ-1116 note, REQ-201, IF-09 A0 | "cannot be invoked as a subagent" overstates IF-09 ("not meant to be spawned") | "is not meant to be spawned as a subagent (C001-IF-09 A0)" | open |
+| CR-22 | minor | CAP-11 coverage, REQ-1116 | alternate and error columns still n/a | TS-1117 (conductor hand-over) under alternate; TS-1117 (Architect subagent started) under error | open |
+| CR-23 | minor | SC-05 | "≥ 90% correct agent" has no unit (prompts or runs) | "≥ 90% of runs pass all their checks" | open |
