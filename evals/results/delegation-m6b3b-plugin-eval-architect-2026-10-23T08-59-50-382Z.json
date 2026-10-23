@@ -1,0 +1,275 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b3b",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T08:59:50.332Z",
+  "runs": 12,
+  "passed": 7,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 2.4914416000000004,
+  "duration_s": 331,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-planner-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-planner-01-run1-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1099918,
+        "session_ms": 122000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-planner-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-planner-01-run2-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3748962,
+        "session_ms": 112000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-planner-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-planner-01-run3-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.105047,
+        "session_ms": 122000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-planner-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-01-run1-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.38724700000000006,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-01-run2-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0773672,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-planner-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-01-run3-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.31516560000000005,
+        "session_ms": 97000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-02-run1-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2787606,
+        "session_ms": 88000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-02-run2-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07614720000000001,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-planner-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-02-run3-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07532420000000001,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-03-run1-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2778956,
+        "session_ms": 78000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-03-run2-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2069366,
+        "session_ms": 56000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-planner-03-run3-2026-10-23T08-59-50-334Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2066626,
+        "session_ms": 53000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 12,
+    "runs": 12,
+    "regraded": 5
+  }
+}

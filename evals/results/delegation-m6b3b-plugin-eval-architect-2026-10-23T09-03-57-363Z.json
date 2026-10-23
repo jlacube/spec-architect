@@ -1,0 +1,144 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b3b",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T09:03:57.338Z",
+  "runs": 6,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 0.6515247,
+  "duration_s": 42,
+  "overall_score": 0,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "offtopic-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-01-run1-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0902047,
+        "session_ms": 20000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-01-run2-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0960381,
+        "session_ms": 23000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-01-run3-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.09571669999999999,
+        "session_ms": 24000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-02-run1-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.1366536,
+        "session_ms": 31000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-02-run2-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.118305,
+        "session_ms": 20000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b3b-offtopic-02-run3-2026-10-23T09-03-57-339Z.jsonl",
+      "failures": [
+        "no-architect-agent: Agent called 1x (expected 0..0)"
+      ],
+      "metrics": {
+        "cost_usd": 0.1146066,
+        "session_ms": 18000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 0,
+    "runs": 6,
+    "regraded": 0
+  }
+}

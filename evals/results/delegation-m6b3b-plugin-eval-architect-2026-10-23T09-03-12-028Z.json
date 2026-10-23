@@ -1,0 +1,240 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b3b",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T09:03:11.980Z",
+  "runs": 12,
+  "passed": 12,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.6735742899999999,
+  "duration_s": 50,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-conductor-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-conductor-01-run1-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06848659,
+        "session_ms": 29000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-conductor-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-conductor-01-run2-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07693837,
+        "session_ms": 28000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-conductor-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-notroute-conductor-01-run3-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07094292999999999,
+        "session_ms": 24000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-01-run1-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.05080559999999999,
+        "session_ms": 13000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-01-run2-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0512056,
+        "session_ms": 13000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-01-run3-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.05282559999999999,
+        "session_ms": 11000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-02-run1-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0513816,
+        "session_ms": 11000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-02-run2-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.052245599999999996,
+        "session_ms": 12000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-02-run3-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.051625599999999994,
+        "session_ms": 12000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-03-run1-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0486496,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-03-run2-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0488456,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b3b-route-conductor-03-run3-2026-10-23T09-03-11-982Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0496216,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 12,
+    "runs": 12,
+    "regraded": 0
+  }
+}
