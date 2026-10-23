@@ -472,11 +472,18 @@ Environment, C002-DOD-009, DOD-G-01 of `../70-dod.md`); in VS Code the record's 
 the model that ran, on Copilot CLI each result's `session_model` and `agent_models` do (C002-IF-010
 §3, §5.1). `models_used` is a mapping from agent name, as the agent picker and the chat show it (`sdd-conductor`,
 `sdd-cartographer`, …), to the model ID that VS Code showed for that agent's turns in the toy-change
-steps of the run (the fresh-install step and the steps that follow it), or to `not shown` when VS
-Code showed none for that agent. The key `sdd-conductor` is required; a specialist is listed where
-P-01 read its model. P-01 reads the model where the install notes say VS Code shows it (C002-IF-005
-§5 Models), and the fresh-install step records whether it was shown there. The release check does
-not read `models_used` and refuses nothing for it: P-01 accepted the evidence on the model the plan
+steps of the run, or to `not shown` when VS
+Code showed none for that agent. The toy-change steps are the conductor chat that the install step
+opens and the steps of group 4 that take the toy change from creation to gate G1. The key
+`sdd-conductor` is required; a specialist is listed where P-01 read its model. The install steps of
+group 1 (Kind `install`) run no conductor turn, so they record no model. The checklist places the
+instruction for `models_used` in the Record of the install step that runs `sdd install copilot` and
+opens the conductor chat (`VSC-02`), and P-01 fills it from the turns of the toy-change steps
+(revised for defect D-028 item 1, as C002-T-066 wrote the checklist). P-01 reads the model where the
+install notes say VS Code shows it (C002-IF-005 §5 Models). Whether VS Code showed it there, or where
+it showed it instead, goes into the `note` of that install step. The record has no field of its own
+for it (revised for defect D-028 item 2). The release check does
+not read `models_used` or that `note`, and it refuses nothing for them: P-01 accepted the evidence on the model the plan
 offers (Q-copilot-opus-01), and no model is a condition of C002-REQ-617 or C002-REQ-618; the review
 of the record (C002-TS-618) and P-01's sign-off check that the key is there, and P-01's sign-off
 reads from it whether the agents ran on the models of the exception. The Copilot CLI part of the

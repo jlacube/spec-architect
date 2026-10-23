@@ -298,13 +298,44 @@ C002-REQ-307).
 
 | Mode | `edit` | `bash` |
 |---|---|---|
-| native-permissions | `"*": deny`, then `.sdd/*`: allow. OpenCode matches the target path relative to the project root, after resolving `..` and `.` segments, with either separator and, on Windows, in any letter case; a path outside the project is decided by `external_directory` first (S-07 §3.2; C002-R-001 C-02, C-03) | `"*": deny`, then `allow` rules for the forms the generated agents send (`sdd *`, `git <read verb> *` for each read verb, the ripwire read verbs, `ast-grep run *--pattern*`, the version probes as exact strings, the pipe-only entries `head -n *`, `tail -n *`, `wc -l`, `sort`, `uniq`, which OpenCode evaluates as separate parts, S-07 §3.3), then `deny` rules for the forms the guard refuses that a glob can name (below); no rule for the script form `node <path>/sdd.mjs` |
+| native-permissions | `"*": deny`, then `.sdd/*`: allow. OpenCode matches the target path relative to the project root, after resolving `..` and `.` segments, with either separator and, on Windows, in any letter case; a path outside the project is decided by `external_directory` first (S-07 §3.2; C002-R-001 C-02, C-03) | `"*": deny`, then `allow` rules for the forms the generated agents send (`sdd *`, `git <read verb> *` for each read verb, the ripwire read verbs and the bounded default map (ripwire rules below), `ast-grep run *--pattern*`, the version probes as exact strings, the pipe-only entries `head -n *`, `tail -n *`, `wc -l`, `sort`, `uniq`, which OpenCode evaluates as separate parts, S-07 §3.3), then `deny` rules for the forms the guard refuses that a glob can name (below); no rule for the script form `node <path>/sdd.mjs` |
 | sdd-mcp-server | `deny` | `deny` |
 
 Other keys in both modes: `external_directory: deny`, `question: allow` for the conductor and
 `deny` for the specialists (C002-REQ-217: OpenCode's default for SDK and `opencode serve` sessions is
 `question: deny`, S-07 §5, fact F-6), `skill: deny` (skills are inlined), `webfetch` and `websearch`
 as the agent's tools allow.
+
+**ripwire rules** (revised for defect D-024, the follow-up of CHG-001 defect D-012). The bash guard
+admits two ripwire forms, the verb form and the bounded default map (C001-IF-07 §3.1). The `bash`
+rules of `native-permissions` name them as follows. They are written after the `git` rules and
+before the `ast-grep` rule, all of them `allow`:
+
+| Form (C001-IF-07 §3.1) | OpenCode rules | Source in `src/hooks/guard-bash.ts` |
+|---|---|---|
+| verb form, value verb (`--for=<v>` …) | `ripwire *<verb>=*`, one rule per entry, in list order (`ripwire *--for=*` … `ripwire *--expand=*`) | `RIPWIRE_VALUE_VERBS` |
+| verb form, flag verb (`--situ` …) | `ripwire *<verb>*`, one rule per entry, in list order (`ripwire *--test-gate*` … `ripwire *--version*`). The rule `ripwire *--test-gate*` also matches the value form `--test-gate=<file>`, which the guard counts as a verb, so the value list needs no `--test-gate` entry | `RIPWIRE_FLAG_VERBS` |
+| default-map form: no verb, `--max-tokens=N` | `ripwire *--max-tokens=*`, one rule, after the verb rules | `RIPWIRE_MAP_BOUND` (below) |
+| map under an other bound only (`ripwire . --token-budget=4000`) | no rule. The command matches no `allow` rule and falls to the catch-all `"*": deny`, as the guard denies it (BG-442). No `deny` rule names `--token-budget`: the verb form allows it (`ripwire . --for="payment method" --token-budget=4000`, BG-002), and such a rule would deny that form too, a false deny | — |
+
+`bashRules()` of the generator (`scripts/generate/emit/opencode-permissions.ts`, C002-COMP-001)
+writes the verb rules from the exported lists `RIPWIRE_VALUE_VERBS` and `RIPWIRE_FLAG_VERBS`, as
+before. Both lists keep their present values; `--test-gate` stays out of the value list. CHG-001 kept
+them unchanged for this rule set (C001-T-079). The default-map rule needs the map bound
+`--max-tokens`, which neither list holds. Today it is a literal inside the guard's `ripwire()`. The
+guard core therefore exports it as a third constant, `RIPWIRE_MAP_BOUND` (`"--max-tokens"`), which
+both `ripwire()` and `bashRules()` read, so the generator copies no guard data (C002-CON-06). The OpenCode
+table's `permissions.native-permissions.bash` list holds the same rules in the same order; a table
+that differs is ERR-GEN-004 (C002-IF-004). A glob cannot hold `N` to digits: `*` matches any
+characters and `?` one character, and there is no character class (C002-R-001 C-02). The guard's
+other conditions on this form cannot be held either, so the rule is a gap row of the table below.
+
+None of this changes the `sdd-mcp-server` mode, which is the OpenCode mode of the table and the
+final mode of the S-07 record after the full replay (`docs/spikes/S-07-opencode.md §8`, §13). In that
+mode `edit` and `bash` are `deny`, and the bash guard core decides every command of the `sdd-shell`
+server exactly, the default-map form included (C002-REQ-209, C002-REQ-210, C002-IF-002 §5.2). The rules
+above appear only in a package generated with `--mode opencode=native-permissions` and in the table's
+native list. A package generated in the present mode does not change.
 
 **What a glob cannot express.** OpenCode matches a `bash` rule as a wildcard pattern against the
 command text, `*` crosses `/` and spaces, and the last matching rule wins (C002-R-001 C-01, C-02). It
@@ -326,7 +357,8 @@ defect D-009); the full corpus replay settles them (C002-IF-009 §2):
 | Serena data folder outside the repository (C002-REQ-517, C002-IF-008 §1.1) | `sdd serena-config *` and `sdd serena-launch *` denied, then `sdd serena-config --user-data` and `sdd serena-launch --user-data *` allowed | the repository is unknown when the package is generated, so a positional folder outside it is denied (false denies), and so is the literal `${CLAUDE_PLUGIN_DATA}` that the guard resolves from its environment on Claude Code (BG-374, BG-403; C002-IF-009 §2.1) |
 | git output options (`-o`, `--output…`, `-O…`, `--open-files-in-pager`, `--ext-diff`) | `git * -o *`, `git * --output*`, `git * -O*`, `git * --open-files-in-pager*`, `git * --ext-diff*` denied | spellings a pattern misses are false allows that the replay finds |
 | `--cwd` of a writing `sdd` subcommand only with a folder at or under the repository root (C002-REQ-521, C002-IF-008 §1.2) | `sdd *--cwd*` denied, written after every `allow` rule of an `sdd` form, the Serena `--user-data` rules included (the last matching rule wins) | the repository root is unknown when the package is generated, so every `sdd` command with `--cwd` is denied, also with a folder inside the root and for subcommands that write no file (false denies; for example the inside-root `--cwd` case of C002-REQ-607); no false allow |
-| ripwire: one read verb, bounded flags only (C001-IF-14 §2) | one `allow` rule per read verb (`ripwire *--for=*`, `ripwire *--situ*`, …); any other ripwire command falls to the catch-all deny | a command with two read verbs or another flag still matches an `allow` rule (false allows the replay finds) |
+| ripwire verb form: one read verb, bounded flags only (C001-IF-07 §3.1 rule 1, C001-IF-14 §2) | one `allow` rule per read verb (`ripwire *--for=*`, `ripwire *--situ*`, …; ripwire rules above); any other ripwire command falls to the catch-all deny | a command with two read verbs or another flag still matches an `allow` rule (false allows the replay finds; for example an empty `--test-gate=` or two verbs, BG-449, BG-451) |
+| ripwire default-map form: no verb, at least one `--max-tokens=N` with digits-only `N`, at most one path word, and only bound and output words besides (C001-IF-07 §3.1 rule 2; revised for defect D-024) | `ripwire *--max-tokens=*` allowed (ripwire rules above); `--token-budget=N` alone matches no `allow` rule and is denied by the catch-all | the glob matches every command that starts with `ripwire ` and holds `--max-tokens=` anywhere. It therefore also allows a map command with a span-edit, write or unknown option (`ripwire . --max-tokens=4000 --edit=src/a.ts:1-2`, BG-448), with a non-digit `N` (`ripwire . --max-tokens=x`, BG-443) or with two path words (`ripwire a b --max-tokens=4000`, BG-447). These are false allows under `native-permissions`. `ripwire . --token-budget=4000` (BG-442) and `ripwire . --max-tokens` (BG-444) stay denied, as the guard denies them |
 | ast-grep `run --pattern` without rewrite flags | `ast-grep run *--pattern*` allowed, then `ast-grep * --rewrite*`, `ast-grep * -r *`, `ast-grep * -U*` denied (S-07 §3.3: with `ast-grep run *`, a `run` without `--pattern` was allowed, BG-109) | as for git |
 | PowerShell dialect (C001-IF-07 §3 PowerShell rows) | none: OpenCode has one shell tool, and the rules follow the Bash rows | PowerShell-only decisions (for example `git log` denied in PowerShell) are not reproduced |
 

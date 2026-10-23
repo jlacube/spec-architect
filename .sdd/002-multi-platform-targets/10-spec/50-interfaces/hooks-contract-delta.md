@@ -19,8 +19,8 @@ Copilot session hooks, revised for defect D-003 after spike S-08 (`docs/spikes/S
 §2.2`, §2.3, §3, §3.1, §5) and after the critic's D-003 review (Q-safety-06, Q-safety-07; CR-37,
 CR-38). Revised for defect D-010 (items 2 and 5: the tool shown for option-parser faults, and
 `--read-only` optional for `serena-launch`) and defect D-014 (item 4: the literal
-`${CLAUDE_PLUGIN_DATA}` is not expanded where the command runs without a shell). Owner:
-C002-COMP-012.
+`${CLAUDE_PLUGIN_DATA}` is not expanded where the command runs without a shell) and defect D-024
+(the deny summary names the bounded ripwire default map, §1). Owner: C002-COMP-012.
 
 ## §1 Allowlist rows changed (C001-IF-07 §3)
 
@@ -36,8 +36,14 @@ stays GUARD-BASH-002.
 Deny message summary (`Allowed:` part of C001-IF-07 §4), CHG-002 text:
 
 ```text
-sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |
+sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs or the bounded default map, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |
 ```
+
+Revised for defect D-024: the summary names both ripwire forms of C001-IF-07 §3.1, the read verbs
+and the bounded default map (`ripwire [<path>] --max-tokens=N …`, admitted since CHG-001 defect
+D-012). Only the text changes. No decision changes, and the same text is shown wherever the bash
+guard core denies a command: the Claude Code hook, the sdd MCP server command tool and the Copilot
+guard hooks.
 
 The same allowlist is the source of the OpenCode `bash` rules under native permission enforcement
 (C002-IF-001 §6.3, which lists the parts a glob cannot express) and the decision of the sdd MCP
