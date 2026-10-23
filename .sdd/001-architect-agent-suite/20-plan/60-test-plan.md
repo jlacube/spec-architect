@@ -326,7 +326,7 @@ run before every task commit.
 | C001-TC-1114 | C001-TS-1114 | integration | `tests/integration/cap11/TS-1114.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1115 | C001-TS-1115 | integration | `tests/integration/cap11/TS-1115.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1116 | C001-TS-1116 | integration | `tests/integration/cap11/TS-1116.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-062 |
-| C001-TC-1117 | C001-TS-1117 | integration | `tests/integration/cap11/TS-1117.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-063 |
+| C001-TC-1117 | C001-TS-1117 | integration | `tests/integration/cap11/TS-1117.test.ts` | the plugin's eval case files under `plugins/architect/evals/` (the PLG-EVAL-001 input, read by `evals/delegation/suite.mjs`); negative fixtures, each of which must fail the inventory: a conductor must-route case without the hand-over check, a conductor must-route case without the 0-subagent check, and a conductor must-not-route case without the hand-over check | REF-WIN, Node 20 and 22 | C001-T-063 |
 | C001-TC-1118 | C001-TS-1118 | integration | `tests/integration/cap11/TS-1118.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1119 | C001-TS-1119 | integration | `tests/integration/cap11/TS-1119.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-061 |
 | C001-TC-1120 | C001-TS-1120 | integration | `tests/integration/cap11/TS-1120.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-064 |

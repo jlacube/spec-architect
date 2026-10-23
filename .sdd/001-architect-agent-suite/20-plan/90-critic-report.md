@@ -139,6 +139,8 @@ Scope: plan against the D-016 spec revision (3a19cef). Appended by the conductor
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-17 | major | TC-1117, TS-1117, T-063 | TC-1117's inline fixture cannot cover the conductor line | test data = the plugin's eval case files (PLG-EVAL-001 input) plus negative fixtures (must-route without hand-over check, without 0-subagent check; must-not-route without hand-over check) | open |
-| CR-18 | minor | T-063, IF-09 | step 1 gives no source for conductor prompts; PLG-EVAL-001 module not a target | "conductor prompts per the C001-REQ-1116 note"; add the PLG-EVAL-001 check module and plugins/architect/evals to targets | open |
-| CR-19 | minor | RISK-005 | mitigation "assertions on tool calls, not prose" vs the conductor's text check | allow the literal command string in the last reply as the one exception (D-016), noting possible flakiness | open |
+| CR-17 | major | TC-1117, TS-1117, T-063 | TC-1117's inline fixture cannot cover the conductor line | test data = the plugin's eval case files (PLG-EVAL-001 input) plus negative fixtures (must-route without hand-over check, without 0-subagent check; must-not-route without hand-over check) | fixed: TC-1117 test data = the case files under `plugins/architect/evals/` plus the three negative conductor fixtures |
+| CR-18 | minor | T-063, IF-09 | step 1 gives no source for conductor prompts; PLG-EVAL-001 module not a target | "conductor prompts per the C001-REQ-1116 note"; add the PLG-EVAL-001 check module and plugins/architect/evals to targets | fixed: T-063 step 1 cites the C001-REQ-1116 note; targets add `plugins/architect/evals/`, `scripts/check/evals.mjs`, `evals/delegation/suite.mjs`, the D-013 rework of TS-213/214/215 (and the TS-817 fixture) and the `evals` package exclude |
+| CR-19 | minor | RISK-005 | mitigation "assertions on tool calls, not prose" vs the conductor's text check | allow the literal command string in the last reply as the one exception (D-016), noting possible flakiness | fixed: RISK-005 mitigation allows the literal hand-over string in the last reply as the one exception (D-016), noted as possibly flaky |
+
+All findings of this section fixed (planner), 2026-10-23.
