@@ -43,7 +43,7 @@ Each goal is referenced by user stories (`Goals:` field) and measured by a succe
 | C001-SC-02 | No lint-passing workspace contains a dangling ID, an orphan requirement or a registry inconsistency | Lint fixture suite (≥ 1 negative fixture per lint rule) | 100% of fixtures detected |
 | C001-SC-03 | Critic usefulness | P-01 tallies critic blockers/majors as valid/invalid at each gate | ≥ 70% valid |
 | C001-SC-04 | Hand-off portability | Same plan executed by 2 different implementers; count implementer questions/defects tagged `missing-info` against Must requirements | 0 |
-| C001-SC-05 | Delegation reliability | `claude plugin eval` suite of ≥ 40 prompts (C001-REQ-1116; conductor routing per its note) | ≥ 90% correct agent |
+| C001-SC-05 | Delegation reliability | `claude plugin eval` suite of ≥ 40 prompts (C001-REQ-1116; conductor routing per its note) | ≥ 90% of runs pass all their checks |
 | C001-SC-06 | Cost visibility | Per-phase usage recorded in change.md | 100% of phases of dogfood changes |
 | C001-SC-07 | Brownfield grounding | Lint rule TR-09 on brownfield dogfood change | 100% MODIFIED/REMOVED REQs with evidence |
 | C001-SC-08 | Time to G2 for a medium feature | Dogfood log (wall time excluding P-01 think time) | ≤ 1 working session |

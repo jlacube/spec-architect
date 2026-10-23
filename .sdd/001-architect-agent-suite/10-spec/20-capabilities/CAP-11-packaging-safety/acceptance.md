@@ -242,7 +242,8 @@ Scenario: C001-TS-1117 — eval inventory
   When the eval suite definition is parsed
   Then it has at least 40 prompts
   And each of the ten agents has at least 3 "must route" prompts and at least 1 "must not route" prompt
-  And each "must route" prompt of the conductor passes when the reply hands the user over to "claude --agent architect:sdd-conductor" and no Architect subagent starts, and fails when any Architect subagent starts
+  And each "must route" prompt of the conductor declares one check that its last reply contains the literal "claude --agent architect:sdd-conductor" and one check that allows 0 Architect subagent starts
+  And each "must not route" prompt of the conductor declares one check that fails when its last reply contains the literal "claude --agent architect:sdd-conductor"
 ```
 
 ## C001-REQ-1117
@@ -336,7 +337,7 @@ Scenario: C001-TS-1124 — Claude Code below the minimum version
 | C001-REQ-1113 | TS-1114 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1114 | TS-1115 | n/a | n/a | TS-1115 | n/a | n/a | n/a |
 | C001-REQ-1115 | TS-1116 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C001-REQ-1116 | TS-1117 | n/a | TS-1117 (≥40, ≥3/agent) | n/a | n/a | n/a | n/a |
+| C001-REQ-1116 | TS-1117 | TS-1117 (conductor hand-over) | TS-1117 (≥40, ≥3/agent) | TS-1117 (Architect subagent started) | n/a | n/a | n/a |
 | C001-REQ-1117 | TS-1118 | n/a | n/a | TS-1118 | n/a | n/a | n/a |
 | C001-REQ-1118 | TS-1119 | TS-1119 (wiring section) | n/a | TS-1119 | n/a | n/a | n/a |
 | C001-REQ-1119 | TS-1120 | n/a | n/a | n/a | n/a | n/a | n/a |

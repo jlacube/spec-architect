@@ -129,7 +129,7 @@ agent definitions C001-IF-09, commands C001-IF-10.
 - **Pattern:** ubiquitous
 - **Statement:** THE repository SHALL contain a `claude plugin eval` suite of at least 40 prompts with at least three prompts that must route to each of the ten agents and at least one prompt per agent that must not route to it.
 - **Rationale:** C001-SC-05; IDEA-§14.4
-- **Note:** The conductor cannot be invoked as a subagent; it runs as the main session (C001-REQ-201). For the conductor, a must-route prompt therefore counts as routed when the reply hands the user over to `claude --agent architect:sdd-conductor` and no Architect subagent starts. The minimum of three must-route prompts and one must-not-route prompt per agent applies to the conductor unchanged (D-016; Q-conductor-route-01).
+- **Note:** The conductor is not meant to be spawned as a subagent (C001-IF-09 A0); it runs as the main session (C001-REQ-201). A prompt therefore counts as routed to the conductor when the last reply contains the literal `claude --agent architect:sdd-conductor` and no Architect subagent starts. A must-route prompt of the conductor fails otherwise; a must-not-route prompt of the conductor fails when the last reply contains that literal. The minimum of three must-route prompts and one must-not-route prompt per agent applies to the conductor unchanged (D-016; Q-conductor-route-01).
 - **Stories:** C001-US-1107
 - **Priority:** Must
 - **Acceptance:** C001-AC-1116.1
