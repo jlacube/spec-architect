@@ -299,8 +299,11 @@ Weights S = 1, M = 2, L = 3. The 67 tasks weigh 139 in total (19 S, 24 M, 24 L).
 weighs 45 and ends with the Copilot release. **The D-023 item 2, D-024, D-028 plan update does not
 change it**: the fix task C002-T-067 (L) starts after C002-T-056 and C002-T-066 (both finishing at
 41), its latest dependencies, and finishes at 44. No task depends on it: C002-T-052 and C002-T-055
-do not wait for it (`10-strategy.md` §2), so it has one unit of slack against the end of the longest
-chain (45). Before that, **the D-026, D-027 plan update
+do not wait for it (`10-strategy.md` §2; P-01 answer to Q-t067-order-01), so it has one unit of
+slack against the end of the longest chain (45). The critic fixes of that revision (spec CR-85 …
+CR-97) widen the task within its L estimate and add no task or edge. Because the releases do not
+wait for it, C002-M-06 may close after C002-M-07 (`10-strategy.md` §3, Milestone order; plan critic
+CR-60). Before that, **the D-026, D-027 plan update
 lengthened it by 1**: the
 catch-up task C002-T-066 (L) starts after C002-T-065 (finishing at 38), its latest dependency, and
 finishes at 41; C002-T-054 now waits for it and for C002-T-048 (finishing at 40), so it finishes at

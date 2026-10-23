@@ -62,15 +62,26 @@ state the fallback, Q-copilot-map-01; `session_model` and `agent_models` in the 
 and the fail-closed merge of the injection summary, §5.2) lands in the catch-up task C002-T-066,
 after C002-T-065 and before C002-T-052 and C002-T-054. C002-T-049 stays done: it ran exactly the OpenCode case set
 that §5.1 now names, and no OpenCode row reruns. The revision for defects D-023 item 2, D-024 and
-D-028 (the bounded ripwire default map in the OpenCode native rules with its gap row and the
-`RIPWIRE_MAP_BOUND` export, the deny summary naming that form; the reconciliation of a `partial`
-OpenCode spend from the OpenRouter key usage; the key redaction of P-01's Q-key-redact-01 answer with
-the short or unsafe key refusal; test rows for what C002-T-066 implemented) lands in the fix task
-C002-T-067, after C002-T-056 and C002-T-066, with no paid session. C002-T-052 and C002-T-055 do not
-wait for it (`10-strategy.md` §2); its commit moves the release-candidate commit, so land it before
-their release checks where possible, and the unpaid re-runs that C002-T-052 already makes after
-C002-T-066 then cover it too. D-023 item 1 (a proportionate rework path after a Revise) is deferred
-to a later change (P-01, Q-c002-defects-01).
+D-028 lands in the fix task C002-T-067, after C002-T-056 and C002-T-066, with no paid session. With
+the critic fixes that followed it (spec CR-85 … CR-97, plan CR-58 … CR-60), it covers:
+- the bounded ripwire default map in the OpenCode native rules, its gap row as a characterization
+  check, the `RIPWIRE_MAP_BOUND` export, and the deny summary naming that form;
+- the reconciliation of a `partial` OpenCode spend from the OpenRouter key usage, with `ended_at`,
+  a settled before-read after a recent session and the 0.9 × settle bound;
+- the three stays-partial cases;
+- the key check with one refusal text per case;
+- the key redaction of P-01's Q-key-redact-01 answer, with the paid run folder deleted and
+  `SDD_EVAL_KEEP_RUN` refused;
+- merge rule 3 fail-closed, and the missing-model refusal as a no-run refusal (P-01,
+  Q-model-refusal-01);
+- test rows for what C002-T-066 implemented.
+
+C002-T-052 and C002-T-055 do not wait for it (P-01, Q-t067-order-01; `10-strategy.md` §2), so
+C002-M-06 may close after C002-M-07 (`10-strategy.md` §3). Its commit moves the release-candidate
+commit, so land it before their release checks where possible: the unpaid re-runs that C002-T-052
+already makes after C002-T-066 then cover it too. D-023 item 1 (a proportionate rework path after a
+Revise) and D-026 item 3 (the TS-208 fixture's placeholder options) are deferred to a later change
+(P-01, Q-c002-defects-01 and Q-ts208-fixture-01).
 
 ## Reading order
 
@@ -194,6 +205,7 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
+| Q-model-refusal-01, Q-t067-order-01, Q-ts208-fixture-01: the missing-model refusal on an injection row, the order of C002-T-067 against the releases, and D-026 item 3 (`questions-log.md` round 2026-10-23) | C002-T-067, C002-T-052, C002-T-055 | settled: P-01 answered "Count as no-run (Recommended)", "No dependency (Recommended)" and "Defer with D-023(1) (Recommended)"; the no-run form in C002-T-067, no edge from C002-T-067 to the release tasks, and D-026 item 3 deferred (`10-strategy.md` §2, §3) |
 
 ## CLI commands
 
