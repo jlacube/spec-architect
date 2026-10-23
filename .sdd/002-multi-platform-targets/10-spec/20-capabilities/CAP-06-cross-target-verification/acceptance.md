@@ -660,7 +660,7 @@ Scenario Outline: C002-TS-680 — the Copilot CLI runner passes the session agen
     | architect:sdd-conductor | without "model"                      | not set                                     | --host copilot-cli --copilot-model claude-opus-5.5=claude-sonnet-5.5,claude-opus-5.5=claude-haiku-5.5  | the run ends before any session with exit code 1, standard error holds the line "eval: --copilot-model "claude-opus-5.5=claude-sonnet-5.5,claude-opus-5.5=claude-haiku-5.5" is not <from>=<to>[,<from>=<to>…]; no session started", and the stub host was not started |
     | architect:sdd-conductor | without "model"                      | "claude opus=claude-sonnet-5.5"             | --host copilot-cli                                                                                     | the run ends before any session with exit code 1, standard error holds the line "eval: SDD_EVAL_COPILOT_MODEL "claude opus=claude-sonnet-5.5" is not <from>=<to>[,<from>=<to>…]; no session started", and the stub host was not started |
     | architect:sdd-conductor | without "model"                      | "claude opus=claude-sonnet-5.5"             | --host opencode                                                                                        | one session runs on the stub OpenCode host: a run on another host does not read the variable |
-    | architect:sdd-critic    | without "model"                      | not set                                     | --host copilot-cli                                                                                     | the stub was run with "--version" and never with "-p"; the row's result record gives the "end_reason" "error", the error text "no model field in agents/sdd-critic.agent.md", "host_versions" {"copilot-cli":"1.0.98"} and "spend" "unreported" |
+    | architect:sdd-critic    | without "model"                      | not set                                     | --host copilot-cli                                                                                     | the stub was run with "--version" and never with "-p"; the row's result record gives the "end_reason" "error", the error text "no model field in agents/sdd-critic.agent.md", "usage.turns" 0, empty "models" and "session_model.used", "session_model.passed" null, no key in "agent_models", "host_versions" {"copilot-cli":"1.0.98"}, "spend" "unreported" and "copilot_usage" null: a no-run refusal of the second form of C002-IF-010 §5.2 |
 ```
 
 Copilot CLI 1.0.98 runs the session agent that `--agent` names on its default model
@@ -675,7 +675,9 @@ file or from the case, and the auditor stays on `claude-haiku-5.5`. In the `<fro
 check both rules. The last row is the missing-model refusal: the runner reads the host version
 before it decides the model, so the refused session's record carries `host_versions` like every
 other session of the run, and with no usage file its `spend` reads `unreported` (C002-IF-010 §2 model
-rule, Order; defect D-028 item 6).
+rule, Order; defect D-028 item 6). No agent ran, so the refusal is a no-run refusal of the second
+form of C002-IF-010 §5.2: on an injection row it gives no entry and locks nothing (last row of
+C002-TS-691; P-01 answer to Q-model-refusal-01; critic CR-95).
 
 ## C002-REQ-613
 
@@ -879,6 +881,7 @@ Scenario Outline: C002-TS-691 — a run of fewer rows merges into the injection 
     | opencode    | opencode | opencode-runner    | {"opencode":"1.18.31"}     | holds 22 entries, "INJ-01" to "INJ-22", each with "acted_upon" false                                  | INJ-07         | INJ-07  | evals/injection/injection.eval.mjs           | it gives a result document that passes, the agent having acted on none of the planted text, and ends with the "end_reason" "turn cap"     | 22      | true  | 1 | 21 | holds no line that starts with "eval: injection summary" |
     | copilot-cli | copilot  | copilot-cli-runner | {"copilot-cli":"1.0.98"}   | holds 22 entries, "INJ-01" to "INJ-22", each with "acted_upon" false, and none for "TS-359"           | TS-359         | TS-359  | evals/targets/copilot-guard/TS-359.eval.mjs  | it gives a result document that passes                                                                                                    | 23      | false | 0 | 22 | holds no line that starts with "eval: injection summary" |
     | copilot-cli | copilot  | copilot-cli-runner | {"copilot-cli":"1.0.98"}   | holds 23 entries, "INJ-01" to "INJ-22" and "TS-359", each with "acted_upon" false                     | INJ-07,INJ-19  | INJ-07  | evals/injection/injection.eval.mjs           | the one of "INJ-07" gives a result document that passes; the one of "INJ-19" is a no-run refusal: it ends with exit code 1, the "end_reason" "error" and the host text "Error: Model "claude-opus-5.5" from --model flag is not available." before any model call, with "usage.turns" 0, empty "models" and "session_model.used", no key in "agent_models", "spend" "reported" with "usage.usd" 0 and "copilot_usage.ai_credits" 0 | 23      | false | 0 | 22 | holds the line "eval: injection summary: no entry for INJ-19: its session ended before any model call" once, and no line that starts with "eval: injection summary keeps" |
+    | copilot-cli | copilot  | copilot-cli-runner | {"copilot-cli":"1.0.98"}   | holds 23 entries, "INJ-01" to "INJ-22" and "TS-359", each with "acted_upon" false                     | INJ-07,INJ-19  | INJ-07  | evals/injection/injection.eval.mjs           | the one of "INJ-07" gives a result document that passes; the one of "INJ-19" is a missing-model refusal: the row gives no "model" and its session agent's file in the package copy has none, so the runner ends it after "copilot --version", before the host process with "-p" starts, with the "end_reason" "error", the error text "no model field in agents/<agent>.agent.md", "usage.turns" 0, empty "models" and "session_model.used", "session_model.passed" null, no key in "agent_models", "spend" "unreported", "copilot_usage" null and "host_versions" {"copilot-cli":"1.0.98"} | 23      | false | 0 | 22 | holds the line "eval: injection summary: no entry for INJ-19: its session ended before any model call" once, and no line that starts with "eval: injection summary keeps" or "eval: injection summary not written" |
 ```
 
 ```gherkin
@@ -972,7 +975,10 @@ C002-TC-917 use `deps.ledger`. A session that did not end `completed` gives `act
 when its result document passes (fourth row of C002-TS-691, a `turn cap` end; C002-IF-010 §5.2 Merge,
 item 3; defect D-028 item 3). A base that fails several checks gives only the line of the first
 check in the order of C002-IF-010 §5.2 Merge, item 2, the target before the host versions (the
-two-check row of C002-TS-692; defect D-028 item 4).
+two-check row of C002-TS-692; defect D-028 item 4). A missing-model refusal of Copilot CLI is a
+no-run refusal of the second form: it gives no entry, keeps the base entry and prints no keep line,
+and its `host_versions` let the run's other sessions merge (last row of C002-TS-691; C002-IF-010 §2
+model rule, §5.2 No-run refusal; critic CR-95).
 
 ## C002-REQ-618
 
@@ -1469,15 +1475,15 @@ development.
 
 ## C002-REQ-638
 
-#### C002-AC-638.1 — A partial OpenCode spend is reconciled from the key usage delta when the before-read succeeded and the usage settled within 20 minutes, and otherwise stays partial
+#### C002-AC-638.1 — A partial OpenCode spend is booked at the key usage delta when an after-read gives a settled key usage
 ```gherkin
 Scenario Outline: C002-TS-695 — a partial spend reconciled from the settled key usage
-  Given the fixture "fx-evals-caps", whose case file "evals/targets/caps/reconcile.eval.mjs" holds the rows "REC-01" and "REC-02", each without "maxBudgetUsd"
-  And a ledger in a temporary folder whose general pool has the limit 30 USD and holds OpenRouter entries totalling 17.14 USD, none with "cost_source" "partial"
+  Given the fixture "fx-evals-caps", whose case file "evals/targets/caps/reconcile.eval.mjs" holds the rows "REC-00", "REC-01" and "REC-02", each without "maxBudgetUsd"
+  And a ledger in a temporary folder whose general pool has the limit 30 USD and holds OpenRouter entries totalling 17.14 USD, none with "cost_source" "partial", the latest with an "ended_at" more than one hour before the test
   And the stub OpenCode host, whose session of "REC-01" ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60, a subagent step ended by the abort without a reported cost as in C002-TS-689, and whose session of "REC-02" ends "completed" with "spend" "reported"
   And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, in place of the 60 s and the 20 minutes, whose "read" gives 17.2400 on the before-read of "REC-01" and then, on the after-reads, <reads>
   When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01,REC-02 evals/targets/caps/reconcile.eval.mjs"
-  Then the ledger entry of "REC-01" gives "cost_usd" <delta> to four decimals, "cost_source" "openrouter key usage delta" and "cost_usd_recorded" 0.60
+  Then the ledger entry of "REC-01" gives "cost_usd" <delta> to four decimals, "cost_source" "openrouter key usage delta", "cost_usd_recorded" 0.60 and "ended_at" an ISO 8601 UTC time
   And its "openrouter_usage" gives "before" 17.2400, "after" <after>, "delta" <delta> to four decimals, "endpoint" "GET /api/v1/key" and "read_at" with two ISO 8601 UTC times: that of the before-read, then that of the <settled>
   And standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: <printed> USD (recorded 0.6000 USD)" once
   And the result record of "REC-01" still gives "spend" "partial" and "usage.usd" 0.60
@@ -1487,12 +1493,83 @@ Scenario Outline: C002-TS-695 — a partial spend reconciled from the settled ke
     | reads                                                  | after   | delta | printed | settled                                                                                         |
     | 18.0000, 18.0000                                       | 18.0000 | 0.76  | 0.7600  | second after-read                                                                               |
     | 18.0000, 18.2000, 18.2000                              | 18.2000 | 0.96  | 0.9600  | third after-read: the usage still rose at the second                                            |
-    | 17.5000, 17.5000, 18.0000, 18.0000                     | 18.0000 | 0.76  | 0.7600  | fourth after-read: the second equals the first but is below 17.2400 plus the recorded 0.60      |
-    | 17.8400, 17.8400                                       | 17.8400 | 0.60  | 0.6000  | second after-read: the usage is exactly 17.2400 plus the recorded 0.60, which settles           |
+    | 17.5000, 17.5000, 18.0000, 18.0000                     | 18.0000 | 0.76  | 0.7600  | fourth after-read: the second equals the first but is below the bound 17.2400 + 0.9 × 0.60 = 17.7800 |
+    | 17.8400, 17.8400                                       | 17.8400 | 0.60  | 0.6000  | second after-read: the delta is the full recorded 0.60                                          |
+    | 17.8000, 17.8000                                       | 17.8000 | 0.56  | 0.5600  | second after-read: the delta lies between 0.9 × and 1 × the recorded 0.60, the runner's step costs being above OpenRouter's usage |
+    | 17.7800, 17.7800                                       | 17.7800 | 0.54  | 0.5400  | second after-read: the usage is exactly the bound 17.7800, which settles                        |
     | a thrown error, 18.0000, 18.0000                       | 18.0000 | 0.76  | 0.7600  | third after-read: the failed first after-read is passed over, and the second, the first that succeeds, has no earlier successful after-read to equal |
     | 18.0000, a thrown error, 18.0000                       | 18.0000 | 0.76  | 0.7600  | third after-read: it equals the first, the latest earlier after-read that succeeded           |
 ```
 
+```gherkin
+Scenario Outline: C002-TS-700 — the before-read after a session that ended less than 20 minutes earlier takes a settled key usage
+  Given the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
+  And the stub OpenCode host, whose session of "REC-00" <previous>, and whose session of "REC-01" ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60
+  And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, in place of the 60 s and the 20 minutes in both waits, whose "read" gives, in call order, <reads>
+  When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-00,REC-01 evals/targets/caps/reconcile.eval.mjs"
+  Then the ledger entry of "REC-00" gives "ended_at" an ISO 8601 UTC time
+  And <before-read of REC-01>
+  And the ledger entry of "REC-01" gives "cost_usd" 0.76 to four decimals, "cost_source" "openrouter key usage delta" and an "openrouter_usage" with "before" 17.2400 and "after" 18.0000
+  And standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: 0.7600 USD (recorded 0.6000 USD)" once
+  And the stub "read" was called <calls> times in all
+  And standard error holds no line that starts with "eval: spend of REC-01 stays partial"
+  Examples:
+    | previous | reads | before-read of REC-01 | calls |
+    | ends "completed" with "spend" "reported" and "usage.usd" 0.34, a charge that OpenRouter posts late | 16.9000 for the before-read of "REC-00"; then 16.9000, 17.2400 and 17.2400 for the wait before "REC-01", the late charge of "REC-00" posting at the second; then 18.0000 and 18.0000 for the after-reads of "REC-01" | "REC-01" takes "U0" 17.2400 from the third read of the wait, the first that equals the read before it, and not 16.9000, which would book the late 0.34 USD of "REC-00" again; the first time of its "read_at" is that of the third read | 6 |
+    | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | 16.5000 for the before-read of "REC-00"; then 17.2400 and 17.2400 for the after-reads of "REC-00"; then 18.0000 and 18.0000 for the after-reads of "REC-01" | the ledger entry of "REC-00" is reconciled at 0.74 USD, and "REC-01" takes "U0" 17.2400, the settled after-read of "REC-00", with no read of its own, since no session ran in between | 5 |
+```
+
+The reconciliation changes the spend ledger entry only; the result record keeps `partial` and its
+recorded spend (C002-IF-010 §2.3 Reconciled cost, §3 `spend`). It ends before the stop rule is
+checked for the next session (C002-IF-010 §2.3 When the key usage is read, item 3), so in
+C002-TS-695 the next row of the pool starts on the reconciled cost. The settle bound is `U0` plus
+0.9 × the recorded spend, here 17.2400 + 0.54 = 17.7800: a delta between 0.9 × and 1 × the recorded
+spend settles, since the runner's step costs can be above OpenRouter's usage (C002-IF-010 §2.3 Why
+the 0.9; critic CR-86). After-reads start one interval after the session ends and end at the limit,
+at most 20 calls (critic CR-93). A previous session that ended less than 20 minutes before, known
+from the ledger's `ended_at`, makes the before-read wait for a settled key usage, or take the
+previous session's settled after-read, so that its late charge is not booked again (C002-IF-010 §2.3
+item 1; critic CR-87; C002-TS-700). The scenarios run `main(argv, deps)` with the test seam
+`deps.keyUsage` and `deps.stopRule` of C002-IF-010 §2.3, as the stop-rule tests of C002-TC-917 use
+`deps.ledger`.
+
+## C002-REQ-639
+
+#### C002-AC-639.1 — The OpenRouter key appears in no output and no file of the OpenCode eval runner, host and model text included
+```gherkin
+Scenario Outline: C002-TS-698 — the OpenRouter key is never written
+  Given P-01's key file ".architect-evals/openrouter-key.txt" in a temporary home folder holds the one line "KEY"
+  And the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
+  And the OpenCode eval runner's paid-session entry with a stubbed host start in place of "opencode serve", so that no host process and no network request runs, whose session of "REC-01" <session>
+  And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, whose "read" <reads>
+  When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01 evals/targets/caps/reconcile.eval.mjs"
+  Then the stubbed host start received "KEY" as "OPENROUTER_API_KEY" in the host's environment
+  And the result record of "REC-01" gives "api_key_source" "openrouter-key-file"
+  And <outcome>
+  And no line of standard output or standard error, and no file that the run created or changed (the result record, the result file, the transcript, the spend ledger and any log file included), holds the text "KEY"
+  And none of them holds the text "Bearer sk-or-v1-" or "Authorization: Bearer"
+  Examples:
+    | session | reads | outcome |
+    | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then 18.0000 and 18.0000 | the ledger entry of "REC-01" gives "cost_source" "openrouter key usage delta", and standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: 0.7600 USD (recorded 0.6000 USD)" |
+    | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | throws, on the before-read, an error whose message holds "Authorization: Bearer KEY" and a response body {"error":"invalid key KEY"} | standard error holds the "stays partial" line of C002-TS-696 with the reason "the key usage could not be read before the session" and no other text of the error |
+    | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then on every after-read throws an error whose message holds "Authorization: Bearer KEY" | standard error holds the "stays partial" line of C002-TS-697 with the reason "the key usage did not settle within 20 minutes" and no other text of the error |
+    | ends "completed" with "spend" "reported", and whose events give the output "OPENROUTER_API_KEY=KEY" of a command the agent ran, an assistant message "the key is KEY" and a host error text "provider rejected key KEY" | gives 17.2400 on the before-read | the transcript and the result record hold the command output as "OPENROUTER_API_KEY=[REDACTED]", the assistant message as "the key is [REDACTED]" and the error text as "provider rejected key [REDACTED]", as does every line of standard output or standard error that quotes one of them |
+```
+
+KEY stands for the dummy key "sk-or-v1-c002ts698dummykey" (26 characters, no character that JSON
+escapes, so the key check of C002-REQ-641 accepts it). The key reaches the host process as
+`OPENROUTER_API_KEY` only and is sent in the read's `Authorization` header only; a failed read is
+reported by its reason, never by the request or the response body (C002-IF-010 §2.3 The key is
+never logged, §4 Provider key). The error texts of the second and third rows stand for a client
+library or a provider that echoes the request: the runner prints none of them. The fourth row
+plants the key in the host's and the model's own text, which the runner writes with `[REDACTED]` in
+place of each occurrence of the exact key value, after any JSON encoding (C002-IF-010 §4 Key
+redaction, Host and model text, Matching; P-01 answer to Q-key-redact-01). C002-TC-907 checks the
+host environment of a paid session.
+
+## C002-REQ-640
+
+#### C002-AC-640.1 — The entry stays partial, with the stays-partial line and its reason, when the before-read gives no U0 or no after-read settles within 20 minutes
 ```gherkin
 Scenario: C002-TS-696 — a failed before-read leaves the entry partial
   Given the fixture "fx-evals-caps", the temporary ledger and the stub OpenCode host of C002-TS-695
@@ -1511,7 +1588,7 @@ Scenario Outline: C002-TS-697 — a key usage that does not settle within 20 min
   And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, in place of the 60 s and the 20 minutes, whose "read" gives 17.2400 on the before-read of "REC-01" and then, on the after-reads, <reads>
   When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01,REC-02 evals/targets/caps/reconcile.eval.mjs"
   Then standard error holds once the line "eval: spend of REC-01 stays partial (LEDGER): the key usage did not settle within 20 minutes; reconcile it by hand (test plan §4.1 Ledger)", LEDGER being the path of the temporary ledger
-  And the stub "read" was called at most 21 times, the before-read included
+  And the stub "read" was called at most 21 times: the before-read and at most 20 after-reads, the first one interval after the session's end and none after the limit
   And the ledger entry of "REC-01" gives "cost_usd" 0.60 and "cost_source" "partial", and has no "cost_usd_recorded" and no "openrouter_usage"
   And the result record of "REC-01" gives "spend" "partial" and "usage.usd" 0.60
   And standard output holds no line that starts with "ledger: REC-01 reconciled"
@@ -1519,57 +1596,67 @@ Scenario Outline: C002-TS-697 — a key usage that does not settle within 20 min
   Examples:
     | reads                                                                              |
     | a new value at each read: 18.0000, 18.0100, 18.0200 and so on, 0.0100 more each time |
-    | 17.5000 at every read, below 17.2400 plus the recorded 0.60                        |
+    | 17.7700 at every read, 0.0100 below the bound 17.2400 + 0.9 × 0.60 = 17.7800        |
     | a thrown error at every read                                                       |
     | 18.0000 on the first after-read, then a thrown error at every later read: one successful after-read only |
 ```
 
-The reconciliation changes the spend ledger entry only; the result record keeps `partial` and its
-recorded lower bound (C002-IF-010 §2.3 Reconciled cost, §3 `spend`). It ends before the stop rule
-is checked for the next session (C002-IF-010 §2.3 When the key usage is read, item 3), so in
-C002-TS-695 the next row of the pool starts on the reconciled cost, and in C002-TS-696 and
-C002-TS-697 the entry left partial stops its pool until a reconciliation by hand (`20-plan/60-test-plan.md`
-§4.1 Ledger). A read that settles on a value below the before-read plus the recorded lower bound is
-not taken (third row of C002-TS-695, second row of C002-TS-697). A run that ends during the wait and
-an entry written without a before-read are reconciled by hand only and have no scenario here: no
-output of the runner marks them beyond the entry's `partial`. The scenarios run `main(argv, deps)`
-with the test seam `deps.keyUsage` and `deps.stopRule` of C002-IF-010 §2.3, as the stop-rule tests
-of C002-TC-917 use `deps.ledger`.
-
-## C002-REQ-639
-
-#### C002-AC-639.1 — The OpenRouter key appears in no output and no file of the OpenCode eval runner, host and model text included, and a key unfit for redaction is refused before use
 ```gherkin
-Scenario Outline: C002-TS-698 — the OpenRouter key is never written, and a key unfit for redaction is refused
-  Given P-01's key file ".architect-evals/openrouter-key.txt" in a temporary home folder holds <key file>
-  And the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
-  And the OpenCode eval runner's paid-session entry with a stubbed host start in place of "opencode serve", so that no host process and no network request runs, whose session of "REC-01" <session>
-  And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, whose "read" <reads>
-  When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01 evals/targets/caps/reconcile.eval.mjs"
-  Then <outcome>
-  And no line of standard output or standard error, and no file that the run created or changed (the result record, the result file, the transcript, the spend ledger and any log file included), holds <absent>
-  And none of them holds the text "Bearer sk-or-v1-" or "Authorization: Bearer"
+Scenario Outline: C002-TS-701 — a before-read that does not settle after a recent session leaves the entry partial
+  Given the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
+  And the stub OpenCode host, whose session of "REC-00" ends "completed" with "spend" "reported" and "usage.usd" 0.34, and whose session of "REC-01" ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60
+  And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, in place of the 60 s and the 20 minutes in both waits, whose "read" gives 16.9000 for the before-read of "REC-00", then <wait reads> for the wait before "REC-01", and 18.0000 on any later call
+  When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-00,REC-01 evals/targets/caps/reconcile.eval.mjs"
+  Then the wait before "REC-01" made at most 21 reads, the first at once and none later than the limit after the end of "REC-00"
+  And the session of "REC-01" runs and its result record gives "spend" "partial" and "usage.usd" 0.60
+  And standard error holds once the line "eval: spend of REC-01 stays partial (LEDGER): <reason>; reconcile it by hand (test plan §4.1 Ledger)", LEDGER being the path of the temporary ledger
+  And the ledger entry of "REC-01" gives "cost_usd" 0.60 and "cost_source" "partial", and has no "cost_usd_recorded" and no "openrouter_usage"
+  And standard output holds no line that starts with "ledger: REC-01 reconciled"
   Examples:
-    | key file | session | reads | outcome | absent |
-    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then 18.0000 and 18.0000 | the stubbed host start received "KEY" as "OPENROUTER_API_KEY" in the host's environment, the result record of "REC-01" gives "api_key_source" "openrouter-key-file", the ledger entry of "REC-01" gives "cost_source" "openrouter key usage delta", and standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: 0.7600 USD (recorded 0.6000 USD)" | the text "KEY" |
-    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | throws, on the before-read, an error whose message holds "Authorization: Bearer KEY" and a response body {"error":"invalid key KEY"} | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", the result record of "REC-01" gives "api_key_source" "openrouter-key-file", and standard error holds the "stays partial" line of C002-TS-696 with the reason "the key usage could not be read before the session" and no other text of the error | the text "KEY" |
-    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then on every after-read throws an error whose message holds "Authorization: Bearer KEY" | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", the result record of "REC-01" gives "api_key_source" "openrouter-key-file", and standard error holds the "stays partial" line of C002-TS-697 with the reason "the key usage did not settle within 20 minutes" and no other text of the error | the text "KEY" |
-    | the one line "KEY" | ends "completed" with "spend" "reported", and whose events give the output "OPENROUTER_API_KEY=KEY" of a command the agent ran, an assistant message "the key is KEY" and a host error text "provider rejected key KEY" | gives 17.2400 on the before-read | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", and the transcript and the result record hold the command output as "OPENROUTER_API_KEY=[REDACTED]", the assistant message as "the key is [REDACTED]" and the error text as "provider rejected key [REDACTED]", as does every line of standard output or standard error that quotes one of them | the text "KEY" |
-    | an empty line | would end "completed" with "spend" "reported" | would give 17.2400 on every call | the session of "REC-01" is refused before any key usage read and before the host starts: the stub "read" and the stubbed host start were never called, and standard error holds the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file | the text "OPENROUTER_API_KEY=" |
-    | the one line "sk-or-v1-short", 14 characters | would end "completed" with "spend" "reported" | would give 17.2400 on every call | the session of "REC-01" is refused before any key usage read and before the host starts: the stub "read" and the stubbed host start were never called, and standard error holds the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file | the text "sk-or-v1-short" |
+    | wait reads                                                                 | reason                                              |
+    | a new value at each read: 16.9000, 16.9100, 16.9200 and so on             | the key usage did not settle before the session     |
+    | 16.9000 on the first read, then a thrown error at every later read         | the key usage did not settle before the session     |
+    | a thrown error at every read                                               | the key usage could not be read before the session  |
 ```
 
-KEY stands for the dummy key "sk-or-v1-c002ts698dummykey" (26 characters, no character that JSON escapes). The key
-reaches the host process as `OPENROUTER_API_KEY` only and is sent in the read's `Authorization`
-header only; a failed read is reported by its reason, never by the request or the response body
-(C002-IF-010 §2.3 The key is never logged, §4 Provider key). The error texts of the second and third
-rows stand for a client library or a provider that echoes the request: the runner prints none of
-them. The fourth row plants the key in the host's and the model's own text, which the runner writes
-with `[REDACTED]` in place of each occurrence of the exact key value, after any JSON encoding (§4 Key
-redaction, Host and model text, Matching; P-01 answer to Q-key-redact-01). The last two rows are the
-refusal of §4 Key redaction (Key too short or unsafe): the key is checked before the before-read of
-§2.3 and before the host process starts, and the refusal names the key file, never the key.
-C002-TC-907 checks the missing key file and the host environment of a paid session.
+An entry left partial stops its pool until a reconciliation by hand (`20-plan/60-test-plan.md` §4.1
+Ledger), so in C002-TS-696 and C002-TS-697 the next row of the pool does not start. A read that
+settles on a value below the bound is not taken (third row of C002-TS-695, second row of
+C002-TS-697). The three reasons are those of C002-IF-010 §2.3 When it stays partial: a before-read
+whose reads all fail, a wait before the session with successful reads but no settled one (critic
+CR-87; C002-TS-701), and no settled after-read. The first two are known before the session starts,
+but the line is printed only for a session that ends `partial`. A run that ends during the wait and
+an entry written without a before-read are reconciled by hand only and have no scenario here: no
+output of the runner marks them beyond the entry's `partial`.
+
+## C002-REQ-641
+
+#### C002-AC-641.1 — A missing key file or a key that redaction cannot match safely refuses the paid session before any use of the key
+```gherkin
+Scenario Outline: C002-TS-699 — the key check before a paid OpenCode session
+  Given P-01's key file ".architect-evals/openrouter-key.txt" in a temporary home folder <key file>
+  And the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
+  And the OpenCode eval runner's paid-session entry with a stubbed host start in place of "opencode serve", so that no host process and no network request runs, whose session of "REC-01" would end "completed" with "spend" "reported"
+  And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, whose "read" gives 17.2400 on every call
+  When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01 evals/targets/caps/reconcile.eval.mjs"
+  Then <outcome>
+  Examples:
+    | key file | outcome |
+    | does not exist | the session is refused: the stub "read" and the stubbed host start were never called, and standard error holds once the line "paid OpenCode session refused: no OpenRouter key in KEYFILE", KEYFILE being the path of the key file |
+    | holds only white space, three spaces and a line break | the session is refused: the stub "read" and the stubbed host start were never called, and standard error holds once the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file |
+    | holds the one line "sk-or-v1-0123456789", 19 characters | the session is refused: the stub "read" and the stubbed host start were never called, standard error holds once the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file, and no line of standard output or standard error holds "sk-or-v1-0123456789" |
+    | holds the one line "sk-or-v1-01234567890", 20 characters | the key is accepted: the stub "read" gave the before-read, the stubbed host start received "sk-or-v1-01234567890" as "OPENROUTER_API_KEY", the session ends "completed", and standard error holds no line that starts with "paid OpenCode session refused" |
+    | holds the one line "sk-or-v1-0123\456789abcdef", 26 characters with a backslash | the session is refused: the stub "read" and the stubbed host start were never called, standard error holds once the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file, and no line of standard output or standard error holds "456789abcdef" |
+    | holds two lines, "sk-or-v1-c002ts699lineone" and "sk-or-v1-c002ts699linetwo", so that the key value holds a line break | the session is refused: the stub "read" and the stubbed host start were never called, standard error holds once the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file, and no line of standard output or standard error holds "c002ts699line" |
+```
+
+The key value is the key file's whole content with the white space at its ends removed (C002-IF-010
+§4 Key redaction, Matching). A value that is empty, shorter than 20 characters or holds a character
+that JSON escapes (`"`, `\` or a control character, a line break included) cannot be replaced
+exactly in every line and file, so C002-REQ-639 could not be met for it; the check runs before the
+before-read of C002-IF-010 §2.3 and before the host process starts (C002-IF-010 §4 Key check;
+critics CR-85, CR-89, CR-90). The missing file keeps the text that the runner ships (critic CR-85).
+The 19- and 20-character rows are the boundary of the length rule.
 
 ## Coverage table
 
@@ -1586,12 +1673,12 @@ C002-TC-907 checks the missing key file and the host environment of a paid sessi
 | C002-REQ-609 | TS-612 | n/a | n/a | n/a | n/a | n/a | TS-612 (injection cases) |
 | C002-REQ-610 | TS-613 | TS-634 (Revise at a gate), TS-635 (revise command) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-611 | TS-614 | TS-614 (turn cap on the OpenCode, Copilot CLI and Claude Code runners; spend cap through the Agent SDK's `maxBudgetUsd` on Claude Code under both auth modes, on the notional cost under `--auth subscription`; `caps` recorded), TS-677 (OpenCode, per step: cost of each finished step, parallel subagent step; `cap` and `step-after-cap` records), TS-678 (Copilot CLI, per session: `--max-ai-credits` and the session total of the usage file), TS-688 (reserve H of a cap-exception row and of an ordinary row), TS-689 (a running step ended by the abort without a reported cost: `spend` `partial`) | TS-614 (30 turns, 0.50 USD), TS-677 (cap reached exactly; overshoot by the last step), TS-678 (limit of at least 30 credits; credits above the limit), TS-679 (exception cap 2.00 USD and below it; rerun cap 1.50 USD with `--cap-exception`, the row's own 0.50 USD without it; 40 turns of `TS-213`), TS-688 (T + H = L starts, 0.01 USD above refused; highest ordinary cost below and above 0.65 USD; a cap-exception session left out of it) | TS-614, TS-690 (session timeout of 20 minutes on both runners: `end_reason` `error`, no `cap` record), TS-679 (cap above 0.50 USD or 30 turns without an exception for the row, case file, host and auth mode, or `--cap-exception` for a row without a rerun cap: exit code 1 before any session), TS-688 (stop rule refuses the exception session: no session, ledger unchanged) | n/a | n/a | TS-679 (a row that raises its own spend or turn cap, uses the exception on another host or above its value, or takes the exception's row ID in another case file; a subscription-class rerun cap claimed with `--auth api-key`, the default auth or on OpenCode) |
-| C002-REQ-612 | TS-615 | TS-615 (case set of C002-IF-010 §5.1 with `TS-359`, `TS-336` not applicable; `architect:<agent>` agent names, workspace prepared by `sdd install copilot`; conductor on `claude-sonnet-5.5` under the release substitution, auditor on `claude-haiku-5.5`, `session_model` and `agent_models`), TS-680 (`--model` from the session agent's file or the case's model; `--copilot-model` and `SDD_EVAL_COPILOT_MODEL`, the option before the variable, a case model of opus substituted, the auditor kept) | TS-680 (`<from>` given twice) | TS-680 (`--copilot-model` on another host, a value not of the `<from>=<to>` form from the option or the variable: exit code 1, no session; a session agent whose file has no `model` field: an `error` session after `copilot --version`, with `host_versions` and `spend` `unreported`) | n/a | n/a | TS-615 (injection cases) |
+| C002-REQ-612 | TS-615 | TS-615 (case set of C002-IF-010 §5.1 with `TS-359`, `TS-336` not applicable; `architect:<agent>` agent names, workspace prepared by `sdd install copilot`; conductor on `claude-sonnet-5.5` under the release substitution, auditor on `claude-haiku-5.5`, `session_model` and `agent_models`), TS-680 (`--model` from the session agent's file or the case's model; `--copilot-model` and `SDD_EVAL_COPILOT_MODEL`, the option before the variable, a case model of opus substituted, the auditor kept) | TS-680 (`<from>` given twice) | TS-680 (`--copilot-model` on another host, a value not of the `<from>=<to>` form from the option or the variable: exit code 1, no session; a session agent whose file has no `model` field: a no-run refusal after `copilot --version`, with `host_versions`, `spend` `unreported` and `session_model.passed` null) | n/a | n/a | TS-615 (injection cases) |
 | C002-REQ-613 | TS-616 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-614 | TS-617 | TS-617 (Revise at G1, revise prompt, install command on a fresh install, `models_used` instruction in the Record of `VSC-02` and the place VS Code showed the model in its `note`; sdd MCP server boundary step of the server mode, delegated-edit step of both modes) | n/a | n/a | n/a | n/a | TS-617 (delegated edit to `general-purpose` through a planted instruction, denied with `GUARD-HOOK-002`) |
 | C002-REQ-615 | TS-618 | TS-618 (both Copilot enforcement modes; hooks state with its three sources; `models_used` with the key `sdd-conductor`; each step once with its last run, earlier runs in `earlier_results` with `result` and `cause`; restricted-mode row refused by VS Code recorded `passed` with a `VS Code refused: ` note) | TS-618 (`enabled` only when all three sources read on, trusted, none) | n/a | n/a | n/a | n/a |
 | C002-REQ-616 | TS-619 | TS-619 (both Copilot enforcement modes; guard-denial step under the hooks fallback) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes), TS-669 (replay reports required per enforcement mode), TS-670 (`--dry-run`, default version, relative `--root`), TS-691 (injection summary merged: no base file, `TS-359` added on Copilot CLI, a no-run refusal beside a passing row gives no entry), TS-693 (no summary from a Copilot CLI run under the Copilot hooks fallback or from a Claude Code run) | TS-620 (1 difference, 1 instruction), TS-669 (19 and 20 injection cases), TS-691 (no base file: 1 entry, 0 kept; one row of 22 rerun, 21 kept), TS-693 (only no-run refusals: no summary, file unchanged, one no-entry line per row) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013), TS-669 (ERR-REL-009 kinds: fewer than 20 injection cases or steps, replay of other corpora, missing report of the mode, unreadable step index), TS-670 (refused dry run writes no file), TS-671 (exit codes 1, 2 and 3; no file on a usage or internal error), TS-692 (summary base that does not parse or match the schema, of another `target`, `tier`, `source` or `host_versions`, with an ID outside the host's injection case set, or sessions of different host versions: exit code 1, file unchanged; a base that fails two checks: only the line of the first) | TS-648 (Architect agents' tool set left open) | TS-691 (a rerun of a row replaces its passing entry and keeps the others: a failing session, a cap end or an error after a model call replaces a passing one, a `turn cap` end with a passing result document included), TS-691 and TS-694 (a no-run refusal gives no entry and keeps the base entry, passing or acted upon, without the keep line), TS-694 (a rerun, passing or failing, keeps an entry acted upon, `TS-359` included, merges the other rows and ends with exit code 1) | TS-692 (results of another target, tier, source or host version, or an unknown ID, mixed into the summary), TS-694 (a passing rerun used to clear an entry acted upon), TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
+| C002-REQ-617 | TS-620 | TS-620 (identity cases not applicable under server enforcement), TS-648 (both OpenCode modes), TS-669 (replay reports required per enforcement mode), TS-670 (`--dry-run`, default version, relative `--root`), TS-691 (injection summary merged: no base file, `TS-359` added on Copilot CLI, a no-run refusal beside a passing row gives no entry), TS-693 (no summary from a Copilot CLI run under the Copilot hooks fallback or from a Claude Code run) | TS-620 (1 difference, 1 instruction), TS-669 (19 and 20 injection cases), TS-691 (no base file: 1 entry, 0 kept; one row of 22 rerun, 21 kept), TS-693 (only no-run refusals: no summary, file unchanged, one no-entry line per row) | TS-620, TS-648 (S-07 record without a closed agent tool set: ERR-REL-013), TS-669 (ERR-REL-009 kinds: fewer than 20 injection cases or steps, replay of other corpora, missing report of the mode, unreadable step index), TS-670 (refused dry run writes no file), TS-671 (exit codes 1, 2 and 3; no file on a usage or internal error), TS-692 (summary base that does not parse or match the schema, of another `target`, `tier`, `source` or `host_versions`, with an ID outside the host's injection case set, or sessions of different host versions: exit code 1, file unchanged; a base that fails two checks: only the line of the first) | TS-648 (Architect agents' tool set left open) | TS-691 (a rerun of a row replaces its passing entry and keeps the others: a failing session, a cap end or an error after a model call replaces a passing one, a `turn cap` end with a passing result document included), TS-691 and TS-694 (a no-run refusal gives no entry and keeps the base entry, passing or acted upon, without the keep line; a missing-model refusal of Copilot CLI included), TS-694 (a rerun, passing or failing, keeps an entry acted upon, `TS-359` included, merges the other rows and ends with exit code 1) | TS-692 (results of another target, tier, source or host version, or an unknown ID, mixed into the summary), TS-694 (a passing rerun used to clear an entry acted upon), TS-359 (Copilot injection case of a planted delegation to a host built-in agent, counted in the injection evals the release check reads) |
 | C002-REQ-618 | TS-621 | TS-668 (steps of the other mode absent or not-applicable; an injection step not-applicable under server enforcement; an earlier failed run excused by the rerun rule; both Copilot modes) | TS-668 (restore step with as many earlier runs as the excused step, each counted whatever its cause and result; the same run without a restore re-run, or on a group-1 step) | TS-621, TS-668 (ERR-REL-004 `not recorded` for an absent step and for an entry without a result, `not-applicable`, `failed`, another value, `passed, but its mode is <mode>`, `listed more than once`, `not a step of the checklist`, `failed in an earlier run not repeated under the rerun rule`, `<earlier result> in an earlier run`), TS-669 (unreadable step index: ERR-REL-009 `checklist`) | n/a | TS-668 (a step listed twice; earlier runs of a re-run step kept in `earlier_results`) | TS-668 (a failed run hidden by a later pass with the cause `repeated`; an other-mode step recorded `passed`; an ID of another checklist) |
 | C002-REQ-619 | TS-622 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-620 | TS-623 | TS-623 (either mode holds) | TS-623 (guard-hook outcome absent from a record whose subagents are not confined) | TS-623 | n/a | n/a | n/a |
@@ -1607,8 +1694,10 @@ C002-TC-907 checks the missing key file and the host environment of a paid sessi
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 | C002-REQ-633 | TS-649 | TS-649 (three mechanisms) | TS-650 (replay host without `file-symlink`: `error`, counted as differing) | TS-650 | n/a | n/a | TS-637 (PG-163 recorded as a malformed call with the source C002-REQ-630), TS-643 (PG-163 not fed as a malformed call) |
 | C002-REQ-634 | TS-651 | TS-651 (OpenCode and Copilot VS Code reports), TS-683 (`posix` report of corpora with and without cases limited to `win32`) | TS-683 (case list `none`) | TS-651 (ERR-REL-012 `replay host lacks file-symlink`), TS-683 (ERR-REL-012 `was replayed on posix, not on win32`; no further line for that report), TS-637 (`posix` row) | n/a | n/a | TS-637 (report showing `deny` for PG-163 on a host without `file-symlink`), TS-683 (a `posix` replay that lists the `win32` path cases as not applicable to pass) |
-| C002-REQ-638 | TS-695 | TS-695 (usage settled at a later after-read: still rising at the second read, equal reads below the bound, a failed after-read passed over before or between the two equal reads) | TS-695 (usage exactly the before-read plus the recorded lower bound settles; equal reads below it do not), TS-697 (usage below the bound at every read; one successful after-read only: stays partial) | TS-696 (before-read fails: stays partial, `could not be read before the session`), TS-697 (no read settles within 20 minutes, a rising usage and every read failing included: stays partial, `did not settle within 20 minutes`) | n/a | TS-695 (the next session's stop-rule check waits for the reconciliation and counts the delta), TS-696, TS-697 (the next session of the pool does not start while the entry stays partial) | n/a: the reads take no input from a case or a caller, and the test seam is no command-line option or variable (C002-IF-010 §2.3 Test seam) |
-| C002-REQ-639 | TS-698 | TS-698 (reconciled session; failed before-read; every after-read failing; host and model text redacted) | TS-698 (a key of 14 characters, an empty key: refused before use) | TS-698 (a failed read reported by its reason only; the refusal names the key file, never the key) | n/a | n/a | TS-698 (read errors whose text holds the key, its `Authorization` header and a response body that echoes the key; an agent that prints `OPENROUTER_API_KEY`) |
+| C002-REQ-638 | TS-695 | TS-695 (usage settled at a later after-read: still rising at the second read, equal reads below the bound, a failed after-read passed over before or between the two equal reads), TS-700 (before-read after a session that ended less than 20 minutes earlier: settled wait, or the previous settled after-read with no read) | TS-695 (delta of the full recorded spend, between 0.9 × and 1 × of it, and exactly the 0.9 × bound: settles; equal reads below the bound: do not) | n/a | n/a | TS-695 (the next session's stop-rule check waits for the reconciliation and counts the delta), TS-700 (a late charge of the previous session posted during the wait is not booked again) | n/a: the reads take no input from a case or a caller, and the test seam is no command-line option or variable (C002-IF-010 §2.3 Test seam) |
+| C002-REQ-639 | TS-698 | TS-698 (reconciled session; failed before-read; every after-read failing; host and model text redacted) | n/a | TS-698 (a failed read reported by its reason only) | n/a | n/a | TS-698 (read errors whose text holds the key, its `Authorization` header and a response body that echoes the key; an agent that prints `OPENROUTER_API_KEY`) |
+| C002-REQ-640 | TS-697 | TS-696 (a failed before-read), TS-701 (a wait before the session after a recent one: rising usage, one successful read only, every read failing) | TS-697 (usage 0.01 below the 0.9 × bound at every read; one successful after-read only; at most 20 after-reads) | TS-696, TS-697, TS-701 (the three reasons of C002-IF-010 §2.3 When it stays partial) | n/a | TS-696, TS-697 (the next session of the pool does not start while the entry stays partial) | n/a: the reads take no input from a case or a caller (C002-IF-010 §2.3 Test seam) |
+| C002-REQ-641 | TS-699 | TS-699 (missing key file, with its own refusal text) | TS-699 (19 characters refused, 20 accepted; a key file of only white space) | TS-699 (each refusal: no key usage read, no host start, the key file named and never the key) | n/a | n/a | TS-699 (a backslash in a key of 26 characters; a two-line key file) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on

@@ -135,17 +135,17 @@ Scenario Outline: C002-TS-209 — bash decisions of the OpenCode permission engi
     | sdd status > out.txt                             | denies   |
     | Remove-Item -Recurse src                         | denies   |
     | ripwire . --token-budget=4000                    | denies   |
-    | ripwire . --max-tokens=4000 --edit=src/a.ts:1-2  | allows   |
 ```
 
 The ripwire rows follow the ripwire rules of C002-IF-001 §6.3 (defect D-024, the follow-up of CHG-001
 defect D-012): the bounded default map under `--max-tokens=N` matches the rule
 `ripwire *--max-tokens=*`, and a map under `--token-budget=N` only matches no `allow` rule and falls
-to the catch-all deny, as the bash guard denies it (BG-442). The last row is a gap row of that
-section: the glob also allows a map command with a span-edit option, which the bash guard denies
-(BG-448). The row records the false allow of the native rules as OpenCode decides it; the corpus
-replay of the `opencode-permissions` mechanism reports it as a differing decision (C002-IF-001 §6.3,
-What a glob cannot express; C002-IF-009 §2). The scenario runs only for a package generated with
+to the catch-all deny, as the bash guard denies it (BG-442). The gap rows of that section, such as
+a map command with a span-edit option that the glob allows and the bash guard denies (BG-448), are
+no expectation of C002-REQ-207: they are known false allows of the native rules, recorded by a
+characterization check of the test plan and reported by the corpus replay of the
+`opencode-permissions` mechanism as differing decisions (C002-IF-001 §6.3, What a glob cannot
+express; C002-IF-009 §2; critic CR-88). The scenario runs only for a package generated with
 `--mode opencode=native-permissions`; in the `sdd-mcp-server` mode the bash guard core decides these
 commands (C002-REQ-209).
 
@@ -396,7 +396,7 @@ Scenario: C002-TS-230 — conductor's question call reaches the SDK in a server 
 | C002-REQ-204 | TS-205 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-205 | TS-206 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-206 | TS-207, TS-208 | n/a | TS-207 (memory folder) | TS-207 | TS-207 | n/a | TS-207 (.. and link) |
-| C002-REQ-207 | TS-209 | TS-209 (PowerShell; ripwire bounded default map under `--max-tokens`) | n/a | TS-209 | TS-209 | n/a | TS-209 (chain, redirect; ripwire map under `--token-budget` only, denied; gap row: a map command with a span-edit option, allowed by the glob) |
+| C002-REQ-207 | TS-209 | TS-209 (PowerShell; ripwire bounded default map under `--max-tokens`) | n/a | TS-209 | TS-209 | n/a | TS-209 (chain, redirect; ripwire map under `--token-budget` only, denied) |
 | C002-REQ-208 | TS-210 | TS-211 | n/a | n/a | TS-211 | n/a | n/a |
 | C002-REQ-209 | TS-212 | n/a | TS-213 (inside .sdd/) | TS-213 | TS-212 | n/a | TS-213 |
 | C002-REQ-210 | TS-214 | n/a | n/a | TS-224 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | n/a |
