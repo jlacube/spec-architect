@@ -71,3 +71,16 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Explicit + implicit: every prompt ends with a neutral "Give this to the matching Architect specialist agent" (no agent named), the ≥ 90% target is measured on these; a few implicit cases (no hint) run once and are reported separately (Recommended) · 2. Explicit only · 3. Tune the descriptions ("Use proactively for …") until implicit prompts reach 90%
 - **Answer:** P-01: "Explicit + implicit (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-23 — release tier and D-017
+
+### Q-release-tier-01 — release eval tier for C001-T-072 (C001-ADR-003)
+- **Context:** 10 runs for every eval scenario (790 runs plus 420 routing runs) costs about 450–1,100 USD notional on the subscription, 9–21 five-hour windows.
+- **Options:** 1. Reduced tier: 10 runs (≥ 9/10) for high-risk scenarios (gates, safety, injection, delegation), 3 runs for the rest; target 1 weekly reset, 2 at most (Recommended) · 2. Full tier, 10 runs for every scenario
+- **Answer:** P-01: "reduced tier looks good" and "let's stick to reduced tier and target 1 reset maybe 2 maximum"
+- **Extracted instructions:** pace by the 5-hour window (≤ 90%); tell P-01 when the weekly usage nears 90% so P-01 can apply a reset
+
+### Q-d017-01 — cartographer blocking judgement (D-017)
+- **Options:** 1. Fix now: a question that decides which code paths are in scope is blocking; TS-215 at release tier in C001-T-072 (Recommended) · 2. Defer to a later change, TS-215 waived for v0.1.0
+- **Answer:** P-01: "Fix now (Recommended)"
+- **Extracted instructions:** none

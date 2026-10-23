@@ -5,8 +5,8 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:4115e8ded702889ba696be495b15262755aedba805f148b313faa203142c728a", approved_at: 2026-10-23, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:df8889160a07b1d5d4380e576c2cfb5a6d6741eef9fdab02ab8316c812b5b290", approved_at: 2026-10-23, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:4115e8ded702889ba696be495b15262755aedba805f148b313faa203142c728a", approved_at: 2026-10-23, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:df8889160a07b1d5d4380e576c2cfb5a6d6741eef9fdab02ab8316c812b5b290", approved_at: 2026-10-23, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -85,3 +85,5 @@ defects:
 | 2026-10-23 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Revise** | "Re-presentation of G3 after the Q-eval-delegation-01 entry was appended to the plan questions log post-approval (32b3a48); no other plan change" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Approved** | "Re-approve G3" | none | unavailable |
+| 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-001 D-017: blocking rule for scope questions in the specialists' question contract (P-01 Q-d017-01: fix now)" | none | unavailable |
+| 2026-10-23 | G3 (plan) | **Revise** | "Plan revision: ADR-003 reduced release tier (P-01 Q-release-tier-01) and a fix task for D-017" | none | unavailable |
