@@ -166,3 +166,18 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. The runner replaces the key's value with [REDACTED] in every line and file it writes, host and model output included (Recommended) · 2. Runner's own writes only, stated in the REQ-639 rationale
 - **Answer:** P-01: "Redact host text too (Recommended)"
 - **Extracted instructions:** none
+
+### Q-model-refusal-01 — missing-model refusal on an injection row (critic CR-95)
+- **Options:** 1. Count it as a no-run refusal: no entry, no lock; the record keeps host_versions and spend unreported (Recommended) · 2. Keep it a real session and state the lock in the spec
+- **Answer:** P-01: "Count as no-run (Recommended)"
+- **Extracted instructions:** none
+
+### Q-t067-order-01 — do T-052 and T-055 wait for C002-T-067 (planner)
+- **Options:** 1. No dependency; land T-067 before the release checks where possible (Recommended) · 2. T-052 and T-055 depend on T-067
+- **Answer:** P-01: "No dependency (Recommended)"
+- **Extracted instructions:** none
+
+### Q-ts208-fixture-01 — D-026 item 3 (TS-208 fixture placeholder options) (planner)
+- **Options:** 1. Defer with D-023 item 1 to a later change (Recommended) · 2. Fix in CHG-002 with a spec revision and one more paid OpenCode session
+- **Answer:** P-01: "Defer with D-023(1) (Recommended)"
+- **Extracted instructions:** none

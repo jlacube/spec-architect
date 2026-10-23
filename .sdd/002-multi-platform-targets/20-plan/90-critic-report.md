@@ -1028,3 +1028,18 @@ Scope: 43992ff…e65ad24 (20-plan/60-test-plan.md), against D-029, Q-tc-lint-01,
 | CR-55 | minor | TC-616, 617, 619, 632, DOD-007 | @review rows include a review entry a person writes, but Executor is "—" and no plan file names the reviewer | name the reviewer (P-01) in the Executor cells or one §7 sentence | fixed (§7 sentence: the runner runs the checks, P-01 writes the DOD-007 review entry; Executor cells unchanged) |
 | CR-56 | minor | §1 manual row, TC-903, T-057 | the manual row names only C002-T-051 for the timed runs; TC-903 is C002-T-057 (pre-existing) | "…of C002-T-051 and C002-T-057" | fixed (§1 manual row names C002-T-051 and C002-T-057) |
 | CR-57 | minor | D-029, §1 | integration count 173 → 177 (correct) not recorded in D-029 | mention in the D-029 resolution | fixed (recorded in the D-029 resolution) |
+
+
+## Revision D-023 item 2, D-024, D-028 (2026-10-23)
+
+Scope: 978d147 (20-plan), against the same defects and answers. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-58 | major | T-067, TC-907, TC-924 | T-067's key-check row reads as changing the missing-file text while TC-907 is "unchanged" | after spec CR-85, name the text per case in the target row and step 4 | open |
+| CR-59 | minor | T-067, test plan §8 | request-level guarantees (header only, 30 s timeout, non-200, label not kept, no body in errors) only in unlisted unit cases | list them in §8 as supporting tests of TC-924 or a unit-level TC | open |
+| CR-60 | minor | M-06, M-07 | M-06 exit needs T-067 while T-052/T-055 don't depend on it, so M-06 may close after M-07 | say so in §3 or give T-067 its own milestone row | open |

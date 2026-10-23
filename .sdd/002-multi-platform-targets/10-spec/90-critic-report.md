@@ -1376,3 +1376,28 @@ Scope: 68bd52c, 177bcb4, 3f0a1ec (10-spec), against D-026, D-027, Q-copilot-opus
 | CR-84 | minor | D-026 item 3 | TS-208 fixture placeholder options neither fixed nor deferred | record the outcome in the D-026 resolution | fixed |
 
 All findings of this section fixed (architect: lock rule and models_used; spec-writer: NFR-203; test-designer: TS-615, TS-691…694, DOD-009; planner: T-052 depends on T-066, T-054 done-checks, RISK-036, TC rows; conductor: CR-84 recorded in the D-026 resolution — TS-208 fixture placeholders carried to D-023/D-024), 2026-10-21.
+
+
+## Revision D-023 item 2, D-024, D-028 (2026-10-23)
+
+Scope: `git diff 8c6efa2 978d147 -- .sdd/002-multi-platform-targets/`, against D-023 item 2, D-024, D-028, Q-c002-defects-01, Q-key-redact-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 5 | 8 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-85 | major | IF-010 §4, REQ-639, TS-698, TC-907 | empty key matches both the missing/empty rule (code: "no OpenRouter key in …") and the short-key text; TS-698 row 5 expects the short-key text | one text per case: missing file keeps "no OpenRouter key in <key file>"; empty after trimming gets the short-key text | open |
+| CR-86 | major | IF-010 §2.3, REQ-638, TS-695, RISK-037 | the settle bound U0 + usage.usd assumes runner costs never exceed OpenRouter's; the 7.3 % overstatement of T-044 means such sessions never settle | bound ≥ U0 + 0.9 × usage.usd (T-044 step 6 tolerance) or stability after a minimum wait; TS-695 row between 0.9× and 1×; RISK-037 trigger | open |
+| CR-87 | major | IF-010 §2.3, REQ-638, RISK-037 | late charges of earlier back-to-back sessions post inside the window: double-booking and false settle | if a paid session ended < 20 min earlier, wait for settle before taking U0, else partial with a third reason; row where an earlier charge posts first; re-rate RISK-037 | open |
+| CR-88 | major | REQ-207, AC-207.1, TS-209, IF-001 §6.3 | TS-209 row expects the gap command to be allowed, i.e. expects REQ-207 to be violated; counted as abuse coverage | move the gap row to a characterization check (GLOB_GAPS / replay report); drop the abuse claim | open |
+| CR-89 | major | REQ-639, TS-698, DOD-012 | JSON-escape branch and 20-character boundary untested; DOD-012 omits the character rule | rows: 19 chars refused, 20 accepted, ≥ 20 with \ refused, two-line file refused; DOD-012 | open |
+| CR-90 | minor | REQ-639, AC-639.1 | the refusal has its own outcome but no REQ | IF-THEN REQ for the refusal with its own AC | open |
+| CR-91 | minor | REQ-638 | one SHALL covers two branches | split: reconciliation (event) and stays-partial (IF-THEN, stderr line) | open |
+| CR-92 | minor | glossary, architecture, IF-010 §2.3 | glossary and architecture restate the settle rule differently from §2.3 | align both wordings | open |
+| CR-93 | minor | IF-010 §2.3, TS-697 | time of the first after-read undefined (21 vs 22 calls) | first after-read 60 s after the session ends, none after 20 minutes | open |
+| CR-94 | minor | IF-010 §5.2 rule 3 | spec says end_reason completed; run.mjs accepts undefined (fail-open) | T-067 requires completed (fail-closed) with a test | open |
+| CR-95 | minor | IF-010 §2 model rule, §5.2, Q-acted-final-01 | a missing-model refusal (no agent ran) locks an injection entry | P-01 (Q-model-refusal-01): count as a no-run refusal | open |
+| CR-96 | minor | DOD-012, REQ-639 | short ID "639" not resolved by trace | write C002-REQ-639 in full | open |
+| CR-97 | minor | IF-010 §4 | a kept run folder (SDD_EVAL_KEEP_RUN) leaves host files unredacted | paid session run folder deleted at end; keep switch refused for paid sessions | open |
