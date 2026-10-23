@@ -176,3 +176,21 @@ Scope: `git diff 2fa33de 3a19cef -- .sdd/001-architect-agent-suite/10-spec/` (RE
 | CR-21 | minor | REQ-1116 note, REQ-201, IF-09 A0 | "cannot be invoked as a subagent" overstates IF-09 ("not meant to be spawned") | "is not meant to be spawned as a subagent (C001-IF-09 A0)" | fixed (REQ-1116 note uses the IF-09 A0 wording) |
 | CR-22 | minor | CAP-11 coverage, REQ-1116 | alternate and error columns still n/a | TS-1117 (conductor hand-over) under alternate; TS-1117 (Architect subagent started) under error | fixed (CAP-11 coverage row: alternate and error cells filled) |
 | CR-23 | minor | SC-05 | "≥ 90% correct agent" has no unit (prompts or runs) | "≥ 90% of runs pass all their checks" | fixed (SC-05 Target reworded as suggested) |
+
+
+## Revision D-017 and reduced release tier (2026-10-24)
+
+Scope: `git diff 08129a5 e2ebb2f -- .sdd/001-architect-agent-suite/ .sdd/_constitution/` plus `10-spec/50-interfaces/questions.md` (landed in 434283c), against D-017, Q-release-tier-01, Q-d017-01. Lint 0, trace 100%. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 4 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-24 | blocker | DOD-G-01, constitution | the approved constitution still says ≥ 9/10 for every eval and every change inherits it; 70-dod.md §1 still calls the repo bootstrap; the new DOD-G-01 has no effect without a G0 amendment | G0 amendment by P-01; rewrite the 70-dod.md preamble; amendment as a T-072 precondition | open |
+| CR-25 | major | DOD-G-01, ADR-003 | DOD-G-01 defers to ADR-003, whose run-time cuts and any G3 change alter the DoD without G2 | state the minimum in DOD-G-01; cuts below it need a P-01 waiver at the gate | open |
+| CR-26 | major | IF-05 §1, REQ-208, AC-208.2 | §1 goes beyond P-01's answer (components/capabilities, public interface, existing data); criteria 2–3 and the false branch untested; more drafting stops | cut back to P-01's answer or ask P-01; one scenario per kept criterion plus a negative scenario | open |
+| CR-27 | major | IF-05 §1 criterion 4, TS-209 | criterion 4 keeps the subjective test behind D-017; a budget question (TS-209) meets none of 1–3 | make criterion 4 decidable or extend the cover-every-option sentence; re-check TS-209 | open |
+| CR-28 | major | TS-223, AC-208.2, RISK-005 | TS-223 lacks dispatcher, phase, brief and a decidable Then (free-text judgement) | TS-215 fixture and ideation sentence; conductor in unattended drafting; Then: blocking true with "web" and "kiosk" in question/options; RISK-005 exception | open |
+| CR-29 | minor | TS-215 note | spec note states a plan fact (retest at release tier in T-072) | keep the §1 link, drop the plan fact | open |

@@ -144,3 +144,22 @@ Scope: plan against the D-016 spec revision (3a19cef). Appended by the conductor
 | CR-19 | minor | RISK-005 | mitigation "assertions on tool calls, not prose" vs the conductor's text check | allow the literal command string in the last reply as the one exception (D-016), noting possible flakiness | fixed: RISK-005 mitigation allows the literal hand-over string in the last reply as the one exception (D-016), noted as possibly flaky |
 
 All findings of this section fixed (planner), 2026-10-23.
+
+
+## Revision D-017 and reduced release tier (2026-10-24)
+
+Scope: 20-plan in `git diff 08129a5 e2ebb2f`, against the same defect and answers. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 4 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-20 | major | ADR-003 class G, TC-209, TC-213 | TC-209 asserts the same blocking flag as TC-223 but is standard; TC-213 (unattended limit) standard too | move TC-209 to G (14/65); decide TC-213; update counts | open |
+| CR-21 | major | ADR-003, T-072, docs/milestone-log.md | milestone runs deferred to the release (M-3…M-6) not in the plan or the estimate; cut 3 reuses results that mostly don't exist | state that release runs close the deferred milestone items and list them in the evidence; restate or drop cut 3 | open |
+| CR-22 | major | T-072 step 1, ADR-003 cuts, Q-release-tier-01 | at 350 USD T-072 applies cuts without asking; reuse ignores the T-082 skill change | at 350 USD ask P-01 (second reset or cuts); reuse only with unchanged agent and skill blobs and current models | open |
+| CR-23 | major | T-082, D-017, TC-223, TC-215 | one dev pass can't show the fix; no path if the release check fails; no rerun of other blocking-sensitive evals | TC-223 at milestone tier (3/3); TC-209, 213, 222 once; < 9/10 in T-072 reopens D-017 via T-082 | open |
+| CR-24 | minor | ADR-003, RISK-005 | loose figures and references (315 midpoint, reset source, 780 vs 790 + 220, stale context, Affects line) | state formula and source; full tier 790 + 220; history label; RISK-005 3/3 weakness (p ≈ 0.73) | open |
+| CR-25 | minor | T-082 | components should be COMP-10; optional code-discovery line; conditional generate step | COMP-10; mandatory or drop; npm run check (targets step) | open |
+| CR-26 | minor | T-072, test plan §4, handoff, index | release-tier rule restated in several places with counts | link to ADR-003; drop the counts from T-072 | open |
