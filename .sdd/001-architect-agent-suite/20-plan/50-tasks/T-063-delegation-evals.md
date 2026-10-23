@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-060, C001-T-029]
 implements: [C001-REQ-1116]
 satisfies_ac: [C001-AC-1116.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1117, C001-TC-1117, C001-TC-213, C001-TC-214, C001-TC-215,
 components: [C001-COMP-12]
 risk_refs: [C001-RISK-005]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: b4f18b7, completed_at: 2026-10-23, notes: "Routing milestone 126/126 re-graded (72/126 raw, timeouts after correct routing), all 42 cases 3/3, off-topic 6/6, conductor rule 12/12; implicit 4/5 (reported apart); D-013 cases TS-213 9/10 (10-run check), TS-214 3/3, TS-817-stop 3/3, TS-215 1/3 waived by P-01 under D-017; npm run check exit 0 (Node 22.22.3); ~$64 notional on Max" }
 ---
 
 # C001-T-063 — Delegation eval suite (claude plugin eval)

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T10:31:08Z",
+  "generated_at": "2026-10-23T16:02:09Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -34,9 +34,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 63,
-          "done": 58,
+          "done": 59,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
         "last_report": "2026-10-23T00:00:00Z"
       },
@@ -167,9 +167,9 @@
           "summary": "Found in C002-T-048: eval cases TS-213, TS-214 and TS-215 (evals/cap02) were built for the Haiku stand-in specialists of the early CHG-001 runs (overlay.mjs): their checks depend on stand-ins reading planted hand-back files (TS-213 spec-writer, TS-215 cartographer) or on a fixture spec without critic blockers (TS-214). With the real specialists no wrong decision occurs but the checked step is never reached. P-01 (Q-standin-cases-01): waived for the CHG-002 regression; rework the cases in C001-T-063 (delegation eval suite). Also: TS-817-stop's fixture lacks the ideation critic report (gate not presented).",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by C001-T-063 (c544138, b4f18b7): TS-213, TS-214, TS-215 reworked for the real specialists (architectReal guard); TS-213 9/10 (10-run check), TS-214 3/3, TS-817-stop 3/3 (fixture already fixed in 0743ed6); TS-215 reaches its step only when the cartographer flags the question blocking — tracked as D-017 (TC-215 waived by P-01).",
+          "closed_at": "2026-10-23"
         },
         {
           "id": "D-014",
@@ -195,6 +195,16 @@
           "id": "D-016",
           "ref": "C001-REQ-1116",
           "summary": "Found in C001-T-063: REQ-1116 asks >= 3 must-route prompts per agent, but the conductor cannot be a subagent (started with claude --agent architect:sdd-conductor); 'routed' is undefined for it. P-01 (Q-conductor-route-01): count a conductor prompt as routed when the reply hands the user over to claude --agent architect:sdd-conductor and no Architect subagent starts; state it in the spec.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-23",
+          "status": "closed",
+          "resolution": "Spec: C001-REQ-1116 note and C001-TS-1117 declared checks (4b14caf, G2 e6ba038). Implemented in C001-T-063 (c544138): PLG-EVAL-001 checks each conductor case declares the hand-over and 0-subagent checks; conductor routing 12/12 at milestone tier (2455bd0).",
+          "closed_at": "2026-10-23"
+        },
+        {
+          "id": "D-017",
+          "ref": "C001-TS-215",
+          "summary": "Found in C001-T-063: the cartographer flags the same scope question (Q-scope-01, coupon on the kiosk path as well as web checkout) as blocking in 1 of 3 runs, so TS-215's Given is met only then (TC-215 1/3 at milestone tier, b4f18b7); the conductor behaved correctly whenever it was blocking. Fix to consider: code-discovery skill / sdd-conventions return contract state that a question deciding which code paths are in scope is blocking; retest TC-215 at milestone tier. P-01 (2026-10-23): 'Log defect, waive (Recommended)' — TC-215 waived for C001-T-063.",
           "reporter": "jerome.lacube",
           "date": "2026-10-23",
           "status": "open",
