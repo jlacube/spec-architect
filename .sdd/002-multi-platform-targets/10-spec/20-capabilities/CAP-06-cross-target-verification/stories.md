@@ -36,8 +36,8 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **Value / outcome:** C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
 - **Context & notes:** The harness has no CHG-001 requirement of its own, so runners are `ADDED` (current-state §2 item 2, E-9); 104 files under `evals/` use `harness/`, so the case API stays stable (baseline survey §3.3). OpenCode can be driven through `opencode serve` and the SDK (C002-R-001 D-01, D-02); whether a `question` call can be answered by script is open for spike S-07. Eval tiers: dev tier on every target; milestone tier on Claude Code and the first port only (ideation §9). Each run keeps a spend cap, as `runSession` does today (current-state E-9).
-- **Requirements:** C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611
-- **Traces to:** ideation §8 (Verification), §9; C002-DEC-003 (Consequences)
+- **Requirements:** C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611, C002-REQ-638, C002-REQ-639
+- **Traces to:** ideation §8 (Verification), §9; C002-DEC-003 (Consequences); defect D-023 item 2 (Q-c002-defects-01)
 
 ### C002-US-604 — Scripted evals through Copilot CLI
 - **As a** P-01 spec owner

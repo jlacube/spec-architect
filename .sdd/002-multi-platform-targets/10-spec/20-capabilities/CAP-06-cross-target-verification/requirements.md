@@ -303,3 +303,21 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Stories:** C002-US-606
 - **Priority:** Must
 - **Acceptance:** C002-AC-634.1
+
+### C002-REQ-638 — Partial OpenCode spend reconciled from the key usage
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN a paid OpenCode session ends with a partial spend, THE OpenCode eval runner SHALL, before it checks the stop rule for the next session or ends the run, set the cost of the session's spend ledger entry to the key usage delta if the key usage was read before the session and settled within 20 minutes of the session's end, and otherwise leave the entry with its partial spend.
+- **Rationale:** defect D-023 item 2 (findings of C002-T-056 X3; P-01 answer to Q-c002-defects-01, `../../../20-plan/questions-log.md` round 2026-10-23: "Fix most, defer D-023(1) (Recommended)"): an entry with a partial spend stops its pool until a spend reconciliation (`20-plan/60-test-plan.md` §4.1 Ledger), and most capped OpenCode sessions with a running subagent end with one. Reads, settle rule, fields of the reconciled entry, the cases in which the entry stays partial with their standard-error line, and what the delta counts: C002-IF-010 §2.3. The reconciliation changes the spend ledger entry only; the result record keeps `partial` (C002-IF-010 §3 `spend`). An entry left partial, an entry written without a before-read and an entry of a run that ends during the wait are reconciled by hand, as before. The OpenRouter key in the reads: C002-REQ-639
+- **Stories:** C002-US-603
+- **Priority:** Must
+- **Acceptance:** C002-AC-638.1
+
+### C002-REQ-639 — OpenRouter key never written
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE OpenCode eval runner SHALL NOT write the OpenRouter key, or the headers of a request that carries it, to standard output, standard error or any file it writes, its result records, transcripts and spend ledger entries included.
+- **Rationale:** C002-IF-010 §2.3 "The key is never logged" (a failed key usage read is reported by its reason only, never by the request or the response body, and `data.label`, which can show part of the key, is not kept) and §4 Provider key (the same rule for the key passed to the host process); a result records the credential's source, never the credential (`api_key_source`, C002-IF-010 §3; critic CR-37 of the plan review). Written as a prohibition that holds at all times, not as an unwanted behaviour: the key passes through the runner on every paid OpenCode session and every key usage read, not only on a fault
+- **Stories:** C002-US-603
+- **Priority:** Must
+- **Acceptance:** C002-AC-639.1
