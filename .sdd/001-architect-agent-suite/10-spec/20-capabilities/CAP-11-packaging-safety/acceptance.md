@@ -242,6 +242,7 @@ Scenario: C001-TS-1117 — eval inventory
   When the eval suite definition is parsed
   Then it has at least 40 prompts
   And each of the ten agents has at least 3 "must route" prompts and at least 1 "must not route" prompt
+  And each "must route" prompt of the conductor passes when the reply hands the user over to "claude --agent architect:sdd-conductor" and no Architect subagent starts, and fails when any Architect subagent starts
 ```
 
 ## C001-REQ-1117
