@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Start the spec-driven workflow for a new change and interview me about it as we go, in rounds of questions with options.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

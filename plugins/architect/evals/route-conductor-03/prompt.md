@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 I want the Architect suite to drive a new change for coupon codes from ideation to an approved plan, and ask me at each gate.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

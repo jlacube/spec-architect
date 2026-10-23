@@ -31,4 +31,4 @@ test("cart total with 10 %", () => expect(cartTotal([{ priceCents: 1000 }], 10))
 
 Map the blast radius of changing applyDiscount to take a Coupon object instead of a percentage: its callers, the tests that reach it and the hotspots, with an evidence entry for each claim.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

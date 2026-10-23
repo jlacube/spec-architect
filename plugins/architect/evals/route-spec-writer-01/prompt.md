@@ -17,4 +17,4 @@ Out of scope: gift cards.
 
 Write the user stories and the EARS requirements of its coupons capability.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

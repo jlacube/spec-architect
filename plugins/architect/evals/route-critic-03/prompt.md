@@ -16,4 +16,4 @@ Is this plan ready for its gate? Review it against the plan rubric and list the 
 - T-3 monthly report, depends on T-2
 - Milestone M-1: "done when it works"
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

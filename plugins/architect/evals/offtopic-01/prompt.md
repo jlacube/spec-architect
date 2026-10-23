@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 What is the difference between let and const in JavaScript? One short paragraph.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

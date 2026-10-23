@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Write the rollout and rollback plan and the implementer hand-off, with the ordered task list, for shipping coupon codes behind a feature flag. The work: a coupon service, the checkout integration, a monthly report and a database migration.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

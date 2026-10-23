@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Turn this into user stories and EARS requirements, and add the new domain terms to the domain model: customers enter one percentage coupon at checkout, expired codes are refused, finance gets a monthly report of discounts.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

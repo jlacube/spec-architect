@@ -1,0 +1,310 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6final",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T11:03:33.523Z",
+  "runs": 12,
+  "passed": 2,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.4294726,
+  "duration_s": 365,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-architect-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-architect-01-run1-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1309488,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-architect-01-run2-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0709166,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-architect-01-run3-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07464680000000001,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-01-run1-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0971554,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-01-run2-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0927532,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-01-run3-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.088507,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-02-run1-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09256720000000002,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-02-run2-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.100133,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-02-run3-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0883906,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-03-run1-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2538748,
+        "session_ms": 81000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-03-run2-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2371656,
+        "session_ms": 72000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-architect-03-run3-2026-10-23T11-03-33-526Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.10241360000000001,
+        "session_ms": 121000,
+        "turns": 6,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 12,
+    "runs": 12,
+    "regraded": 10
+  }
+}

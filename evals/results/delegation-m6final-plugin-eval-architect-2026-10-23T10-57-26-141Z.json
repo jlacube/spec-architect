@@ -1,0 +1,282 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6final",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T10:57:26.088Z",
+  "runs": 12,
+  "passed": 6,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.8718088000000002,
+  "duration_s": 313,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-test-designer-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-test-designer-01-run1-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.19556199999999999,
+        "session_ms": 50000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-test-designer-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-test-designer-01-run2-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.25013,
+        "session_ms": 85000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-test-designer-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-notroute-test-designer-01-run3-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.207231,
+        "session_ms": 58000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-01-run1-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0760178,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-01-run2-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0765778,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-01-run3-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0722506,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-02-run1-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2092126,
+        "session_ms": 52000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-test-designer-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-02-run2-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2472224,
+        "session_ms": 70000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-test-designer-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-02-run3-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.22352239999999998,
+        "session_ms": 65000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-test-designer-03",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-03-run1-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0748512,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-03",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-03-run2-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1217304,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-03",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6final-route-test-designer-03-run3-2026-10-23T10-57-26-090Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.11750060000000001,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 12,
+    "runs": 12,
+    "regraded": 6
+  }
+}

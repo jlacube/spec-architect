@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Break this architecture into implementation tasks with estimates and dependencies: components checkout, coupon service and order store; the coupon service exposes validate and apply; the checkout calls it before tax.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

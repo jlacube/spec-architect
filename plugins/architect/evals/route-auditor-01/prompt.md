@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Run the sdd lint and traceability checks on the SDD workspace here and report the counts per file. If there is no workspace, report what the commands say.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

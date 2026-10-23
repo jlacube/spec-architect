@@ -28,4 +28,4 @@ import { gateway } from "../billing/gateway";
 export const renew = (sub: Sub) => gateway.charge(sub.priceCents, sub.card);
 ```
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

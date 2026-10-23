@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Record an ADR in MADR form: coupon validation moves out of the checkout into its own component. Link it to the constraints and components it affects: the checkout, the coupon service and the order store.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

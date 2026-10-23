@@ -17,4 +17,4 @@ Write the architecture for adding coupon codes to a web checkout with these requ
 
 I need the component catalogue, a Mermaid component diagram and a sequence diagram of applying a coupon.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

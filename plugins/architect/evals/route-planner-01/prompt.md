@@ -17,4 +17,4 @@ An approved spec for coupon codes has these requirements, a coupon-service compo
 
 Break it down into tasks with their dependencies, group them into milestones and show the critical path.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

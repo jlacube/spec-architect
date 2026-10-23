@@ -17,4 +17,4 @@ Write the definition of done of a small change that adds coupon codes at checkou
 
 Inherit these global DoD items: all automated tests pass in CI; a second person reviews the change.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

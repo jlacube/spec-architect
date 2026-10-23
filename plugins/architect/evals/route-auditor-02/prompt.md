@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Refresh the SDD registry and status with the sdd commands, and tell me which phases are stale. An empty workspace is a valid answer; report what the commands say.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

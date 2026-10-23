@@ -17,4 +17,4 @@ These requirements are written:
 
 Write their acceptance criteria and Gherkin scenarios, with the coverage table.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

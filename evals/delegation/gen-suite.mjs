@@ -6,8 +6,9 @@
 // Every prompt is self-contained: the runs start in an empty sandbox, so a prompt never refers to code,
 // files or changes the sandbox does not hold. The material a task needs (ideation text, requirements, a
 // code excerpt) is given inline, and a task that reads a workspace (lint, status) accepts an empty one.
-// Every counted case ends with the neutral HINT line (P-01, Q-eval-delegation-01, "Explicit + implicit"):
-// the session is asked to delegate, and the agent descriptions decide which agent it picks; off-topic,
+// Every counted case ends with the neutral HINT line (P-01, Q-eval-delegation-01, "Explicit + implicit";
+// softened 2026-10-23 after the off-topic misses): the session may delegate when an agent matches, and the
+// agent descriptions decide whether one does and which; off-topic,
 // must-not-route and conductor cases carry the same hint, and their graders decide what passes. The
 // implicit set repeats a few must-route prompts without the hint, one run each, to measure delegation on
 // the session's own initiative; it does not count toward the 90 % or PLG-EVAL-001's minimums.
@@ -16,7 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** The neutral delegation hint of the counted cases (names no agent). */
-export const HINT = "Give this to the matching Architect specialist agent.";
+export const HINT = "If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.";
 /** Eval folders below the plugin: the counted suite and the implicit set. */
 export const EVAL_DIR_NAME = "evals";
 export const IMPLICIT_DIR_NAME = "evals-implicit";

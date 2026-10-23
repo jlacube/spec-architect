@@ -16,4 +16,4 @@ Goal: a customer applies one percentage coupon at checkout; expired codes are re
 Out of scope: gift cards.
 Open question: do coupons stack? (no owner, no phase)
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

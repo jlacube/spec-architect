@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Plan the coupons work: a task file per unit of work (coupon service, checkout integration, expiry check, monthly report), each with its estimate and depends_on, ordered into milestones.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

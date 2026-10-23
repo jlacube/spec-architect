@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Research how public repositories implement idempotency keys for payment APIs, and what the IETF draft on the Idempotency-Key header says. Write it up as a sourced research note.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

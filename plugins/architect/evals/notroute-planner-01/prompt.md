@@ -16,4 +16,4 @@ Review this plan for gaps and ambiguity before its gate:
 - T-3 monthly report, depends on T-2
 - Milestone M-1: "done when it works"
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

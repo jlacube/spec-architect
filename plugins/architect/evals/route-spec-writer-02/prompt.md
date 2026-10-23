@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Write the NFRs of a checkout capability — customers pay for their basket online, peaks of 500 orders a minute, it must work with screen readers: response time, availability and accessibility, each with a metric, a threshold and a method.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

@@ -25,4 +25,4 @@ export const revenue = (all: Order[]) => all.reduce((s, o) => s + orders.total(o
 test("total sums the lines", () => expect(new OrderService().total(order([100, 250]))).toBe(350));
 ```
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

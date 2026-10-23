@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Collect sourced documentation on how Redis and PostgreSQL implement atomic counters, with links and dates. Just the facts, no recommendation.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Define the interface of a coupon service — validate a code, apply it to an order, list a month's redemptions — as an OpenAPI contract, add it to the interface registry, and write its error catalogue.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Show the status of every SDD change here — phases, stale phases and the registry — from the sdd status command. An empty workspace is a valid answer.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

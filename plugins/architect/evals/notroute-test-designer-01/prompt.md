@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Write this as an EARS requirement with its user story: when a customer applies an expired coupon, the checkout refuses it and shows the expiry date.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

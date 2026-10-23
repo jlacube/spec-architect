@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 A team of four is starting a coupon service: monorepo or a separate repository? Give me the trade-off analysis with weighted criteria and scored candidates, and write it up as an options analysis.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

@@ -29,4 +29,4 @@ export const invoiceTotal = (inv: { amountCents: number; discountPct: number }) 
 test("cart total with 10 %", () => expect(cartTotal([{ priceCents: 1000 }], 10)).toBe(900));
 ```
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

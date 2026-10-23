@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Check these requirements for ambiguity and untestable statements: REQ-1 the checkout shall be fast; REQ-2 WHEN a coupon is applied, THE checkout SHALL reduce the total appropriately.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

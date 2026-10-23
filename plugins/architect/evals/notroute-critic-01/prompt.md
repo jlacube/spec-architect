@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Run sdd lint on the plan phase of the SDD workspace here and report the error and warning counts; zero findings or no workspace is a valid answer.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Write the Gherkin acceptance scenarios, including the boundary and error cases, for this requirement: REQ-102 WHEN a customer applies an expired coupon, THE checkout SHALL refuse it and show its expiry date.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

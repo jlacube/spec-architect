@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Give me the deterministic audit of the SDD workspace here — lint counts, traceability coverage and stale phases — from the sdd commands only, even if they find nothing.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

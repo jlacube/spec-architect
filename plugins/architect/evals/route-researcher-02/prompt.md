@@ -11,4 +11,4 @@ disallowed_tools: [Skill]
 
 Look up the current library documentation of Zod for discriminated unions and refinements, and how it would validate a payload like { code, percent, expiresAt }. Cite the docs with their dates.
 
-Give this to the matching Architect specialist agent.
+If one of the Architect specialist agents matches this, give it to that agent; otherwise answer directly.

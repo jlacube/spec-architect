@@ -99,7 +99,9 @@ export default {
   fixture: specStart({ brownfield: true, kind: "brownfield", extra: twoCheckouts }),
   env: { CLAUDE_CODE_ENABLE_TODO_TOOLS: "1" },
   allowTools: ["Agent", "Write", "Edit", "Bash"],
-  maxTurns: 22,
+  // 30 turns, within the TS-215 cap exception (C002-IF-010 §2.2): at 22 the conductor ran out of turns
+  // before it reached the cartographer (t063-d013, 2026-10-23).
+  maxTurns: 30,
   prompt: "Draft the spec of CHG-001 unattended, I'll review at the gate.",
   assert({ transcript }) {
     const { failures, check } = checker();
