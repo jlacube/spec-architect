@@ -1,0 +1,132 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6final",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T11:40:42.431Z",
+  "runs": 6,
+  "passed": 6,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.2660296,
+  "duration_s": 18,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "offtopic-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-01-run1-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.044313599999999995,
+        "session_ms": 10000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-01-run2-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.043977600000000006,
+        "session_ms": 10000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-01-run3-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.044141599999999996,
+        "session_ms": 10000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-02-run1-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0433976,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-02-run2-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0457896,
+        "session_ms": 8000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6final-offtopic-02-run3-2026-10-23T11-40-42-434Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0444096,
+        "session_ms": 7000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 6,
+    "runs": 6,
+    "regraded": 0
+  }
+}
