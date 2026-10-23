@@ -118,8 +118,12 @@ Scenario: C002-TS-505 — deny message names the new entries
   Given hook input for tool "Bash" by agent "architect:sdd-planner" with the command "npm install"
   When the bash guard evaluates it
   Then standard error contains "GUARD-BASH-001"
-  And its "Allowed:" summary names a bare "sdd …" command and "node --version"
+  And its "Allowed:" summary names a bare "sdd …" command, "node --version" and "ripwire read verbs or the bounded default map"
 ```
+
+The summary names both ripwire forms of C001-IF-07 §3.1, the read verbs and the bounded default map
+(C002-IF-008 §1; defect D-024). Only the text changes, and the same text is shown wherever the bash
+guard core denies a command.
 
 ## C002-REQ-504
 
