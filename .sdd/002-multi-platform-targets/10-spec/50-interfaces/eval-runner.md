@@ -443,6 +443,17 @@ is not a finite number of at least 0.
    - **Settled.** The usage is settled at the first read that gives the same `usage` as the read
      before it, provided that this value is at least `U0` plus 0.9 × the session's `usage.usd` (its
      recorded spend).
+   - **Comparison in micro-dollars** (added after the test design of D-023 item 2). Every
+     comparison of this section is made in whole micro-dollars, so that no result depends on
+     floating-point rounding. `run.mjs` first converts each read value, `U0` and `usage.usd` to
+     micro-dollars (the amount × 1 000 000, rounded to the nearest whole number) and then compares
+     only these integers.
+     - "The same `usage`" means equal micro-dollars.
+     - The bound holds when 10 × read ≥ 10 × `U0` + 9 × `usage.usd`, all three in micro-dollars, so
+       the 0.9 needs no fraction. For example, `U0` 17.2400 and `usage.usd` 0.60 give
+       10 × 17 780 000 ≥ 172 400 000 + 5 400 000: a read of 17.7800 settles, a read of 17.7799 does
+       not.
+     - The delta `U1 − U0` is the difference of the two micro-dollar values divided by 1 000 000.
    - **"The read before it"** is the latest earlier after-read of this session that did not fail. A
      failed read is passed over, so it neither settles nor breaks the comparison, and the two equal
      reads are then at least 60 s apart. The before-read never counts as the read before it. The
