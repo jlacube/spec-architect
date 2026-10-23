@@ -7,8 +7,8 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:e1d403b1ebf84003ad658de1e4ad2e5a7032fcfec83bf147e185b76a581c2b45", approved_at: 2026-10-21, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:890edf0ddc55277f2271eecafd96442a7d62bbfe3b8f9aa30f6586bd88d2b92b", approved_at: 2026-10-23, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:e1d403b1ebf84003ad658de1e4ad2e5a7032fcfec83bf147e185b76a581c2b45", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:890edf0ddc55277f2271eecafd96442a7d62bbfe3b8f9aa30f6586bd88d2b92b", approved_at: 2026-10-23, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -203,3 +203,5 @@ waivers:
 | 2026-10-21 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-029: test plan to LINT-TC-001 (C001-REQ-609) — Test data column, the five levels with sub-kinds, Executor column (P-01 Q-tc-lint-01)" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-002 D-024 (OpenCode native ripwire map rules), D-028 (T-066 clarifications) and D-023 item 2 (automatic spend reconciliation); D-023 item 1 deferred to a later change (P-01 Q-c002-defects-01)" | none | unavailable |
+| 2026-10-23 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-023 item 2, D-024, D-028: one fix task (P-01 Q-c002-defects-01)" | none | unavailable |

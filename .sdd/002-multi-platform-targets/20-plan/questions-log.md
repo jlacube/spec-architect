@@ -154,3 +154,10 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. CHG-002 plan revision: Fixture column renamed Test data, the CHG-002 levels recorded as integration with the former name kept as a sub-kind, an Executor column for manual cases; no test meaning changes (Recommended) · 2. CHG-001 spec revision widening C001-REQ-609 to the extra levels and a Fixture column
 - **Answer:** P-01: "Revise CHG-002 plan (Recommended)"; commit order: "After the fix (Recommended)" (C001-T-076 lands with the revision)
 - **Extracted instructions:** none
+
+## Round 2026-10-23 — defects D-023, D-024, D-028
+
+### Q-c002-defects-01 — scope of the open CHG-002 defects
+- **Options:** 1. One CHG-002 revision and one fix task for D-028, D-024 and D-023 item 2 (automatic spend reconciliation); D-023 item 1 (proportionate rework path after a Revise) deferred to a later change, D-023 closed as deferred (Recommended) · 2. Fix all, including the rework path with paid evals on three hosts · 3. Defer all three
+- **Answer:** P-01: "Fix most, defer D-023(1) (Recommended)"
+- **Extracted instructions:** none
