@@ -1489,7 +1489,8 @@ Scenario Outline: C002-TS-695 — a partial spend reconciled from the settled ke
     | 18.0000, 18.2000, 18.2000                              | 18.2000 | 0.96  | 0.9600  | third after-read: the usage still rose at the second                                            |
     | 17.5000, 17.5000, 18.0000, 18.0000                     | 18.0000 | 0.76  | 0.7600  | fourth after-read: the second equals the first but is below 17.2400 plus the recorded 0.60      |
     | 17.8400, 17.8400                                       | 17.8400 | 0.60  | 0.6000  | second after-read: the usage is exactly 17.2400 plus the recorded 0.60, which settles           |
-    | a thrown error, 18.0000, 18.0000                       | 18.0000 | 0.76  | 0.7600  | third after-read: the failed first after-read is skipped                                        |
+    | a thrown error, 18.0000, 18.0000                       | 18.0000 | 0.76  | 0.7600  | third after-read: the failed first after-read is passed over, and the second, the first that succeeds, has no earlier successful after-read to equal |
+    | 18.0000, a thrown error, 18.0000                       | 18.0000 | 0.76  | 0.7600  | third after-read: it equals the first, the latest earlier after-read that succeeded           |
 ```
 
 ```gherkin
@@ -1520,6 +1521,7 @@ Scenario Outline: C002-TS-697 — a key usage that does not settle within 20 min
     | a new value at each read: 18.0000, 18.0100, 18.0200 and so on, 0.0100 more each time |
     | 17.5000 at every read, below 17.2400 plus the recorded 0.60                        |
     | a thrown error at every read                                                       |
+    | 18.0000 on the first after-read, then a thrown error at every later read: one successful after-read only |
 ```
 
 The reconciliation changes the spend ledger entry only; the result record keeps `partial` and its
@@ -1536,33 +1538,38 @@ of C002-TC-917 use `deps.ledger`.
 
 ## C002-REQ-639
 
-#### C002-AC-639.1 — The OpenRouter key appears in no output and no file of the OpenCode eval runner
+#### C002-AC-639.1 — The OpenRouter key appears in no output and no file of the OpenCode eval runner, host and model text included, and a key unfit for redaction is refused before use
 ```gherkin
-Scenario Outline: C002-TS-698 — the OpenRouter key is never written
-  Given P-01's key file ".architect-evals/openrouter-key.txt" in a temporary home folder holds the one line "sk-or-v1-c002ts698dummykey"
+Scenario Outline: C002-TS-698 — the OpenRouter key is never written, and a key unfit for redaction is refused
+  Given P-01's key file ".architect-evals/openrouter-key.txt" in a temporary home folder holds <key file>
   And the fixture "fx-evals-caps" and the temporary ledger of C002-TS-695
-  And the OpenCode eval runner's paid-session entry with a stubbed host start in place of "opencode serve", so that no host process and no network request runs, whose session of "REC-01" ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60
+  And the OpenCode eval runner's paid-session entry with a stubbed host start in place of "opencode serve", so that no host process and no network request runs, whose session of "REC-01" <session>
   And the test dependencies "stopRule" true and "keyUsage" with "intervalMs" 10 and "limitMs" 200, whose "read" <reads>
   When the test runs "main" of "evals/harness/run.mjs" with the arguments "--host opencode --only REC-01 evals/targets/caps/reconcile.eval.mjs"
-  Then the stubbed host start received "sk-or-v1-c002ts698dummykey" as "OPENROUTER_API_KEY" in the host's environment
-  And the result record of "REC-01" gives "api_key_source" "openrouter-key-file"
-  And <outcome>
-  And the text "sk-or-v1-c002ts698dummykey" occurs in no line of standard output or standard error
-  And it occurs in no file that the run created or changed: the result record, the result file, the transcript, the spend ledger and any log file included
-  And neither standard output, standard error nor any of those files holds the text "Bearer sk-or-v1-" or "Authorization: Bearer"
+  Then <outcome>
+  And no line of standard output or standard error, and no file that the run created or changed (the result record, the result file, the transcript, the spend ledger and any log file included), holds <absent>
+  And none of them holds the text "Bearer sk-or-v1-" or "Authorization: Bearer"
   Examples:
-    | reads                                                                                                                                                                                       | outcome                                                                                                                                         |
-    | gives 17.2400 on the before-read, then 18.0000 and 18.0000                                                                                                                                  | the ledger entry of "REC-01" gives "cost_source" "openrouter key usage delta", and standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: 0.7600 USD (recorded 0.6000 USD)" |
-    | throws, on the before-read, an error whose message holds "Authorization: Bearer sk-or-v1-c002ts698dummykey" and a response body {"error":"invalid key sk-or-v1-c002ts698dummykey"} | standard error holds the "stays partial" line of C002-TS-696 with the reason "the key usage could not be read before the session" and no other text of the error |
-    | gives 17.2400 on the before-read, then on every after-read throws an error whose message holds "Authorization: Bearer sk-or-v1-c002ts698dummykey"                                          | standard error holds the "stays partial" line of C002-TS-697 with the reason "the key usage did not settle within 20 minutes" and no other text of the error |
+    | key file | session | reads | outcome | absent |
+    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then 18.0000 and 18.0000 | the stubbed host start received "KEY" as "OPENROUTER_API_KEY" in the host's environment, the result record of "REC-01" gives "api_key_source" "openrouter-key-file", the ledger entry of "REC-01" gives "cost_source" "openrouter key usage delta", and standard output holds the line "ledger: REC-01 reconciled from the OpenRouter key usage: 0.7600 USD (recorded 0.6000 USD)" | the text "KEY" |
+    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | throws, on the before-read, an error whose message holds "Authorization: Bearer KEY" and a response body {"error":"invalid key KEY"} | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", the result record of "REC-01" gives "api_key_source" "openrouter-key-file", and standard error holds the "stays partial" line of C002-TS-696 with the reason "the key usage could not be read before the session" and no other text of the error | the text "KEY" |
+    | the one line "KEY" | ends with the "end_reason" "spend cap", "spend" "partial" and "usage.usd" 0.60 | gives 17.2400 on the before-read, then on every after-read throws an error whose message holds "Authorization: Bearer KEY" | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", the result record of "REC-01" gives "api_key_source" "openrouter-key-file", and standard error holds the "stays partial" line of C002-TS-697 with the reason "the key usage did not settle within 20 minutes" and no other text of the error | the text "KEY" |
+    | the one line "KEY" | ends "completed" with "spend" "reported", and whose events give the output "OPENROUTER_API_KEY=KEY" of a command the agent ran, an assistant message "the key is KEY" and a host error text "provider rejected key KEY" | gives 17.2400 on the before-read | the stubbed host start received "KEY" as "OPENROUTER_API_KEY", and the transcript and the result record hold the command output as "OPENROUTER_API_KEY=[REDACTED]", the assistant message as "the key is [REDACTED]" and the error text as "provider rejected key [REDACTED]", as does every line of standard output or standard error that quotes one of them | the text "KEY" |
+    | an empty line | would end "completed" with "spend" "reported" | would give 17.2400 on every call | the session of "REC-01" is refused before any key usage read and before the host starts: the stub "read" and the stubbed host start were never called, and standard error holds the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file | the text "OPENROUTER_API_KEY=" |
+    | the one line "sk-or-v1-short", 14 characters | would end "completed" with "spend" "reported" | would give 17.2400 on every call | the session of "REC-01" is refused before any key usage read and before the host starts: the stub "read" and the stubbed host start were never called, and standard error holds the line "paid OpenCode session refused: the OpenRouter key in KEYFILE is shorter than 20 characters or holds a character that JSON escapes", KEYFILE being the path of the key file | the text "sk-or-v1-short" |
 ```
 
-The key reaches the host process as `OPENROUTER_API_KEY` only and is sent in the read's
-`Authorization` header only; a failed read is reported by its reason, never by the request or the
-response body (C002-IF-010 §2.3 The key is never logged, §4 Provider key). The error texts of the
-last two rows stand for a client library or a provider that echoes the request: the runner prints
-none of them. The scenario checks what the runner itself writes; it does not plant the key in the
-host's own events (C002-TC-907 checks the key file and the host environment of a paid session).
+KEY stands for the dummy key "sk-or-v1-c002ts698dummykey" (26 characters, no character that JSON escapes). The key
+reaches the host process as `OPENROUTER_API_KEY` only and is sent in the read's `Authorization`
+header only; a failed read is reported by its reason, never by the request or the response body
+(C002-IF-010 §2.3 The key is never logged, §4 Provider key). The error texts of the second and third
+rows stand for a client library or a provider that echoes the request: the runner prints none of
+them. The fourth row plants the key in the host's and the model's own text, which the runner writes
+with `[REDACTED]` in place of each occurrence of the exact key value, after any JSON encoding (§4 Key
+redaction, Host and model text, Matching; P-01 answer to Q-key-redact-01). The last two rows are the
+refusal of §4 Key redaction (Key too short or unsafe): the key is checked before the before-read of
+§2.3 and before the host process starts, and the refusal names the key file, never the key.
+C002-TC-907 checks the missing key file and the host environment of a paid session.
 
 ## Coverage table
 
@@ -1600,8 +1607,8 @@ host's own events (C002-TC-907 checks the key file and the host environment of a
 | C002-REQ-632 | TS-646 | TS-646 (`architect:sdd-unknown`, bare prefix `architect:sdd-`) | n/a | TS-647 | TS-646 (non-Architect caller with an Architect name prefix) | n/a | TS-647 (rules that bind adopter agents) |
 | C002-REQ-633 | TS-649 | TS-649 (three mechanisms) | TS-650 (replay host without `file-symlink`: `error`, counted as differing) | TS-650 | n/a | n/a | TS-637 (PG-163 recorded as a malformed call with the source C002-REQ-630), TS-643 (PG-163 not fed as a malformed call) |
 | C002-REQ-634 | TS-651 | TS-651 (OpenCode and Copilot VS Code reports), TS-683 (`posix` report of corpora with and without cases limited to `win32`) | TS-683 (case list `none`) | TS-651 (ERR-REL-012 `replay host lacks file-symlink`), TS-683 (ERR-REL-012 `was replayed on posix, not on win32`; no further line for that report), TS-637 (`posix` row) | n/a | n/a | TS-637 (report showing `deny` for PG-163 on a host without `file-symlink`), TS-683 (a `posix` replay that lists the `win32` path cases as not applicable to pass) |
-| C002-REQ-638 | TS-695 | TS-695 (usage settled at a later after-read: still rising at the second read, equal reads below the bound, a failed after-read skipped) | TS-695 (usage exactly the before-read plus the recorded lower bound settles; equal reads below it do not), TS-697 (usage below the bound at every read: stays partial) | TS-696 (before-read fails: stays partial, `could not be read before the session`), TS-697 (no read settles within 20 minutes, a rising usage and every read failing included: stays partial, `did not settle within 20 minutes`) | n/a | TS-695 (the next session's stop-rule check waits for the reconciliation and counts the delta), TS-696, TS-697 (the next session of the pool does not start while the entry stays partial) | n/a: the reads take no input from a case or a caller, and the test seam is no command-line option or variable (C002-IF-010 §2.3 Test seam) |
-| C002-REQ-639 | TS-698 | TS-698 (reconciled session; failed before-read; every after-read failing) | n/a | TS-698 (a failed read reported by its reason only) | n/a | n/a | TS-698 (read errors whose text holds the key, its `Authorization` header and a response body that echoes the key) |
+| C002-REQ-638 | TS-695 | TS-695 (usage settled at a later after-read: still rising at the second read, equal reads below the bound, a failed after-read passed over before or between the two equal reads) | TS-695 (usage exactly the before-read plus the recorded lower bound settles; equal reads below it do not), TS-697 (usage below the bound at every read; one successful after-read only: stays partial) | TS-696 (before-read fails: stays partial, `could not be read before the session`), TS-697 (no read settles within 20 minutes, a rising usage and every read failing included: stays partial, `did not settle within 20 minutes`) | n/a | TS-695 (the next session's stop-rule check waits for the reconciliation and counts the delta), TS-696, TS-697 (the next session of the pool does not start while the entry stays partial) | n/a: the reads take no input from a case or a caller, and the test seam is no command-line option or variable (C002-IF-010 §2.3 Test seam) |
+| C002-REQ-639 | TS-698 | TS-698 (reconciled session; failed before-read; every after-read failing; host and model text redacted) | TS-698 (a key of 14 characters, an empty key: refused before use) | TS-698 (a failed read reported by its reason only; the refusal names the key file, never the key) | n/a | n/a | TS-698 (read errors whose text holds the key, its `Authorization` header and a response body that echoes the key; an agent that prints `OPENROUTER_API_KEY`) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on
