@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:0ac02fa7f15f5211d347cd12e973b158c651fd1ffc9a44ca4d3222cf34b1504f", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:df8889160a07b1d5d4380e576c2cfb5a6d6741eef9fdab02ab8316c812b5b290", approved_at: 2026-10-23, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:e1b60776c533acceee024bdbba4a951f5f29d56702cee776ee3d8a13253342de", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -88,3 +88,4 @@ defects:
 | 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-001 D-017: blocking rule for scope questions in the specialists' question contract (P-01 Q-d017-01: fix now)" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Revise** | "Plan revision: ADR-003 reduced release tier (P-01 Q-release-tier-01) and a fix task for D-017" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-24 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
