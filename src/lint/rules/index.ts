@@ -1,5 +1,5 @@
 // Registered lint rules: one module and one bad/good fixture pair per rule (C001-NFR-503).
-// The rule tasks add theirs (C001-T-018 … C001-T-022).
+// The rule tasks add theirs (C001-T-018 … C001-T-022, C001-T-076).
 import type { LintRule } from "../types.ts";
 import { arch001 } from "./arch-001.ts";
 import { arch002 } from "./arch-002.ts";
@@ -17,6 +17,8 @@ import { ears003 } from "./ears-003.ts";
 import { err001 } from "./err-001.ts";
 import { evd001 } from "./evd-001.ts";
 import { gate001 } from "./gate-001.ts";
+import { hand001 } from "./hand-001.ts";
+import { hand002 } from "./hand-002.ts";
 import { ide001 } from "./ide-001.ts";
 import { if001 } from "./if-001.ts";
 import { if002 } from "./if-002.ts";
@@ -29,10 +31,14 @@ import { reg001 } from "./reg-001.ts";
 import { req001 } from "./req-001.ts";
 import { res001 } from "./res-001.ts";
 import { res002 } from "./res-002.ts";
+import { risk001 } from "./risk-001.ts";
+import { roll001 } from "./roll-001.ts";
 import { sec001 } from "./sec-001.ts";
 import { task001 } from "./task-001.ts";
 import { task002 } from "./task-002.ts";
 import { task003 } from "./task-003.ts";
+import { task004 } from "./task-004.ts";
+import { tc001 } from "./tc-001.ts";
 import { tr01 } from "./tr-01.ts";
 import { tr02 } from "./tr-02.ts";
 import { tr03 } from "./tr-03.ts";
@@ -61,5 +67,5 @@ export const RULES: readonly LintRule[] = [
   us001, us002, req001, ears001, ears002, ears003, word001,
   ts001, cov001, cov002, nfr001, dod001, delta001,
   res001, res002, oa001, ide001, arch001, arch002, arch003, arch004, arch005, if001, if002, err001, con001, evd001,
-  plan001, task001, task002, task003, obs001, gate001,
+  plan001, task001, task002, task003, task004, tc001, risk001, roll001, hand001, hand002, obs001, gate001,
 ];

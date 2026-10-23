@@ -244,9 +244,12 @@ export function headingName(text: string): string {
   return text.replace(/^\d+(?:\.\d+)*\.?\s+/, "").trim().toLowerCase();
 }
 
-/** Lines (1-based numbers) of the section under the first heading whose name starts with `name`. */
-export function sectionByName(doc: SpecDoc, name: string): { line: number; end: number } | null {
-  const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
+/**
+ * Lines (1-based numbers) of the section under the first heading whose name starts with `name`;
+ * with `level`, only headings of that level count.
+ */
+export function sectionByName(doc: SpecDoc, name: string, level?: number): { line: number; end: number } | null {
+  const h = doc.blocks.headings.find((x) => (level === undefined || x.level === level) && headingName(x.text).startsWith(name.toLowerCase()));
   return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
 }
 
@@ -308,4 +311,9 @@ export function tasks(c: LintChange): TaskInfo[] {
 /** The change's 20-plan Markdown files. */
 export function planDocs(c: LintChange): [string, SpecDoc][] {
   return [...c.spec.docs].filter(([p]) => p.startsWith("20-plan/"));
+}
+
+/** Text of lines `from` … `to` (1-based, inclusive) of `doc` with HTML comments removed. */
+export function textWithoutComments(doc: SpecDoc, from: number, to: number): string {
+  return doc.lines.slice(from - 1, to).join("\n").replace(/<!--[\s\S]*?-->/g, "");
 }

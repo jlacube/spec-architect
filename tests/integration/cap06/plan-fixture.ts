@@ -1,5 +1,13 @@
-// Plan fixture for the plan-phase lint scenarios (C001-TS-601 … 618, 907): the lint-clean minimal
-// change with a started, lint-clean plan; scenarios replace or add plan files.
+// Plan fixture for the plan-phase lint scenarios (C001-TS-601 … 620, 907): the lint-clean minimal
+// change with a started, lint-clean plan; scenarios replace or add plan files. `workedExample` lints CHG-001.
+import { cpSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
+import { RULES } from "../../../src/lint/rules/index.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
+import type { LintFinding } from "../cap04/spec-fixture.ts";
+import { runInProcess } from "../cli/helpers.ts";
+
 export const PLAN = ".sdd/004-x/20-plan";
 export const CHANGE_MD = "---\nid: CHG-004\ntitle: x\nprofile: full\nphases:\n  20-plan: { status: draft }\n---\n# CHG-004\n";
 
@@ -58,4 +66,28 @@ export function plan(...extra: [string, string][]): Record<string, string> {
     [`${PLAN}/60-test-plan.md`, TEST_PLAN],
     ...extra,
   ]);
+}
+
+/** A lite change.md for CHG-004 with a started plan. */
+export const LITE_CHANGE_MD = "---\nid: CHG-004\ntitle: x\nprofile: lite\nphases:\n  20-plan: { status: draft }\n---\n# CHG-004\n";
+
+/**
+ * Findings of rule `code` when `sdd lint 001` runs on a copy of CHG-001's folder (the worked example),
+ * wherever `sdd archive` moved it (C002-T-006). The copy keeps the folder name, so paths the plan
+ * names relative to the repository root still resolve.
+ */
+export function workedExample(code: string): LintFinding[] {
+  const src = changeFolder("001");
+  const root = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-worked-")));
+  try {
+    const dest = join(root, ".sdd", basename(src));
+    cpSync(src, dest, { recursive: true });
+    const changeMd = join(dest, "change.md");
+    writeFileSync(changeMd, readFileSync(changeMd, "utf8").replace(/^status:\s*"?archived"?\s*$/m, "status: active"));
+    const r = runInProcess(["lint", "001", "--json"], { cwd: root, rules: RULES.filter((x) => x.code === code) });
+    if (r.code !== 0 && r.code !== 1) throw new Error(r.stderr);
+    return (JSON.parse(r.stdout) as { findings: LintFinding[] }).findings;
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 }

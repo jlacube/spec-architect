@@ -3734,9 +3734,9 @@ var require_errors = __commonJS({
       if (error.pos[0] === -1)
         return;
       error.linePos = error.pos.map((pos) => lc.linePos(pos));
-      const { line, col } = error.linePos[0];
-      error.message += ` at line ${line}, column ${col}`;
-      let ci = col - 1;
+      const { line, col: col3 } = error.linePos[0];
+      error.message += ` at line ${line}, column ${col3}`;
+      let ci = col3 - 1;
       let lineStr = src.substring(lc.lineStarts[line - 1], lc.lineStarts[line]).replace(/[\n\r]+$/, "");
       if (ci >= 60 && lineStr.length > 80) {
         const trimStart = Math.min(ci - 39, lineStr.length - 79);
@@ -3754,8 +3754,8 @@ var require_errors = __commonJS({
       if (/[^ ]/.test(lineStr)) {
         let count = 1;
         const end = error.linePos[1];
-        if (end?.line === line && end.col > col) {
-          count = Math.max(1, Math.min(end.col - col, 80 - ci));
+        if (end?.line === line && end.col > col3) {
+          count = Math.max(1, Math.min(end.col - col3, 80 - ci));
         }
         const pointer = " ".repeat(ci) + "^".repeat(count);
         error.message += `:
@@ -7902,8 +7902,8 @@ function headingAbove(doc, line) {
 function headingName(text) {
   return text.replace(/^\d+(?:\.\d+)*\.?\s+/, "").trim().toLowerCase();
 }
-function sectionByName(doc, name) {
-  const h = doc.blocks.headings.find((x) => headingName(x.text).startsWith(name.toLowerCase()));
+function sectionByName(doc, name, level) {
+  const h = doc.blocks.headings.find((x) => (level === void 0 || x.level === level) && headingName(x.text).startsWith(name.toLowerCase()));
   return h ? { line: h.line, end: doc.blocks.sectionEnd(h.line) } : null;
 }
 function idList(value2, change) {
@@ -7959,6 +7959,9 @@ function tasks(c) {
 }
 function planDocs(c) {
   return [...c.spec.docs].filter(([p]) => p.startsWith("20-plan/"));
+}
+function textWithoutComments(doc, from, to) {
+  return doc.lines.slice(from - 1, to).join("\n").replace(/<!--[\s\S]*?-->/g, "");
 }
 
 // src/lint/rules/arch-003.ts
@@ -8064,13 +8067,13 @@ var arch004 = {
     const out = [];
     for (const c of ctx.changes) {
       const doc = c.spec.docs.get(PATH2);
-      const section2 = doc ? sectionByName(doc, "runtime flows") : null;
-      if (!doc || !section2) continue;
+      const section3 = doc ? sectionByName(doc, "runtime flows") : null;
+      if (!doc || !section3) continue;
       const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
       const sequences = mermaidBlocks(docs).filter((b) => b.kind === "sequenceDiagram").map((b) => [headingAbove(c.spec.docs.get(b.path), b.line), ...b.lines, b.path.slice(b.path.lastIndexOf("/") + 1)].join("\n"));
       for (const t of tables(doc, PATH2))
         for (const r of t.rows) {
-          if (r.line <= section2.line || r.line > section2.end) continue;
+          if (r.line <= section3.line || r.line > section3.end) continue;
           const flow2 = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
           if (flow2 === "") continue;
           const word = new RegExp(`(^|[^\\w-])${flow2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
@@ -8161,19 +8164,19 @@ var cov002 = {
       for (const t of coverageTables(c)) {
         const path = `${c.folder}/${t.path}`;
         const header2 = t.rows[0] ? [...t.rows[0].cells.keys()] : [];
-        const absent = COVERAGE_COLUMNS.filter((col) => t.rows.length > 0 && !header2.includes(col));
+        const absent = COVERAGE_COLUMNS.filter((col3) => t.rows.length > 0 && !header2.includes(col3));
         if (absent.length > 0) out.push({ path, line: t.line, message: `Coverage table lacks the column${absent.length > 1 ? "s" : ""} ${absent.join(", ")}` });
         for (const r of t.rows) {
           const req = r.raw[0] ?? "";
-          for (const col of COVERAGE_COLUMNS) {
-            if (!r.cells.has(col)) continue;
-            const cell = (r.cells.get(col) ?? "").trim();
-            let problem = null;
-            if (cell === "") problem = "is empty";
-            else if (/^n\/a$/i.test(cell)) problem = t.note ? null : "is a bare n/a without a reason note below the table";
-            else if (/^n\/a\s*:\s*\S/i.test(cell)) problem = null;
-            else if (!findIds(cell, c.change).some((h) => h.id.includes("-TS-"))) problem = `holds "${cell}", neither TS IDs nor n/a: <reason>`;
-            if (problem) out.push({ path, line: r.line, ids: findIds(req, c.change).map((h) => h.id), message: `Cell ${col} of ${req} ${problem}` });
+          for (const col3 of COVERAGE_COLUMNS) {
+            if (!r.cells.has(col3)) continue;
+            const cell = (r.cells.get(col3) ?? "").trim();
+            let problem2 = null;
+            if (cell === "") problem2 = "is empty";
+            else if (/^n\/a$/i.test(cell)) problem2 = t.note ? null : "is a bare n/a without a reason note below the table";
+            else if (/^n\/a\s*:\s*\S/i.test(cell)) problem2 = null;
+            else if (!findIds(cell, c.change).some((h) => h.id.includes("-TS-"))) problem2 = `holds "${cell}", neither TS IDs nor n/a: <reason>`;
+            if (problem2) out.push({ path, line: r.line, ids: findIds(req, c.change).map((h) => h.id), message: `Cell ${col3} of ${req} ${problem2}` });
           }
         }
       }
@@ -8308,8 +8311,8 @@ var WEAK_WORDS = [
 ];
 var WEAK_PHRASES = ["as needed", "if possible", "as appropriate", "where possible", "as soon as possible", "state of the art"];
 function weakWords(text) {
-  const plain = withoutCodeAndQuotes(text);
-  const lower = plain.toLowerCase();
+  const plain3 = withoutCodeAndQuotes(text);
+  const lower = plain3.toLowerCase();
   const hits = WEAK_WORDS.filter((w) => new RegExp(`(?<![\\w-])${w.replace("/", "\\/")}(?![\\w-])`).test(lower));
   hits.push(...WEAK_PHRASES.filter((p) => new RegExp(`(?<![\\w-])${p}(?![\\w-])`).test(lower)));
   const quoteless = text.replace(/\\"/g, " ").replace(/"[^"]*"|“[^”]*”/g, " ");
@@ -8446,6 +8449,84 @@ var gate001 = {
         for (const r of t.rows) {
           const usage2 = r.raw.length >= t.header.length ? (r.raw[r.raw.length - 1] ?? "").trim() : "";
           if (usage2 === "") out.push({ path: `${c.folder}/change.md`, line: r.line, message: `Gate-log row for ${(r.raw[1] ?? "").trim() || "a gate"} has no Usage cell` });
+        }
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/hand-001.ts
+var HANDOFF = "20-plan/handoff.md";
+var HANDOFF_SECTIONS = ["Reading order", "Rules", "Ordered task list", "Reporting protocol", "Definition of change done"];
+var hand001 = {
+  code: "LINT-HAND-001",
+  severity: "error",
+  fix: "Add the section, the `task set` and `defect add` commands and the frontmatter fallback",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(HANDOFF);
+      if (!c.spec.planStarted || !doc) continue;
+      const path = `${c.folder}/${HANDOFF}`;
+      for (const s of HANDOFF_SECTIONS) if (!sectionByName(doc, s, 2)) out.push({ path, line: 1, message: `Hand-off section missing: ${s}` });
+      const rp = sectionByName(doc, "Reporting protocol", 2);
+      if (!rp) continue;
+      const text = textWithoutComments(doc, rp.line + 1, rp.end);
+      for (const cmd of ["task set", "defect add"]) if (!text.includes(cmd)) out.push({ path, line: rp.line, message: `Reporting protocol incomplete: no "${cmd}" command` });
+      if (!/frontmatter/i.test(text)) out.push({ path, line: rp.line, message: "Reporting protocol incomplete: no frontmatter fallback" });
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/hand-002.ts
+var HANDOFF2 = "20-plan/handoff.md";
+var ENTRY2 = /^\s*(?:\||[-*+]\s|\d+[.)]\s)/;
+var PATH3 = /\.sdd\/[^\s|`'"<>()]+\.md/;
+var hand002 = {
+  code: "LINT-HAND-002",
+  severity: "error",
+  fix: "List every non-dropped task once, with its path, after its dependencies",
+  scope: "change",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(HANDOFF2);
+      if (!c.spec.planStarted || !doc) continue;
+      const section3 = sectionByName(doc, "Ordered task list", 2);
+      if (!section3) continue;
+      const path = `${c.folder}/${HANDOFF2}`;
+      const all = tasks(c);
+      const fileOf = new Map(all.map((t) => [t.id, `${c.folder}/${t.path}`]));
+      const entries2 = [];
+      for (let l = section3.line + 1; l <= section3.end; l++) {
+        const text = doc.lines[l - 1] ?? "";
+        if (doc.blocks.inFence(l) || !ENTRY2.test(text)) continue;
+        const id = findIds(text, c.change).find((h) => h.id.includes("-T-"))?.id;
+        if (!id) continue;
+        entries2.push({ id, line: l });
+        const named = PATH3.exec(text.replace(/\\/g, "/"))?.[0];
+        const file = fileOf.get(id);
+        if (named === void 0) out.push({ path, line: l, ids: [id], message: `Ordered task list incomplete: ${id} has no path relative to the repository root` });
+        else if (file !== void 0 && named !== file) out.push({ path, line: l, ids: [id], message: `Ordered task list incomplete: ${id} names ${named}, not its file ${file}` });
+      }
+      for (const t of all.filter((x) => x.status !== "dropped")) {
+        const n = entries2.filter((e) => e.id === t.id).length;
+        if (n === 0) out.push({ path, line: section3.line, ids: [t.id], message: `Ordered task list incomplete: ${t.id} is not listed` });
+        else if (n > 1) out.push({ path, line: entries2.filter((e) => e.id === t.id)[1].line, ids: [t.id], message: `Ordered task list incomplete: ${t.id} is listed ${n} times` });
+      }
+      const first = /* @__PURE__ */ new Map();
+      for (const e of entries2) if (!first.has(e.id)) first.set(e.id, e.line);
+      for (const t of all) {
+        const at = first.get(t.id);
+        if (at === void 0) continue;
+        for (const d of t.dependsOn) {
+          const dl = first.get(d);
+          if (dl !== void 0 && dl > at) out.push({ path, line: at, ids: [t.id, d], message: `Ordered task list out of dependency order: ${t.id} is listed before its dependency ${d}` });
         }
       }
     }
@@ -8611,9 +8692,9 @@ var if002 = {
       const registered = /* @__PURE__ */ new Set();
       if (doc)
         for (const t of tables(doc, REGISTRY)) {
-          const col = t.header.findIndex((h) => h === "file" || h === "files");
-          if (col < 0) continue;
-          for (const r of t.rows) for (const m of (r.raw[col] ?? "").matchAll(/[^\s`,;]+/g)) registered.add(m[0].replace(/^\.\//, ""));
+          const col3 = t.header.findIndex((h) => h === "file" || h === "files");
+          if (col3 < 0) continue;
+          for (const r of t.rows) for (const m of (r.raw[col3] ?? "").matchAll(/[^\s`,;]+/g)) registered.add(m[0].replace(/^\.\//, ""));
         }
       for (const path of c.spec.interfaces.keys()) {
         const name = path.slice(path.lastIndexOf("/") + 1);
@@ -8883,6 +8964,103 @@ var res002 = {
   }
 };
 
+// src/lint/rules/risk-001.ts
+var RISKS = "20-plan/70-risks.md";
+var LITE_PLAN = "20-plan/plan.md";
+var RATINGS = ["low", "medium", "high"];
+var col = (t, name) => t.header.findIndex((h) => name.test(h));
+var plain = (cell) => (cell ?? "").replace(/[`*]/g, "").trim();
+var risk001 = {
+  code: "LINT-RISK-001",
+  severity: "error",
+  fix: "Fix the risk row",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      const lite = c.profile === "lite";
+      const file = lite ? LITE_PLAN : RISKS;
+      const doc = c.spec.docs.get(file);
+      if (!doc) continue;
+      const path = `${c.folder}/${file}`;
+      const riskTables = tables(doc, file).filter((t) => col(t, /likelihood/) >= 0);
+      if (riskTables.length === 0 && !lite) out.push({ path, line: 1, message: "Risk field missing: no risk table (ID, Risk, Likelihood, Impact, Mitigation, Trigger, Owner, Refs)" });
+      for (const t of riskTables) {
+        const [lik, imp, mit, trig, own, refs] = [col(t, /likelihood/), col(t, /impact/), col(t, /mitigation/), col(t, /trigger/), col(t, /owner/), col(t, /refs|concerns|ids/)];
+        const required = lite ? [["mitigation", mit]] : [["mitigation", mit], ["trigger", trig], ["owner", own]];
+        for (const r of t.rows) {
+          const id = findIds(r.raw[0] ?? "", c.change).find((h) => h.id.includes("-RISK-"))?.id;
+          if (!id) continue;
+          const at = (message) => void out.push({ path, line: r.line, ids: [id], message });
+          for (const [name, i] of [["likelihood", lik], ["impact", imp]]) {
+            const v = plain(r.raw[i]).toLowerCase();
+            if (!RATINGS.includes(v)) at(`Risk rating outside low, medium, high: ${id} has ${name} "${plain(r.raw[i])}"`);
+          }
+          for (const [name, i] of required) if (i < 0 || plain(r.raw[i]) === "") at(`Risk field missing: ${id} has no ${name}`);
+          if (!lite && !findIds(refs >= 0 ? r.raw[refs] ?? "" : r.raw.join(" "), c.change).some((h) => /-(T|COMP)-/.test(h.id))) at(`Risk field missing: ${id} names no T or COMP ID`);
+        }
+      }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/roll-001.ts
+var ROLLOUT = "20-plan/75-rollout.md";
+var NO_IMPACT = /No rollout impact\s*[—–:-]?\s*(.*)/i;
+var NO_FLAGS = /^\s*none\b|\bno (?:feature )?flags?\b/im;
+function section(doc, name) {
+  const s = sectionByName(doc, name, 2);
+  return s ? { ...s, text: textWithoutComments(doc, s.line + 1, s.end) } : null;
+}
+function problems(doc, change) {
+  const body = doc.lines.map((l, i) => doc.blocks.inFence(i + 1) ? "" : l);
+  const none = NO_IMPACT.exec(body.join("\n").replace(/<!--[\s\S]*?-->/g, ""));
+  if (none) return none[1].trim().split(/\s+/).filter(Boolean).length >= 3 ? [] : [{ line: 1, text: '"No rollout impact" without a reason' }];
+  const out = [];
+  const migration = section(doc, "migration");
+  if (!migration || migration.text.trim() === "") out.push({ line: migration?.line ?? 1, text: "no migration steps" });
+  const flags = section(doc, "feature flags");
+  if (!flags || flags.text.trim() === "") out.push({ line: flags?.line ?? 1, text: "no feature flags section" });
+  else if (!NO_FLAGS.test(flags.text)) {
+    const flagTables = tables(doc, ROLLOUT).filter((t) => t.headerLine > flags.line && t.headerLine <= flags.end);
+    const withDefault = flagTables.filter((t) => t.header.some((h) => h.includes("default")));
+    const rows = withDefault.flatMap((t) => t.rows.map((r) => ({ r, i: t.header.findIndex((h) => h.includes("default")) })));
+    if (withDefault.length > 0 && rows.length === 0) out.push({ line: flags.line, text: "feature flags lists no flag and does not say none" });
+    for (const { r, i } of rows) if ((r.raw[i] ?? "").trim() === "") out.push({ line: r.line, text: `feature flag ${(r.raw[0] ?? "").replace(/`/g, "").trim()} has no default value` });
+    if (withDefault.length === 0 && !/default/i.test(flags.text)) out.push({ line: flags.line, text: "feature flags without default values" });
+  }
+  const rb = tables(doc, ROLLOUT).flatMap((t) => t.rows).flatMap((r) => {
+    const id = findIds(r.raw[0] ?? "", change).find((h) => h.id.includes("-RB-"))?.id;
+    return id ? [{ r, id }] : [];
+  });
+  if (rb.length === 0) out.push({ line: section(doc, "rollback")?.line ?? 1, text: "no rollback steps RB-<seq>" });
+  for (const { r, id } of rb)
+    if (!r.raw.slice(1).some((cell) => findIds(cell, change).some((h) => /-(T|M)-/.test(h.id)))) out.push({ line: r.line, ids: [id], text: `${id} is not linked to a T or M ID` });
+  const communication = section(doc, "communication");
+  if (!communication || communication.text.trim() === "") out.push({ line: communication?.line ?? 1, text: "no communication notes" });
+  return out;
+}
+var roll001 = {
+  code: "LINT-ROLL-001",
+  severity: "error",
+  fix: 'Add migration, flags with defaults, RB-IDs linked to T or M, communication — or "No rollout impact — <reason>"',
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(ROLLOUT);
+      if (!c.spec.planStarted || !doc) continue;
+      for (const p of problems(doc, c.change))
+        out.push({ path: `${c.folder}/${ROLLOUT}`, line: p.line, ...p.ids ? { ids: p.ids } : {}, message: `Rollout content missing: ${p.text}` });
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/sec-001.ts
 var SECRET_PATTERNS = [
   { name: "private key", re: /-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED |PGP )?PRIVATE KEY(?: BLOCK)?-----/ },
@@ -8931,14 +9109,14 @@ function emptySections(t) {
     const lines2 = doc.lines.slice(t.from - 1, t.to);
     return ["Targets", "Verification", "Done when"].filter((name) => (fieldText(lines2, name) ?? "") === "");
   }
-  const section2 = (name) => {
+  const section3 = (name) => {
     const s = sectionByName(doc, name);
     return s ? doc.lines.slice(s.line, s.end) : [];
   };
   const targets2 = sectionByName(doc, "targets");
   const hasRow = targets2 !== null && tables(doc, t.path).some((tb) => tb.headerLine > targets2.line && tb.headerLine <= targets2.end && tb.rows.length > 0);
-  const step = section2("verification").some((l) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(l));
-  const box = section2("done when").some((l) => /^\s*[-*+] \[[ xX]\]\s+\S/.test(l));
+  const step = section3("verification").some((l) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(l));
+  const box = section3("done when").some((l) => /^\s*[-*+] \[[ xX]\]\s+\S/.test(l));
   return [...hasRow ? [] : ["Targets"], ...step ? [] : ["Verification"], ...box ? [] : ["Done when"]];
 }
 var task001 = {
@@ -8998,6 +9176,116 @@ var task003 = {
       for (const t of tasks(c))
         if (t.status === "done" && (t.commit === "" || t.commit === "null"))
           out.push({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: `${t.id} is done but records no commit` });
+    return out;
+  }
+};
+
+// src/lint/rules/task-004.ts
+var KEYS = ["id", "title", "milestone", "status", "depends_on", "implements", "satisfies_ac", "verified_by", "components", "risk_refs", "estimate", "report"];
+var LISTS = ["depends_on", "implements", "satisfies_ac", "verified_by", "components", "risk_refs"];
+var HEADINGS = ["Intent", "Targets", "Preconditions", "Step outline", "Verification", "Done when"];
+var LITE_FIELDS = ["Status", "Depends on", "Implements", "Satisfies AC", "Verified by", "Estimate"];
+var STATUSES = ["todo", "in-progress", "blocked", "done", "dropped"];
+var ESTIMATES = ["S", "M", "L"];
+var TASKS_DIR = "20-plan/50-tasks/";
+var problem = (text) => `Task file shape wrong: ${text}`;
+function isHeading(text, name) {
+  const n = headingName(text);
+  return n === name.toLowerCase() || n.startsWith(`${name.toLowerCase()} (`);
+}
+function taskFiles(c) {
+  const out = [];
+  for (const [path, doc] of c.spec.docs) {
+    if (!path.startsWith(TASKS_DIR) || !/^T-[^/]*\.md$/.test(path.slice(TASKS_DIR.length))) continue;
+    const fm = c.graph.files.find((f) => f.path === path)?.frontmatter ?? {};
+    const id = typeof fm["id"] === "string" ? fm["id"] : "";
+    const name = id || path.slice(TASKS_DIR.length);
+    const at = (line, message) => ({ path: `${c.folder}/${path}`, line, ...id ? { ids: [id] } : {}, message: problem(message) });
+    const keyLine = (k) => Math.max(1, doc.lines.findIndex((l) => l.startsWith(`${k}:`)) + 1);
+    for (const k of KEYS) if (!(k in fm)) out.push(at(1, `${name} lacks the frontmatter key ${k}`));
+    if ("status" in fm && !STATUSES.includes(String(fm["status"]))) out.push(at(keyLine("status"), `${name} has status "${String(fm["status"])}", not one of ${STATUSES.join(", ")}`));
+    if ("estimate" in fm && !ESTIMATES.includes(String(fm["estimate"]))) out.push(at(keyLine("estimate"), `${name} has estimate "${String(fm["estimate"])}", not one of ${ESTIMATES.join(", ")}`));
+    for (const k of LISTS) if (k in fm && !Array.isArray(fm[k])) out.push(at(keyLine(k), `${name} has a ${k} that is not a list`));
+    const heads = doc.blocks.headings.filter((h) => h.level === 2);
+    const found = HEADINGS.map((s) => heads.find((h) => isHeading(h.text, s)));
+    HEADINGS.forEach((s, i) => found[i] === void 0 && out.push(at(1, `${name} has no heading ${s}`)));
+    const present = found.flatMap((h, i) => h ? [{ name: HEADINGS[i], line: h.line }] : []);
+    const byLine = [...present].sort((a, b) => a.line - b.line);
+    const misplaced = present.find((p, i) => byLine[i] !== p);
+    if (misplaced) out.push(at(misplaced.line, `${name} has heading ${misplaced.name} out of order (expected ${HEADINGS.join(", ")})`));
+  }
+  return out;
+}
+function liteTasks(c) {
+  const out = [];
+  for (const t of tasks(c)) {
+    if (!t.lite || !t.doc) continue;
+    const lines2 = t.doc.lines.slice(t.from - 1, t.to);
+    const at = (message) => ({ path: `${c.folder}/${t.path}`, line: t.line, ids: [t.id], message: problem(message) });
+    for (const f of LITE_FIELDS) if (fieldText(lines2, f) === null) out.push(at(`${t.id} lacks the field ${f}`));
+    const status2 = fieldText(lines2, "Status");
+    if (status2 !== null && !STATUSES.includes(status2.toLowerCase())) out.push(at(`${t.id} has status "${status2}", not one of ${STATUSES.join(", ")}`));
+    const estimate = fieldText(lines2, "Estimate");
+    if (estimate !== null && !ESTIMATES.includes(estimate)) out.push(at(`${t.id} has estimate "${estimate}", not one of ${ESTIMATES.join(", ")}`));
+  }
+  return out;
+}
+var task004 = {
+  code: "LINT-TASK-004",
+  severity: "error",
+  fix: "Add the field or heading, in order",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) if (c.spec.planStarted) out.push(...taskFiles(c), ...liteTasks(c));
+    return out;
+  }
+};
+
+// src/lint/rules/tc-001.ts
+var TEST_PLAN = "20-plan/60-test-plan.md";
+var LITE_PLAN2 = "20-plan/plan.md";
+var LEVELS = ["unit", "integration", "e2e", "eval", "manual"];
+var col2 = (t, name) => t.header.findIndex((h) => name.test(h));
+var plain2 = (cell) => (cell ?? "").replace(/`/g, "").trim();
+var tc001 = {
+  code: "LINT-TC-001",
+  severity: "error",
+  fix: "Add the field",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      if (!c.spec.planStarted) continue;
+      const lite = c.profile === "lite";
+      const file = lite ? LITE_PLAN2 : TEST_PLAN;
+      const doc = c.spec.docs.get(file);
+      if (!doc) continue;
+      const path = `${c.folder}/${file}`;
+      const all = tables(doc, file);
+      const executors = /* @__PURE__ */ new Map();
+      for (const t of all) {
+        const i = col2(t, /owner|executed by|executor/);
+        if (i >= 0) for (const r of t.rows) for (const h of findIds(r.raw[0] ?? "", c.change)) executors.set(h.id, plain2(r.raw[i]));
+      }
+      const tcTables = all.filter((t) => col2(t, /^level$/) >= 0 && col2(t, /^tc$|^id$/) >= 0);
+      if (tcTables.length === 0) out.push({ path, line: 1, message: "Test case field missing: no test-case table (TC, Level, Location, Test data, Environment)" });
+      for (const t of tcTables) {
+        const [id, level, location, data, env] = [col2(t, /^tc$|^id$/), col2(t, /^level$/), col2(t, /location/), col2(t, /test data|^data$/), col2(t, /environment/)];
+        const required = lite ? [["location", location]] : [["location", location], ["test data", data], ["environment", env]];
+        for (const r of t.rows) {
+          const tc = findIds(r.raw[id] ?? "", c.change).find((h) => h.id.includes("-TC-"))?.id;
+          if (!tc) continue;
+          const at = (message) => void out.push({ path, line: r.line, ids: [tc], message: `Test case field missing: ${tc} ${message}` });
+          const lv = plain2(r.raw[level]);
+          if (!LEVELS.includes(lv)) at(lv === "" ? "has no level" : `has level "${lv}", not one of ${LEVELS.join(", ")}`);
+          for (const [name, i] of required) if (i < 0 || plain2(r.raw[i]) === "") at(`has no ${name}`);
+          if (lv === "manual" && (executors.get(tc) ?? "") === "") at("is manual but names no executor");
+        }
+      }
+    }
     return out;
   }
 };
@@ -9374,8 +9662,8 @@ var tr15 = {
       if (!c.spec.planStarted || !doc) continue;
       const hot = /* @__PURE__ */ new Set();
       for (const t of tables(doc, HOTSPOTS)) {
-        const col = t.header.findIndex((h) => h === "file" || h === "path");
-        if (col >= 0) for (const r of t.rows) hot.add(clean(r.raw[col] ?? ""));
+        const col3 = t.header.findIndex((h) => h === "file" || h === "path");
+        if (col3 >= 0) for (const r of t.rows) hot.add(clean(r.raw[col3] ?? ""));
       }
       const referenced = new Set(risks(c).flatMap((r) => findIds(r.text, c.change).map((h) => h.id)));
       for (const t of tasks(c)) {
@@ -9593,6 +9881,12 @@ var RULES = [
   task001,
   task002,
   task003,
+  task004,
+  tc001,
+  risk001,
+  roll001,
+  hand001,
+  hand002,
   obs001,
   gate001
 ];
@@ -11083,22 +11377,22 @@ function findEntry(text, id) {
   while (end > h.line && ls[end - 1].trim() === "") end--;
   return { start: h.line, end, title: h.text.slice(id.length).replace(/^\s*—\s*/, "").trim() };
 }
-function section(ls, name) {
+function section2(ls, name) {
   const b = blocks(ls);
   const h = b.headings.find((x) => x.level === 2 && x.text.trim().toLowerCase() === name.toLowerCase());
   return h ? { line: h.line, end: b.sectionEnd(h.line) } : null;
 }
 function ensureSections(text) {
   const ls = lines(text);
-  if (!section(ls, "History")) {
+  if (!section2(ls, "History")) {
     while (ls.length > 0 && ls[ls.length - 1] === "") ls.pop();
     ls.push("", "## History", "", ...HISTORY_HEADER, "");
   }
-  if (!section(ls, "Requirements")) {
-    const h2 = section(ls, "History");
+  if (!section2(ls, "Requirements")) {
+    const h2 = section2(ls, "History");
     ls.splice(h2.line - 1, 0, "## Requirements", "");
   }
-  const h = section(ls, "History");
+  const h = section2(ls, "History");
   if (!ls.slice(h.line, h.end).some((l) => /^\|\s*ID\s*\|/.test(l))) ls.splice(h.line, 0, "", ...HISTORY_HEADER);
   return ls.join("\n");
 }
@@ -11113,7 +11407,7 @@ ${text}`;
 }
 function appendEntry(text, entry) {
   const ls = lines(ensureSections(text));
-  const s = section(ls, "Requirements");
+  const s = section2(ls, "Requirements");
   let at = s.end;
   while (at > s.line && ls[at - 1].trim() === "") at--;
   ls.splice(at, 0, "", ...entry, "");
@@ -11131,7 +11425,7 @@ function deleteRange(text, start, end) {
 }
 function addHistory(text, cells) {
   const ls = lines(ensureSections(text));
-  const s = section(ls, "History");
+  const s = section2(ls, "History");
   let last = s.line;
   for (let i = s.line; i <= s.end; i++) if (ls[i - 1].startsWith("|")) last = i;
   ls.splice(last, 0, `| ${cells.map((c) => c.replace(/\|/g, "\\|")).join(" | ")} |`);
@@ -11148,7 +11442,7 @@ function entrySource(text, id) {
 }
 function historyCells(text) {
   const ls = lines(text);
-  const s = section(ls, "History");
+  const s = section2(ls, "History");
   if (!s) return [];
   return blocks(ls).tableRows.filter((r) => r.line > s.line && r.line <= s.end && r.cells[0] !== "ID").map((r) => r.cells);
 }
@@ -11257,15 +11551,15 @@ var GLOSSARY_SECTIONS = [
   [/domain terms/i, "## Domain terms", "| Term | Definition |"],
   [/system names/i, "## System names (allowed after `THE` in EARS statements)", "| Name | Component |"]
 ];
-function upsertRow(text, section2, row2) {
+function upsertRow(text, section3, row2) {
   const ls = text.split("\n");
   let b = parseBlocks(ls, 1);
-  let h = b.headings.find((x) => x.level === 2 && section2[0].test(x.text));
+  let h = b.headings.find((x) => x.level === 2 && section3[0].test(x.text));
   if (!h) {
     while (ls.length > 0 && ls[ls.length - 1] === "") ls.pop();
-    ls.push("", section2[1]);
+    ls.push("", section3[1]);
     b = parseBlocks(ls, 1);
-    h = b.headings.find((x) => x.level === 2 && section2[0].test(x.text));
+    h = b.headings.find((x) => x.level === 2 && section3[0].test(x.text));
   }
   const end = b.sectionEnd(h.line);
   const line = `| ${row2.map((c) => c.replace(/\|/g, "\\|")).join(" | ")} |`;
@@ -11277,7 +11571,7 @@ function upsertRow(text, section2, row2) {
     return { text: ls.join("\n"), replaced: true };
   }
   const last = rows.length > 0 ? rows[rows.length - 1].line : h.line;
-  if (rows.length === 0) ls.splice(last, 0, section2[2], "|---|---|", line);
+  if (rows.length === 0) ls.splice(last, 0, section3[2], "|---|---|", line);
   else ls.splice(last, 0, line);
   return { text: ls.join("\n").replace(/\n*$/, "\n"), replaced: false };
 }
@@ -11440,9 +11734,9 @@ function planArchive(root, changeDir, today) {
     const gPath = join14(sdd, "_constitution", "glossary.md");
     let g = existsSync11(gPath) ? readFileSync10(gPath, "utf8") : ["---", "id: GLOSSARY", "artifact: constitution/glossary", `updated: ${date}`, "---", "# Glossary", ""].join("\n");
     const before = g;
-    for (const section2 of GLOSSARY_SECTIONS)
-      for (const row2 of tableRows(dText, section2[0])) {
-        const r = upsertRow(g, section2, row2);
+    for (const section3 of GLOSSARY_SECTIONS)
+      for (const row2 of tableRows(dText, section3[0])) {
+        const r = upsertRow(g, section3, row2);
         if (r.unchanged) continue;
         g = r.text;
         ops.push({ file: ".sdd/_constitution/glossary.md", op: r.replaced ? "redefine" : "add-term", id: row2[0] });
@@ -12416,8 +12710,8 @@ function markers(t, phase) {
   for (const [file, doc] of files)
     doc.lines.forEach((line, i) => {
       if (doc.blocks.inFence(i + 1)) return;
-      const plain = prose(line);
-      for (const m of plain.matchAll(MARKER)) out.push({ type: m[1], file, line: i + 1, reference: (m[2] ?? "").trim() || "—" });
+      const plain3 = prose(line);
+      for (const m of plain3.matchAll(MARKER)) out.push({ type: m[1], file, line: i + 1, reference: (m[2] ?? "").trim() || "—" });
     });
   return out;
 }
