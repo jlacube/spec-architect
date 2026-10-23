@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-043]
 implements: [C001-REQ-602, C001-REQ-609, C001-REQ-613, C001-REQ-614, C001-REQ-616, C001-REQ-617]
 satisfies_ac: [C001-AC-602.1, C001-AC-609.2, C001-AC-613.1, C001-AC-614.1, C001-AC-616.1, C001-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-602, C001-TS-611, C001-TS-615, C001-TS-617, C001-TS-619, C
 components: [C001-COMP-04]
 risk_refs: []
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 3570bc0, completed_at: 2026-10-23, notes: "6 plan lint rules (TASK-004, TC-001, RISK-001, ROLL-001, HAND-001, HAND-002); TS-602/611/615/617/619/620 pass; CHG-001 plan clean; CHG-002 test plan fixed via D-029; npm run check exit 0 on Node 22 (agent run on Node 20: only the CHG-002 findings, since fixed)" }
 ---
 
 # C001-T-076 — Plan lint rules (task shape, TC fields, risks, rollout, hand-off)
