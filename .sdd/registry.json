@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T16:06:53Z",
+  "generated_at": "2026-10-23T19:12:13Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -230,9 +230,9 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "in-revision",
-          "approved_hash": "sha256:e1d403b1ebf84003ad658de1e4ad2e5a7032fcfec83bf147e185b76a581c2b45",
-          "approved_at": "2026-10-21",
+          "status": "approved",
+          "approved_hash": "sha256:a70ada3827d9f475022914dbc7e708b031abb9791f07e20ca77d1b6e5ebb5e8b",
+          "approved_at": "2026-10-23",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
@@ -245,7 +245,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 66,
+          "total": 67,
           "done": 61,
           "blocked": 0,
           "in_progress": 0
@@ -1215,6 +1215,72 @@
           "item": "C002-TS-634",
           "gate": "10-spec",
           "date": "2026-10-21",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-211",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-212",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-213",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-503",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-504",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-505",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-506",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-507",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-601",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-DOD-G-01",
+          "gate": "10-spec",
+          "date": "2026-10-23",
+          "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-TS-634",
+          "gate": "10-spec",
+          "date": "2026-10-23",
           "note": "Approve with waivers"
         }
       ]

@@ -7,7 +7,7 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:e1d403b1ebf84003ad658de1e4ad2e5a7032fcfec83bf147e185b76a581c2b45", approved_at: 2026-10-21, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:a70ada3827d9f475022914dbc7e708b031abb9791f07e20ca77d1b6e5ebb5e8b", approved_at: 2026-10-23, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:890edf0ddc55277f2271eecafd96442a7d62bbfe3b8f9aa30f6586bd88d2b92b", approved_at: 2026-10-23, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
@@ -155,6 +155,17 @@ waivers:
   - { item: C002-REQ-601, gate: 10-spec, date: 2026-10-21, note: "Approve with waivers" }
   - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-10-21, note: "Approve with waivers" }
   - { item: C002-TS-634, gate: 10-spec, date: 2026-10-21, note: "Approve with waivers" }
+  - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-213, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-503, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-504, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-505, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-506, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-507, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-REQ-601, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
+  - { item: C002-TS-634, gate: 10-spec, date: 2026-10-23, note: "Approve with waivers" }
 ---
 # CHG-002 — Multi-platform targets
 
@@ -205,3 +216,4 @@ waivers:
 | 2026-10-23 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-002 D-024 (OpenCode native ripwire map rules), D-028 (T-066 clarifications) and D-023 item 2 (automatic spend reconciliation); D-023 item 1 deferred to a later change (P-01 Q-c002-defects-01)" | none | unavailable |
 | 2026-10-23 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-023 item 2, D-024, D-028: one fix task (P-01 Q-c002-defects-01)" | none | unavailable |
+| 2026-10-23 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
