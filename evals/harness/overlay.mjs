@@ -129,6 +129,18 @@ export function architectWithStubs() {
   return build([]);
 }
 
+/**
+ * Path of the overlay plugin, refusing stand-ins: every specialist must be the real agent file (CHG-001
+ * D-013: cases whose checks depend on a real specialist's behaviour must not silently fall back to a
+ * stand-in). The overlay still sets the eval Serena home.
+ */
+export function architectReal() {
+  const dir = build([]);
+  const standIns = SPECIALISTS.filter((n) => /Evaluation stand-in/.test(readFileSync(join(dir, "agents", `${n}.md`), "utf8")));
+  if (standIns.length) throw new Error(`stand-in specialists in the eval plugin: ${standIns.join(", ")}`);
+  return dir;
+}
+
 /** A plugin-path function for an overlay without the named MCP servers (degraded-mode scenarios). */
 export function architectWithout(...servers) {
   return () => build(servers);

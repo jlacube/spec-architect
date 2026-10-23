@@ -1,0 +1,235 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b1h",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T06:20:55.552Z",
+  "runs": 12,
+  "passed": 12,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 1.8224071,
+  "duration_s": 144,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-researcher-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-notroute-researcher-01-run1-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1686818,
+        "session_ms": 44000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-notroute-researcher-01-run2-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1529243,
+        "session_ms": 39000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-notroute-researcher-01-run3-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1598816,
+        "session_ms": 48000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-01-run1-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2445582,
+        "session_ms": 65000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-01-run2-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1337202,
+        "session_ms": 33000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-01-run3-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.137658,
+        "session_ms": 35000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-02-run1-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.15038819999999997,
+        "session_ms": 42000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-02-run2-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1361393,
+        "session_ms": 43000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-02-run3-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1248846,
+        "session_ms": 36000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-03-run1-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.13108450000000002,
+        "session_ms": 41000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-03-run2-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1483508,
+        "session_ms": 37000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-m6b1h-route-researcher-03-run3-2026-10-23T06-20-55-554Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1341356,
+        "session_ms": 36000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ]
+}

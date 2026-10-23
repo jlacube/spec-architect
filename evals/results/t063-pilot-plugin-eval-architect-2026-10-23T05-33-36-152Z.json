@@ -1,0 +1,36 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "t063-pilot",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T05:33:36.151Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.26916999999999996,
+  "duration_s": 47,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-critic-01",
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.26916999999999996,
+        "session_ms": 46000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ]
+}

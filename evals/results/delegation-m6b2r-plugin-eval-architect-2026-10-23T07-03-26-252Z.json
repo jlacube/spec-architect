@@ -1,0 +1,324 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b2r",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T07:03:26.202Z",
+  "runs": 12,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.1473162000000001,
+  "duration_s": 365,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-spec-writer-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-notroute-spec-writer-01-run1-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07520980000000001,
+        "session_ms": 122000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-spec-writer-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-notroute-spec-writer-01-run2-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0715076,
+        "session_ms": 122000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-spec-writer-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-notroute-spec-writer-01-run3-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0750688,
+        "session_ms": 122000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-01-run1-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1154866,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-01-run2-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09898420000000001,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-01-run3-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0948544,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-02",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-02-run1-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0921028,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-02-run2-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09944440000000002,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-02-run3-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.095249,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-03",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-03-run1-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.10621459999999999,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-03",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-03-run2-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1027056,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-spec-writer-03",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b2r-route-spec-writer-03-run3-2026-10-23T07-03-26-204Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1204884,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 12,
+    "runs": 12,
+    "regraded": 12
+  }
+}

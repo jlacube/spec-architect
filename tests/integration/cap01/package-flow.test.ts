@@ -63,10 +63,13 @@ test("C002-TC-101 (C002-TS-101): one packaging run writes both target packages a
     const r = packageTargets({ root, dist, version, stdio: "pipe" });
     assert.equal(r.code, 0, r.stderr);
 
-    // The Claude Code plugin and marketplace as before CHG-002: the source plugin minus targets/.
+    // The Claude Code plugin and marketplace as before CHG-002: the source plugin minus targets/ and minus
+    // the routing eval suite evals/ and its implicit set evals-implicit/ (C001-T-063), which no package holds.
     assert.ok(existsSync(join(stage, ".claude-plugin", "marketplace.json")));
     assert.ok(existsSync(join(stage, "INSTALL.md")));
-    assert.deepEqual(relFiles(join(stage, "plugins", "architect")), relFiles(PLUGIN).filter((p) => !p.startsWith("targets/")));
+    assert.ok(relFiles(PLUGIN).some((p) => p.startsWith("evals/")) && relFiles(PLUGIN).some((p) => p.startsWith("evals-implicit/")), "the source plugin has the eval cases");
+    assert.deepEqual(relFiles(join(stage, "plugins", "architect")), relFiles(PLUGIN).filter((p) => !p.startsWith("targets/") && !/^evals(-implicit)?\//.test(p)));
+    for (const t of GENERATED_TARGETS) assert.deepEqual(relFiles(join(dist, t)).filter((p) => /(^|\/)evals(-implicit)?\//.test(p) || /\/(route|notroute|offtopic|implicit)-[\w-]+\/prompt\.md$/.test(p)), [], `${t}: no eval case`);
 
     for (const t of GENERATED_TARGETS) {
       const dir = join(dist, t);

@@ -4,7 +4,8 @@
 //   dist/architect-<version>-plugin.zip  the plugin alone (.claude-plugin/plugin.json at the root), for upload UIs
 // Steps: build (bundle, license allowlist, notices), plugin structure checks, `claude plugin validate`
 // on the staged plugin and marketplace (skipped when Claude Code is not found), then stage and zip.
-// The Claude Code packages leave out plugins/architect/targets/ (C002-CON-10, C002-ADR-002).
+// The Claude Code packages leave out plugins/architect/targets/ (C002-CON-10, C002-ADR-002) and
+// plugins/architect/evals/ and evals-implicit/ (the routing eval suite, C001-T-063).
 // Then the npm package architect-sdd (C002-IF-003, C002-ADR-004): dist/npm/architect-sdd/ staged with the
 // template CLI-line translation and scan (ERR-BLD-002), packed by `npm pack` into
 // dist/architect-sdd-<version>.tgz. Publication stays manual (C002-REQ-502).
@@ -18,8 +19,14 @@ import { fileURLToPath } from "node:url";
 import { NPM_NAME, npmManifestText } from "./npm-manifest.mjs";
 import { translateAndScanTemplates } from "./template-cli-lines.mjs";
 
-/** Top-level folders of plugins/architect/ that no Claude Code package holds: targets/ is the generator's input. */
-export const CLAUDE_EXCLUDES = ["targets"];
+/**
+ * Top-level folders of plugins/architect/ that no Claude Code package holds: targets/ is the generator's
+ * input; evals/ and evals-implicit/ are the `claude plugin eval` routing suite and its implicit set
+ * (C001-T-063), development tools that
+ * evals/harness/plugin-eval.mjs runs from a scratch copy of the source plugin. The npm package copies an
+ * allowlist and the target generator reads fixed source folders, so neither holds evals/ either.
+ */
+export const CLAUDE_EXCLUDES = ["targets", "evals", "evals-implicit"];
 
 /** Removes the Windows long-path prefix: `\\?\UNC\server\share` → `\\server\share`, `\\?\C:\x` → `C:\x`. */
 export function stripLongPathPrefix(p) {

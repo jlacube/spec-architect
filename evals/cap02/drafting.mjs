@@ -1,7 +1,8 @@
 // Shared Givens for the phase-procedure scenarios of C001-T-032 (C001-TS-133, 213…218): workspaces
-// at the start of ideation or specification, built with the real CLI. Specialists that are not
-// written yet run as stand-ins (harness/overlay.mjs); `.eval/handbacks/<agent>.md` scripts a
-// stand-in's hand-back.
+// at the start of ideation or specification, built with the real CLI. Every specialist is the real agent
+// now; `.eval/handbacks/<agent>.md` is read only by the stand-ins of harness/overlay.mjs, so cases that
+// run the real specialists (TS-213, TS-214, TS-215 after CHG-001 D-013) put their Givens where the real
+// conductor reads them: the approved ideation, the repository, or the phase's critic report.
 import { cpSync } from "node:fs";
 import { join } from "node:path";
 import { ROOT } from "../harness/fixtures.mjs";
@@ -33,7 +34,7 @@ export function brownfieldIdeation(root) {
 
 export const IDEA = "Customers should be able to enter a coupon code at checkout that gives a percentage discount; finance wants a report of discounts per month.";
 
-const LITE_IDEATION = `# Ideation — Coupon codes
+export const LITE_IDEATION = `# Ideation — Coupon codes
 
 ## Problem statement
 
@@ -59,16 +60,19 @@ None.
 
 /**
  * Spec start of change `nnn` (lite unless `profile` says otherwise): ideation written and approved
- * through the CLI, so 10-spec may start. `kind` sets greenfield or brownfield.
+ * through the CLI, so 10-spec may start. `kind` sets greenfield or brownfield; `ideation` replaces the
+ * ideation text (before its approval, so the approved phase is current); `extra(root)` adds files to the
+ * repository before the fixture commit.
  */
-export function specStart({ nnn = 1, profile = "lite", kind = "greenfield", brownfield = false } = {}) {
+export function specStart({ nnn = 1, profile = "lite", kind = "greenfield", brownfield = false, ideation = LITE_IDEATION, extra } = {}) {
   return (root) => {
     if (brownfield) cpSync(join(ROOT, "tests", "fixtures", "fx-brownfield-ts"), root, { recursive: true });
+    extra?.(root);
     git(root, "init", "-q");
     sdd(root, "init");
     constitution(root, "approved");
     const dir = changes(root, nnn, "Coupon codes", ["--profile", profile, "--kind", kind]);
-    write(root, `${dir}/00-ideation/ideation.md`, LITE_IDEATION);
+    write(root, `${dir}/00-ideation/ideation.md`, ideation);
     edit(root, `${dir}/change.md`, (t) => t.replace(/^( {2}00-ideation: \{ status: )not-started/m, "$1in-review"));
     sdd(root, "gate", "approve", String(nnn).padStart(3, "0"), "00-ideation", "--note", "Approve", "--by", "p01");
     sdd(root, "status", "--write");
@@ -175,3 +179,36 @@ export function liteSpecDraftedAt(nnn) {
 
 /** Lite change 001 at 10-spec draft (see liteSpecDraftedAt). */
 export const liteSpecDrafted = liteSpecDraftedAt(1);
+
+/** Critic report of a phase with no finding (C001-IF-11 §2; critique-rubrics format): the phase is reviewed. */
+export function criticReport({ nnn = 1, phase = "10-spec", why = "One requirement with one criterion and a complete coverage table; scope matches the approved ideation." } = {}) {
+  const NNN = String(nnn).padStart(3, "0");
+  return `---
+artifact: critic-report
+change: CHG-${NNN}
+phase: ${phase}
+reviewed_ids: all
+---
+# Critic report — CHG-${NNN} ${phase}
+
+## Summary
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 0 |
+
+## Findings
+
+None.
+
+## Rubric
+
+| Rubric item | Result |
+|---|---|
+| Every requirement testable | pass |
+
+## Why no further findings
+
+${why}
+`;
+}

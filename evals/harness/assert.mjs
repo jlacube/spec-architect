@@ -95,3 +95,39 @@ export function dispatches(transcript) {
     .filter((c) => (c.name === "Agent" || c.name === "Task") && c.agent === null)
     .map((c) => ({ ...c, type: String(c.input?.subagent_type ?? ""), prompt: String(c.input?.prompt ?? "") }));
 }
+
+const textOf = (content) => (typeof content === "string" ? content : (content ?? []).filter((b) => b.type === "text").map((b) => b.text).join(""));
+
+/**
+ * The hand-back of one dispatch (an entry of `dispatches`): `{ text, t }`, the subagent's last text
+ * message (its records carry `parent_tool_use_id` = the dispatch's tool-use ID), else the text of the
+ * dispatch's tool result; null when neither is in the transcript.
+ */
+export function handback(transcript, dispatch) {
+  let out = null;
+  for (const r of transcript) {
+    if (r.type !== "sdk") continue;
+    const m = r.message;
+    if (m.type === "assistant" && m.parent_tool_use_id === dispatch.id) {
+      const text = textOf(m.message?.content);
+      if (text.trim()) out = { text, t: r.t };
+    }
+  }
+  if (out) return out;
+  for (const r of transcript) {
+    if (r.type !== "sdk" || r.message.type !== "user") continue;
+    for (const b of r.message.message?.content ?? []) if (b.type === "tool_result" && b.tool_use_id === dispatch.id && textOf(b.content).trim()) return { text: textOf(b.content), t: r.t };
+  }
+  return null;
+}
+
+/** Questions of a hand-back's fenced `json questions` block (C001-IF-05); [] when absent or unparsable. */
+export function handbackQuestions(text) {
+  const m = /```json[ \t]+questions[ \t]*\r?\n([\s\S]*?)```/.exec(text ?? "");
+  if (!m) return [];
+  try {
+    return JSON.parse(m[1]).questions ?? [];
+  } catch {
+    return [];
+  }
+}

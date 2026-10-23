@@ -1,0 +1,79 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b1r",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T06:09:34.694Z",
+  "runs": 3,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 0.1890168,
+  "duration_s": 18,
+  "overall_score": 0.5,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-researcher-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-notroute-researcher-01-run1-2026-10-23T06-09-34-695Z.jsonl",
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0636776,
+        "session_ms": 16000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-notroute-researcher-01-run2-2026-10-23T06-09-34-695Z.jsonl",
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0632616,
+        "session_ms": 17000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-notroute-researcher-01-run3-2026-10-23T06-09-34-695Z.jsonl",
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.062077600000000004,
+        "session_ms": 16000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    }
+  ]
+}

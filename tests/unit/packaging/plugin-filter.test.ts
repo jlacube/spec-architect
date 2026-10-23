@@ -20,17 +20,20 @@ const variants = win
     ]
   : [{ name: "plain root, plain path", src: root, arg: (p: string) => p }];
 
-test("CLAUDE_EXCLUDES names targets", () => {
-  assert.deepEqual(CLAUDE_EXCLUDES, ["targets"]);
+test("CLAUDE_EXCLUDES names targets, evals and evals-implicit", () => {
+  assert.deepEqual(CLAUDE_EXCLUDES, ["targets", "evals", "evals-implicit"]);
 });
 
 for (const v of variants) {
-  test(`pluginFilter (${v.name}): targets and its content are excluded, other folders are kept`, () => {
+  test(`pluginFilter (${v.name}): targets, evals and their content are excluded, other folders are kept`, () => {
     const keep = pluginFilter(v.src);
     assert.equal(keep(v.arg(join(root, "targets"))), false, "targets/");
     assert.equal(keep(v.arg(join(root, "targets", "x", "a.md"))), false, "targets/x/a.md");
+    assert.equal(keep(v.arg(join(root, "evals"))), false, "evals/");
+    assert.equal(keep(v.arg(join(root, "evals", "route-critic-01", "graders", "routes-to-critic.md"))), false, "evals/<case>/graders/x.md");
+    assert.equal(keep(v.arg(join(root, "evals-implicit", "implicit-critic-01", "prompt.md"))), false, "evals-implicit/<case>/prompt.md");
     assert.equal(keep(v.arg(root)), true, "the plugin root itself");
-    for (const kept of [["skills", "a", "SKILL.md"], ["agents", "x.md"], ["scripts", "sdd.mjs"], [".claude-plugin", "plugin.json"], ["targets-old"], ["docs", "targets", "y.md"]]) {
+    for (const kept of [["skills", "a", "SKILL.md"], ["agents", "x.md"], ["scripts", "sdd.mjs"], [".claude-plugin", "plugin.json"], ["targets-old"], ["docs", "targets", "y.md"], ["skills", "evals", "SKILL.md"], ["evals-old"]]) {
       assert.equal(keep(v.arg(join(root, ...kept))), true, kept.join("/"));
     }
   });

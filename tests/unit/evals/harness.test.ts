@@ -2,11 +2,13 @@
 // `claude plugin eval` result conversion and the metrics report. No model is called.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { askUserQuestions, finalReply, firstReply, optionProblems, toolCalls, writesOutside } from "../../../evals/harness/assert.mjs";
 import { grade, loadCases } from "../../../evals/harness/cases.mjs";
 import { runMetrics } from "../../../evals/harness/metrics.mjs";
-import { fromAggregate } from "../../../evals/harness/plugin-eval.mjs";
+import { evalArgs, fromAggregate, keepTraces, resultFileName, suiteName } from "../../../evals/harness/plugin-eval.mjs";
 import { renderReport, stats } from "../../../evals/harness/report.mjs";
 import { repoRoot } from "../../helpers.ts";
 
@@ -117,6 +119,17 @@ test("claude plugin eval results convert into result documents", () => {
   assert.equal(doc.records[0]!.metrics.session_ms, 3000);
 });
 
+test("claude plugin eval runs: suite and result file names, global --setting-sources", () => {
+  for (const dir of ["C:\\Sandbox\\repo\\plugins\\architect", "C:/Sandbox/repo/plugins/architect/", "plugins/architect"]) assert.equal(suiteName(dir), "plugin-eval-architect", dir);
+  const name = resultFileName("delegation", suiteName("C:\\x\\architect"));
+  assert.match(name, /^delegation-plugin-eval-architect-\d{4}-\d{2}-\d{2}T[\d-]+Z\.json$/);
+  assert.doesNotMatch(name, /[\\/:]/);
+  const args = evalArgs("T", { json: "j", out: "o", caseGlob: "route-*", runs: 1, model: "opus" });
+  assert.deepEqual(args.slice(0, 5), ["--setting-sources", "project,local", "plugin", "eval", "T"], "--setting-sources is a global option, before `plugin`");
+  for (const f of ["--no-publish", "--trust-plugin", "--case", "--runs", "--model"]) assert.ok(args.includes(f), f);
+  assert.equal(args[args.indexOf("--ablation") + 1], "none");
+});
+
 test("metrics report: statistics, sections and release projection", () => {
   assert.deepEqual(stats([4, 1, 3, 2]), { n: 4, mean: 2.5, p50: 2, p95: 4, max: 4 });
   const m = runMetrics(TRANSCRIPT, TRANSCRIPT.at(-1)!.message as Rec, 1000);
@@ -125,4 +138,27 @@ test("metrics report: statistics, sections and release projection", () => {
   assert.match(md, /\| TS-x \| 1 \| 1 \| \$0\.0020 \|/);
   assert.match(md, /\| subagent \| architect:sdd-researcher \| 1 \| 1\.2 s \|/);
   assert.match(md, /cost \$0\.0200, sequential duration 10\.0 s/);
+});
+
+test("claude plugin eval runs keep their traces and the aggregate, and the run sandboxes are removed", () => {
+  assert.ok(evalArgs("T", { json: "j", out: "o" }).includes("--keep-temp"));
+  const base = mkdtempSync(join(tmpdir(), "sdd-keep-"));
+  try {
+    const sandbox = join(base, "run-1");
+    mkdirSync(sandbox);
+    writeFileSync(join(sandbox, "trace.jsonl"), '{"type":"assistant"}\n');
+    const agg = { cases: [{ name: "c1", arms: { with: [{ passed: true, score: 1, tracePath: join(sandbox, "trace.jsonl"), graders: [] }, { passed: false, score: 0, tracePath: "", graders: [] }] } }] };
+    const doc = fromAggregate(agg, { label: "t" });
+    const out = join(base, "kept");
+    keepTraces(agg, doc, out, "t");
+    const kept = readdirSync(out).sort();
+    assert.equal(kept.length, 2, kept.join(", "));
+    assert.match(kept[0]!, /^t-aggregate-.+\.json$/);
+    assert.match(kept[1]!, /^t-c1-run1-.+\.jsonl$/);
+    assert.match(String(doc.records[0]!.trace), /t-c1-run1-.+\.jsonl$/);
+    assert.equal(doc.records[1]!.trace, null, "a run without a trace keeps none");
+    assert.equal(existsSync(sandbox), false, "the run sandbox is removed");
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
 });

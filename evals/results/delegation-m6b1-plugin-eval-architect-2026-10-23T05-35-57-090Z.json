@@ -1,0 +1,247 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b1",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T05:35:57.089Z",
+  "runs": 12,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.2129851999999999,
+  "duration_s": 56,
+  "overall_score": 0.5,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-researcher-01",
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.111192,
+        "session_ms": 24000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 2,
+      "pass": false,
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.1091866,
+        "session_ms": 26000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "notroute-researcher-01",
+      "run": 3,
+      "pass": false,
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.1106022,
+        "session_ms": 22000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0946102,
+        "session_ms": 15000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 2,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.10009420000000001,
+        "session_ms": 14000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-01",
+      "run": 3,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0992462,
+        "session_ms": 12000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.09843280000000001,
+        "session_ms": 15000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 2,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0952134,
+        "session_ms": 11000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-02",
+      "run": 3,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.09979280000000001,
+        "session_ms": 14000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.1004834,
+        "session_ms": 13000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 2,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0974154,
+        "session_ms": 16000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 3,
+      "pass": false,
+      "failures": [
+        "routes-to-researcher: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.09671600000000001,
+        "session_ms": 15000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    }
+  ]
+}

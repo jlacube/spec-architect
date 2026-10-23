@@ -1,0 +1,111 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-implicit",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T06:34:58.786Z",
+  "runs": 5,
+  "passed": 4,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.69223088,
+  "duration_s": 260,
+  "overall_score": 0.9,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "implicit-auditor-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-implicit-implicit-auditor-01-run1-2026-10-23T06-34-58-787Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06835239,
+        "session_ms": 25000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "implicit-cartographer-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-implicit-implicit-cartographer-01-run1-2026-10-23T06-34-58-787Z.jsonl",
+      "failures": [
+        "routes-to-cartographer: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0930908,
+        "session_ms": 34000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "implicit-critic-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-implicit-implicit-critic-01-run1-2026-10-23T06-34-58-787Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.7271854,
+        "session_ms": 259000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "implicit-researcher-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-implicit-implicit-researcher-01-run1-2026-10-23T06-34-58-787Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.17720189000000003,
+        "session_ms": 55000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "implicit-spec-writer-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/delegation-implicit-implicit-spec-writer-01-run1-2026-10-23T06-34-58-787Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.6264004000000001,
+        "session_ms": 220000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ]
+}

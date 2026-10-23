@@ -1,7 +1,8 @@
 // C002-TC-121 / C002-TS-121 (C002-AC-113.1), staging part (C002-T-015): with a targets/ folder in the
 // plugin, the Claude Code staging and both zips hold no targets/ entry, the staged plugin (the input of
 // `claude plugin validate`) is the source plugin minus targets/, and PLG-PATH-001 and PLG-LAYOUT-001
-// still pass with targets/ present (regression-set §4.4). Runs on a temporary copy of the repository.
+// still pass with targets/ present (regression-set §4.4). The routing eval suite plugins/architect/evals/
+// and its implicit set evals-implicit/ (C001-T-063) are left out the same way. Runs on a temporary copy of the repository.
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -21,6 +22,7 @@ writeFileSync(join(copy.plugin, "targets", "opencode", "dummy.md"), "# Dummy tar
 const stage = join(copy.repo, "dist", "architect-0.0.0-test");
 stageMarketplace(copy.repo, stage, "0.0.0-test");
 const stagedPlugin = join(stage, "plugins", "architect");
+const EVALS = /^evals(-implicit)?\//;
 const relFiles = (dir: string) => files(dir).map((p: string) => p.slice(dir.length + 1).split("\\").join("/"));
 
 /** Entry names of a zip archive, read from its central directory. */
@@ -41,17 +43,19 @@ function zipEntries(path: string): string[] {
   return out;
 }
 
-test("the source plugin of the fixture has a targets/ file", () => {
+test("the source plugin of the fixture has a targets/ file and the eval cases", () => {
   assert.ok(relFiles(copy.plugin).includes("targets/opencode/dummy.md"));
+  assert.ok(relFiles(copy.plugin).some((r: string) => /^evals\/[^/]+\/prompt\.md$/.test(r)), "evals/<case>/prompt.md");
+  assert.ok(relFiles(copy.plugin).some((r: string) => /^evals-implicit\/[^/]+\/prompt\.md$/.test(r)), "evals-implicit/<case>/prompt.md");
 });
 
-test("the staged plugin holds no targets/ entry and is otherwise the source plugin", () => {
+test("the staged plugin holds no targets/ or evals/ entry and is otherwise the source plugin", () => {
   const staged = relFiles(stagedPlugin);
-  assert.deepEqual(staged.filter((r: string) => r.startsWith("targets/")), []);
-  assert.deepEqual(staged, relFiles(copy.plugin).filter((r: string) => !r.startsWith("targets/")));
+  assert.deepEqual(staged.filter((r: string) => r.startsWith("targets/") || EVALS.test(r)), []);
+  assert.deepEqual(staged, relFiles(copy.plugin).filter((r: string) => !r.startsWith("targets/") && !EVALS.test(r)));
 });
 
-test("the plugin and marketplace zips hold no targets/ entry", () => {
+test("the plugin and marketplace zips hold no targets/ or evals/ entry", () => {
   const pluginZip = join(copy.repo, "dist", "plugin.zip");
   const marketZip = join(copy.repo, "dist", "market.zip");
   zipDir(stagedPlugin, pluginZip);
@@ -62,6 +66,8 @@ test("the plugin and marketplace zips hold no targets/ entry", () => {
   assert.ok(mz.includes("plugins/architect/.claude-plugin/plugin.json"), "marketplace zip has the plugin");
   assert.deepEqual(pz.filter((e) => /^targets(\/|$)/.test(e)), []);
   assert.deepEqual(mz.filter((e) => /(^|\/)targets(\/|$)/.test(e)), []);
+  assert.deepEqual(pz.filter((e) => /^evals(-implicit)?(\/|$)/.test(e)), []);
+  assert.deepEqual(mz.filter((e) => /^plugins\/architect\/evals(-implicit)?(\/|$)/.test(e)), []);
 });
 
 test("PLG-PATH-001 and PLG-LAYOUT-001 pass with targets/ present", () => {

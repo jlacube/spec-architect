@@ -1,0 +1,79 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "delegation-m6b1r",
+  "auth": "subscription",
+  "measured_at": "2026-10-23T06:10:00.305Z",
+  "runs": 3,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 0.1982168,
+  "duration_s": 24,
+  "overall_score": 0.5,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-options-analyst-03",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-route-options-analyst-03-run1-2026-10-23T06-10-00-308Z.jsonl",
+      "failures": [
+        "routes-to-options-analyst: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0674856,
+        "session_ms": 23000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-route-options-analyst-03-run2-2026-10-23T06-10-00-308Z.jsonl",
+      "failures": [
+        "routes-to-options-analyst: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0652256,
+        "session_ms": 22000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/delegation-m6b1r-route-options-analyst-03-run3-2026-10-23T06-10-00-308Z.jsonl",
+      "failures": [
+        "routes-to-options-analyst: Agent called 0x (expected 1..∞)"
+      ],
+      "metrics": {
+        "cost_usd": 0.0655056,
+        "session_ms": 21000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 0.5
+      }
+    }
+  ]
+}

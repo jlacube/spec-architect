@@ -52,7 +52,8 @@ export function grade(graders, { transcript, created }) {
     }
     if (g.type === "regex") {
       const target = g.target === "trace" ? transcript.map((r) => JSON.stringify(r)).join("\n") : finalReply(transcript);
-      const found = (target.match(new RegExp(g.pattern, `${g.flags ?? ""}g`)) ?? []).length;
+      // `claude plugin eval` takes a regex grader's pattern from the file body (loaded as `criteria`).
+      const found = (target.match(new RegExp(g.pattern ?? g.criteria, `${g.flags ?? ""}g`)) ?? []).length;
       const passed = g.match === "not_contains" ? found === 0 : String(g.match ?? "").startsWith("count:") ? found === Number(String(g.match).slice(6)) : found > 0;
       return { name: g.name, passed, explanation: `${found} match(es)` };
     }
