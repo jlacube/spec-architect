@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: in-revision, approved_hash: "sha256:9268713ce2fe05a1b2941328da480fb515aab03da93ac8d47cbb5e6e2df55791", approved_at: 2026-10-22, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:22754dd5b2662bfc2d2133bd300909e30eb7d4dd73f3c68f3e241006afe428e8", approved_at: 2026-10-22, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:22754dd5b2662bfc2d2133bd300909e30eb7d4dd73f3c68f3e241006afe428e8", approved_at: 2026-10-22, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -79,3 +79,4 @@ defects:
 | 2026-10-22 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-22 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-001 D-016: conductor routing in the delegation evals (C001-REQ-1116; P-01 Q-conductor-route-01: spec note, hand-over counts as routed)" | none | unavailable |
+| 2026-10-23 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-016: TC-1117 test data, T-063 conductor prompts and targets, RISK-005 exception (critic CR-17…19)" | none | unavailable |
