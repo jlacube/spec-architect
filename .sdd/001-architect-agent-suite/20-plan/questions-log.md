@@ -58,3 +58,10 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Add a CAP-09 requirement with AC and scenario: an interrupted archive completes on re-run with the same result as one uninterrupted run (Recommended) · 2. No spec change; D-015, C001-T-081 and C001-TC-1131 are the record
 - **Answer:** P-01: "Add a CAP-09 requirement (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-23 — defect D-016 (found in C001-T-063)
+
+### Q-conductor-route-01 — what "must route" means for the conductor (C001-REQ-1116)
+- **Options:** 1. Spec note: the conductor counts as routed when the reply hands the user over to `claude --agent architect:sdd-conductor` and no Architect subagent starts (Recommended) · 2. Exempt the conductor from the per-agent minimum · 3. No spec change
+- **Answer:** P-01: "Spec note + accept (Recommended)"
+- **Extracted instructions:** none

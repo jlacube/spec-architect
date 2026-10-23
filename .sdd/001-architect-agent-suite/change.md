@@ -2,11 +2,11 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:9268713ce2fe05a1b2941328da480fb515aab03da93ac8d47cbb5e6e2df55791", approved_at: 2026-10-22, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:22754dd5b2662bfc2d2133bd300909e30eb7d4dd73f3c68f3e241006afe428e8", approved_at: 2026-10-22, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:9268713ce2fe05a1b2941328da480fb515aab03da93ac8d47cbb5e6e2df55791", approved_at: 2026-10-22, approved_by: jerome.lacube }
+  20-plan: { status: stale, approved_hash: "sha256:22754dd5b2662bfc2d2133bd300909e30eb7d4dd73f3c68f3e241006afe428e8", approved_at: 2026-10-22, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -25,6 +25,7 @@ defects:
   - { id: D-013, ref: C001-TS-213, summary: "Found in C002-T-048: eval cases TS-213, TS-214 and TS-215 (evals/cap02) were built for the Haiku stand-in specialists of the early CHG-001 runs (overlay.mjs): their checks depend on stand-ins reading planted hand-back files (TS-213 spec-writer, TS-215 cartographer) or on a fixture spec without critic blockers (TS-214). With the real specialists no wrong decision occurs but the checked step is never reached. P-01 (Q-standin-cases-01): waived for the CHG-002 regression; rework the cases in C001-T-063 (delegation eval suite). Also: TS-817-stop's fixture lacks the ideation critic report (gate not presented).", reporter: jerome.lacube, date: 2026-10-21, status: open, resolution: null, closed_at: null }
   - { id: D-014, ref: C001-NFR-403, summary: "Found in C001-T-065: F-1 on Node 20 fs.cpSync passes \\?\\-prefixed paths to the filter in scripts/package.mjs, so plugins/architect/targets/ ships in the Claude Code packages (3 tests fail on Node 20); F-2 tests/integration/mcp/shell.test.ts 'output caps and timeout' EPERM on cleanup on Node 20; F-3 line coverage 79.99% (NFR-502 needs 85%); F-4 archive not covered by the fault benchmark/test (NFR-301); F-5 NFR-404/502 claim to be measured in npm run check, which has no encoding scan or coverage step.", reporter: jerome.lacube, date: 2026-10-21, status: closed, resolution: "Fixed by C001-T-080 (5cdae42, b606935): Node 20 package filter strips the \\?\\ prefix (F-1); shell test stub is a copy of node.exe (F-2); coverage 88.7–89.1% lines, 82.1–82.5% branches on Node 22 (F-3; NFR-502 on Node 22 per Q-cov-node20-01); archive in the fault test and 1,000-run bench, 0 failing files (F-4, F-6 rule per TC-1126); encoding and coverage steps in npm run check (F-5); Node 20 coverage step skipped with reason (F-7). Archive re-run idempotency moved to D-015.", closed_at: 2026-10-22 }
   - { id: D-015, ref: C001-REQ-914, summary: "Found in C001-T-080 (F-6): sdd archive is not idempotent after an interrupted run. Killed between its in-place writes (change.md status archived, _living/ entries appended) and the folder move, it leaves change 001 marked archived outside _archive/; re-running sdd archive appends the same ADDED entries again (C001-REQ-101 twice in CAP-area-1.md). Each file stays a complete version (C001-NFR-301 holds); the re-run must resume without duplicates.", reporter: jerome.lacube, date: 2026-10-22, status: closed, resolution: "Fixed by C001-T-081 (a0c86b3): an interrupted sdd archive resumes on re-run per C001-REQ-924; verified by C001-TC-1131 over the 6 rows of C001-TS-925 on Node 20 and 22.", closed_at: 2026-10-22 }
+  - { id: D-016, ref: C001-REQ-1116, summary: "Found in C001-T-063: REQ-1116 asks >= 3 must-route prompts per agent, but the conductor cannot be a subagent (started with claude --agent architect:sdd-conductor); 'routed' is undefined for it. P-01 (Q-conductor-route-01): count a conductor prompt as routed when the reply hands the user over to claude --agent architect:sdd-conductor and no Architect subagent starts; state it in the spec.", reporter: jerome.lacube, date: 2026-10-23, status: open, resolution: null, closed_at: null }
 ---
 # CHG-001 — Architect agent suite
 
@@ -77,3 +78,4 @@ defects:
 | 2026-10-22 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-014 F-7 and F-6: coverage step on Node 22 only, skipped with reason on Node 20 (Q-cov-node20-01); fault bench follows C001-NFR-301 (Q-archive-faults-01); fix task for D-015" | none | unavailable |
 | 2026-10-22 | G2 (spec) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-22 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
+| 2026-10-23 | G2 (spec) | **Revise** | "Revision for CHG-001 D-016: conductor routing in the delegation evals (C001-REQ-1116; P-01 Q-conductor-route-01: spec note, hand-over counts as routed)" | none | unavailable |

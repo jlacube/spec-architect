@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T04:18:33Z",
+  "generated_at": "2026-10-23T05:26:10Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -9,7 +9,7 @@
       "kind": "greenfield",
       "profile": "full",
       "status": "active",
-      "phase": "20-plan",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -18,13 +18,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:9268713ce2fe05a1b2941328da480fb515aab03da93ac8d47cbb5e6e2df55791",
           "approved_at": "2026-10-22",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "stale",
           "approved_hash": "sha256:22754dd5b2662bfc2d2133bd300909e30eb7d4dd73f3c68f3e241006afe428e8",
           "approved_at": "2026-10-22",
           "approved_by": "jerome.lacube"
@@ -36,7 +36,7 @@
           "total": 63,
           "done": 58,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 1
         },
         "last_report": "2026-10-23T00:00:00Z"
       },
@@ -190,6 +190,16 @@
           "status": "closed",
           "resolution": "Fixed by C001-T-081 (a0c86b3): an interrupted sdd archive resumes on re-run per C001-REQ-924; verified by C001-TC-1131 over the 6 rows of C001-TS-925 on Node 20 and 22.",
           "closed_at": "2026-10-22"
+        },
+        {
+          "id": "D-016",
+          "ref": "C001-REQ-1116",
+          "summary": "Found in C001-T-063: REQ-1116 asks >= 3 must-route prompts per agent, but the conductor cannot be a subagent (started with claude --agent architect:sdd-conductor); 'routed' is undefined for it. P-01 (Q-conductor-route-01): count a conductor prompt as routed when the reply hands the user over to claude --agent architect:sdd-conductor and no Architect subagent starts; state it in the spec.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-23",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []
