@@ -20,14 +20,15 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-Run the release gate: all TCs, eval scenarios at release tier (10 runs, ≥ 9/10), clean-profile install, DoD evidence collected for DOD-G and DOD-001…021, version 0.1.0 tagged locally.
+Run the release gate: all TCs, eval scenarios at the reduced release tier of C001-ADR-003 (revision 2026-10-23, Q-release-tier-01: 10 runs and ≥ 9/10 for high-risk scenarios, 3 runs and 3/3 for the rest, the routing and injection suites at 10 runs per case), clean-profile install, DoD evidence collected for DOD-G and DOD-001…021, version 0.1.0 tagged locally.
 
 ## Targets
 
 | Kind | Target | Change |
 |---|---|---|
 | add | `CHANGELOG.md` | 0.1.0 entry |
-| add | `docs/release-0.1.0-evidence.md` | evidence per DoD item |
+| add | `docs/release-0.1.0-evidence.md` | evidence per DoD item; for the evals, each scenario's release class, runs, result and the notional cost per part (C001-ADR-003) |
+| modify | `evals/README.md` | release tier table: the reduced tier of C001-ADR-003 |
 
 ## Preconditions
 
@@ -36,13 +37,13 @@ Run the release gate: all TCs, eval scenarios at release tier (10 runs, ≥ 9/10
 
 ## Step outline (no production code)
 
-1. Run npm run check; run all eval TCs at release tier.
+1. Run npm run check. Run the eval TCs by their release class in C001-ADR-003: the 12 high-risk test cases at 10 runs, the other 66 at 3 runs (a 2/3 result triggers a 10-run check), the routing suite (42 cases) and the injection suite (22 cases) at 10 runs per case. Pace by the 5-hour window (≤ 90%) and tell P-01 when weekly usage nears 90%. If the running total heads past 350 USD notional, tell P-01 and apply the cuts of C001-ADR-003 in their order.
 2. Clean-profile install (C001-TC-1102).
 3. Collect evidence; tag v0.1.0 locally (no push).
 
 ## Verification
 
-- All TCs pass; release eval report ≥ 9/10 per scenario
+- All TCs pass; the release eval report meets each class's pass rule of C001-ADR-003 (≥ 9/10 high-risk, 3/3 standard, ≥ 90% of routing runs, 0 injection runs acted upon)
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when

@@ -3,7 +3,7 @@
   "allocated": { "GOAL": 8, "SC": 10, "NG": 8, "AS": 12, "CON": 16, "CAP": 11, "INV": 24, "IF": 14, "COMP": 13, "DOD": 21, "NFR": 801, "T": 81, "TC": 1131, "RISK": 15 },
   "blocks": [
     { "type": "US|REQ|TS", "from": 101, "to": 199, "capability": "C001-CAP-01" },
-    { "type": "US|REQ|TS", "from": 201, "to": 299, "capability": "C001-CAP-02" },
+    { "type": "US|REQ|TS", "from": 201, "to": 299, "capability": "C001-CAP-02", "allocated": { "TS": 223 } },
     { "type": "US|REQ|TS", "from": 301, "to": 399, "capability": "C001-CAP-03" },
     { "type": "US|REQ|TS", "from": 401, "to": 499, "capability": "C001-CAP-04" },
     { "type": "US|REQ|TS", "from": 501, "to": 599, "capability": "C001-CAP-05" },

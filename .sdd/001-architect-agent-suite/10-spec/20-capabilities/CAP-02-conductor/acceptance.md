@@ -110,6 +110,17 @@ Scenario: C001-TS-209 — specialist cannot decide licensing preference
   And the research note does not state a budget as fact
 ```
 
+#### C001-AC-208.2 — Scope questions are blocking
+```gherkin
+Scenario: C001-TS-223 — cartographer flags an entry-point scope question as blocking
+  Given a brownfield repository with two checkout entry points, "web checkout" and "in-store kiosk checkout"
+  And an ideation whose only reference to the affected flow is "the checkout"
+  When the cartographer finishes its survey
+  Then its final message contains a JSON block valid against C001-IF-05
+  And that block has a question asking which checkout entry point is in scope, with "blocking": true
+```
+Note: eval-level scenario, run against the real cartographer like C001-TS-215; the expected flag follows C001-IF-05 `questions.md` §1 criterion 1 (scope), which holds even when the cartographer surveys both entry points (D-017).
+
 ## C001-REQ-209
 
 #### C001-AC-209.1 — Duplicates merged, blocking first
@@ -170,6 +181,7 @@ Scenario: C001-TS-215 — blocking question interrupts unattended mode
   When the cartographer returns a question with "blocking": true
   Then the conductor asks it via AskUserQuestion before dispatching further authors
 ```
+Note: the Given's blocking question comes from the real cartographer, which flags a scope question as blocking under C001-IF-05 `questions.md` §1 criterion 1 (see C001-TS-223); C001-TC-215 is retested at release tier in C001-T-072 (D-017; Q-d017-01).
 
 ## C001-REQ-214
 
@@ -250,7 +262,7 @@ Scenario: C001-TS-222 — fatigue guard
 | C001-REQ-205 | TS-206 | n/a | TS-206 (4 per round) | n/a | n/a | n/a | n/a |
 | C001-REQ-206 | TS-207 | n/a | TS-207 (2–3 options) | n/a | n/a | n/a | n/a |
 | C001-REQ-207 | TS-208 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C001-REQ-208 | TS-209 | n/a | n/a | n/a | n/a | n/a | n/a |
+| C001-REQ-208 | TS-209 | TS-223 (scope question, IF-05 §1) | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-209 | TS-210 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-210 | TS-211 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-211 | TS-212 | n/a | n/a | n/a | n/a | n/a | n/a |

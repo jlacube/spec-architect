@@ -27,7 +27,7 @@ status: approved
 | `10-strategy.md` | Approach, sequencing rationale, milestones C001-M-1 … 7, ways of working |
 | `20-decisions/ADR-001-build-order.md` | Spikes → CLI core → agents → rest |
 | `20-decisions/ADR-002-typescript-esbuild.md` | TypeScript sources bundled by esbuild |
-| `20-decisions/ADR-003-eval-tiers.md` | 1 / 3 / 10 runs for agent evals |
+| `20-decisions/ADR-003-eval-tiers.md` | 1 / 3 runs for agent evals in dev and at milestones; reduced release tier (10 runs high-risk, 3 runs the rest) |
 | `20-decisions/ADR-004-implementer.md` | Plain Claude Code sessions implement |
 | `20-decisions/OA-005-…`, `ADR-005-…` | Custom line parser + yaml |
 | `20-decisions/OA-006-…`, `ADR-006-…` | `node --test` runner |

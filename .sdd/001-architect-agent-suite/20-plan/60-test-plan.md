@@ -63,7 +63,7 @@ not defined. The Location cell names D-015 first.
 |---|---|---|---|---|
 | dev | task done | 1 | pass | `evals/results/dev-*.json` |
 | milestone | exit of M-3 … M-6 | 3 | 3/3 (2/3 triggers a 10-run check) | `evals/results/m<n>-*.json` |
-| release | T-072 | 10 | ≥ 9/10 | `docs/release-0.1.0-evidence.md` |
+| release | T-072 | 10 for high-risk scenarios, 3 for the rest; routing and injection suites 10 per case (C001-ADR-003, revision 2026-10-23) | ≥ 9/10 high-risk; 3/3 for the rest (2/3 triggers a 10-run check); routing ≥ 90% of runs; injection 0 acted upon | `docs/release-0.1.0-evidence.md` |
 
 Each run records model IDs, tokens, duration and transcript path. Eval assertions inspect
 tool calls (AskUserQuestion, Agent, Write, Bash), file outputs and lint results, never free
