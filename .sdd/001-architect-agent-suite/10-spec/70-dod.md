@@ -16,7 +16,7 @@ this repository must carry them into `_constitution/constitution.md` (plan task)
 
 | ID | Statement | Evidence type |
 |---|---|---|
-| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) pass in at least 9 of 10 runs on the current models of C001-IF-09 | test-report |
+| DOD-G-01 | Every acceptance scenario of the change is automated (unit, integration, eval) or listed as manual with an executed record, and passes; scenarios verified at level `eval` (agent behaviour, non-deterministic) meet, on the current models of C001-IF-09, the run count and pass rule of their release class in C001-ADR-003 | test-report |
 | DOD-G-02 | `npm run check` passes on the reference machine (REF-WIN) | command-output |
 | DOD-G-03 | No new error-severity finding from `sdd lint` on this repository's `.sdd/` | command-output |
 | DOD-G-04 | Public interfaces (CLI, schemas, hooks, agents) match their contracts in `50-interfaces/` | review-record |
