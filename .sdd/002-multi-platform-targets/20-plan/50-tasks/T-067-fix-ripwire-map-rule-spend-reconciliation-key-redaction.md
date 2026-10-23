@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-030, C002-T-043, C002-T-056, C002-T-066]
 implements: [C002-REQ-207, C002-REQ-503, C002-REQ-612, C002-REQ-614, C002-REQ-617, C002-REQ-638, C002-REQ-639, C002-REQ-640, C002-REQ-641]
 satisfies_ac: [C002-AC-207.1, C002-AC-503.1, C002-AC-612.1, C002-AC-614.1, C002-AC-617.1, C002-AC-638.1, C002-AC-639.1, C002-AC-640.1, C002-AC-641.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-209, C002-TS-505, C002-TS-617, C002-TS-680, C002-TS-691, C
 components: [C002-COMP-001, C002-COMP-002, C002-COMP-009, C002-COMP-011, C002-COMP-012]
 risk_refs: [C002-RISK-001, C002-RISK-015, C002-RISK-037]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 5e5ade7, completed_at: 2026-10-23, notes: "TC-921…927 pass; TC-505, 680 row 14, 691 row 7 failed before and pass; npm run check exit 0 (Node 22 1342 s, Node 20 505 s); replay sdd-mcp-server 683/26/0 (both targets), copilot-hooks 683/26/0, native 709/0/154 (7 decisions changed by the new rule; baseline drift 165→153 unrelated); release-check opencode dry-run released; no paid session" }
 ---
 
 # C002-T-067 — Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T21:30:13Z",
+  "generated_at": "2026-10-23T21:41:28Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -246,11 +246,11 @@
         "status": "in-progress",
         "tasks": {
           "total": 67,
-          "done": 61,
+          "done": 62,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
-        "last_report": "2026-10-21T00:00:00Z"
+        "last_report": "2026-10-23T00:00:00Z"
       },
       "defects": [
         {
@@ -479,9 +479,9 @@
           "summary": "Found in C002-T-056 X3 (observations, not blocking): (1) after a one-line Revise at G2 the conductor runs spec-writer, auditor, a full critic re-review, an options analysis and a second interview round before showing the gate again — the rework does not fit 0.50/1.00/2.00 USD on OpenCode; consider a proportionate rework path in the gate-protocol / revise skills; (2) a capped session with a running subagent leaves the conductor's step without a cost, so most such sessions read spend partial and block their pool until reconciled by hand — consider reconciling automatically from OpenRouter's key usage delta.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Item 2 fixed by C002-T-067 (5e5ade7): automatic reconciliation of partial OpenCode spend from the OpenRouter key usage delta (IF-010 §2.3, REQ-638/640), key redaction and refusal (REQ-639/641). Item 1 (proportionate rework path after a Revise) deferred to a later change by P-01 (Q-c002-defects-01), recorded in strategy §2 with D-026 item 3.",
+          "closed_at": "2026-10-23"
         },
         {
           "id": "D-024",
@@ -489,9 +489,9 @@
           "summary": "Follow-up of CHG-001 D-012 (C001-IF-07 §3.1 ripwire forms): C002-IF-001 §6.3 OpenCode native bash rules need the bounded default-map form (globs like 'ripwire *--max-tokens=*', '*--token-budget=*') with a gap row (such a glob also matches a map command with a span-edit or unknown option — false allow under native-permissions); generator bashRules(), opencode.json permissions, permissions test and golden files follow; C002-IF-008 deny-summary wording 'ripwire read verbs or the bounded default map'. No effect in the current sdd-mcp-server mode.",
           "reporter": "jerome.lacube",
           "date": "2026-10-20",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed by C002-T-067 (5e5ade7): IF-001 §6.3 bounded default-map rule ripwire *--max-tokens=* from RIPWIRE_MAP_BOUND, gap rows in GLOB_GAPS with a characterization check, IF-008 deny summary 'ripwire read verbs or the bounded default map'; sdd-mcp-server mode unchanged.",
+          "closed_at": "2026-10-23"
         },
         {
           "id": "D-025",
@@ -529,9 +529,9 @@
           "summary": "Found in C002-T-066 (minor): (1) IF-009 §4 'fresh-install step' records models_used but VSC-02 has no conductor turns (instruction placed in VSC-02's Record); (2) no field for 'model shown where the install notes say' (recorded in VSC-02 note); (3) IF-010 §5.2 rule 3 ambiguous for capped sessions (implemented fail-closed: false only if the document passes and every session ended completed); (4) rule 2 gives no check order (implemented parse, schema, run host versions, target, tier, source, host versions, foreign ids); (5) no text for the internal-error line of a merged summary failing validation; (6) a missing-model refusal still reads copilot --version first. Batch with D-023/D-024.",
           "reporter": "jerome.lacube",
           "date": "2026-10-21",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Spec clarifications in IF-009 §4 and IF-010 §2/§5.2 (G2 ce5d9a5); code in C002-T-067 (5e5ade7): rule 3 fail-closed, missing-model refusal as a no-run refusal; item 5 line quoted in the T-067 report.",
+          "closed_at": "2026-10-23"
         },
         {
           "id": "D-029",

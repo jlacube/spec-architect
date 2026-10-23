@@ -14,7 +14,7 @@ status: approved
 | C001-IF-02 | Registry document | JSON document | `registry.schema.json` | C001-COMP-03 | all agents, session-start hook, P-02, P-04 | C001-REQ-104, 105, 106 |
 | C001-IF-03 | Artifact frontmatter and entry formats | Markdown conventions | `artifact-frontmatter.md` | authoring agents | sdd CLI parser, critic | CAP-01, 03, 04, 05, 06, 09, 10 |
 | C001-IF-04 | ID scheme, EARS shapes, weak words, traceability rules | Conventions | `id-scheme.md` | C001-COMP-04 | all | C001-REQ-112, 113, 405, 408, CAP-07 |
-| C001-IF-05 | Interview questions contract | JSON document | `questions.schema.json` | specialists, conductor | conductor, questions-log | C001-REQ-207, 208, 209 |
+| C001-IF-05 | Interview questions contract | JSON document + Markdown | `questions.schema.json`, `questions.md` | specialists, conductor | conductor, questions-log | C001-REQ-207, 208, 209 |
 | C001-IF-06 | Workspace layout (full and lite) | Conventions | `workspace-layout.md` | C001-COMP-03 | all | C001-REQ-101, 108, 117, 119, 401 |
 | C001-IF-07 | Hooks contract and Bash allowlist | Hook protocol | `hooks-contract.md` | C001-COMP-08 | Claude Code | C001-REQ-911, 1103–1107, 1121 |
 | C001-IF-08 | Plugin layout, manifests and structure checks | Conventions | `plugin-layout.md` | C001-COMP-11, 12 | Claude Code, P-03 | C001-REQ-1101, 1102, 1117–1122 |
