@@ -24,13 +24,19 @@ export const DEFAULT_HOST = "claude-code";
  * `{ "<from>": "<to>" }` or null; run.mjs sets it from `--copilot-model` (else
  * `SDD_EVAL_COPILOT_MODEL`) and `runSession` hands it to the Copilot CLI runner.
  */
-const context = { host: undefined, runners: {}, query: undefined, copilotModel: null };
+const context = { host: undefined, runners: {}, query: undefined, copilotModel: null, openRouterKey: null };
 
-/** Sets the harness context: `{ host?, runners?, query?, copilotModel? }`; returns the previous one. */
-export function setHarnessContext({ host, runners, query, copilotModel } = {}) {
-  const prev = { host: context.host, runners: context.runners, query: context.query, copilotModel: context.copilotModel };
+/**
+ * Sets the harness context: `{ host?, runners?, query?, copilotModel?, openRouterKey? }`; returns the
+ * previous one. `openRouterKey` is the OpenRouter key that run.mjs read and checked for a run on
+ * `--host opencode` with the real runner (C002-IF-010 §4 Key check); `runSession` hands it to the OpenCode
+ * runner, which gives it to the host process and redacts it, and writes it nowhere.
+ */
+export function setHarnessContext({ host, runners, query, copilotModel, openRouterKey } = {}) {
+  const prev = { host: context.host, runners: context.runners, query: context.query, copilotModel: context.copilotModel, openRouterKey: context.openRouterKey };
   if (query !== undefined) context.query = query;
   if (copilotModel !== undefined) context.copilotModel = copilotModel;
+  if (openRouterKey !== undefined) context.openRouterKey = openRouterKey;
   if (host !== undefined) {
     if (!HOSTS.includes(host)) throw new Error(`unknown eval host ${host}; use ${HOSTS.join(", ")}`);
     context.host = host;
@@ -63,11 +69,13 @@ export async function runSession(options) {
   const own = context.runners[host];
   // The Copilot CLI runner gets the run's model substitution (C002-IF-010 §1, §2 model rule).
   if (host === "copilot-cli" && context.copilotModel) options = { ...options, copilotModel: context.copilotModel };
+  // The OpenCode runner gets the key that run.mjs checked (C002-IF-010 §4).
+  if (host === "opencode" && context.openRouterKey) options = { ...options, openRouterKey: context.openRouterKey };
   if (own) return own(options);
   if (host === "claude-code") return runClaudeCodeSession(options);
   if (host === "opencode") {
-    const { runOpenCodeSession } = await import("./runners/opencode.mjs");
-    return runOpenCodeSession({ ...options, names: namesOf(options) });
+    const { paidOpenCodeRunner } = await import("./runners/opencode.mjs");
+    return paidOpenCodeRunner()(options);
   }
   const { runCopilotCliSession } = await import("./runners/copilot-cli.mjs");
   return runCopilotCliSession({ ...options, names: namesOf(options) });

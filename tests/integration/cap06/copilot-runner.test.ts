@@ -20,7 +20,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { allowToolArgs, API_KEY_SOURCE, copilotPackage, hostAgent, loginIdentity, mapCall, maxAiCredits, runCopilotCliSession, serversConfig, SESSION_TIMEOUT_MS, sessionStart, tokenFiles, usageOf } from "../../../evals/harness/runners/copilot-cli.mjs";
 import { copilotStubHost } from "../../../evals/harness/runners/stub.mjs";
-import { copilotLedgerEntry, copilotStopRule, runScenario, selectScenarios } from "../../../evals/harness/run.mjs";
+import { copilotLedgerEntry, copilotStopRule, noRunRefusal, runScenario, selectScenarios } from "../../../evals/harness/run.mjs";
 import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
 import { repoRoot } from "../../helpers.ts";
 
@@ -454,16 +454,18 @@ const packageModel = (agent: string) => {
 };
 
 // --- C002-TC-680 (C002-TS-680; C002-T-066, revision D-026/D-027): the model rule and the run's model
-// substitution, thirteen rows through main of run.mjs in a child process, with the stub Copilot CLI host
+// substitution, fourteen rows (row 14 by C002-T-067) through main of run.mjs in a child process, with the stub Copilot CLI host
 // (recording its command line) and the stub OpenCode host for the two --host opencode rows.
-interface MainRun { status: number | null; stdout: string; stderr: string; started: number; args: string[] | null; records: Record<string, any>[] }
+interface MainRun { status: number | null; stdout: string; stderr: string; started: number; args: string[] | null; records: Record<string, any>[]; hostCalls: string[] }
 
-function runMain(args: string[], { agent, model, variable }: { agent: string; model?: string; variable?: string }): MainRun {
+function runMain(args: string[], { agent, model, variable, pkgDir }: { agent: string; model?: string; variable?: string; pkgDir?: string }): MainRun {
   const dir = tmp("sdd-tc680-");
   const caseFile = join(dir, "case.eval.mjs");
   writeFileSync(caseFile, `export default { id: "TC-680-ROW", title: "TC-680", agent: ${JSON.stringify(agent)}, ${model ? `model: ${JSON.stringify(model)}, ` : ""}fixture: null, prompt: "hi", assert: () => [] };\n`);
   const startLog = join(dir, "started.log");
   const argsFile = join(dir, "args.json");
+  // Every run of the stub Copilot CLI host: `--version` (the version read) or `-p` (the session's host process).
+  const hostLog = join(dir, "host-calls.log");
   const url = (p: string) => pathToFileURL(join(ROOT, "evals", "harness", p)).href;
   const driver = join(dir, "driver.mjs");
   writeFileSync(
@@ -475,7 +477,8 @@ function runMain(args: string[], { agent, model, variable }: { agent: string; mo
       `import { runOpenCodeSession } from ${JSON.stringify(url("runners/opencode.mjs"))};`,
       `import { copilotStubHost, stubHost } from ${JSON.stringify(url("runners/stub.mjs"))};`,
       `const started = () => appendFileSync(${JSON.stringify(startLog)}, "started\\n");`,
-      `const copilot = (o) => runCopilotCliSession(o, { host: copilotStubHost({ endAfter: 1, onRun: ({ args }) => { started(); writeFileSync(${JSON.stringify(argsFile)}, JSON.stringify(args)); } }), pkg: ${JSON.stringify(pkg())}, scripts: ${JSON.stringify(SCRIPTS)}, identity: ${JSON.stringify(IDENTITY)} });`,
+      `const stub = () => { const h = copilotStubHost({ endAfter: 1, onRun: ({ args }) => { started(); appendFileSync(${JSON.stringify(hostLog)}, (args.includes("-p") ? "-p" : "run") + "\\n"); writeFileSync(${JSON.stringify(argsFile)}, JSON.stringify(args)); } }); const version = h.version; h.version = (env) => { appendFileSync(${JSON.stringify(hostLog)}, "--version\\n"); return version(env); }; return h; };`,
+      `const copilot = (o) => runCopilotCliSession(o, { host: stub(), pkg: ${JSON.stringify(pkgDir ?? pkg())}, scripts: ${JSON.stringify(SCRIPTS)}, identity: ${JSON.stringify(IDENTITY)} });`,
       `const opencode = (o) => { started(); return runOpenCodeSession(o, { host: stubHost({ endAfter: 1 }) }); };`,
       `process.exitCode = await main(JSON.parse(process.argv[2]), { runners: { "copilot-cli": copilot, opencode }, ledger: "unused" });`,
     ].join("\n"),
@@ -486,7 +489,7 @@ function runMain(args: string[], { agent, model, variable }: { agent: string; mo
   const res = join(dir, "results");
   const r = spawnSync(process.execPath, [driver, JSON.stringify([caseFile, ...args, "--tier", "dev", "--results-dir", res])], { cwd: ROOT, encoding: "utf8", env, windowsHide: true, timeout: 120_000 });
   const records = existsSync(res) ? readdirSync(res).filter((f) => f.endsWith(".json")).flatMap((f) => (JSON.parse(readFileSync(join(res, f), "utf8")) as { records: Record<string, any>[] }).records) : [];
-  return { status: r.status, stdout: r.stdout, stderr: r.stderr, started: existsSync(startLog) ? readFileSync(startLog, "utf8").split("\n").filter(Boolean).length : 0, args: existsSync(argsFile) ? (JSON.parse(readFileSync(argsFile, "utf8")) as string[]) : null, records };
+  return { status: r.status, stdout: r.stdout, stderr: r.stderr, started: existsSync(startLog) ? readFileSync(startLog, "utf8").split("\n").filter(Boolean).length : 0, args: existsSync(argsFile) ? (JSON.parse(readFileSync(argsFile, "utf8")) as string[]) : null, records, hostCalls: existsSync(hostLog) ? readFileSync(hostLog, "utf8").split("\n").filter(Boolean) : [] };
 }
 
 const SUB = "claude-opus-5.5=claude-sonnet-5.5";
@@ -540,6 +543,35 @@ for (const row of ROWS_680) {
     assert.deepEqual(r.records[0]!["agent_models"], { [row.agent]: [row.passed] });
   });
 }
+
+// Row 14 (defect D-028 item 6; P-01 answer to Q-model-refusal-01, critic CR-95): the missing-model refusal
+// after `copilot --version`, a no-run refusal of the second form of C002-IF-010 §5.2.
+test("C002-TS-680 row 14 — sdd-critic, whose agent file has no model field, in a row without one: the stub runs with --version and never with -p; the record is a no-run refusal of the second form", () => {
+  const copy = tmp("sdd-cp-nomodel-critic-");
+  cpSync(pkg(), copy, { recursive: true });
+  const file = join(copy, "agents", "sdd-critic.agent.md");
+  assert.match(readFileSync(file, "utf8"), /^model:/m, "the generated package names a model for sdd-critic");
+  writeFileSync(file, readFileSync(file, "utf8").replace(/^model:.*\r?\n/m, ""));
+  const r = runMain(["--host", "copilot-cli"], { agent: "architect:sdd-critic", pkgDir: copy });
+  assert.deepEqual(r.hostCalls, ["--version"], "the stub was run with --version, never with -p");
+  assert.equal(r.started, 0, "no host process with -p");
+  assert.equal(r.records.length, 1, r.stdout + r.stderr);
+  const rec = r.records[0]!;
+  assert.equal(rec["end_reason"], "error");
+  assert.equal(rec["error"], "no model field in agents/sdd-critic.agent.md");
+  assert.equal(rec["usage"].turns, 0);
+  assert.deepEqual(rec["models"], []);
+  assert.deepEqual(rec["session_model"].used, []);
+  assert.equal(rec["session_model"].passed, null);
+  assert.deepEqual(rec["agent_models"], {});
+  assert.deepEqual(rec["host_versions"], { "copilot-cli": "1.0.98" });
+  assert.equal(rec["spend"], "unreported");
+  assert.equal(rec["copilot_usage"], null);
+  assert.equal(noRunRefusal(rec, "copilot-cli"), true, "a no-run refusal of the second form of C002-IF-010 §5.2");
+  assert.equal(noRunRefusal({ ...rec, error: "another error" }, "copilot-cli"), false, "outside the second form: another error text");
+  assert.equal(noRunRefusal({ ...rec, session_model: { ...rec["session_model"], passed: "claude-opus-5.5" } }, "copilot-cli"), false, "outside the second form: a passed model");
+  assert.equal(noRunRefusal(rec, "opencode"), false, "the second form is for Copilot CLI only");
+});
 
 test("C002-TS-680 (supporting): a session agent whose agent file has no model field, in a row without one, ends before the host starts with error \"no model field in agents/<agent>.agent.md\"", async () => {
   const copy = tmp("sdd-cp-nomodel-");

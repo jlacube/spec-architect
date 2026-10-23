@@ -26,6 +26,7 @@ import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { homedir } from "node:os";
 import { isAbsolute, join } from "node:path";
+import { checkOpenRouterKey, defaultOpenRouterKeyFile, readOpenRouterKey } from "../key-usage.mjs";
 import { Readable } from "node:stream";
 
 /**
@@ -96,9 +97,7 @@ export function readOpenCodeVersion(bin, env = process.env) {
 }
 
 /** Default file of the OpenRouter key of paid sessions (one line; never printed, logged or committed). */
-export function defaultOpenRouterKeyFile() {
-  return join(homedir(), ".architect-evals", "openrouter-key.txt");
-}
+export { defaultOpenRouterKeyFile };
 
 /** A free loopback port. */
 export function freePort() {
@@ -168,24 +167,25 @@ function killTree(child) {
  *   project       the project folder OpenCode runs in (its `opencode.json`, `.opencode/`)
  *   runDir        folder of the run: database, XDG folders (isolate), server log
  *   isolate       true for the stub-model replay: no credential store, models fetch off, proxy closed
- *   paid          { keyFile? }: a session against OpenRouter; the key file's one line goes to the host as
- *                 OPENROUTER_API_KEY; refused when the file is missing or empty
+ *   paid          { keyFile?, key? }: a session against OpenRouter; the key (`key`, already read, else the
+ *                 key file's content with the white space at its ends removed) goes to the host as
+ *                 OPENROUTER_API_KEY; refused by the key check of C002-IF-010 §4 (missing file; an
+ *                 empty, short or JSON-escaped value)
  *   env           extra variables of the host process
  *   startTimeoutMs  default 90 s
  */
 /**
  * The environment of the host process of `startOpenCode` (`runDir`, `isolate`, `paid`, `env` as there):
- * a paid session takes the OpenRouter key from the key file's one line as OPENROUTER_API_KEY and is
- * refused, before any process starts, when the file is missing or empty (C002-IF-010 §4 Provider key).
+ * a paid session takes the OpenRouter key from the key file as OPENROUTER_API_KEY and is refused, before
+ * any process starts, by the key check of C002-IF-010 §4 (Provider key, Key check): one refusal text for a
+ * missing file, one for an empty value, a value shorter than 20 characters or one that JSON escapes.
  */
 export function hostProcessEnv(options) {
   mkdirSync(options.runDir, { recursive: true });
   const extra = { ...(options.env ?? {}) };
   if (options.paid) {
     const keyFile = options.paid.keyFile ?? defaultOpenRouterKeyFile();
-    const key = existsSync(keyFile) ? readFileSync(keyFile, "utf8").trim() : "";
-    if (!key) throw new Error(`paid OpenCode session refused: no OpenRouter key in ${keyFile}`);
-    extra.OPENROUTER_API_KEY = key;
+    extra.OPENROUTER_API_KEY = options.paid.key !== undefined ? checkOpenRouterKey(options.paid.key, keyFile) : readOpenRouterKey(keyFile);
   }
   return hostEnv({ runDir: options.runDir, isolate: options.isolate === true, extra });
 }

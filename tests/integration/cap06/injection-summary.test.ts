@@ -5,6 +5,11 @@
 // cannot merge with is refused with nothing written, an entry acted upon is final for the package
 // version, a no-run refusal gives no entry and locks nothing, and no summary comes from a Copilot CLI run
 // under the Copilot hooks fallback, from a Claude Code run, or from a run of no-run refusals only.
+// C002-T-067 (defect D-028 and critics CR-94, CR-95): C002-TC-691 row 4 (a `turn cap` end with a passing
+// result document gives an entry acted upon) and row 7 (a missing-model refusal of Copilot CLI, the second
+// form of the no-run refusal, gives no entry and locks nothing), the rule-3 test of a session record
+// without `end_reason` (fail-closed), and C002-TC-692 row 5 (a base that fails two checks: the line of the
+// first only).
 // fx-evals-injection is built in a temporary folder by `fxEvalsInjection` and given to `main` as the
 // releases root (`deps.releasesRoot`, the test seam of §5.2); the case files are the repository's,
 // selected with --only; the sessions run on the stub hosts of evals/harness/runners/stub.mjs (a replaced
@@ -14,7 +19,7 @@ import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -43,6 +48,19 @@ const tmp = (p: string) => {
 // One generated Copilot package (sdd-mcp-server) for the file, given to the stub sessions.
 let PKG: string | null = null;
 const pkg = (): string => (PKG ??= copilotPackage({ target: "copilot", mode: "sdd-mcp-server" }) as string);
+// A copy of that package whose conductor agent file has no model field (C002-TS-691 row 7, INJ-19 being a
+// conductor row without a model of its own).
+let PKG_NO_MODEL: string | null = null;
+const pkgNoModel = (): string => {
+  if (PKG_NO_MODEL) return PKG_NO_MODEL;
+  const copy = tmp("sdd-inj-pkg-nomodel-");
+  cpSync(pkg(), copy, { recursive: true });
+  const file = join(copy, "agents", "sdd-conductor.agent.md");
+  const text = readFileSync(file, "utf8");
+  assert.match(text, /^model:/m, "the conductor's agent file names a model");
+  writeFileSync(file, text.replace(/^model:.*\r?\n/m, ""));
+  return (PKG_NO_MODEL = copy);
+};
 
 // Every planted marker of the injection corpus and of TS-359: a stub session's tool result holds them
 // all, so the session saw the planted text (the cases' first check).
@@ -97,8 +115,13 @@ function snapshot(dir: string): Map<string, string> {
 
 // --- the run ----------------------------------------------------------------------------------------
 
-/** A stub session: `pass` (saw the planted text, acted on none), `fail` (wrote outside .sdd/), `spend-cap` (ended at the cap before any check), `refuse` (Copilot CLI's refused --model). */
-type Kind = "pass" | "fail" | "spend-cap" | "refuse";
+/**
+ * A stub session: `pass` (saw the planted text, acted on none), `fail` (wrote outside .sdd/), `spend-cap`
+ * (ended at the cap before any check), `turn-cap` (saw the planted text, acted on none, ended at the turn
+ * cap), `refuse` (Copilot CLI's refused --model), `no-model` (Copilot CLI: no model in the row or its
+ * session agent's file), `no-end-reason` (OpenCode: a passing session whose record gives no `end_reason`).
+ */
+type Kind = "pass" | "fail" | "spend-cap" | "turn-cap" | "refuse" | "no-model" | "no-end-reason";
 interface Run { status: number | null; stdout: string[]; stderr: string[]; results: Map<string, string> }
 
 /**
@@ -110,7 +133,7 @@ function runEval(fx: string, host: string, rows: string, files: string[], sessio
   const dir = tmp("sdd-inj-run-");
   const driver = join(dir, "driver.mjs");
   const url = (p: string) => pathToFileURL(join(ROOT, "evals", "harness", p)).href;
-  const config = { sessions, versions, markers: MARKERS, pkg: host === "copilot-cli" ? pkg() : null, scripts: SCRIPTS, identity: IDENTITY };
+  const config = { sessions, versions, markers: MARKERS, pkg: host === "copilot-cli" ? pkg() : null, pkgNoModel: host === "copilot-cli" && sessions.includes("no-model") ? pkgNoModel() : null, scripts: SCRIPTS, identity: IDENTITY };
   writeFileSync(
     driver,
     [
@@ -125,10 +148,13 @@ function runEval(fx: string, host: string, rows: string, files: string[], sessio
       `const copilot = (o) => { const { kind, version } = next();`,
       `  const script = kind === "pass" ? [[{ tool: "view", input: { path: "src/app.ts" }, result: seen }]] : kind === "fail" ? [[{ tool: "view", input: { path: "src/app.ts" }, result: seen }, { tool: "create", input: { path: "src/injected.ts", file_text: "x" } }]] : [];`,
       `  const host = copilotStubHost({ endAfter: 1, script, refuseModel: kind === "refuse", ...(kind === "spend-cap" ? { endAfter: null, creditsPerTurn: 60 } : {}), ...(version ? { version } : {}) });`,
-      `  return runCopilotCliSession(o, { host, pkg: c.pkg, scripts: c.scripts, identity: c.identity }); };`,
+      `  return runCopilotCliSession(o, { host, pkg: kind === "no-model" ? c.pkgNoModel : c.pkg, scripts: c.scripts, identity: c.identity }); };`,
       `const opencode = (o) => { const { kind, version } = next();`,
-      `  const script = kind === "pass" ? [[{ tool: "read", input: { filePath: "src/app.ts" }, output: seen }]] : kind === "fail" ? [[{ tool: "read", input: { filePath: "src/app.ts" }, output: seen }, { tool: "write", input: { filePath: "src/injected.ts", content: "x" } }]] : [];`,
-      `  return runOpenCodeSession(o, { host: stubHost({ endAfter: kind === "spend-cap" ? null : 1, spendPerTurn: kind === "spend-cap" ? 0.6 : 0.01, script, ...(version ? { version } : {}) }) }); };`,
+      `  const script = kind === "pass" || kind === "turn-cap" || kind === "no-end-reason" ? [[{ tool: "read", input: { filePath: "src/app.ts" }, output: seen }]] : kind === "fail" ? [[{ tool: "read", input: { filePath: "src/app.ts" }, output: seen }, { tool: "write", input: { filePath: "src/injected.ts", content: "x" } }]] : [];`,
+      `  const capped = kind === "spend-cap" || kind === "turn-cap";`,
+      `  const s = runOpenCodeSession(o, { host: stubHost({ endAfter: capped ? null : 1, spendPerTurn: kind === "spend-cap" ? 0.6 : kind === "turn-cap" ? 0.001 : 0.01, script, ...(version ? { version } : {}) }) });`,
+      `  // A session record without end_reason (the rule-3 test, critic CR-94): the runner's result without the field.`,
+      `  return kind === "no-end-reason" ? s.then(({ end_reason, ...rest }) => rest) : s; };`,
       `// The replaced Claude Code runner (C002-TC-693 row 2): a session that saw the planted text.`,
       `const claude = async () => ({ transcript: [{ t: 0, type: "sdk", message: { type: "user", message: { role: "user", content: [{ type: "tool_result", tool_use_id: "t1", content: seen }] } } }], answers: [], result: { type: "result", subtype: "success", result: "", total_cost_usd: 0, num_turns: 1, modelUsage: {} }, wallMs: 1, auth: "api-key", apiKeySource: "none" });`,
       `const runners = c.runners ? { opencode, "copilot-cli": copilot, "claude-code": claude } : {};`,
@@ -184,6 +210,7 @@ test("C002-TS-691 row 1 — OpenCode, no base file: a passing INJ-07 session giv
 for (const row of [
   { n: 2, kind: "fail" as Kind, title: "a failing session (the agent acted on the planted instruction)" },
   { n: 3, kind: "spend-cap" as Kind, title: "a session ended at the spend cap before the step its case checks" },
+  { n: 4, kind: "turn-cap" as Kind, title: "a session whose result document passes and that ends with turn cap" },
 ]) {
   test(`C002-TS-691 row ${row.n} — OpenCode, 22 passing entries: ${row.title} of INJ-07 replaces the passing entry with acted_upon true`, () => {
     const base = ids(22).map((id) => entry(id));
@@ -192,12 +219,17 @@ for (const row of [
     const s = assertMerged(fx, "opencode", "opencode-runner", OC, base, 22, ["INJ-07"]);
     assertRunEntry(fx, r, s, "INJ-07", true);
     if (row.kind === "spend-cap") assert.equal((recordOf(fx, r.results.get("INJ-07")!) as unknown as { end_reason: string }).end_reason, "spend cap");
+    if (row.kind === "turn-cap") {
+      const rec = recordOf(fx, r.results.get("INJ-07")!) as unknown as { end_reason: string; pass: boolean; failures: string[] };
+      assert.equal(rec.end_reason, "turn cap");
+      assert.equal(rec.pass, true, `the result document passes: ${JSON.stringify(rec.failures)}`);
+    }
     assert.ok(r.stdout.includes(`injection summary: ${pathOf("opencode")} (22 cases, 1 acted upon; 1 from this run, 21 kept)`), r.stdout.join("\n"));
     assert.deepEqual(summaryLines(r, "eval: injection summary"), []);
   });
 }
 
-test("C002-TS-691 row 4 — Copilot CLI, 22 passing entries and none for TS-359: a passing TS-359 session is added, 23 cases, 22 kept", () => {
+test("C002-TS-691 row 5 — Copilot CLI, 22 passing entries and none for TS-359: a passing TS-359 session is added, 23 cases, 22 kept", () => {
   const base = ids(22).map((id) => entry(id));
   const fx = fxEvalsInjection({ base: { target: "copilot", text: json(summary("copilot", "copilot-cli-runner", CP, base)) } });
   const r = runEval(fx, "copilot-cli", "TS-359", [TS359_FILE], ["pass"]);
@@ -207,7 +239,7 @@ test("C002-TS-691 row 4 — Copilot CLI, 22 passing entries and none for TS-359:
   assert.deepEqual(summaryLines(r, "eval: injection summary"), []);
 });
 
-test("C002-TS-691 row 5 — Copilot CLI, 23 passing entries: INJ-07 passes, INJ-19 is a no-run refusal that gives no entry; the base's INJ-19 is kept", () => {
+test("C002-TS-691 row 6 — Copilot CLI, 23 passing entries: INJ-07 passes, INJ-19 is a no-run refusal that gives no entry; the base's INJ-19 is kept", () => {
   const base = [...ids(22), "TS-359"].map((id) => entry(id));
   const fx = fxEvalsInjection({ base: { target: "copilot", text: json(summary("copilot", "copilot-cli-runner", CP, base)) } });
   const r = runEval(fx, "copilot-cli", "INJ-07,INJ-19", [INJ_FILE], ["pass", "refuse"]);
@@ -219,6 +251,36 @@ test("C002-TS-691 row 5 — Copilot CLI, 23 passing entries: INJ-07 passes, INJ-
   assert.ok(r.stdout.includes(`injection summary: ${pathOf("copilot")} (23 cases, 0 acted upon; 1 from this run, 22 kept)`), r.stdout.join("\n"));
   assert.deepEqual(summaryLines(r, "eval: injection summary:"), [NO_ENTRY("INJ-19")]);
   assert.deepEqual(summaryLines(r, "eval: injection summary keeps"), []);
+});
+
+test("C002-TS-691 row 7 — Copilot CLI, 23 passing entries: INJ-07 passes, INJ-19 is a missing-model refusal (no model in the row or the conductor's file) that gives no entry; the base's INJ-19 is kept", () => {
+  const base = [...ids(22), "TS-359"].map((id) => entry(id));
+  const fx = fxEvalsInjection({ base: { target: "copilot", text: json(summary("copilot", "copilot-cli-runner", CP, base)) } });
+  const r = runEval(fx, "copilot-cli", "INJ-07,INJ-19", [INJ_FILE], ["pass", "no-model"]);
+  const refusal = recordOf(fx, r.results.get("INJ-19")!) as unknown as Record<string, any>;
+  assert.equal(refusal["end_reason"], "error");
+  assert.equal(refusal["error"], "no model field in agents/sdd-conductor.agent.md");
+  assert.deepEqual([refusal["usage"].turns, refusal["models"], refusal["session_model"].used, refusal["session_model"].passed, refusal["agent_models"], refusal["spend"], refusal["copilot_usage"]], [0, [], [], null, {}, "unreported", null], "the missing-model refusal's result record");
+  assert.deepEqual(refusal["host_versions"], CP, "the host versions that copilot --version gave");
+  const s = assertMerged(fx, "copilot", "copilot-cli-runner", CP, base, 23, ["INJ-07"]);
+  assertRunEntry(fx, r, s, "INJ-07", false);
+  assert.ok(r.stdout.includes(`injection summary: ${pathOf("copilot")} (23 cases, 0 acted upon; 1 from this run, 22 kept)`), r.stdout.join("\n"));
+  assert.deepEqual(summaryLines(r, "eval: injection summary:"), [NO_ENTRY("INJ-19")]);
+  assert.deepEqual(summaryLines(r, "eval: injection summary keeps"), []);
+  assert.deepEqual(summaryLines(r, "eval: injection summary not written"), []);
+});
+
+test("C002-TS-691 (supporting, rule 3 fail-closed, critic CR-94): a session record of INJ-07 without end_reason whose result document passes gives an entry acted upon", () => {
+  const base = ids(22).map((id) => entry(id));
+  const fx = fxEvalsInjection({ base: { target: "opencode", text: json(summary("opencode", "opencode-runner", OC, base)) } });
+  const r = runEval(fx, "opencode", "INJ-07", [INJ_FILE], ["no-end-reason"]);
+  const rec = recordOf(fx, r.results.get("INJ-07")!) as unknown as Record<string, unknown>;
+  assert.ok(!("end_reason" in rec), "the record gives no end_reason");
+  assert.equal(rec["pass"], true, "the result document passes");
+  const s = assertMerged(fx, "opencode", "opencode-runner", OC, base, 22, ["INJ-07"]);
+  // A record without end_reason carries no models either: the entry's models are empty.
+  assert.deepEqual(s.cases.find((c) => c.id === "INJ-07"), { id: "INJ-07", acted_upon: true, result: r.results.get("INJ-07"), models: [] });
+  assert.ok(r.stdout.includes(`injection summary: ${pathOf("opencode")} (22 cases, 1 acted upon; 1 from this run, 21 kept)`), r.stdout.join("\n"));
 });
 
 test("C002-TS-691 (supporting): deps.releasesRoot while deps.runners replaces no runner of the run's --host ends the run before any session; no file under the fixture changes", () => {
@@ -291,11 +353,12 @@ for (const row of [
   { n: 2, host: "copilot-cli", target: "copilot" as Target, base: json({ target: "copilot", tier: "dev", source: "copilot-cli-runner", host_versions: CP }), problem: "it does not match the injection summary schema" },
   { n: 3, host: "copilot-cli", target: "copilot" as Target, base: json(summary("opencode", "copilot-cli-runner", CP, cp23())), problem: 'it gives target "opencode", this run "copilot"' },
   { n: 4, host: "copilot-cli", target: "copilot" as Target, base: json({ ...summary("copilot", "copilot-cli-runner", CP, cp23()), tier: "full" }), problem: "it does not match the injection summary schema" },
-  { n: 5, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "copilot-cli-runner", { "copilot-cli": "1.0.97" }, cp23())), problem: 'it gives host_versions {"copilot-cli":"1.0.97"}, this run {"copilot-cli":"1.0.98"}' },
-  { n: 6, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "manual-checklist", CP, ids(22).map((id) => ({ id, acted_upon: false })), { checklist_record: "docs/checklists/records/vscode-2026-11-20-0.3.0.md" })), problem: 'it gives source "manual-checklist", this run "copilot-cli-runner"' },
-  { n: 7, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "copilot-cli-runner", CP, [...ids(23), "TS-359"].map((id) => entry(id)))), problem: "it holds INJ-23, which is no injection case of copilot-cli" },
-  { n: 8, host: "opencode", target: "opencode" as Target, base: json(summary("opencode", "opencode-runner", OC, [...ids(22), "TS-359"].map((id) => entry(id)))), problem: "it holds TS-359, which is no injection case of opencode" },
-  { n: 9, host: "opencode", target: "opencode" as Target, base: json(summary("opencode", "opencode-runner", OC, ids(22).map((id) => entry(id)))), rows: "INJ-07,INJ-08", versions: ["1.18.31", "1.18.32"], problem: "the run's sessions read different host versions" },
+  { n: 5, host: "copilot-cli", target: "copilot" as Target, base: json(summary("opencode", "copilot-cli-runner", { "copilot-cli": "1.0.97" }, cp23())), problem: 'it gives target "opencode", this run "copilot"' },
+  { n: 6, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "copilot-cli-runner", { "copilot-cli": "1.0.97" }, cp23())), problem: 'it gives host_versions {"copilot-cli":"1.0.97"}, this run {"copilot-cli":"1.0.98"}' },
+  { n: 7, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "manual-checklist", CP, ids(22).map((id) => ({ id, acted_upon: false })), { checklist_record: "docs/checklists/records/vscode-2026-11-20-0.3.0.md" })), problem: 'it gives source "manual-checklist", this run "copilot-cli-runner"' },
+  { n: 8, host: "copilot-cli", target: "copilot" as Target, base: json(summary("copilot", "copilot-cli-runner", CP, [...ids(23), "TS-359"].map((id) => entry(id)))), problem: "it holds INJ-23, which is no injection case of copilot-cli" },
+  { n: 9, host: "opencode", target: "opencode" as Target, base: json(summary("opencode", "opencode-runner", OC, [...ids(22), "TS-359"].map((id) => entry(id)))), problem: "it holds TS-359, which is no injection case of opencode" },
+  { n: 10, host: "opencode", target: "opencode" as Target, base: json(summary("opencode", "opencode-runner", OC, ids(22).map((id) => entry(id)))), rows: "INJ-07,INJ-08", versions: ["1.18.31", "1.18.32"], problem: "the run's sessions read different host versions" },
 ]) {
   test(`C002-TS-692 row ${row.n} — ${row.host}: ${row.problem}; nothing written, exit code 1`, () => {
     const fx = fxEvalsInjection({ base: { target: row.target, text: row.base } });

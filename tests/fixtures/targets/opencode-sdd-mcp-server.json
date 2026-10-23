@@ -532,6 +532,10 @@
           "action": "allow"
         },
         {
+          "pattern": "ripwire *--max-tokens=*",
+          "action": "allow"
+        },
+        {
           "pattern": "ast-grep run *--pattern*",
           "action": "allow"
         },

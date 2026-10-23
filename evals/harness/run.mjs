@@ -18,7 +18,11 @@
 // its sessions record a notional cost_usd and do not count against --max-total-usd. Claude Code host only.
 // OpenCode sessions bill OpenRouter (test plan §4.1): before each session the stop rule of the CHG-002
 // ledger (evals/results/spend-chg002.json) is checked for `--pool` (default general), and after it the
-// session is added to the ledger with `--task`/`--step`. The rows of the host's injection case set
+// session is added to the ledger with `--task`/`--step`, with its `ended_at`. A session whose spend reads
+// `partial` is reconciled from the OpenRouter key usage read before and after it (C002-IF-010 §2.3,
+// C002-T-067), before the next session's stop rule; else it stays partial with one line naming why. On
+// --host opencode the key is checked before any session and written nowhere (every line and file goes
+// through the redaction of C002-IF-010 §4). The rows of the host's injection case set
 // (C002-IF-010 §5.1, §5.2: INJ-01 … INJ-22, and TS-359 on Copilot CLI) are merged, fail-closed, into the
 // injection summary docs/releases/<target>/<version>/injection.json (`mergeInjectionSummary`).
 // Copilot CLI sessions (runners/copilot-cli.mjs, C002-T-045) bill P-01's GitHub Copilot plan in AI
@@ -32,6 +36,7 @@ import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { capCheck, capException, DEFAULT_MAX_BUDGET_USD, DEFAULT_MAX_TURNS } from "./caps.mjs";
 import { checkHostEnv, resolveAuth } from "./env.mjs";
+import { readKeyUsage, readOpenRouterKey, redactor } from "./key-usage.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
 import { DEFAULT_HOST, HOSTS, runSession, setHarnessContext } from "./session.mjs";
@@ -43,15 +48,18 @@ export const TIERS = {
 };
 
 export const RESULTS = join(ROOT, "evals", "results");
+/** The refusal of SDD_EVAL_KEEP_RUN on --host opencode with the real runner (C002-IF-010 §4 Run folder of a paid session). */
+export const KEEP_RUN_REFUSAL = "eval: SDD_EVAL_KEEP_RUN applies to stub-host runs only: the run folder of a paid OpenCode session holds host files that are not redacted; no session started";
 export const LEDGER = join(RESULTS, "spend-chg002.json");
 
 /**
  * Runs one scenario `runs` times; returns the result document (also written to `resultsDir`).
  * `host` names the session host for the record (the session itself runs on the harness context's
  * host); `hooks.before({ scenario, run })` may refuse a session by throwing; `hooks.after({ scenario,
- * record, resultFile })` sees each finished run.
+ * record, resultFile, endedAt })` sees each finished run (`endedAt` the session's end, ms). `redact` is
+ * applied to each file's whole text after the JSON encoding (the key redaction of C002-IF-010 §4).
  */
-export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log, auth, host = DEFAULT_HOST, resultsDir = RESULTS, hooks = {}, caps: checkedCaps } = {}) {
+export async function runScenario(scenario, { tier = "dev", runs, label, budget = { spent: 0, limit: 5 }, log = console.log, auth, host = DEFAULT_HOST, resultsDir = RESULTS, hooks = {}, caps: checkedCaps, redact = (text) => text } = {}) {
   const n = runs ?? TIERS[tier].runs;
   const mode = host === "claude-code" ? resolveAuth(auth) : null;
   let apiKeySource = null;
@@ -97,6 +105,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         targetPackage: scenario.targetPackage,
         mcpOverrides: scenario.mcpOverrides,
       });
+      // The session's end (the ledger entry's `ended_at`, C002-IF-010 §2.3 item 3).
+      const endedAt = Date.now();
       apiKeySource = session.apiKeySource;
       const failures = [];
       try {
@@ -109,7 +119,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       if (mode !== "subscription") budget.spent += metrics.cost_usd;
       const transcriptFile = join(resultsDir, "transcripts", `${scenario.id}-${time}-run${i + 1}.json`);
       mkdirSync(join(resultsDir, "transcripts"), { recursive: true });
-      writeFileSync(transcriptFile, JSON.stringify(session.transcript, null, 1) + "\n");
+      // Every file is redacted as a whole, after the JSON encoding (C002-IF-010 §4 Key redaction).
+      writeFileSync(transcriptFile, redact(JSON.stringify(session.transcript, null, 1)) + "\n");
       const target = session.target ?? "claude-code";
       const record = {
         run: i + 1,
@@ -132,7 +143,7 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       records.push(record);
       const usd = session.usage && session.usage.usd === null ? "spend unreported" : `$${metrics.cost_usd.toFixed(4)}`;
       log(`${scenario.id} run ${i + 1}/${n}: ${failures.length === 0 ? "pass" : `FAIL (${failures.join("; ")})`} · ${usd} · ${(metrics.session_ms / 1000).toFixed(1)} s${session.end_reason ? ` · ${session.end_reason}, ${session.usage.turns} turns` : ""}`);
-      await hooks.after?.({ scenario, record, resultFile });
+      await hooks.after?.({ scenario, record, resultFile, endedAt });
     } finally {
       ws.cleanup();
     }
@@ -159,7 +170,7 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
     records,
   };
   mkdirSync(resultsDir, { recursive: true });
-  writeFileSync(resultFile, JSON.stringify(doc, null, 2) + "\n");
+  writeFileSync(resultFile, redact(JSON.stringify(doc, null, 2)) + "\n");
   resultFiles.set(doc, resultFile);
   return doc;
 }
@@ -311,7 +322,9 @@ export function reserveH(entries, exceptionCap = null) {
 /** @param {any} ledger @param {string} [pool] @param {{ exceptionCap?: number | null }} [options] */
 export function stopRule(ledger, pool = "general", { exceptionCap = null } = {}) {
   const entries = ledger.entries ?? [];
-  const mine = entries.filter((e) => e.provider === "openrouter" && e.pool === pool);
+  // OpenRouter entries of the pool; an OpenCode entry of a stub-host run (provider `stub`, a test ledger
+  // only) counts as one, so that the next session's check counts a reconciled entry (C002-TS-695).
+  const mine = entries.filter((e) => (e.provider === "openrouter" || e.host === "opencode") && e.pool === pool);
   const T = mine.reduce((s, e) => s + (Number(e.cost_usd) || 0), 0);
   const H = reserveH(entries, exceptionCap);
   const L = Number(ledger.pools?.[pool]);
@@ -328,8 +341,12 @@ function stopText(name, pool, r) {
 
 const readLedger = (file) => JSON.parse(readFileSync(file, "utf8"));
 
-/** The ledger entry of one OpenCode session. */
-export function ledgerEntry({ scenario, record, resultFile, task, step, pool }) {
+/**
+ * The ledger entry of one OpenCode session. `endedAt` (ms or ISO 8601) is the session's end, written as
+ * `ended_at` (ISO 8601 UTC) in every OpenCode entry for the before-read of the next session (C002-IF-010
+ * §2.3 item 3); default: now.
+ */
+export function ledgerEntry({ scenario, record, resultFile, task, step, pool, endedAt = Date.now() }) {
   return {
     date: new Date().toISOString().slice(0, 10),
     task: task ?? null,
@@ -351,7 +368,119 @@ export function ledgerEntry({ scenario, record, resultFile, task, step, pool }) 
     caps_usd: record.caps?.usd ?? null,
     cost_source: record.spend === "partial" ? "partial" : record.spend === "unreported" ? "unreported by the host" : "runner (OpenCode step cost)",
     pass: record.pass,
+    ended_at: new Date(endedAt).toISOString(),
     result: posix(relative(ROOT, resultFile)),
+  };
+}
+
+// --- Reconciliation of a partial OpenCode spend from the OpenRouter key usage (C002-IF-010 §2.3) -----
+
+/** The `<reason>` of each case in which a partial spend stays partial (C002-IF-010 §2.3 When it stays partial). */
+export const STAYS_PARTIAL = {
+  beforeFailed: "the key usage could not be read before the session",
+  beforeUnsettled: "the key usage did not settle before the session",
+  afterUnsettled: "the key usage did not settle within 20 minutes",
+};
+
+/** The 60 s between reads and the 20 minutes of both waits (C002-IF-010 §2.3; `deps.keyUsage` replaces them in the tests). */
+export const KEY_USAGE_INTERVAL_MS = 60_000;
+export const KEY_USAGE_LIMIT_MS = 20 * 60_000;
+
+/** An amount in whole micro-dollars: every comparison of §2.3 is made on these integers. */
+const micro = (usd) => Math.round(Number(usd) * 1e6);
+const iso = (ms) => new Date(ms).toISOString();
+const sleep = (ms) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
+/** Waits until `Date.now()` is at least `at` (a timer can fire a little early). */
+async function sleepUntil(at) {
+  while (Date.now() < at) await sleep(at - Date.now());
+}
+
+/**
+ * The latest `ended_at` (ms) of the ledger's OpenCode entries, or null; an entry without `ended_at`
+ * (written before §2.3) is left out.
+ */
+export function previousSessionEnd(ledger) {
+  const ends = (ledger.entries ?? []).filter((e) => (e.host === "opencode" || e.provider === "openrouter") && typeof e.ended_at === "string").map((e) => Date.parse(e.ended_at)).filter(Number.isFinite);
+  return ends.length > 0 ? Math.max(...ends) : null;
+}
+
+/**
+ * The before-read of one paid OpenCode session (C002-IF-010 §2.3 item 1): `{ u0: { micro, at } }` or
+ * `{ u0: null, reason }`. `prevEnd` is the previous session's end (ms) or null; `settled` the settled
+ * after-read of the latest session of this run (`{ micro, at, endedAt }`) or null; `keyUsage` the reads
+ * `{ read, intervalMs, limitMs }`. A previous session that ended `limitMs` or more before (or none): one
+ * read. Otherwise the previous session's settled after-read when it is the latest session, else a wait:
+ * a read at once and then every `intervalMs`, none later than `limitMs` after the previous end, settled at
+ * the first read that equals the latest earlier successful read of the wait (no bound).
+ */
+export async function beforeRead({ prevEnd, settled, keyUsage }) {
+  const { read, intervalMs, limitMs } = keyUsage;
+  const start = Date.now();
+  if (prevEnd === null || start - prevEnd >= limitMs) {
+    const at = Date.now();
+    try {
+      return { u0: { micro: micro(await read()), at: iso(at) } };
+    } catch {
+      return { u0: null, reason: STAYS_PARTIAL.beforeFailed };
+    }
+  }
+  if (settled && settled.endedAt === prevEnd) return { u0: { micro: settled.micro, at: settled.at } };
+  let latest = null;
+  for (let k = 0; ; k++) {
+    const slot = start + k * intervalMs;
+    if (slot > prevEnd + limitMs) break;
+    await sleepUntil(slot);
+    const at = Date.now();
+    if (at > prevEnd + limitMs) break;
+    let v;
+    try {
+      v = micro(await read());
+    } catch {
+      continue;
+    }
+    if (latest !== null && v === latest) return { u0: { micro: v, at: iso(at) } };
+    latest = v;
+  }
+  return { u0: null, reason: latest === null ? STAYS_PARTIAL.beforeFailed : STAYS_PARTIAL.beforeUnsettled };
+}
+
+/**
+ * The after-reads of a session that ended `partial` (C002-IF-010 §2.3 item 2): a read every `intervalMs`,
+ * the first `intervalMs` after the session's end `endedAt` (ms), none later than `limitMs` after it (at
+ * most 20 with the 60 s and the 20 minutes). Settled at the first successful read that equals the latest
+ * earlier successful after-read (never the before-read), when 10 × read ≥ 10 × U0 + 9 × the recorded
+ * spend, all in micro-dollars. Returns `{ micro, at }` or null.
+ */
+export async function afterReads({ endedAt, u0, usd, keyUsage }) {
+  const { read, intervalMs, limitMs } = keyUsage;
+  const bound = 10 * u0.micro + 9 * micro(usd);
+  let latest = null;
+  for (let k = 1; ; k++) {
+    const slot = endedAt + k * intervalMs;
+    if (slot > endedAt + limitMs) break;
+    await sleepUntil(slot);
+    const at = Date.now();
+    if (at > endedAt + limitMs) break;
+    let v;
+    try {
+      v = micro(await read());
+    } catch {
+      continue; // a failed read is passed over
+    }
+    if (latest !== null && v === latest && 10 * v >= bound) return { micro: v, at: iso(at) };
+    latest = v;
+  }
+  return null;
+}
+
+/** The reconciled fields of a session's ledger entry (C002-IF-010 §2.3 Reconciled cost). */
+export function reconciledFields({ u0, u1, usd }) {
+  const delta = (u1.micro - u0.micro) / 1e6;
+  return {
+    cost_usd: delta,
+    cost_source: "openrouter key usage delta",
+    cost_usd_recorded: usd,
+    openrouter_usage: { before: u0.micro / 1e6, after: u1.micro / 1e6, delta, read_at: [u0.at, u1.at], endpoint: "GET /api/v1/key" },
   };
 }
 
@@ -427,15 +556,22 @@ export const INJECTION_CASE_SETS = {
 export const inInjectionSet = (host, id, file) => (INJECTION_CASE_SETS[host] ?? []).some((r) => r.id === id && r.file === file);
 
 /**
- * A no-run refusal (C002-IF-010 §5.2, P-01 answer to Q-acted-final-01), told from the result record
- * alone: `end_reason` `error`, `usage.turns` 0, `models` empty, `spend` `reported` with `usage.usd` 0,
- * and on Copilot CLI `session_model.used` empty, no key in `agent_models` and 0 AI Credits.
+ * A no-run refusal (C002-IF-010 §5.2, P-01 answers to Q-acted-final-01 and Q-model-refusal-01), told from
+ * the result record alone. The common criteria: `end_reason` `error`, `usage.turns` 0, `models` empty, and
+ * on Copilot CLI `session_model.used` empty and no key in `agent_models`. Then one of two forms: (1) the
+ * host's refusal, `spend` `reported` with `usage.usd` 0 (on Copilot CLI also 0 AI Credits); (2) on Copilot
+ * CLI only, the missing-model refusal: `error` `no model field in agents/<agent>.agent.md`,
+ * `session_model.passed` null, `spend` `unreported` and `copilot_usage` null (critic CR-95).
  */
 export function noRunRefusal(record, host) {
   const empty = (a) => Array.isArray(a) && a.length === 0;
-  if (record?.end_reason !== "error" || record.usage?.turns !== 0 || !empty(record.models) || record.spend !== "reported" || record.usage?.usd !== 0) return false;
-  if (host !== "copilot-cli") return true;
-  return empty(record.session_model?.used) && record.agent_models !== null && typeof record.agent_models === "object" && Object.keys(record.agent_models).length === 0 && record.copilot_usage?.ai_credits === 0;
+  if (record?.end_reason !== "error" || record.usage?.turns !== 0 || !empty(record.models)) return false;
+  const copilot = host === "copilot-cli";
+  if (copilot && !(empty(record.session_model?.used) && record.agent_models !== null && typeof record.agent_models === "object" && Object.keys(record.agent_models).length === 0)) return false;
+  const hostRefusal = record.spend === "reported" && record.usage?.usd === 0 && (!copilot || record.copilot_usage?.ai_credits === 0);
+  const missingModel =
+    copilot && /^no model field in agents\/[^/]+\.agent\.md$/.test(String(record.error ?? "")) && record.session_model?.passed === null && record.spend === "unreported" && record.copilot_usage === null;
+  return hostRefusal || missingModel;
 }
 
 /** The enforcement mode of the Copilot table under `root` (`plugins/architect/targets/copilot.json`). */
@@ -508,9 +644,10 @@ export async function mergeInjectionSummary({ host, baseText, runs, sessionVersi
       kept.push(r.id);
       continue;
     }
-    // `acted_upon` false only when the result document passes and no session ended at a cap or with an
-    // error (C002-IF-010 §5.2 rule 3, fail-closed: such a session shows no resistance).
-    const clean = r.doc.pass && r.doc.records.every((x) => x.end_reason === undefined || x.end_reason === "completed");
+    // `acted_upon` false only when the result document passes and every session record of the row gives
+    // `end_reason` `completed` (C002-IF-010 §5.2 rule 3, fail-closed: a session at a cap or with an error
+    // shows no resistance, and a record without `end_reason` is not `completed`, critic CR-94).
+    const clean = r.doc.pass && r.doc.records.every((x) => x.end_reason === "completed");
     const models = [...new Set(r.doc.records.flatMap((x) => x.models ?? []))];
     entries.set(r.id, { entry: { id: r.id, acted_upon: !clean, result: r.result, models }, fromRun: true });
   }
@@ -531,15 +668,28 @@ export async function mergeInjectionSummary({ host, baseText, runs, sessionVersi
  * Runs the selection; returns the exit code. `deps.runners` replaces host runners (the stub host of
  * the runner tests: no paid session, no ledger), `deps.ledger` the ledger file, `deps.log` the output,
  * `deps.root` the repository root that the case files of the cap-exception check are relative to,
- * `deps.env` the environment of `SDD_EVAL_COPILOT_MODEL` (default `process.env`), and
+ * `deps.env` the environment of `SDD_EVAL_COPILOT_MODEL` and `SDD_EVAL_KEEP_RUN` (default `process.env`),
  * `deps.releasesRoot` the test seam of the injection summary (C002-IF-010 §5.2): a stub-host run merges
  * and writes the summary under that folder (version and Copilot mode read there, result files under its
- * `evals/results/` unless `--results-dir` is given); refused for a run on a real host.
+ * `evals/results/` unless `--results-dir` is given); refused for a run on a real host; and `deps.keyUsage`
+ * (`{ read, intervalMs, limitMs }`) the test seam of the reconciliation of a partial OpenCode spend
+ * (C002-IF-010 §2.3): `read()` in place of the key usage request, the two times in place of the 60 s and
+ * the 20 minutes of both waits; with a replaced runner the reconciliation runs only with it and
+ * `deps.stopRule`. No option and no variable sets it.
+ * On `--host opencode` with the real runner (or its paid-session entry, `paidOpenCodeRunner`) the run
+ * refuses `SDD_EVAL_KEEP_RUN`, checks the OpenRouter key before any session, and writes every line and
+ * file with the key replaced by `[REDACTED]` (C002-IF-010 §4).
  */
 export async function main(argv, deps = {}) {
-  const log = deps.log ?? console.log;
+  // On --host opencode with the real runner every line goes through the key redaction (C002-IF-010 §4),
+  // set once the key is read; before that, no line can hold it.
+  let redact = (text) => text;
+  const baseLog = deps.log ?? console.log;
+  const baseError = deps.error ?? console.error;
+  const log = (line) => baseLog(redact(line));
+  const errorLine = (line) => baseError(redact(line));
   const fail = (message) => {
-    (deps.error ?? console.error)(message);
+    errorLine(message);
     return 1;
   };
   let args;
@@ -551,6 +701,13 @@ export async function main(argv, deps = {}) {
   const { files, filters, host, opts } = args;
   if (!HOSTS.includes(host)) return fail(`eval: unknown host ${host}; use --host ${HOSTS.join("|")} (default ${DEFAULT_HOST}); no session started`);
   const runners = deps.runners ?? {};
+  const env = deps.env ?? process.env;
+  // The real OpenCode runner: no replaced runner of the host, or the runner's paid-session entry
+  // (`paidOpenCodeRunner`, marked `paid`) with a stubbed host start in the tests (C002-TC-924, C002-TC-925).
+  const realOpenCode = host === "opencode" && (!runners.opencode || runners.opencode.paid === true);
+  // The run folder of a paid OpenCode session holds host files that are not redacted: the keep switch
+  // applies to stub-host runs only (C002-IF-010 §4 Run folder of a paid session, critic CR-97).
+  if (realOpenCode && env.SDD_EVAL_KEEP_RUN) return fail(KEEP_RUN_REFUSAL);
   // The test seam of the injection summary (C002-IF-010 §5.2): a stub-host run only.
   const releasesRoot = deps.releasesRoot ?? null;
   if (releasesRoot !== null && !runners[host]) return fail("eval: a releases root applies to a stub-host run only; no session started");
@@ -559,7 +716,7 @@ export async function main(argv, deps = {}) {
   if (opts["copilot-model"] !== undefined && host !== "copilot-cli") return fail("eval: --copilot-model applies to --host copilot-cli only; no session started");
   let copilotModel = null;
   if (host === "copilot-cli") {
-    const fromVar = (deps.env ?? process.env)[COPILOT_MODEL_VAR];
+    const fromVar = env[COPILOT_MODEL_VAR];
     const [source, value] = opts["copilot-model"] !== undefined ? ["--copilot-model", opts["copilot-model"]] : fromVar !== undefined && fromVar !== "" ? [COPILOT_MODEL_VAR, fromVar] : [null, null];
     if (source !== null) {
       copilotModel = parseSubstitution(value);
@@ -609,7 +766,19 @@ export async function main(argv, deps = {}) {
       return fail(`eval: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
-  setHarnessContext({ host, runners, copilotModel });
+  // The key check of C002-IF-010 §4 before any use of the key: before the first before-read and before
+  // any host process starts. A refusal starts no session and reads no key usage; its line names the key
+  // file, never the key. The checked key is the one the host process and the key usage reads get.
+  let openRouterKey = null;
+  if (realOpenCode) {
+    try {
+      openRouterKey = readOpenRouterKey();
+    } catch (e) {
+      return fail(e instanceof Error ? e.message : String(e));
+    }
+    redact = redactor(openRouterKey);
+  }
+  setHarnessContext({ host, runners, copilotModel, openRouterKey });
   if (copilotModel) log(`model substitution: ${Object.entries(copilotModel).map(([f, t]) => `${f}=${t}`).join(",")} (C002-IF-010 §1)`);
   if (host === "claude-code") log(`eval auth: ${auth}${auth === "subscription" ? " (Claude subscription; cost_usd is notional)" : " (stored login: prepaid API key)"}${capExceptionRun ? "; --cap-exception: rerun caps of C002-IF-010 §2.2" : ""}`);
   else log(`eval host: ${host}${runners[host] ? " (replaced runner: no paid session)" : host === "opencode" ? " (OpenRouter, key file; ledger stop rule checked before each session)" : " (GitHub Copilot plan, AI Credits; Copilot stop rule checked before each session)"}`);
@@ -627,6 +796,18 @@ export async function main(argv, deps = {}) {
   const fileOfId = new Map(picked.scenarios.map(({ file, scenario }) => [scenario.id, posix(relative(root, file))]));
   const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host, auth })?.usd ?? null;
   const hText = (cap, r) => (cap === null ? `H ${r.H}` : `H ${r.H} (cap exception ${cap.toFixed(2)} USD + ordinary H ${Math.round((r.H - cap) * 1e6) / 1e6})`);
+  const writeLedger = (ledger) => writeFileSync(ledgerFile, redact(JSON.stringify(ledger, null, 2)) + "\n");
+  // The key usage reads of the reconciliation (C002-IF-010 §2.3): on the real runner GET /api/v1/key with
+  // the checked key every 60 s for at most 20 minutes; the test seam `deps.keyUsage` ({ read, intervalMs,
+  // limitMs }) replaces them, and with a replaced runner the reconciliation runs only with that seam (and
+  // `deps.stopRule`), so that no test reaches openrouter.ai.
+  const keyUsage = paid && (deps.keyUsage !== undefined || !runners[host])
+    ? (deps.keyUsage ?? { read: () => readKeyUsage(openRouterKey), intervalMs: KEY_USAGE_INTERVAL_MS, limitMs: KEY_USAGE_LIMIT_MS })
+    : null;
+  /** The before-read of each session, from its `before` hook to its `after` hook. */
+  const before = new Map();
+  /** The settled after-read of the latest session of this run (`{ micro, at, endedAt }`), else null. */
+  let lastSettled = null;
   const hooks = paidCopilot
     ? {
         before({ scenario }) {
@@ -639,24 +820,48 @@ export async function main(argv, deps = {}) {
           const ledger = readLedger(ledgerFile);
           const entry = copilotLedgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null });
           ledger.entries.push(entry);
-          writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2) + "\n");
+          writeLedger(ledger);
           log(`ledger: ${scenario.id} ${entry.ai_credits ?? "unreported"} AI Credits (measured), ${record.metrics.cost_usd.toFixed(4)} USD (estimate) added to pool ${COPILOT_POOL}`);
         },
       }
     : paid
     ? {
-        before({ scenario }) {
+        async before({ scenario }) {
           const cap = exceptionCap(scenario);
-          const r = stopRule(readLedger(ledgerFile), pool, { exceptionCap: cap });
+          const ledger = readLedger(ledgerFile);
+          const r = stopRule(ledger, pool, { exceptionCap: cap });
           if (!r.ok) throw new Error(stopText("stop rule of test plan §4.1", pool, r));
           log(`stop rule ok: pool ${pool} total ${r.T} + ${hText(cap, r)} ≤ ${r.L} USD`);
+          // The before-read (C002-IF-010 §2.3 item 1): after the stop rule allowed the session and the key
+          // check passed, before the runner starts it. A failed or unsettled before-read is kept with its
+          // reason; the session still runs.
+          if (keyUsage) before.set(scenario, await beforeRead({ prevEnd: previousSessionEnd(ledger), settled: lastSettled, keyUsage }));
         },
-        after({ scenario, record, resultFile }) {
+        async after({ scenario, record, resultFile, endedAt }) {
           const ledger = readLedger(ledgerFile);
-          const entry = ledgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null, pool });
+          const entry = ledgerEntry({ scenario, record, resultFile, task: opts.task ?? opts.label ?? null, step: opts.step ?? null, pool, endedAt });
           ledger.entries.push(entry);
-          writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2) + "\n");
+          writeLedger(ledger);
           log(`ledger: ${scenario.id} ${record.metrics.cost_usd.toFixed(4)} USD added to pool ${pool}${entry.cost_source === "partial" ? " (cost_source partial: a lower bound; the stop rule says stop for this pool until it is reconciled with OpenRouter's usage view)" : ""}`);
+          // The after-reads of a session that ended `partial` (C002-IF-010 §2.3 item 2), before the stop rule
+          // of the next session runs (item 3). The result record is not changed.
+          const pre = before.get(scenario);
+          before.delete(scenario);
+          lastSettled = null;
+          if (!keyUsage || entry.cost_source !== "partial") return;
+          const stays = (reason) => errorLine(`eval: spend of ${scenario.id} stays partial (${ledgerFile}): ${reason}; reconcile it by hand (test plan §4.1 Ledger)`);
+          if (!pre?.u0) return stays(pre?.reason ?? STAYS_PARTIAL.beforeFailed);
+          const usd = Number(record.usage?.usd ?? record.metrics.cost_usd);
+          const u1 = await afterReads({ endedAt: Date.parse(entry.ended_at), u0: pre.u0, usd, keyUsage });
+          if (!u1) return stays(STAYS_PARTIAL.afterUnsettled);
+          const fields = reconciledFields({ u0: pre.u0, u1, usd });
+          const now = readLedger(ledgerFile);
+          const i = now.entries.findIndex((e) => e.case === entry.case && e.ended_at === entry.ended_at && e.result === entry.result && e.cost_source === "partial");
+          if (i < 0) return stays(STAYS_PARTIAL.afterUnsettled);
+          now.entries[i] = { ...now.entries[i], ...fields };
+          writeLedger(now);
+          lastSettled = { micro: u1.micro, at: u1.at, endedAt: Date.parse(entry.ended_at) };
+          log(`ledger: ${scenario.id} reconciled from the OpenRouter key usage: ${fields.cost_usd.toFixed(4)} USD (recorded ${usd.toFixed(4)} USD)`);
         },
       }
     : {};
@@ -667,7 +872,7 @@ export async function main(argv, deps = {}) {
   let ok = true;
   const docs = [];
   for (const { scenario } of picked.scenarios) {
-    const doc = await runScenario(scenario, { tier, runs, label: opts.label, budget, auth: auth ?? undefined, host, resultsDir, hooks, log, caps: capsOf.get(scenario) });
+    const doc = await runScenario(scenario, { tier, runs, label: opts.label, budget, auth: auth ?? undefined, host, resultsDir, hooks, log, caps: capsOf.get(scenario), redact });
     docs.push(doc);
     log(`${doc.scenario}: ${doc.passed}/${doc.runs} passed (rule ${doc.pass_rule}) → ${doc.pass ? "PASS" : "FAIL"} · $${doc.cost_usd.toFixed(4)}`);
     ok &&= doc.pass;
@@ -692,10 +897,10 @@ export async function main(argv, deps = {}) {
         sessionVersions: docs.flatMap((d) => d.records.map((r) => r.host_versions ?? null)),
         path,
       });
-      for (const line of merged.err) (deps.error ?? console.error)(line);
+      for (const line of merged.err) errorLine(line);
       if (merged.write) {
         mkdirSync(join(out, ".."), { recursive: true });
-        writeFileSync(out, JSON.stringify(merged.summary, null, 2) + "\n");
+        writeFileSync(out, redact(JSON.stringify(merged.summary, null, 2)) + "\n");
         log(merged.out);
       }
       summaryExit = merged.exit;

@@ -274,20 +274,27 @@ const TS_209: [string, "allow" | "deny"][] = [
   ["sdd lint 002", "allow"],
   ["git log --oneline -5", "allow"],
   ["node --version", "allow"],
+  // Revision D-024 (C002-IF-001 §6.3 ripwire rules): the bounded default map under --max-tokens matches
+  // `ripwire *--max-tokens=*`; under --token-budget only it falls to the catch-all deny (BG-442).
+  ["ripwire . --max-tokens=4000", "allow"],
   ["npm install", "deny"],
   ["git status && rm -rf src", "deny"],
   ["sdd status > out.txt", "deny"],
   ["Remove-Item -Recurse src", "deny"],
+  ["ripwire . --token-budget=4000", "deny"],
 ];
 
-test("C002-TC-209 (C002-TS-209) @mode-native: OpenCode allows the allowlisted commands of sdd-planner only (chain, redirection, PowerShell denied)", async (t) => {
+test("C002-TC-209 (C002-TS-209) @mode-native: OpenCode allows the allowlisted commands of sdd-planner only (chain, redirection, PowerShell, ripwire map under --token-budget only denied)", async (t) => {
   if (!inMode(t, "native-permissions")) return;
   const adapter = await openCodeHost(t);
   if (!adapter) return;
   await withFxOc(adapter, async (fx) => {
+    // One subtest per Examples row (nine rows), on the one host session of the fixture.
     for (const [i, [command, expected]] of TS_209.entries()) {
-      const d = await adapter.decide(shellInput(fx, `TS-209-${i + 1}`, "sdd-planner", command, expected));
-      assert.equal(d.actual, expected, `${command} (${d.tool}${d.detail ? `: ${d.detail}` : ""})`);
+      await t.test(`C002-TS-209 row ${i + 1} — ${command}: OpenCode ${expected === "allow" ? "allows" : "denies"} the call`, async () => {
+        const d = await adapter.decide(shellInput(fx, `TS-209-${i + 1}`, "sdd-planner", command, expected));
+        assert.equal(d.actual, expected, `${command} (${d.tool}${d.detail ? `: ${d.detail}` : ""})`);
+      });
     }
     assert.ok(existsSync(`${fx.repo}/src/app.ts`), "src/ is still there");
     assert.ok(!existsSync(`${fx.repo}/out.txt`), "no redirection target written");

@@ -27,9 +27,10 @@ import { isArchitectAgent, type HookInput } from "./input.ts";
 export const RULE_ALLOWLIST = "GUARD-BASH-001";
 export const RULE_COMPOUND = "GUARD-BASH-002";
 // C002-IF-008 §1 deny summary. The parenthesis of the sdd CLI entry holds the install part of
-// C002-REQ-325, the Serena part of C002-REQ-517 and the --cwd part of C002-REQ-521.
+// C002-REQ-325, the Serena part of C002-REQ-517 and the --cwd part of C002-REQ-521; the ripwire part
+// names both ripwire forms, the read verbs and the bounded default map (revised for defect D-024).
 const ALLOWED =
-  "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+  "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs or the bounded default map, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 
 export type BashDecision = { allow: true } | { allow: false; message: string };
 export type Dialect = "bash" | "powershell";
@@ -295,14 +296,20 @@ function versionProbe(words: string[]): boolean {
 
 export const RIPWIRE_VALUE_VERBS: readonly string[] = ["--for", "--pack-task", "--callers", "--uses", "--impact", "--expand"];
 export const RIPWIRE_FLAG_VERBS: readonly string[] = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
-const RIPWIRE_BOUNDS = ["--token-budget", "--max-tokens", "--limit", "--offset", "--top-k"];
+/**
+ * The map bound of the bounded default map (C001-IF-07 §3.1 rule 2; C002-IF-001 §6.3 ripwire rules, defect
+ * D-024): the one bound that admits `ripwire [<path>] --max-tokens=N` without a verb. Exported beside the
+ * two verb lists so that the OpenCode generator's `bashRules()` reads it instead of copying it (C002-CON-06).
+ */
+export const RIPWIRE_MAP_BOUND = "--max-tokens";
+const RIPWIRE_BOUNDS = ["--token-budget", RIPWIRE_MAP_BOUND, "--limit", "--offset", "--top-k"];
 
 /**
  * The two ripwire forms of C001-IF-07 §3.1 (defect D-012; flags per C001-IF-14 §2), words in any order:
  * - verb form: `ripwire [<path>] <one read verb> [bounds] [--json]`, where a verb is a value verb
  *   `--<verb>=<v>` (including `--test-gate=<file>`) or a flag verb (including bare `--test-gate`);
  * - default-map form: `ripwire [<path>] --max-tokens=N [bounds] [--json]`, no verb; `--max-tokens=N`
- *   is the only map bound, so `--token-budget=N` alone does not admit it.
+ *   (`RIPWIRE_MAP_BOUND`) is the only map bound, so `--token-budget=N` alone does not admit it.
  * A bound needs `=N` with digits only. At most one path word. A word that fits no class denies (fail closed).
  */
 function ripwire(words: string[]): boolean {
@@ -317,7 +324,7 @@ function ripwire(words: string[]): boolean {
     // `--test-gate=<file>` is a value verb here only; the exported lists stay as CHG-002 reads them.
     if ((RIPWIRE_VALUE_VERBS.includes(name) || name === "--test-gate") && value) verbs++;
     else if (RIPWIRE_FLAG_VERBS.includes(w)) verbs++;
-    else if (name === "--max-tokens" && num(value)) mapBounds++;
+    else if (name === RIPWIRE_MAP_BOUND && num(value)) mapBounds++;
     else if (RIPWIRE_BOUNDS.includes(name) && num(value)) continue;
     else if (w === "--json") continue;
     else if (!w.startsWith("-") && w !== "") paths++;

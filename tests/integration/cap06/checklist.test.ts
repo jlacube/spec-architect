@@ -353,7 +353,7 @@ test("C002-TS-617 Then 1: the sdd MCP server boundary step (write outside .sdd/,
   assert.ok(/outside `\.sdd\/`/.test(s.body) && /outside the allowlist/.test(s.body), s.id);
 });
 
-test("C002-TS-617 Then 7: the delegated-edit step of C002-TS-358 has the mode both; C002-TS-358, an outline over both modes without a mode tag, maps to a step of each mode", () => {
+test("C002-TS-617 Then 9: the delegated-edit step of C002-TS-358 has the mode both; C002-TS-358, an outline over both modes without a mode tag, maps to a step of each mode", () => {
   const de = STEPS.filter((s) => s.kind === "delegated-edit" && s.scenarios.includes("C002-TS-358"));
   assert.ok(de.length > 0);
   for (const s of de) assert.equal(s.mode, "both", s.id);
@@ -365,16 +365,30 @@ test("C002-TS-617 Then 7: the delegated-edit step of C002-TS-358 has the mode bo
 
 // --- C002-T-066 (revision D-026/D-027): models_used in the fresh-install step and the record template ---
 
-test("C002-TS-617 Then 5: the fresh-install step records in models_used the model ID VS Code showed for the turns of sdd-conductor, or not shown, and whether VS Code showed it where the install notes say", () => {
+// C002-T-067 (defect D-028 items 1 and 2): the two instructions sit in the Record of the install step
+// VSC-02, which runs `sdd install copilot` and opens the conductor chat (C002-IF-009 §4 Models used).
+/** The install step that runs `sdd install copilot` and opens the conductor chat, and its Record text. */
+function vsc02(): { id: string; record: string } {
   const install = STEPS.filter((s) => s.kind === "install" && s.body.includes("sdd install copilot --package"));
   assert.equal(install.length, 1);
-  const record = (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(at(install, 0).body)?.[1] ?? "").replace(/\s+/g, " ");
+  const step = at(install, 0);
+  assert.equal(step.id, "VSC-02", "the install step that runs sdd install copilot is VSC-02");
+  assert.match(step.body.replace(/\s+/g, " "), /select `sdd-conductor` as the session agent/, "VSC-02 opens the conductor chat");
+  return { id: step.id, record: (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(step.body)?.[1] ?? "").replace(/\s+/g, " ") };
+}
+
+test("C002-TS-617 Then 5: the Record of VSC-02 instructs P-01 to fill models_used from the turns of the toy-change steps, with at least the model ID VS Code showed for the turns of sdd-conductor, or not shown", () => {
+  const { record } = vsc02();
+  assert.ok(/for the turns of `sdd-conductor` in this chat and in the toy-change steps that follow/.test(record), record);
   assert.ok(/record in `models_used` under the key `sdd-conductor` the model ID that VS Code showed for those turns, or `not shown`/.test(record), record);
-  assert.ok(/for the turns of `sdd-conductor`/.test(record), record);
-  assert.ok(/whether VS Code showed the model where `INSTALL\.md` says it does \(the chat's model picker\)/.test(record), record);
+  assert.deepEqual(STEPS.map((s) => s.id), STEPS.map((_, i) => `VSC-${String(i + 1).padStart(2, "0")}`), "no step added, removed or renumbered");
+});
+
+test("C002-TS-617 Then 6: the Record of VSC-02 instructs P-01 to write into the note of VSC-02 whether VS Code showed the model where the install notes say it does, or where it showed it instead", () => {
+  const { record } = vsc02();
+  assert.ok(/in this step's `note` whether VS Code showed the model where `INSTALL\.md` says it does \(the chat's model picker\), or where it showed it instead/.test(record), record);
   // The install notes name the chat's model picker as that place (C002-IF-005 §5 Models).
   assert.ok(/the model that the chat's model picker shows for the session/.test(read("plugins/architect/targets/copilot/install.md").replace(/\s+/g, " ")));
-  assert.deepEqual(STEPS.map((s) => s.id), STEPS.map((_, i) => `VSC-${String(i + 1).padStart(2, "0")}`), "no step added, removed or renumbered");
 });
 
 test("C002-TC-618 (template check): the record template holds models_used, a mapping with the key sdd-conductor, where C002-IF-009 §4 shows it", () => {

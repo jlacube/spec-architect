@@ -12,7 +12,9 @@
 // Beside them: the bash rules of native enforcement (C002-REQ-207), the table checks (ERR-GEN-004) and
 // the quick-lint plugin (C002-REQ-215). Carried: C002-TC-229 (TGT-PERM-001, C002-T-035); C002-TC-207,
 // 209, 211, 213, 222, 223 need an OpenCode host (tests/replay/scenarios/opencode-host.test.ts, C002-T-042);
-// C002-TC-230 is an eval (C002-T-044, C002-T-056).
+// C002-TC-230 is an eval (C002-T-044, C002-T-056). C002-T-067 (revision D-024): the bounded ripwire
+// default map rule `ripwire *--max-tokens=*` read from RIPWIRE_MAP_BOUND, no `--token-budget` rule, and
+// the characterization check of the ripwire gap rows (the supporting test of C002-TC-209, critic CR-88).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
@@ -26,7 +28,7 @@ import { readSource } from "../../../scripts/generate/reader.ts";
 import { loadTable, loadTargetTable, type MappingTable, type Mode } from "../../../scripts/generate/tables.ts";
 import { CONDUCTOR, translateAgents } from "../../../scripts/generate/translate/frontmatter.ts";
 import { WRITING_COMMANDS } from "../../../src/cli/writing-commands.ts";
-import { decideBash, GIT_OUTPUT_OPTIONS, GIT_READ, RIPWIRE_FLAG_VERBS, RIPWIRE_VALUE_VERBS, VERSION_PROBES } from "../../../src/hooks/guard-bash.ts";
+import { decideBash, GIT_OUTPUT_OPTIONS, GIT_READ, RIPWIRE_FLAG_VERBS, RIPWIRE_MAP_BOUND, RIPWIRE_VALUE_VERBS, VERSION_PROBES } from "../../../src/hooks/guard-bash.ts";
 import { repoRoot } from "../../helpers.ts";
 
 const root = repoRoot();
@@ -120,6 +122,17 @@ test("C002-REQ-207 @mode-native: the bash rules are generated from the guard's a
   for (const v of GIT_READ) assert.ok(allows.has(`git ${v} *`), `git ${v}`);
   for (const v of RIPWIRE_VALUE_VERBS) assert.ok(allows.has(`ripwire *${v}=*`), v);
   for (const v of RIPWIRE_FLAG_VERBS) assert.ok(allows.has(`ripwire *${v}*`), v);
+  // The bounded default map (C002-IF-001 §6.3 ripwire rules, defect D-024): one rule from the guard's
+  // exported map bound, after the verb rules and before the ast-grep rule; no rule names --token-budget.
+  assert.equal(RIPWIRE_MAP_BOUND, "--max-tokens");
+  const mapRule = `ripwire *${RIPWIRE_MAP_BOUND}=*`;
+  assert.equal(generated.filter(([p]) => p === mapRule).length, 1, "the default-map rule once");
+  const at = generated.findIndex(([p]) => p === mapRule);
+  assert.deepEqual(generated[at], [mapRule, "allow"]);
+  const lastVerb = Math.max(...generated.map(([p], i) => (p.startsWith("ripwire ") && p !== mapRule ? i : -1)));
+  assert.equal(at, lastVerb + 1, "right after the last verb rule");
+  assert.equal(generated[at + 1]![0], "ast-grep run *--pattern*", "right before the ast-grep rule");
+  assert.equal(generated.filter(([p]) => p.includes("--token-budget")).length, 0, "no rule names --token-budget");
   for (const p of VERSION_PROBES) assert.ok(allows.has(p.join(" ")), p.join(" "));
   assert.equal(generated.filter(([p]) => /sdd\.mjs|^node (?!-v$|--version$)/.test(p)).length, 0, "no rule for the script form node <path>/sdd.mjs");
   assert.equal(GIT_OUTPUT_OPTIONS.length, generated.filter(([p, a]) => a === "deny" && p.startsWith("git * ")).length, "one deny per git output option");
@@ -128,11 +141,11 @@ test("C002-REQ-207 @mode-native: the bash rules are generated from the guard's a
 
   // The forms the generated agents send are allowed and agree with the guard; what the guard refuses and a glob can name is denied.
   const guard = (command: string) => decideBash({ hook_event_name: "PreToolUse", agent_type: "architect:sdd-planner", tool_name: "Bash", tool_input: { command }, cwd: root }).allow;
-  for (const cmd of ["sdd lint 002", "git log --oneline -5", "node --version", "node -v", "ripwire --for=x --max-tokens=2000", "ast-grep run --pattern 'f($A)' --lang ts", "sdd serena-config --user-data", "sdd serena-launch --user-data --read-only -- start-mcp-server --context ide", "sdd serena-launch --user-data -- start-mcp-server"]) {
+  for (const cmd of ["sdd lint 002", "git log --oneline -5", "node --version", "node -v", "ripwire --for=x --max-tokens=2000", "ripwire . --max-tokens=4000", "ast-grep run --pattern 'f($A)' --lang ts", "sdd serena-config --user-data", "sdd serena-launch --user-data --read-only -- start-mcp-server --context ide", "sdd serena-launch --user-data -- start-mcp-server"]) {
     assert.equal(decide(generated, cmd), "allow", cmd);
     assert.equal(guard(cmd), true, `the guard allows ${cmd}`);
   }
-  for (const cmd of ["npm install", "rm -rf src", "Remove-Item -Recurse src", "git log -o out.txt", "git diff --output=x", "git log --ext-diff", "ast-grep run --pattern x --rewrite y", "ast-grep run --pattern x -U", "ast-grep run src", "sdd install copilot", "sdd trace 001 --write --cwd ../other-repo", "sdd serena-config ./data", "curl http://x"]) {
+  for (const cmd of ["npm install", "rm -rf src", "Remove-Item -Recurse src", "git log -o out.txt", "git diff --output=x", "git log --ext-diff", "ast-grep run --pattern x --rewrite y", "ast-grep run --pattern x -U", "ast-grep run src", "sdd install copilot", "sdd trace 001 --write --cwd ../other-repo", "sdd serena-config ./data", "curl http://x", "ripwire . --token-budget=4000"]) {
     assert.equal(decide(generated, cmd), "deny", cmd);
     assert.equal(guard(cmd), false, `the guard denies ${cmd}`);
   }
@@ -235,6 +248,49 @@ test("ERR-GEN-004: a table whose rules differ from the generated rules, or that 
   const server = structuredClone(fixtureTable("sdd-mcp-server"));
   server.permissions!["sdd-mcp-server"]["bash"] = "allow";
   assert.match(permissionTableDiagnostics(server, "sdd-mcp-server")[0]!.message, /\/permissions\/sdd-mcp-server\/bash: must be "deny"/);
+});
+
+// --- C002-TC-209 supporting test: the characterization check of the ripwire gap (critic CR-88) --------
+// The gap rows of C002-IF-001 §6.3 for the two ripwire forms: known false allows of the native rules,
+// recorded here; they are no expectation of C002-REQ-207 (the corpus replay of opencode-permissions
+// reports them as differing decisions). The commands are read from the bash corpus by ID.
+const CORPUS = new Map((JSON.parse(readFileSync(join(root, "tests", "guards", "bash-corpus.json"), "utf8")) as { cases: { id: string; command: string; tool: string }[] }).cases.map((c) => [c.id, c]));
+const corpusCommand = (id: string) => {
+  const c = CORPUS.get(id);
+  assert.ok(c && c.tool === "Bash", `${id} is a Bash case of the corpus`);
+  return c.command;
+};
+
+test("C002-TC-209 (supporting, characterization of the ripwire gap): GLOB_GAPS holds the default-map row; the native rules allow BG-448, BG-443 and BG-447 (false allows) and deny BG-442 and BG-444, as the guard does", () => {
+  const generated: [string, string][] = bashRules().map((r) => [r.pattern, r.action]);
+  const guard = (command: string) => decideBash({ hook_event_name: "PreToolUse", agent_type: "architect:sdd-cartographer", tool_name: "Bash", tool_input: { command }, cwd: root }).allow;
+  const map = GLOB_GAPS.find((g) => g.glob === `ripwire *${RIPWIRE_MAP_BOUND}=*`);
+  assert.ok(map, "the default-map gap row");
+  assert.equal(map.effect, "false allow");
+  assert.deepEqual(map.examples, ["BG-448", "BG-443", "BG-447"]);
+  for (const id of map.examples!) {
+    const cmd = corpusCommand(id);
+    assert.equal(decide(generated, cmd), "allow", `${id} ${cmd}: allowed by the native rules (known false allow)`);
+    assert.equal(guard(cmd), false, `${id} ${cmd}: denied by the guard`);
+  }
+  for (const id of ["BG-442", "BG-444"]) {
+    const cmd = corpusCommand(id);
+    assert.equal(decide(generated, cmd), "deny", `${id} ${cmd}: still denied by the native rules`);
+    assert.equal(guard(cmd), false, `${id} ${cmd}: denied by the guard`);
+  }
+  // The verb-form row names its revised examples: an empty --test-gate= and two verbs.
+  const verb = GLOB_GAPS.find((g) => g.rule.startsWith("ripwire verb form"));
+  assert.ok(verb, "the verb-form gap row");
+  assert.equal(verb.effect, "false allow");
+  assert.deepEqual(verb.examples, ["BG-449", "BG-451"]);
+  for (const id of verb.examples!) {
+    const cmd = corpusCommand(id);
+    assert.equal(decide(generated, cmd), "allow", `${id} ${cmd}: allowed by the native rules (known false allow)`);
+    assert.equal(guard(cmd), false, `${id} ${cmd}: denied by the guard`);
+  }
+  // BG-002: the verb form under --token-budget stays allowed (no deny rule names --token-budget).
+  assert.equal(decide(generated, corpusCommand("BG-002")), "allow");
+  assert.equal(guard(corpusCommand("BG-002")), true);
 });
 
 test("glob gaps: the native rules list the guard rules a glob cannot follow (C002-IF-001 §6.3); none under sdd MCP server enforcement", () => {

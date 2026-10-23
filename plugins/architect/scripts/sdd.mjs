@@ -11837,7 +11837,7 @@ function isArchitectAgent(input) {
 // src/hooks/guard-bash.ts
 var RULE_ALLOWLIST = "GUARD-BASH-001";
 var RULE_COMPOUND = "GUARD-BASH-002";
-var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
+var ALLOWED2 = "sdd … or node <path>/sdd.mjs … (not install; serena-config and serena-launch only with --user-data or a data folder outside the repository; --cwd of a writing subcommand only with a folder inside the repository), ripwire read verbs or the bounded default map, ast-grep run --pattern, git log|show|diff|blame|ls-files|rev-parse|status|grep, version probes (node -v, node --version, git --version, claude --version, serena --version, ast-grep --version, uv --version); head -n N, tail -n N, wc -l, sort, uniq only after |";
 function dialectOf(toolName) {
   return toolName === "PowerShell" ? "powershell" : "bash";
 }
@@ -12040,7 +12040,8 @@ function versionProbe(words) {
 }
 var RIPWIRE_VALUE_VERBS = ["--for", "--pack-task", "--callers", "--uses", "--impact", "--expand"];
 var RIPWIRE_FLAG_VERBS = ["--test-gate", "--situ", "--hotspots", "--quality-panel", "--quality-delta", "--pack-signatures", "--doctor", "--help-task", "--version"];
-var RIPWIRE_BOUNDS = ["--token-budget", "--max-tokens", "--limit", "--offset", "--top-k"];
+var RIPWIRE_MAP_BOUND = "--max-tokens";
+var RIPWIRE_BOUNDS = ["--token-budget", RIPWIRE_MAP_BOUND, "--limit", "--offset", "--top-k"];
 function ripwire(words) {
   if (!exe(words[0], "ripwire")) return false;
   let verbs = 0;
@@ -12052,7 +12053,7 @@ function ripwire(words) {
     const value2 = eq < 0 ? void 0 : w.slice(eq + 1);
     if ((RIPWIRE_VALUE_VERBS.includes(name) || name === "--test-gate") && value2) verbs++;
     else if (RIPWIRE_FLAG_VERBS.includes(w)) verbs++;
-    else if (name === "--max-tokens" && num2(value2)) mapBounds++;
+    else if (name === RIPWIRE_MAP_BOUND && num2(value2)) mapBounds++;
     else if (RIPWIRE_BOUNDS.includes(name) && num2(value2)) continue;
     else if (w === "--json") continue;
     else if (!w.startsWith("-") && w !== "") paths++;

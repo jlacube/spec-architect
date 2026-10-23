@@ -11,7 +11,10 @@
 //     would provide them; the same two names are on the host's PATH for its shell;
 //   - the host process gets its own config, data, cache and state folders under the run folder (no
 //     credential store and no auth.json is read), SERENA_HOME and LOCALAPPDATA in the run folder, and the
-//     OpenRouter key from the key file of the driver (`paid`), which refuses the session without it;
+//     OpenRouter key that run.mjs read and checked, else the key file's (`paid`), refused by the key check
+//     of C002-IF-010 §4 before the host starts; every occurrence of the key in the session result is
+//     written `[REDACTED]`, and the run folder of a paid session is deleted at its end, after an error too
+//     (`SDD_EVAL_KEEP_RUN` keeps it on the stub host only; C002-T-067);
 //   - the case's agent name loses its `architect:` prefix; a `/architect:<name> <args>` or
 //     `/architect-<name> <args>` prompt runs that server command (`session.command`); the eval relay
 //     `architect:eval-dispatcher` ("Dispatch: <agent>" + brief) has no OpenCode counterpart, so the
@@ -41,6 +44,8 @@ import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, rm
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { createCaps } from "../caps.mjs";
+import { defaultOpenRouterKeyFile, readOpenRouterKey, redactor } from "../key-usage.mjs";
+import { namesOf } from "../session.mjs";
 
 // The repository root: the first folder up from this module that holds the OpenCode table (also when a
 // test bundles this module elsewhere in the repository).
@@ -391,13 +396,17 @@ function removeLink(path) {
 }
 
 /**
- * The real host: the pinned binary through the driver, paid (OpenRouter key file), with the package in
- * the project. `start({ project, runDir })` → `{ version, run(options), stop() }`.
+ * The real host: the pinned binary through the driver, paid (OpenRouter key), with the package in the
+ * project. `start({ project, runDir })` → `{ version, run(options), stop(), key }`. `key` is the key that
+ * run.mjs read and checked (C002-IF-010 §4 Key check); without it the key file (`keyFile`, default P-01's)
+ * is read and checked here, before any use of the key and before the host process starts. The started
+ * host gives the key back for the runner's redaction (`key`), never for a write.
  */
-export function driverHost({ keyFile, bin, start } = {}) {
+export function driverHost({ keyFile, key, bin, start } = {}) {
   return {
     needsPackage: true,
     async start({ project, runDir, env: caseEnv = {} }) {
+      const secret = key ?? readOpenRouterKey(keyFile ?? defaultOpenRouterKeyFile());
       // `start` replaces the driver's startOpenCode in the runner tests (C002-TC-907: no opencode serve).
       const startOpenCode = start ?? (await import("../opencode/driver.mjs")).startOpenCode;
       const links = [];
@@ -440,13 +449,14 @@ export function driverHost({ keyFile, bin, start } = {}) {
       if (casePathKey) env[pathKey] = caseEnv[casePathKey];
       let driver;
       try {
-        driver = await startOpenCode({ ...(bin ? { bin } : {}), project, runDir, isolate: false, paid: keyFile ? { keyFile } : {}, env });
+        driver = await startOpenCode({ ...(bin ? { bin } : {}), project, runDir, isolate: false, paid: { ...(keyFile ? { keyFile } : {}), key: secret }, env });
       } catch (e) {
         for (const l of links) removeLink(l);
         throw e;
       }
       return {
         version: driver.version,
+        key: secret,
         run: (o) => driver.run(o),
         async stop() {
           try {
@@ -462,8 +472,25 @@ export function driverHost({ keyFile, bin, start } = {}) {
 
 // --- Session --------------------------------------------------------------------------------------
 
-function keepRunDir() {
-  return Boolean(process.env.SDD_EVAL_KEEP_RUN);
+/**
+ * Whether the run folder is kept for debugging (`SDD_EVAL_KEEP_RUN`): on the stub host only. The run folder
+ * of a paid session holds the host's isolated data folders, whose host files are not redacted, so it is
+ * deleted when the session ends, after an error too (C002-IF-010 §4 Run folder of a paid session).
+ */
+function keepRunDir(host) {
+  return !host.needsPackage && Boolean(process.env.SDD_EVAL_KEEP_RUN);
+}
+
+/**
+ * The OpenCode runner's paid-session entry (C002-IF-010 §4): the session on the pinned host binary with
+ * the key that run.mjs read and checked (`options.openRouterKey`, else the key file), names by the row's
+ * `host` field. `start` and `bin` replace the driver's host start and binary in the runner tests (a stubbed
+ * host start: no `opencode serve`, no network). Marked `paid`, so that run.mjs treats a test's entry as the
+ * real runner (key check, redaction, keep switch refused).
+ */
+export function paidOpenCodeRunner({ keyFile, bin, start } = {}) {
+  const run = (options) => runOpenCodeSession({ ...options, names: options.names ?? namesOf(options) }, { host: driverHost({ keyFile, key: options.openRouterKey ?? undefined, bin, start }) });
+  return Object.assign(run, { paid: true });
 }
 
 /**
@@ -534,9 +561,13 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
   let h;
   let r = null;
   let error = null;
+  // The key redaction (C002-IF-010 §4): every occurrence of the key in the session result (host events,
+  // error texts, tool output, model messages) is written `[REDACTED]`.
+  let redact = redactor(options.openRouterKey ?? null);
   try {
     if (host.needsPackage) placePackage(cwd, generatedPackage(options.targetPackage), sddScripts(), options.mcpOverrides);
     h = await host.start({ project: cwd, runDir, env: options.env ?? {} });
+    if (h.key) redact = redactor(h.key);
     version = h.version;
     stamp({ event: "host", target: TARGET, host_versions: { opencode: version }, tested: testedVersion(table) });
     const modelRef = model ? (/\//.test(model) ? { providerID: model.split("/")[0], modelID: model.split("/").slice(1).join("/") } : undefined) : undefined;
@@ -590,10 +621,10 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
     stamp({ event: "error", message: error });
   } finally {
     await h?.stop().catch(() => {});
-    if (!keepRunDir()) rmSync(runDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+    if (!keepRunDir(host)) rmSync(runDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
     else stamp({ event: "run-dir", path: runDir });
   }
-  if (r === null && error !== null && version === null) throw new Error(`OpenCode eval session not started: ${error}`);
+  if (r === null && error !== null && version === null) throw new Error(redact(`OpenCode eval session not started: ${error}`));
   if (endReason === null) endReason = error ? "error" : "completed";
   if (error && endReason === "error") stamp({ event: "error", message: error });
   const messages = r?.messages ?? [];
@@ -638,7 +669,7 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
     modelUsage: byModel,
   };
   transcript.push({ t: Date.now() - t0, type: "sdk", message: result });
-  return {
+  const out = {
     transcript,
     answers,
     result,
@@ -654,4 +685,7 @@ export async function runOpenCodeSession(options, { host = driverHost(), table =
     models: Object.keys(byModel),
     ...(error ? { error } : {}),
   };
+  // Redacted as a whole after the JSON encoding, so an occurrence inside a JSON string is replaced too; a
+  // checked key holds no character that JSON escapes, so the text stays valid JSON.
+  return h?.key || options.openRouterKey ? JSON.parse(redact(JSON.stringify(out))) : out;
 }

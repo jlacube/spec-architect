@@ -21,7 +21,7 @@
 // `GLOB_GAPS` lists the guard rules a glob cannot follow (C002-IF-001 §6.3): C002-T-043 reads it with
 // the replay outcome to select the OpenCode mode.
 import { WRITING_COMMANDS } from "../../../src/cli/writing-commands.ts";
-import { AST_GREP_RUN, GIT_OUTPUT_OPTIONS, GIT_READ, PIPE_ONLY_FORMS, RIPWIRE_FLAG_VERBS, RIPWIRE_VALUE_VERBS, VERSION_PROBES } from "../../../src/hooks/guard-bash.ts";
+import { AST_GREP_RUN, GIT_OUTPUT_OPTIONS, GIT_READ, PIPE_ONLY_FORMS, RIPWIRE_FLAG_VERBS, RIPWIRE_MAP_BOUND, RIPWIRE_VALUE_VERBS, VERSION_PROBES } from "../../../src/hooks/guard-bash.ts";
 import { diagnostic, type Diagnostic } from "../diagnostics.ts";
 import type { MappingTable, Mode } from "../tables.ts";
 import type { TranslatedAgent } from "../translate/frontmatter.ts";
@@ -47,7 +47,9 @@ export function editRules(): PermissionRule[] {
 
 /**
  * `bash` rules under native permission enforcement, in evaluation order (C002-IF-001 §6.3): the
- * catch-all deny; `sdd *`; `git <read verb> *`; one rule per ripwire read verb; `ast-grep run
+ * catch-all deny; `sdd *`; `git <read verb> *`; one rule per ripwire read verb, then the bounded
+ * default map `ripwire *--max-tokens=*` (from `RIPWIRE_MAP_BOUND`; no rule names `--token-budget`, whose
+ * map form falls to the catch-all deny, revised for defect D-024); `ast-grep run
  * *--pattern*`; the version probes and the pipe-only entries as exact strings (`N` → `*`); then the
  * deny forms: git output options, ast-grep rewrite options, the `deny` rows of the writing-command
  * table (`sdd install *`), the Serena commands, then their `--user-data` forms allowed again, and
@@ -58,6 +60,7 @@ export function bashRules(): PermissionRule[] {
   for (const verb of GIT_READ) out.push(rule(`git ${verb} *`, "allow"));
   for (const verb of RIPWIRE_VALUE_VERBS) out.push(rule(`ripwire *${verb}=*`, "allow"));
   for (const verb of RIPWIRE_FLAG_VERBS) out.push(rule(`ripwire *${verb}*`, "allow"));
+  out.push(rule(`ripwire *${RIPWIRE_MAP_BOUND}=*`, "allow"));
   out.push(rule(`ast-grep ${AST_GREP_RUN.subcommand} *${AST_GREP_RUN.pattern[0]}*`, "allow"));
   for (const probe of VERSION_PROBES) out.push(rule(probe.join(" "), "allow"));
   for (const form of PIPE_ONLY_FORMS) out.push(rule(form.map((w) => (w === "N" ? "*" : w)).join(" "), "allow"));
@@ -84,6 +87,8 @@ export interface GlobGap {
   effect: "false allow" | "false deny" | "false allow and false deny";
   /** What the pattern cannot follow. */
   gap: string;
+  /** Bash corpus cases that show the difference (C002-IF-001 §6.3 gap table), where the table names them. */
+  examples?: readonly string[];
 }
 
 /** The glob gaps of the native rules (C002-IF-001 §6.3); any one of them selects `sdd-mcp-server` (C002-T-043). */
@@ -97,7 +102,14 @@ export const GLOB_GAPS: readonly GlobGap[] = [
   { rule: "Serena data folder outside the repository (C002-REQ-517)", glob: "sdd serena-config|serena-launch denied, --user-data forms allowed", effect: "false deny", gap: "the repository is unknown when the package is generated" },
   { rule: "git output options", glob: "git * <option>* denied", effect: "false allow", gap: "spellings a pattern misses" },
   { rule: "--cwd of a writing sdd subcommand only inside the repository root (C002-REQ-521)", glob: "sdd *--cwd* denied last", effect: "false deny", gap: "the repository root is unknown when the package is generated" },
-  { rule: "ripwire: one read verb, bounded flags only (C001-IF-14 §2)", glob: "one allow rule per read verb", effect: "false allow", gap: "two read verbs or another flag still match" },
+  { rule: "ripwire verb form: one read verb, bounded flags only (C001-IF-07 §3.1 rule 1, C001-IF-14 §2)", glob: "one allow rule per read verb", effect: "false allow", gap: "a command with two read verbs or another flag still matches an allow rule (an empty --test-gate=, two verbs)", examples: ["BG-449", "BG-451"] },
+  {
+    rule: "ripwire default-map form: no verb, at least one --max-tokens=N with digits-only N, at most one path word, only bound and output words besides (C001-IF-07 §3.1 rule 2; defect D-024)",
+    glob: `ripwire *${RIPWIRE_MAP_BOUND}=*`,
+    effect: "false allow",
+    gap: "the glob matches every ripwire command that holds --max-tokens= anywhere: a span-edit, write or unknown option, a non-digit N or two path words are allowed; --token-budget=N alone (BG-442) and a bare --max-tokens (BG-444) stay denied",
+    examples: ["BG-448", "BG-443", "BG-447"],
+  },
   { rule: "ast-grep run --pattern without rewrite flags", glob: "ast-grep run *--pattern* allowed, rewrite options denied", effect: "false allow", gap: "spellings a pattern misses" },
   { rule: "PowerShell dialect (C001-IF-07 §3)", glob: "none", effect: "false allow and false deny", gap: "OpenCode has one shell tool; the rules follow the Bash rows" },
 ];
