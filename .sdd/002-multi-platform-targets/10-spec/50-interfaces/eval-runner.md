@@ -57,7 +57,9 @@ host with `TS-359` on Copilot CLI, and an injection summary that a run of fewer 
 instead of replacing, fail-closed (§4 Release evidence by mode, §5). Revised for defect D-023 item 2
 (P-01 answer to Q-c002-defects-01, "Fix most, defer D-023(1) (Recommended)"): a `partial` spend of an
 OpenCode session is reconciled automatically from the usage of the OpenRouter key, read before and
-after the session (§2.3). Revised for defect D-028 items 3 … 6 (findings of C002-T-066), stating what
+after the session (§2.3), and the OpenCode eval runner replaces the key's value with `[REDACTED]`
+in everything it writes, host and model text included (§4 Key redaction; P-01 answer to
+Q-key-redact-01). Revised for defect D-028 items 3 … 6 (findings of C002-T-066), stating what
 that task implemented: rule 3 of the injection-summary merge is fail-closed for a session that did
 not end `completed`, the check order of rule 2, the internal-error line of rule 5 (§5.2), and the
 missing-model refusal of the Copilot CLI runner after the host version is read (§2 model rule).
@@ -413,7 +415,11 @@ is not a finite number of at least 0.
    20 minutes from the end of the session. A read that fails is skipped, and the next read follows
    60 s later. The usage is **settled** at the first read that gives the same `usage` as the read
    before it, provided that this value is at least `U0` plus the session's `usage.usd` (its recorded
-   lower bound). The wait exists because OpenRouter's key usage lags the session: about 15 minutes
+   lower bound). "The read before it" is the latest earlier after-read of this session that did not
+   fail. A failed read is passed over, so it neither settles nor breaks the comparison, and the two
+   equal reads are then at least 60 s apart. The before-read never counts as the read before it. The
+   first after-read therefore never settles, and at least two after-reads must succeed (revised after
+   the test design of D-023 item 2). The wait exists because OpenRouter's key usage lags the session: about 15 minutes
    in the smoke session of C002-T-044, and the hand reconciliation of C002-T-056 X3 settled on a
    second read (the ledger notes of both entries).
 3. **Order.** The reconciliation ends before `run.mjs` checks the stop rule for the next session or
@@ -463,8 +469,8 @@ by hand only.
 the key in the `Authorization` header to `openrouter.ai` and nowhere else. It never prints, logs or
 writes the key or the request's headers: not in a line, a result, a transcript, a ledger entry or an
 error text. A failed read is reported by the `<reason>` above, never by the request or the
-response's body. The key-file rule of §4 (Provider key) applies to this read as it does to the
-host process.
+response's body. The key-file rule of §4 (Provider key) and the key redaction of §4 (Key redaction)
+apply to this read as they do to the host process.
 
 **Test seam.** `main(argv, deps)` of `run.mjs` takes `deps.keyUsage`, an object
 `{ read, intervalMs, limitMs }`. `read()` returns the key's usage in USD or throws, in place of the
@@ -629,6 +635,31 @@ F-8, F-10; revised for defect D-015 item 4). The OpenCode runner, and the corpus
   key source `openrouter-key-file`; the runner refuses to start the session when the file is missing
   or empty. The key is never printed, logged, written to a result or committed (P-01's key file
   replaces the credential store that an earlier text of this contract named).
+- **Key redaction** (P-01 answer to Q-key-redact-01, "Redact host text too (Recommended)";
+  C002-REQ-639). The OpenCode eval runner is `evals/harness/runners/opencode.mjs`, with
+  `evals/harness/run.mjs` for a run on `--host opencode`. It replaces every occurrence of the key's
+  value with `[REDACTED]` in every line and file it writes: standard output, standard error, result
+  records, transcripts, ledger entries and logs.
+  - **Host and model text.** The rule also covers text that the runner did not produce itself: the
+    host's events and error texts, a tool's output, and the model's messages, for example an agent
+    that prints `OPENROUTER_API_KEY` through a command. It also covers a host file that the runner
+    copies or quotes. Files that the host process writes itself into its isolated data folders (below)
+    are not the runner's writes, and the runner copies none of them unredacted.
+  - **Matching.** Matching is on the exact key value: the one line of the key file with the white
+    space at its ends removed. It is case-sensitive, with no partial or fuzzy match. Each complete
+    line or file is replaced before it is written, after any JSON encoding, so an occurrence inside
+    a JSON string is replaced as well.
+  - **Key too short or unsafe.** Before any use of the key, the runner checks it: before the
+    before-read of §2.3 and before the host process starts. A missing or empty key file, as above,
+    refuses the session with no key usage read. So does a key that is shorter than 20 characters,
+    or that holds a character that JSON escapes (`"`, `\` or a control character). Such a key is
+    used for nothing, since an exact replacement of a short value would also hit unrelated text,
+    and an escaped key would not match its JSON form. The refusal text is
+    `paid OpenCode session refused: the OpenRouter key in <key file> is shorter than 20 characters
+    or holds a character that JSON escapes`. `<key file>` is the path, never the key. OpenRouter's
+    keys are far longer and hold no such character, so the check refuses no real key.
+  - **No other key.** The rule names the OpenRouter key alone. The other runners pass no key that
+    they read themselves (§3 `api_key_source`).
 - **Node.js.** The machine that runs the runner or the replay with the OpenCode JS SDK has Node.js
   22.22.2 or later (F-10; `../10-context/scope.md` §5); the adopter's floor stays Node.js 20
   (C002-IF-006 §2).
