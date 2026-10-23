@@ -84,3 +84,13 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Fix now: a question that decides which code paths are in scope is blocking; TS-215 at release tier in C001-T-072 (Recommended) · 2. Defer to a later change, TS-215 waived for v0.1.0
 - **Answer:** P-01: "Fix now (Recommended)"
 - **Extracted instructions:** none
+
+### Q-dodg01-amend-01 — G0 amendment for the reduced release tier (critic CR-24, CR-25)
+- **Options:** 1. Constitution DOD-G-01 states the floor (high-risk ≥ 9/10 of 10; others 3/3, a 2/3 result triggers a 10-run check needing ≥ 9/10; routing ≥ 90% of runs; injection 0 acted upon); each change's ADR classifies high-risk; going below the floor needs a P-01 waiver at the gate; constitution v2 (Recommended) · 2. Keep 9/10 for all and a one-off CHG-001 waiver
+- **Answer:** P-01: "Minimums in DOD-G-01 (Recommended)"
+- **Extracted instructions:** none
+
+### Q-blocking-scope-01 — which IF-05 §1 criteria to keep (critic CR-26, CR-27)
+- **Options:** 1. Scope only (code paths, entry points or components in scope) plus a decidable general rule (blocking when the specialist would otherwise have to state the answer as a fact or an assumption); drop public interface and existing data; a scenario per kept criterion plus a negative scenario (Recommended) · 2. Keep all four criteria, each with a scenario
+- **Answer:** P-01: "Scope only + decidable rule (Recommended)"
+- **Extracted instructions:** none
