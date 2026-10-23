@@ -41,7 +41,7 @@ F-7 coverage skip). Commit pending; the T-080 report gives it.
 | C001-NFR-404 Artifact encoding | 0 files violating UTF-8 without BOM, LF | 2026-10-22, step "artifact encoding scan" of `npm run check`, all four runs: files written by the CLI 0 of 622 (fx-large) and 0 of 12 (fx-empty); repository `.sdd/` 1 of 335 reported (CRLF in the working tree, not written by the CLI) | **pass** | §5 |
 | C001-NFR-501 Single-file runtime | 0 runtime imports of unbundled packages | `sdd.mjs` copied alone to a folder with no `node_modules` above it: `version`, `lint`, `status --write`, `trace --write` run on Node 20 and 22; 8 import specifiers, all Node built-ins | **pass** | §6 |
 | C001-NFR-502 CLI test coverage | ≥ 85% lines, ≥ 75% branches | 2026-10-22, step "coverage" of `npm run check` on Node 22.22.3, no exclusions: 88.72% lines (8,818/9,939), 82.06% branches (4,937/6,016) in Git Bash; 89.09% (8,855/9,939) / 82.48% (4,968/6,023) in PowerShell 7. On Node 20.20.2 the step is skipped with its reason (Environment of the NFR; F-7) | **pass** | §4 |
-| C001-NFR-503 One rule, one module | 0 catalogue codes without module or fixture | PLG-RULES-001: 0 errors, 12 pending (LINT-RISK-001, LINT-ROLL-001, LINT-HAND-001, LINT-HAND-002: no module and no fixture, owned by C001-T-076, todo) | **open until T-076** | §3 |
+| C001-NFR-503 One rule, one module | 0 catalogue codes without module or fixture | PLG-RULES-001: 0 errors, 0 pending (C001-T-076, 3570bc0: LINT-RISK-001, LINT-ROLL-001, LINT-HAND-001, LINT-HAND-002 and the other plan rules have a module and a bad/good fixture) | **pass** | §3 |
 | C001-NFR-601 Actionable messages | 0 catalogue entries without code, location, fix | PLG-MSG-001: 0 findings | **pass** | §3 |
 | C001-NFR-602 Time to first change | ≤ 15 min on a fresh profile | not measured: manual timed run by P-01 (`tests/manual/TS-1102.md`, C001-T-072) | **not measured** | — |
 | C001-NFR-701 Per-phase usage record | 0 gate-log rows without a Usage cell | LINT-GATE-001: 0 findings on CHG-001 (`sdd lint 001`: 0 errors); every row has a cell (`unavailable` so far) | **pass** | `.sdd/001-architect-agent-suite/change.md` Gate log |
@@ -188,10 +188,9 @@ Failing tests on Node 20.20.2 (both shells unless noted):
 
 ## 3. Structure checks (NFR-105, 204, 402, 503, 601)
 
-`node scripts/check/run.mjs` (also inside every check run): 16 checks, 0 errors, 33 pending. The
-pending findings belong to open owner tasks: 21 × PLG-EVAL-001 (C001-T-063, delegation evals) and
-12 × PLG-RULES-001 (C001-T-076, the four plan rules LINT-RISK-001, LINT-ROLL-001, LINT-HAND-001,
-LINT-HAND-002 without a module and a fixture). PLG-SIZE-001, PLG-TOOLS-001, PLG-PORT-001,
+`node scripts/check/run.mjs` (also inside every check run): 16 checks, 0 errors, 21 pending (after C001-T-076, 3570bc0; 33 before). The
+pending findings belong to an open owner task: 21 × PLG-EVAL-001 (C001-T-063, delegation evals).
+The 12 × PLG-RULES-001 of the plan rules are resolved by C001-T-076. PLG-SIZE-001, PLG-TOOLS-001, PLG-PORT-001,
 PLG-PORT-002 and PLG-MSG-001 report nothing.
 
 macOS and Linux are **not measured here**: the dormant workflow `.github/workflows/check.yml` runs
@@ -328,7 +327,7 @@ folder holds only `sdd.mjs` (`tests/smoke.test.ts`).
 | F-6 (**resolved** by C001-T-080 round 2, b606935: the bench applies the C001-TC-1126 rule and exits non-zero on a failing file; D-015 **resolved** by C001-T-081, a0c86b3 (the T-081 report gives it): a re-run of `sdd archive` after an interrupted run finishes the remaining operations without duplicates, C001-REQ-924, C001-TC-1131; fault campaign rerun 0 failing files, §1) | C001-NFR-301 | A kill of `sdd archive` between its in-place writes (living specs, glossary, `change.md` with `status: archived`) and the move of the change folder leaves a change folder that says `archived` but is not under `_archive/` (1 of 1,000 bench runs; 1 of 400 probe runs). Every file is complete. Re-running `sdd archive` after a failed archive also merges the living entries twice (seen while extending `tests/integration/faults.test.ts`: `C001-REQ-101` twice in `CAP-area-1.md`). Needs a decision: either the bench counts any complete version the command writes, or `archive` gets recovery or idempotent merging. | §1; `bench/results/faults-2026-10-22T09-15-24-050Z.json` |
 | F-7 (**resolved** by C001-T-080 round 2, b606935: on Node 20 the coverage step reports skipped with its reason and counts as passed, Q-cov-node20-01) | C001-NFR-401, 502 | On Node 20.20.2 the coverage step cannot produce a figure: Node 20's test runner fails to merge coverage of several processes (`TypeError … reading 'startOffset'`), so `npm run check` exits 1 on Node 20 in both shells, although every test passes. Needs a decision: run the coverage step on Node 22 only (Node 20 reports it as skipped with the reason), or accept the Node 20 failure. | §2, §4 |
 
-Not findings, but open: NFR-503 until C001-T-076; NFR-106, NFR-304 until C001-T-073/T-074; NFR-602
+Not findings, but open: NFR-106, NFR-304 until C001-T-073/T-074; NFR-602
 and TS-1102 until C001-T-072; NFR-205 milestone tier before release; macOS/Linux runs of NFR-402 via
 the dormant workflow.
 
