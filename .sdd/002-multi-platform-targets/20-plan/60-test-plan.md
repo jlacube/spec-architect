@@ -34,12 +34,12 @@ file, each case is one `test()` whose name starts with its TS ID (or, for an NFR
 
 | Level | Kind | Meaning | Count | Runner |
 |---|---|---|---|---|
-| integration | — | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host (an in-process stub host at most, C002-TC-656, C002-TC-667) | 177 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded) |
+| integration | — | CLI (the Copilot install command included), guards, sdd MCP server (from the packed tarball), hook adapter, release check and runner tests against fixtures; no host (an in-process stub host at most, C002-TC-656, C002-TC-667) | 177 | `npm test` (`scripts/test.mjs`, `node --test`, `tests/no-network.mjs` preloaded); `npm run smoke:npm` (C002-TC-501); `npm run check` and `npm run bench` (C002-TC-626) |
 | integration | structure | Static checks of generated target packages, the target structure check (TGT-*, PLG-VAR-001), README sections and the VS Code checklist file | 53 | `npm test` (and the target-structure step of `npm run check`, C002-ADR-003) |
 | integration | replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 (feasible, S-07 §4) on the pinned host binary, C002-TC-666 and C002-TC-681 included | 28 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
 | integration | benchmark | Timing of an NFR threshold on REF-WIN, result file under `bench/results/` (C002-TC-905) | 1 | `npm run bench` (`bench/*.mjs`) |
 | eval | — | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 27 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
-| manual | — | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
+| manual | — | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 and C002-T-057 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
 | unit | — | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
 | e2e | — | Not used in CHG-002: host sessions are eval cases, and P-01's runs are manual cases | 0 | — |
 
@@ -616,7 +616,8 @@ C002-TC-902 (OpenCode, C002-T-051) and C002-TC-903 (Copilot, C002-T-057) are tim
 recorded in `docs/releases/clean-profile-runs.md` (C002-DOD-019; C002-DOD-021 for the OpenCode toy
 change to G1).
 The `@review` cases (C002-TC-616, 617, 619, 632) are automated checks of the checklist file plus the
-review entry of C002-DOD-007.
+review entry of C002-DOD-007. The runner runs their checks (Executor "—"); P-01 writes the
+C002-DOD-007 review entry for C002-TC-616, 617, 619 and 632.
 
 ## 8. Test cases
 

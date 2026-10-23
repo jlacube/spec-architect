@@ -1024,7 +1024,7 @@ Scope: 43992ff…e65ad24 (20-plan/60-test-plan.md), against D-029, Q-tc-lint-01,
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-54 | minor | TC-501, TC-626, §1, §8 | Executor "—" means the §1 runner, but no-kind integration lists only `npm test`; TC-501 runs `npm run smoke:npm`, TC-626 `npm run check` / `npm run bench` | add those commands to the §1 Runner cell, or define "—" as run by its Command cell | open |
-| CR-55 | minor | TC-616, 617, 619, 632, DOD-007 | @review rows include a review entry a person writes, but Executor is "—" and no plan file names the reviewer | name the reviewer (P-01) in the Executor cells or one §7 sentence | open |
-| CR-56 | minor | §1 manual row, TC-903, T-057 | the manual row names only C002-T-051 for the timed runs; TC-903 is C002-T-057 (pre-existing) | "…of C002-T-051 and C002-T-057" | open |
-| CR-57 | minor | D-029, §1 | integration count 173 → 177 (correct) not recorded in D-029 | mention in the D-029 resolution | open |
+| CR-54 | minor | TC-501, TC-626, §1, §8 | Executor "—" means the §1 runner, but no-kind integration lists only `npm test`; TC-501 runs `npm run smoke:npm`, TC-626 `npm run check` / `npm run bench` | add those commands to the §1 Runner cell, or define "—" as run by its Command cell | fixed (§1 no-kind integration Runner cell adds `npm run smoke:npm` for TC-501 and `npm run check`, `npm run bench` for TC-626) |
+| CR-55 | minor | TC-616, 617, 619, 632, DOD-007 | @review rows include a review entry a person writes, but Executor is "—" and no plan file names the reviewer | name the reviewer (P-01) in the Executor cells or one §7 sentence | fixed (§7 sentence: the runner runs the checks, P-01 writes the DOD-007 review entry; Executor cells unchanged) |
+| CR-56 | minor | §1 manual row, TC-903, T-057 | the manual row names only C002-T-051 for the timed runs; TC-903 is C002-T-057 (pre-existing) | "…of C002-T-051 and C002-T-057" | fixed (§1 manual row names C002-T-051 and C002-T-057) |
+| CR-57 | minor | D-029, §1 | integration count 173 → 177 (correct) not recorded in D-029 | mention in the D-029 resolution | fixed (recorded in the D-029 resolution) |
