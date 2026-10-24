@@ -139,7 +139,7 @@ their dependencies allow.
 | 56 | C001-T-079 | Bash guard: ripwire verb and bounded default-map forms (D-012) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-079-ripwire-guard-forms.md` |
 | 57 | C001-T-080 | NFR catch-up (D-014): Node 20 package filter and test cleanup, archive faults, check encoding and coverage steps, coverage to 85% | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-080-nfr-catch-up.md` |
 | 58 | C001-T-081 | Archive resumes after an interrupted run without duplicates (D-015) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-081-archive-resume.md` |
-| 59 | C001-T-082 | Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-082-blocking-criteria.md` |
+| 59 | C001-T-082 | Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017) — cross-change dependency: the CHG-002 fix task of defect D-031 (harness hides the budget from the model) must be done before its step 4 reruns | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-082-blocking-criteria.md` |
 | 60 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
 | 61 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
 | 62 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |

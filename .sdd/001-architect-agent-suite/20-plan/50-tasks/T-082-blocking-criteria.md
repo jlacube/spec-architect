@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: blocked
 depends_on: [C001-T-063]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-223, C001-TS-224, C001-TC-223, C001-TC-224, C001-TC-215, C
 components: [C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
-report: { commit: null, completed_at: null, notes: "blocked: waits for C002-T-068 (CHG-002 D-030 cap exceptions for TS-223/224 and other release cases)" }
+report: { commit: null, completed_at: null, notes: "blocked: waits for the CHG-002 fix task of D-031 (harness hides the budget from the model); then TC-223/224 milestone reruns" }
 ---
 
 # C001-T-082 — Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017)
@@ -35,8 +35,9 @@ C001-T-072.
 |---|---|---|
 | modify | `plugins/architect/skills/sdd-conventions/SKILL.md › Return contract, blocking bullet` | replace the one-line `blocking: true` rule (about line 130) with the two criteria of C001-IF-05 `questions.md` §1 (scope; stated answer). Add the rule that covering every option counts as an assumption for a scope question and as no assumption for any other question. Link to C001-IF-05 rather than copying its rationale |
 | modify | `plugins/architect/skills/code-discovery/SKILL.md` | one line where the cartographer reports open points: a question that decides which entry points or code paths are in scope is blocking, even when the survey covers all of them (C001-IF-05 §1 criterion 1) |
+| modify | `plugins/architect/skills/sdd-conventions/SKILL.md › Return contract, question ID and empty block` | D-018 run findings (TC-223 run 3, TC-224 run 2). Question IDs are `Q-<topic>-<nn>`, with the topic in lowercase letters (for example `Q-scope-01`; IF-05 pattern `^Q-[a-z]+-[0-9]{2,3}$`). When there are no questions, omit the questions block; never return an empty `questions` array. Both follow from the IF-05 schema, so the spec does not change |
 | add | `evals/cap02/TS-223.eval.mjs` | C001-TC-223, built like `evals/cap02/TS-215.eval.mjs`: the real cartographer (`architectReal`), a brownfield fixture with two checkout entry points ("web checkout" and "in-store kiosk checkout"), and an ideation that names only "the checkout". The assert reads the cartographer's hand-back: a questions block valid against C001-IF-05 with a question whose text or option labels contain both "web" and "kiosk" (case-insensitive) and `"blocking": true` (C001-TS-223) |
-| add | `evals/cap02/TS-224.eval.mjs` | C001-TC-224, the negative case: the C001-TS-223 fixture with the kiosk checkout out of scope and the "coupons" or "promotions" naming question in the ideation's Open questions. The assert reads the hand-back: a question whose text or option labels contain both "coupons" and "promotions" (case-insensitive) has `"blocking": false` (C001-TS-224) |
+| add | `evals/cap02/TS-224.eval.mjs` | C001-TC-224, the negative case: the C001-TS-223 fixture with the kiosk checkout out of scope and the "coupons" or "promotions" naming question in the ideation's Open questions. The assert reads every specialist hand-back up to the end of the conductor's turn, not only the cartographer's. It needs at least one hand-back, and every question whose text or option labels contain both "coupons" and "promotions" (case-insensitive) must have `"blocking": false`, never `true` (C001-TS-224 as reworked for D-018) |
 | modify | `evals/cap02/TS-215.eval.mjs` | header comment only: cite C001-IF-05 §1 criterion 1 instead of the old one-line rule |
 
 ## Preconditions
@@ -47,19 +48,27 @@ C001-T-072.
 - Size budgets of C001-NFR-105 (≤ 24,000 characters per skill, ≤ 64,000 per agent with its
   preloaded skills), checked by PLG-SIZE-001 in `npm run check`. `sdd-conventions` is preloaded by
   every agent, so keep the addition short.
+- Cross-change dependency (recorded in `../handoff.md`): the CHG-002 fix task of defect D-031 is
+  done before the reruns of step 4. That task makes the harness enforce the eval cap without telling
+  the model a budget. The 2026-10-24 runs (`evals/results/t082-*.json`) showed the conductor
+  rationing work against the visible budget. Until then the task is blocked through the CLI.
 
 ## Step outline (no production code)
 
 1. Write `evals/cap02/TS-223.eval.mjs` and `TS-224.eval.mjs` first and run each once at dev tier on the current skill text.
    Record the results: for TS-223, today's text is expected to give `"blocking": false` or no question.
-2. Rewrite the blocking bullet of `sdd-conventions` and add the `code-discovery` line. Update the
+2. Rewrite the blocking bullet of `sdd-conventions`, add the question-ID and no-empty-block rules, and
+   add the `code-discovery` line. Update the
    header comment of `TS-215.eval.mjs`.
 3. Run `npm run check`. Its targets step checks the platform target structures (opencode, copilot), and
    PLG-SIZE-001 and the plugin structure checks must pass.
-4. Eval runs on the subscription (notional, no charge; about 12 USD), recorded in `evals/results/`:
+4. Eval runs on the subscription (notional, no charge; about 12 USD), recorded in `evals/results/`. The
+   first pass (2026-10-24) gave C001-TC-223 2 / 3, C001-TC-224 0 / 3, and passes for the other four.
+   After the D-031 harness fix and the question-ID and empty-block rules, rerun:
    - C001-TC-223 and C001-TC-224 at milestone tier, each of which must pass 3 / 3;
-   - C001-TC-215, C001-TC-209, C001-TC-213 and C001-TC-222 once each at dev tier.
-5. When a run fails, read the trace. A failure in the cartographer's flag means the wording does
+   - C001-TC-215, C001-TC-209, C001-TC-213 and C001-TC-222 once each at dev tier (passed on
+     2026-10-24; rerun once, because the new rules change `sdd-conventions` again).
+5. When a run fails, read the trace. A wrong flag or question ID in a specialist hand-back means the wording does
    not work yet. A failure after a correct flag is a conductor finding, so raise a defect.
 6. Report the task. The 10-run release checks of C001-TC-209, 215, 223 and 224 are part of C001-T-072.
    If C001-TC-215, 223 or 224 ends below 9 / 10 there, D-017 and this task are reopened (step 4
@@ -74,9 +83,9 @@ C001-T-072.
 
 ## Done when
 
-- [ ] `sdd-conventions` and `code-discovery` carry the C001-IF-05 §1 rule; the size budgets hold.
+- [ ] `sdd-conventions` and `code-discovery` carry the C001-IF-05 §1 rule, the question-ID format and the no-empty-block rule; the size budgets hold.
 - [ ] `evals/cap02/TS-223.eval.mjs` and `TS-224.eval.mjs` exist; C001-TC-223 and C001-TC-224 pass 3 / 3 at milestone tier.
 - [ ] C001-TC-215, C001-TC-209, C001-TC-213 and C001-TC-222 pass once each at dev tier.
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003.
 - [ ] Progress reported: `sdd task set C001-T-082 --status done --commit <sha>`. That commit is the
-      resolution evidence for closing D-017.
+      resolution evidence for closing D-017 and D-018.
