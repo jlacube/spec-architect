@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-057]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-057, C002-T-071]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
@@ -35,6 +35,12 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Preconditions
 
+- **C002-T-071 done** (P-01 answer to Q-release-base-01; plan critic CR-71). The release is made from
+  the release-candidate commit that C002-T-071 records, with the CHG-001 fixes. C002-T-071 re-ran the
+  Copilot unpaid steps (C002-T-054 steps 1 and 2) there. Its step 5 records P-01's decision on the
+  paid Copilot CLI rows (C002-T-054 step 3, 24 sessions, Copilot pool), and this task waits for that
+  decision; when P-01 decided to retake them, they ran at that commit. C002-T-050 and C002-T-057 ran
+  on the package of that commit.
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
 - The S-08 record of the tested versions is not `deferred`: the signed-off record gives
   `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could

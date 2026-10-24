@@ -212,3 +212,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Retake after the fixes: release from a commit with all CHG-001 fixes; before T-052 re-run the unpaid steps and the ~31 paid OpenCode rows from the general pool (about 5.40 USD of OpenRouter spend) (Recommended) · 2. Release an older release-candidate commit before the CHG-001 fixes, no paid re-run
 - **Answer:** P-01: "Retake after fixes (Recommended)"
 - **Extracted instructions:** none
+
+### Q-copilot-retake-01 — retake the 24 paid Copilot CLI release sessions too (planner, C002-T-071)
+- **Options:** 1. Retake them too at the release-candidate commit with the CHG-001 fixes (about 3.4 USD, Copilot pool) (Recommended) · 2. Keep the C002-T-054 sessions
+- **Answer:** conductor, under P-01's standing approval and Q-release-base-01 ("Retake after fixes"): option 1, within the approved Copilot limit of 30 USD
+- **Extracted instructions:** none

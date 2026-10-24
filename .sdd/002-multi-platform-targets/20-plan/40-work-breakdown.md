@@ -95,6 +95,7 @@ flowchart TB
     C002_T_050["T-050 P-01 checklist run"]
     C002_T_057["T-057 Copilot clean-profile run"]
     C002_T_055["T-055 P-01 Copilot release"]
+    C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes"]
   end
   C002_T_053 --> C002_T_006
   C002_T_007 --> C002_T_008
@@ -299,14 +300,27 @@ flowchart TB
   C002_T_050 --> C002_T_055
   C002_T_054 --> C002_T_055
   C002_T_057 --> C002_T_055
+  C002_T_049 --> C002_T_071
+  C002_T_054 --> C002_T_071
+  C002_T_068 --> C002_T_071
+  C002_T_069 --> C002_T_071
+  C002_T_070 --> C002_T_071
+  C002_T_071 --> C002_T_052
+  C002_T_071 --> C002_T_055
+  C002_T_071 --> C002_T_050
+  C002_T_071 --> C002_T_057
 ```
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 70 tasks weigh 143 in total (21 S, 25 M, 24 L). The longest chain
-weighs 45 and ends with the Copilot release. **The D-033 plan update does not change it**: the fix
-task C002-T-070 (S) starts after C002-T-069 (finishing at 43) and finishes at 44, and no CHG-002
-task depends on it; CHG-001's C001-T-082 and C001-T-072 wait for it (`handoff.md`), outside this
+Weights S = 1, M = 2, L = 3. The 71 tasks weigh 145 in total (21 S, 26 M, 24 L). The longest chain
+weighs 48 and ends with the Copilot release. **The release retake lengthens it by 3** (P-01 answer
+to Q-release-base-01; plan critic CR-71). C002-T-071 (M) waits for C002-T-068 … C002-T-070, the last
+of which finishes at 44 (C002-T-067 stays off the release chain, Q-t067-order-01), and for C002-T-049 and C002-T-054, so it finishes at 46. C002-T-052,
+C002-T-055, C002-T-050 and C002-T-057 wait for it, and the fix tasks C002-T-068 … C002-T-070, on no
+release chain before, now are. The chains: overall 48, OpenCode release 47 (lists below). **The
+D-033 plan update did not change the chain by itself**: the fix task C002-T-070 (S) starts after
+C002-T-069 (finishing at 43) and finishes at 44, and before the retake no CHG-002 task depended on it; CHG-001's C001-T-082 and C001-T-072 wait for it (`handoff.md`), outside this
 graph. **The D-031 plan update does not change it either**: the fix
 task C002-T-069 (M) starts after C002-T-068 (finishing at 41) and finishes at 43, and no CHG-002
 task depends on it; CHG-001's C001-T-082 and C001-T-072 wait for it (`handoff.md`), outside this
@@ -360,7 +374,15 @@ the eval auth switch, is already built and finishes at 1, before C002-T-010, C00
 and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
-**Overall (to C002-T-055, weight 45):**
+**Overall (to C002-T-055, weight 48, from the release retake of plan critic CR-71):** items 1 … 14
+below, then C002-T-048 — Claude Code regression set run (M, 40), C002-T-068 — cap exceptions for the
+CHG-001 release cases (S, 41), C002-T-069 — Claude Code spend cap applied by the runner (M, 43),
+C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-071 — release evidence retaken after the
+CHG-001 fixes (M, 46), C002-T-050 — P-01 checklist run (S, 47) and C002-T-055 — P-01 Copilot
+release (S, 48). C002-T-057 also finishes at 47. The chain also waits for CHG-001's C001-T-082
+and C001-T-083, outside this graph (`handoff.md`), so its calendar end follows them.
+
+**Before the release retake (to C002-T-055, weight 45):**
 
 1. C002-T-001 — Spike S-07: OpenCode at its tested version (L)
 2. C002-T-024 — Mapping tables, their schema copy and loader (M)
@@ -381,7 +403,9 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 17. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
 18. C002-T-055 — P-01: release the Copilot target (S)
 
-**OpenCode release (to C002-T-052, weight 44):** items 1 to 14 above, then C002-T-056 — OpenCode
+**OpenCode release (to C002-T-052, weight 47, from the release retake):** the overall chain to
+C002-T-071 (46), then C002-T-052 (S, 47). **Before the release retake (weight 44):** items 1 to 14
+above, then C002-T-056 — OpenCode
 dev-tier runs of the carried eval rows (L; its rerun plan after C002-T-065, finishing at 41),
 C002-T-049 — Release evidence for OpenCode (M, 43) and C002-T-052 — P-01: publish architect-sdd and
 release the OpenCode target (S, 44). C002-T-048 (finishing at 40) has one unit of slack against
@@ -480,8 +504,9 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
-| C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066 |
+| C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066, T-071 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
-| C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054 |
-| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058 |
-| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057 |
+| C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes | M | T-049, T-054, T-068, T-069, T-070 |
+| C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054, T-071 |
+| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058, T-071 |
+| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057, T-071 |

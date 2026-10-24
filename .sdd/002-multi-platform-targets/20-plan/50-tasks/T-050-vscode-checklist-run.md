@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-046, C002-T-054]
+depends_on: [C002-T-046, C002-T-054, C002-T-071]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
 verified_by: [C002-TS-358, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
@@ -45,6 +45,9 @@ does not wait for it.
 ## Preconditions
 
 - C002-T-046 and C002-T-054 done; the release candidate packed at the commit of C002-T-054.
+- C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the checklist runs on the
+  Copilot package packed at the release-candidate commit that holds the CHG-001 fixes of C001-T-082
+  and C001-T-083, which C002-T-071 records. That commit replaces the commit of C002-T-054 above.
 - Hooks enabled in VS Code from the restore step of step 2 on (`chat.useHooks`, Workspace Trust for
   the toy repository, no organisation policy that disables them; the hooks-off rows of C002-TC-516
   run before the restore, C002-IF-009 §4 "Run order"): the release check refuses a record that shows hooks disabled or not

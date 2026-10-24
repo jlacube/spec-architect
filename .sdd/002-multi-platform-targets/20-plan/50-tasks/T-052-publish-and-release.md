@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051, C002-T-066]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051, C002-T-066, C002-T-071]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
@@ -36,6 +36,12 @@ communication steps belong to `75-rollout.md`.
 
 ## Preconditions
 
+- **C002-T-071 done** (P-01 answer to Q-release-base-01, "Retake after fixes (Recommended)"; plan
+  critic CR-71). The release is made from the release-candidate commit that C002-T-071 records, which
+  holds the CHG-001 fixes of C001-T-082 and C001-T-083. C002-T-071 re-ran the unpaid release steps
+  and the paid OpenCode rows of C002-T-049 step 4 (about 31 sessions, general pool) at that commit.
+  That commit and its evidence replace those named below. The unpaid re-runs below are the ones
+  C002-T-071 made, unless a later commit moved the release candidate again.
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051 and C002-T-066 done.
 - C002-T-066 step 8 backfilled `result` and `models` into the committed OpenCode injection summary
   (P-01 answer to Q-inj-result-01; C002-DOD-009), and its commits moved the release-candidate commit

@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-058]
+depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-058, C002-T-071]
 implements: [C002-NFR-601]
 satisfies_ac: [C002-AC-304.1]
 verified_by: [C002-TS-306, C002-TC-306, C002-TC-903]
@@ -36,6 +36,9 @@ the OpenCode release does not wait for it.
 
 ## Preconditions
 
+- C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the run uses
+  `dist/architect-copilot-<version>.zip` built at the release-candidate commit with the CHG-001
+  fixes, which C002-T-071 records.
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-058 (install
   command) done; VS Code Insiders and Copilot Chat at the S-08 tested versions; REF-WIN set up as
   `handoff.md` "Reference machine" lists.
