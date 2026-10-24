@@ -94,3 +94,15 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Scope only (code paths, entry points or components in scope) plus a decidable general rule (blocking when the specialist would otherwise have to state the answer as a fact or an assumption); drop public interface and existing data; a scenario per kept criterion plus a negative scenario (Recommended) · 2. Keep all four criteria, each with a scenario
 - **Answer:** P-01: "Scope only + decidable rule (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-24 — defect D-019 (found in C001-T-082)
+
+### Q-t082-bugs-01 — three product issues from the hidden-budget reruns
+- **Options:** 1. Fix all three now: the conductor asks a blocking question as soon as its hand-back arrives; template access fixed (reads allowed or one `sdd template show`); "the number of candidates" wording (Recommended) · 2. Fix the conductor and the wording, defer the template loop · 3. Defer all
+- **Answer:** P-01: "Fix all 3 now (Recommended)"
+- **Extracted instructions:** none
+
+### Q-cap-level-01 — rerun cap for full-flow cases now that the budget is hidden
+- **Options:** 1. Raise the rule-1 cap to 3 USD notional (release estimate about 420 USD), measure after the fixes (Recommended) · 2. Keep 1.50 USD
+- **Answer:** P-01: "Raise to $3 (Recommended)"
+- **Extracted instructions:** none

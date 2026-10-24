@@ -7,8 +7,8 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:4bae72a8e3eba18ccfbd702bd19ed94c479d82d2786a3986360c891a840af152", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:1906acb9e67da8210b72be66dc98e6eb9c639ec446fc7a7286a866349e4cf484", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:4bae72a8e3eba18ccfbd702bd19ed94c479d82d2786a3986360c891a840af152", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:1906acb9e67da8210b72be66dc98e6eb9c639ec446fc7a7286a866349e4cf484", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -45,6 +45,7 @@ defects:
   - { id: D-030, ref: C002-IF-010, summary: "Found in C001-T-082: the C001 eval cases TS-223 and TS-224 (real conductor and cartographer, about 1.2–1.4 USD notional per run) have no row in the C002-IF-010 §2.2 cap-exception table, so the 0.50 USD default cap ends them before the cartographer hands back; TS-215 has a 1.50 USD subscription row for the same reason. Other C001-T-072 release cases may be in the same position. P-01 (Q-cap-exc-01): add cap exceptions.", reporter: jerome.lacube, date: 2026-10-24, status: closed, resolution: "Spec C002-IF-010 §2.2 (G2 c5157fb) and C002-T-068 (a677f6b): cap-exception rows and the two rules for the CHG-001 release cases, measured evidence (d030-measure, t082-baseline).", closed_at: 2026-10-24 }
   - { id: D-031, ref: C002-IF-010, summary: "Found in C001-T-082: the Claude Code eval runner passes the session cap to the Agent SDK (maxBudgetUsd), so the model sees its remaining budget; the conductor then rations or stops its work ('about $0.13 of $1.50 left, the next specialist won't fit'), which real users never see. Seen in TS-223, TS-224, TS-213, TS-215, TS-802, TS-507, TS-508. P-01 (Q-budget-hide-01): the harness enforces the cap itself and the model is not told a budget.", reporter: jerome.lacube, date: 2026-10-24, status: closed, resolution: "Spec IF-010 §2/§2.2, REQ-642…644 (G2 6a4ed29); C002-T-069 (a9d4666): no budget passed to the SDK, runner-enforced cap; paid check confirms the usage request and no budget text.", closed_at: 2026-10-24 }
   - { id: D-032, ref: C002-IF-010, summary: "Found in C002-T-069 (minor, spec alignment): (1) waiting usage triggers are dropped when a stop begins; (2) cap-close closed_by can be stream-end; (3) harness record {event: allowed, tool} for bound condition 2; (4) a rejected session still writes its transcript; (5) the OpenCode driver host also places @opencode-ai/plugin package.json and package-lock.json; (6) a runner stop can precede the SDK's own error_max_turns result. Code is as implemented in C002-T-069; IF-010 §2.2 to state these.", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
+  - { id: D-033, ref: C002-IF-010, summary: "Found in C001-T-082: with the budget hidden (D-031), all 8 rule-1 sessions ran to the 1.50 USD rerun cap, the 3 passing ones included, so full-flow CHG-001 cases are cap-limited. P-01 (Q-cap-level-01): rule-1 rows run at 3 USD notional; measure after the D-019 fixes.", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
@@ -251,3 +252,5 @@ waivers:
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-031: harness fix task" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
 | 2026-10-24 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-24 | G2 (spec) | **Revise** | "Revision for the C001-T-082 findings (P-01 Q-t082-bugs-01, Q-cap-level-01)" | none | unavailable |
+| 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for the C001-T-082 findings" | none | unavailable |

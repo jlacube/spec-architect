@@ -5,8 +5,8 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:db41f5871e5fa84504a551f7fea611e1a0edcedeb80f21835755ab3e63e05440", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:bcd11537d9829f362eda550942b22f52d68ee84dca7e05359b90f0127afa6254", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:db41f5871e5fa84504a551f7fea611e1a0edcedeb80f21835755ab3e63e05440", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:bcd11537d9829f362eda550942b22f52d68ee84dca7e05359b90f0127afa6254", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -28,6 +28,7 @@ defects:
   - { id: D-016, ref: C001-REQ-1116, summary: "Found in C001-T-063: REQ-1116 asks >= 3 must-route prompts per agent, but the conductor cannot be a subagent (started with claude --agent architect:sdd-conductor); 'routed' is undefined for it. P-01 (Q-conductor-route-01): count a conductor prompt as routed when the reply hands the user over to claude --agent architect:sdd-conductor and no Architect subagent starts; state it in the spec.", reporter: jerome.lacube, date: 2026-10-23, status: closed, resolution: "Spec: C001-REQ-1116 note and C001-TS-1117 declared checks (4b14caf, G2 e6ba038). Implemented in C001-T-063 (c544138): PLG-EVAL-001 checks each conductor case declares the hand-over and 0-subagent checks; conductor routing 12/12 at milestone tier (2455bd0).", closed_at: 2026-10-23 }
   - { id: D-017, ref: C001-TS-215, summary: "Found in C001-T-063: the cartographer flags the same scope question (Q-scope-01, coupon on the kiosk path as well as web checkout) as blocking in 1 of 3 runs, so TS-215's Given is met only then (TC-215 1/3 at milestone tier, b4f18b7); the conductor behaved correctly whenever it was blocking. Fix to consider: code-discovery skill / sdd-conventions return contract state that a question deciding which code paths are in scope is blocking; retest TC-215 at milestone tier. P-01 (2026-10-23): 'Log defect, waive (Recommended)' — TC-215 waived for C001-T-063.", reporter: jerome.lacube, date: 2026-10-23, status: open, resolution: null, closed_at: null }
   - { id: D-018, ref: C001-TS-224, summary: "Found in C001-T-082: TS-224 expects the cartographer to return the naming question with blocking false, but the cartographer correctly raises no question it does not need (IF-05 §1) and the spec-writer raised Q-naming-01 blocking false; TC-224 0/3. The Then must assert on the specialists' hand-backs as a whole (no blocking naming question; the naming question, where raised, is blocking false).", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
+  - { id: D-019, ref: C001-REQ-213, summary: "Found in C001-T-082 (hidden-budget reruns): (1) in unattended drafting the conductor holds a blocking question back while a background specialist runs, instead of stopping at it (TC-215: question flagged blocking at 238 s, never asked before the cap at 554 s); (2) the spec-writer loops on 'sdd template show' after Glob/Read of the plugin templates are denied (TC-213, about 1.3 USD); (3) the sdd-conventions material bullet 'give candidates_considered (4 or 5)' leads agents to give a list where C001-IF-05 wants a number (TC-223 run 1). P-01 (Q-t082-bugs-01): fix all three now.", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
 ---
 # CHG-001 — Architect agent suite
 
@@ -94,3 +95,5 @@ defects:
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-018: TC-224 and T-082" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-24 | G2 (spec) | **Revise** | "Revision for the C001-T-082 findings (P-01 Q-t082-bugs-01, Q-cap-level-01)" | none | unavailable |
+| 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for the C001-T-082 findings" | none | unavailable |

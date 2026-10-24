@@ -200,3 +200,10 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Hide the budget: the eval harness stops a session itself when the cost reaches the cap and passes no budget to Claude Code; narrow CHG-002 revision, harness change with offline tests, one paid check (about 3 USD notional) (Recommended) · 2. Raise caps for the affected rows · 3. Accept as is under RISK-038
 - **Answer:** P-01: "Hide the budget (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-24 — defect D-033 (found in C001-T-082)
+
+### Q-cap-level-01 — rerun cap for full-flow CHG-001 cases now that the budget is hidden
+- **Options:** 1. Rule-1 rows of the Claude Code subscription class run at 3 USD notional; measure after the CHG-001 D-019 fixes (Recommended) · 2. Keep 1.50 USD
+- **Answer:** P-01: "Raise to $3 (Recommended)"
+- **Extracted instructions:** none
