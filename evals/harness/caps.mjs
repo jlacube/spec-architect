@@ -74,29 +74,64 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  * - paid class: TS-634 on OpenCode at 2.00 USD, no rerun cap (P-01, Q-ts634-budget-01/02, D-022 item 1);
  * - Claude Code subscription class (P-01, Q-claude-cap-01/02, 2026-10-21): the five rows of C002-T-048
  *   batches 5 and 6 that the 0.50 USD notional cap ended, rerun at 1.50 USD; TS-213 and TS-221 at their
- *   case files' 40 turns, rerun at 1.50 USD; the rows of batch 7 and INJ-19, rerun at 1.50 USD.
+ *   case files' 40 turns, rerun at 1.50 USD; the rows of batch 7 and INJ-19, rerun at 1.50 USD; and, for
+ *   defect D-030 (P-01, Q-cap-exc-01/02, 2026-10-24; C002-T-068), the CHG-001 release cases of
+ *   C001-T-082 step 4 and C001-T-072, at the row's own caps with the rerun cap 1.50 USD.
+ * Each subscription-class row records as `rule` the list of §2.2 "Sessions of CHG-001 tasks" that holds
+ * it, which the CHG-001 tasks read: 1 = every session at the rerun cap (each started with
+ * `--cap-exception`); 2 = sessions at the row's own caps, each failed session that ended at the spend cap
+ * replaced by one session at the rerun cap (started with `--cap-exception`); null = in neither list
+ * (TS-421-agent, no release case of C001-ADR-003). The rule is data only: the harness decides no run or
+ * rerun, and `capCheck` applies the rerun cap to any run with `--cap-exception` whatever the rule.
  * The harness does not count the exception's runs (§2.2 Runs: the owning task's done-check does,
- * C002-T-056 for TS-634, C002-T-048 for the subscription class).
+ * C002-T-056 for TS-634, C002-T-048 for its subscription-class sessions, C001-T-082 and C001-T-072 for
+ * theirs).
  */
-const SUB = (row, file, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: 1.5 });
+const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: 1.5, rule });
+const INJ = "evals/injection/injection.eval.mjs";
 export const CAP_EXCEPTIONS = Object.freeze([
   Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", auth: null, usd: 2.0, turns: DEFAULT_MAX_TURNS, rerunUsd: null }),
-  SUB("TS-214", "evals/cap02/TS-214.eval.mjs"),
-  SUB("TS-215", "evals/cap02/TS-215.eval.mjs"),
-  SUB("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs"),
-  SUB("TS-318-10-spec", "evals/cap03/TS-318.eval.mjs"),
-  SUB("TS-318-20-plan", "evals/cap03/TS-318.eval.mjs"),
-  SUB("TS-213", "evals/cap02/TS-213.eval.mjs", 40),
-  SUB("TS-221", "evals/cap02/TS-221.eval.mjs", 40),
-  SUB("TS-419", "evals/cap04/TS-419.eval.mjs"),
-  SUB("TS-420", "evals/cap04/TS-420.eval.mjs"),
-  SUB("TS-421-agent", "evals/cap04/TS-421.eval.mjs"),
-  SUB("TS-713", "evals/cap07/TS-713.eval.mjs"),
-  SUB("TS-715", "evals/cap07/TS-715.eval.mjs"),
-  SUB("TS-815", "evals/cap08/TS-815.eval.mjs"),
-  SUB("TS-817-stop", "evals/cap08/TS-817.eval.mjs"),
-  SUB("TS-817-specify", "evals/cap08/TS-817.eval.mjs"),
-  SUB("INJ-19", "evals/injection/injection.eval.mjs"),
+  SUB("TS-214", "evals/cap02/TS-214.eval.mjs", 2),
+  SUB("TS-215", "evals/cap02/TS-215.eval.mjs", 1),
+  SUB("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs", 1),
+  SUB("TS-318-10-spec", "evals/cap03/TS-318.eval.mjs", 1),
+  SUB("TS-318-20-plan", "evals/cap03/TS-318.eval.mjs", 1),
+  SUB("TS-213", "evals/cap02/TS-213.eval.mjs", 1, 40),
+  SUB("TS-221", "evals/cap02/TS-221.eval.mjs", 1, 40),
+  SUB("TS-419", "evals/cap04/TS-419.eval.mjs", 2),
+  SUB("TS-420", "evals/cap04/TS-420.eval.mjs", 2),
+  SUB("TS-421-agent", "evals/cap04/TS-421.eval.mjs", null),
+  SUB("TS-713", "evals/cap07/TS-713.eval.mjs", 2),
+  SUB("TS-715", "evals/cap07/TS-715.eval.mjs", 2),
+  SUB("TS-815", "evals/cap08/TS-815.eval.mjs", 2),
+  SUB("TS-817-stop", "evals/cap08/TS-817.eval.mjs", 2),
+  SUB("TS-817-specify", "evals/cap08/TS-817.eval.mjs", 2),
+  SUB("INJ-19", INJ, 2),
+  // Defect D-030: the table's three D-030 rows in order.
+  SUB("TS-223", "evals/cap02/TS-223.eval.mjs", 1),
+  SUB("TS-224", "evals/cap02/TS-224.eval.mjs", 1),
+  SUB("TS-127", "evals/cap01/TS-127.eval.mjs", 2),
+  SUB("TS-201", "evals/cap02/TS-201.eval.mjs", 2),
+  SUB("TS-216", "evals/cap02/TS-216.eval.mjs", 2),
+  SUB("TS-217", "evals/cap02/TS-217.eval.mjs", 2),
+  SUB("TS-218", "evals/cap02/TS-218.eval.mjs", 2),
+  SUB("TS-319", "evals/cap03/TS-319.eval.mjs", 2),
+  SUB("TS-401", "evals/cap04/TS-401.eval.mjs", 2),
+  SUB("TS-418", "evals/cap04/TS-418.eval.mjs", 2),
+  SUB("TS-424", "evals/cap04/TS-424.eval.mjs", 2),
+  SUB("TS-511", "evals/cap05/TS-511.eval.mjs", 2),
+  SUB("TS-515", "evals/cap05/TS-515.eval.mjs", 2),
+  SUB("TS-622", "evals/cap06/TS-622.eval.mjs", 2),
+  SUB("TS-710", "evals/cap07/TS-710.eval.mjs", 2),
+  SUB("TS-712", "evals/cap07/TS-712.eval.mjs", 2),
+  SUB("TS-714", "evals/cap07/TS-714.eval.mjs", 2),
+  SUB("INJ-17", INJ, 2),
+  SUB("INJ-18", INJ, 2),
+  SUB("INJ-21", INJ, 2),
+  SUB("TS-507", "evals/cap05/TS-507.eval.mjs", 1),
+  SUB("TS-508", "evals/cap05/TS-508.eval.mjs", 1),
+  SUB("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
+  SUB("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
 ]);
 
 /**

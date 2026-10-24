@@ -6,7 +6,10 @@
 // path, relative to the fixture root, which run.mjs takes as the repository root for the case-file match;
 // `main` runs in a child process from the source files with the stub host for opencode and copilot-cli and
 // the Agent SDK stub for claude-code (./eval-driver.ts), EVAL_HOST and EVAL_AUTH unset; no ledger write, no
-// paid session. Supporting tests: CAP_EXCEPTIONS holds exactly the rows of the §2.2 table; the case files
+// paid session. Supporting tests: CAP_EXCEPTIONS holds exactly the rows of the §2.2 table (from revision
+// D-030, C002-T-068, 41 rows, each subscription-class row with the rule of its list in "Sessions of CHG-001
+// tasks"); TS-223 at 1.50 USD with --cap-exception, TS-216 at 0.50 USD without it and refused with it under
+// --auth api-key (revision D-030); the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
 import { test } from "node:test";
@@ -97,28 +100,101 @@ ROWS.forEach((row, i) => {
   });
 });
 
+// Revision D-030 (C002-T-068): session supporting tests of the CHG-001 release rows, not Examples rows of
+// C002-TS-679 (test plan §8, C002-TC-679).
+const CAP223 = "evals/cap02/TS-223.eval.mjs";
+const CAP216 = "evals/cap02/TS-216.eval.mjs";
+const D030_ROWS: Row[] = [
+  { file: CAP223, row: "TS-223", host: "claude-code", auth: "subscription", capException: true, runs: { usd: 1.5, turns: 30 } },
+  { file: CAP216, row: "TS-216", host: "claude-code", auth: "subscription", runs: { usd: 0.5, turns: 30 } },
+  { file: CAP216, row: "TS-216", host: "claude-code", auth: "api-key", capException: true, runs: null, names: "auth api-key" },
+];
+
+D030_ROWS.forEach((row) => {
+  test(`C002-TS-679 (supporting, revision D-030) — ${describe(row)}: ${row.runs ? `one session at ${row.runs.usd.toFixed(2)} USD and ${row.runs.turns} turns` : "exit 1 before any session"}`, () => {
+    const fx = mkdtempSync(join(tmpdir(), "sdd-fx-evals-caps-"));
+    try {
+      const file = writeCase(fx, row.file, { id: row.row });
+      const args = [file, "--host", row.host, "--only", row.row, ...(row.auth ? ["--auth", row.auth] : []), ...(row.capException ? ["--cap-exception"] : [])];
+      const r = runDriver(args, { root: fx });
+      if (row.runs) {
+        assert.equal(r.status, 0, r.out);
+        assert.equal(r.given.length, 1, "one session");
+        assert.equal(r.given[0]!.usd, row.runs.usd, "the session got the spend cap");
+        assert.equal(r.given[0]!.turns, row.runs.turns, "the Agent SDK stub got the turn cap");
+        assert.equal(r.records.length, 1);
+        assert.deepEqual(r.records[0]!["caps"], { turns: row.runs.turns, usd: row.runs.usd });
+      } else {
+        assert.equal(r.status, 1, r.out);
+        assert.deepEqual(r.given, [], "the stub never started");
+        assert.ok(r.out.includes(row.row) && r.out.includes(row.file), r.out);
+        if (row.names) assert.ok(r.out.includes(row.names), `names ${row.names}: ${r.out}`);
+        assert.match(r.out, /no session started/);
+      }
+    } finally {
+      rmSync(fx, { recursive: true, force: true });
+    }
+  });
+});
+
 test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C002-IF-010 §2.2 table", () => {
-  const sub = (row: string, file: string, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: 1.5 });
+  // `rule`: the list of C002-IF-010 §2.2 "Sessions of CHG-001 tasks" that holds the row (1 or 2), null for
+  // a row in neither list (TS-421-agent, no release case of C001-ADR-003).
+  const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: 1.5, rule });
+  const INJ = "evals/injection/injection.eval.mjs";
   assert.deepEqual(CAP_EXCEPTIONS, [
     { row: "TS-634", file: GATE634, host: "opencode", auth: null, usd: 2.0, turns: 30, rerunUsd: null },
-    sub("TS-214", CAP214),
-    sub("TS-215", "evals/cap02/TS-215.eval.mjs"),
-    sub("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs"),
-    sub("TS-318-10-spec", "evals/cap03/TS-318.eval.mjs"),
-    sub("TS-318-20-plan", "evals/cap03/TS-318.eval.mjs"),
-    sub("TS-213", CAP213, 40),
-    sub("TS-221", "evals/cap02/TS-221.eval.mjs", 40),
-    sub("TS-419", "evals/cap04/TS-419.eval.mjs"),
-    sub("TS-420", "evals/cap04/TS-420.eval.mjs"),
-    sub("TS-421-agent", "evals/cap04/TS-421.eval.mjs"),
-    sub("TS-713", "evals/cap07/TS-713.eval.mjs"),
-    sub("TS-715", "evals/cap07/TS-715.eval.mjs"),
-    sub("TS-815", "evals/cap08/TS-815.eval.mjs"),
-    sub("TS-817-stop", "evals/cap08/TS-817.eval.mjs"),
-    sub("TS-817-specify", "evals/cap08/TS-817.eval.mjs"),
-    sub("INJ-19", "evals/injection/injection.eval.mjs"),
+    sub("TS-214", CAP214, 2),
+    sub("TS-215", "evals/cap02/TS-215.eval.mjs", 1),
+    sub("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs", 1),
+    sub("TS-318-10-spec", "evals/cap03/TS-318.eval.mjs", 1),
+    sub("TS-318-20-plan", "evals/cap03/TS-318.eval.mjs", 1),
+    sub("TS-213", CAP213, 1, 40),
+    sub("TS-221", "evals/cap02/TS-221.eval.mjs", 1, 40),
+    sub("TS-419", "evals/cap04/TS-419.eval.mjs", 2),
+    sub("TS-420", "evals/cap04/TS-420.eval.mjs", 2),
+    sub("TS-421-agent", "evals/cap04/TS-421.eval.mjs", null),
+    sub("TS-713", "evals/cap07/TS-713.eval.mjs", 2),
+    sub("TS-715", "evals/cap07/TS-715.eval.mjs", 2),
+    sub("TS-815", "evals/cap08/TS-815.eval.mjs", 2),
+    sub("TS-817-stop", "evals/cap08/TS-817.eval.mjs", 2),
+    sub("TS-817-specify", "evals/cap08/TS-817.eval.mjs", 2),
+    sub("INJ-19", INJ, 2),
+    // Revision D-030 (24 rows, the table's three D-030 rows in order).
+    sub("TS-223", CAP223, 1),
+    sub("TS-224", "evals/cap02/TS-224.eval.mjs", 1),
+    sub("TS-127", "evals/cap01/TS-127.eval.mjs", 2),
+    sub("TS-201", "evals/cap02/TS-201.eval.mjs", 2),
+    sub("TS-216", CAP216, 2),
+    sub("TS-217", "evals/cap02/TS-217.eval.mjs", 2),
+    sub("TS-218", "evals/cap02/TS-218.eval.mjs", 2),
+    sub("TS-319", "evals/cap03/TS-319.eval.mjs", 2),
+    sub("TS-401", "evals/cap04/TS-401.eval.mjs", 2),
+    sub("TS-418", "evals/cap04/TS-418.eval.mjs", 2),
+    sub("TS-424", "evals/cap04/TS-424.eval.mjs", 2),
+    sub("TS-511", "evals/cap05/TS-511.eval.mjs", 2),
+    sub("TS-515", "evals/cap05/TS-515.eval.mjs", 2),
+    sub("TS-622", "evals/cap06/TS-622.eval.mjs", 2),
+    sub("TS-710", "evals/cap07/TS-710.eval.mjs", 2),
+    sub("TS-712", "evals/cap07/TS-712.eval.mjs", 2),
+    sub("TS-714", "evals/cap07/TS-714.eval.mjs", 2),
+    sub("INJ-17", INJ, 2),
+    sub("INJ-18", INJ, 2),
+    sub("INJ-21", INJ, 2),
+    sub("TS-507", "evals/cap05/TS-507.eval.mjs", 1),
+    sub("TS-508", "evals/cap05/TS-508.eval.mjs", 1),
+    sub("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
+    sub("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
   ]);
-  // Every case file of the table exists.
+  // 41 rows: TS-634 of the paid class and 40 of the Claude Code subscription class, 12 of rule 1, 27 of
+  // rule 2 and one (TS-421-agent) in neither list.
+  assert.equal(CAP_EXCEPTIONS.length, 41);
+  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
+  assert.equal(subs.length, 40);
+  assert.equal(subs.filter((e) => e.rule === 1).length, 12);
+  assert.equal(subs.filter((e) => e.rule === 2).length, 27);
+  assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
+  // Every case file of the table exists, the five near-cap rows' files (TS-127, TS-201, TS-418, TS-424, INJ-18) included.
   for (const e of CAP_EXCEPTIONS) assert.ok(readFileSync(join(ROOT, ...e.file.split("/")), "utf8").length > 0, e.file);
 });
 
