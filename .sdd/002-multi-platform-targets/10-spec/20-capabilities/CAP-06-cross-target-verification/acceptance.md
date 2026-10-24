@@ -606,8 +606,15 @@ no exception with a rerun cap matches, `TS-634` on OpenCode included. Without th
 the Claude Code subscription class runs at its own caps on either auth mode, unless its own caps
 exceed 0.50 USD or 30 turns (`TS-213`). The harness does not count runs or tell a rerun from a run;
 the run limit of an exception row is checked by the done-check of the task that runs it (C002-T-056
-for C002-TS-634, C002-T-048 for the Claude Code subscription class; P-01 answers to
-Q-capped-runs-01, Q-claude-cap-01 and Q-claude-cap-02).
+for C002-TS-634; C002-T-048 for its sessions of the rows of the Claude Code subscription class;
+C001-T-082 and C001-T-072 for theirs; P-01 answers to Q-capped-runs-01, Q-claude-cap-01 and
+Q-claude-cap-02). In those two CHG-001 tasks each row of the class runs by one of the two rules of
+C002-IF-010 §2.2 Sessions of CHG-001 tasks: every session at the rerun cap with `--cap-exception`
+(rule 1, for example `TS-215`, `TS-223` and `TS-224`), or at its own caps with each failed session
+that ended at the spend cap replaced by one session at the rerun cap (rule 2, for example
+`TS-214`), as in C002-T-048 (P-01 answers to Q-cap-exc-01 and Q-cap-exc-02; defect D-030). The
+match on row ID, case file, host and auth mode, which the Examples check, is the same for every
+task.
 
 ## C002-REQ-612
 
