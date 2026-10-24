@@ -20,7 +20,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createCaps } from "../../../evals/harness/caps.mjs";
-import { hostProcessEnv } from "../../../evals/harness/opencode/driver.mjs";
+import { hostProcessEnv, runOnClient } from "../../../evals/harness/opencode/driver.mjs";
 import { driverHost as runnerDriverHost, generatedPackage, nameMaps, permissionReply, replyFor, runOpenCodeSession, SESSION_TIMEOUT_MS, sessionStart } from "../../../evals/harness/runners/opencode.mjs";
 import { namesOf, setHarnessContext } from "../../../evals/harness/session.mjs";
 import { doctorCase as doctorCaseJs, shims as shimsJs } from "../../../evals/targets/doctor/doctor-cases.mjs";
@@ -930,4 +930,104 @@ test("C002-T-056 errorText: an SDK fetch error keeps its message and cause inste
   assert.equal(errorText(e), "fetch failed (cause: HeadersTimeoutError: Headers Timeout Error)");
   assert.equal(errorText({ name: "APIError", data: { message: "402" } }), '{"name":"APIError","data":{"message":"402"}}');
   assert.equal(errorText("session timed out"), "session timed out");
+});
+
+// --- C002-TC-931 (C002-TS-705, C002-REQ-642; defect D-031, critic CR-108): the OpenCode row -------------
+// What the OpenCode eval runner gives its host holds no budget: the placed package, the host process's
+// environment and the session start, recorded by a stub host behind the runner's own driver host (the
+// driver's host start replaced, as in C002-TC-907; the session runs on the driver's `runOnClient` with a
+// stub SDK client that records what an OpenCode server would get).
+
+/** Every file under `dir` (relative, `/` separators) with its bytes, `node_modules` left out. */
+function treeOf(dir: string, base = dir): Map<string, Buffer> {
+  const out = new Map<string, Buffer>();
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules") continue;
+    const p = join(dir, e.name);
+    if (e.isDirectory()) for (const [k, v] of treeOf(p, base)) out.set(k, v);
+    else out.set(p.slice(base.length + 1).split(/[\/]/).join("/"), readFileSync(p));
+  }
+  return out;
+}
+/** The entries of `env` the runner set: those that differ from its own process environment. */
+const givenEnv = (env: Record<string, string | undefined>) => Object.fromEntries(Object.entries(env).filter(([k, v]) => process.env[k] !== v));
+const BUDGET_TERMS = [/budget/i, /maxBudgetUsd/, /maxTurns/, /max-turns/, /0\.50/, /USD/];
+
+test("C002-TS-705 row 1 — OpenCode eval runner: the placed package, the host environment and the session start hold no budget; the start gives the title \"eval Start change 001\" and only agent, prompt text, model and title; the package as generated except §2.1; caps { turns: 30, usd: 0.50 }", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-tc931-oc-"));
+  const savedScripts = process.env["SDD_EVAL_SDD_SCRIPTS"];
+  let prev: ReturnType<typeof setHarnessContext> | null = null;
+  try {
+    const scripts = join(dir, "scripts");
+    mkdirSync(scripts);
+    for (const f of ["sdd.mjs", "sdd-mcp.mjs"]) writeFileSync(join(scripts, f), "process.exit(0);\n");
+    process.env["SDD_EVAL_SDD_SCRIPTS"] = scripts;
+    writeFileSync(join(dir, "key.txt"), "sk-or-v1-dummy-0123456789\n");
+    const seen: { start?: Record<string, unknown>; env?: Record<string, string>; create: unknown[]; prompt: Record<string, unknown>[]; project?: string; pkgTree?: Map<string, Buffer>; ocJson?: unknown } = { create: [], prompt: [] };
+    const start = async (o: Record<string, any>) => {
+      const { paid, ...rest } = o;
+      seen.start = { ...rest, paid: { keyFile: paid?.keyFile ?? null } };
+      seen.env = hostProcessEnv(o) as Record<string, string>;
+      seen.project = o["project"] as string;
+      seen.pkgTree = treeOf(join(o["project"] as string, ".opencode"));
+      seen.ocJson = JSON.parse(readFileSync(join(o["project"] as string, "opencode.json"), "utf8"));
+      const client = {
+        session: {
+          create: async (a: unknown) => (seen.create.push(a), { data: { id: "ses_1" } }),
+          prompt: async (a: Record<string, unknown>) => (seen.prompt.push(a), { data: {} }),
+          command: async (a: Record<string, unknown>) => (seen.prompt.push(a), { data: {} }),
+          abort: async () => ({ data: true }),
+          messages: async () => ({ data: [] }),
+        },
+        permission: { reply: async () => ({}) },
+        question: { reply: async () => ({}), reject: async () => ({}) },
+      };
+      const contexts = new Map();
+      return { version: "1.18.31", run: (ro: any) => runOnClient(client, contexts, ro), stop: async () => {} };
+    };
+    const host = runnerDriverHost({ keyFile: join(dir, "key.txt"), bin: process.execPath, start });
+    prev = setHarnessContext({ host: "opencode", runners: { opencode: (o: Record<string, unknown>) => runOpenCodeSession(o, { host }) } });
+    const scenario = { id: "TS-705-opencode", title: "fx", agent: "architect:sdd-conductor", fixture: null, prompt: "Start change 001", assert: () => [] };
+    const doc = (await runScenario(scenario as never, { host: "opencode", tier: "dev", resultsDir: join(dir, "results"), log: () => {} })) as { records: Record<string, any>[] };
+    const inputs = JSON.stringify({ start: seen.start, env: givenEnv(seen.env!), create: seen.create, prompt: seen.prompt });
+    for (const t of BUDGET_TERMS) assert.ok(!t.test(inputs), `the recorded inputs hold ${t}: ${inputs}`);
+    assert.deepEqual(seen.create, [{ title: "eval Start change 001" }], "the session start's title");
+    assert.equal(seen.prompt.length, 1);
+    const p = seen.prompt[0]!;
+    assert.deepEqual(Object.keys(p).filter((k) => k !== "sessionID").sort(), ["agent", "parts"], "the prompt gives the agent and the prompt text (no model given)");
+    assert.equal(p["agent"], "sdd-conductor");
+    assert.deepEqual(p["parts"], [{ type: "text", text: "Start change 001" }]);
+    // The package: as generated, its MCP server commands pointing at the staged CLI (§2.1).
+    const pkg = generatedPackage(undefined) as string;
+    const want = treeOf(join(pkg, ".opencode"));
+    // Beside the package, the driver host links the tool plugin's module (`@opencode-ai/plugin`) into
+    // `.opencode/`: its package.json and package-lock.json, copied from the replay fixture, and a
+    // node_modules link (left out here). No other file is added.
+    const pluginModule = join(ROOT, "tests", "replay", "fixtures", "opencode", ".opencode");
+    for (const f of ["package.json", "package-lock.json"]) {
+      if (want.has(f) || !seen.pkgTree!.has(f)) continue;
+      assert.ok(seen.pkgTree!.get(f)!.equals(readFileSync(join(pluginModule, f))), `${f} is the plugin module's`);
+      seen.pkgTree!.delete(f);
+    }
+    assert.deepEqual([...seen.pkgTree!.keys()].sort(), [...want.keys()].sort(), "the placed .opencode files are the generated ones");
+    for (const [k, v] of want) assert.ok(seen.pkgTree!.get(k)!.equals(v), `${k} unchanged`);
+    const fragment = JSON.parse(readFileSync(join(pkg, "opencode.json"), "utf8")) as Record<string, any>;
+    const placed = structuredClone(seen.ocJson) as Record<string, any>;
+    for (const [name, server] of Object.entries(placed["mcp"] ?? {}) as [string, any][]) {
+      const orig = fragment["mcp"][name];
+      if (Array.isArray(server.command) && server.command[0] === process.execPath) {
+        assert.ok(["sdd", "sdd-mcp"].includes(orig.command[0]), `${name}: only sdd commands are rewritten`);
+        assert.equal(server.command[1], join(scripts, `${orig.command[0]}.mjs`));
+        server.command = orig.command;
+      }
+    }
+    assert.deepEqual(placed, fragment, "opencode.json is the generated fragment but for the staged sdd commands");
+    assert.equal(doc.records.length, 1);
+    assert.deepEqual(doc.records[0]!["caps"], { turns: 30, usd: 0.5 });
+  } finally {
+    if (prev) setHarnessContext(prev);
+    if (savedScripts === undefined) delete process.env["SDD_EVAL_SDD_SCRIPTS"];
+    else process.env["SDD_EVAL_SDD_SCRIPTS"] = savedScripts;
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  }
 });

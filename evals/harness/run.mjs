@@ -39,7 +39,7 @@ import { checkHostEnv, resolveAuth } from "./env.mjs";
 import { readKeyUsage, readOpenRouterKey, redactor } from "./key-usage.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
-import { DEFAULT_HOST, HOSTS, runSession, setHarnessContext } from "./session.mjs";
+import { DEFAULT_HOST, HOSTS, runSession, setHarnessContext, usdText } from "./session.mjs";
 
 export const TIERS = {
   dev: { runs: 1, pass: (passed, runs) => passed === runs, rule: "1 / 1" },
@@ -104,6 +104,21 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         host: scenario.host,
         targetPackage: scenario.targetPackage,
         mcpOverrides: scenario.mcpOverrides,
+      }).catch(async (e) => {
+        // A failed notional-cost reading of the Claude Code eval runner (C002-IF-010 §2.2 Claude Code spend
+        // cap, item 8; critic CR-113): the session is no run and gets no result record. Its transcript is
+        // kept, and the `spendCheckFailed` hook books R in the spend ledger before the error reaches the run.
+        if (host === "claude-code" && typeof e?.costUsd === "number" && /^claude-code spend check failed: /.test(String(e.message))) {
+          const endedAt = Date.now();
+          if (Array.isArray(e.transcript)) {
+            const transcriptFile = join(resultsDir, "transcripts", `${scenario.id}-${time}-run${i + 1}.json`);
+            mkdirSync(join(resultsDir, "transcripts"), { recursive: true });
+            writeFileSync(transcriptFile, redact(JSON.stringify(e.transcript, null, 1)) + "\n");
+            log(`${scenario.id} run ${i + 1}/${n}: ${e.message}; no result record; transcript evals/results/transcripts/${basename(transcriptFile)}`);
+          }
+          await hooks.spendCheckFailed?.({ scenario, error: e, caps, auth: mode, endedAt });
+        }
+        throw e;
       });
       // The session's end (the ledger entry's `ended_at`, C002-IF-010 §2.3 item 3).
       const endedAt = Date.now();
@@ -130,6 +145,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         auth: mode,
         api_key_source: session.apiKeySource,
         target,
+        // The Claude Code version of the SDK's init message, recorded and never refused (plan critic CR-66; C002-RISK-039).
+        ...(target === "claude-code" ? { claude_code_version: session.claudeCodeVersion ?? null } : {}),
         ...(session.host_versions ? { host_versions: session.host_versions } : {}),
         ...(session.end_reason ? { end_reason: session.end_reason, usage: session.usage } : {}),
         caps,
@@ -142,7 +159,10 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       };
       records.push(record);
       const usd = session.usage && session.usage.usd === null ? "spend unreported" : `$${metrics.cost_usd.toFixed(4)}`;
-      log(`${scenario.id} run ${i + 1}/${n}: ${failures.length === 0 ? "pass" : `FAIL (${failures.join("; ")})`} · ${usd} · ${(metrics.session_ms / 1000).toFixed(1)} s${session.end_reason ? ` · ${session.end_reason}, ${session.usage.turns} turns` : ""}`);
+      // The overshoot of a Claude Code session the runner stopped at the spend cap (its `cap-close` record, item 7).
+      const capClose = target === "claude-code" ? session.transcript.find((r) => r.type === "harness" && r.event === "cap-close") : undefined;
+      const overshoot = capClose ? ` · overshoot ${usdText(capClose.overshoot_usd)} USD` : "";
+      log(`${scenario.id} run ${i + 1}/${n}: ${failures.length === 0 ? "pass" : `FAIL (${failures.join("; ")})`} · ${usd} · ${(metrics.session_ms / 1000).toFixed(1)} s${session.end_reason ? ` · ${session.end_reason}, ${session.usage.turns} turns` : ""}${overshoot}`);
       await hooks.after?.({ scenario, record, resultFile, endedAt });
     } finally {
       ws.cleanup();
@@ -370,6 +390,32 @@ export function ledgerEntry({ scenario, record, resultFile, task, step, pool, en
     pass: record.pass,
     ended_at: new Date(endedAt).toISOString(),
     result: posix(relative(ROOT, resultFile)),
+  };
+}
+
+/**
+ * The ledger entry of a Claude Code session whose notional-cost reading failed (C002-IF-010 §2.2 Claude Code
+ * spend cap, item 8; critic CR-113): the highest cost read, R, booked as the session's only record of its
+ * cost. The session is no run: no result record, `valid_run` false.
+ */
+export function spendCheckFailedEntry({ scenario, error, caps, auth, task, step, endedAt = Date.now() }) {
+  return {
+    date: new Date().toISOString().slice(0, 10),
+    task: task ?? null,
+    step: step !== undefined && step !== null && /^\d+$/.test(String(step)) ? Number(step) : (step ?? null),
+    case: scenario.id,
+    row: null,
+    host: "claude-code",
+    provider: auth === "subscription" ? "claude-max" : "anthropic-key",
+    auth,
+    cost_usd: error.costUsd,
+    caps_usd: caps?.usd ?? null,
+    cost_source: "claude-code spend check failed",
+    valid_run: false,
+    pass: false,
+    end_reason: null,
+    result: null,
+    ended_at: new Date(endedAt).toISOString(),
   };
 }
 
@@ -862,6 +908,19 @@ export async function main(argv, deps = {}) {
           writeLedger(now);
           lastSettled = { micro: u1.micro, at: u1.at, endedAt: Date.parse(entry.ended_at) };
           log(`ledger: ${scenario.id} reconciled from the OpenRouter key usage: ${fields.cost_usd.toFixed(4)} USD (recorded ${usd.toFixed(4)} USD)`);
+        },
+      }
+    : host === "claude-code"
+    ? {
+        // A failed notional-cost reading (C002-IF-010 §2.2 Claude Code spend cap, item 8): one ledger
+        // entry before the error reaches the run, which then ends with it.
+        spendCheckFailed({ scenario, error, caps, auth: mode, endedAt }) {
+          const ledger = existsSync(ledgerFile) ? readLedger(ledgerFile) : { entries: [] };
+          ledger.entries ??= [];
+          const entry = spendCheckFailedEntry({ scenario, error, caps, auth: mode, task: opts.task ?? opts.label ?? null, step: opts.step ?? null, endedAt });
+          ledger.entries.push(entry);
+          writeLedger(ledger);
+          errorLine(`ledger: ${scenario.id} ${usdText(entry.cost_usd)} USD booked with cost_source "${entry.cost_source}" (${ledgerFile}); the session is no run`);
         },
       }
     : {};

@@ -669,3 +669,56 @@ for (const loaded of [true, false]) {
     assert.deepEqual(hooks[0].hook_deny_sources, [".github_hooks_architect-guard.json"]);
   });
 }
+
+// --- C002-TC-931 (C002-TS-705, C002-REQ-642; defect D-031, critic CR-108): the Copilot CLI row ----------
+// What the Copilot CLI eval runner gives its host holds no budget other than `--max-ai-credits 50`: the
+// command line, the prompt text, the package copy, the servers file and the host process's environment,
+// recorded by the stub host when it starts.
+
+/** Every file under `dir` (relative, `/` separators) with its bytes, `node_modules` left out. */
+function filesOf(dir: string, base = dir): Map<string, Buffer> {
+  const out = new Map<string, Buffer>();
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules") continue;
+    const p = join(dir, e.name);
+    if (e.isDirectory()) for (const [k, v] of filesOf(p, base)) out.set(k, v);
+    else out.set(p.slice(base.length + 1).split(/[\/]/).join("/"), readFileSync(p));
+  }
+  return out;
+}
+
+test("C002-TS-705 row 2 — Copilot CLI eval runner: the command line, the prompt text, the servers file and the host environment hold no budget; --max-ai-credits 50 once, the only cap, and no turn-cap option; the package copy as generated; caps { turns: 30, usd: 0.50 }", async () => {
+  const dir = tmp("sdd-tc931-cp-");
+  const seen: { args?: string[]; env?: Record<string, string | undefined>; servers?: string; copy?: Map<string, Buffer> } = {};
+  const host = copilotStubHost({
+    creditsPerTurn: 1,
+    endAfter: 1,
+    onRun: ({ args, env }: { args: string[]; env: Record<string, string | undefined> }) => {
+      seen.args = [...args];
+      seen.env = { ...env };
+      const file = args[args.indexOf("--additional-mcp-config") + 1]!.replace(/^@/, "");
+      seen.servers = readFileSync(file, "utf8");
+      seen.copy = filesOf(args[args.indexOf("--plugin-dir") + 1]!);
+    },
+  });
+  const prev = setHarnessContext({ host: "copilot-cli", runners: { "copilot-cli": (o: Record<string, unknown>) => runCopilotCliSession(o, { host, pkg: pkg(), scripts: SCRIPTS, identity: IDENTITY }) } });
+  try {
+    const scenario = { id: "TS-705-copilot", title: "fx", agent: "architect:sdd-conductor", fixture: null, prompt: "Start change 001", assert: () => [] };
+    const doc = (await runScenario(scenario, { host: "copilot-cli", resultsDir: dir, log: () => undefined })) as Record<string, any>;
+    const args = seen.args!;
+    assert.equal(once(args, "--max-ai-credits"), 1, "--max-ai-credits once");
+    assert.equal(valueOf(args, "--max-ai-credits"), "50");
+    assert.equal(valueOf(args, "-p"), "Start change 001", "the prompt text");
+    assert.ok(!args.some((a) => /^--.*(turn|budget|usd|cost|limit)/i.test(a)), `no option names a turn cap or another budget: ${args.filter((a) => a.startsWith("--")).join(" ")}`);
+    const given = Object.fromEntries(Object.entries(seen.env!).filter(([k, v]) => process.env[k] !== v));
+    const inputs = JSON.stringify({ args, env: given, servers: seen.servers });
+    for (const t of [/budget/i, /maxBudgetUsd/, /maxTurns/, /max-turns/, /0\.50/, /USD/]) assert.ok(!t.test(inputs), `the recorded inputs hold ${t}`);
+    // The package copy: the generated package, plus the plugin.json and hooks.json that `sdd install copilot` writes into it (§4).
+    const want = filesOf(pkg());
+    for (const [k, v] of want) assert.ok(seen.copy!.get(k)?.equals(v), `${k} as generated`);
+    assert.deepEqual([...seen.copy!.keys()].filter((k) => !want.has(k)).sort(), ["hooks.json", "plugin.json"].filter((k) => !want.has(k)), "no other file added to the copy");
+    assert.deepEqual(doc["records"][0]["caps"], { turns: 30, usd: 0.5 });
+  } finally {
+    setHarnessContext(prev);
+  }
+});

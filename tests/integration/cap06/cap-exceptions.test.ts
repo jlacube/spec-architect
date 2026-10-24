@@ -5,8 +5,9 @@
 // and auth mode. fx-evals-caps: a temporary case folder with one case file per row at the row's `file`
 // path, relative to the fixture root, which run.mjs takes as the repository root for the case-file match;
 // `main` runs in a child process from the source files with the stub host for opencode and copilot-cli and
-// the Agent SDK stub for claude-code (./eval-driver.ts), EVAL_HOST and EVAL_AUTH unset; no ledger write, no
-// paid session. Supporting tests: CAP_EXCEPTIONS holds exactly the rows of the §2.2 table (from revision
+// the Agent SDK stub for claude-code on mock timers (./eval-driver.ts), EVAL_HOST and EVAL_AUTH unset; no
+// ledger write, no paid session. On claude-code the stub gets the turn cap and no spend cap, and the runner
+// stops the session at the cap itself (revision D-031, C002-T-069). Supporting tests: CAP_EXCEPTIONS holds exactly the rows of the §2.2 table (from revision
 // D-030, C002-T-068, 41 rows, each subscription-class row with the rule of its list in "Sessions of CHG-001
 // tasks"); TS-223 at 1.50 USD with --cap-exception, TS-216 at 0.50 USD without it and refused with it under
 // --auth api-key (revision D-030); the case files
@@ -19,7 +20,7 @@ import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { CAP_EXCEPTIONS } from "../../../evals/harness/caps.mjs";
 import { repoRoot } from "../../helpers.ts";
-import { runDriver, writeCase } from "./eval-driver.ts";
+import { type DriverRun, runDriver, writeCase } from "./eval-driver.ts";
 
 const ROOT = repoRoot();
 
@@ -70,6 +71,35 @@ const ROWS: Row[] = [
   { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "api-key", runs: null, names: "auth api-key" },
 ];
 
+/**
+ * The Agent SDK stub of the Claude Code rows (revised for defect D-031 and critic CR-109): on mock timers,
+ * one model call each second, 0.25 USD added at the end of each call, each usage request answered with the
+ * cost of the ended calls, a result at once after an interrupt.
+ */
+const CLAUDE_STUB = { usdPerCall: 0.25, everyMs: 1000, usageDelayMs: 100, afterInterrupt: [{ result: {} }] };
+
+/**
+ * A Claude Code session row: the stub got `maxTurns` and no `maxBudgetUsd` or `taskBudget`, and the runner
+ * stopped the session itself at the reading of the cap in force, after the second call at 0.50 USD or
+ * after the sixth at 1.50 USD (and not at the 0.50 USD reading of the second), with `error_max_budget_usd`.
+ */
+function claudeSession(r: DriverRun, caps: { usd: number; turns: number }) {
+  assert.deepEqual(r.given[0], { turns: caps.turns, usd: null }, "the Agent SDK stub got the turn cap and no spend cap");
+  const o = r.stub.find((e) => e["ev"] === "options")!;
+  assert.equal(o["maxBudgetUsd"], "absent");
+  assert.equal(o["taskBudget"], "absent");
+  const tr = r.transcripts[0]!;
+  const capRecs = tr.filter((x) => x.type === "harness" && x.event === "cap");
+  assert.equal(capRecs.length, 1, "one cap record");
+  assert.equal(capRecs[0].usd, caps.usd, `stopped at the ${caps.usd.toFixed(2)} USD reading`);
+  assert.equal(capRecs[0].cap_usd, caps.usd);
+  const calls = Math.round(caps.usd / 0.25);
+  const interrupt = r.stub.find((e) => e["ev"] === "interrupt")!;
+  assert.ok(Math.abs((interrupt["t"] as number) - ((calls - 1) * 1000 + 100)) < 50, `stopped after model call ${calls}: interrupt at ${interrupt["t"]} ms`);
+  assert.equal(r.stub.filter((e) => e["ev"] === "call-end").length, calls, `${calls} model calls ended`);
+  assert.equal(r.records[0]!["metrics"].result_subtype, "error_max_budget_usd");
+}
+
 const describe = (r: Row) =>
   `${r.row} of ${r.file} (${r.usd !== undefined ? r.usd.toFixed(2) + " USD" : "default USD"}, ${r.turns ?? "default"} turns) --host ${r.host}${r.auth ? " --auth " + r.auth : ""}${r.capException ? " --cap-exception" : ""}`;
 
@@ -79,12 +109,12 @@ ROWS.forEach((row, i) => {
     try {
       const file = writeCase(fx, row.file, { id: row.row, ...(row.usd !== undefined ? { maxBudgetUsd: row.usd } : {}), ...(row.turns !== undefined ? { maxTurns: row.turns } : {}) });
       const args = [file, "--host", row.host, "--only", row.row, ...(row.auth ? ["--auth", row.auth] : []), ...(row.capException ? ["--cap-exception"] : [])];
-      const r = runDriver(args, { root: fx });
+      const r = runDriver(args, { root: fx, stub: CLAUDE_STUB });
       if (row.runs) {
         assert.equal(r.status, 0, r.out);
         assert.equal(r.given.length, 1, "one session");
-        assert.equal(r.given[0]!.usd, row.runs.usd, "the session got the spend cap");
-        if (row.host === "claude-code") assert.equal(r.given[0]!.turns, row.runs.turns, "the Agent SDK stub got the turn cap");
+        if (row.host === "claude-code") claudeSession(r, row.runs);
+        else assert.equal(r.given[0]!.usd, row.runs.usd, "the session got the spend cap");
         assert.equal(r.records.length, 1);
         assert.deepEqual(r.records[0]!["caps"], { turns: row.runs.turns, usd: row.runs.usd });
       } else {
@@ -116,12 +146,11 @@ D030_ROWS.forEach((row) => {
     try {
       const file = writeCase(fx, row.file, { id: row.row });
       const args = [file, "--host", row.host, "--only", row.row, ...(row.auth ? ["--auth", row.auth] : []), ...(row.capException ? ["--cap-exception"] : [])];
-      const r = runDriver(args, { root: fx });
+      const r = runDriver(args, { root: fx, stub: CLAUDE_STUB });
       if (row.runs) {
         assert.equal(r.status, 0, r.out);
         assert.equal(r.given.length, 1, "one session");
-        assert.equal(r.given[0]!.usd, row.runs.usd, "the session got the spend cap");
-        assert.equal(r.given[0]!.turns, row.runs.turns, "the Agent SDK stub got the turn cap");
+        claudeSession(r, row.runs);
         assert.equal(r.records.length, 1);
         assert.deepEqual(r.records[0]!["caps"], { turns: row.runs.turns, usd: row.runs.usd });
       } else {
