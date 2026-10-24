@@ -1043,3 +1043,20 @@ Scope: 978d147 (20-plan), against the same defects and answers. Lint: the 9 waiv
 | CR-58 | major | T-067, TC-907, TC-924 | T-067's key-check row reads as changing the missing-file text while TC-907 is "unchanged" | after spec CR-85, name the text per case in the target row and step 4 | fixed (T-067 key-check target row, step 4 and done-check name both texts of IF-010 §4 Key check: missing file keeps `no OpenRouter key in <key file>`; empty, short or unsafe key gets the short-key text; TC-925 for TS-699, TC-907 unchanged) |
 | CR-59 | minor | T-067, test plan §8 | request-level guarantees (header only, 30 s timeout, non-200, label not kept, no body in errors) only in unlisted unit cases | list them in §8 as supporting tests of TC-924 or a unit-level TC | fixed (test plan §8 TC-924: request-level supporting tests of `tests/unit/evals/key-usage.test.ts`: header only, 30 s timeout, non-200, invalid `data.usage`, label not kept, no key, headers or body in a failure reason) |
 | CR-60 | minor | M-06, M-07 | M-06 exit needs T-067 while T-052/T-055 don't depend on it, so M-06 may close after M-07 | say so in §3 or give T-067 its own milestone row | fixed (strategy §3 "Milestone order": M-07 may close before M-06, P-01 answer to Q-t067-order-01; work breakdown and handoff say the same) |
+
+
+## Revision D-030 (2026-10-24)
+
+Scope: 20-plan in `git diff 8952984 46096c4`. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-61 | major | handoff, C001-T-082, C001-T-072, DOD-012 | cross-change dependency recorded only on the CHG-002 side; T-082's approved commands lack --auth subscription --cap-exception and mix rule-1 rows with rows without exceptions; T-072 lacks the session-limit check | sdd task set C001-T-082 blocked (waits for C002-T-068); command forms in the handoff (rule-1 rows in their own --cap-exception run, others without, replacements with --only); state T-072's session-limit check | open |
+| CR-62 | major | T-068, TC-679 | 37 rows stated; the table holds 36 | 36, or drop the number | open |
+| CR-63 | minor | T-068 Targets | the rule-2 range is ambiguous | list the rule-2 rows or cite §2.2 | open |
+| CR-64 | minor | test plan §4.1 | the no-run mark of a CHG-001 session has no home (claude-max ledger is hand-written for C002 tasks) | name the C001-T-072 release evidence or the C001-T-082 report | open |
+| CR-65 | minor | 70-risks, RISK-015 | no risk row for the D-030 residual risks (budget stop, 1.50 USD cap hits, near-cap rows) | add a risk row (owner P-01) or point to C001-RISK-005 | open |

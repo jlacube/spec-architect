@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: blocked
 depends_on: [C001-T-063]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-223, C001-TS-224, C001-TC-223, C001-TC-224, C001-TC-215, C
 components: [C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "blocked: waits for C002-T-068 (CHG-002 D-030 cap exceptions for TS-223/224 and other release cases)" }
 ---
 
 # C001-T-082 — Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017)

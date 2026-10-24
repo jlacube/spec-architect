@@ -1401,3 +1401,20 @@ Scope: `git diff 8c6efa2 978d147 -- .sdd/002-multi-platform-targets/`, against D
 | CR-95 | minor | IF-010 §2 model rule, §5.2, Q-acted-final-01 | a missing-model refusal (no agent ran) locks an injection entry | P-01 (Q-model-refusal-01): count as a no-run refusal | fixed (P-01 "Count as no-run (Recommended)"; IF-010 §2 model rule and §5.2 No-run refusal, second form: missing-model refusal, spend `unreported`, `host_versions` kept; architecture §6.2 aligned) |
 | CR-96 | minor | DOD-012, REQ-639 | short ID "639" not resolved by trace | write C002-REQ-639 in full | fixed (test-designer: DOD-012 Covers C002-NFR-105, C002-REQ-638, C002-REQ-639, C002-REQ-640, C002-REQ-641) |
 | CR-97 | minor | IF-010 §4 | a kept run folder (SDD_EVAL_KEEP_RUN) leaves host files unredacted | paid session run folder deleted at end; keep switch refused for paid sessions | fixed (IF-010 §4 Run folder of a paid session: deleted at the end, `SDD_EVAL_KEEP_RUN` refused on `--host opencode` with the real runner, refusal line defined; Copilot CLI runner unchanged) |
+
+
+## Revision D-030 (2026-10-24)
+
+Scope: `git diff 8952984 46096c4 -- .sdd/002-multi-platform-targets/`, against D-030, Q-cap-exc-01/02 and the d030-measure and t082-baseline results. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-98 | major | IF-010 §2.2 rule 2, C001-TS-802 | TS-802's conductor stops itself for the budget (ends success), which rule 2 cannot replace — the same reason TS-507/508 went to rule 1; TS-802 is a 10-run high-risk case | move TS-802 to rule 1 (conductor decision: follows the approved rationale) | open |
+| CR-99 | major | DOD-012, §2.2 rule 2 | DOD-012 limits sessions to the tier's runs, but rule-2 replacements and the 10-run check add sessions; the rule-2 clause lacks "failed" | sessions = runs of the tier (plus the 10-run check) plus one per replaced session; add "failed" | open |
+| CR-100 | minor | TS-679 note | "as in C002-T-048" contradicts the test plan (no one-rerun limit for CHG-001) | "started with --cap-exception as in C002-T-048, without its one-rerun limit" | open |
+| CR-101 | minor | §2.2, Q-cap-exc-01 | near-cap cases left at defaults (TS-201 0.481, INJ-18 0.459, TS-127 0.427, TS-418 0.446, TS-424 0.413) | add as rule-2 rows (conductor decision: inert unless a session hits the cap) | open |
+| CR-102 | minor | §2.2 rule 2 (TS-214) | no reason given for TS-214 in rule 2 | cite t063-d013-TS-214 (0.28–0.32 USD at 1.50) | open |
