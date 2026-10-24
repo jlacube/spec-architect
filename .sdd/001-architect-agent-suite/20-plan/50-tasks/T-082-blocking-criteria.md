@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-063, C001-T-083]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-223, C001-TS-224, C001-TS-225, C001-TC-223, C001-TC-224, C
 components: [C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
-report: { commit: null, completed_at: null, notes: "blocked: waits for C002-T-070 (rule-1 cap 3.00 USD) and the D-019 fix task" }
+report: { commit: d7c930b, completed_at: 2026-10-25, notes: "IF-05 §1 rule, ID format and no-empty-block rule in sdd-conventions/code-discovery; milestone tier (t082-d019, hidden budget, rule-1 at 3.00 USD): TC-223, 224, 225, 215, 213, 209, 222 all 3/3; no budget statements; rule-1 sessions ran to the cap after their checks (D-034); t082-d018 sessions are no runs" }
 ---
 
 # C001-T-082 — Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017)
