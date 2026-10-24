@@ -181,3 +181,10 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Defer with D-023 item 1 to a later change (Recommended) · 2. Fix in CHG-002 with a spec revision and one more paid OpenCode session
 - **Answer:** P-01: "Defer with D-023(1) (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-24 — defect D-030 (found in C001-T-082)
+
+### Q-cap-exc-01 — eval caps for the CHG-001 cases TS-223 and TS-224
+- **Options:** 1. Add rows to the C002-IF-010 §2.2 cap-exception table like TS-215 (1.50 USD, subscription), with caps.mjs and its test; the scenarios stay as approved (Recommended) · 2. Change TS-223/224 to dispatch the cartographer directly (about 0.30 USD a run), a CHG-001 G2 change
+- **Answer:** P-01: "Add cap exceptions (Recommended)"
+- **Extracted instructions:** none

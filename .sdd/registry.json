@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-23T22:20:08Z",
+  "generated_at": "2026-10-24T01:37:44Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -230,13 +230,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:a70ada3827d9f475022914dbc7e708b031abb9791f07e20ca77d1b6e5ebb5e8b",
           "approved_at": "2026-10-23",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:c230f9d78a5b676624d57853410130a03d48a668edc1f06868c0d44f5769f8b6",
           "approved_at": "2026-10-23",
           "approved_by": "jerome.lacube"
@@ -542,6 +542,16 @@
           "status": "closed",
           "resolution": "Fixed by plan revision e65ad24 and f368750 (G3 31c0b6f): Test data column, Kind column (structure, replay, benchmark as kinds of integration), Executor column for the 18 manual cases; also corrects the §1 integration count from 173 to 177 (CR-57). No test meaning changed; LINT-TC-001 0 findings.",
           "closed_at": "2026-10-23"
+        },
+        {
+          "id": "D-030",
+          "ref": "C002-IF-010",
+          "summary": "Found in C001-T-082: the C001 eval cases TS-223 and TS-224 (real conductor and cartographer, about 1.2–1.4 USD notional per run) have no row in the C002-IF-010 §2.2 cap-exception table, so the 0.50 USD default cap ends them before the cartographer hands back; TS-215 has a 1.50 USD subscription row for the same reason. Other C001-T-072 release cases may be in the same position. P-01 (Q-cap-exc-01): add cap exceptions.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-24",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
