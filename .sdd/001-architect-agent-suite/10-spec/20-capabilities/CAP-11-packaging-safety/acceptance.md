@@ -319,6 +319,19 @@ Scenario: C001-TS-1124 — Claude Code below the minimum version
   And the doctor run reports "completed with warnings"
 ```
 
+## C001-REQ-1124
+
+#### C001-AC-1124.1 — Template paths in bodies detected
+```gherkin
+Scenario: C001-TS-1126 — template path under the plugin root in an agent body
+  Given a copy of the shipped plugin in which "agents/sdd-spec-writer.md" gains the line "Read `${CLAUDE_PLUGIN_ROOT}/templates/lite/10-spec/spec.md` before drafting."
+  And the same file gains the line "Run `sdd template show lite/10-spec/spec.md` before drafting."
+  When the plugin structure check runs on the copy
+  Then it reports error "PLG-TMPL-001" for "agents/sdd-spec-writer.md" and the line naming "${CLAUDE_PLUGIN_ROOT}/templates/"
+  And it reports no other "PLG-TMPL-001" finding
+```
+Note: the copy differs from the shipped plugin only by the two added lines, so the last step also shows that the shipped plugin's agent, command and skill bodies name no path under `${CLAUDE_PLUGIN_ROOT}/templates/`, and that a `sdd template show` line is not reported (C001-IF-08 §4).
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -345,6 +358,7 @@ Scenario: C001-TS-1124 — Claude Code below the minimum version
 | C001-REQ-1121 | TS-1122 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1122 | TS-1123 | n/a | n/a | TS-1123 | n/a | n/a | n/a |
 | C001-REQ-1123 | TS-1124 | n/a | TS-1124 (version) | TS-1124 | n/a | n/a | n/a |
+| C001-REQ-1124 | TS-1126 | TS-1126 (`sdd template show` line not reported) | n/a | TS-1126 | n/a | n/a | n/a |
 
 Per-column n/a reasons: as in CAP-05. Concurrency is n/a because guards are stateless
 per call.

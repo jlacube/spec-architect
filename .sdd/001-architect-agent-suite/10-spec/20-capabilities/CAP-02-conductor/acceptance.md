@@ -189,11 +189,14 @@ Scenario: C001-TS-214 — unattended mode never approves
 #### C001-AC-213.2 — Stops on a blocking question
 ```gherkin
 Scenario: C001-TS-215 — blocking question interrupts unattended mode
-  Given unattended drafting is active
-  When the cartographer returns a question with "blocking": true
-  Then the conductor asks it via AskUserQuestion before dispatching further authors
+  Given the C001-TS-223 fixture and its approved lite ideation
+  And P-01 told the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate."
+  And the spec-writer is still running when the cartographer's hand-back, holding a question with "blocking": true, arrives
+  When the conductor receives that hand-back
+  Then an AskUserQuestion call that carries the blocking question occurs after the arrival and before the conductor's turn ends
+  And no Agent call occurs between the arrival and that AskUserQuestion call
 ```
-Note: the Given's blocking question comes from the real cartographer, which flags a scope question as blocking under the scope criterion of C001-IF-05 `questions.md` §1 (see C001-TS-223; D-017).
+Note: eval-level scenario, run against the real specialists. The terms "hand-back", "arrives", "still running", "carries" and "the conductor's turn ends" are defined in the note under C001-AC-221.1. The blocking question comes from the real cartographer, which flags the web-or-kiosk scope question as blocking under the scope criterion of C001-IF-05 `questions.md` §1 (see C001-TS-223; D-017). The Then follows C001-IF-05 `questions.md` §2 (D-019).
 
 ## C001-REQ-214
 
@@ -263,6 +266,27 @@ Scenario: C001-TS-222 — fatigue guard
   Then round six includes an option to resolve remaining non-blocking questions with recommendations
 ```
 
+## C001-REQ-221
+
+#### C001-AC-221.1 — Blocking question asked when its hand-back arrives
+```gherkin
+Scenario: C001-TS-225 — blocking question asked while another specialist runs, attended drafting
+  Given the C001-TS-223 fixture and its approved lite ideation
+  And P-01 told the conductor "Draft the spec of CHG-001."
+  And the spec-writer is still running when the cartographer's hand-back, holding a question with "blocking": true, arrives
+  When the conductor receives that hand-back
+  Then an AskUserQuestion call that carries the blocking question occurs after the arrival and before the conductor's turn ends
+  And no Agent call occurs between the arrival and that AskUserQuestion call
+```
+Note: eval-level scenario, run against the real specialists; C001-TS-215 is the same rule in unattended drafting. Terms, read from the session transcript:
+- *Hand-back* and *questions block*: as defined in the note under C001-TS-224. The blocking question is a question with `"blocking": true` in a questions block of the cartographer's hand-back.
+- *Arrives*: the moment the conductor receives the hand-back. For an asynchronous Agent call this is the `task_notification` system message whose `tool_use_id` is that call; for a synchronous call it is the call's tool result that is not a launch notice.
+- *Still running*: the conductor's Agent call to the spec-writer occurs before the arrival, and its own arrival does not occur before it.
+- *Carries*: the question text of one AskUserQuestion question contains at least half of the distinct words of five or more letters in the blocking question's text (case-insensitive).
+- *The conductor's turn ends*: the first `result` message after the arrival.
+
+When the Given does not hold (the cartographer is not dispatched, its hand-back holds no blocking question, or the spec-writer is not still running at the arrival), the run fails as "Given not met", distinct from a conductor failure.
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -287,5 +311,6 @@ Scenario: C001-TS-222 — fatigue guard
 | C001-REQ-218 | TS-220 | n/a | n/a | n/a | TS-220 | n/a | n/a |
 | C001-REQ-219 | TS-221 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-220 | TS-222 | n/a | TS-222 (sixth round) | n/a | n/a | n/a | n/a |
+| C001-REQ-221 | TS-225 (attended) | TS-215 (unattended) | n/a | n/a | n/a | TS-215, TS-225 (spec-writer still running at the arrival) | n/a |
 
 Per-column n/a reasons: *alternate/boundary/error* where marked n/a: the requirement has a single path with no limits or error branch. *Authorization*: local single-user tool; approval authority is covered where marked. *Concurrency*: single writer per change (C001-CON-11). *Abuse*: inputs are the user's own repository; injected instructions in repository or web content are covered by C001-NFR-205.
