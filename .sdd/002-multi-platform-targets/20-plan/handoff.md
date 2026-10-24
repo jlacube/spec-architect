@@ -85,16 +85,49 @@ Revise) and D-026 item 3 (the TS-208 fixture's placeholder options) are deferred
 
 The revision for defect D-030 (found in C001-T-082; P-01 answers Q-cap-exc-01, "Add cap exceptions
 (Recommended)", and Q-cap-exc-02, "Measure now (Recommended)") lands in the fix task C002-T-068,
-after C002-T-048, with no paid session. It adds the 19 CHG-001 release cases of the C002-IF-010 §2.2
-table to `evals/harness/caps.mjs` with the two rules of "Sessions of CHG-001 tasks", and updates the
-pinning test and `cap06/cap-exceptions`.
+after C002-T-048, with no paid session. It adds the CHG-001 release cases of the C002-IF-010 §2.2
+table to `evals/harness/caps.mjs`, with the rules of the two lists of "Sessions of CHG-001 tasks",
+and updates the pinning test and `cap06/cap-exceptions`.
 
 **Cross-change dependency.** CHG-001's **C001-T-082** (its step 4, the paid runs after the skill
 change) and **C001-T-072** (the release evals) depend on C002-T-068. Their Claude Code sessions of
 these rows must not start before C002-T-068 is done. Without the rows, `run.mjs` refuses
 `--cap-exception` for them, and a session at 0.50 USD is cut off as the two `t082-baseline` sessions
 were. The CHG-001 task files do not carry this edge: the CHG-001 plan is approved, and an edit there
-would need its own G3. The conductor records it on the CHG-001 side.
+would need its own G3. On the CHG-001 side, C001-T-082 is marked `blocked` through the CLI with the
+reason "waits for C002-T-068" (`sdd task set C001-T-082 --status blocked`). The conductor sets it
+back to `in-progress` when C002-T-068 is reported done.
+
+**Command forms of the CHG-001 runs** (plan critic CR-61; C002-IF-010 §2.2 Sessions of CHG-001
+tasks). These forms replace the commands of the approved CHG-001 task files wherever those name a
+row of these rules. The harness applies the rerun cap to every selected row of a run that gives
+`--cap-exception`, and refuses the run when a selected row has no matching exception with a rerun
+cap. So a run never mixes rule-1 rows with other rows:
+
+| Rows | Command form | Why |
+|---|---|---|
+| Rule 1 (the rows of list 1 of §2.2) | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <rule-1 rows> <case files>`, in a run of their own | every session at 1.50 USD |
+| Rule 2 (the rows of list 2), and every release case that no exception matches | `node evals/harness/run.mjs --host claude-code --auth subscription --tier <tier> --only <rows> <case files>`, without `--cap-exception` | own caps, 0.50 USD and 30 turns, or the row's own turn cap |
+| A rule-2 replacement, for a session that failed and ended at the spend cap | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <row> <case file>`, one row per run | one session at 1.50 USD for that row only |
+
+`--auth subscription` is named on every run, since `api-key` is the default. Each run records its
+command line in the task's report or release evidence.
+
+**Session-limit check of C001-T-072** (plan critic CR-61). The release evidence of C001-T-072 lists,
+per row of the class, every session it ran. For each session it gives the result file, `caps.usd`
+and `caps.turns`, `metrics.result_subtype`, the result, and whether it counts as a run (test plan
+§4.1, Rule for capped sessions, Sessions of CHG-001 tasks). From that list the task reports these
+checks:
+- the number of runs equals the row's release class in C001-ADR-003 (10 or 3, with the 10-run check
+  after a 2 / 3 result);
+- every session of a rule-1 row ran at 1.50 USD;
+- every session at 1.50 USD of a rule-2 row replaces exactly one session that failed and ended at the
+  spend cap (`error_max_budget_usd`), named by its result file;
+- no rule-2 row has a session at 1.50 USD without such a predecessor, or more than one replacement
+  for the same session;
+- no row of the class ran with `--auth api-key`.
+
+C001-T-082 reports the same check for the sessions of its step 4 against that step's runs.
 
 ## Reading order
 
@@ -218,7 +251,7 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
-| Q-cap-exc-01, Q-cap-exc-02: cap exceptions for the CHG-001 release eval cases (defect D-030; `questions-log.md` round 2026-10-24) | C002-T-068; C001-T-082, C001-T-072 | settled: P-01 answered "Add cap exceptions (Recommended)" and "Measure now (Recommended)"; the 19 rows and two rules of C002-IF-010 §2.2 in C002-T-068; the CHG-001 tasks wait for it (cross-change dependency above) |
+| Q-cap-exc-01, Q-cap-exc-02: cap exceptions for the CHG-001 release eval cases (defect D-030; `questions-log.md` round 2026-10-24) | C002-T-068; C001-T-082, C001-T-072 | settled: P-01 answered "Add cap exceptions (Recommended)" and "Measure now (Recommended)"; the rows and the two rule lists of C002-IF-010 §2.2 in C002-T-068, the command forms and session-limit check above; residual risks C002-RISK-038; the CHG-001 tasks wait for it (cross-change dependency above) |
 | Q-model-refusal-01, Q-t067-order-01, Q-ts208-fixture-01: the missing-model refusal on an injection row, the order of C002-T-067 against the releases, and D-026 item 3 (`questions-log.md` round 2026-10-23) | C002-T-067, C002-T-052, C002-T-055 | settled: P-01 answered "Count as no-run (Recommended)", "No dependency (Recommended)" and "Defer with D-023(1) (Recommended)"; the no-run form in C002-T-067, no edge from C002-T-067 to the release tasks, and D-026 item 3 deferred (`10-strategy.md` §2, §3) |
 
 ## CLI commands
