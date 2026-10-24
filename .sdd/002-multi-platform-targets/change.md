@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:4bae72a8e3eba18ccfbd702bd19ed94c479d82d2786a3986360c891a840af152", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:058fdf86c4075398ec2b078f22ab2fd057348558e9e7851e1cf36a06818aaa7d", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:1906acb9e67da8210b72be66dc98e6eb9c639ec446fc7a7286a866349e4cf484", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -249,3 +249,4 @@ waivers:
 | 2026-10-24 | G2 (spec) | **Revise** | "Revision for CHG-002 D-031: eval caps enforced by the harness without telling the model a budget (P-01 Q-budget-hide-01)" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-031: harness fix task" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-10-24 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
