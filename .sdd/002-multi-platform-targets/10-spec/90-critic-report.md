@@ -1418,3 +1418,26 @@ Scope: `git diff 8952984 46096c4 -- .sdd/002-multi-platform-targets/`, against D
 | CR-100 | minor | TS-679 note | "as in C002-T-048" contradicts the test plan (no one-rerun limit for CHG-001) | "started with --cap-exception as in C002-T-048, without its one-rerun limit" | fixed (test-designer: the C002-TS-679 note reads "started with `--cap-exception` as in C002-T-048, without its one-rerun limit") |
 | CR-101 | minor | §2.2, Q-cap-exc-01 | near-cap cases left at defaults (TS-201 0.481, INJ-18 0.459, TS-127 0.427, TS-418 0.446, TS-424 0.413) | add as rule-2 rows (conductor decision: inert unless a session hits the cap) | fixed (architect: the five cases added to the second row and to rule 2 of C002-IF-010 §2.2, each with its evidence file in the evidence table) |
 | CR-102 | minor | §2.2 rule 2 (TS-214) | no reason given for TS-214 in rule 2 | cite t063-d013-TS-214 (0.28–0.32 USD at 1.50) | fixed (architect: rule 2 of C002-IF-010 §2.2 cites `t063-d013-TS-214-2026-10-23T09-23-45-699Z.json`, 0.28 … 0.32 USD at the 1.50 USD cap, and the pre-rework C002-T-048 sessions) |
+
+
+## Revision D-031 (2026-10-24)
+
+Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 6 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-103 | blocker | IF-010 §2.2 item 8, REQ-644, TS-704 | the SDK rejects pending and later usage requests when the query closes, so a request open at a normal end or at the runner's close fails the run | a reading fails only while the query is open; ignore rejections from the query ending; R from the last result; two TS-704 rows | open |
+| CR-104 | major | IF-010 items 3, 8, REQ-644 | a usage request that never answers leaves the session uncapped | a request unanswered within a stated time is a failed reading; TS-704 row on mock timers | open |
+| CR-105 | major | REQ-643, IF-010 items 3–5, rule 2 | REQ-643 relabels a session that ended by itself (success or error_max_turns) at or above the cap as error_max_budget_usd | a self-ending result keeps its subtype and cost; only a runner-stopped session gets error_max_budget_usd; TS-702 row | open |
+| CR-106 | major | NFR-105, IF-010 item 7, AC-643.1 | the overshoot threshold cannot fail and cannot be checked (no reading records) | harness usage records per reading; restate the bound on them; report the overshoot; Claude Code in the NFR Method | open |
+| CR-107 | major | TS-702, IF-010 item 3, DOD-012, T-069 | when the stub ends a call is undefined; the one-queued rule has no test and contradicts "one request per model call" | stub ends a call after its last block, answers after a set delay; Then: no repeat-ID request, at most one open; coalescing row; align DOD-012 | open |
+| CR-108 | major | REQ-642, AC-642.1, TS-703 | REQ-642 covers every runner, AC only Claude Code; Copilot assumption unchecked | AC-642.2 rows on the OpenCode and Copilot stub hosts; transcript search in the next Copilot batch | open |
+| CR-109 | major | TS-679, TC-679 | Claude Code rows can no longer fail (stub gives no cost) | stub answers 0.25 USD per call; stop at the 1.50 reading, not at 0.50 | open |
+| CR-110 | minor | TS-614, TC-614 | stub behaviour after the interrupt and turn counting unstated; no mock timers | stub streams a result at once; turns = ended calls; mock timers | open |
+| CR-111 | minor | REQ-611, coverage row, glossary | still say the Agent SDK applies the cap | point to IF-010 §2.2 Claude Code spend cap | open |
+| CR-112 | minor | REQ-643, REQ-644, US-603/604 | Claude-Code-only REQs trace to OpenCode/Copilot stories | trace to a Claude Code story or extend US-603 | open |
+| CR-113 | minor | IF-010 item 8, §4.1 Ledger | a rejected session after spending leaves no ledger entry | write R into a ledger entry before rethrowing | open |

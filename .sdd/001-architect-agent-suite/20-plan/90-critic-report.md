@@ -165,3 +165,17 @@ Scope: 20-plan in `git diff 08129a5 e2ebb2f`, against the same defect and answer
 | CR-26 | minor | T-072, test plan §4, handoff, index | release-tier rule restated in several places with counts | link to ADR-003; drop the counts from T-072 | fixed: T-072, test plan §4, handoff and index link to the ADR-003 revision; counts removed |
 
 All findings of this section fixed (planner), 2026-10-24.
+
+
+## Revision D-018 (2026-10-24)
+
+Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-27 | minor | T-082, handoff row 59, CHG-002 handoff | cross-change references mismatch (unnamed C002-T-069, "CHG-002 side only") | name C002-T-069, one reason text, drop "CHG-002 side only" | open |
+| CR-28 | minor | TC-224, T-082 target | repeat CR-30's wording | update with the CR-30 fix | open |

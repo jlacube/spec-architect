@@ -1060,3 +1060,20 @@ Scope: 20-plan in `git diff 8952984 46096c4`. Appended by the conductor from the
 | CR-63 | minor | T-068 Targets | the rule-2 range is ambiguous | list the rule-2 rows or cite §2.2 | fixed (T-068 Targets and test plan §4.1 cite the two lists of §2.2 "Sessions of CHG-001 tasks"; no row list or range in the plan) |
 | CR-64 | minor | test plan §4.1 | the no-run mark of a CHG-001 session has no home (claude-max ledger is hand-written for C002 tasks) | name the C001-T-072 release evidence or the C001-T-082 report | fixed (test plan §4.1 Rule for capped sessions, "Where the no-run mark lives": the C001-T-072 release evidence and the C001-T-082 step-4 report, no CHG-002 ledger entry) |
 | CR-65 | minor | 70-risks, RISK-015 | no risk row for the D-030 residual risks (budget stop, 1.50 USD cap hits, near-cap rows) | add a risk row (owner P-01) or point to C001-RISK-005 | fixed (C002-RISK-038, owner P-01: budget stop under rule 2, a rule-1 session at the 1.50 USD cap, near-cap rows; in T-068 risk_refs) |
+
+
+## Revision D-031 (2026-10-24)
+
+Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-66 | major | RISK-039, T-069 | only the SDK is pinned; the desktop-bundled Claude Code version is unchecked; usage call reads the claude.ai endpoint (latency, failure) | record claude_code_version; a version change repeats the T-069 check (conductor decision: record, not refuse); endpoint latency in RISK-039 | open |
+| CR-67 | major | T-069 step 6(a) | the assumption test cannot tell a usage call from a normal side call | compare session.model_usage between readings; probe: two back-to-back requests give equal costs | open |
+| CR-68 | major | T-069 step 6, IF-010 TS-224 row, NFR-105, DOD-012 | the paid check runs TS-224 at 1.50 USD outside the runs its exception allows | name C002-T-069 step 6 (one session) in the TS-224 row, NFR-105 and DOD-012 (conductor decision, within P-01's approved spend) | open |
+| CR-69 | minor | T-069 step 6(c), (d) | search misses turn-cap wording; no fallback if TS-216 doesn't reach the cap | add turn terms; state the fallback | open |
+| CR-70 | minor | registry | tasks.total 68 stored, 69 expected | sdd status --write | open |

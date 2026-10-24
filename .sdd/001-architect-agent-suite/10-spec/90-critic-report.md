@@ -194,3 +194,17 @@ Scope: `git diff 08129a5 e2ebb2f -- .sdd/001-architect-agent-suite/ .sdd/_consti
 | CR-27 | major | IF-05 §1 criterion 4, TS-209 | criterion 4 keeps the subjective test behind D-017; a budget question (TS-209) meets none of 1–3 | make criterion 4 decidable or extend the cover-every-option sentence; re-check TS-209 | fixed (IF-05 §1 criterion 2: blocking when, without the answer, the specialist would have to state it as a fact or an assumption in its artifact; covering every option counts as an assumption for criterion 1 only; TS-209 re-checked: blocking under criterion 2, its brief asks for one provider and the choice depends on the budget) |
 | CR-28 | major | TS-223, AC-208.2, RISK-005 | TS-223 lacks dispatcher, phase, brief and a decidable Then (free-text judgement) | TS-215 fixture and ideation sentence; conductor in unattended drafting; Then: blocking true with "web" and "kiosk" in question/options; RISK-005 exception | TS-223 part fixed (TS-215 fixture and quoted ideation sentence; conductor in unattended spec drafting; Then: "blocking": true with "web" and "kiosk" in question or option text); negative scenario C001-TS-224 added; RISK-005 exception: planner |
 | CR-29 | minor | TS-215 note | spec note states a plan fact (retest at release tier in T-072) | keep the §1 link, drop the plan fact | fixed (TS-215 note keeps the §1 link; release tier and T-072 dropped) |
+
+
+## Revision D-018 (2026-10-24)
+
+Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-30 | major | TS-224, AC-208.2 | "hand-back" can be read as the Agent tool result (launch notice), so the Then passes with nothing checked | bound by the session's last result; a hand-back is the specialist's last assistant message (parent_tool_use_id = the Agent call) | open |
+| CR-31 | minor | TS-224 | an unparsable block reads as no questions, so a blocking naming question can pass | an unparsable questions block fails; TC-224 reports per run whether and by whom it was raised | open |
