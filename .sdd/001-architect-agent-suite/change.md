@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:dfb397ddba91aeef375c272be1d31feaab5e3aca6d45cab33b8a42337e65abf2", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:bcd11537d9829f362eda550942b22f52d68ee84dca7e05359b90f0127afa6254", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:d46bf4a71e0f7bea5f71b073dc984c7c7dbd8393f94c84f65f029bb0ec8d1d66", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -98,3 +98,4 @@ defects:
 | 2026-10-24 | G2 (spec) | **Revise** | "Revision for the C001-T-082 findings (P-01 Q-t082-bugs-01, Q-cap-level-01)" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for the C001-T-082 findings" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-24 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
