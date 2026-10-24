@@ -226,4 +226,4 @@ Questions on the S-07 record (C002-T-001).
 - **Extracted instructions:** none
 
 ### Q-weekly-reset-01 — weekly reset for the remaining paid runs
-- **Answer:** P-01: "It seems I won't have any free weekly reset, it only applies to 5-hours limits under certain conditions" — the week stays capped at 95 %; long eval blocks span the weekly reset (Monday 23:00 UTC)
+- **Answer:** P-01: "It seems I won't have any free weekly reset, it only applies to 5-hours limits under certain conditions" — the week stays capped at 95 %; long eval blocks span the weekly reset (Tuesday 23:00 UTC)

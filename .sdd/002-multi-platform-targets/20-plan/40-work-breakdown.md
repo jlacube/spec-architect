@@ -85,6 +85,7 @@ flowchart TB
     C002_T_068["T-068 Fix D-030: cap exceptions for the CHG-001 release cases"]
     C002_T_069["T-069 Fix D-031: Claude Code spend cap applied by the runner, budget hidden"]
     C002_T_070["T-070 Fix D-033: rule-1 rerun cap 3.00 USD"]
+    C002_T_072["T-072 Fix D-034: early stop when the check is decided"]
   end
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
@@ -245,6 +246,8 @@ flowchart TB
   C002_T_068 --> C002_T_069
   C002_T_068 --> C002_T_070
   C002_T_069 --> C002_T_070
+  C002_T_069 --> C002_T_072
+  C002_T_070 --> C002_T_072
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
   C002_T_063 --> C002_T_056
@@ -313,8 +316,12 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 71 tasks weigh 145 in total (21 S, 26 M, 24 L). The longest chain
-weighs 48 and ends with the Copilot release. **The release retake lengthens it by 3** (P-01 answer
+Weights S = 1, M = 2, L = 3. The 72 tasks weigh 147 in total (21 S, 27 M, 24 L). The longest chain
+weighs 48 and ends with the Copilot release. **The D-034 plan update does not change it**: the
+harness task C002-T-072 (M) starts after C002-T-070 (finishing at 44) and finishes at 46, and no
+CHG-002 task depends on it. CHG-001's C001-T-082 (its `TS-213` rerun) and C001-T-072 wait for it,
+outside this graph (`handoff.md`). C002-T-071 waits for C001-T-082 through a cross-change edge, so
+C002-T-072 sits on that path in the calendar, not in this graph. **The release retake lengthens it by 3** (P-01 answer
 to Q-release-base-01; plan critic CR-71). C002-T-071 (M) waits for C002-T-068 … C002-T-070, the last
 of which finishes at 44 (C002-T-067 stays off the release chain, Q-t067-order-01), and for C002-T-049 and C002-T-054, so it finishes at 46. C002-T-052,
 C002-T-055, C002-T-050 and C002-T-057 wait for it, and the fix tasks C002-T-068 … C002-T-070, on no
@@ -501,6 +508,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-068 | Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks | S | T-048 |
 | C002-M-06 | C002-T-069 | Fix for revision D-031: the Claude Code eval runner applies the spend cap itself and shows the model no budget | M | T-048, T-068 |
 | C002-M-06 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | S | T-068, T-069 |
+| C002-M-06 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | M | T-069, T-070 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043 |
