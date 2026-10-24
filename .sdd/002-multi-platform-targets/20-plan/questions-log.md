@@ -217,3 +217,13 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Retake them too at the release-candidate commit with the CHG-001 fixes (about 3.4 USD, Copilot pool) (Recommended) · 2. Keep the C002-T-054 sessions
 - **Answer:** conductor, under P-01's standing approval and Q-release-base-01 ("Retake after fixes"): option 1, within the approved Copilot limit of 30 USD
 - **Extracted instructions:** none
+
+## Round 2026-10-24 — defect D-034 (found in C001-T-082)
+
+### Q-early-stop-01 — full-flow sessions run to the cap after their check
+- **Options:** 1. Stop when checked: each case declares when its check is decided, and the runner ends the session there; narrow revision, harness task, one small paid check (Recommended) · 2. Keep 3 USD and run to the cap
+- **Answer:** P-01: "Stop when checked (Recommended)"
+- **Extracted instructions:** none
+
+### Q-weekly-reset-01 — weekly reset for the remaining paid runs
+- **Answer:** P-01: "It seems I won't have any free weekly reset, it only applies to 5-hours limits under certain conditions" — the week stays capped at 95 %; long eval blocks span the weekly reset (Monday 23:00 UTC)
