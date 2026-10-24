@@ -9,7 +9,9 @@
 // ledger write, no paid session. On claude-code the stub gets the turn cap and no spend cap, and the runner
 // stops the session at the cap itself (revision D-031, C002-T-069). Supporting tests: CAP_EXCEPTIONS holds exactly the rows of the §2.2 table (from revision
 // D-030, C002-T-068, 41 rows, each subscription-class row with the rule of its list in "Sessions of CHG-001
-// tasks"); TS-223 at 1.50 USD with --cap-exception, TS-216 at 0.50 USD without it and refused with it under
+// tasks"; from revision D-033, C002-T-070, 42 rows, TS-225 added after TS-224, the 13 rule-1 rows at the
+// rerun cap 3.00 USD and the 27 rule-2 rows and TS-421-agent at 1.50 USD); TS-223 at 3.00 USD with
+// --cap-exception (1.50 USD before revision D-033), TS-216 at 0.50 USD without it and refused with it under
 // --auth api-key (revision D-030); the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
@@ -67,7 +69,8 @@ const ROWS: Row[] = [
   { file: CAP214, row: "TS-214", host: "opencode", capException: true, runs: null, names: "no auth mode" },
   { file: OTHER214, row: "TS-214", host: "claude-code", auth: "subscription", capException: true, runs: null, names: "auth subscription" },
   { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "subscription", runs: { usd: 0.5, turns: 40 } },
-  { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "subscription", capException: true, runs: { usd: 1.5, turns: 40 } },
+  // TS-213, a rule-1 row: the rerun cap 3.00 USD from revision D-033 on (C002-T-070; 1.50 USD before).
+  { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "subscription", capException: true, runs: { usd: 3.0, turns: 40 } },
   { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "api-key", runs: null, names: "auth api-key" },
 ];
 
@@ -80,8 +83,9 @@ const CLAUDE_STUB = { usdPerCall: 0.25, everyMs: 1000, usageDelayMs: 100, afterI
 
 /**
  * A Claude Code session row: the stub got `maxTurns` and no `maxBudgetUsd` or `taskBudget`, and the runner
- * stopped the session itself at the reading of the cap in force, after the second call at 0.50 USD or
- * after the sixth at 1.50 USD (and not at the 0.50 USD reading of the second), with `error_max_budget_usd`.
+ * stopped the session itself at the reading of the cap in force, after the second call at 0.50 USD, after
+ * the sixth at 1.50 USD (and not at the 0.50 USD reading of the second), or after the twelfth at 3.00 USD
+ * (and not at the 0.50 or 1.50 USD readings; revision D-033), with `error_max_budget_usd`.
  */
 function claudeSession(r: DriverRun, caps: { usd: number; turns: number }) {
   assert.deepEqual(r.given[0], { turns: caps.turns, usd: null }, "the Agent SDK stub got the turn cap and no spend cap");
@@ -135,7 +139,8 @@ ROWS.forEach((row, i) => {
 const CAP223 = "evals/cap02/TS-223.eval.mjs";
 const CAP216 = "evals/cap02/TS-216.eval.mjs";
 const D030_ROWS: Row[] = [
-  { file: CAP223, row: "TS-223", host: "claude-code", auth: "subscription", capException: true, runs: { usd: 1.5, turns: 30 } },
+  // TS-223, a rule-1 row: 3.00 USD from revision D-033 on (C002-T-070; 1.50 USD before).
+  { file: CAP223, row: "TS-223", host: "claude-code", auth: "subscription", capException: true, runs: { usd: 3.0, turns: 30 } },
   { file: CAP216, row: "TS-216", host: "claude-code", auth: "subscription", runs: { usd: 0.5, turns: 30 } },
   { file: CAP216, row: "TS-216", host: "claude-code", auth: "api-key", capException: true, runs: null, names: "auth api-key" },
 ];
@@ -168,8 +173,9 @@ D030_ROWS.forEach((row) => {
 
 test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C002-IF-010 §2.2 table", () => {
   // `rule`: the list of C002-IF-010 §2.2 "Sessions of CHG-001 tasks" that holds the row (1 or 2), null for
-  // a row in neither list (TS-421-agent, no release case of C001-ADR-003).
-  const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: 1.5, rule });
+  // a row in neither list (TS-421-agent, no release case of C001-ADR-003). `rerunUsd`: 3.00 USD for a rule-1
+  // row, 1.50 USD for every other row (revision D-033, C002-T-070).
+  const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: rule === 1 ? 3.0 : 1.5, rule });
   const INJ = "evals/injection/injection.eval.mjs";
   assert.deepEqual(CAP_EXCEPTIONS, [
     { row: "TS-634", file: GATE634, host: "opencode", auth: null, usd: 2.0, turns: 30, rerunUsd: null },
@@ -192,6 +198,8 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     // Revision D-030 (24 rows, the table's three D-030 rows in order).
     sub("TS-223", CAP223, 1),
     sub("TS-224", "evals/cap02/TS-224.eval.mjs", 1),
+    // Revision D-033 (spec critic CR-114): TS-225, the attended twin of TS-215, after TS-224.
+    sub("TS-225", "evals/cap02/TS-225.eval.mjs", 1),
     sub("TS-127", "evals/cap01/TS-127.eval.mjs", 2),
     sub("TS-201", "evals/cap02/TS-201.eval.mjs", 2),
     sub("TS-216", CAP216, 2),
@@ -215,15 +223,23 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
     sub("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
   ]);
-  // 41 rows: TS-634 of the paid class and 40 of the Claude Code subscription class, 12 of rule 1, 27 of
+  // 42 rows: TS-634 of the paid class and 41 of the Claude Code subscription class, 13 of rule 1, 27 of
   // rule 2 and one (TS-421-agent) in neither list.
-  assert.equal(CAP_EXCEPTIONS.length, 41);
+  assert.equal(CAP_EXCEPTIONS.length, 42);
   const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
-  assert.equal(subs.length, 40);
-  assert.equal(subs.filter((e) => e.rule === 1).length, 12);
+  assert.equal(subs.length, 41);
+  assert.equal(subs.filter((e) => e.rule === 1).length, 13);
   assert.equal(subs.filter((e) => e.rule === 2).length, 27);
   assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
-  // Every case file of the table exists, the five near-cap rows' files (TS-127, TS-201, TS-418, TS-424, INJ-18) included.
+  // Rerun caps (revision D-033): 3.00 USD for the 13 rule-1 rows, 1.50 USD for the 27 rule-2 rows and
+  // TS-421-agent; TS-634 has none.
+  assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 13);
+  assert.ok(subs.filter((e) => e.rerunUsd === 3.0).every((e) => e.rule === 1));
+  assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 28);
+  assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634"]);
+  // Every case file of the table exists, the five near-cap rows' files (TS-127, TS-201, TS-418, TS-424, INJ-18)
+  // and evals/cap02/TS-225.eval.mjs included.
   for (const e of CAP_EXCEPTIONS) assert.ok(readFileSync(join(ROOT, ...e.file.split("/")), "utf8").length > 0, e.file);
 });
 

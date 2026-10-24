@@ -67,7 +67,7 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 
 /**
  * Cap exceptions in force: the rows of the C002-IF-010 §2.2 table "Caps above 0.50 USD" (critic CR-68;
- * revised for defect D-025). Each row gives the row ID, its case file (repository-relative, `/`
+ * revised for defects D-025, D-030 and D-033). Each row gives the row ID, its case file (repository-relative, `/`
  * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
  * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
  * row has none).
@@ -76,7 +76,12 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   batches 5 and 6 that the 0.50 USD notional cap ended, rerun at 1.50 USD; TS-213 and TS-221 at their
  *   case files' 40 turns, rerun at 1.50 USD; the rows of batch 7 and INJ-19, rerun at 1.50 USD; and, for
  *   defect D-030 (P-01, Q-cap-exc-01/02, 2026-10-24; C002-T-068), the CHG-001 release cases of
- *   C001-T-082 step 4 and C001-T-072, at the row's own caps with the rerun cap 1.50 USD.
+ *   C001-T-082 step 4 and C001-T-072, at the row's own caps with the rerun cap 1.50 USD; and, for defect
+ *   D-033 (P-01, Q-cap-level-01, 2026-10-24; C002-T-070), the row TS-225 after TS-224 (spec critic CR-114,
+ *   the attended twin of TS-215).
+ * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
+ * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
+ * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
  * Each subscription-class row records as `rule` the list of §2.2 "Sessions of CHG-001 tasks" that holds
  * it, which the CHG-001 tasks read: 1 = every session at the rerun cap (each started with
  * `--cap-exception`); 2 = sessions at the row's own caps, each failed session that ended at the spend cap
@@ -87,7 +92,9 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  * C002-T-056 for TS-634, C002-T-048 for its subscription-class sessions, C001-T-082 and C001-T-072 for
  * theirs).
  */
-const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: 1.5, rule });
+export const RERUN_USD = 1.5;
+export const RULE1_RERUN_USD = 3.0;
+const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: rule === 1 ? RULE1_RERUN_USD : RERUN_USD, rule });
 const INJ = "evals/injection/injection.eval.mjs";
 export const CAP_EXCEPTIONS = Object.freeze([
   Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", auth: null, usd: 2.0, turns: DEFAULT_MAX_TURNS, rerunUsd: null }),
@@ -110,6 +117,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   // Defect D-030: the table's three D-030 rows in order.
   SUB("TS-223", "evals/cap02/TS-223.eval.mjs", 1),
   SUB("TS-224", "evals/cap02/TS-224.eval.mjs", 1),
+  // Defect D-033 (spec critic CR-114): TS-225, the attended twin of TS-215.
+  SUB("TS-225", "evals/cap02/TS-225.eval.mjs", 1),
   SUB("TS-127", "evals/cap01/TS-127.eval.mjs", 2),
   SUB("TS-201", "evals/cap02/TS-201.eval.mjs", 2),
   SUB("TS-216", "evals/cap02/TS-216.eval.mjs", 2),
