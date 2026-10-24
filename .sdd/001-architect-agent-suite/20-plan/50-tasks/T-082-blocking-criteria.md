@@ -6,10 +6,10 @@ phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
 status: blocked
-depends_on: [C001-T-063]
+depends_on: [C001-T-063, C001-T-083]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
-verified_by: [C001-TS-223, C001-TS-224, C001-TC-223, C001-TC-224, C001-TC-215, C001-TC-209, C001-TC-213, C001-TC-222]
+verified_by: [C001-TS-223, C001-TS-224, C001-TC-223, C001-TC-224, C001-TC-215, C001-TC-209, C001-TC-213, C001-TC-222, C001-TC-225]
 components: [C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
@@ -48,11 +48,12 @@ C001-T-072.
 - Size budgets of C001-NFR-105 (≤ 24,000 characters per skill, ≤ 64,000 per agent with its
   preloaded skills), checked by PLG-SIZE-001 in `npm run check`. `sdd-conventions` is preloaded by
   every agent, so keep the addition short.
-- Cross-change dependency (recorded in `../handoff.md`): waits for C002-T-068 (done) and C002-T-069.
-  C002-T-069 (CHG-002 defect D-031) is
-  done before the reruns of step 4. That task makes the harness enforce the eval cap without telling
-  the model a budget. The 2026-10-24 runs (`evals/results/t082-*.json`) showed the conductor
-  rationing work against the visible budget. Until then the task is blocked through the CLI.
+- Cross-change dependency (recorded in `../handoff.md`): waits for C002-T-068 (done), C002-T-069 (done)
+  and C002-T-070, and for C001-T-083 (D-019 fixes). C002-T-070 (CHG-002 defect D-033) raises the
+  rule-1 rerun cap to 3.00 USD (P-01 Q-cap-level-01). C002-T-069 (CHG-002 defect D-031) makes the
+  harness enforce the eval cap without telling the model a budget. The 2026-10-24 runs
+  (`evals/results/t082-*.json`) showed the conductor rationing work against the visible budget.
+  Until C002-T-070 and C001-T-083 are done, the task is blocked through the CLI.
 
 ## Step outline (no production code)
 
@@ -63,30 +64,28 @@ C001-T-072.
    header comment of `TS-215.eval.mjs`.
 3. Run `npm run check`. Its targets step checks the platform target structures (opencode, copilot), and
    PLG-SIZE-001 and the plugin structure checks must pass.
-4. Eval runs on the subscription (notional, no charge; about 12 USD), recorded in `evals/results/`. The
+4. Eval runs on the subscription (notional, no charge; about 30–35 USD), recorded in `evals/results/`. The
    first pass (2026-10-24) gave C001-TC-223 2 / 3, C001-TC-224 0 / 3, and passes for the other four.
-   After C002-T-069 (D-031 harness fix) and the question-ID and empty-block rules, rerun:
-   - C001-TC-223 and C001-TC-224 at milestone tier, each of which must pass 3 / 3;
-   - C001-TC-215, C001-TC-209, C001-TC-213 and C001-TC-222 once each at dev tier (passed on
-     2026-10-24; rerun once, because the new rules change `sdd-conventions` again).
+   The eight `t082-d018` sessions count as no runs (CHG-002 handoff, D-033). After C002-T-069,
+   C002-T-070 and C001-T-083, rerun at milestone tier (3 / 3 each) at the 3.00 USD rule-1 cap:
+   - C001-TC-223, C001-TC-224, C001-TC-215, C001-TC-213, C001-TC-209 and C001-TC-222;
+   - C001-TC-225 (C001-T-083).
 5. When a run fails, read the trace. A wrong flag or question ID in a specialist hand-back means the wording does
    not work yet. A failure after a correct flag is a conductor finding, so raise a defect.
-6. Report the task. The 10-run release checks of C001-TC-209, 215, 223 and 224 are part of C001-T-072.
+6. Report the task. The 10-run release checks of C001-TC-209, 215, 223, 224 and 225 are part of C001-T-072.
    If C001-TC-215, 223 or 224 ends below 9 / 10 there, D-017 and this task are reopened (step 4
    of C001-T-072).
 
 ## Verification
 
-- `node evals/harness/run.mjs evals/cap02/TS-223.eval.mjs evals/cap02/TS-224.eval.mjs --tier milestone --label t082`
-- `node evals/harness/run.mjs evals/cap02/TS-215.eval.mjs evals/cap02/TS-209.eval.mjs evals/cap02/TS-213.eval.mjs evals/cap02/TS-222.eval.mjs --tier dev --label t082`
+- `node evals/harness/run.mjs evals/cap02/TS-223.eval.mjs evals/cap02/TS-224.eval.mjs evals/cap02/TS-215.eval.mjs evals/cap02/TS-213.eval.mjs evals/cap02/TS-209.eval.mjs evals/cap02/TS-222.eval.mjs evals/cap02/TS-225.eval.mjs --tier milestone --label t082`
 - `npm run check` on Node 22.22.3 (exit 0; the targets step and PLG-SIZE-001 report nothing)
 - `node plugins/architect/scripts/sdd.mjs lint`
 
 ## Done when
 
 - [ ] `sdd-conventions` and `code-discovery` carry the C001-IF-05 §1 rule, the question-ID format and the no-empty-block rule; the size budgets hold.
-- [ ] `evals/cap02/TS-223.eval.mjs` and `TS-224.eval.mjs` exist; C001-TC-223 and C001-TC-224 pass 3 / 3 at milestone tier.
-- [ ] C001-TC-215, C001-TC-209, C001-TC-213 and C001-TC-222 pass once each at dev tier.
+- [ ] `evals/cap02/TS-223.eval.mjs` and `TS-224.eval.mjs` exist; C001-TC-223, 224, 215, 213, 209, 222 and 225 pass 3 / 3 at milestone tier.
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003.
 - [ ] Progress reported: `sdd task set C001-T-082 --status done --commit <sha>`. That commit is the
       resolution evidence for closing D-017 and D-018.

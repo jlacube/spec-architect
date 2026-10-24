@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "allocated": { "GOAL": 8, "SC": 10, "NG": 8, "AS": 12, "CON": 16, "CAP": 11, "INV": 24, "IF": 14, "COMP": 13, "DOD": 21, "NFR": 801, "T": 82, "TC": 1131, "RISK": 15 },
+  "allocated": { "GOAL": 8, "SC": 10, "NG": 8, "AS": 12, "CON": 16, "CAP": 11, "INV": 24, "IF": 14, "COMP": 13, "DOD": 21, "NFR": 801, "T": 83, "TC": 1132, "RISK": 15 },
   "blocks": [
     { "type": "US|REQ|TS", "from": 101, "to": 199, "capability": "C001-CAP-01" },
     { "type": "US|REQ|TS", "from": 201, "to": 299, "capability": "C001-CAP-02", "allocated": { "TS": 225, "REQ": 221 } },

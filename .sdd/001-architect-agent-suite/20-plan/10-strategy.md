@@ -44,7 +44,7 @@ The suite is built **from the deterministic core outwards** (C001-ADR-001):
 | C001-M-3 | Conductor and ideation/spec agents | Ideation and specification phases run end to end with interview, critic and gates | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2; eval metrics report (tokens by type, agent and model; timings by session, subagent and tool call) produced, and P-01 decides the release eval budget from it | C001-T-029 … C001-T-039 |
 | C001-M-4 | Code intelligence, architecture and planning agents | Brownfield grounding and the plan phase run end to end | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | C001-T-041 … C001-T-044 |
 | C001-M-5 | Hooks, guards and archive | The write/shell boundary is enforced and the archive loop works | Guard corpora 100%; injection evals 0 failures; archive test cases pass | C001-T-050 … C001-T-054 |
-| C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green on Node 20 and 22 under PowerShell 7 and Git Bash, including its encoding scan and coverage steps (C001-NFR-404, 502; coverage measured on Node 22, skipped with its reason on Node 20); routing ≥ 90%; NFR results recorded, and every NFR measured in `docs/nfr-results.md` meets its threshold | C001-T-060 … C001-T-065, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082 |
+| C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green on Node 20 and 22 under PowerShell 7 and Git Bash, including its encoding scan and coverage steps (C001-NFR-404, 502; coverage measured on Node 22, skipped with its reason on Node 20); routing ≥ 90%; NFR results recorded, and every NFR measured in `docs/nfr-results.md` meets its threshold | C001-T-060 … C001-T-065, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082, C001-T-083 |
 | C001-M-7 | Release and dogfood | v0.1.0 released locally and proven on two real changes | Release evidence complete; dogfood logs recorded; CHG-001 archived | C001-T-070 … C001-T-075 |
 
 C001-T-080 is the catch-up task of defect D-014 (P-01, Q-coverage-01). It closes the findings
@@ -52,7 +52,9 @@ of C001-T-065, which stays `done`, and the release gate C001-T-072 depends on it
 defect D-015, found by C001-T-080 (P-01, Q-archive-faults-01): an interrupted `archive` resumes
 without duplicates. It follows C001-T-080, and C001-T-072 depends on it. C001-T-082 fixes defect
 D-017 (P-01, Q-d017-01): the C001-IF-05 §1 blocking criteria in the skills, with C001-TC-223; C001-T-072
-depends on it.
+depends on it. C001-T-083 fixes defect D-019 (P-01, Q-t082-bugs-01): the conductor asks a blocking
+question when its hand-back arrives, templates are read through `sdd template show` (PLG-TMPL-001),
+and the candidates count; C001-T-082 and C001-T-072 depend on it.
 
 Task numbers leave gaps between milestones (008–009, 040, 045–049, 055–059, 066–069) so the
 numbering stays readable; gaps are not tombstones because they were never allocated.

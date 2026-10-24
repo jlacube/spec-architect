@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
 status: todo
-depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082]
+depends_on: [C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082, C001-T-083]
 implements: []
 satisfies_ac: [C001-AC-1102.1]
 verified_by: [C001-TS-1102, C001-TC-1102]
@@ -36,7 +36,8 @@ DoD evidence collected for DOD-G and DOD-001…021; version 0.1.0 tagged locally
 ## Preconditions
 
 - All M-6 tasks
-- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates), C001-T-082 (D-017 closed: the C001-IF-05 §1 blocking criteria in the skills)
+- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates), C001-T-082 (D-017 and D-018 closed: the C001-IF-05 §1 blocking criteria in the skills), C001-T-083 (D-019 closed: blocking question asked on arrival, templates through `sdd template show`, candidates count)
+- Cross-change: C002-T-070 done (rule-1 rerun cap 3.00 USD; P-01 Q-cap-level-01). The eval estimate is in C001-ADR-003 (about 420 USD notional).
 - The constitution v2 is approved at G0, with DOD-G-01 carrying the floor of the release classes (Q-dodg01-amend-01).
 
 ## Step outline (no production code)
@@ -48,7 +49,7 @@ DoD evidence collected for DOD-G and DOD-001…021; version 0.1.0 tagged locally
    nears 90%.
 3. Keep a running notional total. At 350 USD, stop and ask P-01 to choose: a second weekly reset, or
    the cuts of C001-ADR-003 in their order.
-4. If C001-TC-215, C001-TC-223 or C001-TC-224 ends below its pass rule, reopen D-017
+4. If C001-TC-225 ends below its pass rule, reopen D-019 and C001-T-083 the same way. If C001-TC-215, C001-TC-223 or C001-TC-224 ends below its pass rule, reopen D-017
    (`sdd defect reopen D-017`) and C001-T-082 (`sdd task set C001-T-082 --status in-progress`), and
    rerun both cases after the fix.
 5. Close the deferred milestone items of `docs/milestone-log.md`:
