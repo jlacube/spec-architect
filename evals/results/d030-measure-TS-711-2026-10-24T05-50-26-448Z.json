@@ -1,0 +1,186 @@
+{
+  "scenario": "TS-711",
+  "title": "Rubric coverage",
+  "tier": "dev",
+  "label": "d030-measure",
+  "agent": "architect:eval-dispatcher",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-24T05:54:56.341Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.61524446,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "requirement rubric rows R1…R12: found none"
+      ],
+      "metrics": {
+        "cost_usd": 0.61524446,
+        "session_ms": 268080,
+        "api_ms": 221078,
+        "turns": 1,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1442,
+            "output": 801,
+            "cache_read": 2056,
+            "cache_write": 4200,
+            "cost_usd": 0.0014052600000000002
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 24520,
+            "cache_read": 54211,
+            "cache_write": 22513,
+            "cost_usd": 0.6138392
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 2,
+              "output": 801,
+              "cache_read": 2056,
+              "cache_write": 4200
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 36,
+              "cache_read": 54211,
+              "cache_write": 22513
+            },
+            "output": "shown"
+          },
+          "unattributed": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 24484,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "not attributed: a subagent ended without a task_notification"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "ac4c4e7819ed4517f",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null,
+            "notified": false
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5hejsm4c",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bha44djkv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Read": 6,
+          "Bash": 2,
+          "Glob": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": null
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 55
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 28
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 32450
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 11678
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 11224
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 30
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 52
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-critic",
+            "ms": null
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-711-2026-10-24T05-50-26-448Z-run1.json"
+    }
+  ]
+}
