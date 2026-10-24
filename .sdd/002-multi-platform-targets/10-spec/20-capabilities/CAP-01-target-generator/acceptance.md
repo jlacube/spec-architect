@@ -106,25 +106,25 @@ Scenario Outline: C002-TS-106 — construct translation per target
 
 ```gherkin
 Scenario Outline: C002-TS-107 — every construct kind of the source plugin is translated
-  Given the source plugin contains the construct kind "<kind>" in "<file>"
+  Given the source plugin of the fixture "fx-src" contains the construct kind "<kind>" in "<file>", <where>
   When the generator writes the OpenCode and the Copilot target packages
   Then the file generated from "<file>" in each package holds that target's mapping-table entry for the construct at the same place
   And the target structure check reports no untranslated construct for that file
   Examples:
-    | kind                         | file                       |
-    | tool name in agent tools     | agents/sdd-spec-writer.md  |
-    | model name                   | agents/sdd-auditor.md      |
-    | ${CLAUDE_PLUGIN_ROOT}        | agents/sdd-spec-writer.md  |
-    | ${CLAUDE_PLUGIN_DATA}        | commands/doctor.md         |
-    | $ARGUMENTS                   | commands/new.md            |
-    | architect: agent reference   | agents/sdd-conductor.md    |
-    | claude --agent guard line    | commands/specify.md        |
-    | AskUserQuestion              | agents/sdd-conductor.md    |
-    | AskUserQuestion              | commands/archive.md        |
-    | ${CLAUDE_PLUGIN_ROOT}/templates/ | commands/decide.md     |
-    | CLI invocation line          | agents/sdd-auditor.md      |
-    | MCP tool name in a body      | skills/research-protocol/SKILL.md |
-    | ToolSearch in a body         | agents/sdd-architect.md    |
+    | kind                         | file                       | where |
+    | tool name in agent tools     | agents/sdd-spec-writer.md  | as the source plugin ships it |
+    | model name                   | agents/sdd-auditor.md      | as the source plugin ships it |
+    | ${CLAUDE_PLUGIN_ROOT}        | agents/sdd-spec-writer.md  | on a line that the fixture plants, the shipped file holding no template path since C001-T-083 |
+    | ${CLAUDE_PLUGIN_DATA}        | commands/doctor.md         | as the source plugin ships it |
+    | $ARGUMENTS                   | commands/new.md            | as the source plugin ships it |
+    | architect: agent reference   | agents/sdd-conductor.md    | as the source plugin ships it |
+    | claude --agent guard line    | commands/specify.md        | as the source plugin ships it |
+    | AskUserQuestion              | agents/sdd-conductor.md    | as the source plugin ships it |
+    | AskUserQuestion              | commands/archive.md        | as the source plugin ships it |
+    | ${CLAUDE_PLUGIN_ROOT}/templates/ | commands/decide.md     | on a line that the fixture plants, the shipped file holding no template path since C001-T-083 |
+    | CLI invocation line          | agents/sdd-auditor.md      | as the source plugin ships it |
+    | MCP tool name in a body      | skills/research-protocol/SKILL.md | as the source plugin ships it |
+    | ToolSearch in a body         | agents/sdd-architect.md    | as the source plugin ships it |
 ```
 
 ```gherkin
@@ -486,7 +486,7 @@ Scenario: C002-TS-126 — Serena declaration without the read-only option
 #### C002-AC-115.1 — Template paths in agent and command bodies become `sdd template show`
 ```gherkin
 Scenario Outline: C002-TS-127 — template references per target
-  Given line <line> of "<file>" names the template "<source path>"
+  Given the fixture "fx-src" plants, as line <line> of "<file>", a line that names the template "<source path>", the line that the shipped file held before C001-T-083
   When the generator writes the <target> target package
   Then the file generated from "<file>" contains "<command>" in its place
   And it does not contain "${CLAUDE_PLUGIN_ROOT}"
@@ -497,6 +497,12 @@ Scenario Outline: C002-TS-127 — template references per target
     | agents/sdd-spec-writer.md | 19   | ${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…                                 | OpenCode | sdd template show <profile>/…                                         |
     | agents/sdd-spec-writer.md | 19   | ${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…                                 | Copilot  | sdd template show <profile>/…                                         |
 ```
+
+C001-T-083 removes the template paths from the shipped `agents/sdd-spec-writer.md`,
+`commands/decide.md` and `commands/init.md` (C001-REQ-1124; C001-IF-08 `plugin-layout.md` §4; the
+plugin check PLG-TMPL-001 keeps them out). The generator rule of C002-REQ-115 stays, for any body
+that names such a path, so C002-TS-127 and the template rows of C002-TS-107 plant the lines in the
+fixture "fx-src" at the places the shipped files held them, and the shipped sources hold none.
 
 ## C002-REQ-116
 

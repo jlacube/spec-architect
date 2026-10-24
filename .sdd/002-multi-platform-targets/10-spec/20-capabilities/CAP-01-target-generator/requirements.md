@@ -146,7 +146,7 @@ system names: `../../40-domain/glossary-delta.md`. Acceptance criteria are writt
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN the generator writes an agent or a command for a generated target, THE generator SHALL replace each template path under `${CLAUDE_PLUGIN_ROOT}/templates/` in its body with the command `sdd template show <profile>/<path>` for that template.
-- **Rationale:** template paths in `agents/sdd-spec-writer.md:19`, `commands/decide.md:18` and `commands/init.md:25`; neither generated host expands `${CLAUDE_PLUGIN_ROOT}` in bodies (C002-R-001 A-09); construct `plugin-root-templates` of C002-IF-001 §2; the CLI side is C002-REQ-513
+- **Rationale:** template paths were named in `agents/sdd-spec-writer.md:19`, `commands/decide.md:18` and `commands/init.md:25`; CHG-001 task C001-T-083 removes them from the shipped bodies (C001-REQ-1124, C001-IF-08 §4, PLG-TMPL-001), so the rule stays as a guard for any body that names such a path, tested with lines planted in the fixture `fx-src` (C002-TS-107, C002-TS-127); neither generated host expands `${CLAUDE_PLUGIN_ROOT}` in bodies (C002-R-001 A-09); construct `plugin-root-templates` of C002-IF-001 §2; the CLI side is C002-REQ-513
 - **Stories:** C002-US-504
 - **Priority:** Must
 - **Acceptance:** C002-AC-115.1
