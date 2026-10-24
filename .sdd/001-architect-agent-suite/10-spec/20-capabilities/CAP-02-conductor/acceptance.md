@@ -122,15 +122,15 @@ Scenario: C001-TS-223 — cartographer flags an entry-point scope question as bl
 Note: eval-level scenario, run against the real cartographer like C001-TS-215; the expected flag follows the scope criterion of C001-IF-05 `questions.md` §1, which holds even when the cartographer surveys both entry points (D-017).
 
 ```gherkin
-Scenario: C001-TS-224 — a naming preference comes back non-blocking
+Scenario: C001-TS-224 — no specialist flags a naming preference as blocking
   Given the C001-TS-223 fixture, with the ideation's Design direction reading "A coupon service validates codes; the web checkout applies the discount before tax. The kiosk checkout is out of scope."
   And the ideation's Open questions section reading "Should the new module be named 'coupons' or 'promotions'? No file or interface depends on the name yet."
-  When P-01 tells the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate." and the conductor dispatches the cartographer
-  Then the cartographer's final message contains a questions block valid against C001-IF-05
-  And that block has a question whose question text or option labels contain both "coupons" and "promotions" (case-insensitive)
-  And that question has "blocking": false
+  When P-01 tells the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate."
+  Then by the end of the conductor's turn the transcript holds at least one specialist hand-back
+  And no question in any specialist hand-back's questions block whose question text or option labels contain both "coupons" and "promotions" (case-insensitive) has "blocking": true
+  And every such question has "blocking": false
 ```
-Note: eval-level scenario, run against the real cartographer like C001-TS-215. The naming question meets no criterion of C001-IF-05 `questions.md` §1: it decides no code path, entry point or component in scope, and the cartographer's survey does not have to state the name as a fact or an assumption.
+Note: eval-level scenario, run against the real specialists like C001-TS-215. A specialist hand-back is the final message of an Agent call from the conductor to one of the nine specialists of C001-REQ-217. The naming question meets no criterion of C001-IF-05 `questions.md` §1: it decides no code path, entry point or component in scope, and no specialist has to state the name as a fact or an assumption. Any specialist may raise it, or none; the scenario does not require the cartographer to be dispatched or to raise it (D-018). The validity of the questions block against C001-IF-05 is checked by C001-TS-209 and C001-TS-223, not here.
 
 ## C001-REQ-209
 
@@ -273,7 +273,7 @@ Scenario: C001-TS-222 — fatigue guard
 | C001-REQ-205 | TS-206 | n/a | TS-206 (4 per round) | n/a | n/a | n/a | n/a |
 | C001-REQ-206 | TS-207 | n/a | TS-207 (2–3 options) | n/a | n/a | n/a | n/a |
 | C001-REQ-207 | TS-208 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C001-REQ-208 | TS-209 | TS-223 (scope question, blocking per IF-05 §1) | TS-224 (no §1 criterion met, not blocking) | n/a | n/a | n/a | n/a |
+| C001-REQ-208 | TS-209 | TS-223 (scope question, blocking per IF-05 §1) | TS-224 (no §1 criterion met: no specialist hand-back flags it blocking) | n/a | n/a | n/a | n/a |
 | C001-REQ-209 | TS-210 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-210 | TS-211 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-211 | TS-212 | n/a | n/a | n/a | n/a | n/a | n/a |
