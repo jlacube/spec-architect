@@ -133,6 +133,8 @@ Your final message is your hand-back to the conductor. It contains, in this orde
      in your artifact as a fact or as an assumption. Covering every option (for example,
      surveying both entry points) counts as an assumption for a scope question, so it stays
      blocking; for any other question it is no assumption.
+   - `id` is `Q-<topic>-<nn>`, the topic in lowercase letters (`Q-scope-01`). With no questions,
+     omit the block; never return an empty `questions` array.
    - `material: true` when the answer changes scope, architecture, an interface, an NFR
      threshold or a dependency; then also give `candidates_considered` (4 or 5), the 2–3
      presented `options` (recommendation first, `"recommended": true`) and every other
