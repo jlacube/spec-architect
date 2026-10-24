@@ -339,3 +339,30 @@ eval harness has no CHG-001 requirement of its own, so the eval runners are `ADD
 - **Stories:** C002-US-603
 - **Priority:** Must
 - **Acceptance:** C002-AC-641.1
+
+### C002-REQ-642 — No session budget shown to the model
+- **Delta:** ADDED
+- **Pattern:** ubiquitous
+- **Statement:** THE eval runner SHALL NOT give its host the spend cap or the turn cap of a session in a prompt, a system prompt, an option or a flag that the host shows to the model, the Agent SDK options `maxBudgetUsd` and `taskBudget` of the Claude Code eval runner included.
+- **Rationale:** defect D-031 (found in C001-T-082; P-01 answer to Q-budget-hide-01, `../../../20-plan/questions-log.md`: "Hide the budget (Recommended)"): a real user's session runs without a budget, and Claude Code 2.1.299 shows the model the spend cap that the Agent SDK passes on, so the conductor and its specialists cut or stop their work for it. What reaches the model on each host, with evidence, and the per-runner rule: C002-IF-010 §2.2 "Budget hidden from the model". The turn cap stays with the Agent SDK as `maxTurns`, which the host does not show to the model (C002-IF-010 §2 `maxTurns`). On Copilot CLI the rule rests on the D-031 assumption of C002-IF-010 §2.2 that the host does not show its `--max-ai-credits` limit to the model. How the Claude Code eval runner applies the spend cap without the Agent SDK: C002-REQ-643. Split from the architect's draft, which held two SHALLs
+- **Stories:** C002-US-603, C002-US-604
+- **Priority:** Must
+- **Acceptance:** C002-AC-642.1
+
+### C002-REQ-643 — Claude Code session stopped at the spend cap by the runner
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN a check of the Claude Code eval runner after an assistant message with a new message ID or after a result message finds the session's notional cost at or above the session's spend cap, THE Claude Code eval runner SHALL stop the session at that check, with the result subtype `error_max_budget_usd` and the highest notional cost read in the session as its recorded cost.
+- **Rationale:** defect D-031 (P-01 answer to Q-budget-hide-01); with no spend cap passed to the Agent SDK (C002-REQ-642), the runner applies it itself (C002-IF-010 §2.2 Claude Code spend cap: running cost, checks, stop, result, recorded cost and overshoot with no fixed allowance, items 2 … 7). The result subtype `error_max_budget_usd` keeps the end at the spend cap of the Claude Code subscription class, so the ledgers, the rules of C002-IF-010 §2.2 "Sessions of CHG-001 tasks" and every pass rule stay as they are; overshoot threshold: C002-NFR-105. The failed reading of item 8 and the D-031 assumption on the usage request are stated in C002-IF-010 §2.2; the paid check of the D-031 fix confirms the assumption. Split from the architect's draft of C002-REQ-642
+- **Stories:** C002-US-603, C002-US-604
+- **Priority:** Must
+- **Acceptance:** C002-AC-643.1
+
+### C002-REQ-644 — Claude Code session stopped when a cost reading fails
+- **Delta:** ADDED
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF a reading of the session's notional cost by the Claude Code eval runner fails, because the Agent SDK refuses the usage request or its answer gives no finite `session.total_cost_usd` of at least 0, THEN THE Claude Code eval runner SHALL stop the session as at the spend cap and reject the `runSession` call with the error `claude-code spend check failed: <reason>; notional cost read <R> USD`, with no result record written for the session.
+- **Rationale:** defect D-031; C002-IF-010 §2.2 Claude Code spend cap, item 8: a failed reading would leave the session uncapped, since the runner passes no spend cap to the Agent SDK (C002-REQ-642), so it fails closed (C002-CON-08); the stop is that of item 4 (C002-REQ-643), and the rejection ends the run as a key source that does not match the auth mode does (C002-T-060); the session is no run. The D-031 assumption of item 8 (the usage request answered during a turn, with no model call) is confirmed by the paid check of the D-031 fix
+- **Stories:** C002-US-603, C002-US-604
+- **Priority:** Must
+- **Acceptance:** C002-AC-644.1

@@ -443,19 +443,21 @@ Scenario Outline: C002-TS-614 — caps with a stub host
     | OpenCode eval runner                                | a stub host that never ends a session                                                 | gives a cost of 0.01 USD in the step-finish event of each turn                                | after 30 turns with the "end_reason" "turn cap"                                                                                          |
     | Copilot CLI eval runner                             | a stub host that never ends a session                                                 | counts 1 AI Credit per turn, below its "--max-ai-credits" limit of 50 for the whole session   | after 30 turns with the "end_reason" "turn cap"                                                                                          |
     | OpenCode eval runner                                | a stub host that never ends a session                                                 | gives a cost of 0.10 USD in the step-finish event of each turn                                | after 5 turns with the "end_reason" "spend cap"                                                                                          |
-    | Claude Code eval runner, run with "--auth subscription" | an Agent SDK stub that records the caps it receives and ends a session only at them | gives a notional cost of 0.01 USD for each turn                                               | after 30 turns, the stub having received "maxTurns" 30 and "maxBudgetUsd" 0.50, with the result's "metrics.result_subtype" "error_max_turns"       |
-    | Claude Code eval runner, run with "--auth subscription" | an Agent SDK stub that records the caps it receives and ends a session only at them | gives a notional cost of 0.10 USD for each turn                                               | after 5 turns, the stub having received "maxTurns" 30 and "maxBudgetUsd" 0.50, with the result's "metrics.result_subtype" "error_max_budget_usd"   |
-    | Claude Code eval runner, run with "--auth api-key"  | an Agent SDK stub that records the caps it receives and ends a session only at them   | gives a cost of 0.10 USD for each turn                                                        | after 5 turns, the stub having received "maxTurns" 30 and "maxBudgetUsd" 0.50, with the result's "metrics.result_subtype" "error_max_budget_usd"   |
+    | Claude Code eval runner, run with "--auth subscription" | an Agent SDK stub that records the options it receives, ends a session only at its "maxTurns" and answers the usage request with the notional cost so far | gives a notional cost of 0.01 USD for each turn                                               | after 30 turns, the stub having received "maxTurns" 30 and no "maxBudgetUsd", with the result's "metrics.result_subtype" "error_max_turns" |
+    | Claude Code eval runner, run with "--auth subscription" | an Agent SDK stub that records the options it receives, ends a session only at its "maxTurns" and answers the usage request with the notional cost so far | gives a notional cost of 0.10 USD for each turn                                               | after 5 turns, the stub having received "maxTurns" 30 and no "maxBudgetUsd", the runner having stopped the session at the 0.50 USD reading, with the result's "metrics.result_subtype" "error_max_budget_usd" |
+    | Claude Code eval runner, run with "--auth api-key"  | an Agent SDK stub that records the options it receives, ends a session only at its "maxTurns" and answers the usage request with the notional cost so far | gives a cost of 0.10 USD for each turn                                                        | after 5 turns, the stub having received "maxTurns" 30 and no "maxBudgetUsd", the runner having stopped the session at the 0.50 USD reading, with the result's "metrics.result_subtype" "error_max_budget_usd" |
 ```
 
 The spend-cap row of the generated-target runners runs on OpenCode only, whose host reports the cost
 of each step. Copilot CLI reports the AI Credits of the whole session only, so its spend cap is the
 host's `--max-ai-credits` limit on the session total, which C002-TS-678 checks (C002-IF-010 §2.2
-spend-cap rule, per session; C002-NFR-105; critic CR-64). On Claude Code the Agent SDK applies both
-caps itself, under `--auth subscription` to the session's notional cost (C002-IF-010 §2.2, spend-cap
-rule and Claude Code subscription class), so the Claude Code rows check that the runner passes the
-caps of the row to the SDK and records the SDK's end: `error_max_budget_usd` is the end at the spend
-cap that C002-IF-010 §2.2 names; `error_max_turns` is the Agent SDK's end at `maxTurns`.
+spend-cap rule, per session; C002-NFR-105; critic CR-64). On Claude Code the Agent SDK applies the
+turn cap and the runner applies the spend cap itself, on the notional cost under `--auth
+subscription` (C002-IF-010 §2.2, spend-cap rule, Claude Code spend cap and Claude Code subscription
+class; defect D-031). The Claude Code rows therefore check that the SDK gets the row's `maxTurns` and
+no `maxBudgetUsd`, and that the session ends with `error_max_turns`, the Agent SDK's end at
+`maxTurns`, or with `error_max_budget_usd`, the end that the runner gives a session it stopped at the
+spend cap. What the SDK receives: C002-TS-703; how the runner reads the cost and stops the session: C002-TS-702.
 
 ```gherkin
 Scenario Outline: C002-TS-690 — session timeout of 20 minutes with a stub host
@@ -569,7 +571,7 @@ Scenario Outline: C002-TS-679 — a case cap above 0.50 USD or 30 turns, or a re
   Given the fixture "fx-evals-caps", whose case file "<file>" holds one row with the ID "<row>", no "host" field, "maxBudgetUsd" <cap> and "maxTurns" <turns>
   And the cap exceptions of C002-IF-010 §2.2, among which the row "TS-634" of "evals/targets/gate/TS-634.eval.mjs" on "opencode" with no auth mode at 2.00 USD and 30 turns with no rerun cap, the row "TS-214" of "evals/cap02/TS-214.eval.mjs" on "claude-code" with the auth "subscription" at 0.50 USD and 30 turns with the rerun cap 1.50 USD, and the row "TS-213" of "evals/cap02/TS-213.eval.mjs" on "claude-code" with the auth "subscription" at 0.50 USD and 40 turns with the rerun cap 1.50 USD, and none for "TS-613"
   And the variables "EVAL_HOST" and "EVAL_AUTH" are not set
-  And a stub host in place of the host that the run's "--host" selects (the Agent SDK on "claude-code")
+  And a stub host in place of the host that the run's "--host" selects (the Agent SDK on "claude-code", to which the runner passes "maxTurns" and no spend cap, C002-TS-703)
   When P-01 runs "npm run eval -- <args>" on that fixture
   Then <outcome>
   Examples:
@@ -581,15 +583,15 @@ Scenario Outline: C002-TS-679 — a case cap above 0.50 USD or 30 turns, or a re
     | evals/targets/other/TS-634.eval.mjs   | TS-634 | 2.00 | 30    | --host opencode --only TS-634                                         | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/other/TS-634.eval.mjs"                               |
     | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.75 | 30    | --host opencode --only TS-613                                         | the run ends before any session, with exit code 1 and a message that names "TS-613" and "evals/targets/gate/TS-613.eval.mjs"                                |
     | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.50 | 30    | --host opencode --only TS-613                                         | one session runs, the stub is given a spend cap of 0.50 USD and the result record gives "caps.usd" 0.50                                                      |
-    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth subscription --cap-exception --only TS-214  | one session runs, the stub is given a spend cap of 1.50 USD and a turn cap of 30, and the result record gives "caps.usd" 1.50 and "caps.turns" 30          |
-    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth subscription --only TS-214                  | one session runs, the stub is given a spend cap of 0.50 USD and the result record gives "caps.usd" 0.50                                                      |
-    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth api-key --only TS-214                       | one session runs, the stub is given a spend cap of 0.50 USD and the result record gives "caps.usd" 0.50                                                      |
+    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth subscription --cap-exception --only TS-214  | one session runs at a spend cap of 1.50 USD, which the runner applies (the Agent SDK stub gets no "maxBudgetUsd") and a turn cap of 30, and the result record gives "caps.usd" 1.50 and "caps.turns" 30          |
+    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth subscription --only TS-214                  | one session runs at a spend cap of 0.50 USD, which the runner applies (the Agent SDK stub gets no "maxBudgetUsd") and the result record gives "caps.usd" 0.50                                                      |
+    | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth api-key --only TS-214                       | one session runs at a spend cap of 0.50 USD, which the runner applies (the Agent SDK stub gets no "maxBudgetUsd") and the result record gives "caps.usd" 0.50                                                      |
     | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --auth api-key --cap-exception --only TS-214       | the run ends before any session, with exit code 1 and a message that names "TS-214" and "evals/cap02/TS-214.eval.mjs"                                       |
     | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host claude-code --cap-exception --only TS-214                      | the run ends before any session, with exit code 1 and a message that names "TS-214" and "evals/cap02/TS-214.eval.mjs"                                       |
     | evals/cap02/TS-214.eval.mjs           | TS-214 | 0.50 | 30    | --host opencode --cap-exception --only TS-214                         | the run ends before any session, with exit code 1 and a message that names "TS-214" and "evals/cap02/TS-214.eval.mjs"                                       |
     | evals/targets/other/TS-214.eval.mjs   | TS-214 | 0.50 | 30    | --host claude-code --auth subscription --cap-exception --only TS-214  | the run ends before any session, with exit code 1 and a message that names "TS-214" and "evals/targets/other/TS-214.eval.mjs"                               |
-    | evals/cap02/TS-213.eval.mjs           | TS-213 | 0.50 | 40    | --host claude-code --auth subscription --only TS-213                  | one session runs, the stub is given a spend cap of 0.50 USD and a turn cap of 40, and the result record gives "caps.usd" 0.50 and "caps.turns" 40          |
-    | evals/cap02/TS-213.eval.mjs           | TS-213 | 0.50 | 40    | --host claude-code --auth subscription --cap-exception --only TS-213  | one session runs, the stub is given a spend cap of 1.50 USD and a turn cap of 40, and the result record gives "caps.usd" 1.50 and "caps.turns" 40          |
+    | evals/cap02/TS-213.eval.mjs           | TS-213 | 0.50 | 40    | --host claude-code --auth subscription --only TS-213                  | one session runs at a spend cap of 0.50 USD, which the runner applies (the Agent SDK stub gets no "maxBudgetUsd") and a turn cap of 40, and the result record gives "caps.usd" 0.50 and "caps.turns" 40          |
+    | evals/cap02/TS-213.eval.mjs           | TS-213 | 0.50 | 40    | --host claude-code --auth subscription --cap-exception --only TS-213  | one session runs at a spend cap of 1.50 USD, which the runner applies (the Agent SDK stub gets no "maxBudgetUsd") and a turn cap of 40, and the result record gives "caps.usd" 1.50 and "caps.turns" 40          |
     | evals/cap02/TS-213.eval.mjs           | TS-213 | 0.50 | 40    | --host claude-code --auth api-key --only TS-213                       | the run ends before any session, with exit code 1 and a message that names "TS-213" and "evals/cap02/TS-213.eval.mjs"                                       |
     | evals/targets/gate/TS-613.eval.mjs    | TS-613 | 0.50 | 40    | --host opencode --only TS-613                                         | the run ends before any session, with exit code 1 and a message that names "TS-613" and "evals/targets/gate/TS-613.eval.mjs"                                |
     | evals/targets/gate/TS-634.eval.mjs    | TS-634 | 2.00 | 30    | --host opencode --cap-exception --only TS-634                         | the run ends before any session, with exit code 1 and a message that names "TS-634" and "evals/targets/gate/TS-634.eval.mjs"                                |
@@ -1665,6 +1667,89 @@ before-read of C002-IF-010 §2.3 and before the host process starts (C002-IF-010
 critics CR-85, CR-89, CR-90). The missing file keeps the text that the runner ships (critic CR-85).
 The 19- and 20-character rows are the boundary of the length rule.
 
+## C002-REQ-642
+
+#### C002-AC-642.1 — No spend cap or turn cap of a session reaches the model through the Claude Code eval runner
+```gherkin
+Scenario Outline: C002-TS-703 — no budget in the options, the prompt or the system prompt that the Agent SDK receives
+  Given the Claude Code eval runner, run with "<auth>", with an Agent SDK stub in place of the Agent SDK that records the options, the prompt and the system prompt it receives and ends the session after one model call
+  And <row>, whose prompt is "Start change 001"
+  When the runner runs one eval session of that row
+  Then the stub received the option "maxTurns" <turns>, neither "maxBudgetUsd" nor "taskBudget", and no extra argument that names a spend cap or a turn cap
+  And the prompt it received is "Start change 001"
+  And neither the prompt nor the system prompt it received holds "<usd>", "USD", "budget" or "<turns> turns"
+  And the session's result record gives "caps.usd" <usd> and "caps.turns" <turns>
+  Examples:
+    | auth                                 | row                                                                                                         | turns | usd  |
+    | --auth subscription                  | a case row without "maxTurns" and "maxBudgetUsd"                                                            | 30    | 0.50 |
+    | --auth api-key                       | a case row without "maxTurns" and "maxBudgetUsd"                                                            | 30    | 0.50 |
+    | --auth subscription --cap-exception  | the row "TS-214" of "evals/cap02/TS-214.eval.mjs" in the fixture "fx-evals-caps" of C002-TS-679             | 30    | 1.50 |
+    | --auth subscription                  | the row "TS-213" of "evals/cap02/TS-213.eval.mjs" in the fixture "fx-evals-caps", whose "maxTurns" is 40     | 40    | 0.50 |
+```
+
+The Claude Code CLI shows the model the spend cap that the Agent SDK passes on, and the agents then
+ration their work, which no real user's session does (defect D-031; P-01 answer to Q-budget-hide-01,
+"Hide the budget"). The runner therefore passes the SDK the turn cap only, which the host shows the
+model nowhere, at the row's own value or that of its cap exception, and keeps the spend cap out of
+every option, prompt and system prompt; the result record still gives both caps (C002-IF-010 §2
+`maxTurns`, `maxBudgetUsd`; §2.2 Budget hidden from the model). The OpenCode and Copilot CLI runners
+give their hosts no budget that the model sees and are unchanged (C002-IF-010 §2.2 Budget hidden
+from the model; the Copilot CLI part rests on the assumption D-031 there).
+
+## C002-REQ-643
+
+#### C002-AC-643.1 — The Claude Code eval runner stops a session at the spend cap itself, with `error_max_budget_usd` and the highest cost read
+```gherkin
+Scenario Outline: C002-TS-702 — the Claude Code spend cap applied by the runner
+  Given the Claude Code eval runner, run with "<auth>", with an Agent SDK stub in place of the Agent SDK that records the options, the prompt and the system prompt it receives
+  And the stub streams the assistant message of each model call once per content block, two blocks per call, with a new message ID per call, and answers each usage request with "session.total_cost_usd" 0.10 USD for each model call ended so far
+  And a case row with the prompt "Start change 001" and without "maxTurns" and "maxBudgetUsd", so that the caps are 30 turns and 0.50 USD
+  And <stub after the cap>
+  When the runner runs one eval session
+  Then the runner sent one usage request per model call, not one per content block
+  And <outcome>
+  Examples:
+    | auth                | stub after the cap | outcome |
+    | --auth subscription | after the interrupt, the stub ends the model call then running, sends a permission request for the tool "Write", and streams a result message with "subtype" "error_during_execution" and "total_cost_usd" 0.60 | after the usage answer 0.50 USD of the fifth model call, the transcript holds one harness record {"event":"cap","reason":"spend cap","usd":0.5,"cap_usd":0.5}; the runner sent "interrupt()" once and then closed the query; the request for "Write" was denied with "Write is not available in this evaluation"; and the result record gives "metrics.result_subtype" "error_max_budget_usd", "metrics.cost_usd" 0.60, the stub's cost after the interrupt and not cut to the cap, and "caps.usd" 0.50 |
+    | --auth api-key      | after the interrupt, the stub ends the model call then running, sends a permission request for the tool "Write", and streams a result message with "subtype" "error_during_execution" and "total_cost_usd" 0.60 | after the usage answer 0.50 USD of the fifth model call, the transcript holds one harness record {"event":"cap","reason":"spend cap","usd":0.5,"cap_usd":0.5}; the runner sent "interrupt()" once and then closed the query; the request for "Write" was denied with "Write is not available in this evaluation"; and the result record gives "metrics.result_subtype" "error_max_budget_usd", "metrics.cost_usd" 0.60 and "caps.usd" 0.50 |
+    | --auth subscription | a subagent's model call runs in parallel with the fifth call of the session agent and ends after the 0.50 USD reading, before the interrupt takes effect; the stub then sends a permission request for the tool "Agent" and streams a result message with "total_cost_usd" 0.70 | the transcript holds one harness record {"event":"cap","reason":"spend cap","usd":0.5,"cap_usd":0.5}; the request for "Agent" was denied with "Agent is not available in this evaluation"; and the result record gives "metrics.result_subtype" "error_max_budget_usd" and "metrics.cost_usd" 0.70, which counts the subagent's call in full |
+    | --auth subscription | after the interrupt, the stub streams nothing and sends no result message | the transcript holds one harness record {"event":"cap","reason":"spend cap","usd":0.5,"cap_usd":0.5}; the runner closed the query 30 s after the interrupt; and the result record gives "metrics.result_subtype" "error_max_budget_usd" and "metrics.cost_usd" 0.50, from a result with "is_error" true, "total_cost_usd" 0.50, "num_turns" null and "modelUsage" {} |
+```
+
+With no spend cap passed to the Agent SDK (C002-REQ-642, C002-TS-703), the runner applies the cap
+itself (defect D-031): it reads the session's notional cost after each new
+assistant message, stops the session at the first reading at or above the cap with an interrupt and
+the close of the query, and records the end as `error_max_budget_usd`, so that the ledgers and the
+pass rules that read it are unchanged (C002-IF-010 §2.2 Budget hidden from the model, Claude Code
+spend cap, items 1 … 8). The recorded cost is the highest reading until the query closed, never cut
+to the cap: the overshoot is the calls that the last reading below the cap had not counted, a
+subagent's parallel call included (third row; C002-IF-010 §2.2 overshoot rule). The denial after
+the cap carries no text about a budget. A failed reading: C002-REQ-644, C002-TS-704.
+
+## C002-REQ-644
+
+#### C002-AC-644.1 — A failed cost reading stops the Claude Code session and rejects `runSession` with no result record
+```gherkin
+Scenario Outline: C002-TS-704 — a failed notional-cost reading stops the session and the run
+  Given the Claude Code eval runner, run with "--auth subscription", with the Agent SDK stub of C002-TS-702
+  And a case row without "maxTurns" and "maxBudgetUsd", so that the caps are 30 turns and 0.50 USD
+  And the stub <failure> for the usage request of the third model call, after answering 0.10 and 0.20 USD for the first two
+  When the runner runs one eval session
+  Then the runner sent "interrupt()" once and then closed the query
+  And "runSession" rejects with an error whose message starts with "claude-code spend check failed: " and ends with "; notional cost read 0.20 USD"
+  And no result record of the session is written
+  Examples:
+    | failure                                                        |
+    | refuses the request                                            |
+    | answers with "session.total_cost_usd" -1                       |
+    | answers without "session.total_cost_usd"                       |
+```
+
+A reading that fails would leave the session uncapped, so the runner stops it as at the spend cap
+and the run ends with the error, as it does for a key source that does not match the auth mode
+(C002-IF-010 §2.2 Claude Code spend cap, item 8; C002-T-060). `<R>` is the highest cost read before
+the failure. The session is no run and has no result record.
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -1705,6 +1790,9 @@ The 19- and 20-character rows are the boundary of the length rule.
 | C002-REQ-639 | TS-698 | TS-698 (reconciled session; failed before-read; every after-read failing; host and model text redacted) | n/a | TS-698 (a failed read reported by its reason only) | n/a | n/a | TS-698 (read errors whose text holds the key, its `Authorization` header and a response body that echoes the key; an agent that prints `OPENROUTER_API_KEY`) |
 | C002-REQ-640 | TS-697 | TS-696 (a failed before-read), TS-701 (a wait before the session after a recent one: rising usage, one successful read only, every read failing) | TS-697 (usage 0.01 below the 0.9 × bound at every read; one successful after-read only; at most 20 after-reads) | TS-696, TS-697, TS-701 (the three reasons of C002-IF-010 §2.3 When it stays partial) | n/a | TS-696, TS-697 (the next session of the pool does not start while the entry stays partial) | n/a: the reads take no input from a case or a caller (C002-IF-010 §2.3 Test seam) |
 | C002-REQ-641 | TS-699 | TS-699 (missing key file, with its own refusal text) | TS-699 (19 characters refused, 20 accepted; a key file of only white space) | TS-699 (each refusal: no key usage read, no host start, the key file named and never the key) | n/a | n/a | TS-699 (a backslash in a key of 26 characters; a two-line key file) |
+| C002-REQ-642 | TS-703 | TS-703 (`--auth api-key`; a cap-exception row at 1.50 USD; a row of 40 turns), TS-614 (Claude Code rows: `maxTurns` and no `maxBudgetUsd`), TS-679 (cap exceptions on Claude Code: no spend cap to the stub) | n/a | n/a | n/a | n/a | TS-702 (a tool and a subagent requested after the cap denied with the usual message, no text about a budget) |
+| C002-REQ-643 | TS-702 | TS-702 (`--auth api-key`), TS-614 (Claude Code spend-cap rows), TS-679 (rerun cap 1.50 USD applied by the runner) | TS-702 (stop at the first reading at the 0.50 USD cap; a subagent's parallel call after it counted in full; no result within 30 s of the interrupt) | n/a: a failed reading is C002-REQ-644 (C002-TS-704) | n/a | TS-702 (one usage request per model call, not per repeated content block) | TS-702 (a tool and a subagent requested after the cap denied; the recorded cost never cut to the cap) |
+| C002-REQ-644 | TS-704 | TS-704 (a refused request, a negative cost, an answer without the cost) | n/a | TS-704 (`claude-code spend check failed: …`, no result record) | n/a | n/a | n/a |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on

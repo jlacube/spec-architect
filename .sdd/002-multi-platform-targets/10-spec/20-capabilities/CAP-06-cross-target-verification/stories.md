@@ -36,7 +36,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **Value / outcome:** C002-GOAL-02, C002-GOAL-03
 - **Priority:** Must · **Size hint:** L · **Capability:** C002-CAP-06
 - **Context & notes:** The harness has no CHG-001 requirement of its own, so runners are `ADDED` (current-state §2 item 2, E-9); 104 files under `evals/` use `harness/`, so the case API stays stable (baseline survey §3.3). OpenCode can be driven through `opencode serve` and the SDK (C002-R-001 D-01, D-02); whether a `question` call can be answered by script is open for spike S-07. Eval tiers: dev tier on every target; milestone tier on Claude Code and the first port only (ideation §9). Each run keeps a spend cap, as `runSession` does today (current-state E-9).
-- **Requirements:** C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611, C002-REQ-638, C002-REQ-639, C002-REQ-640, C002-REQ-641
+- **Requirements:** C002-REQ-608, C002-REQ-609, C002-REQ-610, C002-REQ-611, C002-REQ-638, C002-REQ-639, C002-REQ-640, C002-REQ-641, C002-REQ-642, C002-REQ-643, C002-REQ-644
 - **Traces to:** ideation §8 (Verification), §9; C002-DEC-003 (Consequences); defect D-023 item 2 (Q-c002-defects-01)
 
 ### C002-US-604 — Scripted evals through Copilot CLI
@@ -47,7 +47,7 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-06
 - **Context & notes:** C002-DEC-003. Copilot CLI runs headless with `-p`, `--agent` and JSON output; unattended runs use `--no-ask-user`, so interviews and gates are not exercised here (C002-R-001 D-03). C002-AS-04 is settled for Copilot CLI 1.0.98: it loads the package with `--plugin-dir`, confines subagents, and names agents `<plugin>:<agent>` (`docs/spikes/S-08-copilot-vscode.md §2`, fact F-6); a hook deny shows there as a fail-closed hook error, not through exit code 2 (§2.2). Copilot CLI reports the AI Credits of a whole session only, so its spend cap is the host's `--max-ai-credits` limit, checked on the session total (C002-NFR-105; C002-IF-010 §2.2; critic CR-64). If a later Copilot CLI version does not load the package, the server is tested in isolation and the Copilot injection cases move to the manual checklist (C002-US-605). Copilot CLI is an eval tool only (C002-NG-01). The guard behaviour of the sdd MCP server is verified by the corpus replay of the Copilot package, not by Copilot CLI sessions (C002-REQ-606; C002-IF-010 §5.1; defect D-026).
 - **Out of scope:** VS Code automation through an extension host or UI automation (not documented, C002-R-001 D-04).
-- **Requirements:** C002-REQ-611, C002-REQ-612, C002-REQ-613
+- **Requirements:** C002-REQ-611, C002-REQ-612, C002-REQ-613, C002-REQ-642, C002-REQ-643, C002-REQ-644
 - **Traces to:** C002-DEC-003; Q-eval-01
 
 ### C002-US-605 — Recorded manual VS Code checklist
