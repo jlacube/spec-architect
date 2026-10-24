@@ -54,6 +54,14 @@ tiers are unchanged.
 A 3 / 3 pass is weaker evidence than ≥ 9 / 10. A scenario that passes 90% of its runs passes 3 / 3
 with p ≈ 0.73 (0.9³), so release-standard accepts that weaker assurance (C001-RISK-005).
 
+**Runs whose Given does not hold.** Some scenarios state a Given that the real specialists must
+produce, for example C001-TS-215 and C001-TS-225: the cartographer's hand-back holds a blocking
+question while the spec-writer still runs. A run whose Given does not hold is recorded as
+"Given not met" with `valid_run` false. It does not count toward the class's pass rule, and it is
+replaced once by a new session. A second "Given not met" run in its place counts as a failure
+(C001-AC-221.1 note). The replacements are extra sessions; the estimate below does not count them.
+Each one costs at most the row's cap, 3.00 USD for the rule-1 rows.
+
 **Classification rule.** An eval scenario is high-risk when at least one of these holds:
 
 - **G, gates:** it checks that a gate is presented, refused or enforced. It also counts when it
@@ -117,33 +125,46 @@ qualifies for a scenario that spawns an agent.
 - **Source:** the latest Claude Code run of each scenario in `evals/results/*.json` (top-level
   `cost_usd` ÷ `runs`) as of 2026-10-23, and the `delegation-m6final` routing results.
 - **Missing results:** eight scenarios without a result are taken at 0.15–0.55 USD by agent.
-  C001-TC-223, C001-TC-224 and C001-TC-225 are taken at 1.40 USD each, like C001-TC-215.
 - **Formula:** per part, runs × the per-run cost of each scenario.
   - Uplift column: the figures measured on 2026-10-11 doubled, because some specialists then still
     ran as Haiku stand-ins (D-013); for example, C001-TS-201 cost 0.11 USD then and 0.48 USD on
     2026-10-21. Routing is taken at 0.25 USD per run.
-  - Expected cost: the mean of the two columns.
+- **Rule-1 sessions:** the rows that run every session at the rerun cap (C002-IF-010
+  `eval-runner.md` §2.2 list 1, with the C001-TS-225 row that CHG-002 adds) are not taken from the
+  measured figures. Those were measured with the budget visible to the model, and the
+  sessions rationed or stopped their work (D-031). With the budget hidden and the 3.00 USD rule-1
+  cap (C002-T-070; P-01 Q-cap-level-01), each such session is taken at 1.8–3.0 USD. The low end is
+  just above the 1.52–1.86 USD at which the eight `t082-d018` sessions hit the 1.50 USD cap; the high
+  end is the cap. They are:
+  - release-high, 10 runs: C001-TC-215, 223, 224, 225 and 802 (50 sessions);
+  - release-standard, 3 runs: C001-TC-213, 221, 318 (three rows), 507, 508 and 711 (24 sessions).
 
 | Part | Runs | Measured basis | With uplift |
 |---|---|---|---|
-| release-high, 16 scenarios × 10 | 160 | 95 USD (9.46 per round) | 115 USD |
-| release-standard, 65 scenarios × 3 | 195 | 65 USD (21.70 per round) | 94 USD |
+| release-high without rule-1 rows, 11 scenarios × 10 | 110 | 34 USD | 50 USD |
+| release-standard without rule-1 rows, 59 scenarios × 3 | 177 | 51 USD | 80 USD |
 | routing suite, 42 × 10 | 420 | 50 USD (0.119 per run) | 105 USD |
 | injection suite, 22 × 10 | 220 | 42 USD (4.24 per round, 2026-10-11) | 85 USD |
 | 10-run checks after 2 / 3 results (about 7 standard scenarios) | about 50 | 15 USD | 25 USD |
-| **Total** | **about 1,045** | **about 270 USD** | **about 425 USD** |
+| **Subtotal without rule-1 rows** | **about 980** | **about 190 USD** | **about 345 USD** |
 
-The mean of the two columns is about 345 USD. Those figures come from runs in which the model saw
-its budget (before C002-T-069, D-031), and full-flow cases then rationed or stopped their work.
-With the budget hidden and the rule-1 rerun cap at 3.00 USD (C002-T-070; P-01 Q-cap-level-01
-"Raise to $3 (Recommended)", whose option gave about 420 USD), the expected cost is **about 420 USD
-notional**. The full-flow figures are measured again after the fixes, as Q-cap-level-01 says. The
-target was 200–350 USD, the conductor's figure for one weekly reset of P-01's subscription. 420 USD
-is past one reset and inside the maximum of two (Q-release-tier-01: "target 1 reset maybe 2
-maximum").
+| Rule-1 sessions (hidden budget, 3.00 USD cap) | Sessions | Expected (1.8 USD each) | Worst case (3.0 USD each) |
+|---|---|---|---|
+| release-high rows | 50 | 90 USD | 150 USD |
+| release-standard rows | 24 | 43 USD | 72 USD |
+| **Rule-1 total** | **74** | **about 135 USD** | **about 220 USD** |
+
+- **Expected cost: about 400 USD notional.** That is the mean of the subtotal columns (about
+  270 USD) plus the expected rule-1 cost.
+- **Worst case: about 570 USD.** That is the uplift subtotal plus every rule-1 session at the cap.
+- **Against the target:** the target was 200–350 USD, the conductor's figure for one weekly reset of
+  P-01's subscription. The expected cost is past one reset, and the worst case stays inside the
+  maximum of two (Q-release-tier-01: "target 1 reset maybe 2 maximum").
+- **Remeasure:** the rule-1 figures are measured again in C001-T-082 step 4 after the fixes, as
+  Q-cap-level-01 says. This estimate is then updated from those sessions.
 
 **At 350 USD notional**, C001-T-072 stops and asks P-01 to choose. Either a second weekly reset,
-which Q-release-tier-01 allows as the maximum and the 420 USD estimate expects, or the cuts below,
+which Q-release-tier-01 allows as the maximum and the expected cost of about 400 USD needs, or the cuts below,
 in this order:
 
 1. The routing suite drops to 5 runs per case (210 runs; C001-SC-05 is a ratio over runs, so 210

@@ -9,7 +9,7 @@ status: blocked
 depends_on: [C001-T-063, C001-T-083]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
-verified_by: [C001-TS-223, C001-TS-224, C001-TC-223, C001-TC-224, C001-TC-215, C001-TC-209, C001-TC-213, C001-TC-222, C001-TC-225]
+verified_by: [C001-TS-223, C001-TS-224, C001-TS-225, C001-TC-223, C001-TC-224, C001-TC-225, C001-TC-215, C001-TC-209, C001-TC-213, C001-TC-222]
 components: [C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
@@ -64,13 +64,19 @@ C001-T-072.
    header comment of `TS-215.eval.mjs`.
 3. Run `npm run check`. Its targets step checks the platform target structures (opencode, copilot), and
    PLG-SIZE-001 and the plugin structure checks must pass.
-4. Eval runs on the subscription (notional, no charge; about 30–35 USD), recorded in `evals/results/`. The
-   first pass (2026-10-24) gave C001-TC-223 2 / 3, C001-TC-224 0 / 3, and passes for the other four.
-   The eight `t082-d018` sessions count as no runs (CHG-002 handoff, D-033). After C002-T-069,
-   C002-T-070 and C001-T-083, rerun at milestone tier (3 / 3 each) at the 3.00 USD rule-1 cap:
-   - C001-TC-223, C001-TC-224, C001-TC-215, C001-TC-213, C001-TC-209 and C001-TC-222;
-   - C001-TC-225 (C001-T-083).
-5. When a run fails, read the trace. A wrong flag or question ID in a specialist hand-back means the wording does
+4. Eval runs at milestone tier (3 / 3 each) on the subscription, notional with no charge (about
+   30–35 USD), recorded in `evals/results/`. The first pass (2026-10-24) gave C001-TC-223 2 / 3,
+   C001-TC-224 0 / 3, and passes for the other four. The eight `t082-d018` sessions count as no runs
+   (CHG-002 handoff, D-033). After C002-T-069, C002-T-070 and C001-T-083, use the two command forms
+   of the CHG-002 handoff, each in a run of its own:
+   - **Rule-1 rows** (every session at the 3.00 USD rerun cap): TS-223, TS-224, TS-215, TS-213 and
+     TS-225. CHG-002 adds the TS-225 rule-1 row. Run with
+     `--host claude-code --auth subscription --cap-exception`.
+   - **TS-209 and TS-222** at their own caps (0.50 USD): `--host claude-code --auth subscription`,
+     without `--cap-exception`.
+5. A TS-215 or TS-225 run reported "Given not met" (`valid_run` false) is replaced once by a new session;
+   a second one in its place counts as a failure (C001-AC-221.1 note). When a run fails, read the
+   trace. A wrong flag or question ID in a specialist hand-back means the wording does
    not work yet. A failure after a correct flag is a conductor finding, so raise a defect.
 6. Report the task. The 10-run release checks of C001-TC-209, 215, 223, 224 and 225 are part of C001-T-072.
    If C001-TC-215, 223 or 224 ends below 9 / 10 there, D-017 and this task are reopened (step 4
@@ -78,7 +84,8 @@ C001-T-072.
 
 ## Verification
 
-- `node evals/harness/run.mjs evals/cap02/TS-223.eval.mjs evals/cap02/TS-224.eval.mjs evals/cap02/TS-215.eval.mjs evals/cap02/TS-213.eval.mjs evals/cap02/TS-209.eval.mjs evals/cap02/TS-222.eval.mjs evals/cap02/TS-225.eval.mjs --tier milestone --label t082`
+- `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier milestone --label t082 --only <the rule-1 rows of TS-223, TS-224, TS-215, TS-213, TS-225> evals/cap02/TS-223.eval.mjs evals/cap02/TS-224.eval.mjs evals/cap02/TS-215.eval.mjs evals/cap02/TS-213.eval.mjs evals/cap02/TS-225.eval.mjs`
+- `node evals/harness/run.mjs --host claude-code --auth subscription --tier milestone --label t082 --only <the rows of TS-209, TS-222> evals/cap02/TS-209.eval.mjs evals/cap02/TS-222.eval.mjs`
 - `npm run check` on Node 22.22.3 (exit 0; the targets step and PLG-SIZE-001 report nothing)
 - `node plugins/architect/scripts/sdd.mjs lint`
 
@@ -87,5 +94,6 @@ C001-T-072.
 - [ ] `sdd-conventions` and `code-discovery` carry the C001-IF-05 §1 rule, the question-ID format and the no-empty-block rule; the size budgets hold.
 - [ ] `evals/cap02/TS-223.eval.mjs` and `TS-224.eval.mjs` exist; C001-TC-223, 224, 215, 213, 209, 222 and 225 pass 3 / 3 at milestone tier.
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003.
+- [ ] D-019 closed with this task: C001-TC-225 and the revised C001-TC-215 pass 3 / 3 (the fixes of C001-T-083).
 - [ ] Progress reported: `sdd task set C001-T-082 --status done --commit <sha>`. That commit is the
-      resolution evidence for closing D-017 and D-018.
+      resolution evidence for closing D-017, D-018 and D-019.

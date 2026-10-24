@@ -193,9 +193,11 @@ Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-29 | major | T-083, IF-05 §2, REQ-221 | phase-spec step 2 (line 41) and phase-ideation steps 3–4 ("Wait for all hand-backs") still batch; shipped skills would cite a CHG-001 spec ID | add them to the targets; cite the sdd-conventions blocking bullet instead | open |
-| CR-30 | major | T-082, CHG-002 handoff, TS-679 | step 4 wording puts TC-209/222/225 at 3.00 USD and the command lacks --host/--auth/--cap-exception and mixes row kinds (default auth api-key) | the two handoff command forms; correct the cap wording | open |
-| CR-31 | major | T-083, T-082 | T-083's done-check needs T-082 step 4, which depends on T-083 | T-083 done-check: TC-1132, C002-TC-107/127, parse checks; eval passes and D-019 closure in T-082 | open |
-| CR-32 | minor | ADR-003 | 420 USD not derived; TC-223/224/225 at 1.40 though all ended at 1.52–1.86 | a hidden-budget row with expected and worst case at 3.00 USD | open |
-| CR-33 | minor | T-083 | assertion checked only on failing traces | a synthetic passing transcript fixture | open |
-| CR-34 | minor | registry, handoff | LINT-REG-001 (64 vs 65); extra empty cell in row 60 | sdd status --write; remove the cell | open |
+| CR-29 | major | T-083, IF-05 §2, REQ-221 | phase-spec step 2 (line 41) and phase-ideation steps 3–4 ("Wait for all hand-backs") still batch; shipped skills would cite a CHG-001 spec ID | add them to the targets; cite the sdd-conventions blocking bullet instead | fixed: T-083 targets phase-spec step 2 (line 41) and phase-ideation steps 3–4 (line 58); shipped skills point to the `sdd-conventions` blocking bullet and interview-protocol §2, never to CHG-001 spec IDs |
+| CR-30 | major | T-082, CHG-002 handoff, C002-TS-679 | step 4 wording puts TC-209/222/225 at 3.00 USD and the command lacks --host/--auth/--cap-exception and mixes row kinds (default auth api-key) | the two handoff command forms; correct the cap wording | fixed: T-082 step 4 and Verification use the two CHG-002 handoff forms (rule-1 rows TS-223, 224, 215, 213, 225 with `--host claude-code --auth subscription --cap-exception` at 3.00 USD; TS-209, 222 with `--host claude-code --auth subscription` at 0.50 USD) |
+| CR-31 | major | T-083, T-082 | T-083's done-check needs T-082 step 4, which depends on T-083 | T-083 done-check: TC-1132, C002-TC-107/127, parse checks; eval passes and D-019 closure in T-082 | fixed: T-083 done-check is TC-1132, C002-TC-107/127 and the parse checks; the eval passes and the D-019 closure are in T-082 |
+| CR-32 | minor | ADR-003 | 420 USD not derived; TC-223/224/225 at 1.40 though all ended at 1.52–1.86 | a hidden-budget row with expected and worst case at 3.00 USD | fixed: ADR-003 rule-1 sessions (74) at 1.8–3.0 USD with the hidden budget; expected about 400 USD, worst case about 570 USD, replacing the quoted 420 USD |
+| CR-33 | minor | T-083 | assertion checked only on failing traces | a synthetic passing transcript fixture | fixed: T-083 builds synthetic passing transcripts for the TS-225 and TS-215 assertions; the parse check also reproduces the recorded failures |
+| CR-34 | minor | registry, handoff | LINT-REG-001 (64 vs 65); extra empty cell in row 60 | sdd status --write; remove the cell | fixed: registry refreshed by the conductor; extra empty cell of handoff row 60 removed |
+
+All findings of this section fixed (planner), 2026-10-24.
