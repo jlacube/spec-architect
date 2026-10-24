@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-24T16:09:16Z",
+  "generated_at": "2026-10-24T16:37:20Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -31,12 +31,12 @@
         }
       },
       "implementation": {
-        "status": "blocked",
+        "status": "in-progress",
         "tasks": {
           "total": 65,
           "done": 60,
-          "blocked": 1,
-          "in_progress": 0
+          "blocked": 0,
+          "in_progress": 1
         },
         "last_report": "2026-10-24T00:00:00Z"
       },
@@ -266,9 +266,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 71,
-          "done": 64,
+          "done": 65,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
         "last_report": "2026-10-24T00:00:00Z"
       },
@@ -599,9 +599,9 @@
           "summary": "Found in C001-T-082: with the budget hidden (D-031), all 8 rule-1 sessions ran to the 1.50 USD rerun cap, the 3 passing ones included, so full-flow CHG-001 cases are cap-limited. P-01 (Q-cap-level-01): rule-1 rows run at 3 USD notional; measure after the D-019 fixes.",
           "reporter": "jerome.lacube",
           "date": "2026-10-24",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Spec IF-010 §2.2 (G2 45dd6bb) and C002-T-070 (64ac51b): 13 rule-1 rows at a 3.00 USD rerun cap. Correction to the summary: 5 of the 8 t082-d018 sessions passed (result files), not 3.",
+          "closed_at": "2026-10-24"
         }
       ],
       "waivers": [

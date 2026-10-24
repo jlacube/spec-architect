@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-068, C002-T-069]
 implements: [C002-REQ-611, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-679, C002-TC-679]
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-038]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 64ac51b, completed_at: 2026-10-24, notes: "42 rows (13 rule-1 at 3.00 USD incl. TS-225, 27 rule-2 and TS-421-agent at 1.50); cap-exceptions 26/26 (3 failed before); npm test 1736/0/1; check exit 0 (Node 22); no paid run" }
 ---
 
 # C002-T-070 — Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class

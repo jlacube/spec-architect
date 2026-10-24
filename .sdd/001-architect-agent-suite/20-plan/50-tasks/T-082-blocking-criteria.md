@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: blocked
+status: in-progress
 depends_on: [C001-T-063, C001-T-083]
 implements: [C001-REQ-208]
 satisfies_ac: [C001-AC-208.2]
