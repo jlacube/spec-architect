@@ -43,7 +43,7 @@ test("status --write on a copy of this repository's workspace produces a schema-
     const reg = JSON.parse(readFileSync(join(root, ".sdd", "registry.json"), "utf8")) as { changes: { id: string; implementation: { tasks: { total: number } } }[] };
     assert.ok(validateRegistry(reg), JSON.stringify(validateRegistry.errors));
     assert.equal(reg.changes[0]?.id, "CHG-001");
-    assert.equal(reg.changes[0]?.implementation.tasks.total, 64, "65 tasks, C001-T-071 dropped (C001-T-079 added by revision D-012, C001-T-080 by D-014, C001-T-081 by D-015, C001-T-082 by D-017)");
+    assert.equal(reg.changes[0]?.implementation.tasks.total, 65, "66 tasks, C001-T-071 dropped (C001-T-079 added by revision D-012, C001-T-080 by D-014, C001-T-081 by D-015, C001-T-082 by D-017, C001-T-083 by D-019)");
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

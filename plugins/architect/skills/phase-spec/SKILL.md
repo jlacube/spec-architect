@@ -35,10 +35,14 @@ capability only.
   stakeholders and personas, scope, current state), the capability list in `00-index.md`, and
   `stories.md` per capability. Brownfield or mixed: dispatch `sdd-cartographer` in the same turn
   for the current-state evidence the context needs.
-- Briefs per the brief template (`phase-ideation/references/brief-template.md`): change ID,
-  phase and step, input paths, ID blocks (CAP-nn → story and requirement numbers nn01…), output
-  paths, quality bar (user-stories, sdd-conventions), return contract.
-- Interview on the returned questions (interview-protocol) before step 3 when they are blocking.
+- Briefs per the section "Specialist brief" of the phase-ideation skill (load that skill with
+  the Skill tool if this session has not loaded it): change ID, phase and step, input paths, ID
+  blocks (CAP-nn → story and requirement numbers nn01…), output paths, quality bar
+  (user-stories, sdd-conventions), return contract.
+- When a hand-back holding a blocking question arrives (the blocking bullet of the
+  sdd-conventions return contract), ask it before you end your turn and before any other
+  dispatch, even while another specialist still runs (interview-protocol §2). Batch the
+  non-blocking questions into rounds (interview-protocol) before step 3.
 - **Exit:** every capability has stories; no unasked blocking question.
 
 ## Step 3 — Requirements and NFRs
@@ -100,7 +104,9 @@ gate"), follow interview-protocol §8:
   to the authors with the instruction to mark every statement that depends on one with
   `[ASSUMPTION: <question-id>]`.
 - Run `sdd trace <NNN> --write` before the gate so `85-open-items.md` lists every assumption.
-- **Stop on a blocking question:** ask it (an interview round) before dispatching any further
-  author.
+- **Stop on a blocking question:** when a hand-back holding a blocking question arrives (the
+  blocking bullet of the sdd-conventions return contract), ask it in an interview round before
+  you end your turn and before you dispatch another specialist. Do not wait for specialists
+  still running; their later questions go to a later round (interview-protocol §2).
 - **Stop at the gate:** present G2 (step 8) and end your turn. Unattended mode never approves and
   never records a gate decision.

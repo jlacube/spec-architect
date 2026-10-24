@@ -52,15 +52,18 @@ sections of `ideation.md`.
     affected areas and a blast-radius preview. Skip for greenfield.
   - `sdd-options-analyst` — the initial option space for the 1–3 key decisions;
     `options/OA-<seq>-<slug>.md`.
-- Write each brief with the brief template (`references/brief-template.md`): change ID, phase
-  and step, input paths, IDs to use, output paths, quality bar (skills), return contract.
-  Paths and IDs, not pasted content.
-- Wait for all hand-backs; collect their `questions` blocks.
+- Write each brief as the section "Specialist brief" below sets out: change ID, phase and step,
+  input paths, IDs to use, output paths, quality bar (skills), return contract. Paths and IDs,
+  not pasted content.
+- Collect the `questions` blocks as the hand-backs arrive. When a hand-back holding a blocking
+  question arrives (the blocking bullet of the sdd-conventions return contract), ask it at once,
+  as interview-protocol §2 says: before you end your turn and before any other dispatch, without
+  waiting for the other hand-backs.
 - **Exit:** every dispatched specialist has handed back; notes and analyses exist.
 
 ## Step 4 — Interview
 
-- Run the interview-protocol skill on the collected questions: merge, blocking first, rounds of
+- Run the interview-protocol skill on the questions not yet asked: merge, blocking first, rounds of
   at most four, options with the recommendation first, log every round, list extracted
   instructions.
 - New topics raised by the answers go back to step 3 (only the specialist concerned).
@@ -121,5 +124,43 @@ Link, don't summarise: the indexes point to the notes; facts live in their own a
 
 When P-01 asked for unattended drafting of this phase, follow interview-protocol §8: apply the
 recommended option to non-blocking questions and mark each dependent statement
-`[ASSUMPTION: <question-id>]`. Stop and ask on any blocking question, and always stop at step 8:
-present the gate and end your turn; never approve.
+`[ASSUMPTION: <question-id>]`. Ask a blocking question when its hand-back arrives (step 3), and
+always stop at step 8: present the gate and end your turn; never approve.
+
+## Specialist brief
+
+Every dispatch to a specialist, in every phase, uses this brief (C001-REQ-214). Fill every field;
+write `none` when a field does not apply. Refer to artifacts by path and ID; never paste their
+content. Write every path relative to the repository root, starting with `.sdd/` (for example
+`.sdd/004-coupons/10-spec/spec.md`); never an absolute path or a path relative to `.sdd/`. The
+only exception is an excerpt of at most 40 lines that states a specific question (C001-REQ-215),
+marked as an excerpt with its source path and line range.
+
+```markdown
+# Brief — <specialist role>: <one-line task>
+
+- **Change:** CHG-<NNN> "<title>" · profile <full|lite> · kind <greenfield|brownfield|mixed>
+- **Phase / step:** <00-ideation|10-spec|20-plan> · step <n> — <step title>
+- **Task:** <what to produce and why, 2–6 sentences; the decision or question it serves>
+- **Inputs (read these):**
+  - `.sdd/<NNN>-<slug>/<path>` — <what to take from it>
+  - …
+- **IDs to use:** <ID types and blocks, e.g. "allocate REQ and NFR with
+  `sdd id next REQ --change <NNN>`; CAP-03 requirements use the 3xx block"; IDs to reference>
+- **Outputs (write only these):**
+  - `.sdd/<NNN>-<slug>/<path>` — <content expected>
+- **Quality bar:** <skills and sections that apply, e.g. "ears-requirements, sdd-conventions
+  §Writing rules; C001-IF-03 §5 research-note headings">
+- **Constraints:** <scope limits, decisions already taken (DEC/OA IDs), unattended mode if
+  active, time or cost limits>
+- **Return contract:** final message = Digest (≤ 15 lines, IDs and paths), Written (paths),
+  and a `questions` block when P-01 must decide something, each question flagged as the
+  blocking bullet of the sdd-conventions return contract says. Do not ask P-01 directly.
+```
+
+Checks before dispatching:
+
+- The change ID, phase and at least one input path written as `.sdd/<NNN>-<slug>/…` are present.
+- Every output path is inside `.sdd/<NNN>-<slug>/` and is owned by that specialist's role.
+- No block of more than 40 consecutive lines copied from any `.sdd/` file.
+- Independent briefs of the same step are dispatched together, in one turn.

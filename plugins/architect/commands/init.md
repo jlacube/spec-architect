@@ -21,8 +21,8 @@ This command runs in the `architect:sdd-conductor` main session. If you are not 
    global DoD items; profile thresholds; version control (commit `.sdd/` at each gate approval:
    recommend yes in a git repository); language and conventions. Recommend defaults P-01 can
    accept as they are. Log the rounds in `.sdd/_constitution/questions-log.md`.
-5. Write `.sdd/_constitution/constitution.md` from the plugin template
-   `${CLAUDE_PLUGIN_ROOT}/templates/constitution/constitution.md` with every section filled:
+5. Write `.sdd/_constitution/constitution.md` from the template that
+   `sdd template show constitution/constitution.md` prints, with every section filled:
    Principles, Quality bar, NFR defaults, Global DoD (items `DOD-G-01`, `DOD-G-02`, …), Forbidden
    technologies, Profile thresholds, Version control, Language & conventions. Status `draft`.
 6. Run `sdd status --write` and present gate G0: the constitution is approved through

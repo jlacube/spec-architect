@@ -14,11 +14,12 @@ import { port001, port002 } from "./port.mjs";
 import readme from "./readme.mjs";
 import { msg001, rules001, ver001 } from "./rules.mjs";
 import size from "./size.mjs";
+import tmpl from "./tmpl.mjs";
 import tools from "./tools.mjs";
 import variants from "./variants.mjs";
 
 // PLG-VAR-001 (C002-IF-005 §6, C002-T-035) runs with the plugin checks of C001-IF-08 §3.
-export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, ver001, readme, hooks, ci, evals, mcp, variants];
+export const CHECKS = [layout, dup, port001, port002, path, tools, size, rules001, msg001, ver001, readme, hooks, ci, evals, mcp, tmpl, variants];
 
 /** Runs every check; each finding gets `severity` error, or pending while its owner task is open. */
 export function runChecks(ctx = context(), checks = CHECKS) {

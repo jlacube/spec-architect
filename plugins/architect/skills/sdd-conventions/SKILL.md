@@ -136,7 +136,8 @@ Your final message is your hand-back to the conductor. It contains, in this orde
    - `id` is `Q-<topic>-<nn>`, the topic in lowercase letters (`Q-scope-01`). With no questions,
      omit the block; never return an empty `questions` array.
    - `material: true` when the answer changes scope, architecture, an interface, an NFR
-     threshold or a dependency; then also give `candidates_considered` (4 or 5), the 2–3
+     threshold or a dependency; then also give `candidates_considered`: the number of
+     candidates (4 or 5), not a list; the 2–3
      presented `options` (recommendation first, `"recommended": true`) and every other
      candidate under `rejected` with its reason (options-analysis method).
    - Never assume the answer: do not write a guessed value into an artifact as fact. Where your

@@ -12,7 +12,7 @@
 // Carried: C002-TC-132 (eval, evals/targets/generator/TS-132.eval.mjs) to C002-T-056. The CLI invocation
 // row of C002-TC-107 (a wiring anchor) is checked here on its variant; the inlined-body clause of
 // C002-TC-134 is in wiring.test.ts (C002-T-028).
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -36,14 +36,14 @@ const tableFor = (t: Target, m: Mode): MappingTable =>
   m === tables[t].enforcement_mode ? tables[t] : { ...loadTable(join(FIXTURES, `${t}-${m}.json`), `${t}-${m}.json`), variants: tables[t].variants };
 const NAME: Record<Target, string> = { opencode: "OpenCode", copilot: "Copilot" };
 
-/** Every translated doc of the real plugin for one target and mode, by source path; fails on any diagnostic. */
-function docsOf(t: Target, mode: Mode = tables[t].enforcement_mode): Map<string, TranslatedDoc> {
-  const r = translateBodies({ source: source.source, table: tableFor(t, mode), target: t, mode });
+/** Every translated doc of the real plugin (or of `src`) for one target and mode, by source path; fails on any diagnostic. */
+function docsOf(t: Target, mode: Mode = tables[t].enforcement_mode, src = source.source): Map<string, TranslatedDoc> {
+  const r = translateBodies({ source: src, table: tableFor(t, mode), target: t, mode });
   assert.deepEqual(r.diagnostics, [], `${t}/${mode}: no diagnostics`);
   return new Map(r.docs.map((d) => [d.path, d]));
 }
-function agentsOf(t: Target, mode: Mode = tables[t].enforcement_mode): Map<string, AgentFrontmatter> {
-  const r = translateAgents({ source: source.source, table: tableFor(t, mode), target: t, mode });
+function agentsOf(t: Target, mode: Mode = tables[t].enforcement_mode, src = source.source): Map<string, AgentFrontmatter> {
+  const r = translateAgents({ source: src, table: tableFor(t, mode), target: t, mode });
   assert.deepEqual(r.diagnostics, [], `${t}/${mode}: no frontmatter diagnostics`);
   return new Map(r.agents.map((a) => [a.frontmatter.name, a.frontmatter]));
 }
@@ -57,7 +57,7 @@ function lineFrom(d: TranslatedDoc, n: number): string | undefined {
 }
 /** Every generated line that comes from source line `n` (a wiring variant replaces its anchor from the anchor's first line). */
 const linesFrom = (d: TranslatedDoc, n: number) => d.body.split("\n").filter((_, i) => d.sourceLines[i] === n).join("\n");
-const sourceLine = (path: string, n: number) => source.source.files.find((f) => f.path === path)!.text.split("\n")[n - 1]!;
+const sourceLine = (path: string, n: number, src = source.source) => src.files.find((f) => f.path === path)!.text.replace(/\r\n/g, "\n").split("\n")[n - 1]!;
 const construct = (table: MappingTable, id: string): Construct => {
   const c = table.constructs.find((x) => x.id === id);
   assert.ok(c, `${table.target}: construct ${id}`);
@@ -78,6 +78,30 @@ function fxSrc(base: string): string {
   cpSync(PLUGIN, src, { recursive: true });
   return src;
 }
+// The template lines the shipped files held before C001-T-083 (C002-TS-107 and C002-TS-127 as revised in
+// b82aaad): the shipped sources name templates through `sdd template show` only (C001-REQ-1124, PLG-TMPL-001),
+// so fx-src plants each line at its old place and the generator rewrite is tested on that copy.
+const PLANTED: [file: string, line: number, text: string][] = [
+  ["agents/sdd-spec-writer.md", 19, "  (`${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…`). Lite profile: the sections of `spec.md`."],
+  ["commands/decide.md", 18, "   template (`${CLAUDE_PLUGIN_ROOT}/templates/full/00-ideation/decisions/DEC-{{SEQ}}-{{SLUG}}.md`, or"],
+  ["commands/init.md", 25, "   `${CLAUDE_PLUGIN_ROOT}/templates/constitution/constitution.md` with every section filled:"],
+];
+const plantedBase = mkdtempSync(join(tmpdir(), "sdd-cx-planted-"));
+after(() => rmSync(plantedBase, { recursive: true, force: true }));
+/** fx-src with the PLANTED lines in place of the shipped ones, read as the generator reads a source plugin. */
+const planted = (() => {
+  const src = fxSrc(plantedBase);
+  for (const [file, n, text] of PLANTED) {
+    const p = join(src, ...file.split("/"));
+    const lines = readFileSync(p, "utf8").replace(/\r\n/g, "\n").split("\n");
+    lines[n - 1] = text;
+    writeFileSync(p, lines.join("\n"));
+  }
+  const r = readSource(src);
+  assert.deepEqual(r.diagnostics, [], "fx-src with the planted lines reads without diagnostics");
+  return r.source;
+})();
+
 function run(args: string[]) {
   const stdout: string[] = [];
   const stderr: string[] = [];
@@ -110,8 +134,9 @@ for (const t of TARGETS) {
   test(`C002-TC-107 (C002-TS-107): every construct kind of the source plugin is translated on ${NAME[t]}, in every mode`, () => {
     for (const mode of MODES[t]) {
       const table = tableFor(t, mode);
-      const docs = docsOf(t, mode);
-      const agents = agentsOf(t, mode);
+      // fx-src with the planted template lines (the shipped files hold none since C001-T-083).
+      const docs = docsOf(t, mode, planted);
+      const agents = agentsOf(t, mode, planted);
       const at = (path: string, n: number) => {
         const l = lineFrom(docs.get(path)!, n);
         assert.ok(l !== undefined, `${path}:${n} is kept`);
@@ -125,8 +150,9 @@ for (const t of TARGETS) {
         if (!name.startsWith("mcp__")) for (const g of toolGrants(table.tools[name]!, mode)!) assert.ok(sw.tools.includes(g), `${where}: spec-writer ${name} → ${g}`);
       // model name — agents/sdd-auditor.md
       assert.equal(agents.get("sdd-auditor")!.model, table.models.haiku, where);
-      // ${CLAUDE_PLUGIN_ROOT} — agents/sdd-spec-writer.md line 19 (template construct)
-      assert.ok(sourceLine("agents/sdd-spec-writer.md", 19).includes("${CLAUDE_PLUGIN_ROOT}/templates/"));
+      // ${CLAUDE_PLUGIN_ROOT} — agents/sdd-spec-writer.md line 19 (template construct), planted in fx-src
+      assert.ok(!sourceLine("agents/sdd-spec-writer.md", 19).includes("${CLAUDE_PLUGIN_ROOT}"), "the shipped line names no template path");
+      assert.ok(sourceLine("agents/sdd-spec-writer.md", 19, planted).includes("${CLAUDE_PLUGIN_ROOT}/templates/"));
       assert.ok(at("agents/sdd-spec-writer.md", 19).includes(`${replaceOf(table, "plugin-root-templates", mode)}<profile>/…`), where);
       // ${CLAUDE_PLUGIN_DATA} — commands/doctor.md line 8
       assert.ok(at("commands/doctor.md", 8).includes(`sdd serena-config ${replaceOf(table, "plugin-data", mode)}`), where);
@@ -143,7 +169,8 @@ for (const t of TARGETS) {
       assert.ok(!docs.get("commands/specify.md")!.body.includes("claude --agent"), where);
       // AskUserQuestion — agents/sdd-conductor.md, commands/archive.md (C002-TC-131 holds the line checks)
       for (const p of ["agents/sdd-conductor.md", "commands/archive.md"]) assert.ok(!textOf(docs.get(p)!).includes("AskUserQuestion"), `${where}: ${p}`);
-      // ${CLAUDE_PLUGIN_ROOT}/templates/ — commands/decide.md line 18
+      // ${CLAUDE_PLUGIN_ROOT}/templates/ — commands/decide.md line 18, planted in fx-src
+      assert.ok(sourceLine("commands/decide.md", 18, planted).includes("${CLAUDE_PLUGIN_ROOT}/templates/"));
       assert.ok(at("commands/decide.md", 18).includes(replaceOf(table, "plugin-root-templates", mode)), where);
       // MCP tool name in a body — skills/research-protocol/SKILL.md lines 95–97, inside the wiring section of
       // line 93, which the target's variant replaces (C002-T-028); the variant names the tools in source form.
@@ -217,10 +244,11 @@ for (const [file, line, sourcePath, target, command] of [
   ["agents/sdd-spec-writer.md", 19, "${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…", "copilot", "sdd template show <profile>/…"],
 ] as const) {
   test(`C002-TC-127 (C002-TS-127): ${file}:${line} on ${NAME[target]} names "${command}"`, () => {
-    assert.ok(sourceLine(file, line).includes(sourcePath), "source line names the template");
+    assert.ok(!sourceLine(file, line).includes("${CLAUDE_PLUGIN_ROOT}"), "the shipped line names no template path (C001-T-083)");
+    assert.ok(sourceLine(file, line, planted).includes(sourcePath), "the line fx-src plants names the template");
     assert.equal(replaceOf(tables[target], "plugin-root-templates", tables[target].enforcement_mode), "sdd template show ");
     for (const mode of MODES[target]) {
-      const doc = docsOf(target, mode).get(file)!;
+      const doc = docsOf(target, mode, planted).get(file)!;
       assert.ok(lineFrom(doc, line)!.includes(command), `${target}/${mode}`);
       assert.ok(!textOf(doc).includes("${CLAUDE_PLUGIN_ROOT}"), `${target}/${mode}: no plugin root left`);
     }

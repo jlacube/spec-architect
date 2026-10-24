@@ -34,6 +34,6 @@ test("trace output is deterministic apart from generated_at", () => {
 test("coverage equals the prototype generator's: TR-01 … TR-08 all complete, DAG resolves", () => {
   const r = trace(dir, { write: false });
   const lines = r.coverage.map((c) => `${c.rule} ${c.covered}/${c.total}`);
-  assert.deepEqual(lines, ["TR-01 80/80", "TR-02 213/213", "TR-03 236/236", "TR-04 27/27", "TR-05 213/213", "TR-05 27/27", "TR-06 213/213", "TR-07 64/64", "TR-08 239/239"]);
+  assert.deepEqual(lines, ["TR-01 80/80", "TR-02 215/215", "TR-03 238/238", "TR-04 27/27", "TR-05 215/215", "TR-05 27/27", "TR-06 215/215", "TR-07 65/65", "TR-08 241/241"]);
   assert.equal(r.dagOk, true);
 });

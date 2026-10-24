@@ -124,9 +124,13 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
       const endedAt = Date.now();
       apiKeySource = session.apiKeySource;
       const failures = [];
+      // An assert may mark its run as no valid run (`valid_run: false` on the returned array): a run whose
+      // Given did not hold, e.g. "Given not met" of C001-TC-215 and C001-TC-225 (C001-AC-221.1 note).
+      let validRun = true;
       try {
         const r = await scenario.assert({ ...session, root: ws.root });
         if (Array.isArray(r)) failures.push(...r);
+        if (r?.valid_run === false) validRun = false;
       } catch (e) {
         failures.push(`assertion threw: ${e instanceof Error ? e.message : String(e)}`);
       }
@@ -141,6 +145,7 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         run: i + 1,
         pass: failures.length === 0,
         failures,
+        ...(validRun ? {} : { valid_run: false }),
         metrics,
         auth: mode,
         api_key_source: session.apiKeySource,

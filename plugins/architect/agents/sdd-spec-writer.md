@@ -15,8 +15,10 @@ user-stories, ears-requirements and nfr-catalogue skills.
 - Work from the approved ideation and the decisions it cites; refer to them by ID. Link, don't
   summarise.
 - Full profile: one capability folder per capability with `stories.md`, `requirements.md` and
-  `acceptance.md`; start every file from the plugin templates
-  (`${CLAUDE_PLUGIN_ROOT}/templates/<profile>/…`). Lite profile: the sections of `spec.md`.
+  `acceptance.md`. Lite profile: the sections of `spec.md`. Start every file from its template,
+  printed by `sdd template show <profile>/<path>` (`<profile>` is the change's profile in
+  `change.md`, for example `sdd template show lite/10-spec/spec.md`); `sdd template list <profile>`
+  lists the paths. Never read the plugin's files.
 - Brownfield or mixed change: every requirement has a Delta; MODIFIED, REMOVED and RENAMED cite
   the living-spec ID and the cartographer's evidence.
 - Every new term or system name goes into `40-domain/glossary-delta.md` before you use it.

@@ -1,6 +1,7 @@
-// C001-TC-215 — verifies C001-TS-215 (C001-AC-213.2, C001-REQ-213): a blocking question interrupts
-// unattended mode. In unattended spec drafting of a brownfield change, the cartographer returns a question
-// with "blocking": true; the conductor asks it (AskUserQuestion) before dispatching any further author.
+// C001-TC-215 — verifies C001-TS-215 (C001-AC-213.2, C001-REQ-213; C001-REQ-221): a blocking question
+// interrupts unattended mode. In unattended spec drafting of a brownfield change, the cartographer's hand-back
+// holds a question with "blocking": true and arrives while the spec-writer still runs; the conductor asks it
+// (AskUserQuestion) after the arrival and before its turn ends, with no Agent call between.
 // Reworked for CHG-001 D-013: the blocking question used to be planted in a stand-in's scripted hand-back,
 // which the real cartographer never reads. The real cartographer runs now (architectReal), and the
 // repository itself holds a question only P-01 can settle: the shop has two live checkouts whose totals
@@ -9,11 +10,14 @@
 // discount before tax" without naming one. Which checkout is in scope decides the entry points of the
 // change, so the question is blocking under C001-IF-05 `questions.md` §1 criterion 1 (scope), even when
 // the cartographer surveys both checkouts (CHG-001 D-017; the cartographer's flag alone is C001-TS-223).
-// The assert reads the real hand-back: if the cartographer returned no blocking question, the case's Given
-// did not occur and the run fails with "Given not met" (distinct from a conductor failure).
-import { askUserQuestions, checker, dispatches, handback, handbackQuestions } from "../harness/assert.mjs";
+// Revised for D-019 (C001-T-083): the checks are the arrival-to-ask checks of C001-AC-221.1, shared with
+// C001-TC-225 (arrival.mjs), on the terms of its note. In the t082-d018 trace the hand-back arrived at 235 s
+// and the turn ended at 238 s with the question unasked. A run whose Given does not hold (no cartographer,
+// no blocking question in its hand-back, or the spec-writer not still running at the arrival) is reported
+// "Given not met" with `valid_run` false, distinct from a conductor failure.
 import { architectReal } from "../harness/overlay.mjs";
 import { write } from "../harness/workspaces.mjs";
+import { assertAskOnArrival } from "./arrival.mjs";
 import { specStart } from "./drafting.mjs";
 
 const WEB = `// Web checkout totals: net line prices in EUR cents; VAT is added on the net total.
@@ -84,14 +88,6 @@ function twoCheckouts(root) {
   write(root, "tests/totals.test.ts", TESTS);
 }
 
-// Words of 5+ letters of a question, to recognise it when the conductor rewords it for AskUserQuestion.
-const words = (s) => [...new Set(String(s).toLowerCase().match(/[a-z]{5,}/g) ?? [])];
-const carries = (asked, q) => {
-  const w = words(q.question);
-  const a = String(asked).toLowerCase();
-  return w.length > 0 && w.filter((x) => a.includes(x)).length / w.length >= 0.5;
-};
-
 export default {
   id: "TS-215",
   title: "Blocking question interrupts unattended mode",
@@ -104,23 +100,7 @@ export default {
   // before it reached the cartographer (t063-d013, 2026-10-23).
   maxTurns: 30,
   prompt: "Draft the spec of CHG-001 unattended, I'll review at the gate.",
-  assert({ transcript }) {
-    const { failures, check } = checker();
-    const d = dispatches(transcript);
-    const carto = d.find((x) => x.type.endsWith("sdd-cartographer"));
-    check(carto, `cartographer not dispatched (dispatched: ${d.map((x) => x.type).join(", ") || "none"})`);
-    if (!carto) return failures;
-    const back = handback(transcript, carto);
-    const blocking = handbackQuestions(back?.text).filter((q) => q.blocking === true);
-    if (!back || blocking.length === 0) {
-      check(false, `Given not met: the cartographer returned no blocking question (hand-back: ${back ? JSON.stringify(back.text.slice(-300)) : "none"})`);
-      return failures;
-    }
-    const answers = transcript.filter((r) => r.type === "harness" && r.event === "answer" && r.t > back.t);
-    const asked = answers.find((r) => r.questions.some((aq) => blocking.some((q) => carries(aq.question, q))));
-    check(asked, `the blocking question was not asked: ${blocking.map((q) => q.id ?? q.question).join(", ")} (asked: ${askUserQuestions(transcript).flatMap((c) => c.questions.map((q) => q.question)).join(" | ") || "none"})`);
-    const later = d.filter((x) => x.t > back.t);
-    for (const x of later) check(asked && x.t > asked.t, `${x.type} dispatched before the blocking question was asked`);
-    return failures;
+  assert({ transcript, log }) {
+    return assertAskOnArrival("TS-215", { transcript, log });
   },
 };
