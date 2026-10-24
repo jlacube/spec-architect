@@ -1796,6 +1796,37 @@ failure. The session is no run and has no result record; before the error reache
 `evals/harness/run.mjs` books R in a spend ledger entry, its only record of the cost (first row;
 critic CR-113). The rows run on mock timers, so the 30 s and the 5 s take no real time.
 
+## C002-REQ-645
+
+#### C002-AC-645.1 — A Claude Code session ends with `check_decided` once its row's stop condition holds, and runs to its caps otherwise
+```gherkin
+Scenario Outline: C002-TS-706 — early stop when the row's check is decided
+  Given the <runner> with <stub>, on mock timers
+  And a case row without "maxTurns" and "maxBudgetUsd", so that the caps are 30 turns and 0.50 USD, whose "stopWhen" <condition>
+  When the runner runs one eval session of that row
+  Then <outcome>
+  Examples:
+    | runner                  | stub | condition | outcome |
+    | Claude Code eval runner | the Agent SDK stub of C002-TS-702, which answers each usage request 100 ms after it is sent, asks one AskUserQuestion in the third model call, and after an interrupt sends a permission request for the tool "Write" and streams at once a result message with "subtype" "error_during_execution" and "total_cost_usd" 0.35 | returns false until the "answer" record of that AskUserQuestion, and true from it on | the transcript holds one record {"event":"check-decided","usd":R}, R being the highest cost read by then, and no "cap" or "cap-close" record; the runner sent "interrupt()" once and then closed the query; the request for "Write" was denied with "Write is not available in this evaluation"; and the result record gives "metrics.result_subtype" "check_decided", "metrics.cost_usd" 0.35, the stub's cost after the interrupt, from a result with "is_error" false |
+    | Claude Code eval runner | the Agent SDK stub of C002-TS-702, which answers each usage request 100 ms after it is sent, asks one AskUserQuestion in the third model call, and streams at once a result message with "total_cost_usd" 0.60 after an interrupt | returns false at every call | the session runs to the 0.50 USD cap: the transcript holds one "cap" record and no "check-decided" record, and the result record gives "metrics.result_subtype" "error_max_budget_usd" |
+    | Claude Code eval runner | the Agent SDK stub of C002-TS-702, which answers each usage request 100 ms after it is sent, asks one AskUserQuestion in the third model call, and streams at once a result message with "total_cost_usd" 0.60 after an interrupt | throws an error at its first call | the transcript holds one record {"event":"stop-when-error","error":TEXT}, TEXT being the error's text, the runner calls the condition no more, and the session runs to the 0.50 USD cap: one "cap" record, no "check-decided" record, and "metrics.result_subtype" "error_max_budget_usd" |
+    | Claude Code eval runner | the Agent SDK stub of C002-TS-702, which answers each usage request 100 ms after it is sent, asks one AskUserQuestion in the seventh model call, and streams at once a result message with "total_cost_usd" 0.60 after an interrupt | returns false until the "answer" record of that AskUserQuestion, and true from it on | the 0.50 USD reading of the fifth model call stops the session first: the transcript holds one "cap" record and no "check-decided" record, the condition is not called after the "cap" record, and the result record gives "metrics.result_subtype" "error_max_budget_usd" |
+    | OpenCode eval runner    | a stub host that never ends a session and gives a cost of 0.10 USD in the step-finish event of each turn | returns true at every call | the condition is never called, the transcript holds no "check-decided" record, and the session ends after 5 turns with the "end_reason" "spend cap" |
+    | Copilot CLI eval runner | a stub host that never ends a session and counts 1 AI Credit per turn, below its "--max-ai-credits" limit of 50 | returns true at every call | the condition is never called, the transcript holds no "check-decided" record, and the session ends after 30 turns with the "end_reason" "turn cap" |
+```
+
+A case row may say when its check is decided, and the Claude Code eval runner then ends the session
+as at the spend cap, without the `cap` records, with the distinct end `check_decided` and the cost
+read after the interrupt (C002-IF-010 §2 `stopWhen`, §2.2 Early stop when the check is decided,
+items 1 … 4; defect D-034; P-01 answer to Q-early-stop-01, "Stop when checked"). The runner calls the
+condition after each record it appends and acts on the first `true` while the query is open and no
+stop has begun, so a cap reached first keeps the cap end (fourth row; item 2). An end with
+`check_decided` is a run, neither a failure nor an end at the spend cap; the row's `assert` decides
+the outcome (item 5). A condition that throws is written once as `stop-when-error` and leaves the
+session to its caps (third row; item 1). The OpenCode and Copilot CLI runners build the transcript
+only after the session, so they ignore `stopWhen` (last two rows; item 7). No injection row gives
+`stopWhen` (item 8).
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -1839,6 +1870,7 @@ critic CR-113). The rows run on mock timers, so the 30 s and the 5 s take no rea
 | C002-REQ-642 | TS-703, TS-705 | TS-703 (`--auth api-key`; a cap-exception row at 1.50 USD; a row of 40 turns), TS-705 (OpenCode and Copilot CLI stub hosts: no cap but `--max-ai-credits`), TS-614 (Claude Code rows: `maxTurns` and no `maxBudgetUsd`), TS-679 (cap exceptions on Claude Code: no spend cap to the stub) | n/a | n/a | n/a | n/a | TS-702 (a tool and a subagent requested after the cap denied with the usual message, no text about a budget) |
 | C002-REQ-643 | TS-702 | TS-702 (`--auth api-key`; a session that ended by itself at 0.55 USD keeps `success` with no interrupt), TS-614 (Claude Code spend-cap rows), TS-679 (stop at the 1.50 USD reading of a rerun cap, not at 0.50 USD) | TS-702 (stop at the first reading at the 0.50 USD cap; a subagent's parallel call after it counted in full; no result within 30 s of the interrupt) | n/a: a failed reading is C002-REQ-644 (C002-TS-704) | n/a | TS-702 (queue rule: no request for a repeated message ID, at most one open, the IDs that arrive while one is open coalesced into one follow-up) | TS-702 (a tool and a subagent requested after the cap denied; the recorded cost never cut to the cap) |
 | C002-REQ-644 | TS-704 | TS-704 (a refused request, a negative cost, an answer without the cost) | TS-704 (no answer within 30 s; the 5 s settle time) | TS-704 (`claude-code spend check failed: …`, the ledger entry, no result record) | n/a | TS-704 (a refusal at the session's own end and at the runner's close, both ignored, the result kept) | n/a |
+| C002-REQ-645 | TS-706 | TS-706 (a condition never true: the session runs to the cap; the OpenCode and Copilot CLI runners ignore `stopWhen`) | TS-706 (the cap reached before the condition: the cap end stays, the condition not called after the stop began) | TS-706 (a condition that throws: one `stop-when-error` record, then the caps) | n/a | TS-706 (one interrupt, then the close; the condition acted on once, while the query is open) | TS-706 (a permission request after the `check-decided` record denied with the usual message) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit except the caps
 (C002-NFR-105) and the release thresholds (0 differences, 0 instructions acted upon). *Error*: rules on
