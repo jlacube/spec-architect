@@ -190,10 +190,10 @@ agent definitions C001-IF-09, commands C001-IF-10.
 - **Priority:** Must
 - **Acceptance:** C001-AC-1123.1
 
-### C001-REQ-1124 — Templates through the CLI only
+### C001-REQ-1124 — Plugin files only through the CLI or skill bodies
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF an agent, command or skill body names a path under `${CLAUDE_PLUGIN_ROOT}/templates/`, THEN THE plugin structure check SHALL report error `PLG-TMPL-001`.
-- **Rationale:** D-019 item 2; Q-t082-bugs-01; C001-IF-08 §4
+- **Statement:** IF an agent, command or skill body names a plugin file to read (a `${CLAUDE_PLUGIN_ROOT}/` path other than `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`, a path containing `references/`, or a relative link target that resolves to a file of the plugin), THEN THE plugin structure check SHALL report error `PLG-TMPL-001`.
+- **Rationale:** D-019 item 2; Q-t082-bugs-01; C001-IF-08 §4; critic CR-32
 - **Stories:** C001-US-1107
 - **Priority:** Must
 - **Acceptance:** C001-AC-1124.1

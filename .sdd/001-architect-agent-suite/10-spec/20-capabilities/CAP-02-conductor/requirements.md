@@ -82,7 +82,7 @@ contract C001-IF-05.
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor holds questions from more than one specialist, THE conductor SHALL merge questions with the same `topic` and intent into one, and order rounds so that every question with `blocking: true` is asked before any non-blocking question.
 - **Rationale:** OA-10; IDEA-§15.4
-- **Note:** Merging covers the questions the conductor holds when it forms a round; it is no reason to wait for specialists that are still running (C001-IF-05 `questions.md` §2; C001-REQ-221; D-019).
+- **Note:** Merging and ordering cover the questions the conductor holds when it forms a round; they are no reason to wait for specialists that are still running (C001-IF-05 `questions.md` §2; C001-REQ-221; D-019).
 - **Stories:** C001-US-204
 - **Priority:** Must
 - **Acceptance:** C001-AC-209.1
@@ -115,6 +115,7 @@ contract C001-IF-05.
 - **Pattern:** state-driven
 - **Statement:** WHILE unattended drafting is active, THE conductor SHALL stop and wait for P-01 when it reaches a gate or a question with `blocking: true`.
 - **Rationale:** IDEA-P-14; gates are never automatic
+- **Note:** The conductor reaches a question with `blocking: true` when the specialist hand-back that holds it arrives, and asks it then per C001-REQ-221 (C001-IF-05 `questions.md` §2; critic CR-34).
 - **Stories:** C001-US-207
 - **Priority:** Must
 - **Acceptance:** C001-AC-213.1, C001-AC-213.2
