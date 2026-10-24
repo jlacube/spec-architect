@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-24T14:25:51Z",
+  "generated_at": "2026-10-24T14:38:47Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -250,8 +250,8 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "in-revision",
-          "approved_hash": "sha256:4bae72a8e3eba18ccfbd702bd19ed94c479d82d2786a3986360c891a840af152",
+          "status": "approved",
+          "approved_hash": "sha256:43caf1c1c67b4ec9bb55d8c37809218d02c703509b3afe5aa216e687632d0887",
           "approved_at": "2026-10-24",
           "approved_by": "jerome.lacube"
         },
@@ -265,7 +265,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 70,
+          "total": 71,
           "done": 64,
           "blocked": 0,
           "in_progress": 0
@@ -1408,6 +1408,72 @@
           "gate": "10-spec",
           "date": "2026-10-24",
           "note": "Approve with waivers"
+        },
+        {
+          "item": "C002-REQ-211",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-212",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-213",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-503",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-504",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-505",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-506",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-507",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-601",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-DOD-G-01",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-TS-634",
+          "gate": "10-spec",
+          "date": "2026-10-24",
+          "note": "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise"
         },
         {
           "item": "C002-REQ-211",
