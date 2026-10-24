@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:f17a049d8b77c6f321e3682a650a04c52a70794f04efaf659b8117ce8a747949", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:c230f9d78a5b676624d57853410130a03d48a668edc1f06868c0d44f5769f8b6", approved_at: 2026-10-23, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:058fdf86c4075398ec2b078f22ab2fd057348558e9e7851e1cf36a06818aaa7d", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -233,3 +233,4 @@ waivers:
 | 2026-10-24 | G2 (spec) | **Revise** | "Revision for CHG-002 D-030: cap exceptions for the CHG-001 release eval cases TS-223, TS-224 and any other C001-T-072 case over the default cap (P-01 Q-cap-exc-01)" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-030: caps.mjs rows and test" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved with waivers** | "Approve with waivers" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-10-24 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
