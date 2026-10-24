@@ -144,7 +144,7 @@ decides it, bills the prepaid Anthropic API key and draws on no OpenRouter pool.
 | Copilot release evidence: the Copilot CLI case set of C002-IF-010 §5.1 for C002-TC-615 (24 sessions, C002-TC-359 among them), with `--copilot-model claude-opus-5.5=claude-sonnet-5.5` | release evidence, Copilot column | Copilot subscription, Copilot pool | C002-T-054 step 3 (after C002-T-066) |
 | VS Code checklist runs, including the Copilot toy change to G1 and the delegated edit of C002-TC-358 | release evidence, Copilot column | Copilot subscription | C002-T-050 steps 2 and 3 (P-01) |
 | Copilot clean-profile run to the first question | release evidence, Copilot column | Copilot subscription | C002-T-057 step 2 (P-01) |
-| Paid check of the D-031 Claude Code spend cap: `TS-216` at its own 0.50 USD cap and `TS-224` at 1.50 USD with `--cap-exception`, 2 sessions, about 3 USD notional; neither counts toward a pass rule (P-01 answer to Q-budget-hide-01) | verification tooling (fix) | Claude subscription | C002-T-069 step 6 |
+| Paid check of the D-031 Claude Code spend cap: `TS-216` at its own 0.50 USD cap and `TS-224` at 1.50 USD with `--cap-exception` (an allowed use of its rule-1 row, plan critic CR-68), 2 sessions, and one `TS-1001` session at a 0.05 USD cap only if `TS-216` stays below its cap (CR-69); about 3 USD notional; none counts toward a pass rule (P-01 answer to Q-budget-hide-01). Repeated before release runs when the SDK or Claude Code version changes (CR-66) | verification tooling (fix) | Claude subscription | C002-T-069 step 6 |
 
 The OpenRouter reserve for the release evidence is spent only by C002-T-049 step 3 and C002-T-051
 step 3. Every other OpenRouter session, including a re-run of C002-T-049 after a fix, draws on the

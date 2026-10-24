@@ -657,8 +657,11 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   (Recommended)", `questions-log.md` round 2026-10-24). The fix task C002-T-069 writes C002-TC-928 …
   930 (C002-TS-702 … 704) and revises the Claude Code rows of C002-TC-614 and C002-TC-679, all on the
   Agent SDK stub, which gains the usage request and `interrupt()`. Its one paid check on the Max plan,
-  about 3 USD notional (one session driven to the cap, and `TS-224` at 1.50 USD), confirms the D-031
-  assumption on the usage request and records the readings. It is no test case: it is evidence of
+  about 3 USD notional (one session driven to the cap, and `TS-224` at 1.50 USD; one `TS-1001`
+  session at a 0.05 USD cap only if the first stays below its cap), confirms the D-031 assumption on
+  the usage request, by a per-model comparison and a back-to-back probe, and records the readings,
+  their latency and the `claude_code_version`. A change of the SDK or Claude Code version repeats it
+  before release runs (plan critics CR-66 … CR-69). It is no test case: it is evidence of
   that step, with no pass rule of a tier (`50-tasks/T-069-fix-claude-code-spend-cap-hidden-budget.md`
   step 6). The CHG-001 reruns of `TS-223` and `TS-224` (C001-T-082) and the release evals
   (C001-T-072) run after it.

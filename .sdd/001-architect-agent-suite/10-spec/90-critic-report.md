@@ -206,5 +206,5 @@ Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-0
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-30 | major | TS-224, AC-208.2 | "hand-back" can be read as the Agent tool result (launch notice), so the Then passes with nothing checked | bound by the session's last result; a hand-back is the specialist's last assistant message (parent_tool_use_id = the Agent call) | open |
-| CR-31 | minor | TS-224 | an unparsable block reads as no questions, so a blocking naming question can pass | an unparsable questions block fails; TC-224 reports per run whether and by whom it was raised | open |
+| CR-30 | major | TS-224, AC-208.2 | "hand-back" can be read as the Agent tool result (launch notice), so the Then passes with nothing checked | bound by the session's last result; a hand-back is the specialist's last assistant message (parent_tool_use_id = the Agent call) | fixed (TS-224 Then bounded by the session's last result message; note defines the hand-back as the last assistant message whose `parent_tool_use_id` is the conductor's Agent call to a specialist, and excludes the Agent tool result) |
+| CR-31 | minor | TS-224 | an unparsable block reads as no questions, so a blocking naming question can pass | an unparsable questions block fails; TC-224 reports per run whether and by whom it was raised | TS-224 part fixed (Then: every questions block in a specialist hand-back parses as JSON; the note says an unparsable block fails the scenario); TC-224 per-run report: planner |

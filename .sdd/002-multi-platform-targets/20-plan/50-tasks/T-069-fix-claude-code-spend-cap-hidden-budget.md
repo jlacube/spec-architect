@@ -46,6 +46,7 @@ and C001-TC-224) and C001-T-072 wait for it (`../handoff.md`, Cross-change depen
 | modify | `evals/harness/session.mjs` › `runClaudeCodeSession`, the stop | (item 4) at the first comparison where R ≥ the cap, in this order: the harness record `{ "event": "cap", "reason": "spend cap", "usd": <R>, "cap_usd": <cap> }`; every later permission request denied, AskUserQuestion included, with the usual `<tool> is not available in this evaluation`; `interrupt()` once, the stream read until a `result` message after the interrupt or 30 s; then `abortController.abort()`. An `error_max_turns` result keeps its subtype |
 | modify | `evals/harness/session.mjs` › `runClaudeCodeSession`, the result | (items 5, 6) the session's `result` is the last `result` message with `subtype` `error_max_budget_usd`, `is_error` `true` and `total_cost_usd` the recorded cost (the final R, never cut to the cap), its other fields kept; with no `result` message, a result with these three fields, `num_turns` `null` and `modelUsage` `{}`. The transcript keeps the SDK's own messages as they came |
 | modify | `evals/harness/session.mjs` › `runClaudeCodeSession`, the failed reading | (item 8) a refused usage request, or an answer without a finite `session.total_cost_usd` of at least 0, stops the session as at the cap. `runSession` then rejects with `claude-code spend check failed: <reason>; notional cost read <R> USD`, as it does for a key source that does not match the auth mode (C002-T-060), and no result record is written |
+| modify | `evals/harness/session.mjs` › `runClaudeCodeSession`, and the result records of `evals/harness/run.mjs` | (plan critic CR-66, conductor decision) each Claude Code session's result record gives `claude_code_version`, the value that the SDK's `init` message carries (`claude_code_version`), or `null` when the message gives none. The version is recorded, never refused. A version other than the one of the latest C002-T-069 paid check means the check is repeated before release runs (C002-RISK-039) |
 | modify | `evals/harness/runners/sdk-stub.mjs` | the usage request with its per-row answers (cost of the model calls ended so far, refusal, `-1`, no `session.total_cost_usd`), `interrupt()` and the close recorded, assistant messages repeated per content block with one ID per call, a subagent call in parallel, and the per-row behaviour after the interrupt (test plan §2 sdk-stub). It records `maxBudgetUsd` and `taskBudget` when given, so the tests can show that none is passed. It ends a session itself only at `maxTurns` |
 | modify | `tests/integration/cap06/claude-runner.test.ts` | the three Claude Code rows of C002-TC-614 as revised (no `maxBudgetUsd` to the stub, the runner's stop at 0.50 USD); C002-TC-928 (four rows), C002-TC-929 (four rows), C002-TC-930 (three rows); the supporting test of C002-TC-930 on the pinned SDK |
 | modify | `tests/integration/cap06/cap-exceptions.test.ts` | the Claude Code session rows of C002-TC-679: the cap in force applied by the runner and no `maxBudgetUsd` or `taskBudget` to the stub |
@@ -56,9 +57,12 @@ and C001-TC-224) and C001-T-072 wait for it (`../handoff.md`, Cross-change depen
   `TS-224` with `--cap-exception`, which needs its row, and both tasks edit `cap-exceptions.test.ts`.
 - G2 re-approved after the D-031 revision, and G3 after this plan revision (gate records of
   `../../change.md`).
-- The Agent SDK stays pinned at 0.3.296 (`evals/package.json`) and Claude Code at 2.1.299 (the
-  desktop-bundled binary of `CLAUDE_CODE_EXECPATH`), the versions that the D-031 evidence and
-  assumption name (C002-RISK-039).
+- The Agent SDK stays pinned at 0.3.296 (`evals/package.json`). Claude Code is the desktop-bundled
+  binary of `CLAUDE_CODE_EXECPATH`, 2.1.299 when the D-031 evidence and assumption were taken; the
+  harness cannot pin it. So every result records `claude_code_version`, and a change of either
+  version repeats the paid check of step 6 before any release run of the Claude Code subscription
+  class (C001-T-072, C002-T-048 step 5) (plan critic CR-66; C002-RISK-039). The version is recorded,
+  never refused.
 - For step 6: E-CC with `--auth subscription` on P-01's Max plan. P-01 watches the plan's usage limits
   (test plan §4.1 "Eval auth"). The sessions spend from no pool (rule 7).
 
@@ -86,22 +90,51 @@ and C001-TC-224) and C001-T-072 wait for it (`../handoff.md`, Cross-change depen
      turns, without `--cap-exception`. Its latest session ended at that cap (C002-IF-010 §2.2
      evidence table).
    - **One session at 1.50 USD:** `TS-224` (`evals/cap02/TS-224.eval.mjs`) with `--cap-exception`, its
-     rule-1 cap.
+     rule-1 cap. This one session is an allowed use of the `TS-224` rule-1 row of C002-IF-010 §2.2,
+     beside C001-T-082 step 4 and C001-T-072 (plan critic CR-68, the conductor's decision within
+     P-01's approved spend of Q-budget-hide-01; the spec owners name C002-T-069 step 6 in that row,
+     C002-NFR-105 and C002-DOD-012). No other session of the row runs in this task.
+   - **Fallback if `TS-216` does not reach the cap** (plan critic CR-69). If its session ends below
+     0.50 USD, items (c) and the stop part of (a) are not shown. Then run **one** further session of a
+     cheap case, `TS-1001` (`evals/cap10/TS-1001.eval.mjs`, 0.094 USD in the Q-cap-exc-02
+     measurement), through the real Agent SDK at a cap of 0.05 USD. The session is started by a
+     one-off script, kept out of the shipped code, that calls `runSession` for that row with
+     `maxBudgetUsd` 0.05 and `--auth subscription`. A cap below 0.50 USD needs no exception
+     (C002-IF-010 §2.2), and no case file changes. It is not a run of `TS-1001`. If that session also ends below its cap, the task
+     report says so and the stop stays shown by C002-TC-928 only. The conductor then decides with
+     P-01 whether a third session runs. The task makes at most three sessions, within the 3 USD
+     notional.
 
-   Neither session is a run of any tier: both count toward no pass rule of C001-T-082 or C001-T-072.
+   Neither session is a run of any tier: none counts toward a pass rule of C001-T-082 or C001-T-072.
    From the transcripts and result records, the task report states:
-   - **(a) The D-031 assumption of item 8:** whether every usage request was answered during a turn,
-     whether any answer came with a model call (a cost that rose with no assistant message between
-     two readings), and how the last reading before each `result` message compares with that
-     message's `total_cost_usd`.
+   - **(a) The D-031 assumption of item 8** (revised for plan critic CR-67): whether every usage
+     request was answered during a turn, and how the last reading before each `result` message
+     compares with that message's `total_cost_usd`. Whether a usage request itself makes a model
+     call, told in two ways:
+     - **Per model, between readings.** `session.model_usage` of each answer is compared, model by
+       model, with the previous answer's. A model whose usage rose with no assistant message of that
+       model between the two readings marks a model call that the request caused. The report lists
+       each such rise and tells it from the CLI's own side calls (the `claude-haiku-5-5` entry of a
+       result) by when it occurs: with each request, or not.
+     - **Direct probe.** Once in each session, at a point where no message is pending, the runner
+       sends two usage requests back to back, the second as soon as the first is answered and with no
+       message streamed between them. Both answers must give the same `session.total_cost_usd` and
+       the same `session.model_usage`. A difference refutes the assumption. The probe is a
+       check-only mode of this step, which the shipped runner does not use.
    - **(b) Frequency and latency:** the number of usage requests sent and answered, the time from
-     each request to its answer (median and largest), and the readings per model call.
+     each request to its answer (median, 95th percentile and largest), the readings per model call,
+     and any request that failed. The usage request reads the claude.ai usage endpoint, so this is
+     the measured basis of C002-RISK-039's bound.
    - **(c) The stop:** for the session that reached the cap, R at the cap record, the recorded cost,
      the overshoot, and whether a `result` message came within 30 s of the interrupt.
-   - **(d) No budget statement:** the model text of every message of the session agent and of each
-     subagent, searched for `budget`, `USD`, `spending limit`, `remaining`, `$` followed by a figure,
-     and the denial text `Budget limit reached`. Every hit is quoted with its context. A hit that
-     refers to a session budget the case did not give fails the check.
+   - **(d) No budget or turn statement** (revised for plan critic CR-69): the model text of every
+     message of the session agent and of each subagent is searched for these terms. Spend: `budget`,
+     `USD`, `spending limit`, `remaining`, `$` followed by a figure, and the denial text `Budget limit
+     reached`. Turns: `turn`, `turns left`, `turn limit`, `max turns`. Every hit is quoted with its
+     context. A hit that refers to a session budget or a turn limit the case did not give fails the
+     check.
+   - **(e) Versions:** the `claude_code_version` and the SDK version of each session, which later
+     sessions compare against (plan critic CR-66).
 
    A refuted assumption, or a budget statement, is a spec defect against C002-REQ-643 or
    C002-REQ-642 (`sdd defect add --ref <REQ>`): the task stays in progress, and the CHG-001 tasks keep
@@ -122,6 +155,7 @@ and C001-TC-224) and C001-T-072 wait for it (`../handoff.md`, Cross-change depen
 - [ ] It reads the notional cost from `result` messages and one usage request per new assistant message ID, stops at the first reading at or above the cap (cap record, denial, `interrupt()`, at most 30 s, close), and records `error_max_budget_usd` with the highest cost read; C002-TC-928 (four rows) and the Claude Code rows of C002-TC-614 and C002-TC-679 pass
 - [ ] A failed reading stops the session and rejects `runSession` with `claude-code spend check failed: …`, with no result record; C002-TC-930 (three rows) and its supporting test pass
 - [ ] `npm test` and `npm run check` green
-- [ ] The paid check ran (two sessions, about 3 USD notional, `--auth subscription`), and the task report gives (a) … (d) of step 6 with the result files; no transcript of it shows a budget statement, and the D-031 assumption holds, or a spec defect is raised and the task stays in progress
+- [ ] The paid check ran (two sessions, a third only under the fallback of step 6; about 3 USD notional; `--auth subscription`), and the task report gives (a) … (e) of step 6 with the result files: the per-model comparison and the back-to-back probe, the reading latency and failures, the stop, the search for budget and turn wording, and the versions. No transcript of it shows a budget or turn statement, and the D-031 assumption holds; otherwise a spec defect is raised and the task stays in progress
+- [ ] Every Claude Code result record gives `claude_code_version` (recorded, not refused)
 - [ ] The task report names C001-T-082 and C001-T-072 as waiting for this task
 - [ ] Progress reported: `sdd task set C002-T-069 --status done --commit <sha>`

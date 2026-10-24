@@ -126,11 +126,12 @@ Scenario: C001-TS-224 — no specialist flags a naming preference as blocking
   Given the C001-TS-223 fixture, with the ideation's Design direction reading "A coupon service validates codes; the web checkout applies the discount before tax. The kiosk checkout is out of scope."
   And the ideation's Open questions section reading "Should the new module be named 'coupons' or 'promotions'? No file or interface depends on the name yet."
   When P-01 tells the conductor "Draft the spec of CHG-001 unattended, I'll review at the gate."
-  Then by the end of the conductor's turn the transcript holds at least one specialist hand-back
+  Then the transcript up to the session's last result message holds at least one specialist hand-back
+  And every questions block in a specialist hand-back parses as JSON
   And no question in any specialist hand-back's questions block whose question text or option labels contain both "coupons" and "promotions" (case-insensitive) has "blocking": true
   And every such question has "blocking": false
 ```
-Note: eval-level scenario, run against the real specialists like C001-TS-215. A specialist hand-back is the final message of an Agent call from the conductor to one of the nine specialists of C001-REQ-217. The naming question meets no criterion of C001-IF-05 `questions.md` §1: it decides no code path, entry point or component in scope, and no specialist has to state the name as a fact or an assumption. Any specialist may raise it, or none; the scenario does not require the cartographer to be dispatched or to raise it (D-018). The validity of the questions block against C001-IF-05 is checked by C001-TS-209 and C001-TS-223, not here.
+Note: eval-level scenario, run against the real specialists like C001-TS-215. A specialist hand-back is the last assistant message among the messages whose `parent_tool_use_id` is an Agent call from the conductor to one of the nine specialists of C001-REQ-217; the Agent tool result is not a hand-back, since it can be an asynchronous launch notice. A questions block is a fenced `json questions` block; one that does not parse as JSON fails the scenario. The naming question meets no criterion of C001-IF-05 `questions.md` §1: it decides no code path, entry point or component in scope, and no specialist has to state the name as a fact or an assumption. Any specialist may raise it, or none; the scenario does not require the cartographer to be dispatched or to raise it (D-018). The validity of the questions block against C001-IF-05 is checked by C001-TS-209 and C001-TS-223, not here.
 
 ## C001-REQ-209
 

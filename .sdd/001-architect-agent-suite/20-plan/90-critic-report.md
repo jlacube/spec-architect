@@ -177,5 +177,7 @@ Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-0
 
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
-| CR-27 | minor | T-082, handoff row 59, CHG-002 handoff | cross-change references mismatch (unnamed C002-T-069, "CHG-002 side only") | name C002-T-069, one reason text, drop "CHG-002 side only" | open |
-| CR-28 | minor | TC-224, T-082 target | repeat CR-30's wording | update with the CR-30 fix | open |
+| CR-27 | minor | T-082, handoff row 59, CHG-002 handoff | cross-change references mismatch (unnamed C002-T-069, "CHG-002 side only") | name C002-T-069, one reason text, drop "CHG-002 side only" | fixed: T-082 precondition and handoff row 59 name C002-T-069, one reason text "waits for C002-T-068 (done) and C002-T-069" |
+| CR-28 | minor | TC-224, T-082 target | repeat CR-30's wording | update with the CR-30 fix | fixed: TC-224 and the T-082 target define the hand-back as the specialist's last assistant message (`parent_tool_use_id` = the Agent call, bounded by the last result message); an unparsable block fails; each run reports whether and by whom the naming question was raised |
+
+All findings of this section fixed (planner), 2026-10-24.
