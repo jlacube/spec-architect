@@ -75,7 +75,7 @@ are recommended. `claude plugin validate` stays authoritative (C001-REQ-1117).
 | PLG-CI-001 | Workflows cover 3 OSes and are `workflow_dispatch`-only | C001-REQ-1119 |
 | PLG-EVAL-001 | Eval suite size and spread | C001-REQ-1116 |
 | PLG-MCP-001 | `.mcp.json` declares exactly context7, deepwiki, serena; no ripwire | C001-REQ-1005, 1006, 1108 |
-| PLG-TMPL-001 | No path under `${CLAUDE_PLUGIN_ROOT}/templates/` in agent, command or skill bodies (§4) | D-019 item 2 (CAP-11 requirement to follow) |
+| PLG-TMPL-001 | No path under `${CLAUDE_PLUGIN_ROOT}/templates/` in agent, command or skill bodies (§4) | C001-REQ-1124 (D-019 item 2) |
 
 ## §4 Template access
 
