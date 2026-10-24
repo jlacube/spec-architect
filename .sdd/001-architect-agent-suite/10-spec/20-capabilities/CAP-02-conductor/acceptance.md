@@ -196,7 +196,7 @@ Scenario: C001-TS-215 — blocking question interrupts unattended mode
   Then an AskUserQuestion call that carries the blocking question occurs after the arrival and before the conductor's turn ends
   And no Agent call occurs between the arrival and that AskUserQuestion call
 ```
-Note: eval-level scenario, run against the real specialists. The terms "hand-back", "arrives", "still running", "carries" and "the conductor's turn ends" are defined in the note under C001-AC-221.1. The blocking question comes from the real cartographer, which flags the web-or-kiosk scope question as blocking under the scope criterion of C001-IF-05 `questions.md` §1 (see C001-TS-223; D-017). The Then follows C001-IF-05 `questions.md` §2 (D-019).
+Note: eval-level scenario, run against the real specialists. The terms "hand-back", "arrives", "still running", "carries" and "the conductor's turn ends", and the "Given not met" rule for runs where the Given does not hold, are those of the note under C001-AC-221.1. The blocking question comes from the real cartographer, which flags the web-or-kiosk scope question as blocking under the scope criterion of C001-IF-05 `questions.md` §1 (see C001-TS-223; D-017). The Then follows C001-IF-05 `questions.md` §2 (D-019).
 
 ## C001-REQ-214
 
@@ -281,11 +281,11 @@ Scenario: C001-TS-225 — blocking question asked while another specialist runs,
 Note: eval-level scenario, run against the real specialists; C001-TS-215 is the same rule in unattended drafting. Terms, read from the session transcript:
 - *Hand-back* and *questions block*: as defined in the note under C001-TS-224. The blocking question is a question with `"blocking": true` in a questions block of the cartographer's hand-back.
 - *Arrives*: the moment the conductor receives the hand-back. For an asynchronous Agent call this is the `task_notification` system message whose `tool_use_id` is that call; for a synchronous call it is the call's tool result that is not a launch notice.
-- *Still running*: the conductor's Agent call to the spec-writer occurs before the arrival, and its own arrival does not occur before it.
+- *Still running*: at least one Agent call from the conductor to the spec-writer occurs before the arrival, and for every Agent call to the spec-writer made before the arrival, the call's own arrival does not occur before it.
 - *Carries*: the question text of one AskUserQuestion question contains at least half of the distinct words of five or more letters in the blocking question's text (case-insensitive).
 - *The conductor's turn ends*: the first `result` message after the arrival.
 
-When the Given does not hold (the cartographer is not dispatched, its hand-back holds no blocking question, or the spec-writer is not still running at the arrival), the run fails as "Given not met", distinct from a conductor failure.
+When the Given does not hold (the cartographer is not dispatched, its hand-back holds no blocking question, or the spec-writer is not still running at the arrival), the run is recorded as "Given not met" with `valid_run` false, distinct from a conductor failure. Such a run is replaced once by a new session; a second "Given not met" run in its place counts as a failure (conductor decision on critic finding CR-35).
 
 ## Coverage table
 

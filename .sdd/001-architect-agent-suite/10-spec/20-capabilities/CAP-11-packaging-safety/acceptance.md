@@ -321,16 +321,24 @@ Scenario: C001-TS-1124 — Claude Code below the minimum version
 
 ## C001-REQ-1124
 
-#### C001-AC-1124.1 — Template paths in bodies detected
+#### C001-AC-1124.1 — Plugin files named in bodies detected
 ```gherkin
-Scenario: C001-TS-1126 — template path under the plugin root in an agent body
-  Given a copy of the shipped plugin in which "agents/sdd-spec-writer.md" gains the line "Read `${CLAUDE_PLUGIN_ROOT}/templates/lite/10-spec/spec.md` before drafting."
-  And the same file gains the line "Run `sdd template show lite/10-spec/spec.md` before drafting."
+Scenario Outline: C001-TS-1126 — plugin file named in a body: <construct>
+  Given a copy of the shipped plugin in which "<file>" gains <addition>
   When the plugin structure check runs on the copy
-  Then it reports error "PLG-TMPL-001" for "agents/sdd-spec-writer.md" and the line naming "${CLAUDE_PLUGIN_ROOT}/templates/"
-  And it reports no other "PLG-TMPL-001" finding
+  Then the check's "PLG-TMPL-001" findings are exactly <findings>
+
+  Examples:
+    | construct | file | addition | findings |
+    | template path under the plugin root | agents/sdd-spec-writer.md | the line "Read `${CLAUDE_PLUGIN_ROOT}/templates/lite/10-spec/spec.md` before drafting." | one error for "agents/sdd-spec-writer.md" at the added line |
+    | other plugin-root path | skills/phase-spec/SKILL.md | the line "Read `${CLAUDE_PLUGIN_ROOT}/skills/sdd-conventions/SKILL.md` first." | one error for "skills/phase-spec/SKILL.md" at the added line |
+    | references/ path | skills/interview-protocol/SKILL.md | the line "Validate the block against `references/questions.schema.json`." | one error for "skills/interview-protocol/SKILL.md" at the added line |
+    | relative link into the plugin | commands/specify.md | the line "See [the conventions](../skills/sdd-conventions/SKILL.md)." | one error for "commands/specify.md" at the added line |
+    | the CLI path only | agents/sdd-spec-writer.md | the line "Run `node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs lint 001`." | none |
+    | template through the CLI | agents/sdd-spec-writer.md | the line "Run `sdd template show lite/10-spec/spec.md` before drafting." | none |
+    | hooks.json is not a body | hooks/hooks.json | a SessionStart hook whose command is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs" hook session-start "${CLAUDE_PLUGIN_ROOT}/templates"` | none |
 ```
-Note: the copy differs from the shipped plugin only by the two added lines, so the last step also shows that the shipped plugin's agent, command and skill bodies name no path under `${CLAUDE_PLUGIN_ROOT}/templates/`, and that a `sdd template show` line is not reported (C001-IF-08 §4).
+Note: one row per construct of C001-IF-08 §4. Each copy differs from the shipped plugin only by the row's addition, so a row with findings "none" also shows that the shipped plugin's bodies have no PLG-TMPL-001 finding. The hooks.json row adds a `${CLAUDE_PLUGIN_ROOT}/` path other than the CLI, so it would be reported if `hooks/hooks.json` were read as a body.
 
 ## Coverage table
 
@@ -358,7 +366,7 @@ Note: the copy differs from the shipped plugin only by the two added lines, so t
 | C001-REQ-1121 | TS-1122 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-1122 | TS-1123 | n/a | n/a | TS-1123 | n/a | n/a | n/a |
 | C001-REQ-1123 | TS-1124 | n/a | TS-1124 (version) | TS-1124 | n/a | n/a | n/a |
-| C001-REQ-1124 | TS-1126 | TS-1126 (`sdd template show` line not reported) | n/a | TS-1126 | n/a | n/a | n/a |
+| C001-REQ-1124 | TS-1126 | TS-1126 (CLI path, `sdd template show`, hooks.json not reported) | TS-1126 (`${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs` is the one allowed root path) | TS-1126 (templates, other root path, references/, relative link) | n/a | n/a | n/a |
 
 Per-column n/a reasons: as in CAP-05. Concurrency is n/a because guards are stateless
 per call.
