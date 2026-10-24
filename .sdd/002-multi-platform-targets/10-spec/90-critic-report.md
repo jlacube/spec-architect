@@ -1441,3 +1441,19 @@ Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-0
 | CR-111 | minor | REQ-611, coverage row, glossary | still say the Agent SDK applies the cap | point to IF-010 §2.2 Claude Code spend cap | architecture part fixed (architect: §6.1 Performance and cost names the Claude Code check by the runner and points to IF-010 §2.2 Claude Code spend cap); the coverage row is the C002-REQ-611 row of the CAP-06 `acceptance.md` coverage table ("spend cap through the Agent SDK's `maxBudgetUsd`"), fixed (test-designer: the REQ-611 row names the runner's spend cap and IF-010 §2.2 Claude Code spend cap); REQ-611 and the glossary fixed (spec-writer: the REQ-611 rationale and the glossary rows "Spend cap" and "Claude Code subscription class" point to IF-010 §2.2 "Claude Code spend cap", the Agent SDK getting no spend cap) |
 | CR-112 | minor | REQ-643, REQ-644, US-603/604 | Claude-Code-only REQs trace to OpenCode/Copilot stories | trace to a Claude Code story or extend US-603 | fixed (spec-writer: new story C002-US-608, eval sessions capped without a budget shown to the model, owns REQ-642 … REQ-644; REQ-643 and REQ-644 no longer trace to US-603 or US-604; REQ-642 traces to all three) |
 | CR-113 | minor | IF-010 item 8, §4.1 Ledger | a rejected session after spending leaves no ledger entry | write R into a ledger entry before rethrowing | interface fixed (architect: IF-010 §2.2 item 8: the rejection's error carries R as `costUsd`; `run.mjs` appends a spend ledger entry (`host` `claude-code`, `provider` `claude-max` or `anthropic-key`, `cost_usd` R, `caps_usd`, `cost_source` `claude-code spend check failed`, `valid_run` false, `pass` false, `result` null, `ended_at`) and then rethrows); REQ-644 fixed (spec-writer: the spend ledger entry booked before the rejection); test plan §4.1 Ledger open |
+
+
+## Revision D-033 (2026-10-24)
+
+Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 / Q-cap-level-01. Lint: the 9 waived LINT-DELTA-001 plus LINT-REG-001. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 0 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-114 | blocker | IF-010 §2.2, C001-TS-225, T-070, TC-679 | C001-TS-225 has no cap exception; at 0.50 USD every session stops before the arrival (TS-215 reached 0.507 USD at 88 s, arrival at 234 s) | add a rule-1 row for TS-225 (13 rows) at 3.00 USD (conductor decision, same rule as the other rule-1 rows); update T-070, TC-679, NFR-105, handoff | open |
+| CR-115 | minor | architecture §6.2, IF-010 §2.2, DOD-012 | three spots still say 1.50 USD or omit TS-421-agent | align them | open |
+| CR-116 | minor | IF-010 §2.2, D-033 | the ledger holds no t082-d018 entries and no task writes them; D-033 says 3 passes, there were 5 | assign the entries to C001-T-082 or point at the result records; correct via a gate-log note | open |
+| CR-117 | minor | REQ-115, TS-107/127 | the rework stems from CHG-001 D-019, and PLG-TMPL-001 makes REQ-115 unreachable on shipped sources | record the origin; state REQ-115 as defense in depth | open |

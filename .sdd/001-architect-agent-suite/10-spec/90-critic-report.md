@@ -208,3 +208,19 @@ Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-0
 |---|---|---|---|---|---|
 | CR-30 | major | TS-224, AC-208.2 | "hand-back" can be read as the Agent tool result (launch notice), so the Then passes with nothing checked | bound by the session's last result; a hand-back is the specialist's last assistant message (parent_tool_use_id = the Agent call) | fixed (TS-224 Then bounded by the session's last result message; note: the hand-back is the last assistant text whose `parent_tool_use_id` is the conductor's Agent call to a specialist, else that call's tool result unless it is a launch notice, i.e. contains "Async agent launched"). Decision by the test designer, recommended option of Q-handback-def-01 accepted by the conductor: the critic's suggested definition alone missed T-082 run 1, where the spec-writer's final report came only in the synchronous tool result |
 | CR-31 | minor | TS-224 | an unparsable block reads as no questions, so a blocking naming question can pass | an unparsable questions block fails; TC-224 reports per run whether and by whom it was raised | TS-224 part fixed (Then: every fence named "json questions" in a specialist hand-back parses as JSON, else the scenario fails; the note reads a questions block as the harness does, any "```json" fence whose content is an object with a `questions` key; a parsable but schema-invalid block such as an empty array does not fail TS-224); TC-224 per-run report: planner |
+
+
+## Revision D-019 (2026-10-24)
+
+Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 / Q-cap-level-01. Lint: the 9 waived LINT-DELTA-001 plus LINT-REG-001. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-32 | major | IF-08 §4, REQ-1124, AC-1124.1 | the fix leaves out skills' references/ files (brief-template.md, questions.schema.json), whose reads were denied in 4 t082-d018 sessions; relative links escape PLG-TMPL-001 | serve them through sdd template show or inline them; extend the check to references/ links; scenario | open |
+| CR-33 | minor | IF-08 §4, T-083 | DEC, ADR and OA templates exist only under full/ | state that they are always full/… | open |
+| CR-34 | minor | REQ-209, REQ-213, REQ-221 | REQ-209 note limits merging but not ordering; REQ-213 keeps the ambiguous "reaches" and does not cite REQ-221 | "merging and ordering"; REQ-213 note citing REQ-221 and IF-05 §2 | open |
+| CR-35 | minor | AC-221.1, TS-215, TS-225, ADR-003 | singular spec-writer call; Given-not-met rule only under AC-221.1; such runs count against ≥ 9/10 | "every Agent call to the spec-writer"; cite the rule in TS-215; decide in ADR-003/TC-225 whether such runs count or are replaced | open |

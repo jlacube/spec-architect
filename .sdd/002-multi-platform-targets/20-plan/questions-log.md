@@ -207,3 +207,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Rule-1 rows of the Claude Code subscription class run at 3 USD notional; measure after the CHG-001 D-019 fixes (Recommended) · 2. Keep 1.50 USD
 - **Answer:** P-01: "Raise to $3 (Recommended)"
 - **Extracted instructions:** none
+
+### Q-release-base-01 — CHG-002 release base after the CHG-001 fixes (critic CR-71)
+- **Options:** 1. Retake after the fixes: release from a commit with all CHG-001 fixes; before T-052 re-run the unpaid steps and the ~31 paid OpenCode rows from the general pool (about 5.40 USD of OpenRouter spend) (Recommended) · 2. Release an older release-candidate commit before the CHG-001 fixes, no paid re-run
+- **Answer:** P-01: "Retake after fixes (Recommended)"
+- **Extracted instructions:** none

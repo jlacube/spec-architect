@@ -1077,3 +1077,18 @@ Scope: `git diff 1f704a5 3164267`, against the defect and P-01's Q-budget-hide-0
 | CR-68 | major | T-069 step 6, IF-010 TS-224 row, NFR-105, DOD-012 | the paid check runs TS-224 at 1.50 USD outside the runs its exception allows | name C002-T-069 step 6 (one session) in the TS-224 row, NFR-105 and DOD-012 (conductor decision, within P-01's approved spend) | fixed in the plan (T-069 step 6 and strategy §3a: one `TS-224` session as an allowed use of its rule-1 row); the IF-010 row, NFR-105 and DOD-012 are left to the spec owners |
 | CR-69 | minor | T-069 step 6(c), (d) | search misses turn-cap wording; no fallback if TS-216 doesn't reach the cap | add turn terms; state the fallback | fixed (T-069 step 6(d) adds `turn`, `turns left`, `turn limit`, `max turns`; fallback: one `TS-1001` session at a 0.05 USD cap through a one-off script, at most three sessions) |
 | CR-70 | minor | registry | tasks.total 68 stored, 69 expected | sdd status --write | fixed (conductor: registry refreshed in 5a4bccb) |
+
+
+## Revision D-033 (2026-10-24)
+
+Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 / Q-cap-level-01. Lint: the 9 waived LINT-DELTA-001 plus LINT-REG-001. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-71 | major | T-052, T-055, T-049 step 4, C001-T-083 | the CHG-001 fixes change files the packages are generated from; release evidence must be retaken, the plan doesn't say so | P-01 (Q-release-base-01): retake after the CHG-001 fixes — unpaid steps plus the ~31 paid OpenCode rows from the general pool before T-052 | open |
+| CR-72 | minor | TC-107/127 | test plan rows not updated for the planted lines | fixture name and C001-T-083 in the task cell | open |
+| CR-73 | minor | RISK-038, T-070 | trigger at 1.50 USD stale; no step or rule for re-measuring | trigger at 3.00 USD; C001-T-082 step 4 as the measurement; a rule-1 session ending at 3.00 USD → question to P-01 | open |
