@@ -93,7 +93,18 @@ the session's notional cost read after each assistant message, and records the e
 (`error_max_budget_usd`). So the ledgers, the rules of Sessions of CHG-001 tasks and every pass rule
 stay as they are. The turn cap stays with the Agent SDK: the host shows the model no turn count. The
 OpenCode and Copilot CLI runners give their hosts no budget that the model sees (§2, §2.2 Budget
-hidden from the model and Claude Code spend cap; C002-REQ-642).
+hidden from the model and Claude Code spend cap; C002-REQ-642). After the critic's review of that
+revision (CR-103 … CR-108, CR-113), the Claude Code spend cap states:
+- the open query, a 30 s answer time and a 5 s settle time, so that a refusal by a closing query is
+  no failed reading (items 1 and 8);
+- the call's end after its last block and the queue rule with coalesced triggers (item 3);
+- a session that ends by itself keeping its own result (items 4 … 6);
+- the `usage` and `cap-close` records with the bound checked on them and the overshoot reported
+  (item 7);
+- the ledger entry of a session whose failed reading ends the run (item 8).
+
+The table Budget hidden from the model also lists what the OpenCode and Copilot CLI runners pass to
+their hosts.
 
 ## §1 Selection
 
@@ -296,14 +307,16 @@ session also gets, stay. Per host:
 | Host | What reaches the model | Evidence | Runner rule |
 |---|---|---|---|
 | Claude Code | Before D-031, the spend cap. The Agent SDK 0.3.296 passes `maxBudgetUsd` to the Claude Code CLI as `--max-budget-usd`, beside `--max-turns` (`evals/node_modules/@anthropic-ai/claude-agent-sdk/sdk.mjs`, its argument builder). Claude Code 2.1.299, the desktop-bundled `claude.exe` that `CLAUDE_CODE_EXECPATH` names, then adds the attachment `budget_usd` to each model request of the session agent and of every subagent. The model reads it as the system reminder `USD budget: $<used>/$<total>; $<remaining> remaining`. Once the cost reaches the cap, the CLI's Agent tool also refuses a new subagent with the text `Budget limit reached ($<spent> spent of the $<cap> maximum). New agents cannot be started. Complete the remaining work directly with your tools, or wrap up with the results you already have.` The SDK's type definitions (`sdk.d.ts`, `maxBudgetUsd`) say only that the query stops at the budget, and name `taskBudget` as the option that makes the model aware of a budget. The turn cap is not shown: the CLI uses `--max-turns` in its loop only, and the attachment `max_turns_reached`, written when the loop ends, renders no text | Transcripts in `evals/results/transcripts/`: `TS-224-2026-10-24T07-36-59-379Z-run3.json` (the conductor: "The session's spending limit is nearly used up, and the next specialist runs wouldn't fit"; the spec-writer subagent: "The rest of my budget is tight", "I ran out of budget before writing the OA sections"); `TS-223-2026-10-24T07-15-26-786Z-run1.json`; `TS-215-2026-10-24T07-57-51-741Z-run1.json`; `TS-802-2026-10-24T05-35-37-614Z-run1.json`; `TS-213-2026-10-11T10-27-29-114Z-run1.json` ("the session budget is nearly spent ($0.10 left)"). The reminder itself is in no transcript, since the SDK does not stream meta messages | no spend cap passed to the Agent SDK (Claude Code spend cap below); `maxTurns` passed as before |
-| OpenCode | Nothing. The runner starts a session with the agent, the prompt or command, the model and a title only (`evals/harness/runners/opencode.mjs:574`, the host's `run` call), and applies both caps itself from the step events (per step, above) | 102 OpenCode transcripts: model text names a budget only as a subject of the scenario (`TS-209`: "P-01's monthly budget for paid APIs") | unchanged |
-| Copilot CLI | Not known to be anything. The runner passes `--max-ai-credits <n>` (§4 Copilot CLI session) and applies the turn cap itself. The host's code is compressed inside its native binary and could not be read | 34 Copilot CLI transcripts: no model text names credits, a credit limit or a budget of the session | unchanged. [ASSUMPTION: D-031 — Copilot CLI 1.0.98 does not show the model its `--max-ai-credits` limit; a Copilot CLI transcript in which an agent refers to its credits, its limit or a session budget that the case did not give is a defect against C002-REQ-642, and P-01 decides the fix, since the host reports no cost before the session ends (per session, above) and the runner cannot apply the cap itself] |
+| OpenCode | Nothing. The runner gives the host three things (`evals/harness/runners/opencode.mjs:574`, the host's `run` call; revised for critic CR-108). First, the generated OpenCode package placed in the project, as generated except that its MCP server commands point at the staged CLI and the case's `mcpOverrides` replace server URLs (§2.1). Second, the host process's environment: the OpenRouter key (§4 Provider key), the PATH lead, the isolated data folders and the case's `env`. Third, per session, the start: the agent, the command with its name and arguments or the prompt text, the model when the case gives one, and the title `eval <the first 40 characters of the prompt>`. None of these holds the session's spend cap or turn cap, or a budget other than one the case itself writes into its prompt or `env`. The runner applies both caps itself from the step events (per step, above) | 102 OpenCode transcripts: model text names a budget only as a subject of the scenario (`TS-209`: "P-01's monthly budget for paid APIs") | unchanged |
+| Copilot CLI | Not known to be anything. The runner gives the host the command line of §4 Copilot CLI session, the prompt text, the package copy, the servers file and the host's environment (revised for critic CR-108). The command line is `-p <prompt>`, `--agent`, `--plugin-dir`, `--additional-mcp-config`, `--output-format json`, `--no-ask-user`, `--no-auto-update`, `--disable-builtin-mcps`, `--max-ai-credits <n>`, `--usage-output-file`, `--log-dir`, `--model` and the `--allow-tool` permissions (`evals/harness/runners/copilot-cli.mjs` › `cliArgs`). The prompt text is the case's prompt, or the prompt file's body with `Arguments: …` (§2). The environment is `COPILOT_HOME`, `COPILOT_AUTO_UPDATE`, `GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS` and the case's `env`, with the variables of §4 Credentials removed (`copilot-cli.mjs` › `hostEnv`). The only cap among all of these is `--max-ai-credits <n>`, given once. The runner applies the turn cap itself, by ending the process tree. The host's code is compressed inside its native binary and could not be read, so whether the host shows the model its limit is not known | 34 Copilot CLI transcripts: no model text names credits, a credit limit or a budget of the session | unchanged. [ASSUMPTION: D-031 — Copilot CLI 1.0.98 does not show the model its `--max-ai-credits` limit; a Copilot CLI transcript in which an agent refers to its credits, its limit or a session budget that the case did not give is a defect against C002-REQ-642, and P-01 decides the fix, since the host reports no cost before the session ends (per session, above) and the runner cannot apply the cap itself] |
 
 **Claude Code spend cap** (defect D-031). The Claude Code eval runner
 (`evals/harness/session.mjs` › `runClaudeCodeSession`) applies `maxBudgetUsd` itself:
 
 1. **Options.** It passes no `maxBudgetUsd` and no `taskBudget` to the Agent SDK, and no spend cap
-   in the prompt, the system prompt or an extra argument. It passes `maxTurns` as before.
+   or turn cap in the prompt, the system prompt or an extra argument (`extraArgs`). It passes
+   `maxTurns` as before. The **query is open** from the `query()` call until the runner begins to stop
+   the session (item 4) or the query's message stream ends (its iterator finishes or throws).
 2. **Running cost.** The session's running cost R is the highest `total_cost_usd` read so far in the
    session, in USD. It is read from each `result` message and from each answer to the Agent SDK's
    usage request, `usage_EXPERIMENTAL_MAY_CHANGE_DO_NOT_RELY_ON_THIS_API_YET({ skipBehaviors: true })`,
@@ -315,44 +328,121 @@ session also gets, stay. Per host:
    of `TS-224-2026-10-24T07-36-59-379Z-run3.json`, 40,438 in its result's `modelUsage`). The CLI's
    side calls stream no message (the `claude-haiku-5-5` entry of that result). And a price table in
    the harness would copy the CLI's.
-3. **Checks.** The runner sends one usage request after each assistant message whose `message.id`
-   it has not seen before, of the session agent or of a subagent; the SDK repeats one model call's
-   message once per content block. One request is open at a time: an assistant message with a new ID
-   that arrives while a request is open makes the runner send one more request when the open one is
-   answered. After each `result` message and each usage answer, the runner compares R with the cap.
-4. **Stop.** At the first comparison at which R reaches the cap (R ≥ `maxBudgetUsd`, no allowance
-   added), the runner stops the session:
-   - it writes the harness record `{ "event": "cap", "reason": "spend cap", "usd": <R>, "cap_usd": <cap> }`;
-   - it denies every permission request from then on, AskUserQuestion included, with its usual deny
-     message (`<tool> is not available in this evaluation`, no text about a budget);
-   - it sends `interrupt()` once and reads the stream on until a `result` message arrives after the
-     interrupt, or 30 s pass;
-   - it closes the query (`abortController.abort()`), which ends the Claude Code process and every
-     subagent still running.
+3. **Model calls and checks** (revised for critic CR-107). A model call of the session agent or of a
+   subagent streams one assistant message per content block, each with the call's `message.id`. The
+   call ends after its last block: the Claude Code CLI adds the call's cost to the session's cost when
+   the call ends, so a reading counts a call only when it is answered after the call's end. The SDK
+   streams no marker of that end. The Agent SDK stub of the runner tests does the same: it ends a call
+   after it has streamed the call's last block, and its usage answers count the call from then on.
+   A **trigger** is an assistant message whose `message.id` the runner has not seen before in the
+   session. Queue rule:
+   - a message with an ID already seen is no trigger and gets no request;
+   - at a trigger, the runner sends a usage request when none is open;
+   - at most one request is open at a time;
+   - the triggers that arrive while a request is open coalesce: when that request ends (answered or
+     failed, item 8), the runner sends exactly one follow-up request for all of them, and none when
+     none arrived.
 
-   A `result` message whose `subtype` is `error_max_turns` keeps it: the turn cap ended that session.
-5. **Result.** The session result's `result` is the query's last `result` message with `subtype`
-   `error_max_budget_usd`, `is_error` `true` and `total_cost_usd` the recorded cost; its other fields
-   (`num_turns`, `modelUsage` and the rest) are kept. A session that streamed no `result` message
-   gets one with these three fields, `num_turns` `null` and `modelUsage` `{}`. So
-   `metrics.result_subtype` reads `error_max_budget_usd`, the end at the spend cap of the Claude
-   Code subscription class (below), and `metrics.cost_usd` reads the recorded cost, as before D-031.
-   The transcript keeps the SDK's own messages as they came.
-6. **Recorded cost.** The final R: the highest `total_cost_usd` read until the query closed, the
-   result that follows the interrupt included. It is never cut to the cap, and every model call that
-   ended before the stop counts in full.
-7. **Overshoot.** The overshoot is the recorded cost minus the cap, with no fixed allowance (overshoot
-   rule above). A check follows each new assistant message, and a reading counts only the model calls
-   that have ended. So the calls that may cross the cap are those that the last reading below it had
-   not counted: the call that brought R to the cap, and each call of the session agent or of a
-   subagent running in parallel that ended before the stop took effect. The `cap` record gives R at
-   the cap; the recorded cost minus that R is the cost of the calls counted after it.
-8. **Failed reading.** A usage request that is refused, or whose answer gives no finite
-   `session.total_cost_usd` of at least 0, would leave the session uncapped. The runner then stops the
-   session as at the cap (item 4), and `runSession` rejects with the error
-   `claude-code spend check failed: <reason>; notional cost read <R> USD`, as it rejects for a key
-   source that does not match the auth mode (C002-T-060). The run ends with that error, and the
-   session is no run and has no result record. [ASSUMPTION: D-031 — with Agent SDK 0.3.296 and Claude Code 2.1.299 the usage request is answered during a turn, makes no model call, and gives the cost that the next result message gives; the paid check of the D-031 fix confirms it]
+   So the requests are at most as many as the session's distinct message IDs, and the last trigger
+   is always covered by a request. After each usage answer and each `result` message, the runner
+   updates R and compares it with the cap.
+4. **Stop.** At the first comparison, while the query is open, at which R reaches the cap
+   (R ≥ `maxBudgetUsd`, no allowance added), the runner stops the session. One exception: when the
+   last message that the stream gave is a `result` message, the session may have ended by itself
+   (item 5), so the runner waits for the next stream message. If one arrives, the session went on
+   past that result, and the runner stops it at that message. If the stream ends instead, the session
+   ended by itself. To stop the session, the runner:
+   - writes the harness record `{ "event": "cap", "reason": "spend cap", "usd": <R>, "cap_usd": <cap> }`;
+   - denies every permission request from then on, AskUserQuestion included, with its usual deny
+     message (`<tool> is not available in this evaluation`, no text about a budget);
+   - sends `interrupt()` once and reads the stream on until a `result` message arrives after the
+     interrupt, or 30 s pass;
+   - closes the query (`abortController.abort()`), which ends the Claude Code process and every
+     subagent still running, and writes the harness record `cap-close` (item 7).
+5. **Result** (revised for critic CR-105). Which `result` the session result carries depends on how
+   the session ended.
+   - **Stopped by the runner** (item 4): the query's last `result` message, with `subtype`
+     `error_max_budget_usd`, `is_error` `true` and `total_cost_usd` the recorded cost. Its other fields
+     (`num_turns`, `modelUsage` and the rest) are kept. A session that streamed no `result` message gets
+     one with these three fields, `num_turns` `null` and `modelUsage` `{}`.
+   - **Ended by itself**, its stream ended without a stop by the runner: the last `result` message as
+     it came. A `success` or an `error_max_turns` result, the Agent SDK's end at `maxTurns`, keeps its
+     `subtype` and its `total_cost_usd`, also at or above the cap.
+
+   Only a session that the runner stopped therefore reads `error_max_budget_usd` in
+   `metrics.result_subtype`, the end at the spend cap of the Claude Code subscription class (below).
+   `metrics.cost_usd` reads the recorded cost, as before D-031. The transcript keeps the SDK's own
+   messages as they came.
+6. **Recorded cost.** For a session the runner stopped: the final R, the highest `total_cost_usd`
+   read until the query closed, the result that follows the interrupt included. It is never cut to the
+   cap, and every model call that ended before the stop counts in full. For a session that ended by
+   itself: its last result's `total_cost_usd`.
+7. **Readings, records and overshoot** (revised for critic CR-106). The runner writes into the
+   transcript one harness record per reading:
+   `{ "event": "usage", "source": "request" | "result", "usd": <total_cost_usd, or null>, "message_id": <ID>, "sent_t": <ms>, "error": <text>, "ignored": true }`.
+   - `source` `request` is a usage request: answered, refused or timed out.
+   - `source` `result` is a `result` message.
+   - `message_id` is the latest trigger the request covers (`null` for a result).
+   - `sent_t` is the time the runner sent the request, in ms since the session start, like the
+     record's own `t`, which is the time the reading arrived (`null` for a result).
+   - `error` is present only for a failed reading (item 8).
+   - `ignored` is present only for a failure that the runner ignored.
+
+   At the close after a stop, the runner writes:
+   `{ "event": "cap-close", "usd": <recorded cost>, "usd_at_cap": <the cap record's usd>, "after_cap_usd": <usd − usd_at_cap>, "overshoot_usd": <usd − cap_usd>, "closed_by": "result" | "timeout" }`.
+   `evals/harness/run.mjs` adds ` · overshoot <overshoot_usd> USD` to the session's line on standard
+   output.
+
+   The overshoot is the recorded cost minus the cap, with no fixed allowance (overshoot rule above).
+   A reading counts only the model calls that have ended (item 3). So the calls that may cross the cap
+   are those that the last reading below it had not counted: the call that brought R to the cap, and
+   each call of the session agent or of a subagent running in parallel that ended before the stop took
+   effect. **The bound holds** for a session that the runner stopped when its transcript shows all of
+   these:
+   1. every `usage` record before the `cap` record gives a `usd` below `cap_usd`, and the `cap`
+      record's `usd` is that of the first `usage` record at or above it;
+   2. no permission request was allowed after the `cap` record (`denied` records only);
+   3. no assistant message with a message ID not seen before arrives after the first `result` message
+      that follows the `cap` record;
+   4. the `cap-close` record follows the `cap` record by at most 30 s plus the close (`closed_by`).
+
+   A session that breaches one of them breaches the Claude Code measure of C002-NFR-105, as a step
+   started after the capping step does on OpenCode. `cap-close` reports the overshoot of every
+   stopped session, whatever its size.
+8. **Failed reading** (revised for critics CR-103, CR-104 and CR-113). A reading **fails** in three
+   cases:
+   - the SDK refuses the usage request;
+   - no answer arrives within **30 s** of the request;
+   - the answer gives no finite `session.total_cost_usd` of at least 0.
+
+   Why 30 s: the answer on the subscription route may wait for the plan's usage endpoint (assumption
+   below), and a failure that counts ends the whole run. While a request is open, no other reading
+   is taken (item 3), so 30 s is also the longest gap between readings.
+
+   A failed reading **counts only while the query is open**. The runner acts on it 5 s after the
+   failure (the settle time), and only when by then the stream has not ended and the runner has not
+   begun to stop the session. Otherwise it ignores the failure: the `usage` record gives `ignored`
+   `true`, and R stays the highest cost read, the last result's included. Why: the SDK refuses every
+   open and every later request when a query closes (`Query closed before response received`,
+   `sdk.mjs:136, 138`), at the session's own end and at the runner's close alike. And messages that
+   the SDK had already received may still reach the runner after that refusal. So neither the time
+   of a refusal nor the next message tells a closing query from a broken reading, and a query that
+   closes ends its stream within the settle time.
+
+   A failed reading that counts would leave the session uncapped, so the runner stops the session as
+   at the cap (item 4, without the `cap` and `cap-close` records) and the session ends with an error:
+   - `runSession` rejects with the error
+     `claude-code spend check failed: <reason>; notional cost read <R> USD`, whose property `costUsd`
+     is R, as it rejects for a key source that does not match the auth mode (C002-T-060);
+   - before the rejection reaches the run, `evals/harness/run.mjs` appends one entry to the spend
+     ledger (`evals/results/spend-chg002.json`, test plan §4.1 Ledger) and then rethrows the error. The
+     entry gives: the date, task and step; `case` and `row`; `host` `claude-code`; `provider`
+     `claude-max` under `--auth subscription`, else `anthropic-key`; `auth`; `cost_usd` R; `caps_usd`;
+     `cost_source` `claude-code spend check failed`; `valid_run` `false`; `pass` `false`; `end_reason`
+     `null`; `result` `null`; and `ended_at`.
+
+   The run ends with that error. The session is no run and has no result record; its ledger entry is
+   the only record of its cost (critic CR-113). [ASSUMPTION: D-031 — with Agent SDK 0.3.296 and Claude Code 2.1.299 the usage request is answered during a turn within 30 s, makes no model call, and gives the cost that the next result message gives; the paid check of the D-031 fix confirms it and records the answer times]
 
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
 exception $1"; raised for defect D-022 item 1, P-01 answer to Q-ts634-budget-02, "One run at $2
