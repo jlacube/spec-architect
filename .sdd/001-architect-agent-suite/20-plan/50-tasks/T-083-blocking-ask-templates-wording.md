@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-063]
 implements: [C001-REQ-221, C001-REQ-1124, C001-REQ-213, C001-REQ-208]
 satisfies_ac: [C001-AC-221.1, C001-AC-1124.1, C001-AC-213.2]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-1126, C001-TC-1132]
 components: [C001-COMP-01, C001-COMP-02, C001-COMP-09, C001-COMP-10, C001-COMP-12]
 risk_refs: [C001-RISK-005]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 2a32f73, completed_at: 2026-10-24, notes: "TC-1132 7/7 (all failed before); C002-TC-107/127 pass with planted lines; arrival parse checks pass on synthetic transcripts and fail on the t082-d018 traces; npm run check exit 0 (Node 22, Node 20); replay sdd-mcp-server 683/26/0 both targets; skill sizes within budget (phase-ideation 9,296); eval passes and D-019 closure in C001-T-082" }
 ---
 
 # C001-T-083 — Ask a blocking question on arrival, templates through the CLI, candidates count (D-019)
