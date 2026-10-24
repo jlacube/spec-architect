@@ -116,6 +116,13 @@ a thirteenth rule-1 row, for C001-TS-225 (CR-114, the conductor's decision); the
 named in the Runs cells (CR-115); and the no-run marking of the eight sessions placed in C001-T-082's
 report and the result records, not in the CHG-002 ledger (CR-116).
 
+Revised for defect D-034 (found in C001-T-082, `t082-d019`; P-01 answer to Q-early-stop-01, "Stop
+when checked"): a case row may declare when its check is decided (`stopWhen`, §2). The Claude Code
+eval runner then ends the session as at the spend cap, with the distinct end `check_decided` and the
+actual cost. That end is no cap end and no failure, rules 1 and 2 do not read it, and a row without
+the condition runs as before. The OpenCode and Copilot CLI runners ignore it (§2.2 Early stop when the
+check is decided).
+
 ## §1 Selection
 
 `npm run eval -- --host claude-code|opencode|copilot-cli` (default `claude-code`, the existing
@@ -162,6 +169,7 @@ A selection that leaves no row for the host ends the run before any session, wit
 | `allowTools` | Claude Code tool names. They gate only the permission requests of the host (revised for defect D-015 item 5). OpenCode: the runner answers a permission request `once` when its permission maps to a tool of `allowTools` (through the target's mapping table, C002-IF-001; `edit` for Write, Edit, MultiEdit and NotebookEdit, `bash` for Bash and PowerShell, `task` for Agent) and rejects every other request; it answers the read-only permissions (`read`, `glob`, `grep`, `list`, `lsp`, `todowrite`, `todoread`, `codesearch`) and `question` with `once`, and rejects `external_directory` and `doom_loop`. Copilot CLI (revised for defect D-019 item 6): the runner maps each tool of `allowTools` through the table's grants of the package's mode and passes one `--allow-tool=<permission>` per resulting permission, each once, in sorted order: a grant `<server>/*` gives `<server>`, the grant `edit` gives `write`, the grant `execute` gives `shell`, and a source MCP name `mcp__plugin_architect_<server>__<tool>` gives `<server>(<tool>)`; read-only tools need no permission. A tool that the host runs without asking, because the package's own rules allow it (for example the sdd MCP server tools that an Architect agent is granted), is not gated by `allowTools`: the package decides it, as it does for an adopter |
 | `maxTurns` | default 30; at most 30 unless a cap exception of §2.2 matches the row (C002-NFR-105; revised for defect D-025). Claude Code: passed to the Agent SDK as `maxTurns`, which ends the session with `error_max_turns`; the host shows the model no turn count and no turn limit (§2.2 Budget hidden from the model; defect D-031) |
 | `maxBudgetUsd` | default 0.50; at most 0.50 unless a cap exception of §2.2 matches the row, and replaced by the exception's rerun cap when the run gives `--cap-exception` (§2.2; revised for defect D-025); applied when the host reports spend, else recorded as `unreported` (C002-NFR-105 open item); checked by the spend-cap rule of §2.2. Claude Code (revised for defect D-031): never passed to the Agent SDK, neither as `maxBudgetUsd` nor as `taskBudget`; the Claude Code eval runner applies it itself (§2.2 Claude Code spend cap) |
+| `stopWhen` | added for defect D-034: the case row's optional stop condition, `stopWhen(transcript, answers)`, which `evals/harness/run.mjs` passes from the row's field of the same name. Claude Code: the runner ends the session once it returns `true` (§2.2 Early stop when the check is decided). OpenCode and Copilot CLI: ignored. A row without it runs as before, so no case file has to change (C002-REQ-608) |
 | `env` | variables of the host process (for example a machine configuration of a doctor case); a `PATH` given here replaces the runner's own `PATH` for the host, with the PATH lead of the pinned OpenCode binary placed into it on OpenCode (§4) |
 
 **Model rule on Copilot CLI** (revised for defect D-019 item 1 and for defect D-027; P-01 answers to
@@ -453,6 +461,55 @@ session also gets, stay. Per host:
 
    The run ends with that error. The session is no run and has no result record; its ledger entry is
    the only record of its cost (critic CR-113). [ASSUMPTION: D-031 — with Agent SDK 0.3.296 and Claude Code 2.1.299 the usage request is answered during a turn within 30 s, makes no model call, and gives the cost that the next result message gives; the paid check of the D-031 fix confirms it and records the answer times]
+
+**Early stop when the check is decided** (defect D-034; P-01 answer to Q-early-stop-01, "Stop when
+checked"). In the `t082-d019` run of C001-T-082 (2026-10-24, `evals/results/t082-d019-<row>-*.json`),
+every rule-1 session ran to the 3.00 USD cap: 12 sessions of `TS-215`, `TS-223`, `TS-224` and
+`TS-225`, at 3.00 … 3.52 USD and 917 … 1274 s, all passed. Their first scripted answer, at or near the
+step their cases check, came at 206 … 954 s. The rest of each session decided nothing, and the release
+gate's rule-1 sessions would need several five-hour windows of P-01's plan. So a case may say when
+its check is decided, and the Claude Code eval runner then ends the session:
+
+1. **Condition.** A case row may give `stopWhen(transcript, answers)` (§2). The runner calls it after
+   each record it appends to the transcript, an SDK message or a harness record, with the transcript
+   so far and the `answers` so far, in the names the row reads (§3).
+   - It reads only those two arguments: no file, no tool, no clock. So the condition rests on
+     harness-observable events only.
+   - It returns `true` once no later event can change the outcome of the row's `assert`, whether that
+     outcome is a pass or a failure. Examples: for `TS-215` and `TS-225`, the conductor's
+     AskUserQuestion call that carries the blocking question (its `answer` record); for `TS-223`, the
+     `task_notification` of the cartographer's hand-back that holds the scope question.
+   - A call that throws or returns no boolean makes the runner write
+     `{ "event": "stop-when-error", "error": <text> }` once and call the condition no more.
+2. **When.** The runner acts on the first `true` while the query is open, before any stop has begun
+   (item 4 of the Claude Code spend cap), with the same exception for a session that may have ended
+   by itself after a `result` message. A cap reached first stops the session at the cap as before,
+   and the condition is not called again after a stop has begun.
+3. **Stop.** The runner writes `{ "event": "check-decided", "usd": <R> }`. It then stops the session as
+   at the spend cap, without the `cap` and `cap-close` records: it denies every permission request
+   from then on with its usual deny message, sends `interrupt()` once, waits up to 30 s for a
+   `result`, and closes the query.
+4. **Result.** The session result's `result` is the query's last `result` message, with `subtype`
+   `check_decided`, `is_error` `false` and `total_cost_usd` the recorded cost: the highest cost read
+   until the query closed, as for a session stopped at the cap (item 6). A session that streamed no
+   `result` gets one built as in item 5. `metrics.result_subtype` reads `check_decided`, and
+   `metrics.cost_usd` the actual cost.
+5. **Effects.** An end with `check_decided` is not an end at the spend cap, so the definition of
+   "ended at the spend cap" of the Claude Code subscription class does not hold for it, and neither
+   rule 2 (no replacement) nor the no-run clause of Runs applies. The session is a run like any
+   other, at the caps it ran with (`caps`). It is not a failure: the row's `assert` decides pass or
+   fail from the transcript and the workspace, as for every session. The bound of item 7 is for
+   sessions stopped at the cap only.
+6. **Without the condition, and when it is never met.** A row without `stopWhen`, or whose condition
+   never returns `true`, runs to its end or its caps as today.
+7. **Other hosts.** The OpenCode and Copilot CLI runners ignore `stopWhen`. Both could stop a session
+   (OpenCode by the SDK's abort, Copilot CLI by ending the process tree, §4), but they build the
+   transcript in the row's names only after the session, from the host's messages or events
+   (`toTranscript` of `runners/opencode.mjs` and `runners/copilot-cli.mjs`). So they have no
+   transcript to give the condition while the session runs. No row of the Claude Code subscription
+   class runs on them. Building the transcript live is left to a later revision.
+8. **Injection rows.** No row of the injection case sets of §5.1 gives `stopWhen`. Rule 3 of §5.2 reads
+   only `completed` and would count a `check decided` end as acted upon.
 
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
 exception $1"; raised for defect D-022 item 1, P-01 answer to Q-ts634-budget-02, "One run at $2
