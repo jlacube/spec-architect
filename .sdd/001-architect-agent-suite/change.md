@@ -5,7 +5,7 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:0ac02fa7f15f5211d347cd12e973b158c651fd1ffc9a44ca4d3222cf34b1504f", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:db41f5871e5fa84504a551f7fea611e1a0edcedeb80f21835755ab3e63e05440", approved_at: 2026-10-24, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:e1b60776c533acceee024bdbba4a951f5f29d56702cee776ee3d8a13253342de", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
@@ -92,3 +92,4 @@ defects:
 | 2026-10-24 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Revise** | "Revision for CHG-001 D-018: TS-224 Then over the specialists' hand-backs" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-001 D-018: TC-224 and T-082" | none | unavailable |
+| 2026-10-24 | G2 (spec) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
