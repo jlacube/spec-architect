@@ -112,6 +112,18 @@ for it. C001-T-082 stays `blocked` until both are done; the conductor records th
 for C002-T-068 and C002-T-069". Like the edge to C002-T-068, this one lives on the CHG-002 side
 only, since the CHG-001 plan is approved.
 
+**CHG-001 also waits for C002-T-070** (defect D-033; P-01 answer Q-cap-level-01, "Raise to $3
+(Recommended)"). C001-T-082 step 4 and C001-T-072 depend on C002-T-070 as well. It raises the rerun
+cap of the 12 rule-1 rows to 3.00 USD; the rule-2 rows keep 1.50 USD. Until C002-T-070 is done, a
+rule-1 session runs at 1.50 USD, which the full-flow cases do not fit with the budget hidden. **The
+eight `t082-d018` sessions** of C001-T-082 step 4 (2026-10-24, `TS-223` ×3, `TS-224` ×3, `TS-215`,
+`TS-213`; all ended `error_max_budget_usd` at 1.516 … 1.860 USD) **are no runs**, the five passing
+ones included. They ended at the spend cap under a cap below the 3.00 USD that the exception now
+gives their rows, so each gets `valid_run: false` (test plan §4.1, Rule for capped sessions, Sessions
+of CHG-001 tasks). C001-T-082 step 4 reruns those rows at 3.00 USD after C002-T-070, and none of the
+eight counts toward its pass rule. The conductor records the blocked reason as "waits for C002-T-068,
+C002-T-069 and C002-T-070". Like the other edges, this one lives on the CHG-002 side only.
+
 **Command forms of the CHG-001 runs** (plan critic CR-61; C002-IF-010 §2.2 Sessions of CHG-001
 tasks). These forms replace the commands of the approved CHG-001 task files wherever those name a
 row of these rules. The harness applies the rerun cap to every selected row of a run that gives
@@ -120,7 +132,7 @@ cap. So a run never mixes rule-1 rows with other rows:
 
 | Rows | Command form | Why |
 |---|---|---|
-| Rule 1 (the rows of list 1 of §2.2) | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <rule-1 rows> <case files>`, in a run of their own | every session at 1.50 USD |
+| Rule 1 (the rows of list 1 of §2.2) | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <rule-1 rows> <case files>`, in a run of their own | every session at the rule-1 rerun cap, 3.00 USD from C002-T-070 on (defect D-033) |
 | Rule 2 (the rows of list 2), and every release case that no exception matches | `node evals/harness/run.mjs --host claude-code --auth subscription --tier <tier> --only <rows> <case files>`, without `--cap-exception` | own caps, 0.50 USD and 30 turns, or the row's own turn cap |
 | A rule-2 replacement, for a session that failed and ended at the spend cap | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <row> <case file>`, one row per run | one session at 1.50 USD for that row only |
 
@@ -134,7 +146,8 @@ and `caps.turns`, `metrics.result_subtype`, the result, and whether it counts as
 checks:
 - the number of runs equals the row's release class in C001-ADR-003 (10 or 3, with the 10-run check
   after a 2 / 3 result);
-- every session of a rule-1 row ran at 1.50 USD;
+- every session of a rule-1 row ran at 3.00 USD (defect D-033); a session at 1.50 USD of such a row,
+  the eight `t082-d018` sessions included, is no run;
 - every session at 1.50 USD of a rule-2 row replaces exactly one session that failed and ended at the
   spend cap (`error_max_budget_usd`), named by its result file;
 - no rule-2 row has a session at 1.50 USD without such a predecessor, or more than one replacement
@@ -266,6 +279,7 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
+| Q-cap-level-01: rerun cap for full-flow CHG-001 cases now that the budget is hidden (defect D-033; `questions-log.md` round 2026-10-24) | C002-T-070; C001-T-082, C001-T-072 | settled: P-01 answered "Raise to $3 (Recommended)"; rule-1 rows at 3.00 USD, rule-2 at 1.50 USD, in C002-T-070; the eight `t082-d018` sessions are no runs and are rerun at 3.00 USD; P-01 measures the rule-1 rows again after the CHG-001 D-019 fixes |
 | Q-budget-hide-01: the model sees its session budget in Claude Code evals (defect D-031; `questions-log.md` round 2026-10-24) | C002-T-069; C001-T-082, C001-T-072 | settled: P-01 answered "Hide the budget (Recommended)"; the runner-applied spend cap of C002-IF-010 §2.2 in C002-T-069, with one paid check of about 3 USD notional; the CHG-001 tasks wait for it (cross-change dependency above); C002-RISK-039 |
 | Q-cap-exc-01, Q-cap-exc-02: cap exceptions for the CHG-001 release eval cases (defect D-030; `questions-log.md` round 2026-10-24) | C002-T-068; C001-T-082, C001-T-072 | settled: P-01 answered "Add cap exceptions (Recommended)" and "Measure now (Recommended)"; the rows and the two rule lists of C002-IF-010 §2.2 in C002-T-068, the command forms and session-limit check above; residual risks C002-RISK-038; the CHG-001 tasks wait for it (cross-change dependency above) |
 | Q-model-refusal-01, Q-t067-order-01, Q-ts208-fixture-01: the missing-model refusal on an injection row, the order of C002-T-067 against the releases, and D-026 item 3 (`questions-log.md` round 2026-10-23) | C002-T-067, C002-T-052, C002-T-055 | settled: P-01 answered "Count as no-run (Recommended)", "No dependency (Recommended)" and "Defer with D-023(1) (Recommended)"; the no-run form in C002-T-067, no edge from C002-T-067 to the release tasks, and D-026 item 3 deferred (`10-strategy.md` §2, §3) |
@@ -290,8 +304,9 @@ revision C002-T-064, for the D-018 … D-020 revision C002-T-065, for the D-026,
 C002-T-066 (after C002-T-065 and before C002-T-052 and C002-T-054), and for the D-023 item 2, D-024,
 D-028 revision C002-T-067 (after C002-T-066; listed before the release tasks, which do not depend on
 it, so that one set of unpaid re-runs covers both commits), for the D-030 revision C002-T-068
-(after C002-T-048), and for the D-031 revision C002-T-069 (after C002-T-068; CHG-001's C001-T-082
-and C001-T-072 wait for both), sit after their dependencies
+(after C002-T-048), for the D-031 revision C002-T-069 (after C002-T-068), and for the D-033 revision
+C002-T-070 (after C002-T-069; CHG-001's C001-T-082 and C001-T-072 wait for all three), sit after
+their dependencies
 (C002-T-063 after C002-T-042 and before C002-T-041;
 C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-065 after C002-T-045 and
 before C002-T-056, C002-T-048 and C002-T-054; C002-T-023 needs only C002-T-022 and
@@ -369,11 +384,12 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 61 | C002-T-067 | Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-067-fix-ripwire-map-rule-spend-reconciliation-key-redaction.md` |
 | 62 | C002-T-068 | Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-068-fix-cap-exceptions-chg001-release-cases.md` |
 | 63 | C002-T-069 | Fix for revision D-031: the Claude Code eval runner applies the spend cap itself and shows the model no budget | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-069-fix-claude-code-spend-cap-hidden-budget.md` |
-| 64 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 65 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 66 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 67 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 68 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 64 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-070-fix-rule-1-rerun-cap-3-usd.md` |
+| 65 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+| 66 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 67 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 68 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 69 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 
