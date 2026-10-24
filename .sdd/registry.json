@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-24T06:42:07Z",
+  "generated_at": "2026-10-24T07:13:39Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -31,12 +31,12 @@
         }
       },
       "implementation": {
-        "status": "blocked",
+        "status": "in-progress",
         "tasks": {
           "total": 64,
           "done": 59,
-          "blocked": 1,
-          "in_progress": 0
+          "blocked": 0,
+          "in_progress": 1
         },
         "last_report": "2026-10-23T00:00:00Z"
       },
@@ -246,11 +246,11 @@
         "status": "in-progress",
         "tasks": {
           "total": 68,
-          "done": 62,
+          "done": 63,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
-        "last_report": "2026-10-23T00:00:00Z"
+        "last_report": "2026-10-24T00:00:00Z"
       },
       "defects": [
         {
@@ -549,9 +549,9 @@
           "summary": "Found in C001-T-082: the C001 eval cases TS-223 and TS-224 (real conductor and cartographer, about 1.2–1.4 USD notional per run) have no row in the C002-IF-010 §2.2 cap-exception table, so the 0.50 USD default cap ends them before the cartographer hands back; TS-215 has a 1.50 USD subscription row for the same reason. Other C001-T-072 release cases may be in the same position. P-01 (Q-cap-exc-01): add cap exceptions.",
           "reporter": "jerome.lacube",
           "date": "2026-10-24",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Spec C002-IF-010 §2.2 (G2 c5157fb) and C002-T-068 (a677f6b): cap-exception rows and the two rules for the CHG-001 release cases, measured evidence (d030-measure, t082-baseline).",
+          "closed_at": "2026-10-24"
         }
       ],
       "waivers": [

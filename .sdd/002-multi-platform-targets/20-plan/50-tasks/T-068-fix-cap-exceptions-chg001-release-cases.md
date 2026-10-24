@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-048]
 implements: [C002-REQ-611, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-679, C002-TC-679]
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-015, C002-RISK-038]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a677f6b, completed_at: 2026-10-24, notes: "41 rows in table order with rules (12 rule-1, 27 rule-2, TS-421-agent none); TC-679 20 rows + 6 supporting pass; npm test 1700/0/1; check exit 0 (Node 22, 1023 s); no paid session; C001-T-082 step 4 and C001-T-072 unblocked" }
 ---
 
 # C002-T-068 — Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks
