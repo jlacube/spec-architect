@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-048, C002-T-068]
 implements: [C002-REQ-611, C002-REQ-642, C002-REQ-643, C002-REQ-644, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1, C002-AC-642.1, C002-AC-642.2, C002-AC-643.1, C002-AC-644.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-614, C002-TS-679, C002-TS-702, C002-TS-703, C002-TS-704, C
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-009, C002-RISK-038, C002-RISK-039]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a9d4666, completed_at: 2026-10-24, notes: "npm run check exit 0; TC-928…931, 614, 679 pass (failed before); paid check TS-216 + TS-224: usage request answered in ≤ 92 ms, back-to-back probe equal, 4 bound conditions hold, overshoot 0.017 / 0.148 USD, no budget or turn text in 175 model-text blocks; Claude Code 2.1.299, SDK 0.3.296. Implementation details beyond the spec logged as D-032." }
 ---
 
 # C002-T-069 — Fix for revision D-031: the Claude Code eval runner applies the spend cap itself and shows the model no budget

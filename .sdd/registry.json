@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-24T10:01:08Z",
+  "generated_at": "2026-10-24T11:11:50Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -31,12 +31,12 @@
         }
       },
       "implementation": {
-        "status": "blocked",
+        "status": "in-progress",
         "tasks": {
           "total": 64,
           "done": 59,
-          "blocked": 1,
-          "in_progress": 0
+          "blocked": 0,
+          "in_progress": 1
         },
         "last_report": "2026-10-23T00:00:00Z"
       },
@@ -256,9 +256,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 69,
-          "done": 63,
+          "done": 64,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
         "last_report": "2026-10-24T00:00:00Z"
       },
@@ -567,6 +567,16 @@
           "id": "D-031",
           "ref": "C002-IF-010",
           "summary": "Found in C001-T-082: the Claude Code eval runner passes the session cap to the Agent SDK (maxBudgetUsd), so the model sees its remaining budget; the conductor then rations or stops its work ('about $0.13 of $1.50 left, the next specialist won't fit'), which real users never see. Seen in TS-223, TS-224, TS-213, TS-215, TS-802, TS-507, TS-508. P-01 (Q-budget-hide-01): the harness enforces the cap itself and the model is not told a budget.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-24",
+          "status": "closed",
+          "resolution": "Spec IF-010 §2/§2.2, REQ-642…644 (G2 6a4ed29); C002-T-069 (a9d4666): no budget passed to the SDK, runner-enforced cap; paid check confirms the usage request and no budget text.",
+          "closed_at": "2026-10-24"
+        },
+        {
+          "id": "D-032",
+          "ref": "C002-IF-010",
+          "summary": "Found in C002-T-069 (minor, spec alignment): (1) waiting usage triggers are dropped when a stop begins; (2) cap-close closed_by can be stream-end; (3) harness record {event: allowed, tool} for bound condition 2; (4) a rejected session still writes its transcript; (5) the OpenCode driver host also places @opencode-ai/plugin package.json and package-lock.json; (6) a runner stop can precede the SDK's own error_max_turns result. Code is as implemented in C002-T-069; IF-010 §2.2 to state these.",
           "reporter": "jerome.lacube",
           "date": "2026-10-24",
           "status": "open",
