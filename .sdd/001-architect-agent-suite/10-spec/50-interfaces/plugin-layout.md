@@ -75,27 +75,43 @@ are recommended. `claude plugin validate` stays authoritative (C001-REQ-1117).
 | PLG-CI-001 | Workflows cover 3 OSes and are `workflow_dispatch`-only | C001-REQ-1119 |
 | PLG-EVAL-001 | Eval suite size and spread | C001-REQ-1116 |
 | PLG-MCP-001 | `.mcp.json` declares exactly context7, deepwiki, serena; no ripwire | C001-REQ-1005, 1006, 1108 |
-| PLG-TMPL-001 | No path under `${CLAUDE_PLUGIN_ROOT}/templates/` in agent, command or skill bodies (§4) | C001-REQ-1124 (D-019 item 2) |
+| PLG-TMPL-001 | No agent, command or skill body names a plugin file to read (§4) | C001-REQ-1124 (D-019 item 2) |
 
-## §4 Template access
+## §4 Plugin files named in bodies
 
-Agent, command and skill bodies name a template as `sdd template show <profile>/<path>` and list
-the templates of a profile with `sdd template list <profile>` (C002-IF-007; C002-REQ-513,
-C002-REQ-520), on Claude Code as on the generated targets (C002-REQ-115). `<profile>` is the
-change's profile in `change.md` (`full` or `lite`) or `constitution`, and a body names the whole
-argument, for example `sdd template show lite/10-spec/spec.md`. No body names a path under
-`${CLAUDE_PLUGIN_ROOT}/templates/` for Read, Glob or Grep:
+No agent, command or skill body tells an agent to read a file of the plugin with Read, Glob or
+Grep. The plugin root lies outside the session's working directory, so Claude Code asks for
+permission on each such read, and the plugin cannot grant it: plugin agents ignore
+`permissionMode` (C001-CON-03), and the guards of C001-IF-07 only deny. What a body needs from
+the plugin reaches the agent in one of two ways:
 
-- The plugin root lies outside the session's working directory, so Claude Code asks for
-  permission on each such read, and the plugin cannot grant it: plugin agents ignore
-  `permissionMode` (C001-CON-03), and the guards of C001-IF-07 only deny.
-- A direct read skips the repository override in `.sdd/_templates/<profile>/`, which
-  `sdd template show` applies (C002-REQ-513; C001-COMP-13).
+1. **Templates** through `sdd template show <profile>/<path>`, and a profile's template list
+   through `sdd template list <profile>` (C002-IF-007; C002-REQ-513, C002-REQ-520), on Claude
+   Code as on the generated targets (C002-REQ-115). A body names the whole argument, for example
+   `sdd template show lite/10-spec/spec.md`. `<profile>` is the change's profile in `change.md`
+   (`full` or `lite`), `constitution` for the constitution, and always `full` for the DEC, OA
+   and ADR templates, whatever the change's profile: they exist only under
+   `full/00-ideation/decisions/`, `full/00-ideation/options/` and `full/20-plan/20-decisions/`.
+   The CLI applies the repository override in `.sdd/_templates/<profile>/`, which a direct read
+   would skip (C002-REQ-513; C001-COMP-13). `sdd` runs through the Bash tool (C001-IF-07 §3, sdd
+   CLI entry), so this needs no permission beyond the one every `sdd` command already needs.
+2. **Other content** inside the body of a skill, within the budgets of C001-NFR-105. The
+   specialist brief template is a section of the `phase-ideation` skill. `phase-spec` refers to
+   that section by name, and a session that has not loaded `phase-ideation` loads it with the
+   Skill tool. `interview-protocol/references/questions.schema.json` stays a byte copy of
+   C001-IF-05 for the eval harness and its copy test, and no body links it: the field rules an
+   agent needs are in the `sdd-conventions` and `interview-protocol` bodies.
 
-`sdd` runs through the Bash tool (C001-IF-07 §3, sdd CLI entry), so reading a template needs no
-permission beyond the one every `sdd` command already needs.
+PLG-TMPL-001 reports a body that contains any of these:
+- a `${CLAUDE_PLUGIN_ROOT}/` path other than `${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs`;
+- a path containing `references/`;
+- a relative link target that resolves to a file of the plugin.
 
-Origin: defect D-019 item 2, the C001-TS-213 trace of `t082-d018`: the spec-writer's Glob, Read
-and Grep under the plugin root were refused (102–131 s), then it tried `sdd template` forms
-until one worked and read five full-profile templates before the lite one (134–220 s); P-01
-Q-t082-bugs-01 "Fix all 3 now (Recommended)".
+`hooks/hooks.json` and `.mcp.json` are not bodies.
+
+Origin: defect D-019 item 2. In the C001-TS-213 trace of `t082-d018`, the spec-writer's Glob,
+Read and Grep under the plugin root were refused (102–131 s). It then tried `sdd template` forms
+until one worked, and read five full-profile templates before the lite one (134–220 s). On
+2026-10-24 the conductor's reads of `phase-ideation/references/brief-template.md` were refused
+in TS-216, TS-223 (3 runs) and TS-224 (critic CR-32, CR-33). P-01 answered Q-t082-bugs-01 with
+"Fix all 3 now (Recommended)".
