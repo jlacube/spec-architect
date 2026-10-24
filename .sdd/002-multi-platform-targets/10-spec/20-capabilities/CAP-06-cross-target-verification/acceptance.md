@@ -612,7 +612,7 @@ Q-claude-cap-02). In those two CHG-001 tasks each row of the class runs by one o
 C002-IF-010 §2.2 Sessions of CHG-001 tasks: every session at the rerun cap with `--cap-exception`
 (rule 1, for example `TS-215`, `TS-223` and `TS-224`), or at its own caps with each failed session
 that ended at the spend cap replaced by one session at the rerun cap (rule 2, for example
-`TS-214`), as in C002-T-048 (P-01 answers to Q-cap-exc-01 and Q-cap-exc-02; defect D-030). The
+`TS-214`), started with `--cap-exception` as in C002-T-048, without its one-rerun limit (P-01 answers to Q-cap-exc-01 and Q-cap-exc-02; defect D-030). The
 match on row ID, case file, host and auth mode, which the Examples check, is the same for every
 task.
 
