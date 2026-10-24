@@ -37,6 +37,7 @@ after `THE` in EARS statements (checked by C001-REQ-407).
 | Defect (spec defect) | An implementer-reported error in a specification item (`D-<seq>`) |
 | Unattended drafting | Conductor mode that applies recommended options to non-blocking questions until the next gate |
 | Interview round | One AskUserQuestion call of 1–4 questions |
+| Specialist hand-back | The final message a specialist returns to the conductor, with its optional `questions` block (C001-IF-05) |
 | Options analysis | Scored comparison of 4–5 candidates for a decision (`OA`) |
 | Reference machine | REF-WIN: the Windows 11 configuration used for NFR measurement |
 

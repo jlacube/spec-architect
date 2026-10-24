@@ -189,3 +189,11 @@ agent definitions C001-IF-09, commands C001-IF-10.
 - **Stories:** C001-US-1105
 - **Priority:** Must
 - **Acceptance:** C001-AC-1123.1
+
+### C001-REQ-1124 — Templates through the CLI only
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF an agent, command or skill body names a path under `${CLAUDE_PLUGIN_ROOT}/templates/`, THEN THE plugin structure check SHALL report error `PLG-TMPL-001`.
+- **Rationale:** D-019 item 2; Q-t082-bugs-01; C001-IF-08 §4
+- **Stories:** C001-US-1107
+- **Priority:** Must
+- **Acceptance:** C001-AC-1124.1

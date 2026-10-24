@@ -77,8 +77,8 @@ id_block: { US: 1101-1199, REQ: 1101-1199, TS: 1101-1199 }
 - **Value / outcome:** C001-SC-05; IDEA-RK-12
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-11
 - **Context & notes:** The delegation evals run in the eval harness with the tiers of the test plan; `npm run check` is the single local entry point.
-- **Requirements:** C001-REQ-1116, C001-REQ-1117, C001-REQ-1118, C001-REQ-1122
-- **Traces to:** IDEA-§14.4, §25
+- **Requirements:** C001-REQ-1116, C001-REQ-1117, C001-REQ-1118, C001-REQ-1122, C001-REQ-1124
+- **Traces to:** IDEA-§14.4, §25, D-019
 
 ### C001-US-1108 — Cross-platform CI prepared but dormant
 - **As a** P-01 spec owner

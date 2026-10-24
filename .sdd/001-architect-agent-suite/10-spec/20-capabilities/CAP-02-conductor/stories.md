@@ -47,8 +47,8 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **Value / outcome:** no hidden assumptions (IDEA-P-06)
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-02
 - **Context & notes:** OA-10 option A; JSON contract C001-IF-05.
-- **Requirements:** C001-REQ-208, C001-REQ-209
-- **Traces to:** OA-10, D-01
+- **Requirements:** C001-REQ-208, C001-REQ-209, C001-REQ-221
+- **Traces to:** OA-10, D-01, D-019
 
 ### C001-US-205 — Free-text answers are read for embedded requests
 - **As a** P-01 spec owner
@@ -78,8 +78,8 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **Priority:** Should · **Size hint:** M · **Capability:** C001-CAP-02
 - **Context & notes:** Unattended drafting still stops at the gate: recommendations are marked as such in the artifacts, and approval stays with P-01.
 - **Out of scope:** passing gates unattended (never allowed, IDEA-P-14).
-- **Requirements:** C001-REQ-212, C001-REQ-213
-- **Traces to:** OQ-16
+- **Requirements:** C001-REQ-212, C001-REQ-213, C001-REQ-221
+- **Traces to:** OQ-16, D-019
 
 ### C001-US-208 — Efficient, well-briefed delegation
 - **As a** P-01 spec owner

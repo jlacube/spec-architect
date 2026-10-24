@@ -82,6 +82,7 @@ contract C001-IF-05.
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor holds questions from more than one specialist, THE conductor SHALL merge questions with the same `topic` and intent into one, and order rounds so that every question with `blocking: true` is asked before any non-blocking question.
 - **Rationale:** OA-10; IDEA-§15.4
+- **Note:** Merging covers the questions the conductor holds when it forms a round; it is no reason to wait for specialists that are still running (C001-IF-05 `questions.md` §2; C001-REQ-221; D-019).
 - **Stories:** C001-US-204
 - **Priority:** Must
 - **Acceptance:** C001-AC-209.1
@@ -173,3 +174,12 @@ contract C001-IF-05.
 - **Stories:** C001-US-209
 - **Priority:** Should
 - **Acceptance:** C001-AC-220.1
+
+### C001-REQ-221 — Ask a blocking question when its hand-back arrives
+- **Pattern:** event-driven
+- **Statement:** WHEN a specialist hand-back that holds a question with `blocking: true` arrives, THE conductor SHALL ask that question through AskUserQuestion before it ends its turn and before it dispatches another specialist.
+- **Rationale:** D-019 item 1; Q-t082-bugs-01; C001-IF-05 `questions.md` §2
+- **Note:** Applies with and without unattended drafting (C001-REQ-213); specialists that are still running continue, and their later questions go to a later round (C001-IF-05 `questions.md` §2).
+- **Stories:** C001-US-204, C001-US-207
+- **Priority:** Must
+- **Acceptance:** C001-AC-221.1
