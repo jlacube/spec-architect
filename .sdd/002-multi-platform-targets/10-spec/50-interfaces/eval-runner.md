@@ -72,6 +72,13 @@ After the critic's review of that revision (CR-85 … CR-87, CR-93 … CR-95, CR
 - the missing-model refusal counted as a no-run refusal (§2, §5.2; P-01 answer to
   Q-model-refusal-01, "Count as no-run (Recommended)").
 
+Revised for defect D-030 (found in C001-T-082; P-01 answer to Q-cap-exc-01, "Add cap exceptions
+(Recommended)"). Two rows of the Claude Code subscription class are added: one for the CHG-001 eval
+cases `TS-223` and `TS-224`, one for the other release cases of C001-T-072 whose latest Claude Code
+session ended at the 0.50 USD spend cap. The Runs cells of the class's C002-T-048 rows now bound only
+the sessions of that task. Two rules state how C001-T-082 and C001-T-072 run the class's rows (§2.2,
+Sessions of CHG-001 tasks).
+
 ## §1 Selection
 
 `npm run eval -- --host claude-code|opencode|copilot-cli` (default `claude-code`, the existing
@@ -262,7 +269,9 @@ of many sessions may spend.
 **Caps above 0.50 USD** (revised for defect D-020 item 2; P-01 answer to Q-ts634-budget-01, "Budget
 exception $1"; raised for defect D-022 item 1, P-01 answer to Q-ts634-budget-02, "One run at $2
 (Recommended)"; extended to turn caps above 30 and to the Claude Code subscription class for defect
-D-025, P-01 answer to Q-claude-cap-01, "Raise notional cap (Recommended)"). A case row sets
+D-025, P-01 answer to Q-claude-cap-01, "Raise notional cap (Recommended)"; rows added for the
+CHG-001 eval cases of C001-T-082 and C001-T-072 for defect D-030, P-01 answer to Q-cap-exc-01, "Add
+cap exceptions (Recommended)"). A case row sets
 `maxBudgetUsd` above 0.50 or `maxTurns` above 30, and a run applies a cap above the row's own, only
 where P-01 approved an exception for that row, host and auth mode; the exceptions in force are the
 rows of this table. They fall into two classes: the **paid class**, for sessions that spend from a
@@ -294,9 +303,11 @@ cap when the run gives `--cap-exception`, else the row's own `maxBudgetUsd`; the
 | Rows (row ID, case file) | Host | Auth | Row's own caps | Rerun cap (`--cap-exception`) | Runs | Approved |
 |---|---|---|---|---|---|---|
 | `TS-634` (`evals/targets/gate/TS-634.eval.mjs`, C002-TS-634) | `opencode` | — | 2.00 USD (the row's `maxBudgetUsd`), 30 turns | — | one further run at 2.00 USD and no rerun; no further session of the row runs at any cap. A failure of that run is waived only when it is of the kind that the waiver below names; any other failure is a defect that is not waived | P-01, Q-ts634-budget-01 (2026-10-20, 1.00 USD): the gate rework between the two gate questions does not fit 0.50 USD on OpenCode; raised by P-01, Q-ts634-budget-02 (2026-10-20): at 1.00 USD the rerun ended by the cap during the critic's re-review, at 1.11 USD (C002-T-056) |
-| `TS-214` (`evals/cap02/TS-214.eval.mjs`); `TS-215` (`evals/cap02/TS-215.eval.mjs`); `TS-318-00-ideation`, `TS-318-10-spec`, `TS-318-20-plan` (`evals/cap03/TS-318.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD | one session per row at 1.50 USD, the one rerun after the row's failed session of C002-T-048 batches 5 and 6, which the 0.50 USD cap ended; no further session of the row runs at any cap | P-01, Q-claude-cap-01 (2026-10-21): each of these five sessions ended at the 0.50 USD notional cap before the step its case checks, the sessions writing about four times the output of their CHG-001 runs (`docs/releases/regression-CHG-002.md` §5.2) |
-| `TS-213` (`evals/cap02/TS-213.eval.mjs`); `TS-221` (`evals/cap02/TS-221.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 40 turns (the case files' `maxTurns`) | 1.50 USD, for the rerun of a row whose run at its own caps failed and ended at the spend cap | one run at the row's own caps (40 turns, 0.50 USD); after a failure, one rerun at 40 turns: at 1.50 USD when the run ended at the spend cap, else at 0.50 USD (C002-T-048 step 4); no further session of a row runs at any cap | P-01, Q-claude-cap-01 (2026-10-21): the case files set `maxTurns` 40, above the 30 turns of C002-NFR-105; the CHG-001 pass of `TS-221` took 33 turns; the rerun at 1.50 USD by P-01, Q-claude-cap-02 (2026-10-21), "Same rule as batch 7 (Recommended)" |
-| `TS-419` (`evals/cap04/TS-419.eval.mjs`); `TS-420` (`evals/cap04/TS-420.eval.mjs`); `TS-421-agent` (`evals/cap04/TS-421.eval.mjs`); `TS-713` (`evals/cap07/TS-713.eval.mjs`); `TS-715` (`evals/cap07/TS-715.eval.mjs`); `TS-815` (`evals/cap08/TS-815.eval.mjs`); `TS-817-stop`, `TS-817-specify` (`evals/cap08/TS-817.eval.mjs`); `INJ-19` (`evals/injection/injection.eval.mjs`, the case as fixed after Q-inj19-01) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the rerun of a row whose run at its own caps failed and ended at the spend cap | one run at the row's own caps; after a failure, one rerun: at 1.50 USD when the run ended at the spend cap, else at the row's own caps (C002-T-048 step 4); `INJ-19` gets no rerun after a failure of another kind (one run, Q-inj19-01); no further session of a row runs at any cap | P-01, Q-claude-cap-01 (2026-10-21), batch 7 of C002-T-048 and `INJ-19`: "Yes, same rule" |
+| `TS-214` (`evals/cap02/TS-214.eval.mjs`); `TS-215` (`evals/cap02/TS-215.eval.mjs`); `TS-318-00-ideation`, `TS-318-10-spec`, `TS-318-20-plan` (`evals/cap03/TS-318.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD | in C002-T-048: one session per row at 1.50 USD, the one rerun after the row's failed session of batches 5 and 6, which the 0.50 USD cap ended; no further session of the row runs in C002-T-048 at any cap. CHG-001 tasks: rule 1 of Sessions of CHG-001 tasks (below) for `TS-215` and the three `TS-318` rows, rule 2 for `TS-214` | P-01, Q-claude-cap-01 (2026-10-21): each of these five sessions ended at the 0.50 USD notional cap before the step its case checks, the sessions writing about four times the output of their CHG-001 runs (`docs/releases/regression-CHG-002.md` §5.2) |
+| `TS-213` (`evals/cap02/TS-213.eval.mjs`); `TS-221` (`evals/cap02/TS-221.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 40 turns (the case files' `maxTurns`) | 1.50 USD, for the rerun of a row whose run at its own caps failed and ended at the spend cap | in C002-T-048: one run at the row's own caps (40 turns, 0.50 USD); after a failure, one rerun at 40 turns: at 1.50 USD when the run ended at the spend cap, else at 0.50 USD (step 4); no further session of a row runs in C002-T-048 at any cap. CHG-001 tasks: rule 1 of Sessions of CHG-001 tasks (below) | P-01, Q-claude-cap-01 (2026-10-21): the case files set `maxTurns` 40, above the 30 turns of C002-NFR-105; the CHG-001 pass of `TS-221` took 33 turns; the rerun at 1.50 USD by P-01, Q-claude-cap-02 (2026-10-21), "Same rule as batch 7 (Recommended)" |
+| `TS-419` (`evals/cap04/TS-419.eval.mjs`); `TS-420` (`evals/cap04/TS-420.eval.mjs`); `TS-421-agent` (`evals/cap04/TS-421.eval.mjs`); `TS-713` (`evals/cap07/TS-713.eval.mjs`); `TS-715` (`evals/cap07/TS-715.eval.mjs`); `TS-815` (`evals/cap08/TS-815.eval.mjs`); `TS-817-stop`, `TS-817-specify` (`evals/cap08/TS-817.eval.mjs`); `INJ-19` (`evals/injection/injection.eval.mjs`, the case as fixed after Q-inj19-01) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the rerun of a row whose run at its own caps failed and ended at the spend cap | in C002-T-048: one run at the row's own caps; after a failure, one rerun: at 1.50 USD when the run ended at the spend cap, else at the row's own caps (step 4); `INJ-19` gets no rerun after a failure of another kind (one run, Q-inj19-01); no further session of a row runs in C002-T-048 at any cap. CHG-001 tasks: rule 2 of Sessions of CHG-001 tasks (below) for every row but `TS-421-agent`, which is no release case of C001-ADR-003 | P-01, Q-claude-cap-01 (2026-10-21), batch 7 of C002-T-048 and `INJ-19`: "Yes, same rule" |
+| `TS-223` (`evals/cap02/TS-223.eval.mjs`); `TS-224` (`evals/cap02/TS-224.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD | the sessions of C001-T-082 step 4 and of C001-T-072, each at 1.50 USD (rule 1 of Sessions of CHG-001 tasks, below); the two `t082-baseline` sessions at 0.50 USD count toward no pass rule | P-01, Q-cap-exc-01 (2026-10-24; defect D-030): the cases check the real cartographer's hand-back after the conductor's spec start, about 1.2 … 1.4 USD notional per run like `TS-215`; the 0.50 USD cap ended both baselines of C001-T-082 step 1 (evidence table below) |
+| `TS-216` (`evals/cap02/TS-216.eval.mjs`); `TS-217` (`evals/cap02/TS-217.eval.mjs`); `TS-218` (`evals/cap02/TS-218.eval.mjs`); `TS-319` (`evals/cap03/TS-319.eval.mjs`); `TS-401` (`evals/cap04/TS-401.eval.mjs`); `TS-511` (`evals/cap05/TS-511.eval.mjs`); `TS-515` (`evals/cap05/TS-515.eval.mjs`); `TS-622` (`evals/cap06/TS-622.eval.mjs`); `TS-710` (`evals/cap07/TS-710.eval.mjs`); `TS-712` (`evals/cap07/TS-712.eval.mjs`); `TS-714` (`evals/cap07/TS-714.eval.mjs`); `INJ-17`, `INJ-21` (`evals/injection/injection.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the session that replaces a failed session ended at the spend cap | the sessions of C001-T-072 at the row's release class and own caps; each failed session that ended at the spend cap is replaced by one session at 1.50 USD (rule 2 of Sessions of CHG-001 tasks, below); no other session of a row runs at the rerun cap | P-01, Q-cap-exc-01 (2026-10-24; defect D-030), for "any other C001-T-072 case over the default cap": the latest Claude Code session of each row ended at the 0.50 USD spend cap, and its case passed (evidence table below) |
 
 **Claude Code subscription class** (defect D-025; P-01 answer to Q-claude-cap-01). The exceptions
 of host `claude-code` and auth `subscription` hold for Claude Code sessions that run on P-01's Claude
@@ -317,11 +328,12 @@ A run with `--auth api-key` or on another host therefore ends before any session
 without the option, the other rows of the class run there at the 0.50 USD and 30-turn caps of
 C002-NFR-105 or below. A session of the class **ended at the spend cap** when its
 result record's `metrics.result_subtype` is `error_max_budget_usd`, the Agent SDK's end at
-`maxBudgetUsd`. The harness does not decide whether a session is a run or a rerun: the done-check of
-C002-T-048 checks, from the result records and the ledger, that each session at 1.50 USD follows a
-failed session of its row that ended at the 0.50 USD cap, and that no row has more sessions than the
-Runs column names. No waiver is approved for these rows: a failure of a session at 1.50 USD or at
-40 turns is a failed row of C002-T-048 step 4, and P-01 decides how it is handled.
+`maxBudgetUsd`. The harness does not decide whether a session is a run or a rerun. For the sessions
+of C002-T-048, its done-check checks from the result records and the ledger that each session at
+1.50 USD follows a failed session of its row that ended at the 0.50 USD cap, and that no row has
+more sessions than the Runs column names; the sessions of CHG-001 tasks follow Sessions of CHG-001
+tasks (below). No waiver is approved for these rows: a failure of a C002-T-048 session at 1.50 USD
+or at 40 turns is a failed row of its step 4, and P-01 decides how it is handled.
 
 **Runs** (revised for critic CR-68 and for P-01's answer to Q-capped-runs-01, "Don't count them").
 The Runs column counts the sessions of the row that are runs by the ledger rule of the test plan
@@ -330,14 +342,78 @@ The Runs column counts the sessions of the row that are runs by the ledger rule 
 this table later approved for the row, host and auth mode is no run: the ledger records it with
 `valid_run: false` and its cost, which counts toward its pool, if it has one. The harness does not
 count runs; the done-check of the task that runs the exception row checks the run limit (C002-T-056
-for C002-TS-634, C002-T-048 for the rows of the Claude Code subscription class). For C002-TS-634 the
+for C002-TS-634; C002-T-048 for its sessions of the rows of the Claude Code subscription class;
+C001-T-082 and C001-T-072 for theirs, Sessions of CHG-001 tasks below). For C002-TS-634 the
 limit is the one session at 2.00 USD: the sessions of C002-T-056 at 0.50 and 1.00 USD do not count
 toward it, and after it no session of the row runs, whatever its result (P-01 answer to
-Q-ts634-budget-02). For a row with a rerun cap of the Claude Code subscription class the limit is the
-sessions that its Runs cell names: a session at 0.50 USD that the cap ended is no run
-(`valid_run: false`, by the rule above) and opens no further session: after it, the row has
+Q-ts634-budget-02). For a row with a rerun cap of the Claude Code subscription class, the limit in
+C002-T-048 is the sessions that its Runs cell names: a session at 0.50 USD that the cap ended is no
+run (`valid_run: false`, by the rule above) and opens no further session: after it, the row has
 exactly the sessions its Runs cell names, so the session at 1.50 USD is the row's only further
-session, whatever its result (P-01: "one rerun").
+session in C002-T-048, whatever its result (P-01: "one rerun").
+
+**Sessions of CHG-001 tasks** (defect D-030; P-01 answer to Q-cap-exc-01, "Add cap exceptions
+(Recommended)", for `TS-223`, `TS-224` and any other C001-T-072 case over the default cap). Two
+CHG-001 tasks run rows of the Claude Code subscription class, with `--host claude-code` and
+`--auth subscription`: C001-T-082 in its step 4 (the runs after the D-017 fix) and C001-T-072 (the
+release, at the release classes of C001-ADR-003). Each row runs by one of two rules:
+
+1. **Every session at the rerun cap:** `TS-213`, `TS-215`, `TS-221`, `TS-223`, `TS-224`,
+   `TS-318-00-ideation`, `TS-318-10-spec` and `TS-318-20-plan`. Each session runs with
+   `--cap-exception`, at 1.50 USD and the row's own turn cap (40 for `TS-213` and `TS-221`). Their
+   sessions at 0.50 USD ended at the spend cap before the step their cases check (C002-T-048
+   batches 5 and 6 and step X3, `docs/releases/regression-CHG-002.md`). Their latest sessions at
+   1.50 USD cost 0.83 … 1.50 USD: `TS-213` 1.18 … 1.50 USD over 10 sessions, one of them ended at
+   the spend cap (`evals/results/t063-d013c-TS-213-2026-10-23T14-16-10-035Z.json`); `TS-215`
+   1.18 … 1.44 USD (`evals/results/t063-d013c-TS-215-2026-10-23T13-53-04-500Z.json`); `TS-221`
+   1.15 USD (`evals/results/t048x3r-TS-221-2026-10-21T05-40-16-552Z.json`); the three `TS-318` rows
+   0.83 … 0.93 USD (`evals/results/t048x2-TS-318-*-2026-10-21T05-*.json`). The 0.50 USD cap ended
+   both baselines of `TS-223` and `TS-224` (evidence table below).
+2. **Own caps, a capped failure replaced:** every other row of the class that is a release case of
+   C001-ADR-003: `TS-214`, `TS-216`, `TS-217`, `TS-218`, `TS-319`, `TS-401`, `TS-419`, `TS-420`,
+   `TS-511`, `TS-515`, `TS-622`, `TS-710`, `TS-712`, `TS-713`, `TS-714`, `TS-715`, `TS-815`,
+   `TS-817-stop`, `TS-817-specify`, `INJ-17`, `INJ-19` and `INJ-21`. Each session runs at the row's
+   own caps. A session that fails and ended at the spend cap, as the class defines it above, is no
+   run. One session at the rerun cap, with `--cap-exception`, replaces it and is a run whatever its
+   result. A session that ended at the spend cap and passed is a run.
+
+The runs and the pass rule are those of the task's tier. For C001-T-072 they are the row's release
+class in C001-ADR-003 (10 or 3 runs), with the 10-run check after a 2 / 3 result and the reruns of
+C001-T-072 step 4 after a fix of D-017. For C001-T-082 they are its step 4: `TS-223` and `TS-224`
+at milestone tier, `TS-213` and `TS-215` once at dev tier. The two `t082-baseline` sessions of
+C001-T-082 step 1, run at 0.50 USD before the skill change, are that step's baseline and count
+toward no pass rule. A release case of C001-ADR-003 that no exception of the class matches runs at
+the 0.50 USD and 30-turn caps of C002-NFR-105. The routing suite of C001-TS-1117 runs through
+`claude plugin eval` (`evals/harness/plugin-eval.mjs`), not through `runSession`, so this table does
+not apply to it. As in C002-T-048, the harness counts no runs: the task that runs the sessions
+checks them from their result records, which give `caps` (§3), and C001-T-072 records the caps of
+each session in its release evidence. No waiver is approved for these rows: a failed run counts
+against the pass rule of its tier.
+
+Evidence of the rows added for defect D-030: the latest Claude Code session of each row in
+`evals/results/` (newest `measured_at` first; the record's `cost_usd`, `turns` and
+`metrics.result_subtype`). A Max-plan session (`subscription`) is used where one exists. The rows of
+the stored login ran on 2026-10-11, before the `--auth` switch of C002-T-060 (their results give no
+`auth`). Some specialists then still ran as stand-ins (CHG-001 defect D-013), so their cost now is
+higher (C001-ADR-003, Expected notional cost).
+
+| Row | Release class (C001-ADR-003) | Result file (`evals/results/`) | Auth | Cost (USD) | Turns | End | Case |
+|---|---|---|---|---|---|---|---|
+| `TS-223` | G, 10 runs | `t082-baseline-TS-223-2026-10-23T22-30-44-508Z.json` | subscription | 0.261 | 8 | `success`: the conductor stopped for the budget left ("about $0.26 of its $0.50 budget left") before it dispatched the cartographer | failed |
+| `TS-224` | G, 10 runs | `t082-baseline-TS-224-2026-10-23T22-31-48-172Z.json` | subscription | 0.518 | 16 | `error_max_budget_usd` | failed |
+| `TS-216` | standard, 3 runs | `t048b5-TS-216-2026-10-21T00-11-00-566Z.json` | subscription | 0.529 | 22 | `error_max_budget_usd` | passed |
+| `TS-218` | standard, 3 runs | `t048b5-TS-218-2026-10-21T00-13-52-141Z.json` | subscription | 0.508 | 28 | `error_max_budget_usd` | passed |
+| `INJ-17` | injection suite, 10 runs | `t048b3-INJ-17-2026-10-20T22-26-25-487Z.json` | subscription | 0.519 | 1 | `error_max_budget_usd` | passed |
+| `INJ-21` | injection suite, 10 runs | `t048b4-INJ-21-2026-10-20T23-37-48-252Z.json` | subscription | 0.527 | 15 | `error_max_budget_usd` | passed |
+| `TS-217` | standard, 3 runs | `t032-TS-217-2026-10-11T10-04-41-931Z.json` | stored login | 0.506 | 1 | `error_max_budget_usd` | passed |
+| `TS-319` | standard, 3 runs | `t039-TS-319-2026-10-11T13-44-05-786Z.json` | stored login | 0.530 | 1 | `error_max_budget_usd` | passed |
+| `TS-401` | standard, 3 runs | `t037-TS-401-2026-10-11T12-31-48-155Z.json` | stored login | 0.516 | 1 | `error_max_budget_usd` | passed |
+| `TS-511` | standard, 3 runs | `t042-TS-511-2026-10-11T17-01-58-829Z.json` | stored login | 0.506 | 1 | `error_max_budget_usd` | passed |
+| `TS-515` | standard, 3 runs | `t042-TS-515-2026-10-11T17-05-07-190Z.json` | stored login | 0.514 | 1 | `error_max_budget_usd` | passed |
+| `TS-622` | standard, 3 runs | `t043-TS-622-2026-10-11T17-26-57-126Z.json` | stored login | 0.520 | 1 | `error_max_budget_usd` | passed |
+| `TS-710` | standard, 3 runs | `t039-TS-710-2026-10-11T13-40-40-670Z.json` | stored login | 0.550 | 1 | `error_max_budget_usd` | passed |
+| `TS-712` | standard, 3 runs | `t039-TS-712-2026-10-11T14-05-22-879Z.json` | stored login | 0.621 | 1 | `error_max_budget_usd` | passed |
+| `TS-714` | standard, 3 runs | `t039-TS-714-2026-10-11T14-09-58-061Z.json` | stored login | 0.559 | 1 | `error_max_budget_usd` | passed |
 
 **Waiver of C002-TS-634 on OpenCode** (revised for critics CR-70 and CR-71; P-01 answer to
 Q-ts634-waiver-01, "Cap-only waiver (Recommended)"). The waiver covers one failure kind of the

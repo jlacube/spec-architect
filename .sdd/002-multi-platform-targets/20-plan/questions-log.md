@@ -188,3 +188,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Add rows to the C002-IF-010 §2.2 cap-exception table like TS-215 (1.50 USD, subscription), with caps.mjs and its test; the scenarios stay as approved (Recommended) · 2. Change TS-223/224 to dispatch the cartographer directly (about 0.30 USD a run), a CHG-001 G2 change
 - **Answer:** P-01: "Add cap exceptions (Recommended)"
 - **Extracted instructions:** none
+
+### Q-cap-exc-02 — release cases without capped Max-plan evidence (architect)
+- **Options:** 1. Measure now: one Max-plan session per case at 0.50 USD (TS-802, TS-804-unattended, TS-320, 507, 508, 711, 1001, 1013; about 3 USD notional), then add rows in this revision (Recommended) · 2. Leave them at the defaults
+- **Answer:** P-01: "Measure now (Recommended)"
+- **Extracted instructions:** none
