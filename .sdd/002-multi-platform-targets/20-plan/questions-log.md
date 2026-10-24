@@ -193,3 +193,10 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Measure now: one Max-plan session per case at 0.50 USD (CHG-001 cases `TS-802`, `TS-804-unattended`, `TS-320`, `TS-507`, `TS-508`, `TS-711`, `TS-1001`, `TS-1013`; about 3 USD notional), then add rows in this revision (Recommended) · 2. Leave them at the defaults
 - **Answer:** P-01: "Measure now (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-24 — defect D-031 (found in C001-T-082)
+
+### Q-budget-hide-01 — the model sees its session budget in Claude Code evals
+- **Options:** 1. Hide the budget: the eval harness stops a session itself when the cost reaches the cap and passes no budget to Claude Code; narrow CHG-002 revision, harness change with offline tests, one paid check (about 3 USD notional) (Recommended) · 2. Raise caps for the affected rows · 3. Accept as is under RISK-038
+- **Answer:** P-01: "Hide the budget (Recommended)"
+- **Extracted instructions:** none
