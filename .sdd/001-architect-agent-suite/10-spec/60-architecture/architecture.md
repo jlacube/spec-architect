@@ -162,6 +162,7 @@ approves).
 | F2 | Guarded write by an author agent | C001-TS-1103, 1105 |
 | F3 | Implementer reports progress and a defect, then revision | C001-TS-901, 908, 910, 814, 815 |
 | F4 | Archive into living specs | C001-TS-914, 915, 916, 921, 925 |
+| F5 | Blocking question while other specialists still run (C001-IF-05 §2) | C001-TS-215 |
 
 ## 4. Data view
 
@@ -334,4 +335,21 @@ sequenceDiagram
   P01-->>C001_COMP_01: confirm
   C001_COMP_01->>C001_COMP_07: archive 004
   C001_COMP_06->>C001_COMP_06: ADDED/MODIFIED/REMOVED/RENAMED into _living, glossary merge, move folder
+```
+
+### 8.6 F5 — Blocking question while other specialists still run (realizes C001-TS-215)
+
+```mermaid
+sequenceDiagram
+  %% Flow F5: realizes C001-TS-215, rule C001-IF-05 §2 (defect D-019 item 1)
+  actor P01 as P-01
+  participant C001_COMP_01 as Conductor
+  participant C001_COMP_02 as Specialists
+  C001_COMP_01->>C001_COMP_02: parallel briefs (spec-writer, cartographer)
+  C001_COMP_02-->>C001_COMP_01: cartographer hand-back, question with blocking true
+  Note over C001_COMP_01,C001_COMP_02: spec-writer still running, the conductor does not wait for it
+  C001_COMP_01->>P01: AskUserQuestion with the blocking question, before the turn ends and before any dispatch
+  P01-->>C001_COMP_01: answer (verbatim, logged)
+  C001_COMP_02-->>C001_COMP_01: spec-writer hand-back, its questions go to a later round
+  C001_COMP_01->>C001_COMP_02: further author briefs, with the answer
 ```

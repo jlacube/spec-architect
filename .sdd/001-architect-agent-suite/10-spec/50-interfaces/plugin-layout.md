@@ -75,3 +75,27 @@ are recommended. `claude plugin validate` stays authoritative (C001-REQ-1117).
 | PLG-CI-001 | Workflows cover 3 OSes and are `workflow_dispatch`-only | C001-REQ-1119 |
 | PLG-EVAL-001 | Eval suite size and spread | C001-REQ-1116 |
 | PLG-MCP-001 | `.mcp.json` declares exactly context7, deepwiki, serena; no ripwire | C001-REQ-1005, 1006, 1108 |
+| PLG-TMPL-001 | No path under `${CLAUDE_PLUGIN_ROOT}/templates/` in agent, command or skill bodies (§4) | D-019 item 2 (CAP-11 requirement to follow) |
+
+## §4 Template access
+
+Agent, command and skill bodies name a template as `sdd template show <profile>/<path>` and list
+the templates of a profile with `sdd template list <profile>` (C002-IF-007; C002-REQ-513,
+C002-REQ-520), on Claude Code as on the generated targets (C002-REQ-115). `<profile>` is the
+change's profile in `change.md` (`full` or `lite`) or `constitution`, and a body names the whole
+argument, for example `sdd template show lite/10-spec/spec.md`. No body names a path under
+`${CLAUDE_PLUGIN_ROOT}/templates/` for Read, Glob or Grep:
+
+- The plugin root lies outside the session's working directory, so Claude Code asks for
+  permission on each such read, and the plugin cannot grant it: plugin agents ignore
+  `permissionMode` (C001-CON-03), and the guards of C001-IF-07 only deny.
+- A direct read skips the repository override in `.sdd/_templates/<profile>/`, which
+  `sdd template show` applies (C002-REQ-513; C001-COMP-13).
+
+`sdd` runs through the Bash tool (C001-IF-07 §3, sdd CLI entry), so reading a template needs no
+permission beyond the one every `sdd` command already needs.
+
+Origin: defect D-019 item 2, the C001-TS-213 trace of `t082-d018`: the spec-writer's Glob, Read
+and Grep under the plugin root were refused (102–131 s), then it tried `sdd template` forms
+until one worked and read five full-profile templates before the lite one (134–220 s); P-01
+Q-t082-bugs-01 "Fix all 3 now (Recommended)".
