@@ -83,6 +83,19 @@ already makes after C002-T-066 then cover it too. D-023 item 1 (a proportionate 
 Revise) and D-026 item 3 (the TS-208 fixture's placeholder options) are deferred to a later change
 (P-01, Q-c002-defects-01 and Q-ts208-fixture-01).
 
+The revision for defect D-030 (found in C001-T-082; P-01 answers Q-cap-exc-01, "Add cap exceptions
+(Recommended)", and Q-cap-exc-02, "Measure now (Recommended)") lands in the fix task C002-T-068,
+after C002-T-048, with no paid session. It adds the 19 CHG-001 release cases of the C002-IF-010 §2.2
+table to `evals/harness/caps.mjs` with the two rules of "Sessions of CHG-001 tasks", and updates the
+pinning test and `cap06/cap-exceptions`.
+
+**Cross-change dependency.** CHG-001's **C001-T-082** (its step 4, the paid runs after the skill
+change) and **C001-T-072** (the release evals) depend on C002-T-068. Their Claude Code sessions of
+these rows must not start before C002-T-068 is done. Without the rows, `run.mjs` refuses
+`--cap-exception` for them, and a session at 0.50 USD is cut off as the two `t082-baseline` sessions
+were. The CHG-001 task files do not carry this edge: the CHG-001 plan is approved, and an edit there
+would need its own G3. The conductor records it on the CHG-001 side.
+
 ## Reading order
 
 1. `.sdd/SDD.md`: workspace conventions.
@@ -205,6 +218,7 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
+| Q-cap-exc-01, Q-cap-exc-02: cap exceptions for the CHG-001 release eval cases (defect D-030; `questions-log.md` round 2026-10-24) | C002-T-068; C001-T-082, C001-T-072 | settled: P-01 answered "Add cap exceptions (Recommended)" and "Measure now (Recommended)"; the 19 rows and two rules of C002-IF-010 §2.2 in C002-T-068; the CHG-001 tasks wait for it (cross-change dependency above) |
 | Q-model-refusal-01, Q-t067-order-01, Q-ts208-fixture-01: the missing-model refusal on an injection row, the order of C002-T-067 against the releases, and D-026 item 3 (`questions-log.md` round 2026-10-23) | C002-T-067, C002-T-052, C002-T-055 | settled: P-01 answered "Count as no-run (Recommended)", "No dependency (Recommended)" and "Defer with D-023(1) (Recommended)"; the no-run form in C002-T-067, no edge from C002-T-067 to the release tasks, and D-026 item 3 deferred (`10-strategy.md` §2, §3) |
 
 ## CLI commands
@@ -226,7 +240,8 @@ revisions, C002-T-059, C002-T-058, C002-T-061, C002-T-062 and C002-T-063, and fo
 revision C002-T-064, for the D-018 … D-020 revision C002-T-065, for the D-026, D-027 revision
 C002-T-066 (after C002-T-065 and before C002-T-052 and C002-T-054), and for the D-023 item 2, D-024,
 D-028 revision C002-T-067 (after C002-T-066; listed before the release tasks, which do not depend on
-it, so that one set of unpaid re-runs covers both commits), sit after their dependencies
+it, so that one set of unpaid re-runs covers both commits), and for the D-030 revision C002-T-068
+(after C002-T-048; CHG-001's C001-T-082 and C001-T-072 wait for it), sit after their dependencies
 (C002-T-063 after C002-T-042 and before C002-T-041;
 C002-T-064 after C002-T-047 and before C002-T-045 and C002-T-056; C002-T-065 after C002-T-045 and
 before C002-T-056, C002-T-048 and C002-T-054; C002-T-023 needs only C002-T-022 and
@@ -302,11 +317,12 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 59 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
 | 60 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
 | 61 | C002-T-067 | Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-067-fix-ripwire-map-rule-spend-reconciliation-key-redaction.md` |
-| 62 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 63 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 64 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 65 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 66 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 62 | C002-T-068 | Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-068-fix-cap-exceptions-chg001-release-cases.md` |
+| 63 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+| 64 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 65 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 66 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 67 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 
