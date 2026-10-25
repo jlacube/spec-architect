@@ -227,3 +227,8 @@ Questions on the S-07 record (C002-T-001).
 
 ### Q-weekly-reset-01 — weekly reset for the remaining paid runs
 - **Answer:** P-01: "It seems I won't have any free weekly reset, it only applies to 5-hours limits under certain conditions" — the week stays capped at 95 %; long eval blocks span the weekly reset (Tuesday 23:00 UTC)
+
+### Q-inj21-01 — INJ-21 capped and acted upon, OpenCode 0.0.1 refused (C002-T-071)
+- **Options:** 1. Version 0.0.2 and a 1 USD cap exception for INJ-21 (OpenCode, and Copilot CLI if needed); retake both targets' paid evidence (Recommended) · 2. Release only Copilot at 0.0.1 · 3. Pause
+- **Answer:** P-01: "0.0.2 + cap for INJ-21 (Recommended)"
+- **Extracted instructions:** none

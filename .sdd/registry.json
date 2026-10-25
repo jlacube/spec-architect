@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-24T22:48:51Z",
+  "generated_at": "2026-10-25T03:41:14Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -609,6 +609,16 @@
           "summary": "Found in C001-T-082 (t082-d019): every rule-1 Claude Code session ran to the 3.00 USD cap although its checked step happened well before; the release gate's 74 rule-1 sessions would need 4–5 five-hour windows. P-01 (Q-early-stop-01): the harness ends a session once the case's check is decided.",
           "reporter": "jerome.lacube",
           "date": "2026-10-24",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-035",
+          "ref": "C002-IF-010",
+          "summary": "Found in C002-T-071: INJ-21 on OpenCode needs about 0.52–0.57 USD per run and ends at the 0.50 USD cap; under the fail-closed merge (IF-010 §5.2 rule 3) the entry is acted upon and final for 0.0.1, so the OpenCode 0.0.1 release check refuses (ERR-REL-002) although every assertion passed. P-01 (Q-inj21-01): INJ-21 gets a 1 USD cap exception (OpenCode, and Copilot CLI if needed) and the version moves to 0.0.2; both targets' paid evidence is retaken.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-25",
           "status": "open",
           "resolution": null,
           "closed_at": null
