@@ -694,7 +694,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.sdd/004-x/)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.sdd/004-x/)"
     },
     {
       "id": "PG-049",
@@ -1128,7 +1128,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root)"
     },
     {
       "id": "PG-080",
@@ -1142,7 +1142,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.sdd)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.sdd)"
     },
     {
       "id": "PG-081",
@@ -1156,7 +1156,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-082",
@@ -1170,7 +1170,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-083",
@@ -1408,7 +1408,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-100",
@@ -1464,7 +1464,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.sdd/..)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.sdd/..)"
     },
     {
       "id": "PG-104",
@@ -1478,7 +1478,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.sdd/../)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.sdd/../)"
     },
     {
       "id": "PG-105",
@@ -1604,7 +1604,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-114",
@@ -1730,7 +1730,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-123",
@@ -1940,7 +1940,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-138",
@@ -1954,7 +1954,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-139",
@@ -2332,7 +2332,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-166",
@@ -2346,7 +2346,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-167",
@@ -2360,7 +2360,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-168",
@@ -2374,7 +2374,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-169",
@@ -2388,7 +2388,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-170",
@@ -2402,7 +2402,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-171",
@@ -2416,7 +2416,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-172",
@@ -2430,7 +2430,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-173",
@@ -2822,7 +2822,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "FileSystem.writeFile: The argument 'path' must be a string, Uint8Array, or URL without null bytes. Received \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.sdd/a\\u0000.md\""
+      "detail": "FileSystem.writeFile: The argument 'path' must be a string, Uint8Array, or URL without null bytes. Received \"C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.sdd/a\\u0000.md\""
     },
     {
       "id": "PG-201",
@@ -2836,7 +2836,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-202",
@@ -2850,7 +2850,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-203",
@@ -2864,7 +2864,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-204",
@@ -2878,7 +2878,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-205",
@@ -3018,7 +3018,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root/.claude/agent-memory/architect-sdd-cartographer)"
+      "detail": "BadResource: FileSystem.readFile (C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root/.claude/agent-memory/architect-sdd-cartographer)"
     },
     {
       "id": "PG-215",
@@ -3144,7 +3144,7 @@
       "expected": "deny",
       "expected_source": "C002-REQ-625",
       "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-ljfvxR\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\sdd-oc-run-HK40wH\\\\xdg\\\\data\\\\opencode\\\\tool-output\\\\*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"C:\\\\Users\\\\jerom\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\"act…"
     },
     {
       "id": "PG-224",
@@ -3396,7 +3396,7 @@
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-1Hwenn\\repository-root\\src\\app.ts</path>\n<type>file</type>\n<content>\n1: replay PG-240\n\n(End of file - total 1 lines)\n</content>"
+      "detail": "<path>C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-OQsRNU\\repository-root\\src\\app.ts</path>\n<type>file</type>\n<content>\n1: replay PG-240\n\n(End of file - total 1 lines)\n</content>"
     },
     {
       "id": "PG-242",
@@ -3522,7 +3522,7 @@
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "deny",
-      "detail": "BadResource: FileSystem.readFile (C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-1Hwenn\\repository-root)"
+      "detail": "BadResource: FileSystem.readFile (C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-OQsRNU\\repository-root)"
     },
     {
       "id": "PG-251",
@@ -3616,7 +3616,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3631,12 +3631,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-003",
@@ -3646,12 +3646,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-004",
@@ -3661,12 +3661,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "0038469 replay fixture\n"
+      "detail": "23ad89e replay fixture\n"
     },
     {
       "id": "BG-005",
@@ -3676,7 +3676,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3691,7 +3691,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3706,7 +3706,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3721,7 +3721,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3736,7 +3736,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3751,7 +3751,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3766,7 +3766,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3781,7 +3781,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3796,7 +3796,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3811,7 +3811,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -3826,7 +3826,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3841,7 +3841,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3856,7 +3856,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3871,7 +3871,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3886,7 +3886,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3901,7 +3901,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3916,7 +3916,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3931,7 +3931,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3946,7 +3946,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3961,7 +3961,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3976,7 +3976,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -3991,7 +3991,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4006,7 +4006,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4021,7 +4021,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4036,7 +4036,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4051,7 +4051,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4066,7 +4066,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4081,7 +4081,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4096,7 +4096,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4111,7 +4111,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4126,7 +4126,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4141,7 +4141,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4156,7 +4156,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4171,7 +4171,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4186,7 +4186,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4201,7 +4201,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4216,7 +4216,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4231,7 +4231,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4246,7 +4246,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4261,7 +4261,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4276,7 +4276,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4291,7 +4291,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4306,7 +4306,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4321,7 +4321,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4336,7 +4336,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4351,7 +4351,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4366,7 +4366,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4381,7 +4381,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4396,7 +4396,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4411,7 +4411,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4426,7 +4426,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4441,7 +4441,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4456,7 +4456,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4471,7 +4471,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4486,7 +4486,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4501,7 +4501,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4516,7 +4516,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4531,7 +4531,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4546,7 +4546,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4561,7 +4561,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4576,7 +4576,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4591,12 +4591,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-067",
@@ -4606,12 +4606,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-068",
@@ -4621,12 +4621,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-069",
@@ -4636,12 +4636,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-070",
@@ -4651,12 +4651,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-071",
@@ -4666,12 +4666,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-072",
@@ -4681,12 +4681,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-073",
@@ -4696,12 +4696,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-074",
@@ -4711,12 +4711,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-075",
@@ -4726,12 +4726,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-076",
@@ -4741,7 +4741,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4756,12 +4756,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-078",
@@ -4771,7 +4771,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -4786,12 +4786,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-080",
@@ -4801,7 +4801,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4816,7 +4816,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4831,12 +4831,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-083",
@@ -4846,7 +4846,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4861,12 +4861,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-085",
@@ -4876,7 +4876,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4891,7 +4891,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4906,7 +4906,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4921,7 +4921,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4936,7 +4936,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4951,7 +4951,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4966,7 +4966,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4981,7 +4981,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -4996,7 +4996,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5011,7 +5011,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5026,7 +5026,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5041,7 +5041,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5056,12 +5056,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-098",
@@ -5071,7 +5071,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5086,7 +5086,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5101,12 +5101,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "wc: Le terme ��wc�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "0\n"
     },
     {
       "id": "BG-101",
@@ -5116,7 +5116,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5131,7 +5131,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5146,7 +5146,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5161,7 +5161,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5176,7 +5176,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5191,7 +5191,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5206,7 +5206,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5221,7 +5221,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5236,7 +5236,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5251,7 +5251,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5266,7 +5266,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5281,7 +5281,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5296,7 +5296,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5311,7 +5311,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5326,12 +5326,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "0038469 replay fixture\n"
+      "detail": "23ad89e replay fixture\n"
     },
     {
       "id": "BG-116",
@@ -5341,7 +5341,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5356,7 +5356,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5371,7 +5371,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5386,7 +5386,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5401,7 +5401,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5416,7 +5416,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5431,12 +5431,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "C:/Users/jerom/AppData/Local/Temp/sdd-guard-1Hwenn/repository-root\n"
+      "detail": "C:/Users/jerom/AppData/Local/Temp/sdd-guard-OQsRNU/repository-root\n"
     },
     {
       "id": "BG-123",
@@ -5446,7 +5446,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5461,7 +5461,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5476,12 +5476,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "0038469 replay fixture\n"
+      "detail": "23ad89e replay fixture\n"
     },
     {
       "id": "BG-126",
@@ -5491,12 +5491,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 00384690a6a3fe4b13ec8e081acd495452afc734\nAuthor: replay <replay@localhost>\nDate:   Wed Oct 21 01:01:44 2026 +0200\n\n    replay fixture\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-127",
@@ -5506,12 +5506,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "tail: Le terme ��tail�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "23ad89e replay fixture\n"
     },
     {
       "id": "BG-128",
@@ -5521,7 +5521,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5536,7 +5536,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5551,7 +5551,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5566,7 +5566,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5581,12 +5581,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "error: pathspec 'src' did not match any file(s) known to git\n"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-133",
@@ -5596,7 +5596,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5611,7 +5611,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5626,7 +5626,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5641,7 +5641,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5656,7 +5656,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5671,7 +5671,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5686,7 +5686,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5701,7 +5701,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5716,7 +5716,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5731,7 +5731,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5746,7 +5746,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5761,7 +5761,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5776,7 +5776,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5791,7 +5791,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5806,7 +5806,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5821,7 +5821,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5836,7 +5836,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5851,7 +5851,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5866,7 +5866,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5881,7 +5881,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5896,7 +5896,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -5911,7 +5911,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5926,7 +5926,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5941,7 +5941,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5956,7 +5956,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5971,7 +5971,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -5986,7 +5986,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6001,7 +6001,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6016,7 +6016,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6031,7 +6031,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6046,7 +6046,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6061,7 +6061,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6076,7 +6076,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6091,7 +6091,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6106,7 +6106,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6121,12 +6121,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-169",
@@ -6136,7 +6136,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6151,7 +6151,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6166,12 +6166,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "wc: Le terme ��wc�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "5\n"
     },
     {
       "id": "BG-172",
@@ -6181,12 +6181,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "\r\n    replay fixture\r\nAuthor: replay <replay@localhost>\r\ncommit 00384690a6a3fe4b13ec8e081acd495452afc734\r\nDate:   Wed Oct 21 01:01:44 2026 +0200\r\n"
+      "detail": "\n    replay fixture\nAuthor: replay <replay@localhost>\ncommit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nDate:   Sun Oct 25 02:00:00 2026 +0200\n"
     },
     {
       "id": "BG-173",
@@ -6196,7 +6196,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6211,7 +6211,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -6226,12 +6226,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "head: cannot open 'src/a.ts' for reading: No such file or directory\n"
     },
     {
       "id": "BG-176",
@@ -6241,12 +6241,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "tail: Le terme ��tail�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "tail: cannot open 'x' for reading: No such file or directory\n"
     },
     {
       "id": "BG-177",
@@ -6256,7 +6256,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6271,7 +6271,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6286,7 +6286,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6301,7 +6301,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6316,7 +6316,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6331,7 +6331,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6346,7 +6346,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6361,12 +6361,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "uniq: Le terme ��uniq�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-185",
@@ -6376,7 +6376,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6391,7 +6391,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6406,7 +6406,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6421,7 +6421,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6436,7 +6436,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6451,7 +6451,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6466,12 +6466,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-192",
@@ -6481,7 +6481,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6496,7 +6496,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6511,7 +6511,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6526,12 +6526,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "head: option requires an argument -- n\nTry 'head --help' for more information.\n"
     },
     {
       "id": "BG-196",
@@ -6541,7 +6541,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6556,7 +6556,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6571,7 +6571,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6586,7 +6586,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6601,7 +6601,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6616,7 +6616,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6631,12 +6631,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "\r\nId     Name            PSJobTypeName   State         HasMoreData     Location             Command\r\n--     ----            -------------   -----         -----------     --------             -------\r\n1      Job1            BackgroundJob   Running       True            localhost            git status\r\n\r\n"
+      "detail": "On branch main\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\t.claude/\n\t.github/\n\t.mcp.json\n\t.opencode/\n\t.sdd/\n\tREADME.md\n\tnode_modules/\n\topencode.json\n\tsource-code-folder/\n\tsrc/\n\nnothing added to commit but untracked files present (use \"git add\" to track)\n"
     },
     {
       "id": "BG-203",
@@ -6646,7 +6646,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6661,12 +6661,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 00384690a6a3fe4b13ec8e081acd495452afc734\nAuthor: replay <replay@localhost>\nDate:   Wed Oct 21 01:01:44 2026 +0200\n\n    replay fixture\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-205",
@@ -6676,12 +6676,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "\r\nId     Name            PSJobTypeName   State         HasMoreData     Location             Command\r\n--     ----            -------------   -----         -----------     --------             -------\r\n1      Job1            BackgroundJob   Running       True            localhost            git log\r\n>: Le terme ��>�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\n\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� …"
+      "detail": "(no output)"
     },
     {
       "id": "BG-206",
@@ -6691,12 +6691,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ParserError: \r\nLine |\r\n   1 |  git log < input.txt\r\n     |          ~\r\n     | L'op�rateur ��<�� est r�serv� � une utilisation ult�rieure.\r\n"
+      "detail": "/usr/bin/bash: line 1: input.txt: No such file or directory\n"
     },
     {
       "id": "BG-207",
@@ -6706,12 +6706,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ParserError: \r\nLine |\r\n   1 |  git log <<< 'x'\r\n     |           ~\r\n     | Sp�cification de fichier manquante apr�s l'op�rateur de redirection.\r\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-208",
@@ -6721,12 +6721,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ParserError: \r\nLine |\r\n   1 |  git log << EOF\r\n     |           ~\r\n     | Sp�cification de fichier manquante apr�s l'op�rateur de redirection.\r\n"
+      "detail": "/usr/bin/bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')\ncommit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-209",
@@ -6736,7 +6736,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6751,7 +6751,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6766,12 +6766,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "fatal: ambiguous argument '?m': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'\n"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-212",
@@ -6781,7 +6781,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6796,12 +6796,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-214",
@@ -6811,7 +6811,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6826,7 +6826,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6841,12 +6841,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "commit 00384690a6a3fe4b13ec8e081acd495452afc734\r\nAuthor: replay <replay@localhost>\r\nDate:   Wed Oct 21 01:01:44 2026 +0200\r\n\r\n    replay fixture\r\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-217",
@@ -6856,12 +6856,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": " git log; \r\n"
+      "detail": "commit 23ad89e67cf6e3bf9dae841ba187fda12ba755c8\nAuthor: replay <replay@localhost>\nDate:   Sun Oct 25 02:00:00 2026 +0200\n\n    replay fixture\n"
     },
     {
       "id": "BG-218",
@@ -6871,7 +6871,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6886,7 +6886,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6901,12 +6901,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "fatal: ambiguous argument 'rm': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'\n"
     },
     {
       "id": "BG-221",
@@ -6916,12 +6916,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "On branch main\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\t.claude/\n\t.github/\n\t.mcp.json\n\t.opencode/\n\t.sdd/\n\tREADME.md\n\terr.txt\n\tnode_modules/\n\topencode.json\n\tsource-code-folder/\n\tsrc/\n\nnothing added to commit but untracked files present (use \"git add\" to track)\n"
+      "detail": "On branch main\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\t.claude/\n\t.github/\n\t.mcp.json\n\t.opencode/\n\t.sdd/\n\tREADME.md\n\terr.txt\n\tnode_modules/\n\topencode.json\n\tout.txt\n\tsource-code-folder/\n\tsrc/\n\nnothing added to commit but untracked files present (use \"git add\" to track)\n"
     },
     {
       "id": "BG-222",
@@ -6931,12 +6931,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "(no output)"
+      "detail": "/usr/bin/bash: -c: line 1: unexpected EOF while looking for matching `''\n"
     },
     {
       "id": "BG-223",
@@ -6946,12 +6946,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "(no output)"
+      "detail": "/usr/bin/bash: -c: line 1: unexpected EOF while looking for matching `\"'\n"
     },
     {
       "id": "BG-224",
@@ -6961,12 +6961,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "fatal: invalid --pretty format: x>y\n"
+      "detail": "fatal: invalid --pretty format: x\n"
     },
     {
       "id": "BG-225",
@@ -6976,7 +6976,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -6991,7 +6991,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7006,12 +7006,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-228",
@@ -7021,7 +7021,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7036,7 +7036,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7051,7 +7051,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7066,7 +7066,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7081,12 +7081,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-233",
@@ -7096,7 +7096,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7111,12 +7111,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-235",
@@ -7126,7 +7126,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7141,12 +7141,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-237",
@@ -7156,7 +7156,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7171,7 +7171,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7186,7 +7186,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7201,7 +7201,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7216,7 +7216,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7231,7 +7231,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7246,12 +7246,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "0038469 replay fixture\n"
+      "detail": "23ad89e replay fixture\n"
     },
     {
       "id": "BG-244",
@@ -7261,7 +7261,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7276,7 +7276,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7291,7 +7291,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7306,7 +7306,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7321,7 +7321,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7336,7 +7336,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7351,7 +7351,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7366,7 +7366,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7381,7 +7381,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7396,7 +7396,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7411,7 +7411,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7426,7 +7426,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7441,7 +7441,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7456,7 +7456,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7471,12 +7471,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-259",
@@ -7486,12 +7486,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-260",
@@ -7501,12 +7501,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-261",
@@ -7516,12 +7516,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-262",
@@ -7531,12 +7531,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-263",
@@ -7546,12 +7546,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-264",
@@ -7561,12 +7561,12 @@
         "tool": "bash",
         "caller": "adopter-agent",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "Remove-Item: Nous ne pouvons pas trouver un param�tre qui correspond au nom de param�tre ��rf��.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-265",
@@ -7576,7 +7576,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7591,7 +7591,7 @@
         "tool": "bash",
         "caller": "sdd-auditor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7606,7 +7606,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7621,7 +7621,7 @@
         "tool": "write",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "C001-REQ-1103",
@@ -7636,12 +7636,12 @@
         "tool": "read",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "File not found: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-1Hwenn\\repository-root\\rm -rf src\n\nDid you mean one of these?\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-1Hwenn\\repository-root\\src"
+      "detail": "File not found: C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-OQsRNU\\repository-root\\rm -rf src\n\nDid you mean one of these?\nC:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-guard-OQsRNU\\repository-root\\src"
     },
     {
       "id": "BG-270",
@@ -7651,7 +7651,7 @@
         "tool": "grep",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7666,7 +7666,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": true,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7681,7 +7681,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": true,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7696,7 +7696,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": true,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7711,12 +7711,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "(no output)"
+      "detail": "The argument 'file' cannot be empty. Received ''"
     },
     {
       "id": "BG-275",
@@ -7726,7 +7726,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7741,7 +7741,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7756,7 +7756,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": true,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "C002-REQ-630",
@@ -7771,12 +7771,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ERR-CLI-002: Change `002` not found. Fix: Check `sdd status`\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-279",
@@ -7786,7 +7786,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7801,7 +7801,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7816,12 +7816,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-282",
@@ -7831,7 +7831,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7846,7 +7846,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7861,12 +7861,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "./sdd: Le terme ��./sdd�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-285",
@@ -7876,7 +7876,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7891,7 +7891,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7906,7 +7906,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7921,12 +7921,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "error LINT-REG-001 .sdd/registry.json — registry.json is missing. Fix: Run `sdd status --write`\ninfo LINT-WS-002 .sdd/.. / — Unknown entry `.. /` in .sdd/ is preserved. Fix: None needed (preserved)\ninfo LINT-WS-002 .sdd/%2e%2e/ — Unknown entry `%2e%2e/` in .sdd/ is preserved. Fix: None needed (preserved)\ninfo LINT-WS-002 .sdd/004-x. / — Unknown entry `004-x. /` in .sdd/ is preserved. Fix: None needed (preserved)\ninfo LINT-WS-002 .sdd/a.md — Unknown entry `a.md` in .sdd/ is preserved. Fix: None n…"
+      "detail": "(no output)"
     },
     {
       "id": "BG-289",
@@ -7936,7 +7936,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7951,7 +7951,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -7966,7 +7966,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7981,7 +7981,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -7996,7 +7996,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8011,7 +8011,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8026,7 +8026,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8041,7 +8041,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8056,7 +8056,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8071,7 +8071,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8086,7 +8086,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8101,7 +8101,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8116,7 +8116,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8131,7 +8131,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8146,7 +8146,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8161,7 +8161,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8176,7 +8176,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8191,7 +8191,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8206,7 +8206,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8221,7 +8221,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8236,7 +8236,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8251,7 +8251,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8266,7 +8266,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8281,7 +8281,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8296,7 +8296,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8311,7 +8311,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8326,7 +8326,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8341,7 +8341,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8356,7 +8356,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8371,7 +8371,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8386,7 +8386,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8401,7 +8401,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8416,7 +8416,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8431,7 +8431,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8446,7 +8446,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8461,7 +8461,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8476,7 +8476,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8491,7 +8491,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8506,7 +8506,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8521,7 +8521,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8536,7 +8536,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8551,7 +8551,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8566,7 +8566,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8581,7 +8581,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8596,7 +8596,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8611,7 +8611,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8626,7 +8626,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8641,7 +8641,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8656,7 +8656,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8671,7 +8671,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8686,7 +8686,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8701,7 +8701,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8716,7 +8716,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8731,7 +8731,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8746,7 +8746,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8761,7 +8761,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8776,7 +8776,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8791,7 +8791,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8806,7 +8806,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8821,7 +8821,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8836,7 +8836,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8851,7 +8851,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8866,7 +8866,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8881,7 +8881,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8896,7 +8896,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8911,7 +8911,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8926,7 +8926,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8941,7 +8941,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -8956,7 +8956,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8971,7 +8971,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -8986,7 +8986,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9001,7 +9001,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9016,7 +9016,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9031,7 +9031,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9046,7 +9046,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9061,7 +9061,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9076,7 +9076,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9091,7 +9091,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9106,7 +9106,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9121,7 +9121,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9136,7 +9136,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9151,7 +9151,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9166,7 +9166,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9181,7 +9181,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9196,7 +9196,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9211,7 +9211,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9226,7 +9226,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9241,7 +9241,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9256,7 +9256,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9271,7 +9271,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9286,7 +9286,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9301,7 +9301,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9316,7 +9316,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9331,12 +9331,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-383",
@@ -9346,12 +9346,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-384",
@@ -9361,12 +9361,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-385",
@@ -9376,12 +9376,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-386",
@@ -9391,12 +9391,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "INFO  2026-10-21 01:06:34,750 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-21 01:06:34,751 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:/Users/jerom/AppData/Local/Temp/sdd-oc-run-ljfvxR/localappdata/architect-sdd/serena\\logs\\2026-10-21\\mcp_20261021-010634_25204.txt\r\nINFO  2026-10-21 01:06:34,768 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:/Users/jerom/AppData/Local/Temp/sd…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-387",
@@ -9406,12 +9406,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "INFO  2026-10-21 01:06:43,143 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-21 01:06:43,143 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena-home\\logs\\2026-10-21\\mcp_20261021-010643_12188.txt\r\nINFO  2026-10-21 01:06:43,229 [MainThread] serena.config.serena_config:from_config_file:1037 - Serena configuration file not found at C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\s…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-388",
@@ -9421,12 +9421,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "INFO  2026-10-21 01:06:51,390 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-21 01:06:51,390 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena-home\\logs\\2026-10-21\\mcp_20261021-010651_34028.txt\r\nINFO  2026-10-21 01:06:51,396 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-389",
@@ -9436,12 +9436,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "INFO  2026-10-21 01:06:59,535 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-21 01:06:59,535 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena-home\\logs\\2026-10-21\\mcp_20261021-010659_34392.txt\r\nINFO  2026-10-21 01:06:59,538 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-390",
@@ -9451,12 +9451,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "INFO  2026-10-21 01:07:07,635 [MainThread] serena.cli:start_mcp_server:355 - Initializing Serena MCP server\r\nINFO  2026-10-21 01:07:07,635 [MainThread] serena.cli:start_mcp_server:356 - Storing logs in C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena-home\\logs\\2026-10-21\\mcp_20261021-010707_37300.txt\r\nINFO  2026-10-21 01:07:07,708 [MainThread] serena.config.serena_config:from_config_file:1041 - Loading Serena configuration from C:\\Users\\jerom\\AppData\\Local\\Temp\\sdd-oc-run-ljfvxR\\serena…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-391",
@@ -9466,7 +9466,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9481,12 +9481,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "node:internal/modules/cjs/loader:1433\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'C:\\p\\scripts\\sdd.mjs'\r\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)\r\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)\r\n    at Function._load (node:internal/modules/cjs/loader:1216:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\r\n    at Function.executeUserEntryPoint …"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-393",
@@ -9496,7 +9496,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9511,7 +9511,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9526,7 +9526,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9541,7 +9541,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9556,7 +9556,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9571,7 +9571,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9586,12 +9586,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-400",
@@ -9601,7 +9601,7 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9616,12 +9616,12 @@
         "tool": "bash",
         "caller": "sdd-planner",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-402",
@@ -9631,7 +9631,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9646,7 +9646,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -9661,12 +9661,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "node:internal/modules/cjs/loader:1433\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'C:\\scripts\\sdd.mjs'\r\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)\r\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)\r\n    at Function._load (node:internal/modules/cjs/loader:1216:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\r\n    at Function.executeUserEntryPoint [a…"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-405",
@@ -9676,7 +9676,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9691,7 +9691,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9706,12 +9706,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-408",
@@ -9721,7 +9721,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9736,7 +9736,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9751,7 +9751,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9766,12 +9766,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-412",
@@ -9781,7 +9781,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9796,7 +9796,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9811,12 +9811,12 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-415",
@@ -9826,7 +9826,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9841,7 +9841,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9856,7 +9856,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9871,7 +9871,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9886,7 +9886,7 @@
         "tool": "bash",
         "caller": "sdd-conductor",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9901,7 +9901,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9916,7 +9916,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9931,7 +9931,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9946,7 +9946,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9961,7 +9961,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9976,7 +9976,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -9991,7 +9991,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10006,7 +10006,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10021,7 +10021,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10036,7 +10036,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10051,7 +10051,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10066,12 +10066,12 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "allow",
-      "detail": "(no output)"
+      "actual": "deny",
+      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
     },
     {
       "id": "BG-432",
@@ -10081,12 +10081,12 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ERR-CLI-002: Change `002` not found. Fix: Check `sdd status`\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-433",
@@ -10096,12 +10096,12 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "ERR-CLI-003: Usage error: `<NNN> must have three digits: install`. Fix: See `sdd lint --help`\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-434",
@@ -10111,7 +10111,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -10126,7 +10126,7 @@
         "tool": "bash",
         "caller": "sdd-spec-writer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -10141,12 +10141,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-437",
@@ -10156,12 +10156,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-438",
@@ -10171,12 +10171,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-439",
@@ -10186,7 +10186,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -10201,12 +10201,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
       "actual": "allow",
-      "detail": "head: Le terme ��head�� n'est pas reconnu comme nom d'applet de commande, d'une fonction, d'un fichier de script ou d'un programme ex�cutable.\r\nV�rifiez l'orthographe du nom ou, si un chemin d'acc�s a �t� inclus, v�rifiez que le chemin d'acc�s est correct et r�essayez.\r\n"
+      "detail": "(no output)"
     },
     {
       "id": "BG-441",
@@ -10216,7 +10216,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "allow",
       "expected_source": "corpus",
@@ -10231,7 +10231,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10246,12 +10246,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-444",
@@ -10261,7 +10261,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10276,7 +10276,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10291,7 +10291,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10306,12 +10306,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-448",
@@ -10321,12 +10321,12 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     },
     {
       "id": "BG-449",
@@ -10336,7 +10336,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10351,7 +10351,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10366,7 +10366,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10381,7 +10381,7 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
@@ -10396,15 +10396,15 @@
         "tool": "bash",
         "caller": "sdd-cartographer",
         "malformed": false,
-        "dialect": "powershell"
+        "dialect": "bash"
       },
       "expected": "deny",
       "expected_source": "corpus",
-      "actual": "deny",
-      "detail": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"sdd *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git log *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git show *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"git diff *\",\"ac…"
+      "actual": "allow",
+      "detail": "(no output)"
     }
   ],
   "not_applicable": [],
   "applicable": 709,
-  "differing": 165
+  "differing": 154
 }

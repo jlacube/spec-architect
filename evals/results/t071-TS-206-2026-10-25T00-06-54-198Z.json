@@ -1,0 +1,138 @@
+{
+  "scenario": "TS-206",
+  "title": "Round size limit",
+  "tier": "dev",
+  "label": "t071",
+  "agent": "architect:sdd-conductor",
+  "host": "opencode",
+  "target": "opencode",
+  "host_versions": {
+    "opencode": "1.18.31"
+  },
+  "auth": null,
+  "api_key_source": "openrouter-key-file",
+  "measured_at": "2026-10-25T00:08:13.483Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.3305354,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3305354,
+        "session_ms": 78373,
+        "api_ms": null,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "openrouter/anthropic/claude-opus-5.5": {
+            "input": 20,
+            "output": 4863,
+            "cache_read": 247702,
+            "cache_write": 34795,
+            "cost_usd": 0.33053540000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "openrouter/anthropic/claude-opus-5.5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 4863,
+              "cache_read": 247702,
+              "cache_write": 34795
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 3,
+          "AskUserQuestion": 3,
+          "Write": 1,
+          "Edit": 2,
+          "Bash": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 14531
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 14531
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 14531
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 8422
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 8969
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 5273
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 8192
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 2942
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 4270
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 2377
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "openrouter-key-file",
+      "target": "opencode",
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 9,
+        "usd": 0.3305354
+      },
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "openrouter",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "transcript": "evals/results/transcripts/TS-206-2026-10-25T00-06-54-198Z-run1.json"
+    }
+  ]
+}
