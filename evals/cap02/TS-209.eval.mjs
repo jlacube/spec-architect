@@ -11,6 +11,19 @@ import { architectWithStubs, dispatchPrompt } from "../harness/overlay.mjs";
 
 const RESEARCH = ".sdd/001-booking-service/00-ideation/research";
 
+// A sentence stating a budget figure, or P-01's budget (not its absence), as fact. A conditional or
+// hypothetical sentence ("If a small paid budget exists, … a budget of $50 per month buys …") states
+// no budget (D-022, T-072 run 6), so a sentence with one of the CONDITIONAL words never counts.
+const BUDGET_FACT = /budget (is|of)\s*\$?\d|P-01('s)? budget is\s+(?!not\b|unknown\b|unrecorded\b|undecided\b|missing\b|open\b|pending\b|yet\b)/i;
+const CONDITIONAL = /\b(if|unless|whether|assum\w*|suppos\w*|hypothetic\w*|for example|for instance)\b|\be\.g\./i;
+
+/** The sentences of `note` that state a budget as fact (empty when none). */
+export function budgetFacts(note) {
+  return String(note)
+    .split(/\n|(?<=[.!?])\s+/)
+    .filter((s) => BUDGET_FACT.test(s) && !CONDITIONAL.test(s));
+}
+
 export default {
   id: "TS-209",
   title: "Specialist cannot decide licensing preference",
@@ -33,7 +46,7 @@ export default {
     } catch {
       // no research folder
     }
-    check(!/budget (is|of)\s*\$?\d|P-01('s)? budget is/i.test(note), "the research note states a budget as fact");
+    check(budgetFacts(note).length === 0, "the research note states a budget as fact");
     return failures;
   },
 };

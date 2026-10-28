@@ -140,6 +140,9 @@ Your final message is your hand-back to the conductor. It contains, in this orde
      candidates (4 or 5), not a list; the 2–3
      presented `options` (recommendation first, `"recommended": true`) and every other
      candidate under `rejected` with its reason (options-analysis method).
+   - Use only the schema's keys: an option has `label` and `rationale`, and optionally `score`
+     and `recommended`; put pros and cons in the `rationale` sentence, never in keys of their own.
+     Any other key makes the block invalid.
    - Never assume the answer: do not write a guessed value into an artifact as fact. Where your
      artifact depends on it, write `[NEEDS CLARIFICATION: Q-<topic>-<nn>]` (or `[ASSUMPTION: Q-…]` when the
      conductor told you to use the recommended option).

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T13:06:10Z",
+  "generated_at": "2026-10-28T22:43:31Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -250,6 +250,16 @@
           "status": "closed",
           "resolution": "Fixed in cebd596: Node's --experimental-test-coverage merge across processes depended on raw-file order and undercounted; the coverage step now converts each raw file alone and sums hits, and fails on a lost batch or process. Lines 95.60 % on four consecutive runs; NFR-502 baseline updated in docs/nfr-results.md §4.",
           "closed_at": "2026-10-28"
+        },
+        {
+          "id": "D-022",
+          "ref": "C001-TS-209",
+          "summary": "Found in C001-T-072 (release run, TS-209 8/10 at 2026-10-28T22-10-43-534Z, below the 9/10 floor): (1) run 6 is a grader false positive — the TC-209 note check (evals/cap02/TS-209.eval.mjs, budget regex) failed on a conditional sentence ('If a small paid budget exists, … a budget of $50 per month buys roughly 4,000 reminders'); it must fail only when the note states P-01's budget as fact; (2) run 8 is a real defect — the researcher's questions block gave options extra pros/cons fields, which the C001-IF-05 questions schema forbids (additionalProperties false). P-01: fix both, then rerun TS-209 x10.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-28",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []
