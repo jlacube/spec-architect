@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-073]
 implements: [C002-REQ-509, C002-REQ-617, C002-REQ-611, C002-REQ-312]
 satisfies_ac: [C002-AC-509.1, C002-AC-617.1, C002-AC-611.1, C002-AC-312.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-620, C002-TS-679, C002-TS-319, C002-TC-620, C002-TC-679, C
 components: [C002-COMP-006, C002-COMP-009, C002-COMP-011]
 risk_refs: [C002-RISK-019, C002-RISK-036, C002-RISK-038]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: d6fdd13, completed_at: 2026-10-28, notes: "0.0.3 everywhere, dist 0.0.3 built with the D-020 fallback; caps 44 rows (14 rule 1); VSC-15 Expect updated; cap-exceptions 30/30, checklist 26/26, question-variants 23/23, release-check 78/78; check exit 0 first run" }
 ---
 
 # C002-T-074 — Fix for revisions D-036, D-037: package version 0.0.3 after the CHG-001 D-020 fix, the TS-226-blocking caps row, and checklist step VSC-15
