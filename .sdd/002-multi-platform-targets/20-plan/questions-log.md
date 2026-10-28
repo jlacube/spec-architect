@@ -253,3 +253,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Defer OpenCode: release Copilot (and npm architect-sdd) first; OpenCode waits for a proper fix (early stop or bounded case for OpenCode injection rows) in a later version; no more OpenRouter spend now (Recommended) · 2. Try once more at 0.0.3 with a 2 USD cap · 3. Fix the INJ-21 case, then 0.0.3
 - **Answer:** P-01: "Defer OpenCode (Recommended)"
 - **Extracted instructions:** none
+
+### Q-noask-01 — conductor without a question tool (found in C002-T-071)
+- **Options:** 1. Text fallback: the conductor asks its question or presents the gate as plain text in its reply and ends its turn; Copilot 0.0.3 with its 24 sessions retaken (Recommended) · 2. Harness change only (question tool on with scripted answers) · 3. Pause releases
+- **Answer:** P-01: "Text fallback + 0.0.3 (Recommended)"
+- **Extracted instructions:** none

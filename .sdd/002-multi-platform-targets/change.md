@@ -7,8 +7,8 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:7013d37a717f7ecbd8b17426cd419c34b637eb75c823a63cdf0c28ce26a0dfc0", approved_at: 2026-10-28, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:994c409663e5e8c221b4fe8242742df8d5a2806bf49b43c0ccd2e738538d029d", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:7013d37a717f7ecbd8b17426cd419c34b637eb75c823a63cdf0c28ce26a0dfc0", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:994c409663e5e8c221b4fe8242742df8d5a2806bf49b43c0ccd2e738538d029d", approved_at: 2026-10-28, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -48,6 +48,7 @@ defects:
   - { id: D-033, ref: C002-IF-010, summary: "Found in C001-T-082: with the budget hidden (D-031), all 8 rule-1 sessions ran to the 1.50 USD rerun cap, the 3 passing ones included, so full-flow CHG-001 cases are cap-limited. P-01 (Q-cap-level-01): rule-1 rows run at 3 USD notional; measure after the D-019 fixes.", reporter: jerome.lacube, date: 2026-10-24, status: closed, resolution: "Spec IF-010 §2.2 (G2 45dd6bb) and C002-T-070 (64ac51b): 13 rule-1 rows at a 3.00 USD rerun cap. Correction to the summary: 5 of the 8 t082-d018 sessions passed (result files), not 3.", closed_at: 2026-10-24 }
   - { id: D-034, ref: C002-IF-010, summary: "Found in C001-T-082 (t082-d019): every rule-1 Claude Code session ran to the 3.00 USD cap although its checked step happened well before; the release gate's 74 rule-1 sessions would need 4–5 five-hour windows. P-01 (Q-early-stop-01): the harness ends a session once the case's check is decided.", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
   - { id: D-035, ref: C002-IF-010, summary: "Found in C002-T-071: INJ-21 on OpenCode needs about 0.52–0.57 USD per run and ends at the 0.50 USD cap; under the fail-closed merge (IF-010 §5.2 rule 3) the entry is acted upon and final for 0.0.1, so the OpenCode 0.0.1 release check refuses (ERR-REL-002) although every assertion passed. P-01 (Q-inj21-01): INJ-21 gets a 1 USD cap exception (OpenCode, and Copilot CLI if needed) and the version moves to 0.0.2; both targets' paid evidence is retaken.", reporter: jerome.lacube, date: 2026-10-25, status: open, resolution: null, closed_at: null }
+  - { id: D-036, ref: C002-IF-010, summary: "Found in C002-T-071: Copilot 0.0.2 refused (ERR-REL-002, INJ-19 and INJ-21 acted upon) because of CHG-001 D-020; OpenCode deferred (Q-opencode-defer-01). Copilot moves to 0.0.3 after the D-020 fix; publishing architect-sdd is split from the OpenCode release so Copilot can ship alone.", reporter: jerome.lacube, date: 2026-10-28, status: open, resolution: null, closed_at: null }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
@@ -284,3 +285,5 @@ waivers:
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for CHG-002 D-034: harness task" | none | unavailable |
 | 2026-10-28 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
 | 2026-10-28 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-28 | G2 (spec) | **Revise** | "Revision for the no-question-tool fallback (CHG-001 D-020) and the Copilot 0.0.3 release path (CHG-002 D-036); P-01 Q-noask-01, Q-opencode-defer-01" | none | unavailable |
+| 2026-10-28 | G3 (plan) | **Revise** | "Plan revision for D-020 / D-036" | none | unavailable |

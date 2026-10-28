@@ -106,3 +106,8 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Raise the rule-1 cap to 3 USD notional (release estimate about 420 USD), measure after the fixes (Recommended) · 2. Keep 1.50 USD
 - **Answer:** P-01: "Raise to $3 (Recommended)"
 - **Extracted instructions:** none
+
+### Q-noask-01 — conductor without a question tool (found in C002-T-071)
+- **Options:** 1. Text fallback: the conductor asks its question or presents the gate as plain text in its reply and ends its turn; Copilot 0.0.3 with its 24 sessions retaken (Recommended) · 2. Harness change only (question tool on with scripted answers) · 3. Pause releases
+- **Answer:** P-01: "Text fallback + 0.0.3 (Recommended)"
+- **Extracted instructions:** none

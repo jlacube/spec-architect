@@ -5,8 +5,8 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:dfb397ddba91aeef375c272be1d31feaab5e3aca6d45cab33b8a42337e65abf2", approved_at: 2026-10-24, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:d46bf4a71e0f7bea5f71b073dc984c7c7dbd8393f94c84f65f029bb0ec8d1d66", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:dfb397ddba91aeef375c272be1d31feaab5e3aca6d45cab33b8a42337e65abf2", approved_at: 2026-10-24, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:d46bf4a71e0f7bea5f71b073dc984c7c7dbd8393f94c84f65f029bb0ec8d1d66", approved_at: 2026-10-24, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -29,6 +29,7 @@ defects:
   - { id: D-017, ref: C001-TS-215, summary: "Found in C001-T-063: the cartographer flags the same scope question (Q-scope-01, coupon on the kiosk path as well as web checkout) as blocking in 1 of 3 runs, so TS-215's Given is met only then (TC-215 1/3 at milestone tier, b4f18b7); the conductor behaved correctly whenever it was blocking. Fix to consider: code-discovery skill / sdd-conventions return contract state that a question deciding which code paths are in scope is blocking; retest TC-215 at milestone tier. P-01 (2026-10-23): 'Log defect, waive (Recommended)' — TC-215 waived for C001-T-063.", reporter: jerome.lacube, date: 2026-10-23, status: closed, resolution: "C001-T-082 (d7c930b) and C001-T-083: IF-05 §1 blocking criteria in the skills; TC-215 3/3 and TC-223 3/3 at milestone tier with the real cartographer flagging the scope question blocking.", closed_at: 2026-10-25 }
   - { id: D-018, ref: C001-TS-224, summary: "Found in C001-T-082: TS-224 expects the cartographer to return the naming question with blocking false, but the cartographer correctly raises no question it does not need (IF-05 §1) and the spec-writer raised Q-naming-01 blocking false; TC-224 0/3. The Then must assert on the specialists' hand-backs as a whole (no blocking naming question; the naming question, where raised, is blocking false).", reporter: jerome.lacube, date: 2026-10-24, status: closed, resolution: "TS-224 reworked over all hand-backs (G2 6655e9c); TC-224 3/3 at milestone tier (C001-T-082, d7c930b).", closed_at: 2026-10-25 }
   - { id: D-019, ref: C001-REQ-213, summary: "Found in C001-T-082 (hidden-budget reruns): (1) in unattended drafting the conductor holds a blocking question back while a background specialist runs, instead of stopping at it (TC-215: question flagged blocking at 238 s, never asked before the cap at 554 s); (2) the spec-writer loops on 'sdd template show' after Glob/Read of the plugin templates are denied (TC-213, about 1.3 USD); (3) the sdd-conventions material bullet 'give candidates_considered (4 or 5)' leads agents to give a list where C001-IF-05 wants a number (TC-223 run 1). P-01 (Q-t082-bugs-01): fix all three now.", reporter: jerome.lacube, date: 2026-10-24, status: closed, resolution: "C001-T-083 (ask on arrival, templates via the CLI, PLG-TMPL-001, candidates_considered wording) and C001-T-082 (d7c930b): TC-215, 225, 213, 223 3/3 at milestone tier.", closed_at: 2026-10-25 }
+  - { id: D-020, ref: C001-REQ-221, summary: "Found in C002-T-071 (Copilot CLI 0.0.2, --no-ask-user): when the question tool is unavailable, the conductor refuses to present a gate or ask (it tells the user to enable the tool) instead of continuing; INJ-19 and INJ-21 recorded acted upon. P-01 (Q-noask-01): text fallback — the conductor asks its question or presents the gate as plain text in its reply and ends its turn.", reporter: jerome.lacube, date: 2026-10-28, status: open, resolution: null, closed_at: null }
 ---
 # CHG-001 — Architect agent suite
 
@@ -99,3 +100,5 @@ defects:
 | 2026-10-24 | G3 (plan) | **Revise** | "Plan revision for the C001-T-082 findings" | none | unavailable |
 | 2026-10-24 | G2 (spec) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-10-24 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-28 | G2 (spec) | **Revise** | "Revision for the no-question-tool fallback (CHG-001 D-020) and the Copilot 0.0.3 release path (CHG-002 D-036); P-01 Q-noask-01, Q-opencode-defer-01" | none | unavailable |
+| 2026-10-28 | G3 (plan) | **Revise** | "Plan revision for D-020 / D-036" | none | unavailable |
