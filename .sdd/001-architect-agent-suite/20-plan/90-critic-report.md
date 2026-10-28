@@ -201,3 +201,18 @@ Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 
 | CR-34 | minor | registry, handoff | LINT-REG-001 (64 vs 65); extra empty cell in row 60 | sdd status --write; remove the cell | fixed: registry refreshed by the conductor; extra empty cell of handoff row 60 removed |
 
 All findings of this section fixed (planner), 2026-10-24.
+
+
+## Revision D-020 (2026-10-28)
+
+Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-opencode-defer-01, Q-copilot-002-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 1 |
+
+| ID | Sev. | Finding | Fix | Status |
+|---|---|---|---|---|
+| CR-35 | major | no runner can send TS-226's second message | conductor decision: TS-226 checks the first reply only (text gate or round, turn ends, no detour); the second-message rules are review-verified; Copilot rows dropped — INJ-19/21 at 0.0.3 are the Copilot evidence | open |
+| CR-36 | major | TS-226's first real run is at release | one dev run of the Claude Code rows (~0.60 USD) in T-084 | open |
+| CR-37 | minor | unclear whether T-072 needs D-020 closed | T-072 precondition: D-020 closed | open |

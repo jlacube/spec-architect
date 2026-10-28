@@ -1112,3 +1112,21 @@ Scope: `git diff 9c03f6f 5e3b1db`, against D-034, D-035 and Q-early-stop-01, Q-w
 | CR-79 | minor | T-071, §4.1 rule 5, handoff, T-072 preconditions | answered questions still marked open; met precondition still open | replace with the answers; mark met | fixed (T-071 Pools, test plan §4.1 rule 5 and §4.2, strategy §2 and handoff carry P-01's answer to Q-pool-retake-01, "Yes, use the reserve"; T-072's paid-check precondition marked met: the IF-010 `TS-225` row names step 6) |
 | CR-80 | minor | T-071 steps 4, 6 | "goes to P-01 before any rerun" conflicts with "final for 0.0.2"; no near-cap check on the 0.0.2 sessions | "goes to P-01; 0.0.2 of that target is refused"; report injection rows at or within 0.09 USD of their cap per host | fixed (T-071 step 4 failure text; step 6 near-cap list per host and its done-when line; T-052 and T-055 done-when read that list as the release-task check of the injection-row cap rule, spec CR-122) |
 | CR-81 | minor | handoff exception, Q-weekly-reset-01 | P-01's instruction only in the handoff; Monday→Tuesday corrected in place | log the instruction verbatim with its date; add a correction note | fixed (conductor) |
+
+
+## Revision D-036 (2026-10-28)
+
+Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-opencode-defer-01, Q-copilot-002-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 3 | 2 |
+
+| ID | Sev. | Finding | Fix | Status |
+|---|---|---|---|---|
+| CR-82 | blocker | T-071's done-check needs a released Copilot dry run, which needs T-050's record, which depends on T-071 (deadlock) | T-071's dry run is "reported"; the released dry run moves to T-075 after T-050 and T-057 | open |
+| CR-83 | major | T-071 omits the TS-226 Copilot rows that D-020 closure needs | resolved by C001 CR-35: no TS-226 Copilot rows; D-020 closes on INJ-19/21 passing at 0.0.3 | open |
+| CR-84 | major | npm publication before any Copilot check passes (versions immutable) | T-075 depends on T-050 and T-057 plus a released dry run | open |
+| CR-85 | major | the OpenCode deferral leaves items without owner (scope question, fix task, T-052 near-cap reference, M-07 closure) | open a Q-ID for the scope question (asked to P-01), a defect-tracked placeholder for the OpenCode fix and retake, rebase T-052 on it | open |
+| CR-86 | minor | cross-change edge stated backwards and without C001-T-084 | name C001-T-084 in T-074, T-071, handoff; fix direction | open |
+| CR-87 | minor | duplicate WBS sentence; 21 of 23 vs 24 unexplained; OpenCode runsheets name refused 0.0.2 | remove; explain (TS-336 n/a, TS-359 not run); OpenCode runsheets say "deferred, version to be set" | open |

@@ -1476,3 +1476,16 @@ Scope: `git diff 9c03f6f 5e3b1db`, against D-034, D-035 and Q-early-stop-01, Q-w
 | CR-122 | minor | NFR-105, IF-010 Caps of injection rows | a P-01 process duty inside an NFR; "normal session" and a turn margin undefined | keep it in IF-010 with a release-task done-check; define or exclude the turn margin | IF-010 fixed (architect: §2.2 Caps of injection rows as a release duty: the criterion (latest session ended at a cap, or recorded spend within 0.09 USD of the spend cap), turns excluded from the margin since spend ends these sessions (16 turns, 3 … 6 used), and the done-check of the task that takes a host's release evidence, today C002-T-071, over the host's injection case set); NFR-105 fixed (spec-writer: the injection-row cap rule dropped from the Threshold); the C002-T-071 done-check open for the planner |
 | CR-123 | minor | TS-688 | only the passing INJ-21 row, no 28.36 refusal row | add it (TC-917 seven rows) | fixed (test-designer: C002-TS-688 row `INJ-21` at 28.36 refused, seven rows); TC-917 left to the planner |
 | CR-124 | minor | REQ-645, TS-706 | cites items 1…7 of 8; stop-when-error has no SHALL; no rows for a non-boolean return or a self-ended session | unwanted-behaviour REQ or AC note; cite 1…8; two rows | TS part fixed (test-designer: C002-TS-706 rows for a non-boolean return and for a session that ends by itself after a `result` while the condition is true; the note cites items 1 … 8; rows under C002-AC-645.1, since no `stop-when-error` REQ had landed); REQ part fixed (spec-writer: unwanted-behaviour C002-REQ-646, one `stop-when-error` record, the condition called no more, the session runs on, its AC ID named; C002-REQ-645 cites items 1 … 8); moving the rows to the new REQ's AC left to the test-designer |
+
+
+## Revision D-036 (2026-10-28)
+
+Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-opencode-defer-01, Q-copilot-002-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 0 |
+
+| ID | Sev. | Finding | Fix | Status |
+|---|---|---|---|---|
+| CR-125 | major | IF-010 §5.1 says interview cases have no Copilot CLI row; TS-226 had two | resolved by C001 CR-35: TS-226 has no Copilot CLI rows | open |

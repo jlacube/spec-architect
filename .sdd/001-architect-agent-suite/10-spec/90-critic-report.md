@@ -224,3 +224,19 @@ Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 
 | CR-33 | minor | IF-08 §4, T-083 | DEC, ADR and OA templates exist only under full/ | state that they are always full/… | fixed (IF-08 §4 item 1: DEC, OA and ADR templates are always `full/…` whatever the profile, with their three folders) |
 | CR-34 | minor | REQ-209, REQ-213, REQ-221 | REQ-209 note limits merging but not ordering; REQ-213 keeps the ambiguous "reaches" and does not cite REQ-221 | "merging and ordering"; REQ-213 note citing REQ-221 and IF-05 §2 | fixed (REQ-209 note: "merging and ordering cover…"; REQ-213 note: a blocking question is reached when the hand-back that holds it arrives and is asked then per REQ-221 and IF-05 §2) |
 | CR-35 | minor | AC-221.1, TS-215, TS-225, ADR-003 | singular spec-writer call; Given-not-met rule only under AC-221.1; such runs count against ≥ 9/10 | "every Agent call to the spec-writer"; cite the rule in TS-215; decide in ADR-003/TC-225 whether such runs count or are replaced | fixed (AC-221.1 note: "still running" covers every Agent call to the spec-writer made before the arrival; a Given-not-met run is recorded with `valid_run` false and replaced once by a new session, a second one counts as a failure, by conductor decision; TS-215's note cites the rule); ADR-003: planner |
+
+
+## Revision D-020 (2026-10-28)
+
+Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-opencode-defer-01, Q-copilot-002-01. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 2 |
+
+| ID | Sev. | Finding | Fix | Status |
+|---|---|---|---|---|
+| CR-36 | major | ambiguous replies (negation, two choices, "Approve" in "Approve with waivers") have no rule; re-asking only in T-084; unanswered round questions undefined | a decision only when the reply picks exactly one choice; otherwise nothing recorded and the choices presented again; unanswered questions stay open (review-verified rule, see CR-35) | open |
+| CR-37 | major | TS-226's word check ("enable", "INSTALL.md", "--no-ask-user") fails correct replies | match the detour itself (INSTALL.md, restart or flag instruction, "enable the … tool") | open |
+| CR-38 | minor | no TS-226 row for a blocking ask; vague reply only on Claude Code | a blocking-ask row; Copilot evidence is INJ-19/21 at 0.0.3 (conductor decision) | open |
+| CR-39 | minor | REQ-222 bundles the fallback and "never tell P-01 to enable a tool" | split: own SHALL NOT | open |
