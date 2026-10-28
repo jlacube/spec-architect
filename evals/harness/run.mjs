@@ -842,10 +842,14 @@ export async function main(argv, deps = {}) {
   const ledgerFile = deps.ledger ?? LEDGER;
   const pool = opts.pool ?? "general";
   // The cap of the exception that matches a selected row (C002-IF-010 §2.2 "Reserve of a cap-exception
-  // session"): H = that cap + the ordinary H; null for an ordinary row.
+  // session"): H = that cap + the ordinary H; null for an ordinary row. An exception with a session cap
+  // gives that cap (INJ-21 on OpenCode, 1.00 USD, so H is at least 1.65 USD; defect D-035).
   const fileOf = new Map(picked.scenarios.map(({ file, scenario }) => [scenario, posix(relative(root, file))]));
   const fileOfId = new Map(picked.scenarios.map(({ file, scenario }) => [scenario.id, posix(relative(root, file))]));
-  const exceptionCap = (scenario) => capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host, auth })?.usd ?? null;
+  const exceptionCap = (scenario) => {
+    const e = capException({ id: scenario.id, file: fileOf.get(scenario) ?? "", host, auth });
+    return e ? (typeof e.sessionUsd === "number" ? e.sessionUsd : e.usd) : null;
+  };
   const hText = (cap, r) => (cap === null ? `H ${r.H}` : `H ${r.H} (cap exception ${cap.toFixed(2)} USD + ordinary H ${Math.round((r.H - cap) * 1e6) / 1e6})`);
   const writeLedger = (ledger) => writeFileSync(ledgerFile, redact(JSON.stringify(ledger, null, 2)) + "\n");
   // The key usage reads of the reconciliation (C002-IF-010 §2.3): on the real runner GET /api/v1/key with

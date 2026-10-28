@@ -5,7 +5,7 @@ Insiders with hooks enabled, take the toy change to G1, and save the checklist r
 
 Task C002-T-050 · cases C002-TC-901 (the run) and C002-TC-618 (record review), plus C002-TC-358,
 C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
-`docs/checklists/records/vscode-<YYYY-MM-DD>-0.0.1.md`
+`docs/checklists/records/vscode-<YYYY-MM-DD>-0.0.2.md`
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 - **A new, empty VS Code profile** (Profiles: New Profile). A new profile starts without
   extensions, so make sure Copilot Chat 0.35.3 is installed in it.
 - Node 22.22.3 first on PATH, as in T-051 step 1.
-- **Package:** `dist\architect-copilot-0.0.1.zip` and `dist\architect-sdd-0.0.1.tgz`, packed at
+- **Package:** `dist\architect-copilot-0.0.2.zip` and `dist\architect-sdd-0.0.2.tgz`, packed at
   T-054's commit. The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 13 VS Code chat sessions, or about 26 if one repeat is needed. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
@@ -27,17 +27,17 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 1. Create the record from the template.
 
 ```powershell
-Copy-Item C:\Sandbox\ClaudeCode\Architect\docs\checklists\records\TEMPLATE.md "C:\Sandbox\ClaudeCode\Architect\docs\checklists\records\vscode-$(Get-Date -Format yyyy-MM-dd)-0.0.1.md"
+Copy-Item C:\Sandbox\ClaudeCode\Architect\docs\checklists\records\TEMPLATE.md "C:\Sandbox\ClaudeCode\Architect\docs\checklists\records\vscode-$(Get-Date -Format yyyy-MM-dd)-0.0.2.md"
 ```
 
-   Fill in the header: `date`, `package_version: 0.0.1`, `host_versions` (from Help: About),
+   Fill in the header: `date`, `package_version: 0.0.2`, `host_versions` (from Help: About),
    `session_type: Local`, `enforcement_mode: sdd-mcp-server`, `executed_by`.
 
-2. Install the CLI from the tarball and check the versions. `sdd --version` must print `0.0.1`, and
+2. Install the CLI from the tarball and check the versions. `sdd --version` must print `0.0.2`, and
    `sdd host-version vscode-insiders` must print both host versions.
 
 ```powershell
-npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.1.tgz
+npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.2.tgz
 ```
 ```powershell
 sdd --version
@@ -50,7 +50,7 @@ sdd host-version vscode-insiders
    backtick.
 
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.1.zip -DestinationPath C:\Sandbox\runs\t050\architect-copilot-0.0.1
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip -DestinationPath C:\Sandbox\runs\t050\architect-copilot-0.0.2
 ```
 
 4. Build the toy repository and the two-folder workspace exactly as the checklist's "Scope of a run"
@@ -64,7 +64,7 @@ Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.1.zip 
      from the root of `toy`:
 
 ```powershell
-sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.0.1
+sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.0.2
 ```
 
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
@@ -129,7 +129,7 @@ node C:\Sandbox\ClaudeCode\Architect\scripts\release-check.mjs --target copilot 
 
 ## Tell the conductor
 
-> T-050 done: record at docs/checklists/records/vscode-<YYYY-MM-DD>-0.0.1.md, all 26 sdd-mcp-server
+> T-050 done: record at docs/checklists/records/vscode-<YYYY-MM-DD>-0.0.2.md, all 26 sdd-mcp-server
 > steps passed, hooks_state enabled, models_used sdd-conductor = <model ID | not shown> (<shown in
 > the model picker | elsewhere: …>), VSC-04 <row ok | VS Code refused>, dry run: <outcome line>.
 

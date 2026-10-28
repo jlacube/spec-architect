@@ -15,8 +15,8 @@ OpenCode section · ledger entry in `evals/results/spend-chg002.json`
 - **Node 22.22.3** from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3`.
 - **OpenCode 1.18.31**, the pinned binary
   `C:\Users\jerom\AppData\Roaming\npm\node_modules\opencode-ai\bin\opencode.exe`.
-- **Package files:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-opencode-0.0.1.zip` and
-  `dist\architect-sdd-0.0.1.tgz`. The CLI is not on npm yet, so you install it from the tarball.
+- **Package files:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-opencode-0.0.2.zip` and
+  `dist\architect-sdd-0.0.2.tgz`. The CLI is not on npm yet, so you install it from the tarball.
 - **Model access, which applies to this task:** OpenCode's OpenRouter provider, using **your
   OpenRouter key file** `C:\Users\jerom\.architect-evals\openrouter-key.txt`. You pass the key as
   `OPENROUTER_API_KEY` to this profile's OpenCode process only. This is what the task asks for, not
@@ -64,7 +64,7 @@ New-Item -ItemType Directory -Force C:\Sandbox\runs\t051\toy
 git -C C:\Sandbox\runs\t051\toy init
 ```
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-opencode-0.0.1.zip -DestinationPath C:\Sandbox\runs\t051\pkg
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-opencode-0.0.2.zip -DestinationPath C:\Sandbox\runs\t051\pkg
 ```
 
 5. Give the key to this shell only. Use 5a, or use 5b if the file cannot be read.
@@ -89,10 +89,10 @@ $env:OPENROUTER_API_KEY = Read-Host -MaskInput "OpenRouter key"
 each phase. Subtract any download time, such as OpenCode fetching its plugin package on first start,
 and note it.
 
-7. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.1`.
+7. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.2`.
 
 ```powershell
-npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.1.tgz
+npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.2.tgz
 ```
 ```powershell
 sdd --version

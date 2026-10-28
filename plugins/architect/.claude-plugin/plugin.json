@@ -1,6 +1,6 @@
 {
   "name": "architect",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Spec-driven development agents: ideation → specification → planning with gates",
   "license": "MIT",
   "author": { "name": "Jerome LACUBE" }

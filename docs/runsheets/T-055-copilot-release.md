@@ -1,10 +1,10 @@
 # T-055 — Release the Copilot target
 
-**Purpose:** run the Copilot release check, publish `architect-sdd` 0.0.1 if T-052 did not, and
+**Purpose:** run the Copilot release check, publish `architect-sdd` 0.0.2 if T-052 did not, and
 share the Copilot zip with its SHA-256.
 
 Task C002-T-055 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
-`docs/releases/copilot/0.0.1/release.json` and `zip.sha256`
+`docs/releases/copilot/0.0.2/release.json` and `zip.sha256`
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ Task C002-T-055 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
 - The S-08 record is not `deferred`. It gives `sdd-mcp-server`, so no hooks-fallback exception is
   expected.
 - Node 22.22.3, and the repository at the release-candidate commit (ask the conductor which commit).
-- If npm does not have `architect-sdd` 0.0.1 yet: your npm account `jlacube` with 2FA, and your
+- If npm does not have `architect-sdd` 0.0.2 yet: your npm account `jlacube` with 2FA, and your
   authenticator to hand.
 - **No model spend:** no agent sessions. `npm publish` is free.
 
@@ -31,14 +31,14 @@ Set-Location C:\Sandbox\ClaudeCode\Architect
 git log -1 --oneline
 ```
 
-2. Dry run. This writes nothing. Expect `release-check: copilot 0.0.1 (sdd-mcp-server): released; …`
+2. Dry run. This writes nothing. Expect `release-check: copilot 0.0.2 (sdd-mcp-server): released; …`
    and exit code 0. The `ERR-REL-003` line from T-054 should now be gone.
 
 ```powershell
 node scripts/release-check.mjs --target copilot --dry-run
 ```
 
-3. The real release check. It writes `docs/releases/copilot/0.0.1/release.json`. Exit code 0 means
+3. The real release check. It writes `docs/releases/copilot/0.0.2/release.json`. Exit code 0 means
    `released`. Exit code 1 means `refused`: if so, release nothing and go to "Tell the conductor".
 
 ```powershell
@@ -49,14 +49,14 @@ node scripts/release-check.mjs --target copilot
    `1.142.0-insider`, Copilot CLI `1.0.98`), `exception: null` and `refusals: 0`.
 
 ```powershell
-node -e "const r=require('./docs/releases/copilot/0.0.1/release.json');console.log(r.outcome,r.enforcement_mode,JSON.stringify(r.tested_versions),'exception:',JSON.stringify(r.exception),'refusals:',r.refusals.length)"
+node -e "const r=require('./docs/releases/copilot/0.0.2/release.json');console.log(r.outcome,r.enforcement_mode,JSON.stringify(r.tested_versions),'exception:',JSON.stringify(r.exception),'refusals:',r.refusals.length)"
 ```
 
-5. Check npm. If the command prints `0.0.1`, T-052 already published it: skip step 6. If it gives
+5. Check npm. If the command prints `0.0.2`, T-052 already published it: skip step 6. If it gives
    **E404**, publish in step 6.
 
 ```powershell
-npm view architect-sdd@0.0.1 version
+npm view architect-sdd@0.0.2 version
 ```
 
 6. **Only if step 5 gave E404: publish. You do this yourself.** First check that `npm whoami` prints
@@ -66,10 +66,10 @@ npm view architect-sdd@0.0.1 version
 npm whoami
 ```
 ```powershell
-npm publish dist/architect-sdd-0.0.1.tgz
+npm publish dist/architect-sdd-0.0.2.tgz
 ```
 
-7. Check that the published version is `0.0.1`.
+7. Check that the published version is `0.0.2`.
 
 ```powershell
 npm view architect-sdd version
@@ -78,10 +78,10 @@ npm view architect-sdd version
 8. Write the one-line `zip.sha256` file.
 
 ```powershell
-"$((Get-FileHash dist\architect-copilot-0.0.1.zip -Algorithm SHA256).Hash.ToLower())  architect-copilot-0.0.1.zip" | Set-Content docs\releases\copilot\0.0.1\zip.sha256
+"$((Get-FileHash dist\architect-copilot-0.0.2.zip -Algorithm SHA256).Hash.ToLower())  architect-copilot-0.0.2.zip" | Set-Content docs\releases\copilot\0.0.2\zip.sha256
 ```
 
-9. Share `dist\architect-copilot-0.0.1.zip` the way the Claude Code zips are shared
+9. Share `dist\architect-copilot-0.0.2.zip` the way the Claude Code zips are shared
    (`75-rollout.md` §1). Keep the shared copy unchanged, because it is retained for rollback
    C002-RB-003. Check that its hash equals the `zip.sha256` line.
 
@@ -91,15 +91,15 @@ Get-FileHash <path of the shared copy> -Algorithm SHA256
 
 ## Record
 
-- `docs/releases/copilot/0.0.1/release.json`, written by step 3. Do not edit it.
-- `docs/releases/copilot/0.0.1/zip.sha256`, from step 8.
+- `docs/releases/copilot/0.0.2/release.json`, written by step 3. Do not edit it.
+- `docs/releases/copilot/0.0.2/zip.sha256`, from step 8.
 - For the task report: the outcome line of step 3, the output of step 4, and whether you or T-052
   published `architect-sdd`.
 
 ## Pass / fail
 
 - **Pass:** step 3 exits 0 with outcome `released`, `exception` is null, the tested versions are
-  1.142.0-insider and 1.0.98, `npm view architect-sdd version` prints `0.0.1`, and the hash of the
+  1.142.0-insider and 1.0.98, `npm view architect-sdd version` prints `0.0.2`, and the hash of the
   shared zip equals `zip.sha256`.
 - **Refused:** step 3 exits 1. Nothing is published or shared, and the refusal stays in the release
   record. It is done as "refusal recorded". If OpenCode was also refused, `architect-sdd` stays
@@ -109,9 +109,9 @@ Get-FileHash <path of the shared copy> -Algorithm SHA256
 
 ## Tell the conductor
 
-> T-055 done: Copilot 0.0.1 released, record at docs/releases/copilot/0.0.1/release.json
-> (sdd-mcp-server, exception null), zip.sha256 written, zip shared at <where>; architect-sdd 0.0.1
+> T-055 done: Copilot 0.0.2 released, record at docs/releases/copilot/0.0.2/release.json
+> (sdd-mcp-server, exception null), zip.sha256 written, zip shared at <where>; architect-sdd 0.0.2
 > on npm (published by <T-052 | me in T-055>). RC commit <sha>.
 
 If it was refused: "T-055: Copilot refused (<ERR-REL codes>), record at
-docs/releases/copilot/0.0.1/release.json, nothing released".
+docs/releases/copilot/0.0.2/release.json, nothing released".

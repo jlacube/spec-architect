@@ -1,10 +1,10 @@
 # T-052 — Publish `architect-sdd` and release the OpenCode target
 
-**Purpose:** run the OpenCode release check, publish `architect-sdd` 0.0.1 to npm by hand with 2FA,
+**Purpose:** run the OpenCode release check, publish `architect-sdd` 0.0.2 to npm by hand with 2FA,
 and share the OpenCode zip with its SHA-256.
 
 Task C002-T-052 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
-`docs/releases/opencode/0.0.1/release.json` and `zip.sha256`
+`docs/releases/opencode/0.0.2/release.json` and `zip.sha256`
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ Set-Location C:\Sandbox\ClaudeCode\Architect
 git log -1 --oneline
 ```
 
-2. Dry run. This writes nothing. Expect `release-check: opencode 0.0.1 (sdd-mcp-server): released;
+2. Dry run. This writes nothing. Expect `release-check: opencode 0.0.2 (sdd-mcp-server): released;
    release record not written (--dry-run; …)` and exit code 0.
 
 ```powershell
@@ -46,7 +46,7 @@ node scripts/release-check.mjs --target opencode --dry-run
    result or models`.
 
 ```powershell
-node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.1/injection.json','utf8'));let bad=0;for(const c of s.cases){if(!c.result||!Array.isArray(c.models)||!c.models.length||!fs.existsSync(c.result)){console.log('MISSING',c.id);bad++}}console.log(s.cases.length+' entries, '+bad+' with a missing result or models')"
+node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.2/injection.json','utf8'));let bad=0;for(const c of s.cases){if(!c.result||!Array.isArray(c.models)||!c.models.length||!fs.existsSync(c.result)){console.log('MISSING',c.id);bad++}}console.log(s.cases.length+' entries, '+bad+' with a missing result or models')"
 ```
 
 4. Check the ledger. Every OpenCode `INJ-*` session whose result did not pass must have an entry
@@ -54,13 +54,13 @@ node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/release
    rows without an entry: none`.
 
 ```powershell
-node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.1/injection.json','utf8'));const L=JSON.parse(fs.readFileSync('evals/results/spend-chg002.json','utf8')).entries.filter(e=>e.host==='opencode'&&/^INJ-/.test(e.case||''));const by=Object.fromEntries(s.cases.map(c=>[c.id,c]));let n=0;for(const e of L){if(e.pass===false){const c=by[e.case];const ok=c&&c.acted_upon===true;console.log(e.case,e.result,ok?'acted upon: ok':'NOT marked acted upon');if(!ok)n++}}const miss=Array.from({length:22},(_,i)=>'INJ-'+String(i+1).padStart(2,'0')).filter(id=>!by[id]);console.log(L.length+' OpenCode INJ sessions checked; '+n+' problems; rows without an entry: '+(miss.join(' ')||'none'))"
+node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.2/injection.json','utf8'));const L=JSON.parse(fs.readFileSync('evals/results/spend-chg002.json','utf8')).entries.filter(e=>e.host==='opencode'&&/^INJ-/.test(e.case||''));const by=Object.fromEntries(s.cases.map(c=>[c.id,c]));let n=0;for(const e of L){if(e.pass===false){const c=by[e.case];const ok=c&&c.acted_upon===true;console.log(e.case,e.result,ok?'acted upon: ok':'NOT marked acted upon');if(!ok)n++}}const miss=Array.from({length:22},(_,i)=>'INJ-'+String(i+1).padStart(2,'0')).filter(id=>!by[id]);console.log(L.length+' OpenCode INJ sessions checked; '+n+' problems; rows without an entry: '+(miss.join(' ')||'none'))"
 ```
 
    If step 3 or step 4 shows a problem, **stop** and tell the conductor. The fix goes through
    T-066, reopened. Never edit the summary by hand.
 
-5. The real release check. It writes `docs/releases/opencode/0.0.1/release.json`. Exit code 0 means
+5. The real release check. It writes `docs/releases/opencode/0.0.2/release.json`. Exit code 0 means
    `released`. Exit code 1 means `refused`: the refusals are printed on stderr. If it is refused, do
    not publish. Go straight to "Tell the conductor". The refusal stays recorded, and T-055 publishes
    later if Copilot passes.
@@ -69,15 +69,15 @@ node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/release
 node scripts/release-check.mjs --target opencode
 ```
 
-6. Check npm. `npm whoami` must print `jlacube`. `npm view architect-sdd@0.0.1` must give **E404**
-   (no such version). If 0.0.1 already exists, skip step 7. Also run `npm view architect-sdd`: if it
+6. Check npm. `npm whoami` must print `jlacube`. `npm view architect-sdd@0.0.2` must give **E404**
+   (no such version). If 0.0.2 already exists, skip step 7. Also run `npm view architect-sdd`: if it
    lists a package, the maintainers must include `jlacube`. If someone else owns the name, stop.
 
 ```powershell
 npm whoami
 ```
 ```powershell
-npm view architect-sdd@0.0.1
+npm view architect-sdd@0.0.2
 ```
 ```powershell
 npm view architect-sdd
@@ -86,10 +86,10 @@ npm view architect-sdd
 7. **Publish. You do this yourself.** npm asks for your 2FA code. The conductor never publishes.
 
 ```powershell
-npm publish dist/architect-sdd-0.0.1.tgz
+npm publish dist/architect-sdd-0.0.2.tgz
 ```
 
-8. Check that the published version is `0.0.1`.
+8. Check that the published version is `0.0.2`.
 
 ```powershell
 npm view architect-sdd version
@@ -98,10 +98,10 @@ npm view architect-sdd version
 9. Write the one-line `zip.sha256` file (the hash, two spaces, the file name).
 
 ```powershell
-"$((Get-FileHash dist\architect-opencode-0.0.1.zip -Algorithm SHA256).Hash.ToLower())  architect-opencode-0.0.1.zip" | Set-Content docs\releases\opencode\0.0.1\zip.sha256
+"$((Get-FileHash dist\architect-opencode-0.0.2.zip -Algorithm SHA256).Hash.ToLower())  architect-opencode-0.0.2.zip" | Set-Content docs\releases\opencode\0.0.2\zip.sha256
 ```
 
-10. Share `dist\architect-opencode-0.0.1.zip` the same way you share the Claude Code zips
+10. Share `dist\architect-opencode-0.0.2.zip` the same way you share the Claude Code zips
     (`75-rollout.md` §1). Keep the shared copy unchanged, because it is retained for rollback
     C002-RB-002. Check that the hash of the shared copy matches the `zip.sha256` line.
 
@@ -111,15 +111,15 @@ Get-FileHash <path of the shared copy> -Algorithm SHA256
 
 ## Record
 
-- `docs/releases/opencode/0.0.1/release.json`, written by the check in step 5. Do not edit it.
-- `docs/releases/opencode/0.0.1/zip.sha256`, from step 9.
+- `docs/releases/opencode/0.0.2/release.json`, written by the check in step 5. Do not edit it.
+- `docs/releases/opencode/0.0.2/zip.sha256`, from step 9.
 - For the task report: the release-candidate commit, the output lines of steps 3 and 4 (the
   sessions checked), the outcome line of step 5, and the output of `npm view architect-sdd version`.
 
 ## Pass / fail
 
 - **Pass:** steps 3 and 4 are clean, step 5 exits 0 with outcome `released`,
-  `npm view architect-sdd version` prints `0.0.1`, and the hash of the shared zip equals
+  `npm view architect-sdd version` prints `0.0.2`, and the hash of the shared zip equals
   `zip.sha256`.
 - **Refused:** step 5 exits 1. Nothing is published or shared, and the release record keeps the
   refusals. That still counts as done for T-052, with the refusal recorded.
@@ -128,9 +128,9 @@ Get-FileHash <path of the shared copy> -Algorithm SHA256
 
 ## Tell the conductor
 
-> T-052 done: OpenCode 0.0.1 released, record at docs/releases/opencode/0.0.1/release.json,
-> zip.sha256 written, architect-sdd 0.0.1 published (npm view: 0.0.1), zip shared at <where>. RC
+> T-052 done: OpenCode 0.0.2 released, record at docs/releases/opencode/0.0.2/release.json,
+> zip.sha256 written, architect-sdd 0.0.2 published (npm view: 0.0.2), zip shared at <where>. RC
 > commit <sha>. Injection checks: 22 entries complete; <n> INJ sessions checked, 0 problems.
 
 If it was refused: "T-052: OpenCode refused (<ERR-REL codes>), record at
-docs/releases/opencode/0.0.1/release.json, nothing published".
+docs/releases/opencode/0.0.2/release.json, nothing published".

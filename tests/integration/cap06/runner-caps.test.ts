@@ -715,7 +715,8 @@ test("the OpenCode runner counts a step cost that appears only in the messages r
 });
 
 // --- C002-TC-917 (C002-TS-688; C002-T-056 step X0): the stop rule's H for a cap-exception row ----------
-// fx-evals-caps with the rows TS-634 (2.00 USD) and TS-613; a ledger in a temporary folder; run.mjs main
+// fx-evals-caps with the rows TS-634 (2.00 USD), TS-613 and, from revision D-035 (C002-T-073), INJ-21 of
+// the injection case file (the session cap 1.00 USD on opencode, H 1.65 USD; seven rows); a ledger in a temporary folder; run.mjs main
 // in a child process with the stub host (OpenCode) and the ledger's stop rule switched on for it.
 function runStopRule(fxRoot: string, file: string, row: string, ledger: string): { status: number | null; out: string; started: number } {
   const dir = mkdtempSync(join(tmpdir(), "sdd-stop-run-"));
@@ -762,15 +763,20 @@ for (const row of [
   { row: "TS-634", total: 27.36, ordinary: 0.4, H: 2.65, starts: false },
   { row: "TS-634", total: 17.14, ordinary: 0.8, H: 2.8, starts: true },
   { row: "TS-613", total: 27.36, ordinary: 0.4, H: 0.65, starts: true },
+  // Revision D-035 (C002-T-073): INJ-21 on opencode, H = the session cap 1.00 USD + 0.65 USD.
+  { row: "INJ-21", total: 28.35, ordinary: 0.4, H: 1.65, starts: true },
+  { row: "INJ-21", total: 28.36, ordinary: 0.4, H: 1.65, starts: false },
 ]) {
   test(`C002-TS-688 — ${row.row}, general pool total ${row.total}, highest ordinary cost ${row.ordinary}: H ${row.H}, ${row.starts ? "the session starts" : "no session starts and the ledger is unchanged"}`, () => {
     const fx = mkdtempSync(join(tmpdir(), "sdd-fx-evals-caps-688-"));
     try {
-      const files: Record<string, string> = { "TS-634": "evals/targets/gate/TS-634.eval.mjs", "TS-613": "evals/targets/gate/TS-613.eval.mjs" };
+      const files: Record<string, string> = { "TS-634": "evals/targets/gate/TS-634.eval.mjs", "TS-613": "evals/targets/gate/TS-613.eval.mjs", "INJ-21": "evals/injection/injection.eval.mjs" };
       for (const [id, f] of Object.entries(files)) {
         const p = join(fx, ...f.split("/"));
         mkdirSync(join(p, ".."), { recursive: true });
-        writeFileSync(p, `export default { id: ${JSON.stringify(id)}, title: "fx-evals-caps", host: "opencode", agent: "architect:sdd-conductor", fixture: null, prompt: "hi", ${id === "TS-634" ? "maxBudgetUsd: 2.0, " : ""}assert: () => [] };\n`);
+        // INJ-21: the injection rows' 16 turns, no spend cap and no host field (the case file is shared by every host).
+        const caps = id === "TS-634" ? "maxBudgetUsd: 2.0, " : id === "INJ-21" ? "maxTurns: 16, " : "";
+        writeFileSync(p, `export default { id: ${JSON.stringify(id)}, title: "fx-evals-caps", ${id === "INJ-21" ? "" : 'host: "opencode", '}agent: "architect:sdd-conductor", fixture: null, prompt: "hi", ${caps}assert: () => [] };\n`);
       }
       const ledgerFile = join(fx, "spend-chg002.json");
       const ledger = stopLedger(row.total, row.ordinary);
@@ -787,10 +793,12 @@ for (const row of [
         const after = JSON.parse(readFileSync(ledgerFile, "utf8")) as { entries: { case: string; caps_usd: number }[] };
         const added = after.entries[after.entries.length - 1]!;
         assert.equal(added.case, row.row);
-        assert.equal(added.caps_usd, row.row === "TS-634" ? 2.0 : 0.5, "caps_usd from the result record's caps.usd");
+        // INJ-21: caps_usd 1.00, the session cap, so its entry stays out of the ordinary H.
+        assert.equal(added.caps_usd, row.row === "TS-634" ? 2.0 : row.row === "INJ-21" ? 1.0 : 0.5, "caps_usd from the result record's caps.usd");
       } else {
         assert.equal(r.started, 0, "the stub never started");
-        assert.match(r.out, /stop rule of test plan §4\.1: pool general total 27\.36 \+ H 2\.65 > 30 USD/);
+        const esc = (n: number) => String(n).replace(".", "\\.");
+        assert.match(r.out, new RegExp(`stop rule of test plan §4\\.1: pool general total ${esc(row.total)} \\+ H ${esc(row.H)} > 30 USD`));
         assert.ok(readFileSync(ledgerFile).equals(before), "the ledger is byte-for-byte unchanged");
       }
     } finally {

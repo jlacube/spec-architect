@@ -16,8 +16,8 @@ Copilot section (T-051 creates the file)
 - **Node 22.22.3** from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3`. If the
   fresh profile cannot read that folder, or VS Code Insiders is not installed for it, install them in
   the profile before the timer and write that down.
-- **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.1.zip` and
-  `dist\architect-sdd-0.0.1.tgz` (install the CLI from the tarball until T-052 publishes it).
+- **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip` and
+  `dist\architect-sdd-0.0.2.tgz` (install the CLI from the tarball until T-052 publishes it).
 - **Spend:** 1 VS Code session, billed in AI Credits to your Copilot plan, not to the prepaid key.
   There is no ledger entry.
 
@@ -47,7 +47,7 @@ git -C C:\Sandbox\runs\t057\toy init
    read `INSTALL.md`.
 
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.1.zip -DestinationPath $HOME\architect\copilot-0.0.1
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip -DestinationPath $HOME\architect\copilot-0.0.2
 ```
 
 4. Optional: start a screen recording, for example with the Snipping Tool's record mode.
@@ -55,10 +55,10 @@ Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.1.zip 
 **Timed part.** Start the stopwatch at the first install command. Write down the time at the end of
 each phase, and leave out any download time.
 
-5. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.1`.
+5. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.2`.
 
 ```powershell
-npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.1.tgz
+npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.2.tgz
 ```
 ```powershell
 sdd --version
@@ -71,7 +71,7 @@ sdd --version
 Set-Location C:\Sandbox\runs\t057\toy
 ```
 ```powershell
-sdd install copilot --package $HOME\architect\copilot-0.0.1
+sdd install copilot --package $HOME\architect\copilot-0.0.2
 ```
 
 7. **Phase C, settings.** Open the folder in VS Code Insiders and trust it. Set

@@ -70,8 +70,12 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  * revised for defects D-025, D-030 and D-033). Each row gives the row ID, its case file (repository-relative, `/`
  * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
  * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
- * row has none).
+ * row has none). An exception may also give a session cap (`sessionUsd`, defect D-035; §2.2 "Session cap
+ * of an exception"): the spend cap of every session of the row on that host and auth mode without
+ * `--cap-exception`, in place of the row's own; such an exception gives no rerun cap.
  * - paid class: TS-634 on OpenCode at 2.00 USD, no rerun cap (P-01, Q-ts634-budget-01/02, D-022 item 1);
+ *   INJ-21 on OpenCode at its own caps (the default 0.50 USD, its 16 turns) with the session cap 1.00 USD,
+ *   no rerun cap (P-01, Q-inj21-01, 2026-10-25; defect D-035, C002-T-073);
  * - Claude Code subscription class (P-01, Q-claude-cap-01/02, 2026-10-21): the five rows of C002-T-048
  *   batches 5 and 6 that the 0.50 USD notional cap ended, rerun at 1.50 USD; TS-213 and TS-221 at their
  *   case files' 40 turns, rerun at 1.50 USD; the rows of batch 7 and INJ-19, rerun at 1.50 USD; and, for
@@ -98,6 +102,8 @@ const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row,
 const INJ = "evals/injection/injection.eval.mjs";
 export const CAP_EXCEPTIONS = Object.freeze([
   Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", auth: null, usd: 2.0, turns: DEFAULT_MAX_TURNS, rerunUsd: null }),
+  // Defect D-035: INJ-21 on OpenCode, the session cap 1.00 USD (the case file is shared by every host).
+  Object.freeze({ row: "INJ-21", file: INJ, host: "opencode", auth: null, usd: DEFAULT_MAX_BUDGET_USD, turns: 16, sessionUsd: 1.0, rerunUsd: null }),
   SUB("TS-214", "evals/cap02/TS-214.eval.mjs", 2),
   SUB("TS-215", "evals/cap02/TS-215.eval.mjs", 1),
   SUB("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs", 1),
@@ -157,7 +163,8 @@ const authText = (auth) => (auth ? `auth ${auth}` : "no auth mode");
 /**
  * The cap-exception check of one selected row before any session (C002-IF-010 §2.2): `{ caps }` when the
  * row may run, with the caps to pass to the session (`turns` the row's `maxTurns`; `usd` the matching
- * exception's rerun cap under `--cap-exception`, else the row's `maxBudgetUsd`), else `{ refusal }`, the
+ * exception's rerun cap under `--cap-exception`, else the matching exception's session cap when it gives
+ * one (defect D-035), else the row's `maxBudgetUsd`), else `{ refusal }`, the
  * message naming the row's ID, its case file, the host and the auth mode. A row runs when it sets at most
  * 0.50 USD and 30 turns (a value it does not set being the default) or a matching exception's own caps
  * are at least the row's values; under `--cap-exception` only when a matching exception has a rerun cap.
@@ -176,6 +183,7 @@ export function capCheck({ id, file, host, auth = null, maxBudgetUsd, maxTurns, 
     if (!e || typeof e.rerunUsd !== "number") return { refusal: `${where}: --cap-exception given, but no cap exception of C002-IF-010 §2.2 with a rerun cap matches its row ID, case file, host and auth mode` };
     return { caps: { turns, usd: e.rerunUsd } };
   }
+  if (e && typeof e.sessionUsd === "number") return { caps: { turns, usd: e.sessionUsd } };
   return { caps: { turns, usd } };
 }
 

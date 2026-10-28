@@ -12,7 +12,8 @@
 // tasks"; from revision D-033, C002-T-070, 42 rows, TS-225 added after TS-224, the 13 rule-1 rows at the
 // rerun cap 3.00 USD and the 27 rule-2 rows and TS-421-agent at 1.50 USD); TS-223 at 3.00 USD with
 // --cap-exception (1.50 USD before revision D-033), TS-216 at 0.50 USD without it and refused with it under
-// --auth api-key (revision D-030); the case files
+// --auth api-key (revision D-030); from revision D-035 (C002-T-073), 43 rows, INJ-21 on opencode with the
+// session cap 1.00 USD after TS-634, and the four INJ-21 rows of C002-TC-679 (24 rows in all); the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
 import { test } from "node:test";
@@ -21,6 +22,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { CAP_EXCEPTIONS } from "../../../evals/harness/caps.mjs";
+import { cliArgs, maxAiCredits } from "../../../evals/harness/runners/copilot-cli.mjs";
 import { repoRoot } from "../../helpers.ts";
 import { type DriverRun, runDriver, writeCase } from "./eval-driver.ts";
 
@@ -47,6 +49,7 @@ const GATE613 = "evals/targets/gate/TS-613.eval.mjs";
 const CAP214 = "evals/cap02/TS-214.eval.mjs";
 const OTHER214 = "evals/targets/other/TS-214.eval.mjs";
 const CAP213 = "evals/cap02/TS-213.eval.mjs";
+const INJ = "evals/injection/injection.eval.mjs";
 
 const ROWS: Row[] = [
   // Revision D-021 … D-022 (7 rows).
@@ -72,6 +75,13 @@ const ROWS: Row[] = [
   // TS-213, a rule-1 row: the rerun cap 3.00 USD from revision D-033 on (C002-T-070; 1.50 USD before).
   { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "subscription", capException: true, runs: { usd: 3.0, turns: 40 } },
   { file: CAP213, row: "TS-213", turns: 40, host: "claude-code", auth: "api-key", runs: null, names: "auth api-key" },
+  // Revision D-035 (C002-T-073, 4 rows): INJ-21 at the session cap 1.00 USD on opencode without
+  // --cap-exception, refused with it (the exception gives no rerun cap), and at its own 0.50 USD and
+  // 16 turns on claude-code and copilot-cli, where no exception gives it a session cap.
+  { file: INJ, row: "INJ-21", usd: 0.5, turns: 16, host: "opencode", runs: { usd: 1.0, turns: 16 } },
+  { file: INJ, row: "INJ-21", usd: 0.5, turns: 16, host: "opencode", capException: true, runs: null, names: "no auth mode" },
+  { file: INJ, row: "INJ-21", usd: 0.5, turns: 16, host: "claude-code", auth: "subscription", runs: { usd: 0.5, turns: 16 } },
+  { file: INJ, row: "INJ-21", usd: 0.5, turns: 16, host: "copilot-cli", runs: { usd: 0.5, turns: 16 } },
 ];
 
 /**
@@ -119,6 +129,12 @@ ROWS.forEach((row, i) => {
         assert.equal(r.given.length, 1, "one session");
         if (row.host === "claude-code") claudeSession(r, row.runs);
         else assert.equal(r.given[0]!.usd, row.runs.usd, "the session got the spend cap");
+        if (row.host === "copilot-cli") {
+          // The Copilot CLI eval runner passes the session's spend cap to the host as AI Credits.
+          const args = cliArgs({ text: "hi", agent: "architect:sdd-conductor", copy: "pkg", serversFile: "servers.json", maxAiCredits: maxAiCredits(r.given[0]!.usd!), logDir: "logs", usageFile: "usage.json", model: null }) as string[];
+          assert.equal(args.filter((a) => a === "--max-ai-credits").length, 1);
+          assert.equal(args[args.indexOf("--max-ai-credits") + 1], String(Math.round(row.runs.usd * 100)), "the host's command line holds --max-ai-credits 50");
+        }
         assert.equal(r.records.length, 1);
         assert.deepEqual(r.records[0]!["caps"], { turns: row.runs.turns, usd: row.runs.usd });
       } else {
@@ -176,9 +192,11 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
   // a row in neither list (TS-421-agent, no release case of C001-ADR-003). `rerunUsd`: 3.00 USD for a rule-1
   // row, 1.50 USD for every other row (revision D-033, C002-T-070).
   const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: rule === 1 ? 3.0 : 1.5, rule });
-  const INJ = "evals/injection/injection.eval.mjs";
   assert.deepEqual(CAP_EXCEPTIONS, [
     { row: "TS-634", file: GATE634, host: "opencode", auth: null, usd: 2.0, turns: 30, rerunUsd: null },
+    // Revision D-035 (C002-T-073): INJ-21 on opencode, paid class: the row's own caps (the default
+    // 0.50 USD, its 16 turns), the session cap 1.00 USD, no rerun cap.
+    { row: "INJ-21", file: INJ, host: "opencode", auth: null, usd: 0.5, turns: 16, sessionUsd: 1.0, rerunUsd: null },
     sub("TS-214", CAP214, 2),
     sub("TS-215", "evals/cap02/TS-215.eval.mjs", 1),
     sub("TS-318-00-ideation", "evals/cap03/TS-318.eval.mjs", 1),
@@ -223,21 +241,22 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
     sub("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
   ]);
-  // 42 rows: TS-634 of the paid class and 41 of the Claude Code subscription class, 13 of rule 1, 27 of
-  // rule 2 and one (TS-421-agent) in neither list.
-  assert.equal(CAP_EXCEPTIONS.length, 42);
+  // 43 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 41 of the Claude Code subscription
+  // class, 13 of rule 1, 27 of rule 2 and one (TS-421-agent) in neither list.
+  assert.equal(CAP_EXCEPTIONS.length, 43);
   const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
   assert.equal(subs.length, 41);
   assert.equal(subs.filter((e) => e.rule === 1).length, 13);
   assert.equal(subs.filter((e) => e.rule === 2).length, 27);
   assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
   // Rerun caps (revision D-033): 3.00 USD for the 13 rule-1 rows, 1.50 USD for the 27 rule-2 rows and
-  // TS-421-agent; TS-634 has none.
+  // TS-421-agent; TS-634 and INJ-21 have none. Only INJ-21 on opencode gives a session cap.
   assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 13);
   assert.ok(subs.filter((e) => e.rerunUsd === 3.0).every((e) => e.rule === 1));
   assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 28);
   assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
-  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634"]);
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21"]);
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0]]);
   // Every case file of the table exists, the five near-cap rows' files (TS-127, TS-201, TS-418, TS-424, INJ-18)
   // and evals/cap02/TS-225.eval.mjs included.
   for (const e of CAP_EXCEPTIONS) assert.ok(readFileSync(join(ROOT, ...e.file.split("/")), "utf8").length > 0, e.file);
