@@ -258,3 +258,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Text fallback: the conductor asks its question or presents the gate as plain text in its reply and ends its turn; Copilot 0.0.3 with its 24 sessions retaken (Recommended) · 2. Harness change only (question tool on with scripted answers) · 3. Pause releases
 - **Answer:** P-01: "Text fallback + 0.0.3 (Recommended)"
 - **Extracted instructions:** none
+
+### Q-opencode-scope-01 — the deferred OpenCode release: in CHG-002 or a new change (critic CR-85)
+- **Options:** 1. Move to a new change: a scope revision drops C002-T-051 and C002-T-052, marks the OpenCode DoD items as moved, and a later CHG-003 "OpenCode release" carries the early-stop or INJ-21 fix; CHG-002 closes after the Copilot release (Recommended) · 2. Keep it in CHG-002 at a later version
+- **Answer:** P-01: "Move to a new change (Recommended)"
+- **Extracted instructions:** none
