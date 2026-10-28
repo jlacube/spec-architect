@@ -33,7 +33,7 @@ If the spike S-08 record gives the enforcement mode `deferred` (Copilot subagent
 tool list and Copilot guard hooks not blocking a subagent's tool calls; C002-DEC-005, C002-AS-03), that
 record triggers a revision of this spec with P-01 (Q-defer-01, spec round 2, `../questions-log.md`).
 The revision removes C002-CAP-03, C002-SC-02 and the DoD items that cover the Copilot target, and
-reviews every other item that names the Copilot target; OpenCode still ships in CHG-002. Until that
+reviews every other item that names the Copilot target; the OpenCode release is not affected (it is in CHG-003, §2). Until that
 revision the release check refuses the Copilot target (C002-REQ-620). The signed-off S-08 record gives
 `sdd-mcp-server` (`docs/spikes/S-08-copilot-vscode.md §4`), so this section applies only to a later
 spike record of a new tested version (C002-REQ-621).
@@ -41,6 +41,9 @@ spike record of a new tested version (C002-REQ-621).
 ## 2. Out of scope
 
 - C002-NG-01 … C002-NG-04 (`problem-and-goals.md` §4).
+- The OpenCode release and its release evidence: moved to a later change, CHG-003 "OpenCode release"
+  (defects D-035, D-036; Q-opencode-scope-01; `problem-and-goals.md` §2.1). The OpenCode target
+  generator, package, replays and the evidence built so far stay in CHG-002 as delivered work.
 - On OpenCode, "later" in the ideation §5 hook table: the session-start brief (no documented context
   injection), the SubagentStop trace (the auditor runs the trace at gates instead), and the post-write
   quick lint when spike S-07 finds no feedback channel.

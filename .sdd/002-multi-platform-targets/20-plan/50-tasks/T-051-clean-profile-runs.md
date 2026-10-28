@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: dropped
 depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-043, C002-T-073]
 implements: [C002-NFR-601]
 satisfies_ac: [C002-AC-204.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-205, C002-TC-205, C002-TC-902]
 components: [C002-COMP-003]
 risk_refs: [C002-RISK-015]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "dropped from CHG-002 (P-01 answer to Q-opencode-scope-01, \"Move to a new change (Recommended)\"): the OpenCode release moves to the future CHG-003 \"OpenCode release\", which carries the INJ-21 fix (an OpenCode-capable early stop or a bounded INJ-21 case)" }
 ---
 
 # C002-T-051 — Timed clean-profile run for OpenCode and the OpenCode toy change to G1
@@ -35,7 +35,10 @@ not wait for it.
 
 ## Preconditions
 
-- **Deferred, out of this release round** (revision D-036; P-01 answer to Q-opencode-defer-01,
+- **Dropped from CHG-002** (P-01 answer to Q-opencode-scope-01, "Move to a new change
+  (Recommended)"; plan critic CR-85). The OpenCode clean-profile run and the toy change to G1 move to
+  the future CHG-003 "OpenCode release". This task does not run in CHG-002. Before the drop, it was
+  deferred, out of this release round (revision D-036; P-01 answer to Q-opencode-defer-01,
   "Defer OpenCode (Recommended)"). The OpenCode release is deferred to a later version
   (`../10-strategy.md` §2, Deferred: OpenCode, D-035 and D-036), and CHG-002 spends no more
   OpenRouter credit for now. This task runs only with that later release, on its

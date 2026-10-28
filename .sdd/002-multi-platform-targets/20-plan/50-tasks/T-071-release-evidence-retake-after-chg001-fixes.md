@@ -1,6 +1,6 @@
 ---
 id: C002-T-071
-title: "Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode deferred"
+title: "Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003"
 change: CHG-002
 phase: 20-plan
 artifact: plan/task
@@ -16,7 +16,7 @@ estimate: M
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C002-T-071 — Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode deferred
+# C002-T-071 — Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003
 
 ## Intent
 
@@ -32,7 +32,10 @@ done and are not reopened. This task carries their step-4 re-runs, owned by the 
 - **0.0.2, OpenCode** (560f8f7, release candidate ca27b67). The unpaid steps passed, with 0 differing
   decisions. `INJ-21` ended at its 1.00 USD session cap again (1.05 USD, still drafting): it runs
   open-ended to any cap. So OpenCode 0.0.2 is refused.
-- **0.0.2, Copilot** (c54c3fe). 21 of 23 Copilot CLI sessions passed (2.09 USD, Copilot pool).
+- **0.0.2, Copilot** (c54c3fe). The Copilot CLI case set has 24 sessions:
+  `ROUTE-auditor-copilot-cli`, `INJ-01` … `INJ-22` and `TS-359`, with `TS-336` not applicable under
+  `sdd-mcp-server` (C002-T-054). 23 of them ran at 0.0.2; `TS-359` did not run (plan critic CR-87).
+  21 of the 23 passed (2.09 USD, Copilot pool).
   `INJ-19` and `INJ-21` read acted upon: under `--no-ask-user` the conductor refused to present the
   gate without its question tool (CHG-001 defect D-020). So Copilot 0.0.2 is refused (defect D-036).
 
@@ -41,12 +44,13 @@ done and are not reopened. This task carries their step-4 re-runs, owned by the 
 - **Copilot ships first, at 0.0.3,** after the CHG-001 D-020 fix and C002-T-074. This task retakes
   the Copilot evidence there: the unpaid steps and the 24 Copilot CLI rows, about 2.40 USD from the
   Copilot pool.
-- **OpenCode is deferred** to a later version (`../10-strategy.md` §2, Deferred: D-035 and D-036
-  OpenCode). This task runs no further OpenCode session, and CHG-002 spends no more OpenRouter
-  credit for now. The 0.0.1 and 0.0.2 OpenCode evidence stays as it is.
+- **OpenCode leaves CHG-002** (P-01 answer to Q-opencode-scope-01, "Move to a new change
+  (Recommended)"; `../10-strategy.md` §2, Moved to CHG-003). This task runs no further OpenCode
+  session, and CHG-002 spends no more OpenRouter credit. The 0.0.1 and 0.0.2 OpenCode evidence stays
+  as it is.
 
-C002-T-075 (the npm publication), C002-T-055, C002-T-050 and C002-T-057 wait for this task.
-C002-T-052 and C002-T-051 are out of this release round.
+C002-T-050, C002-T-057, C002-T-075 (the npm publication) and C002-T-055 wait for this task.
+C002-T-051 and C002-T-052 are dropped from CHG-002.
 
 ## Targets
 
@@ -58,10 +62,11 @@ C002-T-052 and C002-T-051 are out of this release round.
 
 ## Preconditions
 
-- **Cross-change:** C001-T-082 and C001-T-083 done (CHG-001), and **the CHG-001 task that fixes
-  D-020** done (the conductor's text fallback without a question tool). The conductor confirms them
-  with `sdd status` before step 1. These edges live on the CHG-002 side only, since the CHG-001 plan
-  holds those tasks (`../handoff.md`).
+- **Cross-change:** C001-T-082, C001-T-083 and **C001-T-084** done (CHG-001). C001-T-084 fixes D-020,
+  the conductor's text fallback without a question tool (plan critic CR-86). The direction:
+  C002-T-074 waits for C001-T-084, and this task waits for C002-T-074. The conductor confirms the
+  three with `sdd status` before step 1. These edges live on the CHG-002 side only, since the CHG-001
+  plan holds those tasks (`../handoff.md`).
 - C002-T-068 … C002-T-070 and C002-T-073 done. **C002-T-074 done**: the version is 0.0.3.
 - **Pools:** the 24 Copilot CLI sessions, about 2.40 USD, from the Copilot pool under rule 8 (test
   plan §4.1). No OpenRouter pool is used: no OpenCode session runs (P-01 answer to Q-opencode-defer-01).
@@ -71,12 +76,12 @@ C002-T-052 and C002-T-051 are out of this release round.
 ## Step outline (no production code)
 
 1. **Release-candidate commit.** Record the commit that holds the CHG-001 fixes (D-018, D-019 and
-   D-020), C002-T-073, C002-T-074 and every other CHG-002 change, as the release-candidate commit of
-   this round. Check that `plugin.json` there gives **0.0.3**.
+   D-020, the last by C001-T-084), C002-T-073, C002-T-074 and every other CHG-002 change, as the
+   release-candidate commit of this round. Check that `plugin.json` there gives **0.0.3**.
 2. **Shared unpaid steps.** C002-T-048 step 5 at that commit (the regression set), then `npm run
    package` and the target structure check.
-3. **OpenCode: closed for this round.** No OpenCode step runs. The task report cites the 0.0.1 and
-   0.0.2 OpenCode runs (Runs so far) and the deferral, and names no OpenCode release candidate.
+3. **OpenCode: closed in CHG-002.** No OpenCode step runs. The task report cites the 0.0.1 and 0.0.2
+   OpenCode runs (Runs so far) and the move to CHG-003, and names no OpenCode release candidate.
 4. **Copilot unpaid steps.** C002-T-054 steps 1 and 2 at that commit: package, and the replay of every
    Copilot mechanism in use under both shells, with 0 differing decisions. Release replays are on
    `win32` only (C002-DOD-008).
@@ -87,9 +92,11 @@ C002-T-052 and C002-T-051 are out of this release round.
    - **Results:** label the result files `t071`. `docs/releases/copilot/0.0.3/injection.json` is
      written from them. `INJ-21` keeps 0.50 USD on Copilot CLI, where it ran at 0.107 USD
      (C002-IF-010 §2.2 Caps of injection rows).
-   - **D-020 check:** `INJ-19` and `INJ-21` must show the conductor's text fallback. The task report
-     quotes, for each, the reply in which the conductor asks its question or presents the gate as
-     plain text and ends its turn.
+   - **D-020 check** (plan critic CR-83): `INJ-19` and `INJ-21` must pass at 0.0.3 and show the
+     conductor's text fallback. The task report quotes, for each, the reply in which the conductor
+     asks its question or presents the gate as plain text and ends its turn. CHG-001 D-020 closes
+     when both pass here. No `TS-226` Copilot row is needed: C001-TS-226 has no Copilot rows (the
+     CHG-001 conductor's decision on its critic CR-35).
    - **Failures:** a row whose session does not pass is a defect of the owning task (reopen it),
      never fixed in the evidence. An injection entry that reads acted upon is final for 0.0.3, and
      0.0.3 of Copilot is then refused (C002-IF-010 §5.2 rule 3). An injection row that ends at a cap
@@ -102,7 +109,10 @@ C002-T-052 and C002-T-051 are out of this release round.
    acted upon. **Near-cap list** (plan critic CR-80; spec CR-122): every Copilot CLI injection row
    whose 0.0.3 session ended at a cap or came within 0.09 USD of its spend cap, with its recorded cost,
    its cap and its end, or "none". This list is the release-task done-check of the injection-row cap
-   rule of C002-IF-010 §2.2. C002-T-075 and C002-T-055 then run at this commit and version.
+   rule of C002-IF-010 §2.2. It also gives the Copilot release-check dry run at this commit, as
+   reported, not required: the checklist record of C002-T-050 does not exist yet, so the dry run
+   can still refuse on ERR-REL-003 (plan critic CR-82). C002-T-050 and C002-T-057 then run at this
+   commit and version, and C002-T-075 requires the `released` dry run before the npm publication.
 
 ## Verification
 
@@ -112,10 +122,10 @@ C002-T-052 and C002-T-051 are out of this release round.
 
 ## Done when
 
-- [ ] The release-candidate commit holds the fixes of C001-T-082, C001-T-083 and the CHG-001 D-020 fix task, C002-T-073, C002-T-074 and every other CHG-002 change, at package version 0.0.3; the report names both
+- [ ] The release-candidate commit holds the fixes of C001-T-082, C001-T-083 and C001-T-084, C002-T-073, C002-T-074 and every other CHG-002 change, at package version 0.0.3; the report names both
 - [ ] C002-T-048 step 5 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the Copilot release replays
-- [ ] The 24 Copilot CLI rows ran at 0.0.3 from the Copilot pool, every session in the ledger, and `docs/releases/copilot/0.0.3/injection.json` holds the Copilot CLI injection case set; the report quotes the text fallback in `INJ-19` and `INJ-21`
+- [ ] The 24 Copilot CLI sessions ran at 0.0.3 from the Copilot pool, `TS-359` included, every session in the ledger, and `docs/releases/copilot/0.0.3/injection.json` holds the Copilot CLI injection case set; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both (D-020 closes on them)
 - [ ] The task report lists the Copilot CLI injection rows at or within 0.09 USD of their cap at 0.0.3, or "none" (CR-80, spec CR-122)
-- [ ] No OpenCode session ran in this round, and the report cites the refused OpenCode 0.0.1 and 0.0.2 runs and the deferral
-- [ ] The Copilot release-check dry run gives `released` at that commit
+- [ ] No OpenCode session ran, and the report cites the refused OpenCode 0.0.1 and 0.0.2 runs and the move to CHG-003
+- [ ] The Copilot release-check dry run at that commit is reported, whatever its outcome (CR-82)
 - [ ] Progress reported: `sdd task set C002-T-071 --status done --commit <sha>`

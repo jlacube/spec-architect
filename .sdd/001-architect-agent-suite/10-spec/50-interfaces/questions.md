@@ -56,12 +56,19 @@ the conductor asks in plain text in its reply:
 1. **Same content.** The reply carries what the tool call would carry. For a question round,
    that is each question with its options, the recommended option first and labelled
    "(Recommended)", and at most four questions (C001-REQ-205, C001-REQ-206). For a gate, it is
-   the gate summary, the statement of what approval commits to, and the four choices Approve,
-   Approve with waivers, Revise and Stop, without a recommendation (C001-REQ-802; C001-IF-13 §1).
-2. **Answer.** The conductor then ends its turn and takes P-01's next message as the answer. The
-   answer is logged verbatim (C001-REQ-210, C001-REQ-211). At a gate it counts as the answer of
-   C001-REQ-803 and C001-REQ-804, and a message that names none of the four choices records no
-   decision.
+   the gate summary, the statement of what approval commits to, and the four choices numbered
+   1 Approve, 2 Approve with waivers, 3 Revise and 4 Stop, without a recommendation
+   (C001-REQ-802; C001-IF-13 §1).
+2. **Answer.** The conductor then ends its turn and takes P-01's next message as the answer,
+   logged verbatim (C001-REQ-210).
+   - **At a gate:** the message records a decision (C001-REQ-803, C001-REQ-804) only when it picks
+     exactly one of the four choices, by its label or its number. Text beyond that choice is
+     handled per C001-REQ-211. The label "Approve" inside "Approve with waivers" picks Approve
+     with waivers. A message that negates a choice, names two choices or names none records
+     nothing, and the conductor presents the choices again.
+   - **In a question round:** each question the message leaves unanswered stays open.
+
+   These rules are verified by review; C001-TS-226 checks only the first reply.
 3. **No detour.** The conductor never tells P-01 to enable a tool instead of asking.
 
 The fallback applies to the asks of §2 (C001-REQ-221), to interview rounds and to gate

@@ -30,11 +30,20 @@ Ideation labels G-1 … G-5 map in order to C002-GOAL-01 … 05.
 
 | ID | Goal | Measure (from the ideation) | Measured by | Ideation |
 |---|---|---|---|---|
-| C002-GOAL-01 | One build produces installable OpenCode and Copilot VS Code packages from the source plugin | `npm run package` emits both target packages; zero hand-maintained per-target copies | C002-SC-01, C002-SC-02, C002-SC-04 | G-1 |
+| C002-GOAL-01 | One build produces installable OpenCode and Copilot VS Code packages from the source plugin (OpenCode release: CHG-003, §2.1) | `npm run package` emits both target packages; zero hand-maintained per-target copies | C002-SC-01, C002-SC-02, C002-SC-04 | G-1 |
 | C002-GOAL-02 | The same safety level on every target | the guard corpora pass 100% against each target's enforcement mechanism (applicable cases with the per-mechanism expectations of Q-safety-02 and Q-safety-04, C002-REQ-625 … C002-REQ-627, C002-REQ-630, C002-REQ-632); injection evals show 0 instructions acted upon (dev tier, per target); the Copilot hooks fallback, if used, is flagged (C002-DEC-005) | C002-SC-03 | G-2 |
-| C002-GOAL-03 | The same workflow on every target: interviews, gates with P-01's verbatim words, traceability | the gate, interview and revise scenarios pass on each target (automated where the host allows, recorded manual check otherwise) | C002-SC-01, C002-SC-02 | G-3 |
+| C002-GOAL-03 | The same workflow on every target: interviews, gates with P-01's verbatim words, traceability (OpenCode release evidence: CHG-003, §2.1) | the gate, interview and revise scenarios pass on each target (automated where the host allows, recorded manual check otherwise) | C002-SC-01, C002-SC-02 | G-3 |
 | C002-GOAL-04 | The `sdd` CLI is reachable on every target without a plugin-root variable | OpenCode agents call `sdd …` from `architect-sdd`; the Copilot sdd MCP server runs the CLI from `architect-sdd`; Claude Code keeps its bundled copy | C002-SC-01, C002-SC-02 | G-4 |
 | C002-GOAL-05 | Claude Code behaviour unchanged, except three bash guard changes: a bare `sdd` command is accepted; `sdd serena-config` and `sdd serena-launch` are allowed only with a data folder outside the repository; a writing `sdd` subcommand is allowed with the option `--cwd` only when its folder lies inside the repository root | every CHG-001 test and eval that passes today still passes, with the changed expectations of the three bash guard changes only; the changes (bare `sdd …` and `node --version` from defect D-011 of CHG-001, C002-REQ-503; the Serena data-folder confinement, C002-REQ-517; the `--cwd` confinement of writing subcommands, C002-REQ-521) are specified in CHG-002, and D-011 is closed when CHG-002 implements it | C002-SC-05 | G-5, widened by Q-guards-04 (spec round 2) and Q-guards-05 (spec round 4) |
+
+### 2.1 Scope note: OpenCode release moved to CHG-003
+
+Defects D-035 and D-036; P-01 answer to Q-opencode-scope-01, "Move to a new change (Recommended)"
+(`../../20-plan/questions-log.md`). The OpenCode release and its release evidence leave CHG-002 for a
+later change, CHG-003 "OpenCode release": the OpenCode part of C002-GOAL-01 (an OpenCode package
+released for installation), of C002-GOAL-03 (the scenarios on OpenCode as release evidence) and
+C002-SC-01 are met there. The OpenCode target generator, the OpenCode target package, its corpus
+replays and the evidence built so far stay in CHG-002 as delivered work.
 
 ## 3. Success criteria
 
@@ -42,7 +51,7 @@ Ideation labels SC-1 … SC-5 map in order to C002-SC-01 … 05.
 
 | ID | Criterion | Goal | Ideation |
 |---|---|---|---|
-| C002-SC-01 | A fresh OpenCode install reaches gate G1 of a toy change with the generated package | C002-GOAL-01, C002-GOAL-03, C002-GOAL-04 | SC-1 |
+| C002-SC-01 | A fresh OpenCode install reaches gate G1 of a toy change with the generated package (moved to CHG-003, §2.1) | C002-GOAL-01, C002-GOAL-03, C002-GOAL-04 | SC-1 |
 | C002-SC-02 | A fresh VS Code with Copilot install reaches gate G1 of a toy change with the generated package (recorded manual run) | C002-GOAL-01, C002-GOAL-03, C002-GOAL-04 | SC-2 |
 | C002-SC-03 | On both generated targets, an Architect agent cannot write outside `.sdd/` or run a command outside the allowlist (guard corpora replayed against each target's enforcement mechanism) | C002-GOAL-02 | SC-3 |
 | C002-SC-04 | A change to the source plugin reaches all targets through one `npm run package`, with structure checks run on every target package | C002-GOAL-01 | SC-4 |

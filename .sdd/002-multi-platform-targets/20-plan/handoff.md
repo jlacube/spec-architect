@@ -450,7 +450,7 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 65 | C002-T-073 | Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-073-inj21-session-cap-and-version-0-0-2.md` |
 | 66 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-074-version-0-0-3.md` |
 | 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode deferred | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
+| 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
 | 69 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
 | 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
 | 71 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |

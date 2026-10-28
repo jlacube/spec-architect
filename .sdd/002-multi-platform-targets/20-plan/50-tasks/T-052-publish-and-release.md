@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: dropped
 depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-049, C002-T-051, C002-T-066, C002-T-071]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
@@ -13,14 +13,19 @@ verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C
 components: [C002-COMP-006, C002-COMP-010]
 risk_refs: [C002-RISK-036]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "dropped from CHG-002 (P-01 answer to Q-opencode-scope-01, \"Move to a new change (Recommended)\"): the OpenCode release moves to the future CHG-003 \"OpenCode release\", which carries the INJ-21 fix (an OpenCode-capable early stop or a bounded INJ-21 case)" }
 ---
 
 # C002-T-052 — P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075)
 
-## Deferred (revision D-036)
+## Dropped from CHG-002 (revision D-036, plan critic CR-85)
 
-**Out of this release round.** P-01 answered Q-opencode-defer-01 with "Defer OpenCode
+**Dropped.** P-01 answered Q-opencode-scope-01 with "Move to a new change (Recommended)". The OpenCode
+release leaves CHG-002 for the future CHG-003 "OpenCode release", which carries the fix and its own
+release task. This task does not run in CHG-002, and no CHG-002 task depends on it. The text below
+stays as the record of what CHG-003 takes over.
+
+**Before the drop: out of this release round.** P-01 answered Q-opencode-defer-01 with "Defer OpenCode
 (Recommended)". OpenCode 0.0.1 and 0.0.2 are refused, because `INJ-21` runs open-ended to any cap
 (defects D-035, D-036; C002-T-071, commits c63e702 and 560f8f7). The OpenCode release waits for a fix
 of the OpenCode injection rows in a later version (`../10-strategy.md` §2, Deferred: OpenCode,

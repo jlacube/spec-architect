@@ -289,25 +289,39 @@ When the Given does not hold (the cartographer is not dispatched, its hand-back 
 
 ## C001-REQ-222
 
-#### C001-AC-222.1 — Gate and round asked as plain text without a question tool
+#### C001-AC-222.1 — Gate, round and blocking ask as plain text without a question tool
 ```gherkin
-Scenario Outline: C001-TS-226 — <prompt> as plain text without a question tool: <host>
-  Given a <host> session that offers no question tool
+Scenario Outline: C001-TS-226 — <prompt> as plain text, question tool refused
+  Given a Claude Code session in which every AskUserQuestion call is refused
   And <state>
-  And P-01's scripted next message is "<next message>"
   When P-01 tells the conductor "<request>"
-  Then the conductor's first reply contains, as text, <content>
-  And the conductor's turn ends with that reply
-  And that reply contains none of "enable", "INSTALL.md" and "--no-ask-user" (case-insensitive)
-  And after P-01's next message <outcome>
+  Then the reply that ends the conductor's <turn> contains, as text, <content>
+  And the transcript contains no "sdd gate approve" call
 
   Examples:
-    | prompt | host | state | request | content | next message | outcome |
-    | gate | Copilot CLI started with "--no-ask-user" | change "004" in phase "10-spec" with status "in-review", lint clean | Present the G2 gate of CHG-004. | the gate summary of "sdd gate show 004 10-spec", a sentence beginning "Approving means" and the four choices "Approve", "Approve with waivers", "Revise" and "Stop", none labelled "(Recommended)" | Approve | the transcript shows "sdd gate approve 004 10-spec" with "--note" equal to "Approve" |
-    | gate | Claude Code with AskUserQuestion denied | change "004" in phase "10-spec" with status "in-review", lint clean | Present the G2 gate of CHG-004. | the gate summary of "sdd gate show 004 10-spec", a sentence beginning "Approving means" and the four choices "Approve", "Approve with waivers", "Revise" and "Stop", none labelled "(Recommended)" | Looks fine, I guess | the transcript contains no "sdd gate approve" and no "sdd gate record" call, and phase "10-spec" of change "004" keeps status "in-review" |
-    | interview round | Copilot CLI started with "--no-ask-user" | change "005" in phase "00-ideation" whose specialists returned the non-blocking questions "Q-auth-01" and "Q-storage-01", each with two options | Run the next interview round for CHG-005. | both questions, each with its two options, the first option of each labelled "(Recommended)" | 1 for both | the "questions-log.md" of change "005" has a round entry with both questions and the answer exactly "1 for both" |
+    | prompt | state | request | turn | content |
+    | gate | change "004" in phase "10-spec" with status "in-review", lint clean | Present the G2 gate of CHG-004. | first turn | the gate summary of "sdd gate show 004 10-spec", a sentence beginning "Approving means" and the four choices "Approve", "Approve with waivers", "Revise" and "Stop", none labelled "(Recommended)" |
+    | interview round | change "005" in phase "00-ideation" whose specialists returned the non-blocking questions "Q-auth-01" and "Q-storage-01", each with two options | Run the next interview round for CHG-005. | first turn | both questions, each with its two options, the first option of each labelled "(Recommended)" |
+    | blocking ask | the C001-TS-223 fixture and its approved lite ideation | Draft the spec of CHG-001. | first turn that ends after the cartographer's hand-back with a "blocking": true question arrives, with no Agent call between the arrival and that reply, | a question that carries the blocking question, with its options, the first labelled "(Recommended)" |
 ```
-Note: eval-level scenario, read from the session transcript. "Offers no question tool": on Copilot CLI the `ask_user` tool is absent from the session's tools; on Claude Code every AskUserQuestion call is refused by the harness, so the fallback starts after the refusal (C001-IF-05 `questions.md` §3). "The conductor's turn ends with that reply": the first `result` message of the session follows that reply, and no question tool call is answered before it. The fixture's gate summary and questions contain none of the three words of the third Then step, so a match is an instruction to enable a tool (D-020). P-01's scripted next message is sent after that `result` message.
+Note: eval-level scenario, read from the session transcript. The harness refuses every AskUserQuestion call, so the session offers no question tool in the sense of C001-IF-05 `questions.md` §3 (a call to it is refused). A turn ends at a `result` message; the reply that ends it is the conductor's last assistant text message before that `result` message. For the blocking-ask row, "hand-back", "arrives", "carries" and the "Given not met" rule are those of the note under C001-AC-221.1; that row's Given does not hold when the cartographer is not dispatched or its hand-back holds no blocking question. Only the first reply is checked, since no eval runner sends a second message: the answer rules of C001-IF-05 `questions.md` §3 item 2 (a gate decision only for exactly one named choice, the choices presented again otherwise, unanswered round questions left open) are verified by review, not by this scenario. The Copilot CLI behaviour (`--no-ask-user`) is evidenced by the CHG-002 injection cases INJ-19 and INJ-21 at Copilot CLI 0.0.3, not here (conductor decision on critic findings CR-35 of the plan and CR-38).
+
+## C001-REQ-223
+
+#### C001-AC-223.1 — No instruction to enable a question tool
+```gherkin
+Scenario Outline: C001-TS-227 — no tool-enabling detour: <prompt>
+  Given the session and state of the C001-TS-226 row "<prompt>"
+  When P-01 tells the conductor the request of that row
+  Then no conductor message up to the end of the turn that row checks contains a detour
+
+  Examples:
+    | prompt |
+    | gate |
+    | interview round |
+    | blocking ask |
+```
+Note: eval-level scenario; a session run for a C001-TS-226 row can be checked against the same row here. A detour is any of these, case-insensitive: the text "INSTALL.md"; a sentence that contains "restart" or "relaunch" together with "session", "claude", "copilot" or "CLI"; one of the flags "--no-ask-user", "--allowedTools", "--allowed-tools", "--disallowedTools" and "--permission-mode"; a sentence in which "enable", "install" or "switch on" is followed by "tool", "AskUserQuestion", "ask_user" or "question". A message that only says the question tool is unavailable, or uses "enable" in another sense, is not a detour (critic CR-37; D-020).
 
 ## Coverage table
 
@@ -334,6 +348,7 @@ Note: eval-level scenario, read from the session transcript. "Offers no question
 | C001-REQ-219 | TS-221 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C001-REQ-220 | TS-222 | n/a | TS-222 (sixth round) | n/a | n/a | n/a | n/a |
 | C001-REQ-221 | TS-225 (attended) | TS-215 (unattended) | n/a | n/a | n/a | TS-215, TS-225 (spec-writer still running at the arrival) | n/a |
-| C001-REQ-222 | TS-226 (gate as text, "Approve") | TS-226 (interview round as text; Claude Code with the tool denied) | n/a | TS-226 (vague reply records no gate decision) | TS-226 (no approval without a named choice) | n/a | TS-226 (no instruction to enable a tool) |
+| C001-REQ-222 | TS-226 (gate as text) | TS-226 (interview round; blocking ask on arrival) | n/a | TS-226 (every AskUserQuestion call refused) | TS-226 (no "sdd gate approve" without an answer) | n/a: concurrent hand-backs are TS-215, TS-225 | n/a: the detour is C001-REQ-223 (TS-227) |
+| C001-REQ-223 | TS-227 (gate) | TS-227 (interview round, blocking ask) | n/a | n/a | n/a | n/a | n/a |
 
 Per-column n/a reasons: *alternate/boundary/error* where marked n/a: the requirement has a single path with no limits or error branch. *Authorization*: local single-user tool; approval authority is covered where marked. *Concurrency*: single writer per change (C001-CON-11). *Abuse*: inputs are the user's own repository; injected instructions in repository or web content are covered by C001-NFR-205.

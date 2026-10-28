@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-071, C002-T-074]
+depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-057, C002-T-071, C002-T-074]
 implements: [C002-REQ-501, C002-REQ-502, C002-REQ-509]
 satisfies_ac: [C002-AC-501.1, C002-AC-502.1, C002-AC-509.1]
 verified_by: [C002-TS-501, C002-TC-501]
@@ -21,10 +21,11 @@ report: { commit: null, completed_at: null, notes: null }
 ## Intent
 
 Until now, P-01 published `architect-sdd` in C002-T-052, with the OpenCode release, or in C002-T-055
-if OpenCode had not shipped. The OpenCode release is deferred (P-01 answer to Q-opencode-defer-01,
-"Defer OpenCode (Recommended)"; defect D-036). So the npm publication becomes a task of its own:
-P-01 publishes `architect-sdd@0.0.3` before or together with the Copilot release (C002-T-055), and
-no OpenCode task is involved.
+if OpenCode had not shipped. The OpenCode release leaves CHG-002 for the future CHG-003 (P-01
+answers to Q-opencode-defer-01 and Q-opencode-scope-01; defect D-036), and C002-T-052 is dropped. So
+the npm publication becomes a task of its own: P-01 publishes `architect-sdd@0.0.3` after the
+Copilot checks pass and before or together with the Copilot release (C002-T-055). No OpenCode task
+is involved.
 
 The generated doctor requires the exact version of the CLI (C002-REQ-509). A target released before
 its CLI is on npm would show the sdd CLI row as `error` to every adopter (C002-ADR-004;
@@ -42,21 +43,27 @@ the account of C002-T-003.
 
 - C002-T-003 done (P-01's npm account and the name), C002-T-023 done (install smoke and manifest
   check of the tarball), C002-T-074 done (version 0.0.3).
-- C002-T-071 done for its Copilot part at 0.0.3: the tarball is packed at the release-candidate commit
-  whose evidence the Copilot release check reads. The OpenCode part of C002-T-071 is deferred and is
-  not a precondition.
+- C002-T-071 done: the tarball is packed at the release-candidate commit whose evidence the Copilot
+  release check reads. C002-T-071 runs no OpenCode step, since the OpenCode release moved to CHG-003.
+- **C002-T-050 and C002-T-057 done** (plan critics CR-82, CR-84): the checklist record and the
+  Copilot clean-profile run exist at 0.0.3. npm versions are immutable, so the CLI is published only
+  after every Copilot check can pass.
 - `npm view architect-sdd@0.0.3` shows no such version. A version already on npm is never published
   again: npm versions are immutable (C002-RB-001).
 
 ## Step outline (no production code)
 
-1. At the release-candidate commit of C002-T-071, run `npm run smoke:npm` and the tarball check
+1. **Released dry run** (plan critics CR-82, CR-84). At the release-candidate commit of C002-T-071,
+   run `node scripts/release-check.mjs --target copilot --dry-run`. It must give `released`, with the
+   checklist record of C002-T-050 and the run of C002-T-057 in place. Any other outcome stops this
+   task, and nothing is published.
+2. At the same commit, run `npm run smoke:npm` and the tarball check
    (`node scripts/check/tarball.mjs dist/architect-sdd-0.0.3.tgz`). Record the tarball's `sha512`
    integrity.
-2. Re-check that the name is still P-01's (`npm view architect-sdd`; C002-RISK-017).
-3. **P-01 step:** `npm publish dist/architect-sdd-0.0.3.tgz` from P-01's account, then
+3. Re-check that the name is still P-01's (`npm view architect-sdd`; C002-RISK-017).
+4. **P-01 step:** `npm publish dist/architect-sdd-0.0.3.tgz` from P-01's account, then
    `npm view architect-sdd version`, which must print `0.0.3`.
-4. Write the record and commit it.
+5. Write the record with the dry-run outcome, and commit it. C002-T-055 then releases Copilot.
 
 ## Verification
 
@@ -66,6 +73,7 @@ the account of C002-T-003.
 
 ## Done when
 
+- [ ] The Copilot release-check dry run gave `released` at the release-candidate commit, after C002-T-050 and C002-T-057
 - [ ] `architect-sdd@0.0.3` is on npm, published by P-01 from the checked tarball of the release-candidate commit, before or together with the Copilot release of C002-T-055
 - [ ] The record `docs/releases/architect-sdd/0.0.3.md` is committed
 - [ ] Progress reported: `sdd task set C002-T-075 --status done --commit <sha>`

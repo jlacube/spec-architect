@@ -188,9 +188,17 @@ contract C001-IF-05.
 
 ### C001-REQ-222 — Plain-text fallback without a question tool
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF the session offers no question tool, THEN THE conductor SHALL ask its interview round or present its gate as plain text in its reply, with the content of C001-IF-05 `questions.md` §3, and end its turn instead of asking P-01 to enable a tool.
+- **Statement:** IF the session offers no question tool, THEN THE conductor SHALL ask its interview round or present its gate as plain text in its reply, with the content of C001-IF-05 `questions.md` §3, and end its turn.
 - **Rationale:** D-020; Q-noask-01; C001-IF-05 `questions.md` §3
-- **Note:** Covers the rounds of C001-REQ-205, the asks of C001-REQ-221 and the gate of C001-REQ-802.
+- **Note:** Covers the rounds of C001-REQ-205, the asks of C001-REQ-221 and the gate of C001-REQ-802. The detour is excluded by C001-REQ-223 (critic CR-39).
 - **Stories:** C001-US-203
 - **Priority:** Must
 - **Acceptance:** C001-AC-222.1
+
+### C001-REQ-223 — No tool-enabling detour
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the session offers no question tool, THEN THE conductor SHALL NOT tell P-01 to enable, install or switch on a question tool instead of asking.
+- **Rationale:** D-020; Q-noask-01; C001-IF-05 `questions.md` §3 item 3; critic CR-39
+- **Stories:** C001-US-203
+- **Priority:** Must
+- **Acceptance:** C001-AC-223.1

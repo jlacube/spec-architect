@@ -37,7 +37,7 @@ id_block: { US: 201-299, REQ: 201-299, TS: 201-299 }
 - **Value / outcome:** fast high-quality decisions (Q14); C001-GOAL-05
 - **Priority:** Must · **Size hint:** M · **Capability:** C001-CAP-02
 - **Context & notes:** The four-question limit comes from AskUserQuestion; options are pre-researched by the specialists, and the question contract is C001-IF-05.
-- **Requirements:** C001-REQ-205, C001-REQ-206, C001-REQ-207, C001-REQ-222
+- **Requirements:** C001-REQ-205, C001-REQ-206, C001-REQ-207, C001-REQ-222, C001-REQ-223
 - **Traces to:** Q14, Q15, IDEA-§15.4, D-020
 
 ### C001-US-204 — Specialists surface questions instead of assuming
