@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-070]
 implements: [C002-REQ-611, C002-NFR-105]
 satisfies_ac: [C002-AC-611.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-679, C002-TS-688, C002-TC-679, C002-TC-917]
 components: [C002-COMP-009, C002-COMP-006]
 risk_refs: [C002-RISK-015, C002-RISK-036]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 728211f, completed_at: 2026-10-28, notes: "43 cap rows (INJ-21 session cap 1.00 USD, opencode only); TC-679 24/24, TC-917 7/7 (failed before); npm test 1742/0/1; check exit 0 (Node 22; one run lost a coverage batch, rerun green); dist 0.0.2 built; no paid run" }
 ---
 
 # C002-T-073 — Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2
