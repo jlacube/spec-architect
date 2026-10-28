@@ -1,0 +1,237 @@
+{
+  "scenario": "TS-1124",
+  "title": "Claude Code below the minimum version",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T21:16:33.377Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.24894459999999996,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.24894459999999996,
+        "session_ms": 170617,
+        "api_ms": 42309,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 2075,
+            "cache_read": 69063,
+            "cache_write": 14653,
+            "cost_usd": 0.17256860000000002
+          },
+          "claude-sonnet-5-5": {
+            "input": 10,
+            "output": 2581,
+            "cache_read": 84835,
+            "cache_write": 16825,
+            "cost_usd": 0.07637599999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 2075,
+              "cache_read": 69063,
+              "cache_write": 14653
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 0,
+              "cache_read": 63841,
+              "cache_write": 15946
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b2br8yql0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "a64e71bfd8c04eaa3",
+            "ms": 97562,
+            "tool_uses": 12,
+            "total_tokens": 23125
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7satsbdq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bhqzrwvlg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnqj0q6us",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnsqyvag8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3bhy5xmn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b6e15t8yo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 8,
+          "Glob": 2,
+          "Agent": 1,
+          "ToolSearch": 4,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 302
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33765
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 33674
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 97574
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12518
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 24649
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 36423
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 48385
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 65769
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 77871
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 77544
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 77103
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 8
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 8
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 155
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 694
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-1124-2026-10-28T21-13-42-008Z-run1.json"
+    }
+  ]
+}

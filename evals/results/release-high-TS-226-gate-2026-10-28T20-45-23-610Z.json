@@ -1,0 +1,196 @@
+{
+  "scenario": "TS-226-gate",
+  "title": "Gate G2 as plain text, question tool refused",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T20:47:36.047Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.2843362,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2843362,
+        "session_ms": 128204,
+        "api_ms": 42213,
+        "turns": 18,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1179,
+            "output": 23,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001294
+          },
+          "claude-opus-5-5": {
+            "input": 16,
+            "output": 3325,
+            "cache_read": 181374,
+            "cache_write": 22671,
+            "cost_usd": 0.2842068
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 3325,
+              "cache_read": 181374,
+              "cache_write": 22671
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b8zzt1b4r",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b33sio55k",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bc7uchb6n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxe1d1qzx",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxugknoux",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 2,
+          "Read": 5,
+          "Bash": 6,
+          "Glob": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 68
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 56
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 317
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33293
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 46839
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 58478
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 58317
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12633
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 12072
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 11380
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 10839
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12371
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 26
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-226-gate-2026-10-28T20-45-23-610Z-run1.json"
+    }
+  ]
+}

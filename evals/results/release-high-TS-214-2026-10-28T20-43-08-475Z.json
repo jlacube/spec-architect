@@ -1,0 +1,220 @@
+{
+  "scenario": "TS-214",
+  "title": "Unattended mode never approves",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T20:45:23.118Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.3933951,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3933951,
+        "session_ms": 131746,
+        "api_ms": 33352,
+        "turns": 20,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1210,
+            "output": 19,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001305
+          },
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 3600,
+            "cache_read": 278563,
+            "cache_write": 33183,
+            "cost_usd": 0.3932646
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 22,
+              "output": 3600,
+              "cache_read": 278563,
+              "cache_write": 33183
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b97v0mwkw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bi2798b0h",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bc4btb98w",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjm5hasys",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brb5qhq6z",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "buktevtmc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Read": 6,
+          "Glob": 2,
+          "Skill": 1,
+          "Bash": 7,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 144
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 166
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 49
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 301
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33095
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 44908
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12048
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 23602
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 10933
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12257
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 669
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12554
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 36
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-214-2026-10-28T20-43-08-475Z-run1.json"
+    }
+  ]
+}

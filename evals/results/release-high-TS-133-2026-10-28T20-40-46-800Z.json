@@ -1,0 +1,114 @@
+{
+  "scenario": "TS-133",
+  "title": "G0 enforcement",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T20:41:03.901Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.2354252,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2354252,
+        "session_ms": 16256,
+        "api_ms": 11789,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1053,
+            "cache_read": 59316,
+            "cache_write": 25293,
+            "cost_usd": 0.2352992
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1053,
+              "cache_read": 59316,
+              "cache_write": 25293
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 1,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 283
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 127
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 33
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T20-40-46-800Z-run1.json"
+    }
+  ]
+}

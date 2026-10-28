@@ -1,0 +1,396 @@
+{
+  "scenario": "TS-804-unattended",
+  "title": "Unattended drafting reached G2 with lint clean",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T21:00:17.346Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.505955685,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.505955685,
+        "session_ms": 194695,
+        "api_ms": 71695,
+        "turns": 19,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1213,
+            "output": 2717,
+            "cache_read": 30401,
+            "cache_write": 12063,
+            "cost_usd": 0.003291685
+          },
+          "claude-opus-5-5": {
+            "input": 30,
+            "output": 5879,
+            "cache_read": 299825,
+            "cache_write": 50502,
+            "cost_usd": 0.502664
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 5879,
+              "cache_read": 178208,
+              "cache_write": 24163
+            },
+            "output": "derived"
+          },
+          "architect:sdd-auditor": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 18821,
+              "cache_write": 11580
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 0,
+              "cache_read": 121617,
+              "cache_write": 26339
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bevborvgc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-auditor",
+            "task_id": "a77090c9c016d26c2",
+            "ms": 73829,
+            "tool_uses": 5,
+            "total_tokens": 13249
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bedp41fj2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4xzq1dgc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0qxznwnr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4fgx2dnt",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b6knjfvmc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "af08b0113d775311e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bd82fcz14",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bntso5jiz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 11,
+          "Read": 24,
+          "Glob": 3,
+          "Skill": 1,
+          "Agent": 2,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 313
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 158
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 147
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 24
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33439
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33271
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32721
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-auditor",
+            "ms": 73845
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 12494
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 12446
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 24485
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 12240
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 24074
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": 49733
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 51
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 36
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 32
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 38
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 33
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 166
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 22
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 43
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 12244
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "subagent": "subagent",
+            "ms": 23709
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 36
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-critic",
+            "ms": 196
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 41
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 28
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "ms": 291
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-critic",
+            "ms": null
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-804-unattended-2026-10-28T20-56-56-797Z-run1.json"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T20:40:28.613Z",
+  "runs": 5,
+  "passed": 5,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.218796,
+  "duration_s": 14,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "offtopic-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-offtopic-01-run1-2026-10-28T20-40-28-614Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0435776,
+        "session_ms": 8000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-offtopic-01-run2-2026-10-28T20-40-28-614Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.043477600000000005,
+        "session_ms": 8000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-offtopic-01-run3-2026-10-28T20-40-28-614Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0442376,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-offtopic-01-run4-2026-10-28T20-40-28-614Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0435216,
+        "session_ms": 8000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "offtopic-01",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-offtopic-01-run5-2026-10-28T20-40-28-614Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.043981599999999996,
+        "session_ms": 6000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 5,
+    "runs": 5,
+    "regraded": 0
+  }
+}

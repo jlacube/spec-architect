@@ -1,0 +1,189 @@
+{
+  "scenario": "TS-209",
+  "title": "Specialist cannot decide licensing preference",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:eval-dispatcher",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T20:42:42.221Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.23939871000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.23939871000000001,
+        "session_ms": 95359,
+        "api_ms": 129072,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 148040,
+            "output": 12035,
+            "cache_read": 6081,
+            "cache_write": 8022,
+            "cost_usd": 0.07248671
+          },
+          "claude-sonnet-5-5": {
+            "input": 16,
+            "output": 7450,
+            "cache_read": 152550,
+            "cache_write": 30850,
+            "cost_usd": 0.166912
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 12035,
+              "cache_read": 6081,
+              "cache_write": 8022
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 0,
+              "cache_read": 126071,
+              "cache_write": 26479
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a8d85f50c6295b997",
+            "ms": 84475,
+            "tool_uses": 16,
+            "total_tokens": 32577
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "ToolSearch": 1,
+          "Glob": 1,
+          "Read": 3,
+          "WebSearch": 4,
+          "WebFetch": 5,
+          "Bash": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 84501
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 10
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-researcher",
+            "ms": 159
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 25
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6141
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 9871
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8617
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6225
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7944
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7333
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7713
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7298
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 4036
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-researcher",
+            "ms": 0
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-researcher",
+            "ms": 60
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 700
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 30,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-209-2026-10-28T20-41-05-896Z-run1.json"
+    }
+  ]
+}

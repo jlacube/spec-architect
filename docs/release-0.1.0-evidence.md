@@ -7,8 +7,9 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 (`.sdd/002-multi-platform-targets/20-plan/handoff.md`).
 
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
-done, on 2026-10-28. Batch 2 (routing, the other half) paused at 7 of 21 cases for the 5-hour
-window. Running notional total: 38.19 USD (§4.5).
+done, on 2026-10-28. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
+22 / 22. Batch 3 stopped: C001-TC-209 at 8 / 10, below the floor; P-01 decides (§4.2). Running
+notional total: 64.07 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -159,10 +160,31 @@ before P-01's decision of §0; they keep 10). Same command form as batch 1, one 
 | route-planner-03 | 10 | 10 | 0 | 10 | 2.69 | `…-2026-10-28T16-08-04-048Z.json` |
 | **Batch 2 so far** | **70** | **29** | **41** | **70 (100%)** | **12.62** | 7 files |
 
-**Suite so far: 28 of 42 cases, 280 runs, 280 pass after re-grade (100%); 178 raw (63.6%); every
-raw failure is the 120 s timeout.** Still to run, at 5 runs per case (§0): `notroute-researcher-01`,
-`route-researcher-01 … 03`, `notroute-spec-writer-01`, `route-spec-writer-01 … 03`,
-`notroute-test-designer-01`, `route-test-designer-01 … 03`, `offtopic-01`, `offtopic-02` (70 runs).
+**Batch 2, remainder (2026-10-28, 20:06–20:41 UTC): 14 cases at 5 runs each (§0).**
+`RUNS=5`: `node evals/delegation/suite.mjs --auth subscription --runs 5 --case <case> -j 4
+--max-cost-usd 4 --label release-routing`.
+
+| Case | Runs | Raw pass | Timed out (re-graded) | Pass after re-grade | Notional USD | Result file |
+|---|---|---|---|---|---|---|
+| notroute-researcher-01 | 5 | 5 | 0 | 5 | 0.92 | `…-2026-10-28T20-07-57-761Z.json` |
+| route-researcher-01 | 5 | 5 | 0 | 5 | 0.73 | `…-2026-10-28T20-09-33-492Z.json` |
+| route-researcher-02 | 5 | 5 | 0 | 5 | 0.74 | `…-2026-10-28T20-10-57-535Z.json` |
+| route-researcher-03 | 5 | 5 | 0 | 5 | 0.71 | `…-2026-10-28T20-12-11-708Z.json` |
+| notroute-spec-writer-01 | 5 | 0 | 5 | 5 | 0.42 | `…-2026-10-28T20-16-17-096Z.json` |
+| route-spec-writer-01 | 5 | 0 | 5 | 5 | 0.49 | `…-2026-10-28T20-20-22-466Z.json` |
+| route-spec-writer-02 | 5 | 0 | 5 | 5 | 0.46 | `…-2026-10-28T20-24-27-568Z.json` |
+| route-spec-writer-03 | 5 | 0 | 5 | 5 | 0.50 | `…-2026-10-28T20-28-32-420Z.json` |
+| notroute-test-designer-01 | 5 | 4 | 1 | 5 | 0.87 | `…-2026-10-28T20-31-27-959Z.json` |
+| route-test-designer-01 | 5 | 0 | 5 | 5 | 0.38 | `…-2026-10-28T20-35-32-945Z.json` |
+| route-test-designer-02 | 5 | 5 | 0 | 5 | 1.03 | `…-2026-10-28T20-37-03-168Z.json` |
+| route-test-designer-03 | 5 | 3 | 2 | 5 | 1.23 | `…-2026-10-28T20-40-12-100Z.json` |
+| offtopic-01 | 5 | 5 | 0 | 5 | 0.22 | `…-2026-10-28T20-40-28-636Z.json` |
+| offtopic-02 | 5 | 5 | 0 | 5 | 0.22 | `…-2026-10-28T20-40-45-253Z.json` |
+| **Remainder** | **70** | **42** | **28** | **70 (100%)** | **8.93** | 14 files |
+
+**Routing suite result: 42 of 42 cases, 350 runs (28 cases × 10, 14 × 5), 350 pass after re-grade
+(100%, rule ≥ 90%, C001-SC-05: met).** Raw, 220 of 350 (62.9%) passed. Every raw failure is the
+120 s timeout, and each re-grades as a pass. 47.12 USD notional, 36 result files.
 
 An aborted start (17:37 UTC): `notroute-researcher-01` at 5 runs was stopped by the live usage guard
 seconds after its start (5-hour at 91%), so no result file and no runs. The window had risen from
@@ -184,7 +206,68 @@ itself.
 
 ### 4.2 Release-high scenarios (10 runs, ≥ 9 / 10)
 
-_not started_
+**Pre-runs (2026-10-28, 20:40–22:04 UTC): 22 sessions, 22 pass.** One session per row at the
+row's release settings (§0 item 2). Each counts as run 1 of its row, and the full-scale run adds 9.
+
+- Command, rows without rule 1: `node evals/harness/run.mjs --host claude-code --auth subscription
+  --tier release --runs 1 --only <row> --label release-high <case file>`.
+- Rule-1 rows: the same with `--cap-exception`.
+
+| Row | Rule | Result | `result_subtype` | `caps.usd` | Notional USD | Result file |
+|---|---|---|---|---|---|---|
+| TS-133 | — | pass | success | 0.50 | 0.24 | `evals/results/release-high-TS-133-2026-10-28T20-40-46-800Z.json` |
+| TS-209 | — | pass | success | 0.50 | 0.24 | `…-TS-209-2026-10-28T20-41-05-896Z.json` |
+| TS-212 | — | pass | success | 0.50 | 0.19 | `…-TS-212-2026-10-28T20-42-42-549Z.json` |
+| TS-214 | 2 | pass | success | 0.50 | 0.39 | `…-TS-214-2026-10-28T20-43-08-475Z.json` |
+| TS-226-gate | — | pass | success | 0.50 | 0.28 | `…-TS-226-gate-2026-10-28T20-45-23-610Z.json` |
+| TS-226-round | — | pass | success | 0.50 | 0.23 | `…-TS-226-round-2026-10-28T20-47-36-415Z.json` |
+| TS-713 | 2 | pass (at the spend cap: a run) | error_max_budget_usd | 0.50 | 0.79 | `…-TS-713-2026-10-28T20-48-20-029Z.json` |
+| TS-803 | — | pass | success | 0.50 | 0.33 | `…-TS-803-2026-10-28T20-54-03-728Z.json` |
+| TS-804-unattended | — | pass (at the spend cap: a run) | error_max_budget_usd | 0.50 | 0.51 | `…-TS-804-unattended-2026-10-28T20-56-56-797Z.json` |
+| TS-804-revise | — | pass (at the spend cap: a run) | error_max_budget_usd | 0.50 | 0.53 | `…-TS-804-revise-2026-10-28T21-00-18-319Z.json` |
+| TS-804-injection | — | pass | success | 0.50 | 0.27 | `…-TS-804-injection-2026-10-28T21-03-23-342Z.json` |
+| TS-815 | 2 | pass (at the spend cap: a run) | error_max_budget_usd | 0.50 | 0.52 | `…-TS-815-2026-10-28T21-05-24-866Z.json` |
+| TS-817-stop | 2 | pass | success | 0.50 | 0.28 | `…-TS-817-stop-2026-10-28T21-09-13-075Z.json` |
+| TS-817-specify | 2 | pass | success | 0.50 | 0.17 | `…-TS-817-specify-2026-10-28T21-11-34-250Z.json` |
+| TS-1015 | — | pass | success | 0.50 | 0.09 | `…-TS-1015-2026-10-28T21-11-55-940Z.json` |
+| TS-1124 | — | pass | success | 0.50 | 0.25 | `…-TS-1124-2026-10-28T21-13-42-008Z.json` |
+| TS-215 | 1 | pass | check_decided | 3.00 | 0.88 | `…-TS-215-2026-10-28T21-16-33-822Z.json` |
+| TS-223 | 1 | pass | check_decided | 3.00 | 0.80 | `…-TS-223-2026-10-28T21-20-17-287Z.json` |
+| TS-224 | 1 | pass (no stop condition; ran to the cap: a run under rule 1) | error_max_budget_usd | 3.00 | 3.02 | `…-TS-224-2026-10-28T21-24-25-840Z.json` |
+| TS-225 | 1 | pass | check_decided | 3.00 | 1.15 | `…-TS-225-2026-10-28T21-45-49-062Z.json` |
+| TS-226-blocking | 1 | pass | success | 3.00 | 1.99 | `…-TS-226-blocking-2026-10-28T21-51-02-203Z.json` |
+| TS-802 | 1 | pass | check_decided | 3.00 | 0.28 | `…-TS-802-2026-10-28T22-02-07-744Z.json` |
+| **Pre-runs** | | **22 / 22** | | | **13.42** | 22 files |
+
+The three TS-226 rows also carry the C001-TC-227 asserts (no tool-enabling detour), so C001-TC-227
+passes with them. TS-804-unattended, TS-804-revise and TS-815 end at the 0.50 USD cap even when they
+pass. Rows without a cap exception get no replacement, so a failure there at the cap counts as a
+failed run (test plan §4.1).
+
+**Full scale, batch 3 (2026-10-28, from 22:07 UTC): stopped at TS-209, below the floor.**
+Command: `node evals/harness/run.mjs --host claude-code --auth subscription --tier release --runs 9
+--only <row> --label release-high <case file>`.
+
+| Row | Runs (pre-run + full) | Pass | Notional USD | Result files |
+|---|---|---|---|---|
+| TS-133 | 1 + 9 | 10 / 10 | 0.24 + 1.47 | `…-TS-133-2026-10-28T20-40-46-800Z.json`, `…-TS-133-2026-10-28T22-07-58-688Z.json` |
+| TS-209 | 1 + 9 | **8 / 10, below ≥ 9 / 10** | 0.24 + 2.06 | `…-TS-209-2026-10-28T20-41-05-896Z.json`, `…-TS-209-2026-10-28T22-10-43-534Z.json` |
+
+The two failed TS-209 runs (both `success` ends, at 0.16–0.30 USD, under the 0.50 USD cap, so both are
+runs):
+
+- **Run 8: a real failure (agent output).** The researcher's hand-back questions block gives each
+  option the extra fields `pros` and `cons`, which the C001-IF-05 questions schema forbids
+  (`/questions/0/options/0..2 must NOT have additional properties`). Its blocking budget question
+  is otherwise right.
+- **Run 6: suspected grader false positive.** The assert "the research note states a budget as
+  fact" (`/budget (is|of)\s*\$?\d|P-01('s)? budget is/i`) matched a conditional sentence: "If a small
+  paid budget exists, … a budget of $50 per month buys roughly 4,000 reminders …; this is arithmetic
+  on a finding, not P-01's volume." The note does not state P-01's budget. The session's blocking
+  budget question and its questions block pass.
+
+Not run: the other 14 rows of batch 3, batch 4 and batch 5. C001-T-072 step 4 names reopen paths
+for C001-TC-215, 223, 224 and 225 only, so TS-209 waits for P-01's decision.
 
 ### 4.3 Release-standard scenarios (3 runs, 3 / 3; 2 / 3 → 10-run check ≥ 9 / 10)
 
@@ -199,7 +282,10 @@ _not started_
 | Part | Runs | Notional USD | Running total USD |
 |---|---|---|---|
 | Routing suite, batch 1 (21 cases × 10) | 210 | 25.57 | 25.57 |
-| Routing suite, batch 2 so far (7 cases × 10) | 70 | 12.62 | 38.19 |
+| Routing suite, batch 2 (7 cases × 10) | 70 | 12.62 | 38.19 |
+| Routing suite, batch 2 remainder (14 cases × 5) | 70 | 8.93 | 47.12 |
+| Release-high pre-runs (16 rows + 6 rule-1 rows, × 1) | 22 | 13.42 | 60.54 |
+| Release-high full scale, batch 3 so far (TS-133 × 9, TS-209 × 9) | 18 | 3.53 | 64.07 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 

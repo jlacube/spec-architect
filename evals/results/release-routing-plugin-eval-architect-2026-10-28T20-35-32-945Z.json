@@ -1,0 +1,149 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T20:35:32.924Z",
+  "runs": 5,
+  "passed": 0,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 0.3816968,
+  "duration_s": 243,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-test-designer-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-test-designer-01-run1-2026-10-28T20-35-32-925Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.080247,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-test-designer-01-run2-2026-10-28T20-35-32-925Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07387560000000001,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-test-designer-01-run3-2026-10-28T20-35-32-925Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07731679999999999,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-test-designer-01-run4-2026-10-28T20-35-32-925Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07672680000000001,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-test-designer-01",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-test-designer-01-run5-2026-10-28T20-35-32-925Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0735306,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 5,
+    "runs": 5,
+    "regraded": 5
+  }
+}

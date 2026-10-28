@@ -1,0 +1,114 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T20:12:11.689Z",
+  "runs": 5,
+  "passed": 5,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.7142511650000001,
+  "duration_s": 72,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-researcher-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-researcher-03-run1-2026-10-28T20-12-11-690Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1247659,
+        "session_ms": 33000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-researcher-03-run2-2026-10-28T20-12-11-690Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16696786500000002,
+        "session_ms": 50000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-researcher-03-run3-2026-10-28T20-12-11-690Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.13573030000000003,
+        "session_ms": 44000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-researcher-03-run4-2026-10-28T20-12-11-690Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.14583100000000002,
+        "session_ms": 48000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-researcher-03",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-researcher-03-run5-2026-10-28T20-12-11-690Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1409561,
+        "session_ms": 38000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 5,
+    "runs": 5,
+    "regraded": 0
+  }
+}

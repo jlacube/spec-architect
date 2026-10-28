@@ -1,0 +1,871 @@
+{
+  "scenario": "TS-133",
+  "title": "G0 enforcement",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T22:10:43.259Z",
+  "runs": 9,
+  "passed": 9,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 1.4695011999999998,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1755186,
+        "session_ms": 19302,
+        "api_ms": 14462,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1059,
+            "cache_read": 66423,
+            "cache_write": 17612,
+            "cost_usd": 0.17539259999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1059,
+              "cache_read": 66423,
+              "cache_write": 17612
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 334
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 148
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 54
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 43
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run1.json"
+    },
+    {
+      "run": 2,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.151724,
+        "session_ms": 15154,
+        "api_ms": 10237,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 1032,
+            "cache_read": 48630,
+            "cache_write": 15151,
+            "cost_usd": 0.15159799999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 1032,
+              "cache_read": 48630,
+              "cache_write": 15151
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 4,
+          "Glob": 1,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 156
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 42
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 47
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run2.json"
+    },
+    {
+      "run": 3,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.161922,
+        "session_ms": 19180,
+        "api_ms": 14658,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1051,
+            "cache_read": 74400,
+            "cache_write": 15733,
+            "cost_usd": 0.161796
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1051,
+              "cache_read": 74400,
+              "cache_write": 15733
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Skill": 1,
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 392
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 403
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 194
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run3.json"
+    },
+    {
+      "run": 4,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1640464,
+        "session_ms": 15648,
+        "api_ms": 11470,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1039,
+            "cache_read": 88422,
+            "cache_write": 15677,
+            "cost_usd": 0.16392040000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1039,
+              "cache_read": 88422,
+              "cache_write": 15677
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 311
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 167
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 42
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 37
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run4.json"
+    },
+    {
+      "run": 5,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1609864,
+        "session_ms": 15868,
+        "api_ms": 11254,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 945,
+            "cache_read": 88282,
+            "cache_write": 15533,
+            "cost_usd": 0.16086040000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 945,
+              "cache_read": 88282,
+              "cache_write": 15533
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 333
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 162
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 48
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 26
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run5.json"
+    },
+    {
+      "run": 6,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1779458,
+        "session_ms": 17595,
+        "api_ms": 13339,
+        "turns": 11,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 1240,
+            "cache_read": 118499,
+            "cache_write": 16159,
+            "cost_usd": 0.17781979999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 1240,
+              "cache_read": 118499,
+              "cache_write": 16159
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Skill": 2,
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 30
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 20
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 301
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 166
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run6.json"
+    },
+    {
+      "run": 7,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1613812,
+        "session_ms": 15238,
+        "api_ms": 10341,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 972,
+            "cache_read": 97916,
+            "cache_write": 15274,
+            "cost_usd": 0.1612552
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 972,
+              "cache_read": 97916,
+              "cache_write": 15274
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 4,
+          "Glob": 2,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 48
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 155
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 35
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 53
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 149
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run7.json"
+    },
+    {
+      "run": 8,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.149986,
+        "session_ms": 19969,
+        "api_ms": 16179,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 6,
+            "output": 938,
+            "cache_read": 48740,
+            "cache_write": 15166,
+            "cost_usd": 0.14986
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 938,
+              "cache_read": 48740,
+              "cache_write": 15166
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 4,
+          "Glob": 1,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 56
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 147
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 29
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run8.json"
+    },
+    {
+      "run": 9,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1659908,
+        "session_ms": 21075,
+        "api_ms": 16923,
+        "turns": 11,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1175,
+            "output": 17,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.000126
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1166,
+            "cache_read": 71244,
+            "cache_write": 16033,
+            "cost_usd": 0.1658648
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1166,
+              "cache_read": 71244,
+              "cache_write": 16033
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Skill": 2,
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 295
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 91
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 154
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 30
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 44
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 44
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 14,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-133-2026-10-28T22-07-58-688Z-run9.json"
+    }
+  ]
+}

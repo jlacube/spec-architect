@@ -1,0 +1,330 @@
+{
+  "scenario": "TS-815",
+  "title": "Changed IDs and dependents",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T21:09:11.987Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.5210243999999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.5210243999999999,
+        "session_ms": 223328,
+        "api_ms": 71365,
+        "turns": 27,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 32,
+            "output": 7752,
+            "cache_read": 374327,
+            "cache_write": 40800,
+            "cost_usd": 0.5210243999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 26,
+              "output": 7752,
+              "cache_read": 364316,
+              "cache_write": 30498
+            },
+            "output": "derived"
+          },
+          "architect:sdd-test-designer": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 30912,
+              "cache_write": 11487
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bls96bbm8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bj91ur3uv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b9q66luwm",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bq9qq2xtr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btw3waaqw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "beo2mc2os",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnlfof0y9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brqkqu77l",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-test-designer",
+            "task_id": "a961b29444f97dc3e",
+            "ms": 36042,
+            "tool_uses": 5,
+            "total_tokens": 17267
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bk6bwt29n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkywwkge8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bx4lp6th1",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 8,
+          "Glob": 1,
+          "Bash": 12,
+          "Edit": 3,
+          "AskUserQuestion": 2,
+          "Agent": 1,
+          "Grep": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 33
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 144
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 343
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33466
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 45871
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 58716
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58091
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57544
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13753
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13798
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12455
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 11928
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 765
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12350
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 24
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12569
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-test-designer",
+            "ms": 36059
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 47
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 667
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 682
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-test-designer",
+            "ms": 194
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 12494
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 47
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12370
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 23855
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-815-2026-10-28T21-05-24-866Z-run1.json"
+    }
+  ]
+}

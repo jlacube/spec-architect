@@ -1,0 +1,240 @@
+{
+  "scenario": "TS-803",
+  "title": "Note equals answer",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-28T20:56:56.497Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.32636100000000007,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.32636100000000007,
+        "session_ms": 169038,
+        "api_ms": 48111,
+        "turns": 22,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 20,
+            "output": 3756,
+            "cache_read": 253845,
+            "cache_write": 25049,
+            "cost_usd": 0.32636100000000007
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 3756,
+              "cache_read": 253845,
+              "cache_write": 25049
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bevwmxw19",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2p8xrm1l",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brwsnj7ys",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bfz16q3lf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b9cry8kmf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bylassoxy",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bq7pqdw5j",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bt7226n31",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Skill": 1,
+          "Read": 6,
+          "Glob": 1,
+          "Bash": 9,
+          "Grep": 1,
+          "Edit": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 146
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 308
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 33439
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32894
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 32199
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 31601
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12321
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 23892
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 35295
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12192
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 23670
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 23094
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 182
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 754
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12357
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12931
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 24,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-803-2026-10-28T20-54-03-728Z-run1.json"
+    }
+  ]
+}
