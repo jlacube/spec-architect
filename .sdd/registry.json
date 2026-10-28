@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T06:12:45Z",
+  "generated_at": "2026-10-28T07:28:10Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -260,13 +260,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:f1f0938eb8812e900e2025c19fa46217806d50c9c44f31ca92a0bcfa8cdf8fd4",
           "approved_at": "2026-10-28",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:27fb446fc2cca337df51ccbf9240542935d8f8757ffb60d20ec9905129f7ae98",
           "approved_at": "2026-10-28",
           "approved_by": "jerome.lacube"
@@ -637,6 +637,16 @@
           "id": "D-036",
           "ref": "C002-IF-010",
           "summary": "Found in C002-T-071: Copilot 0.0.2 refused (ERR-REL-002, INJ-19 and INJ-21 acted upon) because of CHG-001 D-020; OpenCode deferred (Q-opencode-defer-01). Copilot moves to 0.0.3 after the D-020 fix; publishing architect-sdd is split from the OpenCode release so Copilot can ship alone.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-28",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-037",
+          "ref": "C002-REQ-312",
+          "summary": "Found in C001-T-084: C002-REQ-312 (AC-312.1, TS-319, TC-319) still requires that without ask_user the conductor asks nothing and names the INSTALL.md steps, which C001-REQ-222/223 (text fallback, no detour) now forbid; the shipped Copilot wiring follows C001. Also TS-226-blocking (C001) needs a rule-1 cap exception (3.00 USD), like TS-225. Conductor decisions under P-01's Q-noask-01.",
           "reporter": "jerome.lacube",
           "date": "2026-10-28",
           "status": "open",

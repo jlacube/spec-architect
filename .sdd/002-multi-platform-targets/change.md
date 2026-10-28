@@ -7,8 +7,8 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:f1f0938eb8812e900e2025c19fa46217806d50c9c44f31ca92a0bcfa8cdf8fd4", approved_at: 2026-10-28, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:27fb446fc2cca337df51ccbf9240542935d8f8757ffb60d20ec9905129f7ae98", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:f1f0938eb8812e900e2025c19fa46217806d50c9c44f31ca92a0bcfa8cdf8fd4", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  20-plan: { status: in-revision, approved_hash: "sha256:27fb446fc2cca337df51ccbf9240542935d8f8757ffb60d20ec9905129f7ae98", approved_at: 2026-10-28, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -49,6 +49,7 @@ defects:
   - { id: D-034, ref: C002-IF-010, summary: "Found in C001-T-082 (t082-d019): every rule-1 Claude Code session ran to the 3.00 USD cap although its checked step happened well before; the release gate's 74 rule-1 sessions would need 4–5 five-hour windows. P-01 (Q-early-stop-01): the harness ends a session once the case's check is decided.", reporter: jerome.lacube, date: 2026-10-24, status: open, resolution: null, closed_at: null }
   - { id: D-035, ref: C002-IF-010, summary: "Found in C002-T-071: INJ-21 on OpenCode needs about 0.52–0.57 USD per run and ends at the 0.50 USD cap; under the fail-closed merge (IF-010 §5.2 rule 3) the entry is acted upon and final for 0.0.1, so the OpenCode 0.0.1 release check refuses (ERR-REL-002) although every assertion passed. P-01 (Q-inj21-01): INJ-21 gets a 1 USD cap exception (OpenCode, and Copilot CLI if needed) and the version moves to 0.0.2; both targets' paid evidence is retaken.", reporter: jerome.lacube, date: 2026-10-25, status: open, resolution: null, closed_at: null }
   - { id: D-036, ref: C002-IF-010, summary: "Found in C002-T-071: Copilot 0.0.2 refused (ERR-REL-002, INJ-19 and INJ-21 acted upon) because of CHG-001 D-020; OpenCode deferred (Q-opencode-defer-01). Copilot moves to 0.0.3 after the D-020 fix; publishing architect-sdd is split from the OpenCode release so Copilot can ship alone.", reporter: jerome.lacube, date: 2026-10-28, status: open, resolution: null, closed_at: null }
+  - { id: D-037, ref: C002-REQ-312, summary: "Found in C001-T-084: C002-REQ-312 (AC-312.1, TS-319, TC-319) still requires that without ask_user the conductor asks nothing and names the INSTALL.md steps, which C001-REQ-222/223 (text fallback, no detour) now forbid; the shipped Copilot wiring follows C001. Also TS-226-blocking (C001) needs a rule-1 cap exception (3.00 USD), like TS-225. Conductor decisions under P-01's Q-noask-01.", reporter: jerome.lacube, date: 2026-10-28, status: open, resolution: null, closed_at: null }
 waivers:
   - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
   - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-15, note: "Approve with waivers" }
@@ -300,3 +301,5 @@ waivers:
 | 2026-10-28 | G3 (plan) | **Revise** | "Plan revision for D-020 / D-036" | none | unavailable |
 | 2026-10-28 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
 | 2026-10-28 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-10-28 | G2 (spec) | **Revise** | "Revision for CHG-002 D-037: REQ-312/TS-319 aligned with the C001 text fallback; TS-226-blocking rule-1 cap row" | none | unavailable |
+| 2026-10-28 | G3 (plan) | **Revise** | "Plan revision for D-037: TC-319, caps row" | none | unavailable |
