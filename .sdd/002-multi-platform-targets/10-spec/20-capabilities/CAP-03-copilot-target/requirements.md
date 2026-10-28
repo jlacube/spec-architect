@@ -126,8 +126,8 @@ C002-REQ-330).
 ### C002-REQ-312 — Question tool unavailable in VS Code
 - **Delta:** ADDED
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF `ask_user` is not available to the conductor in VS Code, THEN THE conductor SHALL ask no question and reply with a message that names the missing tool `ask_user` and the step of the install notes that makes it available.
-- **Rationale:** `ask_user` is the question tool of the local agent host (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-5); interviews and gates rely on its structured answers (C002-REQ-211, C002-REQ-212); a plain-chat fallback would add a second answer path to verify; settled here as C002-US-304 asks; the install notes step: C002-REQ-304
+- **Statement:** IF `ask_user` is not available to the conductor in VS Code, THEN THE conductor SHALL ask its interview round or present its gate as plain text in its reply, with the content of C001-IF-05 `questions.md` §3 and without an instruction to enable, install or switch on `ask_user`, and end its turn.
+- **Rationale:** defect D-037 (found in C001-T-084; the conductor's decision under P-01's answer to Q-noask-01): the earlier statement (ask nothing, name the missing tool and the step of the install notes) contradicted C001-REQ-222 (plain-text fallback when the session offers no question tool) and C001-REQ-223 (no tool-enabling detour), which the shipped Copilot wiring follows; this requirement applies them to `ask_user`, the question tool of the local agent host (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-5). With the tool, interviews and gates keep their structured answers (C002-REQ-211, C002-REQ-212, C002-REQ-311); the install notes still say how the tool is made available (C002-REQ-304)
 - **Stories:** C002-US-304
 - **Priority:** Must
 - **Acceptance:** C002-AC-312.1

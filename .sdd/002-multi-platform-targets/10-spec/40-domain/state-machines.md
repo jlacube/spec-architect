@@ -158,11 +158,11 @@ stateDiagram-v2
   asked --> no_choice : skipped, dismissed or empty result
   answered --> [*] : answer logged verbatim, gate decision applied
   no_choice --> [*] : nothing recorded, P-01 told no answer was received
-  unavailable --> [*] : reply naming ask_user and the install-notes step
+  unavailable --> [*] : round or gate asked as plain text, turn ended
 ```
 
 | From | Event | Guard | To | Effect |
 |---|---|---|---|---|
 | asked | tool result | holds at least one choice or text answer | answered | questions log and, at a gate, `sdd gate approve` or `gate record` with the verbatim words |
 | asked | tool result | `{"skipped": true}`, dismissed or empty | no_choice | no log entry, no approval (C002-REQ-311, C002-INV-09) |
-| (none) | conductor would ask | VS Code offers no `ask_user` tool | unavailable | no question asked; reply naming `ask_user` and the install-notes step (C002-REQ-312) |
+| (none) | conductor would ask | VS Code offers no `ask_user` tool | unavailable | round or gate asked as plain text in the reply (C001-IF-05 `questions.md` §3), turn ended, no instruction to enable the tool (C002-REQ-312; C001-REQ-222, C001-REQ-223; defect D-037) |

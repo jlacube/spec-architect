@@ -365,16 +365,25 @@ Scenario: C002-TS-318 — skipped gate question in VS Code
 
 ## C002-REQ-312
 
-#### C002-AC-312.1 — No `ask_user`: no question, a message naming the tool and the install step
+#### C002-AC-312.1 — No `ask_user`: the conductor asks as plain text, with no install detour
 ```gherkin
 @manual-vscode
 Scenario: C002-TS-319 — ask_user unavailable
   Given "ask_user" is removed from the "tools" list of ".github/agents/sdd-conductor.agent.md" in the toy change repository
   When P-01 runs the new-change prompt with the title "Toy change"
-  Then the conductor's reply names the missing tool "ask_user" and the step of "INSTALL.md" that makes it available
-  And the reply asks no question
-  And no change folder is created
+  Then the conductor's reply asks its interview round as plain text, with the content of C001-IF-05 `questions.md` §3, and the conductor ends its turn
+  And the reply does not name "INSTALL.md"
+  And it does not tell P-01 to enable, install or switch on "ask_user" or another question tool
 ```
+
+Without a question tool the conductor falls back to the text form of the interview and gate
+protocols, as on every host (C001-REQ-222, C001-REQ-223; C001-IF-05 `questions.md` §3; defect
+D-037). The generated Copilot conductor holds that rule in both enforcement modes: its
+interview-protocol wiring reads "If the `ask_user` tool is absent or a call to it is refused, ask
+the round in the text form of §4.", its gate-protocol wiring "If the `ask_user` tool is absent or a
+call to it is refused, present the gate in the text form of §3.", and neither names `INSTALL.md`
+(the package test of C002-TC-319, `tests/integration/cap02/question-variants.test.ts`). This
+scenario is the checklist step that shows the behaviour in VS Code (`VSC-15`).
 
 ## C002-REQ-313
 
@@ -1096,7 +1105,7 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file), TS-367 (fault messages: no path in the tool input, `--agents` name without `sdd-`) | TS-314 (empty input, empty `cwd`) | TS-314, TS-367 | TS-367 (an `--agents` name without `sdd-` is never passed unchecked to a guard core) | n/a | TS-314 (unclassed tool, input not an object), TS-334 (letter case), TS-367 (`architect:` prefix on a non-`sdd-` name) |
 | C002-REQ-310 | TS-315 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-311 | TS-316, TS-317 | TS-318 (gate) | TS-316 (empty list) | TS-316 | n/a | n/a | TS-317 (auto-approve) |
-| C002-REQ-312 | TS-319 | n/a | n/a | TS-319 | n/a | n/a | n/a |
+| C002-REQ-312 | TS-319 | n/a | n/a | TS-319 (no question tool: the text form, no instruction to enable a tool) | n/a | n/a | TS-319 (no `INSTALL.md` detour in place of the question) |
 | C002-REQ-313 | TS-320, TS-321 | n/a | TS-320 (10 lines) | n/a | n/a | n/a | n/a |
 | C002-REQ-314 | TS-322 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-315 | TS-323 | TS-323 (non-author agent; `architect:` form of Copilot CLI) | n/a | TS-324 | n/a | n/a | n/a |
