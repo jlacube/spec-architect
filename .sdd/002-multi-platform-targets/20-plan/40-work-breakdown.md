@@ -327,7 +327,7 @@ lengthens it by 2**:
   CR-84), and finishes at 50.
 - C002-T-055 finishes at 51.
 
-C002-T-074 also waits for C001-T-084 outside this graph (plan critic CR-86), so the calendar end
+C002-T-074 also waits for the product commit of C001-T-084 outside this graph (plan critic CR-86; revision D-037), so the calendar end
 follows that task. The dropped tasks keep their own `depends_on` in their files but are no nodes of
 this graph, and no task depends on them. **The D-035 plan update lengthened it by 1**: the fix
 task C002-T-073 (S) starts after C002-T-070 (finishing at 44) and finishes at 45. C002-T-071 now
@@ -404,7 +404,7 @@ C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-073 — `INJ-21` sessio
 (M, 48), C002-T-050 — P-01 checklist run (S, 49), C002-T-075 — P-01 npm publication after a
 `released` dry run (S, 50) and C002-T-055 — P-01 Copilot release (S, 51). C002-T-057 also finishes
 at 49. The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
-(C002-T-074 waits for C001-T-084; `handoff.md`), so its calendar end follows them.
+(C002-T-074 waits for the C001-T-084 product commit; `handoff.md`), so its calendar end follows them.
 
 **Before the release retake (to C002-T-055, weight 45):**
 
@@ -528,7 +528,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | S | T-068, T-069 |
 | C002-M-06 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | M | T-069, T-070 |
 | C002-M-06 | C002-T-073 | Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2 | S | T-070 |
-| C002-M-06 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | S | T-073 |
+| C002-M-06 | C002-T-074 | Fix for revisions D-036, D-037: package version 0.0.3 after the CHG-001 D-020 fix, the TS-226-blocking caps row, and checklist step VSC-15 | S | T-073 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | (dropped, moved to CHG-003) Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043, T-073 |

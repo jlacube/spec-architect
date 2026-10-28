@@ -62,11 +62,13 @@ C002-T-051 and C002-T-052 are dropped from CHG-002.
 
 ## Preconditions
 
-- **Cross-change:** C001-T-082, C001-T-083 and **C001-T-084** done (CHG-001). C001-T-084 fixes D-020,
-  the conductor's text fallback without a question tool (plan critic CR-86). The direction:
-  C002-T-074 waits for C001-T-084, and this task waits for C002-T-074. The conductor confirms the
-  three with `sdd status` before step 1. These edges live on the CHG-002 side only, since the CHG-001
-  plan holds those tasks (`../handoff.md`).
+- **Cross-change:** C001-T-082 and C001-T-083 done (CHG-001), and **the product changes of
+  C001-T-084** committed (3643c69). C001-T-084 fixes D-020, the conductor's text fallback without a
+  question tool (plan critic CR-86). It stays open only for the dev run of its `TS-226-blocking` row,
+  which this task does not need (revision D-037). The direction: C002-T-074 waits for the C001-T-084
+  product commit, and this task waits for C002-T-074. The conductor confirms them before step 1.
+  These edges live on the CHG-002 side only, since the CHG-001 plan holds those tasks
+  (`../handoff.md`).
 - C002-T-068 … C002-T-070 and C002-T-073 done. **C002-T-074 done**: the version is 0.0.3.
 - **Pools:** the 24 Copilot CLI sessions, about 2.40 USD, from the Copilot pool under rule 8 (test
   plan §4.1). No OpenRouter pool is used: no OpenCode session runs (P-01 answer to Q-opencode-defer-01).
@@ -122,7 +124,7 @@ C002-T-051 and C002-T-052 are dropped from CHG-002.
 
 ## Done when
 
-- [ ] The release-candidate commit holds the fixes of C001-T-082, C001-T-083 and C001-T-084, C002-T-073, C002-T-074 and every other CHG-002 change, at package version 0.0.3; the report names both
+- [ ] The release-candidate commit holds the fixes of C001-T-082, C001-T-083 and the C001-T-084 product commit, C002-T-073, C002-T-074 and every other CHG-002 change, at package version 0.0.3; the report names both
 - [ ] C002-T-048 step 5 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the Copilot release replays
 - [ ] The 24 Copilot CLI sessions ran at 0.0.3 from the Copilot pool, `TS-359` included, every session in the ledger, and `docs/releases/copilot/0.0.3/injection.json` holds the Copilot CLI injection case set; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both (D-020 closes on them)
 - [ ] The task report lists the Copilot CLI injection rows at or within 0.09 USD of their cap at 0.0.3, or "none" (CR-80, spec CR-122)

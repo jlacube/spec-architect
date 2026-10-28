@@ -156,8 +156,11 @@ C002-T-055, C002-T-050 and C002-T-057 use the 0.0.2 packages.
 Q-opencode-scope-01, "Move to a new change (Recommended)"). OpenCode 0.0.2 is refused, because
 `INJ-21` runs open-ended to any cap. Copilot 0.0.2 is refused, because `INJ-19` and `INJ-21` have no
 ask tool under `--no-ask-user`, which CHG-001 D-020 fixes. The order:
-1. **C001-T-084** (CHG-001) fixes D-020.
-2. **C002-T-074** moves the version to 0.0.3.
+1. **C001-T-084** (CHG-001) fixes D-020. Its product changes are committed (3643c69).
+2. **C002-T-074** moves the version to 0.0.3. With revision D-037 it also adds the rule-1 caps row
+   `TS-226-blocking` (3.00 USD, 44 rows), brings checklist step VSC-15 to the revised C002-TS-319
+   (plain-text round, no `INSTALL.md` detour), and names the `question-variants.test.ts` test as the
+   supporting test of C002-TC-319.
 3. **C002-T-071** retakes the Copilot evidence at 0.0.3: 24 Copilot CLI sessions, about 2.40 USD of
    the Copilot pool. D-020 closes when `INJ-19` and `INJ-21` pass there (plan critic CR-83). Its
    release-check dry run is reported only (CR-82).
@@ -166,8 +169,11 @@ ask tool under `--no-ask-user`, which CHG-001 D-020 fixes. The order:
    CR-84), split from the OpenCode release that C002-T-052 used to hold.
 6. **C002-T-055** releases Copilot at 0.0.3.
 
-**Cross-change dependency** (plan critic CR-86): C002-T-074 waits for C001-T-084, and C002-T-071
-waits for C002-T-074. The edge lives on the CHG-002 side only.
+**Cross-change dependency** (plan critic CR-86; revision D-037): C002-T-074 waits for the committed
+product changes of C001-T-084 (3643c69), and C002-T-071 waits for C002-T-074. C001-T-084 stays open
+only for the dev run of its `TS-226-blocking` row. That run needs the caps row C002-T-074 adds, so
+C002-T-074 does not wait for it; the edge goes the other way for that one row. The edges live on the
+CHG-002 side only.
 
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
@@ -452,7 +458,7 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 63 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-070-fix-rule-1-rerun-cap-3-usd.md` |
 | 64 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-072-early-stop-when-check-decided.md` |
 | 65 | C002-T-073 | Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-073-inj21-session-cap-and-version-0-0-2.md` |
-| 66 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-074-version-0-0-3.md` |
+| 66 | C002-T-074 | Fix for revisions D-036, D-037: package version 0.0.3 after the CHG-001 D-020 fix, the TS-226-blocking caps row, and checklist step VSC-15 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-074-version-0-0-3.md` |
 | 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
 | 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
 | 69 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
