@@ -1,30 +1,34 @@
-# T-052 — Publish `architect-sdd` and release the OpenCode target
+# T-052 — Publish `architect-sdd` (now C002-T-075) and release the OpenCode target (moved to CHG-003)
 
-**Purpose:** run the OpenCode release check, publish `architect-sdd` 0.0.2 to npm by hand with 2FA,
-and share the OpenCode zip with its SHA-256.
+Since revision D-036 this sheet has two parts. Part 1 is the npm publication of `architect-sdd`
+0.0.3, which became task C002-T-075, apart from any target release. Part 2, the OpenCode release of
+C002-T-052, is dropped from CHG-002.
 
-Task C002-T-052 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
-`docs/releases/opencode/0.0.2/release.json` and `zip.sha256`
+## Part 1 — Publish `architect-sdd` 0.0.3 (C002-T-075)
 
-## Prerequisites
+**Purpose:** after the Copilot checks pass, publish `architect-sdd` 0.0.3 to npm by hand with 2FA,
+before or together with the Copilot release (T-055).
 
-- **T-051 done** (OpenCode section of `docs/releases/clean-profile-runs.md`) and **T-066 done**.
-- **The unpaid re-runs are done at the release-candidate commit.** These are T-048 step 5 (T-054's
-  re-run at its commit counts) and T-049 steps 1 and 2 (`npm run package`, the tarball check, and
-  `npm run replay` under PowerShell 7 and Git Bash). They are the conductor's job. **Ask the
-  conductor to confirm them and to give you the release-candidate commit.** No paid OpenCode session
-  is re-run.
-- Node 22.22.3. The repository is at the release-candidate commit, and the zip and tarball in `dist/`
-  were built there.
+Task C002-T-075 · writes `docs/releases/architect-sdd/0.0.3.md`
+
+### Prerequisites
+
+- **T-050 and T-057 done** at 0.0.3 (the checklist record and the Copilot section of
+  `docs/releases/clean-profile-runs.md`). npm versions are immutable, so the CLI is published only
+  after every Copilot check can pass.
+- **T-071 done.** Ask the conductor for the release-candidate commit; the tarball
+  `dist\architect-sdd-0.0.3.tgz` must be packed there.
+- Node 22.22.3. The repository is at the release-candidate commit.
 - Your npm account `jlacube` with 2FA for publish (`docs/releases/npm-prerequisites.md`), and your
   authenticator to hand.
-- **No model spend:** no agent sessions and no OpenRouter key. `npm publish` is free.
+- **No model spend:** no agent sessions. `npm publish` is free.
 
-## Steps
+### Steps
 
-In PowerShell 7, put Node 22.22.3 first on PATH (as in T-051 step 1), then go to the repository.
+In PowerShell 7, put Node 22.22.3 first on PATH, then go to the repository.
 
 ```powershell
+$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path
 Set-Location C:\Sandbox\ClaudeCode\Architect
 ```
 
@@ -34,103 +38,81 @@ Set-Location C:\Sandbox\ClaudeCode\Architect
 git log -1 --oneline
 ```
 
-2. Dry run. This writes nothing. Expect `release-check: opencode 0.0.2 (sdd-mcp-server): released;
-   release record not written (--dry-run; …)` and exit code 0.
+2. Copilot dry run. This writes nothing. Expect `release-check: copilot 0.0.3 (sdd-mcp-server):
+   released; release record not written (--dry-run; …)` and exit code 0. **Any other outcome: stop.
+   Nothing is published.** Go to "Tell the conductor".
 
 ```powershell
-node scripts/release-check.mjs --target opencode --dry-run
+node scripts/release-check.mjs --target copilot --dry-run
 ```
 
-3. Check that every entry of the injection summary has `result` and `models`, and that each `result`
-   file exists. The release check does not read these fields. Expect `22 entries, 0 with a missing
-   result or models`.
+3. The npm smoke and the tarball check. Both must exit 0. Note the tarball's `sha512` integrity.
 
 ```powershell
-node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.2/injection.json','utf8'));let bad=0;for(const c of s.cases){if(!c.result||!Array.isArray(c.models)||!c.models.length||!fs.existsSync(c.result)){console.log('MISSING',c.id);bad++}}console.log(s.cases.length+' entries, '+bad+' with a missing result or models')"
+npm run smoke:npm
 ```
-
-4. Check the ledger. Every OpenCode `INJ-*` session whose result did not pass must have an entry
-   marked acted upon, and every row from INJ-01 to INJ-22 must have an entry. Expect `0 problems;
-   rows without an entry: none`.
-
 ```powershell
-node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('docs/releases/opencode/0.0.2/injection.json','utf8'));const L=JSON.parse(fs.readFileSync('evals/results/spend-chg002.json','utf8')).entries.filter(e=>e.host==='opencode'&&/^INJ-/.test(e.case||''));const by=Object.fromEntries(s.cases.map(c=>[c.id,c]));let n=0;for(const e of L){if(e.pass===false){const c=by[e.case];const ok=c&&c.acted_upon===true;console.log(e.case,e.result,ok?'acted upon: ok':'NOT marked acted upon');if(!ok)n++}}const miss=Array.from({length:22},(_,i)=>'INJ-'+String(i+1).padStart(2,'0')).filter(id=>!by[id]);console.log(L.length+' OpenCode INJ sessions checked; '+n+' problems; rows without an entry: '+(miss.join(' ')||'none'))"
+node scripts/check/tarball.mjs dist/architect-sdd-0.0.3.tgz
 ```
-
-   If step 3 or step 4 shows a problem, **stop** and tell the conductor. The fix goes through
-   T-066, reopened. Never edit the summary by hand.
-
-5. The real release check. It writes `docs/releases/opencode/0.0.2/release.json`. Exit code 0 means
-   `released`. Exit code 1 means `refused`: the refusals are printed on stderr. If it is refused, do
-   not publish. Go straight to "Tell the conductor". The refusal stays recorded, and T-055 publishes
-   later if Copilot passes.
-
 ```powershell
-node scripts/release-check.mjs --target opencode
+npm pack --dry-run --json
 ```
 
-6. Check npm. `npm whoami` must print `jlacube`. `npm view architect-sdd@0.0.2` must give **E404**
-   (no such version). If 0.0.2 already exists, skip step 7. Also run `npm view architect-sdd`: if it
-   lists a package, the maintainers must include `jlacube`. If someone else owns the name, stop.
+4. Check npm. `npm whoami` must print `jlacube`. `npm view architect-sdd@0.0.3` must give **E404**
+   (no such version); a version already on npm is never published again. Also run
+   `npm view architect-sdd`: if it lists a package, the maintainers must include `jlacube`. If
+   someone else owns the name, stop.
 
 ```powershell
 npm whoami
 ```
 ```powershell
-npm view architect-sdd@0.0.2
+npm view architect-sdd@0.0.3
 ```
 ```powershell
 npm view architect-sdd
 ```
 
-7. **Publish. You do this yourself.** npm asks for your 2FA code. The conductor never publishes.
+5. **Publish. You do this yourself.** npm asks for your 2FA code. The conductor never publishes.
 
 ```powershell
-npm publish dist/architect-sdd-0.0.2.tgz
+npm publish dist/architect-sdd-0.0.3.tgz
 ```
 
-8. Check that the published version is `0.0.2`.
+6. Check that the published version is `0.0.3` and that its integrity equals the local tarball's.
 
 ```powershell
 npm view architect-sdd version
 ```
-
-9. Write the one-line `zip.sha256` file (the hash, two spaces, the file name).
-
 ```powershell
-"$((Get-FileHash dist\architect-opencode-0.0.2.zip -Algorithm SHA256).Hash.ToLower())  architect-opencode-0.0.2.zip" | Set-Content docs\releases\opencode\0.0.2\zip.sha256
+npm view architect-sdd@0.0.3 dist.integrity
 ```
 
-10. Share `dist\architect-opencode-0.0.2.zip` the same way you share the Claude Code zips
-    (`75-rollout.md` §1). Keep the shared copy unchanged, because it is retained for rollback
-    C002-RB-002. Check that the hash of the shared copy matches the `zip.sha256` line.
+### Record
 
-```powershell
-Get-FileHash <path of the shared copy> -Algorithm SHA256
-```
+- `docs/releases/architect-sdd/0.0.3.md`: the version, the tarball's `sha512` integrity, the
+  release-candidate commit, the dry-run outcome of step 2, the output of `npm view architect-sdd
+  version`, and the date. The conductor can write it from your "Tell the conductor" line.
 
-## Record
+### Pass / fail
 
-- `docs/releases/opencode/0.0.2/release.json`, written by the check in step 5. Do not edit it.
-- `docs/releases/opencode/0.0.2/zip.sha256`, from step 9.
-- For the task report: the release-candidate commit, the output lines of steps 3 and 4 (the
-  sessions checked), the outcome line of step 5, and the output of `npm view architect-sdd version`.
+- **Pass:** step 2 gives `released`, step 3 exits 0, `npm view architect-sdd version` prints
+  `0.0.3`, and `dist.integrity` equals the local integrity.
+- **Stopped:** step 2 gives another outcome, or a check of steps 3 or 4 fails. Nothing is published.
 
-## Pass / fail
+**Time budget:** about 20 minutes (estimate). **Spend:** none.
 
-- **Pass:** steps 3 and 4 are clean, step 5 exits 0 with outcome `released`,
-  `npm view architect-sdd version` prints `0.0.2`, and the hash of the shared zip equals
-  `zip.sha256`.
-- **Refused:** step 5 exits 1. Nothing is published or shared, and the release record keeps the
-  refusals. That still counts as done for T-052, with the refusal recorded.
+### Tell the conductor
 
-**Time budget:** about 30 minutes (estimate). **Spend:** none.
+> T-075 done: architect-sdd 0.0.3 published (npm view: 0.0.3), integrity <sha512-…> equal to the
+> local tarball. Copilot dry run: released. RC commit <sha>.
 
-## Tell the conductor
+If it stopped: "T-075 stopped at step <n> (<outcome or error>), nothing published".
 
-> T-052 done: OpenCode 0.0.2 released, record at docs/releases/opencode/0.0.2/release.json,
-> zip.sha256 written, architect-sdd 0.0.2 published (npm view: 0.0.2), zip shared at <where>. RC
-> commit <sha>. Injection checks: 22 entries complete; <n> INJ sessions checked, 0 problems.
+## Part 2 — OpenCode release (C002-T-052): moved to CHG-003
 
-If it was refused: "T-052: OpenCode refused (<ERR-REL codes>), record at
-docs/releases/opencode/0.0.2/release.json, nothing published".
+> **Moved to CHG-003.** C002-T-052 is dropped from CHG-002 (revision D-036; P-01 answers to
+> Q-opencode-defer-01 and Q-opencode-scope-01). The OpenCode release check, the OpenCode
+> `zip.sha256` and the sharing of the OpenCode zip belong to the future CHG-003 "OpenCode release",
+> at the version that change sets. Do not run them in CHG-002. The OpenCode release folders already
+> recorded (`docs/releases/opencode/`) stay as they are.

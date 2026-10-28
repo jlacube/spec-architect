@@ -150,9 +150,10 @@ for (const mode of MODES.opencode) {
 }
 
 for (const mode of MODES.copilot) {
-  test(`C002-TC-319 (C002-REQ-312): Copilot ${mode} — without ask_user the conductor asks nothing and names the tool and the INSTALL.md steps that provide it`, () => {
+  test(`C002-TS-319 (supporting): Copilot ${mode} — without ask_user the conductor asks in the text form and names no INSTALL.md step`, () => {
     // Revised by C001-T-084 (D-020; P-01, Q-noask-01 "Text fallback"): without ask_user the conductor asks
-    // as plain text (C001-IF-05 `questions.md` §3) and names no INSTALL.md step (C001-REQ-223).
+    // as plain text (C001-IF-05 `questions.md` §3) and names no INSTALL.md step (C001-REQ-223). Supporting
+    // test of C002-TC-319, which stays the manual case of checklist step VSC-15 (revision D-037, C002-T-074).
     const { body } = pkg("copilot", mode);
     const w = oneLine(wiring("copilot", skillPart(body, "interview-protocol")));
     assert.ok(w.includes("If the `ask_user` tool is absent or a call to it is refused, ask the round in the text form of §4."));

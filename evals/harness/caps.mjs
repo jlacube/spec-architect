@@ -67,7 +67,7 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 
 /**
  * Cap exceptions in force: the rows of the C002-IF-010 §2.2 table "Caps above 0.50 USD" (critic CR-68;
- * revised for defects D-025, D-030 and D-033). Each row gives the row ID, its case file (repository-relative, `/`
+ * revised for defects D-025, D-030, D-033 and D-037). Each row gives the row ID, its case file (repository-relative, `/`
  * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
  * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
  * row has none). An exception may also give a session cap (`sessionUsd`, defect D-035; §2.2 "Session cap
@@ -82,7 +82,8 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   defect D-030 (P-01, Q-cap-exc-01/02, 2026-10-24; C002-T-068), the CHG-001 release cases of
  *   C001-T-082 step 4 and C001-T-072, at the row's own caps with the rerun cap 1.50 USD; and, for defect
  *   D-033 (P-01, Q-cap-level-01, 2026-10-24; C002-T-070), the row TS-225 after TS-224 (spec critic CR-114,
- *   the attended twin of TS-215).
+ *   the attended twin of TS-215); and, for defect D-037 (C002-T-074), the row TS-226-blocking after
+ *   TS-225, a fourteenth rule-1 row (the file's other rows get no exception).
  * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
  * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
@@ -125,6 +126,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-224", "evals/cap02/TS-224.eval.mjs", 1),
   // Defect D-033 (spec critic CR-114): TS-225, the attended twin of TS-215.
   SUB("TS-225", "evals/cap02/TS-225.eval.mjs", 1),
+  // Defect D-037 (C002-T-074): TS-226-blocking, the profile of TS-225; the file's other rows get no exception.
+  SUB("TS-226-blocking", "evals/cap02/TS-226.eval.mjs", 1),
   SUB("TS-127", "evals/cap01/TS-127.eval.mjs", 2),
   SUB("TS-201", "evals/cap02/TS-201.eval.mjs", 2),
   SUB("TS-216", "evals/cap02/TS-216.eval.mjs", 2),

@@ -354,8 +354,11 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 - **Do:** Remove `ask_user` from the `tools` list of `.github/agents/sdd-conductor.agent.md`; reload
   the window; in a new Local chat with `sdd-conductor` send `/new "Toy change"`. Afterwards restore the
   file (`git checkout -- .github/agents/sdd-conductor.agent.md`) and reload the window.
-- **Expect:** the conductor's reply names the missing tool `ask_user` and the step of `INSTALL.md`
-  that makes it available, asks no question, and no change folder `.sdd/<NNN>-*` is created.
+- **Expect:** the conductor asks its interview round, the profile question ("lite" or "full" with
+  its size estimate), as plain text in the text form of C001-IF-05 `questions.md` §3, with the
+  recommended option first, and then ends its turn. The reply names no `INSTALL.md` step and does not
+  tell you to enable, install or switch on `ask_user` or another question tool. No change folder
+  `.sdd/<NNN>-*` is created until you answer (do not answer; restore the file as Do says).
 - **Record:** the reply's wording in `note` when it differs.
 
 ### VSC-16 — Toy change created through the profile round

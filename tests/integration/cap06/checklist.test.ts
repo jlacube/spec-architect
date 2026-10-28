@@ -448,3 +448,17 @@ test("C002-TC-618 (supporting): the record template has an earlier_results examp
   assert.ok(!/with a `note` naming the earlier run/.test(TEMPLATE), "no free-text rerun note");
   assert.ok(/Never name an earlier run in a free-text `note`/.test(TEMPLATE));
 });
+
+test("C002-TS-319 (supporting): VSC-15 expects the text fallback, with no INSTALL.md step and no enable step (revision D-037)", () => {
+  const s = STEPS.find((x) => x.id === "VSC-15")!;
+  assert.deepEqual([s.group, s.mode, s.kind, s.hook, s.scenarios], [4, "both", "scenario", false, ["C002-TS-319"]]);
+  const expect = (/- \*\*Expect:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(s.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/as plain text/.test(expect) && /recommended option first/.test(expect) && /ends its turn/.test(expect), expect);
+  assert.ok(/No change folder `\.sdd\/<NNN>-\*` is created until you answer/.test(expect), expect);
+  // The Expect states both absences in one sentence; outside it, it names no INSTALL.md step and no enable step.
+  const absent = "The reply names no `INSTALL.md` step and does not tell you to enable, install or switch on `ask_user` or another question tool.";
+  assert.ok(expect.includes(absent), expect);
+  const rest = expect.replace(absent, "");
+  assert.ok(!/INSTALL\.md/.test(rest), "no INSTALL.md step");
+  assert.ok(!/\b(?:enable|install|switch on|turn on)/i.test(rest), "no enable step");
+});

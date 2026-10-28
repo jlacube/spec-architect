@@ -5,7 +5,7 @@ to the first interview question of a new change in VS Code Insiders with Copilot
 `INSTALL.md` (limit 15 minutes). The `sdd install copilot` step is timed on its own.
 
 Task C002-T-057 · cases C002-TC-903 (C002-TS-306) · record `docs/releases/clean-profile-runs.md`,
-Copilot section (T-051 creates the file)
+Copilot section (create the file if it does not exist yet; the OpenCode run moved to CHG-003)
 
 ## Prerequisites
 
@@ -16,8 +16,8 @@ Copilot section (T-051 creates the file)
 - **Node 22.22.3** from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3`. If the
   fresh profile cannot read that folder, or VS Code Insiders is not installed for it, install them in
   the profile before the timer and write that down.
-- **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip` and
-  `dist\architect-sdd-0.0.2.tgz` (install the CLI from the tarball until T-052 publishes it).
+- **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.3.zip` and
+  `dist\architect-sdd-0.0.3.tgz` (install the CLI from the tarball until T-075 publishes it).
 - **Spend:** 1 VS Code session, billed in AI Credits to your Copilot plan, not to the prepaid key.
   There is no ledger entry.
 
@@ -47,7 +47,7 @@ git -C C:\Sandbox\runs\t057\toy init
    read `INSTALL.md`.
 
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip -DestinationPath $HOME\architect\copilot-0.0.2
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.3.zip -DestinationPath $HOME\architect\copilot-0.0.3
 ```
 
 4. Optional: start a screen recording, for example with the Snipping Tool's record mode.
@@ -55,10 +55,10 @@ Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.0.2.zip 
 **Timed part.** Start the stopwatch at the first install command. Write down the time at the end of
 each phase, and leave out any download time.
 
-5. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.2`.
+5. **Phase A, CLI.** Install the CLI, then check that `sdd --version` prints `0.0.3`.
 
 ```powershell
-npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.2.tgz
+npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.0.3.tgz
 ```
 ```powershell
 sdd --version
@@ -71,7 +71,7 @@ sdd --version
 Set-Location C:\Sandbox\runs\t057\toy
 ```
 ```powershell
-sdd install copilot --package $HOME\architect\copilot-0.0.2
+sdd install copilot --package $HOME\architect\copilot-0.0.3
 ```
 
 7. **Phase C, settings.** Open the folder in VS Code Insiders and trust it. Set
