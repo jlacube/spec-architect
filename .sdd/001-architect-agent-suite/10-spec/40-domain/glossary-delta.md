@@ -36,7 +36,8 @@ after `THE` in EARS statements (checked by C001-REQ-407).
 | Hand-off | The `handoff.md` contract where Architect stops and an implementer starts |
 | Defect (spec defect) | An implementer-reported error in a specification item (`D-<seq>`) |
 | Unattended drafting | Conductor mode that applies recommended options to non-blocking questions until the next gate |
-| Interview round | One AskUserQuestion call of 1–4 questions |
+| Interview round | One ask of 1–4 questions: a question-tool call, or its plain-text form when the session offers no question tool (C001-IF-05 `questions.md` §3) |
+| Question tool | The tool through which the conductor asks P-01: AskUserQuestion on Claude Code, or its counterpart on a generated target (C001-IF-05 `questions.md` §3) |
 | Specialist hand-back | The final message a specialist returns to the conductor, with its optional `questions` block (C001-IF-05) |
 | Options analysis | Scored comparison of 4–5 candidates for a decision (`OA`) |
 | Reference machine | REF-WIN: the Windows 11 configuration used for NFR measurement |

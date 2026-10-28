@@ -49,6 +49,7 @@ contract C001-IF-05.
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use AskUserQuestion with at most four questions per call.
 - **Rationale:** Q14
+- **Note:** When the session offers no question tool, the round is asked as plain text per C001-REQ-222 (D-020).
 - **Stories:** C001-US-203
 - **Priority:** Must
 - **Acceptance:** C001-AC-205.1
@@ -180,7 +181,16 @@ contract C001-IF-05.
 - **Pattern:** event-driven
 - **Statement:** WHEN a specialist hand-back that holds a question with `blocking: true` arrives, THE conductor SHALL ask that question through AskUserQuestion before it ends its turn and before it dispatches another specialist.
 - **Rationale:** D-019 item 1; Q-t082-bugs-01; C001-IF-05 `questions.md` §2
-- **Note:** Applies with and without unattended drafting (C001-REQ-213); specialists that are still running continue, and their later questions go to a later round (C001-IF-05 `questions.md` §2).
+- **Note:** Applies with and without unattended drafting (C001-REQ-213); specialists that are still running continue, and their later questions go to a later round (C001-IF-05 `questions.md` §2). When the session offers no question tool, the question is asked as plain text per C001-REQ-222 (D-020).
 - **Stories:** C001-US-204, C001-US-207
 - **Priority:** Must
 - **Acceptance:** C001-AC-221.1
+
+### C001-REQ-222 — Plain-text fallback without a question tool
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the session offers no question tool, THEN THE conductor SHALL ask its interview round or present its gate as plain text in its reply, with the content of C001-IF-05 `questions.md` §3, and end its turn instead of asking P-01 to enable a tool.
+- **Rationale:** D-020; Q-noask-01; C001-IF-05 `questions.md` §3
+- **Note:** Covers the rounds of C001-REQ-205, the asks of C001-REQ-221 and the gate of C001-REQ-802.
+- **Stories:** C001-US-203
+- **Priority:** Must
+- **Acceptance:** C001-AC-222.1

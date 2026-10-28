@@ -26,6 +26,7 @@ All `Delta: ADDED`. Interfaces: gate summary and hash algorithm C001-IF-13, CLI 
 - **Pattern:** event-driven
 - **Statement:** WHEN the conductor presents a gate, THE conductor SHALL show the gate summary and a plain-language statement of what approval commits to, and ask P-01 through AskUserQuestion to choose among Approve, Approve with waivers, Revise and Stop.
 - **Rationale:** IDEA-§18.2 step 4
+- **Note:** When the session offers no question tool, the gate is presented as plain text per C001-REQ-222 (D-020).
 - **Stories:** C001-US-801
 - **Priority:** Must
 - **Acceptance:** C001-AC-802.1
