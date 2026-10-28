@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T09:01:19Z",
+  "generated_at": "2026-10-28T10:17:50Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -240,6 +240,16 @@
           "status": "closed",
           "resolution": "Spec IF-05 §3, REQ-222/223 (G2 4c12909); C001-T-084 (3643c69, a6b9520): text fallback; TC-226/227 pass on Claude Code; INJ-19/21 pass at Copilot CLI 0.0.3 with the text-form gate (C002-T-071, e5a6440).",
           "closed_at": "2026-10-28"
+        },
+        {
+          "id": "D-021",
+          "ref": "C001-NFR-502",
+          "summary": "Found in C002-T-073 (2026-10-28): the coverage step of npm run check is flaky — one run gave 83.58 % lines with no src/ change (runs before and after: 88.21 %, 87.93 %); src/archive/living.ts fell from about 50 % to 22 %, so one batch's raw V8 coverage looks lost or unmerged. P-01: fix before C001-T-072.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-28",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []
