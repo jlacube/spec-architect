@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-6
-status: in-progress
+status: done
 depends_on: [C001-T-083]
 implements: [C001-REQ-222, C001-REQ-223]
 satisfies_ac: [C001-AC-222.1, C001-AC-223.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-226, C001-TS-227, C001-TC-226, C001-TC-227]
 components: [C001-COMP-01, C001-COMP-10]
 risk_refs: [C001-RISK-005]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 28caf34, completed_at: 2026-10-28, notes: "Text fallback in interview-protocol, gate-protocol (exactly-one-choice rule), conductor rules, Copilot/OpenCode wiring; dev runs: gate, round, blocking all pass TC-226/227 (3.55 USD notional); $0 checks fail the t071 INJ-19/21 transcripts; D-020 closes with C002-T-071 at Copilot 0.0.3" }
 ---
 
 # C001-T-084 — Plain-text fallback without a question tool (D-020)
