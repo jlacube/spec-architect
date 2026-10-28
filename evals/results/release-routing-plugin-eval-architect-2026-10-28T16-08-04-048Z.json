@@ -1,0 +1,204 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T16:08:04.015Z",
+  "runs": 10,
+  "passed": 10,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 2.6936656000000005,
+  "duration_s": 227,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-planner-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run1-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.341573,
+        "session_ms": 93000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run2-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3111066,
+        "session_ms": 99000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run3-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2408054,
+        "session_ms": 78000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run4-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.28540160000000003,
+        "session_ms": 89000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run5-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.24639799999999998,
+        "session_ms": 69000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run6-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.230978,
+        "session_ms": 60000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run7-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.23964880000000002,
+        "session_ms": 72000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run8-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2573074,
+        "session_ms": 79000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run9-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2706756,
+        "session_ms": 75000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-planner-03",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-planner-03-run10-2026-10-28T16-08-04-016Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2697712,
+        "session_ms": 78000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 0
+  }
+}

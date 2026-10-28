@@ -1,0 +1,239 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T15:47:01.872Z",
+  "runs": 10,
+  "passed": 5,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 2.0119302,
+  "duration_s": 319,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-options-analyst-03",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run1-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0715752,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run2-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.11538419999999999,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run3-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3362708000000001,
+        "session_ms": 111000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run4-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.07088720000000001,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run5-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.29783139999999997,
+        "session_ms": 100000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 6,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run6-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.11636640000000001,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run7-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3160998,
+        "session_ms": 101000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 8,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run8-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0711562,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run9-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.31994920000000004,
+        "session_ms": 106000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-options-analyst-03",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-options-analyst-03-run10-2026-10-28T15-47-01-873Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.29640979999999995,
+        "session_ms": 93000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 5
+  }
+}

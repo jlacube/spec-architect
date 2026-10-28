@@ -7,7 +7,32 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 (`.sdd/002-multi-platform-targets/20-plan/handoff.md`).
 
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
-done, on 2026-10-28. Running notional total: 25.57 USD (§4.5).
+done, on 2026-10-28. Batch 2 (routing, the other half) paused at 7 of 21 cases for the 5-hour
+window. Running notional total: 38.19 USD (§4.5).
+
+## 0. Run decisions
+
+**2026-10-28, P-01 (verbatim):** "for the runs, yes let's choose planned cuts to prevalidate and run
+only once full scale whenever possible"
+
+How it applies to this task (relayed by the conductor, 2026-10-28):
+
+1. **The C001-ADR-003 cuts, now.**
+   - Routing suite: 5 runs per case. The cases of batch 1 keep their 10 runs. The cases of batch 2 not
+     yet run when the decision came (14 of 21) run 5 per case. The 7 that had already run keep 10.
+   - Injection suite: 5 runs per case, with the 0-acted-upon rule unchanged.
+   - Reuse of earlier results: only under the strict reuse conditions of C001-ADR-003. Since C001-T-083
+     and C001-T-084 changed skills every agent preloads, almost none qualify, so none are sought.
+2. **Pre-run before each full-scale class.** Before the 10-run release-high rows and the 3-run
+   release-standard rows, each case runs once; rule-1 rows run once with `--cap-exception`. A case that
+   fails its pre-run is investigated and reported before any full-scale run of it. A pre-run counts
+   toward the case's runs only when it ran at the case's release-class settings (same tier,
+   caps and command form). It then counts as run 1, and the full-scale run adds the rest.
+3. **Full scale once.** After a clean pre-run, the full count runs once. Sessions are replaced only
+   under the existing rules (rule-2 replacement, "Given not met"). No batch is repeated.
+
+The DOD-G-01 floor is unchanged: release-high ≥ 9 / 10 of 10 runs; release-standard 3 / 3 (2 / 3
+triggers a 10-run check needing ≥ 9 / 10); routing ≥ 90% of runs; injection 0 runs acted upon.
 
 ## 1. Preconditions
 
@@ -120,6 +145,30 @@ Not yet run (batch 2): `notroute-planner-01`, `notroute-researcher-01`, `notrout
 `route-planner-01 … 03`, `route-researcher-01 … 03`, `route-spec-writer-01 … 03`,
 `route-test-designer-01 … 03`.
 
+**Batch 2 (2026-10-28, from 15:29 UTC; in progress): 7 of 21 cases done, at 10 runs each** (they ran
+before P-01's decision of §0; they keep 10). Same command form as batch 1, one case per run.
+
+| Case | Runs | Raw pass | Timed out (re-graded) | Pass after re-grade | Notional USD | Result file |
+|---|---|---|---|---|---|---|
+| route-options-analyst-01 | 10 | 0 | 10 | 10 | 0.73 | `…-2026-10-28T15-35-34-774Z.json` |
+| route-options-analyst-02 | 10 | 0 | 10 | 10 | 0.95 | `…-2026-10-28T15-41-41-194Z.json` |
+| route-options-analyst-03 | 10 | 5 | 5 | 10 | 2.01 | `…-2026-10-28T15-47-01-909Z.json` |
+| notroute-planner-01 | 10 | 5 | 5 | 10 | 2.19 | `…-2026-10-28T15-52-59-147Z.json` |
+| route-planner-01 | 10 | 5 | 5 | 10 | 2.16 | `…-2026-10-28T15-58-30-841Z.json` |
+| route-planner-02 | 10 | 4 | 6 | 10 | 1.88 | `…-2026-10-28T16-04-14-559Z.json` |
+| route-planner-03 | 10 | 10 | 0 | 10 | 2.69 | `…-2026-10-28T16-08-04-048Z.json` |
+| **Batch 2 so far** | **70** | **29** | **41** | **70 (100%)** | **12.62** | 7 files |
+
+**Suite so far: 28 of 42 cases, 280 runs, 280 pass after re-grade (100%); 178 raw (63.6%); every
+raw failure is the 120 s timeout.** Still to run, at 5 runs per case (§0): `notroute-researcher-01`,
+`route-researcher-01 … 03`, `notroute-spec-writer-01`, `route-spec-writer-01 … 03`,
+`notroute-test-designer-01`, `route-test-designer-01 … 03`, `offtopic-01`, `offtopic-02` (70 runs).
+
+An aborted start (17:37 UTC): `notroute-researcher-01` at 5 runs was stopped by the live usage guard
+seconds after its start (5-hour at 91%), so no result file and no runs. The window had risen from
+78% to 91% between 16:08 and 17:37 with no eval running. That rise came from the conducting session
+itself.
+
 **Usage (from the `rate_limit_event` of the kept traces):**
 
 | Point | 5-hour | Weekly | Note |
@@ -130,6 +179,8 @@ Not yet run (batch 2): `notroute-planner-01`, `notroute-researcher-01`, `notrout
 | after `route-cartographer-03` (14:25) | 78% | 20% | paused: the next case could not fit under 85% before the 15:00 reset |
 | after the reset, first case (15:02) | 1% | 20% | window resets 20:00 UTC |
 | end of batch 1 (15:26) | 28% | 22% | weekly resets 2026-11-03 23:00 UTC |
+| batch 2 paused, after `route-planner-03` (16:08) | 78% | 25% | |
+| aborted start of `notroute-researcher-01` (17:37) | 91% | 27% | no eval in between: the rise is the conducting session's own |
 
 ### 4.2 Release-high scenarios (10 runs, ≥ 9 / 10)
 
@@ -148,6 +199,7 @@ _not started_
 | Part | Runs | Notional USD | Running total USD |
 |---|---|---|---|
 | Routing suite, batch 1 (21 cases × 10) | 210 | 25.57 | 25.57 |
+| Routing suite, batch 2 so far (7 cases × 10) | 70 | 12.62 | 38.19 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 
