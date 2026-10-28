@@ -48,14 +48,14 @@ status: draft
 | C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–307 (7) | 301–330 (30) | 30 | 72 (block 301–399, plus C002-TS-659, C002-TS-664) |
 | C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 31 (block 401–499, plus C002-TS-641, C002-TS-642, C002-TS-660, C002-TS-665, C002-TS-666, C002-TS-686, C002-TS-687) |
 | C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–521 (21) | 21 | 42 (block 501–599, plus C002-TS-639, C002-TS-675, C002-TS-684, C002-TS-685) |
-| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–608 (8) | 601–623, 625–630, 632–634, 638–645 (40) | 41 | 85 (block 601–699, plus C002-TS-700 … C002-TS-706) |
-| **Total** | | **33** | **141** | **144** | **300** |
+| C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–608 (8) | 601–623, 625–630, 632–634, 638–646 (41) | 42 | 86 (block 601–699, plus C002-TS-700 … C002-TS-707) |
+| **Total** | | **33** | **142** | **145** | **301** |
 
 Scenarios C002-TS-639 … C002-TS-642 (step-7 rework), C002-TS-657 … C002-TS-660 and
 C002-TS-664 (revision D-010 … D-014), C002-TS-665 and C002-TS-666 (revision D-015 … D-017), and
 C002-TS-672 … C002-TS-675 and C002-TS-684 … C002-TS-687 (later revisions) were numbered in the
 601–699 block and are defined in the capability named in the TS column. C002-TS-700 and C002-TS-701
-(revision D-023 item 2, critic CR-87) C002-TS-702 … C002-TS-705 (revision D-031) and C002-TS-706 (revision D-034) were allocated after the end
+(revision D-023 item 2, critic CR-87) C002-TS-702 … C002-TS-705 (revision D-031) and C002-TS-706 and C002-TS-707 (revision D-034) were allocated after the end
 of that block and are defined in C002-CAP-06. The AC and TS columns count the criteria and scenarios written.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·

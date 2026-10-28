@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 608, "AS": 5, "CON": 17, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 645, "TS": 706, "ADR": 5, "M": 7, "T": 73, "RISK": 40, "RB": 6, "TC": 932 },
+  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 608, "AS": 5, "CON": 17, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 646, "TS": 707, "ADR": 5, "M": 7, "T": 73, "RISK": 40, "RB": 6, "TC": 932 },
   "blocks": [],
   "tombstones": [
     { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },

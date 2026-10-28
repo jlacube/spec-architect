@@ -87,5 +87,5 @@ id_block: { US: 601-699, REQ: 601-699, TS: 601-699 }
 - **Value / outcome:** C002-GOAL-03 (the scenarios measure the real workflow); C002-NFR-105
 - **Priority:** Must · **Size hint:** M · **Capability:** C002-CAP-06
 - **Context & notes:** defect D-031 (found in C001-T-082): Claude Code 2.1.299 shows the model the spend cap that the Agent SDK passes on, and the conductor and its specialists cut their work for it; P-01 answer to Q-budget-hide-01, "Hide the budget (Recommended)". The Claude Code eval runner is the Claude Code path of `runSession` (glossary); what each host shows, the stop and the failed reading: C002-IF-010 §2.2 "Budget hidden from the model" and "Claude Code spend cap". A session that ends by itself keeps its own result. Traced here instead of to C002-US-603 or C002-US-604, which own the OpenCode and Copilot CLI runners (critic CR-112).
-- **Requirements:** C002-REQ-642, C002-REQ-643, C002-REQ-644, C002-REQ-645
+- **Requirements:** C002-REQ-642, C002-REQ-643, C002-REQ-644, C002-REQ-645, C002-REQ-646
 - **Traces to:** defect D-031; Q-budget-hide-01; defect D-034 (Q-early-stop-01: a Claude Code session also ends once its case's check is decided)
