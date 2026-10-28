@@ -7,7 +7,7 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:7013d37a717f7ecbd8b17426cd419c34b637eb75c823a63cdf0c28ce26a0dfc0", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:f1f0938eb8812e900e2025c19fa46217806d50c9c44f31ca92a0bcfa8cdf8fd4", approved_at: 2026-10-28, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:994c409663e5e8c221b4fe8242742df8d5a2806bf49b43c0ccd2e738538d029d", approved_at: 2026-10-28, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
@@ -217,6 +217,17 @@ waivers:
   - { item: C002-REQ-601, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-TS-634, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-211, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-212, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-213, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-503, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-504, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-505, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-506, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-507, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-601, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-TS-634, gate: 10-spec, date: 2026-10-28, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
 ---
 # CHG-002 — Multi-platform targets
 
@@ -287,3 +298,4 @@ waivers:
 | 2026-10-28 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-10-28 | G2 (spec) | **Revise** | "Revision for the no-question-tool fallback (CHG-001 D-020) and the Copilot 0.0.3 release path (CHG-002 D-036); P-01 Q-noask-01, Q-opencode-defer-01" | none | unavailable |
 | 2026-10-28 | G3 (plan) | **Revise** | "Plan revision for D-020 / D-036" | none | unavailable |
+| 2026-10-28 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
