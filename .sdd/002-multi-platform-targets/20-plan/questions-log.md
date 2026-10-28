@@ -245,3 +245,11 @@ Questions on the S-07 record (C002-T-001).
 
 ### Correction note (2026-10-28, critic CR-81)
 - The Q-weekly-reset-01 gloss first said "Monday 23:00 UTC"; the usage readout gives Tuesday 2026-10-27 23:00 UTC (P-01 pointed out the weekday). It was corrected in place on 2026-10-24.
+
+### Q-copilot-002-01 — run the 24 Copilot CLI release sessions at 0.0.2 (C002-T-071)
+- **Answer:** P-01: "Run Copilot now (Recommended)"
+
+### Q-opencode-defer-01 — OpenCode release after INJ-21 capped again at 0.0.2 (C002-T-071)
+- **Options:** 1. Defer OpenCode: release Copilot (and npm architect-sdd) first; OpenCode waits for a proper fix (early stop or bounded case for OpenCode injection rows) in a later version; no more OpenRouter spend now (Recommended) · 2. Try once more at 0.0.3 with a 2 USD cap · 3. Fix the INJ-21 case, then 0.0.3
+- **Answer:** P-01: "Defer OpenCode (Recommended)"
+- **Extracted instructions:** none
