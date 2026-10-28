@@ -48,6 +48,10 @@ does not wait for it.
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the checklist runs on the
   Copilot package packed at the release-candidate commit that holds the CHG-001 fixes of C001-T-082
   and C001-T-083, which C002-T-071 records. That commit replaces the commit of C002-T-054 above.
+- **Package version 0.0.2** (defect D-035; C002-T-073): `dist/architect-copilot-0.0.2.zip` and
+  `dist/architect-sdd-0.0.2.tgz`, and the record `docs/checklists/records/vscode-<date>-0.0.2.md`
+  with `package_version: 0.0.2`, as the runsheet `docs/runsheets/T-050-vscode-checklist.md` names
+  them from C002-T-073 on.
 - Hooks enabled in VS Code from the restore step of step 2 on (`chat.useHooks`, Workspace Trust for
   the toy repository, no organisation policy that disables them; the hooks-off rows of C002-TC-516
   run before the restore, C002-IF-009 §4 "Run order"): the release check refuses a record that shows hooks disabled or not

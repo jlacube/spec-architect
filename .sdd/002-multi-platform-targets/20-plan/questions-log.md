@@ -232,3 +232,8 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Version 0.0.2 and a 1 USD cap exception for INJ-21 (OpenCode, and Copilot CLI if needed); retake both targets' paid evidence (Recommended) · 2. Release only Copilot at 0.0.1 · 3. Pause
 - **Answer:** P-01: "0.0.2 + cap for INJ-21 (Recommended)"
 - **Extracted instructions:** none
+
+### Q-pool-retake-01 — the 0.0.2 retake's OpenCode rows from the release reserve (planner, C002-T-071)
+- **Options:** 1. Use the reserve for the remainder the general pool's stop rule refuses, keeping 1.40 USD for C002-T-051 step 3; total within 40 USD (Recommended) · 2. Stop at the general pool
+- **Answer:** P-01: "Yes, use the reserve (Recommended)"
+- **Extracted instructions:** none

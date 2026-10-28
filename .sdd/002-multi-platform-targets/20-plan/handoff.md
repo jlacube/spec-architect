@@ -140,6 +140,15 @@ the three `TS-213` sessions of C001-T-082 step 4 run before C002-T-072, to the 3
 9 USD notional). C001-T-082 and then C002-T-071 therefore do not wait for C002-T-072; only the
 release evals of C001-T-072 do.
 
+**Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
+for INJ-21 (Recommended)"). In C002-T-071's first run, `INJ-21` on OpenCode ended at the 0.50 USD cap
+with every assertion passed. Its 0.0.1 entry is therefore acted upon and final, and OpenCode 0.0.1 is
+refused. **C002-T-073** (S) gives `INJ-21` on OpenCode a session cap of 1.00 USD, which the harness
+applies without `--cap-exception`, and moves the packages to version **0.0.2**. C002-T-071 then
+retakes both targets' paid evidence at 0.0.2: 30 OpenCode rows from the general pool and then the
+reserve (Q-pool-retake-01), and 24 Copilot CLI rows from the Copilot pool. C002-T-051, C002-T-052,
+C002-T-055, C002-T-050 and C002-T-057 use the 0.0.2 packages.
+
 **Release from a commit with the CHG-001 fixes** (P-01 answer Q-release-base-01, "Retake after
 fixes (Recommended)"; plan critic CR-71). The fixes of C001-T-082 and C001-T-083 change files that
 both packages are generated from. CHG-002 therefore releases from a release-candidate commit that
@@ -149,8 +158,8 @@ cross-change wait recorded here only), records that commit and re-runs at it:
 - the paid OpenCode case set of C002-T-049 step 4, about 31 sessions and about 5.40 USD from the
   OpenRouter **general pool**.
 
-The paid Copilot CLI case set (C002-T-054 step 3, 24 sessions, Copilot pool) runs there only if
-P-01 decides it, and C002-T-055 waits for that decision. C002-T-052, C002-T-055, C002-T-050 and
+The paid Copilot CLI case set (C002-T-054 step 3, 24 sessions, Copilot pool) runs there too, at
+0.0.2: P-01 decided it with the answer to Q-inj21-01. C002-T-052, C002-T-055, C002-T-050 and
 C002-T-057 wait for C002-T-071.
 
 **Command forms of the CHG-001 runs** (plan critic CR-61; C002-IF-010 §2.2 Sessions of CHG-001
@@ -308,8 +317,9 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
+| Q-inj21-01: INJ-21 capped and acted upon, OpenCode 0.0.1 refused (defect D-035; `questions-log.md`) | C002-T-073, C002-T-071; the release tasks | settled: P-01 answered "0.0.2 + cap for INJ-21 (Recommended)"; the session cap and version 0.0.2 in C002-T-073, both targets' paid evidence retaken at 0.0.2 in C002-T-071. This answer also settles the Copilot CLI retake that Q-copilot-retake-01 asked about. **Open:** Q-pool-retake-01, whether the OpenCode rows that the general pool cannot hold run from the reserve (test plan §4.1 rule 5 exception) |
 | Q-early-stop-01, Q-weekly-reset-01: full-flow sessions run to the cap after their check; no free weekly reset (defect D-034; `questions-log.md`) | C002-T-072; C001-T-082 (`TS-213` rerun), C001-T-072 | settled: P-01 answered "Stop when checked (Recommended)"; the week stays at most 95 % used. C002-T-072 adds the early stop and the 13 rule-1 conditions. **Open:** its paid `TS-225` check needs C002-IF-010 §2.2 to name C002-T-072 step 6 in the `TS-225` row (as for CR-68); the spec owners make that edit |
-| Q-release-base-01: CHG-002 release base after the CHG-001 fixes (plan critic CR-71; `questions-log.md`) | C002-T-071, C002-T-052, C002-T-055 | settled: P-01 answered "Retake after fixes (Recommended)"; C002-T-071 retakes the unpaid steps and the paid OpenCode rows (general pool). **Open within it:** whether the paid Copilot CLI case set of C002-T-054 step 3 is retaken too, asked of P-01 in C002-T-071 step 5; C002-T-055 waits for the answer |
+| Q-release-base-01: CHG-002 release base after the CHG-001 fixes (plan critic CR-71; `questions-log.md`) | C002-T-071, C002-T-052, C002-T-055 | settled: P-01 answered "Retake after fixes (Recommended)"; C002-T-071 retakes the unpaid steps and the paid OpenCode rows. The Copilot CLI retake is settled by Q-inj21-01 (row above), at 0.0.2 |
 | Q-cap-level-01: rerun cap for full-flow CHG-001 cases now that the budget is hidden (defect D-033; `questions-log.md` round 2026-10-24) | C002-T-070; C001-T-082, C001-T-072 | settled: P-01 answered "Raise to $3 (Recommended)"; rule-1 rows at 3.00 USD, rule-2 at 1.50 USD, in C002-T-070; the eight `t082-d018` sessions are no runs and are rerun at 3.00 USD; P-01 measures the rule-1 rows again after the CHG-001 D-019 fixes |
 | Q-budget-hide-01: the model sees its session budget in Claude Code evals (defect D-031; `questions-log.md` round 2026-10-24) | C002-T-069; C001-T-082, C001-T-072 | settled: P-01 answered "Hide the budget (Recommended)"; the runner-applied spend cap of C002-IF-010 §2.2 in C002-T-069, with one paid check of about 3 USD notional; the CHG-001 tasks wait for it (cross-change dependency above); C002-RISK-039 |
 | Q-cap-exc-01, Q-cap-exc-02: cap exceptions for the CHG-001 release eval cases (defect D-030; `questions-log.md` round 2026-10-24) | C002-T-068; C001-T-082, C001-T-072 | settled: P-01 answered "Add cap exceptions (Recommended)" and "Measure now (Recommended)"; the rows and the two rule lists of C002-IF-010 §2.2 in C002-T-068, the command forms and session-limit check above; residual risks C002-RISK-038; the CHG-001 tasks wait for it (cross-change dependency above) |
@@ -410,19 +420,20 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 56 | C002-T-056 | OpenCode dev-tier runs of the carried eval rows | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-056-opencode-carried-eval-runs.md` |
 | 57 | C002-T-048 | Claude Code regression set run | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-048-claude-regression-run.md` |
 | 58 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-049-release-evidence-runs.md` |
-| 59 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
-| 60 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
-| 61 | C002-T-067 | Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-067-fix-ripwire-map-rule-spend-reconciliation-key-redaction.md` |
-| 62 | C002-T-068 | Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-068-fix-cap-exceptions-chg001-release-cases.md` |
-| 63 | C002-T-069 | Fix for revision D-031: the Claude Code eval runner applies the spend cap itself and shows the model no budget | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-069-fix-claude-code-spend-cap-hidden-budget.md` |
-| 64 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-070-fix-rule-1-rerun-cap-3-usd.md` |
-| 65 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-072-early-stop-when-check-decided.md` |
-| 66 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
-| 67 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
-| 68 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
-| 69 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 70 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 71 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 59 | C002-T-066 | Catch-up for revision D-026, D-027: Copilot CLI model substitution, session_model and agent_models, fail-closed injection-summary merge, install-notes fallback, checklist models_used | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-066-catch-up-copilot-model-substitution-injection-merge.md` |
+| 60 | C002-T-067 | Fix for revision D-023 item 2, D-024, D-028: OpenCode ripwire map rule and deny summary, partial-spend reconciliation from the OpenRouter key usage, key redaction | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-067-fix-ripwire-map-rule-spend-reconciliation-key-redaction.md` |
+| 61 | C002-T-068 | Fix for revision D-030: cap exceptions for the CHG-001 release eval cases and the rules for sessions of CHG-001 tasks | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-068-fix-cap-exceptions-chg001-release-cases.md` |
+| 62 | C002-T-069 | Fix for revision D-031: the Claude Code eval runner applies the spend cap itself and shows the model no budget | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-069-fix-claude-code-spend-cap-hidden-budget.md` |
+| 63 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-070-fix-rule-1-rerun-cap-3-usd.md` |
+| 64 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-072-early-stop-when-check-decided.md` |
+| 65 | C002-T-073 | Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-073-inj21-session-cap-and-version-0-0-2.md` |
+| 66 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
+| 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
+| 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes, at package version 0.0.2 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
+| 69 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+| 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 71 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 72 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 ## Reporting protocol
 

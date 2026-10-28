@@ -35,11 +35,15 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Preconditions
 
+- **Package version 0.0.2** (defect D-035; P-01 answer to Q-inj21-01; C002-T-073). Both targets
+  share the one version, so Copilot is released at 0.0.2 too: `<version>` below is `0.0.2`, from
+  `docs/releases/copilot/0.0.2/` and `dist/architect-copilot-0.0.2.zip`. Its Copilot CLI evidence is
+  the 24 sessions that C002-T-071 step 5 runs at 0.0.2 (P-01: "retake both targets' paid
+  evidence"). The runsheet `docs/runsheets/T-055-copilot-release.md` names 0.0.2.
 - **C002-T-071 done** (P-01 answer to Q-release-base-01; plan critic CR-71). The release is made from
   the release-candidate commit that C002-T-071 records, with the CHG-001 fixes. C002-T-071 re-ran the
-  Copilot unpaid steps (C002-T-054 steps 1 and 2) there. Its step 5 records P-01's decision on the
-  paid Copilot CLI rows (C002-T-054 step 3, 24 sessions, Copilot pool), and this task waits for that
-  decision; when P-01 decided to retake them, they ran at that commit. C002-T-050 and C002-T-057 ran
+  Copilot unpaid steps (C002-T-054 steps 1 and 2) there. Its step 5 ran the paid Copilot CLI rows (C002-T-054 step 3, 24 sessions, Copilot pool) at that
+  commit and version 0.0.2, which P-01 decided with the answer to Q-inj21-01. C002-T-050 and C002-T-057 ran
   on the package of that commit.
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
 - The S-08 record of the tested versions is not `deferred`: the signed-off record gives

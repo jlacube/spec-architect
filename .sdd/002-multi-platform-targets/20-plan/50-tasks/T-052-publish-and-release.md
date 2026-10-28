@@ -36,6 +36,12 @@ communication steps belong to `75-rollout.md`.
 
 ## Preconditions
 
+- **Package version 0.0.2** (defect D-035; P-01 answer to Q-inj21-01; C002-T-073). The OpenCode
+  0.0.1 release check refuses, because the 0.0.1 `INJ-21` entry is acted upon and final. This task
+  releases 0.0.2: `<version>` below is `0.0.2`, from `docs/releases/opencode/0.0.2/`,
+  `dist/architect-opencode-0.0.2.zip` and `dist/architect-sdd-0.0.2.tgz` (`npm publish` of
+  `architect-sdd@0.0.2`). The runsheet `docs/runsheets/T-052-publish-and-opencode-release.md` names
+  0.0.2 from C002-T-073 on. The 0.0.1 evidence stays as it is and is never released.
 - **C002-T-071 done** (P-01 answer to Q-release-base-01, "Retake after fixes (Recommended)"; plan
   critic CR-71). The release is made from the release-candidate commit that C002-T-071 records, which
   holds the CHG-001 fixes of C001-T-082 and C001-T-083. C002-T-071 re-ran the unpaid release steps

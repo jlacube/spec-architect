@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-043]
+depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-043, C002-T-073]
 implements: [C002-NFR-601]
 satisfies_ac: [C002-AC-204.1]
 verified_by: [C002-TS-205, C002-TC-205, C002-TC-902]
@@ -35,6 +35,11 @@ not wait for it.
 
 ## Preconditions
 
+- **Package version 0.0.2** (defect D-035; C002-T-073): the run uses
+  `dist/architect-opencode-0.0.2.zip` and `dist/architect-sdd-0.0.2.tgz`, the version that
+  C002-T-052 releases, as the runsheet `docs/runsheets/T-051-opencode-clean-profile.md` names them.
+  It waits for C002-T-073 for that reason only; its reserve share of 1.40 USD stays kept by the
+  reserve's stop rule while C002-T-071 draws on the reserve (test plan §4.1 rule 5 exception).
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-043 (final
   OpenCode mode) done.
 - REF-WIN set up as `handoff.md` "Reference machine" lists.
