@@ -257,6 +257,8 @@ flowchart TB
   C002_T_023 --> C002_T_075
   C002_T_071 --> C002_T_075
   C002_T_074 --> C002_T_075
+  C002_T_050 --> C002_T_075
+  C002_T_057 --> C002_T_075
   C002_T_075 --> C002_T_055
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
@@ -394,14 +396,15 @@ the eval auth switch, is already built and finishes at 1, before C002-T-010, C00
 and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
-**Overall (to C002-T-055, weight 50, from the D-036 update):** items 1 … 14
+**Overall (to C002-T-055, weight 51, from the D-036 critic fixes):** items 1 … 14
 below, then C002-T-048 — Claude Code regression set run (M, 40), C002-T-068 — cap exceptions for the
 CHG-001 release cases (S, 41), C002-T-069 — Claude Code spend cap applied by the runner (M, 43),
 C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-073 — `INJ-21` session cap and version 0.0.2
 (S, 45), C002-T-074 — version 0.0.3 (S, 46), C002-T-071 — release evidence retaken, Copilot at 0.0.3
-(M, 48), C002-T-050 — P-01 checklist run (S, 49) and C002-T-055 — P-01 Copilot release (S, 50).
-C002-T-057 and C002-T-075 also finish at 49. The chain also waits for CHG-001's C001-T-082, C001-T-083
-and the D-020 fix task, outside this graph (`handoff.md`), so its calendar end follows them.
+(M, 48), C002-T-050 — P-01 checklist run (S, 49), C002-T-075 — P-01 npm publication after a
+`released` dry run (S, 50) and C002-T-055 — P-01 Copilot release (S, 51). C002-T-057 also finishes
+at 49. The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
+(C002-T-074 waits for C001-T-084; `handoff.md`), so its calendar end follows them.
 
 **Before the release retake (to C002-T-055, weight 45):**
 
@@ -424,10 +427,9 @@ and the D-020 fix task, outside this graph (`handoff.md`), so its calendar end f
 17. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
 18. C002-T-055 — P-01: release the Copilot target (S)
 
-**OpenCode release (to C002-T-052): deferred** (revision D-036). The graph still gives the chain
-through C002-T-071 (48) to C002-T-052 (S, 49), but C002-T-051 and C002-T-052 do not start in this
-round, so the chain sets no date until the OpenCode fix of a later version is planned. **At the
-D-035 update** it weighed 48. **Before the release retake (weight 44):** items 1 to 14
+**OpenCode release: moved to CHG-003** (revision D-036; P-01 answer to Q-opencode-scope-01).
+C002-T-051 and C002-T-052 are dropped, so CHG-002 has no OpenCode release chain. **At the D-035
+update** it weighed 48. **Before the release retake (weight 44):** items 1 to 14
 above, then C002-T-056 — OpenCode
 dev-tier runs of the carried eval rows (L; its rerun plan after C002-T-065, finishing at 41),
 C002-T-049 — Release evidence for OpenCode (M, 43) and C002-T-052 — P-01: publish architect-sdd and
@@ -529,11 +531,11 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | S | T-073 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
-| C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043, T-073 |
-| C002-M-07 | C002-T-052 | P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075) | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066, T-071 |
+| C002-M-07 | C002-T-051 | (dropped, moved to CHG-003) Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043, T-073 |
+| C002-M-07 | C002-T-052 | (dropped, moved to CHG-003) P-01: release the OpenCode target (npm publication moved to C002-T-075) | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066, T-071 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
 | C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | M | T-049, T-054, T-068, T-069, T-070, T-073, T-074 |
-| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-071, T-074 |
+| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-057, T-071, T-074 |
 | C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054, T-071 |
 | C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058, T-071 |
 | C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057, T-071, T-075 |

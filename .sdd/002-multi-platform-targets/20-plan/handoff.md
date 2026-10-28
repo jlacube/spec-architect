@@ -151,23 +151,27 @@ reserve (P-01's answer to Q-pool-retake-01, "Yes, use the reserve"), and 24 Copi
 the Copilot pool. C002-T-051, C002-T-052,
 C002-T-055, C002-T-050 and C002-T-057 use the 0.0.2 packages.
 
-**Copilot first at 0.0.3, OpenCode deferred** (defect D-036; P-01 answers Q-opencode-defer-01,
-"Defer OpenCode (Recommended)", and Q-noask-01, "Text fallback + 0.0.3 (Recommended)"). OpenCode 0.0.2
-is refused, because `INJ-21` runs open-ended to any cap. Copilot 0.0.2 is refused, because `INJ-19`
-and `INJ-21` have no ask tool under `--no-ask-user`, which CHG-001 D-020 fixes. This round:
-- the CHG-001 task that fixes D-020;
-- **C002-T-074**, version 0.0.3;
-- **C002-T-071**, the Copilot evidence at 0.0.3, 24 Copilot CLI rows, about 2.40 USD of the Copilot
-  pool;
-- **C002-T-075**, P-01 publishes `architect-sdd@0.0.3`, split from the OpenCode release that
-  C002-T-052 used to hold;
-- C002-T-050 and C002-T-057, then C002-T-055, the Copilot release, all at 0.0.3.
+**Copilot at 0.0.3, OpenCode moved to CHG-003** (defect D-036; P-01 answers Q-opencode-defer-01,
+"Defer OpenCode (Recommended)", Q-noask-01, "Text fallback + 0.0.3 (Recommended)", and
+Q-opencode-scope-01, "Move to a new change (Recommended)"). OpenCode 0.0.2 is refused, because
+`INJ-21` runs open-ended to any cap. Copilot 0.0.2 is refused, because `INJ-19` and `INJ-21` have no
+ask tool under `--no-ask-user`, which CHG-001 D-020 fixes. The order:
+1. **C001-T-084** (CHG-001) fixes D-020.
+2. **C002-T-074** moves the version to 0.0.3.
+3. **C002-T-071** retakes the Copilot evidence at 0.0.3: 24 Copilot CLI sessions, about 2.40 USD of
+   the Copilot pool. D-020 closes when `INJ-19` and `INJ-21` pass there (plan critic CR-83). Its
+   release-check dry run is reported only (CR-82).
+4. **C002-T-050** and **C002-T-057** run at 0.0.3.
+5. **C002-T-075:** a `released` Copilot dry run, then P-01 publishes `architect-sdd@0.0.3` (CR-82,
+   CR-84), split from the OpenCode release that C002-T-052 used to hold.
+6. **C002-T-055** releases Copilot at 0.0.3.
 
-**Cross-change dependency:** C002-T-071's Copilot retake, and through it C002-T-074's version move,
-wait for the CHG-001 D-020 fix task. The edge lives on the CHG-002 side only. **Deferred:** the
-OpenCode release (C002-T-051, and C002-T-052 apart from its npm check) waits for a fix of a later
-version: an OpenCode-capable early stop, or a bounded `INJ-21` gate case. CHG-002 spends no more
-OpenRouter credit for now (`10-strategy.md` §2, Deferred: OpenCode release).
+**Cross-change dependency** (plan critic CR-86): C002-T-074 waits for C001-T-084, and C002-T-071
+waits for C002-T-074. The edge lives on the CHG-002 side only.
+
+**Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
+fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
+OpenRouter credit (`10-strategy.md` §2, Moved to CHG-003).
 
 **Release from a commit with the CHG-001 fixes** (P-01 answer Q-release-base-01, "Retake after
 fixes (Recommended)"; plan critic CR-71). The fixes of C001-T-082 and C001-T-083 change files that
@@ -337,7 +341,7 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
-| Q-opencode-defer-01, Q-noask-01: OpenCode 0.0.2 refused (`INJ-21` open-ended), Copilot 0.0.2 refused (no ask tool, CHG-001 D-020) (defect D-036; `questions-log.md`) | C002-T-074, C002-T-071, C002-T-075, C002-T-055; C002-T-051, C002-T-052 | settled: P-01 answered "Defer OpenCode (Recommended)" and "Text fallback + 0.0.3 (Recommended)". Copilot ships first at 0.0.3 after the CHG-001 D-020 fix, `architect-sdd@0.0.3` is published apart (C002-T-075), and OpenCode is deferred with no more OpenRouter spend. **Open:** whether the deferred OpenCode release stays in CHG-002 at a later version or moves to a later change; until then the OpenCode DoD items stay open (reply to the conductor) |
+| Q-opencode-defer-01, Q-noask-01: OpenCode 0.0.2 refused (`INJ-21` open-ended), Copilot 0.0.2 refused (no ask tool, CHG-001 D-020) (defect D-036; `questions-log.md`) | C002-T-074, C002-T-071, C002-T-075, C002-T-055; C002-T-051, C002-T-052 | settled: P-01 answered "Defer OpenCode (Recommended)" and "Text fallback + 0.0.3 (Recommended)". Copilot ships first at 0.0.3 after the CHG-001 D-020 fix, `architect-sdd@0.0.3` is published apart (C002-T-075), and OpenCode is deferred with no more OpenRouter spend. Q-opencode-scope-01 settled it: P-01 answered "Move to a new change (Recommended)". C002-T-051 and C002-T-052 are dropped, the OpenCode-release parts of C002-DOD-001, 002, 005, 008, 009, 019 and 021 and their test cases are marked "moved to CHG-003", and C002-M-07 closes on Copilot alone (plan critic CR-85) |
 | Q-inj21-01: INJ-21 capped and acted upon, OpenCode 0.0.1 refused (defect D-035; `questions-log.md`) | C002-T-073, C002-T-071; the release tasks | settled: P-01 answered "0.0.2 + cap for INJ-21 (Recommended)"; the session cap and version 0.0.2 in C002-T-073, both targets' paid evidence retaken at 0.0.2 in C002-T-071. This answer also settles the Copilot CLI retake that Q-copilot-retake-01 asked about. Q-pool-retake-01 settled too: P-01 answered "Yes, use the reserve", with the standing approval renewed, so the OpenCode rows that the general pool cannot hold run from the reserve (test plan §4.1 rule 5 exception; plan critic CR-79) |
 | Q-early-stop-01, Q-weekly-reset-01: full-flow sessions run to the cap after their check; no free weekly reset (defect D-034; `questions-log.md`) | C002-T-072; C001-T-072 | settled: P-01 answered "Stop when checked (Recommended)"; the week stays at most 95 % used. C002-T-072 adds the early stop and the conditions of seven rule-1 rows (CR-74, CR-76); only C001-T-072 waits for it (CR-77). Its paid `TS-225` check is allowed: C002-IF-010 §2.2 names C002-T-072 step 6 in the `TS-225` row (met, CR-79) |
 | Q-release-base-01: CHG-002 release base after the CHG-001 fixes (plan critic CR-71; `questions-log.md`) | C002-T-071, C002-T-052, C002-T-055 | settled: P-01 answered "Retake after fixes (Recommended)"; C002-T-071 retakes the unpaid steps and the paid OpenCode rows. The Copilot CLI retake is settled by Q-inj21-01 (row above), at 0.0.2 |
@@ -451,12 +455,13 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 66 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-074-version-0-0-3.md` |
 | 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
 | 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
-| 69 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
-| 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 71 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 69 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 70 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 71 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
 | 72 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
-| 73 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 (deferred, out of this release round) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-051-clean-profile-runs.md` |
-| 74 | C002-T-052 | P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-052-publish-and-release.md` |
+
+C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
+are not in this list. The OpenCode release moves to the future CHG-003.
 
 ## Reporting protocol
 
