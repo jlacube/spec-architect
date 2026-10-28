@@ -327,9 +327,8 @@ waits for it and finishes at 47, then C002-T-050 at 48 and C002-T-055 at 49. C00
 for it (its 0.0.2 zip) and finishes at 47, so C002-T-052 finishes at 48. **The D-034 plan update did
 not change it**: the
 harness task C002-T-072 (M) starts after C002-T-070 (finishing at 44) and finishes at 46, and no
-CHG-002 task depends on it. CHG-001's C001-T-082 (its `TS-213` rerun) and C001-T-072 wait for it,
-outside this graph (`handoff.md`). C002-T-071 waits for C001-T-082 through a cross-change edge, so
-C002-T-072 sits on that path in the calendar, not in this graph. **The release retake lengthens it by 3** (P-01 answer
+CHG-002 task depends on it. Only CHG-001's C001-T-072 waits for it, outside this graph (plan
+critic CR-77; `handoff.md`). C001-T-082 is done, so C002-T-072 is not on C002-T-071's path either. **The release retake lengthens it by 3** (P-01 answer
 to Q-release-base-01; plan critic CR-71). C002-T-071 (M) waits for C002-T-068 … C002-T-070, the last
 of which finishes at 44 (C002-T-067 stays off the release chain, Q-t067-order-01), and for C002-T-049 and C002-T-054, so it finishes at 46. C002-T-052,
 C002-T-055, C002-T-050 and C002-T-057 wait for it, and the fix tasks C002-T-068 … C002-T-070, on no

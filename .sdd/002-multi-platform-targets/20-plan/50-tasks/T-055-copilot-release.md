@@ -72,5 +72,6 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 ## Done when
 
 - [ ] `architect-sdd` of this version on npm no later than the Copilot release
+- [ ] The near-cap list of C002-T-071's report for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] Copilot release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-055 --status done --commit <sha>`

@@ -128,13 +128,14 @@ C002-T-069 and C002-T-070". Like the other edges, this one lives on the CHG-002 
 
 **CHG-001 also waits for C002-T-072** (defect D-034; P-01 answers Q-early-stop-01, "Stop when
 checked (Recommended)", and Q-weekly-reset-01). C002-T-072 lets a case row end its Claude Code
-session once its check is decided (`stopWhen`, end `check_decided`, a run and not a cap end), and it
-writes the conditions of the 13 rule-1 rows into their CHG-001 case files, each checked offline
-against the row's stored transcripts. **The `TS-213` rerun of C001-T-082 step 4 and the release evals
-of C001-T-072 depend on C002-T-072.** Without it, every rule-1 session runs to the 3.00 USD cap, and
-the release gate needs 4 … 5 five-hour windows of a week that has no free reset. The conductor adds
-C002-T-072 to the blocked reason of those CHG-001 steps. Like the other edges, this one lives on the
-CHG-002 side only. **Exception (conductor, 2026-10-24):** P-01 asked to finish and secure the Claude
+session once its check is decided (`stopWhen`, end `check_decided`, a run and not a cap end).
+It writes the conditions of seven rule-1 rows into their CHG-001 case files, each checked offline and
+report-only against the row's stored transcripts: `TS-215`, `TS-221`, `TS-223`, `TS-224`, `TS-225`,
+`TS-507` and `TS-802`. `TS-213`, the three `TS-318` rows, `TS-508` and `TS-711` get none (plan
+critics CR-74, CR-76). **Only the release evals of C001-T-072 depend on C002-T-072** (CR-77). Without
+it, every rule-1 session runs to the 3.00 USD cap, and the release gate needs 4 … 5 five-hour windows
+of a week that has no free reset. Like the other edges, this one lives on the CHG-002 side only.
+**Exception (conductor, 2026-10-24):** P-01 asked to finish and secure the Claude
 Code and Copilot CLI versions first ("ok finish and secure Claude Code + GH Copilot CLI version"), so
 the three `TS-213` sessions of C001-T-082 step 4 run before C002-T-072, to the 3.00 USD cap (about
 9 USD notional). C001-T-082 and then C002-T-071 therefore do not wait for C002-T-072; only the
@@ -146,7 +147,8 @@ with every assertion passed. Its 0.0.1 entry is therefore acted upon and final, 
 refused. **C002-T-073** (S) gives `INJ-21` on OpenCode a session cap of 1.00 USD, which the harness
 applies without `--cap-exception`, and moves the packages to version **0.0.2**. C002-T-071 then
 retakes both targets' paid evidence at 0.0.2: 30 OpenCode rows from the general pool and then the
-reserve (Q-pool-retake-01), and 24 Copilot CLI rows from the Copilot pool. C002-T-051, C002-T-052,
+reserve (P-01's answer to Q-pool-retake-01, "Yes, use the reserve"), and 24 Copilot CLI rows from
+the Copilot pool. C002-T-051, C002-T-052,
 C002-T-055, C002-T-050 and C002-T-057 use the 0.0.2 packages.
 
 **Release from a commit with the CHG-001 fixes** (P-01 answer Q-release-base-01, "Retake after
@@ -317,8 +319,8 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
-| Q-inj21-01: INJ-21 capped and acted upon, OpenCode 0.0.1 refused (defect D-035; `questions-log.md`) | C002-T-073, C002-T-071; the release tasks | settled: P-01 answered "0.0.2 + cap for INJ-21 (Recommended)"; the session cap and version 0.0.2 in C002-T-073, both targets' paid evidence retaken at 0.0.2 in C002-T-071. This answer also settles the Copilot CLI retake that Q-copilot-retake-01 asked about. **Open:** Q-pool-retake-01, whether the OpenCode rows that the general pool cannot hold run from the reserve (test plan §4.1 rule 5 exception) |
-| Q-early-stop-01, Q-weekly-reset-01: full-flow sessions run to the cap after their check; no free weekly reset (defect D-034; `questions-log.md`) | C002-T-072; C001-T-082 (`TS-213` rerun), C001-T-072 | settled: P-01 answered "Stop when checked (Recommended)"; the week stays at most 95 % used. C002-T-072 adds the early stop and the 13 rule-1 conditions. **Open:** its paid `TS-225` check needs C002-IF-010 §2.2 to name C002-T-072 step 6 in the `TS-225` row (as for CR-68); the spec owners make that edit |
+| Q-inj21-01: INJ-21 capped and acted upon, OpenCode 0.0.1 refused (defect D-035; `questions-log.md`) | C002-T-073, C002-T-071; the release tasks | settled: P-01 answered "0.0.2 + cap for INJ-21 (Recommended)"; the session cap and version 0.0.2 in C002-T-073, both targets' paid evidence retaken at 0.0.2 in C002-T-071. This answer also settles the Copilot CLI retake that Q-copilot-retake-01 asked about. Q-pool-retake-01 settled too: P-01 answered "Yes, use the reserve", with the standing approval renewed, so the OpenCode rows that the general pool cannot hold run from the reserve (test plan §4.1 rule 5 exception; plan critic CR-79) |
+| Q-early-stop-01, Q-weekly-reset-01: full-flow sessions run to the cap after their check; no free weekly reset (defect D-034; `questions-log.md`) | C002-T-072; C001-T-072 | settled: P-01 answered "Stop when checked (Recommended)"; the week stays at most 95 % used. C002-T-072 adds the early stop and the conditions of seven rule-1 rows (CR-74, CR-76); only C001-T-072 waits for it (CR-77). Its paid `TS-225` check is allowed: C002-IF-010 §2.2 names C002-T-072 step 6 in the `TS-225` row (met, CR-79) |
 | Q-release-base-01: CHG-002 release base after the CHG-001 fixes (plan critic CR-71; `questions-log.md`) | C002-T-071, C002-T-052, C002-T-055 | settled: P-01 answered "Retake after fixes (Recommended)"; C002-T-071 retakes the unpaid steps and the paid OpenCode rows. The Copilot CLI retake is settled by Q-inj21-01 (row above), at 0.0.2 |
 | Q-cap-level-01: rerun cap for full-flow CHG-001 cases now that the budget is hidden (defect D-033; `questions-log.md` round 2026-10-24) | C002-T-070; C001-T-082, C001-T-072 | settled: P-01 answered "Raise to $3 (Recommended)"; rule-1 rows at 3.00 USD, rule-2 at 1.50 USD, in C002-T-070; the eight `t082-d018` sessions are no runs and are rerun at 3.00 USD; P-01 measures the rule-1 rows again after the CHG-001 D-019 fixes |
 | Q-budget-hide-01: the model sees its session budget in Claude Code evals (defect D-031; `questions-log.md` round 2026-10-24) | C002-T-069; C001-T-082, C001-T-072 | settled: P-01 answered "Hide the budget (Recommended)"; the runner-applied spend cap of C002-IF-010 §2.2 in C002-T-069, with one paid check of about 3 USD notional; the CHG-001 tasks wait for it (cross-change dependency above); C002-RISK-039 |

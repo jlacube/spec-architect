@@ -76,8 +76,8 @@ owned by the conductor. C002-T-052, C002-T-055, C002-T-050 and C002-T-057 wait f
     enough for the remaining 1 … 1.5 USD. The reserve was ring-fenced for exactly this kind of session, the OpenCode
     release evidence of C002-T-049 step 3 and C002-T-051 step 3 (Q-evalbudget-04). This retake is
     the C002-T-049 step 3 evidence of the version that ships, so it may draw on the reserve once the
-    general pool stops. [ASSUMPTION: Q-pool-retake-01 — P-01 confirms the reserve for the rows that
-    the general pool cannot hold; rule 5 of test plan §4.1 otherwise keeps re-runs out of the reserve]
+    general pool stops. P-01 approved this: answer to Q-pool-retake-01, "Yes, use the reserve", with
+    the standing approval renewed (test plan §4.1 rule 5 exception; plan critic CR-79).
   - **Copilot pool:** the 24 Copilot CLI sessions, about 3.4 USD, under rule 8.
 - REF-WIN with the tested hosts (OpenCode 1.18.31; VS Code Insiders 1.142.0-insider and Copilot CLI
   1.0.98), Node.js 22.22.2 or later, PowerShell 7 and Git Bash, and Developer Mode on.
@@ -107,7 +107,9 @@ owned by the conductor. C002-T-052, C002-T-055, C002-T-050 and C002-T-057 wait f
    - **Failures:** a row whose session does not pass is a defect of the owning task (reopen it),
      never fixed in the evidence. An injection entry that reads acted upon is final for 0.0.2, and a
      fix ships under a new version (test plan §4.1). An injection row that ends at a cap again goes
-     to P-01 before any rerun (C002-IF-010 §2.2 Caps of injection rows).
+     to P-01, and 0.0.2 of that target is refused, since its entry is acted upon and final for the
+     version (C002-IF-010 §2.2 Caps of injection rows, §5.2 rule 3; plan critic CR-80). No rerun of
+     the row runs at 0.0.2.
 5. **Copilot evidence at 0.0.2** (plan critic CR-71; P-01 answer to Q-inj21-01, "retake both
    targets' paid evidence").
    - **Unpaid:** C002-T-054 steps 1 and 2 at the new commit: package, and the replay of every
@@ -121,8 +123,12 @@ owned by the conductor. C002-T-052, C002-T-055, C002-T-050 and C002-T-057 wait f
 6. **Report.** The task report gives the release-candidate commit and the version 0.0.2, the
    regression-set result, the replay reports of both targets, and every paid session with its ledger
    entry, pool and the pool totals after it. For each target it gives the 0.0.2 injection summary:
-   entry count and acted upon. C002-T-052 and C002-T-055 then run their release checks at this commit
-   and version.
+   entry count and acted upon. **Near-cap list** (plan critic CR-80; spec CR-122): per host, every
+   injection row whose 0.0.2 session ended at a cap or came within 0.09 USD of its spend cap, with
+   its recorded cost, its cap and its end, or "none". This list is the done-check of the injection-row
+   cap rule of C002-IF-010 §2.2 for the release tasks: a listed row goes to P-01 for a cap exception
+   before the next release evidence on that host. C002-T-052 and C002-T-055 then run their release
+   checks at this commit and version.
 
 ## Verification
 
@@ -137,5 +143,6 @@ owned by the conductor. C002-T-052, C002-T-055, C002-T-050 and C002-T-057 wait f
 - [ ] C002-T-048 step 5, C002-T-049 steps 1 and 2 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the release replays
 - [ ] The 30 OpenCode rows ran at 0.0.2 (`INJ-21` at 1.00 USD) under the stop rule, from the general pool and then the reserve, every session in the ledger, and the OpenRouter total within 40 USD; `docs/releases/opencode/0.0.2/injection.json` holds `INJ-01` … `INJ-22`
 - [ ] The 24 Copilot CLI rows ran at 0.0.2 from the Copilot pool, and `docs/releases/copilot/0.0.2/injection.json` holds the Copilot CLI injection case set
+- [ ] The task report lists, per host, the injection rows at or within 0.09 USD of their cap at 0.0.2, or "none" (CR-80, spec CR-122); a row that ended at a cap went to P-01, and that target's 0.0.2 is refused
 - [ ] The release-check dry runs of both targets are reported at that commit, OpenCode giving `released`
 - [ ] Progress reported: `sdd task set C002-T-071 --status done --commit <sha>`

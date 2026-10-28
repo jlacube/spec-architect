@@ -102,5 +102,6 @@ communication steps belong to `75-rollout.md`.
 - [ ] Every entry of `docs/releases/opencode/<version>/injection.json` gives `result` and `models`, and each `result` names an existing file under `evals/results/` (C002-DOD-009)
 - [ ] Every OpenCode `INJ-*` session at the package version in the ledger whose result document does not pass, a no-run refusal excepted, has an entry that reads acted upon, and every row `INJ-01` … `INJ-22` has an entry (C002-IF-010 §5.2; plan critic CR-53, Q-acted-final-01); the task report lists the sessions checked
 - [ ] `architect-sdd` published no later than the OpenCode release (or the refusal recorded and no publication)
+- [ ] The near-cap list of C002-T-071's report for `opencode` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] OpenCode release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-052 --status done --commit <sha>`
