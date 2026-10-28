@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T05:28:56Z",
+  "generated_at": "2026-10-28T06:06:41Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -18,9 +18,9 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "in-revision",
-          "approved_hash": "sha256:dfb397ddba91aeef375c272be1d31feaab5e3aca6d45cab33b8a42337e65abf2",
-          "approved_at": "2026-10-24",
+          "status": "approved",
+          "approved_hash": "sha256:183d8cc0449d7d59095e8147eac1c0daef3df61e4af87216c31a9b5ba0b5b070",
+          "approved_at": "2026-10-28",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
@@ -33,7 +33,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 65,
+          "total": 66,
           "done": 61,
           "blocked": 0,
           "in_progress": 0
