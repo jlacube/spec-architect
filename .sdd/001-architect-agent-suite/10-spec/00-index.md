@@ -59,7 +59,7 @@ status: approved
 | Capability | Folder | US | REQ | AC | TS |
 |---|---|---|---|---|---|
 | C001-CAP-01 Workspace, registry, identifiers | `CAP-01-workspace` | 101–108 (8) | 101–127 (27) | 33 | 101–133 (33) |
-| C001-CAP-02 Conductor and interview | `CAP-02-conductor` | 201–209 (9) | 201–222 (22) | 24 | 201–225 (25) |
+| C001-CAP-02 Conductor and interview | `CAP-02-conductor` | 201–209 (9) | 201–222 (22) | 25 | 201–226 (26) |
 | C001-CAP-03 Ideation | `CAP-03-ideation` | 301–308 (8) | 301–318 (17; 308 tombstoned) | 20 | 301–320 (20) |
 | C001-CAP-04 Specification authoring | `CAP-04-specification` | 401–409 (9) | 401–422 (22) | 24 | 401–424 (24) |
 | C001-CAP-05 Architecture, interfaces, diagrams | `CAP-05-architecture` | 501–507 (7) | 501–516 (13; 504–506 tombstoned) | 13 | 501–516 (13; 504–506 tombstoned) |
@@ -69,7 +69,7 @@ status: approved
 | C001-CAP-09 Tracking and archive | `CAP-09-tracking-archive` | 901–906 (6) | 901–924 (24) | 25 | 901–925 (25) |
 | C001-CAP-10 Code intelligence | `CAP-10-code-intelligence` | 1001–1005 (5) | 1001–1013 (13) | 14 | 1001–1015 (15) |
 | C001-CAP-11 Packaging, safety, environment | `CAP-11-packaging-safety` | 1101–1109 (9) | 1101–1124 (23; 1105 tombstoned) | 24 | 1101–1126 (25; 1106 tombstoned) |
-| **Total** | | **80** | **216** | **238** | **241** |
+| **Total** | | **80** | **216** | **239** | **242** |
 
 Other IDs: GOAL 8 · SC 10 · NG 2 (plus IDEA-NG-01 … 06) · AS 4 (plus IDEA-AS-01 … 08) · CON 16 ·
 NFR 27 · INV 24 · IF 14 · COMP 13 · DOD 21 (+ DOD-G 7).

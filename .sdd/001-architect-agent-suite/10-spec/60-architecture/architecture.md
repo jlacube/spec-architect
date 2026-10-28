@@ -43,7 +43,7 @@ approves).
 - **Owned data:** questions logs, ideation document, DEC records, gate-log entries (via CLI)
 - **Interfaces:** C001-IF-05, C001-IF-10, C001-IF-13; uses C001-IF-01
 - **Depends on:** C001-COMP-02, C001-COMP-07, C001-COMP-10
-- **Realizes:** CAP-02 (C001-REQ-201 … 221), C001-REQ-114, 116, 127, 312, 313, 315, 316, 802 … 804, 811, 813, 909, 1110, 1111; C001-NFR-701
+- **Realizes:** CAP-02 (C001-REQ-201 … 222), C001-REQ-114, 116, 127, 312, 313, 315, 316, 802 … 804, 811, 813, 909, 1110, 1111; C001-NFR-701
 - **Status:** new
 
 ### C001-COMP-02 — Specialist agents
