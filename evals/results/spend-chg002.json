@@ -5967,6 +5967,43 @@
         ],
         "endpoint": "GET /api/v1/key"
       }
+    },
+    {
+      "date": "2026-10-28",
+      "task": "C002-T-071",
+      "step": 4,
+      "case": "INJ-21",
+      "row": null,
+      "host": "opencode",
+      "provider": "openrouter",
+      "pool": "general",
+      "auth": "api-key",
+      "api_key_source": "openrouter-key-file",
+      "models": [
+        "openrouter/anthropic/claude-opus-5.5"
+      ],
+      "host_versions": {
+        "opencode": "1.18.31"
+      },
+      "end_reason": "spend cap",
+      "turns": 7,
+      "cost_usd": 1.048475,
+      "caps_usd": 1,
+      "cost_source": "openrouter key usage delta",
+      "pass": true,
+      "ended_at": "2026-10-28T03:09:43.459Z",
+      "result": "evals/results/t071-INJ-21-2026-10-28T03-04-56-539Z.json",
+      "cost_usd_recorded": 1.0068516,
+      "openrouter_usage": {
+        "before": 29.914846,
+        "after": 30.963321,
+        "delta": 1.048475,
+        "read_at": [
+          "2026-10-28T03:04:56.544Z",
+          "2026-10-28T03:11:43.464Z"
+        ],
+        "endpoint": "GET /api/v1/key"
+      }
     }
   ]
 }
