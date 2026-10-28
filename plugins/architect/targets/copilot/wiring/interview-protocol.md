@@ -13,10 +13,6 @@
   say that no answer was received, and do not continue the step that needs them (no change folder,
   no command that depends on the answer); the questions stay open and are asked again when the step
   resumes.
-- When the `ask_user` tool is not available, ask nothing, not even in the chat: create no change
-  folder and run no command that needs P-01's answer. Reply that the question tool `ask_user` is
-  missing and name the step of `INSTALL.md` that makes it available: step 2
-  (`sdd install copilot --package <folder>`, which writes `.github/agents/sdd-conductor.agent.md`
-  with `ask_user` in its tools) and step 3 (the setting `chat.askQuestions.enabled`: `true`).
+- If the `ask_user` tool is absent or a call to it is refused, ask the round in the text form of §4.
 - Specialists have no question tool; they return questions blocks (the return contract in the
   sdd-conventions skill).

@@ -8,6 +8,7 @@
 - Every option has a non-empty `description`, which carries the one-sentence rationale; a call with
   an option without one fails. The tool has no recommended flag: the first option's label carries
   ` (Recommended)`.
+- If the `question` tool is absent or a call to it is refused, ask the round in the text form of §4.
 - The tool's answer gives, per question, the chosen label or P-01's typed text
   (`"<question>"="<answer>"`); log that value verbatim.
 - A result without a choice of P-01 is no answer: the call dismissed (`The user dismissed this

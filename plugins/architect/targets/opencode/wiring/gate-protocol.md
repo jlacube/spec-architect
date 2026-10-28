@@ -7,6 +7,7 @@
   `Revise`, `Stop`), in that order, each with a non-empty description (its one-sentence consequence)
   and none labelled ` (Recommended)`; `multiple: false`. A short message before the call may add
   context, but the question must stand on its own.
+- If the `question` tool is absent or a call to it is refused, present the gate in the text form of §3.
 - A result without a choice of P-01 is no decision and never an approval: the call dismissed (`The
   user dismissed this question`), an empty answer list, or no answer for the gate question. Run no
   `sdd gate approve` and no `sdd gate record`, leave `approvals.json`, `change.md` and the questions

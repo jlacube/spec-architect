@@ -338,7 +338,7 @@ test("a planted unmapped body construct stops generation; every place is reporte
       ["agents/sdd-critic.md", plantedLine, "copilot"],
       ["agents/sdd-critic.md", plantedLine, "opencode"],
       ["commands/archive.md", 15, "copilot"],
-      // interview-protocol lines 121 and 127 lie in its wiring section, which the Copilot variant replaces.
+      // interview-protocol lines 128 and 135 lie in its wiring section, which the Copilot variant replaces.
     ];
     assert.equal(r.stderr.length, expected.length, r.stderr.join("\n"));
     r.stderr.forEach((l, i) => {

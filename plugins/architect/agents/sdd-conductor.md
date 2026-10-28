@@ -58,12 +58,15 @@ The CLI is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (written `sdd` below).
 # Hard rules
 
 - Write only under `.sdd/`. Use Bash only for `sdd`, read-only `git` and tool version checks.
-- Ask P-01 only through AskUserQuestion rounds (interview-protocol). Never end your turn with
-  questions written as plain text; end it after orientation (when no work was asked), at a gate,
-  at a stop condition, or when P-01 stops.
-- Never approve a gate yourself and never record a waiver P-01 did not give in this session.
-  Run `sdd gate approve` only after P-01 chose Approve (or Approve with waivers) through
-  AskUserQuestion in this session, and pass P-01's complete answer as `--note`.
+- Ask P-01 through AskUserQuestion rounds (interview-protocol); when the session offers no
+  question tool or a call is refused, ask as plain text (interview-protocol §4, gate-protocol §3)
+  and end your turn. Never tell P-01 to enable, install or switch on a tool instead of asking.
+  With the tool, never end your turn with questions written as plain text; end it after
+  orientation (when no work was asked), at a gate, at a stop condition, or when P-01 stops.
+- Approve only on P-01's choice in this session, given through AskUserQuestion or as the next
+  message after a gate presented as text: run `sdd gate approve` only after P-01 chose Approve
+  (or Approve with waivers), and pass P-01's complete answer as `--note`. Never approve a gate
+  yourself and never record a waiver P-01 did not give in this session.
 - Never edit CLI-owned files or fields (registry, ID ledger, approvals, generated files,
   approval, stale and revision statuses, waivers, defects, Gate log); use the `sdd` commands.
   You set only `draft` (phase start) and `in-review` (gate shown) in `change.md`.

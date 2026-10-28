@@ -81,6 +81,14 @@ export async function runSession(options) {
   return runCopilotCliSession({ ...options, names: namesOf(options) });
 }
 
+/**
+ * Answer policy that refuses every AskUserQuestion call (C001-TS-226: the session offers no question tool in
+ * the sense of C001-IF-05 `questions.md` §3, a call to it is refused). Each refusal is a `refused` harness record.
+ */
+export const refuseAsk = Object.assign(() => null, { refuse: true });
+/** The refusal text of a refused AskUserQuestion call. */
+export const ASK_REFUSED = "AskUserQuestion is not available in this session";
+
 /** The Claude Code spend cap's times (C002-IF-010 §2.2 Claude Code spend cap, items 4 and 8); no option or variable changes them. */
 export const USAGE_TIMEOUT_MS = 30_000;
 export const SETTLE_MS = 5_000;
@@ -292,6 +300,10 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
       if (stopping) {
         stamp({ type: "harness", event: "denied", tool: toolName, input });
         return { behavior: "deny", message: `${toolName} is not available in this evaluation` };
+      }
+      if (toolName === "AskUserQuestion" && answer?.refuse === true) {
+        stamp({ type: "harness", event: "refused", tool: toolName, input });
+        return { behavior: "deny", message: ASK_REFUSED };
       }
       if (toolName === "AskUserQuestion") {
         const given = {};

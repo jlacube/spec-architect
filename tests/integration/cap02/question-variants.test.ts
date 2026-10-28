@@ -151,16 +151,14 @@ for (const mode of MODES.opencode) {
 
 for (const mode of MODES.copilot) {
   test(`C002-TC-319 (C002-REQ-312): Copilot ${mode} — without ask_user the conductor asks nothing and names the tool and the INSTALL.md steps that provide it`, () => {
-    const { body, install } = pkg("copilot", mode);
+    // Revised by C001-T-084 (D-020; P-01, Q-noask-01 "Text fallback"): without ask_user the conductor asks
+    // as plain text (C001-IF-05 `questions.md` §3) and names no INSTALL.md step (C001-REQ-223).
+    const { body } = pkg("copilot", mode);
     const w = oneLine(wiring("copilot", skillPart(body, "interview-protocol")));
-    assert.match(w, /When the `ask_user` tool is not available, ask nothing, not even in the chat: create no change folder/);
-    const named = /missing and name the step of `INSTALL\.md` that makes it available: step (\d+) \(`([^`]+)`[^)]*\) and step (\d+) \(the setting `([^`]+)`/.exec(w);
-    assert.ok(named, "names the steps of INSTALL.md");
-    // The steps named are the generated install notes' own: step 2 runs the install, step 3 sets the setting.
-    const step = (n: string) => new RegExp(`^${n}\\. [\\s\\S]*?(?=^\\d+\\. |(?![\\s\\S]))`, "m").exec(install)?.[0] ?? "";
-    assert.ok(step(named[1]!).includes(named[2]!.replace(/ --package <folder>$/, "")), `INSTALL.md step ${named[1]} runs ${named[2]}`);
-    assert.ok(step(named[3]!).includes(`\`${named[4]}\``), `INSTALL.md step ${named[3]} sets ${named[4]}`);
-    assert.ok(oneLine(wiring("copilot", skillPart(body, "gate-protocol"))).includes("Without the `ask_user` tool, present nothing to decide"));
+    assert.ok(w.includes("If the `ask_user` tool is absent or a call to it is refused, ask the round in the text form of §4."));
+    const gw = oneLine(wiring("copilot", skillPart(body, "gate-protocol")));
+    assert.ok(gw.includes("If the `ask_user` tool is absent or a call to it is refused, present the gate in the text form of §3."));
+    assert.ok(!/INSTALL\.md/.test(w) && !/INSTALL\.md/.test(gw), "no INSTALL.md detour");
   });
 }
 

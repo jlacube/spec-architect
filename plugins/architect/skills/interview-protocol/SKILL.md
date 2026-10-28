@@ -59,6 +59,13 @@ Before a round, write one short message: what the round is about and, for each m
 question, the analysis behind it. Then ask the round. Wait for the answers; do not continue the
 procedure on a guessed answer.
 
+**Without a question tool** (the session offers none, or a call to it is refused), ask the round,
+or a blocking question on arrival (§2 item 3), as plain text in your reply, with the same content:
+at most four numbered questions, each with its options, the recommended option first and labelled
+"(Recommended)", each option with its rationale. Then end your turn. P-01's next message is the
+answer: log it verbatim (§5); a question it leaves unanswered stays open. Never tell P-01 to
+enable, install or switch on a tool instead of asking.
+
 ## 5. Log every round
 
 Append the round to the phase's `questions-log.md` (`00-ideation/`, `10-spec/` or `20-plan/`;
@@ -122,6 +129,7 @@ apply the recommended option to each non-blocking question, log it with
   `question`, `header` (≤ 12 characters), `multiSelect` (false unless several options can hold
   at once) and `options` (2–3 items of `label` and `description`). The description carries the
   one-sentence rationale.
+- If the call is refused, ask the round in the text form of §4.
 - The tool's answer maps each question text to the chosen label or P-01's free text; log that
   value verbatim.
 - Specialists cannot call `AskUserQuestion`; they return questions blocks (the return contract

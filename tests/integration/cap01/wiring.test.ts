@@ -156,12 +156,12 @@ for (const t of TARGETS) {
 for (const t of TARGETS) {
   test(`C002-TC-117 (C002-TS-117): the interview wiring section takes the ${NAME[t]} variant, in the skill and every inlining agent`, () => {
     const path = "skills/interview-protocol/SKILL.md";
-    assert.equal(sourceLine(path, 119), `## ${WIRING_SECTION}`);
-    assert.ok(sourceText(path).split("\n").slice(118).join("\n").includes("AskUserQuestion"), "the source section names AskUserQuestion");
+    assert.equal(sourceLine(path, 126), `## ${WIRING_SECTION}`);
+    assert.ok(sourceText(path).split("\n").slice(125).join("\n").includes("AskUserQuestion"), "the source section names AskUserQuestion");
     const g = generated(t);
     const doc = g.docs.get(path)!;
     const expected = variantText(t, "interview-protocol");
-    assert.equal(linesFrom(doc, 119), expected, "the variant in place of the section");
+    assert.equal(linesFrom(doc, 126), expected, "the variant in place of the section");
     assert.ok(!doc.body.includes("AskUserQuestion"));
     assert.ok(expected.includes(t === "opencode" ? "`question` tool" : "`ask_user`"), "the host question tool");
     const agents = inliners("interview-protocol");
@@ -170,6 +170,26 @@ for (const t of TARGETS) {
       const part = inlinedPart(g.agents.get(name)!, "interview-protocol");
       assert.ok(part.includes(expected), `${t}: ${name}`);
       assert.ok(!g.agents.get(name)!.body.includes("AskUserQuestion"), `${t}: ${name}`);
+    }
+  });
+}
+
+// --- C001-T-084 (C001-REQ-222, C001-REQ-223; C001-IF-05 `questions.md` §3): the fallback line ---
+const FALLBACK: Record<string, string> = {
+  "interview-protocol": "ask the round in the text form of §4.",
+  "gate-protocol": "present the gate in the text form of §3.",
+};
+for (const t of TARGETS) {
+  test(`C001-T-084: the generated ${NAME[t]} bodies of gate-protocol and interview-protocol keep the plain-text fallback, with no tool-enabling detour`, () => {
+    const g = generated(t);
+    const tool = t === "opencode" ? "`question`" : "`ask_user`";
+    for (const [skill, tail] of Object.entries(FALLBACK)) {
+      const body = g.docs.get(`skills/${skill}/SKILL.md`)!.body;
+      const line = `- If the ${tool} tool is absent or a call to it is refused, ${tail}`;
+      assert.ok(body.split("\n").includes(line), `${t}: ${skill} has the line "${line}"`);
+      assert.ok(body.includes("**Without a question tool**"), `${t}: ${skill} keeps the text form`);
+      assert.ok(!/INSTALL\.md/.test(body), `${t}: ${skill} names no INSTALL.md step`);
+      for (const name of inliners(skill)) assert.ok(inlinedPart(g.agents.get(name)!, skill).includes(line), `${t}: ${name} inlines the fallback line of ${skill}`);
     }
   });
 }
@@ -247,10 +267,10 @@ for (const [skill, section, sourceName, call, grant] of [
 }
 
 // --- C002-TC-119 ---
-test('C002-TC-119 (C002-TS-119): gate wiring with an OpenCode variant and no Copilot variant names line 87 and "copilot" only', () => {
+test('C002-TC-119 (C002-TS-119): gate wiring with an OpenCode variant and no Copilot variant names line 99 and "copilot" only', () => {
   const r = onFixture((src) => dropVariant(src, "copilot", "gate-protocol"));
   assert.equal(r.code, 1);
-  assert.deepEqual(r.stderr, [`ERR-GEN-002: skills/gate-protocol/SKILL.md:87: section "${WIRING_SECTION}" has no copilot wiring variant. ${fix002("copilot")}`]);
+  assert.deepEqual(r.stderr, [`ERR-GEN-002: skills/gate-protocol/SKILL.md:99: section "${WIRING_SECTION}" has no copilot wiring variant. ${fix002("copilot")}`]);
   assert.ok(!r.stderr.join("\n").includes("opencode"));
   assert.deepEqual(r.stdout, ["copilot: not written (1 errors)", "opencode: not written (0 errors)"]);
 });

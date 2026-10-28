@@ -13,7 +13,6 @@
   `change.md` and the questions log unchanged, say that no decision was received, and end your turn:
   the phase stays in review until P-01 answers a gate question (`/architect:gate <NNN>` asks it
   again).
-- Without the `ask_user` tool, present nothing to decide: reply as the interview wiring says
-  (the missing tool and the steps of `INSTALL.md`).
+- If the `ask_user` tool is absent or a call to it is refused, present the gate in the text form of §3.
 - Pass the answer to the CLI unchanged: quote it for the shell so that dashes, quotes and
   non-ASCII characters survive.
