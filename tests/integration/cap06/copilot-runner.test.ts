@@ -67,6 +67,18 @@ test("C002-TS-614 Copilot CLI runner, 0.01 USD (1 AI Credit) per turn: the sessi
   assert.equal(s.copilot_usage?.ai_credits, 30, "AI Credits measured from the usage file");
 });
 
+// C002-TC-932 row 6 (C002-TS-706, C002-REQ-645 item 7; C002-T-072): the Copilot CLI eval runner ignores `stopWhen`.
+test("C002-TS-706 row 6 — Copilot CLI eval runner, a stub host that never ends at 1 AI Credit per turn below the limit of 50, a condition true at every call: never called, no check-decided record, turn cap after 30 turns", async () => {
+  let calls = 0;
+  const { s, host } = await session({ creditsPerTurn: 1 }, { stopWhen: () => ((calls += 1), true) });
+  const args = host.calls[0]!.args;
+  assert.equal(args[args.indexOf("--max-ai-credits") + 1], "50");
+  assert.equal(calls, 0, "the condition is never called");
+  assert.ok(!s.transcript.some((r: any) => r.type === "harness" && r.event === "check-decided"), "no check-decided record");
+  assert.equal(s.end_reason, "turn cap");
+  assert.equal(s.usage.turns, 30);
+});
+
 test("C002-TS-614 Copilot CLI runner, 0.10 USD (10 AI Credits) per turn: the session ends after 5 turns with the reason spend cap", async () => {
   const { s, host } = await session({ creditsPerTurn: 10 });
   const args = host.calls[0]!.args as string[];

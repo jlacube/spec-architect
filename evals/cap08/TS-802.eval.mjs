@@ -9,6 +9,9 @@ export default {
   title: "Gate question",
   ...gateG2,
   answer: answering("Revise"),
+  // Ends the session once the check is decided (C002-T-072): at the answer record of the first gate question.
+  // The assert reads that record, the gate question's options and the text before it, all fixed by then.
+  stopWhen: (transcript) => transcript.some((r) => r.type === "harness" && r.event === "answer" && r.questions.some(isGate)),
   assert({ transcript }) {
     const { failures, check } = checker();
     const at = transcript.findIndex((r) => r.type === "harness" && r.event === "answer" && r.questions.some(isGate));

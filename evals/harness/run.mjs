@@ -100,6 +100,9 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         env: scenario.env ?? {},
         startDelayMs: scenario.startDelayMs ?? 0,
         auth: mode ?? undefined,
+        // The row's stop condition, for the Claude Code eval runner only (C002-IF-010 §2 `stopWhen`, §2.2 Early
+        // stop when the check is decided, item 7: the OpenCode and Copilot CLI runners get none).
+        stopWhen: host === "claude-code" ? scenario.stopWhen : undefined,
         // Fields the generated-target runners read (C002-T-038, C002-T-044); Claude Code ignores them.
         host: scenario.host,
         targetPackage: scenario.targetPackage,

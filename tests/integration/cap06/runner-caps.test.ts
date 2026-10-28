@@ -63,6 +63,16 @@ test("C002-TS-614 OpenCode runner, 0.10 USD per turn: the session ends after 5 t
   assert.equal(s.result.subtype, "error_max_budget_usd");
 });
 
+// C002-TC-932 row 5 (C002-TS-706, C002-REQ-645 item 7; C002-T-072): the OpenCode eval runner ignores `stopWhen`.
+test("C002-TS-706 row 5 — OpenCode eval runner, a stub host that never ends at 0.10 USD per step-finish, a condition true at every call: never called, no check-decided record, spend cap after 5 turns", async () => {
+  let calls = 0;
+  const s = await session({ spendPerTurn: 0.1 }, { stopWhen: () => ((calls += 1), true) });
+  assert.equal(calls, 0, "the condition is never called");
+  assert.ok(!s.transcript.some((r: any) => r.type === "harness" && r.event === "check-decided"), "no check-decided record");
+  assert.equal(s.end_reason, "spend cap");
+  assert.equal(s.usage.turns, 5);
+});
+
 test("the caps default to 30 turns and 0.50 USD; a case's lower caps apply", async () => {
   const caps = createCaps();
   assert.equal(caps.maxTurns, 30);

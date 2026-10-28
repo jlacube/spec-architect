@@ -13,6 +13,7 @@
 // C001-T-082 and C001-T-072 replaces it once (C001-AC-221.1 note).
 import { architectReal } from "../harness/overlay.mjs";
 import { assertAskOnArrival } from "./arrival.mjs";
+import { askDecided } from "./TS-215.eval.mjs";
 import { twoCheckoutSpecStart } from "./TS-223.eval.mjs";
 
 export default {
@@ -26,6 +27,8 @@ export default {
   // 30 turns, as TS-215 (the conductor needs more than 22 to reach the cartographer, t063-d013).
   maxTurns: 30,
   prompt: "Draft the spec of CHG-001.",
+  // Ends the session once the check is decided (C002-T-072): the condition of TS-215, which shares this check.
+  stopWhen: (transcript) => askDecided(transcript),
   assert({ transcript, log }) {
     return assertAskOnArrival("TS-225", { transcript, log });
   },

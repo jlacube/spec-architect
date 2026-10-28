@@ -36,12 +36,19 @@ export interface DriverRun {
 }
 
 /** Writes a case file with one row at `file` (relative, `/` separators) under `fxRoot`. */
-export function writeCase(fxRoot: string, file: string, row: { id: string; maxBudgetUsd?: number; maxTurns?: number; prompt?: string; allowTools?: string[] }): string {
+/**
+ * `stopWhen` (C002-T-072): the JS source of the row's condition, a function expression; each call is
+ * written to `stopWhen.log` (one line `{ n, last }`: the transcript's length and its last record's event or
+ * message type) before the condition runs. `assert`: the JS source of the row's assert (default `() => []`).
+ */
+export function writeCase(fxRoot: string, file: string, row: { id: string; maxBudgetUsd?: number; maxTurns?: number; prompt?: string; allowTools?: string[]; stopWhen?: { source: string; log: string }; assert?: string }): string {
   const p = join(fxRoot, ...file.split("/"));
   mkdirSync(dirname(p), { recursive: true });
   const caps = [row.maxBudgetUsd !== undefined ? `maxBudgetUsd: ${row.maxBudgetUsd}, ` : "", row.maxTurns !== undefined ? `maxTurns: ${row.maxTurns}, ` : ""].join("");
   const allow = row.allowTools ? `allowTools: ${JSON.stringify(row.allowTools)}, ` : "";
-  writeFileSync(p, `export default { id: ${JSON.stringify(row.id)}, title: "fx-evals-caps", agent: "architect:sdd-conductor", fixture: null, prompt: ${JSON.stringify(row.prompt ?? "hi")}, ${caps}${allow}assert: () => [] };\n`);
+  const head = row.stopWhen ? `import { appendFileSync } from "node:fs";\nconst condition = ${row.stopWhen.source};\n` : "";
+  const stop = row.stopWhen ? `stopWhen: (tr, answers) => { appendFileSync(${JSON.stringify(row.stopWhen.log)}, JSON.stringify({ n: tr.length, last: tr.at(-1)?.event ?? tr.at(-1)?.message?.type ?? null }) + "\\n"); return condition(tr, answers); }, ` : "";
+  writeFileSync(p, `${head}export default { id: ${JSON.stringify(row.id)}, title: "fx-evals-caps", agent: "architect:sdd-conductor", fixture: null, prompt: ${JSON.stringify(row.prompt ?? "hi")}, ${caps}${allow}${stop}assert: ${row.assert ?? "() => []"} };\n`);
   return p;
 }
 

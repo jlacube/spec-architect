@@ -11,12 +11,17 @@
 // - C002-TC-930 (C002-TS-704, C002-REQ-644): a failed reading stops the session and the run while the query
 //   is open (with its ledger entry), and is ignored once it closes, six rows through `main` with a temporary
 //   ledger; and the supporting test of the pinned Agent SDK (C002-RISK-039).
+// - C002-TC-932 (C002-TS-706 rows 1 … 4, C002-REQ-645) and C002-TC-933 (C002-TS-707, C002-REQ-646): the early
+//   stop when the row's check is decided (`stopWhen`), and its supporting tests (no injection row gives one;
+//   the rule-1 rows with and without a condition). C002-T-072.
 // No Claude Code process starts and nothing is billed. C002-T-069.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import { INJECTION_CASE_SETS } from "../../../evals/harness/run.mjs";
 import { capBoundConditions } from "../../../evals/harness/session.mjs";
 import { repoRoot } from "../../helpers.ts";
 import { type DriverRun, runDriver, writeCase } from "./eval-driver.ts";
@@ -416,4 +421,217 @@ test("C002-TS-704 (supporting, C002-RISK-039) — the installed Agent SDK is the
   assert.match(dts, /usage_EXPERIMENTAL_MAY_CHANGE_DO_NOT_RELY_ON_THIS_API_YET\(opts\?: \{\s*skipBehaviors\?: boolean;/);
   assert.match(dts, /interrupt\(\): Promise</);
   assert.match(dts, /total_cost_usd: number;/);
+});
+
+// --- C002-TC-932 (C002-TS-706 rows 1 … 4, C002-REQ-645) and C002-TC-933 (C002-TS-707, C002-REQ-646): early stop
+// when the row's check is decided (C002-IF-010 §2 `stopWhen`, §2.2 Early stop when the check is decided; defect
+// D-034, C002-T-072). Each row's condition logs every call (its transcript length and last record) to a file.
+
+interface StopRun extends DriverRun {
+  /** The condition's calls, in order: the transcript length and the last record's event or message type. */
+  calls: { n: number; last: string | null }[];
+}
+
+/** The assert of the early-stop rows: it fails unless the session result's `result` has `is_error` false for `success` and `check_decided`, true otherwise. */
+const RESULT_ASSERT = `({ result }) => (result && result.is_error === !["success", "check_decided"].includes(result.subtype) ? [] : ["result " + JSON.stringify(result && { subtype: result.subtype, is_error: result.is_error })])`;
+
+/** Runs one row with the condition `source` (a function expression) through `main` on the stub. */
+function runStop(stub: Record<string, unknown>, source: string): StopRun {
+  const fx = mkdtempSync(join(tmpdir(), "sdd-stop-when-"));
+  try {
+    const log = join(fx, "calls.log");
+    const file = writeCase(fx, "evals/cap06/TS-706.eval.mjs", { id: "TS-706", prompt: "Draft the spec of CHG-001.", stopWhen: { source, log }, assert: RESULT_ASSERT });
+    const r = runDriver([file, "--host", "claude-code", "--auth", "subscription", "--tier", "dev"], { root: fx, stub });
+    const calls = existsSync(log) ? readFileSync(log, "utf8").split("\n").filter((l) => l !== "").map((l) => JSON.parse(l) as { n: number; last: string | null }) : [];
+    return { ...r, calls };
+  } finally {
+    rmSync(fx, { recursive: true, force: true });
+  }
+}
+
+const isAnswer = `(tr) => tr.some((r) => r.type === "harness" && r.event === "answer")`;
+const isResult = `(tr) => tr.some((r) => r.type === "sdk" && r.message.type === "result")`;
+const STUB706 = { usdPerCall: 0.1, usageDelayMs: 100 };
+const AT_ONCE_060 = [{ result: { total_cost_usd: 0.6 } }];
+const SELF_END_030 = { afterCall: 3, result: { subtype: "success", total_cost_usd: 0.3 } };
+const indexOf = (tr: any[], event: string) => tr.findIndex((r) => r.type === "harness" && r.event === event);
+
+/** The condition was called after each record, from the first, up to the record at index `upTo`, and not after. */
+function calledThrough(r: StopRun, upTo: number) {
+  assert.deepEqual(
+    r.calls.map((c) => c.n),
+    Array.from({ length: upTo + 1 }, (_, i) => i + 1),
+    "one call after each record with the transcript so far, none after",
+  );
+}
+
+function endedAtCap(r: StopRun, tr: any[]) {
+  assert.deepEqual(capOf(tr), [capRecord(0.5, 0.5)], "one cap record at the 0.50 USD reading");
+  assert.equal(harness(tr, "check-decided").length, 0, "no check-decided record");
+  assert.equal(r.records[0]!["metrics"].result_subtype, "error_max_budget_usd");
+  const capAt = indexOf(tr, "cap");
+  assert.ok(r.calls.every((c) => c.n <= capAt), `the condition is not called after the cap record (last call at length ${r.calls.at(-1)?.n ?? 0}, cap at ${capAt})`);
+}
+
+function endedByItself(r: StopRun, tr: any[]) {
+  assert.equal(harness(tr, "check-decided").length, 0, "no check-decided record");
+  assert.deepEqual(capOf(tr), [], "no cap record");
+  assert.equal(stubEv(r, "interrupt").length, 0, "no interrupt()");
+  const rec = r.records[0]!;
+  assert.equal(rec["metrics"].result_subtype, "success");
+  assert.ok(near(rec["metrics"].cost_usd, 0.3), `cost ${rec["metrics"].cost_usd}`);
+  assert.equal(rec["pass"], true, JSON.stringify(rec["failures"]));
+}
+
+test("C002-TS-706 row 1 — AskUserQuestion in the third call, the condition true from its answer record: one check-decided record at the highest cost read, no cap records; interrupt() once and the close; Write denied; check_decided at 0.35 USD from a result with is_error false", () => {
+  const r = runStop({ ...STUB706, ask: { atCall: 3 }, afterInterrupt: [{ permission: "Write" }, { result: { subtype: "error_during_execution", total_cost_usd: 0.35 } }] }, isAnswer);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  const at = indexOf(tr, "answer");
+  assert.ok(at > 0, "the answer record of the AskUserQuestion");
+  calledThrough(r, at);
+  const decided = harness(tr, "check-decided");
+  assert.equal(decided.length, 1, "one check-decided record");
+  const di = tr.indexOf(decided[0]);
+  assert.equal(di, at + 1, "the check-decided record follows the record of the first true");
+  const read = Math.max(...tr.slice(0, di).filter((x) => x.type === "harness" && x.event === "usage" && typeof x.usd === "number").map((x) => x.usd as number));
+  assert.deepEqual(Object.keys(decided[0]).sort(), ["event", "t", "type", "usd"]);
+  assert.ok(near(decided[0].usd, read) && read > 0, `usd ${decided[0].usd}, the highest cost read by then ${read}`);
+  assert.deepEqual(capOf(tr), [], "no cap record");
+  assert.equal(harness(tr, "cap-close").length, 0, "no cap-close record");
+  const interrupts = stubEv(r, "interrupt");
+  assert.equal(interrupts.length, 1, "interrupt() sent once");
+  const close = stubEv(r, "close");
+  assert.equal(close.length, 1);
+  assert.equal(close[0]!["why"], "abort", "the runner closed the query");
+  assert.ok((close[0]!["t"] as number) >= (interrupts[0]!["t"] as number), "the close after the interrupt");
+  denied(r, tr, "Write");
+  const rec = r.records[0]!;
+  assert.equal(rec["metrics"].result_subtype, "check_decided");
+  assert.ok(near(rec["metrics"].cost_usd, 0.35), `cost ${rec["metrics"].cost_usd}`);
+  assert.equal(rec["pass"], true, `the assert read a result with is_error false: ${JSON.stringify(rec["failures"])}`);
+});
+
+test("C002-TS-706 row 2 — AskUserQuestion in the third call, the condition false at every call: the session runs to the 0.50 USD cap, no check-decided record, error_max_budget_usd", () => {
+  const r = runStop({ ...STUB706, ask: { atCall: 3 }, afterInterrupt: AT_ONCE_060 }, `() => false`);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  assert.ok(indexOf(tr, "answer") > 0, "the AskUserQuestion was answered");
+  endedAtCap(r, tr);
+  // The reading at the cap begins the stop before the condition would be called after its record (item 2).
+  calledThrough(r, indexOf(tr, "cap") - 2);
+});
+
+test("C002-TS-706 row 3 — AskUserQuestion in the seventh call, the condition true from its answer record: the 0.50 USD reading of the fifth call stops the session first; no check-decided record, no call after the cap record, error_max_budget_usd", () => {
+  const r = runStop({ ...STUB706, ask: { atCall: 7 }, afterInterrupt: AT_ONCE_060 }, isAnswer);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  endedAtCap(r, tr);
+  const capT = harness(tr, "cap")[0]!.t as number;
+  assert.ok(capT >= 4100 && capT < 4200, `the cap at the fifth call's answer (4.1 s): ${capT}`);
+  assert.equal(indexOf(tr, "answer"), -1, "the seventh call never ran");
+  // The reading at the cap begins the stop before the condition would be called after its record (item 2).
+  calledThrough(r, indexOf(tr, "cap") - 2);
+});
+
+test("C002-TS-706 row 4 — a result after the third call that ends the stream, the condition true from that result: the session ended by itself; no check-decided or cap record, no interrupt(), success at 0.30 USD", () => {
+  const r = runStop({ ...STUB706, selfEnd: SELF_END_030 }, isResult);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  endedByItself(r, tr);
+  calledThrough(r, tr.findIndex((x) => x.type === "sdk" && x.message.type === "result"));
+});
+
+/** The one `stop-when-error` record right after the faulty call, `calls` calls and none after, no check-decided record. */
+function dropped(r: StopRun, tr: any[], calls: number, text: RegExp) {
+  const errs = harness(tr, "stop-when-error");
+  assert.equal(errs.length, 1, `exactly one stop-when-error record: ${JSON.stringify(errs)}`);
+  assert.deepEqual(Object.keys(errs[0]).sort(), ["error", "event", "t", "type"]);
+  assert.match(String(errs[0].error), text);
+  assert.equal(r.calls.length, calls, `${calls} call(s), none after the faulty one`);
+  assert.equal(tr.indexOf(errs[0]), r.calls.at(-1)!.n, "the record follows the record of the faulty call");
+  assert.equal(harness(tr, "check-decided").length, 0, "no check-decided record");
+}
+
+test("C002-TS-707 row 1 — a condition that throws at its first call: one stop-when-error record with the error's text, no call after it; the session runs to the 0.50 USD cap", () => {
+  const r = runStop({ ...STUB706, afterInterrupt: AT_ONCE_060 }, `() => { throw new Error("condition broke at call 1"); }`);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  dropped(r, tr, 1, /^condition broke at call 1$/);
+  endedAtCap(r, tr);
+});
+
+test("C002-TS-707 row 2 — a condition that returns the string yes at its first call: one stop-when-error record naming the value, no call after it; the session runs to the 0.50 USD cap", () => {
+  const r = runStop({ ...STUB706, afterInterrupt: AT_ONCE_060 }, `() => "yes"`);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  dropped(r, tr, 1, /"yes".*no boolean/);
+  endedAtCap(r, tr);
+});
+
+test("C002-TS-707 row 3 — a condition false at its first three calls that throws at the fourth: one stop-when-error record with the error's text, no call after it; the session runs to the 0.50 USD cap", () => {
+  const r = runStop({ ...STUB706, afterInterrupt: AT_ONCE_060 }, `(() => { let k = 0; return () => { k += 1; if (k === 4) throw new Error("condition broke at call 4"); return false; }; })()`);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  dropped(r, tr, 4, /^condition broke at call 4$/);
+  endedAtCap(r, tr);
+});
+
+test("C002-TS-707 row 4 — a condition that throws at its first call in a session that ends by itself after the third call: one stop-when-error record, no call after it; no cap record, no interrupt(), success at 0.30 USD", () => {
+  const r = runStop({ ...STUB706, selfEnd: SELF_END_030 }, `() => { throw new Error("condition broke at call 1"); }`);
+  assert.equal(r.status, 0, r.out);
+  const tr = r.transcripts[0]!;
+  dropped(r, tr, 1, /^condition broke at call 1$/);
+  endedByItself(r, tr);
+});
+
+// Supporting tests of C002-TC-932: no injection row gives `stopWhen` (C002-IF-010 §2.2 item 8), and the rule-1
+// rows with a condition and those without one (C002-T-072; plan critics CR-74, CR-76; the step-4 report).
+
+const rowsOf = async (file: string) => {
+  const d = (await import(pathToFileURL(join(ROOT, ...file.split("/"))).href)).default;
+  return (Array.isArray(d) ? d : [d]) as { id: string; stopWhen?: unknown }[];
+};
+
+test("C002-TS-706 (supporting, item 8) — no row of the injection case sets of C002-IF-010 §5.1 gives stopWhen", async () => {
+  const sets = Object.values(INJECTION_CASE_SETS).flat() as { id: string; file: string }[];
+  assert.ok(sets.length >= 23);
+  for (const file of new Set(sets.map((r) => r.file))) {
+    const rows = await rowsOf(file);
+    for (const want of sets.filter((r) => r.file === file)) {
+      const row = rows.find((x) => x.id === want.id);
+      assert.ok(row, `${want.id} in ${file}`);
+      assert.equal(row.stopWhen, undefined, `${want.id} (${file}) gives no stopWhen`);
+    }
+  }
+});
+
+const WITH_CONDITION: [string, string][] = [
+  ["TS-215", "evals/cap02/TS-215.eval.mjs"],
+  ["TS-221", "evals/cap02/TS-221.eval.mjs"],
+  ["TS-223", "evals/cap02/TS-223.eval.mjs"],
+  ["TS-225", "evals/cap02/TS-225.eval.mjs"],
+  ["TS-802", "evals/cap08/TS-802.eval.mjs"],
+];
+const WITHOUT_CONDITION: [string, string][] = [
+  ["TS-213", "evals/cap02/TS-213.eval.mjs"],
+  ["TS-224", "evals/cap02/TS-224.eval.mjs"],
+  ["TS-507", "evals/cap05/TS-507.eval.mjs"],
+  ["TS-508", "evals/cap05/TS-508.eval.mjs"],
+  ["TS-711", "evals/cap07/TS-711.eval.mjs"],
+];
+
+test("C002-TS-706 (supporting) — the rule-1 rows with a stop condition give a function; TS-213, the three TS-318 rows, TS-508, TS-711 and the rows the step-4 check leaves out give none", async () => {
+  for (const [id, file] of WITH_CONDITION) {
+    const row = (await rowsOf(file)).find((x) => x.id === id);
+    assert.equal(typeof row?.stopWhen, "function", `${id} gives stopWhen`);
+  }
+  for (const [id, file] of WITHOUT_CONDITION) {
+    const row = (await rowsOf(file)).find((x) => x.id === id);
+    assert.ok(row, `${id} in ${file}`);
+    assert.equal(row.stopWhen, undefined, `${id} gives no stopWhen`);
+  }
+  const ts318 = (await rowsOf("evals/cap03/TS-318.eval.mjs")).filter((x) => /^TS-318-/.test(x.id));
+  assert.deepEqual(ts318.map((x) => x.id).sort(), ["TS-318-00-ideation", "TS-318-10-spec", "TS-318-20-plan"]);
+  for (const row of ts318) assert.equal(row.stopWhen, undefined, `${row.id} gives no stopWhen`);
 });

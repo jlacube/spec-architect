@@ -97,6 +97,19 @@ const USAGE_METHOD = "usage_EXPERIMENTAL_MAY_CHANGE_DO_NOT_RELY_ON_THIS_API_YET"
 
 /** An amount in USD rounded to 1e-6 (the differences of the `cap-close` record). */
 const usd6 = (x) => Math.round(x * 1e6) / 1e6;
+/** A value that is no boolean, as the `stop-when-error` text names it: JSON when it has one, else its type. */
+function describe(value) {
+  if (value === undefined) return "undefined";
+  if (typeof value === "function") return "a function";
+  if (value && typeof value.then === "function") return "a promise";
+  try {
+    const s = JSON.stringify(value);
+    return s === undefined ? typeof value : s.length > 80 ? `${s.slice(0, 80)}…` : s;
+  } catch {
+    return typeof value;
+  }
+}
+
 /** An amount in USD as text: at least two decimals, up to six, e.g. 0.20, 0.1234. */
 export function usdText(x) {
   const s = usd6(x).toFixed(6).replace(/0+$/, "");
@@ -131,8 +144,17 @@ export function usdText(x) {
  * reading (refused, no answer within 30 s, or no finite cost of at least 0) counts when the query is still
  * open 5 s later: the session is stopped as at the cap, without the cap records, and the call rejects with
  * `claude-code spend check failed: <reason>; notional cost read <R> USD` (property `costUsd`).
+ *
+ * The early stop (C002-IF-010 §2.2 Early stop when the check is decided, items 1 … 6; C002-REQ-645,
+ * C002-REQ-646; defect D-034). `stopWhen(transcript, answers)`, the row's optional condition, is called
+ * after each record appended to the transcript while the query is open and no stop has begun. At its
+ * first `true` the runner writes `{ event: "check-decided", usd: R }` and stops the session as at the cap,
+ * without the `cap` and `cap-close` records (after a `result` message it first waits for the next
+ * message, as for the cap); the session ends with a `check_decided` result at the highest cost read. A
+ * call that throws or returns no boolean is written once as `stop-when-error`, and the condition is
+ * called no more.
  */
-export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0, auth }) {
+export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], answer = firstOption, allowTools = [], maxTurns = 30, maxBudgetUsd = 0.5, model, env = {}, startDelayMs = 0, auth, stopWhen }) {
   const mode = resolveAuth(auth);
   const cap = maxBudgetUsd;
   const abortController = new AbortController();
@@ -143,12 +165,43 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
   const answers = [];
   const t0 = Date.now();
   const now = () => Date.now() - t0;
-  const stamp = (record) => transcript.push({ t: now(), ...record });
+
+  // --- Early stop state (§2.2 Early stop when the check is decided) ---
+  let condition = typeof stopWhen === "function" ? stopWhen : null; // null once met or dropped
+  let decidedArmed = false; // the first `true` came while the last message was a result (item 2)
+  /** Calls the condition after a record was appended (item 1); acts on its first `true` (items 2, 3). */
+  const consider = () => {
+    if (!condition || !open || stopping || ended) return;
+    const fn = condition;
+    let out;
+    try {
+      out = fn(transcript, answers);
+    } catch (e) {
+      condition = null;
+      append({ t: now(), type: "harness", event: "stop-when-error", error: e instanceof Error ? e.message : String(e) });
+      return;
+    }
+    if (typeof out !== "boolean") {
+      condition = null;
+      append({ t: now(), type: "harness", event: "stop-when-error", error: `stopWhen returned ${describe(out)}, no boolean` });
+      return;
+    }
+    if (!out) return;
+    condition = null;
+    if (lastWasResult) decidedArmed = true;
+    else beginStop("decided");
+  };
+  /** Appends a record to the transcript, then calls the condition. */
+  const append = (record) => {
+    transcript.push(record);
+    consider();
+  };
+  const stamp = (record) => append({ t: now(), ...record });
 
   // --- Spend cap state (items 1 … 8) ---
   let open = false; // the query is open (item 1)
   let ended = false; // the stream ended or the runner closed the query
-  /** @type {null | "cap" | "failed"} */
+  /** @type {null | "cap" | "failed" | "decided"} */
   let stopping = null;
   let interruptSent = false;
   let R = 0;
@@ -201,10 +254,12 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
     // The triggers waiting for a follow-up are covered by the stop: the result after the interrupt gives the
     // final cost. A message that arrives after this point is still a trigger (item 6).
     coalesced = null;
+    decidedArmed = false;
     if (kind === "cap") {
       usdAtCap = R;
       stamp({ type: "harness", event: "cap", reason: "spend cap", usd: R, cap_usd: cap });
     }
+    if (kind === "decided") stamp({ type: "harness", event: "check-decided", usd: R });
     interruptSent = true;
     Promise.resolve()
       .then(() => q.interrupt())
@@ -262,7 +317,9 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
     if (out.answer && typeof cost === "number" && Number.isFinite(cost) && cost >= 0) {
       transcript.push(usageRecord({ ...base, usd: cost }));
       R = Math.max(R, cost);
+      // The cap first: a reading at the cap stops the session at the cap even when the condition holds (item 2).
       compare();
+      consider();
     } else {
       const reason = out.timeout
         ? `no answer to the usage request within ${USAGE_TIMEOUT_MS / 1000} s`
@@ -346,9 +403,11 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
       const message = next.value;
       // The message that arrived after the interrupt was sent (a result then ends the wait of item 4).
       const afterInterrupt = interruptSent;
-      stamp({ type: "sdk", message });
-      // R reached the cap at a result: the session went on past it, so it is stopped at this message.
+      transcript.push({ t: now(), type: "sdk", message });
+      // R reached the cap at a result: the session went on past it, so it is stopped at this message. The
+      // same for a condition first met at a result (early stop, item 2); a cap armed first keeps its stop.
       if (armed && open) beginStop("cap");
+      if (decidedArmed && open) beginStop("decided");
       lastWasResult = message.type === "result";
       if (message.type === "system" && message.subtype === "init") {
         apiKeySource = message.apiKeySource ?? null;
@@ -363,6 +422,8 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
           break;
         }
       }
+      // The condition after the message's record (item 1), once the key source is checked.
+      consider();
       if (message.type === "assistant") {
         const id = message.message?.id;
         if (typeof id === "string" && !seen.has(id)) {
@@ -377,6 +438,7 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
         transcript.push(usageRecord({ t: now(), source: "result", usd, message_id: null, sent_t: null }));
         if (usd !== null) R = Math.max(R, usd);
         compare();
+        consider();
         if (stopping && afterInterrupt) close("result");
       }
     }
@@ -423,6 +485,8 @@ export async function runClaudeCodeSession({ cwd, prompt, agent, plugins = [], a
   // The result (items 5 and 6): a session the runner stopped ends with `error_max_budget_usd` at the
   // highest cost read; a session that ended by itself keeps its last result as it came.
   if (stopping === "cap") result = { ...(result ?? { type: "result", num_turns: null, modelUsage: {} }), subtype: "error_max_budget_usd", is_error: true, total_cost_usd: R };
+  // A session stopped when its check was decided: `check_decided`, no error, the highest cost read (early stop, item 4).
+  if (stopping === "decided") result = { ...(result ?? { type: "result", num_turns: null, modelUsage: {} }), subtype: "check_decided", is_error: false, total_cost_usd: R };
   return { transcript, answers, result, wallMs: Date.now() - t0, auth: mode, apiKeySource, claudeCodeVersion };
 }
 

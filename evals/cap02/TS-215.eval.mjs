@@ -17,8 +17,45 @@
 // "Given not met" with `valid_run` false, distinct from a conductor failure.
 import { architectReal } from "../harness/overlay.mjs";
 import { write } from "../harness/workspaces.mjs";
-import { assertAskOnArrival } from "./arrival.mjs";
+import { assertAskOnArrival, blockingQuestions, carries, timeline } from "./arrival.mjs";
 import { specStart } from "./drafting.mjs";
+
+const isAgent = (type, agent) => type === agent || type.endsWith(`:${agent}`);
+
+/**
+ * The stop condition of TS-215 and TS-225 (C002-IF-010 §2.2 Early stop when the check is decided, item 1;
+ * C002-T-072): true once no later record can change the outcome of `askOnArrival`, the assert. It reads the
+ * terms of that check only:
+ * - the cartographer hand-back the check takes is the first cartographer call, in dispatch order, that has
+ *   arrived with a blocking question; it is known once every cartographer call dispatched before it has
+ *   arrived (an earlier one could still arrive with a blocking question);
+ * - from its arrival on, "Given not met" is decided when no spec-writer call was dispatched before the
+ *   arrival or one had handed back before it;
+ * - a pass is decided at the `answer` record of the AskUserQuestion call that carries the blocking question,
+ *   after the arrival and before the first `result` message after it (the call's ask is then fixed, and so
+ *   are the Agent calls between the arrival and it);
+ * - a failure is decided at the first `result` message after the arrival with no such call before it.
+ */
+export function askDecided(transcript) {
+  const { agents, asks, results } = timeline(transcript);
+  let carto = null;
+  for (const a of agents.filter((x) => isAgent(x.type, "sdd-cartographer"))) {
+    if (a.arrival === null) return false;
+    if (blockingQuestions(a.handback).length > 0) {
+      carto = a;
+      break;
+    }
+  }
+  if (!carto) return false;
+  const at = carto.arrival;
+  const writers = agents.filter((a) => isAgent(a.type, "sdd-spec-writer") && a.i < at);
+  if (writers.length === 0 || writers.some((w) => w.arrival !== null && w.arrival < at)) return true;
+  const blocking = blockingQuestions(carto.handback);
+  const end = results.find((i) => i > at) ?? transcript.length;
+  const ask = asks.find((a) => a.i > at && a.i < end && a.questions.some((q) => blocking.some((b) => carries(q?.question, b.question))));
+  if (ask) return transcript.slice(ask.i + 1, end).some((r) => r?.type === "harness" && r.event === "answer" && (r.questions ?? []).some((q) => blocking.some((b) => carries(q?.question, b.question))));
+  return end < transcript.length;
+}
 
 const WEB = `// Web checkout totals: net line prices in EUR cents; VAT is added on the net total.
 export interface Line {
@@ -100,6 +137,8 @@ export default {
   // before it reached the cartographer (t063-d013, 2026-10-23).
   maxTurns: 30,
   prompt: "Draft the spec of CHG-001 unattended, I'll review at the gate.",
+  // Ends the session once the check is decided (C002-T-072): see askDecided.
+  stopWhen: (transcript) => askDecided(transcript),
   assert({ transcript, log }) {
     return assertAskOnArrival("TS-215", { transcript, log });
   },

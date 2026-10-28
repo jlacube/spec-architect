@@ -13,6 +13,7 @@ import { architectReal } from "../harness/overlay.mjs";
 import { questionsBlocks, questionsErrors } from "../harness/questions.mjs";
 import { write } from "../harness/workspaces.mjs";
 import { LITE_IDEATION, specStart } from "./drafting.mjs";
+import { timeline } from "./arrival.mjs";
 
 // The repository files of the TS-215 Given, verbatim (TS-215.eval.mjs keeps its own copy: C001-T-082
 // changes only its header comment).
@@ -125,6 +126,10 @@ export default {
   // 30 turns, as TS-215 (the conductor needs more than 22 to reach the cartographer, t063-d013).
   maxTurns: 30,
   prompt: "Draft the spec of CHG-001 unattended, I'll review at the gate.",
+  // Ends the session once the check is decided (C002-T-072): the assert reads the hand-back of the first
+  // cartographer call only, which is final when that call arrives (its task_notification, or the tool result
+  // of a synchronous call; arrival.mjs). The hand-back fixes the outcome, pass or failure.
+  stopWhen: (transcript) => (timeline(transcript).agents.find((a) => a.type.endsWith("sdd-cartographer"))?.arrival ?? null) !== null,
   assert({ transcript }) {
     const { failures, check, questions } = cartographerQuestions(transcript);
     if (!questions) return failures;

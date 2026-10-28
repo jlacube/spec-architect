@@ -23,6 +23,9 @@
 // - `subagent` (`{ atCall }`): a subagent's model call that starts in parallel with that call of the
 //   session agent and streams its message (a new message ID, `parent_tool_use_id` set); its end and cost
 //   come after the interrupt (`afterInterrupt` `{ endCall }`);
+// - `ask` (`{ atCall, questions? }`; C002-T-072): an AskUserQuestion permission request sent through
+//   `canUseTool` in that model call, after its blocks and before its end, so that the runner writes its
+//   `answer` record (`log({ ev: "ask", t, call, behavior })`);
 // - records `interrupt()` and the close (`log({ ev: "interrupt" | "close", t })`); after the interrupt it
 //   starts no further call and runs `afterInterrupt` in order: `{ endCall: usd }` ends the call then
 //   running with that cost, `{ newCall: true }` streams the message of a new model call (a new message ID)
@@ -35,7 +38,7 @@ const round = (x) => Math.round(x * 1e9) / 1e9;
 
 /**
  * The stub `query`.
- * @param {{ usdPerCall?: number, usdPerTurn?: number, everyMs?: number, firstAtMs?: number, schedule?: number[], blocks?: number, usageDelayMs?: number, answers?: (string | number)[], then?: string | number, keySource?: string, model?: string, version?: string, selfEnd?: { afterCall: number, result?: Record<string, any> } | null, subagent?: { atCall: number } | null, afterInterrupt?: Record<string, any>[], log?: (e: any) => void, onOptions?: (o: any) => void }} [config]
+ * @param {{ usdPerCall?: number, usdPerTurn?: number, everyMs?: number, firstAtMs?: number, schedule?: number[], blocks?: number, usageDelayMs?: number, answers?: (string | number)[], then?: string | number, keySource?: string, model?: string, version?: string, selfEnd?: { afterCall: number, result?: Record<string, any> } | null, subagent?: { atCall: number } | null, ask?: { atCall: number, questions?: Record<string, any>[] } | null, afterInterrupt?: Record<string, any>[], log?: (e: any) => void, onOptions?: (o: any) => void }} [config]
  */
 export function sdkStub(config = {}) {
   const {
@@ -52,6 +55,7 @@ export function sdkStub(config = {}) {
     version = "2.1.299",
     selfEnd = null,
     subagent = null,
+    ask = null,
     afterInterrupt = [{ result: {} }],
     log = () => {},
     onOptions = () => {},
@@ -128,6 +132,11 @@ export function sdkStub(config = {}) {
           const id = `msg_${String(call).padStart(3, "0")}`;
           for (let b = 1; b <= blocks; b++) yield assistant(id, b);
           if (subagent && subagent.atCall === call) yield assistant(`msg_sub_${String(call).padStart(3, "0")}`, 1, "toolu_agent_1");
+          if (ask && ask.atCall === call) {
+            const questions = ask.questions ?? [{ question: "Which checkout is in scope?", header: "Scope", multiSelect: false, options: [{ label: "Web (Recommended)", description: "the web checkout" }, { label: "Kiosk", description: "the kiosk checkout" }] }];
+            const r = await options.canUseTool("AskUserQuestion", { questions }, { signal, toolUseID: `toolu_ask_${call}` });
+            log({ ev: "ask", t: now(), call, behavior: r?.behavior ?? null });
+          }
           // The call ends after its last block: its cost counts from now on, and so does its turn.
           turns += 1;
           endCall(usdPerCall);

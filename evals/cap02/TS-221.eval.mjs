@@ -18,6 +18,21 @@ function steps() {
   return [...readFileSync(SKILL, "utf8").matchAll(/^#{2,3}\s+Step\s+\d+\s*[—–-]\s*(.+)$/gm)].map((m) => m[1].trim());
 }
 
+/**
+ * Whether the assert's two checks hold on a transcript (C002-T-072): TaskCreate subjects cover at least 80 % of
+ * the phase-spec steps, and a TaskUpdate marks a step completed. Both only grow with later records, so once
+ * they hold the assert passes whatever follows.
+ */
+function planShown(transcript, expected) {
+  if (expected.length === 0) return false;
+  const created = toolCalls(transcript, "TaskCreate").map((c) => String(c.input?.subject ?? c.input?.title ?? c.input?.description ?? ""));
+  const covered = expected.filter((s) => created.some((c) => c.toLowerCase().includes(s.toLowerCase().slice(0, 20))));
+  return covered.length >= Math.ceil(expected.length * 0.8) && toolCalls(transcript, "TaskUpdate").some((c) => c.input?.status === "completed");
+}
+
+// The phase-spec steps, read once when the case file loads: the stop condition reads no file.
+const STEPS = steps();
+
 export default {
   id: "TS-221",
   title: "Visible phase plan",
@@ -30,6 +45,9 @@ export default {
   maxBudgetUsd: 0.5,
   plugins: [architectWithStubs],
   prompt: "Start the spec phase of CHG-001.",
+  // Ends the session once the check is decided (C002-T-072): at the first record at which both checks of the
+  // assert hold (planShown). A failure is decided only at the session's end, so a failing session runs on.
+  stopWhen: (transcript) => planShown(transcript, STEPS),
   assert({ transcript }) {
     const { failures, check } = checker();
     const expected = steps();
