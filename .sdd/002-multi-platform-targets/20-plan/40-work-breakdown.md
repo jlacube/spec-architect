@@ -92,8 +92,6 @@ flowchart TB
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
     C002_T_049["T-049 OpenCode release evidence"]
-    C002_T_051["T-051 OpenCode clean-profile run"]
-    C002_T_052["T-052 P-01 publish and OpenCode release"]
     C002_T_054["T-054 Copilot release evidence"]
     C002_T_050["T-050 P-01 checklist run"]
     C002_T_057["T-057 Copilot clean-profile run"]
@@ -260,7 +258,6 @@ flowchart TB
   C002_T_071 --> C002_T_075
   C002_T_074 --> C002_T_075
   C002_T_075 --> C002_T_055
-  C002_T_073 --> C002_T_051
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
   C002_T_063 --> C002_T_056
@@ -285,17 +282,6 @@ flowchart TB
   C002_T_048 --> C002_T_049
   C002_T_056 --> C002_T_049
   C002_T_064 --> C002_T_049
-  C002_T_023 --> C002_T_051
-  C002_T_034 --> C002_T_051
-  C002_T_039 --> C002_T_051
-  C002_T_043 --> C002_T_051
-  C002_T_003 --> C002_T_052
-  C002_T_023 --> C002_T_052
-  C002_T_047 --> C002_T_052
-  C002_T_048 --> C002_T_052
-  C002_T_049 --> C002_T_052
-  C002_T_051 --> C002_T_052
-  C002_T_066 --> C002_T_052
   C002_T_036 --> C002_T_054
   C002_T_041 --> C002_T_054
   C002_T_045 --> C002_T_054
@@ -321,7 +307,6 @@ flowchart TB
   C002_T_068 --> C002_T_071
   C002_T_069 --> C002_T_071
   C002_T_070 --> C002_T_071
-  C002_T_071 --> C002_T_052
   C002_T_071 --> C002_T_055
   C002_T_071 --> C002_T_050
   C002_T_071 --> C002_T_057
@@ -329,14 +314,20 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 75 tasks weigh 150 in total (24 S, 27 M, 24 L). The longest chain
-weighs 50 and ends with the Copilot release. **The D-036 plan update lengthens it by 1**:
-C002-T-074 (S, version 0.0.3) follows C002-T-073 (45) and finishes at 46. C002-T-071 waits for it
-and finishes at 48. C002-T-050, C002-T-057 and C002-T-075 (S, the npm publication) then finish at
-49, and C002-T-055 at 50. C002-T-071 also waits for the CHG-001 D-020 fix task outside this graph,
-so the calendar end follows that task. C002-T-051 and C002-T-052 keep their edges but are out of
-this release round (`10-strategy.md` §2, Deferred: OpenCode release), so the OpenCode chain sets no
-date. **The D-035 update lengthened it by 1 before that, to 49.** **The D-035 plan update lengthens it by 1**: the fix
+Weights S = 1, M = 2, L = 3. Of the 75 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
+to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85). The 73 others weigh 147 (23 S,
+26 M, 24 L). The longest chain weighs 51 and ends with the Copilot release. **The D-036 plan update
+lengthens it by 2**:
+- C002-T-074 (S, version 0.0.3) follows C002-T-073 (45) and finishes at 46.
+- C002-T-071 waits for it and finishes at 48.
+- C002-T-050 and C002-T-057 then finish at 49.
+- C002-T-075 (S, the npm publication) waits for both and a `released` dry run (plan critics CR-82,
+  CR-84), and finishes at 50.
+- C002-T-055 finishes at 51.
+
+C002-T-074 also waits for C001-T-084 outside this graph (plan critic CR-86), so the calendar end
+follows that task. The dropped tasks keep their own `depends_on` in their files but are no nodes of
+this graph, and no task depends on them. **The D-035 plan update lengthened it by 1**: the fix
 task C002-T-073 (S) starts after C002-T-070 (finishing at 44) and finishes at 45. C002-T-071 now
 waits for it and finishes at 47, then C002-T-050 at 48 and C002-T-055 at 49. C002-T-051 also waits
 for it (its 0.0.2 zip) and finishes at 47, so C002-T-052 finishes at 48. **The D-034 plan update did
