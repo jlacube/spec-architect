@@ -38,8 +38,8 @@ the OpenCode release does not wait for it.
 
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the run uses
   `dist/architect-copilot-<version>.zip` built at the release-candidate commit with the CHG-001
-  fixes, which C002-T-071 records, at **package version 0.0.2** (defect D-035; C002-T-073):
-  `dist/architect-copilot-0.0.2.zip` and `dist/architect-sdd-0.0.2.tgz`, as the runsheet
+  fixes, which C002-T-071 records, at **package version 0.0.3** (defect D-036; C002-T-074):
+  `dist/architect-copilot-0.0.3.zip` and `dist/architect-sdd-0.0.3.tgz`, as the runsheet
   `docs/runsheets/T-057-copilot-clean-profile.md` names them.
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-058 (install
   command) done; VS Code Insiders and Copilot Chat at the S-08 tested versions; REF-WIN set up as

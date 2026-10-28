@@ -1,6 +1,6 @@
 ---
 id: C002-T-052
-title: "P-01: publish architect-sdd and release the OpenCode target"
+title: "P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075)"
 change: CHG-002
 phase: 20-plan
 artifact: plan/task
@@ -16,13 +16,30 @@ estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C002-T-052 — P-01: publish architect-sdd and release the OpenCode target
+# C002-T-052 — P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075)
+
+## Deferred (revision D-036)
+
+**Out of this release round.** P-01 answered Q-opencode-defer-01 with "Defer OpenCode
+(Recommended)". OpenCode 0.0.1 and 0.0.2 are refused, because `INJ-21` runs open-ended to any cap
+(defects D-035, D-036; C002-T-071, commits c63e702 and 560f8f7). The OpenCode release waits for a fix
+of the OpenCode injection rows in a later version (`../10-strategy.md` §2, Deferred: OpenCode,
+D-035 and D-036). The fix will be one of two directions: an early stop that works on OpenCode, or a
+bounded `INJ-21` gate case. No step of this task runs, and CHG-002 spends no more OpenRouter credit,
+until that fix is planned and P-01 gives the go.
+
+**The npm publication is no longer part of this task.** C002-T-075 publishes `architect-sdd@0.0.3`
+with the Copilot release. When OpenCode is released later, it is at its own version, and that version
+of `architect-sdd` is published first by the steps of C002-T-075 (C002-REQ-509). Step 2 below then
+only checks that it is on npm.
+
+The text below is the plan for that later release, with `<version>` the OpenCode release version.
 
 ## Intent
 
 Release OpenCode on its own evidence, independently of the Copilot target (C002-REQ-619; Copilot is
-C002-T-055). P-01 publishes the `architect-sdd` tarball **before or together with** the first target
-release, because the generated doctor requires the exact version (C002-REQ-509, C002-ADR-004). The
+C002-T-055). The `architect-sdd` tarball of the same version is on npm **before or together with**
+the release, because the generated doctor requires the exact version (C002-REQ-509, C002-ADR-004). The
 release channel is the per-target zip in `dist/` (Q-release-01): P-01 shares
 `dist/architect-opencode-<version>.zip` as the Claude Code zips are shared today. The rollback and
 communication steps belong to `75-rollout.md`.
@@ -36,12 +53,9 @@ communication steps belong to `75-rollout.md`.
 
 ## Preconditions
 
-- **Package version 0.0.2** (defect D-035; P-01 answer to Q-inj21-01; C002-T-073). The OpenCode
-  0.0.1 release check refuses, because the 0.0.1 `INJ-21` entry is acted upon and final. This task
-  releases 0.0.2: `<version>` below is `0.0.2`, from `docs/releases/opencode/0.0.2/`,
-  `dist/architect-opencode-0.0.2.zip` and `dist/architect-sdd-0.0.2.tgz` (`npm publish` of
-  `architect-sdd@0.0.2`). The runsheet `docs/runsheets/T-052-publish-and-opencode-release.md` names
-  0.0.2 from C002-T-073 on. The 0.0.1 evidence stays as it is and is never released.
+- **Deferred** (Deferred, above): this task starts only after the OpenCode fix of a later version
+  is planned and its evidence is taken at that version. The OpenCode 0.0.1 and 0.0.2 checks refuse,
+  and that evidence stays as it is and is never released. `<version>` below is that later version.
 - **C002-T-071 done** (P-01 answer to Q-release-base-01, "Retake after fixes (Recommended)"; plan
   critic CR-71). The release is made from the release-candidate commit that C002-T-071 records, which
   holds the CHG-001 fixes of C001-T-082 and C001-T-083. C002-T-071 re-ran the unpaid release steps
@@ -77,11 +91,9 @@ communication steps belong to `75-rollout.md`.
    upon (C002-IF-010 §5.2, the done-check of the owning task C002-T-049, done before that rule was
    revised for plan critic CR-53); such an entry is final for the version and the release check
    refuses it (ERR-REL-002).
-2. **P-01 step:** if the check passes and `npm view architect-sdd@<version>` shows no such version,
-   re-check that the name is still P-01's (C002-RISK-017), then publish:
-   `npm publish dist/architect-sdd-<version>.tgz` from P-01's account, and check
-   `npm view architect-sdd version`. If the check refuses OpenCode, do not publish here; the refusal
-   stays recorded and C002-T-055 publishes with the Copilot release if that target passes.
+2. **npm check** (revision D-036): `npm view architect-sdd@<version>` shows the version. If it does
+   not, P-01 publishes it first by the steps of C002-T-075, at the same release-candidate commit. This
+   task publishes nothing itself.
 3. **P-01 step:** release `dist/architect-opencode-<version>.zip` through the channel of
    `75-rollout.md` §1: share the zip as the Claude Code zips are shared, and keep the released zip
    with its `zip.sha256` line (retention for C002-RB-002). The README section and install notes name
@@ -101,7 +113,7 @@ communication steps belong to `75-rollout.md`.
 - [ ] C002-T-048 step 5 and C002-T-049 steps 1 and 2 re-run at the release-candidate commit after C002-T-066, with that commit in the task report
 - [ ] Every entry of `docs/releases/opencode/<version>/injection.json` gives `result` and `models`, and each `result` names an existing file under `evals/results/` (C002-DOD-009)
 - [ ] Every OpenCode `INJ-*` session at the package version in the ledger whose result document does not pass, a no-run refusal excepted, has an entry that reads acted upon, and every row `INJ-01` … `INJ-22` has an entry (C002-IF-010 §5.2; plan critic CR-53, Q-acted-final-01); the task report lists the sessions checked
-- [ ] `architect-sdd` published no later than the OpenCode release (or the refusal recorded and no publication)
+- [ ] `architect-sdd@<version>` is on npm (C002-T-075 or its steps) no later than the OpenCode release
 - [ ] The near-cap list of C002-T-071's report for `opencode` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] OpenCode release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-052 --status done --commit <sha>`

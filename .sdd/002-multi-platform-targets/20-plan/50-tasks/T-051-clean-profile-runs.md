@@ -35,11 +35,12 @@ not wait for it.
 
 ## Preconditions
 
-- **Package version 0.0.2** (defect D-035; C002-T-073): the run uses
-  `dist/architect-opencode-0.0.2.zip` and `dist/architect-sdd-0.0.2.tgz`, the version that
-  C002-T-052 releases, as the runsheet `docs/runsheets/T-051-opencode-clean-profile.md` names them.
-  It waits for C002-T-073 for that reason only; its reserve share of 1.40 USD stays kept by the
-  reserve's stop rule while C002-T-071 draws on the reserve (test plan §4.1 rule 5 exception).
+- **Deferred, out of this release round** (revision D-036; P-01 answer to Q-opencode-defer-01,
+  "Defer OpenCode (Recommended)"). The OpenCode release is deferred to a later version
+  (`../10-strategy.md` §2, Deferred: OpenCode, D-035 and D-036), and CHG-002 spends no more
+  OpenRouter credit for now. This task runs only with that later release, on its
+  `dist/architect-opencode-<version>.zip` and `dist/architect-sdd-<version>.tgz`. Its reserve share
+  of 1.40 USD stays in the OpenRouter reserve for it.
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-043 (final
   OpenCode mode) done.
 - REF-WIN set up as `handoff.md` "Reference machine" lists.

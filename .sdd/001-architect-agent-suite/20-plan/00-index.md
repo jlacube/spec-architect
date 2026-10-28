@@ -32,8 +32,8 @@ status: approved
 | `20-decisions/OA-005-…`, `ADR-005-…` | Custom line parser + yaml |
 | `20-decisions/OA-006-…`, `ADR-006-…` | `node --test` runner |
 | `40-work-breakdown.md` | Mermaid DAG by milestone; task table; critical path (weight 48) |
-| `50-tasks/T-*.md` | 66 tasks (one dropped) |
-| `60-test-plan.md` | 246 test cases: 162 integration, 81 eval, 3 manual |
+| `50-tasks/T-*.md` | 67 tasks (one dropped) |
+| `60-test-plan.md` | 247 test cases: 162 integration, 82 eval, 3 manual |
 | `70-risks.md` | RISK-001 … 015 |
 | `75-rollout.md` | Release model, migration, rollback RB-001 … 004 |
 | `78-observability.md` | NFR → signal → task |
@@ -51,6 +51,6 @@ No `30-impact/` folder: CHG-001 is greenfield (no existing code to analyse).
 | C001-M-3 Conductor and ideation/spec agents | 11 |
 | C001-M-4 Code intelligence, architecture, planning | 4 |
 | C001-M-5 Hooks, guards, archive | 5 |
-| C001-M-6 Packaging and quality gates | 14 |
+| C001-M-6 Packaging and quality gates | 15 |
 | C001-M-7 Release and dogfood | 6 |
-| **Total** | **66** |
+| **Total** | **67** |

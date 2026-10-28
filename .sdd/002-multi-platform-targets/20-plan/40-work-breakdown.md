@@ -87,6 +87,7 @@ flowchart TB
     C002_T_070["T-070 Fix D-033: rule-1 rerun cap 3.00 USD"]
     C002_T_072["T-072 Fix D-034: early stop when the check is decided"]
     C002_T_073["T-073 Fix D-035: INJ-21 session cap, version 0.0.2"]
+    C002_T_074["T-074 Fix D-036: version 0.0.3"]
   end
   subgraph M07["C002-M-07 Release evidence and release"]
     C002_T_048["T-048 Claude Code regression run"]
@@ -97,7 +98,8 @@ flowchart TB
     C002_T_050["T-050 P-01 checklist run"]
     C002_T_057["T-057 Copilot clean-profile run"]
     C002_T_055["T-055 P-01 Copilot release"]
-    C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes"]
+    C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes (Copilot 0.0.3; OpenCode deferred)"]
+    C002_T_075["T-075 P-01 publish architect-sdd"]
   end
   C002_T_053 --> C002_T_006
   C002_T_007 --> C002_T_008
@@ -251,6 +253,13 @@ flowchart TB
   C002_T_070 --> C002_T_072
   C002_T_070 --> C002_T_073
   C002_T_073 --> C002_T_071
+  C002_T_073 --> C002_T_074
+  C002_T_074 --> C002_T_071
+  C002_T_003 --> C002_T_075
+  C002_T_023 --> C002_T_075
+  C002_T_071 --> C002_T_075
+  C002_T_074 --> C002_T_075
+  C002_T_075 --> C002_T_055
   C002_T_073 --> C002_T_051
   C002_T_038 --> C002_T_056
   C002_T_044 --> C002_T_056
@@ -320,8 +329,14 @@ flowchart TB
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. The 73 tasks weigh 148 in total (22 S, 27 M, 24 L). The longest chain
-weighs 49 and ends with the Copilot release. **The D-035 plan update lengthens it by 1**: the fix
+Weights S = 1, M = 2, L = 3. The 75 tasks weigh 150 in total (24 S, 27 M, 24 L). The longest chain
+weighs 50 and ends with the Copilot release. **The D-036 plan update lengthens it by 1**:
+C002-T-074 (S, version 0.0.3) follows C002-T-073 (45) and finishes at 46. C002-T-071 waits for it
+and finishes at 48. C002-T-050, C002-T-057 and C002-T-075 (S, the npm publication) then finish at
+49, and C002-T-055 at 50. C002-T-071 also waits for the CHG-001 D-020 fix task outside this graph,
+so the calendar end follows that task. C002-T-051 and C002-T-052 keep their edges but are out of
+this release round (`10-strategy.md` §2, Deferred: OpenCode release), so the OpenCode chain sets no
+date. **The D-035 update lengthened it by 1 before that, to 49.** **The D-035 plan update lengthens it by 1**: the fix
 task C002-T-073 (S) starts after C002-T-070 (finishing at 44) and finishes at 45. C002-T-071 now
 waits for it and finishes at 47, then C002-T-050 at 48 and C002-T-055 at 49. C002-T-051 also waits
 for it (its 0.0.2 zip) and finishes at 47, so C002-T-052 finishes at 48. **The D-034 plan update did
@@ -388,13 +403,14 @@ the eval auth switch, is already built and finishes at 1, before C002-T-010, C00
 and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
-**Overall (to C002-T-055, weight 49, from the D-035 update):** items 1 … 14
+**Overall (to C002-T-055, weight 50, from the D-036 update):** items 1 … 14
 below, then C002-T-048 — Claude Code regression set run (M, 40), C002-T-068 — cap exceptions for the
 CHG-001 release cases (S, 41), C002-T-069 — Claude Code spend cap applied by the runner (M, 43),
 C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-073 — `INJ-21` session cap and version 0.0.2
-(S, 45), C002-T-071 — release evidence retaken at 0.0.2 (M, 47), C002-T-050 — P-01 checklist run
-(S, 48) and C002-T-055 — P-01 Copilot release (S, 49). C002-T-057 also finishes at 48. The chain also waits for CHG-001's C001-T-082
-and C001-T-083, outside this graph (`handoff.md`), so its calendar end follows them.
+(S, 45), C002-T-074 — version 0.0.3 (S, 46), C002-T-071 — release evidence retaken, Copilot at 0.0.3
+(M, 48), C002-T-050 — P-01 checklist run (S, 49) and C002-T-055 — P-01 Copilot release (S, 50).
+C002-T-057 and C002-T-075 also finish at 49. The chain also waits for CHG-001's C001-T-082, C001-T-083
+and the D-020 fix task, outside this graph (`handoff.md`), so its calendar end follows them.
 
 **Before the release retake (to C002-T-055, weight 45):**
 
@@ -417,8 +433,10 @@ and C001-T-083, outside this graph (`handoff.md`), so its calendar end follows t
 17. C002-T-050 — P-01: run the manual VS Code checklist and record it (S)
 18. C002-T-055 — P-01: release the Copilot target (S)
 
-**OpenCode release (to C002-T-052, weight 48, from the D-035 update):** the overall chain to
-C002-T-071 (47), then C002-T-052 (S, 48); C002-T-051 also finishes at 47. **Before the release retake (weight 44):** items 1 to 14
+**OpenCode release (to C002-T-052): deferred** (revision D-036). The graph still gives the chain
+through C002-T-071 (48) to C002-T-052 (S, 49), but C002-T-051 and C002-T-052 do not start in this
+round, so the chain sets no date until the OpenCode fix of a later version is planned. **At the
+D-035 update** it weighed 48. **Before the release retake (weight 44):** items 1 to 14
 above, then C002-T-056 — OpenCode
 dev-tier runs of the carried eval rows (L; its rerun plan after C002-T-065, finishing at 41),
 C002-T-049 — Release evidence for OpenCode (M, 43) and C002-T-052 — P-01: publish architect-sdd and
@@ -517,12 +535,14 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-06 | C002-T-070 | Fix for revision D-033: rerun cap of 3.00 USD for the rule-1 rows of the Claude Code subscription class | S | T-068, T-069 |
 | C002-M-06 | C002-T-072 | Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided | M | T-069, T-070 |
 | C002-M-06 | C002-T-073 | Fix for revision D-035: session cap of 1.00 USD for INJ-21 on OpenCode, and package version 0.0.2 | S | T-070 |
+| C002-M-06 | C002-T-074 | Fix for revision D-036: package version 0.0.3 after the CHG-001 D-020 fix | S | T-073 |
 | C002-M-07 | C002-T-048 | Claude Code regression set run | M | T-022, T-035, T-037, T-038, T-042, T-044, T-045, T-047, T-060, T-064, T-065 |
 | C002-M-07 | C002-T-049 | Release evidence for OpenCode: corpus replay and dev-tier evals on the tested host | M | T-023, T-036, T-041, T-043, T-044, T-048, T-056, T-064 |
 | C002-M-07 | C002-T-051 | Timed clean-profile run for OpenCode and the OpenCode toy change to G1 | M | T-023, T-034, T-039, T-043, T-073 |
-| C002-M-07 | C002-T-052 | P-01: publish architect-sdd and release the OpenCode target | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066, T-071 |
+| C002-M-07 | C002-T-052 | P-01: release the OpenCode target (deferred to a later version; npm publication moved to C002-T-075) | S | T-003, T-023, T-047, T-048, T-049, T-051, T-066, T-071 |
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
-| C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes, at package version 0.0.2 | M | T-049, T-054, T-068, T-069, T-070, T-073 |
+| C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode deferred | M | T-049, T-054, T-068, T-069, T-070, T-073, T-074 |
+| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-071, T-074 |
 | C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054, T-071 |
 | C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058, T-071 |
-| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057, T-071 |
+| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057, T-071, T-075 |

@@ -12,8 +12,8 @@ status: approved
 
 History (G3, 2026-10-10): 79 test cases were at level `eval` (agent behaviour,
 non-deterministic). DOD-G-01 then required ≥ 9 of 10 passing runs, and running 10 × 79 sessions
-at every iteration was expensive. The test plan has 81 eval test cases after C001-TC-223,
-C001-TC-224 (D-017) and C001-TC-225 (D-019). The current DOD-G-01 refers to the release classes below, with the floor set in the
+at every iteration was expensive. The test plan has 82 eval test cases after C001-TC-223,
+C001-TC-224 (D-017), C001-TC-225 (D-019) and C001-TC-226 (D-020). The current DOD-G-01 refers to the release classes below, with the floor set in the
 constitution (v2, Q-dodg01-amend-01).
 
 ## Considered options
@@ -40,7 +40,7 @@ Option 1, chosen by P-01 ("Tiered: 1 run in dev, 10 at release (Recommended)").
 P-01 chose a reduced release tier (Q-release-tier-01, `../questions-log.md` round 2026-10-23:
 "reduced tier looks good", "target 1 reset maybe 2 maximum"). The floor of each class is in the
 constitution's DOD-G-01 (v2, Q-dodg01-amend-01); this ADR classifies CHG-001's scenarios against it.
-The full tier would be 810 scenario runs (81 × 10; 790 before C001-TC-224 and C001-TC-225) plus 220 injection runs. Q-release-tier-01's
+The full tier would be 820 scenario runs (82 × 10; 790 before C001-TC-224, 225 and 226) plus 220 injection runs. Q-release-tier-01's
 context also counted the 420 routing runs, for about 450–1,100 USD notional. The dev and milestone
 tiers are unchanged.
 
@@ -87,16 +87,16 @@ at the gate review, which C001-TC-802 … 804 hold at 10 runs. No approval and n
 can follow. C001-TC-209 (a specialist returns a blocking question it cannot decide) carries the same
 blocking flag as C001-TC-223, so it is class G.
 
-**Release run count per eval test case** (81 eval rows in `../60-test-plan.md` §8):
+**Release run count per eval test case** (82 eval rows in `../60-test-plan.md` §8):
 
 | Runs at release | Test cases | Class |
 |---|---|---|
-| 10 | C001-TC-133, C001-TC-209, C001-TC-214, C001-TC-215, C001-TC-223, C001-TC-224, C001-TC-225, C001-TC-802, C001-TC-803, C001-TC-804, C001-TC-815, C001-TC-817 | G (C001-TC-209, 215, 223 and 224: blocking flag, D-017; C001-TC-225: blocking question asked on arrival, D-019) |
+| 10 | C001-TC-133, C001-TC-209, C001-TC-214, C001-TC-215, C001-TC-223, C001-TC-224, C001-TC-225, C001-TC-226, C001-TC-802, C001-TC-803, C001-TC-804, C001-TC-815, C001-TC-817 | G (C001-TC-209, 215, 223 and 224: blocking flag, D-017; C001-TC-225: blocking question asked on arrival, D-019; C001-TC-226: gate and round as plain text without a question tool, D-020, its Claude Code row; its two Copilot CLI rows run on the CHG-002 Copilot target in C002-T-071) |
 | 10 | C001-TC-713, C001-TC-1015, C001-TC-1124 | S |
 | 10 | C001-TC-212 (C001-TC-804 also holds the injection row) | I |
 | 3 | C001-TC-119, 120, 121, 122, 127, 201, 202, 203, 206, 207, 208, 210, 211, 213, 216, 217, 218, 221, 222, 301, 303, 304, 305, 306, 307, 309, 312, 313, 315, 316, 317, 318, 319, 320, 401, 418, 419, 420, 423, 424, 507, 508, 511, 515, 609, 612, 613, 622, 710, 711, 712, 714, 715, 910, 1001, 1002, 1004, 1005, 1010, 1011, 1012, 1013, 1014, 1111, 1112 | standard |
 
-That is 16 test cases at 10 runs and 65 at 3. A scenario with variants (Scenario Outline rows,
+That is 17 test cases at 10 runs and 65 at 3. A scenario with variants (Scenario Outline rows,
 configurations such as C001-TC-1002's three configurations) runs all its variants in each run.
 C001-TC-1117 itself is an integration test; the routing runs belong to the routing suite.
 
@@ -141,12 +141,12 @@ qualifies for a scenario that spawns an agent.
 
 | Part | Runs | Measured basis | With uplift |
 |---|---|---|---|
-| release-high without rule-1 rows, 11 scenarios × 10 | 110 | 34 USD | 50 USD |
+| release-high without rule-1 rows, 12 scenarios × 10 | 120 | 37 USD (C001-TC-226 at about 0.30 USD) | 53 USD |
 | release-standard without rule-1 rows, 59 scenarios × 3 | 177 | 51 USD | 80 USD |
 | routing suite, 42 × 10 | 420 | 50 USD (0.119 per run) | 105 USD |
 | injection suite, 22 × 10 | 220 | 42 USD (4.24 per round, 2026-10-11) | 85 USD |
 | 10-run checks after 2 / 3 results (about 7 standard scenarios) | about 50 | 15 USD | 25 USD |
-| **Subtotal without rule-1 rows** | **about 980** | **about 190 USD** | **about 345 USD** |
+| **Subtotal without rule-1 rows** | **about 990** | **about 195 USD** | **about 350 USD** |
 
 | Rule-1 sessions (hidden budget, 3.00 USD cap) | Sessions | Expected (1.8 USD each) | Worst case (3.0 USD each) |
 |---|---|---|---|
@@ -154,8 +154,8 @@ qualifies for a scenario that spawns an agent.
 | release-standard rows | 24 | 43 USD | 72 USD |
 | **Rule-1 total** | **74** | **about 135 USD** | **about 220 USD** |
 
-- **Expected cost: about 400 USD notional.** That is the mean of the subtotal columns (about
-  270 USD) plus the expected rule-1 cost.
+- **Expected cost: about 405 USD notional.** That is the mean of the subtotal columns (about
+  272 USD) plus the expected rule-1 cost.
 - **Worst case: about 570 USD.** That is the uplift subtotal plus every rule-1 session at the cap.
 - **Against the target:** the target was 200–350 USD, the conductor's figure for one weekly reset of
   P-01's subscription. The expected cost is past one reset, and the worst case stays inside the
@@ -164,7 +164,7 @@ qualifies for a scenario that spawns an agent.
   Q-cap-level-01 says. This estimate is then updated from those sessions.
 
 **At 350 USD notional**, C001-T-072 stops and asks P-01 to choose. Either a second weekly reset,
-which Q-release-tier-01 allows as the maximum and the expected cost of about 400 USD needs, or the cuts below,
+which Q-release-tier-01 allows as the maximum and the expected cost of about 405 USD needs, or the cuts below,
 in this order:
 
 1. The routing suite drops to 5 runs per case (210 runs; C001-SC-05 is a ratio over runs, so 210
