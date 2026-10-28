@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-06
-status: in-progress
+status: done
 depends_on: [C002-T-069, C002-T-070]
 implements: [C002-REQ-645, C002-REQ-646, C002-NFR-105]
 satisfies_ac: [C002-AC-645.1, C002-AC-646.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-706, C002-TS-707, C002-TC-932, C002-TC-933]
 components: [C002-COMP-009]
 risk_refs: [C002-RISK-009, C002-RISK-038, C002-RISK-040]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: f53b355, completed_at: 2026-10-28, notes: "Mechanism verified in the paid check (check-decided at 575.8 s, 1.02 USD, assert pass; lateness from the cartographer, not the runner). Conductor decisions: TS-224 has no condition (a pass is only settled at the end; a condition could pass a failing session) and TS-507 none (assert reads the workspace, IF-010 §2.2 item 1) — 5 of the 7 named rows. Step 4: all verdicts unchanged. C001-T-072 can start." }
 ---
 
 # C002-T-072 — Fix for revision D-034: the Claude Code eval runner ends a session once the case's check is decided

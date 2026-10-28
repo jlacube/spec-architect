@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T11:43:35Z",
+  "generated_at": "2026-10-28T13:05:25Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -286,9 +286,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 73,
-          "done": 68,
+          "done": 69,
           "blocked": 0,
-          "in_progress": 1
+          "in_progress": 0
         },
         "last_report": "2026-10-28T00:00:00Z"
       },
@@ -629,9 +629,9 @@
           "summary": "Found in C001-T-082 (t082-d019): every rule-1 Claude Code session ran to the 3.00 USD cap although its checked step happened well before; the release gate's 74 rule-1 sessions would need 4–5 five-hour windows. P-01 (Q-early-stop-01): the harness ends a session once the case's check is decided.",
           "reporter": "jerome.lacube",
           "date": "2026-10-24",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "C002-T-072 (f53b355): early stop for Claude Code eval sessions; paid check 1.02 USD instead of running to 3.00 USD.",
+          "closed_at": "2026-10-28"
         },
         {
           "id": "D-035",
