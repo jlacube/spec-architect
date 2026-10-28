@@ -1,0 +1,204 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T15:25:59.335Z",
+  "runs": 10,
+  "passed": 10,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 1.478648525,
+  "duration_s": 120,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run1-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16388761000000002,
+        "session_ms": 50000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run2-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.139067,
+        "session_ms": 41000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run3-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16247286500000002,
+        "session_ms": 50000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run4-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1353048,
+        "session_ms": 35000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run5-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1315042,
+        "session_ms": 37000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run6-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1334926,
+        "session_ms": 34000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run7-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16400810500000002,
+        "session_ms": 50000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run8-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.166476045,
+        "session_ms": 44000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run9-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1261969,
+        "session_ms": 35000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-options-analyst-01",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-options-analyst-01-run10-2026-10-28T15-25-59-336Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1562384,
+        "session_ms": 45000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 0
+  }
+}

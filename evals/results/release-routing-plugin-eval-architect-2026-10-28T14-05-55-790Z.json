@@ -1,0 +1,926 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T14:05:55.636Z",
+  "runs": 40,
+  "passed": 14,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 7.0072944,
+  "duration_s": 1161,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-architect-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run1-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.11043,
+        "session_ms": 122000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run2-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.11407039999999999,
+        "session_ms": 122000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run3-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.125278,
+        "session_ms": 122000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run4-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.36779700000000004,
+        "session_ms": 106000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run5-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2919662,
+        "session_ms": 86000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run6-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.32688360000000005,
+        "session_ms": 103000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run7-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3498504,
+        "session_ms": 109000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run8-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.274007,
+        "session_ms": 81000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 9,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run9-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.12539140000000001,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-architect-01",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-architect-01-run10-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2388186,
+        "session_ms": 70000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run1-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0935294,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run2-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0891938,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run3-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0893106,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run4-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0898306,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run5-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0893562,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 6,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run6-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.08897279999999999,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 7,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run7-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09844140000000001,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 8,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run8-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0405696,
+        "session_ms": 121000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 9,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run9-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09414360000000001,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-01",
+      "run": 10,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-01-run10-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0894762,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run1-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0924836,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run2-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0921964,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run3-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0931804,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run4-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0968556,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run5-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0882168,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 6,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run6-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.095784,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 7,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run7-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09436639999999999,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 8,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run8-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.1089934,
+        "session_ms": 121000,
+        "turns": 6,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run9-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3591706,
+        "session_ms": 108000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-02",
+      "run": 10,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-02-run10-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0979738,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run1-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3136596,
+        "session_ms": 100000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run2-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3009676,
+        "session_ms": 91000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run3-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.29875779999999996,
+        "session_ms": 96000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run4-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.099684,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run5-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09249399999999999,
+        "session_ms": 121000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run6-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.34574099999999997,
+        "session_ms": 109000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run7-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3511946,
+        "session_ms": 115000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run8-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.34171460000000003,
+        "session_ms": 107000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 9,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run9-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0981362,
+        "session_ms": 121000,
+        "turns": 5,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-architect-03",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-architect-03-run10-2026-10-28T14-05-55-638Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3584072,
+        "session_ms": 114000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 40,
+    "runs": 40,
+    "regraded": 26
+  }
+}

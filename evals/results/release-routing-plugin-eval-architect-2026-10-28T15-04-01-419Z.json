@@ -1,0 +1,204 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T15:04:01.377Z",
+  "runs": 10,
+  "passed": 10,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 0.518724,
+  "duration_s": 36,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-conductor-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run1-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0521736,
+        "session_ms": 12000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run2-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0526736,
+        "session_ms": 14000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run3-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0508336,
+        "session_ms": 12000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run4-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0531936,
+        "session_ms": 13000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run5-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.05242959999999999,
+        "session_ms": 11000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run6-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0507696,
+        "session_ms": 10000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run7-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0494136,
+        "session_ms": 9000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run8-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0497136,
+        "session_ms": 11000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run9-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.0560136,
+        "session_ms": 13000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-conductor-02",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-conductor-02-run10-2026-10-28T15-04-01-378Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.051509599999999996,
+        "session_ms": 11000,
+        "turns": 1,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 0
+  }
+}

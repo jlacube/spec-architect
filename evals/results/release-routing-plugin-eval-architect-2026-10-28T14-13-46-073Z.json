@@ -1,0 +1,786 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T14:13:45.948Z",
+  "runs": 40,
+  "passed": 34,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 3.9521769050000004,
+  "duration_s": 468,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-auditor-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run1-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.347027,
+        "session_ms": 110000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run2-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.084368,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run3-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.32244400000000006,
+        "session_ms": 109000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run4-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.084781,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run5-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.125765,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 6,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run6-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.084338,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run7-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.31109460000000005,
+        "session_ms": 96000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run8-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.280848,
+        "session_ms": 81000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 9,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run9-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.085172,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "notroute-auditor-01",
+      "run": 10,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-notroute-auditor-01-run10-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.08491099999999999,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run1-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.067529115,
+        "session_ms": 21000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run2-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07174448,
+        "session_ms": 25000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run3-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06750973,
+        "session_ms": 24000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run4-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06363917499999999,
+        "session_ms": 20000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run5-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06718823000000002,
+        "session_ms": 20000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run6-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.066246785,
+        "session_ms": 20000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run7-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06735532500000001,
+        "session_ms": 22000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run8-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.068440215,
+        "session_ms": 21000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run9-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06795257,
+        "session_ms": 24000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-01",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-01-run10-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.069018765,
+        "session_ms": 21000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run1-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06905544,
+        "session_ms": 25000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run2-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06547833500000001,
+        "session_ms": 27000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run3-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.066913345,
+        "session_ms": 26000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run4-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.10064408999999999,
+        "session_ms": 42000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run5-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07097232,
+        "session_ms": 24000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run6-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07254084999999999,
+        "session_ms": 22000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run7-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.075775185,
+        "session_ms": 26000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run8-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06812222,
+        "session_ms": 23000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run9-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06849256000000001,
+        "session_ms": 20000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-02",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-02-run10-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.069387785,
+        "session_ms": 24000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run1-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07764348,
+        "session_ms": 21000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run2-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.06956809,
+        "session_ms": 22000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run3-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.068851535,
+        "session_ms": 22000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run4-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.081145455,
+        "session_ms": 23000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run5-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.071163735,
+        "session_ms": 23000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run6-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07017354499999999,
+        "session_ms": 23000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run7-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.07047968500000001,
+        "session_ms": 30000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run8-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.071297815,
+        "session_ms": 18000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run9-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.09073366999999999,
+        "session_ms": 32000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "route-auditor-03",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-auditor-03-run10-2026-10-28T14-13-45-949Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.066364775,
+        "session_ms": 26000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 40,
+    "runs": 40,
+    "regraded": 6
+  }
+}

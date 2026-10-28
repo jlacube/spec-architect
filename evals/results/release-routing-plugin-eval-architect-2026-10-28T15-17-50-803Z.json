@@ -1,0 +1,267 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T15:17:50.769Z",
+  "runs": 10,
+  "passed": 1,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": false,
+  "partial_reason": null,
+  "cost_usd": 1.0955648,
+  "duration_s": 364,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "route-critic-02",
+      "run": 1,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run1-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.08977140000000002,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 2,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run2-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0897012,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 3,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run3-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.0912426,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 4,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run4-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.085667,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 5,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run5-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.08608099999999999,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 6,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run6-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.09017119999999999,
+        "session_ms": 121000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 7,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run7-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.086063,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 8,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run8-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.08571099999999998,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 9,
+      "pass": false,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run9-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [
+        "timed out after 120s"
+      ],
+      "metrics": {
+        "cost_usd": 0.085488,
+        "session_ms": 121000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      },
+      "regraded": {
+        "pass": true,
+        "failures": [],
+        "reason": "timed out; re-graded from the kept trace"
+      }
+    },
+    {
+      "case": "route-critic-02",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-route-critic-02-run10-2026-10-28T15-17-50-770Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.3056684,
+        "session_ms": 92000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 9
+  }
+}

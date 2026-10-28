@@ -1,0 +1,204 @@
+{
+  "scenario": "plugin-eval-architect",
+  "title": "claude plugin eval suite",
+  "tier": "plugin-eval",
+  "label": "release-routing",
+  "auth": "subscription",
+  "measured_at": "2026-10-28T14:16:53.629Z",
+  "runs": 10,
+  "passed": 10,
+  "pass_rule": "every grader passes (score 1.0)",
+  "pass": true,
+  "partial_reason": null,
+  "cost_usd": 1.393252415,
+  "duration_s": 113,
+  "overall_score": 1,
+  "claude_version": "2.1.299",
+  "records": [
+    {
+      "case": "notroute-cartographer-01",
+      "run": 1,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run1-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1597759,
+        "session_ms": 39000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 2,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run2-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.13136029999999999,
+        "session_ms": 37000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 3,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run3-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1348449,
+        "session_ms": 40000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 4,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run4-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.14866530000000003,
+        "session_ms": 47000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 5,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run5-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1311392,
+        "session_ms": 36000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 6,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run6-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.14893235999999999,
+        "session_ms": 48000,
+        "turns": 4,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 7,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run7-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.129041,
+        "session_ms": 32000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 8,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run8-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.132402,
+        "session_ms": 34000,
+        "turns": 2,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 9,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run9-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.137357855,
+        "session_ms": 40000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    },
+    {
+      "case": "notroute-cartographer-01",
+      "run": 10,
+      "pass": true,
+      "trace": "evals/results/transcripts/release-routing-notroute-cartographer-01-run10-2026-10-28T14-16-53-630Z.jsonl",
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1397336,
+        "session_ms": 36000,
+        "turns": 3,
+        "tokens_by_model": {},
+        "tokens_by_agent": {},
+        "subagents": [],
+        "tool_calls": {},
+        "tool_timings": [],
+        "score": 1
+      }
+    }
+  ],
+  "regraded": {
+    "passed": 10,
+    "runs": 10,
+    "regraded": 0
+  }
+}
