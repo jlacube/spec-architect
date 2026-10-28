@@ -33,7 +33,7 @@ status: approved
 | `20-decisions/OA-006-…`, `ADR-006-…` | `node --test` runner |
 | `40-work-breakdown.md` | Mermaid DAG by milestone; task table; critical path (weight 48) |
 | `50-tasks/T-*.md` | 67 tasks (one dropped) |
-| `60-test-plan.md` | 247 test cases: 162 integration, 82 eval, 3 manual |
+| `60-test-plan.md` | 248 test cases: 162 integration, 83 eval, 3 manual |
 | `70-risks.md` | RISK-001 … 015 |
 | `75-rollout.md` | Release model, migration, rollback RB-001 … 004 |
 | `78-observability.md` | NFR → signal → task |

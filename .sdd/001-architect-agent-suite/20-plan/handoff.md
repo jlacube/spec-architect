@@ -141,7 +141,7 @@ their dependencies allow.
 | 58 | C001-T-081 | Archive resumes after an interrupted run without duplicates (D-015) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-081-archive-resume.md` |
 | 59 | C001-T-083 | Ask a blocking question on arrival, templates through the CLI, candidates count (D-019) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-083-blocking-ask-templates-wording.md` |
 | 60 | C001-T-082 | Blocking criteria of C001-IF-05 §1 in the specialist skills (D-017) — cross-change dependency: waits for C002-T-068 (done), C002-T-069 (done) and C002-T-070, and C001-T-083 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-082-blocking-criteria.md` |
-| 61 | C001-T-084 | Plain-text fallback without a question tool (D-020) — cross-change: its paid evidence is C002-T-071's Copilot CLI 0.0.3 retake (the two Copilot CLI rows of C001-TS-226, INJ-19, INJ-21); C001-T-072 waits for C001-T-084 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-084-no-question-tool-fallback.md` |
+| 61 | C001-T-084 | Plain-text fallback without a question tool (D-020) — cross-change: D-020 closes when INJ-19 and INJ-21 pass at Copilot CLI 0.0.3 in C002-T-071; C001-T-072 waits for C001-T-084 and the closed D-020 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-084-no-question-tool-fallback.md` |
 | 62 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
 | 63 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
 | 64 | C001-T-072 | Release gate v0.1.0 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |

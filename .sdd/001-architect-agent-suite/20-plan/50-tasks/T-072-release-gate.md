@@ -36,8 +36,9 @@ DoD evidence collected for DOD-G and DOD-001…021; version 0.1.0 tagged locally
 ## Preconditions
 
 - All M-6 tasks
-- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates), C001-T-082 (D-017 and D-018 closed: the C001-IF-05 §1 blocking criteria in the skills), C001-T-083 (D-019 fixes: blocking question asked on arrival, templates through `sdd template show`, candidates count), C001-T-084 (D-020: plain-text fallback without a question tool; D-020 closes with C002-T-071's Copilot CLI 0.0.3 retake)
-- Cross-change: C002-T-070 done (rule-1 rerun cap 3.00 USD; P-01 Q-cap-level-01). The eval estimate is in C001-ADR-003 (about 405 USD expected, about 570 USD worst case, notional).
+- Dependencies done: C001-T-061, C001-T-062, C001-T-063, C001-T-064, C001-T-065, C001-T-054, C001-T-053, C001-T-070, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080 (D-014 closed: `npm run check` green on Node 20 and 22 in both shells, with the encoding and coverage steps; coverage measured on Node 22, skipped with its reason on Node 20), C001-T-081 (D-015 closed: an interrupted archive resumes without duplicates), C001-T-082 (D-017 and D-018 closed: the C001-IF-05 §1 blocking criteria in the skills), C001-T-083 (D-019 fixes: blocking question asked on arrival, templates through `sdd template show`, candidates count), C001-T-084 (plain-text fallback without a question tool)
+- D-020 closed: C001-T-084 done and INJ-19 and INJ-21 passing at Copilot CLI 0.0.3 in C002-T-071 (critic CR-37)
+- Cross-change: C002-T-070 done (rule-1 rerun cap 3.00 USD; P-01 Q-cap-level-01). The eval estimate is in C001-ADR-003 (about 420 USD expected, about 590 USD worst case, notional).
 - The constitution v2 is approved at G0, with DOD-G-01 carrying the floor of the release classes (Q-dodg01-amend-01).
 
 ## Step outline (no production code)

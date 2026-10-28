@@ -213,6 +213,8 @@ Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-openc
 
 | ID | Sev. | Finding | Fix | Status |
 |---|---|---|---|---|
-| CR-35 | major | no runner can send TS-226's second message | conductor decision: TS-226 checks the first reply only (text gate or round, turn ends, no detour); the second-message rules are review-verified; Copilot rows dropped — INJ-19/21 at 0.0.3 are the Copilot evidence | spec part fixed (C001-TS-226: three Claude Code rows, gate, interview round, blocking ask, first reply only; no Copilot CLI rows); TC-226: planner |
-| CR-36 | major | TS-226's first real run is at release | one dev run of the Claude Code rows (~0.60 USD) in T-084 | open |
-| CR-37 | minor | unclear whether T-072 needs D-020 closed | T-072 precondition: D-020 closed | open |
+| CR-35 | major | no runner can send TS-226's second message | conductor decision: TS-226 checks the first reply only (text gate or round, turn ends, no detour); the second-message rules are review-verified; Copilot rows dropped — INJ-19/21 at 0.0.3 are the Copilot evidence | spec part fixed (C001-TS-226: three Claude Code rows, gate, interview round, blocking ask, first reply only; no Copilot CLI rows); TC-226: planner — fixed: TC-226 is the Claude Code eval only (three rows); TC-227 added for TS-227 on the same sessions; T-084 implements REQ-223; D-020 closes when INJ-19 and INJ-21 pass at 0.0.3 in C002-T-071 |
+| CR-36 | major | TS-226's first real run is at release | one dev run of the Claude Code rows (~0.60 USD) in T-084 | fixed: T-084 step 5 runs the three Claude Code rows once at dev tier after the skill change (about 0.60 USD notional), graded by TC-226 and TC-227 |
+| CR-37 | minor | unclear whether T-072 needs D-020 closed | T-072 precondition: D-020 closed | fixed: T-072 precondition "D-020 closed" (T-084 done, INJ-19 and INJ-21 passing at Copilot CLI 0.0.3 in C002-T-071) |
+
+All findings of this section fixed (planner), 2026-10-28.

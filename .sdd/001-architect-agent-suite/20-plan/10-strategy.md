@@ -56,7 +56,7 @@ depends on it. C001-T-083 fixes defect D-019 (P-01, Q-t082-bugs-01): the conduct
 question when its hand-back arrives, templates are read through `sdd template show` (PLG-TMPL-001),
 and the candidates count; C001-T-082 and C001-T-072 depend on it. C001-T-084 fixes defect D-020
 (P-01, Q-noask-01): without a question tool the conductor asks or presents the gate as plain text.
-Its paid evidence is CHG-002's C002-T-071 retake; C001-T-072 depends on it.
+D-020 closes when INJ-19 and INJ-21 pass at Copilot CLI 0.0.3 in CHG-002's C002-T-071; C001-T-072 depends on it.
 
 Task numbers leave gaps between milestones (008–009, 040, 045–049, 055–059, 066–069) so the
 numbering stays readable; gaps are not tombstones because they were never allocated.
