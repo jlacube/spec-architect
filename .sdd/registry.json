@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T10:17:50Z",
+  "generated_at": "2026-10-28T11:43:35Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -247,9 +247,9 @@
           "summary": "Found in C002-T-073 (2026-10-28): the coverage step of npm run check is flaky — one run gave 83.58 % lines with no src/ change (runs before and after: 88.21 %, 87.93 %); src/archive/living.ts fell from about 50 % to 22 %, so one batch's raw V8 coverage looks lost or unmerged. P-01: fix before C001-T-072.",
           "reporter": "jerome.lacube",
           "date": "2026-10-28",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fixed in cebd596: Node's --experimental-test-coverage merge across processes depended on raw-file order and undercounted; the coverage step now converts each raw file alone and sums hits, and fails on a lost batch or process. Lines 95.60 % on four consecutive runs; NFR-502 baseline updated in docs/nfr-results.md §4.",
+          "closed_at": "2026-10-28"
         }
       ],
       "waivers": []
