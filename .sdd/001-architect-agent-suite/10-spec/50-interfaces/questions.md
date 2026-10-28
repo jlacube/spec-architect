@@ -45,3 +45,30 @@ attended and in unattended drafting.
 Origin: defect D-019 item 1, the C001-TS-215 trace of `t082-d018` (hand-back with a blocking
 question at 235 s, turn ended at 238 s "waiting for the spec writer", session capped at 554 s
 with the question unasked); P-01 Q-t082-bugs-01 "Fix all 3 now (Recommended)".
+
+## §3 Without a question tool
+
+The question tool is AskUserQuestion on Claude Code, and its counterpart on a generated target
+(`question` on OpenCode, `ask_user` on Copilot; C002-IF-001). When the session offers no
+question tool, because the tool is absent from the session's tools or a call to it is refused,
+the conductor asks in plain text in its reply:
+
+1. **Same content.** The reply carries what the tool call would carry. For a question round,
+   that is each question with its options, the recommended option first and labelled
+   "(Recommended)", and at most four questions (C001-REQ-205, C001-REQ-206). For a gate, it is
+   the gate summary, the statement of what approval commits to, and the four choices Approve,
+   Approve with waivers, Revise and Stop, without a recommendation (C001-REQ-802; C001-IF-13 §1).
+2. **Answer.** The conductor then ends its turn and takes P-01's next message as the answer. The
+   answer is logged verbatim (C001-REQ-210, C001-REQ-211). At a gate it counts as the answer of
+   C001-REQ-803 and C001-REQ-804, and a message that names none of the four choices records no
+   decision.
+3. **No detour.** The conductor never tells P-01 to enable a tool instead of asking.
+
+The fallback applies to the asks of §2 (C001-REQ-221), to interview rounds and to gate
+presentation.
+
+Origin: defect D-020. In C002-T-071, Copilot CLI ran with `--no-ask-user`. At G2 of change 004
+in INJ-19 and INJ-21 (`t071`, 2026-10-28), the conductor replied "I can't present the G2 gate …
+The `ask_user` question tool isn't available in this session" and listed `INSTALL.md` steps to
+enable it, instead of presenting the gate. P-01 answered Q-noask-01 with "Text fallback + 0.0.3
+(Recommended)".

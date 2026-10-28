@@ -36,6 +36,10 @@ Downstream: C004-T-031, C004-T-032, C004-DOD-004
 approval: unknown (…)`. The conductor adds, in prose, "Approving means …" (C001-REQ-802) and
 shows these lines at the gate of a revised phase.
 
+When the session offers no question tool, the conductor presents the summary, the "Approving
+means …" statement and the four choices as plain text and ends its turn (C001-IF-05
+`questions.md` §3).
+
 ## §2 Approval hash algorithm
 
 1. **Inputs:** every file under the phase folder, excluding generated files (`80-traceability.md`,
