@@ -1457,3 +1457,22 @@ Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 
 | CR-115 | minor | architecture §6.2, IF-010 §2.2, DOD-012 | three spots still say 1.50 USD or omit TS-421-agent | align them | architect parts fixed (architecture §6.2: an entry at 1.50 or 3.00 USD stays out of the highest ordinary cost, an `--auth api-key` run would spend 1.50 or 3.00 USD; IF-010 §2.2: the Runs cells of the `TS-214`/`TS-215`/`TS-318` and `TS-213`/`TS-221` rows name the CHG-001 caps, rule 1 every session at 3.00 USD, rule 2 one replacement at 1.50 USD); DOD-012 fixed (test-designer: `TS-421-agent` named as a row of the class in neither rule, run in neither CHG-001 task, rerun cap 1.50 USD for C002-T-048) |
 | CR-116 | minor | IF-010 §2.2, D-033 | the ledger holds no t082-d018 entries and no task writes them; D-033 says 3 passes, there were 5 | assign the entries to C001-T-082 or point at the result records; correct via a gate-log note | interface fixed (architect: IF-010 §2.2 rule 1, At 1.50 USD with the budget hidden: the no-run marking of the eight sessions lives in C001-T-082's report, from their result records (`caps.usd` 1.50, `error_max_budget_usd`), not in `spend-chg002.json`, which holds and gets no entry for them; the note gives 5 passes from the result files); the D-033 pass count in `change.md` open for the conductor (gate-log note) |
 | CR-117 | minor | REQ-115, TS-107/127 | the rework stems from CHG-001 D-019, and PLG-TMPL-001 makes REQ-115 unreachable on shipped sources | record the origin; state REQ-115 as defense in depth | fixed in the revision note (architect: architecture D-033 note: the C002-TS-107 and C002-TS-127 rework stems from CHG-001 D-019, C001-T-083 removing the template paths from the shipped bodies (C001-REQ-1124, PLG-TMPL-001); C002-REQ-115 stays as defense in depth for any body that names such a path); the REQ-115 rationale already says it stays as a guard (spec-writer, `b82aaad`) |
+
+
+## Revision D-034 and D-035 (2026-10-28)
+
+Scope: `git diff 9c03f6f 5e3b1db`, against D-034, D-035 and Q-early-stop-01, Q-weekly-reset-01, Q-inj21-01, Q-pool-retake-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 4 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-118 | major | IF-010 Session cap of an exception, NFR-105 | "with or without --cap-exception" contradicts the refusal with --cap-exception | "without --cap-exception; a run that gives it for the row is refused" in both | open |
+| CR-119 | major | DOD-012, NFR-105, D-035 | DOD-012 not updated for INJ-21 at 1.00 USD, H ≥ 1.65 USD and the injection-row cap rule | add them and REQ-611 coverage | open |
+| CR-120 | major | NFR-105, DOD-012, IF-010 TS-225 row | the C002-T-072 step 6 TS-225 session is not named as an allowed use in NFR-105 and DOD-012 | add it as for CR-68 | open |
+| CR-121 | major | IF-010 Early stop, REQ-645 | the safety rule is on events only; an assert reading the workspace, or the post-stop tail, can change the verdict | (a) rows whose assert reads the workspace give no stopWhen (conductor decision); (b) the verdict must be the same with the stop tail | open |
+| CR-122 | minor | NFR-105, IF-010 Caps of injection rows | a P-01 process duty inside an NFR; "normal session" and a turn margin undefined | keep it in IF-010 with a release-task done-check; define or exclude the turn margin | open |
+| CR-123 | minor | TS-688 | only the passing INJ-21 row, no 28.36 refusal row | add it (TC-917 seven rows) | open |
+| CR-124 | minor | REQ-645, TS-706 | cites items 1…7 of 8; stop-when-error has no SHALL; no rows for a non-boolean return or a self-ended session | unwanted-behaviour REQ or AC note; cite 1…8; two rows | open |

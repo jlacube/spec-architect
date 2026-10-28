@@ -1092,3 +1092,23 @@ Scope: `git diff a99f6e1 b82aaad`, against the defect and P-01's Q-t082-bugs-01 
 | CR-71 | major | T-052, T-055, T-049 step 4, C001-T-083 | the CHG-001 fixes change files the packages are generated from; release evidence must be retaken, the plan doesn't say so | P-01 (Q-release-base-01): retake after the CHG-001 fixes — unpaid steps plus the ~31 paid OpenCode rows from the general pool before T-052 | fixed (new task C002-T-071, conductor: release-candidate commit with C001-T-082 and C001-T-083; unpaid steps of C002-T-048 step 5, C002-T-049 steps 1–2, C002-T-054 steps 1–2; the OpenCode case set from the general pool; the paid Copilot CLI rows only on P-01's decision in its step 5; C002-T-052, T-055, T-050, T-057 depend on it; strategy §2 and §3a, handoff) |
 | CR-72 | minor | TC-107/127 | test plan rows not updated for the planted lines | fixture name and C001-T-083 in the task cell | fixed (TC-107 and TC-127: fx-src with the pre-C001-T-083 template lines planted; C001-T-083 in the Task cell) |
 | CR-73 | minor | RISK-038, T-070 | trigger at 1.50 USD stale; no step or rule for re-measuring | trigger at 3.00 USD; C001-T-082 step 4 as the measurement; a rule-1 session ending at 3.00 USD → question to P-01 | fixed (RISK-038 trigger at 3.00 USD; C001-T-082 step 4 named as the re-measurement; a rule-1 session ending at the 3.00 USD cap goes to P-01 before any further session of its row) |
+
+
+## Revision D-034 and D-035 (2026-10-28)
+
+Scope: `git diff 9c03f6f 5e3b1db`, against D-034, D-035 and Q-early-stop-01, Q-weekly-reset-01, Q-inj21-01, Q-pool-retake-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 5 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-74 | major | T-072, RISK-040 | conditions allowed on rows whose assert reads the workspace (TS-213, three TS-318, TS-711) | those rows get no stopWhen (conductor decision); list them in the done-when | open |
+| CR-75 | major | T-072 step 4 | the offline check runs the assert on the cut transcript without the stop's tail (TS-224 reads before the last result) | append a synthetic stop tail (check-decided record and one result) before the assert | open |
+| CR-76 | major | T-072, stop-conditions.test.ts | stored transcripts are git-ignored; TS-508 and TS-711 have no passing transcript | the step 4 check is report-only outside npm test; a row with no passing stored transcript gets no condition (conductor decision) | open |
+| CR-77 | major | T-072, strategy, test plan §6, work breakdown, handoff | the cross-change exception is not carried through (TS-213 rerun still waits; C001-T-082 is done) | "only C001-T-072 waits" everywhere; drop the TS-213 rerun from step 7 and the done-when; fix the critical-path text | open |
+| CR-78 | major | T-072 step 6 | one model-dependent session with no fallback; done-when needs the assert to pass | done-check on the mechanism (check-decided record, check_decided, no cap record, denials), report the assert; name one fallback session (conductor decision) | open |
+| CR-79 | minor | T-071, §4.1 rule 5, handoff, T-072 preconditions | answered questions still marked open; met precondition still open | replace with the answers; mark met | open |
+| CR-80 | minor | T-071 steps 4, 6 | "goes to P-01 before any rerun" conflicts with "final for 0.0.2"; no near-cap check on the 0.0.2 sessions | "goes to P-01; 0.0.2 of that target is refused"; report injection rows at or within 0.09 USD of their cap per host | open |
+| CR-81 | minor | handoff exception, Q-weekly-reset-01 | P-01's instruction only in the handoff; Monday→Tuesday corrected in place | log the instruction verbatim with its date; add a correction note | open |

@@ -237,3 +237,11 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Use the reserve for the remainder the general pool's stop rule refuses, keeping 1.40 USD for C002-T-051 step 3; total within 40 USD (Recommended) · 2. Stop at the general pool
 - **Answer:** P-01: "Yes, use the reserve (Recommended)"
 - **Extracted instructions:** none
+
+
+### P-01 instruction 2026-10-24 — secure the Claude Code and Copilot CLI versions first (critic CR-81)
+- **Words:** "ok finish and secure Claude Code + GH Copilot CLI version. I will handle VScode GH Copilot tests tomorrow or on Monday"
+- **Effect:** conductor exception recorded in the handoff: C001-T-082's TS-213 sessions and C002-T-071 run before C002-T-072.
+
+### Correction note (2026-10-28, critic CR-81)
+- The Q-weekly-reset-01 gloss first said "Monday 23:00 UTC"; the usage readout gives Tuesday 2026-10-27 23:00 UTC (P-01 pointed out the weekday). It was corrected in place on 2026-10-24.
