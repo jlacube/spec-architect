@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-28T08:27:35Z",
+  "generated_at": "2026-10-28T09:01:19Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -237,9 +237,9 @@
           "summary": "Found in C002-T-071 (Copilot CLI 0.0.2, --no-ask-user): when the question tool is unavailable, the conductor refuses to present a gate or ask (it tells the user to enable the tool) instead of continuing; INJ-19 and INJ-21 recorded acted upon. P-01 (Q-noask-01): text fallback — the conductor asks its question or presents the gate as plain text in its reply and ends its turn.",
           "reporter": "jerome.lacube",
           "date": "2026-10-28",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Spec IF-05 §3, REQ-222/223 (G2 4c12909); C001-T-084 (3643c69, a6b9520): text fallback; TC-226/227 pass on Claude Code; INJ-19/21 pass at Copilot CLI 0.0.3 with the text-form gate (C002-T-071, e5a6440).",
+          "closed_at": "2026-10-28"
         }
       ],
       "waivers": []
@@ -276,9 +276,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 73,
-          "done": 67,
+          "done": 68,
           "blocked": 0,
-          "in_progress": 2
+          "in_progress": 1
         },
         "last_report": "2026-10-28T00:00:00Z"
       },
@@ -629,9 +629,9 @@
           "summary": "Found in C002-T-071: INJ-21 on OpenCode needs about 0.52–0.57 USD per run and ends at the 0.50 USD cap; under the fail-closed merge (IF-010 §5.2 rule 3) the entry is acted upon and final for 0.0.1, so the OpenCode 0.0.1 release check refuses (ERR-REL-002) although every assertion passed. P-01 (Q-inj21-01): INJ-21 gets a 1 USD cap exception (OpenCode, and Copilot CLI if needed) and the version moves to 0.0.2; both targets' paid evidence is retaken.",
           "reporter": "jerome.lacube",
           "date": "2026-10-25",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Deferred to CHG-003 (Q-opencode-defer-01, Q-opencode-scope-01): INJ-21 on OpenCode drafts until any cap; fix directions recorded in strategy §2 (OpenCode-capable early stop or bounded INJ-21 case). The 1.00 USD session cap (C002-T-073) remains.",
+          "closed_at": "2026-10-28"
         },
         {
           "id": "D-036",
@@ -639,9 +639,9 @@
           "summary": "Found in C002-T-071: Copilot 0.0.2 refused (ERR-REL-002, INJ-19 and INJ-21 acted upon) because of CHG-001 D-020; OpenCode deferred (Q-opencode-defer-01). Copilot moves to 0.0.3 after the D-020 fix; publishing architect-sdd is split from the OpenCode release so Copilot can ship alone.",
           "reporter": "jerome.lacube",
           "date": "2026-10-28",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Copilot released path at 0.0.3: C002-T-074 and C002-T-071 (e5a6440) 24/24, dry run refuses only the pending checklist record; npm publication split into C002-T-075; the OpenCode release moved to CHG-003 (Q-opencode-scope-01).",
+          "closed_at": "2026-10-28"
         },
         {
           "id": "D-037",
@@ -649,9 +649,9 @@
           "summary": "Found in C001-T-084: C002-REQ-312 (AC-312.1, TS-319, TC-319) still requires that without ask_user the conductor asks nothing and names the INSTALL.md steps, which C001-REQ-222/223 (text fallback, no detour) now forbid; the shipped Copilot wiring follows C001. Also TS-226-blocking (C001) needs a rule-1 cap exception (3.00 USD), like TS-225. Conductor decisions under P-01's Q-noask-01.",
           "reporter": "jerome.lacube",
           "date": "2026-10-28",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "REQ-312/TS-319 and VSC-15 follow the C001 text fallback; TS-226-blocking caps row (C002-T-074, 4ef1d61).",
+          "closed_at": "2026-10-28"
         }
       ],
       "waivers": [

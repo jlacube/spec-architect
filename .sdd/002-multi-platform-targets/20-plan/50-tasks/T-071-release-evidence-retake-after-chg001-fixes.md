@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: in-progress
+status: done
 depends_on: [C002-T-049, C002-T-054, C002-T-068, C002-T-069, C002-T-070, C002-T-073, C002-T-074]
 implements: [C002-REQ-606, C002-REQ-609, C002-REQ-612, C002-REQ-617]
 satisfies_ac: [C002-AC-606.1, C002-AC-609.1, C002-AC-612.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-612, C002-TS-615, C002-TS-620, C002-TC-612, C002-TC-615, C
 components: [C002-COMP-008, C002-COMP-009, C002-COMP-010]
 risk_refs: [C002-RISK-015, C002-RISK-026, C002-RISK-036]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e5a6440, completed_at: 2026-10-28, notes: "RC 4ef1d61 (0.0.3): check, bench, package, tarball pass; replays 683/26/0 both mechanisms; Copilot CLI 24/24 (2.32 USD; pool 7.70/30); injection 23 entries, 0 acted upon; INJ-19/21 text fallback quoted in the report; dry run ERR-REL-003 only. OpenCode moved to CHG-003 (no OpenRouter spend)." }
 ---
 
 # C002-T-071 — Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003
