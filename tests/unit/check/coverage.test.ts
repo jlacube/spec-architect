@@ -1,12 +1,17 @@
 // C001-TC-1130 (C001-NFR-502; C001-T-080, finding F-5): the threshold check of the `coverage` step
 // (scripts/check/coverage.mjs) — lcov records of src/ merged per file, files no test loaded counted as
 // uncovered, 85% lines and 75% branches, and test-only variables that can raise but never lower a threshold.
+// D-021: per-process summaries summed in any order give the same lcov; a batch whose coverage was lost fails
+// scripts/check/coverage-raw.mjs, which then writes no lcov.
 // F-7: on Node 20 the step reports skipped with its reason, runs no coverage and counts as passed.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
-import { coverageSkip, MIN_BRANCHES, MIN_LINES, parseLcov, srcPath, summarize, thresholds, verdict } from "../../../scripts/check/coverage.mjs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { pathToFileURL } from "node:url";
+import { addSummary, coverageSkip, MIN_BRANCHES, MIN_LINES, missingTestFiles, parseLcov, srcPath, summarize, thresholds, toLcov, verdict } from "../../../scripts/check/coverage.mjs";
 import { repoRoot } from "../../helpers.ts";
 
 const ROOT = process.platform === "win32" ? "C:\\repo" : "/repo";
@@ -112,3 +117,89 @@ test(
     assert.doesNotMatch(r.stdout, /coverage mode:/, "no coverage run");
   },
 );
+
+// D-021: three processes' summaries of src/a.ts (node's TestCoverage, one raw file each). Line 3 and the
+// second branch of line 2 are hit by one process only.
+type Summary = { path: string; lines: { line: number; count: number }[]; branches: { line: number; count: number }[] };
+const proc = (lines: number[], branches: [number, number][]): Summary[] => [
+  { path: join(ROOT, "src", "a.ts"), lines: lines.map((count, i) => ({ line: i + 1, count })), branches: branches.map(([line, count]) => ({ line, count })) },
+  { path: join(ROOT, "tests", "a.test.ts"), lines: [{ line: 1, count: 1 }], branches: [] },
+];
+const PROCS = [proc([1, 0, 0, 0], [[2, 0], [2, 0]]), proc([2, 1, 0, 0], [[2, 1], [2, 0]]), proc([1, 0, 4, 0], [[2, 0], [2, 3]])];
+
+test("D-021: addSummary sums per-process hits, so every order of the processes gives the same lcov; a line hit by one process stays hit", () => {
+  const orders = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+  const texts = orders.map((o) => {
+    const files = new Map();
+    for (const i of o) addSummary(files, PROCS[i]!, ROOT);
+    return toLcov(files);
+  });
+  for (const t of texts) assert.equal(t, texts[0]);
+  const a = parseLcov(texts[0]!, ROOT).get("src/a.ts")!;
+  assert.deepEqual([...parseLcov(texts[0]!, ROOT).keys()], ["src/a.ts"], "only src/ is kept");
+  assert.deepEqual([...a.lines.entries()], [[1, 4], [2, 1], [3, 4], [4, 0]]);
+  assert.deepEqual([...a.branches.entries()], [["2#0", 1], ["2#1", 3]]);
+  const s = summarize(parseLcov(texts[0]!, ROOT), ["src/a.ts"], () => 0);
+  assert.deepEqual([s.lh, s.lf, s.brh, s.brf], [3, 4, 2, 2]);
+});
+
+test("D-021: toLcov writes what parseLcov reads back, branches in rank order", () => {
+  const files = addSummary(new Map(), proc([1, 0], [[1, 0], [1, 2], [2, 5]]), ROOT);
+  const text = toLcov(files);
+  assert.match(text, /^SF:src\/a\.ts\nBRDA:1,0,0,0\nBRDA:1,0,1,2\nBRDA:2,0,0,5\nBRF:3\nBRH:2\nDA:1,1\nDA:2,0\nLF:2\nLH:1\nend_of_record\n$/);
+  assert.deepEqual(parseLcov(text, ROOT), files);
+  assert.equal(toLcov(new Map()), "");
+});
+
+test("D-021: missingTestFiles names the test files whose process left no raw coverage (case-insensitive on Windows)", () => {
+  const flushed = new Set([String.raw`C:\repo\build\t\a.test.mjs`, String.raw`C:\repo\node_modules\x.js`]);
+  assert.deepEqual(missingTestFiles(flushed, ["c:/REPO/build/t/a.test.mjs", String.raw`C:\repo\build\t\b.test.mjs`], "win32"), [String.raw`C:\repo\build\t\b.test.mjs`]);
+  assert.deepEqual(missingTestFiles(new Set(["/repo/t/a.test.mjs"]), ["/repo/t/A.test.mjs", "/repo/t/a.test.mjs"], "linux"), ["/repo/t/A.test.mjs"]);
+  assert.deepEqual(missingTestFiles(flushed, [], "win32"), []);
+});
+
+test("D-021: coverage-raw.mjs fails loudly and writes no lcov when a batch's coverage was lost, and writes it otherwise", () => {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-cov-raw-"));
+  try {
+    const script = join(repoRoot(), "scripts", "check", "coverage-raw.mjs");
+    const testFile = join(dir, "a.test.mjs");
+    const run = (raw: string) => {
+      const out = join(dir, "out.info");
+      rmSync(out, { force: true });
+      const r = spawnSync(process.execPath, ["--expose-internals", script, raw, out, testFile], { encoding: "utf8" });
+      return { status: r.status, stderr: r.stderr, written: existsSync(out) ? readFileSync(out, "utf8") : null };
+    };
+    const raw = (name: string, files: Record<string, string>) => {
+      const d = join(dir, name);
+      rmSync(d, { recursive: true, force: true });
+      mkdirSync(d);
+      for (const [f, text] of Object.entries(files)) writeFileSync(join(d, f), text);
+      return d;
+    };
+    const script1 = (url: string) => JSON.stringify({ result: [{ scriptId: "1", url, functions: [] }] });
+    let r = run(raw("ok", { "coverage-1-1700000000000-0.json": script1(pathToFileURL(testFile).href) }));
+    if (coverageSkip() !== null) {
+      // Node 20 (the coverage step is skipped there, F-7): the summariser refuses, loudly, with no lcov.
+      assert.equal(r.status, 1);
+      assert.match(r.stderr, /has no internal\/test_runner\/coverage/);
+      assert.equal(r.written, null);
+      return;
+    }
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(r.written, "");
+    r = run(raw("empty", {}));
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /coverage of this batch was lost \(D-021\)[\s\S]*no raw coverage file/);
+    assert.equal(r.written, null);
+    r = run(raw("truncated", { "coverage-1-1700000000000-0.json": script1(pathToFileURL(testFile).href), "coverage-2-1700000000000-0.json": '{"result":[' }));
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /coverage-2-1700000000000-0\.json: /);
+    assert.equal(r.written, null);
+    r = run(raw("missing", { "coverage-1-1700000000000-0.json": script1(pathToFileURL(join(dir, "other.mjs")).href) }));
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /no raw coverage from the process of .*a\.test\.mjs/);
+    assert.equal(r.written, null);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

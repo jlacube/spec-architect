@@ -4,8 +4,8 @@
 // are transpiled with inline source maps; both bundles (plugins/architect/scripts/sdd.mjs,
 // build/npm/sdd-mcp.mjs) are rebuilt with inline source maps, so the CLI and MCP server processes the tests
 // spawn report coverage of src/ too; NODE_OPTIONS carries --enable-source-maps beside the no-network
-// preload; `node --test --experimental-test-coverage` (in batches of files, to bound the disk space of the
-// raw coverage files) writes lcov, joined into coverage/lcov.info. The timing tests
+// preload; `node --test` runs in batches of files (to bound the disk space of the raw V8 coverage files, kept
+// per batch with NODE_V8_COVERAGE and summed per process into lcov, D-021), joined into coverage/lcov.info. The timing tests
 // still run alone afterwards, without coverage. The rebuilt bundles are not the shipped ones: the `coverage`
 // step of scripts/check.mjs restores them with scripts/build.mjs (also when this run fails).
 import { build } from "esbuild";
@@ -217,30 +217,50 @@ const parallel = files.filter((f) => !isTiming(f));
 const serial = files.filter(isTiming);
 /**
  * Coverage mode: the parallel files run in batches of SDD_TEST_COVERAGE_BATCH files (default 16), each a
- * `node --test --experimental-test-coverage` run with its own lcov file; node keeps one raw V8 coverage file
- * (several hundred KB) per spawned process in the temporary folder until its run ends, so batches bound the
- * disk space a coverage run needs. The batch files are joined into coverage/lcov.info, whose records of one
- * source file scripts/check/coverage.mjs merges.
+ * `node --test` run whose processes (the runner, the test files and every process they spawn) write their raw
+ * V8 coverage into a folder of the batch (NODE_V8_COVERAGE, coverage/raw-NNN/); the raw files take several
+ * hundred KB per process, so batches bound the disk space a coverage run needs. After each batch,
+ * scripts/check/coverage-raw.mjs summarises every raw file alone and sums the per-process figures into the
+ * batch's lcov file, then the raw folder is removed (D-021: node's `--experimental-test-coverage` merged the
+ * processes of a batch in the order of the raw files' names, which hold the process id, and lost coverage
+ * differently from run to run). A batch whose coverage was lost — no raw file, an unreadable raw file, or a
+ * test file whose own process left none — fails the run, and coverage/lcov.info is not written, so the
+ * threshold check fails too instead of reporting a lower figure. The batch files are joined into
+ * coverage/lcov.info, whose records of one source file scripts/check/coverage.mjs merges.
  */
 function coverageRun(list) {
   const dir = join(root, "coverage");
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const size = Math.max(1, Number(process.env.SDD_TEST_COVERAGE_BATCH) || 16);
-  const covEnv = { ...env, NODE_OPTIONS: [env.NODE_OPTIONS, "--enable-source-maps"].join(" ") };
+  const count = Math.ceil(list.length / size);
   let status = 0;
   const parts = [];
+  const lost = [];
   for (let i = 0; i < list.length; i += size) {
-    const part = join(dir, `lcov-${String(parts.length + 1).padStart(3, "0")}.info`);
+    const n = String(parts.length + 1).padStart(3, "0");
+    const part = join(dir, `lcov-${n}.info`);
+    const raw = join(dir, `raw-${n}`);
+    mkdirSync(raw, { recursive: true });
     const batch = list.slice(i, i + size);
-    console.log(`coverage mode: batch ${parts.length + 1} of ${Math.ceil(list.length / size)} (${batch.length} file(s))`);
-    const covFlags = ["--experimental-test-coverage", "--test-reporter=tap", "--test-reporter-destination=stdout", "--test-reporter=lcov", `--test-reporter-destination=${part}`];
-    const r = spawnSync(process.execPath, ["--enable-source-maps", "--test", ...covFlags, ...flags, ...batch], { stdio: "inherit", cwd: root, env: covEnv });
+    console.log(`coverage mode: batch ${parts.length + 1} of ${count} (${batch.length} file(s))`);
+    const covEnv = { ...env, NODE_V8_COVERAGE: raw, NODE_OPTIONS: [env.NODE_OPTIONS, "--enable-source-maps"].join(" ") };
+    const r = spawnSync(process.execPath, ["--enable-source-maps", "--test", "--test-reporter=tap", "--test-reporter-destination=stdout", ...flags, ...batch], { stdio: "inherit", cwd: root, env: covEnv });
     if ((r.status ?? 1) !== 0) status = r.status ?? 1;
+    // The summariser runs without NODE_V8_COVERAGE, so it writes nothing into the folder it reads.
+    const sumEnv = { ...process.env };
+    delete sumEnv.NODE_V8_COVERAGE;
+    const s = spawnSync(process.execPath, ["--expose-internals", join(root, "scripts", "check", "coverage-raw.mjs"), raw, part, ...batch], { stdio: "inherit", cwd: root, env: sumEnv });
+    if (s.status !== 0 || !existsSync(part)) lost.push(parts.length + 1);
+    rmSync(raw, { recursive: true, force: true });
     parts.push(part);
   }
-  writeFileSync(join(dir, "lcov.info"), parts.filter((p) => existsSync(p)).map((p) => readFileSync(p, "utf8")).join("\n"));
-  console.log("coverage mode: lcov written to coverage/lcov.info");
+  if (lost.length > 0) {
+    console.error(`coverage mode: coverage of batch(es) ${lost.join(", ")} of ${count} was lost (D-021); coverage/lcov.info not written`);
+    return { status: 1 };
+  }
+  writeFileSync(join(dir, "lcov.info"), parts.map((p) => readFileSync(p, "utf8")).join("\n"));
+  console.log(`coverage mode: lcov of ${count} batch(es) written to coverage/lcov.info`);
   return { status };
 }
 const res = parallel.length === 0 ? { status: 0 } : coverage ? coverageRun(parallel) : spawnSync(process.execPath, ["--test", ...flags, ...parallel], { stdio: "inherit", cwd: root, env });

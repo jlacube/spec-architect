@@ -70,6 +70,58 @@ export function parseLcov(text, root) {
   return files;
 }
 
+/**
+ * D-021: adds the per-file summaries of one process (node's TestCoverage summary of a single raw V8 coverage
+ * file, `[{ path, lines: [{ line, count }], branches: [{ line, count }] }]`) to `files`, the map of
+ * parseLcov. Hits are summed, so the result does not depend on the order in which processes are added —
+ * unlike node's own merge of several processes' raw files (mergeCoverageRanges), which drops or keeps
+ * zero-count ranges depending on the order of the files in the coverage folder. A branch is keyed by its
+ * line and its rank among the branches of that line in that process, as in parseLcov.
+ */
+export function addSummary(files, summaryFiles, root) {
+  for (const s of summaryFiles) {
+    const p = srcPath(s.path, root);
+    if (p === null) continue;
+    const cur = files.get(p) ?? { lines: new Map(), branches: new Map() };
+    files.set(p, cur);
+    for (const l of s.lines) cur.lines.set(l.line, (cur.lines.get(l.line) ?? 0) + l.count);
+    const rank = new Map();
+    for (const b of s.branches) {
+      const k = rank.get(b.line) ?? 0;
+      rank.set(b.line, k + 1);
+      const key = `${b.line}#${k}`;
+      cur.branches.set(key, (cur.branches.get(key) ?? 0) + b.count);
+    }
+  }
+  return files;
+}
+
+/** The map of parseLcov / addSummary as lcov text, files and entries sorted; parseLcov reads it back unchanged. */
+export function toLcov(files) {
+  const out = [];
+  for (const path of [...files.keys()].sort()) {
+    const f = files.get(path);
+    out.push(`SF:${path}`);
+    const br = [...f.branches.entries()].map(([k, h]) => [...k.split("#").map(Number), h]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    for (const [line, k, h] of br) out.push(`BRDA:${line},0,${k},${h}`);
+    out.push(`BRF:${br.length}`, `BRH:${br.filter((b) => b[2] > 0).length}`);
+    const lines = [...f.lines.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [n, h] of lines) out.push(`DA:${n},${h}`);
+    out.push(`LF:${lines.length}`, `LH:${lines.filter((l) => l[1] > 0).length}`, "end_of_record");
+  }
+  return out.length ? out.join("\n") + "\n" : "";
+}
+
+/**
+ * D-021: the test files of a batch whose own process left no raw coverage (killed, timed out, crashed before
+ * exit, or its file lost), given the script paths found in the batch's raw files. Case-insensitive on Windows.
+ */
+export function missingTestFiles(flushed, expected, platform = process.platform) {
+  const norm = (p) => (platform === "win32" ? p.replace(/\//g, "\\").toLowerCase() : p);
+  const seen = new Set([...flushed].map(norm));
+  return expected.filter((f) => !seen.has(norm(f)));
+}
+
 /** Every `.ts` file under `<root>/src/`, as `src/…` paths. */
 export function srcFiles(root) {
   const out = [];

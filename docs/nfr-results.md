@@ -203,8 +203,9 @@ tests (`tests/unit/io/paths.test.ts`).
 **2026-10-22 (C001-T-080): the `coverage` step of `npm run check`, measured on Node 22.22.3; on Node 20
 the step is skipped with its reason (F-7, C001-NFR-502 Environment).** `SDD_TEST_COVERAGE=1 node
 scripts/test.mjs` follows the method below. In addition, the parallel test files run in batches of 16
-(`SDD_TEST_COVERAGE_BATCH`), each a `node --test --experimental-test-coverage` run with its own lcov file,
-joined into `coverage/lcov.info`. The bundles' inline source maps keep only the segments of `src/`
+(`SDD_TEST_COVERAGE_BATCH`), each with its own lcov file, joined into `coverage/lcov.info` (since D-021,
+see below, each batch is a `node --test` run that leaves its raw V8 coverage in a folder of the batch,
+summed per process by `scripts/check/coverage-raw.mjs`). The bundles' inline source maps keep only the segments of `src/`
 sources. Then `scripts/check/coverage.mjs` computes lines and branches over every `.ts` file under
 `src/`, with no exclusions. A file that no test loads counts as fully uncovered. Records of one file
 from several batches are merged; branches are matched by line and rank. Below 85% lines or 75%
@@ -223,6 +224,20 @@ positions in `src/` map to the same source and line, 0 differ, and 0 positions i
 | Run (Node 22.22.3) | Lines | Branches |
 |---|---|---|
 | check round 2, Git Bash | **88.72%** (8,818 / 9,939) | **82.06%** (4,937 / 6,016) |
+
+**2026-10-28 (D-021): per-process summing replaces node's merge.** With `--experimental-test-coverage`
+node merges the raw files of all processes of a run (`mergeCoverageRanges`). That merge drops
+zero-count ranges, or keeps them, depending on the order of the files in the folder. The file names
+hold the process id, so the order and the figure change from run to run (83.58% to 89.39% lines with no
+`src/` change). The same 25 raw files of `TC-1131-archive-resume`, merged by node's own `TestCoverage`
+in six orders, gave `src/archive/living.ts` 44 to 50 covered lines of 139. One of those processes alone
+covers 118 lines. No process was lost: each of three runs left 25 raw files. Now each batch writes its
+raw files to `coverage/raw-NNN/` (`NODE_V8_COVERAGE`). `scripts/check/coverage-raw.mjs` has node's
+`TestCoverage` summarise each file alone (same source maps and line rules) and sums the hits per line
+and per branch rank. The sum does not depend on order. A batch fails the run, and `coverage/lcov.info`
+is not written, when it left no raw file, when a raw file cannot be read, or when one of its test files
+left no coverage from its own process. Processes that tests kill (the MCP sessions) still record
+nothing, as before, but that loss is the same in every run.
 | check round 2, PowerShell 7 | **89.09%** (8,855 / 9,939) | **82.48%** (4,968 / 6,023) |
 | earlier runs, same method | 88.05%, 88.51%, 88.58%, 89.86% | 82.50%, 82.41%, 82.49%, 82.43% |
 
