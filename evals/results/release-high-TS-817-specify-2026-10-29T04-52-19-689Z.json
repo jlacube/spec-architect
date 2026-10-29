@@ -1,0 +1,808 @@
+{
+  "scenario": "TS-817-specify",
+  "title": "Specify refused on a stopped change",
+  "tier": "release",
+  "label": "release-high",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-10-29T04:55:56.889Z",
+  "runs": 9,
+  "passed": 9,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 1.5164736,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.18342960000000003,
+        "session_ms": 20175,
+        "api_ms": 14396,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1531,
+            "cache_read": 92768,
+            "cache_write": 16777,
+            "cost_usd": 0.18342960000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1531,
+              "cache_read": 92768,
+              "cache_write": 16777
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 333
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 37
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 196
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 190
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run1.json"
+    },
+    {
+      "run": 2,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.15921960000000002,
+        "session_ms": 24187,
+        "api_ms": 18993,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1467,
+            "cache_read": 71718,
+            "cache_write": 14438,
+            "cost_usd": 0.15921960000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1467,
+              "cache_read": 71718,
+              "cache_write": 14438
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 332
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 75
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 176
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 54
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 95
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run2.json"
+    },
+    {
+      "run": 3,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1562688,
+        "session_ms": 20750,
+        "api_ms": 15512,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1388,
+            "cache_read": 71504,
+            "cache_write": 14272,
+            "cost_usd": 0.1562688
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1388,
+              "cache_read": 71504,
+              "cache_write": 14272
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 361
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 160
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 76
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 47
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run3.json"
+    },
+    {
+      "run": 4,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.18069659999999999,
+        "session_ms": 21010,
+        "api_ms": 15543,
+        "turns": 11,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1696,
+            "cache_read": 94643,
+            "cache_write": 15976,
+            "cost_usd": 0.18069659999999999
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1696,
+              "cache_read": 94643,
+              "cache_write": 15976
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 7,
+          "Glob": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 366
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 72
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 151
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 168
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 81
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 42
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 41
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run4.json"
+    },
+    {
+      "run": 5,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.17751640000000002,
+        "session_ms": 18965,
+        "api_ms": 13620,
+        "turns": 10,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1537,
+            "cache_read": 95122,
+            "cache_write": 15964,
+            "cost_usd": 0.17751640000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1537,
+              "cache_read": 95122,
+              "cache_write": 15964
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 7,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 314
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 64
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 149
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 50
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 69
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 41
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 29
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run5.json"
+    },
+    {
+      "run": 6,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.15738999999999997,
+        "session_ms": 18312,
+        "api_ms": 13298,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1432,
+            "cache_read": 71470,
+            "cache_write": 14303,
+            "cost_usd": 0.15738999999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1432,
+              "cache_read": 71470,
+              "cache_write": 14303
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 304
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 213
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 89
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run6.json"
+    },
+    {
+      "run": 7,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1577392,
+        "session_ms": 21586,
+        "api_ms": 16322,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1417,
+            "cache_read": 71716,
+            "cache_write": 14378,
+            "cost_usd": 0.1577392
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1417,
+              "cache_read": 71716,
+              "cache_write": 14378
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 322
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 169
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 66
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run7.json"
+    },
+    {
+      "run": 8,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.18587900000000002,
+        "session_ms": 29765,
+        "api_ms": 24199,
+        "turns": 9,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 1782,
+            "cache_read": 120835,
+            "cache_write": 15753,
+            "cost_usd": 0.18587900000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 1782,
+              "cache_read": 120835,
+              "cache_write": 15753
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 4,
+          "Grep": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 332
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 186
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 58
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 52
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 225
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 254
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run8.json"
+    },
+    {
+      "run": 9,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.15833440000000001,
+        "session_ms": 25868,
+        "api_ms": 20674,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1432,
+            "cache_read": 71832,
+            "cache_write": 14412,
+            "cost_usd": 0.15833440000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1432,
+              "cache_read": 71832,
+              "cache_write": 14412
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 318
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 88
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 169
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 70
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 55
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-817-specify-2026-10-29T04-52-19-689Z-run9.json"
+    }
+  ]
+}

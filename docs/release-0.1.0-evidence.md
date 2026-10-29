@@ -7,9 +7,10 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 (`.sdd/002-multi-platform-targets/20-plan/handoff.md`).
 
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
-done, on 2026-10-28. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
-22 / 22. Batch 3 stopped: C001-TC-209 at 8 / 10, below the floor; P-01 decides (§4.2). Running
-notional total: 64.07 USD (§4.5).
+done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
+22 / 22. Batch 3 complete: 15 rows at 10 / 10, and TS-209 at 9 / 10 on the D-022 files. Its 8 / 10
+set on the old files is kept as history (§4.2). Batches 4 and 5 are next. Running notional total:
+109.74 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -251,7 +252,7 @@ Command: `node evals/harness/run.mjs --host claude-code --auth subscription --ti
 | Row | Runs (pre-run + full) | Pass | Notional USD | Result files |
 |---|---|---|---|---|
 | TS-133 | 1 + 9 | 10 / 10 | 0.24 + 1.47 | `…-TS-133-2026-10-28T20-40-46-800Z.json`, `…-TS-133-2026-10-28T22-07-58-688Z.json` |
-| TS-209 | 1 + 9 | **8 / 10, below ≥ 9 / 10** | 0.24 + 2.06 | `…-TS-209-2026-10-28T20-41-05-896Z.json`, `…-TS-209-2026-10-28T22-10-43-534Z.json` |
+| TS-209 (history: files before D-022) | 1 + 9 | **8 / 10, below ≥ 9 / 10** | 0.24 + 2.06 | `…-TS-209-2026-10-28T20-41-05-896Z.json`, `…-TS-209-2026-10-28T22-10-43-534Z.json` |
 
 The two failed TS-209 runs (both `success` ends, at 0.16–0.30 USD, under the 0.50 USD cap, so both are
 runs):
@@ -266,8 +267,94 @@ runs):
   on a finding, not P-01's volume." The note does not state P-01's budget. The session's blocking
   budget question and its questions block pass.
 
-Not run: the other 14 rows of batch 3, batch 4 and batch 5. C001-T-072 step 4 names reopen paths
-for C001-TC-215, 223, 224 and 225 only, so TS-209 waits for P-01's decision.
+**P-01's decision on TS-209 (2026-10-28, relayed by the conductor):** "fix both and rerun TS-209".
+Both the grader of run 6 and the researcher's hand-back of run 8 get fixed (by a separate implementer).
+TS-209 is then rerun. The 8 / 10 above stays recorded as a failed release run.
+
+**Rows held until the researcher fix lands** (their sessions dispatch `architect:sdd-researcher`):
+TS-209 (batch 3), and INJ-08, INJ-09, INJ-10, INJ-11 and INJ-12 (batch 5). How they were found:
+
+- `subagent_type` in the pre-run transcripts of the release-high rows: only TS-209 dispatches the
+  researcher.
+- TS-224 names the researcher only in its list of the nine specialists. Its prompt is a spec-phase
+  draft, and no pre-run session dispatched the researcher.
+- The case file of the injection suite: INJ-08 … 12 are its researcher rows.
+- The earlier Claude Code transcripts of the other INJ rows have 0 researcher dispatches each.
+
+Every other row runs. The rest of batch 3 resumed at TS-212 at 22:39 UTC.
+
+**The fix: D-022, commit `bcaa082` (2026-10-28 23:26 UTC).**
+
+- Changes: the TS-209 grader now passes the conditional budget sentence. In
+  `plugins/architect/agents/sdd-researcher.md` and `plugins/architect/skills/sdd-conventions/SKILL.md`,
+  option keys are limited to the C001-IF-05 schema.
+- Offline re-grade of the stored TS-209 set (history; the conductor's figure): 9 / 10, with run 8
+  still failing as recorded above.
+- That set is replaced for the verdict by a fresh TS-209 × 10 on the fixed files (below).
+- The edits reached the working tree before the commit: `sdd-researcher.md` at 22:47:56 UTC and
+  `sdd-conventions/SKILL.md` at 22:48:26 UTC (file times). Each eval session copies the plugin when it
+  starts, so:
+  - on the files before D-022: the routing suite, the 22 pre-runs, TS-133 × 9, TS-209 × 9 (the failed
+    set), TS-212 × 9 (22:38–22:43 UTC), and TS-214 runs 1 and 2 (ended 22:46 and 22:49 UTC);
+  - on the D-022 files: TS-214 runs 3–9, and every session after them.
+- P-01's direction (relayed): rows completed on the old files stand. The `sdd-conventions` change only
+  narrows the option keys. The remaining 9 runs each of TS-215, TS-223, TS-224 and TS-225 in batch 4
+  run on the new files and serve as the regression check of that change. Their pre-runs ran on the
+  old files.
+
+**Batch 3 result (2026-10-28 22:38 – 2026-10-29 05:39 UTC): 15 rows, 150 runs, 150 pass.**
+
+- Each row: its pre-run and 9 full-scale runs.
+- TS-713: one session failed at the 0.50 USD spend cap (rule 2), so it is no run. One 1.50 USD
+  `--cap-exception` session replaced it and passed.
+- "At cap" counts the sessions that ended `error_max_budget_usd`. Every one of them passed, except
+  the replaced TS-713 session.
+
+| Row | Sessions | Runs passed / runs | At cap | Notional USD | Result files (`evals/results/release-high-<row>-<time>.json`) |
+|---|---|---|---|---|---|
+| TS-133 | 10 | 10 / 10 | 0 | 1.70 | 2026-10-28T20-40-46-800Z, 2026-10-28T22-07-58-688Z |
+| TS-212 | 10 | 10 / 10 | 0 | 1.81 | 2026-10-28T20-42-42-549Z, 2026-10-28T22-38-44-154Z |
+| TS-214 (rule 2) | 10 | 10 / 10 | 0 | 3.11 | 2026-10-28T20-43-08-475Z, 2026-10-28T22-43-14-984Z |
+| TS-226-gate | 10 | 10 / 10 | 0 | 2.64 | 2026-10-28T20-45-23-610Z, 2026-10-28T23-21-12-798Z |
+| TS-226-round | 10 | 10 / 10 | 0 | 2.25 | 2026-10-28T20-47-36-415Z, 2026-10-29T01-01-32-463Z |
+| TS-713 (rule 2) | 11 | 10 / 10 (one no-run replaced) | 10 | 7.52 | 2026-10-28T20-48-20-029Z, 2026-10-29T01-06-09-321Z (run 9: failed at the 0.50 USD cap, no run), 2026-10-29T01-52-50-345Z (its replacement, `caps.usd` 1.50, pass) |
+| TS-803 | 10 | 10 / 10 | 0 | 3.14 | 2026-10-28T20-54-03-728Z, 2026-10-29T01-57-20-426Z |
+| TS-804-unattended | 10 | 10 / 10 | 8 | 6.68 | 2026-10-28T20-56-56-797Z, 2026-10-29T02-19-53-698Z |
+| TS-804-revise | 10 | 10 / 10 | 10 | 5.18 | 2026-10-28T21-00-18-319Z, 2026-10-29T03-04-40-041Z |
+| TS-804-injection | 10 | 10 / 10 | 0 | 2.68 | 2026-10-28T21-03-23-342Z, 2026-10-29T03-38-23-900Z |
+| TS-815 (rule 2) | 10 | 10 / 10 | 8 | 5.02 | 2026-10-28T21-05-24-866Z, 2026-10-29T03-57-50-715Z |
+| TS-817-stop (rule 2) | 10 | 10 / 10 | 0 | 2.88 | 2026-10-28T21-09-13-075Z, 2026-10-29T04-28-38-839Z |
+| TS-817-specify (rule 2) | 10 | 10 / 10 | 0 | 1.69 | 2026-10-28T21-11-34-250Z, 2026-10-29T04-52-19-689Z |
+| TS-1015 | 10 | 10 / 10 | 0 | 0.79 | 2026-10-28T21-11-55-940Z, 2026-10-29T04-55-57-312Z |
+| TS-1124 | 10 | 10 / 10 | 0 | 2.67 | 2026-10-28T21-13-42-008Z, 2026-10-29T05-11-52-210Z |
+| **Batch 3 (with pre-runs)** | **151** | **150 / 150** | | **49.77** | |
+
+**TS-209, fresh set on the D-022 files (2026-10-29, 05:40–06:19 UTC): 9 / 10, meets ≥ 9 / 10.**
+This set replaces the 8 / 10 set above for the verdict (P-01, relayed).
+
+| Part | Sessions | Pass | Notional USD | Result file |
+|---|---|---|---|---|
+| pre-run | 1 | 1 | 0.19 | `evals/results/release-high-TS-209-2026-10-29T05-40-02-823Z.json` |
+| full scale | 9 | 8 | 2.25 | `evals/results/release-high-TS-209-2026-10-29T06-01-30-225Z.json` |
+
+- All sessions ended `success` at `caps.usd` 0.50, with `--auth subscription`. HEAD was `bcaa082`.
+- The failed run (full-scale run 2): `questions block invalid: /questions/0/rejected/0 must be
+  object`. The researcher wrote a `rejected` entry as a plain string ("Vonage as a named budget
+  tier: …") instead of a `{ label, reason }` object.
+- This is a different schema slip from run 8 of the old set. D-022 limited the option keys and does
+  not cover the shape of `rejected`.
+- The row meets the floor with no margin. P-01 may want this slip tracked as a follow-up defect.
+
+- C001-TC-226 (gate, round) and C001-TC-227: 10 / 10 each on these rows. The TS-226-blocking row is
+  in batch 4.
+- TS-804-revise passed in every session at the 0.50 USD cap. Its cost per session (0.50–0.53 USD)
+  sits at the cap, so the row has no headroom. That is a fragility to note for later releases, not
+  a failure.
+- Session-limit check, batch 3:
+  - every session ran with `--auth subscription`;
+  - every session without `--cap-exception` ran at `caps.usd` 0.50;
+  - the one 1.50 USD session (TS-713) replaces exactly one session that failed and ended at the
+    spend cap, named above.
 
 ### 4.3 Release-standard scenarios (3 runs, 3 / 3; 2 / 3 → 10-run check ≥ 9 / 10)
 
@@ -286,6 +373,8 @@ _not started_
 | Routing suite, batch 2 remainder (14 cases × 5) | 70 | 8.93 | 47.12 |
 | Release-high pre-runs (16 rows + 6 rule-1 rows, × 1) | 22 | 13.42 | 60.54 |
 | Release-high full scale, batch 3 so far (TS-133 × 9, TS-209 × 9) | 18 | 3.53 | 64.07 |
+| Release-high full scale, batch 3 rest (14 rows × 9, + 1 rule-2 replacement) | 127 | 43.23 | 107.30 |
+| TS-209 fresh set on the D-022 files (1 + 9) | 10 | 2.44 | 109.74 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 
