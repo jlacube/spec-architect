@@ -50,6 +50,11 @@ reviewed_ids: all            # or the list of IDs reviewed in a revision (see Re
 ```
 
 - Finding IDs `CR-<n>` from 1 in the report; every finding has all six fields; Status `open`.
+- **Refs:** at least one ID of the sdd-conventions scheme, in full form (`C<NNN>-<TYPE>-<seq>`),
+  also when the finding is about something missing: cite the nearest owning artifact — the
+  requirement, story or capability the gap belongs to, otherwise the closest other ID of the
+  phase (NFR, IF, COMP, DOD, GOAL, SC, T, M …). A section or file path alone is not a ref, nor
+  is a frontmatter `id` outside the scheme (`C004-SPEC-NFR`); add the path to Evidence instead.
 - **Severity:** blocker — the phase cannot be approved as is (a wrong or missing requirement, a
   contradiction, an open blocking question); major — a reviewer would send it back (ambiguity,
   untestable statement, missing coverage of a real case); minor — clarity, consistency, style.
