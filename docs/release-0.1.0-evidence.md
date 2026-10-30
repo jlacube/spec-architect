@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation stopped at TS-710 (§4.3). Running notional total:
-211.84 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; stopped at TS-320 (cap, §4.3). Running notional total:
+223.88 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -436,6 +436,71 @@ Command: `node evals/harness/run.mjs --host claude-code --auth subscription --ti
   the 10-run check (≥ 9 / 10). It can no longer pass 3 / 3.
 - The run stopped here (P-01: stop at the first counted failure and report).
 
+**P-01's decision on TS-710 (2026-10-30, relayed by the conductor):** the spec requires an artifact ID
+on every finding, so this is a critic defect.
+
+- The fix is **D-024, commit `8c8f898`** (2026-10-30 03:17 UTC). `critique-rubrics/SKILL.md` now
+  requires every finding's Refs to include a full-form artifact ID, findings about missing content
+  included.
+- A fresh TS-710 × 3 on the fixed files replaces the failed run above for the verdict. The failed run
+  stays here as history.
+- Rows held until the fix landed:
+  - TS-319 and TS-320: their sessions dispatch `architect:sdd-critic` (1 / 1 earlier transcripts
+    each).
+  - TS-715: held as the conductor named it. It is an auditor scenario. Its `drafting.mjs` fixture
+    holds a pre-written critic report, and its 6 earlier transcripts have 0 critic dispatches.
+- **Files before and after D-024.** The skill edit reached the working tree at 02:20:31 UTC (file
+  time), before the commit. Each session copies the plugin when it starts.
+  - Before D-024: TS-712 and TS-714 (both passed; they stand, per P-01), TS-710 (the failed run,
+    history), and TS-622 (started 02:20:17 UTC, passed; a planner scenario that does not load
+    `critique-rubrics`).
+  - On the D-024 files: TS-216, TS-401 and TS-515 (first session), and every session after them.
+
+**Prevalidation, second part (02:20–03:07 UTC), on the 55 rows without the held ones:**
+
+- TS-622: pass, at the cap (rule 2).
+- TS-216: pass, at the cap (rule 2).
+- TS-401: the 0.50 USD session failed at the cap (no run), and its 1.50 USD replacement passed.
+- TS-515: the 0.50 USD session failed at the cap (no run). Its replacement was queued for after the
+  03:30 reset.
+- The driver was stopped while it waited, with no session running, and restarted with this order:
+  1. the TS-515 replacement;
+  2. TS-710 × 3 (fresh set);
+  3. TS-319, TS-320 and TS-715;
+  4. the remaining rows in risk order.
+
+**Prevalidation, third part (2026-10-30, 03:31–04:33 UTC, D-024 files): stopped at TS-320.**
+
+| Row | Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-515 (rule 2) | TS-515-2026-10-30T03-31-30-152Z (replaces TS-515-2026-10-30T03-00-26-596Z) | pass | success | 1.50 | 1.16 | run 1: pass |
+| TS-710 (rule 2), fresh set | TS-710-2026-10-30T03-39-40-916Z | fail at cap | error_max_budget_usd | 0.50 | 0.71 | no run |
+| TS-710 | TS-710-2026-10-30T03-45-02-008Z (replaces the above) | pass | success | 1.50 | 0.77 | run 1: pass |
+| TS-710 | TS-710-2026-10-30T03-50-00-778Z | fail at cap | error_max_budget_usd | 0.50 | 0.84 | no run |
+| TS-710 | TS-710-2026-10-30T03-56-20-820Z (replaces the above) | pass | success | 1.50 | 0.95 | run 2: pass |
+| TS-710 | TS-710-2026-10-30T04-02-48-370Z | fail at cap | error_max_budget_usd | 0.50 | 0.62 | no run |
+| TS-710 | TS-710-2026-10-30T04-07-54-036Z (replaces the above) | pass | success | 1.50 | 1.13 | run 3: pass |
+| TS-319 (rule 2) | TS-319-2026-10-30T04-14-50-871Z | fail at cap | error_max_budget_usd | 0.50 | 0.77 | no run |
+| TS-319 | TS-319-2026-10-30T04-20-34-282Z (replaces the above) | pass | success | 1.50 | 1.22 | run 1: pass |
+| TS-320 (no cap exception) | TS-320-2026-10-30T04-28-53-497Z | **fail at cap** | error_max_budget_usd | 0.50 | 0.53 | **run 1: fail** |
+
+- **C001-TC-710 on the D-024 files: 3 / 3, meets its rule.** It replaces the failed run on the old
+  files for the verdict.
+- **The TS-320 failure:**
+  - The asserts: `last section is "undefined"`, `first line of Verdict is not go,
+    needs-clarification or stop: (empty)`, `no reason after the verdict`.
+  - The session (3 turns, 240 s) dispatched `architect:sdd-critic`, which wrote a 12 KB ideation
+    critic report. The session ended at the 0.50 USD spend cap (0.53 USD) before the report held
+    its Verdict section.
+  - TS-320 runs the same ideation review as TS-319 (its case file imports `ideationReview` from
+    `TS-319.eval.mjs`). TS-319's session needs about 1.22 USD and is a rule-2 row of C002-IF-010
+    §2.2. TS-320 has no cap exception, so it gets no 1.50 USD replacement, and its capped failure
+    counts as a run (test plan §4.1).
+  - Its one earlier session (`d030-measure-TS-320-2026-10-24T05-41-01-275Z.json`) passed at 0.40
+    USD.
+  - So this failure comes from the cap, not from the critic's behaviour: the row lacks the cap
+    exception its twin has. The run stopped here (first counted failure).
+
 **Rule-2 pattern:** all three rule-2 rows run so far ended at the 0.50 USD cap in their first session
 and needed the 1.50 USD replacement (0.89–1.10 USD). The other 15 rule-2 rows are likely to do the
 same, at about 1.5–1.7 USD notional per row instead of 0.5.
@@ -555,6 +620,8 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Injection full scale so far (INJ-01, INJ-02 × 4) | 8 | 1.58 | 190.44 |
 | Injection full scale rest (INJ-02 replacement, INJ-03 … 22 × 4, 2 not-exposed replacements) | 83 | 16.53 | 206.97 |
 | Release-standard prevalidation so far (TS-712, TS-714, TS-710, each with its rule-2 replacement) | 6 | 4.87 | 211.84 |
+| Release-standard prevalidation, second part (TS-622, TS-216, TS-401 + replacement, TS-515 first session) | 5 | 3.35 | 215.19 |
+| Release-standard prevalidation, third part (TS-515 replacement, TS-710 fresh × 3 with replacements, TS-319 + replacement, TS-320) | 10 | 8.69 | 223.88 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 
