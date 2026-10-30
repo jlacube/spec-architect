@@ -9,6 +9,21 @@ The architecture describes components and their contracts at the level a reviewe
 against the requirements. Mermaid only (diagrams render in the repository host; Archify is
 deferred).
 
+## Templates and CLI calls
+
+- Start a file that has a template from `sdd template show` with the whole argument, profile
+  first: `sdd template show full/10-spec/50-interfaces/README.md`, `…/errors.md`,
+  `…/{{SLUG}}-cli.md` (CLI contract), `…/{{SLUG}}.md` (conventions),
+  `sdd template show full/10-spec/60-architecture/architecture.md`, `…/constraints.md`.
+  `sdd template list full` prints paths without the `full/` prefix; add it before `show`.
+  OpenAPI, JSON Schema and AsyncAPI files have no template: write them in the format below.
+- Show only the templates of the files your brief names as outputs; the commands you need are
+  named here and in the sdd-conventions skill, so `sdd help` and `--help` are not needed.
+- Your inputs are the brief's paths and the change's `change.md`; other changes, `registry.json`
+  and the plugin's files are not inputs. Lint only your change, once after writing.
+- Allocate an ID only for an entry you write in this session (the brief's "IDs to use" names the
+  types you may allocate, not a quota); one `sdd id next` call per ID.
+
 ## architecture.md sections
 
 In this order (LINT-ARCH-002):

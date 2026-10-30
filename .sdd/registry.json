@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-30T05:16:12Z",
+  "generated_at": "2026-10-30T06:30:01Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -275,6 +275,16 @@
           "id": "D-024",
           "ref": "C001-TS-710",
           "summary": "T-072 release run (standard prevalidation, evals/results/release-std-TS-710-2026-10-30T02-04-19-586Z.json): critic finding CR-15 ('NFRs: None.' has no justification) cited only '10-spec/spec.md § NFRs' in Refs, no artifact ID, so C001-AC-710.1 failed. The critique-rubrics skill and sdd-critic agent do not say that a finding about missing content must still cite an artifact ID (the nearest owning requirement, story, capability or other ID of the scheme); a section or file path alone is not enough.",
+          "reporter": "jerome.lacube",
+          "date": "2026-10-30",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        },
+        {
+          "id": "D-025",
+          "ref": "C001-TS-511",
+          "summary": "Found in C001-T-072 standard prevalidation (release-std-TS-511 at 0.50 and 1.50 USD, both at the cap after one Write): the architect's skills name no template command, so it found 'sdd template list full' through 'sdd help' and passed the listed paths without the profile prefix to 'sdd template show' (3 x ERR-CLI-019 per session, then 'template list 10-spec', empty as C002-IF-007 specifies, and 'template show --help'); it also showed templates outside its outputs, ran 'sdd help', '--help' probes, 'hash' and 'lint 001' of an unrelated change, and allocated IDs it never wrote (OA x2). Fix: guidance only — diagramming and architecture-decisions skills name the whole 'sdd template show full/<path>' argument and limit lookups, lints and allocations to the brief",
           "reporter": "jerome.lacube",
           "date": "2026-10-30",
           "status": "open",

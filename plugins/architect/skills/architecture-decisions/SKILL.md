@@ -16,8 +16,9 @@ through the conductor as a question first; the ADR records the outcome.
 
 1. **Options analysis first** (options-analysis skill): `20-plan/20-decisions/OA-<seq>-<slug>.md`
    with four or five candidates, weighted criteria and the recommendation.
-2. **ADR** `20-plan/20-decisions/ADR-<seq>-<slug>.md` from the plugin template (`sdd id next ADR
-   --change <NNN>`), in MADR form:
+2. **ADR** `20-plan/20-decisions/ADR-<seq>-<slug>.md` from the template that
+   `sdd template show full/20-plan/20-decisions/ADR-{{SEQ}}-{{SLUG}}.md` prints (`full` whatever
+   the change's profile; ID from `sdd id next ADR --change <NNN>`), in MADR form:
 
 ```markdown
 ---
