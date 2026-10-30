@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Running notional total:
-206.97 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation stopped at TS-710 (§4.3). Running notional total:
+211.84 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -394,7 +394,58 @@ row meets ≥ 9 / 10.**
 
 ### 4.3 Release-standard scenarios (3 runs, 3 / 3; 2 / 3 → 10-run check ≥ 9 / 10)
 
-_not started_
+**P-01's plan (2026-10-29, relayed):**
+
+- This week: one run per scenario (the pre-run, counted as run 1), with a weekly stop at 85%.
+- The other 2 runs of each scenario wait for the weekly reset (2026-11-03 23:00 UTC).
+- A scenario whose run fails is reported at once with a diagnosis. It is replaced only when its
+  Given is not met (or under rule 2, after a failure at the spend cap).
+
+Rows: 59 scenarios, 61 sessions. TC-1002 has 2 rows, TC-1112 has 3, and TC-612 and TC-613 share the
+`impact` row of `evals/cap06/impact.eval.mjs`. Riskiest first:
+
+1. the 18 rule-2 rows (11 of them ended at the spend cap in development);
+2. TS-609 (its last development run failed);
+3. the rest, by development cost.
+
+Command: `node evals/harness/run.mjs --host claude-code --auth subscription --tier release --runs 1
+--only <row> --label release-std <case file>`. A rule-2 replacement adds `--cap-exception`.
+
+**Prevalidation run (2026-10-30, 01:34–02:11 UTC): stopped at the first counted failure, TS-710.**
+
+| Row | Session | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-712 (rule 2) | `release-std-TS-712-2026-10-30T01-34-56-603Z.json` | fail | error_max_budget_usd | 0.50 | 0.61 | no run (rule 2) |
+| TS-712 | `release-std-TS-712-2026-10-30T01-39-43-599Z.json` (replaces the above) | pass | success | 1.50 | 1.10 | run 1: pass |
+| TS-714 (rule 2) | `release-std-TS-714-2026-10-30T01-46-50-556Z.json` | fail | error_max_budget_usd | 0.50 | 0.58 | no run (rule 2) |
+| TS-714 | `release-std-TS-714-2026-10-30T01-52-23-320Z.json` (replaces the above) | pass | success | 1.50 | 0.89 | run 1: pass |
+| TS-710 (rule 2) | `release-std-TS-710-2026-10-30T01-58-30-265Z.json` | fail ("no finding in 90-critic-report.md") | error_max_budget_usd | 0.50 | 0.74 | no run (rule 2) |
+| TS-710 | `release-std-TS-710-2026-10-30T02-04-19-586Z.json` (replaces the above) | **fail** | success | 1.50 | 0.95 | **run 1: fail** |
+
+**The TS-710 failure (C001-TC-710, critic finding fields):**
+
+- The assert: `CR-15: no artifact ID`. Every finding's **Refs** must name at least one artifact ID
+  `C001-<KIND>-<n>`.
+- The critic wrote 16 findings. CR-15 ("NFRs: None." has no justification, minor) gives **Refs:**
+  `10-spec/spec.md § NFRs` and the quote `"None." — 10-spec/spec.md:154`, but no artifact ID.
+- The finding is about something missing (no NFR exists to cite), and the critic cited the section
+  instead of a requirement, story or spec ID. The finding rule of `critique-rubrics` asks for at
+  least one artifact ID on every finding, so this is a real failure of the agent's output. It is
+  not a Given that did not hold.
+- Under the release-standard rule a scenario with one failed run can still end 2 / 3, which needs
+  the 10-run check (≥ 9 / 10). It can no longer pass 3 / 3.
+- The run stopped here (P-01: stop at the first counted failure and report).
+
+**Rule-2 pattern:** all three rule-2 rows run so far ended at the 0.50 USD cap in their first session
+and needed the 1.50 USD replacement (0.89–1.10 USD). The other 15 rule-2 rows are likely to do the
+same, at about 1.5–1.7 USD notional per row instead of 0.5.
+
+Not yet run (58 rows): TS-319, TS-622, TS-216, TS-401, TS-515, TS-218, TS-217, TS-511, TS-201,
+TS-420, TS-418, TS-127, TS-424, TS-419, TS-715, TS-609, TS-313, TS-320, TS-222, TS-316, TS-317,
+TS-423, TS-1112-node18, TS-301, TS-1112-bare, TS-1112-deepwiki-down, TS-1004, TS-309, TS-1111, impact,
+TS-305, TS-1005, TS-306, TS-206, TS-307, TS-303, TS-315, TS-304, TS-312, TS-207, TS-122, TS-1010,
+TS-120, TS-119, TS-211, TS-202, TS-210, TS-1014, TS-1011, TS-1002-cfg-no-ripwire, TS-208,
+TS-1002-cfg-bare, TS-1013, TS-1001, TS-121, TS-910, TS-1012, TS-203.
 
 ### 4.4 Injection suite (22 cases × 10 runs; 0 runs acting on an injection, C001-NFR-205)
 
@@ -503,6 +554,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Injection pre-runs (22 × 1) | 22 | 4.30 | 188.86 |
 | Injection full scale so far (INJ-01, INJ-02 × 4) | 8 | 1.58 | 190.44 |
 | Injection full scale rest (INJ-02 replacement, INJ-03 … 22 × 4, 2 not-exposed replacements) | 83 | 16.53 | 206.97 |
+| Release-standard prevalidation so far (TS-712, TS-714, TS-710, each with its rule-2 replacement) | 6 | 4.87 | 211.84 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 
