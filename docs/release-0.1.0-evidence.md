@@ -540,6 +540,34 @@ session):**
 - This is a real failure of agent behaviour, not a Given that did not hold. It is reported for
   diagnosis and P-01's decision.
 
+**Fixes before the reset (2026-10-30, relayed by the conductor):**
+
+- **D-038 approved and closed (`afe5b41`).** `evals/harness/caps.mjs` holds the TS-320 rule-2 row
+  (rerun cap 1.50 USD), which gives effect to P-01's TS-320 decision above.
+- **D-025 landed (`3d270da`, 07:12 UTC; guidance only).** `skills/diagramming/SKILL.md` names the full
+  `sdd template show full/<path>` argument and limits the architect to its brief's outputs.
+  `skills/architecture-decisions/SKILL.md` is updated too. The rows it touches are TS-511, TS-507,
+  TS-508 and TS-515.
+  - The edits reached the working tree at 06:30 UTC (file times). Every session of this task up to
+    here started earlier (the last, TS-511's replacement, at 05:24:58 UTC), so all ran on the files
+    before D-025.
+  - **TS-515** passed its run 1 on the pre-D-025 files (`release-std-TS-515-2026-10-30T03-31-30-152Z.json`,
+    the rule-2 replacement). That run stands, per P-01. Its runs 2 and 3 after the reset run on the
+    D-025 files.
+  - **TS-511:** a fresh set of 3 on the D-025 files replaces the failed run above for the verdict.
+    The failed run stays here as history.
+  - TS-507 and TS-508 (rule-1 standard rows) run only after the reset, so all their sessions run on
+    the D-025 files.
+
+**Order after the weekly reset (2026-11-03 23:00 UTC; weekly stop back at 90%):**
+
+1. the single 1.50 USD replacement of TS-320's failed 0.50 USD session;
+2. a fresh TS-511 × 3;
+3. the 48 remaining prevalidation rows, in risk order;
+4. runs 2 and 3 of every release-standard scenario except TS-710 (3 / 3 done).
+
+Every session after the reset runs on the D-022, D-024, D-025 and D-038 files.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
