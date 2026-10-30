@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-10-30T07:14:47Z",
+  "generated_at": "2026-10-30T07:15:08Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -709,9 +709,9 @@
           "summary": "Found in C001-T-072 (release prevalidation, standard class): the C001-TS-320 session (the critic's ideation verdict, which grades the same review as C001-TS-319) ended at the 0.50 USD spend cap (0.53 USD, error_max_budget_usd, 3 turns) while the critic wrote a 12 KB report, before the Verdict section (evals/results/release-std-TS-320-2026-10-30T04-28-53-497Z.json); C001-TS-319's session on the same review needs about 1.22 USD and is a rule-2 row of C002-IF-010 §2.2, C001-TS-320 has no row. P-01 (2026-10-30, Q-ts320-cap-01): 'Add rule-2 exception (Recommended)', C001-TS-320 gets the rule-2 row of C001-TS-319 with the rerun cap 1.50 USD.",
           "reporter": "jerome.lacube",
           "date": "2026-10-30",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-038 approved at G2/G3 (0503485, e38eaa6): C001-TS-320 rule-2 cap row at 1.50 USD in IF-010 §2.2, NFR-105, TC-679 and caps.mjs (45 rows); critic CR-126…128, CR-88…92 fixed (e78cc4b)",
+          "closed_at": "2026-10-30"
         }
       ],
       "waivers": [
