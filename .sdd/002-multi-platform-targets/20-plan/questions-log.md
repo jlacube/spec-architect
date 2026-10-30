@@ -263,3 +263,11 @@ Questions on the S-07 record (C002-T-001).
 - **Options:** 1. Move to a new change: a scope revision drops C002-T-051 and C002-T-052, marks the OpenCode DoD items as moved, and a later CHG-003 "OpenCode release" carries the early-stop or INJ-21 fix; CHG-002 closes after the Copilot release (Recommended) · 2. Keep it in CHG-002 at a later version
 - **Answer:** P-01: "Move to a new change (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-10-30 — defect D-038 (found in C001-T-072)
+
+### Q-ts320-cap-01 — C001-TS-320 ended at the 0.50 USD cap before its Verdict section (C001-T-072 standard prevalidation)
+- **Context:** C001-TS-320 grades the ideation verdict of the same critic review that C001-TS-319 grades; its session ended at the 0.50 USD spend cap (0.53 USD, `error_max_budget_usd`) while the critic wrote a 12 KB report, before the Verdict section (`evals/results/release-std-TS-320-2026-10-30T04-28-53-497Z.json`). C001-TS-319's session on that review needs about 1.22 USD and is a rule-2 row of C002-IF-010 §2.2; C001-TS-320 had no row.
+- **Options:** 1. Add rule-2 exception: C001-TS-320 gets the rule-2 row of C001-TS-319 (own caps, a capped failure replaced once at the rerun cap of 1.50 USD) through a CHG-002 revision (Recommended); the other options were not relayed with the answer
+- **Answer:** P-01 (2026-10-30, relayed by the conductor): "Add rule-2 exception (Recommended)"
+- **Extracted instructions:** none
