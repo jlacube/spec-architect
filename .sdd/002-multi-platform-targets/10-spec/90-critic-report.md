@@ -1489,3 +1489,18 @@ Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-openc
 | ID | Sev. | Finding | Fix | Status |
 |---|---|---|---|---|
 | CR-125 | major | IF-010 §5.1 says interview cases have no Copilot CLI row; TS-226 had two | resolved by C001 CR-35: TS-226 has no Copilot CLI rows | open |
+
+
+## Revision D-038 (2026-10-30)undefinedfixed: IF-010 revision note, §2.2 table cell and evidence row now say the full report (12,175 chars, Verdict included) was composed in one Write that the 0.530 USD reading stopped before it ran; the cost is the measured range 0.404 … 1.222 USD |undefinedfixed: the TS-320 note under rule 2 now rests on rule 2 itself (ran at its own 0.50 USD cap, failed and ended at the spend cap, so no run; one replacement at 1.50 USD) |undefinedfixed: the evidence table is the session that was latest as of the revision that added the row (D-030 2026-10-24; D-038 2026-10-30) |
+
+Scope: `git diff ea4d6a9 0e3cc8d`, against D-038 and Q-ts320-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-126 | major | IF-010 | failure misdescribed: the transcript shows the full report (with Verdict) composed in one Write that the cap stopped before it ran; "needs about 1.22 USD" rests on one TS-319 session and contradicts 0.404 and 0.530 USD readings | say the report was complete and the cap stopped the write; give the measured range 0.404 … 1.222 USD | fixed: IF-010 revision note, §2.2 table cell and evidence row now say the full report (12,175 characters, Verdict included) was composed in one Write that the 0.530 USD cost reading stopped before it ran; "needs about 1.22 USD" replaced by the measured range 0.404 … 1.222 USD |
+| CR-127 | minor | IF-010 | "under a cap below the one this table now gives the row" is wrong (it ran at the row's own 0.50 USD) and read literally discards capped passes | base it on rule 2: failed and ended at the cap at the row's own cap, so no run | fixed: the TS-320 note under rule 2 rests on rule 2 itself (ran at the row's own 0.50 USD cap, failed and ended at the spend cap, so no run; one replacement at 1.50 USD) |
+| CR-128 | minor | IF-010 | evidence table called "the latest session of each row", no longer true for the D-030 rows | "latest as of the revision that added the row (D-030 2026-10-24; D-038 2026-10-30)" | fixed: the evidence table gives the session that was latest as of the revision that added the row (D-030 2026-10-24; D-038 2026-10-30) |

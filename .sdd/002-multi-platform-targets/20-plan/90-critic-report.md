@@ -1130,3 +1130,20 @@ Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-openc
 | CR-85 | major | the OpenCode deferral leaves items without owner (scope question, fix task, T-052 near-cap reference, M-07 closure) | open a Q-ID for the scope question (asked to P-01), a defect-tracked placeholder for the OpenCode fix and retake, rebase T-052 on it | fixed (P-01 answer to Q-opencode-scope-01, "Move to a new change": C002-T-051 and C002-T-052 `status: dropped` with a note citing it and CHG-003; no task depends on them; strategy §2 "Moved to CHG-003" with the fix directions; M-07 closes on Copilot alone; the matching test cases marked "moved to CHG-003"; rollout, work breakdown and handoff follow) |
 | CR-86 | minor | cross-change edge stated backwards and without C001-T-084 | name C001-T-084 in T-074, T-071, handoff; fix direction | fixed (C001-T-084 named in T-074, T-071, strategy and handoff; direction: C002-T-074 waits for C001-T-084, C002-T-071 waits for C002-T-074) |
 | CR-87 | minor | duplicate WBS sentence; 21 of 23 vs 24 unexplained; OpenCode runsheets name refused 0.0.2 | remove; explain (TS-336 n/a, TS-359 not run); OpenCode runsheets say "deferred, version to be set" | fixed (duplicate WBS sentence removed; T-071 and strategy §3a explain 23 of 24 sessions at 0.0.2, TS-336 not applicable and TS-359 not run; C002-T-074 has the OpenCode runsheets say "moved to CHG-003") |
+
+
+## Revision D-038 (2026-10-30)undefinedfixed: the three options the conductor presented, and P-01 choosing option 1, are in the questions-log entry |undefinedfixed: questions-log context, handoff edge and decisions row corrected; the D-038 summary gets a correction note in strategy row 102 (sdd defect has no edit option) |undefinedfixed: TC-679 Task cell ends "the TS-320 row: D-038 revision commit, no task (10-strategy.md)" |undefinedfixed: the handoff edge condition is the G3 approval of the D-038 revision, with the blocked reason "waits for the G3 approval of CHG-002 revision D-038" |undefinedfixed: strategy row 102 close rule: D-038 closes when the revision is approved at G3 |
+
+Scope: `git diff ea4d6a9 0e3cc8d`, against D-038 and Q-ts320-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-88 | major | NFR-105, IF-010 | questions-log entry lists one option and says the others were not relayed | add the options the conductor presented to P-01 | fixed: the three options the conductor presented, and P-01's choice of option 1, are in the Q-ts320-cap-01 entry |
+| CR-89 | minor | IF-010 | the same misdescription in questions-log, handoff and the D-038 summary | correct with CR-126 | fixed: questions-log context, handoff edge and decisions row corrected; the D-038 summary gets a correction note in strategy row 102 (sdd defect has no edit option) |
+| CR-90 | minor | TC-679 | the tasks cell gives nothing for the TS-320 row | "the TS-320 row: D-038 revision commit, no task (10-strategy.md)" | fixed: the TC-679 Task cell ends "the TS-320 row: D-038 revision commit, no task (10-strategy.md)" |
+| CR-91 | minor | IF-010 | handoff edge says T-072 waits for the caps row, which is already in; condition and blocked reason missing | condition: G3 approval of the D-038 revision; add the blocked-reason text | fixed: the handoff edge condition is the G3 approval of the D-038 revision, blocked reason "waits for the G3 approval of CHG-002 revision D-038" |
+| CR-92 | minor | IF-010 | D-038 has no close condition | closes at G3 of the revision (strategy row 102) | fixed: strategy row 102 close rule, D-038 closes when the revision is approved at G3 |
