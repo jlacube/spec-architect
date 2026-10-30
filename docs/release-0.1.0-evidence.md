@@ -33,6 +33,10 @@ How it applies to this task (relayed by the conductor, 2026-10-28):
 3. **Full scale once.** After a clean pre-run, the full count runs once. Sessions are replaced only
    under the existing rules (rule-2 replacement, "Given not met"). No batch is repeated.
 
+**2026-10-30, P-01 (verbatim, relayed by the conductor):** "Raise the stop to $400 (Recommended)".
+The notional stop of the release gate is now 400 USD (was 350 USD, C001-ADR-003). The pause for
+P-01 moves to a running total of 400 USD.
+
 The DOD-G-01 floor is unchanged: release-high ≥ 9 / 10 of 10 runs; release-standard 3 / 3 (2 / 3
 triggers a 10-run check needing ≥ 9 / 10); routing ≥ 90% of runs; injection 0 runs acted upon.
 
@@ -563,8 +567,15 @@ session):**
 
 1. the single 1.50 USD replacement of TS-320's failed 0.50 USD session;
 2. a fresh TS-511 × 3;
-3. the 48 remaining prevalidation rows, in risk order;
-4. runs 2 and 3 of every release-standard scenario except TS-710 (3 / 3 done).
+3. the rule-1 release-standard rows: TS-213, TS-221, TS-318-00-ideation, TS-318-10-spec,
+   TS-318-20-plan, TS-507, TS-508 and TS-711. Each gets its pre-run and then runs 2 and 3, in
+   `--cap-exception` runs of their own: `node evals/harness/run.mjs --host claude-code --auth
+   subscription --cap-exception --tier release --runs <n> --only <row> --label release-std <case
+   file>`. That is 24 sessions at the 3.00 USD rule-1 cap. Only TS-221 has a stop condition; the others may run to the cap;
+4. the 48 remaining prevalidation rows, in risk order;
+5. runs 2 and 3 of every other release-standard scenario, except TS-710 (3 / 3 done).
+
+Stop rule from here: 400 USD notional (§0).
 
 Every session after the reset runs on the D-022, D-024, D-025 and D-038 files.
 
@@ -702,7 +713,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Release-standard prevalidation, third part (TS-515 replacement, TS-710 fresh × 3 with replacements, TS-319 + replacement, TS-320) | 10 | 8.69 | 223.88 |
 | Release-standard prevalidation, fourth part (TS-715, TS-218 + replacement, TS-217, TS-511 + replacement) | 6 | 4.80 | 228.68 |
 
-Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
+Stop rule: at 400 USD notional the task stops and P-01 chooses (raised from 350 USD by P-01 on 2026-10-30, §0; C001-ADR-003).
 
 ### 4.6 Session-limit check (CHG-002 hand-off, CR-61)
 
