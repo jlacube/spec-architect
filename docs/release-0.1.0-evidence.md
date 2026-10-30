@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; stopped at TS-320 (cap, §4.3). Running notional total:
-223.88 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; stopped at TS-511 and at the 85% weekly stop (§4.3); 48 rows wait for the reset. Running notional total:
+228.68 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -500,6 +500,56 @@ on every finding, so this is a critic defect.
     USD.
   - So this failure comes from the cap, not from the critic's behaviour: the row lacks the cap
     exception its twin has. The run stopped here (first counted failure).
+- **P-01's decision on TS-320 (2026-10-30, relayed by the conductor):**
+  - TS-320 gets the same rule-2 cap exception as TS-319 (rerun cap 1.50 USD), added through a CHG-002
+    revision (`evals/harness/caps.mjs`, C002-IF-010 §2.2).
+  - Once the exception is in `caps.mjs`, the failed 0.50 USD session above is a no-run under rule 2,
+    and it is replaced once at 1.50 USD.
+  - Until then the replacement waits.
+
+**Prevalidation, fourth part (2026-10-30, 05:08–05:48 UTC, D-024 files): stopped at TS-511, with
+the week reaching 85% at the same point.**
+
+| Row | Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-715 (rule 2; held until D-024, released) | TS-715-2026-10-30T05-08-13-660Z | pass | success | 0.50 | 0.00 (no model spend reported, as in development) | run 1: pass |
+| TS-218 (rule 2) | TS-218-2026-10-30T05-10-00-135Z | fail at cap | error_max_budget_usd | 0.50 | 0.51 | no run |
+| TS-218 | TS-218-2026-10-30T05-11-41-619Z (replaces the above) | pass (at its cap) | error_max_budget_usd | 1.50 | 1.52 | run 1: pass |
+| TS-217 (rule 2) | TS-217-2026-10-30T05-15-37-644Z | pass (at cap) | error_max_budget_usd | 0.50 | 0.52 | run 1: pass |
+| TS-511 (rule 2) | TS-511-2026-10-30T05-17-40-555Z | fail at cap | error_max_budget_usd | 0.50 | 0.57 | no run |
+| TS-511 | TS-511-2026-10-30T05-24-58-054Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.68 | **run 1: fail** (a rule-2 replacement is a run whatever its result) |
+
+**The TS-511 failure (C001-TC-511, interface formats; the architect writes four interfaces in one
+session):**
+
+- Both sessions fail every format assert. In the 1.50 USD session no interface file was registered:
+  the HTTP API list is empty (`files: )`), and there is no AsyncAPI file and no CLI document with its
+  headings.
+- The replacement session (22 min, 1.68 USD) spent its budget before writing the interfaces:
+  - 28 `sdd` CLI calls: template lookups, three of them failing with `ERR-CLI-019` because the path
+    lacked the `full/` profile prefix, then `sdd template list`, `template show --help` and
+    `template show full/…`; `sdd help`; a lint of an unrelated change; and eight `id next`
+    allocations (COMP, IF, OA).
+  - 14 reads.
+  - One `Write` (`10-spec/50-interfaces/invoice.schema.json`), after which the cap ended the session.
+- Its development runs passed at 0.33 USD (2026-10-19) and 0.51 USD (2026-10-11). Both predate
+  C001-T-083, which moved template lookups to `sdd template show`.
+- The same failure on both sessions, at 1.1–3.3× the earlier cost, points at the architect's
+  template-lookup detour (the profile prefix of `sdd template show`). It does not look like a
+  one-off.
+- This is a real failure of agent behaviour, not a Given that did not hold. It is reported for
+  diagnosis and P-01's decision.
+
+**Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
+here even without the failure.
+
+**Not yet run (48 rows; wait for the weekly reset 2026-11-03 23:00 UTC):** TS-201, TS-420, TS-418,
+TS-127, TS-424, TS-419, TS-609, TS-313, TS-222, TS-316, TS-317, TS-423, TS-1112-node18, TS-301,
+TS-1112-bare, TS-1112-deepwiki-down, TS-1004, TS-309, TS-1111, impact, TS-305, TS-1005, TS-306, TS-206,
+TS-307, TS-303, TS-315, TS-304, TS-312, TS-207, TS-122, TS-1010, TS-120, TS-119, TS-211, TS-202,
+TS-210, TS-1014, TS-1011, TS-1002-cfg-no-ripwire, TS-208, TS-1002-cfg-bare, TS-1013, TS-1001, TS-121,
+TS-910, TS-1012, TS-203. Also waiting: the TS-320 replacement (when its cap exception is in
+`caps.mjs`), and runs 2 and 3 of every standard scenario except TS-710 (3 / 3 done).
 
 **Rule-2 pattern:** all three rule-2 rows run so far ended at the 0.50 USD cap in their first session
 and needed the 1.50 USD replacement (0.89–1.10 USD). The other 15 rule-2 rows are likely to do the
@@ -622,6 +672,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Release-standard prevalidation so far (TS-712, TS-714, TS-710, each with its rule-2 replacement) | 6 | 4.87 | 211.84 |
 | Release-standard prevalidation, second part (TS-622, TS-216, TS-401 + replacement, TS-515 first session) | 5 | 3.35 | 215.19 |
 | Release-standard prevalidation, third part (TS-515 replacement, TS-710 fresh × 3 with replacements, TS-319 + replacement, TS-320) | 10 | 8.69 | 223.88 |
+| Release-standard prevalidation, fourth part (TS-715, TS-218 + replacement, TS-217, TS-511 + replacement) | 6 | 4.80 | 228.68 |
 
 Stop rule: at 350 USD notional the task stops and P-01 chooses (C001-ADR-003).
 
