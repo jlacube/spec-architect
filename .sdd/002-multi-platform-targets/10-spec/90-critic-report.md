@@ -1504,3 +1504,17 @@ Scope: `git diff ea4d6a9 0e3cc8d`, against D-038 and Q-ts320-cap-01. Lint: the 9
 | CR-126 | major | IF-010 | failure misdescribed: the transcript shows the full report (with Verdict) composed in one Write that the cap stopped before it ran; "needs about 1.22 USD" rests on one TS-319 session and contradicts 0.404 and 0.530 USD readings | say the report was complete and the cap stopped the write; give the measured range 0.404 … 1.222 USD | fixed: IF-010 revision note, §2.2 table cell and evidence row now say the full report (12,175 characters, Verdict included) was composed in one Write that the 0.530 USD cost reading stopped before it ran; "needs about 1.22 USD" replaced by the measured range 0.404 … 1.222 USD |
 | CR-127 | minor | IF-010 | "under a cap below the one this table now gives the row" is wrong (it ran at the row's own 0.50 USD) and read literally discards capped passes | base it on rule 2: failed and ended at the cap at the row's own cap, so no run | fixed: the TS-320 note under rule 2 rests on rule 2 itself (ran at the row's own 0.50 USD cap, failed and ended at the spend cap, so no run; one replacement at 1.50 USD) |
 | CR-128 | minor | IF-010 | evidence table called "the latest session of each row", no longer true for the D-030 rows | "latest as of the revision that added the row (D-030 2026-10-24; D-038 2026-10-30)" | fixed: the evidence table gives the session that was latest as of the revision that added the row (D-030 2026-10-24; D-038 2026-10-30) |
+
+
+## Revision D-039 (2026-11-06)
+
+Scope: `git diff 14cee0d 209af3a`, against D-039 and Q-ts511-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-129 | major | IF-010 §2.2 rule 1 | "likely reading, not a proven one": the transcripts measure it, thinkingTokens 36,061 of 49,446 against 3,132 of 16,060 (98.6 % of the growth) | state the measured split; what stays open is why thinking grew | fixed: IF-010 §2.2 rule 1 gives the measured split (thinkingTokens 36,061 of 49,446 against 3,132 of 16,060, 98.6 % of the growth, checked in both transcripts) and leaves open why thinking grew, with the two candidates |
+| CR-130 | minor | IF-010 §2.2 rule 1, handoff | "That marking lives in the release evidence" while the evidence still says "run 1: fail" for two of the four sessions | the marking is written on G3 approval; a handoff step re-marks them as no run (D-039) | fixed: IF-010 says the marking is written on the G3 approval; the handoff D-039 edge adds the step that re-marks the two "run 1: fail" lines as no run |

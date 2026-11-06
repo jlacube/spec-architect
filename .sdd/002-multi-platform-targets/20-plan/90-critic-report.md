@@ -1147,3 +1147,19 @@ Scope: `git diff ea4d6a9 0e3cc8d`, against D-038 and Q-ts320-cap-01. Lint: the 9
 | CR-90 | minor | TC-679 | the tasks cell gives nothing for the TS-320 row | "the TS-320 row: D-038 revision commit, no task (10-strategy.md)" | fixed: the TC-679 Task cell ends "the TS-320 row: D-038 revision commit, no task (10-strategy.md)" |
 | CR-91 | minor | IF-010 | handoff edge says T-072 waits for the caps row, which is already in; condition and blocked reason missing | condition: G3 approval of the D-038 revision; add the blocked-reason text | fixed: the handoff edge condition is the G3 approval of the D-038 revision, blocked reason "waits for the G3 approval of CHG-002 revision D-038" |
 | CR-92 | minor | IF-010 | D-038 has no close condition | closes at G3 of the revision (strategy row 102) | fixed: strategy row 102 close rule, D-038 closes when the revision is approved at G3 |
+
+
+## Revision D-039 (2026-11-06)
+
+Scope: `git diff 14cee0d 209af3a`, against D-039 and Q-ts511-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-93 | minor | strategy D-039 row, Q-ts511-cap-01 | "cause not established" and "probably hidden thinking; not proven" | correct the strategy; keep the log as presented and add a correction note in the strategy | fixed: strategy D-039 row gives the measured split and a correction note on Q-ts511-cap-01; the questions-log keeps its text as presented |
+| CR-94 | minor | strategy D-039 row, C001-D-025 | "C001-D-025 keeps its own close rule", but none is stated | state it (conductor decision): D-025 closes when the fresh TS-511 set shows no template detours and the row meets its rule | fixed: strategy D-039 row states the C001-D-025 close rule (conductor's decision): no template detours in the fresh set and the row meets its rule |
+| CR-95 | minor | strategy D-039 row, C001-ADR-003 | "up to about 9 USD" leaves out the 10-run check | "up to about 9 USD, about 30 USD with the 10-run check" | fixed: strategy D-039 row says up to about 9 USD, about 30 USD with the 10-run check |
+| CR-96 | minor | test plan early-stop note, C002-T-072 | the rule-1 session count and "the six others" leave out TS-511 and TS-226-blocking | add the TS-511 sessions; name both rows among those without a condition | fixed: test plan early-stop note counts 87 sessions (74 plus TS-226-blocking 10 and TS-511 3) and names both rows among the eight without a condition |

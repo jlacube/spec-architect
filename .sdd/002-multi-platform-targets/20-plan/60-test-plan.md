@@ -186,14 +186,15 @@ counts above are those of the main branch.
   - **Release cost and time of the rule-1 rows** (defect D-034; P-01 answers to Q-early-stop-01,
     "Stop when checked (Recommended)", and Q-weekly-reset-01). In the `t082-d019` run every rule-1
     session ran to the 3.00 USD cap, at 3.00 … 3.52 USD and 917 … 1274 s, while its check was decided
-    at 206 … 954 s. At that rate the 74 rule-1 sessions of the release gate (C001-T-072) would need 4
+    at 206 … 954 s. At that rate the 74 rule-1 sessions of the release gate (C001-T-072) as counted for D-034 (87 with
+    the 10 of `TS-226-blocking`, revision D-037, and the 3 of `TS-511`, revision D-039; plan critic CR-96) would need 4
     … 5 five-hour windows of P-01's plan. From C002-T-072 on, a rule-1 row with a `stopWhen` ends with
     `check_decided` once its check is decided. That end is a run, not an end at the spend cap, so it
     needs no replacement (C002-IF-010 §2.2 Early stop). The expected figure is near 250 s and about
     1 USD notional for `TS-225`, which C002-T-072 step 6 measures. Seven rule-1 rows get a condition
-    (`TS-215`, `TS-221`, `TS-223`, `TS-224`, `TS-225`, `TS-507`, `TS-802`). The six others (`TS-213`,
-    the three `TS-318` rows, `TS-508`, `TS-711`) keep the figures of the cap (plan critics CR-74,
-    CR-76). P-01's week has no free reset: it stays at most 95 %
+    (`TS-215`, `TS-221`, `TS-223`, `TS-224`, `TS-225`, `TS-507`, `TS-802`). The eight others (`TS-213`,
+    the three `TS-318` rows, `TS-508`, `TS-711`, and `TS-226-blocking` and `TS-511` from revisions D-037
+    and D-039) have no condition and end by themselves or at the cap (plan critics CR-74, CR-76, CR-96). P-01's week has no free reset: it stays at most 95 %
     used (Q-weekly-reset-01), and an eval block that would pass it waits for the weekly reset
     (Tuesday 23:00 UTC). C001-T-072 plans its rule-1 batches against the measured stop times and
     reports, per batch, the sessions, the notional cost, the wall time and the plan's usage.

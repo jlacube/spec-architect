@@ -762,16 +762,20 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
 
    So no session with the budget hidden has finished, and 1.507 USD is a lower bound for a whole
    session on the C001-D-025 files. About 2 USD is an estimate from the share of the two unwritten
-   files in the 2026-10-11 session, not a measurement. Most of the growth in output tokens is not in
-   the files, and one model call with almost no visible output holds much of it; hidden thinking is the
-   likely reading, not a proven one. The row is in rule 1, not rule 2 with a higher cap, for two
+   files in the 2026-10-11 session, not a measurement. The growth in output tokens is thinking, as the
+   result messages of the transcripts measure it (`modelUsage`, Opus `thinkingTokens` of
+   `outputTokens`): 36,061 of 49,446 on 2026-11-06, against 3,132 of 16,060 on 2026-10-11. Thinking is
+   32,929 of the growth of 33,386 tokens (98.6 %); the rest moved from 12,928 to 13,385 (critic CR-129).
+   Why thinking grew stays open. The candidates are the budget, which the 2026-10-11 session could see
+   and which is hidden since defect D-031, and the skill changes since that date. The row is in rule 1, not rule 2 with a higher cap, for two
    reasons. Rule 2 is for rows that mostly fit the defaults, and its rerun cap stays 1.50 USD. And both
    sessions at the row's own 0.50 USD with the budget hidden ended at the cap with no Write, so a first
    session at that cap spends its cost on a session that cannot pass. Each of the four sessions of
    2026-10-30 and 2026-11-06 ended at the spend cap under a cap below the one this table now gives the
    row, so none is a run (Runs, above), the two 1.50 USD replacements included, which rule 2 counted as
-   runs while the row was in it. That marking lives in the release evidence of C001-T-072 and the
-   result records (`caps.usd`, `metrics.result_subtype`); the CHG-002 spend ledger
+   runs while the row was in it. That marking is written into the release evidence of C001-T-072 on
+   the G3 approval of this revision (`20-plan/handoff.md`; critic CR-130), from the result records
+   (`caps.usd`, `metrics.result_subtype`); the CHG-002 spend ledger
    (`evals/results/spend-chg002.json`) holds no entry for these sessions and gets none. The row's
    runs are three fresh sessions at 3.00 USD with `--cap-exception`, with the 10-run check after a
    2 / 3 result. The row has no stop condition (`stopWhen`): its check reads the finished files.

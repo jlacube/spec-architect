@@ -167,9 +167,11 @@ the files not written. `TS-511` moves to rule 1 (C002-IF-010 §2.2; 45 rows, 15 
 The row is already in `caps.mjs` with the revision commit (no fix task, `10-strategy.md`), but the
 edge's condition is the G3 approval of the D-039 revision, which approves that row. Until then no
 `TS-511` session of C001-T-072 runs, and the conductor records the blocked reason as "waits for the
-G3 approval of CHG-002 revision D-039". After it, three fresh sessions at 3.00 USD run in a run of
-their own (the rule-1 command form below). The four capped sessions of 2026-10-30 and 2026-11-06 are
-no runs by the Runs rule of C002-IF-010 §2.2. `TS-511` gets no stop condition, so C002-T-072's list of
+G3 approval of CHG-002 revision D-039". After it, the release evidence of C001-T-072
+(`docs/release-0.1.0-evidence.md`) first re-marks its two "run 1: fail" lines for `TS-511` (the
+1.50 USD sessions of 2026-10-30 and 2026-11-06) as no run (D-039; spec critic CR-130). Then three
+fresh sessions at 3.00 USD run in a run of their own (the rule-1 command form below). The four capped
+sessions of 2026-10-30 and 2026-11-06 are no runs by the Runs rule of C002-IF-010 §2.2. `TS-511` gets no stop condition, so C002-T-072's list of
 seven rows stays as it is. Like the other edges, this one lives on the CHG-002 side only.
 
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
