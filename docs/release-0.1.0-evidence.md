@@ -774,6 +774,16 @@ empty text.
   is not given to the agent, and no agent rule is broken. It is not a fault of the decision record's
   behaviour.
 
+**TS-313 fixture fix (`26462dc`).** The prompt now names the slug `research-tooling`; the check and the
+acceptance text are unchanged. The conductor applied this on P-01's TS-418 decision as the precedent
+("State the owner in the brief (Recommended)", §0). It was not put to P-01 separately, and P-01 can
+overrule it. A fresh TS-313 × 3 replaces the sets above for the verdict; those sessions stay here as
+history.
+
+The conductor's standing rule from here: a stop on a check that requires a value the brief does not
+give, with no agent rule broken, is reported the same way, and the conductor fixes the fixture the
+same way.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
