@@ -809,6 +809,18 @@ TS-210.**
   - The same placeholder default serves TS-206 (9 questions), TS-208 (1), TS-211 (3) and TS-222 (5).
     TS-206, TS-211 and TS-222 passed run 1. No check reads the placeholder text.
 
+**TS-210 fixture fix.** The default options of `q()` in `evals/cap02/interview.mjs` now have real
+content; no check read the old text. The conductor applied this on P-01's TS-418 decision as the
+precedent ("State the owner in the brief (Recommended)", §0). It was not put to P-01 separately, and
+P-01 can overrule it.
+
+- **Caveat for P-01:** in the failed session the conductor held the storage question back and logged
+  why, while C001-TS-210 says round 1 contains that question. The fix removes the reason to hold it;
+  it does not decide whether holding a question with empty options is right.
+- A fresh TS-210 × 3 replaces the failed run, which stays above as history.
+- The passed run-1 sessions of TS-206, TS-211 and TS-222 stand, on the old placeholder options. TS-208
+  and all later runs use the new options.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
