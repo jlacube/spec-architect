@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; stopped at TS-313 (cap, §4.3). Running notional total:
-280.98 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 run 1 passed, run 2 failed on its filename check, §4.3. Running notional total:
+282.85 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -748,6 +748,32 @@ written, against the last development pass of the same scenario (titles checked)
   replacement. A failed replacement, or a failure not at the cap, stops the run. Under this,
   TS-313's failed session is no run.
 
+**TS-313 under D-040 (2026-11-06, 20:26–20:38 UTC, driver `full12`): stopped at run 2.**
+
+| Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Thinking tokens | Counts |
+|---|---|---|---|---|---|---|
+| TS-313-2026-11-06T20-26-22-248Z (replaces the no-run of 18:25) | pass | success | 1.50 | 0.73 | 4,450 | run 1: pass |
+| TS-313-2026-11-06T20-30-42-657Z | fail at cap | error_max_budget_usd | 0.50 | 0.54 | 3,402 | no run |
+| TS-313-2026-11-06T20-33-38-325Z (replaces the above) | **fail** | success | 1.50 | 0.61 | 2,409 | **run 2: fail** |
+
+**The failure:** all 9 failed checks come from one: `no DEC-<seq>-research-tooling.md (DEC files:
+…DEC-001-research-sources.md)`. The check finds the record by that filename, so the others read an
+empty text.
+
+- **The agent did the whole job.** It wrote the options analysis, asked, and wrote
+  `DEC-001-research-sources.md`. An offline re-grade of that file's content (from the transcript)
+  passes every other check: the five headings, the OA link, the answer verbatim
+  (`B: Tiered + verify (Recommended)`) and the date.
+- **The slug is the only difference from the passing run 1** (`DEC-001-research-tooling.md`). The
+  prompt says `"Research tooling: which sources should the researcher use for library and API
+  questions?"`, and nothing tells the agent which slug to use. In the four sessions of this set, the
+  options analysis got the slug `research-sources` in two and `research-tooling` in two.
+- **Sources:** C001-REQ-312 and `commands/decide.md` require `DEC-<seq>-<slug>.md` and do not define
+  the slug. Only the acceptance text C001-TS-313 writes `research-tooling`.
+- **Reading: a check stricter than the requirement.** It is close to a fixture gap: the required slug
+  is not given to the agent, and no agent rule is broken. It is not a fault of the decision record's
+  behaviour.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -886,6 +912,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | TS-511 × 3 at 3.00 USD, TS-507 × 2, TS-508 × 3, TS-711 × 3, then TS-201, TS-420, TS-418 + replacement | 15 | 19.98 | 273.58 |
 | TS-418 fresh run 1 (0.50 USD session + replacement) | 2 | 1.56 | 275.14 |
 | Detached run: TS-418 runs 2-3 with replacements, TS-127 + replacement, TS-424, TS-419, TS-609, TS-313 | 10 | 5.84 | 280.98 |
+| TS-313 under D-040: replacement, run 2 + replacement | 3 | 1.87 | 282.85 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 

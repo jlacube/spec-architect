@@ -25,7 +25,7 @@ export default {
   fixture: ideationWorkspace,
   allowTools: ["Agent", "Write", "Edit", "Bash", "WebSearch", "WebFetch"],
   maxTurns: 24,
-  prompt: '/architect:decide "Research tooling: which sources should the researcher use for library and API questions?" --change 001',
+  prompt: '/architect:decide "Research tooling: which sources should the researcher use for library and API questions?" --change 001. Use the slug research-tooling for the decision file.',
   assert({ transcript, root }) {
     const { failures, check } = checker();
     const all = files(join(root, ...CHANGE.split("/")));
