@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; stopped at TS-418 (§4.3). Running notional total:
-273.58 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; stopped at TS-313 (cap, §4.3). Running notional total:
+280.98 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -717,6 +717,26 @@ written, against the last development pass of the same scenario (titles checked)
   (17:30 UTC) refused to run because `CLAUDE_CODE_EXECPATH` was not set; it started no session.
 - The driver now runs detached, so the conducting session does not poll it.
 
+**Detached run (2026-11-06, 17:32–18:28 UTC): stopped at TS-313.**
+
+- **TS-418 fresh set: 3 / 3** on fixture `337f4f3`. Each 0.50 USD session failed at the cap (no run),
+  and each 1.50 USD replacement passed (0.95, 0.89, 0.79 USD). This replaces the failed set.
+- TS-127: 0.50 USD session failed at the cap, 1.50 USD replacement passed. TS-424 and TS-419: pass
+  at the cap. TS-609: pass, 0.23 USD. Files: `evals/results/release-std-<row>-2026-11-06T*.json`.
+- **TS-313 (C001-TC-313, decision record; no cap exception), run 1: fail at the 0.50 USD cap**
+  (`release-std-TS-313-2026-11-06T18-25-42-408Z.json`, 0.53 USD, 14 turns, 159 s).
+  - The session was nearly done. The options analyst had written `OA-001-research-sources.md` (7,386
+    chars), the conductor had asked the question and had the answer, and `sdd id next DEC` had
+    returned. The cap ended it before `DEC-001-…md`, the file every failed assert reads (9 failures,
+    all from that one missing file).
+  - Small detour: the analyst fetched the template after writing the OA, then read and edited it.
+  - Last development pass: 0.41 USD (`t048b6-TS-313-2026-10-21T00-16-15-523Z.json`), with the budget
+    still visible, 8,394 output tokens against 11,028 now.
+  - Thinking text is redacted in transcripts, so tokens cannot be split exactly. Visible output (text
+    plus tool input) is 13.6 KB now and 12.3 KB then, so most of the 2,634 extra tokens are probably
+    thinking (an estimate).
+  - Reading: budget. Not a behaviour fault, and not a fixture gap.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -854,6 +874,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Rule-1 standard rows, first part (TS-213, TS-221, TS-318 × 3 rows × 3, TS-507 × 1) | 16 | 21.47 | 253.60 |
 | TS-511 × 3 at 3.00 USD, TS-507 × 2, TS-508 × 3, TS-711 × 3, then TS-201, TS-420, TS-418 + replacement | 15 | 19.98 | 273.58 |
 | TS-418 fresh run 1 (0.50 USD session + replacement) | 2 | 1.56 | 275.14 |
+| Detached run: TS-418 runs 2-3 with replacements, TS-127 + replacement, TS-424, TS-419, TS-609, TS-313 | 10 | 5.84 | 280.98 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
