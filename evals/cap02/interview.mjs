@@ -22,8 +22,8 @@ export function q(id, topic, question, { blocking = false, options } = {}) {
     blocking,
     material: false,
     options: options ?? [
-      { label: `Option A for ${topic}`, rationale: `Option A keeps ${topic} simple for v1.`, recommended: true },
-      { label: `Option B for ${topic}`, rationale: `Option B covers more ${topic} cases at a higher cost.` },
+      { label: `Keep ${topic} minimal in v1`, rationale: `Keeps ${topic} simple for v1 and leaves the wider cases for later.`, recommended: true },
+      { label: `Cover all ${topic} cases in v1`, rationale: `Covers more ${topic} cases now, at a higher cost and a later delivery.` },
     ],
   };
 }

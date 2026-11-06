@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 run 1 passed, run 2 failed on its filename check, §4.3. Running notional total:
-282.85 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; stopped at TS-210 (fixture placeholders, §4.3). Running notional total:
+295.05 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -784,6 +784,31 @@ The conductor's standing rule from here: a stop on a check that requires a value
 give, with no agent rule broken, is reported the same way, and the conductor fixes the fixture the
 same way.
 
+**Driver `full13` (2026-11-06, 20:43–22:17 UTC, on `26462dc`): 35 sessions, 12.20 USD, stopped at
+TS-210.**
+
+- **TS-313 fresh set: 3 / 3**, replacing the earlier sets. Each 0.50 USD session failed at the cap (no
+  run), and each 1.50 USD replacement passed (0.79, 0.69, 0.65 USD). All three wrote
+  `DEC-<seq>-research-tooling.md`.
+- 28 more rows passed run 1, in the risk order from TS-222 through TS-202, with no replacement (TS-119
+  and TS-120 at the cap). Files: `evals/results/release-std-<row>-2026-11-06T*.json`.
+- **TS-210 (C001-TC-210, merging questions from two specialists), run 1: fail**
+  (`release-std-TS-210-2026-11-06T22-16-29-374Z.json`, `success`, 0.23 USD, 39 s, 11 turns):
+  `storage question not asked after the auth question`.
+  - The merging itself passed: one auth question, marked blocking, first.
+  - The conductor held back Q-storage-01, logging it under "Held — not yet asked" and telling P-01:
+    the fixture's options are placeholders ("Option A for storage", "Option B for storage", from the
+    default of `q()` in `evals/cap02/interview.mjs`), so P-01 could not decide. It also judged the
+    question likely material, against the specialist's `material: no`.
+  - The passing session (`t031-TS-210-2026-10-11T09-05-09-502Z.json`, 0.12 USD) asked it anyway, noting
+    "The analyst did not say what Options A and B are".
+  - **Reading: fixture gap.** The check requires a question to be asked, and the fixture gives it no
+    real options. No rule of `interview-protocol` forbids holding a non-blocking question whose options
+    have no content; the agent logged it and said so. One caveat: C001-TS-210 says round 1 contains
+    the storage question, so holding it departs from the scenario's wording.
+  - The same placeholder default serves TS-206 (9 questions), TS-208 (1), TS-211 (3) and TS-222 (5).
+    TS-206, TS-211 and TS-222 passed run 1. No check reads the placeholder text.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -923,6 +948,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | TS-418 fresh run 1 (0.50 USD session + replacement) | 2 | 1.56 | 275.14 |
 | Detached run: TS-418 runs 2-3 with replacements, TS-127 + replacement, TS-424, TS-419, TS-609, TS-313 | 10 | 5.84 | 280.98 |
 | TS-313 under D-040: replacement, run 2 + replacement | 3 | 1.87 | 282.85 |
+| Driver full13: TS-313 fresh × 3 with replacements, 28 rows × 1, TS-210 | 35 | 12.20 | 295.05 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
