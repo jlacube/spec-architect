@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; stopped at TS-511 and at the 85% weekly stop (§4.3); 48 rows wait for the reset. Running notional total:
-228.68 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed; stopped at the TS-511 fresh set (cap, on the D-025 files, §4.3). Running notional total:
+232.13 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -536,11 +536,13 @@ session):**
     allocations (COMP, IF, OA).
   - 14 reads.
   - One `Write` (`10-spec/50-interfaces/invoice.schema.json`), after which the cap ended the session.
-- Its development runs passed at 0.33 USD (2026-10-19) and 0.51 USD (2026-10-11). Both predate
-  C001-T-083, which moved template lookups to `sdd template show`.
-- The same failure on both sessions, at 1.1–3.3× the earlier cost, points at the architect's
-  template-lookup detour (the profile prefix of `sdd template show`). It does not look like a
-  one-off.
+- Its development run passed at 0.51 USD (`t042-TS-511-2026-10-11T17-01-58-829Z.json`, at the cap).
+  That run predates C001-T-083, which moved template lookups to `sdd template show`.
+- **Correction (2026-11-06):** this passage first also cited a 0.33 USD run of 2026-10-19
+  (`t038-TS-511-claude-code-…`). That row is CHG-002's TS-511 ("toolchain.md on Claude Code"), an
+  unrelated scenario, so the comparison was wrong.
+- The template-lookup detour (the profile prefix of `sdd template show`) wasted budget in this
+  session. It is not the whole cause: see the second failure below.
 - This is a real failure of agent behaviour, not a Given that did not hold. It is reported for
   diagnosis and P-01's decision.
 
@@ -578,6 +580,37 @@ session):**
 Stop rule from here: 400 USD notional (§0).
 
 Every session after the reset runs on the D-022, D-024, D-025 and D-038 files.
+
+**After the weekly reset (P-01's go 2026-11-06; 07:28–07:52 UTC, on the D-025 files, HEAD `434092d`):
+stopped at TS-511.**
+
+| Row | Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-320 (rule 2, D-038) | TS-320-2026-11-06T07-28-38-215Z (replaces TS-320-2026-10-30T04-28-53-497Z, a no-run under rule 2) | pass | success | 1.50 | 1.12 | run 1: pass |
+| TS-511 (rule 2), fresh set | TS-511-2026-11-06T07-35-33-514Z | fail at cap | error_max_budget_usd | 0.50 | 0.82 | no run |
+| TS-511 | TS-511-2026-11-06T07-42-28-706Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.51 | **run 1 of the fresh set: fail** |
+
+**The second TS-511 failure, on the D-025 files:**
+
+- **D-025 did its job.** All three template lookups used `full/…` and worked first time. There was no
+  `sdd help`, no unrelated lint, and 7 `sdd` calls instead of 28.
+- **The session ran out of budget while writing.** Writes issued, in order: `invoice.schema.json`
+  (8,327 chars), `openapi.yaml` (7,063), `events.asyncapi.yaml` (6,476), `billing-admin-cli.md`
+  (5,473). The cap ended the session at 1.51 USD. The CLI document is not on disk per the assert
+  (`*-cli.md lacks heading …`, with no file name), so that write probably did not complete. `README.md`
+  (registry) and `errors.md` were never written, hence the three registry failures.
+- **Why it cost more than in development:** the comparable run is
+  `t042-TS-511-2026-10-11T17-01-58-829Z.json`: the same scenario on the same model (Opus), passing at
+  0.51 USD (at the cap). It wrote all six files, 17,228 chars in all, with 16,060 output tokens.
+  This session used 49,446 output tokens and wrote 27,339 chars across only four files; for example
+  `invoice.schema.json` is 8,327 chars against 3,806, and `openapi.yaml` 7,063 against 4,093. The
+  architect now produces about three times the output for the same brief, on the same model. The
+  cause of that growth is not established. The candidates are the skill and template changes since
+  2026-10-11.
+- **Reading:** the 1.50 USD rerun cap does not fit the session at its present output size. In the
+  `t042` run, `README.md` and `errors.md` were about 19% of the characters written, so this session
+  would need roughly 2 USD to finish (an estimate). No wrong behaviour shows in what it wrote; the
+  outcome is still a counted failure under rule 2.
 
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
@@ -712,6 +745,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Release-standard prevalidation, second part (TS-622, TS-216, TS-401 + replacement, TS-515 first session) | 5 | 3.35 | 215.19 |
 | Release-standard prevalidation, third part (TS-515 replacement, TS-710 fresh × 3 with replacements, TS-319 + replacement, TS-320) | 10 | 8.69 | 223.88 |
 | Release-standard prevalidation, fourth part (TS-715, TS-218 + replacement, TS-217, TS-511 + replacement) | 6 | 4.80 | 228.68 |
+| After the reset: TS-320 replacement, TS-511 fresh set (0.50 USD session + 1.50 USD replacement) | 3 | 3.45 | 232.13 |
 
 Stop rule: at 400 USD notional the task stops and P-01 chooses (raised from 350 USD by P-01 on 2026-10-30, §0; C001-ADR-003).
 
