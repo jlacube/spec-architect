@@ -7,7 +7,7 @@ import { brief, read, SPEC, writerRun } from "./spec.mjs";
 export default {
   id: "TS-418",
   title: "Domain entity fields",
-  ...writerRun(brief("step 5 — Domain", "write the domain model for the billing capability: the entities Clinic, Subscription and Invoice (components C004-COMP-01 billing service, C004-COMP-02 notification service).", `\`${SPEC}/40-domain/domain-model.md\` and, for new terms, \`${SPEC}/40-domain/glossary-delta.md\`.`)),
+  ...writerRun(brief("step 5 — Domain", "write the domain model for the billing capability: the entities Clinic, Subscription and Invoice (components C004-COMP-01 billing service, C004-COMP-02 notification service; C004-COMP-01 owns all three entities).", `\`${SPEC}/40-domain/domain-model.md\` and, for new terms, \`${SPEC}/40-domain/glossary-delta.md\`.`)),
   assert({ root }) {
     const { failures, check } = checker();
     const text = read(root, `${SPEC}/40-domain/domain-model.md`);
