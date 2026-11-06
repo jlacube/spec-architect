@@ -16,7 +16,9 @@
 // session cap 1.00 USD after TS-634, and the four INJ-21 rows of C002-TC-679 (24 rows in all); from revision
 // D-037 (C002-T-074), 44 rows, TS-226-blocking of evals/cap02/TS-226.eval.mjs after TS-225, the fourteenth
 // rule-1 row at 3.00 USD, the file's other rows without a row; from revision D-038, 45 rows, TS-320 of
-// evals/cap03/TS-320.eval.mjs after TS-319, the twenty-eighth rule-2 row at 1.50 USD; the case files
+// evals/cap03/TS-320.eval.mjs after TS-319, the twenty-eighth rule-2 row at 1.50 USD; from revision D-039,
+// still 45 rows, TS-511 of evals/cap05/TS-511.eval.mjs moved from rule 2 to rule 1 at 3.00 USD after TS-802,
+// 15 rule-1 rows and 27 rule-2 rows; the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
 import { test } from "node:test";
@@ -235,7 +237,6 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-401", "evals/cap04/TS-401.eval.mjs", 2),
     sub("TS-418", "evals/cap04/TS-418.eval.mjs", 2),
     sub("TS-424", "evals/cap04/TS-424.eval.mjs", 2),
-    sub("TS-511", "evals/cap05/TS-511.eval.mjs", 2),
     sub("TS-515", "evals/cap05/TS-515.eval.mjs", 2),
     sub("TS-622", "evals/cap06/TS-622.eval.mjs", 2),
     sub("TS-710", "evals/cap07/TS-710.eval.mjs", 2),
@@ -248,21 +249,24 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-508", "evals/cap05/TS-508.eval.mjs", 1),
     sub("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
     sub("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
+    // Revision D-039: TS-511, moved from rule 2 to rule 1, after TS-802.
+    sub("TS-511", "evals/cap05/TS-511.eval.mjs", 1),
   ]);
   // 45 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 43 of the Claude Code subscription
-  // class, 14 of rule 1 (TS-226-blocking from revision D-037), 28 of rule 2 (TS-320 from revision D-038)
+  // class, 15 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039), 27 of rule 2
+  // (TS-320 from revision D-038)
   // and one (TS-421-agent) in neither list.
   assert.equal(CAP_EXCEPTIONS.length, 45);
   const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
   assert.equal(subs.length, 43);
-  assert.equal(subs.filter((e) => e.rule === 1).length, 14);
-  assert.equal(subs.filter((e) => e.rule === 2).length, 28);
+  assert.equal(subs.filter((e) => e.rule === 1).length, 15);
+  assert.equal(subs.filter((e) => e.rule === 2).length, 27);
   assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
-  // Rerun caps (revision D-033): 3.00 USD for the 14 rule-1 rows, 1.50 USD for the 28 rule-2 rows and
+  // Rerun caps (revision D-033): 3.00 USD for the 15 rule-1 rows, 1.50 USD for the 27 rule-2 rows and
   // TS-421-agent; TS-634 and INJ-21 have none. Only INJ-21 on opencode gives a session cap.
-  assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 14);
+  assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 15);
   assert.ok(subs.filter((e) => e.rerunUsd === 3.0).every((e) => e.rule === 1));
-  assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 29);
+  assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 28);
   assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21"]);
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0]]);

@@ -147,13 +147,30 @@ stopped at `TS-320`: the critic had composed its full report, the Verdict sectio
 Write, and the 0.530 USD cost reading stopped the session at the 0.50 USD cap before that Write ran
 (`evals/results/release-std-TS-320-2026-10-30T04-28-53-497Z.json`, transcript
 `evals/results/transcripts/TS-320-2026-10-30T04-28-53-497Z-run1.json`; critics CR-126, CR-89).
-`TS-320` becomes a rule-2 row next to `TS-319` (C002-IF-010 §2.2; 45 rows, 28 rule-2 rows). The row
+`TS-320` becomes a rule-2 row next to `TS-319` (C002-IF-010 §2.2; 45 rows, 28 rule-2 rows at that revision). The row
 is already in `caps.mjs` (revision commit 0e3cc8d, no fix task, `10-strategy.md`), but the edge's
 condition is the G3 approval of the D-038 revision, which approves that row (plan critic CR-91).
 Until then the `TS-320` replacement of C001-T-072 does not run, and the conductor records the blocked
 reason as "waits for the G3 approval of CHG-002 revision D-038". After it, the capped session is no
 run, and one session at 1.50 USD with `--cap-exception` replaces it (the rule-2 replacement form
 below). Like the other edges, this one lives on the CHG-002 side only.
+
+**C001-T-072 also waits for the G3 approval of the D-039 revision** (defect D-039; P-01 answer
+Q-ts511-cap-01, "Raise its cap to $3 (Recommended)"). The standard prevalidation of C001-T-072 stopped
+at `TS-511`. Its session at 0.50 USD ended at the cap at 0.818 USD with no Write
+(`evals/results/release-std-TS-511-2026-11-06T07-35-33-514Z.json`). Its replacement at 1.50 USD
+ended at the cap at 1.507 USD: three contract files were written, the cap stopped the session before
+its fourth Write ran, and `README.md` and `errors.md` were not reached
+(`evals/results/release-std-TS-511-2026-11-06T07-42-28-706Z.json`, transcript
+`evals/results/transcripts/TS-511-2026-11-06T07-42-28-706Z-run1.json`). The failed checks all follow from
+the files not written. `TS-511` moves to rule 1 (C002-IF-010 §2.2; 45 rows, 15 rule-1 and 27 rule-2).
+The row is already in `caps.mjs` with the revision commit (no fix task, `10-strategy.md`), but the
+edge's condition is the G3 approval of the D-039 revision, which approves that row. Until then no
+`TS-511` session of C001-T-072 runs, and the conductor records the blocked reason as "waits for the
+G3 approval of CHG-002 revision D-039". After it, three fresh sessions at 3.00 USD run in a run of
+their own (the rule-1 command form below). The four capped sessions of 2026-10-30 and 2026-11-06 are
+no runs by the Runs rule of C002-IF-010 §2.2. `TS-511` gets no stop condition, so C002-T-072's list of
+seven rows stays as it is. Like the other edges, this one lives on the CHG-002 side only.
 
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
 for INJ-21 (Recommended)"). In C002-T-071's first run, `INJ-21` on OpenCode ended at the 0.50 USD cap
@@ -229,7 +246,8 @@ checks:
 - the number of runs equals the row's release class in C001-ADR-003 (10 or 3, with the 10-run check
   after a 2 / 3 result);
 - every session of a rule-1 row ran at 3.00 USD (defect D-033); a session at 1.50 USD of such a row,
-  the eight `t082-d018` sessions included, is no run;
+  the eight `t082-d018` sessions included, is no run, and so are the four `TS-511` sessions at 0.50 and
+  1.50 USD of 2026-10-30 and 2026-11-06 that ended at the spend cap (defect D-039);
 - every session at 1.50 USD of a rule-2 row replaces exactly one session that failed and ended at the
   spend cap (`error_max_budget_usd`), named by its result file;
 - no rule-2 row has a session at 1.50 USD without such a predecessor, or more than one replacement
@@ -361,7 +379,8 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
-| Q-ts320-cap-01: `TS-320` stopped at the 0.50 USD cap before the Write of its complete report (Verdict included) in the standard prevalidation of C001-T-072 (defect D-038; `questions-log.md` round 2026-10-30) | the D-038 revision commit; C001-T-072 | settled: P-01 answered "Add rule-2 exception (Recommended)"; `TS-320` a rule-2 row next to `TS-319` in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 28 rule-2), no fix task; after the G3 approval of the D-038 revision the capped session is no run and is replaced once at 1.50 USD |
+| Q-ts511-cap-01: `TS-511` failed at the 0.50 and 1.50 USD caps in the standard prevalidation of C001-T-072, the second session stopped before its fourth Write ran (defect D-039; `questions-log.md` round 2026-11-06) | the D-039 revision commit; C001-T-072 | settled: P-01 answered "Raise its cap to $3 (Recommended)"; `TS-511` moved to rule 1 in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 15 rule-1, 27 rule-2), no fix task; after the G3 approval of the D-039 revision three fresh sessions run at 3.00 USD, and the four capped sessions are no runs; the higher token use is a follow-up after release (`10-strategy.md`) |
+| Q-ts320-cap-01: `TS-320` stopped at the 0.50 USD cap before the Write of its complete report (Verdict included) in the standard prevalidation of C001-T-072 (defect D-038; `questions-log.md` round 2026-10-30) | the D-038 revision commit; C001-T-072 | settled: P-01 answered "Add rule-2 exception (Recommended)"; `TS-320` a rule-2 row next to `TS-319` in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 28 rule-2 at that revision), no fix task; after the G3 approval of the D-038 revision the capped session is no run and is replaced once at 1.50 USD |
 | Q-opencode-defer-01, Q-noask-01: OpenCode 0.0.2 refused (`INJ-21` open-ended), Copilot 0.0.2 refused (no ask tool, CHG-001 D-020) (defect D-036; `questions-log.md`) | C002-T-074, C002-T-071, C002-T-075, C002-T-055; C002-T-051, C002-T-052 | settled: P-01 answered "Defer OpenCode (Recommended)" and "Text fallback + 0.0.3 (Recommended)". Copilot ships first at 0.0.3 after the CHG-001 D-020 fix, `architect-sdd@0.0.3` is published apart (C002-T-075), and OpenCode is deferred with no more OpenRouter spend. Q-opencode-scope-01 settled it: P-01 answered "Move to a new change (Recommended)". C002-T-051 and C002-T-052 are dropped, the OpenCode-release parts of C002-DOD-001, 002, 005, 008, 009, 019 and 021 and their test cases are marked "moved to CHG-003", and C002-M-07 closes on Copilot alone (plan critic CR-85) |
 | Q-inj21-01: INJ-21 capped and acted upon, OpenCode 0.0.1 refused (defect D-035; `questions-log.md`) | C002-T-073, C002-T-071; the release tasks | settled: P-01 answered "0.0.2 + cap for INJ-21 (Recommended)"; the session cap and version 0.0.2 in C002-T-073, both targets' paid evidence retaken at 0.0.2 in C002-T-071. This answer also settles the Copilot CLI retake that Q-copilot-retake-01 asked about. Q-pool-retake-01 settled too: P-01 answered "Yes, use the reserve", with the standing approval renewed, so the OpenCode rows that the general pool cannot hold run from the reserve (test plan §4.1 rule 5 exception; plan critic CR-79) |
 | Q-early-stop-01, Q-weekly-reset-01: full-flow sessions run to the cap after their check; no free weekly reset (defect D-034; `questions-log.md`) | C002-T-072; C001-T-072 | settled: P-01 answered "Stop when checked (Recommended)"; the week stays at most 95 % used. C002-T-072 adds the early stop and the conditions of seven rule-1 rows (CR-74, CR-76); only C001-T-072 waits for it (CR-77). Its paid `TS-225` check is allowed: C002-IF-010 §2.2 names C002-T-072 step 6 in the `TS-225` row (met, CR-79) |

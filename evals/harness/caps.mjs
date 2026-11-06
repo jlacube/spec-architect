@@ -67,7 +67,7 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 
 /**
  * Cap exceptions in force: the rows of the C002-IF-010 §2.2 table "Caps above 0.50 USD" (critic CR-68;
- * revised for defects D-025, D-030, D-033, D-037 and D-038). Each row gives the row ID, its case file (repository-relative, `/`
+ * revised for defects D-025, D-030, D-033, D-037, D-038 and D-039). Each row gives the row ID, its case file (repository-relative, `/`
  * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
  * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
  * row has none). An exception may also give a session cap (`sessionUsd`, defect D-035; §2.2 "Session cap
@@ -84,7 +84,9 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   D-033 (P-01, Q-cap-level-01, 2026-10-24; C002-T-070), the row TS-225 after TS-224 (spec critic CR-114,
  *   the attended twin of TS-215); and, for defect D-037 (C002-T-074), the row TS-226-blocking after
  *   TS-225, a fourteenth rule-1 row (the file's other rows get no exception); and, for defect D-038 (P-01,
- *   Q-ts320-cap-01, 2026-10-30), the row TS-320 after TS-319, a twenty-eighth rule-2 row.
+ *   Q-ts320-cap-01, 2026-10-30), the row TS-320 after TS-319, a twenty-eighth rule-2 row; and, for defect
+ *   D-039 (P-01, Q-ts511-cap-01, 2026-11-06), the row TS-511 moved from rule 2 to rule 1 after TS-802, a
+ *   fifteenth rule-1 row and 27 rule-2 rows.
  * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
  * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
@@ -140,7 +142,6 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-401", "evals/cap04/TS-401.eval.mjs", 2),
   SUB("TS-418", "evals/cap04/TS-418.eval.mjs", 2),
   SUB("TS-424", "evals/cap04/TS-424.eval.mjs", 2),
-  SUB("TS-511", "evals/cap05/TS-511.eval.mjs", 2),
   SUB("TS-515", "evals/cap05/TS-515.eval.mjs", 2),
   SUB("TS-622", "evals/cap06/TS-622.eval.mjs", 2),
   SUB("TS-710", "evals/cap07/TS-710.eval.mjs", 2),
@@ -153,6 +154,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-508", "evals/cap05/TS-508.eval.mjs", 1),
   SUB("TS-711", "evals/cap07/TS-711.eval.mjs", 1),
   SUB("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
+  // Defect D-039: TS-511, moved from rule 2; every session at the rule-1 cap.
+  SUB("TS-511", "evals/cap05/TS-511.eval.mjs", 1),
 ]);
 
 /**

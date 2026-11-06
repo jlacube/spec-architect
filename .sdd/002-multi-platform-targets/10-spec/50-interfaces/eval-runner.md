@@ -145,6 +145,13 @@ release session the critic had composed its full report, the Verdict section inc
 Write, and the 0.50 USD cap stopped the session before that Write ran, so no report reached the
 workspace (§2.2 exception table, Sessions of CHG-001 tasks; critic CR-126).
 
+Revised for defect D-039 (found in C001-T-072; P-01 answer to Q-ts511-cap-01, "Raise its cap to $3
+(Recommended)"): the CHG-001 case row `TS-511` moves from rule 2 to rule 1, a fifteenth rule-1 row, so
+every session runs at 3.00 USD and none at 0.50 USD. The table still has 45 rows, now 15 of rule 1 and
+27 of rule 2. In the 1.50 USD session of 2026-11-06 the architect wrote three of its four contract
+files, and the cap stopped the session before the Write of the fourth ran, so the budget ended it. The
+three files it wrote pass their format checks (§2.2 exception table, Sessions of CHG-001 tasks).
+
 ## §1 Selection
 
 `npm run eval -- --host claude-code|opencode|copilot-cli` (default `claude-code`, the existing
@@ -549,7 +556,8 @@ CHG-001 eval cases of C001-T-082 and C001-T-072 for defect D-030, P-01 answer to
 cap exceptions (Recommended)"; the rerun cap of the rule-1 rows raised to 3.00 USD for defect D-033,
 P-01 answer to Q-cap-level-01, "Raise to $3 (Recommended)", and the row `TS-225` added on critic
 CR-114; the rule-2 row `TS-320` added for defect D-038, P-01 answer to Q-ts320-cap-01, "Add rule-2
-exception (Recommended)"). A case row sets
+exception (Recommended)"; the row `TS-511` moved from rule 2 to rule 1 for defect D-039, P-01 answer
+to Q-ts511-cap-01, "Raise its cap to $3 (Recommended)"). A case row sets
 `maxBudgetUsd` above 0.50 or `maxTurns` above 30, and a run applies a cap above the row's own, only
 where P-01 approved an exception for that row, host and auth mode; the exceptions in force are the
 rows of this table. They fall into two classes: the **paid class**, for sessions that spend from a
@@ -621,8 +629,9 @@ cap when the run gives `--cap-exception`, else the matching exception's session 
 | `TS-223` (`evals/cap02/TS-223.eval.mjs`); `TS-224` (`evals/cap02/TS-224.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-033; 1.50 USD before) | the sessions of C001-T-082 step 4 and of C001-T-072, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below); the two `t082-baseline` sessions at 0.50 USD count toward no pass rule, and the `t082-d018` sessions at 1.50 USD are no runs (D-033, below); for `TS-224` also one session of C002-T-069 step 6 with `--cap-exception`, the paid check of the D-031 fix, run at the rerun cap then, 1.50 USD, which counts toward no pass rule of C001-T-082 or C001-T-072 (plan critic CR-68, the conductor's decision within P-01's approved spend of Q-budget-hide-01) | P-01, Q-cap-exc-01 (2026-10-24; defect D-030): the cases check the real cartographer's hand-back after the conductor's spec start, about 1.2 … 1.4 USD notional per run like `TS-215`; the 0.50 USD cap ended both baselines of C001-T-082 step 1 (evidence table below). Rerun cap 3.00 USD: P-01, Q-cap-level-01 (2026-10-24; defect D-033): with the budget hidden, every session at 1.50 USD ran to the cap (below) |
 | `TS-225` (`evals/cap02/TS-225.eval.mjs`, which C001-T-083 adds) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-033) | the sessions of C001-T-082 step 4 and of C001-T-072 (release class G, 10 runs), each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below); also one session of C002-T-072 step 6 at 3.00 USD with `--cap-exception` and the row's stop condition, the paid check of the D-034 fix (Early stop when the check is decided), which counts toward no pass rule of C001-T-082 or C001-T-072 (the conductor's decision within P-01's approved spend of Q-early-stop-01, as for C002-T-069 step 6) | the conductor's decision on critic CR-114 (2026-10-24), under the rule of P-01's answer to Q-cap-level-01 (defect D-033), which P-01 confirms at G2. `TS-225` (C001-TS-225, CHG-001 defect D-019) is the attended twin of `TS-215`: it checks that the conductor asks a blocking question when the hand-back that holds it arrives. In the latest `TS-215` session, the session's cost reached 0.507 USD at 90 s, and the hand-back with the blocking question arrived at 235 s (`evals/results/t082-d018-TS-215-2026-10-24T12-26-47-550Z.json`, its `usage` records and `task_notification` messages). So at 0.50 USD every session would stop before the step the case checks |
 | `TS-226-blocking` (`evals/cap02/TS-226.eval.mjs`; the file's other rows get no exception) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-037) | the session of C001-T-084 (one, dev tier) and the sessions of C001-T-072, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below) | the conductor's decision on defect D-037 (2026-10-28), under the rule of P-01's answer to Q-cap-level-01 (defect D-033), the same profile as `TS-225`. Its first session ended at the 0.50 USD cap, at 0.573 USD after 37 turns, before the step its case checks ("Given not met: no cartographer hand-back holds a blocking question"; `evals/results/t084-TS-226-blocking-2026-10-28T07-24-12-666Z.json`) |
-| `TS-127` (`evals/cap01/TS-127.eval.mjs`); `TS-201` (`evals/cap02/TS-201.eval.mjs`); `TS-216` (`evals/cap02/TS-216.eval.mjs`); `TS-217` (`evals/cap02/TS-217.eval.mjs`); `TS-218` (`evals/cap02/TS-218.eval.mjs`); `TS-319` (`evals/cap03/TS-319.eval.mjs`); `TS-320` (`evals/cap03/TS-320.eval.mjs`, added for defect D-038); `TS-401` (`evals/cap04/TS-401.eval.mjs`); `TS-418` (`evals/cap04/TS-418.eval.mjs`); `TS-424` (`evals/cap04/TS-424.eval.mjs`); `TS-511` (`evals/cap05/TS-511.eval.mjs`); `TS-515` (`evals/cap05/TS-515.eval.mjs`); `TS-622` (`evals/cap06/TS-622.eval.mjs`); `TS-710` (`evals/cap07/TS-710.eval.mjs`); `TS-712` (`evals/cap07/TS-712.eval.mjs`); `TS-714` (`evals/cap07/TS-714.eval.mjs`); `INJ-17`, `INJ-18`, `INJ-21` (`evals/injection/injection.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the session that replaces a failed session ended at the spend cap | the sessions of C001-T-072 at the row's release class and own caps; each failed session that ended at the spend cap is replaced by one session at 1.50 USD (rule 2 of Sessions of CHG-001 tasks, below); no other session of a row runs at the rerun cap | P-01, Q-cap-exc-01 (2026-10-24; defect D-030), for "any other C001-T-072 case over the default cap": the latest Claude Code session of each row ended at the 0.50 USD spend cap, and its case passed. `TS-127`, `TS-201`, `TS-418`, `TS-424` and `INJ-18` were added on critic CR-101, a conductor decision that P-01 confirms at G2: their latest sessions passed at 0.41 … 0.48 USD, within 0.09 USD of the cap, and a rule-2 row changes nothing unless a session reaches the cap (evidence table below). `TS-320`: P-01, Q-ts320-cap-01 (2026-10-30; defect D-038), "Add rule-2 exception (Recommended)", the profile of `TS-319`. `TS-320` grades the ideation verdict of the critic review that `TS-319` grades (its case file imports `ideationReview` from `evals/cap03/TS-319.eval.mjs`), and the measured cost of that review lies between 0.404 and 1.222 USD notional (0.404 … 1.222 USD): `TS-320` passed at 0.404 USD in the Q-cap-exc-02 measurement (`evals/results/d030-measure-TS-320-2026-10-24T05-41-01-275Z.json`), and the `TS-319` replacement session of C001-T-072 passed at 1.222 USD (`evals/results/release-std-TS-319-2026-10-30T04-20-34-282Z.json`). The first C001-T-072 session of `TS-320` ended at the 0.50 USD cap, at 0.530 USD after 3 turns, and failed: the critic had composed its full report of 12,175 characters, the Verdict section included, in one Write, and the 0.530 USD cost reading stopped the session before that Write ran (`evals/results/release-std-TS-320-2026-10-30T04-28-53-497Z.json`, transcript `evals/results/transcripts/TS-320-2026-10-30T04-28-53-497Z-run1.json`; evidence table below; critic CR-126) |
+| `TS-127` (`evals/cap01/TS-127.eval.mjs`); `TS-201` (`evals/cap02/TS-201.eval.mjs`); `TS-216` (`evals/cap02/TS-216.eval.mjs`); `TS-217` (`evals/cap02/TS-217.eval.mjs`); `TS-218` (`evals/cap02/TS-218.eval.mjs`); `TS-319` (`evals/cap03/TS-319.eval.mjs`); `TS-320` (`evals/cap03/TS-320.eval.mjs`, added for defect D-038); `TS-401` (`evals/cap04/TS-401.eval.mjs`); `TS-418` (`evals/cap04/TS-418.eval.mjs`); `TS-424` (`evals/cap04/TS-424.eval.mjs`); `TS-515` (`evals/cap05/TS-515.eval.mjs`); `TS-622` (`evals/cap06/TS-622.eval.mjs`); `TS-710` (`evals/cap07/TS-710.eval.mjs`); `TS-712` (`evals/cap07/TS-712.eval.mjs`); `TS-714` (`evals/cap07/TS-714.eval.mjs`); `INJ-17`, `INJ-18`, `INJ-21` (`evals/injection/injection.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 1.50 USD, for the session that replaces a failed session ended at the spend cap | the sessions of C001-T-072 at the row's release class and own caps; each failed session that ended at the spend cap is replaced by one session at 1.50 USD (rule 2 of Sessions of CHG-001 tasks, below); no other session of a row runs at the rerun cap | P-01, Q-cap-exc-01 (2026-10-24; defect D-030), for "any other C001-T-072 case over the default cap": the latest Claude Code session of each row ended at the 0.50 USD spend cap, and its case passed. `TS-127`, `TS-201`, `TS-418`, `TS-424` and `INJ-18` were added on critic CR-101, a conductor decision that P-01 confirms at G2: their latest sessions passed at 0.41 … 0.48 USD, within 0.09 USD of the cap, and a rule-2 row changes nothing unless a session reaches the cap (evidence table below). `TS-320`: P-01, Q-ts320-cap-01 (2026-10-30; defect D-038), "Add rule-2 exception (Recommended)", the profile of `TS-319`. `TS-320` grades the ideation verdict of the critic review that `TS-319` grades (its case file imports `ideationReview` from `evals/cap03/TS-319.eval.mjs`), and the measured cost of that review lies between 0.404 and 1.222 USD notional (0.404 … 1.222 USD): `TS-320` passed at 0.404 USD in the Q-cap-exc-02 measurement (`evals/results/d030-measure-TS-320-2026-10-24T05-41-01-275Z.json`), and the `TS-319` replacement session of C001-T-072 passed at 1.222 USD (`evals/results/release-std-TS-319-2026-10-30T04-20-34-282Z.json`). The first C001-T-072 session of `TS-320` ended at the 0.50 USD cap, at 0.530 USD after 3 turns, and failed: the critic had composed its full report of 12,175 characters, the Verdict section included, in one Write, and the 0.530 USD cost reading stopped the session before that Write ran (`evals/results/release-std-TS-320-2026-10-30T04-28-53-497Z.json`, transcript `evals/results/transcripts/TS-320-2026-10-30T04-28-53-497Z-run1.json`; evidence table below; critic CR-126) |
 | `TS-507` (`evals/cap05/TS-507.eval.mjs`); `TS-508` (`evals/cap05/TS-508.eval.mjs`); `TS-711` (`evals/cap07/TS-711.eval.mjs`); `TS-802` (`evals/cap08/TS-802.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-033; 1.50 USD before) | the sessions of C001-T-072 at the row's release class, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below) | P-01, Q-cap-exc-01 and Q-cap-exc-02 (2026-10-24; defect D-030); rerun cap 3.00 USD: P-01, Q-cap-level-01 (2026-10-24; defect D-033). In the measurement at the default caps, the 0.50 USD cap cut off `TS-711`'s critic before the rubric, so its case failed. The architect subagent of `TS-507` and `TS-508` skipped outputs because of the budget; their sessions ended at 0.48 and 0.50 USD. The conductor of `TS-802` stopped itself for the budget, and its session then ended at the spend cap (moved from rule 2 on critic CR-98). Evidence table below |
+| `TS-511` (`evals/cap05/TS-511.eval.mjs`, moved from the rule-2 row for defect D-039) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-039; 1.50 USD before) | the sessions of C001-T-072 at the row's release class, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below). The four sessions of 2026-10-30 and 2026-11-06 that ended at the spend cap at 0.50 and 1.50 USD are no runs (Runs, below) | P-01, Q-ts511-cap-01 (2026-11-06; defect D-039), "Raise its cap to $3 (Recommended)". The sessions measured so far cost 0.506 … 1.685 USD, and none that ran with the budget hidden has finished (rule 1 of Sessions of CHG-001 tasks, below; evidence table below) |
 
 **Claude Code subscription class** (defect D-025; P-01 answer to Q-claude-cap-01). The exceptions
 of host `claude-code` and auth `subscription` hold for Claude Code sessions that run on P-01's Claude
@@ -688,8 +697,9 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
 
 1. **Every session at the rerun cap:** `TS-213`, `TS-215`, `TS-221`, `TS-223`, `TS-224`, `TS-225`,
    `TS-226-blocking`, `TS-318-00-ideation`, `TS-318-10-spec`, `TS-318-20-plan`, `TS-507`, `TS-508`,
-   `TS-711` and `TS-802`, fourteen rows (`TS-225` added on critic CR-114, the attended twin of
-   `TS-215`; `TS-226-blocking` added for defect D-037; the evidence is in their table rows). Each
+   `TS-511`, `TS-711` and `TS-802`, fifteen rows (`TS-225` added on critic CR-114, the attended twin
+   of `TS-215`; `TS-226-blocking` added for defect D-037; `TS-511` moved from rule 2 for defect D-039;
+   the evidence is in their table rows). Each
    session runs with `--cap-exception`, at the row's rerun cap of 3.00 USD (defect D-033; P-01 answer
    to Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before) and the row's own turn cap (40 for
    `TS-213` and `TS-221`). The sessions at 0.50 USD of `TS-213`, `TS-215`, `TS-221` and the three `TS-318` rows
@@ -728,11 +738,49 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
    ledger (`evals/results/spend-chg002.json`), which holds no entry for these sessions and gets none
    (critic CR-116). C001-T-082 step 4 runs these rows again at 3.00 USD. P-01 measures the rule's rows again after the CHG-001 D-019 fixes
    (Q-cap-level-01). A cap that this measurement changes is a further revision of this table.
+   `TS-511` is in this rule from defect D-039 (P-01 answer to Q-ts511-cap-01, "Raise its cap to $3
+   (Recommended)"). The architect writes four interfaces, the registry and the error catalogue in one
+   session. Measured so far:
+   - `t042-TS-511-2026-10-11T17-01-58-829Z.json`, 2026-10-11: 0.506 USD, passed, all six files written
+     (17,228 characters), 16,060 Opus output tokens. This session predates defect D-031, which hid the
+     budget from the model.
+   - `release-std-TS-511-2026-10-30T05-17-40-555Z.json` and `…T05-24-58-054Z.json`, 2026-10-30, before
+     the C001-D-025 fix: 0.566 USD at the 0.50 USD cap with no Write, and 1.685 USD at the 1.50 USD cap
+     with one Write issued, which did not run.
+   - `release-std-TS-511-2026-11-06T07-35-33-514Z.json`, 2026-11-06, on the C001-D-025 files: 0.818 USD
+     at the 0.50 USD cap with no Write. One model call, whose visible output is one `sdd id next`
+     command, took the cost reading from 0.113 to 0.818 USD.
+   - `release-std-TS-511-2026-11-06T07-42-28-706Z.json`, 2026-11-06, on the C001-D-025 files: 1.507 USD
+     at the 1.50 USD cap, 49,446 Opus output tokens. Seven `sdd` calls, against 28 in the 1.50 USD
+     session of 2026-10-30, each one right the first time. `invoice.schema.json`, `openapi.yaml` and
+     `events.asyncapi.yaml` were written (21,866 characters) and pass their format checks. The cap
+     stopped the session before its fourth Write ran: `billing-admin-cli.md` (5,473 characters), composed
+     with the four headings that the case checks. `README.md` and `errors.md` were not reached. The
+     failed checks are the four CLI headings and the three registry rows, which follow from the missing
+     `billing-admin-cli.md` and `README.md`, so the budget ended the session, not a wrong behaviour of
+     the architect.
+
+   So no session with the budget hidden has finished, and 1.507 USD is a lower bound for a whole
+   session on the C001-D-025 files. About 2 USD is an estimate from the share of the two unwritten
+   files in the 2026-10-11 session, not a measurement. Most of the growth in output tokens is not in
+   the files, and one model call with almost no visible output holds much of it; hidden thinking is the
+   likely reading, not a proven one. The row is in rule 1, not rule 2 with a higher cap, for two
+   reasons. Rule 2 is for rows that mostly fit the defaults, and its rerun cap stays 1.50 USD. And both
+   sessions at the row's own 0.50 USD with the budget hidden ended at the cap with no Write, so a first
+   session at that cap spends its cost on a session that cannot pass. Each of the four sessions of
+   2026-10-30 and 2026-11-06 ended at the spend cap under a cap below the one this table now gives the
+   row, so none is a run (Runs, above), the two 1.50 USD replacements included, which rule 2 counted as
+   runs while the row was in it. That marking lives in the release evidence of C001-T-072 and the
+   result records (`caps.usd`, `metrics.result_subtype`); the CHG-002 spend ledger
+   (`evals/results/spend-chg002.json`) holds no entry for these sessions and gets none. The row's
+   runs are three fresh sessions at 3.00 USD with `--cap-exception`, with the 10-run check after a
+   2 / 3 result. The row has no stop condition (`stopWhen`): its check reads the finished files.
 2. **Own caps, a capped failure replaced:** every other row of the class that is a release case of
    C001-ADR-003: `TS-127`, `TS-201`, `TS-214`, `TS-216`, `TS-217`, `TS-218`, `TS-319`, `TS-320`,
-   `TS-401`, `TS-418`, `TS-419`, `TS-420`, `TS-424`, `TS-511`, `TS-515`, `TS-622`, `TS-710`,
-   `TS-712`, `TS-713`, `TS-714`, `TS-715`, `TS-815`, `TS-817-stop`, `TS-817-specify`, `INJ-17`,
-   `INJ-18`, `INJ-19` and `INJ-21`, twenty-eight rows (`TS-320` added for defect D-038). Each session
+   `TS-401`, `TS-418`, `TS-419`, `TS-420`, `TS-424`, `TS-515`, `TS-622`, `TS-710`, `TS-712`,
+   `TS-713`, `TS-714`, `TS-715`, `TS-815`, `TS-817-stop`, `TS-817-specify`, `INJ-17`, `INJ-18`,
+   `INJ-19` and `INJ-21`, twenty-seven rows (`TS-320` added for defect D-038; `TS-511` moved to rule 1
+   for defect D-039). Each session
    runs at the row's own caps. A session that fails and ended at
    the spend cap, as the class defines it above, is no run. One session at the row's rerun cap of
    1.50 USD, with `--cap-exception`, replaces it and is a run whatever its result (D-033 leaves this
@@ -765,9 +813,11 @@ checks them from their result records, which give `caps` (§3), and C001-T-072 r
 each session in its release evidence. No waiver is approved for these rows: a failed run counts
 against the pass rule of its tier.
 
-Evidence of the rows added for defect D-030, and of the row `TS-320` added for defect D-038: the Claude Code session of each row in
+Evidence of the rows added for defect D-030, of the row `TS-320` added for defect D-038, and of the
+row `TS-511` moved to rule 1 for defect D-039: the Claude Code session of each row in
 `evals/results/` that was the latest as of the revision that added the row (D-030 2026-10-24; D-038
-2026-10-30; critic CR-128), newest `measured_at` first (the record's `cost_usd`, `turns` and
+2026-10-30; D-039 2026-11-06, with both `TS-511` sessions of that date; critic CR-128), newest
+`measured_at` first (the record's `cost_usd`, `turns` and
 `metrics.result_subtype`). A Max-plan session (`subscription`) is used where one exists. The rows of
 the stored login ran on 2026-10-11, before the `--auth` switch of C002-T-060 (their results give no
 `auth`). Some specialists then still ran as stand-ins (CHG-001 defect D-013), so their cost now is
@@ -785,7 +835,9 @@ higher (C001-ADR-003, Expected notional cost).
 | `TS-319` | standard, 3 runs | `t039-TS-319-2026-10-11T13-44-05-786Z.json` | stored login | 0.530 | 1 | `error_max_budget_usd` | passed |
 | `TS-320` (defect D-038) | standard, 3 runs | `release-std-TS-320-2026-10-30T04-28-53-497Z.json` | subscription | 0.530 | 3 | `error_max_budget_usd`: the critic had composed its full report (12,175 characters, Verdict included) in one Write, and the cap stopped the session before that Write ran (critic CR-126) | failed |
 | `TS-401` | standard, 3 runs | `t037-TS-401-2026-10-11T12-31-48-155Z.json` | stored login | 0.516 | 1 | `error_max_budget_usd` | passed |
-| `TS-511` | standard, 3 runs | `t042-TS-511-2026-10-11T17-01-58-829Z.json` | stored login | 0.506 | 1 | `error_max_budget_usd` | passed |
+| `TS-511` (defect D-039), at 1.50 USD | standard, 3 runs | `release-std-TS-511-2026-11-06T07-42-28-706Z.json` | subscription | 1.507 | 3 | `error_max_budget_usd`: three contract files written, the cap stopped the session before its fourth Write ran, `README.md` and `errors.md` not reached | failed |
+| `TS-511` (defect D-039), at 0.50 USD | standard, 3 runs | `release-std-TS-511-2026-11-06T07-35-33-514Z.json` | subscription | 0.818 | 3 | `error_max_budget_usd`: no Write issued | failed |
+| `TS-511` (defect D-030) | standard, 3 runs | `t042-TS-511-2026-10-11T17-01-58-829Z.json` | stored login | 0.506 | 1 | `error_max_budget_usd` | passed |
 | `TS-515` | standard, 3 runs | `t042-TS-515-2026-10-11T17-05-07-190Z.json` | stored login | 0.514 | 1 | `error_max_budget_usd` | passed |
 | `TS-622` | standard, 3 runs | `t043-TS-622-2026-10-11T17-26-57-126Z.json` | stored login | 0.520 | 1 | `error_max_budget_usd` | passed |
 | `TS-710` | standard, 3 runs | `t039-TS-710-2026-10-11T13-40-40-670Z.json` | stored login | 0.550 | 1 | `error_max_budget_usd` | passed |
