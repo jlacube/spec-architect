@@ -1,0 +1,219 @@
+{
+  "scenario": "TS-221",
+  "title": "Visible phase plan",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-06T09:41:44.311Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.2804059,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.2804059,
+        "session_ms": 74246,
+        "api_ms": 27930,
+        "turns": 28,
+        "result_subtype": "check_decided",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 19,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001273
+          },
+          "claude-opus-5-5": {
+            "input": 12,
+            "output": 3278,
+            "cache_read": 137873,
+            "cache_write": 23387,
+            "cost_usd": 0.2802786
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 14,
+              "output": 3278,
+              "cache_read": 171924,
+              "cache_write": 25355
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b95g9dikl",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bct05ofe2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 3,
+          "Read": 8,
+          "Glob": 1,
+          "Skill": 2,
+          "Edit": 1,
+          "TaskCreate": 8,
+          "TaskUpdate": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 292
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 66
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 150
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 72
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 72
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34804
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 42
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 30
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 39
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 742
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 163
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 79
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 120
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13806
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 12833
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11946
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 11061
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 10174
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 9289
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 8306
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 7471
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 6697
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 25
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 40,
+        "usd": 3
+      },
+      "transcript": "evals/results/transcripts/TS-221-2026-11-06T09-40-28-350Z-run1.json"
+    }
+  ]
+}

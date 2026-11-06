@@ -1,0 +1,467 @@
+{
+  "scenario": "TS-507",
+  "title": "Architecture run (TS-507)",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:eval-dispatcher",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-06T13:46:05.915Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 1.92164533,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 1.92164533,
+        "session_ms": 1264086,
+        "api_ms": 652120,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1705,
+            "output": 3114,
+            "cache_read": 8483,
+            "cache_write": 7188,
+            "cost_usd": 0.00324993
+          },
+          "claude-opus-5-5": {
+            "input": 54,
+            "output": 62480,
+            "cache_read": 1363522,
+            "cache_write": 79175,
+            "cost_usd": 1.9183954
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 3114,
+              "cache_read": 8483,
+              "cache_write": 7188
+            },
+            "output": "derived"
+          },
+          "architect:sdd-architect": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 52,
+              "output": 0,
+              "cache_read": 1280368,
+              "cache_write": 77271
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-architect",
+            "task_id": "a59b9aae3ba05911d",
+            "ms": 1243155,
+            "tool_uses": 40,
+            "total_tokens": 88960
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3fmpig3r",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brzqr4dls",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bhfx6892c",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bg7ec3kea",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmxnd0vmu",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmy0yvbqf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxxn5kexy",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnaycmemp",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b697vesxq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bynbvh7x9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bbi9q3bnr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5msxtykf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bi1az0wzg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bf8i6j43g",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bk5crbect",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brinizpkg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0d43mhnu",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "byiuotm2b",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxne7zbmb",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bqk5v4vxy",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "Glob": 5,
+          "Read": 10,
+          "Bash": 20,
+          "Write": 4,
+          "Edit": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-architect",
+            "ms": 1243177
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-architect",
+            "ms": 445
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 111
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 73
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 74
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 63
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 85
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 61
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 72
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 85
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 58225
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 94823
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 135740
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 135237
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-architect",
+            "ms": 584
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-architect",
+            "ms": 513
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-architect",
+            "ms": 411
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-architect",
+            "ms": 135
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-architect",
+            "ms": 119
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 40146
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 40445
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 37185
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 41589
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 39771
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 43044
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 41379
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 35543
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 31460
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14627
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 13873
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14069
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14141
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14123
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 13388
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14030
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-architect",
+            "ms": 730
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-architect",
+            "ms": 709
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-architect",
+            "ms": 764
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-architect",
+            "ms": 844
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-architect",
+            "ms": 825
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-architect",
+            "subagent": "subagent",
+            "ms": 14450
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 30,
+        "usd": 3
+      },
+      "transcript": "evals/results/transcripts/TS-507-2026-11-06T13-24-55-201Z-run1.json"
+    }
+  ]
+}

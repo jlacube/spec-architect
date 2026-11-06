@@ -1,0 +1,382 @@
+{
+  "scenario": "TS-318-00-ideation",
+  "title": "Decision artifact type (00-ideation → DEC)",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-06T09:54:15.609Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 1.1230909999999998,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 1.1230909999999998,
+        "session_ms": 355501,
+        "api_ms": 260222,
+        "turns": 26,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 52,
+            "output": 27040,
+            "cache_read": 662410,
+            "cache_write": 68887,
+            "cost_usd": 1.1175309999999998
+          },
+          "claude-haiku-5-5": {
+            "input": 37025,
+            "output": 3715,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.005560000000000001
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 34,
+              "output": 27040,
+              "cache_read": 494983,
+              "cache_write": 33202
+            },
+            "output": "derived"
+          },
+          "architect:sdd-options-analyst": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 0,
+              "cache_read": 139528,
+              "cache_write": 23396
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bc05d3zcr",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-options-analyst",
+            "task_id": "a09b3bd2254537333",
+            "ms": 174051,
+            "tool_uses": 23,
+            "total_tokens": 42345
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bb01xmiip",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmzleuh9y",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bdk4k4isj",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsny1t5cv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Read": 12,
+          "Glob": 4,
+          "Bash": 6,
+          "Agent": 1,
+          "Grep": 1,
+          "WebFetch": 11,
+          "WebSearch": 3,
+          "Write": 3,
+          "AskUserQuestion": 2,
+          "Skill": 1,
+          "Edit": 3
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 79
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 44
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 151
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 36
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 63
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 35686
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-options-analyst",
+            "ms": 174070
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 162
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 97
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 124
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 83
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 92
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 121
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 96
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 41
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 9337
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 296
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 50
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 32
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 27
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 5894
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 44
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 26
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 7
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 57
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 11
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 26
+          },
+          {
+            "tool": "WebSearch",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 51
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-options-analyst",
+            "ms": 870
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 477
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13367
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 60
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13507
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 25687
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 24819
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 737
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 45
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 238
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 755
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 59
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 867
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 705
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 757
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 13525
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 18,
+        "usd": 3
+      },
+      "transcript": "evals/results/transcripts/TS-318-00-ideation-2026-11-06T09-48-18-507Z-run1.json"
+    }
+  ]
+}

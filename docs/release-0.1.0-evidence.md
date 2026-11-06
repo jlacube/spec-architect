@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed; stopped at the TS-511 fresh set (cap, on the D-025 files, §4.3). Running notional total:
-232.13 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; stopped at TS-418 (§4.3). Running notional total:
+273.58 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -521,7 +521,7 @@ the week reaching 85% at the same point.**
 | TS-218 | TS-218-2026-10-30T05-11-41-619Z (replaces the above) | pass (at its cap) | error_max_budget_usd | 1.50 | 1.52 | run 1: pass |
 | TS-217 (rule 2) | TS-217-2026-10-30T05-15-37-644Z | pass (at cap) | error_max_budget_usd | 0.50 | 0.52 | run 1: pass |
 | TS-511 (rule 2) | TS-511-2026-10-30T05-17-40-555Z | fail at cap | error_max_budget_usd | 0.50 | 0.57 | no run |
-| TS-511 | TS-511-2026-10-30T05-24-58-054Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.68 | **run 1: fail** (a rule-2 replacement is a run whatever its result) |
+| TS-511 | TS-511-2026-10-30T05-24-58-054Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.68 | no run (D-039; first recorded as run 1: fail) |
 
 **The TS-511 failure (C001-TC-511, interface formats; the architect writes four interfaces in one
 session):**
@@ -588,7 +588,7 @@ stopped at TS-511.**
 |---|---|---|---|---|---|---|
 | TS-320 (rule 2, D-038) | TS-320-2026-11-06T07-28-38-215Z (replaces TS-320-2026-10-30T04-28-53-497Z, a no-run under rule 2) | pass | success | 1.50 | 1.12 | run 1: pass |
 | TS-511 (rule 2), fresh set | TS-511-2026-11-06T07-35-33-514Z | fail at cap | error_max_budget_usd | 0.50 | 0.82 | no run |
-| TS-511 | TS-511-2026-11-06T07-42-28-706Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.51 | **run 1 of the fresh set: fail** |
+| TS-511 | TS-511-2026-11-06T07-42-28-706Z (replaces the above) | **fail at cap** | error_max_budget_usd | 1.50 | 1.51 | no run (D-039; first recorded as run 1 of the fresh set: fail) |
 
 **The second TS-511 failure, on the D-025 files:**
 
@@ -611,6 +611,83 @@ stopped at TS-511.**
   `t042` run, `README.md` and `errors.md` were about 19% of the characters written, so this session
   would need roughly 2 USD to finish (an estimate). No wrong behaviour shows in what it wrote; the
   outcome is still a counted failure under rule 2.
+
+**P-01's decision on TS-511 (2026-11-06, verbatim, relayed by the conductor):** "Raise its cap to $3
+(Recommended)".
+
+- TS-511 gets a 3.00 USD cap through a CHG-002 revision, and it is held until that revision is
+  approved.
+- A fresh TS-511 × 3 at that cap then replaces the sets so far for the verdict. They stay here as
+  history.
+- The conductor asks to be consulted again at 380 USD notional.
+- **D-039 approved and closed (`43c8791`, relayed by the conductor):** TS-511 is now a rule-1 row at
+  3.00 USD. By the rule for capped sessions (a session ended by a cap below the one later approved
+  for its row is no run), its four capped sessions at 0.50 and 1.50 USD (2026-10-30 and 2026-11-06)
+  are no runs and stay here as history. TS-511 × 3 runs in `--cap-exception` runs of its own. A
+  session ending at the 3.00 USD cap is reported at once (C002-RISK-038), with its thinking and
+  output token split.
+- Token growth is a post-release follow-up. For it, TS-507 and TS-508 are compared with their last
+  development pass, below.
+
+**Rule-1 standard rows and TS-511 at 3.00 USD (2026-11-06, 08:30–14:48 UTC, D-025 files, each row in
+its own `--cap-exception` runs): 9 rows, 27 runs, 27 pass.** Result files:
+`evals/results/release-std-<row>-2026-11-06T*.json`.
+
+| Row | Runs | Pass | Ends | USD per session |
+|---|---|---|---|---|
+| TS-213 | 3 | 3 / 3 | error_max_budget_usd 3 (no stop condition; a run under rule 1) | 3.03, 3.19, 3.20 |
+| TS-221 | 3 | 3 / 3 | check_decided 3 | 0.24, 0.28, 0.27 |
+| TS-318-00-ideation | 3 | 3 / 3 | success 3 | 0.98, 1.12, 1.18 |
+| TS-318-10-spec | 3 | 3 / 3 | success 3 | 1.10, 1.10, 0.91 |
+| TS-318-20-plan | 3 | 3 / 3 | success 3 | 1.04, 0.97, 0.96 |
+| TS-507 | 3 | 3 / 3 | success 3 | 1.89, 1.62, 1.92 |
+| TS-508 | 3 | 3 / 3 | success 3 | 1.82, 1.91, 1.93 |
+| TS-711 | 3 | 3 / 3 | success 3 | 0.82, 0.65, 1.09 |
+| TS-511 (rule 1, D-039) | 3 | **3 / 3, replaces the earlier sets** | success 3; none at the 3.00 USD cap | 1.85, 1.90, 1.70 |
+
+**Token comparison for the post-release follow-up (P-01, relayed).** Output tokens and characters
+written, against the last development pass of the same scenario (titles checked):
+
+| Row | Baseline | Output tokens: baseline → release mean | Ratio | Chars written: baseline → release mean | Ratio | USD: baseline → release mean |
+|---|---|---|---|---|---|---|
+| TS-507 | `d030-measure-TS-507-2026-10-24T05-43-47-055Z.json` | 17,521 → 61,477 | 3.5× | 9,301 → 24,259 | 2.6× | 0.48 → 1.81 |
+| TS-508 | `d030-measure-TS-508-2026-10-24T05-47-14-460Z.json` | 18,317 → 66,677 | 3.6× | 9,143 → 29,038 | 3.2× | 0.50 → 1.89 |
+| TS-511 | `t042-TS-511-2026-10-11T17-01-58-829Z.json` | 16,060 → 49,446 (the unfinished 1.50 USD session of 2026-11-06) | 3.1× | 17,228 → 27,339 (four of six files) | 1.6× | 0.51 → 1.51 |
+
+- **Caveat on the baselines:** all three ran before C002-T-069 hid the budget (`a9d4666`, 2026-10-24
+  11:11 UTC), under a 0.50 USD cap. C001-ADR-003 records that such sessions saw their budget and
+  rationed their work (D-031). So these ratios mix any real growth with the end of rationing. No
+  comparison with a hidden-budget development pass exists for these rows, so the share of each is not
+  established.
+- One more observation for the follow-up: TS-508's third session also wrote plan-phase files
+  (`20-plan/20-decisions/OA-001 … 003`, `ADR-001`, `ADR-002`, 19 KB of its 39 KB) in a run of the
+  architecture step. The row passed.
+
+**The 48 rows, first part (14:49–15:11 UTC): stopped at TS-418.**
+
+| Row | Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-201 (rule 2) | TS-201-2026-11-06T14-49-13-180Z | pass (at cap) | error_max_budget_usd | 0.50 | 0.74 | run 1: pass |
+| TS-420 (rule 2) | TS-420-2026-11-06T14-50-15-898Z | pass (at cap) | error_max_budget_usd | 0.50 | 0.52 | run 1: pass |
+| TS-418 (rule 2) | TS-418-2026-11-06T14-56-13-104Z | fail at cap | error_max_budget_usd | 0.50 | 0.53 | no run |
+| TS-418 | TS-418-2026-11-06T15-01-42-807Z (replaces the above) | **fail** | success | 1.50 | 0.97 | **run 1: fail** |
+
+**The TS-418 failure (C001-TC-418, domain entity fields):**
+
+- The assert: `### 2.1 Clinic: no Owning component`. It needs `Owning component` followed by a
+  `COMP-<n>` ID in each entity section.
+- The spec-writer wrote `**Owning component:** [NEEDS CLARIFICATION: Q-domain-01]` for Clinic and
+  `C004-COMP-01` for Subscription and Invoice, and told the conductor in its hand-back that Clinic's
+  owner is still open. Every other field of the three sections is there.
+- The brief names only "components C004-COMP-01 billing service, C004-COMP-02 notification service"
+  and says nothing about who owns Clinic. The ideation fixture names no owner either. The skill says
+  "Do not guess" and to write the marker where the missing value goes (`ears-requirements`).
+- So the agent followed the no-guess rule on a value the fixture does not give, and the check does
+  not accept a marker. C001-REQ-416 still asks for an owning component on every entity. The session
+  passed its development run (`t037-TS-418-2026-10-11T12-42-20-985Z.json`, 0.45 USD), when the budget
+  was still visible.
+- This is a counted failure under rule 2: the replacement is a run whatever its result. It is not a
+  Given that the assert marks as not holding. It goes to P-01.
 
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
@@ -746,6 +823,8 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Release-standard prevalidation, third part (TS-515 replacement, TS-710 fresh × 3 with replacements, TS-319 + replacement, TS-320) | 10 | 8.69 | 223.88 |
 | Release-standard prevalidation, fourth part (TS-715, TS-218 + replacement, TS-217, TS-511 + replacement) | 6 | 4.80 | 228.68 |
 | After the reset: TS-320 replacement, TS-511 fresh set (0.50 USD session + 1.50 USD replacement) | 3 | 3.45 | 232.13 |
+| Rule-1 standard rows, first part (TS-213, TS-221, TS-318 × 3 rows × 3, TS-507 × 1) | 16 | 21.47 | 253.60 |
+| TS-511 × 3 at 3.00 USD, TS-507 × 2, TS-508 × 3, TS-711 × 3, then TS-201, TS-420, TS-418 + replacement | 15 | 19.98 | 273.58 |
 
 Stop rule: at 400 USD notional the task stops and P-01 chooses (raised from 350 USD by P-01 on 2026-10-30, §0; C001-ADR-003).
 
