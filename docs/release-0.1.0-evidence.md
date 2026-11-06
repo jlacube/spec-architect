@@ -46,6 +46,9 @@ that pushes the forecast past 450 USD is reported.
 three entities, and the check stays strict. A fresh TS-418 × 3 replaces the failed set, which stays in
 §4.3 as history.
 
+**2026-11-06, P-01 (verbatim, relayed by the conductor):** "Rule 2 for the whole class (Recommended)".
+Implemented by D-040 (§4.3).
+
 The DOD-G-01 floor is unchanged: release-high ≥ 9 / 10 of 10 runs; release-standard 3 / 3 (2 / 3
 triggers a 10-run check needing ≥ 9 / 10); routing ≥ 90% of runs; injection 0 runs acted upon.
 
@@ -414,7 +417,7 @@ row meets ≥ 9 / 10.**
 - A scenario whose run fails is reported at once with a diagnosis. It is replaced only when its
   Given is not met (or under rule 2, after a failure at the spend cap).
 
-Rows: 59 scenarios, 61 sessions. TC-1002 has 2 rows, TC-1112 has 3, and TC-612 and TC-613 share the
+Rows: 59 scenarios, 61 sessions at the start; 62 since D-040 added `callers-full`, the third row of TC-1002. TC-1002 then had 2 rows, TC-1112 has 3, and TC-612 and TC-613 share the
 `impact` row of `evals/cap06/impact.eval.mjs`. Riskiest first:
 
 1. the 18 rule-2 rows (11 of them ended at the spend cap in development);
@@ -723,19 +726,27 @@ written, against the last development pass of the same scenario (titles checked)
   and each 1.50 USD replacement passed (0.95, 0.89, 0.79 USD). This replaces the failed set.
 - TS-127: 0.50 USD session failed at the cap, 1.50 USD replacement passed. TS-424 and TS-419: pass
   at the cap. TS-609: pass, 0.23 USD. Files: `evals/results/release-std-<row>-2026-11-06T*.json`.
-- **TS-313 (C001-TC-313, decision record; no cap exception), run 1: fail at the 0.50 USD cap**
+- **TS-313 (C001-TC-313, decision record), no run (D-040; first recorded as run 1: fail): failed at
+  the 0.50 USD cap**
   (`release-std-TS-313-2026-11-06T18-25-42-408Z.json`, 0.53 USD, 14 turns, 159 s).
   - The session was nearly done. The options analyst had written `OA-001-research-sources.md` (7,386
-    chars), the conductor had asked the question and had the answer, and `sdd id next DEC` had
-    returned. The cap ended it before `DEC-001-…md`, the file every failed assert reads (9 failures,
+    chars), the conductor had asked the question and had the answer, and `sdd id next DEC` was
+    rejected before it returned (`permission_denials`: the cap had closed the session). The cap ended it before `DEC-001-…md`, the file every failed assert reads (9 failures,
     all from that one missing file).
   - Small detour: the analyst fetched the template after writing the OA, then read and edited it.
   - Last development pass: 0.41 USD (`t048b6-TS-313-2026-10-21T00-16-15-523Z.json`), with the budget
     still visible, 8,394 output tokens against 11,028 now.
-  - Thinking text is redacted in transcripts, so tokens cannot be split exactly. Visible output (text
-    plus tool input) is 13.6 KB now and 12.3 KB then, so most of the 2,634 extra tokens are probably
-    thinking (an estimate).
+  - Thinking tokens (`modelUsage.thinkingTokens`): 3,633 of 11,028 output tokens now, 2,114 of 8,394
+    then. So 1,519 of the 2,634 extra tokens are thinking and 1,115 are visible output. **Correction:**
+    this note first said the split was not available, because thinking text is redacted; the counts are
+    in `modelUsage`.
   - Reading: budget. Not a behaviour fault, and not a fixture gap.
+- **D-040 approved and closed (`e078bc4`, relayed by the conductor):** `evals/harness/caps.mjs` has
+  rule-2 rows for all release-standard scenarios without an exception (88 rows in all), including
+  `callers-full`, the third configuration of C001-TC-1002 (`evals/cap10/callers-full.eval.mjs`), which
+  the earlier row list missed. A session failing at the 0.50 USD cap is no run and gets one 1.50 USD
+  replacement. A failed replacement, or a failure not at the cap, stops the run. Under this,
+  TS-313's failed session is no run.
 
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
