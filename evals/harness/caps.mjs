@@ -67,7 +67,7 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
 
 /**
  * Cap exceptions in force: the rows of the C002-IF-010 §2.2 table "Caps above 0.50 USD" (critic CR-68;
- * revised for defects D-025, D-030, D-033, D-037, D-038 and D-039). Each row gives the row ID, its case file (repository-relative, `/`
+ * revised for defects D-025, D-030, D-033, D-037, D-038, D-039 and D-040). Each row gives the row ID, its case file (repository-relative, `/`
  * separators), the host, the auth mode (`null` for a host without one), the row's own caps that the
  * exception allows (`usd`, `turns`) and the rerun cap of `--cap-exception` (`rerunUsd`, `null` when the
  * row has none). An exception may also give a session cap (`sessionUsd`, defect D-035; §2.2 "Session cap
@@ -86,7 +86,9 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   TS-225, a fourteenth rule-1 row (the file's other rows get no exception); and, for defect D-038 (P-01,
  *   Q-ts320-cap-01, 2026-10-30), the row TS-320 after TS-319, a twenty-eighth rule-2 row; and, for defect
  *   D-039 (P-01, Q-ts511-cap-01, 2026-11-06), the row TS-511 moved from rule 2 to rule 1 after TS-802, a
- *   fifteenth rule-1 row and 27 rule-2 rows.
+ *   fifteenth rule-1 row and 27 rule-2 rows; and, for defect D-040 (P-01, Q-std-cap-01, 2026-11-06), the
+ *   forty-two release-standard rows of C001-T-072 without an exception after TS-511, 69 rule-2 rows. They
+ *   are explicit rows: the match on row ID, case file, host and auth mode refuses every row outside the table.
  * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
  * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
@@ -156,6 +158,49 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-802", "evals/cap08/TS-802.eval.mjs", 1),
   // Defect D-039: TS-511, moved from rule 2; every session at the rule-1 cap.
   SUB("TS-511", "evals/cap05/TS-511.eval.mjs", 1),
+  // Defect D-040: the release-standard rows of C001-T-072 without another row, in C001-ADR-003 order.
+  SUB("TS-119", "evals/cap01/TS-119.eval.mjs", 2),
+  SUB("TS-120", "evals/cap01/TS-120.eval.mjs", 2),
+  SUB("TS-121", "evals/cap01/TS-121.eval.mjs", 2),
+  SUB("TS-122", "evals/cap01/TS-122.eval.mjs", 2),
+  SUB("TS-202", "evals/cap02/TS-202.eval.mjs", 2),
+  SUB("TS-203", "evals/cap02/TS-203.eval.mjs", 2),
+  SUB("TS-206", "evals/cap02/TS-206.eval.mjs", 2),
+  SUB("TS-207", "evals/cap02/TS-207.eval.mjs", 2),
+  SUB("TS-208", "evals/cap02/TS-208.eval.mjs", 2),
+  SUB("TS-210", "evals/cap02/TS-210.eval.mjs", 2),
+  SUB("TS-211", "evals/cap02/TS-211.eval.mjs", 2),
+  SUB("TS-222", "evals/cap02/TS-222.eval.mjs", 2),
+  SUB("TS-301", "evals/cap03/TS-301.eval.mjs", 2),
+  SUB("TS-303", "evals/cap03/TS-303.eval.mjs", 2),
+  SUB("TS-304", "evals/cap03/TS-304.eval.mjs", 2),
+  SUB("TS-305", "evals/cap03/TS-305.eval.mjs", 2),
+  SUB("TS-306", "evals/cap03/TS-306.eval.mjs", 2),
+  SUB("TS-307", "evals/cap03/TS-307.eval.mjs", 2),
+  SUB("TS-309", "evals/cap03/TS-309.eval.mjs", 2),
+  SUB("TS-312", "evals/cap03/TS-312.eval.mjs", 2),
+  SUB("TS-313", "evals/cap03/TS-313.eval.mjs", 2),
+  SUB("TS-315", "evals/cap03/TS-315.eval.mjs", 2),
+  SUB("TS-316", "evals/cap03/TS-316.eval.mjs", 2),
+  SUB("TS-317", "evals/cap03/TS-317.eval.mjs", 2),
+  SUB("TS-423", "evals/cap04/TS-423.eval.mjs", 2),
+  SUB("TS-609", "evals/cap06/TS-609.eval.mjs", 2),
+  SUB("impact", "evals/cap06/impact.eval.mjs", 2),
+  SUB("TS-910", "evals/cap09/TS-910.eval.mjs", 2),
+  SUB("TS-1001", "evals/cap10/TS-1001.eval.mjs", 2),
+  SUB("TS-1002-cfg-no-ripwire", "evals/cap10/TS-1002.eval.mjs", 2),
+  SUB("TS-1002-cfg-bare", "evals/cap10/TS-1002.eval.mjs", 2),
+  SUB("TS-1004", "evals/cap10/TS-1004.eval.mjs", 2),
+  SUB("TS-1005", "evals/cap10/TS-1005.eval.mjs", 2),
+  SUB("TS-1010", "evals/cap10/TS-1010.eval.mjs", 2),
+  SUB("TS-1011", "evals/cap10/TS-1011.eval.mjs", 2),
+  SUB("TS-1012", "evals/cap10/TS-1012.eval.mjs", 2),
+  SUB("TS-1013", "evals/cap10/TS-1013.eval.mjs", 2),
+  SUB("TS-1014", "evals/cap10/TS-1014.eval.mjs", 2),
+  SUB("TS-1111", "evals/cap11/TS-1111.eval.mjs", 2),
+  SUB("TS-1112-deepwiki-down", "evals/cap11/TS-1112.eval.mjs", 2),
+  SUB("TS-1112-bare", "evals/cap11/TS-1112.eval.mjs", 2),
+  SUB("TS-1112-node18", "evals/cap11/TS-1112.eval.mjs", 2),
 ]);
 
 /**
