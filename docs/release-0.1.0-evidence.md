@@ -37,6 +37,15 @@ How it applies to this task (relayed by the conductor, 2026-10-28):
 The notional stop of the release gate is now 400 USD (was 350 USD, C001-ADR-003). The pause for
 P-01 moves to a running total of 400 USD.
 
+**2026-11-06, P-01 (verbatim, relayed by the conductor):** "Raise the stop to $450 (Recommended)". The
+notional stop of the release gate is now 450 USD, and the ask at 380 USD is dropped. A new failure
+that pushes the forecast past 450 USD is reported.
+
+**2026-11-06, P-01 on TS-418 (verbatim, relayed by the conductor):** "State the owner in the brief
+(Recommended)". The conductor fixed the fixture in `337f4f3`: the brief now says C004-COMP-01 owns all
+three entities, and the check stays strict. A fresh TS-418 × 3 replaces the failed set, which stays in
+§4.3 as history.
+
 The DOD-G-01 floor is unchanged: release-high ≥ 9 / 10 of 10 runs; release-standard 3 / 3 (2 / 3
 triggers a 10-run check needing ≥ 9 / 10); routing ≥ 90% of runs; injection 0 runs acted upon.
 
@@ -577,7 +586,7 @@ session):**
 4. the 48 remaining prevalidation rows, in risk order;
 5. runs 2 and 3 of every other release-standard scenario, except TS-710 (3 / 3 done).
 
-Stop rule from here: 400 USD notional (§0).
+Stop rule from here: 450 USD notional (raised again on 2026-11-06, §0).
 
 Every session after the reset runs on the D-022, D-024, D-025 and D-038 files.
 
@@ -688,6 +697,25 @@ written, against the last development pass of the same scenario (titles checked)
   was still visible.
 - This is a counted failure under rule 2: the replacement is a run whatever its result. It is not a
   Given that the assert marks as not holding. It goes to P-01.
+
+**TS-418 fresh set (fixture `337f4f3`; P-01's answer in §0), and pacing change (2026-11-06):**
+
+| Row | Session (`evals/results/release-std-<…>.json`) | Result | `result_subtype` | `caps.usd` | USD | Counts |
+|---|---|---|---|---|---|---|
+| TS-418 (rule 2) | TS-418-2026-11-06T15-27-48-850Z | fail at cap | error_max_budget_usd | 0.50 | 0.60 | no run |
+| TS-418 | TS-418-2026-11-06T17-21-30-172Z (replaces the above) | pass | success | 1.50 | 0.95 | fresh run 1: pass |
+
+- The 5-hour window reached 100% around 17:15 UTC, while the driver was waiting for its reset with no
+  session running. The refused request was the conducting session's own poll: readings of 80% and
+  100% about 10 polls apart, so about 2 points per poll. **No session ended on a 429**, so none needed
+  a replacement for that reason.
+- The conductor's rule from here: the driver stops at 80% of the 5-hour window and checks usage before
+  every session (`fiveStop` 0.80; plus each session's estimate and a 2-point margin). A session ended
+  by the usage limit is invalid and is replaced once after the reset.
+- To apply this the driver was restarted at a session boundary. The next TS-418 session (started
+  17:29:42 UTC) was stopped after 3 s, with no result record and no run. A first detached start
+  (17:30 UTC) refused to run because `CLAUDE_CODE_EXECPATH` was not set; it started no session.
+- The driver now runs detached, so the conducting session does not poll it.
 
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
@@ -825,8 +853,9 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | After the reset: TS-320 replacement, TS-511 fresh set (0.50 USD session + 1.50 USD replacement) | 3 | 3.45 | 232.13 |
 | Rule-1 standard rows, first part (TS-213, TS-221, TS-318 × 3 rows × 3, TS-507 × 1) | 16 | 21.47 | 253.60 |
 | TS-511 × 3 at 3.00 USD, TS-507 × 2, TS-508 × 3, TS-711 × 3, then TS-201, TS-420, TS-418 + replacement | 15 | 19.98 | 273.58 |
+| TS-418 fresh run 1 (0.50 USD session + replacement) | 2 | 1.56 | 275.14 |
 
-Stop rule: at 400 USD notional the task stops and P-01 chooses (raised from 350 USD by P-01 on 2026-10-30, §0; C001-ADR-003).
+Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
 ### 4.6 Session-limit check (CHG-002 hand-off, CR-61)
 
