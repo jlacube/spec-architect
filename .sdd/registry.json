@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-06T20:24:12Z",
+  "generated_at": "2026-11-06T20:24:13Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -729,9 +729,9 @@
           "summary": "Found in C001-T-072 (release prevalidation, standard class): the C001-TS-313 session, a release-standard row with no cap exception, failed and ended at the 0.50 USD spend cap (0.528 USD, error_max_budget_usd, 14 turns; evals/results/release-std-TS-313-2026-11-06T18-25-42-408Z.json). The options analysis was written, the question asked and answered, and the conductor had issued 'sdd id next DEC'; the cap rejected that call before it returned, so the DEC file that all 9 failed checks read was never written. The last development pass cost 0.408 USD on 2026-10-21. The same stop came with C001-TS-320 (D-038) and C001-TS-511 (D-039). P-01 (2026-11-06, Q-std-cap-01): 'Rule 2 for the whole class (Recommended)': every release-standard row of C001-T-072 without a cap exception gets a rule-2 row; a failure at the 0.50 USD cap is no run and gets one 1.50 USD replacement; failures at the replacement and non-cap failures still count, so nothing is waived.",
           "reporter": "jerome.lacube",
           "date": "2026-11-06",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-040 approved at G2/G3: release-standard scenarios without an exception are rule-2 rows (88 rows: 15 rule-1, 70 rule-2, callers-full included) in IF-010 §2.2, NFR-105, TC-679 and caps.mjs; critic CR-131…133, CR-97…100 fixed (30e3ad0)",
+          "closed_at": "2026-11-06"
         }
       ],
       "waivers": [
