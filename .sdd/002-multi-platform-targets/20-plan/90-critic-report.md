@@ -1163,3 +1163,19 @@ Scope: `git diff 14cee0d 209af3a`, against D-039 and Q-ts511-cap-01. Lint: the 9
 | CR-94 | minor | strategy D-039 row, C001-D-025 | "C001-D-025 keeps its own close rule", but none is stated | state it (conductor decision): D-025 closes when the fresh TS-511 set shows no template detours and the row meets its rule | fixed: strategy D-039 row states the C001-D-025 close rule (conductor's decision): no template detours in the fresh set and the row meets its rule |
 | CR-95 | minor | strategy D-039 row, C001-ADR-003 | "up to about 9 USD" leaves out the 10-run check | "up to about 9 USD, about 30 USD with the 10-run check" | fixed: strategy D-039 row says up to about 9 USD, about 30 USD with the 10-run check |
 | CR-96 | minor | test plan early-stop note, C002-T-072 | the rule-1 session count and "the six others" leave out TS-511 and TS-226-blocking | add the TS-511 sessions; name both rows among those without a condition | fixed: test plan early-stop note counts 87 sessions (74 plus TS-226-blocking 10 and TS-511 3) and names both rows among the eight without a condition |
+
+
+## Revision D-040 (2026-11-06)
+
+Scope: `git diff b4d514d c7defb5`, against D-040 and Q-std-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-97 | major | RISK-038, handoff | mitigation and trigger still send any capped session at the defaults to P-01, contradicting D-040 | limit them: a capped failure replaced under rule 2 is inside the rules; a failed replacement, a budget stop, or a capped session of a high-risk or injection row without an exception goes to P-01 | fixed: RISK-038 mitigation and trigger and the handoff say a capped failure replaced under rule 2 is inside the rules; a failed replacement, a budget stop or a capped session of a high-risk or injection row without an exception goes to P-01 |
+| CR-98 | minor | handoff, release evidence | no re-mark step for TS-313's "run 1: fail"; the evidence's "had returned" is wrong | add a step at G3 approval: re-mark as no run and correct the wording | fixed: handoff step at G3 approval: the evidence re-marks TS-313's run 1 as no run and corrects the wording; the file stays with the runner |
+| CR-99 | minor | TC-679, cap-exceptions test | fixed change-folder path breaks once CHG-001 is archived | use specFile("001", …) | fixed: the class test reads C001-ADR-003 through specFile("001", …) |
+| CR-100 | minor | Q-std-cap-01 | entry filed under the D-039 round | add a D-040 round heading | fixed: D-040 round heading added above Q-std-cap-01 |

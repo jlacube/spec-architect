@@ -87,7 +87,7 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   Q-ts320-cap-01, 2026-10-30), the row TS-320 after TS-319, a twenty-eighth rule-2 row; and, for defect
  *   D-039 (P-01, Q-ts511-cap-01, 2026-11-06), the row TS-511 moved from rule 2 to rule 1 after TS-802, a
  *   fifteenth rule-1 row and 27 rule-2 rows; and, for defect D-040 (P-01, Q-std-cap-01, 2026-11-06), the
- *   forty-two release-standard rows of C001-T-072 without an exception after TS-511, 69 rule-2 rows. They
+ *   forty-three release-standard rows of C001-T-072 without an exception after TS-511, 70 rule-2 rows. They
  *   are explicit rows: the match on row ID, case file, host and auth mode refuses every row outside the table.
  * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
@@ -188,6 +188,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("impact", "evals/cap06/impact.eval.mjs", 2),
   SUB("TS-910", "evals/cap09/TS-910.eval.mjs", 2),
   SUB("TS-1001", "evals/cap10/TS-1001.eval.mjs", 2),
+  // Holds the cfg-full configuration of C001-TC-1002 (evals/cap10/TS-1002.eval.mjs).
+  SUB("callers-full", "evals/cap10/callers-full.eval.mjs", 2),
   SUB("TS-1002-cfg-no-ripwire", "evals/cap10/TS-1002.eval.mjs", 2),
   SUB("TS-1002-cfg-bare", "evals/cap10/TS-1002.eval.mjs", 2),
   SUB("TS-1004", "evals/cap10/TS-1004.eval.mjs", 2),

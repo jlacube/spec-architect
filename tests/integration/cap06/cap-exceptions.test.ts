@@ -18,8 +18,8 @@
 // rule-1 row at 3.00 USD, the file's other rows without a row; from revision D-038, 45 rows, TS-320 of
 // evals/cap03/TS-320.eval.mjs after TS-319, the twenty-eighth rule-2 row at 1.50 USD; from revision D-039,
 // still 45 rows, TS-511 of evals/cap05/TS-511.eval.mjs moved from rule 2 to rule 1 at 3.00 USD after TS-802,
-// 15 rule-1 rows and 27 rule-2 rows; from revision D-040, 87 rows, the forty-two release-standard rule-2 rows
-// after TS-511, 69 rule-2 rows, every row of the 3-run class of C001-ADR-003 in the table and --cap-exception
+// 15 rule-1 rows and 27 rule-2 rows; from revision D-040, 88 rows, the forty-three release-standard rule-2 rows
+// after TS-511, 70 rule-2 rows, every row of the 3-run class of C001-ADR-003 in the table and --cap-exception
 // refused for a row outside it; the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
@@ -32,6 +32,7 @@ import { pathToFileURL } from "node:url";
 import { CAP_EXCEPTIONS, capCheck } from "../../../evals/harness/caps.mjs";
 import { cliArgs, maxAiCredits } from "../../../evals/harness/runners/copilot-cli.mjs";
 import { repoRoot } from "../../helpers.ts";
+import { specFile } from "../../helpers/spec-file.ts";
 import { type DriverRun, runDriver, writeCase } from "./eval-driver.ts";
 
 const ROOT = repoRoot();
@@ -284,6 +285,7 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("impact", "evals/cap06/impact.eval.mjs", 2),
     sub("TS-910", "evals/cap09/TS-910.eval.mjs", 2),
     sub("TS-1001", "evals/cap10/TS-1001.eval.mjs", 2),
+    sub("callers-full", "evals/cap10/callers-full.eval.mjs", 2),
     sub("TS-1002-cfg-no-ripwire", "evals/cap10/TS-1002.eval.mjs", 2),
     sub("TS-1002-cfg-bare", "evals/cap10/TS-1002.eval.mjs", 2),
     sub("TS-1004", "evals/cap10/TS-1004.eval.mjs", 2),
@@ -298,21 +300,21 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-1112-bare", "evals/cap11/TS-1112.eval.mjs", 2),
     sub("TS-1112-node18", "evals/cap11/TS-1112.eval.mjs", 2),
   ]);
-  // 87 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 85 of the Claude Code subscription
-  // class, 15 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039), 69 of rule 2
-  // (TS-320 from revision D-038, the forty-two release-standard rows from revision D-040)
+  // 88 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 86 of the Claude Code subscription
+  // class, 15 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039), 70 of rule 2
+  // (TS-320 from revision D-038, the forty-three release-standard rows from revision D-040)
   // and one (TS-421-agent) in neither list.
-  assert.equal(CAP_EXCEPTIONS.length, 87);
+  assert.equal(CAP_EXCEPTIONS.length, 88);
   const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
-  assert.equal(subs.length, 85);
+  assert.equal(subs.length, 86);
   assert.equal(subs.filter((e) => e.rule === 1).length, 15);
-  assert.equal(subs.filter((e) => e.rule === 2).length, 69);
+  assert.equal(subs.filter((e) => e.rule === 2).length, 70);
   assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
-  // Rerun caps (revision D-033): 3.00 USD for the 15 rule-1 rows, 1.50 USD for the 69 rule-2 rows and
+  // Rerun caps (revision D-033): 3.00 USD for the 15 rule-1 rows, 1.50 USD for the 70 rule-2 rows and
   // TS-421-agent; TS-634 and INJ-21 have none. Only INJ-21 on opencode gives a session cap.
   assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 15);
   assert.ok(subs.filter((e) => e.rerunUsd === 3.0).every((e) => e.rule === 1));
-  assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 70);
+  assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 71);
   assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21"]);
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0]]);
@@ -324,7 +326,7 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
 });
 
 test("C002-TS-679 (supporting, revision D-040): every row of the 3-run class of C001-ADR-003 has a row of the §2.2 table", async () => {
-  const adr = readFileSync(join(ROOT, ".sdd", "001-architect-agent-suite", "20-plan", "20-decisions", "ADR-003-eval-tiers.md"), "utf8");
+  const adr = readFileSync(specFile("001", "20-plan/20-decisions/ADR-003-eval-tiers.md"), "utf8");
   const line = adr.split(/\r?\n/).find((l) => l.startsWith("| 3 | C001-TC-") && l.endsWith("| standard |"));
   assert.ok(line, "the 3-run row of C001-ADR-003");
   const numbers = line!.split("|")[2]!.replace(/C001-TC-/g, "").split(",").map((n) => n.trim());
@@ -332,15 +334,18 @@ test("C002-TS-679 (supporting, revision D-040): every row of the 3-run class of 
   const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
   const files = new Set<string>();
   for (const n of numbers) {
-    // C001-TC-612 and C001-TC-613 run on the one row of evals/cap06/impact.eval.mjs.
-    const matching = subs.filter((e) => (n === "612" || n === "613" ? e.row === "impact" : e.row === `TS-${n}` || e.row.startsWith(`TS-${n}-`)));
+    // C001-TC-612 and C001-TC-613 run on the one row of evals/cap06/impact.eval.mjs, and the cfg-full
+    // configuration of C001-TC-1002 on the row of evals/cap10/callers-full.eval.mjs (critic CR-133).
+    const matching = subs.filter((e) => (n === "612" || n === "613" ? e.row === "impact" : e.row === `TS-${n}` || e.row.startsWith(`TS-${n}-`) || (n === "1002" && e.row === "callers-full")));
+    if (n === "1002") assert.deepEqual(matching.map((e) => e.row).sort(), ["TS-1002-cfg-bare", "TS-1002-cfg-no-ripwire", "callers-full"]);
     assert.ok(matching.length > 0, `C001-TC-${n} has a row`);
     for (const e of matching) {
       assert.ok(e.rule === 1 || e.rule === 2, `${e.row} is in a rule`);
       files.add(e.file);
     }
   }
-  // Every row those case files export is in the table, so no variant of a scenario is left out.
+  // Every row those case files export is in the table; with the callers-full row above, that covers the
+  // variants of these scenarios (rows of other files that only re-grade the same sessions are not release rows).
   for (const file of files) {
     const exported = (await import(pathToFileURL(join(ROOT, ...file.split("/"))).href)).default;
     for (const { id } of Array.isArray(exported) ? exported : [exported]) assert.ok(subs.some((e) => e.row === id && e.file === file), `${id} of ${file} has a row`);

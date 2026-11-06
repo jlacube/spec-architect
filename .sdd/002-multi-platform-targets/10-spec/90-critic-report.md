@@ -1518,3 +1518,18 @@ Scope: `git diff 14cee0d 209af3a`, against D-039 and Q-ts511-cap-01. Lint: the 9
 |---|---|---|---|---|---|
 | CR-129 | major | IF-010 §2.2 rule 1 | "likely reading, not a proven one": the transcripts measure it, thinkingTokens 36,061 of 49,446 against 3,132 of 16,060 (98.6 % of the growth) | state the measured split; what stays open is why thinking grew | fixed: IF-010 §2.2 rule 1 gives the measured split (thinkingTokens 36,061 of 49,446 against 3,132 of 16,060, 98.6 % of the growth, checked in both transcripts) and leaves open why thinking grew, with the two candidates |
 | CR-130 | minor | IF-010 §2.2 rule 1, handoff | "That marking lives in the release evidence" while the evidence still says "run 1: fail" for two of the four sessions | the marking is written on G3 approval; a handoff step re-marks them as no run (D-039) | fixed: IF-010 says the marking is written on the G3 approval; the handoff D-039 edge adds the step that re-marks the two "run 1: fail" lines as no run |
+
+
+## Revision D-040 (2026-11-06)
+
+Scope: `git diff b4d514d c7defb5`, against D-040 and Q-std-cap-01. Lint: the 9 waived LINT-DELTA-001 only. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-131 | major | IF-010 §2.2 rule 2, Q-std-cap-01 | the growth range 1.11 … 3.79× is false as written: TS-622 is 0.97× and TS-221 0.23×, neither named; the baseline is unstated | state the baseline and exclusions or list the rows outside the range; keep the log as presented, correction note in the strategy | fixed: IF-010 rule 2 states the baseline, gives 0.90 … 3.79× over eighteen rows and names the eleven left out (TS-622 0.97×, TS-221 0.23×); Q-std-cap-01 stays as presented, correction note in the strategy |
+| CR-132 | minor | IF-010 §2.2 rule 2 | "a replacement is a run whatever its result … either one stops C001-T-072" reads as a passing replacement stopping the run | "a failed replacement and a failure not at the cap each stop C001-T-072" | fixed: IF-010 rule 2 and the handoff say a failed replacement and a failure not at the cap each stop C001-T-072 |
+| CR-133 | minor | IF-010 §2.2, cap-exceptions test, C001-ADR-003 | "release-high and injection rows only" and "no variant is left out" overclaim: C001-TC-1002's cfg-full configuration runs inside callers-full, which has no row and no release result | conductor decision: add callers-full as a rule-2 row and run it at release; correct the test comment | fixed: callers-full is a rule-2 row (88 rows, 70 rule-2), checked as a plain 3-run row; the class test maps C001-TC-1002 to it and its comment is corrected |
