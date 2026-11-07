@@ -30,6 +30,7 @@ import { main } from "../../../scripts/generate/main.ts";
 import { TARGET_MODES } from "../../../scripts/generate/model.ts";
 import { loadTargetTable, TARGETS, type Mode, type Target } from "../../../scripts/generate/tables.ts";
 import { CONDUCTOR, listField } from "../../../scripts/generate/translate/frontmatter.ts";
+import { changeFolder } from "../../helpers/spec-file.ts";
 import { scanText } from "../../../scripts/generate/translate/constructs.ts";
 import { skillHeading } from "../../../scripts/generate/translate/inline.ts";
 import { context } from "../../../scripts/check/lib.mjs";
@@ -547,7 +548,7 @@ test("C002-TC-607 (C002-TS-607): with CHG-001 moved to .sdd/_archive/ the checks
     cpSync(PLUGIN, join(repo, "plugins", "architect"), { recursive: true });
     const archived = join(repo, ".sdd", "_archive", "001-architect-agent-suite", "10-spec", "50-interfaces");
     mkdirSync(archived, { recursive: true });
-    cpSync(join(root, ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces"), archived, { recursive: true });
+    cpSync(join(changeFolder("001", root), "10-spec", "50-interfaces"), archived, { recursive: true });
     const moved = runTargetChecks({ plugin: join(repo, "plugins", "architect") });
     const unmoved = runTargetChecks({ plugin: PLUGIN });
     const norm = (fs: Finding[]) => fs.map((f) => `${f.code} ${f.target} ${f.path}:${f.line} ${f.message}`).sort();
