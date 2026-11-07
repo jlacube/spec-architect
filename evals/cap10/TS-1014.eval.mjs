@@ -7,7 +7,7 @@ import { brief, cartoRun, EVIDENCE, evidence, read } from "./carto.mjs";
 export default {
   id: "TS-1014",
   title: "Documented answer exit code is not a failure",
-  ...cartoRun("cfg-ripwire-exit4", brief("Which tests must run if src/checkout/payments.ts changes? Use ripwire's test gate for that file.", `\`${EVIDENCE}/test-gate-payments.md\`.`)),
+  ...cartoRun("cfg-ripwire-exit4", brief("Which tests must run if src/checkout/payments.ts changes? Use ripwire's test gate for that file, and base every evidence entry on it.", `\`${EVIDENCE}/test-gate-payments.md\`.`)),
   assert({ root }) {
     const { failures, check } = checker();
     const entries = evidence(read(root, `${EVIDENCE}/test-gate-payments.md`));
