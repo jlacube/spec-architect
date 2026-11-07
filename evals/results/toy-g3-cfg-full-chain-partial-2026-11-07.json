@@ -1,0 +1,162 @@
+{
+  "cfg": "cfg-full",
+  "sessions": [
+    {
+      "n": 1,
+      "at": "2026-11-07T19:22:51.531Z",
+      "step": {
+        "command": "new",
+        "phase": null
+      },
+      "prompt": "/architect:new \"Warn on zero-total invoices\" --kind brownfield",
+      "end": "success",
+      "cost_usd": 0.270748,
+      "phases": {
+        "00-ideation": "not-started",
+        "10-spec": "not-started",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 0,
+        "serena": 0,
+        "agents": []
+      },
+      "failures": 0
+    },
+    {
+      "n": 2,
+      "at": "2026-11-07T19:45:42.307Z",
+      "step": {
+        "command": "ideate",
+        "phase": "00-ideation"
+      },
+      "prompt": "/architect:ideate 001",
+      "end": "error_max_budget_usd",
+      "cost_usd": 3.044059,
+      "phases": {
+        "00-ideation": "draft",
+        "10-spec": "not-started",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 16,
+        "serena": 2,
+        "agents": [
+          "sdd-cartographer",
+          "sdd-critic",
+          "sdd-auditor"
+        ]
+      },
+      "failures": 0
+    },
+    {
+      "n": 3,
+      "at": "2026-11-07T20:00:34.259Z",
+      "step": {
+        "command": "ideate",
+        "phase": "00-ideation"
+      },
+      "prompt": "/architect:ideate 001",
+      "end": "error_max_budget_usd",
+      "cost_usd": 3.057491,
+      "phases": {
+        "00-ideation": "draft",
+        "10-spec": "not-started",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 0,
+        "serena": 0,
+        "agents": [
+          "sdd-critic",
+          "sdd-auditor"
+        ]
+      },
+      "failures": 0
+    },
+    {
+      "n": 4,
+      "at": "2026-11-07T20:12:26.842Z",
+      "step": {
+        "command": "ideate",
+        "phase": "00-ideation"
+      },
+      "prompt": "/architect:ideate 001",
+      "end": "success",
+      "cost_usd": 2.10657,
+      "phases": {
+        "00-ideation": "approved",
+        "10-spec": "not-started",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 0,
+        "serena": 0,
+        "agents": [
+          "sdd-critic",
+          "sdd-auditor"
+        ]
+      },
+      "failures": 0
+    },
+    {
+      "n": 5,
+      "at": "2026-11-07T20:28:41.430Z",
+      "step": {
+        "command": "specify",
+        "phase": "10-spec"
+      },
+      "prompt": "/architect:specify 001",
+      "end": "error_max_budget_usd",
+      "cost_usd": 3.021874,
+      "phases": {
+        "00-ideation": "approved",
+        "10-spec": "draft",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 9,
+        "serena": 0,
+        "agents": [
+          "sdd-spec-writer",
+          "sdd-cartographer",
+          "sdd-spec-writer",
+          "sdd-test-designer",
+          "sdd-architect"
+        ]
+      },
+      "failures": 0
+    },
+    {
+      "n": 6,
+      "at": "2026-11-07T20:40:48.621Z",
+      "step": {
+        "command": "specify",
+        "phase": "10-spec"
+      },
+      "prompt": "/architect:specify 001",
+      "end": "error_max_budget_usd",
+      "cost_usd": 3.039415,
+      "phases": {
+        "00-ideation": "approved",
+        "10-spec": "draft",
+        "20-plan": "not-started"
+      },
+      "profile": "lite",
+      "layers": {
+        "ripwire": 0,
+        "serena": 0,
+        "agents": [
+          "sdd-test-designer",
+          "sdd-architect"
+        ]
+      },
+      "failures": 0
+    }
+  ]
+}
