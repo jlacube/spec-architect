@@ -930,7 +930,7 @@ test("C002-TS-690 — OpenCode eval runner: a stub server that accepts the promp
           if (v === undefined) delete process.env[k];
           else process.env[k] = v;
         }
-        rmSync(dir, { recursive: true, force: true });
+        rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); // stub .exe briefly locked on Windows
       }
     });
 }

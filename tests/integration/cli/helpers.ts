@@ -55,7 +55,8 @@ export function makeWorkspace(files: Record<string, string>): { root: string; cl
   if (files[".sdd/registry.json"] === REBUILD) {
     writeFileSync(join(root, ".sdd", "registry.json"), JSON.stringify(rebuildRegistry(join(root, ".sdd")), null, 2) + "\n");
   }
-  return { root, cleanup: () => rmSync(root, { recursive: true, force: true }) };
+  // Retries: on Windows a stub .exe that has just run can stay locked for a moment (EPERM on unlink).
+  return { root, cleanup: () => rmSync(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }) };
 }
 
 /** Marker value for `.sdd/registry.json`: write the registry rebuilt from the other files. */
