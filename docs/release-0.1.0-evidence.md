@@ -871,6 +871,12 @@ layer" ladder stays as an observation for later.
   - It is the same tendency as TS-1014's E-4 (a grep step after ripwire has answered). A brief line
     would hide it here, because the ladder is what this scenario tests.
 
+**TS-1001, what happens next (conductor, 2026-11-07):** no brief change, since the ladder is what it
+tests. This is the existing rule of DOD-G-01, so no new decision is needed. Run 3 follows; 1 / 3 stops
+the run. On 2 / 3, the 10-run check follows. **Counting:** the 3 runs count toward the 10, and 7 more
+are run (3 + 7 = 10, needing ≥ 9 / 10). C001-ADR-003 prices these checks at about 50 runs for about 7
+scenarios, which is 7 more each. So any failure among the 7 is the second failure and stops the run.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
