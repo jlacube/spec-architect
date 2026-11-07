@@ -1,0 +1,175 @@
+{
+  "scenario": "TS-304",
+  "title": "Library question routing",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:eval-dispatcher",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-07T04:12:25.741Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.24195949999999997,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.24195949999999997,
+        "session_ms": 91320,
+        "api_ms": 87694,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 29954,
+            "output": 5969,
+            "cache_read": 7910,
+            "cache_write": 5518,
+            "cost_usd": 0.0071626
+          },
+          "claude-sonnet-5-5": {
+            "input": 20,
+            "output": 10306,
+            "cache_read": 251669,
+            "cache_write": 42612,
+            "cost_usd": 0.23479689999999995
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 5969,
+              "cache_read": 7910,
+              "cache_write": 5518
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 0,
+              "cache_read": 212859,
+              "cache_write": 38810
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a0516c4c7cd2f72fa",
+            "ms": 80727,
+            "tool_uses": 13,
+            "total_tokens": 44176
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "ToolSearch": 1,
+          "mcp__plugin_architect_context7__resolve-library-id": 1,
+          "mcp__plugin_architect_context7__query-docs": 2,
+          "WebFetch": 4,
+          "Glob": 1,
+          "Write": 2,
+          "Edit": 1,
+          "Bash": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 80742
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 9
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__resolve-library-id",
+            "agent": "architect:sdd-researcher",
+            "ms": 1676
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__query-docs",
+            "agent": "architect:sdd-researcher",
+            "ms": 1039
+          },
+          {
+            "tool": "mcp__plugin_architect_context7__query-docs",
+            "agent": "architect:sdd-researcher",
+            "ms": 1065
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8071
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 380
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6337
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 5450
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-researcher",
+            "ms": 162
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 683
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-researcher",
+            "ms": 341
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-researcher",
+            "ms": 1
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 685
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-304-2026-11-07T04-10-53-200Z-run1.json"
+    }
+  ]
+}

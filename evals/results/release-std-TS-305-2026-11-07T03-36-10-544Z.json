@@ -1,0 +1,161 @@
+{
+  "scenario": "TS-305",
+  "title": "Repository internals routing",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:eval-dispatcher",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-07T03:37:51.198Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.16028662000000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.16028662000000002,
+        "session_ms": 99631,
+        "api_ms": 94464,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 110192,
+            "output": 11008,
+            "cache_read": 7542,
+            "cache_write": 5891,
+            "cost_usd": 0.017776820000000002
+          },
+          "claude-sonnet-5-5": {
+            "input": 14,
+            "output": 6068,
+            "cache_read": 114493,
+            "cache_write": 28141,
+            "cost_usd": 0.1425098
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 4,
+              "output": 11008,
+              "cache_read": 7542,
+              "cache_write": 5891
+            },
+            "output": "derived"
+          },
+          "architect:sdd-researcher": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 12,
+              "output": 0,
+              "cache_read": 89839,
+              "cache_write": 24654
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-researcher",
+            "task_id": "a3c4a295e646e459f",
+            "ms": 89223,
+            "tool_uses": 11,
+            "total_tokens": 29010
+          }
+        ],
+        "tool_calls": {
+          "Agent": 1,
+          "ToolSearch": 1,
+          "mcp__plugin_architect_deepwiki__ask_wiki_question": 2,
+          "WebFetch": 7,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-researcher",
+            "ms": 89242
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-researcher",
+            "ms": 12
+          },
+          {
+            "tool": "mcp__plugin_architect_deepwiki__ask_wiki_question",
+            "agent": "architect:sdd-researcher",
+            "ms": 10597
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 5233
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 6355
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 7085
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8691
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 8844
+          },
+          {
+            "tool": "mcp__plugin_architect_deepwiki__ask_wiki_question",
+            "agent": "architect:sdd-researcher",
+            "ms": 12705
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 15515
+          },
+          {
+            "tool": "WebFetch",
+            "agent": "architect:sdd-researcher",
+            "ms": 16060
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-researcher",
+            "ms": 801
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-305-2026-11-07T03-36-10-544Z-run1.json"
+    }
+  ]
+}

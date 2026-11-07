@@ -1,0 +1,101 @@
+{
+  "scenario": "TS-201",
+  "title": "Launch the conductor",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-07T01:01:46.158Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.676944,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.676944,
+        "session_ms": 26356,
+        "api_ms": 20289,
+        "turns": 7,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 1789,
+            "cache_read": 134180,
+            "cache_write": 76787,
+            "cost_usd": 0.676944
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 1789,
+              "cache_read": 134180,
+              "cache_write": 76787
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Read": 4,
+          "Grep": 1,
+          "Glob": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 81
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 235
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 193
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 167
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 254
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 219
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 12,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-201-2026-11-07T01-01-18-919Z-run1.json"
+    }
+  ]
+}

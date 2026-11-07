@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; stopped at TS-210 (fixture placeholders, §4.3). Running notional total:
-295.05 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 59 of 70 standard rows at 3 / 3; stopped at TS-1014 run 2 (§4.3). Running notional total:
+341.89 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -821,6 +821,31 @@ P-01 can overrule it.
 - The passed run-1 sessions of TS-206, TS-211 and TS-222 stand, on the old placeholder options. TS-208
   and all later runs use the new options.
 
+**Driver `full14` (2026-11-06 22:20 – 2026-11-07 04:46 UTC): 119 sessions (11 no-runs with their rule-2
+replacements), 46.84 USD, stopped at TS-1014's run 2.**
+
+- TS-210 fresh set: 3 / 3 on the new options. `callers-full`: 3 / 3. Runs 2 and 3 of the rows from TS-712
+  through TS-202 passed, so those rows are complete.
+- **Scoreboard (release-standard and rule-1 standard rows):** 59 of 70 rows at 3 / 3; 10 rows at 1 / 3
+  (TS-1011, TS-1002-cfg-no-ripwire, TS-208, TS-1002-cfg-bare, TS-1013, TS-1001, TS-121, TS-910, TS-1012,
+  TS-203); TS-1014 at one pass and one failure. 21 sessions left at most.
+- **TS-1014 (C001-TC-1014, documented answer exit code), run 2: fail**
+  (`release-std-TS-1014-2026-11-07T04-43-06-620Z.json`, `success`, 0.12 USD, 159 s): `E-4: layer grep`,
+  `E-5: layer grep`.
+  - The behaviour under test is right. Ripwire exited 4, the agent treated it as an answer and said so,
+    and the three entries with the answer (E-1 to E-3) have layer ripwire. No disclosure says "ripwire
+    failed".
+  - The agent added two more entries, honestly labelled: E-4 (layer grep, "ripwire reported the link;
+    grep only confirms the import") and E-5 (the exported functions, layer grep).
+  - Run 1 (`release-std-TS-1014-2026-11-06T22-26-16-509Z.json`, 0.09 USD) had no grep step, and neither
+    had the development pass (`t041-TS-1014-2026-10-11T15-59-47-356Z.json`, 0.11 USD).
+  - The check requires every entry to have layer ripwire. C001-TS-1014 says "the evidence layer is
+    ripwire". The failure it exists to catch is a fallback after a misread exit code, which did not
+    happen.
+  - **Reading: a check stricter than its purpose (grader false positive), with a minor behaviour note:**
+    E-4 goes against the skill's "use the first layer" ladder, since ripwire had already answered. Not
+    a fixture gap: the brief lacks no value. Not environment.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -961,6 +986,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Detached run: TS-418 runs 2-3 with replacements, TS-127 + replacement, TS-424, TS-419, TS-609, TS-313 | 10 | 5.84 | 280.98 |
 | TS-313 under D-040: replacement, run 2 + replacement | 3 | 1.87 | 282.85 |
 | Driver full13: TS-313 fresh × 3 with replacements, 28 rows × 1, TS-210 | 35 | 12.20 | 295.05 |
+| Driver full14: TS-210 fresh × 3, 12 prevalidation rows, runs 2-3 through TS-202, TS-1014 run 2 | 119 | 46.84 | 341.89 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 

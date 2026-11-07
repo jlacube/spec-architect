@@ -1,0 +1,107 @@
+{
+  "scenario": "TS-203",
+  "title": "No .sdd present",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-06T22:55:39.768Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.10570329999999999,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.10570329999999999,
+        "session_ms": 48335,
+        "api_ms": 7777,
+        "turns": 5,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1171,
+            "output": 14,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001241
+          },
+          "claude-opus-5-5": {
+            "input": 8,
+            "output": 579,
+            "cache_read": 65796,
+            "cache_write": 10101,
+            "cost_usd": 0.10557919999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 8,
+              "output": 579,
+              "cache_read": 65796,
+              "cache_write": 10101
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b13qkwybo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Glob": 1,
+          "Bash": 2,
+          "Read": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 152
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 409
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 43
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 35746
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 10,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-203-2026-11-06T22-54-51-330Z-run1.json"
+    }
+  ]
+}
