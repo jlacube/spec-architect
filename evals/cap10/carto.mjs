@@ -126,11 +126,18 @@ export function evidence(text) {
   }));
 }
 
+/**
+ * A Bash command that runs ripwire or ast-grep: the program is the command itself (at the start or
+ * after `;`, `&`, `|` or `(`, optionally path-qualified or quoted), not a word anywhere in the text,
+ * so `sed -i … ripwire-survey.md` is no ripwire call (C001-T-072, TS-1004 run 3).
+ */
+export const INTEL_COMMAND = /(?:^|[;&|(]\s*)(?:"[^"\n]*[\\/]|'[^'\n]*[\\/]|[^\s;&|"']*[\\/])?["']?(?:ripwire|ast-grep)(?:\.exe)?["']?(?=\s|$)/m;
+
 /** Code-intelligence calls of the subagent in order: ripwire/ast-grep Bash commands, Serena and LSP calls, Grep. */
 export function intelCalls(toolCalls, transcript) {
   return toolCalls(transcript)
     .filter((c) => c.agent !== null)
     .map((c) => ({ name: c.name, cmd: c.name === "Bash" ? String(c.input?.command ?? "") : JSON.stringify(c.input ?? {}) }))
-    .filter((c) => (c.name === "Bash" && /\b(ripwire|ast-grep)\b/.test(c.cmd) && !/--version/.test(c.cmd)) || /serena|^LSP$|^Grep$/.test(c.name));
+    .filter((c) => (c.name === "Bash" && INTEL_COMMAND.test(c.cmd) && !/--version/.test(c.cmd)) || /serena|^LSP$|^Grep$/.test(c.name));
 }
 
