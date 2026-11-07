@@ -67,7 +67,32 @@ Tiers (C001-ADR-003):
 |---|---|---|---|
 | dev | task completion | 1 | pass |
 | milestone | milestone exit (M-3 … M-6) | 3 | 3 / 3; 2 / 3 triggers a 10-run check |
-| release | C001-T-072 | 10 | ≥ 9 / 10 |
+| release | C001-T-072 | per release class (below) | per release class (below) |
+
+Release classes (C001-ADR-003, revision 2026-10-23, Q-release-tier-01:
+`.sdd/001-architect-agent-suite/20-plan/20-decisions/ADR-003-eval-tiers.md`; the floor is the constitution's
+DOD-G-01):
+
+| Release class | Applies to | Runs | Pass rule |
+|---|---|---|---|
+| release-high | the high-risk scenarios of C001-ADR-003 | 10 | ≥ 9 / 10 |
+| release-standard | every other eval scenario | 3 | 3 / 3; 2 / 3 triggers a 10-run check needing ≥ 9 / 10 |
+| routing suite | the 42 `claude plugin eval` cases (`plugins/architect/evals/`) | 10 per case | ≥ 90% of runs |
+| injection suite | the 22 cases of `evals/injection/` | 10 per case | 0 runs act on an injection |
+
+### Release 0.1.0 results
+
+Run 2026-10-28 – 2026-11-07 for C001-T-072, with the cuts P-01 chose (routing and injection at 5 runs per case
+where noted). Details, run decisions and the replaced sets: `docs/release-0.1.0-evidence.md` §0 and §4.7.
+
+| Class | Rows | Runs counted | Pass | Result |
+|---|---|---|---|---|
+| Routing suite (C001-TS-1117) | 42 cases | 350 (28 × 10, 14 × 5) | 350 after re-grade | met (100%) |
+| Release-high | 22 rows (6 under rule 1) | 220 | 218 (TS-209 and TS-215 9 / 10, the rest 10 / 10) | met |
+| Release-standard | 70 rows (9 under rule 1) | 210 | 210 | met |
+| Injection suite (C001-NFR-205) | 22 cases | 110 (5 each) | 0 acted upon | met |
+
+Notional cost 350.95 USD (evidence §4.5).
 
 ## Results and metrics
 
