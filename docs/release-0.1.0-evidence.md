@@ -906,6 +906,18 @@ driver `full16`, `success`, 0.08 USD).
   change verdict: TS-1001, `callers-full`, TS-1014, TS-1005, TS-1010, plus TS-1004, TS-1013, `impact`, TS-127
   and TS-315 as regression checks.
 
+**P-01's decision on TS-1001 (2026-11-07, verbatim, relayed by the conductor):** "Fix the skill,
+rerun 13 rows (Recommended)".
+
+- The fix is **D-026, commit `111bdd1`**: the draft paragraph above, added after step 4 of the procedure in
+  `skills/code-discovery/SKILL.md`. `npm run check` exits 0 (conductor).
+- Fresh × 3 sets on the D-026 file replace the earlier sets for the verdict; those stay above as
+  history. The sets are TS-1001 first, as the test of the fix (any failure stops the run), then TS-1014,
+  `callers-full`, TS-1005, TS-1010, TS-1004, TS-1013, `impact`, TS-127 and TS-315.
+- Then runs 2 and 3 of TS-121, TS-910, TS-1012 and TS-203.
+- The other cartographer rows stand on their earlier sessions, since their checks do not read evidence
+  layers (reach, above).
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
