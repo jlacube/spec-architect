@@ -1,0 +1,103 @@
+{
+  "scenario": "TS-203",
+  "title": "No .sdd present",
+  "tier": "release",
+  "label": "release-std",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-07T13:46:24.866Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "≥ 9 / 10",
+  "pass": true,
+  "cost_usd": 0.11038490000000001,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.11038490000000001,
+        "session_ms": 17421,
+        "api_ms": 12419,
+        "turns": 6,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1171,
+            "output": 14,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001241
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 667,
+            "cache_read": 85924,
+            "cache_write": 9962,
+            "cost_usd": 0.1102608
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 667,
+              "cache_read": 85924,
+              "cache_write": 9962
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Glob": 2,
+          "Bash": 1,
+          "Read": 2
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 153
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 260
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 311
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 51
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 10,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/TS-203-2026-11-07T13-46-07-331Z-run1.json"
+    }
+  ]
+}
