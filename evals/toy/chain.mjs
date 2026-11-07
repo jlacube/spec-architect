@@ -1,15 +1,18 @@
 // Runs the session chain of the toy change to G3 on one configuration (evals/toy/toy-g3.eval.mjs): one run.mjs
 // session of the row `toy-g3-<cfg>` after the other, until G3 is approved, a session fails, or a limit is
 // reached. Usage:
-//   node evals/toy/chain.mjs --cfg cfg-full|cfg-bare [--fresh] [--max-sessions N] [--max-usd X] [--label NAME]
+//   node evals/toy/chain.mjs --cfg cfg-full [--fresh] [--max-sessions N] [--max-usd X] [--label NAME]
 //                            [-- <further run.mjs options>]
 // Each session: `run.mjs --host claude-code --auth subscription --cap-exception --tier dev --runs 1
 // --only toy-g3-<cfg> --label <label> evals/toy/toy-g3.eval.mjs` (the rerun cap of the row's cap exception,
 // 6.00 USD, C002-IF-010 §2.2, defect D-043). --fresh removes the chain's saved state first. Exit 0 when G3 is approved and the end
 // state holds; 1 when a session fails (or run.mjs refuses it); 2 at a limit (sessions or notional USD); 3 when a
 // resume (no --fresh) finds no saved chain: chain.json missing, unreadable or without a session (critic CR-109),
-// so a lost state never restarts a chain from zero. A new chain starts with --fresh.
-// The USD limit (default 30, defect D-043) is checked before each session with the session's cap, read from the
+// so a lost state never restarts a chain from zero. A new chain starts with --fresh. 4 when the configuration is
+// deferred (cfg-bare, defect D-044): nothing runs.
+// The limits are per configuration (`CHAIN_LIMITS`, defect D-044): cfg-full 14 sessions and 55 USD notional in
+// total, the saved sessions included; --max-sessions and --max-usd may only lower them. The USD limit is checked
+// before each session with the session's cap, read from the
 // row's cap exception (C002-IF-010 §2.2, defect D-042, critic CR-134): no session starts when the chain total plus
 // that cap would pass --max-usd, so a chain ends at or under --max-usd, apart from the overshoot of a capped
 // session's last step. A resumed chain counts the sessions of its saved state (chain.json).
@@ -21,8 +24,15 @@ import { TOY_CHAIN_RERUN_USD, capException } from "../harness/caps.mjs";
 import { ROOT } from "../harness/fixtures.mjs";
 import { CONFIGS, nextStep, stateDir, statusOf } from "./toy-g3.eval.mjs";
 
-/** The default notional limit of one chain (USD; defect D-043, P-01 Q-toy-g3-cap-02). */
-export const DEFAULT_MAX_USD = 30;
+/**
+ * The chain limits per configuration (C002-IF-010 §2.2; defect D-044, P-01 Q-toy-g3-limit-01): the session
+ * bound and the notional USD total of the chain, its saved sessions included. cfg-bare is deferred to a follow-up
+ * change and runs no chain in CHG-001 or CHG-002 (its row `toy-g3-cfg-bare` stays in the cap table, unused).
+ */
+export const CHAIN_LIMITS = Object.freeze({
+  "cfg-full": Object.freeze({ maxSessions: 14, maxUsd: 55 }),
+  "cfg-bare": Object.freeze({ deferred: "deferred to a follow-up change (defect D-044); no chain runs in CHG-001 or CHG-002" }),
+});
 
 /** The session cap of the row `toy-g3-<cfg>`: the rerun cap of its cap exception (C002-IF-010 §2.2), or null. */
 export function rowCapUsd(cfg) {
@@ -67,7 +77,7 @@ export function decide({ chain, done, lastExit = 0, maxSessions, maxUsd, session
 }
 
 function parse(argv) {
-  const o = { cfg: null, fresh: false, maxSessions: 12, maxUsd: DEFAULT_MAX_USD, label: "toy-g3", rest: [] };
+  const o = { cfg: null, fresh: false, maxSessions: null, maxUsd: null, label: "toy-g3", rest: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--") {
@@ -82,12 +92,35 @@ function parse(argv) {
     else throw new Error(`chain: unknown option ${a}`);
   }
   if (!CONFIGS.includes(o.cfg)) throw new Error(`chain: --cfg must be one of ${CONFIGS.join(", ")}`);
-  if (!(o.maxSessions > 0) || !(o.maxUsd > 0)) throw new Error("chain: --max-sessions and --max-usd must be positive");
   return o;
+}
+
+/**
+ * The limits of one chain run: `{ maxSessions, maxUsd }` from `CHAIN_LIMITS`, an option lowering one of them,
+ * or `{ refusal, code }`: code 4 for a deferred configuration, 3 for an option above its limit or not positive.
+ */
+export function chainLimits(cfg, { maxSessions = null, maxUsd = null } = {}) {
+  const l = CHAIN_LIMITS[cfg];
+  if (!l) return { refusal: `chain: no chain limits for ${cfg}`, code: 3 };
+  if (l.deferred) return { refusal: `chain: ${cfg} is ${l.deferred}`, code: 4 };
+  const pick = (name, given, limit) => {
+    if (given === null) return { value: limit };
+    if (!(given > 0) || given > limit) return { refusal: `chain: --${name} ${given} must be positive and at most the ${cfg} limit ${limit}` };
+    return { value: given };
+  };
+  const s = pick("max-sessions", maxSessions, l.maxSessions);
+  const u = pick("max-usd", maxUsd, l.maxUsd);
+  const refusal = s.refusal ?? u.refusal;
+  return refusal ? { refusal, code: 3 } : { maxSessions: s.value, maxUsd: u.value };
 }
 
 function main() {
   const o = parse(process.argv.slice(2));
+  const limits = chainLimits(o.cfg, o);
+  if (limits.refusal) {
+    console.error(limits.refusal);
+    process.exit(limits.code);
+  }
   const dir = stateDir(o.cfg);
   const sessionUsd = rowCapUsd(o.cfg);
   if (typeof sessionUsd !== "number") throw new Error(`chain: no cap exception with a rerun cap for toy-g3-${o.cfg} (C002-IF-010 §2.2)`);
@@ -107,7 +140,7 @@ function main() {
   };
   let lastExit = 0;
   for (;;) {
-    const d = decide({ ...read(), lastExit, maxSessions: o.maxSessions, maxUsd: o.maxUsd, sessionUsd });
+    const d = decide({ ...read(), lastExit, maxSessions: limits.maxSessions, maxUsd: limits.maxUsd, sessionUsd });
     if (!d.go) {
       const { chain } = read();
       console.log(`chain ${o.cfg}: ${d.why}; ${chain.sessions.length} session(s), ${chainUsd(chain)} USD notional (state ${dir})`);

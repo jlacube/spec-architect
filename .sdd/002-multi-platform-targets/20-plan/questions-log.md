@@ -309,3 +309,11 @@ Questions on the S-07 record (C002-T-001).
 - **Options** (as presented by the conductor): 1. Raise session cap to $6: a short cap revision so parallel specialists can finish, closer to real use with no cap; resume cfg-full from its saved state (the 14.54 USD isn't lost), then cfg-bare, limit ~30 USD per config; ends near 410 USD of the 450 USD stop (Recommended) · 2. Raise the chain limit only: keep 3.00 USD per session but allow ~30 USD per config; no revision, but the parallel test-designer work may keep getting lost · 3. Accept the partial result: record G1 reached on cfg-full and defer the G3 evidence
 - **Answer:** P-01 (2026-11-07, relayed by the conductor): "Raise session cap to $6 (Recommended)", option 1
 - **Extracted instructions:** none
+
+## Round 2026-11-08 — defect D-044 (found in C001-T-072)
+
+### Q-toy-g3-limit-01 — the resumed cfg-full toy chain stopped at its 30 USD limit before G2 (C001-M-4 item)
+- **Context:** `evals/results/toy-g3-cfg-full-chain-partial-2026-11-08.json` and commit 2563aa6: 8 sessions, 26.78 USD notional; G1 approved; the spec is drafted with 0 lint errors, and the critic review has 2 major findings open; every review found issues (8 at ideation, 6 at spec), and each fix round takes a full session.
+- **Options** (as presented by the conductor): 1. Finish cfg-full, defer cfg-bare: raise the cfg-full limit to about 55 USD and resume, about 20–28 USD more, ending near 400–405 USD of the 450 USD stop; this proves a change reaches G3 end to end; cfg-bare is deferred to a follow-up change, and the cost is logged as a major post-release issue (Recommended) · 2. Defer the whole item: stop now and record the partial result; 0.1.0 ships without end-to-end G3 evidence beyond the cfg-no-ripwire dogfood · 3. Finish both configs: raise the limits and the 450 USD stop to about 480 USD, and run both to G3, about 70–80 USD more
+- **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Finish cfg-full, defer cfg-bare (Recommended)', option 1
+- **Extracted instructions:** the cfg-full limit of 55 USD is a total that includes the 26.78 USD already spent; cfg-bare is not run in CHG-001 or CHG-002; the cost of about 50 USD notional per small lite change to G3 is logged as a major post-release issue (P-01, 2026-11-08, relayed by the conductor)

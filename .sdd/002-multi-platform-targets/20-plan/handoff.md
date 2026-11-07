@@ -236,6 +236,37 @@ critic CR-107): a toy session that ends at its 6.00 USD cap continues the chain,
 design, and does not go to P-01 under C002-RISK-038; the chain's own limits govern. **Forecast** (as presented to P-01):
 the release gate ends near 410 USD notional of its 450 USD stop. C002-T-076 still waits for the end
 of both chains (plan critic CR-103). Like the other edges, this one lives on the CHG-002 side only.
+**Superseded in part by D-044** (below): the cfg-full limit is 55 USD and 14 sessions, and cfg-bare is
+deferred.
+
+**C001-T-072 also waits for the G2 and G3 approvals of the D-044 revision** (defect D-044; P-01 answer
+Q-toy-g3-limit-01, 'Finish cfg-full, defer cfg-bare (Recommended)'). The resumed cfg-full chain stopped
+at its 30 USD limit after eight sessions and 26.78 USD notional, G1 approved and the spec in draft with
+its critic review open (0 blocker, 2 major, 4 minor), G3 not reached (`evals/results/toy-g3-cfg-full-chain-partial-2026-11-08.json`,
+commit 2563aa6). From D-044 the chain limits are per configuration (`CHAIN_LIMITS` of `chain.mjs`):
+cfg-full at most 14 sessions and 55 USD notional in total, its saved sessions included, and cfg-bare
+deferred to a follow-up change, refused by `chain.mjs` (exit 4). The limits are already in `chain.mjs`
+with the revision commit (no fix task, `10-strategy.md`), but the edge's condition is the approval of
+the D-044 revision. Until then no toy-change session runs, and the conductor records the blocked reason
+as "waits for the G3 approval of CHG-002 revision D-044". After it:
+1. **Saved state:** before the first resumed session the conductor checks that the saved `chain.json`
+   of cfg-full holds the eight sessions, 26.78 USD in total, equal to the `sessions` of
+   `evals/results/toy-g3-cfg-full-chain-partial-2026-11-08.json`; otherwise nothing runs and P-01 is
+   asked.
+2. **Run:** `node evals/toy/chain.mjs --cfg cfg-full`, without `--fresh`, `--max-sessions` or
+   `--max-usd`, so the limits of `CHAIN_LIMITS` apply. No session starts when the chain total plus the
+   6.00 USD cap would pass 55 USD; at the cap that leaves four more sessions (50.78 USD).
+3. **Cost to G3** (estimate from the measured sessions, as presented to P-01): about 20 … 28 USD more,
+   the rest of the spec phase with its critic fix round and G2, then the plan phase to G3, at a full
+   session per fix round. So about 47 … 55 USD in total, at or near the limit, and the release gate ends
+   near 400 … 405 USD notional of its 450 USD stop.
+4. **On a limit stop** (`chain.mjs` exit 2) the conductor reports to P-01 with the partial result (the
+   chain record, the phase reached, the cost); no further session runs and no new revision is made
+   unless P-01 agrees.
+
+cfg-bare is not run in CHG-001 or CHG-002; its row `toy-g3-cfg-bare` stays in C002-IF-010 §2.2, unused,
+for the follow-up change that owns it (Open points). C002-T-076 waits for the end of the cfg-full chain
+only (plan critic CR-103). Like the other edges, this one lives on the CHG-002 side only.
 
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
 for INJ-21 (Recommended)"). In C002-T-071's first run, `INJ-21` on OpenCode ended at the 0.50 USD cap
@@ -349,7 +380,8 @@ checks:
 - no row of the class ran with `--auth api-key`;
 - the sessions of the toy change to G3 (`toy-g3-cfg-full`, `toy-g3-cfg-bare`; defect D-042) are listed
   apart: each at its rerun cap (3.00 USD for the six cfg-full sessions of 2026-11-07, 6.00 USD from
-  defect D-043 on), at most 12 per chain, and none counts toward a release-class pass rule.
+  defect D-043 on), the cfg-full chain at most 14 sessions and 55 USD in total (defect D-044), no
+  cfg-bare session, and none counts toward a release-class pass rule.
 
 C001-T-082 reports the same check for the sessions of its step 4 against that step's runs.
 
@@ -475,8 +507,10 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
+| **Cost of a small lite change to G3** (major post-release issue; defect D-044; P-01 answer to Q-toy-g3-limit-01): the cfg-full toy chain needs about 50 USD notional to take a one-function lite change to G3; every critic review found issues (11 at ideation, 6 at spec) and each fix round takes a full session at the cap; thinking tokens grew with the budget hidden (C002-IF-010 §2.2 rule 1, `TS-511`; `docs/release-0.1.0-evidence.md` §7) | a follow-up change after the 0.1.0 release (owner; not yet created), which also runs the deferred cfg-bare chain on `toy-g3-cfg-bare` | open: logged, not addressed in CHG-001 or CHG-002 |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
 | Q-copilot-010-01: the Copilot dry run refuses the 0.0.3 candidate 4ef1d61 with ERR-REL-007 after the CHG-001 release-gate fixes; ship 0.1.0 or 0.0.3 (defect D-041; `questions-log.md` round 2026-11-07) | C002-T-076, C002-T-050, C002-T-057, C002-T-075, C002-T-055 | settled: P-01 answered "Ship 0.1.0 on both hosts (Recommended)"; C002-T-076 retakes the 24 Copilot CLI sessions at 0.1.0, stopped at 15.00 USD of the Copilot pool; the P-01 tasks and the run sheets at 0.1.0 |
+| Q-toy-g3-limit-01: the resumed cfg-full chain at 6.00 USD stopped at its 30 USD limit before G2 (defect D-044; `questions-log.md` round 2026-11-08) | the D-044 revision commit; C001-T-072 | settled: P-01 answered 'Finish cfg-full, defer cfg-bare (Recommended)'; cfg-full limit 55 USD in total and 14 sessions in `chain.mjs` `CHAIN_LIMITS`, cfg-bare deferred to a follow-up change, its row unused; the cost logged as a major post-release issue (Open points); no fix task |
 | Q-toy-g3-cap-02: the cfg-full toy chain at 3.00 USD stopped at its 16 USD limit before G3, both spec sessions capped with the test designer's parallel work lost (defect D-043; `questions-log.md` round 2026-11-07 (2)) | the D-043 revision commit; C001-T-072 | settled: P-01 answered "Raise session cap to $6 (Recommended)"; the two `toy-g3` rows keep rule 1 with their own rerun cap of 6.00 USD in C002-IF-010 §2.2 and `caps.mjs`, `chain.mjs` reads it and limits a chain to 30 USD; cfg-full resumed from its saved state, then cfg-bare; no fix task |
 | Q-toy-g3-cap-01: the C001-T-072 toy change to G3 has no cap exception, and a 0.50 USD session cannot finish a phase step (defect D-042; `questions-log.md` round 2026-11-07) | the D-042 revision commit; C001-T-072 | settled: P-01 answered "Run it on both configs (Recommended)"; `toy-g3-cfg-full` and `toy-g3-cfg-bare` are rule-1 rows in C002-IF-010 §2.2 and `caps.mjs` (90 rows, 17 rule-1, 70 rule-2), no fix task; one chain per configuration, at most 12 sessions and 16 USD notional each, no release-class run |
 | Q-std-cap-01: `TS-313`, a release-standard row without an exception, failed at the 0.50 USD cap in the standard prevalidation of C001-T-072 (defect D-040; `questions-log.md` round 2026-11-06) | the D-040 revision commit; C001-T-072 | settled: P-01 answered "Rule 2 for the whole class (Recommended)"; the forty-three rows are rule-2 rows in C002-IF-010 §2.2 and `caps.mjs` (88 rows, 15 rule-1, 70 rule-2), no fix task; after the G3 approval of the D-040 revision the capped `TS-313` session is no run and is replaced once at 1.50 USD |
