@@ -846,6 +846,11 @@ replacements), 46.84 USD, stopped at TS-1014's run 2.**
     E-4 goes against the skill's "use the first layer" ladder, since ripwire had already answered. Not
     a fixture gap: the brief lacks no value. Not environment.
 
+**P-01's decision on TS-1014 (2026-11-07, verbatim, relayed by the conductor):** "Add a line to the
+brief (Recommended)". The brief is changed and the check is not. A fresh TS-1014 × 3 replaces runs 1
+and 2 for the verdict; they stay above as history. The E-4 note about the skill's "use the first
+layer" ladder stays as an observation for later.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
