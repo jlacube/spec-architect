@@ -32,6 +32,10 @@ easier:
 3. Otherwise (Serena does not load or fails) → LSP, if it answers for the language.
 4. Otherwise → grep / glob, reading the matches to confirm them.
 
+The same order applies to every claim you record, including context you add (a definition goes
+through `--expand=X`). Record only what the brief asks. Do not grep to confirm what a higher layer
+answered; ast-grep for syntactic shapes stays as the table says.
+
 Name the layer you used, and the layers you skipped with the reason (absent, failed), in your
 digest.
 
