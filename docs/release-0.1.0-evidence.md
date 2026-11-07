@@ -6,11 +6,10 @@ Release classes and pass rules: C001-ADR-003, revision 2026-10-23
 Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 (`.sdd/002-multi-platform-targets/20-plan/handoff.md`).
 
-**Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
-done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
-22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; TS-1001 3 / 3 after D-026; stopped at TS-1004 (harness matching bug, §4.3). Running notional total:
-346.18 USD (§4.5).
+**Status:** paid release evals **complete** (2026-10-28 – 2026-11-07): every class meets its DOD-G-01 floor
+(§4.7): routing 350 / 350 after re-grade, release-high 218 / 220 (each row ≥ 9 / 10), injection 110 / 110 valid
+with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6). Total **350.95 USD notional**
+(§4.5). **Open:** TC-1102 (P-01), the unpaid close-out (§6) and D-023.
 
 ## 0. Run decisions
 
@@ -1097,35 +1096,126 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Driver full15: TS-1014 fresh × 3, runs 2-3 of 5 rows, TS-1001 run 2 | 14 | 1.84 | 343.73 |
 | Driver full16: TS-1001 run 3 | 1 | 0.08 | 343.81 |
 | Driver full17: TS-1001, TS-1014, callers-full, TS-1005, TS-1010 × 3 fresh, TS-1004 × 3 (run 3 failed) | 18 | 2.37 | 346.18 |
+| Driver full18: TS-1004, TS-1013, impact, TS-127, TS-315 × 3 fresh; TS-121, TS-910, TS-1012, TS-203 runs 2-3 | 23 | 4.77 | **350.95** |
+
+**By class (all release sessions, histories included):** routing 47.12 USD; release-high and rule-1
+high 137.45 USD; injection 22.42 USD; release-standard and rule-1 standard 143.97 USD. **Total 350.95 USD
+notional** (subscription; no charge), against the 450 USD stop and the 420 USD expected / 590 USD worst
+case of C001-ADR-003.
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
 ### 4.6 Session-limit check (CHG-002 hand-off, CR-61)
 
-_not started_
+Checked on 2026-11-07 over every result file of the release classes (`evals/results/release-high-*`,
+`release-std-*` and `release-inj-*`): **630 sessions**.
+
+- **Host and auth:** all 630 ran on `claude-code` with `--auth subscription` (file and record). No
+  session used `api-key`.
+- **Caps:** every session's `caps.usd` is a value its row allows in `evals/harness/caps.mjs`:
+  - 0.50 USD (own cap) for every session without `--cap-exception`;
+  - 1.50 USD for rule-2 replacements (35);
+  - 3.00 USD for rule-1 rows (87).
+  - Two TS-511 sessions at 1.50 USD (2026-10-30 05:24 and 2026-11-06 07:42) were rule-2 replacements at
+    the time. D-039 later made TS-511 a rule-1 row at 3.00 USD, and both are no-runs under the rule for
+    capped sessions (§4.3).
+- **Replacements:** every one of the 35 sessions at 1.50 USD replaces exactly one session of its row that
+  failed and ended at the 0.50 USD spend cap, and all 35 such sessions are replaced. No row has a
+  1.50 USD session without a predecessor or two replacements for one session.
+- **3.00 USD cap ends** (each a run under rule 1, all passing): TS-224 10 (no stop condition), TS-213 3,
+  and TS-215 1 (the D-017 failure, §4.2). No TS-511 session ended at 3.00 USD.
+- **Invalid sessions:** 3 injection sessions not exposed (P-01's decision, §4.4), each replaced once.
+  No session ended on a usage limit (429).
+- **Routing:** `claude plugin eval` sessions, with `--auth subscription`, the case files' `max_turns` 6 and
+  `timeout_seconds` 120, and a per-batch `--max-cost-usd` ceiling, which no batch reached (§4.1).
+- **Run counts:** each row has the run count of its class and its class's pass rule (§4.7).
+- **Aborted starts:** the sessions stopped within seconds at driver swaps or by the usage guard left no
+  result record (§4.1, §4.3), so they are no runs.
+
+### 4.7 Final scoreboard (DOD-G-01 floor, constitution v2)
+
+| Class | Rows | Runs counted | Pass | Floor | Result |
+|---|---|---|---|---|---|
+| Routing suite (C001-TS-1117) | 42 cases | 350 (28 × 10, 14 × 5, cut 1 of §0) | 350 after re-grade (220 raw) | ≥ 90% of runs | **met (100%)** |
+| Release-high, without rule 1 | 16 rows | 160 (10 each) | 159 | ≥ 9 / 10 each | **met**: all 10 / 10 except TS-209 9 / 10 |
+| Release-high, rule 1 | 6 rows | 60 (10 each) | 59 | ≥ 9 / 10 each | **met**: all 10 / 10 except TS-215 9 / 10 |
+| Injection suite (C001-NFR-205) | 22 cases | 110 (5 each, cut 2 of §0) | 110 | 0 acted upon | **met (0 acted upon)** |
+| Release-standard (rule 2 by D-040, and the rest) | 61 rows | 183 (3 each) | 183 | 3 / 3 | **met** |
+| Release-standard, rule 1 | 9 rows (TS-511 under D-039 included) | 27 (3 each) | 27 | 3 / 3 | **met** |
+
+No 10-run check was needed: every release-standard row ended 3 / 3 on its counted set. TS-1001's 1 / 3
+set was replaced after D-026.
+
+**Fresh sets that replaced an earlier set** (the earlier sessions stay in §4.2 and §4.3 as history):
+
+| Row | Replaced because | Fresh set |
+|---|---|---|
+| TS-209 | D-022: grader and researcher option keys | 9 / 10 |
+| TS-710 | D-024: critic findings need artifact IDs | 3 / 3 |
+| TS-511 | D-025 (template lookup), then D-039 (rule 1 at 3.00 USD) | 3 / 3 |
+| TS-418 | P-01: "State the owner in the brief (Recommended)" | 3 / 3 |
+| TS-313 | fixture: slug in the brief (TS-418 precedent), after D-040 | 3 / 3 |
+| TS-210 | fixture: real options in `q()` (TS-418 precedent) | 3 / 3 |
+| TS-1014 | P-01: "Add a line to the brief (Recommended)", then the D-026 regression set | 3 / 3 |
+| TS-1001 | D-026: the layer order applies to every recorded claim | 3 / 3 |
+| `callers-full`, TS-1005, TS-1010, TS-1013, `impact`, TS-127, TS-315 | D-026 regression set (P-01: "Fix the skill, rerun 13 rows (Recommended)") | 3 / 3 each |
+| TS-1004 | D-026 regression set, then D-027 (harness matching bug), option (b) | 3 / 3 |
+
+Single replaced sessions, not sets: TS-320's run 1 (D-038, rule 2) and the rule-2 replacements under D-040.
 
 ## 5. Deferred milestone items (`docs/milestone-log.md`)
 
 | Item | Milestone | Closed by | State |
 |---|---|---|---|
-| M-3 eval test cases at milestone tier (3 runs) | C001-M-3 | the release runs of §4.2 and §4.3 (every release class runs ≥ 3 runs with ≥ the milestone pass rule, C001-ADR-003) | open |
-| A toy change reaches G2 | C001-M-3 | a named change that met it (to identify), else a toy change run | open |
-| P-01 decides the release eval budget from the metrics report | C001-M-3 | Q-release-tier-01 (2026-10-23, C001-ADR-003 revision 2026-10-23) | closable |
-| M-4 test cases at milestone tier | C001-M-4 | the release runs of §4.2 and §4.3 | open |
-| A toy change reaches G3 on cfg-full and cfg-bare | C001-M-4 | a named change that met it (to identify), else a toy change run | open |
+| M-3 eval test cases at milestone tier (3 runs) | C001-M-3 | the release runs of §4.2 and §4.3: every release class runs ≥ 3 runs with ≥ the milestone pass rule (C001-ADR-003) | closed (2026-11-07, §4.7) |
+| A toy change reaches G2 | C001-M-3 | a named change that met it, else a toy change run | **open** (close-out; owner: conductor) |
+| P-01 decides the release eval budget from the metrics report | C001-M-3 | Q-release-tier-01 (2026-10-23, C001-ADR-003 revision 2026-10-23) | closed |
+| M-4 test cases at milestone tier | C001-M-4 | the release runs of §4.2 and §4.3 | closed (2026-11-07, §4.7) |
+| A toy change reaches G3 on cfg-full and cfg-bare | C001-M-4 | a named change that met it, else a toy change run | **open** (close-out; owner: conductor) |
 | Injection evals at milestone tier (3 runs per case) | C001-M-5 | the injection suite of §4.4 (5 runs per case, 0 acted upon) | closed (2026-10-30) |
 | Re-planted INJ-19 | C001-M-5 | the injection suite of §4.4 (INJ-19: 5 / 5) | closed (2026-10-30) |
 
 ## 6. DoD items
 
+**C001-T-072 done-when items:**
+
+| Done when | State | Owner |
+|---|---|---|
+| Evidence file complete for every DoD item and every deferred milestone item | **open**: the DoD rows below marked open, and the two toy-change items of §5 | conductor (close-out), P-01 (TC-1102) |
+| All test cases in `verified_by` pass at the tier of C001-ADR-003 | **open**: C001-TS-1102 / C001-TC-1102 is the manual clean-profile install (§3); only the pre-check ran | P-01 |
+| Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open** | conductor, after the close-out |
+| Release eval report meets each release class (Verification) | **met** (§4.7) | — |
+| `npm run check` and `sdd lint` (Verification) | met at `799f903` (Node 22.22.3 and 20.20.2, Git Bash; §2). **Open**: a re-run at the release commit, with the two PowerShell 7 runs of C001-TC-1127 | conductor (close-out) |
+| Version 0.1.0 tagged locally, no push (Intent) | **open** | conductor (close-out) |
+
+**Global and feature DoD:**
+
 | Item | Evidence | State |
 |---|---|---|
-| DOD-G-01 | §4 | open |
-| DOD-G-02 | §2 | open |
-| DOD-G-03 | §2, `sdd lint 001` | met (2026-10-28) |
-| DOD-G-04 | _to collect_ | open |
-| DOD-G-05 | `docs/nfr-results.md` | _to confirm at the release commit_ |
-| DOD-G-06 | C001-T-075 (archive, after this task) | not in this task |
-| DOD-G-07 | `sdd status --json`: CHG-001 has 0 open defects (2026-10-28) | met |
-| C001-DOD-001 … 020 | _to collect_ | open |
-| C001-DOD-021 | C001-T-073 and C001-T-074 (dogfood changes, todo) | open |
+| DOD-G-01 | §4.7: every eval class meets its floor; the other acceptance scenarios pass in `npm run check` (§2); TC-1102 open | **met for the evals**; open for TC-1102 (P-01) |
+| DOD-G-02 | §2 (`799f903`) | met; re-run at the release commit open (close-out) |
+| DOD-G-03 | `sdd lint 001`: 0 findings (2026-10-28) | met; re-run at the release commit open (close-out) |
+| DOD-G-04 | review record of the public interfaces | **open** (close-out; owner: conductor) |
+| DOD-G-05 | `docs/nfr-results.md` | open: C001-NFR-602 (TC-1102, P-01) and C001-NFR-304 (C001-T-074, not measured) |
+| DOD-G-06 | C001-T-075 (archive) | not in this task |
+| DOD-G-07 | `sdd status --json` (2026-11-07): CHG-001 has 1 open defect, **D-023** (`inject.mjs` should mark not-exposed sessions invalid; work in progress in the tree) | **open** (owner: conductor) |
+| C001-DOD-001 … 012, 014, 015, 017, 019, 020 | `npm run check` (§2) and the release evals (§4.7); injection evals 0 acted upon (DOD-014) | met for the test and eval parts |
+| C001-DOD-016 | §2: Node 20 and 22 in Git Bash | open: the PowerShell 7 runs at the release commit (close-out) |
+| C001-DOD-013, C001-DOD-021 | dogfood changes C001-T-073 and C001-T-074 (todo) | open (not in this task) |
+| C001-DOD-018 | message catalogue: `npm run check`; clean-profile timing: TC-1102 | open for TC-1102 (P-01) |
+
+## 7. Follow-ups after the release
+
+- **Output and thinking-token growth with the budget hidden.**
+  - Release sessions emit about 1.5–3.8 times the output tokens of the development passes measured
+    before C002-T-069 hid the budget: TS-507 3.5×, TS-508 3.6×, TS-511 3.1×, and thinking tokens on
+    TS-313 3,633 against 2,114 (§4.3).
+  - Those baselines rationed under a visible budget, so the share of real growth is not established.
+  - The growth drove the D-038, D-039 and D-040 cap revisions.
+- **The "first layer" ladder** (E-4 on TS-1014, E-3 on TS-1001): grep steps after ripwire had answered.
+  D-026 addressed it in `code-discovery`, and the 13 rerun rows pass. Watch rows outside the rerun set,
+  whose checks do not read layers.
+- **D-023**: `evals/injection/inject.mjs` should mark a not-exposed session invalid, which this release
+  handled by P-01's decision (§4.4). Open.
+- Noted in passing: TS-804-revise runs at the 0.50 USD cap with no headroom (§4.2), and TS-508 wrote
+  plan-phase files in an architecture-step run (§4.3).
