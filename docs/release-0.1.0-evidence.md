@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 59 of 70 standard rows at 3 / 3; stopped at TS-1014 run 2 (§4.3). Running notional total:
-341.89 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; stopped at TS-1001 run 2 (behaviour, §4.3). Running notional total:
+343.73 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -851,6 +851,26 @@ brief (Recommended)". The brief is changed and the check is not. A fresh TS-1014
 and 2 for the verdict; they stay above as history. The E-4 note about the skill's "use the first
 layer" ladder stays as an observation for later.
 
+**Driver `full15` (2026-11-07, 08:17–08:47 UTC): 14 sessions, 1.84 USD, stopped at TS-1001's run 2.**
+
+- **TS-1014 fresh set: 3 / 3** on the changed brief (`c5255e1`), replacing runs 1 and 2. TS-1011,
+  TS-1002-cfg-no-ripwire, TS-208, TS-1002-cfg-bare and TS-1013 are complete at 3 / 3.
+- **TS-1001 (C001-TC-1001, callers question on cfg-full), run 2: fail**
+  (`release-std-TS-1001-2026-11-07T08-44-49-592Z.json`, `success`, 0.08 USD, 154 s): `evidence layers
+  ["ripwire","ripwire","grep"]`.
+  - The callers answer is right. The first call is `ripwire --callers=createIntent`, and E-1 and E-2 (the
+    two callers) are ripwire.
+  - E-3 (the definition of `createIntent`) came from a `Grep` for `createIntent` made after ripwire had
+    answered, and carries layer grep with `disclosures: none`.
+  - Run 1 (`release-std-TS-1001-2026-11-06T22-47-06-911Z.json`, 0.09 USD) got the same definition from
+    ripwire (`--expand=createIntent`), so ripwire supported the question.
+  - **Reading: behaviour, minor.** C001-TS-1001 says "the resulting evidence entries have layer
+    ripwire", and C001-REQ-1001 says to use the first available layer that supports the question. The
+    check matches both, so it is not too strict, and the brief lacks no value. No wrong answer or
+    wrong claim resulted.
+  - It is the same tendency as TS-1014's E-4 (a grep step after ripwire has answered). A brief line
+    would hide it here, because the ladder is what this scenario tests.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -992,6 +1012,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | TS-313 under D-040: replacement, run 2 + replacement | 3 | 1.87 | 282.85 |
 | Driver full13: TS-313 fresh × 3 with replacements, 28 rows × 1, TS-210 | 35 | 12.20 | 295.05 |
 | Driver full14: TS-210 fresh × 3, 12 prevalidation rows, runs 2-3 through TS-202, TS-1014 run 2 | 119 | 46.84 | 341.89 |
+| Driver full15: TS-1014 fresh × 3, runs 2-3 of 5 rows, TS-1001 run 2 | 14 | 1.84 | 343.73 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
