@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; stopped at TS-1001 run 2 (behaviour, §4.3). Running notional total:
-343.73 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; TS-1001 at 1 / 3, below the floor (behaviour, §4.3). Running notional total:
+343.81 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -877,6 +877,35 @@ the run. On 2 / 3, the 10-run check follows. **Counting:** the 3 runs count towa
 are run (3 + 7 = 10, needing ≥ 9 / 10). C001-ADR-003 prices these checks at about 50 runs for about 7
 scenarios, which is 7 more each. So any failure among the 7 is the second failure and stops the run.
 
+**TS-1001 run 3: fail; the row is at 1 / 3, below the floor** (`release-std-TS-1001-2026-11-07T08-51-18-922Z.json`,
+driver `full16`, `success`, 0.08 USD).
+
+- **Same step as run 2.** After `ripwire --callers` and `--uses`, a `Grep` for `createIntent`; E-3 (the
+  definition) has layer grep. E-1 and E-2 (the callers) are ripwire. The brief asks only "Who calls
+  createIntent? Record each caller as evidence."; neither session's E-3 was asked for.
+- **Not new.** `code-discovery/SKILL.md` and `sdd-cartographer.md` are unchanged since `549f391` (2026-10-23
+  23:32 UTC), and no plugin file changed since 2026-11-06 22:00 UTC. So the passing sessions of 2026-10-24
+  and 2026-11-06 and the failing ones of 2026-11-07 had the same wording. Passes and failures are
+  variation under one text.
+- **Scope.** Sessions where ripwire answered: lower-layer evidence entries in 7 of 19 (development, from
+  2026-10-11) and 19 of 34 (release). The two sets differ in mix, and most of those entries are in rows
+  whose checks allow them (TS-1010 asks for ast-grep; TS-127, TS-315 and `impact` also had grep entries
+  in 2026-10-11 development). Rows whose check requires ripwire only (the same callers task and the test
+  gate): 3 of 8 release sessions (TS-1001 2 of 3, TS-1014 1 of 2 before its brief line, `callers-full` 0 of
+  3), and 0 of 2 in development.
+- **The gap in the guidance.** The skill says "Procedure for each question … 1. ripwire available → ask
+  ripwire. Answer → done." and the table already gives `--expand=X` for a definition. So the ladder is
+  framed per question: a claim the agent adds on its own is not a question, and nothing says to keep to
+  the brief or that an answered question needs no confirming grep.
+- **Draft (not applied):** after "Procedure for each question": "The same order applies to every claim you
+  record, including context you add (a definition goes through `--expand=X`). Record only what the brief
+  asks. Do not grep to confirm what a higher layer answered; ast-grep for syntactic shapes stays as the
+  table says."
+- **Reach:** the skill reaches the 37 release rows that dispatch the cartographer (7 release-high, 23
+  release-standard, 7 injection). Only rows whose checks read evidence layers, with ripwire available, can
+  change verdict: TS-1001, `callers-full`, TS-1014, TS-1005, TS-1010, plus TS-1004, TS-1013, `impact`, TS-127
+  and TS-315 as regression checks.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -1019,6 +1048,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Driver full13: TS-313 fresh × 3 with replacements, 28 rows × 1, TS-210 | 35 | 12.20 | 295.05 |
 | Driver full14: TS-210 fresh × 3, 12 prevalidation rows, runs 2-3 through TS-202, TS-1014 run 2 | 119 | 46.84 | 341.89 |
 | Driver full15: TS-1014 fresh × 3, runs 2-3 of 5 rows, TS-1001 run 2 | 14 | 1.84 | 343.73 |
+| Driver full16: TS-1001 run 3 | 1 | 0.08 | 343.81 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
