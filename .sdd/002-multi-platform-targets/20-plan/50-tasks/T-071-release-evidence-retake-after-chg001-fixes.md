@@ -52,6 +52,15 @@ done and are not reopened. This task carries their step-4 re-runs, owned by the 
 C002-T-050, C002-T-057, C002-T-075 (the npm publication) and C002-T-055 wait for this task.
 C002-T-051 and C002-T-052 are dropped from CHG-002.
 
+**Superseded for the release by C002-T-076 (revision D-041).** This task is done at 0.0.3 (e5a6440),
+and it stays done. After it, the CHG-001 release gate (C001-T-072) changed files the packages are
+generated from and moved the version to 0.1.0 (ab0cfc7). So the Copilot dry run refuses the 0.0.3
+candidate 4ef1d61 with ERR-REL-007. P-01 answered Q-copilot-010-01 with "Ship 0.1.0 on both hosts
+(Recommended)". Copilot ships at 0.1.0, and **C002-T-076** retakes this task's Copilot steps there.
+The 0.0.3 text below and `docs/releases/copilot/0.0.3/` stay as the record of this run. Where they
+say that C002-T-050, C002-T-057, C002-T-075 and C002-T-055 run "at 0.0.3", read 0.1.0 and
+C002-T-076.
+
 ## Targets
 
 | Kind | Target | Change |

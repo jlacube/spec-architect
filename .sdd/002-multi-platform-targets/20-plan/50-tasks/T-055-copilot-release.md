@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-057, C002-T-071, C002-T-075]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-057, C002-T-071, C002-T-075, C002-T-076]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
@@ -35,19 +35,25 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Preconditions
 
-- **Package version 0.0.3** (defect D-036; P-01 answers to Q-noask-01, "Text fallback + 0.0.3
-  (Recommended)", and Q-opencode-defer-01; C002-T-074). Copilot 0.0.2 is refused (`INJ-19` and
-  `INJ-21` acted upon, CHG-001 D-020). So Copilot ships first, alone, at 0.0.3: `<version>` below is
-  `0.0.3`, from `docs/releases/copilot/0.0.3/` and `dist/architect-copilot-0.0.3.zip`. Its Copilot CLI
-  evidence is the 24 sessions that C002-T-071 step 5 runs at 0.0.3. The runsheet
-  `docs/runsheets/T-055-copilot-release.md` names 0.0.3. OpenCode is not released in this round.
-- **C002-T-075 done:** `architect-sdd@0.0.3` is on npm, published by P-01 apart from any OpenCode
+- **Package version 0.1.0** (defect D-041; P-01 answer to Q-copilot-010-01, "Ship 0.1.0 on both
+  hosts (Recommended)"). Copilot 0.0.2 is refused (`INJ-19` and `INJ-21` acted upon, CHG-001 D-020;
+  revision D-036). The 0.0.3 candidate 4ef1d61 (C002-T-071) is refused by the dry run with
+  ERR-REL-007, because the CHG-001 release-gate fixes changed the files it is generated from, and
+  the source is 0.1.0 since ab0cfc7. So Copilot ships alone at 0.1.0: `<version>` below is `0.1.0`,
+  from `docs/releases/copilot/0.1.0/` and `dist/architect-copilot-0.1.0.zip`. Its Copilot CLI
+  evidence is the 24 sessions that **C002-T-076** step 4 runs at 0.1.0. The runsheet
+  `docs/runsheets/T-055-copilot-release.md` names 0.1.0. OpenCode is not released in this round.
+- **C002-T-075 done:** `architect-sdd@0.1.0` is on npm, published by P-01 apart from any OpenCode
   release (revision D-036). This task publishes nothing itself.
+- **C002-T-076 done** (revision D-041). The release is made from the release-candidate commit that
+  C002-T-076 records. It replaces C002-T-071's commit in the next item, and its near-cap list
+  replaces C002-T-071's in Done when.
 - **C002-T-071 done** (P-01 answer to Q-release-base-01; plan critic CR-71). The release is made from
   the release-candidate commit that C002-T-071 records, with the CHG-001 fixes. C002-T-071 re-ran the
   Copilot unpaid steps (C002-T-054 steps 1 and 2) there. Its step 5 ran the paid Copilot CLI rows (C002-T-054 step 3, 24 sessions, Copilot pool) at that
-  commit and version 0.0.3 (P-01 answers to Q-inj21-01 and Q-noask-01). C002-T-050 and C002-T-057 ran
-  on the package of that commit.
+  commit and version 0.0.3 (P-01 answers to Q-inj21-01 and Q-noask-01). That commit is no longer the
+  release candidate (revision D-041): C002-T-076 retakes these steps at 0.1.0, and C002-T-050 and
+  C002-T-057 run on the package of C002-T-076's commit.
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
 - The S-08 record of the tested versions is not `deferred`: the signed-off record gives
   `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could
@@ -73,7 +79,7 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Done when
 
-- [ ] `architect-sdd@0.0.3` on npm (C002-T-075) no later than the Copilot release
-- [ ] The near-cap list of C002-T-071's report for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
+- [ ] `architect-sdd@0.1.0` on npm (C002-T-075) no later than the Copilot release
+- [ ] The near-cap list of C002-T-076's report for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] Copilot release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-055 --status done --commit <sha>`

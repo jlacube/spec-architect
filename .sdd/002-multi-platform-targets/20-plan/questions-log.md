@@ -287,3 +287,17 @@ Questions on the S-07 record (C002-T-001).
 - **Options** (as presented by the conductor): 1. Rule 2 for the whole class: one revision covering the class; any release-standard scenario without a cap exception that fails at the 0.50 USD cap is no run and gets one 1.50 USD replacement, and failures at the replacement and non-cap failures still count and still stop the run; forecast about 415–435 USD notional, under the 450 USD stop (Recommended) · 2. Only the four likely rows: name C001-TS-313, C001-TS-423, C001-TS-316 and C001-TS-317; narrower, but another scenario could still stop the run and need a new revision · 3. Keep it strict, C001-TS-313 only: add just C001-TS-313 and handle each further case as it comes; most controlled, slowest
 - **Answer:** P-01 (2026-11-06, relayed by the conductor): "Rule 2 for the whole class (Recommended)", option 1
 - **Extracted instructions:** none
+
+## Round 2026-11-07 — defects D-041 and D-042 (found in C001-T-072)
+
+### Q-copilot-010-01 — the Copilot 0.0.3 candidate refused after the CHG-001 release-gate fixes (C001-T-072 close-out)
+- **Context:** `node scripts/release-check.mjs --target copilot --dry-run` refuses the Copilot 0.0.3 release candidate with ERR-REL-007, because the CHG-001 release-gate fixes (C001 D-022 … D-027) changed 32 generated files of `dist/copilot/` and `dist/architect-copilot-0.0.3.zip` since the 0.0.3 candidate 4ef1d61 of C002-T-071. The source is 0.1.0 since commit ab0cfc7, with the packages rebuilt in `dist/` (`docs/release-0.1.0-evidence.md` §7). The Copilot pool had 7.70 USD spent of 30 USD.
+- **Options** (as presented by the conductor): 1. Ship 0.1.0 on both hosts: one version everywhere, with all the release-gate fixes (C001 D-022…D-027) included; retake the Copilot CLI evidence on 0.1.0 (~24 sessions, ~$8 of the remaining ~$22 Copilot budget); P-01's VS Code checklist (T-050) and clean-profile run (T-057) then use the 0.1.0 packages (Recommended) · 2. Ship 0.0.3 from its commit: release Copilot 0.0.3 from a checkout of 4ef1d61 exactly as tested, with no retake; Copilot users miss the fixes and the hosts ship different versions
+- **Answer:** P-01 (2026-11-07, relayed by the conductor): "Ship 0.1.0 on both hosts (Recommended)", option 1
+- **Extracted instructions:** stop the Copilot CLI retake if the Copilot spend reaches 15 USD (the pool stays 30 USD, about 7.70 USD used); the Copilot CLI uses its credential store, and no token is written anywhere (P-01, 2026-11-07, relayed by the conductor)
+
+### Q-toy-g3-cap-01 — cap rows for the C001-T-072 toy change to G3 (C001-M-4 item)
+- **Context:** the toy change to G3 (`evals/toy/toy-g3.eval.mjs`, `evals/toy/chain.mjs`, commit 4074c41) chains sessions of the real conductor from `/architect:new` to an approved G3 on cfg-full and cfg-bare. Its two rows have no cap exception, so each session would run at 0.50 USD. In the release runs one architect step costs 1.6 … 1.9 USD (`TS-507`, `TS-508`, `TS-511`) and a session that only presents a gate about 0.27 USD (`TS-802`), so a 0.50 USD session cannot finish a step and the chain would loop.
+- **Options** (as presented by the conductor): 1. Run it on both configs: about 15–30 USD notional (Recommended) · 2. cfg-full only, with cfg-bare deferred · 3. Defer both
+- **Answer:** P-01 (2026-11-07, relayed by the conductor): "Run it on both configs (Recommended)", option 1
+- **Extracted instructions:** none

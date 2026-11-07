@@ -193,6 +193,22 @@ rule 2 replaces is inside the rules: it stops no run and goes to no one. A faile
 not at the cap each stop C001-T-072. A failed replacement, a budget stop, or a capped session of a
 high-risk or injection row without an exception goes to P-01 (C002-RISK-038; plan critic CR-97). Like the other edges, this one lives on the CHG-002 side only.
 
+**C001-T-072 also waits for the G2 and G3 approvals of the D-042 revision** (defect D-042; P-01 answer
+Q-toy-g3-cap-01, "Run it on both configs (Recommended)"). The toy change to G3, the open C001-M-4 item
+of C001-T-072, chains sessions of the real conductor from `/architect:new` to an approved G3 on
+cfg-full and cfg-bare (`evals/toy/toy-g3.eval.mjs`, `evals/toy/chain.mjs`, commit 4074c41). Its
+rows `toy-g3-cfg-full` and `toy-g3-cfg-bare` become rule-1 rows (C002-IF-010 §2.2; 90 rows, 17 rule-1
+and 70 rule-2). The rows are already in `caps.mjs` with the revision commit (no fix task,
+`10-strategy.md`), but the edge's condition is the approval of the D-042 revision, which approves
+those rows. Until then no toy-change session runs, and the conductor records the blocked reason as
+"waits for the G3 approval of CHG-002 revision D-042". After it, each configuration runs one chain,
+`node evals/toy/chain.mjs` for that configuration, whose sessions run in the rule-1 form below
+(`run.mjs … --cap-exception --only toy-g3-<cfg> evals/toy/toy-g3.eval.mjs`, one session per run, each
+at 3.00 USD), at most 12 sessions and 16 USD notional per chain, ending at the G3 approval of the toy
+change. These sessions count toward no pass rule of a release class, and the session-limit check
+below lists them apart from the release rows. Like the other edges, this one lives on the CHG-002
+side only.
+
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
 for INJ-21 (Recommended)"). In C002-T-071's first run, `INJ-21` on OpenCode ended at the 0.50 USD cap
 with every assertion passed. Its 0.0.1 entry is therefore acted upon and final, and OpenCode 0.0.1 is
@@ -226,6 +242,30 @@ product changes of C001-T-084 (3643c69), and C002-T-071 waits for C002-T-074. C0
 only for the dev run of its `TS-226-blocking` row. That run needs the caps row C002-T-074 adds, so
 C002-T-074 does not wait for it; the edge goes the other way for that one row. The edges live on the
 CHG-002 side only.
+
+**Copilot at 0.1.0** (defect D-041; P-01 answer Q-copilot-010-01, "Ship 0.1.0 on both hosts
+(Recommended)"). The order above ran to step 3: C002-T-071 is done at 0.0.3 (e5a6440, release
+candidate 4ef1d61). The CHG-001 release gate (C001-T-072) then fixed files the packages are generated
+from and moved the version to 0.1.0 (ab0cfc7), so the Copilot dry run refuses the 0.0.3 candidate
+with ERR-REL-007 (`docs/release-0.1.0-evidence.md` §7). Steps 4 to 6 above now run at 0.1.0, after
+a new step:
+1. **C002-T-076** retakes the Copilot evidence at 0.1.0: the unpaid steps at its release-candidate
+   commit and the same 24 Copilot CLI sessions from the Copilot pool, about 2.40 USD, **stopped at a
+   pool total of 15.00 USD** (P-01's instruction of 2026-11-07). Its dry run may refuse only on the
+   records P-01 still owes (C002-T-050, C002-T-057).
+2. **C002-T-050** and **C002-T-057** run on the 0.1.0 packages of C002-T-076's commit.
+3. **C002-T-075:** a `released` Copilot dry run, then P-01 publishes `architect-sdd@0.1.0`.
+   `architect-sdd@0.0.3` is never published.
+4. **C002-T-055** releases Copilot at 0.1.0.
+
+**Handoff condition:** C002-T-076 starts after the G3 approval of the D-041 revision. Until then no
+session of it runs, and the conductor records the blocked reason as "waits for the G3 approval of
+CHG-002 revision D-041". C002-T-050 and C002-T-057, P-01's runs, wait for C002-T-076; their blocked
+reason is "waits for C002-T-076 (Copilot evidence at 0.1.0)". **Cross-change:** C002-T-076 needs
+C001-T-072's version commit ab0cfc7, which is committed; a later CHG-001 commit that changes a file
+the packages are generated from moves the release-candidate commit, and before C002-T-055 it goes to
+P-01. **Close rule:** D-041 closes when C002-T-076 is done (`10-strategy.md`, Plan revision for
+D-041); the G3 approval alone does not close it.
 
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
@@ -273,7 +313,9 @@ checks:
   spend cap (`error_max_budget_usd`), named by its result file;
 - no rule-2 row has a session at 1.50 USD without such a predecessor, or more than one replacement
   for the same session;
-- no row of the class ran with `--auth api-key`.
+- no row of the class ran with `--auth api-key`;
+- the sessions of the toy change to G3 (`toy-g3-cfg-full`, `toy-g3-cfg-bare`; defect D-042) are listed
+  apart: each at 3.00 USD, at most 12 per chain, and none counts toward a release-class pass rule.
 
 C001-T-082 reports the same check for the sessions of its step 4 against that step's runs.
 
@@ -400,6 +442,8 @@ Insiders builds): record the version before each run.
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
+| Q-copilot-010-01: the Copilot dry run refuses the 0.0.3 candidate 4ef1d61 with ERR-REL-007 after the CHG-001 release-gate fixes; ship 0.1.0 or 0.0.3 (defect D-041; `questions-log.md` round 2026-11-07) | C002-T-076, C002-T-050, C002-T-057, C002-T-075, C002-T-055 | settled: P-01 answered "Ship 0.1.0 on both hosts (Recommended)"; C002-T-076 retakes the 24 Copilot CLI sessions at 0.1.0, stopped at 15.00 USD of the Copilot pool; the P-01 tasks and the run sheets at 0.1.0 |
+| Q-toy-g3-cap-01: the C001-T-072 toy change to G3 has no cap exception, and a 0.50 USD session cannot finish a phase step (defect D-042; `questions-log.md` round 2026-11-07) | the D-042 revision commit; C001-T-072 | settled: P-01 answered "Run it on both configs (Recommended)"; `toy-g3-cfg-full` and `toy-g3-cfg-bare` are rule-1 rows in C002-IF-010 §2.2 and `caps.mjs` (90 rows, 17 rule-1, 70 rule-2), no fix task; one chain per configuration, at most 12 sessions and 16 USD notional each, no release-class run |
 | Q-std-cap-01: `TS-313`, a release-standard row without an exception, failed at the 0.50 USD cap in the standard prevalidation of C001-T-072 (defect D-040; `questions-log.md` round 2026-11-06) | the D-040 revision commit; C001-T-072 | settled: P-01 answered "Rule 2 for the whole class (Recommended)"; the forty-three rows are rule-2 rows in C002-IF-010 §2.2 and `caps.mjs` (88 rows, 15 rule-1, 70 rule-2), no fix task; after the G3 approval of the D-040 revision the capped `TS-313` session is no run and is replaced once at 1.50 USD |
 | Q-ts511-cap-01: `TS-511` failed at the 0.50 and 1.50 USD caps in the standard prevalidation of C001-T-072, the second session stopped before its fourth Write ran (defect D-039; `questions-log.md` round 2026-11-06) | the D-039 revision commit; C001-T-072 | settled: P-01 answered "Raise its cap to $3 (Recommended)"; `TS-511` moved to rule 1 in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 15 rule-1, 27 rule-2 at that revision), no fix task; after the G3 approval of the D-039 revision three fresh sessions run at 3.00 USD, and the four capped sessions are no runs; the higher token use is a follow-up after release (`10-strategy.md`) |
 | Q-ts320-cap-01: `TS-320` stopped at the 0.50 USD cap before the Write of its complete report (Verdict included) in the standard prevalidation of C001-T-072 (defect D-038; `questions-log.md` round 2026-10-30) | the D-038 revision commit; C001-T-072 | settled: P-01 answered "Add rule-2 exception (Recommended)"; `TS-320` a rule-2 row next to `TS-319` in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 28 rule-2 at that revision), no fix task; after the G3 approval of the D-038 revision the capped session is no run and is replaced once at 1.50 USD |
@@ -517,10 +561,11 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 66 | C002-T-074 | Fix for revisions D-036, D-037: package version 0.0.3 after the CHG-001 D-020 fix, the TS-226-blocking caps row, and checklist step VSC-15 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-074-version-0-0-3.md` |
 | 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
 | 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
-| 69 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 70 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 71 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
-| 72 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 69 | C002-T-076 | Fix for revision D-041: Copilot release evidence retaken at version 0.1.0 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-076-copilot-evidence-retake-0-1-0.md` |
+| 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 71 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 72 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
+| 73 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
 are not in this list. The OpenCode release moves to the future CHG-003.

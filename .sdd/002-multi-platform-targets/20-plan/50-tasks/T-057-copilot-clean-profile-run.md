@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-058, C002-T-071]
+depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-058, C002-T-071, C002-T-076]
 implements: [C002-NFR-601]
 satisfies_ac: [C002-AC-304.1]
 verified_by: [C002-TS-306, C002-TC-306, C002-TC-903]
@@ -38,9 +38,12 @@ the OpenCode release does not wait for it.
 
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the run uses
   `dist/architect-copilot-<version>.zip` built at the release-candidate commit with the CHG-001
-  fixes, which C002-T-071 records, at **package version 0.0.3** (defect D-036; C002-T-074):
-  `dist/architect-copilot-0.0.3.zip` and `dist/architect-sdd-0.0.3.tgz`, as the runsheet
-  `docs/runsheets/T-057-copilot-clean-profile.md` names them.
+  fixes, at **package version 0.1.0** (defect D-041; P-01 answer to Q-copilot-010-01, "Ship 0.1.0
+  on both hosts (Recommended)"). The release-candidate commit is the one **C002-T-076** records,
+  which replaces C002-T-071's; C002-T-076 done first. The files are
+  `dist/architect-copilot-0.1.0.zip` and `dist/architect-sdd-0.1.0.tgz`, as the runsheet
+  `docs/runsheets/T-057-copilot-clean-profile.md` names them. The 0.0.3 packages of revision D-036
+  (C002-T-074) are not released.
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-058 (install
   command) done; VS Code Insiders and Copilot Chat at the S-08 tested versions; REF-WIN set up as
   `handoff.md` "Reference machine" lists.

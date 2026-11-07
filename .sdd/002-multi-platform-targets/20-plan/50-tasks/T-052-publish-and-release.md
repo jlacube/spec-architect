@@ -33,7 +33,7 @@ D-035 and D-036). The fix will be one of two directions: an early stop that work
 bounded `INJ-21` gate case. No step of this task runs, and CHG-002 spends no more OpenRouter credit,
 until that fix is planned and P-01 gives the go.
 
-**The npm publication is no longer part of this task.** C002-T-075 publishes `architect-sdd@0.0.3`
+**The npm publication is no longer part of this task.** C002-T-075 publishes `architect-sdd@0.1.0` (0.0.3 before revision D-041)
 with the Copilot release. When OpenCode is released later, it is at its own version, and that version
 of `architect-sdd` is published first by the steps of C002-T-075 (C002-REQ-509). Step 2 below then
 only checks that it is on npm.

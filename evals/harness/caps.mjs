@@ -87,8 +87,9 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   Q-ts320-cap-01, 2026-10-30), the row TS-320 after TS-319, a twenty-eighth rule-2 row; and, for defect
  *   D-039 (P-01, Q-ts511-cap-01, 2026-11-06), the row TS-511 moved from rule 2 to rule 1 after TS-802, a
  *   fifteenth rule-1 row and 27 rule-2 rows; and, for defect D-040 (P-01, Q-std-cap-01, 2026-11-06), the
- *   forty-three release-standard rows of C001-T-072 without an exception after TS-511, 70 rule-2 rows. They
- *   are explicit rows: the match on row ID, case file, host and auth mode refuses every row outside the table.
+ *   forty-three release-standard rows of C001-T-072 without an exception after TS-511, 70 rule-2 rows; and,
+ *   for defect D-042 (P-01, Q-toy-g3-cap-01, 2026-11-07), the two toy-change-to-G3 rows of C001-T-072
+ *   (toy-g3-cfg-full, toy-g3-cfg-bare) after them, 17 rule-1 rows, 90 rows. They are explicit rows: the match on row ID, case file, host and auth mode refuses every row outside the table.
  * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
  * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
@@ -203,6 +204,9 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-1112-deepwiki-down", "evals/cap11/TS-1112.eval.mjs", 2),
   SUB("TS-1112-bare", "evals/cap11/TS-1112.eval.mjs", 2),
   SUB("TS-1112-node18", "evals/cap11/TS-1112.eval.mjs", 2),
+  // Defect D-042: the C001-T-072 toy change to G3, one chain per configuration, every session at the rule-1 cap.
+  SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1),
+  SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1),
 ]);
 
 /**

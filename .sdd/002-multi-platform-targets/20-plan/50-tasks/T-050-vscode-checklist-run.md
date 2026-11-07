@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-046, C002-T-054, C002-T-071]
+depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
 verified_by: [C002-TS-358, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
@@ -48,10 +48,12 @@ does not wait for it.
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the checklist runs on the
   Copilot package packed at the release-candidate commit that holds the CHG-001 fixes of C001-T-082
   and C001-T-083, which C002-T-071 records. That commit replaces the commit of C002-T-054 above.
-- **Package version 0.0.3** (defect D-036; C002-T-074): `dist/architect-copilot-0.0.3.zip` and
-  `dist/architect-sdd-0.0.3.tgz`, and the record `docs/checklists/records/vscode-<date>-0.0.3.md`
-  with `package_version: 0.0.3`, as the runsheet `docs/runsheets/T-050-vscode-checklist.md` names
-  them from C002-T-074 on.
+- **Package version 0.1.0** (defect D-041; P-01 answer to Q-copilot-010-01, "Ship 0.1.0 on both
+  hosts (Recommended)"): `dist/architect-copilot-0.1.0.zip` and `dist/architect-sdd-0.1.0.tgz`,
+  packed at the release-candidate commit of **C002-T-076**, which replaces the commit of
+  C002-T-071 above. The record is `docs/checklists/records/vscode-<date>-0.1.0.md` with
+  `package_version: 0.1.0`, as the runsheet `docs/runsheets/T-050-vscode-checklist.md` names them.
+  C002-T-076 done first. The 0.0.3 packages of revision D-036 (C002-T-074) are not released.
 - Hooks enabled in VS Code from the restore step of step 2 on (`chat.useHooks`, Workspace Trust for
   the toy repository, no organisation policy that disables them; the hooks-off rows of C002-TC-516
   run before the restore, C002-IF-009 §4 "Run order"): the release check refuses a record that shows hooks disabled or not
