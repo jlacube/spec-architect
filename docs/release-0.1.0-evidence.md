@@ -9,8 +9,8 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** in progress. Unpaid preconditions and checks done, and paid batch 1 (routing suite, half)
 done, on 2026-10-28 and 29. Routing suite complete (350 / 350 after re-grade). Release-high pre-runs
 22 / 22. Batches 3 and 4 complete: every release-high row meets ≥ 9 / 10 (TS-209 9 / 10 on the D-022 files; its 8 / 10
-set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; TS-1001 at 1 / 3, below the floor (behaviour, §4.3). Running notional total:
-343.81 USD (§4.5).
+set on the old files is kept as history (§4.2). Injection suite complete: 110 valid runs, 0 acted upon (§4.4). Standard prevalidation: TS-710 3 / 3 on the D-024 files; after the reset, TS-320 passed, TS-511 3 / 3 at 3.00 USD (D-039), the 8 rule-1 rows 3 / 3 each; TS-418 3 / 3 on the fixed brief; TS-313 3 / 3 on the fixed brief; TS-210 3 / 3 on the new options; 65 of 70 standard rows at 3 / 3; TS-1001 3 / 3 after D-026; stopped at TS-1004 (harness matching bug, §4.3). Running notional total:
+346.18 USD (§4.5).
 
 ## 0. Run decisions
 
@@ -918,6 +918,30 @@ rerun 13 rows (Recommended)".
 - The other cartographer rows stand on their earlier sessions, since their checks do not read evidence
   layers (reach, above).
 
+**Driver `full17` (2026-11-07, 10:47–11:47 UTC, D-026 files): 18 sessions passed, then a stop at TS-1004's
+third fresh run.**
+
+- **TS-1001 fresh set: 3 / 3**, so the D-026 fix works on the row it targets. Also 3 / 3 on the D-026
+  file: TS-1014, `callers-full`, TS-1005 and TS-1010. TS-1004: runs 1 and 2 of the fresh set passed.
+- **TS-1004 fresh run 3: fail** (`release-std-TS-1004-2026-11-07T11-42-11-023Z.json`, `success`, 0.28 USD):
+  `(default map): --max-tokens= missing or above 4000: sed -i -E 's#…#…#' …/evidence/ripwire-survey.md`.
+  - The agent ran the same seven ripwire queries as in the passing runs, each with its flag within budget
+    (`ripwire . --max-tokens=4000`, `--pack-signatures --max-tokens=4000`, `--for=… --token-budget=4000`,
+    and `--limit=50` on `--callers`, `--impact`, `--test-gate` and `--hotspots`).
+  - It then fixed the `path:line` fields of its own evidence entries with `sed -i` on
+    `.sdd/…/evidence/ripwire-survey.md`.
+  - **The cause is the harness.** `intelCalls` in `evals/cap10/carto.mjs` keeps every Bash command that
+    matches `/\b(ripwire|ast-grep)\b/`. The `sed` line matches through the file name
+    `ripwire-survey.md`, so the "(default map)" row of TS-1004 treated it as a ripwire map call with no
+    `--max-tokens`.
+  - Offline re-grade, from the stored transcript and with no session: the unchanged assert reports that
+    failure; without the `sed` line it reports none.
+  - **Not D-026.** None of the new lines is involved: no grep and no added claim, and the `sed` edit is a
+    format fix of entries the brief asked for. The passing release runs on the old file
+    (2026-11-06 21:27 and 2026-11-07 03:08 / 03:13) and the D-026 runs 1 and 2 used the same queries.
+  - **Reading: a check stricter than its purpose (grader false positive), from a matching bug.** It is
+    not behaviour, environment or a fixture gap.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
@@ -1061,6 +1085,7 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Driver full14: TS-210 fresh × 3, 12 prevalidation rows, runs 2-3 through TS-202, TS-1014 run 2 | 119 | 46.84 | 341.89 |
 | Driver full15: TS-1014 fresh × 3, runs 2-3 of 5 rows, TS-1001 run 2 | 14 | 1.84 | 343.73 |
 | Driver full16: TS-1001 run 3 | 1 | 0.08 | 343.81 |
+| Driver full17: TS-1001, TS-1014, callers-full, TS-1005, TS-1010 × 3 fresh, TS-1004 × 3 (run 3 failed) | 18 | 2.37 | 346.18 |
 
 Stop rule: at 450 USD notional the task stops and P-01 chooses (raised from 350 to 400 USD on 2026-10-30, and to 450 USD on 2026-11-06, §0; C001-ADR-003).
 
