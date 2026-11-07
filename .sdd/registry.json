@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-07T19:20:12Z",
+  "generated_at": "2026-11-07T19:20:13Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -769,9 +769,9 @@
           "summary": "Found in C001-T-072 (release close-out, open C001-M-4 item): the toy change to G3 (evals/toy/toy-g3.eval.mjs, rows toy-g3-cfg-full and toy-g3-cfg-bare, chain driver evals/toy/chain.mjs, commit 4074c41) chains sessions of the real conductor from /architect:new to an approved G3 on cfg-full and cfg-bare, and neither row has a cap exception in C002-IF-010 §2.2, so every session runs at 0.50 USD. In the release runs one architect step costs 1.6 … 1.9 USD (TS-507, TS-508, TS-511) and a session that only presents a gate about 0.27 USD (TS-802), so a 0.50 USD session cannot finish a step and the chain would loop. P-01 (2026-11-07, Q-toy-g3-cap-01): 'Run it on both configs (Recommended)': both rows become rule-1 rows at 3.00 USD, one chain per configuration, at most 12 sessions and 16 USD notional each, counted toward no release-class pass rule.",
           "reporter": "jerome.lacube",
           "date": "2026-11-07",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-042 approved at G2/G3: toy-g3-cfg-full and toy-g3-cfg-bare rule-1 rows (90 rows: 17 rule-1, 70 rule-2) in IF-010 §2.2, NFR-105, TC-679 and caps.mjs; chain.mjs stops before the total plus the 3.00 USD cap passes 16 USD; critic CR-134, CR-135, CR-101…105 fixed (0525091)",
+          "closed_at": "2026-11-07"
         }
       ],
       "waivers": [
