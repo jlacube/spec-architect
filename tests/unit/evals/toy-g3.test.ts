@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -92,6 +92,23 @@ test("decide: done, failure and limits", () => {
   // An explicit session cap still applies: at 3.00 USD a 13.00 USD chain may start one more session under 16.
   assert.deepEqual(chainMod.decide({ chain: { sessions: [s(13)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 3 }), { go: true });
   assert.equal(chainMod.decide({ chain: { sessions: [s(1)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 15.5 }).code, 2);
+});
+
+test("resumeProblem (critic CR-109): a resume without --fresh needs a chain.json with at least one saved session", () => {
+  const base = mkdtempSync(join(tmpdir(), "toy-g3-resume-"));
+  try {
+    const dir = join(base, "cfg-full");
+    assert.match(chainMod.resumeProblem(dir), /no saved chain at .*chain\.json; start a new chain with --fresh/);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "chain.json"), "{ not json");
+    assert.match(chainMod.resumeProblem(dir), /is not valid JSON/);
+    writeFileSync(join(dir, "chain.json"), JSON.stringify({ cfg: "cfg-full", sessions: [] }));
+    assert.match(chainMod.resumeProblem(dir), /holds no saved session/);
+    writeFileSync(join(dir, "chain.json"), JSON.stringify({ cfg: "cfg-full", sessions: [{ n: 1, cost_usd: 0.27, failures: 0 }] }));
+    assert.equal(chainMod.resumeProblem(dir), null);
+  } finally {
+    removeTempDir(base);
+  }
 });
 
 test("toolchainFor: cfg-full detects all three tools, cfg-bare none", () => {

@@ -735,9 +735,9 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
    `TS-511` moved from rule 2 for defect D-039; the two `toy-g3` rows added for defect D-042; the
    evidence is in their table rows). Each
    session runs with `--cap-exception`, at the row's rerun cap of 3.00 USD (defect D-033; P-01 answer
-   to Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before), or 6.00 USD for the two `toy-g3`
-   rows, the only rows with a rerun cap of their own (defect D-043) and the row's own turn cap (40 for
-   `TS-213` and `TS-221`). The sessions at 0.50 USD of `TS-213`, `TS-215`, `TS-221` and the three `TS-318` rows
+   to Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before) and the row's own turn cap (40 for
+   `TS-213` and `TS-221`); the two `toy-g3` rows, the only rows with a rerun cap of their own, run at
+   6.00 USD instead (defect D-043). The sessions at 0.50 USD of `TS-213`, `TS-215`, `TS-221` and the three `TS-318` rows
    ended at the spend cap before the step their cases check (C002-T-048
    batches 5 and 6 and step X3, `docs/releases/regression-CHG-002.md`). Their latest sessions at
    1.50 USD cost 0.83 … 1.50 USD: `TS-213` 1.18 … 1.50 USD over 10 sessions, one of them ended at

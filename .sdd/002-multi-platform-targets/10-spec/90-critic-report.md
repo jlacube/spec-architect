@@ -1547,3 +1547,17 @@ Scope: `git diff 4074c41 1d1b010`, against D-041, D-042, Q-copilot-010-01 and th
 |---|---|---|---|---|---|
 | CR-134 | minor | IF-010 §2.2, NFR-105 | "at most 16 USD each": chain.mjs only stops before a session once the total is at or above 16, so a chain can end near 19 USD | conductor decision: chain.mjs stops when the total plus the 3.00 USD cap would pass 16, so a chain ends at or under 16 USD; state that rule | fixed: evals/toy/chain.mjs decide counts the next session at its 3.00 USD cap, no session starts when the total plus that cap would pass 16 USD; unit test in toy-g3.test.ts; rule stated in IF-010 §2.2 revision note, table row and rule 1, NFR-105, handoff and strategy |
 | CR-135 | minor | IF-010 §2.2 TS-511 row, rule 1 | "none that ran with the budget hidden has finished" contradicts the new D-042 evidence (1.696 … 1.903 USD, a pass) | dated note: as of D-039; the 3.00 USD sessions of 2026-11-06T12 finished at 1.696 … 1.903 USD | fixed: dated note (as of D-039; the 3.00 USD sessions of 2026-11-06T12 finished at 1.696 … 1.903 USD) in the TS-511 row and in rule 1; D-039 evidence unchanged |
+
+
+## Revision D-043 (2026-11-07)
+
+Scope: `git diff 2b50507 59d627d`, against D-043 and Q-toy-g3-cap-02. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-136 | major | DOD-012, NFR-105, IF-010 §2.2 | DOD-012 still allows caps.usd 1.50 or 3.00 only and has no place for the chain sessions; every 6.00 USD toy session would fail it | allow 6.00 USD for the two toy-g3 rows; add the chain bound (12 sessions, 30 USD plus overshoot), toward no pass rule; keep the six 3.00 USD cfg-full sessions valid | fixed: DOD-012 allows caps.usd 6.00 for the two toy-g3 rows only, keeps the six 3.00 USD cfg-full sessions of 2026-11-07 valid, and bounds the toy sessions to one chain per configuration of at most 12 sessions and 30 USD plus the overshoot of a capped session's last step, toward no pass rule |
+| CR-137 | minor | NFR-105, IF-010 §2.2 rule 1 | the "among them" list reads as if TS-225, TS-226-blocking and TS-511 were 6.00 USD rows; no overshoot clause; the toy-row clause attached to the turn-cap clause | move the list after the seventeen rule-1 rows; add the overshoot clause; reorder the clauses | fixed: NFR-105 names the four rows right after the seventeen rule-1 rows, then the caps (3.00 USD for fifteen, 6.00 USD for the toy-g3 rows) with the overshoot clause; IF-010 rule 1 puts the toy-row clause after the turn-cap clause |

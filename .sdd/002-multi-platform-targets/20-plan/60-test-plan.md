@@ -176,7 +176,10 @@ counts above are those of the main branch.
     rows are those of its list there (plan critic CR-63). **Rule 1:** every session runs with
     `--cap-exception` at the rule-1 rerun cap of **3.00 USD** (defect D-033; P-01 answer to
     Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before, from C002-T-070 on) and the row's own
-    turn cap. **Rule 2:** the row runs at its own caps, and each failed session that ended at the spend
+    turn cap. **Exception, the two toy-g3 rows** (defects D-042, D-043): every session at their own rerun
+    cap of 6.00 USD, in one chain per configuration whose own limits govern (at most 12 sessions and
+    30 USD notional); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
+    design, and does not go to P-01 under C002-RISK-038. **Rule 2:** the row runs at its own caps, and each failed session that ended at the spend
     cap is replaced by one session at the rule-2 rerun cap of 1.50 USD with
     `--cap-exception`. The command forms are those of `handoff.md` (Cross-change dependency). The runs
     and the pass rule are those of the task's tier (C001-ADR-003 release classes for C001-T-072;

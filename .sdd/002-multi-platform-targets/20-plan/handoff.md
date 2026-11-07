@@ -205,7 +205,7 @@ those rows. Until then no toy-change session runs, and the conductor records the
 `node evals/toy/chain.mjs` for that configuration, whose sessions run in the rule-1 form below
 (`run.mjs … --cap-exception --only toy-g3-<cfg> evals/toy/toy-g3.eval.mjs`, one session per run, each
 at 3.00 USD), at most 12 sessions and 16 USD notional per chain, ending at the G3 approval of the toy
-change; no session starts when the chain total plus the 3.00 USD session cap would pass 16 USD, so a chain ends at or under 16 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`; critic CR-134). These sessions count toward no pass rule of a release class, and the session-limit check
+change (**superseded by D-043**, below: 6.00 USD per session, 30 USD per chain); no session starts when the chain total plus the 3.00 USD session cap would pass 16 USD, so a chain ends at or under 16 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`; critic CR-134). These sessions count toward no pass rule of a release class, and the session-limit check
 below lists them apart from the release rows. Like the other edges, this one lives on the CHG-002
 side only.
 
@@ -224,7 +224,16 @@ form above, each session at 6.00 USD, at most 12 sessions and 30 USD notional pe
 starts when the chain total plus the row's 6.00 USD cap would pass 30 USD, so a chain ends at or under
 30 USD apart from the overshoot of a capped session's last step. **Order** (P-01's answer): first
 cfg-full, resumed from its saved state without `--fresh` (its six sessions and 14.54 USD count toward
-its 30 USD and its 12 sessions), then cfg-bare from a fresh start. **Forecast** (as presented to P-01):
+its 30 USD and its 12 sessions), then cfg-bare from a fresh start (`--fresh`). **Before the first resumed
+session** (plan critic CR-109) the conductor checks that the saved `chain.json` of cfg-full holds the six
+sessions, 14.54 USD in total, equal to the `sessions` of
+`evals/results/toy-g3-cfg-full-chain-partial-2026-11-07.json`; otherwise nothing runs and P-01 is asked.
+`chain.mjs` itself refuses a resume without a saved session (exit 3), so a lost state never restarts a
+chain from zero. **Cost to G3 for cfg-full** (estimate from the measured sessions; plan critic CR-106): the six sessions so far cost 14.54 USD (`/architect:new` 0.27, ideation 8.21 over three sessions, spec 6.06 over two capped sessions without the test designer's part). The rest of the spec phase, the test designer's and the architect's parts, the critic and G2, takes about one to two sessions at 6.00 USD (the architect alone used most of a 3.04 USD session, and one architect step costs 1.6 … 1.9 USD in the release runs), so about 4 … 9 USD; the plan phase to G3 about as much as ideation, 6 … 9 USD. So about 24 … 32 USD to G3, at or near the 30 USD limit: the chain may stop at its limit before G3. **On a limit stop** (`chain.mjs` exit 2, sessions or USD; plan critic CR-106)
+the conductor reports to P-01 with the partial result (the chain record, the phase reached, the cost);
+no further session runs and no new revision is made unless P-01 agrees. **Capped toy sessions** (plan
+critic CR-107): a toy session that ends at its 6.00 USD cap continues the chain, which is the chain's
+design, and does not go to P-01 under C002-RISK-038; the chain's own limits govern. **Forecast** (as presented to P-01):
 the release gate ends near 410 USD notional of its 450 USD stop. C002-T-076 still waits for the end
 of both chains (plan critic CR-103). Like the other edges, this one lives on the CHG-002 side only.
 
@@ -316,7 +325,7 @@ cap. So a run never mixes rule-1 rows with other rows:
 
 | Rows | Command form | Why |
 |---|---|---|
-| Rule 1 (the rows of list 1 of §2.2) | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <rule-1 rows> <case files>`, in a run of their own | every session at the rule-1 rerun cap, 3.00 USD from C002-T-070 on (defect D-033) |
+| Rule 1 (the rows of list 1 of §2.2) | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <rule-1 rows> <case files>`, in a run of their own | every session at the rule-1 rerun cap, 3.00 USD from C002-T-070 on (defect D-033); **exception**, the two toy-g3 rows: 6.00 USD, their own rerun cap, run one session per run by `evals/toy/chain.mjs` (defect D-043) |
 | Rule 2 (the rows of list 2), and every release case that no exception matches | `node evals/harness/run.mjs --host claude-code --auth subscription --tier <tier> --only <rows> <case files>`, without `--cap-exception` | own caps, 0.50 USD and 30 turns, or the row's own turn cap |
 | A rule-2 replacement, for a session that failed and ended at the spend cap | `node evals/harness/run.mjs --host claude-code --auth subscription --cap-exception --tier <tier> --only <row> <case file>`, one row per run | one session at 1.50 USD for that row only |
 
@@ -330,7 +339,7 @@ and `caps.turns`, `metrics.result_subtype`, the result, and whether it counts as
 checks:
 - the number of runs equals the row's release class in C001-ADR-003 (10 or 3, with the 10-run check
   after a 2 / 3 result);
-- every session of a rule-1 row ran at 3.00 USD (defect D-033); a session at 1.50 USD of such a row,
+- every session of a rule-1 row ran at 3.00 USD (defect D-033), except the two toy-g3 rows, listed apart below; a session at 1.50 USD of such a row,
   the eight `t082-d018` sessions included, is no run, and so are the four `TS-511` sessions at 0.50 and
   1.50 USD of 2026-10-30 and 2026-11-06 that ended at the spend cap (defect D-039);
 - every session at 1.50 USD of a rule-2 row replaces exactly one session that failed and ended at the

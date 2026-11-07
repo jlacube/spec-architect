@@ -6,7 +6,9 @@
 // Each session: `run.mjs --host claude-code --auth subscription --cap-exception --tier dev --runs 1
 // --only toy-g3-<cfg> --label <label> evals/toy/toy-g3.eval.mjs` (the rerun cap of the row's cap exception,
 // 6.00 USD, C002-IF-010 §2.2, defect D-043). --fresh removes the chain's saved state first. Exit 0 when G3 is approved and the end
-// state holds; 1 when a session fails (or run.mjs refuses it); 2 at a limit (sessions or notional USD).
+// state holds; 1 when a session fails (or run.mjs refuses it); 2 at a limit (sessions or notional USD); 3 when a
+// resume (no --fresh) finds no saved chain: chain.json missing, unreadable or without a session (critic CR-109),
+// so a lost state never restarts a chain from zero. A new chain starts with --fresh.
 // The USD limit (default 30, defect D-043) is checked before each session with the session's cap, read from the
 // row's cap exception (C002-IF-010 §2.2, defect D-042, critic CR-134): no session starts when the chain total plus
 // that cap would pass --max-usd, so a chain ends at or under --max-usd, apart from the overshoot of a capped
@@ -25,6 +27,23 @@ export const DEFAULT_MAX_USD = 30;
 /** The session cap of the row `toy-g3-<cfg>`: the rerun cap of its cap exception (C002-IF-010 §2.2), or null. */
 export function rowCapUsd(cfg) {
   return capException({ id: `toy-g3-${cfg}`, file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription" })?.rerunUsd ?? null;
+}
+
+/**
+ * Why a chain cannot resume from `dir` (no --fresh; critic CR-109), or null when its chain.json holds at least
+ * one saved session.
+ */
+export function resumeProblem(dir) {
+  const p = join(dir, "chain.json");
+  if (!existsSync(p)) return `chain: no saved chain at ${p}; start a new chain with --fresh`;
+  let chain;
+  try {
+    chain = JSON.parse(readFileSync(p, "utf8"));
+  } catch {
+    return `chain: ${p} is not valid JSON; nothing was run`;
+  }
+  if (!Array.isArray(chain?.sessions) || chain.sessions.length === 0) return `chain: ${p} holds no saved session; start a new chain with --fresh`;
+  return null;
 }
 
 /** The chain's notional total (USD) from its chain.json document. */
@@ -73,6 +92,13 @@ function main() {
   const sessionUsd = rowCapUsd(o.cfg);
   if (typeof sessionUsd !== "number") throw new Error(`chain: no cap exception with a rerun cap for toy-g3-${o.cfg} (C002-IF-010 §2.2)`);
   if (o.fresh) rmSync(dir, { recursive: true, force: true, maxRetries: 20, retryDelay: 250 });
+  else {
+    const problem = resumeProblem(dir);
+    if (problem) {
+      console.error(problem);
+      process.exit(3);
+    }
+  }
   const read = () => {
     const chain = existsSync(join(dir, "chain.json")) ? JSON.parse(readFileSync(join(dir, "chain.json"), "utf8")) : { sessions: [] };
     const ws = join(dir, "workspace");

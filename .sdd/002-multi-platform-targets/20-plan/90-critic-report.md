@@ -1196,3 +1196,19 @@ Scope: `git diff 4074c41 1d1b010`, against D-041, D-042, Q-copilot-010-01 and th
 | CR-103 | major | T-076, T-055, Q-copilot-010-01 | nothing ties Copilot 0.1.0 to the Claude Code 0.1.0 source | conductor decision: T-076 starts after the C001-M-4 toy chains end; step 1 and done-when check git diff --stat <C001 release candidate> <T-076 commit> -- plugins/architect/ lists no file, otherwise P-01 is asked for a new version | fixed: T-076 starts after the C001-M-4 toy chains end; step 1 and done-when check git diff --stat <C001 release candidate, the commit of the v0.1.0 tag> <T-076 commit> -- plugins/architect/ lists no file, else P-01 is asked for a new version; edge in handoff and work breakdown |
 | CR-104 | minor | M-07 exit criterion | T-054 named at 0.0.3 instead of 0.0.1 | "T-054 at 0.0.1, T-071 at 0.0.2 and 0.0.3, T-076 at 0.1.0" | fixed: M-07 criterion reads C002-T-054 at 0.0.1, C002-T-071 at 0.0.2 and 0.0.3, C002-T-076 at 0.1.0 |
 | CR-105 | minor | run sheets T-050, T-055, T-057 | stale pool figure (3.29 vs 7.70 USD); T-055 prerequisites omit T-076 and T-075; T-057 omits the T-076 commit | fix the three | fixed: T-050 sheet 7.70 USD before T-076; T-055 sheet prerequisites add T-076 and T-075 and the T-076 commit; T-057 sheet names T-076's release-candidate commit |
+
+
+## Revision D-043 (2026-11-07)
+
+Scope: `git diff 2b50507 59d627d`, against D-043 and Q-toy-g3-cap-02. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 3 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-106 | major | handoff D-043 edge, strategy, chain.mjs | the 30 USD total leaves cfg-full about two 6.00 USD sessions; no cost-to-G3 estimate; no action on another limit stop | conductor decision: add an estimate from the measured sessions; on a limit stop (exit 2) the conductor reports to P-01 with the partial result, no further session and no new revision unless P-01 agrees | fixed: cost-to-G3 estimate for cfg-full (about 24 … 32 USD from the measured sessions) in the handoff and the strategy; on a chain.mjs exit 2 the conductor reports to P-01 with the partial result, no further session or revision unless P-01 agrees |
+| CR-107 | minor | test plan §4.1, handoff, RISK-038 | rule-1 text still says 3.00 USD; unclear whether a toy session at its 6.00 USD cap stops the chain under RISK-038 | conductor decision: explicit exception for the toy-g3 rows in each place; a capped toy session continues the chain (that is the chain's design) and does not go to P-01 under RISK-038; the chain's own limits govern | fixed: exception for the two toy-g3 rows in test plan §4.1 rule 1, the handoff command-form table and session-limit check, and C002-RISK-038: a toy session at its 6.00 USD cap continues the chain and does not go to P-01, the chain's limits govern; D-042 edge marked superseded by D-043 |
+| CR-108 | minor | change.md D-043, Q-toy-g3-cap-02 | the summary lost "$6" from the quoted answer (shell expansion) | correction note in the strategy D-043 row; quote answers with $ in single quotes | fixed: correction note in the strategy D-043 row: the answer is 'Raise session cap to $6 (Recommended)'; answers with a $ are quoted in single quotes from now on |
+| CR-109 | minor | handoff D-043 edge, chain.mjs | a missing chain.json silently restarts the chain from zero | check before the first resumed session that chain.json holds the six sessions totalling 14.54 USD; otherwise stop | fixed: chain.mjs refuses a resume without --fresh when chain.json is missing, unreadable or has no session (exit 3, resumeProblem), with a unit test; the handoff checks before the first resumed session that chain.json holds the six sessions of 14.54 USD equal to the partial chain record, else nothing runs |
