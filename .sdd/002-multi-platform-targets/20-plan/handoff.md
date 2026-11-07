@@ -205,7 +205,7 @@ those rows. Until then no toy-change session runs, and the conductor records the
 `node evals/toy/chain.mjs` for that configuration, whose sessions run in the rule-1 form below
 (`run.mjs … --cap-exception --only toy-g3-<cfg> evals/toy/toy-g3.eval.mjs`, one session per run, each
 at 3.00 USD), at most 12 sessions and 16 USD notional per chain, ending at the G3 approval of the toy
-change. These sessions count toward no pass rule of a release class, and the session-limit check
+change; no session starts when the chain total plus the 3.00 USD session cap would pass 16 USD, so a chain ends at or under 16 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`; critic CR-134). These sessions count toward no pass rule of a release class, and the session-limit check
 below lists them apart from the release rows. Like the other edges, this one lives on the CHG-002
 side only.
 
@@ -258,9 +258,14 @@ a new step:
    `architect-sdd@0.0.3` is never published.
 4. **C002-T-055** releases Copilot at 0.1.0.
 
-**Handoff condition:** C002-T-076 starts after the G3 approval of the D-041 revision. Until then no
+**Handoff condition:** C002-T-076 starts after the G3 approval of the D-041 revision and after the
+C001-M-4 toy chains of C001-T-072 have ended (defect D-042; the conductor's decision on plan critic
+CR-103), so that no CHG-001 fix lands in `plugins/architect/` after its commit. Its step 1 checks
+that `git diff --stat <C001 release candidate> <its commit> -- plugins/architect/` lists no file, the
+C001 release candidate being the commit that C001-T-072's tag `v0.1.0` will point to; if it lists
+any, no session runs and the conductor asks P-01 for a new version. Until then no
 session of it runs, and the conductor records the blocked reason as "waits for the G3 approval of
-CHG-002 revision D-041". C002-T-050 and C002-T-057, P-01's runs, wait for C002-T-076; their blocked
+CHG-002 revision D-041", or "waits for the end of the C001-M-4 toy chains" after that approval. C002-T-050 and C002-T-057, P-01's runs, wait for C002-T-076; their blocked
 reason is "waits for C002-T-076 (Copilot evidence at 0.1.0)". **Cross-change:** C002-T-076 needs
 C001-T-072's version commit ab0cfc7, which is committed; a later CHG-001 commit that changes a file
 the packages are generated from moves the release-candidate commit, and before C002-T-055 it goes to
@@ -441,7 +446,7 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
-| Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | the next batch of Copilot CLI eval sessions, of whichever task runs it (no such batch is planned in CHG-002 after C002-T-054; a re-run of C002-T-054 step 4 at a new version, or a later change) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031", and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
+| Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
 | Q-copilot-010-01: the Copilot dry run refuses the 0.0.3 candidate 4ef1d61 with ERR-REL-007 after the CHG-001 release-gate fixes; ship 0.1.0 or 0.0.3 (defect D-041; `questions-log.md` round 2026-11-07) | C002-T-076, C002-T-050, C002-T-057, C002-T-075, C002-T-055 | settled: P-01 answered "Ship 0.1.0 on both hosts (Recommended)"; C002-T-076 retakes the 24 Copilot CLI sessions at 0.1.0, stopped at 15.00 USD of the Copilot pool; the P-01 tasks and the run sheets at 0.1.0 |
 | Q-toy-g3-cap-01: the C001-T-072 toy change to G3 has no cap exception, and a 0.50 USD session cannot finish a phase step (defect D-042; `questions-log.md` round 2026-11-07) | the D-042 revision commit; C001-T-072 | settled: P-01 answered "Run it on both configs (Recommended)"; `toy-g3-cfg-full` and `toy-g3-cfg-bare` are rule-1 rows in C002-IF-010 §2.2 and `caps.mjs` (90 rows, 17 rule-1, 70 rule-2), no fix task; one chain per configuration, at most 12 sessions and 16 USD notional each, no release-class run |
 | Q-std-cap-01: `TS-313`, a release-standard row without an exception, failed at the 0.50 USD cap in the standard prevalidation of C001-T-072 (defect D-040; `questions-log.md` round 2026-11-06) | the D-040 revision commit; C001-T-072 | settled: P-01 answered "Rule 2 for the whole class (Recommended)"; the forty-three rows are rule-2 rows in C002-IF-010 §2.2 and `caps.mjs` (88 rows, 15 rule-1, 70 rule-2), no fix task; after the G3 approval of the D-040 revision the capped `TS-313` session is no run and is replaced once at 1.50 USD |

@@ -21,7 +21,7 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
   the release-candidate commit that C002-T-076 records. The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 13 VS Code chat sessions, or about 26 if one repeat is needed. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
-  pool (3.29 of 30 USD) is not touched.
+  pool (7.70 of 30 USD before T-076) is not touched.
 
 ## Steps
 

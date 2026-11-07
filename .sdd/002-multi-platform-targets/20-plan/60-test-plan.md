@@ -818,7 +818,8 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   result, the `usage` and `cap-close` records and the ledger entry of a rejected session; C002-TC-931
   (C002-TS-705) checks what the OpenCode and Copilot CLI runners give their hosts.
   **Copilot CLI transcript search** (spec critic CR-108; the assumption D-031 of C002-IF-010 §2.2):
-  the next batch of Copilot CLI eval sessions, of whichever task runs it, searches every session's
+  the next batch of Copilot CLI eval sessions, C002-T-076 step 6 at 0.1.0 (revision D-041; plan critic
+  CR-102), searches every session's
   transcript for model text that names its credits, its credit limit or a session budget that the
   case did not give, with the spend and turn terms of `50-tasks/T-069-fix-claude-code-spend-cap-hidden-budget.md`
   step 6(d) plus `credit` and `AI Credits`. Each hit is quoted in that task's report. A hit is a

@@ -1179,3 +1179,20 @@ Scope: `git diff b4d514d c7defb5`, against D-040 and Q-std-cap-01. Lint: the 9 w
 | CR-98 | minor | handoff, release evidence | no re-mark step for TS-313's "run 1: fail"; the evidence's "had returned" is wrong | add a step at G3 approval: re-mark as no run and correct the wording | fixed: handoff step at G3 approval: the evidence re-marks TS-313's run 1 as no run and corrects the wording; the file stays with the runner |
 | CR-99 | minor | TC-679, cap-exceptions test | fixed change-folder path breaks once CHG-001 is archived | use specFile("001", …) | fixed: the class test reads C001-ADR-003 through specFile("001", …) |
 | CR-100 | minor | Q-std-cap-01 | entry filed under the D-039 round | add a D-040 round heading | fixed: D-040 round heading added above Q-std-cap-01 |
+
+
+## Revision D-041 and D-042 (2026-11-07)
+
+Scope: `git diff 4074c41 1d1b010`, against D-041, D-042, Q-copilot-010-01 and the toy-change question. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-101 | major | T-076, test plan §4.1 rule 8 | nothing enforces the 15.00 USD stop; one run.mjs call can end near 19.70 USD | rule-8 form with a 15.00 USD limit (T + H ≤ 15.00); batches small enough that T plus the batch caps stays at or under 15.00; ledger check between batches | fixed: T-076 stop in rule-8 form, T + H ≤ 15.00 USD; batches of n sessions with T + n × 0.55 USD ≤ 15.00 from the ledger total (13 or fewer from 7.70), ledger check after each batch; in preconditions, step 4, verification and done-when |
+| CR-102 | major | T-076, handoff open points, spec CR-108 | the Copilot transcript search for budget text is owned by "the next batch"; T-076 is that batch and omits it | add the search (T-069 step 6(d) terms plus credit, AI Credits; every hit quoted) to T-076 step 6 and done-when; owner C002-T-076 in the handoff | fixed: T-076 step 6 and done-when give the Copilot CLI transcript search (T-069 step 6(d) terms plus credit and AI Credits, every hit quoted); handoff open point owned by C002-T-076; test plan §6 Revision D-031 names C002-T-076 step 6 |
+| CR-103 | major | T-076, T-055, Q-copilot-010-01 | nothing ties Copilot 0.1.0 to the Claude Code 0.1.0 source | conductor decision: T-076 starts after the C001-M-4 toy chains end; step 1 and done-when check git diff --stat <C001 release candidate> <T-076 commit> -- plugins/architect/ lists no file, otherwise P-01 is asked for a new version | fixed: T-076 starts after the C001-M-4 toy chains end; step 1 and done-when check git diff --stat <C001 release candidate, the commit of the v0.1.0 tag> <T-076 commit> -- plugins/architect/ lists no file, else P-01 is asked for a new version; edge in handoff and work breakdown |
+| CR-104 | minor | M-07 exit criterion | T-054 named at 0.0.3 instead of 0.0.1 | "T-054 at 0.0.1, T-071 at 0.0.2 and 0.0.3, T-076 at 0.1.0" | fixed: M-07 criterion reads C002-T-054 at 0.0.1, C002-T-071 at 0.0.2 and 0.0.3, C002-T-076 at 0.1.0 |
+| CR-105 | minor | run sheets T-050, T-055, T-057 | stale pool figure (3.29 vs 7.70 USD); T-055 prerequisites omit T-076 and T-075; T-057 omits the T-076 commit | fix the three | fixed: T-050 sheet 7.70 USD before T-076; T-055 sheet prerequisites add T-076 and T-075 and the T-076 commit; T-057 sheet names T-076's release-candidate commit |

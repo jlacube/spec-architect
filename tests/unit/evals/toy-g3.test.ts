@@ -76,6 +76,14 @@ test("decide: done, failure and limits", () => {
   assert.equal(chainMod.decide({ chain: { sessions: [s(1), s(1), s(1)] }, done: false, maxSessions: 3, maxUsd: 10 }).code, 2);
   assert.equal(chainMod.decide({ chain: { sessions: [s(6), s(4)] }, done: false, maxSessions: 5, maxUsd: 10 }).code, 2);
   assert.equal(chainMod.chainUsd({ sessions: [s(0.1), s(0.2), { cost_usd: null }] }), 0.3);
+  // Critic CR-134: the next session counts at its 3.00 USD rule-1 cap, so no session starts when the total plus
+  // that cap would pass --max-usd (13.00 + 3.00 = 16 starts; 13.01 + 3.00 does not), and a chain ends at or under it.
+  assert.deepEqual(chainMod.decide({ chain: { sessions: [s(6.5), s(6.5)] }, done: false, maxSessions: 12, maxUsd: 16 }), { go: true });
+  const near = chainMod.decide({ chain: { sessions: [s(6.5), s(6.51)] }, done: false, maxSessions: 12, maxUsd: 16 });
+  assert.equal(near.go, false);
+  assert.equal(near.code, 2);
+  assert.match(near.why, /3 USD cap would pass --max-usd 16/);
+  assert.equal(chainMod.decide({ chain: { sessions: [s(1)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 15.5 }).code, 2);
 });
 
 test("toolchainFor: cfg-full detects all three tools, cfg-bare none", () => {

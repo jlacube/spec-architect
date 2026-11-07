@@ -1533,3 +1533,17 @@ Scope: `git diff b4d514d c7defb5`, against D-040 and Q-std-cap-01. Lint: the 9 w
 | CR-131 | major | IF-010 §2.2 rule 2, Q-std-cap-01 | the growth range 1.11 … 3.79× is false as written: TS-622 is 0.97× and TS-221 0.23×, neither named; the baseline is unstated | state the baseline and exclusions or list the rows outside the range; keep the log as presented, correction note in the strategy | fixed: IF-010 rule 2 states the baseline, gives 0.90 … 3.79× over eighteen rows and names the eleven left out (TS-622 0.97×, TS-221 0.23×); Q-std-cap-01 stays as presented, correction note in the strategy |
 | CR-132 | minor | IF-010 §2.2 rule 2 | "a replacement is a run whatever its result … either one stops C001-T-072" reads as a passing replacement stopping the run | "a failed replacement and a failure not at the cap each stop C001-T-072" | fixed: IF-010 rule 2 and the handoff say a failed replacement and a failure not at the cap each stop C001-T-072 |
 | CR-133 | minor | IF-010 §2.2, cap-exceptions test, C001-ADR-003 | "release-high and injection rows only" and "no variant is left out" overclaim: C001-TC-1002's cfg-full configuration runs inside callers-full, which has no row and no release result | conductor decision: add callers-full as a rule-2 row and run it at release; correct the test comment | fixed: callers-full is a rule-2 row (88 rows, 70 rule-2), checked as a plain 3-run row; the class test maps C001-TC-1002 to it and its comment is corrected |
+
+
+## Revision D-041 and D-042 (2026-11-07)
+
+Scope: `git diff 4074c41 1d1b010`, against D-041, D-042, Q-copilot-010-01 and the toy-change question. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-134 | minor | IF-010 §2.2, NFR-105 | "at most 16 USD each": chain.mjs only stops before a session once the total is at or above 16, so a chain can end near 19 USD | conductor decision: chain.mjs stops when the total plus the 3.00 USD cap would pass 16, so a chain ends at or under 16 USD; state that rule | fixed: evals/toy/chain.mjs decide counts the next session at its 3.00 USD cap, no session starts when the total plus that cap would pass 16 USD; unit test in toy-g3.test.ts; rule stated in IF-010 §2.2 revision note, table row and rule 1, NFR-105, handoff and strategy |
+| CR-135 | minor | IF-010 §2.2 TS-511 row, rule 1 | "none that ran with the budget hidden has finished" contradicts the new D-042 evidence (1.696 … 1.903 USD, a pass) | dated note: as of D-039; the 3.00 USD sessions of 2026-11-06T12 finished at 1.696 … 1.903 USD | fixed: dated note (as of D-039; the 3.00 USD sessions of 2026-11-06T12 finished at 1.696 … 1.903 USD) in the TS-511 row and in rule 1; D-039 evidence unchanged |

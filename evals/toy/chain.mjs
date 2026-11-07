@@ -7,10 +7,14 @@
 // --only toy-g3-<cfg> --label <label> evals/toy/toy-g3.eval.mjs` (the rule-1 cap of the row's cap exception,
 // C002-IF-010 §2.2). --fresh removes the chain's saved state first. Exit 0 when G3 is approved and the end
 // state holds; 1 when a session fails (or run.mjs refuses it); 2 at a limit (sessions or notional USD).
+// The USD limit is checked before each session with the session's cap (C002-IF-010 §2.2, defect D-042, critic
+// CR-134): no session starts when the chain total plus the 3.00 USD rule-1 cap would pass --max-usd, so a chain
+// ends at or under --max-usd, apart from the overshoot of a capped session's last step.
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { RULE1_RERUN_USD } from "../harness/caps.mjs";
 import { ROOT } from "../harness/fixtures.mjs";
 import { CONFIGS, nextStep, stateDir, statusOf } from "./toy-g3.eval.mjs";
 
@@ -19,16 +23,18 @@ export const chainUsd = (chain) => Math.round((chain?.sessions ?? []).reduce((s,
 
 /**
  * What the driver does next: `{ go: true }` or `{ go: false, code, why }`. `done` (G3 approved) ends with 0
- * when the last session had no failure; `lastExit` non-zero ends with 1; a limit reached ends with 2.
+ * when the last session had no failure; `lastExit` non-zero ends with 1; a limit reached ends with 2. The USD
+ * limit counts the next session at its cap `sessionUsd` (the rule-1 cap, 3.00 USD): no session starts when the
+ * chain total plus that cap would pass `maxUsd` (critic CR-134).
  */
-export function decide({ chain, done, lastExit = 0, maxSessions, maxUsd }) {
+export function decide({ chain, done, lastExit = 0, maxSessions, maxUsd, sessionUsd = RULE1_RERUN_USD }) {
   const n = chain?.sessions?.length ?? 0;
   const last = chain?.sessions?.at(-1);
   if (lastExit !== 0) return { go: false, code: 1, why: `session ${n} failed (run.mjs exit ${lastExit})` };
   if (done) return last && last.failures > 0 ? { go: false, code: 1, why: `G3 approved, but session ${n} has ${last.failures} failure(s)` } : { go: false, code: 0, why: `G3 approved after ${n} session(s)` };
   if (n >= maxSessions) return { go: false, code: 2, why: `${n} sessions, the --max-sessions limit, and G3 not approved` };
   const usd = chainUsd(chain);
-  if (usd >= maxUsd) return { go: false, code: 2, why: `${usd} USD notional, at or above --max-usd ${maxUsd}, and G3 not approved` };
+  if (usd + sessionUsd > maxUsd) return { go: false, code: 2, why: `${usd} USD notional, and one more session at its ${sessionUsd} USD cap would pass --max-usd ${maxUsd}; G3 not approved` };
   return { go: true };
 }
 

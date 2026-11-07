@@ -49,14 +49,20 @@ and the clean-profile run on the 0.1.0 packages.
 
 - **The G3 approval of revision D-041.** Until it, no session of this task runs.
 - **Cross-change:** C001-T-072's version commit ab0cfc7 (0.1.0) is in the history, and `dist/`
-  holds the 0.1.0 packages. This edge lives on the CHG-002 side only (`../handoff.md`).
+  holds the 0.1.0 packages. **The C001-M-4 toy chains have ended** (the toy change to G3 of C001-T-072
+  on cfg-full and cfg-bare, defect D-042; the conductor's decision on plan critic CR-103), so that no
+  CHG-001 fix lands in `plugins/architect/` after this task's commit. The **C001 release candidate**
+  is the commit that C001-T-072's tag `v0.1.0` will point to. These edges live on the CHG-002 side
+  only (`../handoff.md`).
 - C002-T-054, C002-T-066 and C002-T-071 done.
 - **Pools:** the 24 Copilot CLI sessions from the Copilot pool under rule 8 of test plan §4.1. The
   pool stays 30 USD, with 7.70 USD spent after C002-T-071. **Stop at 15.00 USD** (P-01's instruction
-  of 2026-11-07, relayed by the conductor): no further Copilot CLI session starts once the
-  `copilot` ledger total reaches 15.00 USD, and the conductor asks P-01. The 0.0.3 run cost
-  2.32 USD, so about 2.40 USD is expected. The option presented to P-01 gave about 8 USD as a
-  conservative figure.
+  of 2026-11-07, relayed by the conductor), in the form of rule 8 with 15.00 USD as the limit: a
+  session starts only if T + H ≤ 15.00 USD, T the ledger total of the `copilot` entries and H as in
+  rule 1; otherwise no further Copilot CLI session starts and the conductor asks P-01 (plan critic
+  CR-101). `run.mjs` checks rule 8 against 30 USD only, so the 15.00 USD limit is kept by batches
+  (step 4). The 0.0.3 run cost 2.32 USD, so about 2.40 USD is expected. The option presented to P-01
+  gave about 8 USD as a conservative figure.
 - No OpenRouter pool is used, and no OpenCode session runs (OpenCode moved to CHG-003).
 - REF-WIN with the tested Copilot hosts (VS Code Insiders 1.142.0-insider, Copilot CLI 1.0.98).
   The conductor checks `copilot --version` before step 4: a host that updated itself is not the
@@ -69,7 +75,11 @@ and the clean-profile run on the 0.1.0 packages.
 
 1. **Release-candidate commit.** Record the commit of this round. It holds C001-T-072's 0.1.0 fixes,
    the version commit ab0cfc7, and every CHG-002 change. Check that `plugin.json` there gives
-   **0.1.0**. Any later commit that changes a file the packages are generated from moves the
+   **0.1.0**. **Same source as Claude Code 0.1.0** (plan critic CR-103): run
+   `git diff --stat <C001 release candidate> <this commit> -- plugins/architect/`, the C001 release
+   candidate being the commit that C001-T-072's tag `v0.1.0` points to. It must list no file. If it
+   lists any, the Copilot package would differ from the Claude Code 0.1.0 source: no session of this
+   task runs, and the conductor asks P-01 for a new version. Any later commit that changes a file the packages are generated from moves the
    release-candidate commit (ERR-REL-007 again). Before C002-T-055, such a commit goes to P-01, who
    decides whether the evidence is retaken again.
 2. **Shared unpaid steps.** At that commit: C002-T-048 step 5 (the regression set, as
@@ -83,6 +93,13 @@ and the clean-profile run on the 0.1.0 packages.
      step 5: `ROUTE-auditor-copilot-cli`, `INJ-01` … `INJ-22` and `TS-359` (`TS-336` is not
      applicable under `sdd-mcp-server`). They run with
      `--copilot-model claude-opus-5.5=claude-sonnet-5.5`, under rule 8 and the 15.00 USD stop above.
+   - **Batches** (plan critic CR-101): the case set runs in batches of `--only` rows. Before each
+     batch the conductor reads T from the ledger `evals/results/spend-chg002.json`, and the batch
+     holds at most n sessions with T + n × 0.55 USD ≤ 15.00 USD: each session counted at its
+     0.50 USD spend cap plus the 0.05 USD overshoot allowance of rule 1. From 7.70 USD that is
+     13 sessions or fewer, so the 24 rows take at least two batches. After each batch the conductor
+     checks the ledger again: every session of the batch has its entry, and the next batch is sized
+     from the new T. When no session fits, nothing more runs and P-01 is asked.
    - **Results:** label the result files `t076`. `docs/releases/copilot/0.1.0/injection.json` is
      written from them. `INJ-21` keeps 0.50 USD on Copilot CLI (C002-IF-010 §2.2, Caps of injection
      rows).
@@ -105,21 +122,32 @@ and the clean-profile run on the 0.1.0 packages.
    - the **near-cap list** (plan critic CR-80; spec CR-122): every Copilot CLI injection row whose
      0.1.0 session ended at a cap or came within 0.09 USD of its spend cap, with its recorded cost,
      its cap and its end, or "none";
-   - the dry-run output of step 5.
+   - the dry-run output of step 5;
+   - the **Copilot CLI transcript search** (spec critic CR-108; plan critic CR-102; test plan §6
+     "Revision D-031"): the model text of every message of every session of step 4, of the session
+     agent and of each subagent, searched for the terms of
+     `T-069-fix-claude-code-spend-cap-hidden-budget.md` step 6(d) (`budget`, `USD`,
+     `spending limit`, `remaining`, `$` followed by a figure, `Budget limit reached`, `turn`,
+     `turns left`, `turn limit`, `max turns`) plus `credit` and `AI Credits`. Every hit is quoted
+     with its context, or the report says "no hit". A hit that names the session's credits, its credit
+     limit or a session budget that the case did not give is a defect against C002-REQ-642, and P-01
+     decides the fix.
 
    C002-T-050 and C002-T-057 then run on the package of this commit.
 
 ## Verification
 
 - `npm run package`, `npm run check`, `npm run replay -- suite` (both shells), C002-T-048 step 5
-- `node evals/harness/run.mjs --host copilot-cli --tier dev --label t076 --copilot-model claude-opus-5.5=claude-sonnet-5.5 --task C002-T-076 --step 4 <the Copilot CLI case set>`
+- `node evals/harness/run.mjs --host copilot-cli --tier dev --label t076 --copilot-model claude-opus-5.5=claude-sonnet-5.5 --task C002-T-076 --step 4 --only <the rows of one batch> <the Copilot CLI case files>`, one call per batch
 - `node scripts/release-check.mjs --target copilot --dry-run` at the release-candidate commit
 
 ## Done when
 
 - [ ] The release-candidate commit holds the CHG-001 release-gate fixes and every CHG-002 change, at package version 0.1.0; the report names both
+- [ ] The task started after the C001-M-4 toy chains ended, and `git diff --stat <C001 release candidate> <release-candidate commit> -- plugins/architect/` listed no file, the C001 release candidate being the commit of C001-T-072's tag `v0.1.0`; the report gives both commits and the empty output (CR-103)
 - [ ] C002-T-048 step 5 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the Copilot release replays, reports under `docs/releases/copilot/0.1.0/`
-- [ ] The 24 Copilot CLI sessions ran at 0.1.0 from the Copilot pool, `TS-359` included, every session in the ledger, the pool total at most 15.00 USD; `docs/releases/copilot/0.1.0/injection.json` holds the Copilot CLI injection case set, no entry acted upon; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both
+- [ ] The 24 Copilot CLI sessions ran at 0.1.0 from the Copilot pool, `TS-359` included, every session in the ledger, in batches each sized so that T + n × 0.55 USD ≤ 15.00 USD from the ledger total read before it, with a ledger check after each batch, and the pool total at most 15.00 USD (CR-101); `docs/releases/copilot/0.1.0/injection.json` holds the Copilot CLI injection case set, no entry acted upon; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both
 - [ ] The task report lists the Copilot CLI injection rows at or within 0.09 USD of their cap at 0.1.0, or "none" (CR-80, spec CR-122)
 - [ ] The Copilot release-check dry run at that commit refuses on nothing other than the records of C002-T-050 and C002-T-057 (D-041 closes on it)
+- [ ] The report gives the Copilot CLI transcript search of step 6, every hit quoted or "no hit" (CR-102)
 - [ ] Progress reported: `sdd task set C002-T-076 --status done --commit <sha>`

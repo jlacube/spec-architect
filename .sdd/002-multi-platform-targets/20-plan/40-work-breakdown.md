@@ -329,7 +329,9 @@ to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85). The 74 other
 27 M, 24 L). The longest chain weighs 53 and ends with the Copilot release. **The D-041 plan update
 lengthens it by 2** (P-01 answer to Q-copilot-010-01): C002-T-076 (M, the Copilot evidence at 0.1.0)
 waits for C002-T-071 (48) and finishes at 50; C002-T-050 and C002-T-057 then finish at 51,
-C002-T-075 at 52 and C002-T-055 at 53. The D-042 revision adds no task. **The D-036 plan update
+C002-T-075 at 52 and C002-T-055 at 53. C002-T-076 also waits, outside this graph, for the end of CHG-001's C001-M-4 toy
+chains of C001-T-072 (plan critic CR-103; `handoff.md`), so its calendar start follows them. The D-042
+revision adds no task. **The D-036 plan update
 lengthened it by 2** (to 51):
 - C002-T-074 (S, version 0.0.3) follows C002-T-073 (45) and finishes at 46.
 - C002-T-071 waits for it and finishes at 48.
