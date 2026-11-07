@@ -942,6 +942,17 @@ third fresh run.**
   - **Reading: a check stricter than its purpose (grader false positive), from a matching bug.** It is
     not behaviour, environment or a fixture gap.
 
+**D-027 (harness fix, commit `561c907`, relayed by the conductor).**
+
+- `intelCalls` in `evals/cap10/carto.mjs` now counts a Bash command only when ripwire or ast-grep is the
+  program (`INTEL_COMMAND`), with a unit test. `npm run check` exits 0.
+- The conductor re-checked the 443 stored Bash commands of the cartographer rows: only the `sed` line of
+  TS-1004's run 3 changes, so no other stored verdict moves.
+- The conductor took the stricter option (b): a **fresh TS-1004 × 3** on the D-027 harness replaces its
+  set, rather than re-grading the stored run.
+- Then fresh × 3 for TS-1013, `impact`, TS-127 and TS-315 (D-026 regression group), and runs 2 and 3 of
+  TS-121, TS-910, TS-1012 and TS-203.
+
 **Weekly stop:** the reading after TS-511 was 85% (P-01's reserve stop). The prevalidation would stop
 here even without the failure.
 
