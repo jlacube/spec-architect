@@ -7,7 +7,7 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:c934cea07d98c1674d47f0d9bc79d97e2545897e692027d0cdf86d2b737a648e", approved_at: 2026-11-07, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:3026c07385f67358e24470851ce395e5ef0c98ad7b40dfc403499fe8a8bd90ab", approved_at: 2026-11-07, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:a3919effa7b0e40787af7c2266ebda4eefe34ba4ccfd9e7353193c20ddeb408e", approved_at: 2026-11-07, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
@@ -290,6 +290,17 @@ waivers:
   - { item: C002-REQ-601, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-TS-634, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-211, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-212, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-213, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-503, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-504, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-505, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-506, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-507, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-601, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-TS-634, gate: 10-spec, date: 2026-11-07, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
 ---
 # CHG-002 — Multi-platform targets
 
@@ -384,3 +395,4 @@ waivers:
 | 2026-11-07 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-11-07 | G2 (spec) | **Revise** | "Revision for CHG-002 D-043: the toy-g3-cfg-full and toy-g3-cfg-bare rows of C002-IF-010 §2.2 run at 6.00 USD per session instead of 3.00 (a per-row rerun cap in rule 1), chain limit 30 USD per configuration, NFR-105, P-01 Q-toy-g3-cap-02" | none | unavailable |
 | 2026-11-07 | G3 (plan) | **Revise** | "Plan revision for D-043: toy-g3 rows at 6.00 USD per session, chain limit 30 USD, cfg-full resumed from its saved state; strategy, test plan TC-679, handoff edge and session-limit check, P-01 Q-toy-g3-cap-02" | none | unavailable |
+| 2026-11-07 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
