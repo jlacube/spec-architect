@@ -109,7 +109,7 @@ test("the chain on a real workspace: start, no-progress session, saved state, re
     assert.equal(chain.sessions.length, 1);
     assert.equal(chain.sessions[0].cost_usd, 0.25);
     assert.equal(chain.sessions[0].step.command, "new");
-    assert.match(lines[0], /toy-g3-cfg-bare session 1/);
+    assert.match(lines[0] ?? "", /toy-g3-cfg-bare session 1/);
     // The next session starts from the saved workspace, here after a change was created there.
     execFileSync(process.execPath, [join(repoRoot(), "plugins", "architect", "scripts", "sdd.mjs"), "change", "new", toy.TITLE, "--profile", "lite", "--kind", "brownfield"], { cwd: join(dir, "workspace") });
     const ws2 = mkdtempSync(join(tmpdir(), "sdd-toy-g3-ws-"));
