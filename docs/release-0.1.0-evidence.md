@@ -9,7 +9,10 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 **Status:** paid release evals **complete** (2026-10-28 – 2026-11-07): every class meets its DOD-G-01 floor
 (§4.7): routing 350 / 350 after re-grade, release-high 218 / 220 (each row ≥ 9 / 10), injection 110 / 110 valid
 with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6). Total **350.95 USD notional**
-(§4.5). **Open:** TC-1102 (P-01), the unpaid close-out (§6) and D-023.
+(§4.5). Unpaid close-out done 2026-11-07 (§2, §5, §6, §8): version 0.1.0, release candidate **`b6f1509`**,
+`npm run check` exit 0 in all four shell and Node runs, `sdd lint 001` 0 findings, DOD-G-04 review recorded,
+D-023 closed (41c3466). **Open:** TC-1102 (P-01, run sheet `docs/runsheets/T-072-clean-profile-install.md`), the
+toy change through G3 on cfg-full and cfg-bare (§5; paid), then the local tag `v0.1.0` and the task report.
 
 ## 0. Run decisions
 
@@ -73,10 +76,59 @@ Checked 2026-10-28 on `799f903` (working tree: untracked `bench/results/` files 
 | 22.22.3 (npm 10.9.8) | Git Bash | 799f903 | 0 (2026-10-28, about 28 min) | 1,772 of 1,773 pass, 1 skipped (POSIX-only); 62 of 62 lint fixtures; all ten steps PASS | 95.60% lines (9,966 / 10,425), 83.28% branches (4,746 / 5,699); thresholds 85 / 75 | local, not committed |
 | 20.20.2 (npm 10.8.2) | Git Bash | 799f903 | 0 (2026-10-28, about 9 min) | 1,772 of 1,773 pass, 1 skipped; 62 of 62 lint fixtures; nine steps PASS | SKIP with its reason (Node 20 test-runner coverage merge crash; C001-NFR-502 measured on Node 22.22.3) | local, not committed |
 
-The PowerShell 7 runs of C001-TC-1127 (two more of the four) are still to run at the release commit.
-
 `sdd lint 001`: 0 errors, 0 warnings, 0 info (2026-10-28). Workspace `sdd lint`: the 9 waived
 LINT-DELTA-001 findings of CHG-002 only (C002-DEC-008; they end when CHG-001 is archived, C001-T-075).
+
+### 2.1 At the release candidate (close-out, 2026-11-07)
+
+**Release candidate `b6f1509`.** `ab0cfc7` bumps the version to 0.1.0 (§8). `64a859c` and `b6f1509` are test-only:
+they add `maxRetries: 10, retryDelay: 200` to the temp-folder cleanup of the tests that plant and run stub
+executables (`tests/integration/cli/helpers.ts`, `cap06/runner-caps.test.ts`, `cli/serena-user-data.test.ts`,
+`mcp/shell.test.ts`, `tests/fixtures/fx-tgz.ts`), because on Node 20 the unlink of a just-run stub `.exe` failed with
+`EPERM` (history below). Later commits of the close-out change documentation only (`docs/`, `CHANGELOG.md`,
+`evals/README.md`): `git diff --stat b6f1509 HEAD` lists no file under `src/`, `scripts/`, `plugins/` or `tests/`.
+
+C001-TC-1127 (`tests/manual/TC-1127.md`): four sequential runs at `b6f1509`, nothing else running, the given Node first
+in `PATH` for that run only; working tree clean apart from untracked `bench/results/`. Logs in the task scratch
+folder, not committed.
+
+| # | Shell | Node (npm) | Start | Exit | Time | Steps | Tests (pass / fail / skip of 1,782) | Lint fixtures | Encoding (files written by the CLI) | Coverage over `src/` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | PowerShell 7.6.9 | 20.20.2 (10.8.2) | 17:06 | **0** | 492 s | 9 PASS, coverage SKIP | 1,781 / 0 / 1 | 62 / 62 | 0 of 634 | SKIP with its reason (Node 20 coverage merge crash, C001-NFR-502 Environment) |
+| 2 | Git Bash 5.2.26 | 20.20.2 (10.8.2) | 17:15 | **0** | 512 s | 9 PASS, coverage SKIP | 1,781 / 0 / 1 | 62 / 62 | 0 of 634 | SKIP with its reason |
+| 3 | Git Bash 5.2.26 | 22.22.3 (10.9.8) | 18:08 | **0** | 1,206 s | 10 PASS | 1,781 / 0 / 1 | 62 / 62 | 0 of 634 | **95.60% lines** (9,966 / 10,425), **83.22% branches** (4,742 / 5,698); thresholds 85 / 75 |
+| 4 | PowerShell 7.6.9 | 22.22.3 (10.9.8) | 17:46 | **0** | 1,259 s | 10 PASS | 1,781 / 0 / 1 | 62 / 62 | 0 of 634 | **95.60% lines** (9,966 / 10,425), **83.24% branches** (4,744 / 5,699); thresholds 85 / 75 |
+
+Steps: typecheck, validate (Claude Code through `CLAUDE_CODE_EXECPATH`), build, tests, fixtures, encoding, structure,
+targets, tarball, coverage. The only skipped test is `lookup (POSIX): a regular file with execute permission`
+(`# SKIP POSIX only`). Encoding scope (a): fx-large 0 of 622 and fx-empty 0 of 12 files violate UTF-8 without BOM, LF;
+scope (b), reported only: 1 of 348 `.sdd/` files (`.sdd/002-multi-platform-targets/10-spec/20-capabilities/CAP-05-cli-distribution/acceptance.md`,
+CR), as at `799f903`. Coverage reports `src/mcp/handlers.ts` as not loaded by any test (0 of its lines; the figure
+is over all 124 files and passes). After the four runs `git status` shows no tracked change.
+
+**Reruns and failed runs** (each named; none is counted above):
+
+| Commit | Run | Exit | Failing test | Cause | Action |
+|---|---|---|---|---|---|
+| `ab0cfc7` | Git Bash, Node 22.22.3 | 0 (1,303 s) | — | — | superseded by `b6f1509` |
+| `ab0cfc7` | Git Bash, Node 20.20.2 | 1 | C002-TS-675 row 1 (`host-version.test.ts`) | `EPERM` unlinking a just-run stub `opencode.exe` in cleanup | rerun once: exit 0 (481 s) |
+| `ab0cfc7` | PowerShell 7, Node 20.20.2 | 1 | C002-TS-675 row 7 | same `EPERM` (`opencode.exe`) | rerun once: exit 1, C002-TS-676 (`runner-caps.test.ts`), same `EPERM`. Not a known flake, so fixed: `64a859c` |
+| `64a859c` | Git Bash, Node 22.22.3 / 20.20.2 | 0 / 0 | — | — | superseded by `b6f1509` |
+| `64a859c` | PowerShell 7, Node 20.20.2 | 1 | C002-TS-685 row 2 (`serena-user-data.test.ts`) | same `EPERM` (`serena.exe`), a file the first fix did not cover | fixed for every stub-executable test: `b6f1509`; the PowerShell 7 / Node 22 run of `64a859c` was stopped |
+| `b6f1509` | Git Bash, Node 22.22.3 | 1 (1,365 s) | C002-TS-700 row 2 (`spend-reconciliation.test.ts`) | the known flake | rerun once: exit 0 (run 3 above) |
+
+Microsoft Defender showed no detection after the first `EPERM` (`Get-MpThreatDetection` empty). Only Node 20 showed the
+`EPERM`; it matches finding F-2 of `docs/nfr-results.md` §7 (a stub process image still locked when the test removes it).
+
+**`sdd lint` at `b6f1509`**, on Node 22.22.3 and on Node 20.20.2 (same results on both):
+
+| Command | Exit | Result |
+|---|---|---|
+| `node plugins/architect/scripts/sdd.mjs lint 001` | 0 | 0 errors, 0 warnings, 0 info |
+| `node plugins/architect/scripts/sdd.mjs lint 002` | 1 | 9 errors, all LINT-DELTA-001: the CHG-002 requirements citing CHG-001 IDs not yet in `_living/`, waived at C002-G2 (C002-DEC-008; they end when C001-T-075 archives CHG-001) |
+| `node plugins/architect/scripts/sdd.mjs lint` (workspace) | 1 | the same 9 waived errors and LINT-WS-002 info (`.sdd/metrics/` preserved) |
+| `node plugins/architect/scripts/sdd.mjs stale check` | 0 | every phase of CHG-001 and CHG-002 approved, hashes match |
+| `node plugins/architect/scripts/sdd.mjs status` | 0 | CHG-001: 62 / 66 tasks done, 0 open defects; CHG-002: 69 / 73, 1 open defect |
 
 ## 3. Clean-profile install (C001-TC-1102, C001-NFR-602)
 
@@ -95,8 +147,12 @@ Claude Code 2.1.299 (desktop-bundled), an empty `CLAUDE_CONFIG_DIR` in a scratch
 | 4 | `claude plugin list` | `architect@architect-local`, version 0.0.3, enabled |
 | 5 | `claude --agent architect:sdd-conductor -p hi` in a new `git init` folder | the agent resolves; the session ends at the API call (`terminal_reason: api_error`, no login in the empty profile). A wrong name (`architect:no-such-agent`) is refused with the list of the ten `architect:sdd-*` agents |
 
-Finding: the installed plugin reports version **0.0.3**; the 0.1.0 version bump is part of the
-final step of this task (CHANGELOG, tag).
+Finding: the installed plugin reported version **0.0.3**; the version is 0.1.0 since `ab0cfc7` (§8), so
+TC-1102 installs 0.1.0.
+
+**Run sheet for P-01:** `docs/runsheets/T-072-clean-profile-install.md` (fresh profile, steps, inputs, expected
+results, record fields and the line to send the conductor). The record goes to `docs/dogfood.md`; this section and
+§6 are updated from it.
 
 ## 4. Release evals (DOD-G-01)
 
@@ -1168,41 +1224,46 @@ Single replaced sessions, not sets: TS-320's run 1 (D-038, rule 2) and the rule-
 | Item | Milestone | Closed by | State |
 |---|---|---|---|
 | M-3 eval test cases at milestone tier (3 runs) | C001-M-3 | the release runs of §4.2 and §4.3: every release class runs ≥ 3 runs with ≥ the milestone pass rule (C001-ADR-003) | closed (2026-11-07, §4.7) |
-| A toy change reaches G2 | C001-M-3 | a named change that met it, else a toy change run | **open** (close-out; owner: conductor) |
+| A toy change reaches G2 | C001-M-3 | a named change that met it: **CHG-002** (multi-platform targets), taken by the conductor through ideation and specification on this repository: G2 "Approve with waivers" 2026-10-15, re-approved after each revision, last approval current (`.sdd/002-multi-platform-targets/change.md` gate log; `sdd stale check`: 10-spec approved, hash matches) | closed (2026-11-07) |
 | P-01 decides the release eval budget from the metrics report | C001-M-3 | Q-release-tier-01 (2026-10-23, C001-ADR-003 revision 2026-10-23) | closed |
 | M-4 test cases at milestone tier | C001-M-4 | the release runs of §4.2 and §4.3 | closed (2026-11-07, §4.7) |
-| A toy change reaches G3 on cfg-full and cfg-bare | C001-M-4 | a named change that met it, else a toy change run | **open** (close-out; owner: conductor) |
+| A toy change reaches G3 on cfg-full and cfg-bare | C001-M-4 | no named change met it. CHG-002 reached G3 (2026-10-16 "Approve", current) on this machine with ripwire absent and Serena and ast-grep present, which is **cfg-no-ripwire**, neither cfg-full nor cfg-bare (`.sdd/_constitution/toolchain.md`; `20-plan/30-impact/blast-radius.md` §1: "ripwire is absent", Serena references). No eval scenario takes a change to G3: the cfg-bare evals (TS-121, TS-1002, TS-1112, TS-509) stop at one agent step. So step 5 of the task applies: a **toy change run to G3 on each of cfg-full and cfg-bare** (paid conductor sessions with the harness machine overlays, `evals/harness/machines.mjs`) | **open**: needs paid sessions, not run in the unpaid close-out (owner: conductor; spend within P-01's 450 USD stop, 350.95 used) |
 | Injection evals at milestone tier (3 runs per case) | C001-M-5 | the injection suite of §4.4 (5 runs per case, 0 acted upon) | closed (2026-10-30) |
 | Re-planted INJ-19 | C001-M-5 | the injection suite of §4.4 (INJ-19: 5 / 5) | closed (2026-10-30) |
 
 ## 6. DoD items
 
+State after the unpaid close-out (2026-11-07, release candidate `b6f1509`).
+
 **C001-T-072 done-when items:**
 
 | Done when | State | Owner |
 |---|---|---|
-| Evidence file complete for every DoD item and every deferred milestone item | **open**: the DoD rows below marked open, and the two toy-change items of §5 | conductor (close-out), P-01 (TC-1102) |
-| All test cases in `verified_by` pass at the tier of C001-ADR-003 | **open**: C001-TS-1102 / C001-TC-1102 is the manual clean-profile install (§3); only the pre-check ran | P-01 |
-| Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open** | conductor, after the close-out |
+| Evidence file complete for every DoD item and every deferred milestone item | **open** only for TC-1102 (§3) and the M-4 toy change to G3 on cfg-full and cfg-bare (§5); every other DoD row below has its evidence | P-01 (TC-1102), conductor (toy change, paid) |
+| All test cases in `verified_by` pass at the tier of C001-ADR-003 | **open**: C001-TS-1102 / C001-TC-1102 is the manual clean-profile install (§3); run sheet ready | P-01 |
+| Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open**, not done in the close-out (by instruction) | conductor, after TC-1102 and the tag |
 | Release eval report meets each release class (Verification) | **met** (§4.7) | — |
-| `npm run check` and `sdd lint` (Verification) | met at `799f903` (Node 22.22.3 and 20.20.2, Git Bash; §2). **Open**: a re-run at the release commit, with the two PowerShell 7 runs of C001-TC-1127 | conductor (close-out) |
-| Version 0.1.0 tagged locally, no push (Intent) | **open** | conductor (close-out) |
+| `npm run check` and `sdd lint` (Verification) | **met** at the release candidate `b6f1509`: four runs exit 0 (Node 22.22.3 and 20.20.2, Git Bash and PowerShell 7), `sdd lint 001` 0 findings on both Node versions (§2.1) | — |
+| Version 0.1.0 tagged locally, no push (Intent) | version **0.1.0** since `ab0cfc7` (§8); tag **open** | conductor, once TC-1102 passes |
 
 **Global and feature DoD:**
 
 | Item | Evidence | State |
 |---|---|---|
-| DOD-G-01 | §4.7: every eval class meets its floor; the other acceptance scenarios pass in `npm run check` (§2); TC-1102 open | **met for the evals**; open for TC-1102 (P-01) |
-| DOD-G-02 | §2 (`799f903`) | met; re-run at the release commit open (close-out) |
-| DOD-G-03 | `sdd lint 001`: 0 findings (2026-10-28) | met; re-run at the release commit open (close-out) |
-| DOD-G-04 | review record of the public interfaces | **open** (close-out; owner: conductor) |
+| DOD-G-01 | §4.7: every eval class meets its floor; the other acceptance scenarios pass in `npm run check` (§2.1); TC-1102 open | **met for the evals and the automated scenarios**; open for TC-1102 (P-01) |
+| DOD-G-02 | §2.1: `npm run check` exit 0 at `b6f1509` on REF-WIN, all four runs | **met** |
+| DOD-G-03 | §2.1: `sdd lint 001` 0 findings; the workspace's 9 errors are the waived LINT-DELTA-001 of CHG-002 (C002-DEC-008), none new | **met** |
+| DOD-G-04 | §9: review record of the public interfaces (CLI, schemas, hooks, agents, commands, error codes) against `50-interfaces/` and the CHG-002 deltas: 12 of 13 checks match; one minor deviation (two command bodies do not name `sdd-conventions`, which the conductor preloads), no behaviour impact | **met**, with the deviation reported to the conductor |
 | DOD-G-05 | `docs/nfr-results.md` | open: C001-NFR-602 (TC-1102, P-01) and C001-NFR-304 (C001-T-074, not measured) |
 | DOD-G-06 | C001-T-075 (archive) | not in this task |
-| DOD-G-07 | `sdd status --json` (2026-11-07): CHG-001 has 1 open defect, **D-023** (`inject.mjs` should mark not-exposed sessions invalid; work in progress in the tree) | **open** (owner: conductor) |
-| C001-DOD-001 … 012, 014, 015, 017, 019, 020 | `npm run check` (§2) and the release evals (§4.7); injection evals 0 acted upon (DOD-014) | met for the test and eval parts |
-| C001-DOD-016 | §2: Node 20 and 22 in Git Bash | open: the PowerShell 7 runs at the release commit (close-out) |
+| DOD-G-07 | `sdd status` at `b6f1509`: CHG-001 has **0 open defects** (D-023 closed in 41c3466) | **met** |
+| C001-DOD-001 … 012, 014, 015, 017, 019, 020 | `npm run check` (§2.1: tests, fixtures, structure, licence and coverage steps) and the release evals (§4.7); injection evals 0 acted upon (DOD-014); coverage 95.60% lines, 83.22–83.24% branches (DOD-017) | **met** |
+| C001-DOD-016 | §2.1: Windows 11, PowerShell 7.6.9 and Git Bash 5.2.26, Node 20.20.2 and 22.22.3, encoding scan 0 violations, structure checks pass | **met** |
 | C001-DOD-013, C001-DOD-021 | dogfood changes C001-T-073 and C001-T-074 (todo) | open (not in this task) |
-| C001-DOD-018 | message catalogue: `npm run check`; clean-profile timing: TC-1102 | open for TC-1102 (P-01) |
+| C001-DOD-018 | message catalogue: `npm run check` (catalogue test) and §9 (23 of 23 CLI codes); clean-profile timing: TC-1102 | open for TC-1102 (P-01) |
+
+**Is every done-when item met except TC-1102?** No. Besides TC-1102, the M-4 toy-change item (G3 on cfg-full and
+cfg-bare, §5) is open and needs paid sessions; the tag and the task report wait for both by design.
 
 ## 7. Follow-ups after the release
 
@@ -1216,6 +1277,70 @@ Single replaced sessions, not sets: TS-320's run 1 (D-038, rule 2) and the rule-
   D-026 addressed it in `code-discovery`, and the 13 rerun rows pass. Watch rows outside the rerun set,
   whose checks do not read layers.
 - **D-023**: `evals/injection/inject.mjs` should mark a not-exposed session invalid, which this release
-  handled by P-01's decision (§4.4). Open.
+  handled by P-01's decision (§4.4). Closed in 41c3466 (2026-11-07).
 - Noted in passing: TS-804-revise runs at the 0.50 USD cap with no headroom (§4.2), and TS-508 wrote
   plan-phase files in an architecture-step run (§4.3).
+- **Found in the close-out** (for the conductor):
+  - **CHG-002 Copilot release at 0.0.3.** `node scripts/release-check.mjs --target copilot --dry-run` at `41c3466`
+    (before the bump) already refuses with ERR-REL-007: 32 files of `dist/copilot/` and of
+    `dist/architect-copilot-0.0.3.zip` differ from a regeneration from the current source, because the CHG-001 skill
+    and agent fixes since the 0.0.3 release candidate `4ef1d61` (D-022, D-024, D-026 …) are in the source; and
+    ERR-REL-003 (no checklist record yet, C002-T-050). Since `ab0cfc7` the source version is 0.1.0, and
+    `npm run package` (§8) rewrote `dist/copilot/` and `dist/opencode/` at 0.1.0; the 0.0.3 zips and tarball stay in
+    `dist/`. The CHG-002 run sheets (T-050, T-057, T-075, T-055) still name 0.0.3, and C002-T-055's done-when compares
+    `npm view architect-sdd version` with `plugin.json`. Deciding whether Copilot ships at 0.0.3 from a checkout of
+    `4ef1d61` or at 0.1.0 with retaken evidence is a CHG-002 plan question (P-01); the close-out changed no CHG-002 file.
+  - **Node 20 stub-executable cleanup** (§2.1): fixed in the tests (`64a859c`, `b6f1509`). The same unlink race can
+    still hit tests that plant executables without the retry; none failed in the counted runs.
+  - **DOD-G-04 deviation** (§9): `commands/init.md` and `commands/new.md` do not name `sdd-conventions`, which
+    C001-IF-10 §1 lists for them. Either a one-line body change after the release (it changes command files the
+    release evals exercised) or a contract note that the conductor preloads the skill (a spec revision). Owner:
+    conductor.
+
+## 8. Version 0.1.0 and the packages
+
+The release process bumps the version as the 0.0.2 and 0.0.3 bumps did (`728211f` C002-T-073, `d6fdd13` C002-T-074):
+`package.json`, `package-lock.json` (top level and `packages[""]`), `plugins/architect/.claude-plugin/plugin.json` (the
+single version source, C002-CON-16) and the bundled CLI `plugins/architect/scripts/sdd.mjs`, rebuilt by
+`node scripts/build.mjs` ("built plugins/architect/scripts/sdd.mjs (architect-plugin@0.1.0)"). Commit `ab0cfc7`.
+`sdd version` prints `architect-plugin@0.1.0`, `sdd --version` prints `0.1.0`.
+
+`npm run package` at `b6f1509` (Node 22.22.3, exit 0; both `claude plugin validate` steps passed) rebuilt the packages
+into `dist/` (git-ignored, not committed):
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `dist/architect-0.1.0.zip` (marketplace) | 264,363 | `8c5be26c1a2957e1b9ab6d2bcb8e633feff6c64ba19bee40944b600899071113` |
+| `dist/architect-0.1.0-plugin.zip` (plugin, upload) | 257,178 | `210ab11a5b7a0b73fbca6b473da98641d0810ac09882941fb40c9c2f07e9b2be` |
+| `dist/architect-copilot-0.1.0.zip` | 294,126 | `163955a9c21815feec0c96732c29447cdc0740e2b2366dfd1cbc9a0dcc79b79d` |
+| `dist/architect-opencode-0.1.0.zip` | 156,514 | `1f6e6513326174dc524461b9cdb992763158889a5e0fb77ae4b0bd4c777d0452` |
+| `dist/architect-sdd-0.1.0.tgz` | 370,393 | `ee2de8c1e57f0106a885652f3e7e76586d8ab8cff59c4be88810509cc544783c` |
+
+Nothing was published (no `npm publish`, no `npm login`) and no tag was created. The CHG-002 run sheets keep 0.0.3 (§7).
+
+## 9. DOD-G-04 interface review (review record)
+
+**Statement:** public interfaces (CLI, schemas, hooks, agents) match their contracts in `50-interfaces/`. Reviewed
+2026-11-07 at `b6f1509` by the implementer of the close-out, against CHG-001's
+`.sdd/001-architect-agent-suite/10-spec/50-interfaces/` and, where CHG-002 extends them, the CHG-002 deltas
+(`C002-IF-007` `sdd-cli-delta.md`, `C002-IF-008` `hooks-contract-delta.md`, CHG-002 `errors.md`), since CHG-002's code
+ships in the same version. Method: a read-only comparison script (task scratch folder) on Node 22.22.3 and Node 20.20.2
+(same result), plus the automated contract tests that ran in `npm run check` (§2.1).
+
+| Interface | What was compared | Result |
+|---|---|---|
+| C001-IF-01 sdd CLI | the 28 commands of the contract table against the command tables of `src/cli/commands.ts` and `src/cli/hook-cmds.ts` (34 commands: the 28, plus `host-version`, `template show`, `template list`, `install copilot`, `hook guard`, `hook subagent-stop` of C002-IF-007; none outside both contracts); every command in `sdd --help` (`extract-features` is the optional Could row); `sdd version` → `architect-plugin@0.1.0`, `sdd --version` → `0.1.0`; an unknown option → exit 2 with `ERR-CLI-003: … Fix: …` on standard error | **match** |
+| C001-IF-11 lint report | `sdd lint 001 --json`: one JSON document, valid against `lint-report.schema.json` (also C001-TS-703) | **match** |
+| C001-IF-02 registry | `.sdd/registry.json` valid against `registry.schema.json` (also C001-TS-101 … 105) | **match** |
+| C001-IF-12 trace graph | `.sdd/001-…/trace.json` and `.sdd/002-…/trace.json` valid against `trace.schema.json` (also C001-TS-709) | **match** |
+| C001-IF-05 questions | the plugin copy `skills/interview-protocol/references/questions.schema.json` equals the contract (canonical JSON; also `tests/unit/evals/questions.test.ts`) | **match** |
+| C001-IF-07 hooks | `plugins/architect/hooks/hooks.json`: the 5 event, matcher and command rows of §2, exactly; deny-message, brief and feedback formats of §4 and the allowlist of §3 by the guard corpus and the cap11 tests in `npm run check` | **match** |
+| C001-IF-09 agents | the 10 rows against `plugins/architect/agents/*.md`: name, model, effort, exact tool set, preloaded skills; no `hooks`, `mcpServers`, `permissionMode`, `initialPrompt`; `memory: project` on A1 and A2 only; no `Agent` in A1–A9 (also PLG-TOOLS-001 in the structure step and `tests/integration/cap02/agents-if09.test.ts`) | **match** |
+| C001-IF-10 commands | the 13 commands of §1 against `plugins/architect/commands/*.md` (13 files, same names); each body names the skills of its row | **deviation (minor)**: `init.md` and `new.md` name `interview-protocol` but not `sdd-conventions`. Both commands run only in the conductor session, whose agent preloads `sdd-conventions` (C001-IF-09 A0), so the behaviour is unaffected |
+| Error catalogue (C001 `errors.md` §1–2, CHG-002 `errors.md`) | the 23 catalogued `ERR-CLI-*` / `WARN-CLI-*` codes against the codes in `src/`: the same 23 (message texts also by the catalogue test) | **match** |
+| C001-IF-08 plugin layout | the plugin and target structure steps of `npm run check` (PASS in all four runs) | **match** |
+| C001-IF-03, 04, 06, 13 conventions | lint rules and gate tests in `npm run check`; `sdd lint 001` 0 findings; `sdd stale check` hashes match | **match** |
+| C001-IF-14 external tools | the ripwire forms of C001-IF-07 §3.1 by the guard corpus; tool versions by the doctor tests | **match** |
+
+**Verdict:** the public interfaces match their contracts, with one minor documentation deviation in C001-IF-10 §1 that
+has no behaviour impact (§7). DOD-G-04 is met; the conductor decides how to settle the deviation.

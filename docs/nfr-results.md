@@ -35,9 +35,9 @@ F-7 coverage skip). Commit pending; the T-080 report gives it.
 | C001-NFR-302 Deterministic generation | 0 differing bytes outside `generated_at` | 0 (`trace --write`, `status --write`, two runs on fx-large) | **pass** | `tests/integration/determinism.test.ts` (Node 20 and 22) |
 | C001-NFR-303 Lint correctness | 100% detection, 0 findings on clean fixtures | 56 of 56 fixture tests pass; `sdd lint 001` on this spec: 0 findings | **pass** | `npm run check` step "lint fixtures"; `tests/unit/lint/fixtures.test.ts` |
 | C001-NFR-304 Graceful degradation | 100% of phases on cfg-full, cfg-no-ripwire, cfg-bare | not measured: dogfood runs on three configurations (C001-T-074, todo) | **not measured** | — |
-| C001-NFR-401 Windows 11, both shells | `npm run check` passes on PowerShell 7 and Git Bash (+ TS-1102 install) | 2026-10-22: exit 0 in all four runs (Node 20.20.2 and 22.22.3, each in PowerShell 7 and Git Bash); on Node 20 the coverage step reports skipped with its reason (C001-NFR-502 Environment). TS-1102 (manual install) not run here | **pass** | §2 |
+| C001-NFR-401 Windows 11, both shells | `npm run check` passes on PowerShell 7 and Git Bash (+ TS-1102 install) | 2026-11-07 at the 0.1.0 release candidate `b6f1509` (and 2026-10-22): exit 0 in all four runs (Node 20.20.2 and 22.22.3, each in PowerShell 7 and Git Bash); on Node 20 the coverage step reports skipped with its reason (C001-NFR-502 Environment). TS-1102 (manual install) not run here (P-01, run sheet `docs/runsheets/T-072-clean-profile-install.md`) | **pass** | §2 |
 | C001-NFR-402 macOS and Linux readiness | 0 platform-specific constructs outside the marked module | PLG-PORT-002: 0 findings; simulated POSIX path tests pass. Real macOS/Linux runs not measured here | **pass (static)**; OS runs not measured | §3; `.github/workflows/check.yml` (dormant, `workflow_dispatch`) |
-| C001-NFR-403 Node 20 and 22 | 100% unit-test pass rate on both | 2026-10-22: 1,602 of 1,602 run tests pass on Node 20.20.2 and on Node 22.22.3, in both shells (1 POSIX-only skip) | **pass** | §2 |
+| C001-NFR-403 Node 20 and 22 | 100% unit-test pass rate on both | 2026-11-07 at `b6f1509`: 1,781 of 1,781 run tests pass on Node 20.20.2 and on Node 22.22.3, in both shells (1 POSIX-only skip; 2026-10-22: 1,602 of 1,602) | **pass** | §2 |
 | C001-NFR-404 Artifact encoding | 0 files violating UTF-8 without BOM, LF | 2026-10-22, step "artifact encoding scan" of `npm run check`, all four runs: files written by the CLI 0 of 622 (fx-large) and 0 of 12 (fx-empty); repository `.sdd/` 1 of 335 reported (CRLF in the working tree, not written by the CLI) | **pass** | §5 |
 | C001-NFR-501 Single-file runtime | 0 runtime imports of unbundled packages | `sdd.mjs` copied alone to a folder with no `node_modules` above it: `version`, `lint`, `status --write`, `trace --write` run on Node 20 and 22; 8 import specifiers, all Node built-ins | **pass** | §6 |
 | C001-NFR-502 CLI test coverage | ≥ 85% lines, ≥ 75% branches | 2026-10-22, step "coverage" of `npm run check` on Node 22.22.3, no exclusions: 88.72% lines (8,818/9,939), 82.06% branches (4,937/6,016) in Git Bash; 89.09% (8,855/9,939) / 82.48% (4,968/6,023) in PowerShell 7. On Node 20.20.2 the step is skipped with its reason (Environment of the NFR; F-7) | **pass** | §4 |
@@ -134,6 +134,21 @@ probe of 400 more killed `archive` runs gave 1 such case. Its `change.md` was th
 The bench printed `faults: FAIL` but exited 0: `bench/faults.mjs` sets no exit code.
 
 ## 2. `npm run check` under both shells and both Node versions (NFR-401, 403)
+
+**2026-11-07 (C001-T-072 close-out, C001-TC-1127 at the release candidate `b6f1509`, version 0.1.0):** four
+sequential runs as below; details, logs and the reruns in `docs/release-0.1.0-evidence.md` §2.1.
+
+| Shell | Node | typecheck | validate | build | tests | fixtures | encoding | structure | targets | tarball | coverage | Tests (pass / fail / skip of 1,782) | Exit | Time |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PowerShell 7.6.9 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | SKIP (Node 20) | 1,781 / 0 / 1 | **0** | 492 s |
+| Git Bash 5.2.26 | 20.20.2 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | SKIP (Node 20) | 1,781 / 0 / 1 | **0** | 512 s |
+| Git Bash 5.2.26 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (95.60% / 83.22%) | 1,781 / 0 / 1 | **0** | 1,206 s |
+| PowerShell 7.6.9 | 22.22.3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (95.60% / 83.24%) | 1,781 / 0 / 1 | **0** | 1,259 s |
+
+The skipped test is the POSIX-only lookup test. Before `b6f1509`, Node 20 runs failed three times on `EPERM` while a
+test removed a just-run stub executable (finding F-2's mechanism, now in C002-TS-675, C002-TS-676 and C002-TS-685);
+`64a859c` and `b6f1509` add cleanup retries to those tests. The Git Bash / Node 22 run needed its one rerun for the
+known flake C002-TS-700 row 2.
 
 **2026-10-22 (C001-T-080, C001-TC-1127, round 2):** four sequential runs, nothing else running, the
 given Node first in `PATH` (`tests/manual/TC-1127.md`); 10 steps, with the `encoding` and `coverage`
