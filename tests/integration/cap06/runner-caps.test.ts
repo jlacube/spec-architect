@@ -40,7 +40,7 @@ async function session(stub: Parameters<typeof stubHost>[0], options: Record<str
   try {
     return await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [], ...options }, { host: stubHost(stub) });
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 }
 
@@ -124,7 +124,7 @@ test("an assistant message that carries a provider error ends the session with t
     assert.match(String(s.error), /APIError \(HTTP 429\): Provider returned error/);
     assert.ok(s.transcript.some((r: any) => r.type === "harness" && r.event === "error" && /HTTP 429/.test(r.message)));
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -269,7 +269,7 @@ function runStubbed(argv: string[]): { status: number | null; out: string } {
     const r = spawnSync(process.execPath, [script, JSON.stringify(argv)], { cwd: ROOT, encoding: "utf8", windowsHide: true, timeout: 120_000 });
     return { status: r.status, out: `${r.stdout}\n${r.stderr}` };
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 }
 
@@ -290,7 +290,7 @@ test("run.mjs: without --host the session runs on claude-code (stub runner), and
     assert.equal(doc?.["target"], "claude-code");
     assert.equal(doc?.["runs"], 1);
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -341,7 +341,7 @@ test("C002-TS-611 the routing case of sdd-critic runs through the case API on a 
     assert.equal(rec?.target, "opencode");
     assert.equal(rec?.end_reason, "completed");
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
   const after = caseHashes();
   assert.equal(after.size, before.size);
@@ -378,7 +378,7 @@ test("C002-TC-906 rows by host: --host opencode keeps the opencode row and the r
     assert.equal(r.status, 1, r.out);
     assert.match(r.out, /holds no case for host opencode \(1 file\(s\); 1 row\(s\) of another host, 0 row\(s\) left out by --only\); no session started/);
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -466,7 +466,7 @@ test("C002-TC-907 the provider key: a missing or empty key file refuses the sess
       if (v === undefined) delete process.env[k];
       else process.env[k] = v;
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -483,7 +483,7 @@ test("C002-TC-907 run.mjs records api_key_source in each result record and the r
     assert.equal(doc["api_key_source"], null);
     for (const rec of doc["records"] as Record<string, unknown>[]) assert.equal(rec["api_key_source"], null);
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -498,7 +498,7 @@ test("C002-TC-908 the eval relay runs directly on OpenCode: sdd-critic is the se
     assert.equal(relays[0]!.agent, "sdd-critic");
     assert.ok(!host.calls.some((c: { agent: string }) => /eval-dispatcher/.test(c.agent)), "no eval-dispatcher agent started");
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -571,7 +571,7 @@ test("C002-TC-911 allowTools answers permission requests only: edit, bash, task 
   try {
     s = await runOpenCodeSession({ cwd, prompt: "hi", agent: "architect:sdd-conductor", allowTools: [] }, { host: counting });
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
   assert.deepEqual(asked, [], "no permission request was answered");
   assert.ok(!s.transcript.some((r: { event?: string }) => r.event === "denied"), "not recorded as denied");
@@ -600,7 +600,7 @@ async function harnessRecord(stub: Parameters<typeof stubHost>[0]): Promise<Reco
     return doc["records"][0];
   } finally {
     setHarnessContext(prev);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 }
 for (const [spend, turns, reason] of [[0.01, 30, "turn cap"], [0.1, 5, "spend cap"]] as const) {
@@ -662,7 +662,7 @@ for (const row of [
       assert.ok((s.usage.usd ?? 0) - 0.5 <= bound + 1e-9, `overshoot ${(s.usage.usd ?? 0) - 0.5} above ${bound}`);
       assert.ok(near(s.usage.usd, (caps[0]!.usage?.usd ?? 0) + after.reduce((sum, a) => sum + (a.step_usd ?? 0), 0)), "usage.usd = the cap record's spend + the step-after-cap costs");
     } finally {
-      rmSync(cwd, { recursive: true, force: true });
+      rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     }
   });
 }
@@ -680,7 +680,7 @@ test("C002-TS-689 — 0.12 USD per step, a subagent step in parallel with the fi
     // The unfinished step's record: started before the cap, no reported cost.
     assert.deepEqual(afterCapRecords(s).map((a) => [a.step_usd, a.agent, a.started_before_cap]), [[null, "architect:sdd-critic", true]]);
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -720,7 +720,7 @@ test("the OpenCode runner counts a step cost that appears only in the messages r
     assert.deepEqual(afterCapRecords(s).map((a) => [a.step_usd, a.agent, a.started_before_cap]), [[0.07, "architect:sdd-auditor", false]]);
     assert.equal(capRecords(s).length, 1);
   } finally {
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -749,7 +749,7 @@ function runStopRule(fxRoot: string, file: string, row: string, ledger: string):
     const started = existsSync(startLog) ? readFileSync(startLog, "utf8").split("\n").filter((l) => l !== "").length : 0;
     return { status: r.status, out: `${r.stdout}\n${r.stderr}`, started };
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 }
 
@@ -812,7 +812,7 @@ for (const row of [
         assert.ok(readFileSync(ledgerFile).equals(before), "the ledger is byte-for-byte unchanged");
       }
     } finally {
-      rmSync(fx, { recursive: true, force: true });
+      rmSync(fx, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     }
   });
 }
@@ -853,7 +853,7 @@ test("C002-TS-690 — OpenCode eval runner: a stub server that accepts the promp
     assert.deepEqual(capRecords(s), [], "no cap record");
   } finally {
     mock.timers.reset();
-    rmSync(cwd, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 

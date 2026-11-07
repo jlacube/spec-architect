@@ -53,7 +53,7 @@ function recorder(): string {
   const dir = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-spawn-rec-")));
   recorderFile = join(dir, "spawn-recorder.mjs");
   writeFileSync(recorderFile, RECORDER);
-  process.once("exit", () => rmSync(dir, { recursive: true, force: true }));
+  process.once("exit", () => rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }));
   return recorderFile;
 }
 
@@ -101,7 +101,7 @@ function fxCpInstall(): Fx & { cleanup: () => void } {
   writeFileSync(join(root, "src", "app.ts"), "export const app = 1;\n");
   writeFileSync(join(root, "README.md"), "# fx-cp-install\n");
   if (HAS_GIT) git(root, "init", "-q");
-  return fx(root, () => rmSync(root, { recursive: true, force: true }));
+  return fx(root, () => rmSync(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }));
 }
 
 function fx(native: string, cleanup: () => void): Fx & { cleanup: () => void } {
@@ -118,7 +118,7 @@ function fx(native: string, cleanup: () => void): Fx & { cleanup: () => void } {
 /** A temporary folder for PATH stubs. */
 function stubDir(): { dir: string; cleanup: () => void } {
   const dir = realpathSync.native(mkdtempSync(join(tmpdir(), "sdd-path-stub-")));
-  return { dir, cleanup: () => rmSync(dir, { recursive: true, force: true }) };
+  return { dir, cleanup: () => rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }) };
 }
 
 interface ToolResult {
@@ -441,7 +441,7 @@ test("C002-TS-423: the package's scripts/sdd.mjs deleted → ERR-MCP-006 'not fo
     );
   } finally {
     stub.cleanup();
-    rmSync(pkg, { recursive: true, force: true });
+    rmSync(pkg, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -467,7 +467,7 @@ test("C002-TS-424: node ${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs status → node's 
       { env: { CLAUDE_PLUGIN_ROOT: plugin.replace(/\\/g, "/") } },
     );
   } finally {
-    rmSync(plugin, { recursive: true, force: true });
+    rmSync(plugin, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -657,7 +657,7 @@ ROWS_686.forEach((row, i) => {
       if (row.bin === "cmd") assert.deepEqual(cmdStarts(bin, "git"), [], "git.cmd records no start");
     } finally {
       f.cleanup();
-      rmSync(bin, { recursive: true, force: true });
+      rmSync(bin, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     }
   });
 });
@@ -692,6 +692,6 @@ test("C002-TS-687 — at timeout_ms the process tree is killed by the taskkill o
     assert.equal(calls[0]!.file.toLowerCase(), join(system32, "taskkill.exe").toLowerCase());
   } finally {
     f.cleanup();
-    rmSync(bin, { recursive: true, force: true });
+    rmSync(bin, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });

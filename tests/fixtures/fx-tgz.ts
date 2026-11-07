@@ -96,7 +96,7 @@ export function fxTgz(): FxTgz {
 
 /** Removes the fixture's temporary folder (call from `after`). */
 export function cleanupFxTgz(): void {
-  if (tmp) rmSync(tmp, { recursive: true, force: true });
+  if (tmp) rmSync(tmp, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   tmp = null;
   cached = null;
 }

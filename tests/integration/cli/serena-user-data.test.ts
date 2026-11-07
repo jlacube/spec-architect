@@ -39,7 +39,7 @@ function withProfile(fn: (base: string, repo: string, starts: Start[]) => void):
     fn(base, repo, starts);
   } finally {
     setSpawner(null);
-    rmSync(base, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 }
 
@@ -237,7 +237,7 @@ test("the read-only mode file is found beside the CLI in the plugin layout and i
     assert.equal(normalisePath(inPackage), `${pkg}/serena/architect-read-only.yml`);
     assert.ok(existsSync(inPackage));
   } finally {
-    rmSync(base, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
   }
 });
 
@@ -279,7 +279,7 @@ ROWS_685.forEach((row, i) => {
       if (row.bin === "cmd") assert.deepEqual(cmdStarts(bin, "serena"), [], "serena.cmd records no start");
     } finally {
       fx.cleanup();
-      rmSync(home, { recursive: true, force: true });
+      rmSync(home, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     }
   });
 });
