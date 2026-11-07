@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-07T22:13:38Z",
+  "generated_at": "2026-11-07T22:13:40Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -779,9 +779,9 @@
           "summary": "Found in C001-T-072 (toy change to G3, cfg-full chain of 2026-11-07, 2b50507; evals/results/toy-g3-cfg-full-chain-partial-2026-11-07.json): at the 3.00 USD rule-1 cap of D-042 the chain stopped at the 16 USD limit after 6 sessions and 14.54 USD notional, G1 approved in session 4 and 10-spec in draft, G3 not reached, cfg-bare not run. Ideation took 8.21 USD over sessions 2 … 4, two of them ended at the cap (3.044, 3.057 USD). Both spec sessions ended at the cap (3.022, 3.039 USD): session 5 dispatched the test designer and the architect in parallel after the spec writer's draft, and the cap ended it as they started; session 6 dispatched them in parallel again, the architect made 15 edits of spec.md and read 1.93 M cached tokens against 0.54 M for the test designer, which issued no Write or Edit. P-01 (2026-11-07, Q-toy-g3-cap-02): 'Raise session cap to  (Recommended)': the two toy-g3 rows run at 6.00 USD per session, chain limit about 30 USD per configuration, cfg-full resumed from its saved state.",
           "reporter": "jerome.lacube",
           "date": "2026-11-07",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-043 approved at G2/G3: toy-g3 rows at a 6.00 USD rerun cap (per-row field, rule 1), chain limit 30 USD per config including saved sessions, DOD-012 and RISK-038 exceptions, chain.mjs refuses an empty resume; critic CR-136, CR-137, CR-106…109 fixed (56bf494)",
+          "closed_at": "2026-11-07"
         }
       ],
       "waivers": [
