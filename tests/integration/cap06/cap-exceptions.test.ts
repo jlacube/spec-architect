@@ -21,7 +21,8 @@
 // 15 rule-1 rows and 27 rule-2 rows; from revision D-040, 88 rows, the forty-three release-standard rule-2 rows
 // after TS-511, 70 rule-2 rows, every row of the 3-run class of C001-ADR-003 in the table and --cap-exception
 // refused for a row outside it; from revision D-042, 90 rows, the two toy-change-to-G3 rows of
-// evals/toy/toy-g3.eval.mjs after TS-1112-node18, 17 rule-1 rows at 3.00 USD; the case files
+// evals/toy/toy-g3.eval.mjs after TS-1112-node18, 17 rule-1 rows at 3.00 USD; from revision D-043, still 90
+// rows, the two toy-g3 rows' own rerun cap 6.00 USD, so 15 rule-1 rows at 3.00 USD; the case files
 // under evals/ set no row above 0.50 USD but the TS-634 OpenCode row, and no row above 30 turns but TS-213
 // and TS-221 of evals/cap02/.
 import { test } from "node:test";
@@ -201,7 +202,7 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
   // `rule`: the list of C002-IF-010 §2.2 "Sessions of CHG-001 tasks" that holds the row (1 or 2), null for
   // a row in neither list (TS-421-agent, no release case of C001-ADR-003). `rerunUsd`: 3.00 USD for a rule-1
   // row, 1.50 USD for every other row (revision D-033, C002-T-070).
-  const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd: rule === 1 ? 3.0 : 1.5, rule });
+  const sub = (row: string, file: string, rule: 1 | 2 | null, turns = 30, rerunUsd = rule === 1 ? 3.0 : 1.5) => ({ row, file, host: "claude-code", auth: "subscription", usd: 0.5, turns, rerunUsd, rule });
   assert.deepEqual(CAP_EXCEPTIONS, [
     { row: "TS-634", file: GATE634, host: "opencode", auth: null, usd: 2.0, turns: 30, rerunUsd: null },
     // Revision D-035 (C002-T-073): INJ-21 on opencode, paid class: the row's own caps (the default
@@ -300,9 +301,10 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("TS-1112-deepwiki-down", "evals/cap11/TS-1112.eval.mjs", 2),
     sub("TS-1112-bare", "evals/cap11/TS-1112.eval.mjs", 2),
     sub("TS-1112-node18", "evals/cap11/TS-1112.eval.mjs", 2),
-    // Revision D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1.
-    sub("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1),
-    sub("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1),
+    // Revision D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1; revision D-043:
+    // the rows' own rerun cap, 6.00 USD.
+    sub("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0),
+    sub("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0),
   ]);
   // 90 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 88 of the Claude Code subscription
   // class, 17 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039, the two toy-g3 rows
@@ -315,16 +317,18 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
   assert.equal(subs.filter((e) => e.rule === 1).length, 17);
   assert.equal(subs.filter((e) => e.rule === 2).length, 70);
   assert.deepEqual(subs.filter((e) => e.rule === null).map((e) => e.row), ["TS-421-agent"]);
-  // Rerun caps (revision D-033): 3.00 USD for the 17 rule-1 rows, 1.50 USD for the 70 rule-2 rows and
+  // Rerun caps (revision D-033): 3.00 USD for 15 of the 17 rule-1 rows, 6.00 USD for the two toy-g3 rows (revision D-043), 1.50 USD for the 70 rule-2 rows and
   // TS-421-agent; TS-634 and INJ-21 have none. Only INJ-21 on opencode gives a session cap.
-  assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 17);
+  assert.equal(subs.filter((e) => e.rerunUsd === 3.0).length, 15);
   assert.ok(subs.filter((e) => e.rerunUsd === 3.0).every((e) => e.rule === 1));
+  assert.deepEqual(subs.filter((e) => e.rerunUsd === 6.0).map((e) => [e.row, e.rule]), [["toy-g3-cfg-full", 1], ["toy-g3-cfg-bare", 1]]);
+  assert.ok(subs.every((e) => [1.5, 3.0, 6.0].includes(e.rerunUsd as number)));
   assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 71);
   assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21"]);
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0]]);
   // Revision D-042: both rows of evals/toy/toy-g3.eval.mjs have a rule-1 row, in the file's order.
-  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.file === "evals/toy/toy-g3.eval.mjs").map((e) => [e.row, (e as { rule?: number | null }).rule, e.rerunUsd]), [["toy-g3-cfg-full", 1, 3.0], ["toy-g3-cfg-bare", 1, 3.0]]);
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.file === "evals/toy/toy-g3.eval.mjs").map((e) => [e.row, (e as { rule?: number | null }).rule, e.rerunUsd]), [["toy-g3-cfg-full", 1, 6.0], ["toy-g3-cfg-bare", 1, 6.0]]);
   // Revision D-037: of evals/cap02/TS-226.eval.mjs only TS-226-blocking has a row.
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.file === "evals/cap02/TS-226.eval.mjs").map((e) => e.row), ["TS-226-blocking"]);
   // Every case file of the table exists, the five near-cap rows' files (TS-127, TS-201, TS-418, TS-424, INJ-18)
@@ -383,6 +387,23 @@ test("C002-TS-679 (supporting, revision D-040): the release-standard row TS-313 
     { ...base, id: "INJ-01", file: INJ },
   ];
   for (const row of refused) assert.match(check({ ...row, capExceptionRun: true }).refusal ?? "", /--cap-exception given/, `${row.id} of ${row.file} on ${row.host}`);
+});
+
+test("C002-TS-679 (supporting, revision D-043): the toy-g3 rows get 6.00 USD only with --cap-exception on Claude Code under --auth subscription, from their own case file", () => {
+  const check = capCheck as unknown as (row: Record<string, unknown>) => { caps?: { turns: number; usd: number }; refusal?: string };
+  for (const id of ["toy-g3-cfg-full", "toy-g3-cfg-bare"]) {
+    const base = { id, file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription", maxTurns: 30 };
+    assert.deepEqual(check(base), { caps: { turns: 30, usd: 0.5 } });
+    assert.deepEqual(check({ ...base, capExceptionRun: true }), { caps: { turns: 30, usd: 6.0 } });
+    const refused = [
+      { ...base, auth: "api-key" },
+      { ...base, host: "opencode", auth: null },
+      { ...base, host: "copilot-cli", auth: null },
+      { ...base, file: "evals/toy/other.eval.mjs" },
+      { ...base, id: "toy-g3-cfg-no-ripwire" },
+    ];
+    for (const row of refused) assert.match(check({ ...row, capExceptionRun: true }).refusal ?? "", /--cap-exception given/, `${row.id} of ${row.file} on ${row.host}`);
+  }
 });
 
 /** `[file, value]` of every `<field>: <number>` in the case files under evals/ (harness, results and node_modules left out). */

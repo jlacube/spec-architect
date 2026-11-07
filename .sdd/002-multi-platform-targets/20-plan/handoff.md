@@ -209,6 +209,25 @@ change; no session starts when the chain total plus the 3.00 USD session cap wou
 below lists them apart from the release rows. Like the other edges, this one lives on the CHG-002
 side only.
 
+**C001-T-072 also waits for the G2 and G3 approvals of the D-043 revision** (defect D-043; P-01 answer
+Q-toy-g3-cap-02, "Raise session cap to $6 (Recommended)"). The cfg-full chain at 3.00 USD stopped at
+its 16 USD limit after six sessions and 14.54 USD notional, G1 approved and the spec phase in draft:
+both spec sessions ended at the cap while the test designer and the architect ran in parallel, and the
+test designer wrote nothing (`evals/results/toy-g3-cfg-full-chain-partial-2026-11-07.json`, commit
+2b50507; C002-IF-010 §2.2 rule 1). The two `toy-g3` rows get their own rerun cap of 6.00 USD, still
+rule 1 (90 rows, 17 rule-1 of which 2 at 6.00 USD, 70 rule-2), and `chain.mjs` reads the session cap
+from the row's exception, with a default limit of 30 USD per chain. The rows' new cap is already in
+`caps.mjs` with the revision commit (no fix task, `10-strategy.md`), but the edge's condition is the
+approval of the D-043 revision. Until then no toy-change session runs, and the conductor records the
+blocked reason as "waits for the G3 approval of CHG-002 revision D-043". After it, the chains run in the
+form above, each session at 6.00 USD, at most 12 sessions and 30 USD notional per chain: no session
+starts when the chain total plus the row's 6.00 USD cap would pass 30 USD, so a chain ends at or under
+30 USD apart from the overshoot of a capped session's last step. **Order** (P-01's answer): first
+cfg-full, resumed from its saved state without `--fresh` (its six sessions and 14.54 USD count toward
+its 30 USD and its 12 sessions), then cfg-bare from a fresh start. **Forecast** (as presented to P-01):
+the release gate ends near 410 USD notional of its 450 USD stop. C002-T-076 still waits for the end
+of both chains (plan critic CR-103). Like the other edges, this one lives on the CHG-002 side only.
+
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap
 for INJ-21 (Recommended)"). In C002-T-071's first run, `INJ-21` on OpenCode ended at the 0.50 USD cap
 with every assertion passed. Its 0.0.1 entry is therefore acted upon and final, and OpenCode 0.0.1 is
@@ -320,7 +339,8 @@ checks:
   for the same session;
 - no row of the class ran with `--auth api-key`;
 - the sessions of the toy change to G3 (`toy-g3-cfg-full`, `toy-g3-cfg-bare`; defect D-042) are listed
-  apart: each at 3.00 USD, at most 12 per chain, and none counts toward a release-class pass rule.
+  apart: each at its rerun cap (3.00 USD for the six cfg-full sessions of 2026-11-07, 6.00 USD from
+  defect D-043 on), at most 12 per chain, and none counts toward a release-class pass rule.
 
 C001-T-082 reports the same check for the sessions of its step 4 against that step's runs.
 
@@ -448,6 +468,7 @@ Insiders builds): record the version before each run.
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
 | Q-copilot-010-01: the Copilot dry run refuses the 0.0.3 candidate 4ef1d61 with ERR-REL-007 after the CHG-001 release-gate fixes; ship 0.1.0 or 0.0.3 (defect D-041; `questions-log.md` round 2026-11-07) | C002-T-076, C002-T-050, C002-T-057, C002-T-075, C002-T-055 | settled: P-01 answered "Ship 0.1.0 on both hosts (Recommended)"; C002-T-076 retakes the 24 Copilot CLI sessions at 0.1.0, stopped at 15.00 USD of the Copilot pool; the P-01 tasks and the run sheets at 0.1.0 |
+| Q-toy-g3-cap-02: the cfg-full toy chain at 3.00 USD stopped at its 16 USD limit before G3, both spec sessions capped with the test designer's parallel work lost (defect D-043; `questions-log.md` round 2026-11-07 (2)) | the D-043 revision commit; C001-T-072 | settled: P-01 answered "Raise session cap to $6 (Recommended)"; the two `toy-g3` rows keep rule 1 with their own rerun cap of 6.00 USD in C002-IF-010 §2.2 and `caps.mjs`, `chain.mjs` reads it and limits a chain to 30 USD; cfg-full resumed from its saved state, then cfg-bare; no fix task |
 | Q-toy-g3-cap-01: the C001-T-072 toy change to G3 has no cap exception, and a 0.50 USD session cannot finish a phase step (defect D-042; `questions-log.md` round 2026-11-07) | the D-042 revision commit; C001-T-072 | settled: P-01 answered "Run it on both configs (Recommended)"; `toy-g3-cfg-full` and `toy-g3-cfg-bare` are rule-1 rows in C002-IF-010 §2.2 and `caps.mjs` (90 rows, 17 rule-1, 70 rule-2), no fix task; one chain per configuration, at most 12 sessions and 16 USD notional each, no release-class run |
 | Q-std-cap-01: `TS-313`, a release-standard row without an exception, failed at the 0.50 USD cap in the standard prevalidation of C001-T-072 (defect D-040; `questions-log.md` round 2026-11-06) | the D-040 revision commit; C001-T-072 | settled: P-01 answered "Rule 2 for the whole class (Recommended)"; the forty-three rows are rule-2 rows in C002-IF-010 §2.2 and `caps.mjs` (88 rows, 15 rule-1, 70 rule-2), no fix task; after the G3 approval of the D-040 revision the capped `TS-313` session is no run and is replaced once at 1.50 USD |
 | Q-ts511-cap-01: `TS-511` failed at the 0.50 and 1.50 USD caps in the standard prevalidation of C001-T-072, the second session stopped before its fourth Write ran (defect D-039; `questions-log.md` round 2026-11-06) | the D-039 revision commit; C001-T-072 | settled: P-01 answered "Raise its cap to $3 (Recommended)"; `TS-511` moved to rule 1 in C002-IF-010 §2.2 and `caps.mjs` (45 rows, 15 rule-1, 27 rule-2 at that revision), no fix task; after the G3 approval of the D-039 revision three fresh sessions run at 3.00 USD, and the four capped sessions are no runs; the higher token use is a follow-up after release (`10-strategy.md`) |

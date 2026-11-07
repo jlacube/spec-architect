@@ -301,3 +301,11 @@ Questions on the S-07 record (C002-T-001).
 - **Options** (as presented by the conductor): 1. Run it on both configs: about 15–30 USD notional (Recommended) · 2. cfg-full only, with cfg-bare deferred · 3. Defer both
 - **Answer:** P-01 (2026-11-07, relayed by the conductor): "Run it on both configs (Recommended)", option 1
 - **Extracted instructions:** none
+
+## Round 2026-11-07 (2) — defect D-043 (found in C001-T-072)
+
+### Q-toy-g3-cap-02 — the cfg-full toy chain at 3.00 USD per session stopped at its 16 USD limit before G3 (C001-M-4 item)
+- **Context:** the cfg-full chain of the toy change to G3 ran six sessions, 14.54 USD notional (`evals/results/toy-g3-cfg-full-chain-partial-2026-11-07.json` and the six result records of commit 2b50507). Ideation took about 8.5 USD over three sessions, two of them at the 3.00 USD cap, and G1 was approved in session 4. Sessions 5 and 6, in the spec phase, both ended at the cap: the conductor dispatched the test designer and the architect in parallel, the architect used most of each session, and the test designer wrote nothing before the cap. G3 was not reached, and cfg-bare did not run.
+- **Options** (as presented by the conductor): 1. Raise session cap to $6: a short cap revision so parallel specialists can finish, closer to real use with no cap; resume cfg-full from its saved state (the 14.54 USD isn't lost), then cfg-bare, limit ~30 USD per config; ends near 410 USD of the 450 USD stop (Recommended) · 2. Raise the chain limit only: keep 3.00 USD per session but allow ~30 USD per config; no revision, but the parallel test-designer work may keep getting lost · 3. Accept the partial result: record G1 reached on cfg-full and defer the G3 evidence
+- **Answer:** P-01 (2026-11-07, relayed by the conductor): "Raise session cap to $6 (Recommended)", option 1
+- **Extracted instructions:** none

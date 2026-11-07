@@ -167,7 +167,17 @@ rule 1 and 70 of rule 2. Each session of their chains runs at 3.00 USD with `--c
 chain per configuration, at most 12 sessions and 16 USD notional each, ending at the G3 approval:
 no session starts when the chain total plus the 3.00 USD session cap would pass 16 USD, so a chain ends at or under 16 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`; critic CR-134).
 These sessions count toward no pass rule of a release class. The check of an exception does not
-change (§2.2 exception table, Sessions of CHG-001 tasks).
+change (§2.2 exception table, Sessions of CHG-001 tasks). From defect D-043 the two rows run at 6.00 USD
+per session and 30 USD per chain (next note).
+
+Revised for defect D-043 (found in C001-T-072; P-01 answer to Q-toy-g3-cap-02, "Raise session cap to
+$6 (Recommended)"): the two `toy-g3` rows keep rule 1 and get their own rerun cap of 6.00 USD, the
+only rows whose rerun cap is not the one of their rule, so every session of their chains runs at
+6.00 USD with `--cap-exception`. Each chain runs at most 12 sessions and 30 USD notional:
+no session starts when the chain total plus the row's 6.00 USD session cap would pass 30 USD, so a chain ends at or under 30 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`, the cap read from the row's exception; critic CR-134). The cfg-full chain resumes from its saved state, whose six sessions at 3.00 USD
+(14.54 USD) count toward its 30 USD. The table still has 90 rows, 17 of rule 1 (15 at 3.00 USD, 2 at
+6.00 USD) and 70 of rule 2. The check of an exception does not change (§2.2 exception table, Sessions
+of CHG-001 tasks).
 
 ## §1 Selection
 
@@ -577,7 +587,8 @@ exception (Recommended)"; the row `TS-511` moved from rule 2 to rule 1 for defec
 to Q-ts511-cap-01, "Raise its cap to $3 (Recommended)"; the forty-three release-standard rows added to
 rule 2 for defect D-040, P-01 answer to Q-std-cap-01, "Rule 2 for the whole class (Recommended)"; the two
 toy-change-to-G3 rows added to rule 1 for defect D-042, P-01 answer to Q-toy-g3-cap-01, "Run it on both
-configs (Recommended)"). A case row sets
+configs (Recommended)", and their rerun cap raised to 6.00 USD for defect D-043, P-01 answer to
+Q-toy-g3-cap-02, "Raise session cap to $6 (Recommended)"). A case row sets
 `maxBudgetUsd` above 0.50 or `maxTurns` above 30, and a run applies a cap above the row's own, only
 where P-01 approved an exception for that row, host and auth mode; the exceptions in force are the
 rows of this table. They fall into two classes: the **paid class**, for sessions that spend from a
@@ -653,7 +664,7 @@ cap when the run gives `--cap-exception`, else the matching exception's session 
 | `TS-507` (`evals/cap05/TS-507.eval.mjs`); `TS-508` (`evals/cap05/TS-508.eval.mjs`); `TS-711` (`evals/cap07/TS-711.eval.mjs`); `TS-802` (`evals/cap08/TS-802.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-033; 1.50 USD before) | the sessions of C001-T-072 at the row's release class, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below) | P-01, Q-cap-exc-01 and Q-cap-exc-02 (2026-10-24; defect D-030); rerun cap 3.00 USD: P-01, Q-cap-level-01 (2026-10-24; defect D-033). In the measurement at the default caps, the 0.50 USD cap cut off `TS-711`'s critic before the rubric, so its case failed. The architect subagent of `TS-507` and `TS-508` skipped outputs because of the budget; their sessions ended at 0.48 and 0.50 USD. The conductor of `TS-802` stopped itself for the budget, and its session then ended at the spend cap (moved from rule 2 on critic CR-98). Evidence table below |
 | `TS-511` (`evals/cap05/TS-511.eval.mjs`, moved from the rule-2 row for defect D-039) | `claude-code` | `subscription` | 0.50 USD, 30 turns | 3.00 USD (defect D-039; 1.50 USD before) | the sessions of C001-T-072 at the row's release class, each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below). The four sessions of 2026-10-30 and 2026-11-06 that ended at the spend cap at 0.50 and 1.50 USD are no runs (Runs, below) | P-01, Q-ts511-cap-01 (2026-11-06; defect D-039), "Raise its cap to $3 (Recommended)". The sessions measured so far cost 0.506 … 1.685 USD, and none that ran with the budget hidden has finished (rule 1 of Sessions of CHG-001 tasks, below; evidence table below). **Note (2026-11-07, critic CR-135):** that statement is as of D-039; the three 3.00 USD sessions of 2026-11-06T12 (`release-std-TS-511-2026-11-06T12-*.json`) finished at 1.696 … 1.903 USD |
 | `TS-119` (`evals/cap01/TS-119.eval.mjs`); `TS-120` (`evals/cap01/TS-120.eval.mjs`); `TS-121` (`evals/cap01/TS-121.eval.mjs`); `TS-122` (`evals/cap01/TS-122.eval.mjs`); `TS-202` (`evals/cap02/TS-202.eval.mjs`); `TS-203` (`evals/cap02/TS-203.eval.mjs`); `TS-206` (`evals/cap02/TS-206.eval.mjs`); `TS-207` (`evals/cap02/TS-207.eval.mjs`); `TS-208` (`evals/cap02/TS-208.eval.mjs`); `TS-210` (`evals/cap02/TS-210.eval.mjs`); `TS-211` (`evals/cap02/TS-211.eval.mjs`); `TS-222` (`evals/cap02/TS-222.eval.mjs`); `TS-301` (`evals/cap03/TS-301.eval.mjs`); `TS-303` (`evals/cap03/TS-303.eval.mjs`); `TS-304` (`evals/cap03/TS-304.eval.mjs`); `TS-305` (`evals/cap03/TS-305.eval.mjs`); `TS-306` (`evals/cap03/TS-306.eval.mjs`); `TS-307` (`evals/cap03/TS-307.eval.mjs`); `TS-309` (`evals/cap03/TS-309.eval.mjs`); `TS-312` (`evals/cap03/TS-312.eval.mjs`); `TS-313` (`evals/cap03/TS-313.eval.mjs`); `TS-315` (`evals/cap03/TS-315.eval.mjs`); `TS-316` (`evals/cap03/TS-316.eval.mjs`); `TS-317` (`evals/cap03/TS-317.eval.mjs`); `TS-423` (`evals/cap04/TS-423.eval.mjs`); `TS-609` (`evals/cap06/TS-609.eval.mjs`); `impact` (`evals/cap06/impact.eval.mjs`); `TS-910` (`evals/cap09/TS-910.eval.mjs`); `TS-1001` (`evals/cap10/TS-1001.eval.mjs`); `callers-full` (`evals/cap10/callers-full.eval.mjs`, the row that holds the cfg-full configuration of C001-TC-1002, critic CR-133); `TS-1002-cfg-no-ripwire` (`evals/cap10/TS-1002.eval.mjs`); `TS-1002-cfg-bare` (`evals/cap10/TS-1002.eval.mjs`); `TS-1004` (`evals/cap10/TS-1004.eval.mjs`); `TS-1005` (`evals/cap10/TS-1005.eval.mjs`); `TS-1010` (`evals/cap10/TS-1010.eval.mjs`); `TS-1011` (`evals/cap10/TS-1011.eval.mjs`); `TS-1012` (`evals/cap10/TS-1012.eval.mjs`); `TS-1013` (`evals/cap10/TS-1013.eval.mjs`); `TS-1014` (`evals/cap10/TS-1014.eval.mjs`); `TS-1111` (`evals/cap11/TS-1111.eval.mjs`); `TS-1112-deepwiki-down` (`evals/cap11/TS-1112.eval.mjs`); `TS-1112-bare` (`evals/cap11/TS-1112.eval.mjs`); `TS-1112-node18` (`evals/cap11/TS-1112.eval.mjs`) | `claude-code` | `subscription` | 0.50 USD, 30 turns (a row's own lower `maxTurns` stays in force) | 1.50 USD, for the session that replaces a failed session ended at the spend cap | the sessions of C001-T-072 at the row's release class (standard, 3 runs) and own caps; each failed session that ended at the spend cap is replaced by one session at 1.50 USD (rule 2 of Sessions of CHG-001 tasks, below); no other session of a row runs at the rerun cap | P-01, Q-std-cap-01 (2026-11-06; defect D-040), "Rule 2 for the whole class (Recommended)", for every release-standard row of C001-T-072 without an exception: the rows of the 3-run class of C001-ADR-003 that no other row of this table names. `TS-313` is the row that stopped C001-T-072 (rule 2, below; evidence table below). These are explicit rows because an exception matches on row ID, case file, host and auth mode: a row outside this table stays refused under `--cap-exception`, and the release-high and injection rows outside it stay at the caps of C002-NFR-105 |
-| `toy-g3-cfg-full`, `toy-g3-cfg-bare` (`evals/toy/toy-g3.eval.mjs`, added for defect D-042) | `claude-code` | `subscription` | 0.50 USD, 30 turns (the rows' `maxTurns`) | 3.00 USD (defect D-042) | the sessions of the C001-T-072 toy change to G3 (the open C001-M-4 item), each at the rerun cap, 3.00 USD (rule 1 of Sessions of CHG-001 tasks, below): one chain per configuration, run by `evals/toy/chain.mjs`, at most 12 sessions and 16 USD notional per chain, ending at the G3 approval of the toy change; no session starts when the chain total plus the 3.00 USD session cap would pass 16 USD, so a chain ends at or under 16 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`; critic CR-134). These sessions count toward no pass rule of a release class of C001-ADR-003 | P-01, Q-toy-g3-cap-01 (2026-11-07; defect D-042), "Run it on both configs (Recommended)", about 15 … 30 USD notional for both chains. One architect step costs 1.6 … 1.9 USD in the release runs (`TS-507`, `TS-508`, `TS-511`), and a session that only presents a gate about 0.27 USD (`TS-802`), so a session at 0.50 USD cannot finish a step and the chain would not move on (rule 1, below) |
+| `toy-g3-cfg-full`, `toy-g3-cfg-bare` (`evals/toy/toy-g3.eval.mjs`, added for defect D-042) | `claude-code` | `subscription` | 0.50 USD, 30 turns (the rows' `maxTurns`) | 6.00 USD, the rows' own rerun cap (defect D-043; 3.00 USD, the rule-1 cap, before) | the sessions of the C001-T-072 toy change to G3 (the open C001-M-4 item), each at the rerun cap, 6.00 USD (rule 1 of Sessions of CHG-001 tasks, below): one chain per configuration, run by `evals/toy/chain.mjs`, at most 12 sessions and 30 USD notional per chain, ending at the G3 approval of the toy change; no session starts when the chain total plus the row's 6.00 USD session cap would pass 30 USD, so a chain ends at or under 30 USD notional, apart from the overshoot of a capped session's last step (`chain.mjs` `decide`, the cap read from the row's exception; critic CR-134). The cfg-full chain resumes from its saved state, whose six sessions at 3.00 USD (14.54 USD) count toward its 30 USD. These sessions count toward no pass rule of a release class of C001-ADR-003 | P-01, Q-toy-g3-cap-01 (2026-11-07; defect D-042), "Run it on both configs (Recommended)", about 15 … 30 USD notional for both chains; rerun cap 6.00 USD and 30 USD per chain: P-01, Q-toy-g3-cap-02 (2026-11-07; defect D-043), "Raise session cap to $6 (Recommended)", after the cfg-full chain at 3.00 USD stopped at its 16 USD limit with G3 not reached (evidence in rule 1, below). One architect step costs 1.6 … 1.9 USD in the release runs (`TS-507`, `TS-508`, `TS-511`), and a session that only presents a gate about 0.27 USD (`TS-802`), so a session at 0.50 USD cannot finish a step and the chain would not move on (rule 1, below) |
 
 **Claude Code subscription class** (defect D-025; P-01 answer to Q-claude-cap-01). The exceptions
 of host `claude-code` and auth `subscription` hold for Claude Code sessions that run on P-01's Claude
@@ -724,7 +735,8 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
    `TS-511` moved from rule 2 for defect D-039; the two `toy-g3` rows added for defect D-042; the
    evidence is in their table rows). Each
    session runs with `--cap-exception`, at the row's rerun cap of 3.00 USD (defect D-033; P-01 answer
-   to Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before) and the row's own turn cap (40 for
+   to Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before), or 6.00 USD for the two `toy-g3`
+   rows, the only rows with a rerun cap of their own (defect D-043) and the row's own turn cap (40 for
    `TS-213` and `TS-221`). The sessions at 0.50 USD of `TS-213`, `TS-215`, `TS-221` and the three `TS-318` rows
    ended at the spend cap before the step their cases check (C002-T-048
    batches 5 and 6 and step X3, `docs/releases/regression-CHG-002.md`). Their latest sessions at
@@ -816,10 +828,25 @@ decision within P-01's approved spend of Q-early-stop-01). Each row runs by one 
    (`release-std-TS-511-2026-11-06T12-*.json`, 3 sessions); a session that only presents a gate,
    `TS-802`, costs about 0.27 USD (`release-high-TS-802-2026-10-29T17-*.json`, three sessions per
    file). So a session at 0.50 USD cannot finish a phase step, and its successor would resume the
-   same step again. The chain stops at the G3 approval, after 12 sessions, or before a session whose
-   3.00 USD cap would take the chain total past 16 USD notional, whichever comes first (`chain.mjs`
-   `maxSessions` and `maxUsd`; critic CR-134), so a chain ends at or under 16 USD apart from the
-   overshoot of a capped session's last step. The sessions are not runs of a
+   same step again.
+   **At 3.00 USD** (defect D-043; P-01 answer to Q-toy-g3-cap-02, "Raise session cap to $6
+   (Recommended)"). The cfg-full chain of 2026-11-07 (`evals/results/toy-g3-cfg-full-chain-partial-2026-11-07.json`,
+   result records `evals/results/toy-g3-toy-g3-cfg-full-2026-11-07T*.json`, commit 2b50507) stopped at
+   its 16 USD limit after six sessions and 14.54 USD notional, with G1 approved in session 4 and the
+   spec phase in draft, so G3 was not reached and cfg-bare did not run. Session 1 (`/architect:new`)
+   cost 0.271 USD. Ideation took 8.21 USD over sessions 2 … 4 (3.044 and 3.057 USD, both ended at
+   the cap; 2.107 USD, G1 approved). Both spec sessions ended at the cap. In session 5 (3.022 USD)
+   the spec writer drafted the spec with the cartographer, and the conductor then dispatched the test
+   designer and the architect in parallel; the cap ended the session as they started. In session 6
+   (3.039 USD) the conductor dispatched the two in parallel again; the architect made 15 edits of
+   `spec.md` and read 1.93 M cached tokens, against 0.54 M for the test designer, which issued no
+   Write or Edit before the cap. So at 3.00 USD a spec session cannot hold both parallel specialists,
+   and the test designer's work is lost each time. **At 6.00 USD** the chain stops at the G3 approval,
+   after 12 sessions, or before a session whose 6.00 USD cap would take the chain total past 30 USD
+   notional, whichever comes first (`chain.mjs` `maxSessions` and `maxUsd`, the session cap read
+   from the row's exception; critic CR-134), so a chain ends at or under 30 USD apart from the
+   overshoot of a capped session's last step. The resumed cfg-full chain counts its six sessions of
+   2026-11-07 (14.54 USD) toward its 30 USD and its 12 sessions. The sessions are not runs of a
    release class: they count toward no pass rule of C001-ADR-003, and the session-limit check of
    C001-T-072 lists them apart. The rows have no stop condition (`stopWhen`).
 2. **Own caps, a capped failure replaced:** every other row of the class that is a release case of

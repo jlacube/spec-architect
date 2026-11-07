@@ -89,10 +89,15 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  *   fifteenth rule-1 row and 27 rule-2 rows; and, for defect D-040 (P-01, Q-std-cap-01, 2026-11-06), the
  *   forty-three release-standard rows of C001-T-072 without an exception after TS-511, 70 rule-2 rows; and,
  *   for defect D-042 (P-01, Q-toy-g3-cap-01, 2026-11-07), the two toy-change-to-G3 rows of C001-T-072
- *   (toy-g3-cfg-full, toy-g3-cfg-bare) after them, 17 rule-1 rows, 90 rows. They are explicit rows: the match on row ID, case file, host and auth mode refuses every row outside the table.
- * Two rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
+ *   (toy-g3-cfg-full, toy-g3-cfg-bare) after them, 17 rule-1 rows, 90 rows; and, for defect D-043 (P-01,
+ *   Q-toy-g3-cap-02, 2026-11-07), the rerun cap of those two rows raised to 6.00 USD. They are explicit rows:
+ *   the match on row ID, case file, host and auth mode refuses every row outside the table.
+ * Rerun caps of the subscription class (defect D-033): 3.00 USD for each rule-1 row
  * (`RULE1_RERUN_USD`), 1.50 USD for each other row, the rule-2 rows and TS-421-agent (`RERUN_USD`). `SUB`
- * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists.
+ * derives the rerun cap from the row's recorded `rule`, so no second list of rule-1 rows exists. One
+ * exception to that derivation (defect D-043): a row may name its own rerun cap, which only the two
+ * toy-change-to-G3 rows do, at 6.00 USD (`TOY_CHAIN_RERUN_USD`); they stay rule-1 rows, every session at
+ * that cap. The match and the refusals do not change.
  * Each subscription-class row records as `rule` the list of §2.2 "Sessions of CHG-001 tasks" that holds
  * it, which the CHG-001 tasks read: 1 = every session at the rerun cap (each started with
  * `--cap-exception`); 2 = sessions at the row's own caps, each failed session that ended at the spend cap
@@ -105,7 +110,9 @@ export function createCaps({ maxTurns = DEFAULT_MAX_TURNS, maxBudgetUsd = DEFAUL
  */
 export const RERUN_USD = 1.5;
 export const RULE1_RERUN_USD = 3.0;
-const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd: rule === 1 ? RULE1_RERUN_USD : RERUN_USD, rule });
+/** The rerun cap of the two toy-change-to-G3 rows, rule 1 (defect D-043, P-01 Q-toy-g3-cap-02). */
+export const TOY_CHAIN_RERUN_USD = 6.0;
+const SUB = (row, file, rule, turns = DEFAULT_MAX_TURNS, rerunUsd = rule === 1 ? RULE1_RERUN_USD : RERUN_USD) => Object.freeze({ row, file, host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns, rerunUsd, rule });
 const INJ = "evals/injection/injection.eval.mjs";
 export const CAP_EXCEPTIONS = Object.freeze([
   Object.freeze({ row: "TS-634", file: "evals/targets/gate/TS-634.eval.mjs", host: "opencode", auth: null, usd: 2.0, turns: DEFAULT_MAX_TURNS, rerunUsd: null }),
@@ -204,9 +211,10 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("TS-1112-deepwiki-down", "evals/cap11/TS-1112.eval.mjs", 2),
   SUB("TS-1112-bare", "evals/cap11/TS-1112.eval.mjs", 2),
   SUB("TS-1112-node18", "evals/cap11/TS-1112.eval.mjs", 2),
-  // Defect D-042: the C001-T-072 toy change to G3, one chain per configuration, every session at the rule-1 cap.
-  SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1),
-  SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1),
+  // Defect D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1; defect D-043: every
+  // session at the rows' own rerun cap of 6.00 USD.
+  SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
+  SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
 ]);
 
 /**

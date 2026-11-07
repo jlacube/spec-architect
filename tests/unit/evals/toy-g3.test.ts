@@ -76,13 +76,21 @@ test("decide: done, failure and limits", () => {
   assert.equal(chainMod.decide({ chain: { sessions: [s(1), s(1), s(1)] }, done: false, maxSessions: 3, maxUsd: 10 }).code, 2);
   assert.equal(chainMod.decide({ chain: { sessions: [s(6), s(4)] }, done: false, maxSessions: 5, maxUsd: 10 }).code, 2);
   assert.equal(chainMod.chainUsd({ sessions: [s(0.1), s(0.2), { cost_usd: null }] }), 0.3);
-  // Critic CR-134: the next session counts at its 3.00 USD rule-1 cap, so no session starts when the total plus
-  // that cap would pass --max-usd (13.00 + 3.00 = 16 starts; 13.01 + 3.00 does not), and a chain ends at or under it.
-  assert.deepEqual(chainMod.decide({ chain: { sessions: [s(6.5), s(6.5)] }, done: false, maxSessions: 12, maxUsd: 16 }), { go: true });
-  const near = chainMod.decide({ chain: { sessions: [s(6.5), s(6.51)] }, done: false, maxSessions: 12, maxUsd: 16 });
+  // Critic CR-134, revision D-043: the next session counts at the row's 6.00 USD cap (the default), so no session
+  // starts when the total plus that cap would pass --max-usd (24.00 + 6.00 = 30 starts; 24.01 + 6.00 does not), and
+  // a chain ends at or under it. The cfg-full chain resumed from its saved 14.54 USD starts at least two more sessions.
+  assert.equal(chainMod.DEFAULT_MAX_USD, 30);
+  assert.equal(chainMod.rowCapUsd("cfg-full"), 6);
+  assert.equal(chainMod.rowCapUsd("cfg-bare"), 6);
+  assert.equal(chainMod.rowCapUsd("cfg-no-ripwire"), null);
+  assert.deepEqual(chainMod.decide({ chain: { sessions: [s(12), s(12)] }, done: false, maxSessions: 12, maxUsd: 30 }), { go: true });
+  const near = chainMod.decide({ chain: { sessions: [s(12), s(12.01)] }, done: false, maxSessions: 12, maxUsd: 30 });
   assert.equal(near.go, false);
   assert.equal(near.code, 2);
-  assert.match(near.why, /3 USD cap would pass --max-usd 16/);
+  assert.match(near.why, /6 USD cap would pass --max-usd 30/);
+  assert.deepEqual(chainMod.decide({ chain: { sessions: [s(14.54)] }, done: false, maxSessions: 12, maxUsd: 30 }), { go: true });
+  // An explicit session cap still applies: at 3.00 USD a 13.00 USD chain may start one more session under 16.
+  assert.deepEqual(chainMod.decide({ chain: { sessions: [s(13)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 3 }), { go: true });
   assert.equal(chainMod.decide({ chain: { sessions: [s(1)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 15.5 }).code, 2);
 });
 
