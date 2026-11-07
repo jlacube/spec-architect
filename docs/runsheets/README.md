@@ -7,6 +7,12 @@ Copilot release. The OpenCode sheets (T-051, and part 2 of the T-052 sheet) are 
 `.sdd/002-multi-platform-targets/20-plan/50-tasks/`. If a sheet and its task file disagree, the task
 file wins. Tell the conductor about the difference.
 
+**CHG-001 release gate (C001-T-072, version 0.1.0).** One more sheet, outside C002-M-07 and independent of the
+CHG-002 sheets below: [T-072-clean-profile-install.md](T-072-clean-profile-install.md), the timed Claude Code
+install on a fresh Windows profile (C001-TC-1102, limit 15 minutes). It gives the record in `docs/dogfood.md`;
+after it passes the conductor tags `v0.1.0` locally. The rules below about keys, failures and commits apply to it
+too; it uses no CHG-002 package and no Copilot host.
+
 ## Recommended order
 
 | # | Sheet | Task | What it gives | Needs first |
