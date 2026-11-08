@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-08T11:00:19Z",
+  "generated_at": "2026-11-08T11:01:04Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -792,9 +792,9 @@
           "summary": "Found in C001-T-072 (release close-out, docs/release-0.1.0-evidence.md §7): node scripts/release-check.mjs --target copilot --dry-run refuses the Copilot 0.0.3 release candidate with ERR-REL-007, because the CHG-001 release-gate fixes (C001 D-022 … D-027) changed 32 generated files of dist/copilot/ and dist/architect-copilot-0.0.3.zip since the 0.0.3 release-candidate commit 4ef1d61; the source is version 0.1.0 since ab0cfc7 (C001-T-072), with the packages rebuilt in dist/. The plan (C002-T-050, T-055, T-057, T-071, T-075, the handoff and the run sheets) still releases Copilot at 0.0.3. P-01 (2026-11-07, Q-copilot-010-01): 'Ship 0.1.0 on both hosts (Recommended)': Copilot is released at 0.1.0, with the Copilot CLI evidence retaken there and the VS Code checklist and clean-profile runs on the 0.1.0 packages.",
           "reporter": "jerome.lacube",
           "date": "2026-11-07",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "C002-T-076 done (2797533): all 24 Copilot CLI rows pass at 0.1.0 with 0 acted upon (release candidate b481e82, empty plugins/architect diff against 2ee587b); dry run refuses only ERR-REL-003 (T-050's checklist record); Copilot pool 10.33 of 30 USD",
+          "closed_at": "2026-11-08"
         },
         {
           "id": "D-042",
