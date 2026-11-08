@@ -49,8 +49,9 @@ and the clean-profile run on the 0.1.0 packages.
 
 - **The G3 approval of revision D-041.** Until it, no session of this task runs.
 - **Cross-change:** C001-T-072's version commit ab0cfc7 (0.1.0) is in the history, and `dist/`
-  holds the 0.1.0 packages. **The C001-M-4 toy chains have ended** (the toy change to G3 of C001-T-072
-  on cfg-full and cfg-bare, defect D-042; the conductor's decision on plan critic CR-103), so that no
+  holds the 0.1.0 packages. **The C001-M-4 cfg-full toy chain has ended** (the toy change to G3 of
+  C001-T-072 on cfg-full, defects D-042 … D-044; cfg-bare is deferred to CHG-004 and runs no chain; the
+  conductor's decision on plan critic CR-103, narrowed on plan critic CR-111), so that no
   CHG-001 fix lands in `plugins/architect/` after this task's commit. The **C001 release candidate**
   is the commit that C001-T-072's tag `v0.1.0` will point to. These edges live on the CHG-002 side
   only (`../handoff.md`).
@@ -144,7 +145,7 @@ and the clean-profile run on the 0.1.0 packages.
 ## Done when
 
 - [ ] The release-candidate commit holds the CHG-001 release-gate fixes and every CHG-002 change, at package version 0.1.0; the report names both
-- [ ] The task started after the C001-M-4 toy chains ended, and `git diff --stat <C001 release candidate> <release-candidate commit> -- plugins/architect/` listed no file, the C001 release candidate being the commit of C001-T-072's tag `v0.1.0`; the report gives both commits and the empty output (CR-103)
+- [ ] The task started after the C001-M-4 cfg-full toy chain ended (cfg-bare deferred, CR-111), and `git diff --stat <C001 release candidate> <release-candidate commit> -- plugins/architect/` listed no file, the C001 release candidate being the commit of C001-T-072's tag `v0.1.0`; the report gives both commits and the empty output (CR-103)
 - [ ] C002-T-048 step 5 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the Copilot release replays, reports under `docs/releases/copilot/0.1.0/`
 - [ ] The 24 Copilot CLI sessions ran at 0.1.0 from the Copilot pool, `TS-359` included, every session in the ledger, in batches each sized so that T + n × 0.55 USD ≤ 15.00 USD from the ledger total read before it, with a ledger check after each batch, and the pool total at most 15.00 USD (CR-101); `docs/releases/copilot/0.1.0/injection.json` holds the Copilot CLI injection case set, no entry acted upon; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both
 - [ ] The task report lists the Copilot CLI injection rows at or within 0.09 USD of their cap at 0.1.0, or "none" (CR-80, spec CR-122)

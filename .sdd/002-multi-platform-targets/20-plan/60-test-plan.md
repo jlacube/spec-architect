@@ -178,7 +178,7 @@ counts above are those of the main branch.
     Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before, from C002-T-070 on) and the row's own
     turn cap. **Exception, the two toy-g3 rows** (defects D-042, D-043): every session at their own rerun
     cap of 6.00 USD, in one chain for cfg-full whose own limits govern (at most 14 sessions and 55 USD
-    notional in total, defect D-044; cfg-bare deferred to a follow-up change, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
+    notional in total, defect D-044; cfg-bare deferred to CHG-004, its row refused, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
     design, and does not go to P-01 under C002-RISK-038. **Rule 2:** the row runs at its own caps, and each failed session that ended at the spend
     cap is replaced by one session at the rule-2 rerun cap of 1.50 USD with
     `--cap-exception`. The command forms are those of `handoff.md` (Cross-change dependency). The runs
@@ -714,11 +714,13 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
 - **Revision D-044** (found in C001-T-072; P-01 answer to Q-toy-g3-limit-01, 'Finish cfg-full, defer
   cfg-bare (Recommended)').
   - **Chain driver:** the unit test of `evals/toy/chain.mjs` checks `CHAIN_LIMITS`: cfg-full 14 sessions
-    and 55 USD, an option that may only lower them, cfg-bare refused as deferred (exit 4), and the
-    resumed cfg-full chain (26.78 USD in 8 sessions) starting four more sessions at the 6.00 USD cap and
-    not a fifth.
-  - **Caps rows:** none change; C002-TC-679 keeps its 90 rows, and `toy-g3-cfg-bare` stays, unused in
-    CHG-001 and CHG-002.
+    and 55 USD, an option that may only lower them, `--fresh` refused for cfg-full, option refusals at
+    exit 5, cfg-bare refused as deferred (exit 4). It models the eight saved sessions (26.78 USD):
+    four more at the 6.00 USD cap start and a fifth does not (50.78 USD after session 12), and with
+    cheap sessions the chain stops at the bound of 14 (critics CR-113, CR-114).
+  - **Caps rows:** C002-TC-679 keeps its 90 rows; `toy-g3-cfg-bare` is marked deferred, and a
+    supporting test checks that `capCheck` refuses it with and without `--cap-exception` (critic
+    CR-141).
   - No case is added, and no paid session runs in the revision.
 - **Revision D-043** (found in C001-T-072; P-01 answer to Q-toy-g3-cap-02, "Raise session cap to $6
   (Recommended)").

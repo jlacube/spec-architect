@@ -80,7 +80,7 @@ test("decide: done, failure and limits", () => {
   // starts when the total plus that cap would pass --max-usd (24.00 + 6.00 = 30 starts; 24.01 + 6.00 does not), and
   // a chain ends at or under it.
   assert.equal(chainMod.rowCapUsd("cfg-full"), 6);
-  assert.equal(chainMod.rowCapUsd("cfg-bare"), 6);
+  assert.equal(chainMod.rowCapUsd("cfg-bare"), null); // deferred (revision D-044, critic CR-141)
   assert.equal(chainMod.rowCapUsd("cfg-no-ripwire"), null);
   assert.deepEqual(chainMod.decide({ chain: { sessions: [s(12), s(12)] }, done: false, maxSessions: 12, maxUsd: 30 }), { go: true });
   const near = chainMod.decide({ chain: { sessions: [s(12), s(12.01)] }, done: false, maxSessions: 12, maxUsd: 30 });
@@ -91,10 +91,20 @@ test("decide: done, failure and limits", () => {
   // Revision D-044: cfg-full resumes from its saved 26.78 USD in 8 sessions under 14 sessions and 55 USD, so at the
   // 6.00 USD cap four more sessions start (50.78 USD) and a fifth does not (56.78 > 55); the session bound of 14
   // leaves room for six, so the USD limit binds first at the cap.
-  const resumed = (extra: number[]) => ({ sessions: [26.78, ...extra].map((c) => s(c)) });
+  // The eight saved sessions of 2026-11-07/08 (critic CR-114): 26.78 USD in total.
+  const SAVED = [0.270748, 3.044059, 3.057491, 2.10657, 3.021874, 3.039415, 6.22584, 6.011027];
+  assert.equal(chainMod.chainUsd({ sessions: SAVED.map((c) => s(c)) }), 26.777024);
+  const resumed = (extra: number[]) => ({ sessions: [...SAVED, ...extra].map((c) => s(c)) });
   assert.deepEqual(chainMod.decide({ chain: resumed([]), done: false, maxSessions: 14, maxUsd: 55 }), { go: true });
   assert.deepEqual(chainMod.decide({ chain: resumed([6, 6, 6]), done: false, maxSessions: 14, maxUsd: 55 }), { go: true });
-  assert.equal(chainMod.decide({ chain: resumed([6, 6, 6, 6]), done: false, maxSessions: 14, maxUsd: 55 }).code, 2);
+  const atCap = chainMod.decide({ chain: resumed([6, 6, 6, 6]), done: false, maxSessions: 14, maxUsd: 55 });
+  assert.equal(atCap.code, 2); // every session at the cap: stops after session 12 at about 51 USD (critic CR-113)
+  assert.match(atCap.why, /^50\.77\d* USD notional/);
+  // Cheap sessions: the session bound stops the chain at 14 sessions before the USD limit (critic CR-114).
+  assert.deepEqual(chainMod.decide({ chain: resumed([1, 1, 1, 1, 1]), done: false, maxSessions: 14, maxUsd: 55 }), { go: true });
+  const cheap = chainMod.decide({ chain: resumed([1, 1, 1, 1, 1, 1]), done: false, maxSessions: 14, maxUsd: 55 });
+  assert.equal(cheap.code, 2);
+  assert.match(cheap.why, /^14 sessions, the --max-sessions limit/);
   // An explicit session cap still applies: at 3.00 USD a 13.00 USD chain may start one more session under 16.
   assert.deepEqual(chainMod.decide({ chain: { sessions: [s(13)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 3 }), { go: true });
   assert.equal(chainMod.decide({ chain: { sessions: [s(1)] }, done: false, maxSessions: 12, maxUsd: 16, sessionUsd: 15.5 }).code, 2);
@@ -121,13 +131,18 @@ test("chainLimits (revision D-044): cfg-full 14 sessions and 55 USD, options may
   assert.deepEqual(chainMod.chainLimits("cfg-full"), { maxSessions: 14, maxUsd: 55 });
   assert.deepEqual(chainMod.chainLimits("cfg-full", { maxSessions: null, maxUsd: null }), { maxSessions: 14, maxUsd: 55 });
   assert.deepEqual(chainMod.chainLimits("cfg-full", { maxSessions: 10, maxUsd: 40 }), { maxSessions: 10, maxUsd: 40 });
-  assert.equal(chainMod.chainLimits("cfg-full", { maxUsd: 55.01 }).code, 3);
-  assert.equal(chainMod.chainLimits("cfg-full", { maxSessions: 15 }).code, 3);
-  assert.equal(chainMod.chainLimits("cfg-full", { maxUsd: 0 }).code, 3);
+  // Option refusals have their own exit code, 5 (critic CR-139).
+  assert.equal(chainMod.chainLimits("cfg-full", { maxUsd: 55.01 }).code, 5);
+  assert.equal(chainMod.chainLimits("cfg-full", { maxSessions: 15 }).code, 5);
+  assert.equal(chainMod.chainLimits("cfg-full", { maxUsd: 0 }).code, 5);
+  assert.equal(chainMod.chainLimits("cfg-no-ripwire").code, 5);
+  // --fresh is refused for cfg-full, whose chain resumes (critic CR-140).
+  const fresh = chainMod.chainLimits("cfg-full", { fresh: true });
+  assert.equal(fresh.code, 5);
+  assert.match(fresh.refusal, /--fresh is refused for cfg-full/);
   const bare = chainMod.chainLimits("cfg-bare");
   assert.equal(bare.code, 4);
-  assert.match(bare.refusal, /cfg-bare is deferred to a follow-up change \(defect D-044\)/);
-  assert.equal(chainMod.chainLimits("cfg-no-ripwire").code, 3);
+  assert.match(bare.refusal, /cfg-bare is deferred to CHG-004 \(defect D-044\)/);
 });
 
 test("toolchainFor: cfg-full detects all three tools, cfg-bare none", () => {

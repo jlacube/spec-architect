@@ -214,7 +214,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   // Defect D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1; defect D-043: every
   // session at the rows' own rerun cap of 6.00 USD.
   SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
-  SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
+  // Defect D-044 (critic CR-141): cfg-bare deferred to CHG-004; capCheck refuses the row, which CHG-004 re-enables.
+  Object.freeze({ ...SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD), deferred: "deferred to CHG-004 (defect D-044)" }),
 ]);
 
 /**
@@ -235,13 +236,15 @@ const authText = (auth) => (auth ? `auth ${auth}` : "no auth mode");
  * one (defect D-035), else the row's `maxBudgetUsd`), else `{ refusal }`, the
  * message naming the row's ID, its case file, the host and the auth mode. A row runs when it sets at most
  * 0.50 USD and 30 turns (a value it does not set being the default) or a matching exception's own caps
- * are at least the row's values; under `--cap-exception` only when a matching exception has a rerun cap.
+ * are at least the row's values; under `--cap-exception` only when a matching exception has a rerun cap. A row
+ * whose matching exception is marked `deferred` (toy-g3-cfg-bare, defect D-044) is refused in every run.
  */
 export function capCheck({ id, file, host, auth = null, maxBudgetUsd, maxTurns, capExceptionRun = false }, exceptions = CAP_EXCEPTIONS) {
   const usd = maxBudgetUsd ?? DEFAULT_MAX_BUDGET_USD;
   const turns = maxTurns ?? DEFAULT_MAX_TURNS;
   const where = `row ${id} of ${file} on host ${host} with ${authText(auth)}`;
   const e = capException({ id, file, host, auth }, exceptions);
+  if (e && e.deferred) return { refusal: `${where}: its cap exception of C002-IF-010 §2.2 is ${e.deferred}; the row runs in no session` };
   const within = usd <= DEFAULT_MAX_BUDGET_USD + EPS && turns <= DEFAULT_MAX_TURNS;
   if (!within && !(e && e.usd + EPS >= usd && e.turns >= turns)) {
     const over = [usd > DEFAULT_MAX_BUDGET_USD + EPS ? `maxBudgetUsd ${usd} USD, above ${DEFAULT_MAX_BUDGET_USD.toFixed(2)} USD` : null, turns > DEFAULT_MAX_TURNS ? `maxTurns ${turns}, above ${DEFAULT_MAX_TURNS}` : null].filter(Boolean).join(" and ");

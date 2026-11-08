@@ -5,11 +5,17 @@
 //                            [-- <further run.mjs options>]
 // Each session: `run.mjs --host claude-code --auth subscription --cap-exception --tier dev --runs 1
 // --only toy-g3-<cfg> --label <label> evals/toy/toy-g3.eval.mjs` (the rerun cap of the row's cap exception,
-// 6.00 USD, C002-IF-010 §2.2, defect D-043). --fresh removes the chain's saved state first. Exit 0 when G3 is approved and the end
-// state holds; 1 when a session fails (or run.mjs refuses it); 2 at a limit (sessions or notional USD); 3 when a
-// resume (no --fresh) finds no saved chain: chain.json missing, unreadable or without a session (critic CR-109),
-// so a lost state never restarts a chain from zero. A new chain starts with --fresh. 4 when the configuration is
-// deferred (cfg-bare, defect D-044): nothing runs.
+// 6.00 USD, C002-IF-010 §2.2, defect D-043). --fresh removes the chain's saved state first; it is refused for a
+// configuration whose chain must resume (cfg-full, defect D-044, critic CR-140).
+// Exit codes (C002-IF-010 §2.2, critic CR-139):
+//   0  G3 approved and the end state holds;
+//   1  a session failed (or run.mjs refused it);
+//   2  a limit reached (sessions or notional USD), G3 not approved;
+//   3  a resume (no --fresh) found no saved chain: chain.json missing, unreadable or without a session (critic
+//      CR-109), so a lost state never restarts a chain from zero;
+//   4  the configuration is deferred (cfg-bare, defect D-044): nothing runs;
+//   5  an option refused: an unknown option or configuration, --max-sessions or --max-usd not positive or above
+//      the configuration's limit, or --fresh for a configuration that must resume. Nothing runs.
 // The limits are per configuration (`CHAIN_LIMITS`, defect D-044): cfg-full 14 sessions and 55 USD notional in
 // total, the saved sessions included; --max-sessions and --max-usd may only lower them. The USD limit is checked
 // before each session with the session's cap, read from the
@@ -26,17 +32,19 @@ import { CONFIGS, nextStep, stateDir, statusOf } from "./toy-g3.eval.mjs";
 
 /**
  * The chain limits per configuration (C002-IF-010 §2.2; defect D-044, P-01 Q-toy-g3-limit-01): the session
- * bound and the notional USD total of the chain, its saved sessions included. cfg-bare is deferred to a follow-up
- * change and runs no chain in CHG-001 or CHG-002 (its row `toy-g3-cfg-bare` stays in the cap table, unused).
+ * bound and the notional USD total of the chain, its saved sessions included; `resumeOnly`: --fresh refused
+ * (critic CR-140). cfg-bare is deferred to CHG-004 "Cost and token efficiency" and runs no chain in CHG-001 or
+ * CHG-002; its cap row `toy-g3-cfg-bare` is marked deferred too, so capCheck refuses it (critic CR-141).
  */
 export const CHAIN_LIMITS = Object.freeze({
-  "cfg-full": Object.freeze({ maxSessions: 14, maxUsd: 55 }),
-  "cfg-bare": Object.freeze({ deferred: "deferred to a follow-up change (defect D-044); no chain runs in CHG-001 or CHG-002" }),
+  "cfg-full": Object.freeze({ maxSessions: 14, maxUsd: 55, resumeOnly: true }),
+  "cfg-bare": Object.freeze({ deferred: "deferred to CHG-004 (defect D-044); no chain runs in CHG-001 or CHG-002" }),
 });
 
 /** The session cap of the row `toy-g3-<cfg>`: the rerun cap of its cap exception (C002-IF-010 §2.2), or null. */
 export function rowCapUsd(cfg) {
-  return capException({ id: `toy-g3-${cfg}`, file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription" })?.rerunUsd ?? null;
+  const e = capException({ id: `toy-g3-${cfg}`, file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription" });
+  return e && !e.deferred ? (e.rerunUsd ?? null) : null;
 }
 
 /**
@@ -89,20 +97,21 @@ function parse(argv) {
     else if (a === "--max-sessions") o.maxSessions = Number(argv[++i]);
     else if (a === "--max-usd") o.maxUsd = Number(argv[++i]);
     else if (a === "--label") o.label = argv[++i];
-    else throw new Error(`chain: unknown option ${a}`);
+    else return { refusal: `chain: unknown option ${a}` };
   }
-  if (!CONFIGS.includes(o.cfg)) throw new Error(`chain: --cfg must be one of ${CONFIGS.join(", ")}`);
   return o;
 }
 
 /**
  * The limits of one chain run: `{ maxSessions, maxUsd }` from `CHAIN_LIMITS`, an option lowering one of them,
- * or `{ refusal, code }`: code 4 for a deferred configuration, 3 for an option above its limit or not positive.
+ * or `{ refusal, code }`: code 4 for a deferred configuration, 5 for a refused option (an unknown
+ * configuration, a limit option not positive or above the limit, --fresh where the chain must resume).
  */
-export function chainLimits(cfg, { maxSessions = null, maxUsd = null } = {}) {
+export function chainLimits(cfg, { maxSessions = null, maxUsd = null, fresh = false } = {}) {
   const l = CHAIN_LIMITS[cfg];
-  if (!l) return { refusal: `chain: no chain limits for ${cfg}`, code: 3 };
+  if (!l) return { refusal: `chain: --cfg must be one of ${Object.keys(CHAIN_LIMITS).join(", ")}`, code: 5 };
   if (l.deferred) return { refusal: `chain: ${cfg} is ${l.deferred}`, code: 4 };
+  if (fresh && l.resumeOnly) return { refusal: `chain: --fresh is refused for ${cfg}: its chain resumes from its saved sessions (defect D-044)`, code: 5 };
   const pick = (name, given, limit) => {
     if (given === null) return { value: limit };
     if (!(given > 0) || given > limit) return { refusal: `chain: --${name} ${given} must be positive and at most the ${cfg} limit ${limit}` };
@@ -111,11 +120,15 @@ export function chainLimits(cfg, { maxSessions = null, maxUsd = null } = {}) {
   const s = pick("max-sessions", maxSessions, l.maxSessions);
   const u = pick("max-usd", maxUsd, l.maxUsd);
   const refusal = s.refusal ?? u.refusal;
-  return refusal ? { refusal, code: 3 } : { maxSessions: s.value, maxUsd: u.value };
+  return refusal ? { refusal, code: 5 } : { maxSessions: s.value, maxUsd: u.value };
 }
 
 function main() {
   const o = parse(process.argv.slice(2));
+  if (o.refusal) {
+    console.error(o.refusal);
+    process.exit(5);
+  }
   const limits = chainLimits(o.cfg, o);
   if (limits.refusal) {
     console.error(limits.refusal);

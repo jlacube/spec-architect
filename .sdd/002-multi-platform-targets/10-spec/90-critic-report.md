@@ -1561,3 +1561,19 @@ Scope: `git diff 2b50507 59d627d`, against D-043 and Q-toy-g3-cap-02. Read-only 
 |---|---|---|---|---|---|
 | CR-136 | major | DOD-012, NFR-105, IF-010 §2.2 | DOD-012 still allows caps.usd 1.50 or 3.00 only and has no place for the chain sessions; every 6.00 USD toy session would fail it | allow 6.00 USD for the two toy-g3 rows; add the chain bound (12 sessions, 30 USD plus overshoot), toward no pass rule; keep the six 3.00 USD cfg-full sessions valid | fixed: DOD-012 allows caps.usd 6.00 for the two toy-g3 rows only, keeps the six 3.00 USD cfg-full sessions of 2026-11-07 valid, and bounds the toy sessions to one chain per configuration of at most 12 sessions and 30 USD plus the overshoot of a capped session's last step, toward no pass rule |
 | CR-137 | minor | NFR-105, IF-010 §2.2 rule 1 | the "among them" list reads as if TS-225, TS-226-blocking and TS-511 were 6.00 USD rows; no overshoot clause; the toy-row clause attached to the turn-cap clause | move the list after the seventeen rule-1 rows; add the overshoot clause; reorder the clauses | fixed: NFR-105 names the four rows right after the seventeen rule-1 rows, then the caps (3.00 USD for fifteen, 6.00 USD for the toy-g3 rows) with the overshoot clause; IF-010 rule 1 puts the toy-row clause after the turn-cap clause |
+
+
+## Revision D-044 (2026-11-08)
+
+Scope: `git diff 2563aa6 ebb4775`, against D-044 and Q-toy-g3-limit-01. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-138 | minor | IF-010 §2.2 toy-g3 row | approval cell still cites 30 USD per chain; 14 sessions presented as P-01's choice | 55 USD in total: P-01, Q-toy-g3-limit-01 (D-044); 14 sessions: implementer's decision on top of it, confirmed at G2 | fixed: approval cell: 55 USD in total P-01, Q-toy-g3-limit-01 (D-044); 14 sessions the implementer's decision on top of it, confirmed by the conductor at G2; same attribution in the IF-010 revision note, the strategy and the handoff settled row |
+| CR-139 | minor | IF-010 §2.2, chain.mjs | exit 3 means both "no saved session" and "option refused" | give option refusals their own exit code, or specify both meanings | fixed: option refusals exit 5 in chain.mjs; every exit code 0 … 5 specified in the IF-010 §2.2 D-044 note, the chain.mjs header and the handoff; unit tests |
+| CR-140 | minor | IF-010 §2.2, chain.mjs | --fresh on cfg-full deletes the saved sessions and gives a fresh 55 USD | refuse --fresh for cfg-full | fixed: chain.mjs refuses --fresh for cfg-full (CHAIN_LIMITS resumeOnly, exit 5), with a unit test; stated in IF-010, strategy and handoff |
+| CR-141 | minor | IF-010 §2.2 toy-g3 row | the cfg-bare cap exception is still in force through run.mjs | mark the row deferred so capCheck refuses it, or drop the "finds it as approved" claim | fixed: the toy-g3-cfg-bare row is marked deferred in caps.mjs and capCheck refuses it with and without --cap-exception (supporting test in cap-exceptions.test.ts); the 'finds it as approved' claim dropped; CHG-004 re-enables or re-adds it by its own revision |
