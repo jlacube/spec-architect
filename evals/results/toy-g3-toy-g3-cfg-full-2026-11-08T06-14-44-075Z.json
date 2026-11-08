@@ -1,0 +1,2169 @@
+{
+  "scenario": "toy-g3-cfg-full",
+  "title": "Toy change to G3 on cfg-full (C001-M-4)",
+  "tier": "dev",
+  "label": "toy-g3",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-08T06:47:35.665Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 6.006630069999998,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 6.006630069999998,
+        "session_ms": 1970152,
+        "api_ms": 1089421,
+        "turns": 6,
+        "result_subtype": "error_max_budget_usd",
+        "tokens_by_model": {
+          "claude-opus-5-5": {
+            "input": 206,
+            "output": 97654,
+            "cache_read": 6925402,
+            "cache_write": 388379,
+            "cost_usd": 5.479404399999998
+          },
+          "claude-sonnet-5-5": {
+            "input": 30,
+            "output": 20648,
+            "cache_read": 914763,
+            "cache_write": 90188,
+            "cost_usd": 0.5234863000000001
+          },
+          "claude-haiku-5-5": {
+            "input": 12,
+            "output": 3147,
+            "cache_read": 53142,
+            "cache_write": 13066,
+            "cost_usd": 0.0037393699999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 38,
+              "output": 97654,
+              "cache_read": 888687,
+              "cache_write": 66175
+            },
+            "output": "derived"
+          },
+          "architect:sdd-cartographer": {
+            "models": [
+              "claude-sonnet-5-5"
+            ],
+            "tokens": {
+              "input": 28,
+              "output": 0,
+              "cache_read": 829139,
+              "cache_write": 85624
+            },
+            "output": "derived"
+          },
+          "architect:sdd-planner": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 92,
+              "output": 0,
+              "cache_read": 3394124,
+              "cache_write": 196319
+            },
+            "output": "derived"
+          },
+          "architect:sdd-test-designer": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 70,
+              "output": 0,
+              "cache_read": 2542113,
+              "cache_write": 107452
+            },
+            "output": "derived"
+          },
+          "architect:sdd-auditor": {
+            "models": [
+              "claude-haiku-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 0,
+              "cache_read": 41049,
+              "cache_write": 12093
+            },
+            "output": "derived"
+          },
+          "architect:sdd-critic": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 6,
+              "output": 0,
+              "cache_read": 32170,
+              "cache_write": 55653
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "b9aum32ka",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7n1bt5d7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-cartographer",
+            "task_id": "ae5a2938197fdf181",
+            "ms": 414319,
+            "tool_uses": 38,
+            "total_tokens": 91684
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b907s2f5n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bah9j6ppt",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bc6bhnoeh",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvxe2bziz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bu1vppe4k",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4wo6ns02",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvaqql39h",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "beuw2smiq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7m5y7icw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b3tnlpkex",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8rw2ix2b",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bwn8b900g",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bhne0tori",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bxa05ncko",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bf904hq41",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4cwowlri",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5re335cn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bwkay3a90",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brt26f0z4",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b485p7371",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2ra31imh",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-planner",
+            "task_id": "ae02f45342ee5ab05",
+            "ms": 256313,
+            "tool_uses": 21,
+            "total_tokens": 88628
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bf8opqvgf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5fmqwsqg",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b84f2shod",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bro068uc2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8zitsedc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-test-designer",
+            "task_id": "aa07022aa88079bf5",
+            "ms": 1029320,
+            "tool_uses": 71,
+            "total_tokens": 113742
+          },
+          {
+            "subagent": "architect:sdd-planner",
+            "task_id": "aef4bd9e025cd5e01",
+            "ms": 487766,
+            "tool_uses": 51,
+            "total_tokens": 117716
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brn9f1zzo",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bgpbiwz79",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bspm4aisy",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkayhxkhd",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bopjwok5e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b9z9hmq5n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsh7ix6gn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bqqom6kqi",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b73yk3ncc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2rjoe7sk",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjpzbl5ns",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b9rru662e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "binrd34cw",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2yp0a8bn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvzgbbfvk",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "by5pxir1s",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bei4gpws8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bcludj5vv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvym3z0m0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "boaqy313g",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bymj750tm",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bzfpfzhuv",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b6h3v8bic",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2uhm08b9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bi8ajv90z",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bg84nn38p",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bzi7476p8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "by30rnp1e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvt19nhks",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bmd3v982e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bfd0nbyg2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btgcsvsr5",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7fagcm6h",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bl4yz9knc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b2iayqbbc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "brfrjj0h9",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bab9xnyhd",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bz9q8g185",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkrro0pk2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjocblraf",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b22hsudvq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "btckd2cld",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bv06g814l",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b7wit731d",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bimf7pu0t",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bctapxoi2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b07q4ezb2",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b1g1ldrji",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "breje2c70",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b6rrd9j35",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpim2xfft",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpixple6c",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bfri6u046",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bg2yto39d",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b8kxep736",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjsw8xdmh",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bnyzi0d95",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "be2bxoicx",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsr75a99h",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b0zg86m0n",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bh1gd8ea1",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "budbt8ja0",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bpbce0f6p",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "boa353jsc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-auditor",
+            "task_id": "a7c1d32eaa3760038",
+            "ms": 89248,
+            "tool_uses": 8,
+            "total_tokens": 14365
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bsi5bmq6k",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bidkdvzf4",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bcg9tkzmz",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bkon7va5d",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bjd3a84vq",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "architect:sdd-critic",
+            "task_id": "aa0bce219f4f2991e",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 100,
+          "Read": 64,
+          "Glob": 9,
+          "Skill": 1,
+          "TaskCreate": 8,
+          "Edit": 26,
+          "Grep": 6,
+          "TaskUpdate": 11,
+          "Agent": 6,
+          "ToolSearch": 1,
+          "Write": 5,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 315
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 34830
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 34755
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 28
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 31
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 21
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 22
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 32
+          },
+          {
+            "tool": "TaskCreate",
+            "agent": "main",
+            "ms": 12
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 231
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 734
+          },
+          {
+            "tool": "Edit",
+            "agent": "main",
+            "ms": 719
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 330
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 12788
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 12461
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 12
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-cartographer",
+            "ms": 414332
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 233
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 25
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 35
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12469
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13993
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13949
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 26211
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 38607
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13692
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 26284
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 38894
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 52436
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13501
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 26145
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 38801
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 51340
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 65872
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 79443
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12737
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 24663
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 24214
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 23735
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-cartographer",
+            "ms": 23420
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13720
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 26578
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 13791
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "ms": 13753
+          },
+          {
+            "tool": "ToolSearch",
+            "agent": "architect:sdd-cartographer",
+            "ms": 15
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 205
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-cartographer",
+            "ms": 169
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 737
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-cartographer",
+            "ms": 194
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-cartographer",
+            "ms": 709
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-cartographer",
+            "ms": 710
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 737
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-cartographer",
+            "ms": 733
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-cartographer",
+            "subagent": "subagent",
+            "ms": 12860
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 25
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-planner",
+            "ms": 256330
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 266
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 34
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 46
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 36
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 174
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 43
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 30
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 39
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 40
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 30
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12644
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12897
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 882
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12718
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 48
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 755
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 13017
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12685
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 42
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 736
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 17
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-test-designer",
+            "ms": 37
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 251
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 42
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 44
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 35
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 46
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-planner",
+            "ms": 26
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-test-designer",
+            "ms": 52
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-test-designer",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 25
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 250
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 49
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 234
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 31
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 36
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 12798
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 24
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 25
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 26
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 23
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 26
+          },
+          {
+            "tool": "Grep",
+            "agent": "architect:sdd-planner",
+            "ms": 28
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-planner",
+            "ms": 32
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 39
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "ms": 458
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12990
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 13181
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 13773
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 13823
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 26298
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 13864
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 13900
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14017
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 26699
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 39553
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 13893
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 14292
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 51
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 12863
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 24231
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 35780
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 768
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 736
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 37
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 12878
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 763
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 701
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 731
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 44
+          },
+          {
+            "tool": "Write",
+            "agent": "architect:sdd-planner",
+            "ms": 747
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 12806
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 721
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 729
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 867
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 26
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 720
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 781
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 42
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 40
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 14426
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 49
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 741
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14106
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 894
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 16325
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15783
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14356
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 705
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 17554
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 17753
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15053
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 34
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 730
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 17409
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 16778
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 17429
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 836
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 18215
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15275
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 36
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 981
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 15632
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-planner",
+            "subagent": "subagent",
+            "ms": 15700
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 37
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 744
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15710
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-planner",
+            "ms": 30
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-planner",
+            "ms": 740
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15028
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 28422
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 41305
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 55298
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 68925
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14677
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 28148
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 41101
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 55231
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 68792
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 82642
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15100
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 28073
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 42241
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 55419
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 69575
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 83288
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14207
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 28520
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 41930
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 56206
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 69878
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 83509
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 14474
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 28293
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 42011
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 55688
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 69125
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 82633
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-test-designer",
+            "ms": 62
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 872
+          },
+          {
+            "tool": "Edit",
+            "agent": "architect:sdd-test-designer",
+            "ms": 862
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-test-designer",
+            "subagent": "subagent",
+            "ms": 15302
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 16
+          },
+          {
+            "tool": "TaskUpdate",
+            "agent": "main",
+            "ms": 11
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-auditor",
+            "ms": 89269
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 15259
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 29560
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 15158
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 14831
+          },
+          {
+            "tool": "Bash",
+            "agent": "architect:sdd-auditor",
+            "subagent": "subagent",
+            "ms": 29017
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 15
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 9
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-auditor",
+            "ms": 12
+          },
+          {
+            "tool": "Agent",
+            "agent": "main",
+            "subagent": "architect:sdd-critic",
+            "ms": 10815
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 161
+          },
+          {
+            "tool": "Glob",
+            "agent": "architect:sdd-critic",
+            "ms": 150
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 27
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 28
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 258
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": 35
+          },
+          {
+            "tool": "Read",
+            "agent": "architect:sdd-critic",
+            "ms": null
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.299",
+      "caps": {
+        "turns": 30,
+        "usd": 6
+      },
+      "transcript": "evals/results/transcripts/toy-g3-cfg-full-2026-11-08T06-14-44-075Z-run1.json"
+    }
+  ]
+}

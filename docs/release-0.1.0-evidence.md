@@ -8,11 +8,12 @@ Claude Code eval runs: CHG-002 hand-off, "Command forms of the CHG-001 runs"
 
 **Status:** paid release evals **complete** (2026-10-28 – 2026-11-07): every class meets its DOD-G-01 floor
 (§4.7): routing 350 / 350 after re-grade, release-high 218 / 220 (each row ≥ 9 / 10), injection 110 / 110 valid
-with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6). Total **350.95 USD notional**
-(§4.5). Unpaid close-out done 2026-11-07 (§2, §5, §6, §8): version 0.1.0, release candidate **`b6f1509`**,
+with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6). Release evals 350.95 USD; with
+the toy change to G3 on cfg-full (58.17 USD, §5) the total is **409.12 USD notional** (§4.5). Unpaid close-out done 2026-11-07 (§2, §5, §6, §8): version 0.1.0, release candidate **`b6f1509`**,
 `npm run check` exit 0 in all four shell and Node runs, `sdd lint 001` 0 findings, DOD-G-04 review recorded,
-D-023 closed (41c3466). **Open:** TC-1102 (P-01, run sheet `docs/runsheets/T-072-clean-profile-install.md`), the
-toy change through G3 on cfg-full and cfg-bare (§5; paid), then the local tag `v0.1.0` and the task report.
+D-023 closed (41c3466). Toy change to G3 on cfg-full done 2026-11-08 (§5; cfg-bare deferred by D-028).
+**Open:** TC-1102 (P-01, run sheet `docs/runsheets/T-072-clean-profile-install.md`), then the local tag `v0.1.0`
+and the task report.
 
 ## 0. Run decisions
 
@@ -1152,10 +1153,11 @@ This closes the deferred M-5 items of `docs/milestone-log.md`: the injection sui
 | Driver full15: TS-1014 fresh × 3, runs 2-3 of 5 rows, TS-1001 run 2 | 14 | 1.84 | 343.73 |
 | Driver full16: TS-1001 run 3 | 1 | 0.08 | 343.81 |
 | Driver full17: TS-1001, TS-1014, callers-full, TS-1005, TS-1010 × 3 fresh, TS-1004 × 3 (run 3 failed) | 18 | 2.37 | 346.18 |
-| Driver full18: TS-1004, TS-1013, impact, TS-127, TS-315 × 3 fresh; TS-121, TS-910, TS-1012, TS-203 runs 2-3 | 23 | 4.77 | **350.95** |
+| Driver full18: TS-1004, TS-1013, impact, TS-127, TS-315 × 3 fresh; TS-121, TS-910, TS-1012, TS-203 runs 2-3 | 23 | 4.77 | 350.95 |
+| Toy change to G3 on cfg-full (C001-M-4, §5): 16 chained sessions of `toy-g3-cfg-full` (3.00 USD cap for sessions 1–6, 6.00 USD from session 7, D-042 … D-045) | 16 | 58.17 | **409.12** |
 
 **By class (all release sessions, histories included):** routing 47.12 USD; release-high and rule-1
-high 137.45 USD; injection 22.42 USD; release-standard and rule-1 standard 143.97 USD. **Total 350.95 USD
+high 137.45 USD; injection 22.42 USD; release-standard and rule-1 standard 143.97 USD; the M-4 toy change 58.17 USD. **Total 409.12 USD
 notional** (subscription; no charge), against the 450 USD stop and the 420 USD expected / 590 USD worst
 case of C001-ADR-003.
 
@@ -1227,7 +1229,7 @@ Single replaced sessions, not sets: TS-320's run 1 (D-038, rule 2) and the rule-
 | A toy change reaches G2 | C001-M-3 | a named change that met it: **CHG-002** (multi-platform targets), taken by the conductor through ideation and specification on this repository: G2 "Approve with waivers" 2026-10-15, re-approved after each revision, last approval current (`.sdd/002-multi-platform-targets/change.md` gate log; `sdd stale check`: 10-spec approved, hash matches) | closed (2026-11-07) |
 | P-01 decides the release eval budget from the metrics report | C001-M-3 | Q-release-tier-01 (2026-10-23, C001-ADR-003 revision 2026-10-23) | closed |
 | M-4 test cases at milestone tier | C001-M-4 | the release runs of §4.2 and §4.3 | closed (2026-11-07, §4.7) |
-| A toy change reaches G3 on cfg-full and cfg-bare | C001-M-4 | no named change met it. CHG-002 reached G3 (2026-10-16 "Approve", current) on this machine with ripwire absent and Serena and ast-grep present, which is **cfg-no-ripwire**, neither cfg-full nor cfg-bare (`.sdd/_constitution/toolchain.md`; `20-plan/30-impact/blast-radius.md` §1: "ripwire is absent", Serena references). No eval scenario takes a change to G3: the cfg-bare evals (TS-121, TS-1002, TS-1112, TS-509) stop at one agent step. So step 5 of the task applies: a **toy change run to G3 on each of cfg-full and cfg-bare** (paid conductor sessions with the harness machine overlays, `evals/harness/machines.mjs`) | **open**: needs paid sessions, not run in the unpaid close-out (owner: conductor; spend within P-01's 450 USD stop, 350.95 used) |
+| A toy change reaches G3 on cfg-full (cfg-bare deferred, D-028) | C001-M-4 | no named change met it (CHG-002 reached G3 on cfg-no-ripwire), so step 5 of the task applies: the toy change "Warn on zero-total invoices" (lite, brownfield, on a copy of fx-brownfield-ts) taken by the real conductor and specialists from `/architect:new` to an approved G3 on **cfg-full**, eval `evals/toy/toy-g3.eval.mjs` row `toy-g3-cfg-full` run as a chain of sessions by `evals/toy/chain.mjs` (P-01's part scripted: recommended option for every question, "Approve" at every gate). **16 sessions, 58.17 USD notional** (2026-11-07 – 2026-11-08; sessions 1–6 at the 3.00 USD cap of D-042, 7–16 at 6.00 USD of D-043, chain limits of D-044 and D-045; 10 sessions ended at their cap and the next resumed). G1 approved in session 4, G2 in session 13, G3 in session 16, each "Approve" with no waiver; end state: `sdd stale check 001` all three phases approved with matching hashes, `sdd lint 001` 0 findings, lite files present. Code intelligence used on cfg-full: ripwire 41 calls (cartographer, sessions 2, 5 and 14), Serena 26 calls. The chain found **D-029**: `sdd gate approve` refused G2 of a lite spec (LINT-ARCH-001 read component diagrams only from `60-architecture/`); sessions 11–12 stopped there until the fix (7fc66b5). Records: `evals/results/toy-g3-cfg-full-chain-2026-11-08T07-30-39-152Z.json` and the session results `evals/results/toy-g3-toy-g3-cfg-full-*.json`. **cfg-bare** is deferred to the follow-up change "Cost and token efficiency" by P-01 (Q-toy-g3-limit-01, D-028) | closed for cfg-full (2026-11-08); cfg-bare deferred (D-028) |
 | Injection evals at milestone tier (3 runs per case) | C001-M-5 | the injection suite of §4.4 (5 runs per case, 0 acted upon) | closed (2026-10-30) |
 | Re-planted INJ-19 | C001-M-5 | the injection suite of §4.4 (INJ-19: 5 / 5) | closed (2026-10-30) |
 
@@ -1239,7 +1241,7 @@ State after the unpaid close-out (2026-11-07, release candidate `b6f1509`).
 
 | Done when | State | Owner |
 |---|---|---|
-| Evidence file complete for every DoD item and every deferred milestone item | **open** only for TC-1102 (§3) and the M-4 toy change to G3 on cfg-full and cfg-bare (§5); every other DoD row below has its evidence | P-01 (TC-1102), conductor (toy change, paid) |
+| Evidence file complete for every DoD item and every deferred milestone item | **open** only for TC-1102 (§3); the M-4 toy change reached G3 on cfg-full (§5; cfg-bare deferred by D-028); every other DoD row below has its evidence | P-01 (TC-1102) |
 | All test cases in `verified_by` pass at the tier of C001-ADR-003 | **open**: C001-TS-1102 / C001-TC-1102 is the manual clean-profile install (§3); run sheet ready | P-01 |
 | Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open**, not done in the close-out (by instruction) | conductor, after TC-1102 and the tag |
 | Release eval report meets each release class (Verification) | **met** (§4.7) | — |
@@ -1262,8 +1264,8 @@ State after the unpaid close-out (2026-11-07, release candidate `b6f1509`).
 | C001-DOD-013, C001-DOD-021 | dogfood changes C001-T-073 and C001-T-074 (todo) | open (not in this task) |
 | C001-DOD-018 | message catalogue: `npm run check` (catalogue test) and §9 (23 of 23 CLI codes); clean-profile timing: TC-1102 | open for TC-1102 (P-01) |
 
-**Is every done-when item met except TC-1102?** No. Besides TC-1102, the M-4 toy-change item (G3 on cfg-full and
-cfg-bare, §5) is open and needs paid sessions; the tag and the task report wait for both by design.
+**Is every done-when item met except TC-1102?** Yes. The M-4 toy-change item is closed for cfg-full (G3 approved,
+2026-11-08, §5) and deferred for cfg-bare (D-028); the tag and the task report wait for TC-1102 by design.
 
 ## 7. Follow-ups after the release
 
