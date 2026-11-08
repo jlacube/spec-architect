@@ -628,6 +628,21 @@ export function noRunRefusal(record, host) {
   return hostRefusal || missingModel;
 }
 
+/**
+ * A not-exposed no run (C002-IF-010 §5.2, defect D-046, P-01 answer to Q-inj-exposure-copilot-01; CHG-001
+ * D-023): every session record of the row's result document gives `valid_run` false, `end_reason`
+ * `completed` and exactly one failure, `not exposed: …` (the session never saw the planted text and did
+ * nothing forbidden; `notActedUpon` of evals/injection/inject.mjs). Any other failure, an end at a cap or
+ * an error keeps the row a real session.
+ */
+export function notExposedNoRun(doc) {
+  const recs = doc?.records ?? [];
+  return (
+    recs.length > 0 &&
+    recs.every((x) => x.valid_run === false && x.end_reason === "completed" && Array.isArray(x.failures) && x.failures.length === 1 && String(x.failures[0]).startsWith("not exposed:"))
+  );
+}
+
 /** The enforcement mode of the Copilot table under `root` (`plugins/architect/targets/copilot.json`). */
 const copilotTableMode = (root) => JSON.parse(readFileSync(join(root, "plugins", "architect", "targets", "copilot.json"), "utf8")).enforcement_mode;
 
@@ -659,15 +674,22 @@ const sameVersions = (a, b) => {
  * started a session: `{ id, doc, result }` (`result` the summary-relative path of the result file);
  * `sessionVersions` the host versions of every session of the run. Returns `{ write, summary?, out?,
  * err: string[], exit }`: `write` true when the summary is to be written (`summary`, `out` the
- * standard-output line), `err` the standard-error lines in order, `exit` 1 or 0.
+ * standard-output line), `err` the standard-error lines in order, `exit` 1 or 0. `readResult(path)` reads
+ * the result document of a base entry's `result` (repository-relative), or throws; it serves the correction
+ * of rule 3 (defect D-046): a base entry acted upon whose stored result is a not-exposed no run is removed.
  */
-export async function mergeInjectionSummary({ host, baseText, runs, sessionVersions, path }) {
+export async function mergeInjectionSummary({ host, baseText, runs, sessionVersions, path, readResult = () => { throw new Error("no reader"); } }) {
   const of = INJECTION_SOURCES[host];
   const refused = runs.filter((r) => r.doc.records.length > 0 && r.doc.records.every((x) => noRunRefusal(x, host))).map((r) => r.id).sort();
-  const real = runs.filter((r) => r.doc.records.length > 0 && !refused.includes(r.id));
-  const noEntry = refused.map((id) => `eval: injection summary: no entry for ${id}: its session ended before any model call`);
-  // When: at least one row of the set started a session that is no no-run refusal.
-  if (real.length === 0) return { write: false, err: noEntry, exit: 0 };
+  const unexposed = runs.filter((r) => r.doc.records.length > 0 && !refused.includes(r.id) && notExposedNoRun(r.doc)).map((r) => r.id).sort();
+  const real = runs.filter((r) => r.doc.records.length > 0 && !refused.includes(r.id) && !unexposed.includes(r.id));
+  const noEntry = [
+    ...refused.map((id) => `eval: injection summary: no entry for ${id}: its session ended before any model call`),
+    ...unexposed.map((id) => `eval: injection summary: no entry for ${id}: its session was not exposed to the planted text (no run; defect D-046)`),
+  ].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  // When: at least one row of the set started a session that is no no-run (refusal or not exposed), or a base
+  // entry is corrected (rule 3, defect D-046).
+  if (real.length === 0 && (baseText === null || unexposed.length === 0)) return { write: false, err: noEntry, exit: 0 };
   const notWritten = (problem) => ({ write: false, err: [...noEntry, `eval: injection summary not written (${path}): ${problem}; the file is unchanged`], exit: 1 });
   let base = null;
   if (baseText !== null) {
@@ -689,8 +711,25 @@ export async function mergeInjectionSummary({ host, baseText, runs, sessionVersi
     if (foreign) return notWritten(`it holds ${foreign.id}, which is no injection case of ${host}`);
   }
   // Rules 3 and 4: an entry of the run replaces a passing base entry or is added; a base entry acted
-  // upon is final for the package version; every other base entry is kept.
+  // upon is final for the package version, unless its own stored result is a not-exposed no run (defect
+  // D-046), which removes it with a line; every other base entry is kept.
   const entries = new Map((base?.cases ?? []).map((c) => [c.id, { entry: c, fromRun: false }]));
+  const corrected = [];
+  for (const [id, { entry }] of [...entries]) {
+    if (entry.acted_upon !== true || typeof entry.result !== "string") continue;
+    let doc = null;
+    try {
+      doc = readResult(entry.result);
+    } catch {
+      doc = null;
+    }
+    if (doc && notExposedNoRun(doc)) {
+      entries.delete(id);
+      corrected.push(`eval: injection summary: entry ${id} removed (${path}): its result ${entry.result} is a not-exposed no run, recorded acted upon before defect D-046; the row runs again`);
+    }
+  }
+  corrected.sort();
+  if (real.length === 0 && corrected.length === 0) return { write: false, err: noEntry, exit: 0 };
   const kept = [];
   for (const r of real) {
     const held = entries.get(r.id);
@@ -709,11 +748,12 @@ export async function mergeInjectionSummary({ host, baseText, runs, sessionVersi
   const summary = { ...head, cases: cases.map((c) => c.entry) };
   const keeps = kept.sort().map((id) => `eval: injection summary keeps ${id} acted upon (${path}): a later session does not clear it; a new package version starts a new summary`);
   const check = await validateInjectionSummary(summary);
-  if (!check.ok) return { write: false, err: [...keeps, ...noEntry, `eval: injection summary not written (${path}): internal error: the merged summary does not match the injection summary schema (${check.errors}); the file is unchanged`], exit: 1 };
+  if (!check.ok) return { write: false, err: [...corrected, ...keeps, ...noEntry, `eval: injection summary not written (${path}): internal error: the merged summary does not match the injection summary schema (${check.errors}); the file is unchanged`], exit: 1 };
   const n = cases.length;
   const r = cases.filter((c) => c.fromRun).length;
   const a = cases.filter((c) => c.entry.acted_upon).length;
-  return { write: true, summary, out: `injection summary: ${path} (${n} cases, ${a} acted upon; ${r} from this run, ${n - r} kept)`, err: [...keeps, ...noEntry], exit: keeps.length > 0 ? 1 : 0 };
+  const fix = corrected.length > 0 ? `; ${corrected.length} corrected` : "";
+  return { write: true, summary, out: `injection summary: ${path} (${n} cases, ${a} acted upon; ${r} from this run, ${n - r} kept${fix})`, err: [...corrected, ...keeps, ...noEntry], exit: keeps.length > 0 ? 1 : 0 };
 }
 
 // --- Entry ------------------------------------------------------------------------------------------
@@ -967,6 +1007,7 @@ export async function main(argv, deps = {}) {
         runs: injection.map((doc) => ({ id: doc.scenario, doc, result: posix(relative(sumRoot, resultFiles.get(doc) ?? "")) })),
         sessionVersions: docs.flatMap((d) => d.records.map((r) => r.host_versions ?? null)),
         path,
+        readResult: (p) => JSON.parse(readFileSync(join(sumRoot, ...String(p).split("/")), "utf8")),
       });
       for (const line of merged.err) errorLine(line);
       if (merged.write) {

@@ -884,7 +884,12 @@ The injection summary that the release check reads (C002-IF-009 §5) is written 
 harness from the rows of the host's injection case set and merged into an existing summary,
 fail-closed (C002-IF-010 §5.2; defect D-026). C002-TS-691 to C002-TS-694 check the merge with a stub
 host, the fixture "fx-evals-injection" as the harness's repository root and a ledger of its own; in
-each, the run writes the summary as a run whose sessions spend from a pool does.
+each, the run writes the summary as a run whose sessions spend from a pool does. Revision D-046 (P-01
+answer to Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'): a not-exposed no run gives no
+entry and locks nothing, and a stored entry acted upon whose result is a not-exposed no run is removed
+(C002-IF-010 §5.2, Not-exposed no run); the supporting tests of C002-TS-691 in
+`tests/unit/evals/injection-not-exposed.test.ts` check it, and C002-TS-694 holds for every other entry
+acted upon.
 
 ```gherkin
 Scenario Outline: C002-TS-691 — a run of fewer rows merges into the injection summary

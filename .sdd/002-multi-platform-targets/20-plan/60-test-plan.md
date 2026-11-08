@@ -711,6 +711,18 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   `opencode-permissions` replay report. D-023 item 1 (a proportionate rework path after a Revise)
   and D-026 item 3 (the placeholder options of the TS-208 fixture) are deferred to a later change
   and add no case here (`10-strategy.md` §2).
+- **Revision D-046** (found in C002-T-076; P-01 answer to Q-inj-exposure-copilot-01, 'Align with D-023
+  (Recommended)').
+  - **Merge:** `tests/unit/evals/injection-not-exposed.test.ts`, supporting tests of C002-TS-691 at unit
+    level (`mergeInjectionSummary` called directly): a not-exposed no run alone gives no entry and no
+    summary; with a passing row only the pass merges; not exposed plus a forbidden command, or not
+    exposed at a cap, gives an entry acted upon; a passing rerun over a stored not-exposed entry removes
+    it with a line and adds the pass (`; 1 corrected`); a stored entry whose result is a real failure or
+    cannot be read stays final (exit 1); a run of not-exposed sessions only still corrects the base.
+  - **Release check:** unchanged; it reads the summary only (`acted_upon` and the case count), so it
+    follows the summary the merge writes, and its tests stand.
+  - **C002-TC-615:** the resume of C002-T-076 step 4a reruns `INJ-02` and `INJ-04` and runs the nine
+    remaining rows, under the 15.00 USD stop and the batch rule.
 - **Revision D-045** (found in C001-T-072; P-01 answer to Q-toy-g3-limit-02, 'Fix, then finish to G3
   (Recommended)').
   - **Chain driver:** the unit test of `evals/toy/chain.mjs` checks cfg-full at 18 sessions and 75 USD,
