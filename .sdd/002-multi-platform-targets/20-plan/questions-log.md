@@ -335,3 +335,4 @@ Questions on the S-07 record (C002-T-001).
 - **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Align with D-023 (Recommended)', option 1
 - **Extracted instructions:** none
 - **Conductor's note:** a not-exposed session that ended at a cap stays acted upon (fail-closed, the implementer's reading of "did nothing forbidden"); a row not exposed in its rerun goes to P-01 before a third session.
+- **Conductor's note** (D-046 critic review, 2026-11-08): the rule is limited to Copilot CLI, OpenCode keeping its fail-closed rule until CHG-003 decides it (critic CR-146); the correction is limited to a fixed list, the two t076 result paths of `INJ-02` and `INJ-04` (critic CR-147).

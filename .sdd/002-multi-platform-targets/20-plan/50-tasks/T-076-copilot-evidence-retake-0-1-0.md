@@ -134,6 +134,12 @@ and the clean-profile run on the 0.1.0 packages.
    - **Batch 4:** `INJ-13` … `INJ-18`, `INJ-20`, `INJ-22` and `TS-359`, nine sessions, sized from the
      ledger read after batch 3; when they do not fit, the batch is split, and when no session fits,
      nothing more runs and P-01 is asked.
+   - **Batch 5** (only when a batch-4 row was not exposed): that row again, once, sized by the batch
+     rule from the ledger read after batch 4. A row not exposed in its second session, in batch 3 or
+     batch 5, goes to P-01, and no third session runs without P-01's answer.
+   - **Release-candidate commit after step 4a:** the commit that holds the final merge of
+     `docs/releases/copilot/0.1.0/injection.json`; `git diff --stat 2ee587b <that commit> --
+     plugins/architect/` lists no file. Steps 5 and 6 run there.
    - The 15.00 USD stop, the checkpoint and the other failure rules of step 4 are unchanged.
 5. **Dry run.** Run `node scripts/release-check.mjs --target copilot --dry-run` at that commit. It
    must refuse on nothing other than the records P-01 still owes: ERR-REL-003 for the checklist
@@ -171,8 +177,8 @@ and the clean-profile run on the 0.1.0 packages.
 - [ ] The release-candidate commit holds the CHG-001 release-gate fixes and every CHG-002 change, at package version 0.1.0; the report names both
 - [ ] The task started after the C001-M-4 cfg-full toy chain ended (cfg-bare deferred, CR-111), and `git diff --stat <C001 release candidate> <release-candidate commit> -- plugins/architect/` listed no file, the C001 release candidate being the commit of C001-T-072's tag `v0.1.0`; the report gives both commits and the empty output (CR-103)
 - [ ] C002-T-048 step 5 and C002-T-054 steps 1 and 2 re-ran at that commit, with 0 differing decisions in the Copilot release replays, reports under `docs/releases/copilot/0.1.0/`
-- [ ] Step 4a: `INJ-02` and `INJ-04` reran (batch 3) and the merge removed their two stored entries with the removal lines quoted in the report; batch 4 ran the nine remaining rows; any row not exposed twice went to P-01 (D-046)
-- [ ] The 24 Copilot CLI sessions ran at 0.1.0 from the Copilot pool, `TS-359` included, every session in the ledger, in batches each sized so that T + n × 0.55 USD ≤ 15.00 USD from the ledger total read before it, with a ledger check after each batch, and the pool total at most 15.00 USD (CR-101); `docs/releases/copilot/0.1.0/injection.json` holds the Copilot CLI injection case set, no entry acted upon; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both
+- [ ] Step 4a: `INJ-02` and `INJ-04` reran (batch 3) and the merge removed their two stored entries with the removal lines quoted in the report; batch 4 ran the nine remaining rows, and batch 5 any batch-4 row that was not exposed; any row not exposed twice went to P-01 (D-046); the release-candidate commit after step 4a is the commit of the final injection merge, with an empty `plugins/architect/` diff against 2ee587b
+- [ ] Every row of the Copilot CLI case set (24 rows, `TS-359` included) has a session at 0.1.0 that is no no run, from the Copilot pool, every session in the ledger, in batches each sized so that T + n × 0.55 USD ≤ 15.00 USD from the ledger total read before it, with a ledger check after each batch, and the pool total at most 15.00 USD (CR-101); `docs/releases/copilot/0.1.0/injection.json` holds the Copilot CLI injection case set, no entry acted upon; `INJ-19` and `INJ-21` pass, and the report quotes the text fallback in both
 - [ ] The task report lists the Copilot CLI injection rows at or within 0.09 USD of their cap at 0.1.0, or "none" (CR-80, spec CR-122)
 - [ ] The Copilot release-check dry run at that commit refuses on nothing other than the records of C002-T-050 and C002-T-057 (D-041 closes on it)
 - [ ] The report gives the Copilot CLI transcript search of step 6, every hit quoted or "no hit" (CR-102)

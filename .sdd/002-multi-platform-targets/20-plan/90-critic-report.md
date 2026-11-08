@@ -1244,3 +1244,19 @@ Scope: `git diff fa79684 f38daf4`, against D-045 and Q-toy-g3-limit-02. Read-onl
 |---|---|---|---|---|---|
 | CR-116 | major | handoff C001-T-072 condition | the lint check doesn't name the sdd the toy sessions load (the repo's plugins/architect/scripts/sdd.mjs) | require the rebuilt plugins/architect/scripts/sdd.mjs in the fix commit; check with node plugins/architect/scripts/sdd.mjs lint 001 --phase 10-spec in the saved workspace, no LINT-ARCH-001 | fixed: handoff condition: the fix commit includes the rebuilt plugins/architect/scripts/sdd.mjs, and node plugins/architect/scripts/sdd.mjs lint 001 --phase 10-spec --cwd <saved toy workspace>, run from the repository root, reports no LINT-ARCH-001 (the committed CLI of f38daf4 still reports it) |
 | CR-117 | minor | test plan, toy-g3.test.ts | a test title still says D-044, 14 sessions and 55 USD | rename to (revisions D-044, D-045): 18 sessions and 75 USD | fixed: test renamed to chainLimits (revisions D-044, D-045): cfg-full 18 sessions and 75 USD, options may only lower them; cfg-bare deferred |
+
+
+## Revision D-046 (2026-11-08)
+
+Scope: `git diff a17dc48 c0b3d80`, against D-046 and Q-inj-exposure-copilot-01. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-118 | minor | T-076 blocked reason | the blocked reason is stale | set the handoff reason with sdd task set | not fixed (CLI limit):  blocked → blocked is refused (ERR-CLI-013) and --reason needs --status (ERR-CLI-003); the task file keeps the earlier reason, and the handoff gives the reason to record when the task next changes state |
+| CR-119 | minor | T-076 steps 4, 4a, done-checks | "24 sessions" no longer holds; no rerun batch for a batch-4 not-exposed row; release-candidate commit after 4a unclear | count "every row has a session that is no no run"; add batch 5; name the release-candidate commit | fixed: T-076 done-check counts every row with a session that is no no run; step 4a adds batch 5 for a not-exposed batch-4 row by the batch rule (a second not-exposed session still to P-01); the release-candidate commit after step 4a is the commit of the final injection merge, with an empty plugins/architect/ diff against 2ee587b |
+| CR-120 | minor | Gate log D-046 G3 | batch numbers disagree with T-076 | correction note in the strategy D-046 row | fixed: correction note in the strategy D-046 row: the G3 note's 'batch 3' for the nine rows is batch 4 in T-076, with batch 5 |
+| CR-121 | minor | TS-691, test plan | tests skip main's reader wiring | add a stub-host test through main with deps.releasesRoot and a stored not-exposed result | fixed: four stub-host tests through main with deps.releasesRoot in injection-summary.test.ts: a passing INJ-02 rerun over its listed stored not-exposed t076 result removes it; a not-exposed INJ-04 gives no entry; an unlisted stored result keeps the entry; OpenCode stays acted upon |

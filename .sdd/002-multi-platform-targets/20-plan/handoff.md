@@ -386,8 +386,10 @@ with the revision commit (no fix task, `10-strategy.md`), but the edge's conditi
 the D-046 revision. **Handoff condition:** C002-T-076 resumes (step 4a) after that approval and the
 conductor's go. Until then no Copilot CLI session runs, and the task stays `blocked` with the reason
 "waits for the G3 approval of CHG-002 revision D-046 and the conductor's go". After it: batch 3 reruns
-`INJ-02` and `INJ-04`, batch 4 the nine remaining rows, each sized by the batch rule from the ledger
-(T + n × 0.55 USD ≤ 15.00), with a ledger check between them; a row not exposed again goes to P-01.
+`INJ-02` and `INJ-04`, batch 4 the nine remaining rows, batch 5 a batch-4 row that was not exposed,
+each sized by the batch rule from the ledger (T + n × 0.55 USD ≤ 15.00), with a ledger check between
+them; a row not exposed in its second session goes to P-01. The rule holds on Copilot CLI only, and the
+correction only for the two listed t076 entries (critics CR-146, CR-147).
 **Close rules:** D-046 closes at the G2 and G3 approvals; D-041 still closes with C002-T-076.
 
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its

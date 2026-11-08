@@ -885,10 +885,11 @@ harness from the rows of the host's injection case set and merged into an existi
 fail-closed (C002-IF-010 §5.2; defect D-026). C002-TS-691 to C002-TS-694 check the merge with a stub
 host, the fixture "fx-evals-injection" as the harness's repository root and a ledger of its own; in
 each, the run writes the summary as a run whose sessions spend from a pool does. Revision D-046 (P-01
-answer to Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'): a not-exposed no run gives no
-entry and locks nothing, and a stored entry acted upon whose result is a not-exposed no run is removed
-(C002-IF-010 §5.2, Not-exposed no run); the supporting tests of C002-TS-691 in
-`tests/unit/evals/injection-not-exposed.test.ts` check it, and C002-TS-694 holds for every other entry
+answer to Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'): on Copilot CLI a not-exposed no
+run gives no entry and locks nothing, and the two listed stored entries whose results are not-exposed no
+runs are removed (C002-IF-010 §5.2, Not-exposed no run); OpenCode keeps its fail-closed rule; the supporting tests of C002-TS-691 in
+`tests/unit/evals/injection-not-exposed.test.ts` and the D-046 tests of
+`tests/integration/cap06/injection-summary.test.ts` check it, and C002-TS-694 holds for every other entry
 acted upon.
 
 ```gherkin
@@ -985,7 +986,8 @@ entry (C002-IF-010 §5.2 Merge, items 3 and 4). An entry acted upon is final for
 version: no later session of its row clears it, a passing one included, and the run still merges its
 other rows, writes the summary and ends with exit code 1 (C002-IF-010 §5.2 Merge, item 3; plan
 critic CR-53; C002-TS-694, `TS-359` included). Only a new package version, whose summary is another
-file, starts without it. A no-run refusal, a session that ended before any model call such as the
+file, starts without it, the correction of the two listed stored Copilot CLI entries of defect D-046
+excepted (C002-IF-010 §5.2, Not-exposed no run). A no-run refusal, a session that ended before any model call such as the
 host's refusal of the passed model, gives no entry, keeps its row's base entry whatever its value
 and locks nothing: it neither turns a passing entry into one acted upon nor prints the keep line
 (C002-IF-010 §5.2 No-run refusal, Merge item 4; P-01 answer to Q-acted-final-01; last rows of

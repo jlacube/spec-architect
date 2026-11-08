@@ -1593,3 +1593,19 @@ Scope: `git diff fa79684 f38daf4`, against D-045 and Q-toy-g3-limit-02. Read-onl
 | CR-143 | major | IF-010 §2.2 toy-g3-cfg-full row | Runs cell keeps the old saved state (8 sessions, 26.78 USD) | twelve sessions and 42.22 USD (six at 3.00, six at 6.00 USD) | fixed: the Runs cell reads twelve sessions and 42.22 USD (six at 3.00 USD, six at 6.00 USD) |
 | CR-144 | minor | IF-010 §2.2 D-045 note | "failed" undefined; no statement that nothing runs on exit 6; a run.mjs exit with no saved record unguarded | define failed as the saved record's failures above 0; nothing runs on exit 6; a non-zero run.mjs exit with no record goes to the conductor | fixed: the D-045 note defines failed as the saved record's failures above 0 (session 12 ended success with one failure), states that nothing runs on exit 6, and that a non-zero run.mjs exit without a saved record is not covered and goes to the conductor (handoff D-045 edge, item 4, which says the same) |
 | CR-145 | minor | IF-010 §2.2 Caps above 0.50 USD | the D-045 clause separates D-044 from its cited answer | reorder the clauses | fixed: the revision list gives the Q-toy-g3-limit-01 answer right after D-044, then the D-045 clause with Q-toy-g3-limit-02 |
+
+
+## Revision D-046 (2026-11-08)
+
+Scope: `git diff a17dc48 c0b3d80`, against D-046 and Q-inj-exposure-copilot-01. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-146 | major | IF-010 §5.2, Q-inj-exposure-copilot-01 | the rule applies to every generated-target host, so OpenCode's fail-closed rule is loosened without a decision | conductor decision: limit the rule to copilot-cli in the spec and the code; OpenCode keeps its rule (CHG-003 decides) | fixed: rule limited to copilot-cli in IF-010 (revision note and Not-exposed no run) and run.mjs (NOT_EXPOSED_HOSTS); OpenCode keeps its fail-closed rule until CHG-003; conductor's note in the questions-log; unit and stub-host tests that an OpenCode not-exposed result stays acted upon |
+| CR-147 | major | IF-010 §5.2 Correction | the correction trusts any unprotected result file, permanently, against the no-hand-edit rule | conductor decision: limit the correction to a fixed list in the code, the two named t076 result paths of INJ-02 and INJ-04; state it in §5.2 | fixed: correction limited to the fixed list D046_CORRECTIONS in run.mjs (INJ-02 and INJ-04 with their two t076 result paths, Copilot CLI) and stated in §5.2 with the stderr line kept; every other stored entry acted upon stays final; unit and stub-host tests that an unlisted not-exposed result file cannot clear an entry |
+| CR-148 | major | IF-010 §5.2 rule 3, rationale, done-check, TS-694 | done-check and four "only" statements no longer hold | add "a not-exposed no run excepted" to the done-check; name the correction as the second exception in all four places | fixed: the done-check reads 'a no-run refusal and a not-exposed no run excepted'; the correction named as the second exception in rule 3 (only a new version clears the entry), the merge rationale, the acted-upon-is-final rationale and the TS-694 text of acceptance.md |
+| CR-149 | minor | IF-010 §5.2 When | When not revised; conflicts with the all-no-runs sentence and run.mjs:692 | revise When for both kinds of no run and the correction; align the sentence and the code | fixed: When covers both kinds of no run and the correction; the all-no-runs sentence points to When; run.mjs writes no summary for a run of no runs only when there is no base or no entry is corrected |

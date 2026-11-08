@@ -719,6 +719,11 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
     exposed at a cap, gives an entry acted upon; a passing rerun over a stored not-exposed entry removes
     it with a line and adds the pass (`; 1 corrected`); a stored entry whose result is a real failure or
     cannot be read stays final (exit 1); a run of not-exposed sessions only still corrects the base.
+    After the critic review (CR-146, CR-147, CR-121): the rule holds on Copilot CLI only (an OpenCode
+    not-exposed result stays acted upon), the correction only for the two listed t076 entries (an unlisted
+    not-exposed result file cannot clear an entry), and four supporting tests of C002-TS-691 in
+    `tests/integration/cap06/injection-summary.test.ts` run the same rules through `main` with the stub host
+    and `deps.releasesRoot`, the stored t076 result of `INJ-02` placed in the fixture.
   - **Release check:** unchanged; it reads the summary only (`acted_upon` and the case count), so it
     follows the summary the merge writes, and its tests stand.
   - **C002-TC-615:** the resume of C002-T-076 step 4a reruns `INJ-02` and `INJ-04` and runs the nine
