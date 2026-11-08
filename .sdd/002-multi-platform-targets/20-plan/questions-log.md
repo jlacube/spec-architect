@@ -317,3 +317,12 @@ Questions on the S-07 record (C002-T-001).
 - **Options** (as presented by the conductor): 1. Finish cfg-full, defer cfg-bare: raise the cfg-full limit to about 55 USD and resume, about 20–28 USD more, ending near 400–405 USD of the 450 USD stop; this proves a change reaches G3 end to end; cfg-bare is deferred to a follow-up change, and the cost is logged as a major post-release issue (Recommended) · 2. Defer the whole item: stop now and record the partial result; 0.1.0 ships without end-to-end G3 evidence beyond the cfg-no-ripwire dogfood · 3. Finish both configs: raise the limits and the 450 USD stop to about 480 USD, and run both to G3, about 70–80 USD more
 - **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Finish cfg-full, defer cfg-bare (Recommended)', option 1
 - **Extracted instructions:** the cfg-full limit of 55 USD is a total that includes the 26.78 USD already spent; cfg-bare is not run in CHG-001 or CHG-002; the cost of about 50 USD notional per small lite change to G3 is logged as a major post-release issue (P-01, 2026-11-08, relayed by the conductor)
+
+## Round 2026-11-08 (2) — defect D-045 (found in C001-T-072)
+
+### Q-toy-g3-limit-02 — the cfg-full toy chain reached G2, and the CLI refused the approval (C001-M-4 item)
+- **Context:** `evals/results/toy-g3-cfg-full-chain-partial-2026-11-08b.json` and commit fa79684: 12 sessions, 42.22 USD notional. Sessions 11 and 12 presented G2 and got 'Approve', but `sdd gate approve` refused with ERR-CLI-010 (LINT-ARCH-001 reads diagrams only under `60-architecture/`, and lite specs keep them in `spec.md`); a separate implementer fixes that as a CHG-001 defect. Session 12 failed with no progress, so the chain exited 1.
+- **Options** (as presented by the conductor): 1. Fix, then finish to G3: after the fixes, a short revision raises cfg-full's limit to ~75 USD total, resumes at the G2 gate and runs the plan phase (~15–25 USD), ending near 410–420 USD of the 450 USD stop (Recommended) · 2. Fix, stop the chain here: fix the bugs and record the partial result, with G3 evidence moved to the follow-up change
+- **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Fix, then finish to G3 (Recommended)', option 1
+- **Extracted instructions:** none
+- **Conductor's note:** the session bound of 18 is the implementer's decision on top of P-01's 75 USD; the chain waits for the CHG-001 fix of LINT-ARCH-001 before it resumes.

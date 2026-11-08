@@ -1,7 +1,7 @@
 // Runs the session chain of the toy change to G3 on one configuration (evals/toy/toy-g3.eval.mjs): one run.mjs
 // session of the row `toy-g3-<cfg>` after the other, until G3 is approved, a session fails, or a limit is
 // reached. Usage:
-//   node evals/toy/chain.mjs --cfg cfg-full [--fresh] [--max-sessions N] [--max-usd X] [--label NAME]
+//   node evals/toy/chain.mjs --cfg cfg-full [--fresh] [--after-fix] [--max-sessions N] [--max-usd X] [--label NAME]
 //                            [-- <further run.mjs options>]
 // Each session: `run.mjs --host claude-code --auth subscription --cap-exception --tier dev --runs 1
 // --only toy-g3-<cfg> --label <label> evals/toy/toy-g3.eval.mjs` (the rerun cap of the row's cap exception,
@@ -15,9 +15,12 @@
 //      CR-109), so a lost state never restarts a chain from zero;
 //   4  the configuration is deferred (cfg-bare, defect D-044): nothing runs;
 //   5  an option refused: an unknown option or configuration, --max-sessions or --max-usd not positive or above
-//      the configuration's limit, or --fresh for a configuration that must resume. Nothing runs.
-// The limits are per configuration (`CHAIN_LIMITS`, defect D-044): cfg-full 14 sessions and 55 USD notional in
-// total, the saved sessions included; --max-sessions and --max-usd may only lower them. The USD limit is checked
+//      the configuration's limit, --fresh for a configuration that must resume, or --after-fix when the last saved
+//      session did not fail. Nothing runs;
+//   6  a resume whose last saved session failed, without --after-fix (defect D-045): nothing runs. The conductor
+//      gives --after-fix only once the cause of that failure is fixed; the chain then resumes where it stopped.
+// The limits are per configuration (`CHAIN_LIMITS`, defects D-044, D-045): cfg-full 18 sessions and 75 USD notional
+// in total, the saved sessions included; --max-sessions and --max-usd may only lower them. The USD limit is checked
 // before each session with the session's cap, read from the
 // row's cap exception (C002-IF-010 §2.2, defect D-042, critic CR-134): no session starts when the chain total plus
 // that cap would pass --max-usd, so a chain ends at or under --max-usd, apart from the overshoot of a capped
@@ -37,7 +40,7 @@ import { CONFIGS, nextStep, stateDir, statusOf } from "./toy-g3.eval.mjs";
  * CHG-002; its cap row `toy-g3-cfg-bare` is marked deferred too, so capCheck refuses it (critic CR-141).
  */
 export const CHAIN_LIMITS = Object.freeze({
-  "cfg-full": Object.freeze({ maxSessions: 14, maxUsd: 55, resumeOnly: true }),
+  "cfg-full": Object.freeze({ maxSessions: 18, maxUsd: 75, resumeOnly: true }),
   "cfg-bare": Object.freeze({ deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044); no chain runs in CHG-001 or CHG-002" }),
 });
 
@@ -64,6 +67,19 @@ export function resumeProblem(dir) {
   return null;
 }
 
+/**
+ * Why a resume may not go on after its last saved session (defect D-045), as `{ refusal, code }`, or null: a
+ * last session with failures needs `afterFix` (code 6), given by the conductor only once the cause is fixed;
+ * `afterFix` without such a session is refused (code 5).
+ */
+export function afterFailureProblem(chain, afterFix = false) {
+  const last = chain?.sessions?.at(-1);
+  const failed = Boolean(last && last.failures > 0);
+  if (failed && !afterFix) return { refusal: `chain: the last saved session (${last.n ?? chain.sessions.length}) failed; resume with --after-fix only once its cause is fixed`, code: 6 };
+  if (!failed && afterFix) return { refusal: "chain: --after-fix given, but the last saved session did not fail", code: 5 };
+  return null;
+}
+
 /** The chain's notional total (USD) from its chain.json document. */
 export const chainUsd = (chain) => Math.round((chain?.sessions ?? []).reduce((s, x) => s + (x.cost_usd ?? 0), 0) * 1e6) / 1e6;
 
@@ -85,7 +101,7 @@ export function decide({ chain, done, lastExit = 0, maxSessions, maxUsd, session
 }
 
 function parse(argv) {
-  const o = { cfg: null, fresh: false, maxSessions: null, maxUsd: null, label: "toy-g3", rest: [] };
+  const o = { cfg: null, fresh: false, afterFix: false, maxSessions: null, maxUsd: null, label: "toy-g3", rest: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--") {
@@ -94,6 +110,7 @@ function parse(argv) {
     }
     if (a === "--cfg") o.cfg = argv[++i];
     else if (a === "--fresh") o.fresh = true;
+    else if (a === "--after-fix") o.afterFix = true;
     else if (a === "--max-sessions") o.maxSessions = Number(argv[++i]);
     else if (a === "--max-usd") o.maxUsd = Number(argv[++i]);
     else if (a === "--label") o.label = argv[++i];
@@ -137,12 +154,21 @@ function main() {
   const dir = stateDir(o.cfg);
   const sessionUsd = rowCapUsd(o.cfg);
   if (typeof sessionUsd !== "number") throw new Error(`chain: no cap exception with a rerun cap for toy-g3-${o.cfg} (C002-IF-010 §2.2)`);
+  if (o.fresh && o.afterFix) {
+    console.error("chain: --after-fix is for a resume, not with --fresh");
+    process.exit(5);
+  }
   if (o.fresh) rmSync(dir, { recursive: true, force: true, maxRetries: 20, retryDelay: 250 });
   else {
     const problem = resumeProblem(dir);
     if (problem) {
       console.error(problem);
       process.exit(3);
+    }
+    const after = afterFailureProblem(JSON.parse(readFileSync(join(dir, "chain.json"), "utf8")), o.afterFix);
+    if (after) {
+      console.error(after.refusal);
+      process.exit(after.code);
     }
   }
   const read = () => {

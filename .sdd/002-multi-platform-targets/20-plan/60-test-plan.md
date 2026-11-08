@@ -177,8 +177,8 @@ counts above are those of the main branch.
     `--cap-exception` at the rule-1 rerun cap of **3.00 USD** (defect D-033; P-01 answer to
     Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before, from C002-T-070 on) and the row's own
     turn cap. **Exception, the two toy-g3 rows** (defects D-042, D-043): every session at their own rerun
-    cap of 6.00 USD, in one chain for cfg-full whose own limits govern (at most 14 sessions and 55 USD
-    notional in total, defect D-044; cfg-bare deferred to the follow-up change "Cost and token efficiency", its row refused, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
+    cap of 6.00 USD, in one chain for cfg-full whose own limits govern (at most 18 sessions and 75 USD
+    notional in total, defects D-044, D-045; cfg-bare deferred to the follow-up change "Cost and token efficiency", its row refused, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
     design, and does not go to P-01 under C002-RISK-038. **Rule 2:** the row runs at its own caps, and each failed session that ended at the spend
     cap is replaced by one session at the rule-2 rerun cap of 1.50 USD with
     `--cap-exception`. The command forms are those of `handoff.md` (Cross-change dependency). The runs
@@ -711,6 +711,15 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   `opencode-permissions` replay report. D-023 item 1 (a proportionate rework path after a Revise)
   and D-026 item 3 (the placeholder options of the TS-208 fixture) are deferred to a later change
   and add no case here (`10-strategy.md` §2).
+- **Revision D-045** (found in C001-T-072; P-01 answer to Q-toy-g3-limit-02, 'Fix, then finish to G3
+  (Recommended)').
+  - **Chain driver:** the unit test of `evals/toy/chain.mjs` checks cfg-full at 18 sessions and 75 USD,
+    models the twelve saved sessions (42.22 USD): five more at the 6.00 USD cap start and a sixth does
+    not (72.22 USD after session 17), and cheap sessions stop at the bound of 18; and `afterFailureProblem`:
+    a resume after a failed last session is refused without `--after-fix` (exit 6), `--after-fix` without
+    one is refused (exit 5), and with it the chain goes on.
+  - **Caps rows:** none change (C002-TC-679, 90 rows).
+  - No case is added, and no paid session runs in the revision.
 - **Revision D-044** (found in C001-T-072; P-01 answer to Q-toy-g3-limit-01, 'Finish cfg-full, defer
   cfg-bare (Recommended)').
   - **Chain driver:** the unit test of `evals/toy/chain.mjs` checks `CHAIN_LIMITS`: cfg-full 14 sessions
