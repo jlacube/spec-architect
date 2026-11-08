@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-08T01:31:48Z",
+  "generated_at": "2026-11-08T05:07:38Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -320,6 +320,16 @@
           "status": "closed",
           "resolution": "Plan revision approved at G3 (5c03ef7) and G2 re-approved with the cfg-bare waivers of C001-NFR-304 and C001-DOD-015 (260dc9a): C001-M-4 and C001-T-072 step 5 narrowed to G3 on cfg-full; cfg-bare deferred to the follow-up change 'Cost and token efficiency'; critic CR-40…44 fixed (656d0db)",
           "closed_at": "2026-11-08"
+        },
+        {
+          "id": "D-029",
+          "ref": "C001-REQ-509",
+          "summary": "Release-gate toy chain (C001-T-072, cfg-full, commit fa79684): for a lite change, sdd gate approve refuses G2 with ERR-CLI-010 (LINT-ARCH-001 [C001-COMP-001] at 10-spec/spec.md:734) because LINT-ARCH-001 reads component diagrams only from 10-spec/60-architecture/, while a lite change keeps its diagrams in 10-spec/spec.md (C001-IF-06 §3, C001-REQ-118); the flowchart there shows C001_COMP_001. Second issue: the lite plan template references C001-TC-001 under Verified by but its Test mapping table defines no TC row, so a scaffolded lite plan trips TR-12. Implementation bug, spec unchanged",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-08",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -353,13 +363,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:0cf0db9ad0eb2ef394b83a169db6cd3bc1a5291de27055788a3d6f5ee6b14d7c",
           "approved_at": "2026-11-08",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:da2d3cdd36448867d3ed3e01c877a227e593b1d9543ed9bb14120fb48ee6351e",
           "approved_at": "2026-11-08",
           "approved_by": "jerome.lacube"
@@ -815,6 +825,16 @@
           "status": "closed",
           "resolution": "Revision D-044 approved at G2/G3 (8e7c46f, c4780e6): cfg-full chain limit 55 USD total and 14 sessions; cfg-bare row deferred and refused; post-release cost issue owned by the follow-up change 'Cost and token efficiency'; critic CR-138…141, CR-110…115 fixed (8b6c1f4)",
           "closed_at": "2026-11-08"
+        },
+        {
+          "id": "D-045",
+          "ref": "C002-IF-010",
+          "summary": "Found in C001-T-072 (toy change to G3, cfg-full under D-044, fa79684; evals/results/toy-g3-cfg-full-chain-partial-2026-11-08b.json): 12 sessions, 42.22 USD notional; sessions 11 and 12 presented G2 and got Approve, but sdd gate approve refused with ERR-CLI-010 (LINT-ARCH-001 [C001-COMP-001] at 10-spec/spec.md:734: the rule reads component diagrams only under 60-architecture/, and a lite spec keeps them in spec.md; a CHG-001 defect fixes it); session 12 failed with no progress and the chain exited 1; G3 not reached. P-01 (2026-11-08, Q-toy-g3-limit-02): 'Fix, then finish to G3 (Recommended)': after the product fix the cfg-full chain limit rises to about 75 USD in total and the chain resumes at the G2 gate.",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-08",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [

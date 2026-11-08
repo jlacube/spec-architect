@@ -219,6 +219,24 @@ export interface MermaidBlock {
   lines: string[];
 }
 
+/** The lite profile's single spec file (C001-IF-06 §3). */
+export const LITE_SPEC = "10-spec/spec.md";
+const FULL_ARCHITECTURE = "10-spec/60-architecture/";
+
+/**
+ * The files holding the change's architecture views: `10-spec/60-architecture/` (full profile), or
+ * the lite `10-spec/spec.md`, whose Architecture notes carry the catalogue, flows and diagrams
+ * (C001-IF-06 §3; same rules for lite, C001-REQ-118).
+ */
+export function architectureDocs(c: LintChange): [string, SpecDoc][] {
+  return [...c.spec.docs].filter(([p]) => (c.profile === "lite" ? p === LITE_SPEC : p.startsWith(FULL_ARCHITECTURE)));
+}
+
+/** The file whose Runtime flows section lists the flows: `architecture.md`, or the lite `spec.md`. */
+export function architectureFile(c: LintChange): string {
+  return c.profile === "lite" ? LITE_SPEC : `${FULL_ARCHITECTURE}architecture.md`;
+}
+
 /** Mermaid fences of the given docs. */
 export function mermaidBlocks(docs: [string, SpecDoc][]): MermaidBlock[] {
   const out: MermaidBlock[] = [];

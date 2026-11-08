@@ -7883,6 +7883,14 @@ function evidenceGaps(text) {
   const t = text.replace(/`/g, "");
   return [...EVIDENCE_PATH.test(t) ? [] : ["file path"], ...EVIDENCE_SYMBOL.test(t) ? [] : ["symbol"], ...EVIDENCE_LAYER.test(t) ? [] : ["evidence layer"]];
 }
+var LITE_SPEC = "10-spec/spec.md";
+var FULL_ARCHITECTURE = "10-spec/60-architecture/";
+function architectureDocs(c) {
+  return [...c.spec.docs].filter(([p]) => c.profile === "lite" ? p === LITE_SPEC : p.startsWith(FULL_ARCHITECTURE));
+}
+function architectureFile(c) {
+  return c.profile === "lite" ? LITE_SPEC : `${FULL_ARCHITECTURE}architecture.md`;
+}
 function mermaidBlocks(docs) {
   const out = [];
   for (const [path, doc] of docs)
@@ -8005,8 +8013,7 @@ var arch001 = {
       const catalogue = c.graph.nodes.filter((n) => n.type === "COMP" && n.form === "heading");
       const known = new Set(catalogue.map((n) => n.id));
       const shown = /* @__PURE__ */ new Set();
-      const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
-      for (const b of mermaidBlocks(docs)) {
+      for (const b of mermaidBlocks(architectureDocs(c))) {
         if (!COMPONENT_DIAGRAMS.test(b.kind)) continue;
         b.lines.forEach((text, i) => {
           for (const m of text.matchAll(DIAGRAM_ID)) {
@@ -8057,7 +8064,6 @@ var arch002 = {
 };
 
 // src/lint/rules/arch-004.ts
-var PATH2 = "10-spec/60-architecture/architecture.md";
 var arch004 = {
   code: "LINT-ARCH-004",
   severity: "error",
@@ -8066,18 +8072,18 @@ var arch004 = {
   check(ctx) {
     const out = [];
     for (const c of ctx.changes) {
-      const doc = c.spec.docs.get(PATH2);
+      const path = architectureFile(c);
+      const doc = c.spec.docs.get(path);
       const section3 = doc ? sectionByName(doc, "runtime flows") : null;
       if (!doc || !section3) continue;
-      const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
-      const sequences = mermaidBlocks(docs).filter((b) => b.kind === "sequenceDiagram").map((b) => [headingAbove(c.spec.docs.get(b.path), b.line), ...b.lines, b.path.slice(b.path.lastIndexOf("/") + 1)].join("\n"));
-      for (const t of tables(doc, PATH2))
+      const sequences = mermaidBlocks(architectureDocs(c)).filter((b) => b.kind === "sequenceDiagram").map((b) => [headingAbove(c.spec.docs.get(b.path), b.line), ...b.lines, b.path.slice(b.path.lastIndexOf("/") + 1)].join("\n"));
+      for (const t of tables(doc, path))
         for (const r of t.rows) {
           if (r.line <= section3.line || r.line > section3.end) continue;
           const flow2 = (r.raw[0] ?? "").replace(/[*`]/g, "").trim();
           if (flow2 === "") continue;
           const word = new RegExp(`(^|[^\\w-])${flow2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`);
-          if (!sequences.some((s) => word.test(s))) out.push({ path: `${c.folder}/${PATH2}`, line: r.line, message: `Runtime flow ${flow2} has no sequence diagram` });
+          if (!sequences.some((s) => word.test(s))) out.push({ path: `${c.folder}/${path}`, line: r.line, message: `Runtime flow ${flow2} has no sequence diagram` });
         }
     }
     return out;
@@ -8106,6 +8112,8 @@ var arch005 = {
 };
 
 // src/lint/rules/con-001.ts
+var emptySource = (s) => s === "" || s === "—" || s === "-" || /^n\/a$/i.test(s);
+var plain = (s) => s.replace(/[*_`]/g, "").trim();
 var con001 = {
   code: "LINT-CON-001",
   severity: "error",
@@ -8113,18 +8121,23 @@ var con001 = {
   scope: "file",
   check(ctx) {
     const out = [];
-    for (const c of ctx.changes)
+    for (const c of ctx.changes) {
+      for (const n of c.graph.nodes) {
+        if (n.type !== "CON" || n.form !== "heading" || !n.file.startsWith("10-spec/")) continue;
+        const source = n.fields.find((f) => f.name === "Source");
+        if (emptySource(plain(source?.value ?? "")))
+          out.push({ path: `${c.folder}/${n.file}`, line: source?.line ?? n.line, ids: [n.id], message: `${n.id} has no source` });
+      }
       for (const [path, doc] of specDocs(c))
         for (const t of tables(doc, path)) {
           if (!t.header.includes("source")) continue;
           for (const r of t.rows) {
             const id = findIds(r.raw[0] ?? "", c.change).find((h) => h.id.includes("-CON-"))?.id;
             if (!id) continue;
-            const source = (r.cells.get("source") ?? "").replace(/[*_`]/g, "").trim();
-            if (source === "" || source === "—" || source === "-" || /^n\/a$/i.test(source))
-              out.push({ path: `${c.folder}/${path}`, line: r.line, ids: [id], message: `${id} has no source` });
+            if (emptySource(plain(r.cells.get("source") ?? ""))) out.push({ path: `${c.folder}/${path}`, line: r.line, ids: [id], message: `${id} has no source` });
           }
         }
+    }
     return out;
   }
 };
@@ -8311,8 +8324,8 @@ var WEAK_WORDS = [
 ];
 var WEAK_PHRASES = ["as needed", "if possible", "as appropriate", "where possible", "as soon as possible", "state of the art"];
 function weakWords(text) {
-  const plain3 = withoutCodeAndQuotes(text);
-  const lower = plain3.toLowerCase();
+  const plain4 = withoutCodeAndQuotes(text);
+  const lower = plain4.toLowerCase();
   const hits = WEAK_WORDS.filter((w) => new RegExp(`(?<![\\w-])${w.replace("/", "\\/")}(?![\\w-])`).test(lower));
   hits.push(...WEAK_PHRASES.filter((p) => new RegExp(`(?<![\\w-])${p}(?![\\w-])`).test(lower)));
   const quoteless = text.replace(/\\"/g, " ").replace(/"[^"]*"|“[^”]*”/g, " ");
@@ -8485,7 +8498,7 @@ var hand001 = {
 // src/lint/rules/hand-002.ts
 var HANDOFF2 = "20-plan/handoff.md";
 var ENTRY2 = /^\s*(?:\||[-*+]\s|\d+[.)]\s)/;
-var PATH3 = /\.sdd\/[^\s|`'"<>()]+\.md/;
+var PATH2 = /\.sdd\/[^\s|`'"<>()]+\.md/;
 var hand002 = {
   code: "LINT-HAND-002",
   severity: "error",
@@ -8509,7 +8522,7 @@ var hand002 = {
         const id = findIds(text, c.change).find((h) => h.id.includes("-T-"))?.id;
         if (!id) continue;
         entries2.push({ id, line: l });
-        const named = PATH3.exec(text.replace(/\\/g, "/"))?.[0];
+        const named = PATH2.exec(text.replace(/\\/g, "/"))?.[0];
         const file = fileOf.get(id);
         if (named === void 0) out.push({ path, line: l, ids: [id], message: `Ordered task list incomplete: ${id} has no path relative to the repository root` });
         else if (file !== void 0 && named !== file) out.push({ path, line: l, ids: [id], message: `Ordered task list incomplete: ${id} names ${named}, not its file ${file}` });
@@ -8969,7 +8982,7 @@ var RISKS = "20-plan/70-risks.md";
 var LITE_PLAN = "20-plan/plan.md";
 var RATINGS = ["low", "medium", "high"];
 var col = (t, name) => t.header.findIndex((h) => name.test(h));
-var plain = (cell) => (cell ?? "").replace(/[`*]/g, "").trim();
+var plain2 = (cell) => (cell ?? "").replace(/[`*]/g, "").trim();
 var risk001 = {
   code: "LINT-RISK-001",
   severity: "error",
@@ -8995,10 +9008,10 @@ var risk001 = {
           if (!id) continue;
           const at = (message) => void out.push({ path, line: r.line, ids: [id], message });
           for (const [name, i] of [["likelihood", lik], ["impact", imp]]) {
-            const v = plain(r.raw[i]).toLowerCase();
-            if (!RATINGS.includes(v)) at(`Risk rating outside low, medium, high: ${id} has ${name} "${plain(r.raw[i])}"`);
+            const v = plain2(r.raw[i]).toLowerCase();
+            if (!RATINGS.includes(v)) at(`Risk rating outside low, medium, high: ${id} has ${name} "${plain2(r.raw[i])}"`);
           }
-          for (const [name, i] of required) if (i < 0 || plain(r.raw[i]) === "") at(`Risk field missing: ${id} has no ${name}`);
+          for (const [name, i] of required) if (i < 0 || plain2(r.raw[i]) === "") at(`Risk field missing: ${id} has no ${name}`);
           if (!lite && !findIds(refs >= 0 ? r.raw[refs] ?? "" : r.raw.join(" "), c.change).some((h) => /-(T|COMP)-/.test(h.id))) at(`Risk field missing: ${id} names no T or COMP ID`);
         }
       }
@@ -9248,7 +9261,7 @@ var TEST_PLAN = "20-plan/60-test-plan.md";
 var LITE_PLAN2 = "20-plan/plan.md";
 var LEVELS = ["unit", "integration", "e2e", "eval", "manual"];
 var col2 = (t, name) => t.header.findIndex((h) => name.test(h));
-var plain2 = (cell) => (cell ?? "").replace(/`/g, "").trim();
+var plain3 = (cell) => (cell ?? "").replace(/`/g, "").trim();
 var tc001 = {
   code: "LINT-TC-001",
   severity: "error",
@@ -9268,7 +9281,7 @@ var tc001 = {
       const executors = /* @__PURE__ */ new Map();
       for (const t of all) {
         const i = col2(t, /owner|executed by|executor/);
-        if (i >= 0) for (const r of t.rows) for (const h of findIds(r.raw[0] ?? "", c.change)) executors.set(h.id, plain2(r.raw[i]));
+        if (i >= 0) for (const r of t.rows) for (const h of findIds(r.raw[0] ?? "", c.change)) executors.set(h.id, plain3(r.raw[i]));
       }
       const tcTables = all.filter((t) => col2(t, /^level$/) >= 0 && col2(t, /^tc$|^id$/) >= 0);
       if (tcTables.length === 0) out.push({ path, line: 1, message: "Test case field missing: no test-case table (TC, Level, Location, Test data, Environment)" });
@@ -9279,9 +9292,9 @@ var tc001 = {
           const tc = findIds(r.raw[id] ?? "", c.change).find((h) => h.id.includes("-TC-"))?.id;
           if (!tc) continue;
           const at = (message) => void out.push({ path, line: r.line, ids: [tc], message: `Test case field missing: ${tc} ${message}` });
-          const lv = plain2(r.raw[level]);
+          const lv = plain3(r.raw[level]);
           if (!LEVELS.includes(lv)) at(lv === "" ? "has no level" : `has level "${lv}", not one of ${LEVELS.join(", ")}`);
-          for (const [name, i] of required) if (i < 0 || plain2(r.raw[i]) === "") at(`has no ${name}`);
+          for (const [name, i] of required) if (i < 0 || plain3(r.raw[i]) === "") at(`has no ${name}`);
           if (lv === "manual" && (executors.get(tc) ?? "") === "") at("is manual but names no executor");
         }
       }
@@ -12711,8 +12724,8 @@ function markers(t, phase) {
   for (const [file, doc] of files)
     doc.lines.forEach((line, i) => {
       if (doc.blocks.inFence(i + 1)) return;
-      const plain3 = prose(line);
-      for (const m of plain3.matchAll(MARKER)) out.push({ type: m[1], file, line: i + 1, reference: (m[2] ?? "").trim() || "—" });
+      const plain4 = prose(line);
+      for (const m of plain4.matchAll(MARKER)) out.push({ type: m[1], file, line: i + 1, reference: (m[2] ?? "").trim() || "—" });
     });
   return out;
 }

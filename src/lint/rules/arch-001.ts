@@ -1,8 +1,9 @@
 // LINT-ARCH-001 (error): a component ID in a Mermaid component diagram is not in the catalogue, or
 // a non-removed catalogue component appears in no component diagram (C001-REQ-509). Diagram IDs
-// are compared after mapping `_` back to `-`; short forms belong to the change.
+// are compared after mapping `_` back to `-`; short forms belong to the change. Diagrams are read
+// from `60-architecture/` (full) or from the lite `spec.md` (C001-IF-06 §3, C001-D-029).
 import { formatId } from "../../model/ids.ts";
-import { mermaidBlocks } from "../spec.ts";
+import { architectureDocs, mermaidBlocks } from "../spec.ts";
 import type { LintRule, RuleFinding } from "../types.ts";
 import { componentStatus } from "./arch-003.ts";
 
@@ -20,8 +21,7 @@ export const arch001: LintRule = {
       const catalogue = c.graph.nodes.filter((n) => n.type === "COMP" && n.form === "heading");
       const known = new Set(catalogue.map((n) => n.id));
       const shown = new Set<string>();
-      const docs = [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/60-architecture/"));
-      for (const b of mermaidBlocks(docs)) {
+      for (const b of mermaidBlocks(architectureDocs(c))) {
         if (!COMPONENT_DIAGRAMS.test(b.kind)) continue;
         b.lines.forEach((text, i) => {
           for (const m of text.matchAll(DIAGRAM_ID)) {
