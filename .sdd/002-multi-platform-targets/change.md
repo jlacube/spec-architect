@@ -7,7 +7,7 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:8117dd6304ceb7a5da75d0bc640ef7682a9e889a69d846595be9d5e1101186f9", approved_at: 2026-11-08, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:755ce8f0fc206ac87d355b14ad3eb3e08743a827c2e928c042050d980b80caff", approved_at: 2026-11-08, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:a11d005bbf1e0583815a9bfdab82eaf9ff4b9a22e61b8675e972ab2f212e7a98", approved_at: 2026-11-08, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
@@ -326,6 +326,17 @@ waivers:
   - { item: C002-REQ-601, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
   - { item: C002-TS-634, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-211, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-212, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-213, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-503, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-504, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-505, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-506, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-507, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-REQ-601, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-DOD-G-01, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
+  - { item: C002-TS-634, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" }
 ---
 # CHG-002 — Multi-platform targets
 
@@ -432,3 +443,4 @@ waivers:
 | 2026-11-08 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-11-08 | G2 (spec) | **Revise** | "Revision for CHG-002 D-046: C002-IF-010 §5.2, a not-exposed injection session that did nothing forbidden (valid_run false, end_reason completed, the one not-exposed failure) is no run: no entry, the row runs again; a base entry acted upon whose stored result is such a no run is removed by the merge with a line; P-01 Q-inj-exposure-copilot-01" | none | unavailable |
 | 2026-11-08 | G3 (plan) | **Revise** | "Plan revision for D-046: C002-T-076 reruns INJ-02 and INJ-04, then batch 3, under the 15.00 USD stop and the batch rule; the two t076 entries corrected by the merge; strategy, test plan, handoff, questions-log; P-01 Q-inj-exposure-copilot-01" | none | unavailable |
+| 2026-11-08 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
