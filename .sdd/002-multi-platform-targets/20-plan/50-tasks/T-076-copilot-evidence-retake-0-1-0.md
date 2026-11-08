@@ -50,7 +50,7 @@ and the clean-profile run on the 0.1.0 packages.
 - **The G3 approval of revision D-041.** Until it, no session of this task runs.
 - **Cross-change:** C001-T-072's version commit ab0cfc7 (0.1.0) is in the history, and `dist/`
   holds the 0.1.0 packages. **The C001-M-4 cfg-full toy chain has ended** (the toy change to G3 of
-  C001-T-072 on cfg-full, defects D-042 … D-044; cfg-bare is deferred to CHG-004 and runs no chain; the
+  C001-T-072 on cfg-full, defects D-042 … D-044; cfg-bare is deferred to the follow-up change "Cost and token efficiency" and runs no chain; the
   conductor's decision on plan critic CR-103, narrowed on plan critic CR-111), so that no
   CHG-001 fix lands in `plugins/architect/` after this task's commit. The **C001 release candidate**
   is the commit that C001-T-072's tag `v0.1.0` will point to. These edges live on the CHG-002 side

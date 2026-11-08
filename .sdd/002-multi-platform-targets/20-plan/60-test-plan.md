@@ -178,7 +178,7 @@ counts above are those of the main branch.
     Q-cap-level-01, "Raise to $3 (Recommended)"; 1.50 USD before, from C002-T-070 on) and the row's own
     turn cap. **Exception, the two toy-g3 rows** (defects D-042, D-043): every session at their own rerun
     cap of 6.00 USD, in one chain for cfg-full whose own limits govern (at most 14 sessions and 55 USD
-    notional in total, defect D-044; cfg-bare deferred to CHG-004, its row refused, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
+    notional in total, defect D-044; cfg-bare deferred to the follow-up change "Cost and token efficiency", its row refused, no session); a toy session that ends at its 6.00 USD cap continues the chain, by the chain's
     design, and does not go to P-01 under C002-RISK-038. **Rule 2:** the row runs at its own caps, and each failed session that ended at the spend
     cap is replaced by one session at the rule-2 rerun cap of 1.50 USD with
     `--cap-exception`. The command forms are those of `handoff.md` (Cross-change dependency). The runs

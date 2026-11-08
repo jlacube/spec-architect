@@ -304,8 +304,8 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     // Revision D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1; revision D-043:
     // the rows' own rerun cap, 6.00 USD.
     sub("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0),
-    // Revision D-044 (critic CR-141): cfg-bare deferred to CHG-004, refused by capCheck.
-    { ...sub("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0), deferred: "deferred to CHG-004 (defect D-044)" },
+    // Revision D-044 (critic CR-141): cfg-bare deferred to the follow-up change 'Cost and token efficiency', refused by capCheck.
+    { ...sub("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0), deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044)" },
   ]);
   // 90 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 88 of the Claude Code subscription
   // class, 17 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039, the two toy-g3 rows
@@ -394,7 +394,7 @@ test("C002-TS-679 (supporting, revision D-043): the toy-g3 rows get 6.00 USD onl
   const check = capCheck as unknown as (row: Record<string, unknown>) => { caps?: { turns: number; usd: number }; refusal?: string };
   // Revision D-044 (critic CR-141): toy-g3-cfg-bare is deferred, refused with and without --cap-exception.
   const bare = { id: "toy-g3-cfg-bare", file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription", maxTurns: 30 };
-  for (const run of [bare, { ...bare, capExceptionRun: true }]) assert.match(check(run).refusal ?? "", /is deferred to CHG-004 \(defect D-044\); the row runs in no session/);
+  for (const run of [bare, { ...bare, capExceptionRun: true }]) assert.match(check(run).refusal ?? "", /is deferred to the follow-up change 'Cost and token efficiency' \(defect D-044\); the row runs in no session/);
   for (const id of ["toy-g3-cfg-full"]) {
     const base = { id, file: "evals/toy/toy-g3.eval.mjs", host: "claude-code", auth: "subscription", maxTurns: 30 };
     assert.deepEqual(check(base), { caps: { turns: 30, usd: 0.5 } });

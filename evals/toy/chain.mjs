@@ -33,12 +33,12 @@ import { CONFIGS, nextStep, stateDir, statusOf } from "./toy-g3.eval.mjs";
 /**
  * The chain limits per configuration (C002-IF-010 §2.2; defect D-044, P-01 Q-toy-g3-limit-01): the session
  * bound and the notional USD total of the chain, its saved sessions included; `resumeOnly`: --fresh refused
- * (critic CR-140). cfg-bare is deferred to CHG-004 "Cost and token efficiency" and runs no chain in CHG-001 or
+ * (critic CR-140). cfg-bare is deferred to the follow-up change "Cost and token efficiency" and runs no chain in CHG-001 or
  * CHG-002; its cap row `toy-g3-cfg-bare` is marked deferred too, so capCheck refuses it (critic CR-141).
  */
 export const CHAIN_LIMITS = Object.freeze({
   "cfg-full": Object.freeze({ maxSessions: 14, maxUsd: 55, resumeOnly: true }),
-  "cfg-bare": Object.freeze({ deferred: "deferred to CHG-004 (defect D-044); no chain runs in CHG-001 or CHG-002" }),
+  "cfg-bare": Object.freeze({ deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044); no chain runs in CHG-001 or CHG-002" }),
 });
 
 /** The session cap of the row `toy-g3-<cfg>`: the rerun cap of its cap exception (C002-IF-010 §2.2), or null. */

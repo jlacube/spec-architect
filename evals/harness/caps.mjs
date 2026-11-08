@@ -214,8 +214,8 @@ export const CAP_EXCEPTIONS = Object.freeze([
   // Defect D-042: the C001-T-072 toy change to G3, one chain per configuration, rule 1; defect D-043: every
   // session at the rows' own rerun cap of 6.00 USD.
   SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
-  // Defect D-044 (critic CR-141): cfg-bare deferred to CHG-004; capCheck refuses the row, which CHG-004 re-enables.
-  Object.freeze({ ...SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD), deferred: "deferred to CHG-004 (defect D-044)" }),
+  // Defect D-044 (critic CR-141): cfg-bare deferred to the follow-up change 'Cost and token efficiency'; capCheck refuses the row, which that change re-enables.
+  Object.freeze({ ...SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD), deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044)" }),
 ]);
 
 /**

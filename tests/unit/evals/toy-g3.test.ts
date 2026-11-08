@@ -142,7 +142,7 @@ test("chainLimits (revision D-044): cfg-full 14 sessions and 55 USD, options may
   assert.match(fresh.refusal, /--fresh is refused for cfg-full/);
   const bare = chainMod.chainLimits("cfg-bare");
   assert.equal(bare.code, 4);
-  assert.match(bare.refusal, /cfg-bare is deferred to CHG-004 \(defect D-044\)/);
+  assert.match(bare.refusal, /cfg-bare is deferred to the follow-up change 'Cost and token efficiency' \(defect D-044\)/);
 });
 
 test("toolchainFor: cfg-full detects all three tools, cfg-bare none", () => {
