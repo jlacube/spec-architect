@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-08T01:31:23Z",
+  "generated_at": "2026-11-08T01:31:48Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -317,9 +317,9 @@
           "summary": "Found in CHG-002 revision D-044 (plan critic CR-110): C001-M-4 exit criterion and C001-T-072 step 5 require a toy change to reach G3 on cfg-full and cfg-bare. P-01 (2026-11-08, Q-toy-g3-limit-01): 'Finish cfg-full, defer cfg-bare (Recommended)': cfg-bare is deferred to CHG-004 \"Cost and token efficiency\" and runs in neither CHG-001 nor CHG-002, so both items are narrowed to a toy change reaching G3 on cfg-full; the cfg-full chain resumes under a 55 USD limit (CHG-002 D-044).",
           "reporter": "jerome.lacube",
           "date": "2026-11-08",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Plan revision approved at G3 (5c03ef7) and G2 re-approved with the cfg-bare waivers of C001-NFR-304 and C001-DOD-015 (260dc9a): C001-M-4 and C001-T-072 step 5 narrowed to G3 on cfg-full; cfg-bare deferred to the follow-up change 'Cost and token efficiency'; critic CR-40…44 fixed (656d0db)",
+          "closed_at": "2026-11-08"
         }
       ],
       "waivers": [
@@ -812,9 +812,9 @@
           "summary": "Found in C001-T-072 (toy change to G3, cfg-full resumed at 6.00 USD per session, 2563aa6; evals/results/toy-g3-cfg-full-chain-partial-2026-11-08.json): sessions 7 and 8 both ended at the 6.00 USD cap (6.226, 6.011 USD) and the chain stopped at its 30 USD limit after 8 sessions and 26.78 USD notional, G1 approved and 10-spec still in draft with its critic review open (0 blocker, 2 major, 4 minor); G3 not reached, cfg-bare not run. Every review found issues (11 at ideation over three reviews, 8 of them in the first; 6 at spec), and each fix round took a full session. P-01 (2026-11-08, Q-toy-g3-limit-01): 'Finish cfg-full, defer cfg-bare (Recommended)': cfg-full gets a 55 USD chain limit (total, the 26.78 USD included) and resumes; cfg-bare is deferred to a follow-up change; the cost of about 50 USD notional per small lite change to G3 is a major post-release issue.",
           "reporter": "jerome.lacube",
           "date": "2026-11-08",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-044 approved at G2/G3 (8e7c46f, c4780e6): cfg-full chain limit 55 USD total and 14 sessions; cfg-bare row deferred and refused; post-release cost issue owned by the follow-up change 'Cost and token efficiency'; critic CR-138…141, CR-110…115 fixed (8b6c1f4)",
+          "closed_at": "2026-11-08"
         }
       ],
       "waivers": [
