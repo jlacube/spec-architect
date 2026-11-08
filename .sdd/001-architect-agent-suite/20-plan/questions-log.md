@@ -111,3 +111,11 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Options:** 1. Text fallback: the conductor asks its question or presents the gate as plain text in its reply and ends its turn; Copilot 0.0.3 with its 24 sessions retaken (Recommended) · 2. Harness change only (question tool on with scripted answers) · 3. Pause releases
 - **Answer:** P-01: "Text fallback + 0.0.3 (Recommended)"
 - **Extracted instructions:** none
+
+## Round 2026-11-08 — defect D-028 (found in CHG-002 revision D-044, plan critic CR-110)
+
+### Q-toy-g3-limit-01 — the resumed cfg-full toy chain stopped at its 30 USD limit before G2 (C001-M-4 item, C001-T-072 step 5)
+- **Context:** `evals/results/toy-g3-cfg-full-chain-partial-2026-11-08.json` and commit 2563aa6: 8 sessions, 26.78 USD notional; G1 approved; the spec is drafted with 0 lint errors, and the critic review has 2 major findings open; every review found issues (8 at ideation, 6 at spec), and each fix round takes a full session. The question was asked once for both changes and is logged in CHG-002 too (`.sdd/002-multi-platform-targets/20-plan/questions-log.md`, round 2026-11-08, with a correction note in its strategy on the lint and ideation figures).
+- **Options** (as presented by the conductor): 1. Finish cfg-full, defer cfg-bare: raise the cfg-full limit to about 55 USD and resume, about 20–28 USD more, ending near 400–405 USD of the 450 USD stop; this proves a change reaches G3 end to end; cfg-bare is deferred to a follow-up change, and the cost is logged as a major post-release issue (Recommended) · 2. Defer the whole item: stop now and record the partial result; 0.1.0 ships without end-to-end G3 evidence beyond the cfg-no-ripwire dogfood · 3. Finish both configs: raise the limits and the 450 USD stop to about 480 USD, and run both to G3, about 70–80 USD more
+- **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Finish cfg-full, defer cfg-bare (Recommended)', option 1
+- **Extracted instructions:** cfg-bare is not run in CHG-001 or CHG-002; the follow-up change is CHG-004 "Cost and token efficiency", created by the conductor at C001-T-072's close (the conductor's decision on CHG-002 plan critic CR-112)

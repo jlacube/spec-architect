@@ -42,7 +42,7 @@ The suite is built **from the deterministic core outwards** (C001-ADR-001):
 | C001-M-1 | Verification spikes and scaffolding | Unknown platform behaviours resolved before design-dependent work starts | All six spike reports have a verdict; resulting spec defects raised and triaged | C001-T-001 … C001-T-007 |
 | C001-M-2 | Deterministic CLI core, dogfooded | A working `sdd` CLI that validates this repository | `sdd lint` exits 0 on this repository; G1/G2 hashes reproduce; prototypes retired; all M-2 test cases pass | C001-T-010 … C001-T-028 |
 | C001-M-3 | Conductor and ideation/spec agents | Ideation and specification phases run end to end with interview, critic and gates | All M-3 eval test cases pass at milestone tier (3 runs); a toy change reaches G2; eval metrics report (tokens by type, agent and model; timings by session, subagent and tool call) produced, and P-01 decides the release eval budget from it | C001-T-029 … C001-T-039 |
-| C001-M-4 | Code intelligence, architecture and planning agents | Brownfield grounding and the plan phase run end to end | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full and cfg-bare | C001-T-041 … C001-T-044 |
+| C001-M-4 | Code intelligence, architecture and planning agents | Brownfield grounding and the plan phase run end to end | All M-4 test cases pass at milestone tier; a toy change reaches G3 on cfg-full (cfg-bare deferred to CHG-004 "Cost and token efficiency" by P-01's answer of 2026-11-08 to Q-toy-g3-limit-01, 'Finish cfg-full, defer cfg-bare (Recommended)'; defect D-028) | C001-T-041 … C001-T-044 |
 | C001-M-5 | Hooks, guards and archive | The write/shell boundary is enforced and the archive loop works | Guard corpora 100%; injection evals 0 failures; archive test cases pass | C001-T-050 … C001-T-054 |
 | C001-M-6 | Packaging and quality gates | Installable, documented, measured plugin | `npm run check` green on Node 20 and 22 under PowerShell 7 and Git Bash, including its encoding scan and coverage steps (C001-NFR-404, 502; coverage measured on Node 22, skipped with its reason on Node 20); routing ≥ 90%; NFR results recorded, and every NFR measured in `docs/nfr-results.md` meets its threshold | C001-T-060 … C001-T-065, C001-T-076, C001-T-077, C001-T-078, C001-T-079, C001-T-080, C001-T-081, C001-T-082, C001-T-083, C001-T-084 |
 | C001-M-7 | Release and dogfood | v0.1.0 released locally and proven on two real changes | Release evidence complete; dogfood logs recorded; CHG-001 archived | C001-T-070 … C001-T-075 |
@@ -57,6 +57,15 @@ question when its hand-back arrives, templates are read through `sdd template sh
 and the candidates count; C001-T-082 and C001-T-072 depend on it. C001-T-084 fixes defect D-020
 (P-01, Q-noask-01): without a question tool the conductor asks or presents the gate as plain text.
 D-020 closes when INJ-19 and INJ-21 pass at Copilot CLI 0.0.3 in CHG-002's C002-T-071; C001-T-072 depends on it.
+Defect D-028 (P-01, Q-toy-g3-limit-01, 'Finish cfg-full, defer cfg-bare (Recommended)', 2026-11-08; found
+by CHG-002's plan critic CR-110) narrows the toy-change item of C001-M-4 and of C001-T-072 step 5 to a
+toy change reaching G3 on cfg-full. cfg-bare is deferred to CHG-004 "Cost and token efficiency", which
+the conductor creates at C001-T-072's close and which holds the cfg-bare run and the cost issue of
+CHG-002 D-044. No task is added: the toy chain of C001-T-072 step 5 runs on cfg-full under the limits
+of CHG-002 C002-IF-010 §2.2 (55 USD in total, 14 sessions; CHG-002 D-044). **Close rule:** D-028 closes
+when this plan revision is approved at G3. **C001-T-072's close depends on it:** the task is not set
+`done` before that approval, and the conductor records its blocked reason, if it is otherwise ready, as
+"waits for the G3 approval of CHG-001 revision D-028".
 
 Task numbers leave gaps between milestones (008–009, 040, 045–049, 055–059, 066–069) so the
 numbering stays readable; gaps are not tombstones because they were never allocated.
