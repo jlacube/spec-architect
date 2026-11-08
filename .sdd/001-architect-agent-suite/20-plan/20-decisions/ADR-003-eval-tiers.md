@@ -108,8 +108,9 @@ release are recorded in `docs/milestone-log.md`:
 
 The release runs close them, because every release class runs at least the milestone count (3) with
 at least the milestone pass rule. The other items of those rows are not eval runs, so C001-T-072
-closes them with named evidence: a toy change reaching G2, a toy change reaching G3 on cfg-full and
-cfg-bare, and the eval budget decision (Q-release-tier-01).
+closes them with named evidence: a toy change reaching G2, a toy change reaching G3 on cfg-full, and the
+eval budget decision (Q-release-tier-01). The G3 run on cfg-bare is deferred to the follow-up change "Cost
+and token efficiency" (defect D-028, `../10-strategy.md`; P-01 answer to Q-toy-g3-limit-01, 2026-11-08).
 
 **Reuse of earlier results.** An earlier result counts for the release only when all of these hold:
 

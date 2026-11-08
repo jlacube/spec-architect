@@ -218,3 +218,20 @@ Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-openc
 | CR-37 | minor | unclear whether T-072 needs D-020 closed | T-072 precondition: D-020 closed | fixed: T-072 precondition "D-020 closed" (T-084 done, INJ-19 and INJ-21 passing at Copilot CLI 0.0.3 in C002-T-071) |
 
 All findings of this section fixed (planner), 2026-10-28.
+
+
+## Revision D-028 (2026-11-08)
+
+Scope: `git diff 8b6c1f4 1fb5afb`, against D-028 and Q-toy-g3-limit-01. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-40 | major | NFR-304, DOD-015, T-074, Q-toy-g3-limit-01 | "cfg-bare is not run in CHG-001 or CHG-002" overreaches the toy-chain decision; no planned run measures NFR-304 on cfg-bare, so DOD-015 cannot be met | P-01 (Q-nfr304-bare-01, 2026-11-08): defer NFR-304's cfg-bare part to the follow-up change, waived at G2; reword the log line to the toy chain only | fixed: P-01 answer to Q-nfr304-bare-01 ('Defer it to the follow-up (Recommended)') logged in the 2026-11-08 round; the cfg-bare clause of Q-toy-g3-limit-01 scoped to the toy chain by a scope note; G2 Revise recorded citing the waiver (NFR-304 and DOD-015 texts unchanged, cfg-bare part waived at the G2 re-approval); strategy close rule; docs/nfr-results.md NFR-304 row: cfg-bare deferred, P-01 2026-11-08 |
+| CR-41 | major | ADR-003, T-072, M-4 | ADR-003's deferred milestone runs still name cfg-full and cfg-bare | narrow to cfg-full and link the D-028 deferral | fixed: ADR-003 Deferred milestone runs names G3 on cfg-full only and links the D-028 deferral of cfg-bare |
+| CR-42 | major | T-073, D-028 | "CHG-004" is assumed; the next free number goes to whichever change is created first | name the follow-up by title ("Cost and token efficiency") and record its number once it exists | fixed: the follow-up is named by its title, "Cost and token efficiency", its number recorded once it exists, in CHG-001 (strategy, T-072, handoff, ADR-003) and CHG-002 (C002-IF-010, C002-NFR-105, C002-DOD-012, strategy, test plan, C002-T-076, handoff) and in the caps.mjs and chain.mjs messages and their tests; correction note on the D-028 summary |
+| CR-43 | minor | D-028, T-072 | no CHG-001 item tracks creating the follow-up change | add a T-072 done-when item owned by the conductor | fixed: T-072 done-when item owned by the conductor: the follow-up change is created and holds the cfg-bare G3 run, NFR-304's cfg-bare part and the D-044 cost issue |
+| CR-44 | minor | Q-toy-g3-limit-01, M-4 | the follow-up's name is attributed to P-01; extracted instructions mix the conductor's decision and omit two of P-01's | separate P-01's words from the conductor's decision; copy the instructions as CHG-002 records them | fixed: strategy M-4 row: deferred to a follow-up change (P-01); named 'Cost and token efficiency' (conductor, CHG-002 CR-112); extracted instructions copied word for word from CHG-002, with the conductor's decision in a separate note |

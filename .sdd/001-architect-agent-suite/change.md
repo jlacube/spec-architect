@@ -2,10 +2,10 @@
 id: CHG-001
 title: Architect agent suite
 kind: greenfield
-phase: 20-plan
+phase: 10-spec
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: approved, approved_hash: "sha256:183d8cc0449d7d59095e8147eac1c0daef3df61e4af87216c31a9b5ba0b5b070", approved_at: 2026-10-28, approved_by: jerome.lacube }
+  10-spec: { status: in-revision, approved_hash: "sha256:183d8cc0449d7d59095e8147eac1c0daef3df61e4af87216c31a9b5ba0b5b070", approved_at: 2026-10-28, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:e5b5bc183ab1ad27c1384b58e8c0d8ec807e5190224d73b7742578a525c1eed2", approved_at: 2026-10-28, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
@@ -113,3 +113,4 @@ defects:
 | 2026-10-28 | G2 (spec) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-10-28 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-11-08 | G3 (plan) | **Revise** | "Plan revision for D-028: C001-M-4 exit criterion and C001-T-072 step 5 narrowed to a toy change reaching G3 on cfg-full; cfg-bare deferred to CHG-004 by P-01 Q-toy-g3-limit-01 (2026-11-08); C001-T-072 close depends on the G3 approval" | none | unavailable |
+| 2026-11-08 | G2 (spec) | **Revise** | "Revision for CHG-001 D-028 (critic CR-40): C001-NFR-304 and C001-DOD-015 waived for 0.1.0 in their cfg-bare part only, deferred to the follow-up change Cost and token efficiency, P-01 Q-nfr304-bare-01 (2026-11-08); NFR and DoD texts unchanged" | none | unavailable |

@@ -58,20 +58,21 @@ DoD evidence collected for DOD-G and DOD-001…021; version 0.1.0 tagged locally
    - the toy-change items (G2; G3 on cfg-full) through a named change that met them;
    - if no change met one of them, run a toy change for it;
    - **cfg-bare is deferred** (defect D-028; P-01 answer to Q-toy-g3-limit-01 of 2026-11-08, 'Finish
-     cfg-full, defer cfg-bare (Recommended)'): G3 on cfg-bare is not run here; CHG-004 "Cost and token
-     efficiency" holds it. The milestone-log row of C001-M-4 records the deferral with this decision.
+     cfg-full, defer cfg-bare (Recommended)'): G3 on cfg-bare is not run here; the follow-up change "Cost and token efficiency" holds
+     it (its number is recorded once it exists). The milestone-log row of C001-M-4 records the deferral with this decision.
 6. Clean-profile install (C001-TC-1102).
 7. Collect evidence; tag v0.1.0 locally (no push).
 
 ## Verification
 
 - All TCs pass; the release eval report meets the pass rule of each release class of C001-ADR-003
-- Every deferred row of `docs/milestone-log.md` is closed with its evidence; the C001-M-4 toy-change item by a toy change that reached G3 on cfg-full, and its cfg-bare part recorded as deferred to CHG-004 (defect D-028)
+- Every deferred row of `docs/milestone-log.md` is closed with its evidence; the C001-M-4 toy-change item by a toy change that reached G3 on cfg-full, and its cfg-bare part recorded as deferred to the follow-up change "Cost and token efficiency" (defect D-028)
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when
 
-- [ ] Evidence file complete for every DoD item and every deferred milestone item (C001-M-4: G3 on cfg-full; cfg-bare deferred to CHG-004, defect D-028)
+- [ ] Evidence file complete for every DoD item and every deferred milestone item (C001-M-4: G3 on cfg-full; cfg-bare deferred to the follow-up change "Cost and token efficiency", defect D-028)
 - [ ] The G3 approval of the CHG-001 revision D-028 is recorded before this task is set `done`
+- [ ] **Conductor:** the follow-up change "Cost and token efficiency" is created (its number recorded in `10-strategy.md` and in CHG-002's handoff once it exists), and it holds the G3 run of the toy change on cfg-bare, the cfg-bare part of C001-NFR-304 (P-01 answer to Q-nfr304-bare-01) and the cost issue of CHG-002 D-044 (critic CR-43)
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003
 - [ ] Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` (or frontmatter fallback before T-026)
