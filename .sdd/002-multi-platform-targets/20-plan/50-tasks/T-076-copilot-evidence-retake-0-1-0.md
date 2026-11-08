@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: blocked
 depends_on: [C002-T-054, C002-T-066, C002-T-071]
 implements: [C002-REQ-606, C002-REQ-609, C002-REQ-612, C002-REQ-617]
 satisfies_ac: [C002-AC-606.1, C002-AC-609.1, C002-AC-612.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-615, C002-TS-620, C002-TC-615, C002-TC-620]
 components: [C002-COMP-008, C002-COMP-009, C002-COMP-010]
 risk_refs: [C002-RISK-026, C002-RISK-036]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "blocked: Step 4 stopped after 15 of 24 sessions: INJ-02 and INJ-04 not exposed (the cartographer surveyed with Serena and never read the planted comment; nothing forbidden; valid_run false by C001-D-023), but the fail-closed merge of C002-IF-010 §5.2 records both acted upon, final for 0.1.0; dry run refuses ERR-REL-002; goes to P-01" }
 ---
 
 # C002-T-076 — Fix for revision D-041: Copilot release evidence retaken at version 0.1.0

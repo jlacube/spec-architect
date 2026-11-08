@@ -1,0 +1,186 @@
+{
+  "scenario": "ROUTE-auditor-copilot-cli",
+  "title": "The conductor routes an audit to sdd-auditor on Copilot CLI (routing smoke)",
+  "tier": "dev",
+  "label": "t076",
+  "agent": "architect:sdd-conductor",
+  "host": "copilot-cli",
+  "target": "copilot",
+  "host_versions": {
+    "copilot-cli": "1.0.98"
+  },
+  "auth": null,
+  "api_key_source": "copilot-credential-store",
+  "measured_at": "2026-11-08T08:04:13.474Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.107167,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.107167,
+        "session_ms": 44459,
+        "api_ms": null,
+        "turns": 2,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-sonnet-5.5": {
+            "input": 75604,
+            "output": 561,
+            "cache_read": 37275,
+            "cache_write": 38161,
+            "cost_usd": 0.105076
+          },
+          "claude-haiku-5.5": {
+            "input": 40596,
+            "output": 1316,
+            "cache_read": 31568,
+            "cache_write": 8600,
+            "cost_usd": 0.002091
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-sonnet-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 561,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          },
+          "architect:sdd-auditor": {
+            "models": [
+              "claude-haiku-5.5"
+            ],
+            "tokens": {
+              "input": 0,
+              "output": 41912,
+              "cache_read": 0,
+              "cache_write": 0
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "architect:sdd-auditor",
+            "task_id": "9430ee7f-cd32-4e88-9db6-8a446c582885",
+            "ms": 16696,
+            "tool_uses": 4,
+            "total_tokens": 41912
+          }
+        ],
+        "tool_calls": {
+          "task": 1,
+          "sdd-shell-run_command": 4
+        },
+        "tool_timings": [
+          {
+            "tool": "task",
+            "agent": "main",
+            "subagent": "architect:sdd-auditor",
+            "ms": 18150
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "architect:sdd-auditor",
+            "ms": 1482
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "architect:sdd-auditor",
+            "ms": 1457
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "architect:sdd-auditor",
+            "ms": 1541
+          },
+          {
+            "tool": "sdd-shell-run_command",
+            "agent": "architect:sdd-auditor",
+            "ms": 1410
+          }
+        ]
+      },
+      "auth": null,
+      "api_key_source": "copilot-credential-store",
+      "target": "copilot",
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "usage": {
+        "turns": 2,
+        "usd": 0.107167
+      },
+      "caps": {
+        "turns": 12,
+        "usd": 0.5
+      },
+      "spend": "reported",
+      "provider": "github-copilot",
+      "models": [
+        "claude-sonnet-5.5",
+        "claude-haiku-5.5"
+      ],
+      "session_model": {
+        "agent": "architect:sdd-conductor",
+        "chosen": "claude-opus-5.5",
+        "source": "agent file",
+        "substitution": "claude-opus-5.5=claude-sonnet-5.5",
+        "passed": "claude-sonnet-5.5",
+        "used": [
+          "claude-sonnet-5.5"
+        ]
+      },
+      "agent_models": {
+        "architect:sdd-conductor": [
+          "claude-sonnet-5.5"
+        ],
+        "architect:sdd-auditor": [
+          "claude-haiku-5.5"
+        ]
+      },
+      "copilot_usage": {
+        "source": "copilot --usage-output-file",
+        "ai_credits": 10.716748,
+        "nano_aiu": 10716748000,
+        "ai_credits_status": "complete",
+        "premium_requests": 1,
+        "usd_estimate": 0.107167,
+        "usd_estimate_rule": "AI Credits × 0.01 USD (test plan §4.4)",
+        "models": {
+          "claude-sonnet-5.5": {
+            "requests": 2,
+            "input_tokens": 75604,
+            "output_tokens": 561,
+            "cache_read_tokens": 37275,
+            "cache_write_tokens": 38161,
+            "ai_credits": 10.5076,
+            "usd_estimate": 0.105076
+          },
+          "claude-haiku-5.5": {
+            "requests": 5,
+            "input_tokens": 40596,
+            "output_tokens": 1316,
+            "cache_read_tokens": 31568,
+            "cache_write_tokens": 8600,
+            "ai_credits": 0.209148,
+            "usd_estimate": 0.002091
+          }
+        }
+      },
+      "transcript": "evals/results/transcripts/ROUTE-auditor-copilot-cli-2026-11-08T08-03-28-549Z-run1.json"
+    }
+  ]
+}
