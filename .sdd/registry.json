@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-08T06:10:09Z",
+  "generated_at": "2026-11-08T06:10:11Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -832,9 +832,9 @@
           "summary": "Found in C001-T-072 (toy change to G3, cfg-full under D-044, fa79684; evals/results/toy-g3-cfg-full-chain-partial-2026-11-08b.json): 12 sessions, 42.22 USD notional; sessions 11 and 12 presented G2 and got Approve, but sdd gate approve refused with ERR-CLI-010 (LINT-ARCH-001 [C001-COMP-001] at 10-spec/spec.md:734: the rule reads component diagrams only under 60-architecture/, and a lite spec keeps them in spec.md; a CHG-001 defect fixes it); session 12 failed with no progress and the chain exited 1; G3 not reached. P-01 (2026-11-08, Q-toy-g3-limit-02): 'Fix, then finish to G3 (Recommended)': after the product fix the cfg-full chain limit rises to about 75 USD in total and the chain resumes at the G2 gate.",
           "reporter": "jerome.lacube",
           "date": "2026-11-08",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-045 approved at G2/G3: cfg-full chain limit 75 USD total and 18 sessions; --after-fix resume (exit 6 without it); critic CR-142…145, CR-116, CR-117 fixed (2e68055)",
+          "closed_at": "2026-11-08"
         }
       ],
       "waivers": [
