@@ -138,7 +138,7 @@ test("resumeProblem (critic CR-109): a resume without --fresh needs a chain.json
   }
 });
 
-test("chainLimits (revision D-044): cfg-full 14 sessions and 55 USD, options may only lower them; cfg-bare deferred", () => {
+test("chainLimits (revisions D-044, D-045): cfg-full 18 sessions and 75 USD, options may only lower them; cfg-bare deferred", () => {
   assert.deepEqual(chainMod.chainLimits("cfg-full"), { maxSessions: 18, maxUsd: 75 });
   assert.deepEqual(chainMod.chainLimits("cfg-full", { maxSessions: null, maxUsd: null }), { maxSessions: 18, maxUsd: 75 });
   assert.deepEqual(chainMod.chainLimits("cfg-full", { maxSessions: 10, maxUsd: 40 }), { maxSessions: 10, maxUsd: 40 });

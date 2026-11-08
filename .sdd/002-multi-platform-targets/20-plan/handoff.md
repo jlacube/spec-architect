@@ -287,8 +287,12 @@ chain exited 1 after twelve sessions and 42.22 USD notional
 the rule. From D-045 the cfg-full limits are 18 sessions (the implementer's decision) and 75 USD in total
 (P-01), its saved sessions included, and a resume after a failed last session needs `--after-fix`
 (`chain.mjs` exit 6 without it). **Handoff condition:** the chain waits for the G3 approval of the D-045
-revision **and** for the CHG-001 fix of LINT-ARCH-001 to land (its commit, with `sdd lint` of the saved
-toy workspace free of LINT-ARCH-001 on `spec.md`). Until both hold, no toy-change session runs, and the
+revision **and** for the CHG-001 fix of LINT-ARCH-001 to land: its commit includes the rebuilt
+`plugins/architect/scripts/sdd.mjs`, and, run from the repository root,
+`node plugins/architect/scripts/sdd.mjs lint 001 --phase 10-spec --cwd <saved toy workspace>` (the
+workspace `%TEMP%\sdd-eval-toy-g3\cfg-full\workspace`, `--cwd` the CLI's global option for it) reports
+no LINT-ARCH-001 result (critic CR-116; the committed CLI of f38daf4 still reports it at
+`10-spec/spec.md:734`). Until both hold, no toy-change session runs, and the
 conductor records the blocked reason as "waits for the G3 approval of CHG-002 revision D-045 and the
 CHG-001 LINT-ARCH-001 fix". After both:
 1. **Saved state:** the conductor checks that the saved `chain.json` holds the twelve sessions, 42.22 USD
@@ -302,7 +306,11 @@ CHG-001 LINT-ARCH-001 fix". After both:
    450 USD stop.
 4. **On a limit stop** (exit 2), and on another failed session (exit 1), the conductor reports to P-01
    with the partial result; no further session runs and no new revision is made unless P-01 agrees.
-   `--after-fix` is given only once the cause of a failure is fixed.
+   `--after-fix` is given only once the cause of a failure is fixed. A failed session is one whose saved
+   record has `failures` above 0, whatever its `end` (session 12 ended `success` with one failure). A
+   resume refused with exit 6 runs nothing. A non-zero exit of `run.mjs` that leaves no saved session
+   record is not covered by `--after-fix`: the chain exits 1, and the conductor investigates it and
+   reports to P-01 before any further session (critic CR-144).
 Like the other edges, this one lives on the CHG-002 side only.
 
 **Version 0.0.2 and the `INJ-21` session cap** (defect D-035; P-01 answer Q-inj21-01, "0.0.2 + cap

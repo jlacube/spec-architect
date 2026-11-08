@@ -1230,3 +1230,17 @@ Scope: `git diff 2563aa6 ebb4775`, against D-044 and Q-toy-g3-limit-01. Read-onl
 | CR-113 | minor | handoff, strategy | the high end of the estimate cannot fit under the limit when sessions end at the cap | state that with every session at the cap the chain stops after session 12 at about 51 USD | fixed: IF-010 rule 1, the D-044 note, the handoff and the strategy state that with every session at the cap the chain stops after session 12 at about 51 USD (50.78), so the high end of the estimate does not fit at the cap |
 | CR-114 | minor | test plan, toy-g3.test.ts | the test models one saved session, not eight; the session limit is never reached | model 8 saved sessions; add a case that stops at 14 with cheap sessions | fixed: toy-g3.test.ts models the eight saved sessions (26.78 USD) and adds a case of cheap sessions that stops at the bound of 14; test plan revision note updated |
 | CR-115 | minor | handoff session-limit check, settled row | drops the overshoot clause; attributes 14 sessions to P-01 | add the overshoot clause; mark 14 as the implementer's decision | fixed: session-limit check carries the overshoot clause; the settled row names 14 sessions as the implementer's decision, confirmed by the conductor at G2 |
+
+
+## Revision D-045 (2026-11-08)
+
+Scope: `git diff fa79684 f38daf4`, against D-045 and Q-toy-g3-limit-02. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-116 | major | handoff C001-T-072 condition | the lint check doesn't name the sdd the toy sessions load (the repo's plugins/architect/scripts/sdd.mjs) | require the rebuilt plugins/architect/scripts/sdd.mjs in the fix commit; check with node plugins/architect/scripts/sdd.mjs lint 001 --phase 10-spec in the saved workspace, no LINT-ARCH-001 | fixed: handoff condition: the fix commit includes the rebuilt plugins/architect/scripts/sdd.mjs, and node plugins/architect/scripts/sdd.mjs lint 001 --phase 10-spec --cwd <saved toy workspace>, run from the repository root, reports no LINT-ARCH-001 (the committed CLI of f38daf4 still reports it) |
+| CR-117 | minor | test plan, toy-g3.test.ts | a test title still says D-044, 14 sessions and 55 USD | rename to (revisions D-044, D-045): 18 sessions and 75 USD | fixed: test renamed to chainLimits (revisions D-044, D-045): cfg-full 18 sessions and 75 USD, options may only lower them; cfg-bare deferred |

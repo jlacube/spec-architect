@@ -1577,3 +1577,19 @@ Scope: `git diff 2563aa6 ebb4775`, against D-044 and Q-toy-g3-limit-01. Read-onl
 | CR-139 | minor | IF-010 §2.2, chain.mjs | exit 3 means both "no saved session" and "option refused" | give option refusals their own exit code, or specify both meanings | fixed: option refusals exit 5 in chain.mjs; every exit code 0 … 5 specified in the IF-010 §2.2 D-044 note, the chain.mjs header and the handoff; unit tests |
 | CR-140 | minor | IF-010 §2.2, chain.mjs | --fresh on cfg-full deletes the saved sessions and gives a fresh 55 USD | refuse --fresh for cfg-full | fixed: chain.mjs refuses --fresh for cfg-full (CHAIN_LIMITS resumeOnly, exit 5), with a unit test; stated in IF-010, strategy and handoff |
 | CR-141 | minor | IF-010 §2.2 toy-g3 row | the cfg-bare cap exception is still in force through run.mjs | mark the row deferred so capCheck refuses it, or drop the "finds it as approved" claim | fixed: the toy-g3-cfg-bare row is marked deferred in caps.mjs and capCheck refuses it with and without --cap-exception (supporting test in cap-exceptions.test.ts); the 'finds it as approved' claim dropped; CHG-004 re-enables or re-adds it by its own revision |
+
+
+## Revision D-045 (2026-11-08)
+
+Scope: `git diff fa79684 f38daf4`, against D-045 and Q-toy-g3-limit-02. Read-only review (Read, Grep, Glob). Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-142 | major | IF-010 §2.2 rule 1 | the D-044 "stops after session 12 at about 51 USD" sentence follows the D-045 text and contradicts it | move it into the D-044 paragraph or mark it as the D-044 forecast | fixed: the 'stops after session 12 at about 51 USD' sentence moved into the D-044 paragraph of rule 1, marked as the D-044 forecast |
+| CR-143 | major | IF-010 §2.2 toy-g3-cfg-full row | Runs cell keeps the old saved state (8 sessions, 26.78 USD) | twelve sessions and 42.22 USD (six at 3.00, six at 6.00 USD) | fixed: the Runs cell reads twelve sessions and 42.22 USD (six at 3.00 USD, six at 6.00 USD) |
+| CR-144 | minor | IF-010 §2.2 D-045 note | "failed" undefined; no statement that nothing runs on exit 6; a run.mjs exit with no saved record unguarded | define failed as the saved record's failures above 0; nothing runs on exit 6; a non-zero run.mjs exit with no record goes to the conductor | fixed: the D-045 note defines failed as the saved record's failures above 0 (session 12 ended success with one failure), states that nothing runs on exit 6, and that a non-zero run.mjs exit without a saved record is not covered and goes to the conductor (handoff D-045 edge, item 4, which says the same) |
+| CR-145 | minor | IF-010 §2.2 Caps above 0.50 USD | the D-045 clause separates D-044 from its cited answer | reorder the clauses | fixed: the revision list gives the Q-toy-g3-limit-01 answer right after D-044, then the D-045 clause with Q-toy-g3-limit-02 |
