@@ -2,7 +2,7 @@
 checklist: docs/checklists/vscode-copilot.md
 date: <YYYY-MM-DD>
 package_version: <version of the release candidate>
-host_versions: { vscode: "<VS Code Insiders version from Help: About, e.g. 1.142.0-insider>", copilot-chat: "<GitHub Copilot Chat version, e.g. 0.35.3>" }
+host_versions: { vscode: "<VS Code version from Help: About or sdd host-version vscode, e.g. 1.145.2>", copilot-chat: "<GitHub Copilot Chat version, e.g. 0.73.0>" }
 session_type: Local
 enforcement_mode: <sdd-mcp-server | copilot-hooks>
 hooks_state: <enabled | disabled>   # both modes: derived from hooks_sources (enabled exactly when on, trusted, none)
@@ -170,7 +170,7 @@ field counts as not recorded.
 
 ## Filling in the frontmatter
 
-- `date`, `package_version`, `host_versions` (`vscode`: the VS Code Insiders version; `copilot-chat`:
+- `date`, `package_version`, `host_versions` (`vscode`: the VS Code version; `copilot-chat`:
   the GitHub Copilot Chat version, both as Help: About shows them), `session_type` (`Local`),
   `enforcement_mode` (the mode of the package run, `sdd-mcp-server` or `copilot-hooks`) and
   `executed_by` (P-01's name).

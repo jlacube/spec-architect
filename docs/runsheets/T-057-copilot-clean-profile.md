@@ -1,7 +1,7 @@
 # T-057 — Copilot clean-profile run, timed
 
 **Purpose:** on a fresh Windows profile, time how long it takes to go from the first install command
-to the first interview question of a new change in VS Code Insiders with Copilot, using only
+to the first interview question of a new change in VS Code with Copilot, using only
 `INSTALL.md` (limit 15 minutes). The `sdd install copilot` step is timed on its own.
 
 Task C002-T-057 · cases C002-TC-903 (C002-TS-306) · record `docs/releases/clean-profile-runs.md`,
@@ -9,12 +9,12 @@ Copilot section (create the file if it does not exist yet; the OpenCode run move
 
 ## Prerequisites
 
-- **A fresh Windows user profile** with only Node, VS Code Insiders and GitHub Copilot Chat.
-- **Hosts:** VS Code Insiders **1.142.0-insider** and Copilot Chat **0.35.3**, with auto-update off
-  (`update.mode` none, extension auto-update off). Sign in with your own **GitHub Copilot Pro** login
+- **A fresh Windows user profile** with only Node and VS Code (Copilot Chat is built in).
+- **Hosts:** VS Code **1.145.2** (stable) and Copilot Chat **0.73.0**, built in, with auto-update off
+  (`update.mode` none, extension auto-update off; CHG-002 revision D-047). Sign in with your own **GitHub Copilot Pro** login
   **before** the timer starts. Copilot Pro has no Opus, so the conductor runs on Sonnet.
 - **Node 22.22.3** from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3`. If the
-  fresh profile cannot read that folder, or VS Code Insiders is not installed for it, install them in
+  fresh profile cannot read that folder, or VS Code is not installed for it, install them in
   the profile before the timer and write that down.
 - **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip` and
   `dist\architect-sdd-0.1.0.tgz`, packed at the release-candidate commit that T-076 records (ask the
@@ -75,7 +75,7 @@ Set-Location C:\Sandbox\runs\t057\toy
 sdd install copilot --package $HOME\architect\copilot-0.1.0
 ```
 
-7. **Phase C, settings.** Open the folder in VS Code Insiders and trust it. Set
+7. **Phase C, settings.** Open the folder in VS Code and trust it. Set
    `chat.plugins.enabled` to `true`, `chat.pluginLocations` to the package folder, and
    `chat.askQuestions.enabled` to `true`. Reload the window.
 
@@ -89,7 +89,7 @@ sdd install copilot --package $HOME\architect\copilot-0.1.0
 In `docs/releases/clean-profile-runs.md`, add a section `## Copilot` with these fields:
 
 - the date
-- the versions: VS Code Insiders, Copilot Chat, Node, `architect-sdd`, the package
+- the versions: VS Code, Copilot Chat, Node, `architect-sdd`, the package
 - how the hosts were provided
 - the time of each phase (A CLI, **B `sdd install copilot`**, C settings, D first question) and the
   total, with any download time left out

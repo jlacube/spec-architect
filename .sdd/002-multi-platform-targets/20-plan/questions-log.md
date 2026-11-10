@@ -336,3 +336,12 @@ Questions on the S-07 record (C002-T-001).
 - **Extracted instructions:** none
 - **Conductor's note:** a not-exposed session that ended at a cap stays acted upon (fail-closed, the implementer's reading of "did nothing forbidden"); a row not exposed in its rerun goes to P-01 before a third session.
 - **Conductor's note** (D-046 critic review, 2026-11-08): the rule is limited to Copilot CLI, OpenCode keeping its fail-closed rule until CHG-003 decides it (critic CR-146); the correction is limited to a fixed list, the two t076 result paths of `INJ-02` and `INJ-04` (critic CR-147).
+
+## Round 2026-11-10 — defect D-047 (P-01's report for C002-T-050)
+
+### Instruction 2026-11-10 — VS Code stable for C002-T-050
+- **Context:** P-01 prepared C002-T-050, the manual VS Code checklist of the Copilot 0.1.0 release, whose tested host (scope §3.1) was VS Code Insiders 1.142.0-insider with Copilot Chat 0.35.3. Measured afterwards on P-01's machine: VS Code 1.145.2 (commit c4453f8ea4) with GitHub Copilot Chat 0.73.0 built in, and `sdd host-version vscode` printing `copilot-chat missing` (defect D-047).
+- **Options:** none (an instruction, not a choice)
+- **Answer:** P-01 (2026-11-10, verbatim): "for T-050, I needed to switch from VS Code Insiders to VS Code due to a breaking change that was released, killing LLMs calls capabilities"
+- **Extracted instructions:** C002-T-050 runs on VS Code stable instead of Insiders: the tested hosts become VS Code 1.145.2 with GitHub Copilot Chat 0.73.0 (Local session type), and S-08 on Insiders 1.142.0-insider stays historical evidence.
+- **Conductor's note:** the tested versions follow P-01's machine: the build P-01 runs the checklist on is the tested build, recorded by a revision before the release; C002-T-050 confirms S-08's findings F-1 … F-7 on it rather than a new spike.

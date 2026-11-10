@@ -1,7 +1,7 @@
 # T-050 — Manual VS Code checklist run and record
 
 **Purpose:** run `docs/checklists/vscode-copilot.md` on the Copilot release candidate in VS Code
-Insiders with hooks enabled, take the toy change to G1, and save the checklist record.
+(stable, not Insiders; revision D-047) with hooks enabled, take the toy change to G1, and save the checklist record.
 
 Task C002-T-050 · cases C002-TC-901 (the run) and C002-TC-618 (record review), plus C002-TC-358,
 C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
@@ -9,12 +9,27 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 
 ## Prerequisites
 
-- **Hosts:** VS Code Insiders **1.142.0-insider** and GitHub Copilot Chat **0.35.3**, with
-  auto-update off, signed in with your own **GitHub Copilot Pro** login. Copilot Pro has no Opus, so
+- **Hosts:** VS Code **1.145.2** (stable, commit c4453f8ea4) and GitHub Copilot Chat **0.73.0**,
+  which this build ships built in, with auto-update off (the built-in Copilot Chat updates only with
+  VS Code), Local session type, signed in with your own **GitHub Copilot Pro** login. Copilot Pro has no Opus, so
   the conductor's file names `claude-opus-5.5` and VS Code runs it on Sonnet. That is expected:
   record what VS Code shows in `models_used`.
-- **A new, empty VS Code profile** (Profiles: New Profile). A new profile starts without
-  extensions, so make sure Copilot Chat 0.35.3 is installed in it.
+- **A new, empty VS Code profile** (Profiles: New Profile). The built-in Copilot Chat 0.73.0 is
+  there in a new profile; do not install another Copilot Chat from the Marketplace (an installed one
+  replaces the built-in one and `sdd host-version vscode` then prints its version).
+- **Why stable:** your report of 2026-11-10, "for T-050, I needed to switch from VS Code Insiders to
+  VS Code due to a breaking change that was released, killing LLMs calls capabilities" (CHG-002
+  revision D-047). S-08's findings F-1 … F-7 were made on Insiders 1.142; this run confirms them on
+  VS Code 1.145.2.
+- **Settings of this VS Code:** your VS Code user settings do not set `chat.useHooks` today, so
+  `sdd host-version vscode` prints `hooks unknown` until the checklist's restore step sets it (or the
+  workspace settings do). The Insiders settings (`chat.plugins.enabled`, `chat.pluginLocations`,
+  `chat.askQuestions.enabled`, `chat.useHooks`) are not shared with VS Code: VSC-01 and the restore
+  step set them in this profile.
+- **Package with the D-047 fix:** the packages must carry the D-047 host-version fix and the tested
+  versions above (check in step 2). The 0.1.0 packages of b481e82 do not: their doctor probes
+  `vscode-insiders` and their CLI prints `copilot-chat missing` on VS Code 1.145.2. P-01 decides how
+  the fix reaches the packages before this run.
 - Node 22.22.3 first on PATH:
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
@@ -35,7 +50,8 @@ Copy-Item C:\Sandbox\ClaudeCode\Architect\docs\checklists\records\TEMPLATE.md "C
    `session_type: Local`, `enforcement_mode: sdd-mcp-server`, `executed_by`.
 
 2. Install the CLI from the tarball and check the versions. `sdd --version` must print `0.1.0`, and
-   `sdd host-version vscode-insiders` must print both host versions.
+   `sdd host-version vscode` must print `vscode 1.145.2` and `copilot-chat 0.73.0` (revision D-047;
+   not `vscode-insiders`).
 
 ```powershell
 npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.1.0.tgz
@@ -44,7 +60,7 @@ npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.1.0.tgz
 sdd --version
 ```
 ```powershell
-sdd host-version vscode-insiders
+sdd host-version vscode
 ```
 
 3. Unpack the package outside the toy repository. The path must contain no `"`, `$`, `%` or

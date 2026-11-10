@@ -10,10 +10,15 @@ it, in both Copilot enforcement modes (C002-REQ-629).
 
 ## Scope of a run
 
-- **Host:** VS Code Insiders `1.142.0-insider` with GitHub Copilot Chat `0.35.3`, the tested versions
-  of the Copilot mapping table (`plugins/architect/targets/copilot.json`, `host.tested_versions`;
-  `docs/spikes/S-08-copilot-vscode.md`). Another version is untested: record it, and the release check
-  refuses the record (ERR-REL-006).
+- **Host:** VS Code `1.145.2` (stable) with GitHub Copilot Chat `0.73.0`, built in, the tested
+  versions of the Copilot mapping table (`plugins/architect/targets/copilot.json`,
+  `host.tested_versions`; scope §3.1 of CHG-002, revised for defect D-047 on P-01's instruction of
+  2026-11-10). `sdd host-version vscode` prints both. Another version is untested: record it, and the
+  release check refuses the record (ERR-REL-006). The tested versions follow P-01's machine.
+- **S-08 on Insiders:** S-08's findings F-1 … F-7 (`docs/spikes/S-08-copilot-vscode.md` §5) were made
+  on VS Code Insiders 1.142.0-insider with Copilot Chat 0.35.3, which stays their historical evidence;
+  a run of this checklist on the tested build confirms them there, and a finding the run refutes is a
+  spec defect, not a failed step.
 - **Session type:** **Local** (the Copilot CLI session type does not offer the agents, S-08 §3).
 - **Enforcement mode:** the `enforcement_mode` of the Copilot mapping table, today `sdd-mcp-server`
   (sdd MCP server enforcement, S-08 §4). Under the Copilot hooks fallback it is `copilot-hooks`.
@@ -178,7 +183,7 @@ step and a spec defect.
 
 ### VSC-01 — Fresh profile, package unpacked and registered before the install
 
-- **Do:** In VS Code Insiders create and switch to a new, empty profile (Profiles: New Profile). Create
+- **Do:** In VS Code create and switch to a new, empty profile (Profiles: New Profile). Create
   the toy repository: a folder `toy` with `src/app.ts` holding `export const app = "toy";`, then
   `git init`, `git add -A`, `git commit -m toy`; create the empty folder `toy-other` beside it and
   `toy.code-workspace` whose `folders` list `toy` first and `toy-other` second. Install the CLI from
@@ -189,7 +194,8 @@ step and a spec defect.
   picker of a Local chat and type `/` in the chat input.
 - **Expect:** the package folder has no `plugin.json` yet, and neither the agent picker nor the
   slash-command list shows an Architect agent, prompt file or skill (assumption A-3).
-- **Record:** the profile name, the VS Code Insiders and GitHub Copilot Chat versions of Help: About,
+- **Record:** the profile name, the VS Code and GitHub Copilot Chat versions of Help: About (or of
+  `sdd host-version vscode`),
   and as `observed` what the picker and the slash-command list showed.
 
 ### VSC-02 — `sdd install copilot` in your own terminal

@@ -93,7 +93,20 @@ Spike S-08 was signed off by P-01 on 2026-10-17 with enforcement mode `sdd-mcp-s
   chat runs in the local agent host (Copilot SDK agent host; §3). The Copilot Chat version is the one
   P-01 confirmed for the tested build (Q-versions-02, `../../20-plan/questions-log.md` round 7). The
   Copilot CLI session type of VS Code was not used: it does not offer the package's agents (§3).
+  Since the revision for defect D-047 this build is **historical evidence**: S-08's facts (F-1 … F-7)
+  were found on it, and its record keeps these versions.
 - **Copilot CLI 1.0.98**, standalone (§2).
+
+**Tested VS Code host since the revision for defect D-047** (P-01's instruction of 2026-11-10,
+`../../20-plan/questions-log.md` round 2026-11-10: a released Insiders build broke the model calls, so
+C002-T-050 runs on VS Code stable): **VS Code 1.145.2 (commit c4453f8ea4) with GitHub Copilot Chat
+0.73.0**, the Copilot Chat that this build ships built in (no entry in `code --list-extensions`;
+C002-IF-007 §Output), Local session type. These are the tested versions of the Copilot table
+(C002-IF-001 §1), the doctor's host row and the checklist record (C002-IF-009 §3, §4); the doctor
+reads them with `sdd host-version vscode`. The manual VS Code checklist (C002-T-050) confirms S-08's
+facts F-1 … F-7 on this build. The tested versions follow P-01's machine: when P-01 runs the checklist
+on another build, a revision records it before the release. Copilot CLI 1.0.98 stays the tested
+Copilot CLI of the eval runner, as S-08 recorded it.
 
 The facts of the S-08 record that contradict the earlier platform assumptions (F-1 … F-7, §5) are
 taken into C002-CAP-03, C002-REQ-103, C002-REQ-211, C002-REQ-612 and C002-REQ-614 by the revision for
@@ -120,7 +133,7 @@ bundled entry) and C001-CON-03 (distribution as a Claude Code plugin; CHG-002 ad
 | Dependency | Version policy | Required? | Used by | License |
 |---|---|---|---|---|
 | OpenCode | Tested version: the OpenCode version recorded by spike S-07, which validated the target (OpenCode 1.18.31, started as the pinned host binary for replay and evals; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the OpenCode target | P-03 on OpenCode; OpenCode eval runner | host application, not bundled |
-| VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions recorded by spike S-08, which validated the target (VS Code Insiders 1.142.0-insider with GitHub Copilot Chat 0.35.3, Local session type; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
+| VS Code with GitHub Copilot Chat | Tested versions: the VS Code and GitHub Copilot Chat versions on which the manual VS Code checklist runs, P-01's machine (VS Code 1.145.2 with GitHub Copilot Chat 0.73.0, built in, Local session type, since the revision for defect D-047; spike S-08 validated the target on VS Code Insiders 1.142.0-insider with GitHub Copilot Chat 0.35.3, historical evidence; §3.1); shown by the doctor and re-checked before each release (Q-versions-01) | Yes, for the Copilot VS Code target | P-03 on Copilot VS Code; manual VS Code checklist | host application, not bundled |
 | Copilot CLI | Tested version: the Copilot CLI version recorded by spike S-08 for the eval runner (1.0.98; §3.1) and re-checked before each release (Q-versions-01); not shown by the doctor (eval tool only) | Evals only (C002-NG-01) | Copilot CLI eval runner | host application, not bundled |
 | npm registry | package `architect-sdd`, unscoped, published by P-01 (Q-cli-02) | Yes, for `architect-sdd` | P-01 (publish), P-03 on the generated targets (install) | service |
 | Node.js | 20 or later on the PATH (constitution); unchanged by the floor of the OpenCode JS SDK (next row), which `architect-sdd` does not bundle (C002-NFR-402) | Yes | `sdd` executable of `architect-sdd`, sdd MCP server | MIT |

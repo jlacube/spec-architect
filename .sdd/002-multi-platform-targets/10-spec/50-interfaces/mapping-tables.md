@@ -153,7 +153,7 @@ target; the exit code is 1 if any error was found (C002-IF-004).
 | Token | Value |
 |---|---|
 | `{{host_name}}` | `host.name` |
-| `{{host_version_arg}}` | the argument of `sdd host-version` (C002-IF-007) that reads the target's host: `opencode` on OpenCode; on Copilot `vscode-insiders` when `host.tested_versions.vscode` ends in `-insider` (the Insiders build that S-08 tested), else `vscode` (C002-IF-006 §2; revised for defect D-012) |
+| `{{host_version_arg}}` | the argument of `sdd host-version` (C002-IF-007) that reads the target's host: `opencode` on OpenCode; on Copilot `vscode-insiders` when `host.tested_versions.vscode` ends in `-insider` (the Insiders build that S-08 tested), else `vscode` (C002-IF-006 §2; revised for defect D-012); since the revision for defect D-047 the tested build is VS Code 1.145.2 (stable), so `vscode` |
 | `{{tested_version:<part>}}` | `host.tested_versions.<part>` (`opencode`, `vscode`, `copilot-chat`) |
 | `{{package_version}}` | version of the source plugin, which is also the `architect-sdd` version of the same run (C002-INV-11) |
 | `{{enforcement_mode}}` | glossary name of the table's enforcement mode |

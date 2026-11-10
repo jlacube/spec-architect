@@ -58,8 +58,8 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 - The S-08 record of the tested versions is not `deferred`: the signed-off record gives
   `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could
   bring the defer branch of `75-rollout.md` §5 back, and with it a plan revision that drops this task.
-- The release record names the tested hosts of scope §3.1 (VS Code Insiders `1.142.0-insider`,
-  Copilot CLI `1.0.98`).
+- The release record names the tested hosts of scope §3.1 (VS Code `1.145.2` with GitHub Copilot
+  Chat `0.73.0` since revision D-047, Copilot CLI `1.0.98`).
 
 ## Step outline (no production code)
 

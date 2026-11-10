@@ -254,14 +254,21 @@ enforcement_mode: sdd-mcp-server        # S-08: sdd-mcp-server | copilot-hooks |
 ```
 
 The frontmatter above is that of the signed-off record (`docs/spikes/S-08-copilot-vscode.md`, lines
-1-13). Copy into the Copilot table (C002-IF-001 §1): `tested_versions.vscode` takes the version of
-the VS Code build the record tested, `vscode-insiders` when the record has it (the tested host of
-`../10-context/scope.md` §3.1; `vscode` then names an installed build that ran no probe), and
-`copilot-chat` its value; `copilot-cli` stays in the record, and the release check compares the
-`host_versions` of the Copilot CLI runner's evidence with it (ERR-REL-006). The record's
-`copilot-chat` 0.35.3 is the Copilot Chat version of the tested VS Code Insiders build: P-01's
-answer to Q-versions-02 (`../../20-plan/questions-log.md`, round 7) gives the tested pair as VS Code
-Insiders 1.142.0-insider with Copilot Chat 0.35.3.
+1-13). `copilot-cli` stays in the record, and the release check compares the `host_versions` of the
+Copilot CLI runner's evidence with it (ERR-REL-006). The record's `vscode-insiders`, `vscode`,
+`copilot` and `copilot-chat` values are **historical evidence** since the revision for defect D-047:
+they name the build on which S-08 found its facts (VS Code Insiders 1.142.0-insider with Copilot Chat
+0.35.3; P-01's answer to Q-versions-02, `../../20-plan/questions-log.md`, round 7), and the release
+check does not compare them with the table. The Copilot table's `tested_versions` (C002-IF-001 §1)
+are the VS Code and GitHub Copilot Chat versions of the build on which P-01 runs the manual VS Code
+checklist (`../10-context/scope.md` §3.1, P-01's instruction of 2026-11-10): VS Code 1.145.2 with
+GitHub Copilot Chat 0.73.0, as `sdd host-version vscode` prints them (C002-IF-007 §Output); the
+checklist record's `host_versions` must equal them (§4, §5, ERR-REL-006), and a checklist run on
+another build needs a revision of this section and of the table before the release.
+
+Before the revision for defect D-047 the table copied its tested versions from this record
+(`vscode-insiders` when present, and `copilot-chat`), and the release check compared the record with
+the table.
 
 S-07 outcome keys: `edit_rules_match_path_corpus`, `bash_rules_match_shell_corpus`,
 `question_answerable_by_script`, `post_write_feedback_channel`, `agent_tools_closed` (a catch-all
@@ -552,7 +559,7 @@ Refusal reasons are cumulative; each is an ERR-REL code of `errors.md` §3:
 | Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled`, and its `hooks_sources` give `enabled` by the derivation of §4 (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327; the hooks-state check below) | ERR-REL-010 |
 | Copilot, where the checklist record is the injection evidence (the Copilot hooks fallback, C002-REQ-628; sdd MCP server enforcement when the S-08 record gives `copilot_cli_loads_package: false`, C002-REQ-613): one step run per Copilot injection case of the checklist (Copilot CLI results are recorded but not counted); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
 | Copilot: the S-08 spike record does not give `deferred` | ERR-REL-005 |
-| every `host_versions` of the evidence equals the table's tested versions | ERR-REL-006 |
+| every `host_versions` of the evidence equals the table's tested versions (Copilot: the checklist record against `vscode` and `copilot-chat`, the Copilot CLI runner's evidence against the S-08 record's `copilot-cli`; the S-08 record's VS Code values are historical and not compared, §3, revised for defect D-047) | ERR-REL-006 |
 | the package equals the regeneration and was generated without `--mode` | ERR-REL-007, ERR-REL-008 |
 
 **Step check** (ERR-REL-004; revised for critic CR-52, CR-55 and Q-checklist-rerun-01). For the

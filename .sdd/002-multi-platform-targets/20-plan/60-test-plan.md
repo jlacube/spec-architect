@@ -111,7 +111,7 @@ counts above are those of the main branch.
 | E-CC | Claude Code at its tested version, desktop-bundled binary through `CLAUDE_CODE_EXECPATH`, plugin from the local marketplace; sessions run with `--auth subscription` on P-01's Claude Max plan (C002-T-060; §4.1 "Eval auth"), outside every USD budget; a session run with `--auth api-key` bills the prepaid Anthropic API key and runs only after P-01 decides it (§4.1) |
 | E-OCE | OpenCode at its tested version (1.18.31) as `opencode serve` of the pinned host binary, with its own `OPENCODE_DB` and its own configuration, data, cache and state folders under the run folder, so the user's OpenCode configuration and credential store are not read; the provider key comes from P-01's key file `%USERPROFILE%\.architect-evals\openrouter-key.txt` as `OPENROUTER_API_KEY` only, and the runner refuses a session without it (C002-IF-010 §4 host process; C002-ADR-005; Node.js 22.22.2 or later, as E-OC), and the Claude models of the C002-REQ-105 tiers through **OpenRouter** (model ids `openrouter/anthropic/claude-…`, the exact id per tier recorded by S-07, C002-T-001 step 8); billed to P-01's OpenRouter account within the OpenRouter budget of §4.1 (Q-opencode-01, `questions-log.md` round 6) |
 | E-CPC | Copilot CLI at its S-08 tested version (1.0.98), non-interactive with `--no-ask-user`, agents named `architect:<agent>`, each case workspace prepared by `sdd install copilot`, each session with `--model` of its session agent by the model rule of C002-IF-010 §2, after the run's model substitution: P-01's Copilot Pro plan offers no Opus model, so the release run gives `--copilot-model claude-opus-5.5=claude-sonnet-5.5` (C002-IF-010 §1, §5.1; P-01 answer to Q-copilot-opus-01); its sessions spend from the Copilot pool of §4.1 (30 USD); billed in AI Credits to P-01's GitHub Copilot plan (1,500 included AI Credits per month; additional usage enabled with a 50 USD budget; 2026-10-16) (about 68 sessions together with E-VSC, §4.2 and §4.4; C002-RISK-026), not to the prepaid API key |
-| E-VSC | VS Code Insiders and GitHub Copilot Chat at the S-08 tested versions (1.142.0-insider; scope §3.1), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks enabled in both modes (the subagent guard hook, C002-REQ-327, C002-REQ-629); billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
+| E-VSC | VS Code and GitHub Copilot Chat at the tested versions of scope §3.1 (VS Code 1.145.2 with Copilot Chat 0.73.0, built in, since revision D-047; S-08 ran on Insiders 1.142.0-insider), Local session type with `sdd-conductor` as session agent, the toy repository installed with `sdd install copilot`, P-01 at the keyboard, hooks enabled in both modes (the subagent guard hook, C002-REQ-327, C002-REQ-629); billed in AI Credits to the same Copilot plan (C002-T-050, C002-T-057; §4.2 and §4.4), not to the prepaid API key |
 
 ## 4. Eval execution and spend
 
@@ -711,6 +711,21 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   `opencode-permissions` replay report. D-023 item 1 (a proportionate rework path after a Revise)
   and D-026 item 3 (the placeholder options of the TS-208 fixture) are deferred to a later change
   and add no case here (`10-strategy.md` §2).
+- **Revision D-047** (found preparing C002-T-050; P-01's instruction of 2026-11-10, VS Code stable).
+  - **Built-in Copilot Chat:** `tests/unit/cli/host-version-builtin.test.ts`, supporting tests of
+    C002-TS-508 at unit level on the fixture layouts of `tests/fixtures/cfg-vscode-builtin-chat`
+    (Windows commit-prefixed with a stale commit folder beside it, Insiders with stale folders, macOS app
+    bundle, Linux `/usr/share/code`, a package that is not GitHub Copilot Chat, links resolved outside
+    Windows) and `parseCommit`; `tests/integration/cli/host-version.test.ts` adds three D-047 cases (the
+    bundled CLI on the Windows and Insiders layouts, and an installed `github.copilot-chat` taking
+    precedence over a built-in one).
+  - **Release check:** `tests/integration/cap06/release-check.test.ts` (C002-TC-623): an S-08 record on
+    another VS Code build than the table's gives no ERR-REL-006 line; the checklist record is still
+    compared (C002-TC-624 unchanged).
+  - **C002-TC-901:** C002-T-050 runs on VS Code 1.145.2 with Copilot Chat 0.73.0; `sdd host-version
+    vscode` replaces `vscode-insiders` in the run sheet.
+  - These tests and the code they cover are in the working tree with the shipped part of the fix,
+    committed with it after P-01's decision (`10-strategy.md`, D-047 row).
 - **Revision D-046** (found in C002-T-076; P-01 answer to Q-inj-exposure-copilot-01, 'Align with D-023
   (Recommended)').
   - **Merge:** `tests/unit/evals/injection-not-exposed.test.ts`, supporting tests of C002-TS-691 at unit

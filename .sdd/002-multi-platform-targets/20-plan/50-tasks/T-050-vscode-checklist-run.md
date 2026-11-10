@@ -21,8 +21,10 @@ report: { commit: null, completed_at: null, notes: null }
 ## Intent
 
 **P-01 executes this task.** P-01 runs the checklist on the Copilot release candidate in VS Code
-Insiders 1.142.0-insider with Copilot Chat 0.35.3 (Local session type; tested hosts of scope §3.1;
-Q-versions-02), on a fresh install, with hooks enabled, and records the run (C002-DOD-004). This
+1.145.2 (stable, commit c4453f8ea4) with GitHub Copilot Chat 0.73.0, built in (Local session type;
+tested hosts of scope §3.1, revised for defect D-047 on P-01's instruction of 2026-11-10: a released
+Insiders build broke the model calls; the earlier pair, VS Code Insiders 1.142.0-insider with Copilot
+Chat 0.35.3 of Q-versions-02, is S-08's historical evidence), on a fresh install, with hooks enabled, and records the run (C002-DOD-004). This
 covers C002-SC-02 (a toy change reaches G1) and the delegated edit of C002-TS-358: the Copilot
 subagent guard hook denies the host built-in agent `general-purpose` an edit that a planted
 instruction asked the conductor to delegate (C002-REQ-327). It settles the assumptions the spec
@@ -34,7 +36,9 @@ C002-T-024. Under the signed-off S-08 record (`sdd-mcp-server`, `copilot_cli_loa
 the injection cases run on Copilot CLI (C002-T-054), not here; they join this run only under the
 hooks fallback with hooks enabled or when a later record shows that Copilot CLI cannot load the
 package (C002-REQ-613). This task serves the Copilot release only (C002-T-055); the OpenCode release
-does not wait for it.
+does not wait for it. S-08's facts F-1 … F-7 (`docs/spikes/S-08-copilot-vscode.md` §5) were found on
+Insiders 1.142; the steps that settle them (the assumption steps above) confirm them on VS Code
+1.145.2, and a fact this run refutes is a spec defect, as in step 3.
 
 ## Targets
 
@@ -44,6 +48,14 @@ does not wait for it.
 
 ## Preconditions
 
+- **Revision D-047** (P-01's instruction of 2026-11-10): the G2 and G3 approvals of the D-047
+  revision, and P-01's decision on how the shipped part of the fix reaches the packages (the
+  host-version fix in the bundled sdd CLI and the Copilot table's tested versions both change
+  `plugins/architect/`, so the Copilot 0.1.0 packages of C002-T-076's commit b481e82 do not carry
+  them): `sdd host-version vscode` in the package's CLI prints `vscode 1.145.2` and `copilot-chat
+  0.73.0` on P-01's machine, and the package's doctor probes `vscode` (not `vscode-insiders`) and shows
+  the host row `ok`. Before that the doctor of the 0.1.0 packages probes `vscode-insiders` and
+  shows the host row `untested`, and the checklist does not start.
 - C002-T-046 and C002-T-054 done; the release candidate packed at the commit of C002-T-054.
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the checklist runs on the
   Copilot package packed at the release-candidate commit that holds the CHG-001 fixes of C001-T-082
@@ -67,7 +79,8 @@ does not wait for it.
 ## Step outline (no production code)
 
 1. **P-01 step:** install the Copilot package from `dist/architect-copilot-<version>.zip` and
-   `architect-sdd` from the local tarball on a fresh VS Code Insiders profile, following `INSTALL.md`
+   `architect-sdd` from the local tarball on a fresh VS Code 1.145.2 profile (stable, not Insiders;
+   revision D-047), following `INSTALL.md`
    only: unpack outside the toy repository, register the folder and check the picker before the
    install (no Architect entry, C002-T-046 assumption step), run `sdd install copilot --package
    <folder>` in P-01's own terminal, set the three settings, open a Local chat with `sdd-conductor`
@@ -122,6 +135,8 @@ does not wait for it.
 - `node scripts/release-check.mjs --target copilot --dry-run` reads the record without a checklist
   error (no ERR-REL-004 line from the step check of C002-IF-009 §5, no ERR-REL-009 `checklist` or
   `checklist record`) and with hooks enabled
+- No ERR-REL-006 line for the checklist record: its `host_versions` are `vscode: 1.145.2` and
+  `copilot-chat: 0.73.0`, as `sdd host-version vscode` printed them (revision D-047)
 
 ## Done when
 

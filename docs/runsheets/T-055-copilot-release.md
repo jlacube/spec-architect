@@ -48,8 +48,8 @@ node scripts/release-check.mjs --target copilot --dry-run
 node scripts/release-check.mjs --target copilot
 ```
 
-4. Read the record. Expect `released sdd-mcp-server`, the tested versions (VS Code Insiders
-   `1.142.0-insider`, Copilot CLI `1.0.98`), `exception: null` and `refusals: 0`.
+4. Read the record. Expect `released sdd-mcp-server`, the tested versions (VS Code
+   `1.145.2`, GitHub Copilot Chat `0.73.0`, Copilot CLI `1.0.98`; revision D-047), `exception: null` and `refusals: 0`.
 
 ```powershell
 node -e "const r=require('./docs/releases/copilot/0.1.0/release.json');console.log(r.outcome,r.enforcement_mode,JSON.stringify(r.tested_versions),'exception:',JSON.stringify(r.exception),'refusals:',r.refusals.length)"
@@ -102,7 +102,7 @@ Get-FileHash <path of the shared copy> -Algorithm SHA256
 ## Pass / fail
 
 - **Pass:** step 3 exits 0 with outcome `released`, `exception` is null, the tested versions are
-  1.142.0-insider and 1.0.98, `npm view architect-sdd version` prints `0.1.0`, and the hash of the
+  1.145.2, 0.73.0 and 1.0.98, `npm view architect-sdd version` prints `0.1.0`, and the hash of the
   shared zip equals `zip.sha256`.
 - **Refused:** step 3 exits 1. Nothing is published or shared, and the refusal stays in the release
   record. It is done as "refusal recorded". If T-075 has not published `architect-sdd` yet, it stays

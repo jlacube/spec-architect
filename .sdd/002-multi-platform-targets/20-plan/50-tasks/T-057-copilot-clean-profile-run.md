@@ -21,7 +21,8 @@ report: { commit: null, completed_at: null, notes: null }
 ## Intent
 
 **P-01 executes this task.** Measure the time a P-03 adopter needs on a fresh user profile to reach the
-first interview question of a new change in VS Code Insiders at the S-08 tested version with GitHub
+first interview question of a new change in VS Code at the tested version of scope §3.1 (VS Code
+1.145.2 with Copilot Chat 0.73.0 since revision D-047; S-08 ran on Insiders 1.142) with GitHub
 Copilot by following only the install notes, which now include `sdd install copilot` in the
 repository, the Local session type with `sdd-conductor` selected, and a first plain message before
 the workspace MCP servers start (C002-REQ-304). The limit is 15 minutes, download time excluded
@@ -45,15 +46,16 @@ the OpenCode release does not wait for it.
   `docs/runsheets/T-057-copilot-clean-profile.md` names them. The 0.0.3 packages of revision D-036
   (C002-T-074) are not released.
 - C002-T-023 (tarball installs), C002-T-034 (target zip), C002-T-039 (README) and C002-T-058 (install
-  command) done; VS Code Insiders and Copilot Chat at the S-08 tested versions; REF-WIN set up as
+  command) done; VS Code and Copilot Chat at the tested versions of scope §3.1 (VS Code 1.145.2, Copilot Chat
+  0.73.0 built in; revision D-047); REF-WIN set up as
   `handoff.md` "Reference machine" lists.
 - The Copilot subscription named in C002-T-002 has allowance for the 1 VS Code session of step 2
   (test plan §4.2, C002-RISK-026); it is not billed to the prepaid API key.
 
 ## Step outline (no production code)
 
-1. **P-01 step:** use a fresh Windows user profile with only Node.js, VS Code Insiders and GitHub
-   Copilot Chat installed, and a fresh git repository.
+1. **P-01 step:** use a fresh Windows user profile with only Node.js and VS Code (GitHub Copilot
+   Chat built in) installed, and a fresh git repository.
 2. **P-01 step:** extract `dist/architect-copilot-<version>.zip` and follow its `INSTALL.md`. Time
    each phase from the first install command to the first question, the `sdd install copilot` step
    timed on its own.
