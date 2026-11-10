@@ -11,10 +11,11 @@
 // of a shell. No match is `<host> missing` without anything started. Nothing from the command line or
 // the environment is placed in a probe (C002-CON-17).
 //
-// The copilot-chat line (revised for defect D-047): first the `github.copilot-chat` entry of
-// `code --list-extensions --show-versions` (an installed extension, which takes precedence over a built-in
-// one); without it, the GitHub Copilot Chat that the probed build ships built in (VS Code 1.14x and later:
-// no entry in that list). The built-in extension is read from the install folder of the match, its
+// The copilot-chat line (revised for defect D-047 and critic CR-151): the `github.copilot-chat` entry of
+// `code --list-extensions --show-versions` (an installed extension) and the GitHub Copilot Chat that the
+// probed build ships built in (VS Code 1.14x and later: no entry in that list); with both, the installed
+// entry counts only when its version is at least the built-in one's, else the built-in version; with one,
+// that one. The built-in extension is read from the install folder of the match, its
 // symbolic links resolved, as `<install>/<commit prefix>/resources/app/extensions/copilot` (Windows
 // installers since the commit-prefixed layout; the prefix is the first 10 characters of the commit on the
 // second line of `--version`), `<install>/resources/app/extensions/copilot` (the older Windows layout,
@@ -147,6 +148,35 @@ export function builtinCopilotChat(match: string, commit: string | null): string
   return null;
 }
 
+/**
+ * Orders two semantic versions: negative, zero or positive. The numeric parts are compared in order; with
+ * equal numbers a version with a pre-release part is the lower one (`1.2.3-x` < `1.2.3`).
+ */
+export function compareVersions(a: string, b: string): number {
+  const split = (v: string) => {
+    const [core = "", ...pre] = v.split(/[-+]/);
+    return { nums: core.split(".").map((n) => Number.parseInt(n, 10) || 0), pre: pre.length > 0 };
+  };
+  const x = split(a);
+  const y = split(b);
+  for (let i = 0; i < Math.max(x.nums.length, y.nums.length); i++) {
+    const d = (x.nums[i] ?? 0) - (y.nums[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return x.pre === y.pre ? 0 : x.pre ? -1 : 1;
+}
+
+/**
+ * The Copilot Chat version of the line (C002-IF-007 §Output, critic CR-151): the installed entry when there
+ * is no built-in one or its version is at least the built-in one's; else the built-in version; null when
+ * neither exists.
+ */
+export function pickCopilotChat(installed: string | null, builtin: string | null): string | null {
+  if (installed === null) return builtin;
+  if (builtin === null) return installed;
+  return compareVersions(installed, builtin) >= 0 ? installed : builtin;
+}
+
 /** Parses JSON with comments and trailing commas (VS Code settings files); null when invalid. */
 export function parseJsonc(text: string): unknown {
   let out = "";
@@ -221,7 +251,7 @@ export function hostVersions(host: Host, cwd: string): HostVersions {
   const v = out === null ? null : parseVersion(out.stdout);
   if (out === null || v === null) return { host, versions: { vscode: null }, missing: true };
   const ext = run(insiders ? PROBES.insidersExtensions : PROBES.codeExtensions);
-  const chat = (ext === null ? null : parseCopilotChat(ext)) ?? builtinCopilotChat(out.file, parseCommit(out.stdout));
+  const chat = pickCopilotChat(ext === null ? null : parseCopilotChat(ext), builtinCopilotChat(out.file, parseCommit(out.stdout)));
   return { host, versions: { vscode: v, "copilot-chat": chat }, hooks: hooksState(cwd, insiders), missing: false };
 }
 

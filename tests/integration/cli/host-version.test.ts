@@ -187,7 +187,23 @@ test("D-047 — VS Code Insiders with Copilot Chat built in: the folder of the p
   }
 });
 
-test("D-047 — an installed github.copilot-chat in --list-extensions takes precedence over the built-in one", () => {
+test("D-047, CR-151 — an installed github.copilot-chat at least as new as the built-in one gives the installed version", () => {
+  for (const builtin of ["0.32.4", "0.30.0", "0.32.4-pre"]) {
+    const pkg = JSON.stringify({ name: "copilot-chat", publisher: "GitHub", version: builtin });
+    const ws = workspace({ "inst/0123456789/resources/app/extensions/copilot/package.json": pkg });
+    try {
+      const bin = join(ws.root, "inst", "bin");
+      mkdirSync(bin, { recursive: true });
+      for (const f of ["code", "code.cmd"]) copyFileSync(join(HOSTS_BIN, f), join(bin, f));
+      if (!WIN) chmodSync(join(bin, "code"), 0o755);
+      assert.equal(hostVersion(["vscode"], ws.root, bin).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n", `built-in ${builtin}`);
+    } finally {
+      ws.cleanup();
+    }
+  }
+});
+
+test("D-047, CR-151 — an installed github.copilot-chat older than the built-in one gives the built-in version", () => {
   const pkg = JSON.stringify({ name: "copilot-chat", publisher: "GitHub", version: "0.99.0" });
   const ws = workspace({ "inst/0123456789/resources/app/extensions/copilot/package.json": pkg });
   try {
@@ -195,7 +211,8 @@ test("D-047 — an installed github.copilot-chat in --list-extensions takes prec
     mkdirSync(bin, { recursive: true });
     for (const f of ["code", "code.cmd"]) copyFileSync(join(HOSTS_BIN, f), join(bin, f));
     if (!WIN) chmodSync(join(bin, "code"), 0o755);
-    assert.equal(hostVersion(["vscode"], ws.root, bin).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n");
+    // Installed 0.32.4 is older than the built-in 0.99.0: the built-in version.
+    assert.equal(hostVersion(["vscode"], ws.root, bin).stdout, "vscode 1.105.1\ncopilot-chat 0.99.0\nhooks unknown\n");
     // The same install without the extension entry reads the built-in one.
     for (const f of ["code", "code.cmd"]) copyFileSync(join(NO_CHAT_BIN, f), join(bin, f));
     if (!WIN) chmodSync(join(bin, "code"), 0o755);

@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { builtinCopilotChat, builtinCopilotDirs, parseCommit, readCopilotChatPackage } from "../../../src/cli/host-version.ts";
+import { builtinCopilotChat, builtinCopilotDirs, compareVersions, parseCommit, pickCopilotChat, readCopilotChatPackage } from "../../../src/cli/host-version.ts";
 import { repoRoot } from "../../helpers.ts";
 
 const FX = join(repoRoot(), "tests", "fixtures", "cfg-vscode-builtin-chat");
@@ -71,4 +71,17 @@ test("a symbolic link to the launcher (/usr/local/bin/code, /usr/bin/code) resol
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("CR-151: pickCopilotChat takes the installed entry only when it is at least the built-in version", () => {
+  assert.equal(pickCopilotChat("0.74.0", "0.73.0"), "0.74.0");
+  assert.equal(pickCopilotChat("0.73.0", "0.73.0"), "0.73.0");
+  assert.equal(pickCopilotChat("0.72.9", "0.73.0"), "0.73.0");
+  assert.equal(pickCopilotChat("0.73.0", "0.73.0-pre"), "0.73.0");
+  assert.equal(pickCopilotChat("0.73.0-pre", "0.73.0"), "0.73.0");
+  assert.equal(pickCopilotChat("0.74.2026110608", "0.74.2026110502"), "0.74.2026110608");
+  assert.equal(pickCopilotChat(null, "0.73.0"), "0.73.0");
+  assert.equal(pickCopilotChat("0.73.0", null), "0.73.0");
+  assert.equal(pickCopilotChat(null, null), null);
+  assert.ok(compareVersions("0.10.0", "0.9.9") > 0, "numeric, not text, order");
 });

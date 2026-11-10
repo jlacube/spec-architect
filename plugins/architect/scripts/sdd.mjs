@@ -13691,6 +13691,24 @@ function builtinCopilotChat(match, commit) {
   }
   return null;
 }
+function compareVersions(a, b) {
+  const split = (v) => {
+    const [core = "", ...pre] = v.split(/[-+]/);
+    return { nums: core.split(".").map((n) => Number.parseInt(n, 10) || 0), pre: pre.length > 0 };
+  };
+  const x = split(a);
+  const y = split(b);
+  for (let i = 0; i < Math.max(x.nums.length, y.nums.length); i++) {
+    const d = (x.nums[i] ?? 0) - (y.nums[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return x.pre === y.pre ? 0 : x.pre ? -1 : 1;
+}
+function pickCopilotChat(installed, builtin) {
+  if (installed === null) return builtin;
+  if (builtin === null) return installed;
+  return compareVersions(installed, builtin) >= 0 ? installed : builtin;
+}
 function parseJsonc(text) {
   let out = "";
   for (let i = 0; i < text.length; i++) {
@@ -13749,7 +13767,7 @@ function hostVersions(host, cwd) {
   const v = out === null ? null : parseVersion(out.stdout);
   if (out === null || v === null) return { host, versions: { vscode: null }, missing: true };
   const ext = run(insiders ? PROBES.insidersExtensions : PROBES.codeExtensions);
-  const chat = (ext === null ? null : parseCopilotChat(ext)) ?? builtinCopilotChat(out.file, parseCommit(out.stdout));
+  const chat = pickCopilotChat(ext === null ? null : parseCopilotChat(ext), builtinCopilotChat(out.file, parseCommit(out.stdout)));
   return { host, versions: { vscode: v, "copilot-chat": chat }, hooks: hooksState(cwd, insiders), missing: false };
 }
 function formatHostVersions(r) {
