@@ -9,7 +9,7 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 
 ## Executor (defect D-050)
 
-The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local**. It stops after its group-4 steps and hands you one batch, in this order: **VSC-30** (send `/gate <NNN>`, choose Revise, type a short reason, then Approve), **VSC-31**, **VSC-19** (the ideation is in revision again after VSC-31) and **VSC-12**. Then the conductor runs VSC-54, completes the record and runs the dry run. Where the steps below say "you", read "the executor".
+The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local**. It stops after VSC-29 and hands you one batch, in this order: **VSC-30** (send `/gate <NNN>`, choose Revise, type a short reason, then Approve), **VSC-12** (type `/` in the chat input, choose `/doctor`) and the **slash-list half of VSC-01** on a twin: the conductor has unpacked a second package and made a second toy repository in VSC-01's pre-install state, opened in a separate VS Code profile `t050-twin` whose only plugin location is that second package; type `/` there and say what the list shows. Then the conductor runs VSC-31 and VSC-54, completes the record and runs the dry run. If an interview question needs a typed answer during the conductor's steps, it picks the recommended option, or calls you for that one turn. Where the steps below say "you", read "the executor", except the sign-off and `executed_by` (step 11 and Pass), which stay yours; the conductor records the sign-off under your standing waiver of 2026-10-19. This sheet's order overrides the checklist's run order (`vscode-copilot.md`, Run order) for VSC-01's slash-list half and VSC-12; move their entries in the record to the position they ran. `executed_by`: `"<your name>; conductor for P-01 (P-01 ran VSC-30, VSC-12, VSC-01 slash list)"` (C002-IF-009 §4). The install in VSC-02 runs in the conductor's own shell, not through a chat agent.
 
 ## Prerequisites
 
@@ -20,8 +20,9 @@ The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-0
   record what VS Code shows in `models_used`.
 - **Local harness (conductor's pilot of 2026-11-10, `docs/test-responsibilities.md` §4):** VS Code 1.145.2
   calls the session type a *harness*, picked in the chat footer (Copilot, Local, Cloud, Claude, Codex). New chats
-  start on **Copilot**: switch every chat of this run to **Local** before you send the first message. Check the
-  model picker too (your window had a custom endpoint selected). VS Code may then show a survey "Why did you switch
+  start on **Copilot** unless `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` are `false`
+  (step 0b); with them, `code chat` and new chats start on **Local**. For your batch, check that the chat footer
+  says Local before you type. Check the model picker too (your window had a custom endpoint selected). VS Code may then show a survey "Why did you switch
   harnesses?": close it. Edit `settings.json` with an editor or PowerShell, not `node -e` from Git Bash (Git Bash
   collapses the `\\` of a Windows path).
 - **VS Code's default profile, settings backed up** (your answer to Q-t050-profile-01): `sdd
@@ -47,7 +48,8 @@ The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-0
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
   the release-candidate commit 9eb56c0 (moved from b481e82, the commit C002-T-076 records, by revision D-047). The enforcement mode is **`sdd-mcp-server`**.
-- **Spend:** about 13 VS Code chat sessions, or about 26 if one repeat is needed. They are billed in
+- **Spend:** about 25 VS Code chat sessions with `code chat` (defect D-050; about 13 before), or about 50
+  if one repeat is needed; the conductor asks you before a 51st. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
   pool (7.70 of 30 USD before T-076) is not touched.
 
@@ -58,6 +60,10 @@ The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-0
 ```powershell
 Copy-Item "$env:APPDATA\Code\User\settings.json" "$env:APPDATA\Code\User\settings.json.t050-backup"
 ```
+
+   (D-050) After the backup, the conductor sets `"chat.defaultToCopilotHarness": false` and
+   `"chat.editor.preferCopilotHarness": false` in the default profile's user settings; step 12 restores the
+   backup.
 
 1. Create the record from the template.
 
@@ -106,7 +112,7 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
      VSC-07 (restore).
    - **Group 3:** VSC-08, then **directly** VSC-10 (the hooks state, from the three sources).
-   - **Group 4:** VSC-11, VSC-13 to VSC-18, VSC-20 to VSC-24, VSC-27 to VSC-29 (conductor); then your batch VSC-30, VSC-31, VSC-19, VSC-12; then VSC-54 (conductor). Before D-050: VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-27 and VSC-28 are the
+   - **Group 4:** VSC-11, VSC-13 to VSC-24, VSC-27 to VSC-29 (conductor); then your batch VSC-30, VSC-12 and VSC-01's slash-list half on the twin; then VSC-31 and VSC-54 (conductor). Before D-050: VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-27 and VSC-28 are the
      delegated edit with `fixtures/toy-planted-line.md`. VSC-30 is gate G1. VSC-54 checks that a
      specialist subagent cannot edit a file or run a command (your answer to Q-guard-proof-01); if it
      can, the step fails and the release is refused.
@@ -165,12 +171,12 @@ Move-Item -Force "$env:APPDATA\Code\User\settings.json.t050-backup" "$env:APPDAT
   none }`;
 - `models_used` has the key `sdd-conductor`;
 - the assumption outcomes are in `observed`;
-- your name is in `executed_by` and the sign-off;
+- your name is in `executed_by` and the sign-off (with D-050, `executed_by` also names the conductor and lists your steps);
 - the dry run shows no checklist error.
 
 **Fail:** any step is `failed`, or there is a binding earlier `failed` run.
 
-**Time budget:** allow half a day (estimate: 27 steps and about 13 chat sessions).
+**Time budget:** allow half a day of the conductor's time and about 20 minutes of yours for the batch (estimate: 27 steps and about 25 chat sessions).
 
 ## Tell the conductor
 

@@ -1323,3 +1323,26 @@ Scope: `git diff 469e2cf 9d51dd6` (CHG-001 defect D-031 and CHG-002 defect D-049
 | CR-144 | minor | trace | `trace.json` still shows C002-T-057 todo | `sdd trace 002 --write` | fixed |
 
 Why no further findings (critic): T-055, T-075 and T-072 task files, the C001-TC-1102 and TC-903 rows, observability, both questions-logs and the D-049 handoff block are consistent; the release scripts never read `clean-profile-runs.md`; C002-TS-306 keeps C002-TC-306 and C001-TS-1102 keeps the functional check; lint 001 0 findings, lint 002 only the nine waived LINT-DELTA-001; trace 100 % and acyclic; other mentions are records of closed revisions or done tasks; unchanged NFR/DoD texts follow the Q-nfr304-bare-01 precedent.
+
+
+## Revision D-050 (2026-11-10)
+
+Scope: `git diff 405239b 5c359e7` (CHG-002 files and `docs/runsheets/`), against D-050 and the questions-log round 2026-11-10 (D-050). Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 8 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-145 | major | T-050, IF-009 §4, VSC-01 | VSC-01 needs typing (`/` in the chat input) and runs before the install, so it cannot join the end batch | P-01 does VSC-01's `/` half, or a tested click-only view | fixed: P-01 checks VSC-01's slash list on a twin in VSC-01's pre-install state (second package and toy, separate VS Code profile `t050-twin`), in the end batch |
+| CR-146 | minor | IF-009 §4, T-050 | VSC-31 and VSC-19 need no typing (A-6 holds) | name order-tied steps, or keep VSC-19 with the conductor | fixed: VSC-19 and VSC-31 stay with the conductor; P-01's batch is VSC-30, VSC-12 and the twin check |
+| CR-147 | minor | IF-009 §4 | "the order is free" too broad | free as to hooks state; Do preconditions bind | fixed |
+| CR-148 | minor | run sheet, checklist, template | checklist and template still describe the old run order and `executed_by` | run sheet overrides the order, moves the entries, uses IF-009's `executed_by` form | fixed in the run sheet's Executor section |
+| CR-149 | minor | TC-901, T-050, strategy | "P-01 runs every checklist step", "(P-01)" rows, task title, Done-when without the TS-618 clause | align wording; add the clause | fixed |
+| CR-150 | minor | run sheet | Local-switch note contradicts code chat; no step sets the two settings; "you" swallows the sign-off; "after its group-4 steps" wrong | fix all four | fixed: note revised, settings set after step 0's backup, sign-off and `executed_by` stay P-01's, "after VSC-29" |
+| CR-151 | minor | handoff, T-050, RISK-026 | 13/26 sessions understated, code chat opens one per prompt | re-estimate | fixed: about 25, about 50 with a repeat; the conductor asks before a 51st |
+| CR-152 | minor | IF-009 §4 | nothing covers a question needing a typed answer during VSC-17, 18, 29 | recommended option, or hand the turn to P-01, not a failure | fixed |
+| CR-153 | minor | REQ-615, TS-618 | REQ-615 trigger narrower than the widened TS-618 Given | widen or note in Rationale | fixed: D-050 note in the REQ-615 Rationale |
+
+Why no further findings (critic): VSC-02 … VSC-29 and VSC-54 are feasible with new `code chat` sessions, clicks and the conductor's shell (`.sdd/` state persists; palette actions have click or file counterparts); the batch order meets every Do precondition and no batch step changes a hooks source; TS-618's new clause is observable; the instruction is verbatim in the questions-log; lint 002 shows only the nine waived LINT-DELTA-001.

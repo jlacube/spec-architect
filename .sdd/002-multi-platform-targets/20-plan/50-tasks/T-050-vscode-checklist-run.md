@@ -1,6 +1,6 @@
 ---
 id: C002-T-050
-title: "P-01: run the manual VS Code checklist and record it"
+title: "Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)"
 change: CHG-002
 phase: 20-plan
 artifact: plan/task
@@ -16,11 +16,11 @@ estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
 
-# C002-T-050 — P-01: run the manual VS Code checklist and record it
+# C002-T-050 — Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)
 
 ## Intent
 
-**The conductor executes this task for P-01** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"; C002-IF-009 §4 "Executor"): it drives VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings (backed up and restored with the rest of the profile's settings), so that each chat runs on the Local session type. **P-01 runs** the steps that need typing in a running chat, as one batch after the conductor's group-4 steps: VSC-30 (the Revise reason, then Approve), VSC-31, VSC-19 (free-text answers with `chat.askQuestions.enabled` off; the ideation is in revision again after VSC-31) and VSC-12 (the `/` list); the conductor then runs VSC-54 and completes the record. Before D-050, P-01 executed this task; "P-01 step" below means the executor of D-050. The checklist is run on the Copilot release candidate in VS Code
+**The conductor executes this task for P-01** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"; C002-IF-009 §4 "Executor"): it drives VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings (backed up and restored with the rest of the profile's settings), so that each chat runs on the Local session type. **P-01 runs** the steps that need typing, as one batch after VSC-29: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor); the conductor then runs VSC-31 and VSC-54 and completes the record (critics CR-145, CR-146). Before D-050, P-01 executed this task; "P-01 step" below means the executor of D-050. The checklist is run on the Copilot release candidate in VS Code
 1.145.2 (stable, commit c4453f8ea4) with GitHub Copilot Chat 0.73.0, built in (Local session type;
 tested hosts of scope §3.1, revised for defect D-047 on P-01's instruction of 2026-11-10: a released
 Insiders build broke the model calls; the earlier pair, VS Code Insiders 1.142.0-insider with Copilot
@@ -79,8 +79,10 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
   recorded in either mode (C002-REQ-629, ERR-REL-010). The doctor's Copilot hooks row reads
   `chat.useHooks` only and shows `ok` with its caveat text (C002-IF-006 §2), so the checklist's
   hooks-state step is where P-01 reads Workspace Trust and the organisation policy.
-- The Copilot subscription named in C002-T-002 has allowance for about 13 VS Code sessions per
-  checklist run, about 26 with the repeat of step 3 (test plan §4.2, C002-RISK-026). These sessions
+- The Copilot subscription named in C002-T-002 has allowance for about 25 VS Code sessions per
+  checklist run (`code chat` starts a new session for every prompt; defect D-050, critic CR-151), about 50
+  with the repeat of step 3 (test plan §4.2, C002-RISK-026); the conductor stops and asks P-01 before a
+  51st session. These sessions
   are not billed to the prepaid API key.
 
 ## Step outline (no production code)
@@ -148,5 +150,5 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 ## Done when
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
-      `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name
+      `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

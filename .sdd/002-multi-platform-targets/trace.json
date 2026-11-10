@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-11-10T21:09:39.635Z",
+  "generated_at": "2026-11-10T22:50:08.303Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -944,13 +944,13 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
       "line": 744,
       "title": "Each completed run leaves a record with its fields",
-      "content_hash": "sha256:262d5ab62b7654408061bfd340a9c613dc6041ae9628a5dc9a6cd237595a6deb"
+      "content_hash": "sha256:f1a988fc878d7b11d4a49b08bf17866b24f78d59be6cf8d995ef2358f016749a"
     },
     {
       "id": "C002-AC-616.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 769,
+      "line": 770,
       "title": "In both Copilot enforcement modes the checklist records the three hooks sources; under the hooks fallback it also shows a guard denial",
       "content_hash": "sha256:952220a1335eadc489e04bd10b05849fa34ce4f1efeeabb17f21d9e356b74a31"
     },
@@ -958,7 +958,7 @@
       "id": "C002-AC-617.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 784,
+      "line": 785,
       "title": "Release refused without a clean replay and clean injection evals",
       "content_hash": "sha256:d38c6acee40b12cc1f255d7a13608b07d37fd5a51f76744f8b6d9960cab3bdde"
     },
@@ -966,7 +966,7 @@
       "id": "C002-AC-618.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1016,
+      "line": 1017,
       "title": "Copilot release needs an all-passed checklist record",
       "content_hash": "sha256:dec9cc6ad30e036dc99da421682fcc1d7fd0373bf351d633ac8d333bfb2ee5f1"
     },
@@ -974,7 +974,7 @@
       "id": "C002-AC-619.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1079,
+      "line": 1080,
       "title": "One target's refusal does not block the other",
       "content_hash": "sha256:3d831cd067b2acef008fea8642a4634cb4c756f8ebddc014e89888a3ae4213b5"
     },
@@ -982,7 +982,7 @@
       "id": "C002-AC-620.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1090,
+      "line": 1091,
       "title": "Copilot refused when neither enforcement mode holds",
       "content_hash": "sha256:2020543a5b936988ee43b209ede0b1feec6fff851b0107665af88723a4dfaa78"
     },
@@ -990,7 +990,7 @@
       "id": "C002-AC-621.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1106,
+      "line": 1107,
       "title": "Release evidence must come from the tested version",
       "content_hash": "sha256:0c57c19bc04e0b1f7c9a2f60c1062ab44a029a457c8c0dea1a1e97a7ddbdef38"
     },
@@ -998,7 +998,7 @@
       "id": "C002-AC-622.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1122,
+      "line": 1123,
       "title": "Hooks fallback marked in the release record",
       "content_hash": "sha256:f182f3192dbb813b3f18a8d06fc952925e700666905195d596c7c2185ad436ad"
     },
@@ -1006,7 +1006,7 @@
       "id": "C002-AC-623.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1136,
+      "line": 1137,
       "title": "Regression set passes with the three bash guard changes as the only changed expectations",
       "content_hash": "sha256:1a1b8105251f7a4f089190eac33cabc2367c38739d2c3b368dc641c16c3bfa32"
     },
@@ -1014,7 +1014,7 @@
       "id": "C002-AC-625.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1160,
+      "line": 1161,
       "title": "Memory-category cases expect `deny` on every mechanism of a generated target",
       "content_hash": "sha256:ea7537cb4a63bb216190b714e73bbf4a64d64830f02e7a13a821c2317410d9bf"
     },
@@ -1022,7 +1022,7 @@
       "id": "C002-AC-626.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1200,
+      "line": 1201,
       "title": "Identity-category cases replayed against the OpenCode permission rules only, with an adopter agent as non-Architect caller",
       "content_hash": "sha256:ecb9880cc6481506d7fc93e203778bd5f0ea53ba9349016cc50e166aec1214c3"
     },
@@ -1030,7 +1030,7 @@
       "id": "C002-AC-627.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1225,
+      "line": 1226,
       "title": "Every case not replayed is listed as not applicable in the replay report",
       "content_hash": "sha256:09ae945d61fc4220a1201b5f8cafd721d6e61118f8f4f14283dbddb6572b131a"
     },
@@ -1038,7 +1038,7 @@
       "id": "C002-AC-628.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1318,
+      "line": 1319,
       "title": "Under the hooks fallback the checklist holds the Copilot injection cases, run in VS Code with hooks enabled",
       "content_hash": "sha256:fdd704ba71b0eb17e6335c565f08d3bf15428bfc74b7cf9fad6f1872790d680a"
     },
@@ -1046,7 +1046,7 @@
       "id": "C002-AC-629.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1330,
+      "line": 1331,
       "title": "Copilot release refused without injection evidence taken in VS Code with hooks enabled",
       "content_hash": "sha256:24a83ecee33bb18d75309c68328e7784f22f3d164aff51f7f751a622913b65de"
     },
@@ -1054,7 +1054,7 @@
       "id": "C002-AC-630.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1368,
+      "line": 1369,
       "title": "Cases without a cwd or a tool name are replayed as malformed calls expecting `deny` on every mechanism of a generated target",
       "content_hash": "sha256:26007c7073b186dbb4a8d8ea2d307d4a57adbc82b3206975059b4f38c986f90f"
     },
@@ -1062,7 +1062,7 @@
       "id": "C002-AC-632.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1410,
+      "line": 1411,
       "title": "An unknown `architect:sdd-*` caller expects `allow` on the OpenCode permission rules",
       "content_hash": "sha256:2fc31535bfc059717faaa78895c268a6af1564c3a745136ce72ce30c54847ace"
     },
@@ -1070,7 +1070,7 @@
       "id": "C002-AC-633.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1437,
+      "line": 1438,
       "title": "A case that requires a host capability is replayed with its own input and its corpus expectation, and is an error on a host without the capability",
       "content_hash": "sha256:67f2ddbb312f682e8d2e1ca8a9f30d75b2e77a875869f137f9c71d3aa3830b2d"
     },
@@ -1078,7 +1078,7 @@
       "id": "C002-AC-634.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1469,
+      "line": 1470,
       "title": "The release check refuses a replay report whose replay host is not `win32` or lacks a required capability",
       "content_hash": "sha256:54a92ad41201b058aae1bdab03c97fdf0aca9a477d7964e286536c567725e193"
     },
@@ -1086,7 +1086,7 @@
       "id": "C002-AC-638.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1509,
+      "line": 1510,
       "title": "A partial OpenCode spend is booked at the key usage delta when an after-read gives a settled key usage",
       "content_hash": "sha256:7d6aacad6df77278cbe9b3032941f5acb2527371148744299c5b4b64ba42341c"
     },
@@ -1094,7 +1094,7 @@
       "id": "C002-AC-639.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1569,
+      "line": 1570,
       "title": "The OpenRouter key appears in no output and no file of the OpenCode eval runner, host and model text included",
       "content_hash": "sha256:ae88419b3b7af09eacbd896f229b1f7e48cc695f279091ba8da26df9e10dfa41"
     },
@@ -1102,7 +1102,7 @@
       "id": "C002-AC-640.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1603,
+      "line": 1604,
       "title": "The entry stays partial, with the stays-partial line and its reason, when the before-read gives no U0 or no after-read settles within 20 minutes",
       "content_hash": "sha256:e22a317752103bc7f6d1cc109c6b73f3b7f161dbccd3b77230d1bfffa8f12605"
     },
@@ -1110,7 +1110,7 @@
       "id": "C002-AC-641.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1665,
+      "line": 1666,
       "title": "A missing key file or a key that redaction cannot match safely refuses the paid session before any use of the key",
       "content_hash": "sha256:2b3a06ac6f5f4c63f2436264be05543c23c0d70e797c7cfdc712adf454c83b4f"
     },
@@ -1118,7 +1118,7 @@
       "id": "C002-AC-642.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1694,
+      "line": 1695,
       "title": "No spend cap or turn cap of a session reaches the model through the Claude Code eval runner",
       "content_hash": "sha256:c8cf8fcf0a509307ca224a7ae9097ed1909fcbae4665026c3c18267c18c84843"
     },
@@ -1126,7 +1126,7 @@
       "id": "C002-AC-642.2",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1719,
+      "line": 1720,
       "title": "No spend cap or turn cap of a session reaches the OpenCode or the Copilot CLI host, other than Copilot CLI's `--max-ai-credits`",
       "content_hash": "sha256:dc08dd9b03c8c178f2353f988fb758dbfcecd94581ea762bd6fc79390f2bd83a"
     },
@@ -1134,7 +1134,7 @@
       "id": "C002-AC-643.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1745,
+      "line": 1746,
       "title": "The Claude Code eval runner stops a session at the spend cap itself, with `error_max_budget_usd` and the highest cost read",
       "content_hash": "sha256:3bfb61444cc9945417a73dca9d7d033f22046645e1a2d0afe912720d06b16692"
     },
@@ -1142,7 +1142,7 @@
       "id": "C002-AC-644.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1785,
+      "line": 1786,
       "title": "A failed cost reading while the query is open stops the Claude Code session and rejects `runSession`, with a ledger entry and no result record",
       "content_hash": "sha256:a1374ccc2b21fb12d9e0749320c006c86613e0335cf9606a9314df38031d9fe2"
     },
@@ -1150,7 +1150,7 @@
       "id": "C002-AC-645.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1818,
+      "line": 1819,
       "title": "A Claude Code session ends with `check_decided` once its row's stop condition holds, and runs to its caps otherwise",
       "content_hash": "sha256:4fe58b16a185966368649d6bdb984f526fe8a98aac33cd09f4d0dbf241f322f2"
     },
@@ -1158,7 +1158,7 @@
       "id": "C002-AC-646.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1851,
+      "line": 1852,
       "title": "A stop condition that throws or returns no boolean is written once as `stop-when-error`, called no more, and the session runs on",
       "content_hash": "sha256:c8ecf36f4041fd6630c9b49113b5a57397cb498bf2477acca8e98b3ad724e9cf"
     },
@@ -3332,7 +3332,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/requirements.md",
       "line": 145,
       "title": "Checklist record",
-      "content_hash": "sha256:046199e1a46cdd782b34b228383f8d8cd58f828fdb9b752122156b797839174b"
+      "content_hash": "sha256:e24612c791709023df671122c2d6a3d3b87d2e066f121b5bab6c0f25d69624a4"
     },
     {
       "id": "C002-REQ-616",
@@ -4348,8 +4348,8 @@
       "type": "T",
       "file": "20-plan/50-tasks/T-050-vscode-checklist-run.md",
       "line": 1,
-      "title": "P-01: run the manual VS Code checklist and record it",
-      "content_hash": "sha256:1f040544de4f2787e055d9c448d719a4b0dd2df0964bdb0c925c1c045ac1ea36",
+      "title": "Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)",
+      "content_hash": "sha256:88cc0810ae95898e40f2285debad358f0235af4d18092da1f4c79a58b0cc7e1b",
       "status": "todo"
     },
     {
@@ -6864,7 +6864,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1277,
       "title": "C002-TS-618",
-      "content_hash": "sha256:25d4331a35419f9de71df7f5fec152af2ea15d6c2aac06dd66a80f4071114c19"
+      "content_hash": "sha256:e4f8a05bc712e1935684bbc7ff3fd742bc1548358b11ef1838d4c2fb4d2b345a"
     },
     {
       "id": "C002-TC-902",
@@ -8832,13 +8832,13 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
       "line": 747,
       "title": "record of a checklist run",
-      "content_hash": "sha256:bd976f083ca1a0529b02a6722cf357219cfa7efdf8708254bc553b7c57d749e9"
+      "content_hash": "sha256:bc46036a10747d7a16715db83cf952b6191945a170b967f8079cc10010cf22fd"
     },
     {
       "id": "C002-TS-619",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 772,
+      "line": 773,
       "title": "hooks-state and denial steps per Copilot enforcement mode",
       "content_hash": "sha256:ca019334a2583c301a34eae92d445ea3e46a0b2457916515f9441abb5a28991d"
     },
@@ -8846,7 +8846,7 @@
       "id": "C002-TS-620",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 786,
+      "line": 787,
       "title": "boundary evidence at release",
       "content_hash": "sha256:0c70a3ce43511e6a472a56ce751e91e0e5ffa2e38092c41ff6aaf02ab9de451a"
     },
@@ -8854,7 +8854,7 @@
       "id": "C002-TS-621",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1018,
+      "line": 1019,
       "title": "checklist record at release",
       "content_hash": "sha256:d7a60cea3ce4d8e6db1c18807ed85aee04da446aa5fc18ba090ef1902d343064"
     },
@@ -8862,7 +8862,7 @@
       "id": "C002-TS-622",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1081,
+      "line": 1082,
       "title": "Copilot refused, OpenCode clean",
       "content_hash": "sha256:0407360f19dcd6428bb2416dd839d78e524784ff639fe1c1294c69f91453e0a0"
     },
@@ -8870,7 +8870,7 @@
       "id": "C002-TS-623",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1092,
+      "line": 1093,
       "title": "spike S-08 outcomes",
       "content_hash": "sha256:83ad0014c69caa3edb1ade58a26b9200b9bbcd9d5e8878ffb8dc67f992cd2505"
     },
@@ -8878,7 +8878,7 @@
       "id": "C002-TS-624",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1108,
+      "line": 1109,
       "title": "host version of the evidence",
       "content_hash": "sha256:2498b1b2cdba8c91ba56251d9b34f3003ea24bf547bf2167cc72812c73b8da04"
     },
@@ -8886,7 +8886,7 @@
       "id": "C002-TS-625",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1124,
+      "line": 1125,
       "title": "release record by Copilot enforcement mode",
       "content_hash": "sha256:a9cc1a674a11044dfe1b6b2a686bf767dbb97c4ec6e2efe08184c3fda495fa9a"
     },
@@ -8894,7 +8894,7 @@
       "id": "C002-TS-626",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1138,
+      "line": 1139,
       "title": "regression set after CHG-002",
       "content_hash": "sha256:e537714127f44fc8e46e1537feadbef2fcf07ac6b2b55828ed293c40ac2130e9"
     },
@@ -8902,7 +8902,7 @@
       "id": "C002-TS-627",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1147,
+      "line": 1148,
       "title": "a Claude Code behaviour change is caught",
       "content_hash": "sha256:fcdd5d6344f674b32f1136ccfc4e6a89225c0bf5ad237f4454f2e28d508c2719"
     },
@@ -8910,7 +8910,7 @@
       "id": "C002-TS-628",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1162,
+      "line": 1163,
       "title": "memory case expectation per mechanism",
       "content_hash": "sha256:c7500e060359bb2dfcce730cbc5c0f2696ea5aadcf16d3e2b05e478a5e327640"
     },
@@ -8918,7 +8918,7 @@
       "id": "C002-TS-629",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1175,
+      "line": 1176,
       "title": "a memory write allowed on a generated target is a difference",
       "content_hash": "sha256:c57c7b5df97d82b6f52d234f680009ec46606c149e854efde5189252755cad98"
     },
@@ -8926,7 +8926,7 @@
       "id": "C002-TS-630",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1202,
+      "line": 1203,
       "title": "identity case per mechanism",
       "content_hash": "sha256:3f5f8d9681fef7a57b42a86e0d913f54e0e961fe9571dd57d9926181d5dc76cb"
     },
@@ -8934,7 +8934,7 @@
       "id": "C002-TS-631",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1227,
+      "line": 1228,
       "title": "completeness of the replay report",
       "content_hash": "sha256:57d44a363071bd6bb0a73376542fb4b4f9d7dada101d0150a86c178e98be743b"
     },
@@ -8942,7 +8942,7 @@
       "id": "C002-TS-632",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1321,
+      "line": 1322,
       "title": "injection steps in the checklist under the hooks fallback",
       "content_hash": "sha256:8dbbde829bf5f9268e1c54c9062a5494a402e1af965af394f20b8b3d6a5b2075"
     },
@@ -8950,7 +8950,7 @@
       "id": "C002-TS-633",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1332,
+      "line": 1333,
       "title": "hooks state and injection results of the checklist record at release",
       "content_hash": "sha256:62163fd20521fc29485215a725f54b85875dcf12a572d33dad15ff174e42c62e"
     },
@@ -8982,7 +8982,7 @@
       "id": "C002-TS-637",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1268,
+      "line": 1269,
       "title": "incomplete replay report refused at release",
       "content_hash": "sha256:659ff4b8e93b1d9963a57708758232232e641fdb3a4e471b1a692335d612e436"
     },
@@ -8990,7 +8990,7 @@
       "id": "C002-TS-638",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1184,
+      "line": 1185,
       "title": "memory case of a non-Architect caller replayed as an Architect write",
       "content_hash": "sha256:c0ebdef85b8cbe5e43959d5ac6b89edac28ec5db5e66c969fbb3dfd54e271a1e"
     },
@@ -9030,7 +9030,7 @@
       "id": "C002-TS-643",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1370,
+      "line": 1371,
       "title": "absent-field cases per mechanism",
       "content_hash": "sha256:05e9b382a309780dd2593f6d3cfd06840342ccb7ce9d01f2b845684654fb53ad"
     },
@@ -9038,7 +9038,7 @@
       "id": "C002-TS-644",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1387,
+      "line": 1388,
       "title": "a case with a cwd other than the repository root keeps its corpus expectation",
       "content_hash": "sha256:1394ce47e2a6b87c946119a1e307dc1f80c107d094f91f595f9fc09bad23df80"
     },
@@ -9046,7 +9046,7 @@
       "id": "C002-TS-645",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1400,
+      "line": 1401,
       "title": "a malformed call allowed on a generated target is a difference",
       "content_hash": "sha256:af301799492c9c2a3df7ad37886a5affa67268328c8678f9b650f60d842fd27b"
     },
@@ -9054,7 +9054,7 @@
       "id": "C002-TS-646",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1413,
+      "line": 1414,
       "title": "unknown architect:sdd-* caller on OpenCode",
       "content_hash": "sha256:ebdfaa5569a289dafad326d88c94d22d094bd7f97a455cb241399b757bb9d559"
     },
@@ -9062,7 +9062,7 @@
       "id": "C002-TS-647",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1427,
+      "line": 1428,
       "title": "OpenCode rules that also bind adopter agents are a difference",
       "content_hash": "sha256:b4abb3263c13579e8f55fb2d77bb0a87a8cb44e91dbd362fd901b502fc2d70f0"
     },
@@ -9070,7 +9070,7 @@
       "id": "C002-TS-648",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 802,
+      "line": 803,
       "title": "OpenCode release refused when spike S-07 does not show a closed agent tool set",
       "content_hash": "sha256:6fab3fe2eeee1e72d6350149342c9eb805a20c8b113d23a2eb3a3c75af204502"
     },
@@ -9078,7 +9078,7 @@
       "id": "C002-TS-649",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1439,
+      "line": 1440,
       "title": "PG-163 replayed on a host with file-symlink",
       "content_hash": "sha256:89d1fa5d058c804507ac5afdfe2d69586602da0ea23b7cfbb7551b4370dfc312"
     },
@@ -9086,7 +9086,7 @@
       "id": "C002-TS-650",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1455,
+      "line": 1456,
       "title": "PG-163 on a host without file-symlink is an error that counts as differing",
       "content_hash": "sha256:c6f90ed5705feafc24eb620d52dce35af0aae6e2666257da1c48e8602a02d108"
     },
@@ -9094,7 +9094,7 @@
       "id": "C002-TS-651",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1471,
+      "line": 1472,
       "title": "replay host capabilities at release",
       "content_hash": "sha256:6ccdccad393c4eae0e6a7df8d5269c55023090b3e961b6bd086ea10fb80a1d67"
     },
@@ -9102,7 +9102,7 @@
       "id": "C002-TS-652",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1215,
+      "line": 1216,
       "title": "identity case of an Architect caller played by that generated agent on OpenCode",
       "content_hash": "sha256:a74f302ac55f82e59062e28166a2f6d3bd45a59c0804cba5bde0e6883d25c1da"
     },
@@ -9214,7 +9214,7 @@
       "id": "C002-TS-668",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1031,
+      "line": 1032,
       "title": "step check of the checklist record at release",
       "content_hash": "sha256:b0224558613b47506650741b5fc7b634c14f1ea79e412cee58603303ff8d4934"
     },
@@ -9222,7 +9222,7 @@
       "id": "C002-TS-669",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 816,
+      "line": 817,
       "title": "evidence kinds of ERR-REL-009 and the replay reports of each enforcement mode",
       "content_hash": "sha256:cfd5f7e3b7d169c27b222f3d6d658463d776483f6c326a4d81c5680c17e3bb23"
     },
@@ -9230,7 +9230,7 @@
       "id": "C002-TS-670",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 840,
+      "line": 841,
       "title": "a dry run decides and writes no file",
       "content_hash": "sha256:a23428d4471e975d95d891d6d3fc0cb1f902a6ab5ca05abaae7abd6ffbedd602"
     },
@@ -9238,7 +9238,7 @@
       "id": "C002-TS-671",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 864,
+      "line": 865,
       "title": "exit codes and output of the release check",
       "content_hash": "sha256:f2d4bcd85523186bca71224582c6e9fd280c19872e3395bcc89e2882dac25c43"
     },
@@ -9318,7 +9318,7 @@
       "id": "C002-TS-681",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1241,
+      "line": 1242,
       "title": "a case limited to another platform is listed as not applicable with the rule platforms",
       "content_hash": "sha256:b8e84d259a4239299be6172b86ce9e3ed1f063825e59cacec886f5b4078d93c6"
     },
@@ -9326,7 +9326,7 @@
       "id": "C002-TS-682",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1304,
+      "line": 1305,
       "title": "a case of the platform rule listed as not applicable is accepted at release",
       "content_hash": "sha256:5b5fa9e34c9ab55d879afa8d83be8b69f4216ba4238fde8fe2f97f20f2dc175d"
     },
@@ -9334,7 +9334,7 @@
       "id": "C002-TS-683",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1485,
+      "line": 1486,
       "title": "a replay report replayed on posix is refused at release and not checked further",
       "content_hash": "sha256:01c2719639db20f22d9d19d48f3222404140f6164c3919341ea84bfd80afc246"
     },
@@ -9398,7 +9398,7 @@
       "id": "C002-TS-691",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 896,
+      "line": 897,
       "title": "a run of fewer rows merges into the injection summary",
       "content_hash": "sha256:3533f9f4d3c4b6bf4936509bf67b6cefb36faf58402e67f8e429c6272cccd1c6"
     },
@@ -9406,7 +9406,7 @@
       "id": "C002-TS-692",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 940,
+      "line": 941,
       "title": "the injection summary is not written over a base it cannot merge with",
       "content_hash": "sha256:da039b5a62eac21ec2612e9df6220109ebfaf99c21eac656349301db615cf686"
     },
@@ -9414,7 +9414,7 @@
       "id": "C002-TS-693",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 966,
+      "line": 967,
       "title": "no injection summary from a Copilot CLI run under the Copilot hooks fallback, from a Claude Code run, or from a run whose injection sessions are all no-run refusals",
       "content_hash": "sha256:5478ce73056d83866a4c340d4ab31439146354abcaf5749fa6cb9feb13183d26"
     },
@@ -9422,7 +9422,7 @@
       "id": "C002-TS-694",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 918,
+      "line": 919,
       "title": "an entry acted upon stays acted upon for its package version, and a no-run refusal neither clears nor locks it",
       "content_hash": "sha256:71161077f6a379932105f323d3248f7813a907d690e1b0c980af2b8c4e7c1a77"
     },
@@ -9430,7 +9430,7 @@
       "id": "C002-TS-695",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1511,
+      "line": 1512,
       "title": "a partial spend reconciled from the settled key usage",
       "content_hash": "sha256:62a38fdb27df86af85b7a92db36dcbcafe8e3c4ed0628e26781b912d5dade6cc"
     },
@@ -9438,7 +9438,7 @@
       "id": "C002-TS-696",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1605,
+      "line": 1606,
       "title": "a failed before-read leaves the entry partial",
       "content_hash": "sha256:ca68db117bf8b9dc14b39d1c81ed5eaa84b535be2668279045a9a2bf474599db"
     },
@@ -9446,7 +9446,7 @@
       "id": "C002-TS-697",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1617,
+      "line": 1618,
       "title": "a key usage that does not settle within 20 minutes leaves the entry partial",
       "content_hash": "sha256:d36b5b1623c948413b1fa32a250c9706ced828d94b938a6ce711dc302f18833f"
     },
@@ -9454,7 +9454,7 @@
       "id": "C002-TS-698",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1571,
+      "line": 1572,
       "title": "the OpenRouter key is never written",
       "content_hash": "sha256:05d64df8f5c18b58090afaf0fa5af7647ecb5ed53f778de8ff9b885dd7d7c45c"
     },
@@ -9462,7 +9462,7 @@
       "id": "C002-TS-699",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1667,
+      "line": 1668,
       "title": "the key check before a paid OpenCode session",
       "content_hash": "sha256:06c538068745b48d028940167dbe7841085ccf6cb7bb72efe126435664ad98fd"
     },
@@ -9470,7 +9470,7 @@
       "id": "C002-TS-700",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1536,
+      "line": 1537,
       "title": "the before-read after a session that ended less than 20 minutes earlier takes a settled key usage",
       "content_hash": "sha256:8826c2ae285c0fb617954ff7eae8cb3c80f030c039dfa2e1bd2667c876acd2a4"
     },
@@ -9478,7 +9478,7 @@
       "id": "C002-TS-701",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1636,
+      "line": 1637,
       "title": "a before-read that does not settle after a recent session leaves the entry partial",
       "content_hash": "sha256:c736f2b6142c0c85d16b16f8cb883a7ac9a2b52c3bcc3f632906d912dc0f3b5a"
     },
@@ -9486,7 +9486,7 @@
       "id": "C002-TS-702",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1747,
+      "line": 1748,
       "title": "the Claude Code spend cap applied by the runner",
       "content_hash": "sha256:21567bc7668373d3aa4d184477a1e83f19a2cd109c482659f858e33580d710a5"
     },
@@ -9494,7 +9494,7 @@
       "id": "C002-TS-703",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1696,
+      "line": 1697,
       "title": "no budget in the options, the prompt or the system prompt that the Agent SDK receives",
       "content_hash": "sha256:9ca4527ee89f56056ac4dc1b7f49e337ddb08ab0a0aa8fba387c28336cac393a"
     },
@@ -9502,7 +9502,7 @@
       "id": "C002-TS-704",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1787,
+      "line": 1788,
       "title": "a failed notional-cost reading stops the session and the run while the query is open, and is ignored once it closes",
       "content_hash": "sha256:e796ee28803a25448fde2019809f946c03a4160a59265d9fce74f55532b1da30"
     },
@@ -9510,7 +9510,7 @@
       "id": "C002-TS-705",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1721,
+      "line": 1722,
       "title": "what the OpenCode and Copilot CLI runners give their hosts holds no budget",
       "content_hash": "sha256:fcad9f9b0f527f90d7fb9534d1e000e28df878604a26c3d8acfc504c5b064f57"
     },
@@ -9518,7 +9518,7 @@
       "id": "C002-TS-706",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1820,
+      "line": 1821,
       "title": "early stop when the row's check is decided",
       "content_hash": "sha256:f9cdd6af22b20ce82f9ccc33aa45a4ed389d7c42c1e42bdf580cee24f8be44b2"
     },
@@ -9526,7 +9526,7 @@
       "id": "C002-TS-707",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
-      "line": 1853,
+      "line": 1854,
       "title": "a faulty stop condition is dropped and the session runs on",
       "content_hash": "sha256:aff838bfd5eed76d07cafa5a3a9073460ee1d954678e6f4fd48e6929d15214a9"
     },
@@ -20169,6 +20169,11 @@
     {
       "from": "C002-REQ-615",
       "to": "C002-REQ-629",
+      "relation": "references"
+    },
+    {
+      "from": "C002-REQ-615",
+      "to": "C002-TS-618",
       "relation": "references"
     },
     {

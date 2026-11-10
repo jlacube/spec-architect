@@ -1641,3 +1641,10 @@ nine earlier waived LINT-DELTA-001 errors.
 ## Revision D-049 (2026-11-10)
 
 No spec text changed: the waiver is recorded at the G2 re-approval (C002-NFR-601, C002-DOD-019), as for Q-nfr304-bare-01. The review's findings (all on plan and docs, all fixed) are in `../../002-multi-platform-targets/20-plan/90-critic-report.md`, section "Revision D-049".
+
+
+## Revision D-050 (2026-11-10)
+
+Scope: `git diff 405239b 5c359e7` (CHG-002 files and `docs/runsheets/`), against D-050 and the questions-log round 2026-11-10 (D-050). Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+One review covered spec and plan; its findings are listed in `../20-plan/90-critic-report.md`, section "Revision D-050". On the spec text: CR-153 (C002-REQ-615 trigger narrower than C002-TS-618) and the IF-009 §4 "Executor" wording of CR-145, CR-146, CR-147 and CR-152. All fixed.
