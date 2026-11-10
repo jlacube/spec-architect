@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:ac2e886866955b588bc2bc02a2c65b89dee8d91b2e06df480cb080eefab144e5", approved_at: 2026-11-10, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:46d7fb7fa9e656711c678d3842c9e772c920373a702766695cfbf4fcc392ac93", approved_at: 2026-11-10, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:3438ee90aef8b79821365341005621b29d698f924ffe16acda439a9a470a3526", approved_at: 2026-11-10, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -494,4 +494,6 @@ waivers:
 | 2026-11-10 | G2 (spec) | **Revise** | "Revision for CHG-002 D-049: waive C002-NFR-601 and C002-DOD-019 (timed clean-profile run of the Copilot target) at 0.1.0; P-01 instruction 2026-11-10 'agreed on all points. waive and continue autonomously'" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Revise** | "Plan revision for D-049: C002-T-057 dropped, C002-TC-903 dropped, C002-T-055 and C002-T-075 no longer depend on it; test plan, handoff, strategy, questions-log" | none | unavailable |
 | 2026-11-10 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601, C002-DOD-019 | unavailable |
+| 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-11-10 | G3 (plan) | **Revise** | "Record the change numbers: CHG-003 'OpenCode release' and CHG-004 'Cost and token efficiency' exist (created 2026-11-10)" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |

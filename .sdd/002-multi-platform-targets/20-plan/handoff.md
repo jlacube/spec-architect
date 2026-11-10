@@ -774,7 +774,7 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 73 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
-are not in this list. The OpenCode release moves to the future CHG-003.
+are not in this list. The OpenCode release moves to CHG-003 "OpenCode release" (created 2026-11-10; `.sdd/003-opencode-release/`); the follow-up "Cost and token efficiency" is CHG-004 (`.sdd/004-cost-and-token-efficiency/`).
 
 ## Reporting protocol
 
