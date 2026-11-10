@@ -81,28 +81,32 @@ fragile, and a failed step cannot be rerun.
 ## 4. T-050 pilot (2026-11-10, P-01's go "ok for … T-050")
 
 A scratch run, not the checklist record: `C:\Sandbox\runs\t050-pilot` (toy, toy-other, toy.code-workspace), the
-0.1.0 package of 9eb56c0 unpacked there, `sdd install copilot` from the toy root (exit 0, the 15 files of VSC-02);
-the CLI reinstalled from `dist\architect-sdd-0.1.0.tgz` (the global `sdd` was an older 0.1.0 build that printed
-`copilot-chat missing`; now `copilot-chat 0.73.0`); the default profile's `settings.json` backed up, the four settings
-of VSC-01/02/07 set, then restored and the backup removed at the end. VS Code 1.145.2, Copilot Chat 0.73.0.
+0.1.0 package of 9eb56c0 unpacked there, `sdd install copilot` from the toy root (exit 0, the 15 files of VSC-02).
+VS Code 1.145.2, Copilot Chat 0.73.0. The global CLI was reinstalled from `dist\architect-sdd-0.1.0.tgz` (run-sheet
+step 2): the global `sdd` was an older 0.1.0 build that printed `copilot-chat missing`; it now prints
+`copilot-chat 0.73.0`. The default profile's `settings.json` was backed up, the four settings of VSC-01/02/07 set,
+and restored at the end (backup removed).
+
+**Correction.** A first attempt reported two blockers ("the package does not load", "no Local session type"); both
+were the conductor's errors, withdrawn the same day: (1) the settings were written with `node -e` from Git Bash,
+whose argument conversion collapsed the `\` of the package path, so `chat.pluginLocations` named a path that does
+not exist (the trace log of an isolated VS Code instance showed
+`Could not resolve plugin path: …C%3ASandbox%0Duns%09050-pilot…`); (2) VS Code 1.145.2 calls the session type a
+**harness** (footer picker: Copilot, Local, Cloud, Claude, Codex), and the window's chats were on the Copilot harness.
 
 | What | Outcome |
 |---|---|
-| Workspace Trust | conductor clicked Trust in the Restricted Mode banner (its own scratch folder) |
-| `code chat -m sdd-conductor "/doctor"` from Git Bash | **mangled**: MSYS path conversion sent `C:/Program Files/Git/doctor`; send from PowerShell (or `MSYS_NO_PATHCONV=1`) |
-| Default chat model | the window's model was a custom endpoint ("Reflection AI / Beam1", connection refused); the conductor switched the picker to Claude Sonnet 5.5 by clicks |
-| `/doctor` sent from PowerShell | the `sdd-conductor` agent of `.github/agents/` answered (Sonnet 5.5, 13.9 credits) but took `/doctor` as text: it oriented on the workspace and proposed `/init`; the doctor prompt did not run |
-| Workspace MCP servers | `sdd-files`, `sdd-shell`, `serena`, `context7`, `deepwiki` started (window logs) |
-| Customizations view (Copilot · toy) | Agents 11 (10 from `toy\.github\agents`, 1 user), Hooks 1, MCP servers 8; **Plugins 0** (User, toy, toy-other) and **Skills 6** (2 extension, 4 built-in, none of the package's 18); Migrations 13 ("Copilot's new agent runtime uses different formats and locations… Prompt-to-skill conversion") for P-01's own user items, not touched |
-| Session types | New Chat (type "Copilot"), Codex Agent, Copilot CLI Session; **no "Local" session type** |
-| `chat.pluginLocations` in 1.145.2 | still a setting (`chat.plugins.paths` migrates into it) and the folder format (root `plugin.json`) is still recognised by the workbench code, yet the Customizations view lists no plugin |
+| Plugin discovery with a correct path | the package loads: trace log of an isolated instance (`--user-data-dir`, `--log trace`) shows VS Code watching the package's `prompts`, `skills`, `commands` and `.mcp.json`; in P-01's profile `/doctor` ran "the doctor skill" after reading `doctor.prompt.md` |
+| Harness picker | Copilot (the default of new chats here), Local, Cloud, Claude, Codex; Local is selectable |
+| `code chat -m sdd-conductor "/doctor"` | **Git Bash mangles it** (`C:/Program Files/Git/doctor`, MSYS path conversion): send from PowerShell; from PowerShell the prompt reaches `sdd-conductor`, but always in a **new session on the default harness (Copilot)**, even right after Local was selected, so the conductor cannot run a Local-harness step through `code chat` |
+| `/doctor` on the Copilot harness | the skill ran and delegated to `sdd-cartographer`, which ended "Doctor: failed: sdd CLI not reachable": on that harness the `sdd-shell` tools were not available to it (not the checklist's harness; recorded as a caveat) |
+| Model | the window's model was a custom endpoint ("Reflection AI / Beam1", connection refused); switched by clicks to Claude Sonnet 5.5; a later session picked "Copilot Fusion" (Auto) |
+| Workspace MCP servers | `sdd-files`, `sdd-shell`, `serena`, `context7`, `deepwiki` started |
+| Dialogs met | Workspace Trust (conductor trusted its own scratch folder), a VS Code survey "Why did you switch harnesses?" (closed unanswered), a "13 user customizations need an update" migration notice for P-01's own items (not touched) |
+| Copilot credits | 4 short sessions (about 50 AI credits shown), billed to P-01's Copilot plan |
 
-**Finding (blocker for T-050 as written):** on VS Code 1.145.2 the checklist's premises do not hold: there is no
-Local session type, and the package registered through `chat.pluginLocations` is not loaded (no plugin, no skills, no
-`/doctor` prompt). The conductor agent, the workspace MCP servers and the workspace hook file are picked up. VSC-01,
-VSC-02 (Local chat), VSC-11/12/13 (prompt files) and every step that needs the plugin's skills or prompts cannot pass as
-written. Raised to P-01 (scope decision: how Copilot 0.1.0 targets VS Code 1.145.2).
-
-**What the pilot shows about the split:** the conductor can do the setup by shell, send prompts with `code chat` (from
-PowerShell), switch the model and read results by clicks and screenshots, and inspect the Customizations view. It
-cannot type `/` to open the slash-command list or answer free-text questions.
+**Outcome for T-050:** no blocker found. The run sheet gains a note: select the **Local harness** (footer picker) for
+every chat, set the model in the chat's model picker, and expect the harness survey. **What the pilot shows about the
+split:** the conductor can do the setup by shell, switch harness and model and read results by clicks and
+screenshots, and read VS Code's own logs; it cannot type (slash list, free-text answers) and `code chat` cannot target
+the Local harness, so the checklist's chat steps stay P-01's, as §2 says.

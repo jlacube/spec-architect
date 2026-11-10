@@ -14,6 +14,12 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
   VS Code), Local session type, signed in with your own **GitHub Copilot Pro** login. Copilot Pro has no Opus, so
   the conductor's file names `claude-opus-5.5` and VS Code runs it on Sonnet. That is expected:
   record what VS Code shows in `models_used`.
+- **Local harness (conductor's pilot of 2026-11-10, `docs/test-responsibilities.md` §4):** VS Code 1.145.2
+  calls the session type a *harness*, picked in the chat footer (Copilot, Local, Cloud, Claude, Codex). New chats
+  start on **Copilot**: switch every chat of this run to **Local** before you send the first message. Check the
+  model picker too (your window had a custom endpoint selected). VS Code may then show a survey "Why did you switch
+  harnesses?": close it. Edit `settings.json` with an editor or PowerShell, not `node -e` from Git Bash (Git Bash
+  collapses the `\\` of a Windows path).
 - **VS Code's default profile, settings backed up** (your answer to Q-t050-profile-01): `sdd
   host-version` reads `chat.useHooks` from the default profile's user settings, so the run uses the
   default profile, not a new one. Back up `%APPDATA%\Code\User\settings.json` before VSC-01 (step 0)
