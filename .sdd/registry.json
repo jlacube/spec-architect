@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T06:31:19Z",
+  "generated_at": "2026-11-10T12:22:28Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -386,12 +386,12 @@
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:97452e8c5d88a15905be2fe3783233ccd1133d44835bcb2f2b0e70f6724c4de0",
+          "approved_hash": "sha256:fe7d2191bb675de606cf1ec50633b324f0b9b0252b3fd43351fbac777259e30c",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:ebcecfcbfe082b531b466ddb347a493e46ab85074bb593150f00d461094eb64a",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
@@ -877,6 +877,16 @@
           "status": "closed",
           "resolution": "Revision approved at G2/G3 (ffa075b, 4dae1db); release candidate 9eb56c0 (P-01: fold into 0.1.0); rerun list passed: npm run check exit 0, npm run package exit 0, replays sdd-mcp-server and copilot-hooks in Git Bash and PowerShell 7 683 replayed 0 differing, Copilot dry run refuses only ERR-REL-003, host-version vscode 1.145.2 copilot-chat 0.73.0 (docs/releases/copilot/0.1.0/D-047-reruns.md, 60ef2ae)",
           "closed_at": "2026-11-10"
+        },
+        {
+          "id": "D-048",
+          "ref": "C002-NFR-601",
+          "summary": "Found in the conductor's study of 2026-11-10 (docs/test-responsibilities.md §2, §3 item 4): C002-NFR-601 (statement 'on a fresh user profile', environment 'REF-WIN, fresh user profile'), C002-TC-903 (test data 'fresh Windows user profile') and C002-T-057 step 1 require a fresh Windows user profile, which REF-WIN cannot provide (P-01 cannot create a Windows account; Windows 11 Home has no Windows Sandbox; the same finding as CHG-001 D-030). P-01 (2026-11-10): 'go ahead with the T-057 revision', the conductor's proposal: an isolated VS Code profile, the counterpart of C001's isolated Claude profile (D-030): VS Code started with --user-data-dir and --extensions-dir on a new empty folder, HOME, USERPROFILE and APPDATA pointed into it, npm global prefix inside it; machine-wide state stays (caveat stated in the spec). Close rule: the revision approved at G2 and G3, and the isolated VS Code profile set-up checked by the conductor (fresh instance starts with no sign-in, no Marketplace extensions and the built-in Copilot Chat 0.73.0); the C002-NFR-601 timing comes from P-01's timed run (C002-T-057).",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-10",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -2540,6 +2550,72 @@
           "item": "C002-TS-634",
           "gate": "10-spec",
           "date": "2026-11-08",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-211",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-212",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-213",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-503",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-504",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-505",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-506",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-507",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-601",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-DOD-G-01",
+          "gate": "10-spec",
+          "date": "2026-11-10",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-TS-634",
+          "gate": "10-spec",
+          "date": "2026-11-10",
           "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
         },
         {
