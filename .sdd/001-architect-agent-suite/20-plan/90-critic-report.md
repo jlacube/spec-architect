@@ -252,3 +252,13 @@ Scope: `git diff a90fab5 6e51f54` (CHG-001 files, docs and scripts), against D-0
 | CR-48 | major | TC-1102, T-072 step 6 | the script can fall back to the broken PATH claude 2.0.76; the MSIX LocalCache location isn't searched | refuse below 2.1.295; search %LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code; add a -Claude <path> option | fixed: isolated-profile.ps1 refuses a Claude Code below 2.1.295 with an error (tested with a stand-in reporting 2.0.76), searches %LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code besides %APPDATA%, and its -Claude <path> option is in the run sheet |
 | CR-49 | minor | TC-1102 functional part | the mjs check passes signed out with no init event; the ps1 prints the same PASS with fewer checks | missing init event is a failure when signed out; rename the ps1 output or align its criteria | fixed: isolated-profile-check.mjs fails a signed-out run without the conductor's init event; the ps1 -Check prints "Quick check: PASS/FAIL" (no conductor start) and names the mjs as the functional check of record |
 | CR-50 | minor | D-030 close rule | the rule says "window" while the check builds a process environment; the passing evidence is from an uncommitted tree | define the profile by its process environment (window = manual form); close D-030 on a PASS at the approved revision's commit, rerun after the fixes | fixed: C001-SPEC-NFR defines the profile by its process environment (manual form: the window; automated form: the mjs child environment); close rule aligned in the questions-log note plus a correction note on D-030's change.md summary, T-072 verification and done-when: PASS at the commit carrying the approved revision; the mjs prints the commit; rerun PASS recorded in evidence §3 (at 6e51f54 plus uncommitted trees, so not the closing run) |
+
+
+## Revision D-031 (2026-11-10)
+
+Scope: `git diff 469e2cf 9d51dd6` (CHG-001 defect D-031 and CHG-002 defect D-049, one review), against P-01's instruction of 2026-11-10 "agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs". Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+One review covered CHG-001 D-031 and CHG-002 D-049; findings CR-135 … CR-144 are listed in
+`../../002-multi-platform-targets/20-plan/90-critic-report.md`, section "Revision D-049". Those on CHG-001:
+CR-138 (release evidence), CR-139 (close rule), CR-140 (follow-up list), CR-141 (C001-SC-09) and CR-143 (run
+sheet). All fixed.

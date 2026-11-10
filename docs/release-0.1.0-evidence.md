@@ -12,8 +12,8 @@ with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6)
 the toy change to G3 on cfg-full (58.17 USD, §5) the total is **409.12 USD notional** (§4.5). Unpaid close-out done 2026-11-07 (§2, §5, §6, §8): version 0.1.0, release candidate **`b6f1509`**,
 `npm run check` exit 0 in all four shell and Node runs, `sdd lint 001` 0 findings, DOD-G-04 review recorded,
 D-023 closed (41c3466). Toy change to G3 on cfg-full done 2026-11-08 (§5; cfg-bare deferred by D-028).
-**Open:** TC-1102 (P-01, run sheet `docs/runsheets/T-072-clean-profile-install.md`), then the local tag `v0.1.0`
-and the task report.
+**TC-1102's timed run waived** (defect D-031, 2026-11-10: C001-NFR-602 and the timed part of C001-DOD-018; §3). **Open:**
+the local tag `v0.1.0` after D-031's approvals and close, then the task report.
 
 ## 0. Run decisions
 
@@ -135,8 +135,11 @@ Microsoft Defender showed no detection after the first `EPERM` (`Get-MpThreatDet
 
 C001-TC-1102 (`tests/manual/TS-1102.md`) runs in an **isolated Claude profile** (C001-SPEC-NFR; defect
 D-030, P-01 Q-clean-profile-01 of 2026-11-10: a fresh Windows user profile is not available on REF-WIN).
-It has an automated functional part (below, **pass**) and P-01's timed run, which gives the ≤ 15-minute
-timing of C001-NFR-602 and is still **open for P-01**. Caveat: only the four variables change, and the
+It has an automated functional part (below, **pass**) and a scripted end-to-end flow (below, **pass**, 180.6 s
+machine time). P-01's timed run, the ≤ 15-minute timing of C001-NFR-602, is **waived at 0.1.0** (defect D-031;
+P-01's instruction of 2026-11-10, "agreed on all points. waive and continue autonomously"): the time to the
+first question depends on inference (model, reasoning effort, provider). The README part of C001-SC-09 and an
+untimed docs walkthrough are deferred to the follow-up change "Cost and token efficiency". Caveat: only the four variables change, and the
 `CLAUDE*` / `ANTHROPIC*` variables are removed. Everything else stays the tester's: PATH and every other
 inherited variable, the PowerShell profile, `LOCALAPPDATA` (nvm Node, the uv and Serena cache), HKCU,
 Windows Credential Manager, PowerShell's `$HOME` and `~` (the set-up script points these two at the folder
@@ -1318,29 +1321,29 @@ State after the unpaid close-out (2026-11-07, release candidate `b6f1509`).
 |---|---|---|
 | Evidence file complete for every DoD item and every deferred milestone item | **open** only for TC-1102 (§3); the M-4 toy change reached G3 on cfg-full (§5; cfg-bare deferred by D-028); every other DoD row below has its evidence | P-01 (TC-1102) |
 | All test cases in `verified_by` pass at the tier of C001-ADR-003 | **open**: C001-TS-1102 / C001-TC-1102 is the manual clean-profile install (§3); run sheet ready | P-01 |
-| Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open**, not done in the close-out (by instruction) | conductor, after TC-1102 and the tag |
+| Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` | **open**, not done in the close-out (by instruction) | conductor, after the tag |
 | Release eval report meets each release class (Verification) | **met** (§4.7) | — |
 | `npm run check` and `sdd lint` (Verification) | **met** at the release candidate `b6f1509`: four runs exit 0 (Node 22.22.3 and 20.20.2, Git Bash and PowerShell 7), `sdd lint 001` 0 findings on both Node versions (§2.1) | — |
-| Version 0.1.0 tagged locally, no push (Intent) | version **0.1.0** since `ab0cfc7` (§8); tag **open** | conductor, once TC-1102 passes |
+| Version 0.1.0 tagged locally, no push (Intent) | version **0.1.0** since `ab0cfc7` (§8); tag **open** | conductor, after the D-031 approvals |
 
 **Global and feature DoD:**
 
 | Item | Evidence | State |
 |---|---|---|
-| DOD-G-01 | §4.7: every eval class meets its floor; the other acceptance scenarios pass in `npm run check` (§2.1); TC-1102 open | **met for the evals and the automated scenarios**; open for TC-1102 (P-01) |
+| DOD-G-01 | §4.7: every eval class meets its floor; the other acceptance scenarios pass in `npm run check` (§2.1); TC-1102 functional and e2e PASS | **met** (TC-1102's timed part waived, D-031) |
 | DOD-G-02 | §2.1: `npm run check` exit 0 at `b6f1509` on REF-WIN, all four runs | **met** |
 | DOD-G-03 | §2.1: `sdd lint 001` 0 findings; the workspace's 9 errors are the waived LINT-DELTA-001 of CHG-002 (C002-DEC-008), none new | **met** |
 | DOD-G-04 | §9: review record of the public interfaces (CLI, schemas, hooks, agents, commands, error codes) against `50-interfaces/` and the CHG-002 deltas: 12 of 13 checks match; one minor deviation (two command bodies do not name `sdd-conventions`, which the conductor preloads), no behaviour impact | **met**, with the deviation reported to the conductor |
-| DOD-G-05 | `docs/nfr-results.md` | open: C001-NFR-602 (TC-1102, P-01) and C001-NFR-304 (C001-T-074, not measured) |
+| DOD-G-05 | `docs/nfr-results.md` | C001-NFR-602 waived (D-031); C001-NFR-304 open (C001-T-074, not measured; cfg-bare part waived, D-028) |
 | DOD-G-06 | C001-T-075 (archive) | not in this task |
 | DOD-G-07 | `sdd status` at `b6f1509`: CHG-001 has **0 open defects** (D-023 closed in 41c3466) | **met** |
 | C001-DOD-001 … 012, 014, 015, 017, 019, 020 | `npm run check` (§2.1: tests, fixtures, structure, licence and coverage steps) and the release evals (§4.7); injection evals 0 acted upon (DOD-014); coverage 95.60% lines, 83.22–83.24% branches (DOD-017) | **met** |
 | C001-DOD-016 | §2.1: Windows 11, PowerShell 7.6.9 and Git Bash 5.2.26, Node 20.20.2 and 22.22.3, encoding scan 0 violations, structure checks pass | **met** |
 | C001-DOD-013, C001-DOD-021 | dogfood changes C001-T-073 and C001-T-074 (todo) | open (not in this task) |
-| C001-DOD-018 | message catalogue: `npm run check` (catalogue test) and §9 (23 of 23 CLI codes); clean-profile timing: TC-1102 | open for TC-1102 (P-01) |
+| C001-DOD-018 | message catalogue: `npm run check` (catalogue test) and §9 (23 of 23 CLI codes); clean-profile timing: waived (D-031) | **met** for the catalogue; timed part waived |
 
-**Is every done-when item met except TC-1102?** Yes. The M-4 toy-change item is closed for cfg-full (G3 approved,
-2026-11-08, §5) and deferred for cfg-bare (D-028); the tag and the task report wait for TC-1102 by design.
+**Is every done-when item met?** Yes, TC-1102's timed part being waived (D-031). The M-4 toy-change item is closed for cfg-full (G3 approved,
+2026-11-08, §5) and deferred for cfg-bare (D-028); the tag and the task report wait for the D-031 approvals.
 
 ## 7. Follow-ups after the release
 

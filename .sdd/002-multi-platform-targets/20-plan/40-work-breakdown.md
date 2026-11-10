@@ -94,7 +94,6 @@ flowchart TB
     C002_T_049["T-049 OpenCode release evidence"]
     C002_T_054["T-054 Copilot release evidence"]
     C002_T_050["T-050 P-01 checklist run"]
-    C002_T_057["T-057 Copilot clean-profile run (dropped, D-049)"]
     C002_T_055["T-055 P-01 Copilot release"]
     C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes (Copilot 0.0.3; OpenCode deferred)"]
     C002_T_075["T-075 P-01 publish architect-sdd"]
@@ -264,7 +263,6 @@ flowchart TB
   C002_T_066 --> C002_T_076
   C002_T_071 --> C002_T_076
   C002_T_076 --> C002_T_050
-  C002_T_076 --> C002_T_057
   C002_T_076 --> C002_T_075
   C002_T_076 --> C002_T_055
   C002_T_038 --> C002_T_056
@@ -300,10 +298,6 @@ flowchart TB
   C002_T_066 --> C002_T_054
   C002_T_046 --> C002_T_050
   C002_T_054 --> C002_T_050
-  C002_T_023 --> C002_T_057
-  C002_T_034 --> C002_T_057
-  C002_T_039 --> C002_T_057
-  C002_T_058 --> C002_T_057
   C002_T_003 --> C002_T_055
   C002_T_023 --> C002_T_055
   C002_T_047 --> C002_T_055
@@ -317,16 +311,15 @@ flowchart TB
   C002_T_070 --> C002_T_071
   C002_T_071 --> C002_T_055
   C002_T_071 --> C002_T_050
-  C002_T_071 --> C002_T_057
 ```
 
 ## Critical path
 
 Weights S = 1, M = 2, L = 3. Of the 76 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
-to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85). The 74 others weigh 149 (23 S,
+to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85). The 73 others weigh 148 (22 S,
 27 M, 24 L). The longest chain weighs 53 and ends with the Copilot release. **The D-041 plan update
 lengthens it by 2** (P-01 answer to Q-copilot-010-01): C002-T-076 (M, the Copilot evidence at 0.1.0)
-waits for C002-T-071 (48) and finishes at 50; C002-T-050 and C002-T-057 then finish at 51,
+waits for C002-T-071 (48) and finishes at 50; C002-T-050 then finishes at 51 (C002-T-057, dropped by defect D-049, is no node),
 C002-T-075 at 52 and C002-T-055 at 53. C002-T-076 also waits, outside this graph, for the end of CHG-001's C001-M-4 toy
 chains of C001-T-072 (plan critic CR-103; `handoff.md`), so its calendar start follows them. The D-042
 revision adds no task. **The D-036 plan update
@@ -414,7 +407,7 @@ C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-073 — `INJ-21` sessio
 (S, 45), C002-T-074 — version 0.0.3 (S, 46), C002-T-071 — release evidence retaken, Copilot at 0.0.3
 (M, 48), C002-T-076 — Copilot evidence retaken at 0.1.0 (M, 50; revision D-041), C002-T-050 — P-01
 checklist run (S, 51), C002-T-075 — P-01 npm publication after a `released` dry run (S, 52) and
-C002-T-055 — P-01 Copilot release (S, 53). C002-T-057 also finishes at 51. The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
+C002-T-055 — P-01 Copilot release (S, 53). The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
 (C002-T-074 waits for the C001-T-084 product commit; `handoff.md`), so its calendar end follows them.
 
 **Before the release retake (to C002-T-055, weight 45):**

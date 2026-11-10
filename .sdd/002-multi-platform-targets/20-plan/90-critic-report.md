@@ -1299,3 +1299,27 @@ Scope: `git diff 5ab0fa9 d97044b` (CHG-002 files, `scripts/manual/isolated-vscod
 | CR-134 | minor | run sheet step 8 | "Local harness" vs the spec's "Local session type" | use "Local session type", with the UI label in brackets | fixed |
 
 Why no further findings (critic): the TC-903 row, test plan §7 and T-057 intent, step 1 and targets are consistent with the new environment; plan lint 0 errors; the questions-log answer is verbatim; sign-in comes before the timer and the PowerShell commands and paths are correct apart from CR-133.
+
+
+## Revision D-049 (2026-11-10)
+
+Scope: `git diff 469e2cf 9d51dd6` (CHG-001 defect D-031 and CHG-002 defect D-049, one review), against P-01's instruction of 2026-11-10 "agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs". Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 4 | 6 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-135 | major | C002-M-07, C002-T-057, C002-DOD-019 | M-07 exit (`10-strategy.md`) and the release exit (`60-test-plan.md`) still require the timed Copilot run; M-07 lists C002-T-057 | "C002-DOD-019 waived for Copilot (D-049)"; T-057 out of the M-07 tasks | fixed |
+| CR-136 | major | C002-T-055 | T-055 run sheet: "so ignore:" reads as covering every remaining prerequisite | list the real prerequisites; T-057 dropped on its own | fixed |
+| CR-137 | major | C002-T-075, C002-T-055 | run-sheet README: "T-075 and T-055 need both", intro lists the timed Copilot run | "1 → 3 → 4: T-075 and T-055 need T-050"; intro updated | fixed |
+| CR-138 | major | C001-T-072, C001-TC-1102 | `docs/release-0.1.0-evidence.md` still holds the tag and DOD-G-01, DOD-G-05, DOD-018 open for P-01's timed run | §3, done-when and DoD tables: C001-NFR-602 and DOD-018's timed part waived (D-031); tag after D-031's approvals | fixed |
+| CR-139 | minor | D-031 | D-031 has no close rule | add it to the CHG-001 questions-log round | fixed: closes at the G2 and G3 approvals |
+| CR-140 | minor | follow-up change | the Copilot walkthrough of D-049 is missing from T-072's follow-up list and CHG-002 open points | add both walkthroughs to both lists | fixed |
+| CR-141 | minor | C001-SC-09 | nothing left shows the README alone suffices; C001-SC-09 not marked deferred | record C001-SC-09's README part as deferred with the walkthrough (T-072 Verification, evidence §3) | fixed |
+| CR-142 | minor | work breakdown | Mermaid keeps the C002_T_057 node and six edges; totals 74/149 and "T-057 also finishes at 51" not updated | remove node and edges; 73 tasks / 148; delete the sentence | fixed: node and 6 edges removed, 73 / 148 (22 S), sentences updated |
+| CR-143 | minor | run sheet, test plan, rollout | T-072 sheet "last open test case", "the failure counts", "binding limit"; test plan manual row and "about 68"; rollout Task column | align wording; say what a failed optional run triggers | fixed: undocumented step or failure is a defect, a time over 15 min alone is recorded; about 67; rollout annotated |
+| CR-144 | minor | trace | `trace.json` still shows C002-T-057 todo | `sdd trace 002 --write` | fixed |
+
+Why no further findings (critic): T-055, T-075 and T-072 task files, the C001-TC-1102 and TC-903 rows, observability, both questions-logs and the D-049 handoff block are consistent; the release scripts never read `clean-profile-runs.md`; C002-TS-306 keeps C002-TC-306 and C001-TS-1102 keeps the functional check; lint 001 0 findings, lint 002 only the nine waived LINT-DELTA-001; trace 100 % and acyclic; other mentions are records of closed revisions or done tasks; unchanged NFR/DoD texts follow the Q-nfr304-bare-01 precedent.

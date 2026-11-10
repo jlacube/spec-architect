@@ -44,7 +44,7 @@ file, each case is one `test()` whose name starts with its TS ID (or, for an NFR
 | integration | replay | Corpus replay suite (C002-COMP-008) and every scenario that needs an OpenCode session through the scripted-model driver of C002-ADR-005 (feasible, S-07 §4) on the pinned host binary, C002-TC-666 and C002-TC-681 included | 28 | `npm run replay` (own command: the loopback stub would trip `tests/no-network.mjs`, regression-set §4.3) |
 | integration | benchmark | Timing of an NFR threshold on REF-WIN, result file under `bench/results/` (C002-TC-905) | 1 | `npm run bench` (`bench/*.mjs`) |
 | eval | — | Model sessions on a real host, with transcript assertions (tool calls, files, commands, never free text alone); C002-TC-336 (`@mode-hooks`) is not applicable under the signed-off S-08 record | 27 | `node evals/harness/run.mjs --host <claude-code\|opencode\|copilot-cli> --tier dev`; existing Claude Code cases also `npm run eval` |
-| manual | — | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 and C002-T-057 | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
+| manual | — | P-01 in VS Code (`@manual-vscode`, the checklist record of C002-T-050), the review of that record, and the timed clean-profile runs of C002-T-051 and C002-T-057 (both dropped: CHG-003 and defect D-049) | 18 | `docs/checklists/vscode-copilot.md` (C002-T-046), records under `docs/checklists/records/` and `docs/releases/clean-profile-runs.md` |
 | unit | — | Module tests that support the cases above (repository-root helper, replay expectations, adapters); not mapped to a TS | as needed | `npm test` |
 | e2e | — | Not used in CHG-002: host sessions are eval cases, and P-01's runs are manual cases | 0 | — |
 
@@ -483,7 +483,7 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 24: the Copilot CLI case set of C002-IF-010 §5.1 for C002-TC-615, `ROUTE-auditor-copilot-cli`, `INJ-01` … `INJ-22` and C002-TC-359 (`TS-336` not applicable, no session), run with `--copilot-model claude-opus-5.5=claude-sonnet-5.5` (Copilot pool; about 3.4 USD, upper bound about 15.6 USD, §4.4); plus the 2 sessions of 2026-10-21 that the host refused on `claude-opus-5.5` at 0 AI Credits, `valid_run: false` (§4.1 Ledger) |
 | C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
 | C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 0: dropped (defect D-049); was 1 on E-VSC, C002-TC-903 |
-| **Total** | | **96** | **31.10 USD** | 65.86 USD | **83** (30.21 USD notional: measured for C002-T-048 step 4 batches 1 … 6, estimated for the other rows), 84 with the conditional row of C002-T-063 step 5; at most 11 more with the conditional reruns of C002-T-048 steps X3 … X5 (at most 16.50 USD notional) | **about 68** (about 85 before the case set of C002-IF-010 §5.1 cut C002-T-054 from about 41 to 24 sessions) |
+| **Total** | | **96** | **31.10 USD** | 65.86 USD | **83** (30.21 USD notional: measured for C002-T-048 step 4 batches 1 … 6, estimated for the other rows), 84 with the conditional row of C002-T-063 step 5; at most 11 more with the conditional reruns of C002-T-048 steps X3 … X5 (at most 16.50 USD notional) | **about 67** (about 68 before C002-T-057 was dropped, defect D-049; about 85 before the case set of C002-IF-010 §5.1 cut C002-T-054 from about 41 to 24 sessions) |
 
 ### 4.3 Budget, reserve and room for reruns
 
@@ -930,7 +930,7 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
   plan X3 failed within the cap-only waiver above: that failure is recorded and the row is waived,
   P-01 answers to Q-ts634-budget-02 and Q-ts634-waiver-01; any other failure holds the release); replay reports with 0 differing decisions (C002-DOD-008); injection evals with 0
   instructions acted upon (C002-DOD-009); the timed run (C002-DOD-019; for OpenCode with the toy
-  change to G1, C002-DOD-021); for Copilot the checklist record (C002-DOD-004); the regression set at
+  change to G1, C002-DOD-021; waived for Copilot at 0.1.0, defect D-049); for Copilot the checklist record (C002-DOD-004); the regression set at
   the release-candidate commit (C002-DOD-022, shared by both targets); benchmarks (C002-DOD-010).
 
 ## 7. Manual cases

@@ -253,3 +253,8 @@ Scope: `git diff a90fab5 6e51f54` (CHG-001 files, docs and scripts), against D-0
 | ID | Sev. | Refs | Finding | Suggested fix | Status |
 |---|---|---|---|---|---|
 | CR-45 | major | SPEC-NFR, NFR-602, SC-09, TS-1102.md, run sheet, evidence §3 | caveat incomplete and calls per-user tools machine-wide; leaves out PATH and other inherited variables, the PowerShell profile, HKCU, Credential Manager, $HOME and Known-Folder lookups, the desktop-bundled Claude Code, ast-grep | rewrite the caveat: only the four variables change and CLAUDE*/ANTHROPIC* are removed; everything else stays the tester's; drop "machine-wide"; same text in all places | fixed: caveat rewritten in C001-SPEC-NFR (only the four variables change, CLAUDE*/ANTHROPIC* removed; PATH and other inherited variables, PowerShell profile, LOCALAPPDATA, HKCU, Credential Manager, $HOME/~ and Known-Folder lookups, desktop-bundled Claude Code stay the tester's; ripwire, Serena, ast-grep named) and repeated in TS-1102.md, the T-072 run sheet (why, prerequisites, record) and evidence §3; "machine-wide" dropped there and in NFR-602 Environment and C001-SC-09 |
+
+
+## Revision D-031 (2026-11-10)
+
+No spec text changed: the waiver is recorded at the G2 re-approval (C001-NFR-602, C001-DOD-018 timed part), as for Q-nfr304-bare-01. The review's findings (all on plan and docs, all fixed) are in `../../002-multi-platform-targets/20-plan/90-critic-report.md`, section "Revision D-049".

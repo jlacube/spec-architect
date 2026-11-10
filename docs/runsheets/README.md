@@ -1,7 +1,7 @@
 # Run sheets for P-01 — CHG-002 milestone C002-M-07
 
-These sheets are for the human runs of milestone C002-M-07 at version 0.1.0: the timed Copilot
-clean-profile run, the manual VS Code checklist, the npm publication of `architect-sdd` and the
+These sheets are for the human runs of milestone C002-M-07 at version 0.1.0: the manual VS Code
+checklist, the npm publication of `architect-sdd` and the
 Copilot release. The OpenCode sheets (T-051, and part 2 of the T-052 sheet) are moved to CHG-003
 (revision D-036): CHG-002 releases Copilot only. Each sheet is a short version of its task file under
 `.sdd/002-multi-platform-targets/20-plan/50-tasks/`. If a sheet and its task file disagree, the task
@@ -32,8 +32,7 @@ too; it uses no CHG-002 package and no Copilot host.
 How the tasks depend on each other:
 
 - **OpenCode**: moved to CHG-003. No OpenCode sheet runs in CHG-002.
-- **Copilot** (1, 2 → 3 → 4): T-050 and T-057 do not depend on each other, so you can swap them.
-  T-075 and T-055 need both.
+- **Copilot** (1 → 3 → 4): T-075 and T-055 need T-050. T-057 is dropped (defect D-049).
 - **npm**: `architect-sdd` 0.1.0 goes on npm before or together with the Copilot release. T-075
   publishes it, only after a `released` Copilot dry run. If that dry run is not `released`, nobody
   publishes it.

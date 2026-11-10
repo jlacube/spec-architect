@@ -1636,3 +1636,8 @@ One review covered spec and plan; its findings are numbered in the plan series a
 findings (critic): the C002-NFR-601 statement and environment read correctly; C002-DOD-019 has no profile
 wording; "fresh Windows user profile" remains only for OpenCode (moved to CHG-003); spec lint shows only the
 nine earlier waived LINT-DELTA-001 errors.
+
+
+## Revision D-049 (2026-11-10)
+
+No spec text changed: the waiver is recorded at the G2 re-approval (C002-NFR-601, C002-DOD-019), as for Q-nfr304-bare-01. The review's findings (all on plan and docs, all fixed) are in `../../002-multi-platform-targets/20-plan/90-critic-report.md`, section "Revision D-049".

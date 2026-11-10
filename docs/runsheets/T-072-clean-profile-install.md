@@ -7,7 +7,7 @@
 
 **Purpose:** in an isolated Claude profile on Windows 11, time how long it takes to go from opening the
 README to the first interview question of a new change, installing the Architect plugin 0.1.0 from the
-local marketplace (limit 15 minutes, C001-NFR-602). This is the last open test case of the release gate.
+local marketplace (limit 15 minutes, C001-NFR-602). Optional since defect D-031: the release gate no longer waits for it.
 
 Task C001-T-072 · case C001-TC-1102 (C001-TS-1102, C001-AC-1102.1, C001-REQ-1102) · procedure
 `tests/manual/TS-1102.md` · record `docs/dogfood.md` (new entry) · evidence
@@ -149,10 +149,11 @@ with:
 - **Pass:** step 5 shows `architect` installed from `architect-local`; step 6 starts the conductor
   (it orients on the workspace or proposes `/architect:init`); and the total from opening the README
   to the first interview question is **15:00 or less**, download time left out.
-- **Fail:** any of the three does not hold. The failure counts. Tell the conductor, who opens a defect
-  and repeats the whole run only after the fix. Never edit the record to make it pass.
+- **Fail:** any of the three does not hold. Tell the conductor: an undocumented step or a failure is a
+  defect to fix (in the follow-up change if v0.1.0 is already tagged); a time over 15 minutes alone is
+  recorded only, C001-NFR-602 being waived (D-031). Never edit the record to make it pass.
 
-**Time budget:** 15 minutes is the binding limit. Allow about 30 minutes overall, set-up and sign-in
+**Time budget:** 15 minutes was the limit of C001-NFR-602 (waived at 0.1.0, D-031). Allow about 30 minutes overall, set-up and sign-in
 included (estimate).
 
 ## Afterwards
