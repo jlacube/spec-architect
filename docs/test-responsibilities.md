@@ -77,3 +77,32 @@ fragile, and a failed step cannot be rerun.
    screenshots on a scratch run (not the binding record) to measure how much of the checklist it can
    carry. Only then decide whether to change the executor of T-050 (a CHG-002 revision).
 4. **Needed either way:** a CHG-002 revision for T-057's "fresh user profile", like D-030 for TC-1102.
+
+## 4. T-050 pilot (2026-11-10, P-01's go "ok for … T-050")
+
+A scratch run, not the checklist record: `C:\Sandbox\runs\t050-pilot` (toy, toy-other, toy.code-workspace), the
+0.1.0 package of 9eb56c0 unpacked there, `sdd install copilot` from the toy root (exit 0, the 15 files of VSC-02);
+the CLI reinstalled from `dist\architect-sdd-0.1.0.tgz` (the global `sdd` was an older 0.1.0 build that printed
+`copilot-chat missing`; now `copilot-chat 0.73.0`); the default profile's `settings.json` backed up, the four settings
+of VSC-01/02/07 set, then restored and the backup removed at the end. VS Code 1.145.2, Copilot Chat 0.73.0.
+
+| What | Outcome |
+|---|---|
+| Workspace Trust | conductor clicked Trust in the Restricted Mode banner (its own scratch folder) |
+| `code chat -m sdd-conductor "/doctor"` from Git Bash | **mangled**: MSYS path conversion sent `C:/Program Files/Git/doctor`; send from PowerShell (or `MSYS_NO_PATHCONV=1`) |
+| Default chat model | the window's model was a custom endpoint ("Reflection AI / Beam1", connection refused); the conductor switched the picker to Claude Sonnet 5.5 by clicks |
+| `/doctor` sent from PowerShell | the `sdd-conductor` agent of `.github/agents/` answered (Sonnet 5.5, 13.9 credits) but took `/doctor` as text: it oriented on the workspace and proposed `/init`; the doctor prompt did not run |
+| Workspace MCP servers | `sdd-files`, `sdd-shell`, `serena`, `context7`, `deepwiki` started (window logs) |
+| Customizations view (Copilot · toy) | Agents 11 (10 from `toy\.github\agents`, 1 user), Hooks 1, MCP servers 8; **Plugins 0** (User, toy, toy-other) and **Skills 6** (2 extension, 4 built-in, none of the package's 18); Migrations 13 ("Copilot's new agent runtime uses different formats and locations… Prompt-to-skill conversion") for P-01's own user items, not touched |
+| Session types | New Chat (type "Copilot"), Codex Agent, Copilot CLI Session; **no "Local" session type** |
+| `chat.pluginLocations` in 1.145.2 | still a setting (`chat.plugins.paths` migrates into it) and the folder format (root `plugin.json`) is still recognised by the workbench code, yet the Customizations view lists no plugin |
+
+**Finding (blocker for T-050 as written):** on VS Code 1.145.2 the checklist's premises do not hold: there is no
+Local session type, and the package registered through `chat.pluginLocations` is not loaded (no plugin, no skills, no
+`/doctor` prompt). The conductor agent, the workspace MCP servers and the workspace hook file are picked up. VSC-01,
+VSC-02 (Local chat), VSC-11/12/13 (prompt files) and every step that needs the plugin's skills or prompts cannot pass as
+written. Raised to P-01 (scope decision: how Copilot 0.1.0 targets VS Code 1.145.2).
+
+**What the pilot shows about the split:** the conductor can do the setup by shell, send prompts with `code chat` (from
+PowerShell), switch the model and read results by clicks and screenshots, and inspect the Customizations view. It
+cannot type `/` to open the slash-command list or answer free-text questions.
