@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T21:11:37Z",
+  "generated_at": "2026-11-10T21:11:40Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -347,9 +347,9 @@
           "summary": "P-01 decision of 2026-11-10: waive the timed clean-profile run (C001-NFR-602 ≤ 15 minutes, timed part of C001-DOD-018, P-01's timed run of C001-TC-1102) at 0.1.0. P-01's rationale: total time depends on inference (model, reasoning effort, local or cloud provider), so an absolute measure varies a lot; the scripted end-to-end flow reached the first interview question in 180.6 s machine time (isolated-profile-e2e.mjs, 04ad339). The functional check and the e2e record stay as evidence; an untimed docs walkthrough moves to the follow-up change.",
           "reporter": "jerome.lacube",
           "date": "2026-11-10",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-031 approved at G2 (waivers C001-NFR-602, C001-DOD-018 timed part) and G3: C001-T-072 without P-01's timed run (functional check and scripted e2e flow stay); README part of C001-SC-09 and untimed walkthrough deferred to the follow-up change; critic CR-135…144 fixed (2ca3b1f)",
+          "closed_at": "2026-11-10"
         }
       ],
       "waivers": [
@@ -928,9 +928,9 @@
           "summary": "P-01 decision of 2026-11-10: waive the timed clean-profile run of the Copilot target (C002-NFR-601 ≤ 15 minutes, C002-DOD-019, C002-T-057 and C002-TC-903) at 0.1.0. P-01's rationale: total time depends on inference (model, reasoning effort, local or cloud provider), so an absolute measure varies a lot. C002-T-057 is dropped; C002-TS-306 keeps its automated case C002-TC-306; an untimed docs walkthrough moves to the follow-up change.",
           "reporter": "jerome.lacube",
           "date": "2026-11-10",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision D-049 approved at G2 (waivers C002-NFR-601, C002-DOD-019) and G3: C002-T-057 and C002-TC-903 dropped, C002-T-055 and C002-T-075 no longer depend on it; untimed walkthrough deferred to the follow-up change; critic CR-135…144 fixed (2ca3b1f)",
+          "closed_at": "2026-11-10"
         }
       ],
       "waivers": [
