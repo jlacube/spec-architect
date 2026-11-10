@@ -17,7 +17,7 @@ Copilot section (create the file if it does not exist yet; the OpenCode run move
   fresh profile cannot read that folder, or VS Code is not installed for it, install them in
   the profile before the timer and write that down.
 - **Package:** `C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip` and
-  `dist\architect-sdd-0.1.0.tgz`, packed at the release-candidate commit that T-076 records (ask the
+  `dist\architect-sdd-0.1.0.tgz`, packed at the release-candidate commit (876e958 since revision D-047; T-076 recorded b481e82) (ask the
   conductor which commit; install the CLI from the tarball until T-075 publishes it).
 - **Spend:** 1 VS Code session, billed in AI Credits to your Copilot plan, not to the prepaid key.
   There is no ledger entry.

@@ -183,3 +183,26 @@ and the clean-profile run on the 0.1.0 packages.
 - [ ] The Copilot release-check dry run at that commit refuses on nothing other than the records of C002-T-050 and C002-T-057 (D-041 closes on it)
 - [ ] The report gives the Copilot CLI transcript search of step 6, every hit quoted or "no hit" (CR-102)
 - [ ] Progress reported: `sdd task set C002-T-076 --status done --commit <sha>`
+
+## Release candidate moved by revision D-047
+
+By P-01's decision of 2026-11-10 ('Fold into 0.1.0 (Recommended)', Q-d047-ship-01,
+`../questions-log.md` round 2026-11-10), the release candidate of 0.1.0 moves from b481e82, this
+task's commit, to the D-047 code commit **876e958**, for both hosts. The paid evidence of this task
+stands: no agent, skill or prompt changed. The shipped difference is `git diff --stat b481e82 876e958 -- plugins/architect/`:
+
+```text
+ plugins/architect/README.md            |  2 +-
+ plugins/architect/scripts/sdd.mjs      | 51 +++++++++++++++++++++++++++++-----
+ plugins/architect/targets/copilot.json |  2 +-
+ 3 files changed, 46 insertions(+), 9 deletions(-)
+```
+
+and its source, `src/cli/host-version.ts` (71 insertions, 8 deletions).
+
+The report note above stays as recorded (CLI-owned). The unpaid checks rerun at 876e958 before the
+release: `npm run check` (the four CHG-001 approval tests excepted while CHG-001 D-030 is open); the
+`sdd-mcp-server` and `copilot-hooks` corpus replays in Git Bash and in PowerShell 7; `npm run package`
+at 0.1.0; the Copilot release dry run (`node scripts/release-check.mjs --target copilot --dry-run`),
+refusing ERR-REL-003 only (checklist record pending, C002-T-050); and `sdd host-version vscode` on
+P-01's machine printing `copilot-chat 0.73.0`.

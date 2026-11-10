@@ -49,10 +49,9 @@ Insiders 1.142; the steps that settle them (the assumption steps above) confirm 
 ## Preconditions
 
 - **Revision D-047** (P-01's instruction of 2026-11-10): the G2 and G3 approvals of the D-047
-  revision, and P-01's decision on how the shipped part of the fix reaches the packages (the
-  host-version fix in the bundled sdd CLI and the Copilot table's tested versions both change
-  `plugins/architect/`, so the Copilot 0.1.0 packages of C002-T-076's commit b481e82 do not carry
-  them): `sdd host-version vscode` in the package's CLI prints `vscode 1.145.2` and `copilot-chat
+  revision and its unpaid rerun list (`handoff.md`); by P-01's answer to Q-d047-ship-01, 'Fold into
+  0.1.0 (Recommended)', the release candidate moves from b481e82 to the D-047 code commit 876e958, and
+  the 0.1.0 packages are packed there: `sdd host-version vscode` in the package's CLI prints `vscode 1.145.2` and `copilot-chat
   0.73.0` on P-01's machine, and the package's doctor probes `vscode` (not `vscode-insiders`) and shows
   the host row `ok`. Before that the doctor of the 0.1.0 packages probes `vscode-insiders` and
   shows the host row `untested`, and the checklist does not start.

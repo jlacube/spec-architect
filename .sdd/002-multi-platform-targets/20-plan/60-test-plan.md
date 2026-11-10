@@ -724,8 +724,9 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
     compared (C002-TC-624 unchanged).
   - **C002-TC-901:** C002-T-050 runs on VS Code 1.145.2 with Copilot Chat 0.73.0; `sdd host-version
     vscode` replaces `vscode-insiders` in the run sheet.
-  - These tests and the code they cover are in the working tree with the shipped part of the fix,
-    committed with it after P-01's decision (`10-strategy.md`, D-047 row).
+  - These tests and the code they cover are commit 876e958 (P-01's answer to Q-d047-ship-01, 'Fold
+    into 0.1.0 (Recommended)'). The release candidate moves there, and the unpaid rerun list of
+    `handoff.md` (D-047 edge) runs at it: C002-TC-901's packages are packed at 876e958.
 - **Revision D-046** (found in C002-T-076; P-01 answer to Q-inj-exposure-copilot-01, 'Align with D-023
   (Recommended)').
   - **Merge:** `tests/unit/evals/injection-not-exposed.test.ts`, supporting tests of C002-TS-691 at unit

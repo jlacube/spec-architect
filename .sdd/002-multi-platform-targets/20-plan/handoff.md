@@ -376,20 +376,36 @@ the packages are generated from moves the release-candidate commit, and before C
 P-01. **Close rule:** D-041 closes when C002-T-076 is done (`10-strategy.md`, Plan revision for
 D-041); the G3 approval alone does not close it.
 
-**C002-T-050 waits for the G3 approval of the D-047 revision and P-01's decision on the shipped
-part** (defect D-047; P-01's instruction of 2026-11-10, VS Code stable). The checklist runs on VS Code
+**C002-T-050 waits for the G3 approval of the D-047 revision and the D-047 rerun list** (defect
+D-047; P-01's instruction of 2026-11-10, VS Code stable; P-01's answer to Q-d047-ship-01, 'Fold into
+0.1.0 (Recommended)'). The checklist runs on VS Code
 1.145.2 with GitHub Copilot Chat 0.73.0, built in, Local session type (scope §3.1). The host-version
 fix (`src/cli/host-version.ts`, built into `plugins/architect/scripts/sdd.mjs` and `architect-sdd`) and
 the tested versions of `plugins/architect/targets/copilot.json` change the shipped files against the
-release candidate b481e82 of C002-T-076, so they are not in the revision commit: P-01 decides between a
-new version and a retake at 0.1.0 (CR-103, the same source as Claude Code 0.1.0). **Handoff
-condition:** C002-T-050 starts after the G2 and G3 approvals of D-047, P-01's decision, and packages
-whose `sdd host-version vscode` prints `vscode 1.145.2` and `copilot-chat 0.73.0` on P-01's machine
-and whose doctor probes `vscode`. Until then the task stays `blocked` with the reason "waits for the
-G3 approval of CHG-002 revision D-047 and P-01's decision on shipping the host-version fix and the
-VS Code 1.145.2 tested versions". C002-T-057 and C002-T-055 follow C002-T-050 as before. **Close
-rule:** D-047 closes at the G2 and G3 approvals with the host-version fix passing on P-01's machine
-(`sdd host-version vscode` showing `copilot-chat 0.73.0`).
+release candidate b481e82 of C002-T-076. **By P-01's decision the release candidate of 0.1.0 moves
+from b481e82 to the D-047 code commit 876e958, for both hosts** (CR-103 then holds at 876e958); the paid
+evidence stands, since no agent, skill or prompt changed. The shipped difference is `git diff --stat b481e82 876e958 -- plugins/architect/`:
+
+```text
+ plugins/architect/README.md            |  2 +-
+ plugins/architect/scripts/sdd.mjs      | 51 +++++++++++++++++++++++++++++-----
+ plugins/architect/targets/copilot.json |  2 +-
+ 3 files changed, 46 insertions(+), 9 deletions(-)
+```
+
+and its source, `src/cli/host-version.ts` (71 insertions, 8 deletions).
+
+**Rerun list** (unpaid, at 876e958): `npm run check` (the four CHG-001 approval tests excepted while CHG-001 D-030 is open); the
+`sdd-mcp-server` and `copilot-hooks` corpus replays in Git Bash and in PowerShell 7; `npm run package`
+at 0.1.0; the Copilot release dry run (`node scripts/release-check.mjs --target copilot --dry-run`),
+refusing ERR-REL-003 only (checklist record pending, C002-T-050); and `sdd host-version vscode` on
+P-01's machine printing `copilot-chat 0.73.0`. **Handoff condition:** C002-T-050 starts after the G2
+and G3 approvals of D-047 and the rerun list passing, on the 0.1.0 packages packed at 876e958, whose
+`sdd host-version vscode` prints `vscode 1.145.2` and `copilot-chat 0.73.0` on P-01's machine and whose
+doctor probes `vscode`. Until then the task stays `blocked` with the reason "waits for the G3 approval
+of CHG-002 revision D-047 and the D-047 rerun list at 876e958". C002-T-057 and C002-T-055 follow C002-T-050 as before. **Close
+rule:** D-047 closes at the G2 and G3 approvals with the rerun list passing, the host-version fix on
+P-01's machine included (`sdd host-version vscode` showing `copilot-chat 0.73.0`).
 
 **C002-T-076 waits for the G3 approval of the D-046 revision** (defect D-046; P-01 answer
 Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'). Its step 4 stopped after 15 of 24
@@ -587,7 +603,7 @@ Insiders builds): record the version before each run.
 | **Cost of a small lite change to G3** (major post-release issue; defect D-044; P-01 answer to Q-toy-g3-limit-01): the cfg-full toy chain needs about 50 USD notional to take a one-function lite change to G3; every critic review found issues (11 at ideation, 6 at spec) and each fix round takes a full session at the cap; thinking tokens grew after the budget was hidden, a cause **not proven**: the earlier sessions could see their budget, and the skills changed in between (C002-IF-010 §2.2 rule 1, `TS-511`; `docs/release-0.1.0-evidence.md` §7) | **the follow-up change "Cost and token efficiency"** (owner; named by the conductor, CHG-002 plan critic CR-112, and its number recorded once it exists), which the conductor creates at C001-T-072's close; it also holds the cfg-bare part of C001-NFR-304 (P-01 answer to Q-nfr304-bare-01, CHG-001 critic CR-40); it also holds the deferred G3 run on cfg-bare with its cap row `toy-g3-cfg-bare` (plan critic CR-112) | open: logged, not addressed in CHG-001 or CHG-002 |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
 | Q-copilot-010-01: the Copilot dry run refuses the 0.0.3 candidate 4ef1d61 with ERR-REL-007 after the CHG-001 release-gate fixes; ship 0.1.0 or 0.0.3 (defect D-041; `questions-log.md` round 2026-11-07) | C002-T-076, C002-T-050, C002-T-057, C002-T-075, C002-T-055 | settled: P-01 answered "Ship 0.1.0 on both hosts (Recommended)"; C002-T-076 retakes the 24 Copilot CLI sessions at 0.1.0, stopped at 15.00 USD of the Copilot pool; the P-01 tasks and the run sheets at 0.1.0 |
-| P-01's instruction of 2026-11-10: C002-T-050 on VS Code stable, a released Insiders build having broken the model calls (defect D-047; `questions-log.md` round 2026-11-10) | the D-047 revision commit; C002-T-050, C002-T-057, C002-T-055 | settled as an instruction (no options): tested hosts VS Code 1.145.2 with Copilot Chat 0.73.0, S-08 historical, host-version reads the built-in Copilot Chat; open: P-01's decision on shipping the code part (new version or retake at 0.1.0) |
+| P-01's instruction of 2026-11-10: C002-T-050 on VS Code stable, a released Insiders build having broken the model calls (defect D-047; `questions-log.md` round 2026-11-10) | the D-047 revision commit; C002-T-050, C002-T-057, C002-T-055 | settled as an instruction (no options): tested hosts VS Code 1.145.2 with Copilot Chat 0.73.0, S-08 historical, host-version reads the built-in Copilot Chat; settled: P-01 answered Q-d047-ship-01 'Fold into 0.1.0 (Recommended)'; the release candidate moves from b481e82 to 876e958 for both hosts, paid evidence standing; the rerun list closes D-047 with G2 and G3 |
 | Q-inj-exposure-copilot-01: `INJ-02` and `INJ-04` were not exposed and did nothing forbidden in C002-T-076, but the merge recorded them acted upon, so Copilot 0.1.0 was refused (defect D-046; `questions-log.md` round 2026-11-08 (3)) | the D-046 revision commit; C002-T-076 | settled: P-01 answered 'Align with D-023 (Recommended)'; a not-exposed no run gives no entry and its row runs again, the two stored entries are removed from their stored results with a line each (C002-IF-010 §5.2); C002-T-076 step 4a reruns `INJ-02` and `INJ-04`, then the nine remaining rows; no fix task |
 | Q-toy-g3-limit-02: the cfg-full chain reached G2, but `sdd gate approve` refused twice with ERR-CLI-010 (LINT-ARCH-001 on a lite spec), and session 12 failed with no progress (defect D-045; `questions-log.md` round 2026-11-08 (2)) | the D-045 revision commit; C001-T-072 | settled: P-01 answered 'Fix, then finish to G3 (Recommended)'; the CHG-001 fix of LINT-ARCH-001 first, then the cfg-full chain resumes at the G2 gate with `--after-fix` under 75 USD in total and 18 sessions (the implementer's decision); no fix task in CHG-002 |
 | Q-toy-g3-limit-01: the resumed cfg-full chain at 6.00 USD stopped at its 30 USD limit before G2 (defect D-044; `questions-log.md` round 2026-11-08) | the D-044 revision commit; C001-T-072 | settled: P-01 answered 'Finish cfg-full, defer cfg-bare (Recommended)'; cfg-full limit 55 USD in total in `chain.mjs` `CHAIN_LIMITS`, with 14 sessions, the implementer's decision on top of it, confirmed by the conductor at G2 (critic CR-138); cfg-bare deferred to the follow-up change "Cost and token efficiency", its row marked deferred and refused; the cost logged as a major post-release issue (Open points); no fix task |

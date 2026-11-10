@@ -26,14 +26,14 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
   workspace settings do). The Insiders settings (`chat.plugins.enabled`, `chat.pluginLocations`,
   `chat.askQuestions.enabled`, `chat.useHooks`) are not shared with VS Code: VSC-01 and the restore
   step set them in this profile.
-- **Package with the D-047 fix:** the packages must carry the D-047 host-version fix and the tested
-  versions above (check in step 2). The 0.1.0 packages of b481e82 do not: their doctor probes
-  `vscode-insiders` and their CLI prints `copilot-chat missing` on VS Code 1.145.2. P-01 decides how
-  the fix reaches the packages before this run.
+- **Package with the D-047 fix:** by your decision 'Fold into 0.1.0 (Recommended)', the 0.1.0
+  packages are packed at commit 876e958, which carries the host-version fix and the tested versions
+  above (check in step 2). Packages from b481e82 do not: their doctor probes `vscode-insiders` and
+  their CLI prints `copilot-chat missing` on VS Code 1.145.2.
 - Node 22.22.3 first on PATH:
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
-  the release-candidate commit that C002-T-076 records. The enforcement mode is **`sdd-mcp-server`**.
+  the release-candidate commit 876e958 (moved from b481e82, the commit C002-T-076 records, by revision D-047). The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 13 VS Code chat sessions, or about 26 if one repeat is needed. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
   pool (7.70 of 30 USD before T-076) is not touched.
