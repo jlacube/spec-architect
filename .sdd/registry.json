@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T06:17:26Z",
+  "generated_at": "2026-11-10T06:31:19Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -874,9 +874,9 @@
           "summary": "Found by P-01 for C002-T-050 (2026-11-10): \"for T-050, I needed to switch from VS Code Insiders to VS Code due to a breaking change that was released, killing LLMs calls capabilities\". On VS Code stable 1.145.2 (commit c4453f8ea4) GitHub Copilot Chat 0.73.0 is built in (<install>/c4453f8ea4/resources/app/extensions/copilot) and absent from code --list-extensions --show-versions, the only source C002-IF-007 gives for the copilot-chat line, so sdd host-version vscode prints copilot-chat missing (Insiders 1.146.0-insider likewise) and the Copilot doctor host row and the checklist record version are wrong on current VS Code. The tested hosts (VS Code Insiders 1.142.0-insider with Copilot Chat 0.35.3, scope 3.1, C002-IF-009 3, T-050, its run sheet and the checklist) follow P-01 machine: VS Code 1.145.2 with Copilot Chat 0.73.0; S-08 stays historical evidence on Insiders.",
           "reporter": "jerome.lacube",
           "date": "2026-11-10",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision approved at G2/G3 (ffa075b, 4dae1db); release candidate 9eb56c0 (P-01: fold into 0.1.0); rerun list passed: npm run check exit 0, npm run package exit 0, replays sdd-mcp-server and copilot-hooks in Git Bash and PowerShell 7 683 replayed 0 differing, Copilot dry run refuses only ERR-REL-003, host-version vscode 1.145.2 copilot-chat 0.73.0 (docs/releases/copilot/0.1.0/D-047-reruns.md, 60ef2ae)",
+          "closed_at": "2026-11-10"
         }
       ],
       "waivers": [
