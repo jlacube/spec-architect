@@ -5,7 +5,7 @@ kind: greenfield
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
-  10-spec: { status: in-revision, approved_hash: "sha256:183d8cc0449d7d59095e8147eac1c0daef3df61e4af87216c31a9b5ba0b5b070", approved_at: 2026-11-08, approved_by: jerome.lacube }
+  10-spec: { status: approved, approved_hash: "sha256:e27db8dc54f2319f302e83d5905a2c65366cfb932e8ce4a2e133749fb8011ef2", approved_at: 2026-11-10, approved_by: jerome.lacube }
   20-plan: { status: in-revision, approved_hash: "sha256:66cde9858555c7161061ff8b8f5578a1522737835809f95a8e79ca7d75d478a7", approved_at: 2026-11-08, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
@@ -43,6 +43,8 @@ defects:
 waivers:
   - { item: C001-NFR-304, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Waivers by P-01 (Q-nfr304-bare-01, 2026-11-08, 'Defer it to the follow-up (Recommended)'): only the cfg-bare part of C001-NFR-304 and C001-DOD-015 is waived for 0.1.0, deferred to the follow-up change 'Cost and token efficiency'." }
   - { item: C001-DOD-015, gate: 10-spec, date: 2026-11-08, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Waivers by P-01 (Q-nfr304-bare-01, 2026-11-08, 'Defer it to the follow-up (Recommended)'): only the cfg-bare part of C001-NFR-304 and C001-DOD-015 is waived for 0.1.0, deferred to the follow-up change 'Cost and token efficiency'." }
+  - { item: C001-NFR-304, gate: 10-spec, date: 2026-11-10, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Re-approval keeps the cfg-bare waivers of C001-NFR-304 and C001-DOD-015 (P-01, Q-nfr304-bare-01)." }
+  - { item: C001-DOD-015, gate: 10-spec, date: 2026-11-10, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Re-approval keeps the cfg-bare waivers of C001-NFR-304 and C001-DOD-015 (P-01, Q-nfr304-bare-01)." }
 ---
 # CHG-001 — Architect agent suite
 
@@ -123,3 +125,4 @@ waivers:
 | 2026-11-08 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-11-10 | G2 (spec) | **Revise** | "Revision for D-030: C001-TS-1102 Given, C001-NFR-602 environment and method, C001-SC-09 and REF-WIN notes move from a fresh Windows user profile to an isolated Claude profile (CLAUDE_CONFIG_DIR, HOME, USERPROFILE, APPDATA on a new empty folder; machine-wide tools stay visible); P-01 Q-clean-profile-01 (2026-11-10)" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Revise** | "Plan revision for D-030: C001-T-072 step 6 and verification, test plan TC-1102 row and environments, questions-log round 2026-11-10; P-01 Q-clean-profile-01 (2026-11-10)" | none | unavailable |
+| 2026-11-10 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Re-approval keeps the cfg-bare waivers of C001-NFR-304 and C001-DOD-015 (P-01, Q-nfr304-bare-01)." | C001-NFR-304, C001-DOD-015 | unavailable |
