@@ -199,6 +199,33 @@ Claude Code 2.1.299 (desktop-bundled), an empty `CLAUDE_CONFIG_DIR` in a scratch
 Finding: the installed plugin reported version **0.0.3**; the version is 0.1.0 since `ab0cfc7` (§8), so
 TC-1102 installs 0.1.0.
 
+**Scripted end-to-end flow (conductor, 2026-11-10, P-01's go "ok for TC-1102"):**
+`node scripts/manual/isolated-profile-e2e.mjs <new empty scratch folder>`, the machine form of TS-1102 steps 2–7
+(`docs/test-responsibilities.md` §2). Same isolated profile as the functional part; the sign-in (step 0) replaced by
+the eval subscription token (`CLAUDE_CODE_OAUTH_TOKEN`, read from the real profile, never printed or written; session
+`apiKeySource: none`). One Agent SDK session, agent `architect:sdd-conductor`, the plugin loaded from the profile's
+user settings (no `--plugin-dir`); every question answered with its first option (the recommended one), the gate with
+Approve; stopped at the first question of `/architect:ideate`. Claude Code 2.1.321, Node 22.22.3, repository at
+`32f180a` (the `plugins/architect` tree is identical to the release candidate `9eb56c0`), plugin 0.1.0. Result:
+**E2E: PASS**, 180.6 s in total, **1.00 USD notional (no charge)**.
+
+| Step | Prompt or command | Machine time | Outcome |
+|---|---|---|---|
+| 2–4 | marketplace add, install, list | 3.3 s | `architect@architect-local` 0.1.0, scope user, enabled |
+| 6a | `/architect:init` | 86 s | 2 rounds, 6 questions (all "(Recommended)"), constitution drafted; 0.60 USD |
+| 6b | `/architect:gate constitution` | 26 s | gate G0 presented with "Approving means…", Approve; 0.72 USD running |
+| 7a | `/architect:new "Coupon codes"` | 31 s | profile question, Lite (Recommended); CHG-001 created; 0.86 USD running |
+| 7b | `/architect:ideate` | 32 s to the first question | a round of 4 option questions (Form, Discounts, Limits, Stacking), each with 3 options, the first "(Recommended)"; 1.00 USD running |
+
+End state (`sdd status --json` in the toy folder): CHG-001 "Coupon codes", lite, 00-ideation draft. The SDK
+reports `error_during_execution` for 7b because the driver stops the session at the question (expected).
+
+Caveats: this is machine time, not NFR-602's human time (P-01's timed run stays the measure). A signed-in
+profile also receives the account's remote settings: the session listed four account-managed plugins
+(`cc-plugin-agents-md`, `cc-plugin-telemetry`, `cc-plugin-privacy`, `cc-plugin-plugin-authoring`) beside
+`architect`; they come from `remote-settings.json`, not from the tester's profile, and a tester signed in with
+another account may see others.
+
 **Run sheet for P-01:** `docs/runsheets/T-072-clean-profile-install.md` (isolated Claude profile, steps, inputs, expected
 results, record fields and the line to send the conductor). The record goes to `docs/dogfood.md`; this section and
 §6 are updated from it.

@@ -25,7 +25,7 @@ Copilot (C002). OpenCode moved to CHG-003 and is out of scope.
 | Part | Who | Notes |
 |---|---|---|
 | Functional part of TS-1102 (marketplace add, install, conductor starts) | **conductor — done** | `scripts/manual/isolated-profile-check.mjs`, PASS at 4dae1db, 0 USD |
-| End-to-end flow to the first interview question (init, G0, new change, ideate) | **conductor — possible** | a scripted session in the isolated profile with the eval token, answering the recommended options (the same driver as the toy chain). Gives the machine time and proves the flow, ~1–3 USD notional. Not run yet |
+| End-to-end flow to the first interview question (init, G0, new change, ideate) | **conductor — done** | `scripts/manual/isolated-profile-e2e.mjs`, PASS on 2026-11-10 at 32f180a (plugin tree = 9eb56c0): 180.6 s machine time, 1.00 USD notional (`docs/release-0.1.0-evidence.md` §3) |
 | Time for a human to read the README and follow it (NFR-602, ≤ 15 min) | **P-01** | a learnability measure of a person; a scripted run cannot stand in for it without changing NFR-602 |
 | Sign-in in the isolated profile | **P-01** | not timed |
 
