@@ -15,15 +15,21 @@ PowerShell 7 and Git Bash, Claude Code current stable (Oct 2026). Reference work
 generator described in the test plan.
 
 Isolated Claude profile (clean-profile environment of C001-TS-1102, C001-NFR-602 and C001-SC-09; defect
-D-030, P-01 Q-clean-profile-01, 2026-11-10): on REF-WIN, in the tester's own Windows account, one PowerShell 7
-window in which every `CLAUDE*` and `ANTHROPIC*` variable is removed and four variables point into a folder
-that is new and empty when the window is set up: `CLAUDE_CONFIG_DIR` = `<folder>\.claude`, `HOME` and
-`USERPROFILE` = `<folder>`, `APPDATA` = `<folder>\AppData\Roaming` (`scripts/manual/isolated-profile.ps1`
-sets it up). Claude Code then starts with no settings, plugins, marketplaces or sign-in. The tester signs in
-to Claude Code once in that window before any timer starts. Caveat: machine-wide tools (Node, Git, ripwire,
-uv, Serena) and `LOCALAPPDATA` stay those of the tester's account, so a prerequisite the README fails to
-mention would not show in this environment; a fresh Windows user profile is not available on REF-WIN
-(Windows 11 Home: no Windows Sandbox, and P-01 cannot create an account).
+D-030, P-01 Q-clean-profile-01, 2026-11-10): on REF-WIN, in the tester's own Windows account, the process
+environment in which Claude Code runs has every `CLAUDE*` and `ANTHROPIC*` variable removed and four variables
+pointing into a folder that is new and empty when the environment is set up: `CLAUDE_CONFIG_DIR` =
+`<folder>\.claude`, `HOME` and `USERPROFILE` = `<folder>`, `APPDATA` = `<folder>\AppData\Roaming`. Its manual
+form is one PowerShell 7 window set up by `scripts/manual/isolated-profile.ps1`; its automated form is the
+child-process environment of `scripts/manual/isolated-profile-check.mjs`. Claude Code then starts with no
+settings, plugins, marketplaces or sign-in. In the manual form the tester signs in to Claude Code once before
+any timer starts. Caveat: only those four variables change and the `CLAUDE*` / `ANTHROPIC*` variables are
+removed. Everything else stays the tester's: PATH and every other inherited variable, the PowerShell profile,
+`LOCALAPPDATA` (nvm Node, the uv and Serena cache), HKCU, Windows Credential Manager, PowerShell's `$HOME` and
+`~` (the set-up script points these two at the folder for convenience; nothing relies on it), Known-Folder
+lookups, and the desktop-bundled Claude Code (so its install is not exercised). So a
+missing prerequisite or optional tool (ripwire, Serena, ast-grep) does not show in this environment. A fresh
+Windows user profile is not available on REF-WIN (Windows 11 Home: no Windows Sandbox, and P-01 cannot create
+an account).
 
 All NFRs: `Delta: ADDED`.
 
@@ -275,7 +281,7 @@ All NFRs: `Delta: ADDED`.
 - **Metric:** elapsed time from opening the README to the first interview question (excluding download time and the Claude Code sign-in, done before the timer)
 - **Threshold:** ≤ 15 minutes
 - **Method:** clean-profile test (C001-SC-09) in an isolated Claude profile, timed by P-01 (C001-TC-1102)
-- **Environment:** REF-WIN, isolated Claude profile (defined above; machine-wide tools stay visible, so a missing prerequisite is not measured)
+- **Environment:** REF-WIN, isolated Claude profile (defined above, with its caveat: a missing prerequisite or optional tool is not measured)
 - **Rationale:** C001-GOAL-08
 - **DoD:** C001-DOD-018
 

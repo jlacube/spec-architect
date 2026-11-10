@@ -323,7 +323,7 @@ run before every task commit.
 | C001-TC-1014 | C001-TS-1014 | eval | `evals/cap10/TS-1014.eval.mjs` | fx-brownfield-ts | REF-WIN, cfg-full (ripwire shim exits 4 on `--test-gate`) | C001-T-041 |
 | C001-TC-1015 | C001-TS-1015 | eval | `evals/cap10/TS-1015.eval.mjs` | fx-brownfield-ts; empty plugin data folder | REF-WIN, cfg-full, Claude Code current, models per C001-IF-09; tiers per C001-ADR-003 | C001-T-044, C001-T-077, C001-T-078 |
 | C001-TC-1101 | C001-TS-1101 | integration | `tests/integration/cap11/TS-1101.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-060 |
-| C001-TC-1102 | C001-TS-1102 | manual | `tests/manual/TS-1102.md` | inline fixture from scenario Given/Examples | REF-WIN fresh user profile | C001-T-060 |
+| C001-TC-1102 | C001-TS-1102 | manual | `tests/manual/TS-1102.md` | inline fixture from scenario Given/Examples | REF-WIN, isolated Claude profile (C001-SPEC-NFR) | C001-T-060 |
 | C001-TC-1103 | C001-TS-1103 | integration | `tests/integration/cap11/TS-1103.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |
 | C001-TC-1104 | C001-TS-1104 | integration | `tests/integration/cap11/TS-1104.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |
 | C001-TC-1105 | C001-TS-1105 | integration | `tests/integration/cap11/TS-1105.test.ts` | inline fixture from scenario Given/Examples | REF-WIN, Node 20 and 22 | C001-T-050 |

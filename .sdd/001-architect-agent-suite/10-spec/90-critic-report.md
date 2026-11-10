@@ -240,3 +240,16 @@ Scope: `git diff bf04731 0445b9a`, against D-020 / D-036 and Q-noask-01, Q-openc
 | CR-37 | major | TS-226's word check ("enable", "INSTALL.md", "--no-ask-user") fails correct replies | match the detour itself (INSTALL.md, restart or flag instruction, "enable the … tool") | fixed (the bare-word check left TS-226; C001-TS-227 under C001-AC-223.1 matches the detour itself: "INSTALL.md", a restart or relaunch sentence naming the session or CLI, the host flags, and "enable", "install" or "switch on" followed by the tool or "question") |
 | CR-38 | minor | no TS-226 row for a blocking ask; vague reply only on Claude Code | a blocking-ask row; Copilot evidence is INJ-19/21 at 0.0.3 (conductor decision) | fixed (TS-226 blocking-ask row on Claude Code with AskUserQuestion refused; Copilot CLI rows dropped, the note cites INJ-19 and INJ-21 at 0.0.3) |
 | CR-39 | minor | REQ-222 bundles the fallback and "never tell P-01 to enable a tool" | split: own SHALL NOT | fixed (REQ-222 keeps the plain-text fallback; new REQ-223 "No tool-enabling detour": SHALL NOT tell P-01 to enable, install or switch on a question tool instead of asking; criterion fixed: C001-AC-223.1 with C001-TS-227) |
+
+
+## Revision D-030 (2026-11-10)
+
+Scope: `git diff a90fab5 6e51f54` (CHG-001 files, docs and scripts), against D-030 and Q-clean-profile-01. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 0 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-45 | major | SPEC-NFR, NFR-602, SC-09, TS-1102.md, run sheet, evidence §3 | caveat incomplete and calls per-user tools machine-wide; leaves out PATH and other inherited variables, the PowerShell profile, HKCU, Credential Manager, $HOME and Known-Folder lookups, the desktop-bundled Claude Code, ast-grep | rewrite the caveat: only the four variables change and CLAUDE*/ANTHROPIC* are removed; everything else stays the tester's; drop "machine-wide"; same text in all places | fixed: caveat rewritten in C001-SPEC-NFR (only the four variables change, CLAUDE*/ANTHROPIC* removed; PATH and other inherited variables, PowerShell profile, LOCALAPPDATA, HKCU, Credential Manager, $HOME/~ and Known-Folder lookups, desktop-bundled Claude Code stay the tester's; ripwire, Serena, ast-grep named) and repeated in TS-1102.md, the T-072 run sheet (why, prerequisites, record) and evidence §3; "machine-wide" dropped there and in NFR-602 Environment and C001-SC-09 |

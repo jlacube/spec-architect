@@ -136,14 +136,36 @@ Microsoft Defender showed no detection after the first `EPERM` (`Get-MpThreatDet
 C001-TC-1102 (`tests/manual/TS-1102.md`) runs in an **isolated Claude profile** (C001-SPEC-NFR; defect
 D-030, P-01 Q-clean-profile-01 of 2026-11-10: a fresh Windows user profile is not available on REF-WIN).
 It has an automated functional part (below, **pass**) and P-01's timed run, which gives the ≤ 15-minute
-timing of C001-NFR-602 and is still **open for P-01**. Caveat: machine-wide tools (Node, Git, ripwire,
-uv, Serena) and `LOCALAPPDATA` stay those of P-01's account, so a prerequisite the README fails to
-mention would not show.
+timing of C001-NFR-602 and is still **open for P-01**. Caveat: only the four variables change, and the
+`CLAUDE*` / `ANTHROPIC*` variables are removed. Everything else stays the tester's: PATH and every other
+inherited variable, the PowerShell profile, `LOCALAPPDATA` (nvm Node, the uv and Serena cache), HKCU,
+Windows Credential Manager, PowerShell's `$HOME` and `~` (the set-up script points these two at the folder
+for convenience) and Known-Folder lookups, and the desktop-bundled Claude Code (so its install is not
+exercised). So a missing prerequisite or optional tool (ripwire, Serena, ast-grep) does not show.
+
+D-030 closes on a functional-check PASS at the commit that carries the approved revision (questions-log
+round 2026-11-10, CR-50). The runs below are on uncommitted trees, so they do not close it; the conductor
+reruns the check at the approval commit and records it here.
+
+**Functional part, rerun after the critic fixes CR-45…50 (implementer, 2026-11-10 00:43 UTC):**
+`node scripts/manual/isolated-profile-check.mjs <new empty scratch folder>` (the script of the critic-fix
+commit, which fails a signed-out run without the conductor's init event and prints the commit) with Claude
+Code 2.1.321 (desktop-bundled), Node 22.22.3. The script printed: repository at `6e51f54`, "plugin files
+modified in the working tree": `plugins/architect/README.md`, `scripts/sdd.mjs` and `targets/copilot.json`
+carried CHG-002's uncommitted revision work at the time (none of them is read by install, plugin list or
+agent resolution). Result: **Functional check: PASS** (exit 0): `signedOutAtStart`, `marketplaceAdded`,
+`installed`, `listedEnabled` (version 0.1.0), `conductorInPlugin`,
+`unknownAgentRefusedWithConductorListed` and `conductorStarts` all true; conductor init event with the
+tool set Task, Read, Glob, Grep, Write, Edit, Bash, Skill, `apiKeySource: none`, then "Not logged in",
+cost 0 USD. `isolated-profile.ps1 -Check` (now "Quick check", no conductor start) printed "Quick check:
+PASS"; the script refused a stand-in binary reporting 2.0.76 with its version error.
+
+**First run (implementer, 2026-11-10, revision D-030):**
 
 **Functional part (implementer, 2026-11-10, revision D-030):**
 `node scripts/manual/isolated-profile-check.mjs <new empty scratch folder>` with Claude Code 2.1.321
 (desktop-bundled, `CLAUDE_CODE_EXECPATH`), Node 22.22.3, the repository at `a90fab5` plus the D-030 working
-tree (plugin 0.1.0). Every `CLAUDE*` / `ANTHROPIC*` variable removed; `CLAUDE_CONFIG_DIR`, `HOME`,
+tree (plugin 0.1.0), before the CR-49 fix (a missing init event did not fail it then; it was present). Every `CLAUDE*` / `ANTHROPIC*` variable removed; `CLAUDE_CONFIG_DIR`, `HOME`,
 `USERPROFILE` and `APPDATA` in the scratch folder. Result: **Functional check: PASS** (exit 0).
 
 | Command | Exit | Result |

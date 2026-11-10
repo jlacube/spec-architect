@@ -75,14 +75,14 @@ DoD evidence collected for DOD-G and DOD-001…021; version 0.1.0 tagged locally
 
 - All TCs pass; the release eval report meets the pass rule of each release class of C001-ADR-003
 - Every deferred row of `docs/milestone-log.md` is closed with its evidence; the C001-M-4 toy-change item by a toy change that reached G3 on cfg-full, and its cfg-bare part recorded as deferred to the follow-up change "Cost and token efficiency" (defect D-028)
-- C001-TC-1102: `scripts/manual/isolated-profile-check.mjs` ends with PASS (output in `docs/release-0.1.0-evidence.md` §3), and P-01's timed run in an isolated Claude profile is recorded in `docs/dogfood.md` with pass or fail and its time against C001-NFR-602 (≤ 15 minutes); the caveat of C001-SPEC-NFR (machine-wide tools stay visible) is repeated in the record
+- C001-TC-1102: `scripts/manual/isolated-profile-check.mjs` ends with PASS at the commit that carries the approved D-030 revision (output and commit in `docs/release-0.1.0-evidence.md` §3), and P-01's timed run in an isolated Claude profile is recorded in `docs/dogfood.md` with pass or fail and its time against C001-NFR-602 (≤ 15 minutes); the caveat of C001-SPEC-NFR (only the four variables change, so a missing prerequisite or optional tool does not show) is repeated in the record
 - Run `npm run check` (from M-6; before that `npm test`) and `node plugins/architect/scripts/sdd.mjs lint` (from T-028).
 
 ## Done when
 
 - [ ] Evidence file complete for every DoD item and every deferred milestone item (C001-M-4: G3 on cfg-full; cfg-bare deferred to the follow-up change "Cost and token efficiency", defect D-028)
 - [ ] The G3 approval of the CHG-001 revision D-028 is recorded before this task is set `done`
-- [ ] The G2 and G3 approvals of the CHG-001 revision D-030 are recorded, and D-030 is closed (its close rule: the revision approved and the TS-1102 functional check passed in an isolated Claude profile), before this task is set `done`
+- [ ] The G2 and G3 approvals of the CHG-001 revision D-030 are recorded, and D-030 is closed (its close rule: the revision approved at G2 and G3, and `scripts/manual/isolated-profile-check.mjs` ending with PASS at the commit that carries the approved revision), before this task is set `done`
 - [ ] **Conductor:** the follow-up change "Cost and token efficiency" is created (its number recorded in `10-strategy.md` and in CHG-002's handoff once it exists), and it holds the G3 run of the toy change on cfg-bare, the cfg-bare part of C001-NFR-304 (P-01 answer to Q-nfr304-bare-01) and the cost issue of CHG-002 D-044 (critic CR-43)
 - [ ] All test cases in `verified_by` pass at the tier required by C001-ADR-003
 - [ ] Progress reported: `sdd task set C001-T-072 --status done --commit <sha>` (or frontmatter fallback before T-026)

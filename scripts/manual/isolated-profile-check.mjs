@@ -7,7 +7,7 @@
 // variable removed and CLAUDE_CONFIG_DIR, HOME, USERPROFILE and APPDATA pointing into the folder, then:
 // marketplace add <repo>, install architect@architect-local, plugin list, plugin details, an unknown
 // agent (refused with the list of agents, before any model call) and, only while the profile is signed
-// out, `claude -p --agent architect:sdd-conductor` up to its init event (the session ends at the API call
+// out, `claude -p --agent architect:sdd-conductor` up to its init event (no init event is a FAIL) (the session ends at the API call
 // with "Not logged in", so no model turn is billed). Prints each command and its output, then PASS or
 // FAIL; exit 0 on PASS, 1 on FAIL. Session and hook ids are masked; no credential is read or printed.
 import { spawnSync } from "node:child_process";
@@ -59,6 +59,11 @@ const run = (label, argv, cwd = toy, timeout = 90_000) => {
 };
 
 spawnSync("git", ["init", "-q"], { cwd: toy });
+// The repository state the check ran on (D-030 closes on a PASS at the commit of the approved revision).
+const git = (a) => spawnSync("git", ["-C", repo, ...a], { encoding: "utf8" }).stdout?.trim() ?? "";
+const commit = git(["rev-parse", "--short", "HEAD"]);
+const dirtyPlugin = git(["status", "--porcelain", "--", "plugins/architect", ".claude-plugin"]) !== "";
+if (!json) console.log(`repository ${repo} at ${commit}${dirtyPlugin ? " (plugin files modified in the working tree)" : " (plugin files clean)"}`);
 const version = run("version", ["--version"]);
 const auth = run("auth", ["auth", "status"]);
 const signedOut = /"loggedIn":\s*false/.test(auth.out);
@@ -85,10 +90,12 @@ const checks = {
   version: (list.out.match(/Version:\s*(\S+)/) ?? [])[1] ?? null,
   conductorInPlugin: /sdd-conductor/.test(details.out),
   unknownAgentRefusedWithConductorListed: unknown.exit !== 0 && /architect:sdd-conductor/.test(unknown.out),
-  conductorStarts: init ? init.tools?.includes("Task") === true && !init.tools.includes("WebSearch") && (init.cost ?? 0) === 0 : null,
+  // Signed out, the conductor probe must reach its init event (a missing init event is a failure);
+  // signed in, it is not run (it would bill a turn) and the check says so.
+  conductorStarts: signedOut ? Boolean(init) && init.tools?.includes("Task") === true && !init.tools.includes("WebSearch") && (init.cost ?? 0) === 0 : null,
 };
 const pass = checks.marketplaceAdded && checks.installed && checks.listedEnabled && checks.conductorInPlugin && checks.unknownAgentRefusedWithConductorListed && checks.conductorStarts !== false;
-if (json) console.log(JSON.stringify({ root, claude, repo, claudeVersion: version.out, checks, init, steps, pass }, null, 2));
+if (json) console.log(JSON.stringify({ root, claude, repo, commit, dirtyPlugin, claudeVersion: version.out, checks, init, steps, pass }, null, 2));
 else {
   console.log(`\nchecks: ${JSON.stringify(checks)}`);
   console.log(`Functional check: ${pass ? "PASS" : "FAIL"}${checks.conductorStarts === null ? " (conductor session not probed: profile signed in)" : ""}`);

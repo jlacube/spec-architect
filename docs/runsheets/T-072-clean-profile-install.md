@@ -12,20 +12,26 @@ the conductor about the difference.
 **Why an isolated Claude profile** (defect D-030, your answer to Q-clean-profile-01 of 2026-11-10,
 'Isolated Claude profile (Recommended)'): a new Windows account is not possible here and Windows 11 Home
 has no Windows Sandbox. You stay in your own account; one PowerShell window gets its own empty Claude
-Code configuration, home and roaming folders (definition in C001-SPEC-NFR). **Caveat:** Node, Git,
-ripwire, uv and Serena stay those of your account, so a prerequisite missing from the README would not
-show. The functional part (marketplace add, install, plugin listed, conductor resolves) has already
+Code configuration, home and roaming folders (definition in C001-SPEC-NFR). **Caveat:** only the four
+variables change, and the `CLAUDE*` / `ANTHROPIC*` variables are removed. Everything else stays yours:
+PATH and every other inherited variable, your PowerShell profile, `LOCALAPPDATA` (nvm Node, the uv and
+Serena cache), HKCU, Windows Credential Manager, PowerShell's `$HOME` and `~` (the script points these
+two at the folder for convenience) and Known-Folder lookups, and the desktop-bundled Claude Code (so its
+install is not exercised). So a missing prerequisite or optional tool (ripwire, Serena, ast-grep) does
+not show. The functional part (marketplace add, install, plugin listed, conductor resolves) has already
 passed as an automated check (evidence §3); your run gives the timing.
 
 ## Prerequisites
 
 - **Nothing to create.** The script below makes a new empty profile folder (by default
-  `$HOME\architect-iso-<date-time>` of your real profile) and points the window at it.
-- **Claude Code 2.1.295 or later:** the script uses the desktop-bundled Claude Code
-  (`%APPDATA%\Claude\claude-code\<version>\…\claude.exe`, newest version), not the old `claude` on your
-  PATH (2.0.76, broken). Sign in once in the isolated window **before** the timer starts. A sign-in is
+  `C:\Users\jerom\architect-iso-<date-time>`) and points the window at it.
+- **Claude Code 2.1.295 or later:** the script uses the desktop-bundled Claude Code, newest version, from
+  `%APPDATA%\Claude\claude-code\<version>\…\claude.exe` or the MSIX location
+  `%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code`, not the old `claude` on your
+  PATH (2.0.76, broken); it refuses any Claude Code below 2.1.295 with an error. If it finds none, or the
+  wrong one, give the path: `. …\isolated-profile.ps1 -Claude <path to claude.exe>`. Sign in once in the isolated window **before** the timer starts. A sign-in is
   yours to do; never write a password, key or token in a file, record or transcript.
-- **Node 20 or later and Git** on your PATH (machine-wide; the script prints both versions).
+- **Node 20 or later and Git** on your PATH (yours, unchanged; the script prints both versions).
 - **The repository** at `C:\Sandbox\ClaudeCode\Architect`, at the release-candidate commit `b6f1509` or a
   later documentation-only commit (`plugins/architect/.claude-plugin/plugin.json` must give `0.1.0`).
 - **Spend:** one interactive Claude Code session on your Claude plan (the conductor, the cartographer
@@ -47,7 +53,9 @@ $env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;
 
    Expected: `Isolated Claude profile: <folder>`, `claude -> …\claude-code\<version>\…\claude.exe`,
    `claude 2.1.3xx (Claude Code)` (2.1.295 or later), `node v22.22.3`, a git version, and
-   `"loggedIn": false`. Write down the folder. Keep using this window for every step below.
+   `"loggedIn": false`, then `Toy folder for the conductor step: <folder>\runs\tc1102\toy`. Write down
+   the folder. Keep using this window for every step below. Do not use `-Check` here: it installs the
+   plugin, so the profile would no longer be new.
 
 2. Sign in: run `claude`, type `/login`, finish the sign-in in the browser, then `/exit`.
    `claude auth status` should now show `"loggedIn": true`. Check that the profile has no plugin yet:
@@ -77,14 +85,15 @@ time. Write down the time at the end of each phase.
    Then open `/plugin`. Expected: **architect** is listed as installed, from `architect-local`, version
    **0.1.0**, enabled. (Pass criterion 1.)
 
-6. **Phase C, conductor.** Quit Claude Code (stay in the isolated window; `$HOME` is now the profile folder). Make a new empty git repository and start the conductor in
-   it:
+6. **Phase C, conductor.** Quit Claude Code, staying in the isolated window. Make a new empty git
+   repository in the toy folder the script printed (`$env:USERPROFILE` is the profile folder; never use
+   the real home) and start the conductor in it:
 
 ```powershell
-New-Item -ItemType Directory -Force $HOME\runs\tc1102\toy
+New-Item -ItemType Directory -Force $env:USERPROFILE\runs\tc1102\toy
 ```
 ```powershell
-Set-Location $HOME\runs\tc1102\toy
+Set-Location $env:USERPROFILE\runs\tc1102\toy
 ```
 ```powershell
 git init
@@ -119,7 +128,9 @@ Add an entry to `docs/dogfood.md`, headed `## <date> — CHG-001: clean-profile 
 with:
 
 - the date, the Windows build (`winver`), the Claude Code version (`claude --version`), the Node
-  version, and how Node and Claude Code were provided (desktop-bundled Claude Code, machine-wide Node), the isolated profile folder, and the caveat that machine-wide tools stayed visible (isolated Claude profile, D-030);
+  version, and how Node and Claude Code were provided (desktop-bundled Claude Code and its path, your own Node), the isolated profile folder, and the caveat
+  of the isolated Claude profile (only the four variables changed, so a missing prerequisite or optional
+  tool would not show; D-030);
 - the plugin version that `/plugin` showed (expected 0.1.0) and the repository commit
   (`git -C C:\Sandbox\ClaudeCode\Architect rev-parse --short HEAD`);
 - the time of each phase (A marketplace, B install, C conductor, D init and G0, E first question) and
