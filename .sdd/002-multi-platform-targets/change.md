@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:0b5cce77a58fe1bcc5684aa70083ab47fea6cd2426a74863d59b6cb0c769b266", approved_at: 2026-11-10, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:3438ee90aef8b79821365341005621b29d698f924ffe16acda439a9a470a3526", approved_at: 2026-11-10, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:45369b8c2d3ed7fa631ed138c234abc15b73ff8586b7d6dce1db8892aa52b3f5", approved_at: 2026-11-10, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -514,3 +514,4 @@ waivers:
 | 2026-11-10 | G2 (spec) | **Revise** | "Revision for CHG-002 D-050: C002-TS-618 (record of a checklist run) allows a run executed by the conductor for P-01, with P-01 for the steps that need typing; P-01 instruction 2026-11-10 'do T-050 I will do mine afterwards'" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Revise** | "Plan revision for D-050: C002-T-050 executed by the conductor via code chat and clicks under the two harness settings, P-01 batch VSC-30, VSC-31, VSC-19, VSC-12 at the end; run sheet, test plan, handoff, questions-log" | none | unavailable |
 | 2026-11-10 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; executor change by P-01's instruction of 2026-11-10: 'do T-050 I will do mine afterwards'" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601, C002-DOD-019 | unavailable |
+| 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
