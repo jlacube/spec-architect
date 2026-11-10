@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T05:54:36Z",
+  "generated_at": "2026-11-10T06:17:26Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -337,9 +337,9 @@
           "summary": "Found by P-01 (2026-11-10): C001-TS-1102 Given, C001-NFR-602 (environment \"REF-WIN, fresh user profile\") and C001-SC-09 require a fresh Windows 11 user profile, but P-01 cannot create a Windows account and REF-WIN runs Windows 11 Home (no Windows Sandbox). P-01 (Q-clean-profile-01): 'Isolated Claude profile (Recommended)': CLAUDE_CONFIG_DIR, HOME, USERPROFILE and APPDATA pointed at a new empty folder in P-01's own account; machine-wide tools stay visible (caveat stated in the spec). Close rule: the revision approved at G2 and G3, and the TS-1102 functional check passed in an isolated Claude profile; the C001-NFR-602 timing comes from P-01's timed run.",
           "reporter": "jerome.lacube",
           "date": "2026-11-10",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision approved at G2/G3 (1d75f10, 0c874c7); TS-1102 functional check PASS in an isolated Claude profile at 4dae1db (scripts/manual/isolated-profile-check.mjs: marketplace add, install architect 0.1.0, conductor starts; 0 USD). NFR-602 timing comes from P-01's run.",
+          "closed_at": "2026-11-10"
         }
       ],
       "waivers": [
