@@ -61,7 +61,7 @@ Defect D-028 (P-01, Q-toy-g3-limit-01, 'Finish cfg-full, defer cfg-bare (Recomme
 by CHG-002's plan critic CR-110) narrows the toy-change item of C001-M-4 and of C001-T-072 step 5 to a
 toy change reaching G3 on cfg-full. The G3 run on cfg-bare is deferred to a follow-up change (P-01), named
 "Cost and token efficiency" by the conductor (CHG-002 plan critic CR-112), which
-the conductor creates at C001-T-072's close (its number is recorded here once it exists) and which holds the cfg-bare run and the cost issue of
+the conductor created at C001-T-072's close as **CHG-004** (2026-11-10; CHG-003 is the OpenCode release of CHG-002) and which holds the cfg-bare run and the cost issue of
 CHG-002 D-044. No task is added: the toy chain of C001-T-072 step 5 runs on cfg-full under the limits
 of CHG-002 C002-IF-010 §2.2 (55 USD in total, 14 sessions; CHG-002 D-044). **Close rule:** D-028 closes
 when this plan revision is approved at G3 and the G2 re-approval with the waivers of the cfg-bare part of

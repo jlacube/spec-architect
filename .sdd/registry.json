@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T21:11:40Z",
+  "generated_at": "2026-11-10T21:15:08Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -25,7 +25,7 @@
         },
         "20-plan": {
           "status": "approved",
-          "approved_hash": "sha256:0cc927708fa0e17bdc293a0046d2e640afe34b0b1502f90ae27fbb34711a0def",
+          "approved_hash": "sha256:229e9eb73deeb44df5e00ac3446c5d7593b552ed3ea20125eca3896c0fa2619d",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
         }
@@ -425,7 +425,7 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:46d7fb7fa9e656711c678d3842c9e772c920373a702766695cfbf4fcc392ac93",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
@@ -2807,6 +2807,88 @@
           "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'"
         }
       ]
+    },
+    {
+      "id": "CHG-003",
+      "slug": "003-opencode-release",
+      "title": "OpenCode release",
+      "kind": "brownfield",
+      "profile": "lite",
+      "status": "active",
+      "phase": "00-ideation",
+      "phases": {
+        "00-ideation": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "10-spec": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "20-plan": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        }
+      },
+      "implementation": {
+        "status": "not-started",
+        "tasks": {
+          "total": 1,
+          "done": 0,
+          "blocked": 0,
+          "in_progress": 0
+        },
+        "last_report": null
+      },
+      "defects": [],
+      "waivers": []
+    },
+    {
+      "id": "CHG-004",
+      "slug": "004-cost-and-token-efficiency",
+      "title": "Cost and token efficiency",
+      "kind": "brownfield",
+      "profile": "lite",
+      "status": "active",
+      "phase": "00-ideation",
+      "phases": {
+        "00-ideation": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "10-spec": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        },
+        "20-plan": {
+          "status": "not-started",
+          "approved_hash": null,
+          "approved_at": null,
+          "approved_by": null
+        }
+      },
+      "implementation": {
+        "status": "not-started",
+        "tasks": {
+          "total": 1,
+          "done": 0,
+          "blocked": 0,
+          "in_progress": 0
+        },
+        "last_report": null
+      },
+      "defects": [],
+      "waivers": []
     }
   ]
 }

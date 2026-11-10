@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:cd47de21d54e20cb3c4d7b141e86d86f043c9df9f1881e8dd7a1d3bbf62fba52", approved_at: 2026-11-10, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:0cc927708fa0e17bdc293a0046d2e640afe34b0b1502f90ae27fbb34711a0def", approved_at: 2026-11-10, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:229e9eb73deeb44df5e00ac3446c5d7593b552ed3ea20125eca3896c0fa2619d", approved_at: 2026-11-10, approved_by: jerome.lacube }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -135,4 +135,6 @@ waivers:
 | 2026-11-10 | G2 (spec) | **Revise** | "Revision for CHG-001 D-031: waive C001-NFR-602 (timed clean-profile run) at 0.1.0; C001-DOD-018 keeps the message catalogue, its timed part waived; P-01 instruction 2026-11-10 'agreed on all points. waive and continue autonomously'" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Revise** | "Plan revision for D-031: C001-T-072 and C001-TC-1102 without P-01's timed run (functional check and scripted e2e flow stay), run sheet, test plan, handoff, questions-log" | none | unavailable |
 | 2026-11-10 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'" | C001-NFR-304, C001-DOD-015, C001-NFR-602, C001-DOD-018 | unavailable |
+| 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-11-10 | G3 (plan) | **Revise** | "Record the follow-up change number at C001-T-072's close: 'Cost and token efficiency' is CHG-004 (CHG-003 being the OpenCode release of CHG-002 Q-opencode-scope-01, created first)" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
