@@ -28,7 +28,7 @@ Scenario: C001-TS-1101 — plugin tree
 #### C001-AC-1102.1 — Install from local marketplace
 ```gherkin
 Scenario: C001-TS-1102 — marketplace install on Windows 11
-  Given a fresh Windows 11 user profile with Claude Code and Node ≥ 20
+  Given an isolated Claude profile on Windows 11 (C001-SPEC-NFR, "Isolated Claude profile") with Claude Code and Node ≥ 20
   When the user adds the repository folder as a plugin marketplace and installs "architect" from it
   Then "architect" appears among installed plugins
   And the agent "architect:sdd-conductor" can be started with "claude --agent architect:sdd-conductor"

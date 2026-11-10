@@ -58,6 +58,9 @@ verifies C001-NFR-301, so its test case is C001-TC-1132, the next free number.
   Bash; Node 20 and 22.
 - **Claude Code**: current stable at execution time; models per C001-IF-09; the plugin
   installed from the local marketplace.
+- **Isolated Claude profile** (C001-TC-1102): REF-WIN with `CLAUDE_CONFIG_DIR`, `HOME`, `USERPROFILE`
+  and `APPDATA` pointed at a new empty folder (definition and caveat in C001-SPEC-NFR); set up by
+  `scripts/manual/isolated-profile.ps1`.
 - **macOS/Linux**: prepared via dormant CI (T-064); not executed in this change (C001-NG-07).
 
 ## 4. Eval execution policy (C001-ADR-003)
@@ -95,7 +98,7 @@ run before every task commit.
 | TC | Procedure owner | Notes |
 |---|---|---|
 | C001-TC-621 | P-01 supervises a Superpowers session (T-074) | Count implementer questions tagged missing-info (C001-SC-04) |
-| C001-TC-1102 | P-01 on a fresh Windows user profile (T-072) | Timed for C001-NFR-602 |
+| C001-TC-1102 | Functional part (marketplace add, install, plugin list, conductor resolves): the implementer or conductor of T-072 with `scripts/manual/isolated-profile-check.mjs`; timed run: P-01 in an isolated Claude profile (C001-SPEC-NFR; D-030, Q-clean-profile-01) | Timed for C001-NFR-602 |
 | C001-TC-1127 | Implementer of C001-T-080 on REF-WIN; repeated by the implementer of C001-T-072 at the release commit | Four sequential `npm run check` runs (two shells × two Node versions) for C001-NFR-401 |
 
 ## 8. Test cases

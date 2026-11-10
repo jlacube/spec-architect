@@ -128,3 +128,12 @@ Candidates considered but not presented: Rust native binary (rejected: slowest t
 - **Answer:** P-01 (2026-11-08, relayed by the conductor): 'Defer it to the follow-up (Recommended)', option 1
 - **Extracted instructions:** none
 - **Conductor's note:** the waiver is recorded at the G2 re-approval as `--waive C001-NFR-304 --waive C001-DOD-015`, only their cfg-bare part being waived; the NFR and DoD texts stay unchanged.
+
+## Round 2026-11-10 — defect D-030 (found by P-01 before the C001-TC-1102 run)
+
+### Q-clean-profile-01 — C001-TS-1102 and C001-NFR-602 need a fresh Windows user profile that REF-WIN cannot provide
+- **Context:** C001-TS-1102 (Given "a fresh Windows 11 user profile"), C001-NFR-602 (environment "REF-WIN, fresh user profile", method "clean-profile test (C001-SC-09), timed") and C001-SC-09 need a fresh Windows user profile. P-01 cannot create a new Windows account, and REF-WIN runs Windows 11 Home, so Windows Sandbox is not available.
+- **Options** (as presented by the conductor): 1. Isolated Claude profile: in P-01's own account, a PowerShell window where CLAUDE_CONFIG_DIR, HOME, USERPROFILE and APPDATA point at a new empty folder; Claude Code starts clean (no settings, plugins or sign-in); P-01 signs in once, then follows the README timed; the conductor first runs the functional part (marketplace add, install, conductor starts) as an automated check; the caveat goes in the spec: machine-wide tools (Node, Git, ripwire, uv) stay visible, so a missing prerequisite would not show (Recommended) · 2. Isolated profile, minimal PATH: the same, with PATH cut down to Windows, Node, Git and Claude Code · 3. Waive TC-1102 for 0.1.0
+- **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Isolated Claude profile (Recommended)', option 1
+- **Extracted instructions:** none
+- **Conductor's note:** the definition of the isolated Claude profile and its caveat are in C001-SPEC-NFR (after REF-WIN); `scripts/manual/isolated-profile.ps1` sets the window up and `scripts/manual/isolated-profile-check.mjs` runs the functional part. D-030 closes when the revision is approved at G2 and G3 and the TS-1102 functional check has passed in an isolated Claude profile; the C001-NFR-602 timing comes from P-01's timed run and does not hold D-030 open.

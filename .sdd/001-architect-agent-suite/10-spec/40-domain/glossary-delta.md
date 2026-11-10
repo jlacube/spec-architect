@@ -41,6 +41,7 @@ after `THE` in EARS statements (checked by C001-REQ-407).
 | Specialist hand-back | The final message a specialist returns to the conductor, with its optional `questions` block (C001-IF-05) |
 | Options analysis | Scored comparison of 4–5 candidates for a decision (`OA`) |
 | Reference machine | REF-WIN: the Windows 11 configuration used for NFR measurement |
+| Isolated Claude profile | The clean-profile environment of C001-TS-1102 and C001-NFR-602: a window whose Claude Code configuration, home and roaming data folders point into a new empty folder (defined in C001-SPEC-NFR) |
 
 ## 2. System names (allowed after `THE` in EARS statements)
 

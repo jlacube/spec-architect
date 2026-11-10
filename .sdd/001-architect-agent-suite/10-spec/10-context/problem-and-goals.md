@@ -47,7 +47,7 @@ Each goal is referenced by user stories (`Goals:` field) and measured by a succe
 | C001-SC-06 | Cost visibility | Per-phase usage recorded in change.md | 100% of phases of dogfood changes |
 | C001-SC-07 | Brownfield grounding | Lint rule TR-09 on brownfield dogfood change | 100% MODIFIED/REMOVED REQs with evidence |
 | C001-SC-08 | Time to G2 for a medium feature | Dogfood log (wall time excluding P-01 think time) | ≤ 1 working session |
-| C001-SC-09 | Clean install | README procedure on a fresh Windows 11 user profile | Succeeds without undocumented steps |
+| C001-SC-09 | Clean install | README procedure in an isolated Claude profile on Windows 11 (C001-SPEC-NFR, "Isolated Claude profile"; machine-wide tools stay visible) | Succeeds without undocumented steps |
 | C001-SC-10 | Registry freshness during implementation | Compare git history vs registry task status at archive time on dogfood changes | 0 tasks `done` in git but not in registry at archive |
 
 ## 4. Non-goals

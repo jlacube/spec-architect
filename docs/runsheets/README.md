@@ -15,7 +15,7 @@ evidence first. The 0.0.3 packages still in `dist/` are not released; do not use
 
 **CHG-001 release gate (C001-T-072, version 0.1.0).** One more sheet, outside C002-M-07 and independent of the
 CHG-002 sheets below: [T-072-clean-profile-install.md](T-072-clean-profile-install.md), the timed Claude Code
-install on a fresh Windows profile (C001-TC-1102, limit 15 minutes). It gives the record in `docs/dogfood.md`;
+install in an isolated Claude profile (C001-TC-1102, limit 15 minutes; D-030). It gives the record in `docs/dogfood.md`;
 after it passes the conductor tags `v0.1.0` locally. The rules below about keys, failures and commits apply to it
 too; it uses no CHG-002 package and no Copilot host.
 
@@ -41,7 +41,8 @@ How the tasks depend on each other:
 ## Rules that apply to every sheet
 
 - **Versions.** The Copilot hosts are VS Code
-  Insiders 1.142.0-insider and GitHub Copilot Chat 0.35.3, with auto-update off. Node is 22.22.3,
+  1.145.2 (stable) and GitHub Copilot Chat 0.73.0, built in, with auto-update off (CHG-002 revision
+  D-047, P-01's report of 2026-11-10; S-08 ran on Insiders 1.142.0-insider with Copilot Chat 0.35.3). Node is 22.22.3,
   from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3`. Check each version just
   before each run and record it. If a host updates itself, its evidence is no longer valid.
 - **Packages.** Use the files in `C:\Sandbox\ClaudeCode\Architect\dist\`: the zip

@@ -133,11 +133,37 @@ Microsoft Defender showed no detection after the first `EPERM` (`Get-MpThreatDet
 
 ## 3. Clean-profile install (C001-TC-1102, C001-NFR-602)
 
-C001-TC-1102 is a manual, timed procedure (`tests/manual/TS-1102.md`) that P-01 runs on a **fresh
-Windows 11 user profile**. Creating a Windows profile is outside what the implementer may do, so the
-record of TC-1102 itself (and the ≤ 15-minute timing of C001-NFR-602) is still **open for P-01**.
+C001-TC-1102 (`tests/manual/TS-1102.md`) runs in an **isolated Claude profile** (C001-SPEC-NFR; defect
+D-030, P-01 Q-clean-profile-01 of 2026-11-10: a fresh Windows user profile is not available on REF-WIN).
+It has an automated functional part (below, **pass**) and P-01's timed run, which gives the ≤ 15-minute
+timing of C001-NFR-602 and is still **open for P-01**. Caveat: machine-wide tools (Node, Git, ripwire,
+uv, Serena) and `LOCALAPPDATA` stay those of P-01's account, so a prerequisite the README fails to
+mention would not show.
 
-**Pre-check (implementer, 2026-10-28, not the TC-1102 record):** steps 2–5 of the procedure with
+**Functional part (implementer, 2026-11-10, revision D-030):**
+`node scripts/manual/isolated-profile-check.mjs <new empty scratch folder>` with Claude Code 2.1.321
+(desktop-bundled, `CLAUDE_CODE_EXECPATH`), Node 22.22.3, the repository at `a90fab5` plus the D-030 working
+tree (plugin 0.1.0). Every `CLAUDE*` / `ANTHROPIC*` variable removed; `CLAUDE_CONFIG_DIR`, `HOME`,
+`USERPROFILE` and `APPDATA` in the scratch folder. Result: **Functional check: PASS** (exit 0).
+
+| Command | Exit | Result |
+|---|---|---|
+| `claude auth status` | 1 | `"loggedIn": false`, `"authMethod": "none"`, config directory inside the scratch folder |
+| `claude plugin marketplace add C:\Sandbox\ClaudeCode\Architect` | 0 | "Successfully added marketplace: architect-local (declared in user settings)", 0.9 s |
+| `claude plugin install architect@architect-local` | 0 | "Successfully installed plugin: architect@architect-local (scope: user)", 1.6 s |
+| `claude plugin list` | 0 | `architect@architect-local`, Version 0.1.0, Scope user, Status enabled |
+| `claude plugin details architect@architect-local` | 0 | 31 skills, 10 agents (incl. `sdd-conductor`), 4 hooks, 3 MCP servers |
+| `claude -p --agent architect:no-such-agent hi` | 1 | refused before any model call, listing the ten `architect:sdd-*` agents |
+| `claude -p --agent architect:sdd-conductor --output-format stream-json --verbose --max-turns 1 hi` in a new `git init` folder | 1 | SessionStart hook exit 0; init event with the conductor's tool set (Task, Read, Glob, Grep, Write, Edit, Bash, Skill), the three plugin MCP servers, `apiKeySource: none`; then "Not logged in · Please run /login", cost 0 USD |
+
+Feasibility notes: the plugin commands wrote only inside the scratch folder (`.claude\settings.json`,
+`.claude\plugins\…`); Serena's config went to the plugin data folder inside it
+(`.claude\plugins\data\architect-architect-local\serena\serena_config.yml`); `sdd` paths depend on the
+repository, not on the home folder. `scripts/manual/isolated-profile.ps1 -Check` gave the same PASS in
+PowerShell 7, and finds the desktop-bundled binary without `CLAUDE_CODE_EXECPATH`. Starting the
+conductor in an interactive session needs a sign-in: P-01's timed run covers it.
+
+**Earlier pre-check (implementer, 2026-10-28, superseded by the functional part above):** steps 2–5 of the procedure with
 Claude Code 2.1.299 (desktop-bundled), an empty `CLAUDE_CONFIG_DIR` in a scratch folder, and no
 `CLAUDE*` / `ANTHROPIC*` variables inherited:
 
@@ -151,7 +177,7 @@ Claude Code 2.1.299 (desktop-bundled), an empty `CLAUDE_CONFIG_DIR` in a scratch
 Finding: the installed plugin reported version **0.0.3**; the version is 0.1.0 since `ab0cfc7` (§8), so
 TC-1102 installs 0.1.0.
 
-**Run sheet for P-01:** `docs/runsheets/T-072-clean-profile-install.md` (fresh profile, steps, inputs, expected
+**Run sheet for P-01:** `docs/runsheets/T-072-clean-profile-install.md` (isolated Claude profile, steps, inputs, expected
 results, record fields and the line to send the conductor). The record goes to `docs/dogfood.md`; this section and
 §6 are updated from it.
 
