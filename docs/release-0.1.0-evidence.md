@@ -12,8 +12,10 @@ with 0 acted upon, release-standard 210 / 210. Session-limit check clean (§4.6)
 the toy change to G3 on cfg-full (58.17 USD, §5) the total is **409.12 USD notional** (§4.5). Unpaid close-out done 2026-11-07 (§2, §5, §6, §8): version 0.1.0, release candidate **`b6f1509`**,
 `npm run check` exit 0 in all four shell and Node runs, `sdd lint 001` 0 findings, DOD-G-04 review recorded,
 D-023 closed (41c3466). Toy change to G3 on cfg-full done 2026-11-08 (§5; cfg-bare deferred by D-028).
-**TC-1102's timed run waived** (defect D-031, 2026-11-10: C001-NFR-602 and the timed part of C001-DOD-018; §3). **Open:**
-the local tag `v0.1.0` after D-031's approvals and close, then the task report.
+**TC-1102's timed run waived** (defect D-031, 2026-11-10: C001-NFR-602 and the timed part of C001-DOD-018; §3). **Closed 2026-11-10:** D-031 approved and
+closed (405239b); local tag `v0.1.0` at `9eb56c0` (annotated, not pushed; `plugins/architect/` unchanged since, so the
+CHG-002 cross-change condition CR-123 holds); follow-up change "Cost and token efficiency" created as **CHG-004**
+(CHG-003 is the OpenCode release); C001-T-072 reported done.
 
 ## 0. Run decisions
 
