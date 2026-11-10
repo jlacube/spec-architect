@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:fe7d2191bb675de606cf1ec50633b324f0b9b0252b3fd43351fbac777259e30c", approved_at: 2026-11-10, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:ebcecfcbfe082b531b466ddb347a493e46ab85074bb593150f00d461094eb64a", approved_at: 2026-11-10, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:a1f85b942d8840ef1976de2b4e739b8d702ab4df4177b2d53763482f531bacbb", approved_at: 2026-11-10, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -476,3 +476,4 @@ waivers:
 | 2026-11-10 | G2 (spec) | **Revise** | "Revision for CHG-002 D-048: C002-NFR-601 statement and environment move from a fresh Windows user profile to an isolated VS Code profile (code --user-data-dir and --extensions-dir on a new empty folder, HOME, USERPROFILE and APPDATA and the npm global prefix inside it; machine-wide state stays visible); P-01 instruction 'go ahead with the T-057 revision' (2026-11-10)" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Revise** | "Plan revision for D-048: C002-T-057 intent, preconditions and step 1, the test plan C002-TC-903 row and section 7, the run sheet and the isolated VS Code profile set-up script, questions-log round 2026-11-10; P-01 instruction 'go ahead with the T-057 revision' (2026-11-10)" | none | unavailable |
 | 2026-11-10 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634 | unavailable |
+| 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
