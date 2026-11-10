@@ -174,10 +174,8 @@ export function releaseCheck(opts: CheckOptions): CheckResult {
     s08CliVersion = hv["copilot-cli"];
     const outcomes = spike["outcomes"] as Record<string, unknown> | undefined;
     s08LoadsPackage = outcomes?.["copilot_cli_loads_package"] !== false;
-    // The tested VS Code build is the record's vscode-insiders value when present (§3).
-    const ran: HostVersions = { ...hv };
-    if (hv["vscode-insiders"] !== undefined) ran["vscode"] = hv["vscode-insiders"];
-    versions(`spike record ${spikePath}`, ran, tested);
+    // The record's VS Code values are historical evidence since defect D-047 (§3): the tested VS Code
+    // build is that of the checklist record, so the record is not compared with the table.
   }
 
   // --- corpus replay reports (ERR-REL-009, ERR-REL-012, ERR-REL-001, ERR-REL-006; §2, §5) ---

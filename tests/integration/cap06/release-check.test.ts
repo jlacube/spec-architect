@@ -190,7 +190,11 @@ test("C002-TC-623 (C002-TS-623): S-08 outcomes", () => {
   const hooks = check({ variant: CP_HOOKS, s08: s08Record("copilot-hooks", tested, { subagent_tool_list_confined: false, guard_hooks_block_subagent_calls: true }) });
   allowed(hooks, "guard hooks block");
   assert.equal(hooks.record?.["evidence"]["spike"]["enforcement_mode"], "copilot-hooks");
-  // The signed-off record decides "allowed" (sdd-mcp-server).
+  // The signed-off record decides "allowed" (sdd-mcp-server). Its VS Code Insiders 1.142.0-insider and
+  // Copilot Chat 0.35.3 differ from the tested versions (VS Code 1.145.2, Copilot Chat 0.73.0) and are
+  // historical evidence since defect D-047 (C002-IF-009 §3): no ERR-REL-006 line for the spike record.
+  const historical = check({ variant: CP_SDD, s08: s08Record("sdd-mcp-server", { vscode: "1.142.0-insider", "copilot-chat": "0.35.3" }) });
+  allowed(historical, "an S-08 record on another VS Code build");
   const signed = check({ variant: CP_SDD, s08: readFileSync(join(ROOT, "docs", "spikes", "S-08-copilot-vscode.md"), "utf8") });
   allowed(signed, "the signed-off S-08 record");
 });

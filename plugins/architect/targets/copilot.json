@@ -5,7 +5,7 @@
   "enforcement_mode": "sdd-mcp-server",
   "host": {
     "name": "VS Code with GitHub Copilot Chat",
-    "tested_versions": { "vscode": "1.142.0-insider", "copilot-chat": "0.35.3" },
+    "tested_versions": { "vscode": "1.145.2", "copilot-chat": "0.73.0" },
     "validated_by": "docs/spikes/S-08-copilot-vscode.md"
   },
   "placement": {

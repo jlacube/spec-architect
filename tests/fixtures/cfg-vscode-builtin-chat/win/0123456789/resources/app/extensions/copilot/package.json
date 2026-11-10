@@ -1,0 +1,7 @@
+{
+  "name": "copilot-chat",
+  "displayName": "GitHub Copilot Chat",
+  "publisher": "GitHub",
+  "version": "0.72.0",
+  "engines": { "vscode": "^1.144.0" }
+}

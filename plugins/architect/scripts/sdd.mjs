@@ -13624,7 +13624,7 @@ function staleCheck(changeDir, write2) {
 
 // src/cli/host-version.ts
 import { spawnSync as spawnSync3 } from "node:child_process";
-import { readFileSync as readFileSync21 } from "node:fs";
+import { readFileSync as readFileSync21, realpathSync as realpathSync2 } from "node:fs";
 import { homedir } from "node:os";
 import { dirname as dirname13, join as join30 } from "node:path";
 var HOSTS = ["opencode", "vscode", "vscode-insiders"];
@@ -13636,13 +13636,16 @@ var PROBES = {
   insidersExtensions: { command: "code-insiders", args: ["--list-extensions", "--show-versions"] }
 };
 var VERSION2 = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
-function run(p) {
+function runAt(p) {
   const match = findOnPath(p.command, pathValue(process.env), { env: process.env });
   if (match === null) return null;
   const opts = { encoding: "utf8", windowsHide: true, timeout: 3e4, cwd: dirname13(match.file), stdio: ["ignore", "pipe", "pipe"] };
   const r = match.kind === "shim" ? spawnSync3(windowsShell(), ["/d", "/s", "/c", `""${match.file}" ${p.args.join(" ")}"`], { ...opts, windowsVerbatimArguments: true }) : spawnSync3(match.file, [...p.args], opts);
   if (r.error || r.status !== 0) return null;
-  return r.stdout;
+  return { stdout: r.stdout, file: match.file };
+}
+function run(p) {
+  return runAt(p)?.stdout ?? null;
 }
 function parseVersion(stdout) {
   const first = stdout.split(/\r?\n/).find((l) => l.trim() !== "") ?? "";
@@ -13652,6 +13655,39 @@ function parseCopilotChat(stdout) {
   for (const line of stdout.split(/\r?\n/)) {
     const m = /^\s*github\.copilot-chat@(\S+)\s*$/i.exec(line);
     if (m) return VERSION2.exec(m[1])?.[0] ?? null;
+  }
+  return null;
+}
+function parseCommit(stdout) {
+  const second = stdout.split(/\r?\n/).filter((l) => l.trim() !== "")[1]?.trim() ?? "";
+  return /^[0-9a-f]{40}$/i.test(second) ? second.toLowerCase() : null;
+}
+function builtinCopilotDirs(match, commit) {
+  let file = match;
+  try {
+    file = realpathSync2(match);
+  } catch {
+  }
+  const install = dirname13(dirname13(file));
+  const tail = ["resources", "app", "extensions", "copilot"];
+  return [...commit === null ? [] : [join30(install, commit.slice(0, 10), ...tail)], join30(install, ...tail), join30(install, "extensions", "copilot")];
+}
+function readCopilotChatPackage(dir2) {
+  let doc;
+  try {
+    doc = JSON.parse(readFileSync21(join30(dir2, "package.json"), "utf8"));
+  } catch {
+    return null;
+  }
+  if (doc === null || typeof doc !== "object") return null;
+  const { publisher, name, version: version2 } = doc;
+  if (typeof publisher !== "string" || publisher.toLowerCase() !== "github" || name !== "copilot-chat" || typeof version2 !== "string") return null;
+  return VERSION2.exec(version2)?.[0] ?? null;
+}
+function builtinCopilotChat(match, commit) {
+  for (const dir2 of builtinCopilotDirs(match, commit)) {
+    const v = readCopilotChatPackage(dir2);
+    if (v !== null) return v;
   }
   return null;
 }
@@ -13709,11 +13745,12 @@ function hostVersions(host, cwd) {
     return { host, versions: { opencode: v2 }, missing: v2 === null };
   }
   const insiders = host === "vscode-insiders";
-  const out = run(insiders ? PROBES.insiders : PROBES.code);
-  const v = out === null ? null : parseVersion(out);
-  if (v === null) return { host, versions: { vscode: null }, missing: true };
+  const out = runAt(insiders ? PROBES.insiders : PROBES.code);
+  const v = out === null ? null : parseVersion(out.stdout);
+  if (out === null || v === null) return { host, versions: { vscode: null }, missing: true };
   const ext = run(insiders ? PROBES.insidersExtensions : PROBES.codeExtensions);
-  return { host, versions: { vscode: v, "copilot-chat": ext === null ? null : parseCopilotChat(ext) }, hooks: hooksState(cwd, insiders), missing: false };
+  const chat = (ext === null ? null : parseCopilotChat(ext)) ?? builtinCopilotChat(out.file, parseCommit(out.stdout));
+  return { host, versions: { vscode: v, "copilot-chat": chat }, hooks: hooksState(cwd, insiders), missing: false };
 }
 function formatHostVersions(r) {
   if (r.host === "opencode") return [`opencode ${r.versions["opencode"] ?? "missing"}`];

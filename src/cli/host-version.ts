@@ -11,6 +11,16 @@
 // of a shell. No match is `<host> missing` without anything started. Nothing from the command line or
 // the environment is placed in a probe (C002-CON-17).
 //
+// The copilot-chat line (revised for defect D-047): first the `github.copilot-chat` entry of
+// `code --list-extensions --show-versions` (an installed extension, which takes precedence over a built-in
+// one); without it, the GitHub Copilot Chat that the probed build ships built in (VS Code 1.14x and later:
+// no entry in that list). The built-in extension is read from the install folder of the match, its
+// symbolic links resolved, as `<install>/<commit prefix>/resources/app/extensions/copilot` (Windows
+// installers since the commit-prefixed layout; the prefix is the first 10 characters of the commit on the
+// second line of `--version`), `<install>/resources/app/extensions/copilot` (the older Windows layout,
+// Linux `/usr/share/code`) or `<app>/extensions/copilot` (macOS `…/Contents/Resources/app/bin/code`),
+// in this order; its `package.json` counts only with publisher `GitHub` and name `copilot-chat`.
+//
 // The hooks line reads `chat.useHooks` only (C002-IF-007 host-version Output, revised for critic CR-45):
 // first the workspace settings (`.vscode/settings.json` at the repository root), which take precedence;
 // only a missing workspace file, or one without the key, leads to the user settings of the default
@@ -21,7 +31,7 @@
 // Not read: the settings of other VS Code profiles, of a `.code-workspace` file, Workspace Trust and
 // organisation policy (C002-IF-006 §2).
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { findOnPath, pathValue, userConfigDir, windowsShell } from "../io/paths.ts";
@@ -56,8 +66,8 @@ export interface HostVersions {
 
 const VERSION = /\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?/;
 
-/** Standard output of a probe, or null when the executable is missing or fails. */
-function run(p: Probe): string | null {
+/** Standard output of a probe and the file of its match, or null when the executable is missing or fails. */
+function runAt(p: Probe): { stdout: string; file: string } | null {
   const match = findOnPath(p.command, pathValue(process.env), { env: process.env });
   if (match === null) return null;
   const opts = { encoding: "utf8" as const, windowsHide: true, timeout: 30_000, cwd: dirname(match.file), stdio: ["ignore", "pipe", "pipe"] as ["ignore", "pipe", "pipe"] };
@@ -67,7 +77,12 @@ function run(p: Probe): string | null {
       ? spawnSync(windowsShell(), ["/d", "/s", "/c", `""${match.file}" ${p.args.join(" ")}"`], { ...opts, windowsVerbatimArguments: true })
       : spawnSync(match.file, [...p.args], opts);
   if (r.error || r.status !== 0) return null;
-  return r.stdout;
+  return { stdout: r.stdout, file: match.file };
+}
+
+/** Standard output of a probe, or null when the executable is missing or fails. */
+function run(p: Probe): string | null {
+  return runAt(p)?.stdout ?? null;
 }
 
 /** The first semantic version on the first non-empty line of a `--version` output. */
@@ -81,6 +96,53 @@ export function parseCopilotChat(stdout: string): string | null {
   for (const line of stdout.split(/\r?\n/)) {
     const m = /^\s*github\.copilot-chat@(\S+)\s*$/i.exec(line);
     if (m) return VERSION.exec(m[1]!)?.[0] ?? null;
+  }
+  return null;
+}
+
+/** The commit (40 hexadecimal digits) on the second non-empty line of a `code --version` output, or null. */
+export function parseCommit(stdout: string): string | null {
+  const second = stdout.split(/\r?\n/).filter((l) => l.trim() !== "")[1]?.trim() ?? "";
+  return /^[0-9a-f]{40}$/i.test(second) ? second.toLowerCase() : null;
+}
+
+/**
+ * The folders where the build of the `code` (or `code-insiders`) match keeps its built-in GitHub Copilot
+ * Chat, in the order they are read: `<install>/<commit prefix>/resources/app/extensions/copilot` (only with
+ * a commit), `<install>/resources/app/extensions/copilot` and `<install>/extensions/copilot`, where
+ * `<install>` is the parent of the folder that holds the match, its symbolic links resolved.
+ */
+export function builtinCopilotDirs(match: string, commit: string | null): string[] {
+  let file = match;
+  try {
+    file = realpathSync(match);
+  } catch {
+    // An unresolvable link: the match as found.
+  }
+  const install = dirname(dirname(file));
+  const tail = ["resources", "app", "extensions", "copilot"];
+  return [...(commit === null ? [] : [join(install, commit.slice(0, 10), ...tail)]), join(install, ...tail), join(install, "extensions", "copilot")];
+}
+
+/** The version in a built-in extension folder's `package.json` when it is GitHub Copilot Chat; else null. */
+export function readCopilotChatPackage(dir: string): string | null {
+  let doc: unknown;
+  try {
+    doc = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+  } catch {
+    return null;
+  }
+  if (doc === null || typeof doc !== "object") return null;
+  const { publisher, name, version } = doc as Record<string, unknown>;
+  if (typeof publisher !== "string" || publisher.toLowerCase() !== "github" || name !== "copilot-chat" || typeof version !== "string") return null;
+  return VERSION.exec(version)?.[0] ?? null;
+}
+
+/** The built-in GitHub Copilot Chat version of the build of the match: the first folder that holds it. */
+export function builtinCopilotChat(match: string, commit: string | null): string | null {
+  for (const dir of builtinCopilotDirs(match, commit)) {
+    const v = readCopilotChatPackage(dir);
+    if (v !== null) return v;
   }
   return null;
 }
@@ -155,11 +217,12 @@ export function hostVersions(host: Host, cwd: string): HostVersions {
     return { host, versions: { opencode: v }, missing: v === null };
   }
   const insiders = host === "vscode-insiders";
-  const out = run(insiders ? PROBES.insiders : PROBES.code);
-  const v = out === null ? null : parseVersion(out);
-  if (v === null) return { host, versions: { vscode: null }, missing: true };
+  const out = runAt(insiders ? PROBES.insiders : PROBES.code);
+  const v = out === null ? null : parseVersion(out.stdout);
+  if (out === null || v === null) return { host, versions: { vscode: null }, missing: true };
   const ext = run(insiders ? PROBES.insidersExtensions : PROBES.codeExtensions);
-  return { host, versions: { vscode: v, "copilot-chat": ext === null ? null : parseCopilotChat(ext) }, hooks: hooksState(cwd, insiders), missing: false };
+  const chat = (ext === null ? null : parseCopilotChat(ext)) ?? builtinCopilotChat(out.file, parseCommit(out.stdout));
+  return { host, versions: { vscode: v, "copilot-chat": chat }, hooks: hooksState(cwd, insiders), missing: false };
 }
 
 /** The text lines of C002-IF-007 §Output. */

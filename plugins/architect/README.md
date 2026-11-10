@@ -85,7 +85,7 @@ as a target package for each host below (`npm run package` writes `dist/architec
 
 - **Install notes:** [targets/copilot/install.md](targets/copilot/install.md) (`INSTALL.md` in the
   Copilot package).
-- **Tested versions:** VS Code `1.142.0-insider` (Insiders) with GitHub Copilot Chat `0.35.3`.
+- **Tested versions:** VS Code `1.145.2` with GitHub Copilot Chat `0.73.0` (built in).
 - **Enforcement mode:** sdd MCP server enforcement (`sdd-mcp-server`). The Architect agents have no
   generic edit or terminal tool: they write `.sdd/` files and run the allowlisted commands through the
   sdd MCP server, so their write/shell boundary does not depend on hooks. The package's subagent guard

@@ -30,7 +30,7 @@ export const RECORD_PATH = `docs/checklists/records/${RECORD_NAME}`;
 export const TODAY = "2026-11-21";
 export const REAL_TESTED: Record<Target, Record<string, string>> = {
   opencode: { opencode: "1.18.31" },
-  copilot: { vscode: "1.142.0-insider", "copilot-chat": "0.35.3" },
+  copilot: { vscode: "1.145.2", "copilot-chat": "0.73.0" },
 };
 export const COPILOT_CLI = "1.0.98";
 

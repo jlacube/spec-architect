@@ -44,12 +44,15 @@ test("OpenCode: mode, tested version and models are those of the S-07 record", (
   assert.deepEqual(t.models, r.host_versions.models);
 });
 
-test("Copilot: mode and tested versions are those of the S-08 record (VS Code Insiders, Copilot Chat)", () => {
+test("Copilot: mode from the S-08 record; tested versions those of scope §3.1 (VS Code 1.145.2, Copilot Chat 0.73.0; D-047), S-08's Insiders versions historical", () => {
   const t = tables.copilot;
   assert.equal(t.host.validated_by, "docs/spikes/S-08-copilot-vscode.md");
   const r = record(t.host.validated_by) as { enforcement_mode: string; host_versions: Record<string, string>; outcomes: { terminal_dialect: string } };
   assert.equal(t.enforcement_mode, r.enforcement_mode);
-  assert.deepEqual(t.host.tested_versions, { vscode: r.host_versions["vscode-insiders"], "copilot-chat": r.host_versions["copilot-chat"] });
+  // Since defect D-047 the tested versions follow the build of the manual VS Code checklist (C002-IF-009 §3);
+  // the S-08 record keeps the Insiders build it ran on.
+  assert.deepEqual(t.host.tested_versions, { vscode: "1.145.2", "copilot-chat": "0.73.0" });
+  assert.deepEqual({ vscode: r.host_versions["vscode-insiders"], "copilot-chat": r.host_versions["copilot-chat"] }, { vscode: "1.142.0-insider", "copilot-chat": "0.35.3" });
   const bash = t.hook_tool_classes?.terminal.find((c) => c.tool === "Bash");
   assert.equal(bash?.dialect, r.outcomes.terminal_dialect);
 });

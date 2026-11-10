@@ -13,10 +13,12 @@ import { makeWorkspace, runBundled, type Result } from "./helpers.ts";
 const FIXTURES = join(repoRoot(), "tests", "fixtures");
 const HOSTS_BIN = join(FIXTURES, "cfg-hosts", "bin");
 const NO_CHAT_BIN = join(FIXTURES, "cfg-vscode-no-chat", "bin");
+const BUILTIN = join(FIXTURES, "cfg-vscode-builtin-chat");
+const BUILTIN_BINS = [join(BUILTIN, "win", "bin"), join(BUILTIN, "insiders", "bin")];
 const WIN = process.platform === "win32";
 
 // The sh shims need the executable bit outside Windows (git on Windows may not record it).
-if (!WIN) for (const dir of [HOSTS_BIN, NO_CHAT_BIN]) for (const f of readdirSync(dir)) if (!f.endsWith(".cmd")) chmodSync(join(dir, f), 0o755);
+if (!WIN) for (const dir of [HOSTS_BIN, NO_CHAT_BIN, ...BUILTIN_BINS]) for (const f of readdirSync(dir)) if (!f.endsWith(".cmd")) chmodSync(join(dir, f), 0o755);
 
 /** Runs host-version in `cwd` with PATH set to `bin` and the user settings under `<cwd>/profile`. */
 function hostVersion(args: string[], cwd: string, bin: string): Result {
@@ -157,6 +159,47 @@ test("VS Code without the GitHub Copilot Chat extension prints `copilot-chat mis
     assert.equal(r.stdout, "vscode 1.105.1\ncopilot-chat missing\nhooks unknown\n");
     assert.equal(r.code, 0);
     assert.equal(JSON.parse(hostVersion(["vscode", "--json"], ws.root, NO_CHAT_BIN).stdout).versions["copilot-chat"], null);
+  } finally {
+    ws.cleanup();
+  }
+});
+
+// Defect D-047: VS Code 1.14x ships GitHub Copilot Chat built in, absent from --list-extensions.
+test("D-047 — VS Code with Copilot Chat built in: the copilot-chat line reads <install>/<commit prefix>/resources/app/extensions/copilot", () => {
+  const ws = workspace();
+  try {
+    const r = hostVersion(["vscode"], ws.root, BUILTIN_BINS[0]!);
+    assert.equal(r.stderr, "");
+    assert.equal(r.stdout, "vscode 1.145.2\ncopilot-chat 0.73.0\nhooks unknown\n");
+    assert.equal(r.code, 0);
+    assert.deepEqual(JSON.parse(hostVersion(["vscode", "--json"], ws.root, BUILTIN_BINS[0]!).stdout).versions, { vscode: "1.145.2", "copilot-chat": "0.73.0" });
+  } finally {
+    ws.cleanup();
+  }
+});
+
+test("D-047 — VS Code Insiders with Copilot Chat built in: the folder of the probed commit among stale ones", () => {
+  const ws = workspace({ [userSettings("Code - Insiders")]: '{ "chat.useHooks": true }' });
+  try {
+    assert.equal(hostVersion(["vscode-insiders"], ws.root, BUILTIN_BINS[1]!).stdout, "vscode 1.146.0-insider\ncopilot-chat 0.74.2026110608\nhooks enabled\n");
+  } finally {
+    ws.cleanup();
+  }
+});
+
+test("D-047 — an installed github.copilot-chat in --list-extensions takes precedence over the built-in one", () => {
+  const pkg = JSON.stringify({ name: "copilot-chat", publisher: "GitHub", version: "0.99.0" });
+  const ws = workspace({ "inst/0123456789/resources/app/extensions/copilot/package.json": pkg });
+  try {
+    const bin = join(ws.root, "inst", "bin");
+    mkdirSync(bin, { recursive: true });
+    for (const f of ["code", "code.cmd"]) copyFileSync(join(HOSTS_BIN, f), join(bin, f));
+    if (!WIN) chmodSync(join(bin, "code"), 0o755);
+    assert.equal(hostVersion(["vscode"], ws.root, bin).stdout, "vscode 1.105.1\ncopilot-chat 0.32.4\nhooks unknown\n");
+    // The same install without the extension entry reads the built-in one.
+    for (const f of ["code", "code.cmd"]) copyFileSync(join(NO_CHAT_BIN, f), join(bin, f));
+    if (!WIN) chmodSync(join(bin, "code"), 0o755);
+    assert.equal(hostVersion(["vscode"], ws.root, bin).stdout, "vscode 1.105.1\ncopilot-chat 0.99.0\nhooks unknown\n");
   } finally {
     ws.cleanup();
   }
