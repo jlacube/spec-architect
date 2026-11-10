@@ -13,7 +13,7 @@ Task C002-T-055 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
   T-075 (or together with this release, below), and T-054, T-047 and T-048.
 - The S-08 record is not `deferred`. It gives `sdd-mcp-server`, so no hooks-fallback exception is
   expected.
-- Node 22.22.3, and the repository at the release-candidate commit (876e958 since revision D-047, moved from the b481e82 that T-076 records) (ask the
+- Node 22.22.3, and the repository at the release-candidate commit (9eb56c0 since revision D-047, moved from the b481e82 that T-076 records) (ask the
   conductor which commit).
 - **T-075** publishes `architect-sdd` 0.1.0 before or together with this release. If npm does not
   have it yet when you reach step 5: your npm account `jlacube` with 2FA, and your

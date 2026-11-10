@@ -103,8 +103,10 @@ C002-T-050 runs on VS Code stable): **VS Code 1.145.2 (commit c4453f8ea4) with G
 0.73.0**, the Copilot Chat that this build ships built in (no entry in `code --list-extensions`;
 C002-IF-007 §Output), Local session type. These are the tested versions of the Copilot table
 (C002-IF-001 §1), the doctor's host row and the checklist record (C002-IF-009 §3, §4); the doctor
-reads them with `sdd host-version vscode`. The manual VS Code checklist (C002-T-050) confirms S-08's
-facts F-1 … F-7 on this build. The tested versions follow P-01's machine: when P-01 runs the checklist
+reads them with `sdd host-version vscode`. The manual VS Code checklist (C002-T-050) confirms on this build
+those of S-08's facts F-1 … F-7 that a VS Code step exercises (F-6 is Copilot CLI only), and, in its
+step VSC-54, the subagent tool-list confinement that the `sdd-mcp-server` mode rests on (critic
+CR-150; P-01's answer to Q-guard-proof-01). The tested versions follow P-01's machine: when P-01 runs the checklist
 on another build, a revision records it before the release. Copilot CLI 1.0.98 stays the tested
 Copilot CLI of the eval runner, as S-08 recorded it.
 

@@ -217,9 +217,11 @@ Nothing else in the repository is read or written; `.sdd/` is neither required n
   the same period ship GitHub Copilot Chat built in, and `--list-extensions` does not list it) is, in
   this order:
   1. The `github.copilot-chat@<version>` entry of `code --list-extensions --show-versions` (or of
-     `code-insiders`), matched without regard to case: an installed extension, which VS Code runs in
-     place of a built-in one.
-  2. Otherwise the built-in extension of the probed build, read from the install folder of the
+     `code-insiders`), matched without regard to case: an installed extension. When item 2 also gives a
+     version, the entry counts only when its version is at least the built-in one's (numeric order of
+     the parts, a pre-release lower than its release); else the built-in version is printed (critic
+     CR-151).
+  2. Without such an entry, or when it is older than the built-in one, the built-in extension of the probed build, read from the install folder of the
      executable match (§Executable lookup), its symbolic links resolved, as `<install>` = the parent of
      the folder that holds the match, in this order: `<install>/<commit prefix>/resources/app/extensions/copilot`,
      where the commit prefix is the first 10 characters of the 40-digit commit on the second line of

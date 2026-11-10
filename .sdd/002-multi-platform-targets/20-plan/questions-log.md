@@ -352,3 +352,25 @@ Questions on the S-07 record (C002-T-001).
 - **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Fold into 0.1.0 (Recommended)', option 1
 - **Extracted instructions:** none
 - **Conductor's note:** the release candidate moves from b481e82 to the D-047 code commit 876e958 for both hosts; the unpaid rerun list closes D-047 with the G2 and G3 approvals (`handoff.md`, D-047 edge).
+- **Correction note on Q-d047-ship-01** (critic CR-122; the log keeps the question as presented): its context says "No agent, skill or prompt changes". That holds for the sources in `plugins/architect/`, not for the generated Copilot package, where five generated files change (`agents/sdd-cartographer.agent.md`, `skills/code-discovery/SKILL.md`, `prompts/doctor.prompt.md`, `INSTALL.md`, `architect-target.json`: `sdd host-version vscode` instead of `vscode-insiders`, and the new tested versions). P-01 was shown the corrected premise and kept the decision (Q-d047-ship-02). The release candidate is 9eb56c0, not 876e958, since critic CR-151 changed the code again.
+
+### Q-d047-ship-02 — keep the fold into 0.1.0 on the corrected premise (critic CR-122)
+- **Context:** the regenerated Copilot package changes three generated files (cartographer agent, code-discovery skill, doctor prompt: `sdd host-version vscode` instead of `vscode-insiders`, new tested versions); no checked eval row depends on those lines; the Claude Code CLI change touches only host-version.
+- **Options** (as presented by the conductor): 1. 'Keep fold into 0.1.0 (Recommended)' · 2. 'Fold in plus Copilot retake'
+- **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Keep fold into 0.1.0 (Recommended)', option 1
+- **Extracted instructions:** none
+- **Conductor's note:** the full list of changed generated files is five (`INSTALL.md` and `architect-target.json` as well, which hold only the tested versions); the argument is unchanged.
+
+### Q-guard-proof-01 — subagent tool-list confinement on VS Code 1.145.2 (critic CR-150)
+- **Context:** S-08 proved on Insiders 1.142 that subagents only get the tools their agent file lists; nothing re-tests it on 1.145.2.
+- **Options** (as presented by the conductor): 1. 'Add a checklist step (Recommended)': one new T-050 step on 1.145.2 that starts a specialist subagent and confirms it can't use a tool missing from its agent file (edit a file, run a terminal command); about 5 minutes; a failure blocks the release, as S-08 would have · 2. 'New S-08 spike on 1.145.2' · 3. 'Accept the risk'
+- **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Add a checklist step (Recommended)', option 1
+- **Extracted instructions:** none
+- **Conductor's note:** the step is VSC-54 (sdd MCP server enforcement, a scenario step outside the A-1 … A-8 assumption table); IF-001 §1, IF-009 §3 and §5 and C002-RISK-031 name it.
+
+### Q-t050-profile-01 — which VS Code profile C002-T-050 runs in (critic CR-125)
+- **Context:** `sdd host-version` reads `chat.useHooks` from the user settings of the default profile (C002-IF-007 §Output); a run in a new, empty profile would set `chat.useHooks` where host-version does not read it, and VSC-03 and VSC-08 would fail.
+- **Options** (as presented by the conductor): 1. 'Run T-050 in the default profile (Recommended)': change the run sheet and checklist so T-050 uses VS Code stable's default profile after backing up settings.json; the `chat.useHooks` steps then edit what host-version reads; no code change · 2. 'host-version reads the active profile'
+- **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Run T-050 in the default profile (Recommended)', option 1
+- **Extracted instructions:** none
+- **Conductor's note:** the run sheet backs up `%APPDATA%\Code\User\settings.json` before VSC-01 and restores it after the run.

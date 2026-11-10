@@ -40,8 +40,8 @@ the OpenCode release does not wait for it.
 - C002-T-071 done (P-01 answer to Q-release-base-01; plan critic CR-71): the run uses
   `dist/architect-copilot-<version>.zip` built at the release-candidate commit with the CHG-001
   fixes, at **package version 0.1.0** (defect D-041; P-01 answer to Q-copilot-010-01, "Ship 0.1.0
-  on both hosts (Recommended)"). The release-candidate commit is the one **C002-T-076** records,
-  which replaces C002-T-071's; C002-T-076 done first. The files are
+  on both hosts (Recommended)"). The release-candidate commit is **9eb56c0** (revision D-047 moved
+  it from b481e82, the one **C002-T-076** records, which replaces C002-T-071's); C002-T-076 done first. The files are
   `dist/architect-copilot-0.1.0.zip` and `dist/architect-sdd-0.1.0.tgz`, as the runsheet
   `docs/runsheets/T-057-copilot-clean-profile.md` names them. The 0.0.3 packages of revision D-036
   (C002-T-074) are not released.

@@ -724,9 +724,16 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
     compared (C002-TC-624 unchanged).
   - **C002-TC-901:** C002-T-050 runs on VS Code 1.145.2 with Copilot Chat 0.73.0; `sdd host-version
     vscode` replaces `vscode-insiders` in the run sheet.
-  - These tests and the code they cover are commit 876e958 (P-01's answer to Q-d047-ship-01, 'Fold
-    into 0.1.0 (Recommended)'). The release candidate moves there, and the unpaid rerun list of
-    `handoff.md` (D-047 edge) runs at it: C002-TC-901's packages are packed at 876e958.
+  - **Version rule (critic CR-151):** `tests/integration/cli/host-version.test.ts` checks an installed
+    `github.copilot-chat` equal to, newer than, or a release of a pre-release built-in one (the installed
+    version) and an older one (the built-in version); `tests/unit/cli/host-version-builtin.test.ts`
+    checks `pickCopilotChat` and `compareVersions`.
+  - **C002-TC-901, VSC-54** (critic CR-150, Q-guard-proof-01): the checklist's subagent tool-list
+    confinement step on VS Code 1.145.2; a failed VSC-54 refuses the release (ERR-REL-004) and is a
+    spec defect against C002-AS-03.
+  - These tests and the code they cover are commits 876e958 and 9eb56c0 (P-01's answers to
+    Q-d047-ship-01 and Q-d047-ship-02). The release candidate moves to 9eb56c0, and the unpaid rerun list
+    of `handoff.md` (D-047 edge) runs at it: C002-TC-901's packages are packed at 9eb56c0.
 - **Revision D-046** (found in C002-T-076; P-01 answer to Q-inj-exposure-copilot-01, 'Align with D-023
   (Recommended)').
   - **Merge:** `tests/unit/evals/injection-not-exposed.test.ts`, supporting tests of C002-TS-691 at unit

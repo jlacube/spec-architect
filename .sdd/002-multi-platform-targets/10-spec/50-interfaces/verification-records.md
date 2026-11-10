@@ -264,7 +264,13 @@ are the VS Code and GitHub Copilot Chat versions of the build on which P-01 runs
 checklist (`../10-context/scope.md` §3.1, P-01's instruction of 2026-11-10): VS Code 1.145.2 with
 GitHub Copilot Chat 0.73.0, as `sdd host-version vscode` prints them (C002-IF-007 §Output); the
 checklist record's `host_versions` must equal them (§4, §5, ERR-REL-006), and a checklist run on
-another build needs a revision of this section and of the table before the release.
+another build needs a revision of this section and of the table before the release. **What ties the
+tested build to S-08** (critic CR-150; P-01's answer to Q-guard-proof-01): the comparison of the record
+with the table used to be that tie; since D-047 it is the checklist record of the release, run on the
+tested build: its step VSC-54 confirms that a specialist subagent cannot use a tool its agent file
+does not list (`subagent_tool_list_confined`, the outcome the `sdd-mcp-server` mode rests on), and
+the steps the checklist maps to F-1 … F-7 confirm those facts a VS Code run exercises. A failed step
+refuses the release (ERR-REL-004, §5) and is a spec defect.
 
 Before the revision for defect D-047 the table copied its tested versions from this record
 (`vscode-insiders` when present, and `copilot-chat`), and the release check compared the record with
@@ -559,7 +565,7 @@ Refusal reasons are cumulative; each is an ERR-REL code of `errors.md` §3:
 | Copilot, both enforcement modes: the checklist record shows `hooks_state: enabled`, and its `hooks_sources` give `enabled` by the derivation of §4 (C002-REQ-629: the Copilot subagent guard hook is a PreToolUse hook in both modes, C002-REQ-327; the hooks-state check below) | ERR-REL-010 |
 | Copilot, where the checklist record is the injection evidence (the Copilot hooks fallback, C002-REQ-628; sdd MCP server enforcement when the S-08 record gives `copilot_cli_loads_package: false`, C002-REQ-613): one step run per Copilot injection case of the checklist (Copilot CLI results are recorded but not counted); a missing case refuses, a failed injection step refuses naming its case | ERR-REL-011, ERR-REL-002 (with ERR-REL-004 for the failed step) |
 | Copilot: the S-08 spike record does not give `deferred` | ERR-REL-005 |
-| every `host_versions` of the evidence equals the table's tested versions (Copilot: the checklist record against `vscode` and `copilot-chat`, the Copilot CLI runner's evidence against the S-08 record's `copilot-cli`; the S-08 record's VS Code values are historical and not compared, §3, revised for defect D-047) | ERR-REL-006 |
+| every `host_versions` of the evidence equals the table's tested versions (Copilot: the checklist record against `vscode` and `copilot-chat`, the Copilot CLI runner's evidence against the S-08 record's `copilot-cli`; the S-08 record's VS Code values are historical and not compared, §3, revised for defect D-047; the checklist's VSC-54 carries the confinement check on the tested build through the step check, critic CR-150) | ERR-REL-006 |
 | the package equals the regeneration and was generated without `--mode` | ERR-REL-007, ERR-REL-008 |
 
 **Step check** (ERR-REL-004; revised for critic CR-52, CR-55 and Q-checklist-rerun-01). For the

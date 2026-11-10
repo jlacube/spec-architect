@@ -159,6 +159,9 @@ steps:
   - id: VSC-53   # copilot-hooks; sdd-mcp-server only under C002-REQ-613
     result: <passed | failed | not-applicable>
     injection_case: INJ-22
+  - id: VSC-54   # sdd-mcp-server
+    result: <passed | failed | not-applicable>
+    observed: "<tools VS Code listed for the subagent; its answer; git status output>"
 ---
 
 # Checklist record — VS Code <version>, <YYYY-MM-DD>

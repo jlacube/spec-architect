@@ -14,9 +14,12 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
   VS Code), Local session type, signed in with your own **GitHub Copilot Pro** login. Copilot Pro has no Opus, so
   the conductor's file names `claude-opus-5.5` and VS Code runs it on Sonnet. That is expected:
   record what VS Code shows in `models_used`.
-- **A new, empty VS Code profile** (Profiles: New Profile). The built-in Copilot Chat 0.73.0 is
-  there in a new profile; do not install another Copilot Chat from the Marketplace (an installed one
-  replaces the built-in one and `sdd host-version vscode` then prints its version).
+- **VS Code's default profile, settings backed up** (your answer to Q-t050-profile-01): `sdd
+  host-version` reads `chat.useHooks` from the default profile's user settings, so the run uses the
+  default profile, not a new one. Back up `%APPDATA%\Code\User\settings.json` before VSC-01 (step 0)
+  and restore it after the run (step 12). Do not install another Copilot Chat from the Marketplace:
+  an installed one at least as new as the built-in 0.73.0 would replace it, and `sdd host-version
+  vscode` would print its version.
 - **Why stable:** your report of 2026-11-10, "for T-050, I needed to switch from VS Code Insiders to
   VS Code due to a breaking change that was released, killing LLMs calls capabilities" (CHG-002
   revision D-047). S-08's findings F-1 … F-7 were made on Insiders 1.142; this run confirms them on
@@ -25,20 +28,26 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
   `sdd host-version vscode` prints `hooks unknown` until the checklist's restore step sets it (or the
   workspace settings do). The Insiders settings (`chat.plugins.enabled`, `chat.pluginLocations`,
   `chat.askQuestions.enabled`, `chat.useHooks`) are not shared with VS Code: VSC-01 and the restore
-  step set them in this profile.
+  step set them in the default profile, and step 12 puts your own settings back.
 - **Package with the D-047 fix:** by your decision 'Fold into 0.1.0 (Recommended)', the 0.1.0
-  packages are packed at commit 876e958, which carries the host-version fix and the tested versions
+  packages are packed at commit 9eb56c0, which carries the host-version fix and the tested versions
   above (check in step 2). Packages from b481e82 do not: their doctor probes `vscode-insiders` and
   their CLI prints `copilot-chat missing` on VS Code 1.145.2.
 - Node 22.22.3 first on PATH:
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
-  the release-candidate commit 876e958 (moved from b481e82, the commit C002-T-076 records, by revision D-047). The enforcement mode is **`sdd-mcp-server`**.
+  the release-candidate commit 9eb56c0 (moved from b481e82, the commit C002-T-076 records, by revision D-047). The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 13 VS Code chat sessions, or about 26 if one repeat is needed. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
   pool (7.70 of 30 USD before T-076) is not touched.
 
 ## Steps
+
+0. Close VS Code and back up its user settings.
+
+```powershell
+Copy-Item "$env:APPDATA\Code\User\settings.json" "$env:APPDATA\Code\User\settings.json.t050-backup"
+```
 
 1. Create the record from the template.
 
@@ -87,8 +96,10 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
      VSC-07 (restore).
    - **Group 3:** VSC-08, then **directly** VSC-10 (the hooks state, from the three sources).
-   - **Group 4:** VSC-11 to VSC-24, then VSC-27 to VSC-31. VSC-27 and VSC-28 are the delegated edit
-     with `fixtures/toy-planted-line.md`. VSC-30 is gate G1.
+   - **Group 4:** VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-27 and VSC-28 are the
+     delegated edit with `fixtures/toy-planted-line.md`. VSC-30 is gate G1. VSC-54 checks that a
+     specialist subagent cannot edit a file or run a command (your answer to Q-guard-proof-01); if it
+     can, the step fails and the release is refused.
 
 6. **`models_used`** (from VSC-02 onwards): for the turns of `sdd-conductor`, record the model ID
    that the chat's model picker shows, or `not shown`. Add a specialist where you read one. In the
@@ -117,8 +128,9 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
 
 10. **Failures stay binding.** If a step fails, stop and tell the conductor, who reopens the owning
     task. Repeating just that step (`repeated`) does not make the record releasable. After the fix,
-    the whole checklist runs again under a later date. A refuted assumption (A-1 to A-8) is
-    recorded `failed` and becomes a spec defect.
+    the whole checklist runs again under a later date. A refuted assumption (A-1 to A-8), a failed VSC-54 or a
+    refuted S-08 fact (the table in the checklist's "Scope of a run" maps F-1 … F-7 to their steps)
+    is recorded `failed` **and** becomes a spec defect.
 
 11. Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
     no `ERR-REL-003`, `ERR-REL-004`, `ERR-REL-009 … checklist` or `ERR-REL-010` line.
@@ -127,11 +139,17 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
 node C:\Sandbox\ClaudeCode\Architect\scripts\release-check.mjs --target copilot --dry-run
 ```
 
+12. Close VS Code and restore your own user settings.
+
+```powershell
+Move-Item -Force "$env:APPDATA\Code\User\settings.json.t050-backup" "$env:APPDATA\Code\User\settings.json"
+```
+
 ## Pass / fail
 
 **Pass** needs all of these:
 
-- every sdd-mcp-server step (the 26 above) is `passed` and listed once in run order;
+- every sdd-mcp-server step (the 27 above, VSC-54 included) is `passed` and listed once in run order;
 - the other-mode steps are `not-applicable`;
 - `hooks_state: enabled`, with `hooks_sources` `{ use_hooks: on, workspace_trust: trusted, policy:
   none }`;
@@ -142,11 +160,11 @@ node C:\Sandbox\ClaudeCode\Architect\scripts\release-check.mjs --target copilot 
 
 **Fail:** any step is `failed`, or there is a binding earlier `failed` run.
 
-**Time budget:** allow half a day (estimate: 26 steps and about 13 chat sessions).
+**Time budget:** allow half a day (estimate: 27 steps and about 13 chat sessions).
 
 ## Tell the conductor
 
-> T-050 done: record at docs/checklists/records/vscode-<YYYY-MM-DD>-0.1.0.md, all 26 sdd-mcp-server
+> T-050 done: record at docs/checklists/records/vscode-<YYYY-MM-DD>-0.1.0.md, all 27 sdd-mcp-server
 > steps passed, hooks_state enabled, models_used sdd-conductor = <model ID | not shown> (<shown in
 > the model picker | elsewhere: …>), VSC-04 <row ok | VS Code refused>, dry run: <outcome line>.
 

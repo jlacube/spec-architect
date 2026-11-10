@@ -45,8 +45,11 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
   `docs/runsheets/T-055-copilot-release.md` names 0.1.0. OpenCode is not released in this round.
 - **C002-T-075 done:** `architect-sdd@0.1.0` is on npm, published by P-01 apart from any OpenCode
   release (revision D-036). This task publishes nothing itself.
-- **C002-T-076 done** (revision D-041). The release is made from the release-candidate commit that
-  C002-T-076 records. It replaces C002-T-071's commit in the next item, and its near-cap list
+- **C002-T-076 done** (revision D-041). The release is made from the release-candidate commit
+  9eb56c0, to which revision D-047 moved it from b481e82, the commit C002-T-076 records (P-01's answers
+  to Q-d047-ship-01 and Q-d047-ship-02), after the D-047 rerun list (`../handoff.md`); C001-T-072
+  tags v0.1.0 at 9eb56c0 or at a later commit with an empty `plugins/architect/` diff against it, else
+  P-01 decides before this task. It replaces C002-T-071's commit in the next item, and its near-cap list
   replaces C002-T-071's in Done when.
 - **C002-T-071 done** (P-01 answer to Q-release-base-01; plan critic CR-71). The release is made from
   the release-candidate commit that C002-T-071 records, with the CHG-001 fixes. C002-T-071 re-ran the
@@ -55,7 +58,8 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
   release candidate (revision D-041): C002-T-076 retakes these steps at 0.1.0, and C002-T-050 and
   C002-T-057 run on the package of C002-T-076's commit.
 - C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
-- The S-08 record of the tested versions is not `deferred`: the signed-off record gives
+- The S-08 record is not `deferred` (its VS Code versions are historical since revision D-047; the
+  tested versions are VS Code 1.145.2 with Copilot Chat 0.73.0, scope §3.1): the signed-off record gives
   `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could
   bring the defer branch of `75-rollout.md` §5 back, and with it a plan revision that drops this task.
 - The release record names the tested hosts of scope §3.1 (VS Code `1.145.2` with GitHub Copilot

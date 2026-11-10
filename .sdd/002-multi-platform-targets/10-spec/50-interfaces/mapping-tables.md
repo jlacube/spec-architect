@@ -33,9 +33,15 @@ plugins/architect/targets/
   plugin) and outside every `SKILL.md` body (C002-REQ-113). The Claude Code staging of
   `npm run package` leaves it out, so the Claude Code plugin package stays as before CHG-002
   (C002-CON-10, C002-TS-101).
-- A table names exactly one enforcement mode (C002-INV-04). The mode and the tested versions are
-  copied from the spike record named in `host.validated_by` (C002-IF-009 §3); changing either
-  without a new spike record is a review finding of the release check (ERR-REL-006).
+- A table names exactly one enforcement mode (C002-INV-04). The mode is copied from the spike record
+  named in `host.validated_by` (C002-IF-009 §3); changing it without a new spike record is a review
+  finding. The tested versions are copied from that record too, except on Copilot since revision
+  D-047: there they are the VS Code and GitHub Copilot Chat versions of the build of the manual VS
+  Code checklist (VS Code 1.145.2, Copilot Chat 0.73.0; `../10-context/scope.md` §3.1), and the release
+  check compares the checklist record with them (ERR-REL-006). `host.validated_by` keeps naming the
+  S-08 record, the spike that validated the mode; on Copilot the checklist record of the release
+  confirms that mode on the tested versions, its step VSC-54 the subagent tool-list confinement that
+  the `sdd-mcp-server` mode rests on (S-08 §3.1, C002-AS-03; critic CR-150, CR-152).
 - An S-08 record that gives `deferred` is not copied: no table mode means "deferred". The record
   triggers the spec revision of `../10-context/scope.md` §1.1 (Q-defer-01), which removes the
   Copilot target, its table and its package; until then the Copilot table keeps its previous mode,

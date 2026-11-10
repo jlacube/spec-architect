@@ -1609,3 +1609,18 @@ Scope: `git diff a17dc48 c0b3d80`, against D-046 and Q-inj-exposure-copilot-01. 
 | CR-147 | major | IF-010 §5.2 Correction | the correction trusts any unprotected result file, permanently, against the no-hand-edit rule | conductor decision: limit the correction to a fixed list in the code, the two named t076 result paths of INJ-02 and INJ-04; state it in §5.2 | fixed: correction limited to the fixed list D046_CORRECTIONS in run.mjs (INJ-02 and INJ-04 with their two t076 result paths, Copilot CLI) and stated in §5.2 with the stderr line kept; every other stored entry acted upon stays final; unit and stub-host tests that an unlisted not-exposed result file cannot clear an entry |
 | CR-148 | major | IF-010 §5.2 rule 3, rationale, done-check, TS-694 | done-check and four "only" statements no longer hold | add "a not-exposed no run excepted" to the done-check; name the correction as the second exception in all four places | fixed: the done-check reads 'a no-run refusal and a not-exposed no run excepted'; the correction named as the second exception in rule 3 (only a new version clears the entry), the merge rationale, the acted-upon-is-final rationale and the TS-694 text of acceptance.md |
 | CR-149 | minor | IF-010 §5.2 When | When not revised; conflicts with the all-no-runs sentence and run.mjs:692 | revise When for both kinds of no run and the correction; align the sentence and the code | fixed: When covers both kinds of no run and the correction; the all-no-runs sentence points to When; run.mjs writes no summary for a run of no runs only when there is no base or no entry is corrected |
+
+
+## Revision D-047 (2026-11-10)
+
+Scope: `git diff 88df3f5 726430c` plus the README hunk of 6e51f54, against D-047, Q-d047-ship-01 and P-01's T-050 report. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 0 | 2 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-150 | blocker | IF-009 §3/§5, IF-001 §1, scope §3.1, RISK-031 | dropping the S-08 comparison removes the only tie between the released VS Code build and S-08's subagent tool-list confinement, unstated | P-01 (Q-guard-proof-01, 2026-11-10): add a T-050 checklist step on 1.145.2 proving subagent tool-list confinement, a failure blocks the release; revise IF-001 §1, IF-009 §3/§5 and RISK-031 to name it | fixed: P-01 Q-guard-proof-01 'Add a checklist step (Recommended)' logged; checklist step VSC-54 (sdd-mcp-server, group 4) and its record-template entry prove subagent tool-list confinement on 1.145.2, a failure refuses the release (ERR-REL-004) and is a defect against C002-AS-03; IF-001 §1 (mapping-tables), IF-009 §3 and §5, scope §3.1 and RISK-031 name it |
+| CR-151 | minor | IF-007 Output item 1 | the precedence of an installed extension over a built-in one is unsourced | take the installed entry only when its version is at least the built-in's; adjust the test | fixed: IF-007 §Output item 1 — the installed entry counts only when its version is at least the built-in one's; pickCopilotChat/compareVersions in src/cli/host-version.ts (commit 9eb56c0, the new release candidate); host-version.test.ts covers both directions, unit tests for the comparison |
+| CR-152 | minor | glossary, REQ-508, copilot.json validated_by | "Tested version" still defined as recorded by the spike | revise the glossary row and REQ-508 rationale; say what validated_by means since D-047 | fixed: glossary Tested version row and REQ-508 rationale revised; IF-001 §1 states that host.validated_by keeps naming S-08, the spike that validated the mode, and the checklist record confirms it on the tested versions; the field's value is unchanged |

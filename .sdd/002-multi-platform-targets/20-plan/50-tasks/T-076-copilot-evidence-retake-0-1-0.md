@@ -186,23 +186,46 @@ and the clean-profile run on the 0.1.0 packages.
 
 ## Release candidate moved by revision D-047
 
-By P-01's decision of 2026-11-10 ('Fold into 0.1.0 (Recommended)', Q-d047-ship-01,
-`../questions-log.md` round 2026-11-10), the release candidate of 0.1.0 moves from b481e82, this
-task's commit, to the D-047 code commit **876e958**, for both hosts. The paid evidence of this task
-stands: no agent, skill or prompt changed. The shipped difference is `git diff --stat b481e82 876e958 -- plugins/architect/`:
+By P-01's decisions of 2026-11-10 ('Fold into 0.1.0 (Recommended)', Q-d047-ship-01, kept on the
+corrected premise with 'Keep fold into 0.1.0 (Recommended)', Q-d047-ship-02; `../questions-log.md`
+round 2026-11-10), the release candidate of 0.1.0 moves from b481e82, this task's commit, to the
+D-047 code commit **9eb56c0**, for both hosts. The paid evidence of this task stands. The shipped
+difference is `git diff --stat b481e82 9eb56c0 -- plugins/architect/`:
 
 ```text
  plugins/architect/README.md            |  2 +-
- plugins/architect/scripts/sdd.mjs      | 51 +++++++++++++++++++++++++++++-----
+ plugins/architect/scripts/sdd.mjs      | 69 ++++++++++++++++++---
  plugins/architect/targets/copilot.json |  2 +-
- 3 files changed, 46 insertions(+), 9 deletions(-)
+ 3 files changed, 64 insertions(+), 9 deletions(-)
 ```
 
-and its source, `src/cli/host-version.ts` (71 insertions, 8 deletions).
+and its source, `src/cli/host-version.ts` (+101 / −8). Commit 876e958 carried the first D-047 code;
+9eb56c0 adds the version rule of critic CR-151 (an installed Copilot Chat counts only when it is at least
+the built-in version).
 
-The report note above stays as recorded (CLI-owned). The unpaid checks rerun at 876e958 before the
+**Generated files that change** (critic CR-122; P-01's answer to Q-d047-ship-02): no source agent,
+skill or prompt of `plugins/architect/` changed, but the regenerated Copilot package changes in five
+generated files, all from the table's tested versions and `{{host_version_arg}}`:
+`agents/sdd-cartographer.agent.md` and `skills/code-discovery/SKILL.md` (the toolchain line names
+`sdd host-version vscode` instead of `vscode-insiders`), `prompts/doctor.prompt.md` (the probe
+`sdd host-version vscode` and the tested versions 1.145.2 / 0.73.0), `INSTALL.md` (the tested
+versions and the command) and `architect-target.json` (`tested_versions`); the `architect-sdd`
+package changes in `scripts/sdd.mjs` (host-version only). **Why the paid evidence stands:** no
+checked eval row depends on those lines (the Copilot CLI rows of C002-T-076 check boundaries,
+delegation and injection, not the doctor's host row or the toolchain line), and the Claude Code CLI
+change touches only `host-version`, which no Claude Code eval row calls.
+
+**Cross-change condition** (critic CR-123): "both hosts" holds only when CHG-001's C001-T-072 tags
+v0.1.0 at 9eb56c0, or at a later commit whose `plugins/architect/` diff against 9eb56c0 is empty (CR-103,
+the same source as Claude Code 0.1.0). Otherwise the case goes to P-01 before C002-T-055.
+
+The report note above stays as recorded (CLI-owned). The unpaid checks rerun at 9eb56c0 before the
 release: `npm run check` (the four CHG-001 approval tests excepted while CHG-001 D-030 is open); the
 `sdd-mcp-server` and `copilot-hooks` corpus replays in Git Bash and in PowerShell 7; `npm run package`
-at 0.1.0; the Copilot release dry run (`node scripts/release-check.mjs --target copilot --dry-run`),
-refusing ERR-REL-003 only (checklist record pending, C002-T-050); and `sdd host-version vscode` on
-P-01's machine printing `copilot-chat 0.73.0`.
+at 0.1.0, which also builds the Claude Code package (`dist/architect-0.1.0.zip`,
+`dist/architect-0.1.0-plugin.zip`) at 9eb56c0 (critic CR-123; there is no
+`release-check.mjs --target claude-code`: the Claude Code release check is C001-T-072's gate, whose
+`npm run check` includes `claude plugin validate`); the Copilot release dry run
+(`node scripts/release-check.mjs --target copilot --dry-run`), refusing ERR-REL-003 only (checklist
+record pending, C002-T-050); and `sdd host-version vscode` on P-01's machine printing
+`copilot-chat 0.73.0`.

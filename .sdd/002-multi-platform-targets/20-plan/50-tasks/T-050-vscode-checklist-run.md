@@ -37,8 +37,16 @@ the injection cases run on Copilot CLI (C002-T-054), not here; they join this ru
 hooks fallback with hooks enabled or when a later record shows that Copilot CLI cannot load the
 package (C002-REQ-613). This task serves the Copilot release only (C002-T-055); the OpenCode release
 does not wait for it. S-08's facts F-1 … F-7 (`docs/spikes/S-08-copilot-vscode.md` §5) were found on
-Insiders 1.142; the steps that settle them (the assumption steps above) confirm them on VS Code
-1.145.2, and a fact this run refutes is a spec defect, as in step 3.
+Insiders 1.142. This run confirms on VS Code 1.145.2 only those a VS Code step exercises, as the
+checklist's "Scope of a run" maps them (F-1 VSC-22; F-4, plugin-level half, VSC-27; F-5 VSC-18; F-7
+VSC-11 and VSC-17; F-2, workspace half, VSC-11); F-3 and the other halves of F-2 and F-4 are not
+exercised by the package, and F-6 is Copilot CLI only (critic CR-124). A refuted F-n is a `failed`
+step and a spec defect. **Subagent confinement** (critic CR-150; P-01's answer to Q-guard-proof-01):
+VSC-54 confirms on 1.145.2 that a specialist subagent cannot use a tool its agent file does not list
+(S-08 §3.1, C002-AS-03); a failure refuses the release. **Profile** (critic CR-125; P-01's answer to
+Q-t050-profile-01): the run uses VS Code's default profile, its `%APPDATA%\Code\User\settings.json`
+backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps edit the file
+`sdd host-version` reads.
 
 ## Targets
 
@@ -50,8 +58,8 @@ Insiders 1.142; the steps that settle them (the assumption steps above) confirm 
 
 - **Revision D-047** (P-01's instruction of 2026-11-10): the G2 and G3 approvals of the D-047
   revision and its unpaid rerun list (`handoff.md`); by P-01's answer to Q-d047-ship-01, 'Fold into
-  0.1.0 (Recommended)', the release candidate moves from b481e82 to the D-047 code commit 876e958, and
-  the 0.1.0 packages are packed there: `sdd host-version vscode` in the package's CLI prints `vscode 1.145.2` and `copilot-chat
+  0.1.0 (Recommended)', the release candidate moves from b481e82 to the D-047 code commit 9eb56c0 (Q-d047-ship-02
+  kept it on the corrected premise), and the 0.1.0 packages are packed there: `sdd host-version vscode` in the package's CLI prints `vscode 1.145.2` and `copilot-chat
   0.73.0` on P-01's machine, and the package's doctor probes `vscode` (not `vscode-insiders`) and shows
   the host row `ok`. Before that the doctor of the 0.1.0 packages probes `vscode-insiders` and
   shows the host row `untested`, and the checklist does not start.
@@ -78,8 +86,8 @@ Insiders 1.142; the steps that settle them (the assumption steps above) confirm 
 ## Step outline (no production code)
 
 1. **P-01 step:** install the Copilot package from `dist/architect-copilot-<version>.zip` and
-   `architect-sdd` from the local tarball on a fresh VS Code 1.145.2 profile (stable, not Insiders;
-   revision D-047), following `INSTALL.md`
+   `architect-sdd` from the local tarball in VS Code 1.145.2's default profile (stable, not Insiders;
+   revision D-047), after backing up its `settings.json` (Q-t050-profile-01), following `INSTALL.md`
    only: unpack outside the toy repository, register the folder and check the picker before the
    install (no Architect entry, C002-T-046 assumption step), run `sdd install copilot --package
    <folder>` in P-01's own terminal, set the three settings, open a Local chat with `sdd-conductor`
