@@ -324,6 +324,8 @@ Copilot injection case of the dev tier, each naming its case ID, when Copilot CL
 package (C002-REQ-613) and in every case under the Copilot hooks fallback, where those steps come
 after the hooks-state step (C002-REQ-628).
 
+**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in a running chat. `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free, so P-01's steps may run as one batch at the end. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
+
 **Run order** (revised for critic CR-44). The checklist lists its steps in the order P-01 runs them,
 in four groups, so that the hooks state of the record holds for every step that a hook decides:
 
@@ -398,7 +400,7 @@ enforcement_mode: copilot-hooks
 hooks_state: enabled                    # both modes: enabled | disabled, derived from hooks_sources (below)
 hooks_sources: { use_hooks: on, workspace_trust: trusted, policy: none }   # as read in the hooks-state step
 models_used: { sdd-conductor: claude-sonnet-5.5, sdd-cartographer: not shown }   # as VS Code showed them in the toy-change steps
-executed_by: <P-01 name>
+executed_by: <P-01 name>                # with D-050: "<P-01 name>; conductor for P-01 (P-01 ran VSC-.., ..)"
 steps:
   - { id: VSC-01, result: passed }
   - { id: VSC-03, result: not-applicable }

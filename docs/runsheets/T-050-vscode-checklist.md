@@ -7,6 +7,10 @@ Task C002-T-050 · cases C002-TC-901 (the run) and C002-TC-618 (record review), 
 C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 `docs/checklists/records/vscode-<YYYY-MM-DD>-0.1.0.md`
 
+## Executor (defect D-050)
+
+The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local**. It stops after its group-4 steps and hands you one batch, in this order: **VSC-30** (send `/gate <NNN>`, choose Revise, type a short reason, then Approve), **VSC-31**, **VSC-19** (the ideation is in revision again after VSC-31) and **VSC-12**. Then the conductor runs VSC-54, completes the record and runs the dry run. Where the steps below say "you", read "the executor".
+
 ## Prerequisites
 
 - **Hosts:** VS Code **1.145.2** (stable, commit c4453f8ea4) and GitHub Copilot Chat **0.73.0**,
@@ -102,7 +106,7 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
      VSC-07 (restore).
    - **Group 3:** VSC-08, then **directly** VSC-10 (the hooks state, from the three sources).
-   - **Group 4:** VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-27 and VSC-28 are the
+   - **Group 4:** VSC-11, VSC-13 to VSC-18, VSC-20 to VSC-24, VSC-27 to VSC-29 (conductor); then your batch VSC-30, VSC-31, VSC-19, VSC-12; then VSC-54 (conductor). Before D-050: VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-27 and VSC-28 are the
      delegated edit with `fixtures/toy-planted-line.md`. VSC-30 is gate G1. VSC-54 checks that a
      specialist subagent cannot edit a file or run a command (your answer to Q-guard-proof-01); if it
      can, the step fails and the release is refused.

@@ -745,9 +745,10 @@ Models used; defect D-028 items 1 and 2).
 ```gherkin
 @review
 Scenario Outline: C002-TS-618 — record of a checklist run
-  Given P-01 has completed a run of the manual VS Code checklist with the Copilot target package generated for <mode>
+  Given a run of the manual VS Code checklist with the Copilot target package generated for <mode> is completed by P-01, or by the conductor for P-01 with P-01 running the steps that need typing in a running chat (defect D-050)
   When the checklist record of that run is reviewed in the repository
   Then it states the date, the VS Code version, the GitHub Copilot Chat version, the enforcement mode, the result of each step and P-01's name
+  And when the conductor executed steps for P-01, "executed_by" names the conductor too and lists the steps P-01 ran
   And it states the hooks state during the run as "enabled" or "disabled", with the three sources as read in the hooks-state step: "chat.useHooks" on or off, the repository trusted or untrusted under Workspace Trust, and an organisation policy that disables hooks or none
   And its hooks state is "enabled" exactly when the three sources read "on", "trusted" and "none"
   And it states "models_used", a mapping from agent name as VS Code shows it to the model ID that VS Code showed for that agent's turns in the toy-change steps, or to "not shown", which holds the key "sdd-conductor"

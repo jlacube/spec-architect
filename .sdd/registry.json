@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T21:15:46Z",
+  "generated_at": "2026-11-10T22:26:54Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -419,13 +419,13 @@
           "approved_by": "jerome.lacube"
         },
         "10-spec": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:ac2e886866955b588bc2bc02a2c65b89dee8d91b2e06df480cb080eefab144e5",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "in-revision",
           "approved_hash": "sha256:3438ee90aef8b79821365341005621b29d698f924ffe16acda439a9a470a3526",
           "approved_at": "2026-11-10",
           "approved_by": "jerome.lacube"
@@ -931,6 +931,16 @@
           "status": "closed",
           "resolution": "Revision D-049 approved at G2 (waivers C002-NFR-601, C002-DOD-019) and G3: C002-T-057 and C002-TC-903 dropped, C002-T-055 and C002-T-075 no longer depend on it; untimed walkthrough deferred to the follow-up change; critic CR-135…144 fixed (2ca3b1f)",
           "closed_at": "2026-11-10"
+        },
+        {
+          "id": "D-050",
+          "ref": "C002-TS-618",
+          "summary": "P-01 instruction of 2026-11-10 ('go ahead, test the setting for T-050' / 'do T-050 I will do mine afterwards'): the conductor runs C002-T-050. Test of 2026-11-10: with chat.defaultToCopilotHarness and chat.editor.preferCopilotHarness false in the default profile's user settings, 'code chat' opens its session on the Local session type (control without them: Copilot). code chat always starts a new session and the conductor cannot type in VS Code, so P-01 keeps the steps that need typing in a running chat (VSC-12 slash list, VSC-19 text answers, VSC-30 Revise reason), run as one batch at the end; C002-TS-618 and the run sheet name both executors.",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-10",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [

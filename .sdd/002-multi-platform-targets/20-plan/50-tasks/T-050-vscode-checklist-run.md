@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-**P-01 executes this task.** P-01 runs the checklist on the Copilot release candidate in VS Code
+**The conductor executes this task for P-01** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"; C002-IF-009 §4 "Executor"): it drives VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings (backed up and restored with the rest of the profile's settings), so that each chat runs on the Local session type. **P-01 runs** the steps that need typing in a running chat, as one batch after the conductor's group-4 steps: VSC-30 (the Revise reason, then Approve), VSC-31, VSC-19 (free-text answers with `chat.askQuestions.enabled` off; the ideation is in revision again after VSC-31) and VSC-12 (the `/` list); the conductor then runs VSC-54 and completes the record. Before D-050, P-01 executed this task; "P-01 step" below means the executor of D-050. The checklist is run on the Copilot release candidate in VS Code
 1.145.2 (stable, commit c4453f8ea4) with GitHub Copilot Chat 0.73.0, built in (Local session type;
 tested hosts of scope §3.1, revised for defect D-047 on P-01's instruction of 2026-11-10: a released
 Insiders build broke the model calls; the earlier pair, VS Code Insiders 1.142.0-insider with Copilot

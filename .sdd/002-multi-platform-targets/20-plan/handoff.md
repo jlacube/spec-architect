@@ -439,6 +439,8 @@ Chat 0.73.0, with `sdd host-version vscode` of that window recorded
 rule:** D-048 closes at the G2 and G3 approvals with that close check passed; the C002-NFR-601 timing
 comes from P-01's run.
 
+**C002-T-050 is executed by the conductor for P-01** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"; `questions-log.md` round 2026-11-10, D-050; C002-IF-009 §4 "Executor"). The conductor drives VS Code 1.145.2 with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings; P-01 runs VSC-30, VSC-31, VSC-19 and VSC-12 as one batch after the conductor's group-4 steps, then the conductor runs VSC-54, completes the record and records the sign-off under P-01's standing waiver of 2026-10-19. VS Code chat sessions are billed to P-01's Copilot plan (about 13 sessions, at most about 26 with one repeat, as before). **Close rule:** D-050 closes at the G2 and G3 approvals.
+
 **C002-T-057 is dropped** (defect D-049; P-01's instruction of 2026-11-10 "agreed on all points. waive and
 continue autonomously"; `questions-log.md` round 2026-11-10, D-049): C002-NFR-601 and C002-DOD-019 are
 waived at the G2 re-approval, the time to the first question depending on inference (model, reasoning
