@@ -938,7 +938,8 @@ The set is `30-impact/regression-set.md`; this section assigns it to cases and t
 P-01 executes every manual case. The `@manual-vscode` cases are steps of
 `docs/checklists/vscode-copilot.md`; C002-TC-901 is the run that executes them, and its record under
 `docs/checklists/records/` is the evidence of C002-DOD-004. C002-TC-618 is the review of that record.
-C002-TC-902 (OpenCode, C002-T-051) and C002-TC-903 (Copilot, C002-T-057) are timed clean-profile runs
+C002-TC-902 (OpenCode, C002-T-051) and C002-TC-903 (Copilot, C002-T-057; in an isolated VS Code
+profile, C002-SPEC-NFR, defect D-048) are timed clean-profile runs
 recorded in `docs/releases/clean-profile-runs.md` (C002-DOD-019; C002-DOD-021 for the OpenCode toy
 change to G1).
 The `@review` cases (C002-TC-616, 617, 619, 632) are automated checks of the checklist file plus the
@@ -1275,7 +1276,7 @@ Kind names "the branch of §8.1" change level in that branch.
 | C002-TC-656 | C002-TS-656 | integration | — | — | `tests/unit/replay/opencode-decision.test.ts` | `npm test -- unit/replay` | in-process stub OpenCode host answering the `edit` call of PG-050 with each part form of the Examples; replay fixture copy of `README.md` | E-W | C002-T-042 |
 | C002-TC-901 | C002-TS-618 | manual | — | P-01 in VS Code | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step in the run order of C002-IF-009 §4 (install part, hooks-off rows of C002-TC-516, restore, true-and-trusted row, hooks-state step, then every other step; groups 3 and 4 again after a new restore when the order breaks), including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 358, 508 and 516 and the assumption steps of C002-T-046 (the MCP roots step of C002-IF-002 §3 included) (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
 | C002-TC-902 | C002-TS-205 | manual | — | P-01 | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/architect-opencode-<version>.zip` and its `INSTALL.md` | REF-WIN, OpenCode tested version | C002-T-051 (dropped); **moved to CHG-003** (C002-DOD-019, the timed OpenCode run, and C002-DOD-021; Q-opencode-scope-01) |
-| C002-TC-903 | C002-TS-306 | manual | — | P-01 in VS Code | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile to the first interview question | fresh Windows user profile, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC | C002-T-057 |
+| C002-TC-903 | C002-TS-306 | manual | — | P-01 in VS Code | `docs/releases/clean-profile-runs.md` | P-01 timed run in an isolated VS Code profile (C002-SPEC-NFR; defect D-048) to the first interview question | isolated VS Code profile set up by `scripts/manual/isolated-vscode-profile.ps1` on a new empty folder, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC, in the isolated VS Code profile | C002-T-057 |
 
 ### 8.1 Cases re-levelled in the S-07 infeasible-driver branch (not taken)
 

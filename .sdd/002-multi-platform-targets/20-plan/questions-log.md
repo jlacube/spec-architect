@@ -374,3 +374,12 @@ Questions on the S-07 record (C002-T-001).
 - **Answer:** P-01 (2026-11-10, relayed by the conductor): 'Run T-050 in the default profile (Recommended)', option 1
 - **Extracted instructions:** none
 - **Conductor's note:** the run sheet backs up `%APPDATA%\Code\User\settings.json` before VSC-01 and restores it after the run.
+
+## Round 2026-11-10 — defect D-048 (clean profile of C002-T-057)
+
+### Instruction 2026-11-10 — isolated VS Code profile for C002-T-057
+- **Context:** C002-NFR-601 (statement and environment "fresh user profile"), C002-TC-903 and C002-T-057 step 1 need a fresh Windows user profile. REF-WIN cannot provide one: P-01 cannot create a Windows account and Windows 11 Home has no Windows Sandbox (the finding of CHG-001 D-030, Q-clean-profile-01). The conductor's study `docs/test-responsibilities.md` (§2, C002-T-057 row, and §3 item 4) proposed an isolated VS Code instance (`code --user-data-dir <empty> --extensions-dir <empty>`), the counterpart of D-030's isolated Claude profile.
+- **Options:** none (an instruction on the conductor's proposal, not a choice)
+- **Answer:** P-01 (2026-11-10, verbatim): "go ahead with the T-057 revision"
+- **Extracted instructions:** C002-T-057 runs in an isolated VS Code profile (C002-SPEC-NFR), set up by `scripts/manual/isolated-vscode-profile.ps1`; P-01 still times the run and signs in.
+- **Conductor's note:** besides the two VS Code folders, the profile points `HOME`, `USERPROFILE`, `APPDATA` and the npm global prefix into the folder, as D-030 does for Claude Code, so that the CLI install of the install notes lands in the profile and git and Copilot find no earlier user state; the caveat (machine-wide Node, VS Code build, Credential Manager, an `architect-sdd` installed globally before) is stated in the spec.

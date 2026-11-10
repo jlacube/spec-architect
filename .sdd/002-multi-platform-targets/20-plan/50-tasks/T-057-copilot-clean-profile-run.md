@@ -20,8 +20,9 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-**P-01 executes this task.** Measure the time a P-03 adopter needs on a fresh user profile to reach the
-first interview question of a new change in VS Code at the tested version of scope §3.1 (VS Code
+**P-01 executes this task.** Measure the time a P-03 adopter needs in an isolated VS Code profile
+(C002-SPEC-NFR; defect D-048, P-01's instruction of 2026-11-10 "go ahead with the T-057 revision"), not a
+fresh Windows user profile, which REF-WIN cannot provide, to reach the first interview question of a new change in VS Code at the tested version of scope §3.1 (VS Code
 1.145.2 with Copilot Chat 0.73.0 since revision D-047; S-08 ran on Insiders 1.142) with GitHub
 Copilot by following only the install notes, which now include `sdd install copilot` in the
 repository, the Local session type with `sdd-conductor` selected, and a first plain message before
@@ -34,6 +35,8 @@ the OpenCode release does not wait for it.
 | Kind | Target | Change |
 |---|---|---|
 | modify | `docs/releases/clean-profile-runs.md` | the Copilot section: date, versions, timings, transcript or screen-recording link |
+| add | `scripts/manual/isolated-vscode-profile.ps1` | the set-up of the isolated VS Code profile (C002-SPEC-NFR, D-048); written and checked by the conductor before P-01's run |
+| modify | `docs/runsheets/T-057-copilot-clean-profile.md` | prerequisites and set-up in the isolated VS Code profile instead of a fresh Windows user profile (D-048) |
 
 ## Preconditions
 
@@ -54,15 +57,21 @@ the OpenCode release does not wait for it.
 
 ## Step outline (no production code)
 
-1. **P-01 step:** use a fresh Windows user profile with only Node.js and VS Code (GitHub Copilot
-   Chat built in) installed, and a fresh git repository.
+1. **P-01 step:** in a new PowerShell 7 window, dot-source `scripts/manual/isolated-vscode-profile.ps1`
+   on a new empty folder (the isolated VS Code profile of C002-SPEC-NFR; defect D-048), start VS Code
+   with that window's `code`, sign in to GitHub in it and set the git identity, all before the timer,
+   and make a fresh git repository inside the profile folder. The script's caveat (machine-wide Node,
+   VS Code build, an `architect-sdd` installed globally before) is stated in the record.
 2. **P-01 step:** extract `dist/architect-copilot-<version>.zip` and follow its `INSTALL.md`. Time
    each phase from the first install command to the first question, the `sdd install copilot` step
    timed on its own.
 
 ## Verification
 
-- The record shows ≤ 15 minutes for Copilot
+- The record shows ≤ 15 minutes for Copilot, run in an isolated VS Code profile
+- Before P-01's run, the conductor checks the set-up script on a throwaway folder: the instance it
+  starts lists no Marketplace extension, has no GitHub sign-in, and `sdd host-version vscode` in its
+  window prints the tested versions (D-048 close rule)
 
 ## Done when
 

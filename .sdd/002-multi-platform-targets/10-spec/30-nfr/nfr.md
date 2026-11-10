@@ -14,6 +14,23 @@ for the new components and the generated targets; none changes a CHG-001 thresho
 here is `Delta: ADDED`. Reference machine and workspace: REF-WIN and `fx-large` as in CHG-001; a
 host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 
+Isolated VS Code profile (clean-profile environment of C002-NFR-601 for the Copilot target and of
+C002-TC-903; defect D-048, P-01's instruction of 2026-11-10 "go ahead with the T-057 revision"; the
+counterpart of the isolated Claude profile of C001-SPEC-NFR, defect D-030 of CHG-001): on REF-WIN, in the
+tester's own Windows account, one PowerShell 7 window set up by `scripts/manual/isolated-vscode-profile.ps1`
+in which `HOME` and `USERPROFILE` = `<folder>`, `APPDATA` = `<folder>\AppData\Roaming`, the npm global
+prefix (`npm_config_prefix`) = `<folder>\npm`, placed first on PATH, and `code` starts VS Code with
+`--user-data-dir <folder>\vscode\data` and `--extensions-dir <folder>\vscode\extensions`, where `<folder>`
+is new and empty when the window is set up. VS Code then starts with no user settings, no sign-in, no
+Marketplace extension and no trusted folder; GitHub Copilot Chat is the one built into the VS Code build
+at its tested version. The tester signs in to GitHub in that instance, and sets the git identity in the
+profile, once before any timer starts. Caveat: only these variables and the two VS Code folders change.
+Everything else stays the tester's: the installed VS Code build, PATH after the npm prefix (so an
+`architect-sdd` installed globally before stays reachable under the new one), `LOCALAPPDATA` (nvm Node),
+HKCU, Windows Credential Manager (git's credential helper) and Known-Folder lookups. So a missing Node or
+VS Code install, or a skipped CLI install step, does not show in this environment. The OpenCode target's
+clean-profile environment moved to CHG-003 with its run.
+
 ## 1. Performance and cost
 
 ### C002-NFR-101 — sdd MCP server decision time
@@ -168,11 +185,11 @@ host runs at its tested version (glossary). DoD items: `../70-dod.md`.
 
 ### C002-NFR-601 — Time to the first interview on a generated target
 - **Category:** Interaction capability / learnability
-- **Statement:** WHEN a P-03 adopter follows the install notes of a target package on a fresh user profile, THE suite SHALL let them reach the first interview question of a new change within the threshold.
+- **Statement:** WHEN a P-03 adopter follows the install notes of a target package in a clean-profile environment (for the Copilot target: an isolated VS Code profile, defined above), THE suite SHALL let them reach the first interview question of a new change within the threshold.
 - **Metric:** elapsed time from opening the install notes to the first interview question, download time excluded, per target
 - **Threshold:** ≤ 15 minutes
 - **Method:** timed clean-profile run per target, recorded with the runs of C002-SC-01 and C002-SC-02
-- **Environment:** REF-WIN, fresh user profile, host at its tested version
+- **Environment:** REF-WIN, isolated VS Code profile for the Copilot target (defect D-048), host at its tested version
 - **Rationale:** C001-NFR-602 sets the same threshold on Claude Code; C002-GOAL-03
 - **DoD:** C002-DOD-019
 
