@@ -94,7 +94,7 @@ flowchart TB
     C002_T_049["T-049 OpenCode release evidence"]
     C002_T_054["T-054 Copilot release evidence"]
     C002_T_050["T-050 P-01 checklist run"]
-    C002_T_057["T-057 Copilot clean-profile run"]
+    C002_T_057["T-057 Copilot clean-profile run (dropped, D-049)"]
     C002_T_055["T-055 P-01 Copilot release"]
     C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes (Copilot 0.0.3; OpenCode deferred)"]
     C002_T_075["T-075 P-01 publish architect-sdd"]
@@ -259,7 +259,6 @@ flowchart TB
   C002_T_071 --> C002_T_075
   C002_T_074 --> C002_T_075
   C002_T_050 --> C002_T_075
-  C002_T_057 --> C002_T_075
   C002_T_075 --> C002_T_055
   C002_T_054 --> C002_T_076
   C002_T_066 --> C002_T_076
@@ -311,7 +310,6 @@ flowchart TB
   C002_T_048 --> C002_T_055
   C002_T_050 --> C002_T_055
   C002_T_054 --> C002_T_055
-  C002_T_057 --> C002_T_055
   C002_T_049 --> C002_T_071
   C002_T_054 --> C002_T_071
   C002_T_068 --> C002_T_071
@@ -549,7 +547,7 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
 | C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | M | T-049, T-054, T-068, T-069, T-070, T-073, T-074 |
 | C002-M-07 | C002-T-076 | Fix for revision D-041: Copilot release evidence retaken at version 0.1.0 | M | T-054, T-066, T-071 |
-| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-057, T-071, T-074, T-076 |
+| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-071, T-074, T-076 |
 | C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054, T-071, T-076 |
-| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target | S | T-023, T-034, T-039, T-058, T-071, T-076 |
-| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-057, T-071, T-075, T-076 |
+| C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | S | T-023, T-034, T-039, T-058, T-071, T-076 |
+| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-071, T-075, T-076 |

@@ -8,7 +8,7 @@ Task C002-T-055 · cases C002-TC-503, C002-TC-620, C002-TC-622 · writes
 
 ## Prerequisites
 
-- **Done:** T-050 (the checklist record is in `docs/checklists/records/`), T-057 (the Copilot section
+- **Done:** T-050 (the checklist record is in `docs/checklists/records/`); T-057 is dropped (defect D-049), so ignore: T-057 (the Copilot section
   of `clean-profile-runs.md`), T-076 (the Copilot evidence at 0.1.0 and its release-candidate commit),
   T-075 (or together with this release, below), and T-054, T-047 and T-048.
 - The S-08 record is not `deferred`. It gives `sdd-mcp-server`, so no hooks-fallback exception is

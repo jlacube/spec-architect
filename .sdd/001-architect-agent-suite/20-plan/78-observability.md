@@ -36,7 +36,7 @@ tooling, which prove each NFR during development and in use.
 | C001-NFR-502 | Coverage report (`coverage/lcov.info`) and the lines/branches figures that the `coverage` step of `npm run check` prints | metric | C001-T-065, C001-T-080 |
 | C001-NFR-503 | PLG-RULES-001 result | log | C001-T-061 |
 | C001-NFR-601 | PLG-MSG-001 result | log | C001-T-061 |
-| C001-NFR-602 | Timed clean-profile install record | metric | C001-T-062, C001-T-072 |
+| C001-NFR-602 | Waived at 0.1.0 (defect D-031); machine time of the scripted e2e flow recorded as context | metric | C001-T-062, C001-T-072 |
 | C001-NFR-701 | LINT-GATE-001 result on change.md files | log | C001-T-022, C001-T-073 |
 | C001-NFR-702 | `SDD_DEBUG=1` trace test | trace | C001-T-012 |
 | C001-NFR-801 | License check output and THIRD_PARTY_NOTICES.md | log | C001-T-061 |

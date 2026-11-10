@@ -26,12 +26,12 @@ Copilot (C002). OpenCode moved to CHG-003 and is out of scope.
 |---|---|---|
 | Functional part of TS-1102 (marketplace add, install, conductor starts) | **conductor — done** | `scripts/manual/isolated-profile-check.mjs`, PASS at 4dae1db, 0 USD |
 | End-to-end flow to the first interview question (init, G0, new change, ideate) | **conductor — done** | `scripts/manual/isolated-profile-e2e.mjs`, PASS on 2026-11-10 at 32f180a (plugin tree = 9eb56c0): 180.6 s machine time, 1.00 USD notional (`docs/release-0.1.0-evidence.md` §3) |
-| Time for a human to read the README and follow it (NFR-602, ≤ 15 min) | **P-01** | a learnability measure of a person; a scripted run cannot stand in for it without changing NFR-602 |
+| Time for a human to read the README and follow it (NFR-602, ≤ 15 min) | **waived** | CHG-001 defect D-031 (2026-11-10): the time depends on inference (model, effort, provider); an untimed docs walkthrough moves to the follow-up change |
 | Sign-in in the isolated profile | **P-01** | not timed |
 
 ### Claude Code — all release evals
 
-Done by the conductor (C001-T-072, 630 sessions). Nothing left for P-01 except TC-1102's timed part.
+Done by the conductor (C001-T-072, 630 sessions). Nothing left for P-01 (TC-1102's timed part is waived, D-031).
 
 ### Copilot — C002-T-076 (Copilot CLI evidence)
 
@@ -61,7 +61,7 @@ fragile, and a failed step cannot be rerun.
 |---|---|---|
 | A clean VS Code instance | **conductor** | `code --user-data-dir <empty> --extensions-dir <empty>` gives an isolated VS Code, the counterpart of D-030; the spec still says "fresh user profile", so this needs the same kind of revision as D-030 |
 | GitHub sign-in in that instance | **P-01** | |
-| The timed run following the install notes (NFR-601, ≤ 15 min) | **P-01** | human learnability, as for NFR-602 |
+| The timed run following the install notes (NFR-601, ≤ 15 min) | **waived** | CHG-002 defect D-049 (2026-11-10): C002-T-057 dropped |
 
 ### Publication and release — C002-T-075, T-055
 
@@ -71,7 +71,7 @@ fragile, and a failed step cannot be rerun.
 
 1. **Conductor, now:** the end-to-end scripted TC-1102 flow in the isolated profile (machine time and
    flow evidence), and the T-050 preparation (install, host-version, replays, dry run).
-2. **P-01:** the two timed human runs (TC-1102, T-057), the T-050 chat steps and dialogs, every sign-in,
+2. **P-01:** the T-050 chat steps and dialogs, every sign-in,
    the record sign-offs, then publish and release.
 3. **Optional pilot:** with P-01's go, the conductor tries 2–3 T-050 steps through `code chat` and
    screenshots on a scratch run (not the binding record) to measure how much of the checklist it can

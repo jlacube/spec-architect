@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-057, C002-T-071, C002-T-075, C002-T-076]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-071, C002-T-075, C002-T-076]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
@@ -55,9 +55,10 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
   the release-candidate commit that C002-T-071 records, with the CHG-001 fixes. C002-T-071 re-ran the
   Copilot unpaid steps (C002-T-054 steps 1 and 2) there. Its step 5 ran the paid Copilot CLI rows (C002-T-054 step 3, 24 sessions, Copilot pool) at that
   commit and version 0.0.3 (P-01 answers to Q-inj21-01 and Q-noask-01). That commit is no longer the
-  release candidate (revision D-041): C002-T-076 retakes these steps at 0.1.0, and C002-T-050 and
-  C002-T-057 run on the package of C002-T-076's commit.
-- C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054 and C002-T-057 done.
+  release candidate (revision D-041): C002-T-076 retakes these steps at 0.1.0, and C002-T-050 runs on
+  the package of C002-T-076's commit (C002-T-057 is dropped, defect D-049).
+- C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050 and C002-T-054 done (C002-T-057 dropped,
+  C002-NFR-601 and C002-DOD-019 waived; defect D-049).
 - The S-08 record is not `deferred` (its VS Code versions are historical since revision D-047; the
   tested versions are VS Code 1.145.2 with Copilot Chat 0.73.0, scope §3.1): the signed-off record gives
   `sdd-mcp-server` (C002-T-002). Only a later record of a new tested version (C002-REQ-621) could

@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: dropped
 depends_on: [C002-T-023, C002-T-034, C002-T-039, C002-T-058, C002-T-071, C002-T-076]
 implements: [C002-NFR-601]
 satisfies_ac: [C002-AC-304.1]
@@ -13,12 +13,14 @@ verified_by: [C002-TS-306, C002-TC-306, C002-TC-903]
 components: [C002-COMP-004]
 risk_refs: [C002-RISK-031]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "dropped (defect D-049; P-01's instruction of 2026-11-10 'agreed on all points. waive and continue autonomously'): C002-NFR-601 and C002-DOD-019 waived at 0.1.0, the time to the first question depending on inference (model, reasoning effort, local or cloud provider); C002-TS-306 keeps C002-TC-306; an untimed docs walkthrough moves to the follow-up change" }
 ---
 
 # C002-T-057 — Timed clean-profile run for the Copilot target
 
 ## Intent
+
+**Dropped (defect D-049):** C002-NFR-601 and C002-DOD-019 are waived at 0.1.0 (defect D-049; P-01's instruction of 2026-11-10 "agreed on all points. waive and continue autonomously"). This task is not run; the text below is kept as a record and as an optional procedure.
 
 **P-01 executes this task.** Measure the time a P-03 adopter needs in an isolated VS Code profile
 (C002-SPEC-NFR; defect D-048, P-01's instruction of 2026-11-10 "go ahead with the T-057 revision"), not a

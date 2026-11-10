@@ -482,7 +482,7 @@ estimate; they are not part of the OpenRouter totals.
 | C002-M-07, reserve | C002-T-051 step 3 (P-01, by hand) | about 4 on E-OCE at 0.35: the OpenCode toy change to G1 of C002-TC-902 (conductor interview and gate, and the specialist sessions it starts; Q-evalbudget-04) | 1.40 USD | 2.60 USD | 0 | 0 |
 | C002-M-07 | C002-T-054 step 3 | 0 | 0 | 0 | 0 | about 24: the Copilot CLI case set of C002-IF-010 §5.1 for C002-TC-615, `ROUTE-auditor-copilot-cli`, `INJ-01` … `INJ-22` and C002-TC-359 (`TS-336` not applicable, no session), run with `--copilot-model claude-opus-5.5=claude-sonnet-5.5` (Copilot pool; about 3.4 USD, upper bound about 15.6 USD, §4.4); plus the 2 sessions of 2026-10-21 that the host refused on `claude-opus-5.5` at 0 AI Credits, `valid_run: false` (§4.1 Ledger) |
 | C002-M-07 | C002-T-050 steps 2 and 3 (P-01) | 0 | 0 | 0 | 0 | about 13 per checklist run on E-VSC (C002-TC-901: the Copilot toy change to G1, the delegated edit of C002-TC-358 with and without the plugin part, the roots step); about 26 with one repeat after a failed step |
-| C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 1 on E-VSC: C002-TC-903, to the first interview question |
+| C002-M-07 | C002-T-057 step 2 (P-01) | 0 | 0 | 0 | 0 | 0: dropped (defect D-049); was 1 on E-VSC, C002-TC-903 |
 | **Total** | | **96** | **31.10 USD** | 65.86 USD | **83** (30.21 USD notional: measured for C002-T-048 step 4 batches 1 … 6, estimated for the other rows), 84 with the conditional row of C002-T-063 step 5; at most 11 more with the conditional reruns of C002-T-048 steps X3 … X5 (at most 16.50 USD notional) | **about 68** (about 85 before the case set of C002-IF-010 §5.1 cut C002-T-054 from about 41 to 24 sessions) |
 
 ### 4.3 Budget, reserve and room for reruns
@@ -941,7 +941,7 @@ P-01 executes every manual case. The `@manual-vscode` cases are steps of
 C002-TC-902 (OpenCode, C002-T-051) and C002-TC-903 (Copilot, C002-T-057; in an isolated VS Code
 profile, C002-SPEC-NFR, defect D-048) are timed clean-profile runs
 recorded in `docs/releases/clean-profile-runs.md` (C002-DOD-019; C002-DOD-021 for the OpenCode toy
-change to G1).
+change to G1). C002-TC-903 is dropped: C002-NFR-601 and C002-DOD-019 are waived at 0.1.0 (defect D-049; P-01's instruction of 2026-11-10 "agreed on all points. waive and continue autonomously"); C002-TS-306 keeps its automated case C002-TC-306.
 The `@review` cases (C002-TC-616, 617, 619, 632) are automated checks of the checklist file plus the
 review entry of C002-DOD-007. The runner runs their checks (Executor "—"); P-01 writes the
 C002-DOD-007 review entry for C002-TC-616, 617, 619 and 632.
@@ -1276,7 +1276,7 @@ Kind names "the branch of §8.1" change level in that branch.
 | C002-TC-656 | C002-TS-656 | integration | — | — | `tests/unit/replay/opencode-decision.test.ts` | `npm test -- unit/replay` | in-process stub OpenCode host answering the `edit` call of PG-050 with each part form of the Examples; replay fixture copy of `README.md` | E-W | C002-T-042 |
 | C002-TC-901 | C002-TS-618 | manual | — | P-01 in VS Code | `docs/checklists/vscode-copilot.md`, record under `docs/checklists/records/` | P-01 runs every checklist step in the run order of C002-IF-009 §4 (install part, hooks-off rows of C002-TC-516, restore, true-and-trusted row, hooks-state step, then every other step; groups 3 and 4 again after a new restore when the order breaks), including C002-TC-216, 218, 220, 309, 313, 317, 318, 319, 321, 329, 335, 358, 508 and 516 and the assumption steps of C002-T-046 (the MCP roots step of C002-IF-002 §3 included) (C002-TC-313 and 335 not applicable under `sdd-mcp-server`) | toy (fresh install through `sdd install copilot`) | E-VSC | C002-T-050 |
 | C002-TC-902 | C002-TS-205 | manual | — | P-01 | `docs/releases/clean-profile-runs.md` | P-01 timed run on a clean Windows profile, OpenCode toy change to G1 | fresh Windows user profile, `dist/architect-opencode-<version>.zip` and its `INSTALL.md` | REF-WIN, OpenCode tested version | C002-T-051 (dropped); **moved to CHG-003** (C002-DOD-019, the timed OpenCode run, and C002-DOD-021; Q-opencode-scope-01) |
-| C002-TC-903 | C002-TS-306 | manual | — | P-01 in VS Code | `docs/releases/clean-profile-runs.md` | P-01 timed run in an isolated VS Code profile (C002-SPEC-NFR; defect D-048) to the first interview question | isolated VS Code profile set up by `scripts/manual/isolated-vscode-profile.ps1` on a new empty folder, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC, in the isolated VS Code profile | C002-T-057 |
+| C002-TC-903 | C002-TS-306 | manual | — | dropped (C002-NFR-601 waived, defect D-049); was P-01 in VS Code | `docs/releases/clean-profile-runs.md` | P-01 timed run in an isolated VS Code profile (C002-SPEC-NFR; defect D-048) to the first interview question | isolated VS Code profile set up by `scripts/manual/isolated-vscode-profile.ps1` on a new empty folder, `dist/architect-copilot-<version>.zip` and its `INSTALL.md` | E-VSC, in the isolated VS Code profile | C002-T-057 |
 
 ### 8.1 Cases re-levelled in the S-07 infeasible-driver branch (not taken)
 

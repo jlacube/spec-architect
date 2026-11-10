@@ -13,7 +13,7 @@ Task C002-T-075 · writes `docs/releases/architect-sdd/0.1.0.md`
 
 ### Prerequisites
 
-- **T-050 and T-057 done** at 0.1.0 (the checklist record and the Copilot section of
+- **T-050 done** at 0.1.0 (T-057 is dropped, defect D-049; ignore what follows about it) (the checklist record and the Copilot section of
   `docs/releases/clean-profile-runs.md`). npm versions are immutable, so the CLI is published only
   after every Copilot check can pass.
 - **T-076 done.** Ask the conductor for the release-candidate commit; the tarball

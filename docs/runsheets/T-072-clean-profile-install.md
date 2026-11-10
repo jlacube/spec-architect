@@ -1,5 +1,10 @@
 # T-072 — Claude Code clean-profile install, timed (TC-1102)
 
+> **Not required at 0.1.0** (CHG-001 defect D-031; P-01's instruction of 2026-11-10, "agreed on all points. waive and continue autonomously"): C001-NFR-602 is waived,
+> the time to the first question depending on inference (model, reasoning effort, provider). The scripted
+> end-to-end flow (`scripts/manual/isolated-profile-e2e.mjs`) is the evidence of the flow. This sheet stays as an
+> optional procedure.
+
 **Purpose:** in an isolated Claude profile on Windows 11, time how long it takes to go from opening the
 README to the first interview question of a new change, installing the Architect plugin 0.1.0 from the
 local marketplace (limit 15 minutes, C001-NFR-602). This is the last open test case of the release gate.

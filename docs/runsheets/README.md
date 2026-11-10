@@ -15,8 +15,8 @@ evidence first. The 0.0.3 packages still in `dist/` are not released; do not use
 
 **CHG-001 release gate (C001-T-072, version 0.1.0).** One more sheet, outside C002-M-07 and independent of the
 CHG-002 sheets below: [T-072-clean-profile-install.md](T-072-clean-profile-install.md), the timed Claude Code
-install in an isolated Claude profile (C001-TC-1102, limit 15 minutes; D-030). It gives the record in `docs/dogfood.md`;
-after it passes the conductor tags `v0.1.0` locally. The rules below about keys, failures and commits apply to it
+install in an isolated Claude profile (C001-TC-1102, limit 15 minutes; D-030). **Not required at 0.1.0:** C001-NFR-602
+is waived (defect D-031), so the sheet is optional and the conductor tags `v0.1.0` locally without it. The rules below about keys, failures and commits apply to it
 too; it uses no CHG-002 package and no Copilot host.
 
 ## Recommended order
@@ -24,9 +24,9 @@ too; it uses no CHG-002 package and no Copilot host.
 | # | Sheet | Task | What it gives | Needs first |
 |---|---|---|---|---|
 | 1 | [T-050-vscode-checklist.md](T-050-vscode-checklist.md) | C002-T-050 | Checklist record `docs/checklists/records/vscode-<date>-0.1.0.md` | T-046, T-054, **T-076** (the 0.1.0 release-candidate commit) |
-| 2 | [T-057-copilot-clean-profile.md](T-057-copilot-clean-profile.md) | C002-T-057 | Copilot timed run (15 min or less) | T-023, T-034, T-039, T-058, **T-076** |
-| 3 | [T-052-publish-and-opencode-release.md](T-052-publish-and-opencode-release.md), part 1 | C002-T-075 | `architect-sdd` 0.1.0 on npm, record `docs/releases/architect-sdd/0.1.0.md` | **T-050**, **T-057**, T-076 |
-| 4 | [T-055-copilot-release.md](T-055-copilot-release.md) | C002-T-055 | Copilot release record and zip | **T-050**, **T-057**, **T-075** (before or together), T-054, T-047, T-048, T-076 |
+| — | [T-057-copilot-clean-profile.md](T-057-copilot-clean-profile.md) | C002-T-057 | dropped (C002-NFR-601 waived, defect D-049); optional | — |
+| 3 | [T-052-publish-and-opencode-release.md](T-052-publish-and-opencode-release.md), part 1 | C002-T-075 | `architect-sdd` 0.1.0 on npm, record `docs/releases/architect-sdd/0.1.0.md` | **T-050**, T-076 |
+| 4 | [T-055-copilot-release.md](T-055-copilot-release.md) | C002-T-055 | Copilot release record and zip | **T-050**, **T-075** (before or together), T-054, T-047, T-048, T-076 |
 | — | [T-051-opencode-clean-profile.md](T-051-opencode-clean-profile.md); part 2 of the T-052 sheet | C002-T-051, C002-T-052 | moved to CHG-003 | — |
 
 How the tasks depend on each other:

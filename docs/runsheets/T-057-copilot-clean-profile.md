@@ -1,5 +1,8 @@
 # T-057 — Copilot clean-profile run, timed
 
+> **Dropped at 0.1.0** (CHG-002 defect D-049; P-01's instruction of 2026-11-10, "agreed on all points. waive and continue autonomously"): C002-NFR-601 and C002-DOD-019
+> are waived and C002-T-057 is not run. This sheet stays as an optional procedure.
+
 **Purpose:** in an isolated VS Code profile (CHG-002 revision D-048, in place of a fresh Windows profile), time how long it takes to go from the first install command
 to the first interview question of a new change in VS Code with Copilot, using only
 `INSTALL.md` (limit 15 minutes). The `sdd install copilot` step is timed on its own.

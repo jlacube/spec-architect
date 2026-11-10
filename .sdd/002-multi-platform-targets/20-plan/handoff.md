@@ -439,6 +439,14 @@ Chat 0.73.0, with `sdd host-version vscode` of that window recorded
 rule:** D-048 closes at the G2 and G3 approvals with that close check passed; the C002-NFR-601 timing
 comes from P-01's run.
 
+**C002-T-057 is dropped** (defect D-049; P-01's instruction of 2026-11-10 "agreed on all points. waive and
+continue autonomously"; `questions-log.md` round 2026-11-10, D-049): C002-NFR-601 and C002-DOD-019 are
+waived at the G2 re-approval, the time to the first question depending on inference (model, reasoning
+effort, local or cloud provider). The D-048 block above stays as a record; the isolated VS Code profile and
+its script stay available. C002-T-055 and C002-T-075 no longer wait for C002-T-057; C002-TS-306 keeps
+C002-TC-306. An untimed docs walkthrough moves to the follow-up change "Cost and token efficiency".
+**Close rule:** D-049 closes at the G2 and G3 approvals.
+
 **C002-T-076 waits for the G3 approval of the D-046 revision** (defect D-046; P-01 answer
 Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'). Its step 4 stopped after 15 of 24
 sessions (a17dc48): `INJ-02` and `INJ-04` were not exposed and did nothing forbidden, and the merge
@@ -760,7 +768,7 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
 | 69 | C002-T-076 | Fix for revision D-041: Copilot release evidence retaken at version 0.1.0 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-076-copilot-evidence-retake-0-1-0.md` |
 | 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 71 | C002-T-057 | Timed clean-profile run for the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 71 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
 | 72 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
 | 73 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 

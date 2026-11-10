@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-057, C002-T-071, C002-T-074, C002-T-076]
+depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-071, C002-T-074, C002-T-076]
 implements: [C002-REQ-501, C002-REQ-502, C002-REQ-509]
 satisfies_ac: [C002-AC-501.1, C002-AC-502.1, C002-AC-509.1]
 verified_by: [C002-TS-501, C002-TC-501]
@@ -48,8 +48,8 @@ the account of C002-T-003.
 - C002-T-071 and **C002-T-076** done: the tarball is packed at the release-candidate commit of
   C002-T-076, whose evidence the Copilot release check reads. Neither runs an OpenCode step, since
   the OpenCode release moved to CHG-003.
-- **C002-T-050 and C002-T-057 done** (plan critics CR-82, CR-84): the checklist record and the
-  Copilot clean-profile run exist at 0.1.0. npm versions are immutable, so the CLI is published only
+- **C002-T-050 done** (plan critics CR-82, CR-84): the checklist record exists at 0.1.0 (C002-T-057,
+  the Copilot clean-profile run, is dropped: C002-NFR-601 waived, defect D-049). npm versions are immutable, so the CLI is published only
   after every Copilot check can pass.
 - `npm view architect-sdd@0.1.0` shows no such version. A version already on npm is never published
   again: npm versions are immutable (C002-RB-001).
@@ -58,7 +58,7 @@ the account of C002-T-003.
 
 1. **Released dry run** (plan critics CR-82, CR-84). At the release-candidate commit of C002-T-076,
    run `node scripts/release-check.mjs --target copilot --dry-run`. It must give `released`, with the
-   checklist record of C002-T-050 and the run of C002-T-057 in place. Any other outcome stops this
+   checklist record of C002-T-050 in place. Any other outcome stops this
    task, and nothing is published.
 2. At the same commit, run `npm run smoke:npm` and the tarball check
    (`node scripts/check/tarball.mjs dist/architect-sdd-0.1.0.tgz`). Record the tarball's `sha512`
@@ -76,7 +76,7 @@ the account of C002-T-003.
 
 ## Done when
 
-- [ ] The Copilot release-check dry run gave `released` at the release-candidate commit, after C002-T-050 and C002-T-057
+- [ ] The Copilot release-check dry run gave `released` at the release-candidate commit, after C002-T-050
 - [ ] `architect-sdd@0.1.0` is on npm, published by P-01 from the checked tarball of the release-candidate commit, before or together with the Copilot release of C002-T-055
 - [ ] The record `docs/releases/architect-sdd/0.1.0.md` is committed
 - [ ] Progress reported: `sdd task set C002-T-075 --status done --commit <sha>`

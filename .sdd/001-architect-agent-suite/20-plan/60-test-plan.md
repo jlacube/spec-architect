@@ -98,7 +98,7 @@ run before every task commit.
 | TC | Procedure owner | Notes |
 |---|---|---|
 | C001-TC-621 | P-01 supervises a Superpowers session (T-074) | Count implementer questions tagged missing-info (C001-SC-04) |
-| C001-TC-1102 | Functional part (marketplace add, install, plugin list, conductor resolves): the implementer or conductor of T-072 with `scripts/manual/isolated-profile-check.mjs`; timed run: P-01 in an isolated Claude profile (C001-SPEC-NFR; D-030, Q-clean-profile-01) | Timed for C001-NFR-602 |
+| C001-TC-1102 | Functional part (marketplace add, install, plugin list, conductor resolves): the implementer or conductor of T-072 with `scripts/manual/isolated-profile-check.mjs`; scripted end-to-end flow to the first interview question: `scripts/manual/isolated-profile-e2e.mjs` (machine time as context); P-01's timed run waived with C001-NFR-602 (defect D-031) | C001-NFR-602 waived at 0.1.0 (D-031) |
 | C001-TC-1127 | Implementer of C001-T-080 on REF-WIN; repeated by the implementer of C001-T-072 at the release commit | Four sequential `npm run check` runs (two shells × two Node versions) for C001-NFR-401 |
 
 ## 8. Test cases
