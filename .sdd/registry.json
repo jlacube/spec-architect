@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-10T12:22:51Z",
+  "generated_at": "2026-11-10T12:23:54Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -884,9 +884,9 @@
           "summary": "Found in the conductor's study of 2026-11-10 (docs/test-responsibilities.md §2, §3 item 4): C002-NFR-601 (statement 'on a fresh user profile', environment 'REF-WIN, fresh user profile'), C002-TC-903 (test data 'fresh Windows user profile') and C002-T-057 step 1 require a fresh Windows user profile, which REF-WIN cannot provide (P-01 cannot create a Windows account; Windows 11 Home has no Windows Sandbox; the same finding as CHG-001 D-030). P-01 (2026-11-10): 'go ahead with the T-057 revision', the conductor's proposal: an isolated VS Code profile, the counterpart of C001's isolated Claude profile (D-030): VS Code started with --user-data-dir and --extensions-dir on a new empty folder, HOME, USERPROFILE and APPDATA pointed into it, npm global prefix inside it; machine-wide state stays (caveat stated in the spec). Close rule: the revision approved at G2 and G3, and the isolated VS Code profile set-up checked by the conductor (fresh instance starts with no sign-in, no Marketplace extensions and the built-in Copilot Chat 0.73.0); the C002-NFR-601 timing comes from P-01's timed run (C002-T-057).",
           "reporter": "jerome.lacube",
           "date": "2026-11-10",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Revision approved at G2/G3 (2e495ae, b5ab9e8) after critic CR-128 … CR-134 fixed (e7e5e9e); close check PASS: isolated-vscode-profile.ps1 -Check PASS on a throwaway folder, the instance started once with no sign-in, no Marketplace extension, built-in Copilot Chat 0.73.0, sdd host-version vscode 1.145.2 / 0.73.0 in its window (docs/releases/copilot/0.1.0/D-048-isolated-profile-check.md). C002-NFR-601 timing comes from P-01's run (C002-T-057).",
+          "closed_at": "2026-11-10"
         }
       ],
       "waivers": [
