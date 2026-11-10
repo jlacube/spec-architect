@@ -18,16 +18,22 @@ Isolated VS Code profile (clean-profile environment of C002-NFR-601 for the Copi
 C002-TC-903; defect D-048, P-01's instruction of 2026-11-10 "go ahead with the T-057 revision"; the
 counterpart of the isolated Claude profile of C001-SPEC-NFR, defect D-030 of CHG-001): on REF-WIN, in the
 tester's own Windows account, one PowerShell 7 window set up by `scripts/manual/isolated-vscode-profile.ps1`
-in which `HOME` and `USERPROFILE` = `<folder>`, `APPDATA` = `<folder>\AppData\Roaming`, the npm global
-prefix (`npm_config_prefix`) = `<folder>\npm`, placed first on PATH, and `code` starts VS Code with
-`--user-data-dir <folder>\vscode\data` and `--extensions-dir <folder>\vscode\extensions`, where `<folder>`
-is new and empty when the window is set up. VS Code then starts with no user settings, no sign-in, no
-Marketplace extension and no trusted folder; GitHub Copilot Chat is the one built into the VS Code build
-at its tested version. The tester signs in to GitHub in that instance, and sets the git identity in the
+in which every `VSCODE_*` variable and `GH_TOKEN` and `GITHUB_TOKEN` are removed, `HOME` and `USERPROFILE` =
+`<folder>`, `APPDATA` = `<folder>\AppData\Roaming`, the npm global prefix (`npm_config_prefix`) =
+`<folder>\npm`, placed first on PATH, and `code` starts VS Code with `--user-data-dir
+<folder>\AppData\Roaming\Code` and `--extensions-dir <folder>\.vscode\extensions`, VS Code's default
+folders under those variables, so that the sdd CLI and the doctor (C002-IF-007) read the folders the
+instance uses (critic CR-129); `<folder>` is new and empty when the window is set up. VS Code then starts
+with no sign-in, no Marketplace extension, no trusted folder and no user settings except the two
+auto-update settings of revision D-047, `"update.mode": "none"` and `"extensions.autoUpdate": false`
+(critic CR-128; C002-RISK-031); GitHub Copilot Chat is the one built into the VS Code build at its
+tested version. The tester signs in to GitHub in that instance, and sets the git identity in the
 profile, once before any timer starts. Caveat: only these variables and the two VS Code folders change.
 Everything else stays the tester's: the installed VS Code build, PATH after the npm prefix (so an
-`architect-sdd` installed globally before stays reachable under the new one), `LOCALAPPDATA` (nvm Node),
-HKCU, Windows Credential Manager (git's credential helper) and Known-Folder lookups. So a missing Node or
+`architect-sdd` installed globally before stays reachable until the new one is installed) and every other
+inherited variable, the PowerShell profile (a `code` alias there would win over the script's function;
+the script warns), `LOCALAPPDATA` (nvm Node, npm's warm cache), HKCU, Windows Credential Manager (git's
+credential helper) and Known-Folder lookups. So a missing Node or
 VS Code install, or a skipped CLI install step, does not show in this environment. The OpenCode target's
 clean-profile environment moved to CHG-003 with its run.
 

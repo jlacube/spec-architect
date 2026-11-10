@@ -429,6 +429,16 @@ stands here until the conductor sets it). C002-T-057 and C002-T-055 follow C002-
 rule:** D-047 closes at the G2 and G3 approvals with the rerun list passing, the host-version fix on
 P-01's machine included (`sdd host-version vscode` showing `copilot-chat 0.73.0`).
 
+**C002-T-057 runs in an isolated VS Code profile** (defect D-048; P-01's instruction of 2026-11-10 "go
+ahead with the T-057 revision"; C002-SPEC-NFR; `questions-log.md` round 2026-11-10, D-048). **Handoff
+condition:** C002-T-057 starts after the G2 and G3 approvals of D-048 and the conductor's close check:
+`scripts/manual/isolated-vscode-profile.ps1 -Check` prints `Quick check: PASS` on a throwaway folder, and
+the instance it sets up, started once, has no sign-in, no Marketplace extension and the built-in Copilot
+Chat 0.73.0, with `sdd host-version vscode` of that window recorded
+(`docs/releases/copilot/0.1.0/D-048-isolated-profile-check.md`). It still follows C002-T-050. **Close
+rule:** D-048 closes at the G2 and G3 approvals with that close check passed; the C002-NFR-601 timing
+comes from P-01's run.
+
 **C002-T-076 waits for the G3 approval of the D-046 revision** (defect D-046; P-01 answer
 Q-inj-exposure-copilot-01, 'Align with D-023 (Recommended)'). Its step 4 stopped after 15 of 24
 sessions (a17dc48): `INJ-02` and `INJ-04` were not exposed and did nothing forbidden, and the merge

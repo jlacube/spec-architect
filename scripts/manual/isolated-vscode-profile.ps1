@@ -13,27 +13,38 @@
 #   to choose another VS Code);
 # - creates the profile folder, which must not exist yet or be empty (default
 #   <your real home>\architect-vsc-iso-<time>);
+# - removes every VSCODE_* variable (a window opened from VS Code's terminal carries the IPC handle of that
+#   VS Code) and GH_TOKEN / GITHUB_TOKEN from this window, and prints what it removed;
 # - points HOME and USERPROFILE at <root>, APPDATA at <root>\AppData\Roaming, and the npm global prefix
 #   (npm_config_prefix) at <root>\npm, which goes first on PATH, so `npm install -g` lands in the profile;
 #   for convenience it also points PowerShell's $HOME and `~` at <root>;
 # - writes your git user.name and user.email into <root>\.gitconfig (set-up, before the timer);
-# - defines `code` in this window as VS Code with --user-data-dir <root>\vscode\data and
-#   --extensions-dir <root>\vscode\extensions: a separate VS Code instance with no settings, no sign-in,
-#   no Marketplace extension and no trusted folder; GitHub Copilot Chat is the one built into the build;
+# - writes the instance's user settings with only the two auto-update settings of revision D-047,
+#   "update.mode": "none" and "extensions.autoUpdate": false (critic CR-128);
+# - defines `code` in this window as VS Code with --user-data-dir <root>\AppData\Roaming\Code and
+#   --extensions-dir <root>\.vscode\extensions, VS Code's default folders under the redirected variables,
+#   so the sdd CLI and the doctor read the folders the instance uses (critic CR-129): a separate VS Code
+#   instance with no sign-in, no Marketplace extension and no trusted folder; GitHub Copilot Chat is the
+#   one built into the build;
 # - prints the versions (VS Code, built-in Copilot Chat, Node, npm prefix), the extensions of the isolated
 #   instance (none expected) and whether an `sdd` is already reachable (the caveat below).
 # With -Check (a throwaway profile only, never the one of the timed run) it also runs a quick check
 # without starting a window: VS Code and Copilot Chat at the tested versions, no Marketplace extension in
-# the isolated instance, npm's global prefix inside the profile, and empty user data; it prints
-# "Quick check: PASS" or "Quick check: FAIL".
+# the isolated instance, npm's global prefix inside the profile, user settings holding only the two
+# auto-update settings, and no sign-in state yet; it prints "Quick check: PASS" or "Quick check: FAIL".
+# The D-048 close check then starts that instance once and records its Accounts menu (no account), its
+# Extensions view (none installed) and `sdd host-version vscode` in
+# docs/releases/copilot/0.1.0/D-048-isolated-profile-check.md.
 #
 # Caveat (C002-SPEC-NFR): only those variables and the two VS Code folders change. Everything else stays
 # yours: the installed VS Code build, PATH after the npm prefix (so an architect-sdd you installed globally
-# before stays reachable until the new one is installed in the profile), LOCALAPPDATA (nvm Node, npm's
-# cache), HKCU, Windows Credential Manager (git's credential helper) and Known-Folder lookups. So a missing
-# Node or VS Code install, or a skipped CLI install step, does not show. Start VS Code with this window's
-# `code`, not from the Start menu (that would open your own profile). Close the window and the isolated
-# VS Code to leave the profile; delete <root> when the conductor has the record.
+# before stays reachable until the new one is installed in the profile) and every other inherited
+# variable, your PowerShell profile (an alias named code there would win over this script's function; the
+# script warns), LOCALAPPDATA (nvm Node, npm's warm cache), HKCU, Windows Credential Manager (git's
+# credential helper) and Known-Folder lookups. So a missing Node or VS Code install, or a skipped CLI
+# install step, does not show. Start VS Code with this window's `code`, not from the Start menu (that
+# would open your own profile). Close the window and the isolated VS Code to leave the profile; delete
+# <root> when the conductor has the record.
 [CmdletBinding()]
 param(
   [string]$Root = (Join-Path $HOME ("architect-vsc-iso-" + (Get-Date -Format "yyyyMMdd-HHmmss"))),
@@ -55,15 +66,24 @@ function Find-CodeCli([string]$Explicit) {
   return $cmd.Source
 }
 
-# The built-in GitHub Copilot Chat of the build: <install>\<commit prefix>\resources\app\extensions\copilot
-# (Windows, VS Code 1.145) or <install>\resources\app\extensions\copilot (older layout).
-function Get-BuiltInCopilotChat([string]$CodeCli) {
+# The built-in GitHub Copilot Chat of the probed build (C002-IF-007): <install>\<commit prefix>\resources\app\
+# extensions\copilot, the folder whose name is a prefix of the commit that `code --version` prints on its
+# second line (folders of earlier commits may stay beside it), else <install>\resources\app\extensions\copilot
+# (older layout); its package.json must name publisher GitHub and name copilot-chat (critic CR-131).
+function Get-BuiltInCopilotChat([string]$CodeCli, [string]$Commit) {
   $install = Split-Path (Split-Path $CodeCli -Parent) -Parent
-  $candidates = @(Join-Path $install "resources\app\extensions\copilot\package.json")
-  $candidates += @(Get-ChildItem $install -Directory -ErrorAction SilentlyContinue |
-    ForEach-Object { Join-Path $_.FullName "resources\app\extensions\copilot\package.json" })
+  $candidates = @()
+  if ($Commit) {
+    $candidates += @(Get-ChildItem $install -Directory -ErrorAction SilentlyContinue |
+      Where-Object { $_.Name.Length -ge 7 -and $Commit.StartsWith($_.Name, [StringComparison]::OrdinalIgnoreCase) } |
+      ForEach-Object { Join-Path $_.FullName "resources\app\extensions\copilot\package.json" })
+  }
+  $candidates += @(Join-Path $install "resources\app\extensions\copilot\package.json")
   foreach ($c in $candidates) {
-    if (Test-Path $c) { return (Get-Content $c -Raw | ConvertFrom-Json).version }
+    if (Test-Path $c) {
+      $j = Get-Content $c -Raw | ConvertFrom-Json
+      if ($j.publisher -eq "GitHub" -and $j.name -eq "copilot-chat") { return $j.version }
+    }
   }
   return $null
 }
@@ -79,36 +99,48 @@ New-Item -ItemType Directory -Force $Root | Out-Null
 $Root = (Resolve-Path $Root).Path
 if ($Root -match '["$%`]') { throw "The profile folder $Root holds a character that the package path refuses (`"`, `$`, `%` or a backtick)." }
 
+$removed = @(Get-ChildItem Env: | Where-Object { $_.Name -match '^VSCODE_' -or $_.Name -in @("GH_TOKEN", "GITHUB_TOKEN") } |
+  ForEach-Object { $_.Name })
+foreach ($n in $removed) { Remove-Item "Env:$n" }
 $env:HOME = $Root
 $env:USERPROFILE = $Root
 $env:APPDATA = Join-Path $Root "AppData\Roaming"
 $npmPrefix = Join-Path $Root "npm"
 $env:npm_config_prefix = $npmPrefix
 $env:Path = "$npmPrefix;" + $env:Path
-$userData = Join-Path $Root "vscode\data"
-$extensions = Join-Path $Root "vscode\extensions"
-foreach ($d in $env:APPDATA, $npmPrefix, $userData, $extensions) { New-Item -ItemType Directory -Force $d | Out-Null }
+$userData = Join-Path $env:APPDATA "Code"
+$extensions = Join-Path $Root ".vscode\extensions"
+foreach ($d in $env:APPDATA, $npmPrefix, (Join-Path $userData "User"), $extensions) { New-Item -ItemType Directory -Force $d | Out-Null }
 try { Set-Variable -Name HOME -Value $Root -Scope Global -Force -ErrorAction Stop } catch { Write-Warning "PowerShell's `$HOME stays $HOME; use `$env:USERPROFILE." }
 try { (Get-PSProvider FileSystem).Home = $Root } catch { Write-Warning "PowerShell's ~ stays the real home; use `$env:USERPROFILE." }
+$settingsFile = Join-Path $userData "User\settings.json"
+Set-Content -Encoding utf8NoBOM $settingsFile "{`n  `"update.mode`": `"none`",`n  `"extensions.autoUpdate`": false`n}"
 if ($gitName) { git config --global user.name $gitName }
 if ($gitEmail) { git config --global user.email $gitEmail }
 
 $global:ArchitectIsoCode = $codeCli
 $global:ArchitectIsoCodeArgs = @("--user-data-dir", $userData, "--extensions-dir", $extensions)
 function global:code { & $global:ArchitectIsoCode @global:ArchitectIsoCodeArgs @args }
+if ((Get-Command code).CommandType -ne "Function") {
+  Write-Warning "``code`` in this window is not the script's function (an alias in your PowerShell profile?): use & `$global:ArchitectIsoCode @global:ArchitectIsoCodeArgs instead."
+}
 $toy = Join-Path $Root "runs\t057\toy"
 
-$vsVersion = ((code --version) | Select-Object -First 1)
-$copilot = Get-BuiltInCopilotChat $codeCli
+$codeVersionLines = @(code --version)
+$vsVersion = $codeVersionLines | Select-Object -First 1
+$commit = $codeVersionLines | Select-Object -Skip 1 -First 1
+$copilot = Get-BuiltInCopilotChat $codeCli $commit
 $extList = @(code --list-extensions --show-versions | Where-Object { $_ -and $_.Trim() })
 $sddBefore = Get-Command sdd -ErrorAction SilentlyContinue | Select-Object -First 1
 $prefixSeen = (npm config get prefix 2>$null)
 
 Write-Host "Isolated VS Code profile: $Root"
 Write-Host "  HOME=USERPROFILE=$env:USERPROFILE  APPDATA=$env:APPDATA"
+Write-Host ("  removed from this window: {0}" -f $(if ($removed.Count) { $removed -join ", " } else { "nothing (no VSCODE_*, GH_TOKEN or GITHUB_TOKEN was set)" }))
 Write-Host "  npm global prefix: $prefixSeen (first on PATH)"
 Write-Host "  code -> $codeCli --user-data-dir $userData --extensions-dir $extensions"
-Write-Host ("  VS Code {0} (tested {1})" -f $vsVersion, $TestedVsCode)
+Write-Host "  user settings: $settingsFile (update.mode none, extensions.autoUpdate false; nothing else)"
+Write-Host ("  VS Code {0}, commit {1} (tested {2})" -f $vsVersion, $commit, $TestedVsCode)
 Write-Host ("  GitHub Copilot Chat {0}, built in (tested {1})" -f $(if ($copilot) { $copilot } else { "NOT FOUND" }), $TestedCopilotChat)
 Write-Host ("  Marketplace extensions in the isolated instance: {0}" -f $(if ($extList.Count) { $extList -join ", " } else { "none" }))
 foreach ($tool in "node", "git") {
@@ -129,13 +161,16 @@ if ($Check) {
   $vsOk = $vsVersion -eq $TestedVsCode
   $extOk = $extList.Count -eq 0
   $prefixOk = ($prefixSeen -and ((Resolve-Path $prefixSeen -ErrorAction SilentlyContinue).Path -eq $npmPrefix))
-  $userDataFiles = @(Get-ChildItem -Force -Recurse $userData -File -ErrorAction SilentlyContinue)
-  $dataOk = -not ($userDataFiles | Where-Object { $_.FullName -match '\\User\\(settings\.json|globalStorage\\state\.vscdb)$' })
+  $settings = Get-Content $settingsFile -Raw | ConvertFrom-Json
+  $keys = @($settings.PSObject.Properties.Name | Sort-Object)
+  $settingsOk = (($keys -join ",") -eq "extensions.autoUpdate,update.mode") -and ($settings.'update.mode' -eq "none") -and ($settings.'extensions.autoUpdate' -eq $false)
+  $dataOk = -not (Test-Path (Join-Path $userData "User\globalStorage\state.vscdb"))
   Write-Host ""
-  Write-Host ("  VS Code at the tested version:              {0}" -f $vsOk)
-  Write-Host ("  Copilot Chat built in at the tested version: {0}" -f $copilotOk)
-  Write-Host ("  no Marketplace extension:                    {0}" -f $extOk)
-  Write-Host ("  npm global prefix inside the profile:        {0}" -f $prefixOk)
-  Write-Host ("  no user settings or sign-in state yet:       {0}" -f $dataOk)
-  Write-Host ("`nQuick check: " + $(if ($vsOk -and $copilotOk -and $extOk -and $prefixOk -and $dataOk) { "PASS" } else { "FAIL" }))
+  Write-Host ("  VS Code at the tested version:                 {0}" -f $vsOk)
+  Write-Host ("  Copilot Chat built in at the tested version:   {0}" -f $copilotOk)
+  Write-Host ("  no Marketplace extension:                      {0}" -f $extOk)
+  Write-Host ("  npm global prefix inside the profile:          {0}" -f $prefixOk)
+  Write-Host ("  user settings: only the two auto-update ones:  {0}" -f $settingsOk)
+  Write-Host ("  no sign-in state yet (instance never started): {0}" -f $dataOk)
+  Write-Host ("`nQuick check: " + $(if ($vsOk -and $copilotOk -and $extOk -and $prefixOk -and $settingsOk -and $dataOk) { "PASS" } else { "FAIL" }))
 }

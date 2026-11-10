@@ -1624,3 +1624,15 @@ Scope: `git diff 88df3f5 726430c` plus the README hunk of 6e51f54, against D-047
 | CR-150 | blocker | IF-009 §3/§5, IF-001 §1, scope §3.1, RISK-031 | dropping the S-08 comparison removes the only tie between the released VS Code build and S-08's subagent tool-list confinement, unstated | P-01 (Q-guard-proof-01, 2026-11-10): add a T-050 checklist step on 1.145.2 proving subagent tool-list confinement, a failure blocks the release; revise IF-001 §1, IF-009 §3/§5 and RISK-031 to name it | fixed: P-01 Q-guard-proof-01 'Add a checklist step (Recommended)' logged; checklist step VSC-54 (sdd-mcp-server, group 4) and its record-template entry prove subagent tool-list confinement on 1.145.2, a failure refuses the release (ERR-REL-004) and is a defect against C002-AS-03; IF-001 §1 (mapping-tables), IF-009 §3 and §5, scope §3.1 and RISK-031 name it |
 | CR-151 | minor | IF-007 Output item 1 | the precedence of an installed extension over a built-in one is unsourced | take the installed entry only when its version is at least the built-in's; adjust the test | fixed: IF-007 §Output item 1 — the installed entry counts only when its version is at least the built-in one's; pickCopilotChat/compareVersions in src/cli/host-version.ts (commit 9eb56c0, the new release candidate); host-version.test.ts covers both directions, unit tests for the comparison |
 | CR-152 | minor | glossary, REQ-508, copilot.json validated_by | "Tested version" still defined as recorded by the spike | revise the glossary row and REQ-508 rationale; say what validated_by means since D-047 | fixed: glossary Tested version row and REQ-508 rationale revised; IF-001 §1 states that host.validated_by keeps naming S-08, the spike that validated the mode, and the checklist record confirms it on the tested versions; the field's value is unchanged |
+
+
+## Revision D-048 (2026-11-10)
+
+Scope: `git diff 5ab0fa9 d97044b` (CHG-002 files, `scripts/manual/isolated-vscode-profile.ps1`, `docs/runsheets/T-057-copilot-clean-profile.md`), against D-048 and the questions-log round 2026-11-10 (D-048), precedent CHG-001 D-030. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+One review covered spec and plan; its findings are numbered in the plan series and listed in
+`../20-plan/90-critic-report.md`, section "Revision D-048". Those on the spec text: CR-128 and CR-129
+(C002-SPEC-NFR "Isolated VS Code profile", glossary) and CR-132 (caveat). All fixed. Why no further
+findings (critic): the C002-NFR-601 statement and environment read correctly; C002-DOD-019 has no profile
+wording; "fresh Windows user profile" remains only for OpenCode (moved to CHG-003); spec lint shows only the
+nine earlier waived LINT-DELTA-001 errors.

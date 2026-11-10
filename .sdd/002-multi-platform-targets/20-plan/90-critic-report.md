@@ -1278,3 +1278,24 @@ Scope: `git diff 88df3f5 726430c` plus the README hunk of 6e51f54, against D-047
 | CR-125 | major | T-050 run sheet, VSC-01/03/07/08, IF-007 | the new empty profile vs host-version reading the default profile's settings would fail VSC-03/08 | P-01 (Q-t050-profile-01): T-050 runs in VS Code stable's default profile after backing up settings.json | fixed: P-01 Q-t050-profile-01 'Run T-050 in the default profile (Recommended)' logged; checklist VSC-01 and Scope, run sheet steps 0 and 12 (backup and restore of %APPDATA%\Code\User\settings.json), T-050 and handoff use VS Code's default profile |
 | CR-126 | minor | T-055, T-057, RISK-031 | stale pointers to b481e82, the S-08 record and code-insiders | point to 876e958 and revise RISK-031 | fixed: T-055 (release candidate and S-08 note) and T-057 point to 9eb56c0 under D-047; RISK-031 description, mitigation and trigger revised for VS Code 1.145.2, `code` and VSC-54 |
 | CR-127 | minor | handoff, T-050 | handoff says blocked, task says todo | set T-050 blocked with the handoff reason | open: `sdd task set C002-T-050 --status blocked` is refused (ERR-CLI-013: the task state machine allows `blocked` only from `in-progress`, and T-050 is `todo`); the reason is stated in the handoff and T-050 stays `todo` until the conductor decides (`in-progress` then `blocked`, or the state machine) |
+
+
+## Revision D-048 (2026-11-10)
+
+Scope: `git diff 5ab0fa9 d97044b` (CHG-002 files, `scripts/manual/isolated-vscode-profile.ps1`, `docs/runsheets/T-057-copilot-clean-profile.md`), against D-048 and the questions-log round 2026-11-10 (D-048), precedent CHG-001 D-030. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 4 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-128 | major | run sheet, C002-SPEC-NFR, script, C002-RISK-031 | "no user settings" leaves VS Code and extension auto-update on in the isolated instance, against the D-047 auto-update rule | the script writes only `update.mode: none` and `extensions.autoUpdate: false`; definition, glossary, -Check and run sheet say so | fixed: script writes the two settings and -Check accepts exactly them; nfr.md, glossary and run sheet updated |
+| CR-129 | major | C002-SPEC-NFR, script, C002-IF-007, C002-TS-526, T-057 | the instance's folders (`vscode\data`, `vscode\extensions`) differ from those the sdd CLI and the doctor read under the redirected variables | use VS Code's default folders: `<folder>\AppData\Roaming\Code` and `<folder>\.vscode\extensions` | fixed: script, nfr.md and glossary; host-version in the window reads the instance's folders (D-048 close-check record) |
+| CR-130 | major | D-048, T-057, script, handoff | the close rule is worded three ways, the sign-in check cannot fail, no record, no handoff condition, preconditions claimed changed but unchanged | one wording; -Check PASS then one start of the instance with Accounts, Extensions and host-version recorded; T-057 precondition; handoff condition and close rule | fixed: T-057 precondition with the D-048 wording, record `docs/releases/copilot/0.1.0/D-048-isolated-profile-check.md`, handoff condition and close rule, verification line reworded |
+| CR-131 | minor | script, C002-IF-007 | the built-in Copilot Chat lookup takes the first folder found, ignoring the commit prefix and the publisher/name check | take the commit from `code --version` line 2; check publisher and name | fixed: commit-prefixed folder first, `GitHub` / `copilot-chat` required |
+| CR-132 | minor | C002-SPEC-NFR, script | the caveat omits other inherited variables and the PowerShell profile; `VSCODE_*`, `GH_TOKEN`, `GITHUB_TOKEN` stay; npm cache wording differs | add them; remove and report those variables; warn when `code` is not the function | fixed: variables removed and reported, `code` warning, caveat in nfr.md and script aligned |
+| CR-133 | minor | run sheet step 6 | "your own terminal" can be a non-isolated one | "in the isolated PowerShell window, not VS Code's terminal" | fixed |
+| CR-134 | minor | run sheet step 8 | "Local harness" vs the spec's "Local session type" | use "Local session type", with the UI label in brackets | fixed |
+
+Why no further findings (critic): the TC-903 row, test plan §7 and T-057 intent, step 1 and targets are consistent with the new environment; plan lint 0 errors; the questions-log answer is verbatim; sign-in comes before the timer and the PowerShell commands and paths are correct apart from CR-133.

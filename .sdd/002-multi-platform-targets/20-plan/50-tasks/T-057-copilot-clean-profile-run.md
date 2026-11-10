@@ -52,6 +52,11 @@ the OpenCode release does not wait for it.
   command) done; VS Code and Copilot Chat at the tested versions of scope §3.1 (VS Code 1.145.2, Copilot Chat
   0.73.0 built in; revision D-047); REF-WIN set up as
   `handoff.md` "Reference machine" lists.
+- The conductor's D-048 close check passed (critic CR-130): on a throwaway folder,
+  `scripts/manual/isolated-vscode-profile.ps1 -Check` printed `Quick check: PASS`, and the instance it
+  sets up, started once, has no sign-in, no Marketplace extension and the built-in Copilot Chat 0.73.0,
+  with `sdd host-version vscode` of that window; recorded in
+  `docs/releases/copilot/0.1.0/D-048-isolated-profile-check.md`.
 - The Copilot subscription named in C002-T-002 has allowance for the 1 VS Code session of step 2
   (test plan §4.2, C002-RISK-026); it is not billed to the prepaid API key.
 
@@ -69,9 +74,8 @@ the OpenCode release does not wait for it.
 ## Verification
 
 - The record shows ≤ 15 minutes for Copilot, run in an isolated VS Code profile
-- Before P-01's run, the conductor checks the set-up script on a throwaway folder: the instance it
-  starts lists no Marketplace extension, has no GitHub sign-in, and `sdd host-version vscode` in its
-  window prints the tested versions (D-048 close rule)
+- The record names the isolated VS Code profile and the script's caveat line, if it printed one (the
+  conductor's D-048 close check is a precondition, above)
 
 ## Done when
 

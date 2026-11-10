@@ -16,7 +16,8 @@ Copilot section (create the file if it does not exist yet; the OpenCode run move
   `code` (the Start menu opens your own profile). Caveat: Node, the VS Code build, Credential Manager
   and the `sdd` you installed globally before stay visible; the script prints them.
 - **Hosts:** VS Code **1.145.2** (stable) and Copilot Chat **0.73.0**, built in, with auto-update off
-  (`update.mode` none, extension auto-update off; CHG-002 revision D-047). Sign in with your own **GitHub Copilot Pro** login
+  (`update.mode` none, extension auto-update off; CHG-002 revision D-047; the set-up script writes both
+  into the isolated instance's settings). Sign in with your own **GitHub Copilot Pro** login
   **before** the timer starts. Copilot Pro has no Opus, so the conductor runs on Sonnet.
 - **Node 22.22.3** from `C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3` (machine-wide,
   shared with the isolated profile).
@@ -33,7 +34,8 @@ for the whole run.
 
 1. Put Node first on PATH, then set up the isolated VS Code profile on a new folder. Check its output:
    VS Code 1.145.2, Copilot Chat 0.73.0 built in, Marketplace extensions "none", npm global prefix
-   `C:\Sandbox\runs\t057\iso\npm`, your git identity. Write the "Caveat: an sdd is already
+   `C:\Sandbox\runs\t057\iso\npm`, user settings with only `update.mode` none and
+   `extensions.autoUpdate` false, your git identity, and no warning about `code`. Write the "Caveat: an sdd is already
    reachable" line, if shown, into the record.
 
 ```powershell
@@ -81,8 +83,8 @@ npm install -g C:\Sandbox\ClaudeCode\Architect\dist\architect-sdd-0.1.0.tgz
 sdd --version
 ```
 
-6. **Phase B, `sdd install copilot`.** Time this phase on its own. Run it in your own terminal, in
-   the repository root.
+6. **Phase B, `sdd install copilot`.** Time this phase on its own. Run it in the isolated PowerShell
+   window (not VS Code's terminal, not another window), in the repository root.
 
 ```powershell
 Set-Location $env:USERPROFILE\runs\t057\toy
@@ -95,7 +97,7 @@ sdd install copilot --package $env:USERPROFILE\architect\copilot-0.1.0
    `chat.plugins.enabled` to `true`, `chat.pluginLocations` to the package folder, and
    `chat.askQuestions.enabled` to `true`. Reload the window.
 
-8. **Phase D, first question.** Open a chat, switch it to the **Local** harness in the chat footer, check
+8. **Phase D, first question.** Open a chat, choose the **Local** session type in the chat footer (VS Code 1.145.2's picker; it calls it a harness), check
    the model picker, and select `sdd-conductor`. Send `/status` as
    the first message. Then run `/doctor`, then `/init` (recommended options, approve G0), then
    `/new "Toy change"`. **Stop the stopwatch** when the conductor asks the first question of the new
