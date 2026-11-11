@@ -12303,6 +12303,11 @@ function sessionBrief(input, fallbackCwd) {
     return [`SDD workspace: status unavailable (${e instanceof Error ? e.message.split("\n")[0] : String(e)}); run sdd status`];
   }
 }
+function sessionStartOutput(lines2, host) {
+  if (lines2.length === 0) return [];
+  if (host !== "copilot") return [...lines2];
+  return [JSON.stringify({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: lines2.join("\n") } })];
+}
 
 // src/cli/hook-cmds.ts
 import { dirname as dirname10, join as join19, resolve } from "node:path";
@@ -12796,7 +12801,8 @@ function traceActiveChanges(ctx, cwd, write2) {
   }
 }
 function hookSessionStart(ctx) {
-  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
+  const lines2 = sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd);
+  for (const line of sessionStartOutput(lines2, ctx.values["host"])) ctx.out.line(line);
   return 0;
 }
 function guardDeny(out, message) {

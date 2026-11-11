@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { decideCopilot, denyDecision, agentList, agentName, shownTool } from "../hooks/copilot.ts";
 import { parseHookInput } from "../hooks/input.ts";
-import { sessionBrief } from "../hooks/session-start.ts";
+import { sessionBrief, sessionStartOutput } from "../hooks/session-start.ts";
 import { trace } from "../trace/write.ts";
 import { findWorkspace } from "../workspace/find.ts";
 import { listChanges, rebuildRegistry } from "../workspace/status.ts";
@@ -43,9 +43,13 @@ export function traceActiveChanges(ctx: CommandContext, cwd: string, write: bool
   }
 }
 
-/** SessionStart hook (C001-REQ-911, 912; C002-REQ-313, 314 with `--host copilot`): the brief, nothing without .sdd/. Always exit 0. */
+/**
+ * SessionStart hook (C001-REQ-911, 912; C002-REQ-313, 314 with `--host copilot`): the brief as plain text or,
+ * under `--host copilot`, as the JSON object of C002-IF-008 §3; nothing without .sdd/. Always exit 0.
+ */
 function hookSessionStart(ctx: CommandContext): number {
-  for (const line of sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd)) ctx.out.line(line);
+  const lines = sessionBrief(parseHookInput(ctx.stdin()), ctx.cwd);
+  for (const line of sessionStartOutput(lines, ctx.values["host"] as string | undefined)) ctx.out.line(line);
   return 0;
 }
 

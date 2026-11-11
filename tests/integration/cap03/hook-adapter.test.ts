@@ -21,7 +21,7 @@ import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { cleanupPackages, copilotPackage, preToolUse, splitHookCommand } from "../../fixtures/pkg-cp.ts";
 import { CLI, makeWorkspace, minimalChange, REBUILD } from "../cli/helpers.ts";
 
@@ -276,12 +276,24 @@ function cases(F: Form): void {
   });
 
   if (F.hasSessionHooks) {
-    t("C002-TC-320 and C002-TC-322: hook session-start --host copilot prints the brief, or nothing without .sdd/", () => {
+    t("C002-TC-320 and C002-TC-322: hook session-start --host copilot prints the brief as one JSON object, or nothing without .sdd/", () => {
       const r = F.event("SessionStart", "pkg-cp", "base", JSON.stringify({ hook_event_name: "SessionStart", cwd: fx.cp }));
       assert.equal(r.code, 0, r.stderr);
-      const lines = r.stdout.split("\n").filter((l) => l !== "");
-      assert.ok(lines.length <= 10);
+      assert.equal(r.stderr, "");
+      // C002-IF-008 §3 / C002-IF-007: one JSON object on one line, followed by a line feed.
+      assert.ok(r.stdout.endsWith("}\n") && r.stdout.indexOf("\n") === r.stdout.length - 1, `one line: ${JSON.stringify(r.stdout)}`);
+      const doc = JSON.parse(r.stdout) as Record<string, unknown>;
+      assert.deepEqual(Object.keys(doc), ["hookSpecificOutput"]);
+      const hso = doc["hookSpecificOutput"] as Record<string, unknown>;
+      assert.deepEqual(Object.keys(hso).sort(), ["additionalContext", "hookEventName"]);
+      assert.equal(hso["hookEventName"], "SessionStart");
+      assert.equal(typeof hso["additionalContext"], "string");
+      const ctx = hso["additionalContext"] as string;
+      assert.ok(!ctx.endsWith("\n"), "no final line feed in additionalContext");
+      const lines = ctx.split("\n");
+      assert.ok(lines.length <= 10, `${lines.length} lines`);
       assert.equal(lines[0], "SDD workspace: 2 active change(s)");
+      assert.equal(lines.length, 3, "one line per active change");
       const none = F.event("SessionStart", "pkg-cp", "base", JSON.stringify({ hook_event_name: "SessionStart", cwd: fx.install }));
       assert.deepEqual(none, { code: 0, stdout: "", stderr: "" });
     });
@@ -539,3 +551,34 @@ function cases(F: Form): void {
 cases(DIRECT);
 cases(installedForm("hooks.json"));
 cases(installedForm("architect-guard.json"));
+
+// C002-TC-934 (C002-TS-708, revision D-053): the output form of the session-start brief per host, one test
+// per Examples row, on fx-cp.
+const SESSION_INPUT = () => JSON.stringify({ hook_event_name: "SessionStart", session_id: "s-1", cwd: fx.cp, source: "startup" });
+
+test("C002-TS-708 (C002-TC-934): hook session-start --host copilot of pkg-cp's bundled CLI is one JSON object, the head line only inside additionalContext", () => {
+  const c = installedCommand("hooks.json", "SessionStart", "pkg-cp", "base");
+  assert.deepEqual(c.args, SESSION_ARGS);
+  const r = spawn(c.script, c.args, SESSION_INPUT(), {});
+  assert.equal(r.code, 0, r.stderr);
+  const doc = JSON.parse(r.stdout) as { hookSpecificOutput: { additionalContext: string } };
+  assert.ok(doc.hookSpecificOutput.additionalContext.split("\n").includes("SDD workspace: 2 active change(s)"));
+  assert.ok(!r.stdout.split("\n").includes("SDD workspace: 2 active change(s)"), "the head line is not a line of standard output");
+  const outside = JSON.stringify({ ...doc, hookSpecificOutput: { ...doc.hookSpecificOutput, additionalContext: "" } });
+  assert.ok(!outside.includes("SDD workspace"), "the brief occurs only inside additionalContext");
+});
+
+test("C002-TS-708 (C002-TC-934): the Claude Code plugin's session-start hook command, without --host, prints the plain-text brief", () => {
+  const pluginRoot = join(dirname(CLI), "..");
+  const hooks = JSON.parse(readFileSync(join(pluginRoot, "hooks", "hooks.json"), "utf8")) as { hooks: Record<string, { hooks: { command: string }[] }[]> };
+  const entries = hooks.hooks["SessionStart"]!.flatMap((m) => m.hooks);
+  assert.equal(entries.length, 1);
+  const c = splitHookCommand(entries[0]!.command.replace("${CLAUDE_PLUGIN_ROOT}", pluginRoot.split("\\").join("/")));
+  assert.deepEqual(c.args, ["hook", "session-start"], "no --host");
+  const r = spawn(c.script, c.args, SESSION_INPUT(), {});
+  assert.equal(r.code, 0, r.stderr);
+  const lines = r.stdout.split("\n").filter((l) => l !== "");
+  assert.equal(lines[0], "SDD workspace: 2 active change(s)");
+  assert.ok(lines.length <= 10);
+  assert.throws(() => JSON.parse(r.stdout), SyntaxError, "the plain-text brief does not parse as JSON");
+});
