@@ -1,0 +1,106 @@
+{
+  "change": "CHG-003",
+  "generated_at": "2026-11-11T16:06:19.495Z",
+  "nodes": [
+    {
+      "id": "C003-AC-101.1",
+      "type": "AC",
+      "file": "10-spec/spec.md",
+      "line": 37,
+      "title": "OpenCode release",
+      "content_hash": "sha256:c746f85e2f9632fe503a10721daa0ae86617fe2b5f6fbb34dc55a552789e51fb"
+    },
+    {
+      "id": "C003-REQ-101",
+      "type": "REQ",
+      "file": "10-spec/spec.md",
+      "line": 27,
+      "title": "OpenCode release",
+      "content_hash": "sha256:aea6d50986a47443430ebc6a51df4a08d9465e33d2872d9d4059edbb2551cd4d"
+    },
+    {
+      "id": "C003-T-001",
+      "type": "T",
+      "file": "20-plan/plan.md",
+      "line": 14,
+      "title": "OpenCode release",
+      "content_hash": "sha256:5a9ae6179eaa03478b59c7d99542bbce2b9ea026bd79204de1d96eaf4713cc15"
+    },
+    {
+      "id": "C003-TC-001",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 28,
+      "title": "C003-TS-101",
+      "content_hash": "sha256:ae2763605a29736f86683d70f0b3e886bdb6f0f953730f35b3d69b7ac9b7b1fe"
+    },
+    {
+      "id": "C003-TS-101",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 39,
+      "title": "OpenCode release",
+      "content_hash": "sha256:3d7089cf722332924ee9c9c7713039089314dc8fbebcc691e531fde38718ddd9"
+    },
+    {
+      "id": "C003-US-101",
+      "type": "US",
+      "file": "10-spec/spec.md",
+      "line": 16,
+      "title": "OpenCode release",
+      "content_hash": "sha256:f4323566fc80f3bfcd547ddfa891d4a5e93bbab34dd5e7b101bd82b107480776"
+    }
+  ],
+  "edges": [
+    {
+      "from": "C003-AC-101.1",
+      "to": "C003-REQ-101",
+      "relation": "references"
+    },
+    {
+      "from": "C003-AC-101.1",
+      "to": "C003-TS-101",
+      "relation": "references"
+    },
+    {
+      "from": "C003-AC-101.1",
+      "to": "C003-TS-101",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C003-REQ-101",
+      "to": "C003-AC-101.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C003-REQ-101",
+      "to": "C003-US-101",
+      "relation": "story-of"
+    },
+    {
+      "from": "C003-T-001",
+      "to": "C003-AC-101.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C003-T-001",
+      "to": "C003-REQ-101",
+      "relation": "implements"
+    },
+    {
+      "from": "C003-T-001",
+      "to": "C003-TC-001",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C003-T-001",
+      "to": "C003-TS-101",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C003-TC-001",
+      "to": "C003-TS-101",
+      "relation": "references"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "change": "CHG-004",
+  "generated_at": "2026-11-11T16:06:19.539Z",
+  "nodes": [
+    {
+      "id": "C004-AC-101.1",
+      "type": "AC",
+      "file": "10-spec/spec.md",
+      "line": 37,
+      "title": "Cost and token efficiency",
+      "content_hash": "sha256:a7139bdceecbb0b0fdfd7ab10c82b4c2459c7b2355ef9aadf2c5d383568e51ce"
+    },
+    {
+      "id": "C004-REQ-101",
+      "type": "REQ",
+      "file": "10-spec/spec.md",
+      "line": 27,
+      "title": "Cost and token efficiency",
+      "content_hash": "sha256:97b6274391666bb36813a1beb00e5403fee42301b3e8fd907d726517efc14143"
+    },
+    {
+      "id": "C004-T-001",
+      "type": "T",
+      "file": "20-plan/plan.md",
+      "line": 14,
+      "title": "Cost and token efficiency",
+      "content_hash": "sha256:0f2015c771119355aae730bf99cfe89ed403fbcb5e540f55c4165b8a6b0ab5f3"
+    },
+    {
+      "id": "C004-TC-001",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 28,
+      "title": "C004-TS-101",
+      "content_hash": "sha256:2348fdc174b31311078919a500647b0ec37a8e02f2310d34760bff6610e80719"
+    },
+    {
+      "id": "C004-TS-101",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 39,
+      "title": "Cost and token efficiency",
+      "content_hash": "sha256:8e9aa03b4602628af5b98bf687e8b37295fdb3076785c0e95743cc8e0b7aacbe"
+    },
+    {
+      "id": "C004-US-101",
+      "type": "US",
+      "file": "10-spec/spec.md",
+      "line": 16,
+      "title": "Cost and token efficiency",
+      "content_hash": "sha256:b10bab3da7ad7de3965c9d25d98c19642f7acfed409a0d12157b05140853c3db"
+    }
+  ],
+  "edges": [
+    {
+      "from": "C004-AC-101.1",
+      "to": "C004-REQ-101",
+      "relation": "references"
+    },
+    {
+      "from": "C004-AC-101.1",
+      "to": "C004-TS-101",
+      "relation": "references"
+    },
+    {
+      "from": "C004-AC-101.1",
+      "to": "C004-TS-101",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C004-REQ-101",
+      "to": "C004-AC-101.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C004-REQ-101",
+      "to": "C004-US-101",
+      "relation": "story-of"
+    },
+    {
+      "from": "C004-T-001",
+      "to": "C004-AC-101.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C004-T-001",
+      "to": "C004-REQ-101",
+      "relation": "implements"
+    },
+    {
+      "from": "C004-T-001",
+      "to": "C004-TC-001",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C004-T-001",
+      "to": "C004-TS-101",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C004-TC-001",
+      "to": "C004-TS-101",
+      "relation": "references"
+    }
+  ]
+}
