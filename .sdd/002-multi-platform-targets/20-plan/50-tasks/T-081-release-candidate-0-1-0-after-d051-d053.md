@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080]
 implements: [C002-REQ-606, C002-REQ-612, C002-REQ-617]
 satisfies_ac: [C002-AC-606.1, C002-AC-612.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-615, C002-TS-620, C002-TC-615, C002-TC-620]
 components: [C002-COMP-008, C002-COMP-009, C002-COMP-010]
 risk_refs: [C002-RISK-026, C002-RISK-036, C002-RISK-042]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8f2cca4, completed_at: 2026-11-11, notes: "candidate 54b83ff (local annotated tag v0.1.0 moved from 9eb56c0); check green, replays 683/26/0 both shells; Copilot CLI t081 24/24 pass, 2.29 USD, pool 12.62/30; injection 23 cases 0 acted upon; near-cap none; search 3 domain hits; dry run ERR-REL-003 only; report docs/releases/copilot/0.1.0/T-081-candidate-report.md" }
 ---
 
 # C002-T-081 — Fix for revisions D-051 … D-053: new 0.1.0 release candidate, unpaid release steps and the Copilot CLI evidence retaken

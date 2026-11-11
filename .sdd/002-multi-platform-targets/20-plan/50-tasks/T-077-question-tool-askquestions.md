@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: in-progress
+status: done
 depends_on: [C002-T-037, C002-T-076]
 implements: [C002-REQ-211, C002-REQ-311, C002-REQ-312]
 satisfies_ac: [C002-AC-211.1, C002-AC-311.1, C002-AC-312.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-114, C002-TS-121, C002-TS-317, C002-TS-318, C002-TS-319, C
 components: [C002-COMP-002, C002-COMP-014, C002-COMP-016]
 risk_refs: [C002-RISK-022, C002-RISK-042]
 estimate: M
-report: { commit: 70169fb, completed_at: null, notes: "code and tests done; step 6 Copilot CLI session pending" }
+report: { commit: 70169fb, completed_at: 2026-11-11, notes: "step 6: ROUTE-auditor-copilot-cli on the T-081 candidate 54b83ff passed (0.1103 USD, pool 10.44/30); Copilot CLI accepted askQuestions in the conductor tools list; host log lines naming askQuestions: none" }
 ---
 
 # C002-T-077 — Fix for revision D-051: the question tool askQuestions beside ask_user in the Copilot package
