@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-039, C002-T-076]
 implements: [C002-REQ-304, C002-REQ-305]
 satisfies_ac: [C002-AC-304.1, C002-AC-305.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-306, C002-TS-307, C002-TC-306, C002-TC-307]
 components: [C002-COMP-004, C002-COMP-017]
 risk_refs: [C002-RISK-033, C002-RISK-041]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 70169fb, completed_at: 2026-11-11, notes: "dist INSTALL.md regenerated in C002-T-081" }
 ---
 
 # C002-T-079 — Fix for revisions D-051 … D-053: Copilot install notes and README section

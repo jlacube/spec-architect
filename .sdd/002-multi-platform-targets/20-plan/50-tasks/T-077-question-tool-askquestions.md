@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: in-progress
 depends_on: [C002-T-037, C002-T-076]
 implements: [C002-REQ-211, C002-REQ-311, C002-REQ-312]
 satisfies_ac: [C002-AC-211.1, C002-AC-311.1, C002-AC-312.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-114, C002-TS-121, C002-TS-317, C002-TS-318, C002-TS-319, C
 components: [C002-COMP-002, C002-COMP-014, C002-COMP-016]
 risk_refs: [C002-RISK-022, C002-RISK-042]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 70169fb, completed_at: null, notes: "code and tests done; step 6 Copilot CLI session pending" }
 ---
 
 # C002-T-077 — Fix for revision D-051: the question tool askQuestions beside ask_user in the Copilot package

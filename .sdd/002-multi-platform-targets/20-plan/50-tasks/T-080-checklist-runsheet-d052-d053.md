@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-046, C002-T-079]
 implements: [C002-REQ-614, C002-REQ-615, C002-REQ-616]
 satisfies_ac: [C002-AC-614.1, C002-AC-615.1, C002-AC-616.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-358, C002-TS-617, C002-TS-618, C002-TS-619, C002-TC-358, C
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-031, C002-RISK-041, C002-RISK-026]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a50146d, completed_at: 2026-11-11, notes: "package commit placeholder filled by C002-T-081" }
 ---
 
 # C002-T-080 — Fix for revisions D-052, D-053: VS Code checklist, record template and T-050 run sheet

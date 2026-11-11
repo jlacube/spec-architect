@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-032, C002-T-076]
 implements: [C002-REQ-313, C002-REQ-314]
 satisfies_ac: [C002-AC-313.1, C002-AC-314.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-320, C002-TS-321, C002-TS-322, C002-TS-708, C002-TC-320, C
 components: [C002-COMP-012, C002-COMP-018]
 risk_refs: [C002-RISK-042]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: e8279e1, completed_at: 2026-11-11, notes: "npm run check green" }
 ---
 
 # C002-T-078 — Fix for revision D-053: the session-start brief as JSON hookSpecificOutput under --host copilot
