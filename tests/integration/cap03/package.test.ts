@@ -164,11 +164,11 @@ for (const mode of MODES) {
       assert.deepEqual(data["tools"], fm.tools, `${fm.name}: the tools the table derives`);
       if (fm.name === CONDUCTOR) {
         assert.deepEqual([...(data["agents"] as string[])].sort(), [...specialists].sort(), "the conductor starts the nine specialists, by bare name");
-        for (const t of ["agent", "ask_user", "todo"]) assert.ok((data["tools"] as string[]).includes(t), `conductor: ${t}`);
+        for (const t of ["agent", "ask_user", "askQuestions", "todo"]) assert.ok((data["tools"] as string[]).includes(t), `conductor: ${t}`);
       } else {
         assert.deepEqual(data["agents"], [], fm.name);
         assert.equal(data["user-invocable"], false, fm.name);
-        for (const t of ["agent", "ask_user"]) assert.ok(!(data["tools"] as string[]).includes(t), `${fm.name}: no ${t}`);
+        for (const t of ["agent", "ask_user", "askQuestions"]) assert.ok(!(data["tools"] as string[]).includes(t), `${fm.name}: no ${t}`);
       }
     }
   });
@@ -263,7 +263,7 @@ test("C002-TC-339 (C002-TS-339): under the Copilot hooks fallback the conductor 
   assert.ok(!writer.includes("sdd-files/*") && !writer.includes("sdd-shell/*"));
 });
 
-test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm install, the install command, the settings after it, the Local session type, the server start and the subagent rule", () => {
+test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm install, the install command, the settings after it, the Local session type and model picker, the slash form, the known limitation on VS Code, the server start and chat.autoReply", () => {
   const notes = text(fxDist(table.enforcement_mode), INSTALL);
   const version = (JSON.parse(readFileSync(join(PLUGIN, ".claude-plugin", "plugin.json"), "utf8")) as { version: string }).version;
   assert.ok(source.files.some((f) => f.path === INSTALL_SOURCE), "the install-notes source is part of the source plugin");
@@ -291,19 +291,46 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   assert.match(notes, /reload the window/);
   assert.match(notes, /\*\*Local\*\* session type/);
   assert.match(notes, /select `sdd-conductor` as the session agent/);
-  assert.match(notes, /workspace MCP servers .* start only\s+after the first message of a session/s);
-  assert.match(notes, /In a repository that contains `\.sdd\/`, while hooks are enabled, every subagent that is not an\s+Architect agent \(a host built-in agent such as `general-purpose`, or one of your own agents started\s+as a subagent\) can call only the read-only tools of the tool classes file/);
+  const flat = notes.replace(/\s+/g, " ");
+  // C002-T-079 (revised C002-TS-306; defects D-051 … D-053, C002-IF-005 §5 steps 4 … 9).
+  // Step 4: a model picked in the chat's model picker in every new window; "Auto" routes to another model.
+  assert.ok(flat.includes("Pick a model in the chat's model picker in every new window: a new window starts the picker on \"Auto\", which routes the session to another model"), "the model picker step");
+  // Step 5: the slash form /architect:<name>, and a bare /init runs VS Code's built-in /init.
+  assert.ok(flat.includes("offered as `/architect:<name>`") && flat.includes("`/architect:init`"), "the /architect:<name> slash form");
+  assert.ok(flat.includes("A bare `/init` runs VS Code's own built-in `/init`"), "the built-in /init");
+  const slash = [...notes.matchAll(/`(\/[a-z][a-z:-]*)/g)].map((m) => m[1]!);
+  assert.ok(slash.length > 0);
+  for (const s of slash) assert.ok(s.startsWith("/architect:") || s === "/init", `slash command in the /architect:<name> form: ${s}`);
+  assert.ok(!/`\/architect-[a-z]/.test(notes), "no /architect-<name> form");
+  // Step 8: each workspace MCP server starts when the first of its tools is used.
+  assert.match(flat, /Each workspace MCP server \([^)]*\) starts when an agent first uses one of its tools/);
+  assert.ok(!/start only after the first message/.test(flat), "the earlier first-message wording is gone");
+  // Step 6: the known limitation on VS Code, with what still holds.
+  const vscode0 = table.host.tested_versions["vscode"]!;
+  assert.ok(flat.includes(`VS Code ${vscode0} sends no \`agent_type\` to PreToolUse hooks`), "no agent_type on PreToolUse at the tested version");
+  assert.ok(flat.includes("In a repository that contains `.sdd/`, the hook therefore does not stop a subagent that is not an Architect agent, for example one that your own default agent starts"), "the subagent that is not stopped");
+  assert.ok(flat.includes("The conductor's restriction to the nine Architect specialists comes from its instructions, not from VS Code, so a delegation planted in the content it reads and followed by the model is not stopped"), "the restriction by instructions only");
+  assert.ok(flat.includes("the Architect specialists have no generic edit or terminal tool, and their writes and commands go through the sdd MCP servers, which refuse a write outside `.sdd/` and a command outside the allowlist"), "what still holds");
+  // Step 7: no Copilot hooks fallback for VS Code at the tested version.
+  assert.ok(flat.includes(`The Copilot hooks fallback (\`copilot-hooks\`) is not offered for VS Code ${vscode0}`), "no hooks fallback");
+  // Step 9: chat.autoReply kept off; its auto-reply text is no answer.
+  assert.ok(flat.includes("Keep the setting `chat.autoReply` off. While it is on, VS Code answers the conductor's questions itself with an auto-reply text"), "chat.autoReply off");
+  assert.ok(flat.includes("which the conductor treats as no answer, so no interview round or gate goes forward"), "the auto-reply text is no answer");
   assert.match(notes, /sdd MCP server enforcement/, "the enforcement mode by its glossary name");
-  // Order of C002-IF-005 §5: unpack, install, settings, session, servers, subagents.
-  const order = ["Unpack this package", "sdd install copilot --package", "`chat.plugins.enabled`", "**Local**", "start only", "can call only the read-only"].map((s) => notes.indexOf(s));
+  // Order of C002-IF-005 §5: unpack, install, settings, session and model, slash form, known limitation,
+  // no hooks fallback, servers on first use, chat.autoReply.
+  const order = ["Unpack this package", "sdd install copilot --package", "`chat.plugins.enabled`", "**Local**", "offered as `/architect:<name>`", "sends no `agent_type`", "is not offered for VS Code", "starts when an agent first uses", "`chat.autoReply` off"].map((s) => notes.indexOf(s));
+  assert.ok(order.every((i) => i >= 0), JSON.stringify(order));
   assert.deepEqual([...order].sort((a, b) => a - b), order, "steps in the order of C002-IF-005 §5");
+  // The README's known-limitation link (C002-TS-307) resolves to this heading.
+  assert.match(notes, /^## Known limitation on VS Code$/m);
   // C002-T-066 (defect D-027, C002-IF-005 §5 Models): with the prerequisites, the two models lines: the
   // default-model fallback on a plan without an agent file's model, and where P-03 sees the model that ran.
   const prereq = notes.slice(notes.indexOf("## Prerequisites"), notes.indexOf("## Install the sdd CLI"));
   const models = prereq.split(/\n(?=- )/).filter((l) => /default model|which model ran/.test(l)).map((l) => l.replace(/\s+/g, " "));
   assert.equal(models.length, 2, `two models lines: ${JSON.stringify(models)}`);
   assert.match(models[0]!, /On a Copilot plan that does not offer the model an agent file names \(for example a plan without Opus models\), the host runs that agent on its default model, Sonnet at the tested versions, so the agents of the Opus tier then run a tier below their own/);
-  assert.match(models[1]!, /You see which model ran: in VS Code, the model that the chat's model picker shows for the session; on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes/);
+  assert.match(models[1]!, /You see which model ran: in VS Code, the model named in the footer of each reply \(pick the model in the chat's model picker, step 4\); on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes/);
   for (const line of models) for (const id of ["claude-opus-5.5", "claude-sonnet-5.5"]) assert.ok(!line.includes(id), `the models statement names no model ID (${id})`);
   assert.ok(models.join(" ").includes("Sonnet"), "the models statement names the tier Sonnet");
   // C002-T-065 (defect D-019 item 1, critic CR-69): after the steps, exactly one Copilot CLI note (the
@@ -311,7 +338,7 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
   const cli = notes.slice(notes.indexOf("## Install the sdd CLI")).split(/\n\s*\n/).filter((p) => /Copilot CLI/.test(p) && !/session type/.test(p));
   assert.equal(cli.length, 1, `one Copilot CLI note: ${JSON.stringify(cli)}`);
   const note = cli[0]!.replace(/\s+/g, " ");
-  assert.ok(notes.indexOf(cli[0]!) > order[order.length - 1]!, "the note comes after the six steps");
+  assert.ok(notes.indexOf(cli[0]!) > order[order.length - 1]!, "the note comes after the nine steps");
   assert.match(note, /Copilot CLI is no supported host of this package/);
   assert.match(note, /`--agent architect:sdd-conductor`/);
   assert.match(note, /on its own default model/);

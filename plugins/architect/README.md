@@ -89,8 +89,12 @@ as a target package for each host below (`npm run package` writes `dist/architec
 - **Enforcement mode:** sdd MCP server enforcement (`sdd-mcp-server`). The Architect agents have no
   generic edit or terminal tool: they write `.sdd/` files and run the allowlisted commands through the
   sdd MCP server, so their write/shell boundary does not depend on hooks. The package's subagent guard
-  hook, which keeps subagents that are not Architect agents read-only in a repository with `.sdd/`,
-  runs only while hooks are enabled.
+  hook keeps subagents that are not Architect agents read-only in a repository with `.sdd/` only on a
+  host that names the subagent in its hook input, and only while hooks are enabled.
+- **Known limitation:** VS Code sends no `agent_type` in the PreToolUse hook input, so there the
+  subagent guard hook does not stop a subagent that is not an Architect agent, for example one that
+  your own default agent starts; see
+  [the known limitation in the install notes](targets/copilot/install.md#known-limitation-on-vs-code).
 
 ## Quickstart
 

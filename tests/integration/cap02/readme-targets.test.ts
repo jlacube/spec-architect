@@ -99,6 +99,24 @@ for (const s of SECTIONS) {
 
 const copilot = loadTargetTable(repoRoot(), "copilot");
 
+test(`C002-TC-307 (C002-TS-307) [${copilot.enforcement_mode}]: the "Copilot VS Code" section states the known limitation of the subagent guard hook and links its statement in the install notes`, () => {
+  // C002-T-079 (revised C002-REQ-305, C002-TS-307; defect D-052, critic CR-159).
+  const body = section(text, "Copilot VS Code") ?? "";
+  const flat = body.replace(/\s+/g, " ");
+  assert.match(flat, /VS Code sends no `agent_type` in the PreToolUse hook input/, "no agent_type on PreToolUse in VS Code");
+  assert.match(flat, /subagent guard hook does not stop a subagent that is not an Architect agent/, "the subagent the hook does not stop");
+  // The link resolves to the install notes and to the heading of the known limitation there.
+  const links = [...body.matchAll(/\]\(([^)\s#]+)#([^)\s]+)\)/g)].filter((m) => relative(PLUGIN, resolve(dirname(README), m[1]!)).replace(/\\/g, "/") === COPILOT_NOTES);
+  assert.equal(links.length, 1, "one link to the known limitation in the install notes");
+  const slug = (h: string) => h.trim().toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+  const headings = readFileSync(join(PLUGIN, COPILOT_NOTES), "utf8").split(/\r?\n/).filter((l) => /^#{1,6}\s/.test(l)).map((l) => slug(l.replace(/^#+\s*/, "")));
+  assert.ok(headings.includes(links[0]![2]!), `#${links[0]![2]} is a heading of ${COPILOT_NOTES}: ${headings.join(", ")}`);
+  const notes = readFileSync(join(PLUGIN, COPILOT_NOTES), "utf8").replace(/\s+/g, " ");
+  assert.ok(notes.includes("sends no `agent_type` to PreToolUse hooks"), "the install notes state it");
+  // The README ships in the Claude Code zips too: no target token.
+  assert.ok(!body.includes("{{"), "no placeholder");
+});
+
 test(`C002-TC-315 (C002-TS-315) [${copilot.enforcement_mode}]: the hooks fallback warning is in the "Copilot VS Code" section under copilot-hooks only`, () => {
   const body = section(text, "Copilot VS Code") ?? "";
   const expected = copilot.enforcement_mode === "copilot-hooks";

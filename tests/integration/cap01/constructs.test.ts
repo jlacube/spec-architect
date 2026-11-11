@@ -285,7 +285,7 @@ for (const [file, lines, target] of [
     for (const mode of MODES[target]) {
       const table = tableFor(target, mode);
       const entry = replaceOf(table, "ask-user-question", mode);
-      assert.ok(entry.includes(target === "opencode" ? "`question`" : "`ask_user`"), "the host question tool (S-07, S-08 F-5)");
+      assert.ok(target === "opencode" ? entry.includes("`question`") : entry.includes("`askQuestions`") && entry.includes("`ask_user`"), "the host question tool (S-07; C002-IF-001 §6.1, defect D-051)");
       const doc = docsOf(target, mode).get(file)!;
       for (const n of lines) assert.ok(lineFrom(doc, n)!.includes(entry), `${target}/${mode}: ${file}:${n}`);
       assert.ok(!textOf(doc).includes("AskUserQuestion"), `${target}/${mode}`);

@@ -87,7 +87,8 @@
     ],
     "ToolSearch": [],
     "AskUserQuestion": [
-      "ask_user"
+      "ask_user",
+      "askQuestions"
     ],
     "TaskCreate": [
       "todo"
@@ -204,7 +205,7 @@
     },
     "command": {
       "from": "/architect:",
-      "to": "/"
+      "to": "/architect:"
     }
   },
   "constructs": [
@@ -303,9 +304,12 @@
         "frontmatter",
         "body"
       ],
-      "accepted_in": [],
+      "accepted_in": [
+        "frontmatter",
+        "body"
+      ],
       "action": {
-        "replace": "/"
+        "replace": "/architect:"
       }
     },
     {
@@ -354,7 +358,7 @@
       ],
       "accepted_in": [],
       "action": {
-        "replace": "the `ask_user` tool"
+        "replace": "the question tool (`askQuestions` in VS Code, `ask_user` in Copilot CLI)"
       }
     },
     {

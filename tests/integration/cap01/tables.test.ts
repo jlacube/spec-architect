@@ -109,7 +109,8 @@ test("table-only semantic rules of C002-IF-001 §5 hold in every mode of each ta
   const pr = new RegExp(tables.copilot.constructs.find((c) => c.id === "plugin-root")!.detect, "u");
   assert.ok(pr.test("node ${PLUGIN_ROOT}/x") && pr.test("${CLAUDE_PLUGIN_ROOT}/serena/x.yml"));
   assert.deepEqual(tables.copilot.mcp_tool_names, { source_pattern: "mcp__plugin_architect_{server}__{tool}", target_pattern: "{server}-{tool}", grant_pattern: "{server}/{tool}", grant: "per-server", deferred: true });
-  assert.ok(tables.copilot.tools["AskUserQuestion"]?.toString() === "ask_user");
+  // C002-T-077 (defect D-051): the question tool under both names, Copilot CLI and VS Code.
+  assert.deepEqual(tables.copilot.tools["AskUserQuestion"], ["ask_user", "askQuestions"]);
 });
 
 test("no machine path in any table (PLG-PATH-001)", () => {

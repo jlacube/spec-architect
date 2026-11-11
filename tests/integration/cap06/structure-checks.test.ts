@@ -194,12 +194,26 @@ test("C002-TC-121 (C002-TS-121): the plugin structure checks find no variant and
   assert.deepEqual(fs.filter((f) => f.code === "PLG-SIZE-001" && f.severity === "error"), []);
   for (const t of TARGETS)
     for (const v of tables[t].variants) assert.ok(existsSync(join(PLUGIN, "targets", t, "wiring", v.text_file)), `${t}: ${v.text_file} under targets/${t}/wiring/`);
+  // The names C002-TS-121 lists: no Claude Code file holds ask_user, askQuestions or tool_search_tool,
+  // and each of them is a host-only name of PLG-VAR-001 (C002-T-077, defect D-051).
+  for (const name of ["ask_user", "askQuestions", "tool_search_tool"]) {
+    const copy = pluginCopy();
+    try {
+      appendFileSync(join(copy.plugin, "commands", "status.md"), `\nUse ${name} here.\n`);
+      const found = variants.check(copy.ctx) as { path: string; message: string }[];
+      assert.ok(found.some((f) => f.path.endsWith("plugins/architect/commands/status.md") && f.message.includes(`host-only name "${name}"`)), `${name}: ${JSON.stringify(found)}`);
+    } finally {
+      copy.cleanup();
+    }
+  }
 });
 
 const PASTES: { label: string; file: string; text: () => string }[] = [
   { label: "the Copilot variant of the gate wiring", file: "skills/gate-protocol/SKILL.md", text: () => readFileSync(join(PLUGIN, "targets", "copilot", "wiring", "gate-protocol.md"), "utf8") },
   { label: "the OpenCode variant of the CLI invocation line", file: "agents/sdd-conductor.md", text: () => readFileSync(join(PLUGIN, "targets", "opencode", "wiring", "cli-conductor.md"), "utf8") },
   { label: 'the line "Confirm in one ask_user round"', file: "commands/archive.md", text: () => "Confirm in one ask_user round\n" },
+  // C002-T-077 (defect D-051): the VS Code name of the question tool is a host-only name too (C002-TS-121).
+  { label: 'the line "Ask the round through askQuestions"', file: "skills/interview-protocol/SKILL.md", text: () => "Ask the round through askQuestions\n" },
   { label: 'the line "Load sdd-files-write_file through tool_search_tool first"', file: "agents/sdd-spec-writer.md", text: () => "Load sdd-files-write_file through tool_search_tool first\n" },
 ];
 

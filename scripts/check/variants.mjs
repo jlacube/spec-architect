@@ -1,8 +1,8 @@
 // PLG-VAR-001: the wiring variants of the generated targets stay out of the files Claude Code loads
 // (C002-REQ-113, C002-IF-005 §6; C002-TS-121, C002-TS-122). No agent file (`agents/*.md`), command file
 // (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`ask_user`,
-// `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a
-// variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is
+// `askQuestions` (C002-T-077, defect D-051), `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of
+// C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is
 // not in the source text its anchor replaces. The finding names the file, the line and the name or the
 // variant file found. Variants are read from the mapping tables of the plugin, never from a change folder.
 import { existsSync, readdirSync } from "node:fs";
@@ -12,7 +12,7 @@ import { files, finding, read, rel } from "./lib.mjs";
 // The tokens of C002-IF-001 §4 (scripts/generate/translate/wiring.ts › tokenValues); other `{{…}}` text,
 // such as the `{{SEQ}}` placeholder of a file-name pattern, is not a target token.
 const TOKENS = /\{\{\s*(?:host_name|package_version|enforcement_mode|server_files|server_shell|tested_version:[\w.-]+)\s*\}\}/;
-const HOST_ONLY = [/\bask_user\b/, /\btool_search_tool\b/, /\bsdd-files\b/, /\bsdd-shell\b/, TOKENS];
+const HOST_ONLY = [/\bask_user\b/, /\baskQuestions\b/, /\btool_search_tool\b/, /\bsdd-files\b/, /\bsdd-shell\b/, TOKENS];
 export const MIN_LINE = 40;
 
 const HEADING = /^(#{1,6})[ \t]+(.*?)[ \t]*#*[ \t]*$/;

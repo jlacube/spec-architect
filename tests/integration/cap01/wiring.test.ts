@@ -163,7 +163,8 @@ for (const t of TARGETS) {
     const expected = variantText(t, "interview-protocol");
     assert.equal(linesFrom(doc, 126), expected, "the variant in place of the section");
     assert.ok(!doc.body.includes("AskUserQuestion"));
-    assert.ok(expected.includes(t === "opencode" ? "`question` tool" : "`ask_user`"), "the host question tool");
+    // Copilot: both names of the question tool (C002-IF-001 §6.1; C002-T-077, defect D-051).
+    assert.ok(t === "opencode" ? expected.includes("`question` tool") : expected.includes("`askQuestions`") && expected.includes("`ask_user`"), "the host question tool");
     const agents = inliners("interview-protocol");
     assert.ok(agents.includes("sdd-conductor"));
     for (const name of agents) {
@@ -182,10 +183,11 @@ const FALLBACK: Record<string, string> = {
 for (const t of TARGETS) {
   test(`C001-T-084: the generated ${NAME[t]} bodies of gate-protocol and interview-protocol keep the plain-text fallback, with no tool-enabling detour`, () => {
     const g = generated(t);
-    const tool = t === "opencode" ? "`question`" : "`ask_user`";
+    // Copilot names both question tools (C002-T-077, defect D-051).
+    const lead = t === "opencode" ? "If the `question` tool is absent or a call to it is refused," : "If neither `askQuestions` nor `ask_user` is offered, or a call is refused,";
     for (const [skill, tail] of Object.entries(FALLBACK)) {
       const body = g.docs.get(`skills/${skill}/SKILL.md`)!.body;
-      const line = `- If the ${tool} tool is absent or a call to it is refused, ${tail}`;
+      const line = `- ${lead} ${tail}`;
       assert.ok(body.split("\n").includes(line), `${t}: ${skill} has the line "${line}"`);
       assert.ok(body.includes("**Without a question tool**"), `${t}: ${skill} keeps the text form`);
       assert.ok(!/INSTALL\.md/.test(body), `${t}: ${skill} names no INSTALL.md step`);
@@ -540,7 +542,7 @@ test("C002-TC-121 (C002-TS-121): the variants live under targets/ only; Claude C
         for (const l of own) assert.ok(!lines.has(l), `${f.path} holds the ${t} variant line "${l}"`);
       }
     }
-  for (const f of claudeFiles) assert.ok(!/\bask_user\b|\btool_search_tool\b/.test(f.text), `${f.path}: no Copilot tool name`);
+  for (const f of claudeFiles) assert.ok(!/\bask_user\b|\baskQuestions\b|\btool_search_tool\b/.test(f.text), `${f.path}: no Copilot tool name`);
 
   const parts = ["agents", "commands", "skills"];
   const before = new Map(parts.map((p) => [p, hashTree(join(PLUGIN, p))]));

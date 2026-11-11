@@ -15,8 +15,9 @@ is generated from the Architect plugin, version {{package_version}}, for {{enfor
 - On a Copilot plan that does not offer the model an agent file names (for example a plan without
   Opus models), the host runs that agent on its default model, Sonnet at the tested versions, so the
   agents of the Opus tier then run a tier below their own.
-- You see which model ran: in VS Code, the model that the chat's model picker shows for the session;
-  on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes.
+- You see which model ran: in VS Code, the model named in the footer of each reply (pick the model
+  in the chat's model picker, step 4); on Copilot CLI, the models listed with their use in the file
+  that `--usage-output-file` writes.
 - Optional: Serena 1.7 or later (`serena --version`) for symbol-level code discovery.
 
 ## Install the sdd CLI
@@ -66,17 +67,43 @@ This puts `sdd` (the workflow CLI) and `sdd-mcp` (the sdd MCP server) on PATH. C
 ## Start the conductor
 
 4. Open a chat of the **Local** session type (the Copilot CLI session type does not offer the
-   agents) and select `sdd-conductor` as the session agent in the agent picker. The prompt files
-   `/<name>` (for example `/init`, `/new`, `/status`) run in the conductor; the nine specialists are
-   subagents that the conductor starts.
-5. The workspace MCP servers (`sdd-files`, `sdd-shell`, `serena`, `context7`, `deepwiki`) start only
-   after the first message of a session. Make the first message a plain request such as `/status`,
-   before anything that writes.
-6. In a repository that contains `.sdd/`, while hooks are enabled, every subagent that is not an
-   Architect agent (a host built-in agent such as `general-purpose`, or one of your own agents started
-   as a subagent) can call only the read-only tools of the tool classes file
-   (`hooks/tool-classes.json`); its write and terminal calls are denied. The calls of your own session
-   agent are not affected, and repositories without `.sdd/` are not affected.
+   agents) and select `sdd-conductor` as the session agent in the agent picker. Pick a model in the
+   chat's model picker in every new window: a new window starts the picker on "Auto", which routes the
+   session to another model, possibly of another vendor. The footer of each reply names the model
+   that answered. The nine specialists are subagents that the conductor starts.
+5. The Architect commands are the prompt files, offered as `/architect:<name>` (for example
+   `/architect:init`, `/architect:new`, `/architect:doctor`, `/architect:status`); they run in the
+   conductor. A bare `/init` runs VS Code's own built-in `/init`, which writes `AGENTS.md` or
+   `.github/copilot-instructions.md`, not the Architect one: use `/architect:init`.
+
+## Known limitation on VS Code
+
+6. VS Code {{tested_version:vscode}} sends no `agent_type` to PreToolUse hooks, so the subagent guard
+   hook cannot tell which agent makes a tool call. In a repository that contains `.sdd/`, the hook
+   therefore does not stop a subagent that is not an Architect agent, for example one that your own
+   default agent starts, or one that the conductor starts against its instructions, from editing
+   files or running commands; the hook still refuses a call it cannot read and fails closed when its
+   CLI copy is missing. What holds without the hook: the Architect specialists have no generic edit
+   or terminal tool, and their writes and commands go through the sdd MCP servers, which refuse a
+   write outside `.sdd/` and a command outside the allowlist. The conductor's restriction to the
+   nine Architect specialists comes from its instructions, not from VS Code, so a delegation planted
+   in the content it reads and followed by the model is not stopped. On a host that names the
+   subagent in its hook input, such a subagent can call only the read-only tools of the tool classes
+   file (`hooks/tool-classes.json`) in a repository with `.sdd/`; repositories without `.sdd/` are
+   not affected.
+7. The Copilot hooks fallback (`copilot-hooks`) is not offered for VS Code {{tested_version:vscode}}:
+   it decides the Architect agents' calls by the same `agent_type`, so there it would leave the
+   specialists' generic edit and terminal calls undecided.
+
+## Servers and questions
+
+8. No MCP server runs before the first message of a session. Each workspace MCP server
+   (`sdd-files`, `sdd-shell`, `serena`, `context7`, `deepwiki`) starts when an agent first uses
+   one of its tools; a server that MCP: List Servers shows as not started ("Start") is no fault.
+9. Keep the setting `chat.autoReply` off. While it is on, VS Code answers the conductor's questions
+   itself with an auto-reply text ("The user is not available to respond …"), which the conductor
+   treats as no answer, so no interview round or gate goes forward. `chat.tools.global.autoApprove`
+   approves tools only; it does not answer questions.
 
 **Note on Copilot CLI.** Copilot CLI is no supported host of this package. If you start the conductor
 there with `--agent architect:sdd-conductor`, Copilot CLI runs that session agent on its own default
@@ -85,6 +112,6 @@ where `<model>` is the `model` field of `agents/sdd-conductor.agent.md`. The spe
 on the models of their own files. Copilot CLI refuses a `--model` that your plan does not offer before
 the session starts; then name a model your plan offers, and the conductor runs on that model.
 
-Run `/doctor` first: it checks node, {{host_name}}, the sdd CLI, the hooks setting, ripwire, Serena,
-ast-grep, Context7 and DeepWiki, and sets up Serena's data folder outside the repository. Then run
-`/init` to set up `.sdd/` in the repository.
+Run `/architect:doctor` first: it checks node, {{host_name}}, the sdd CLI, the hooks setting,
+ripwire, Serena, ast-grep, Context7 and DeepWiki, and sets up Serena's data folder outside the repository. Then run
+`/architect:init` to set up `.sdd/` in the repository.
