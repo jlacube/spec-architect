@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-071, C002-T-075, C002-T-076]
+depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-071, C002-T-075, C002-T-076, C002-T-081]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
 verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C002-TC-622]
@@ -35,6 +35,10 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Preconditions
 
+- **C002-T-081 done** (revision D-051 … D-053): the release is made from C002-T-081's release
+  candidate, which replaces 9eb56c0 in the C002-T-076 item below; the Copilot CLI evidence and the
+  near-cap list are those of C002-T-081's retake, and C002-T-050's record is taken on its packages.
+  The local tag `v0.1.0` points at that candidate; P-01 pushes it, if at all, with the release.
 - **Package version 0.1.0** (defect D-041; P-01 answer to Q-copilot-010-01, "Ship 0.1.0 on both
   hosts (Recommended)"). Copilot 0.0.2 is refused (`INJ-19` and `INJ-21` acted upon, CHG-001 D-020;
   revision D-036). The 0.0.3 candidate 4ef1d61 (C002-T-071) is refused by the dry run with
@@ -85,6 +89,6 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 ## Done when
 
 - [ ] `architect-sdd@0.1.0` on npm (C002-T-075) no later than the Copilot release
-- [ ] The near-cap list of C002-T-076's report for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
+- [ ] The near-cap list of C002-T-081's report (C002-T-076's before revision D-051 … D-053) for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] Copilot release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-055 --status done --commit <sha>`

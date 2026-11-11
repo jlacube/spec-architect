@@ -251,7 +251,7 @@ Scenario Outline: C002-TS-114 — least-privilege grants per agent
     | sdd-researcher  | Bash                                 | OpenCode | "bash" tool                                |
     | sdd-researcher  | Bash                                 | Copilot  | "execute" tool and no "sdd-shell/*"        |
     | sdd-critic      | AskUserQuestion                      | OpenCode | "question" tool                            |
-    | sdd-critic      | AskUserQuestion                      | Copilot  | "ask_user" tool                            |
+    | sdd-critic      | AskUserQuestion                      | Copilot  | "ask_user" or "askQuestions" tool          |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | OpenCode | Serena, Context7 or DeepWiki tool          |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | Copilot  | Serena, Context7 or DeepWiki tool          |
 ```
@@ -432,7 +432,7 @@ critic CR-67).
 Scenario: C002-TS-121 — Claude Code files after the variants are added
   Given the source plugin keeps the OpenCode and Copilot variants of every wiring section, every CLI invocation line and the doctor host rows
   When the plugin structure checks run on "plugins/architect/"
-  Then no file under "agents/", "commands/" or "skills/" contains an OpenCode or Copilot wiring variant, nor the name "ask_user" or "tool_search_tool"
+  Then no file under "agents/", "commands/" or "skills/" contains an OpenCode or Copilot wiring variant, nor the name "ask_user", "askQuestions" or "tool_search_tool"
   And every variant file lies under "plugins/architect/targets/"
   And PLG-SIZE-001 reports no finding for any Claude Code agent
 ```

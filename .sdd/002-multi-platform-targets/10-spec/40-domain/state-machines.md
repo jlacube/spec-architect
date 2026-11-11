@@ -63,6 +63,12 @@ stateDiagram-v2
 | undetermined | S-08 record | not confined; hooks do not block | deferred | not copied into the Copilot table (C002-IF-001 §1); triggers the spec revision of `../10-context/scope.md` §1.1 that removes the Copilot target (Q-defer-01); until then the Copilot release is refused (C002-REQ-620, ERR-REL-005); OpenCode unaffected (C002-REQ-619) |
 | any determined mode | tested version changes | — | undetermined | spike re-run before the next release (C002-REQ-621) |
 
+The guard "Copilot guard hooks block a subagent's tool calls" needs PreToolUse hook input that names
+the calling agent in `agent_type`. VS Code 1.145.2 sends none (T-050 findings pass of 2026-11-11,
+defect D-052), so on that build the `copilot_hooks` row cannot be taken and the Copilot hooks fallback
+is not offered for VS Code; its mode stays `sdd_mcp_server`, whose confinement held in that run
+(C002-REQ-306).
+
 The S-07 outcome `agent_tools_closed` does not select a mode: the catch-all tool entry applies in
 both OpenCode modes. An S-07 record with `agent_tools_closed: false` sets the mode as above and, in
 addition, triggers a revision of this spec with P-01; until then the OpenCode release is refused
@@ -153,9 +159,9 @@ Each target runs this machine on its own (C002-REQ-619).
 ```mermaid
 stateDiagram-v2
   [*] --> asked : question tool called (≤ 4 questions)
-  [*] --> unavailable : Copilot, ask_user missing
+  [*] --> unavailable : VS Code, askQuestions missing
   asked --> answered : result holds P-01's choice or text
-  asked --> no_choice : skipped, dismissed or empty result
+  asked --> no_choice : skipped, dismissed, empty or auto-reply result
   answered --> [*] : answer logged verbatim, gate decision applied
   no_choice --> [*] : nothing recorded, P-01 told no answer was received
   unavailable --> [*] : round or gate asked as plain text, turn ended
@@ -163,6 +169,6 @@ stateDiagram-v2
 
 | From | Event | Guard | To | Effect |
 |---|---|---|---|---|
-| asked | tool result | holds at least one choice or text answer | answered | questions log and, at a gate, `sdd gate approve` or `gate record` with the verbatim words |
-| asked | tool result | `{"skipped": true}`, dismissed or empty | no_choice | no log entry, no approval (C002-REQ-311, C002-INV-09) |
-| (none) | conductor would ask | VS Code offers no `ask_user` tool | unavailable | round or gate asked as plain text in the reply (C001-IF-05 `questions.md` §3), turn ended, no instruction to enable the tool (C002-REQ-312; C001-REQ-222, C001-REQ-223; defect D-037) |
+| asked | tool result | holds at least one choice or a text answer that is not the auto-reply text | answered | questions log and, at a gate, `sdd gate approve` or `gate record` with the verbatim words |
+| asked | tool result | `{"skipped": true}` or `skipped` true, dismissed, empty, or no selected label with the auto-reply text as free text (`chat.autoReply`, defect D-051) | no_choice | no log entry, no approval (C002-REQ-311, C002-INV-09) |
+| (none) | conductor would ask | VS Code offers no `askQuestions` tool | unavailable | round or gate asked as plain text in the reply (C001-IF-05 `questions.md` §3), turn ended, no instruction to enable the tool (C002-REQ-312; C001-REQ-222, C001-REQ-223; defects D-037, D-051) |

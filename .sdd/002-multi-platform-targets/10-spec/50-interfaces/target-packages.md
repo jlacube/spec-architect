@@ -167,9 +167,14 @@ repository: every VS Code that opens it loads them, with or without the plugin p
 `hooks.json` alone would leave them unguarded where the plugin part is not loaded, is disabled, or is
 a copy that VS Code took before the latest install. The workspace hook file sits beside the agents, so the
 guard is loaded wherever they are; the plugin-level entry is the one S-08 showed carrying
-`agent_type` (§2.3, §3.1). Where the CLI copy named by a hook command does not exist, the hook errors
-and the host denies every tool call of the session (C002-IF-008 §2), so neither place fails open.
-[ASSUMPTION: S-08 — neither the record nor C002-R-001 covers workspace hook files; VS Code and Copilot CLI are taken to load .github/hooks/*.json of the open repository in the hooks-file format of the package's hooks.json, and to give its PreToolUse commands the same input as plugin-level ones, agent_type on subagent calls included; the fresh-install step of the manual VS Code checklist (C002-REQ-614) and the Copilot CLI eval runner (C002-IF-010 §4) confirm both; if a host needs another location or shape, the install command writes that instead; if a host loads no workspace hook file, the plugin-level entry is the only guard there, and the case of workspace agents without the plugin part returns to P-01]
+`agent_type` (§2.3, §3.1; VS Code Insiders 1.142 and Copilot CLI). Where the CLI copy named by a hook
+command does not exist, the hook errors and the host denies every tool call of the session
+(C002-IF-008 §2), so neither place fails open. On VS Code 1.145.2 neither entry receives `agent_type`
+on PreToolUse (defect D-052), so both pass every readable call there (C002-IF-008 §2 rule 3); the
+two entries still fail closed on a missing CLI copy and on faulty input. VS Code 1.145.2 loads the
+workspace hook file beside the plugin-level one: every PreToolUse ran both commands, about 3 s each,
+a cost accepted at 0.1.0 (T-050 findings pass, defect D-053 observation).
+[ASSUMPTION: S-08 — neither the record nor C002-R-001 covers workspace hook files; VS Code 1.145.2 loads .github/hooks/architect-guard.json beside the plugin-level hooks.json (T-050 findings pass), and VSC-28 confirms that it runs with the plugin part disabled (checklist assumption A-4, seen in the hooks log); Copilot CLI loads it as below (C002-T-045); its PreToolUse input is the plugin-level input, without agent_type on VS Code 1.145.2 (D-052); if a host needs another location or shape, the install command writes that instead; if a host loads no workspace hook file, the plugin-level entry is the only guard there, and the case of workspace agents without the plugin part returns to P-01]
 
 **Workspace hooks on Copilot CLI in prompt mode** (revised for defect D-019 item 5; Copilot CLI
 1.0.98, C002-T-045). In prompt mode (`copilot -p`) Copilot CLI loads `.github/hooks/*.json` of the
@@ -193,21 +198,35 @@ user-invocable: false
 <translated body and inlined skills>
 ```
 
+The agent-file references `sdd-files/*` and `sdd-shell/*` grant the servers' tools on VS Code
+1.145.2, which lists them as `mcp_sdd-mcp_write_file`, `mcp_sdd-mcp_replace_text` and
+`mcp_sdd-mcp2_run_command` (C002-IF-001 §2 MCP tool name; defect D-053).
+
 - Every agent has a `tools` list: an agent without one gets every tool of the host, edit and
   terminal tools included (S-08 §3.2; C002-REQ-604, TGT-GRANT-001).
 - The `name` is the file name without `.agent.md`; VS Code reports a workspace agent's name as
-  `agent_type` (`sdd-spec-writer`), Copilot CLI reports a plugin agent as `architect:sdd-spec-writer`
+  `agent_type` (`sdd-spec-writer`; on VS Code 1.145.2 in SubagentStop input only, never on
+  PreToolUse, defect D-052), Copilot CLI reports a plugin agent as `architect:sdd-spec-writer`
   in its hook input (S-08 §2.3, §3.1), while its JSON events name a started subagent by the bare name
   (`sdd-spec-writer`; C002-T-045, C002-IF-010 §3), so every reader strips an `architect:` prefix
   before it compares names (C002-IF-007 `hook subagent-stop`). The conductor's `agents` list names the specialists without prefix on both
   hosts, as the S-08 probe parents did (`docs/spikes/s08/agents/probe-parent.agent.md:5`).
-- `user-invocable: false` on the nine specialists (`agent_fields.subagent_flags`).
-  [ASSUMPTION: S-08 — the record's workspace subagents carried no user-invocable field; the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that a workspace agent with user-invocable false is still started as a subagent]
+- `user-invocable: false` on the nine specialists (`agent_fields.subagent_flags`). Such an agent is
+  still started as a subagent: on VS Code 1.145.2 the default agent started `sdd-spec-writer` with
+  `runSubagent` (`agentName: sdd-spec-writer`), and the started agent listed its tool set (T-050
+  findings pass; checklist assumption A-1 confirmed; defect D-052). VSC-22 of the C002-T-050 rerun
+  records it again.
 - MCP tools are granted per server (`sdd-files/*`, `serena/*`); the host lists them as deferred
   tools named `<server>-<tool>` (`sdd-files-write_file`) and adds `tool_search_tool`, through which
   an agent loads a deferred tool before its first call, to every agent whose `tools` list omits it
-  (S-08 §3.2, fact F-7). Bodies name MCP tools in the `<server>-<tool>` form (C002-IF-001 §2).
-- Conductor: `tools` adds `agent`, `ask_user` and the todo tool; `agents` lists the nine
+  (S-08 §3.2, fact F-7). Bodies name MCP tools in the `<server>-<tool>` form (C002-IF-001 §2), the
+  reference form. On VS Code 1.145.2 the naming half of F-7 does not hold: the tools carry ids of
+  the form `mcp_<command>[N]_<tool>`, the reference form still resolves, and the tool list that a
+  specialist reported held no `tool_search_tool`; whether the tools are deferred there is not
+  recorded (C002-IF-001 §2, §6.1; defect D-053).
+- Conductor: `tools` adds `agent`, the question tool under both its names, `askQuestions` (VS Code)
+  and `ask_user` (Copilot CLI) (C002-IF-001 §6.1 Question tool on Copilot; defect D-051), and the
+  todo tool; every prompt file's `tools` list carries the same names; `agents` lists the nine
   specialists; no `user-invocable: false`. P-03 selects it as the session agent in the Local
   session type (S-08 §3; §5).
 - The `agents` list does not bound the agents the conductor can start. In the 0.0.3 run the local
@@ -216,8 +235,25 @@ user-invocable: false
   `security-review`) and the parent itself (S-08 §3), and an agent without a `tools` list of the
   package gets the host's full tool set, PowerShell, `create` and `edit` included (§3.2). The write
   and terminal calls of such agents are denied, in both modes, by the Copilot subagent guard hook in
-  a repository with `.sdd/` (C002-IF-008 §2 rule 6; C002-REQ-327).
-  [ASSUMPTION: S-08 — three points that §3 and §3.1 do not record: (1) the host also offers its built-in agents to a conductor whose specialists are workspace agents (taken as the worst case; the guard does not depend on it); (2) of the built-in agents' tools, only the hook names Write (create tool) and Bash (terminal tool) are known (§2.3, §3.1), so the edit tool and every other tool the classes file does not name are denied as unclassed (C002-REQ-328); (3) a host built-in agent's tool calls carry agent_type in their hook input, as those of workspace and plugin agents started as subagents do; the manual VS Code checklist (C002-REQ-614) and the Copilot CLI eval runner confirm (1) and (3) (C002-REQ-327 open item); if such calls carry no agent_type, they pass as the session agent's (C002-IF-008 §2 rule 3) and Q-safety-06 returns to P-01]
+  a repository with `.sdd/` on a host whose PreToolUse input names the subagent in `agent_type`
+  (Copilot CLI; C002-IF-008 §2 rule 6; C002-REQ-327).
+  **VS Code 1.145.2: known limitation** (defect D-052; P-01 decision of 2026-11-11, option 1 "Rely
+  on confinement and say so"). VS Code 1.145.2 sends no `agent_type` on PreToolUse, also for calls
+  made inside subagents (436 of 436 inputs of the T-050 findings pass), so the hook passes them as
+  the session agent's (C002-IF-008 §2 rule 3): in the findings pass a subagent of the default agent
+  appended `// injected` to `src/app.ts` (reverted). Checklist assumption A-5 ("its tool calls carry
+  `agent_type`") is refuted on that build and accepted as this limitation. On VS Code the Architect
+  agents stay inside `.sdd/` by what held in the run: the specialists' tool lists hold no generic
+  edit or terminal tool (C002-REQ-306; VSC-54), and the sdd MCP server guard decides every write and
+  command of an Architect agent (C002-IF-002 §5; GUARD-PATH-001 and GUARD-BASH-001 seen in the
+  run). The conductor's restriction to the nine specialists comes from its instructions, not from
+  the host, since the `agents` list does not bound the agents it starts (above): it refused to start
+  `general-purpose` and to brief a specialist for work outside `.sdd/` in the run (VSC-22, VSC-27,
+  VSC-54), but a planted delegation that the model follows is not stopped on VS Code 1.145.2 (critic
+  CR-156). A non-Architect subagent, whether the conductor or P-03's own default agent starts it, is
+  not stopped by the hook in a repository with `.sdd/` (the hook still denies its own faults,
+  C002-IF-008 §2 rules 1 and 2); the install notes say so (§5 step 6).
+  [ASSUMPTION: S-08 — two points that §3 and §3.1 do not record: (1) the host also offers its built-in agents to a conductor whose specialists are workspace agents (taken as the worst case; the guard does not depend on it); (2) of the built-in agents' tools, only the hook names Write (create tool) and Bash (terminal tool) are known (§2.3, §3.1), so on a host that sends agent_type the edit tool and every other tool the classes file does not name are denied as unclassed (C002-REQ-328); on Copilot CLI a host built-in agent's tool calls are taken to carry agent_type, as those of plugin agents started as subagents do (S-08 §2.3); the Copilot CLI eval runner confirms it (C002-TS-359, C002-REQ-327 open item)]
 - Same names in two places: in VS Code the package's `agents/` are also loaded as plugin agents
   (shown in the agent picker, not startable as subagents, S-08 §3). [ASSUMPTION: S-08 — the record tested workspace and plugin agents of different names only; the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that the workspace sdd-conductor, selected as session agent, starts the workspace specialists and that the prompt files bind to it; if not, the generator moves the agent files to install/agents/, outside the plugin part, and the Copilot CLI eval runner restores agents/ in its package copy (C002-IF-010 §4)]
 - The `serena` entry of `install/mcp.json` runs `sdd serena-launch --user-data --read-only --
@@ -229,7 +265,11 @@ user-invocable: false
   (C002-REQ-321), because the session agent's calls carry no `agent_type` (S-08 §2.3, §3). No agent
   frontmatter declares a hook: agent-scoped hooks do not run for a subagent's calls in the local
   agent host (S-08 §3.1, fact F-4). The guard hook is the PreToolUse entry below, in the package's
-  `hooks.json` and in the workspace hook file beside the agents.
+  `hooks.json` and in the workspace hook file beside the agents. The fallback decides an Architect
+  agent's call by its `agent_type`; on VS Code 1.145.2 those calls carry none and pass by rule 3, so
+  there the fallback would leave the specialists' generic edit and terminal calls undecided (the hook
+  denying only its own faults), and it is not offered for VS Code 1.145.2 (C002-IF-008 §2, Copilot
+  hooks fallback on VS Code 1.145.2; defect D-052).
 
 Prompt file (`prompts/plan.prompt.md`, named `<name>.prompt.md` after the source command,
 C002-REQ-317): frontmatter `description`, `argument-hint`, `agent: sdd-conductor` and `tools` equal
@@ -260,8 +300,9 @@ Copilot guard hook of the fallback also for the Architect agents' calls (rule 8)
 ```
 
 `sdd-files` and `sdd-shell` are declared in both modes (C002-REQ-307: under the hooks fallback the
-conductor writes through them, C002-REQ-321). The servers start with the session, after its first
-message (S-08 §3.2; C002-IF-002 §1).
+conductor writes through them, C002-REQ-321). No server starts before the session's first message
+(S-08 §3.2); VS Code 1.145.2 starts each server when an agent first uses one of its tools, so after
+the first message the others may show "Start" (C002-IF-002 §1, C002-IF-001 §6.2; defect D-053).
 
 `install/hooks.template.json` (both modes), commands of C002-IF-008 §4, shown for sdd MCP server
 enforcement:
@@ -281,7 +322,8 @@ In both modes `hooks` holds exactly one PreToolUse entry, the Copilot subagent g
 fallback its `--mode` is `copilot-hooks`, and the same entry is also the Copilot guard hook of the
 Architect agents (C002-REQ-308; C002-IF-008 §2). Only the `PreToolUse` entry goes into the workspace
 hook file; SessionStart and SubagentStop stay plugin-level, so that a session gets one brief and one
-trace refresh per event.
+trace refresh per event. The SessionStart command prints its brief as the JSON object that GitHub
+Copilot Chat reads (`hookSpecificOutput.additionalContext`, C002-IF-008 §3; defect D-053).
 
 The hosts ignore matchers (C002-R-001 A-04), so the CLI filters by `agent_type` itself (C002-IF-007,
 C002-REQ-315, C002-REQ-320, C002-REQ-327).
@@ -307,9 +349,10 @@ and shell or terminal tools instead.
 
 "Write only": on OpenCode the grant is `sdd-files_write_file` alone; on Copilot the package grants
 `sdd-files/*` (per-tool grants were shown on Copilot CLI only, S-08 §2.1), so the agent also
-receives `replace_text`, which writes under the same boundary. Question tool on Copilot: `ask_user`
-(S-08 §3.2, fact F-5). Under the Copilot hooks fallback the conductor's row keeps "files" and
-"shell" (C002-REQ-321).
+receives `replace_text`, which writes under the same boundary. Question tool on Copilot: both
+names, `askQuestions` (VS Code Local session type) and `ask_user` (Copilot CLI) (C002-IF-001 §6.1;
+defect D-051, which refutes S-08 fact F-5 on VS Code 1.145.2). Under the Copilot hooks fallback the
+conductor's row keeps "files" and "shell" (C002-REQ-321).
 
 ## §5 Install notes
 
@@ -335,19 +378,42 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304); on Copilot, the models s
    that path does not exist, VS Code denies every tool call in the repository until the install
    runs there (fail-closed, C002-CON-08).
 3. The settings `chat.plugins.enabled` (true), `chat.pluginLocations` (the package folder) and
-   `chat.askQuestions.enabled` (true; kept per the open item of C002-REQ-304). Step 2 comes first:
+   `chat.askQuestions.enabled` (true; kept per the open item of C002-REQ-304, until VSC-19 shows
+   that the question tool `askQuestions` works without it, C002-IF-001 §6.1). Step 2 comes first:
    the package folder becomes a plugin only when the install has written its `plugin.json` and
    `hooks.json` (§3); after a later install that changes `hooks.json`, reload the window, because
    VS Code loads the plugin from a copy (S-08 §3).
 4. A chat of the **Local** session type (the Copilot CLI session type does not offer the agents,
-   S-08 §3), with `sdd-conductor` selected as the session agent.
-5. The workspace MCP servers start only after the first message of a session (S-08 §3.2), so the
-   first message is a plain request such as the status, before any write.
-6. In a repository with `.sdd/`, while hooks are enabled, a subagent that is not an Architect agent
-   (a host built-in agent such as `general-purpose`, or an agent of the adopter started as a
-   subagent) can call only the read-only tools of the tool classes file; the calls of P-03's own
-   session agent are not affected, and repositories without `.sdd/` are not affected
-   (C002-REQ-304, C002-REQ-327, C002-REQ-329).
+   S-08 §3), with `sdd-conductor` selected as the session agent and a model picked in the chat's
+   model picker: a new window starts the picker on "Auto", which may route the session to a model
+   of another vendor (VS Code 1.145.2; defect D-053; Models below).
+5. The Architect commands are the prompt files, offered as `/architect:<name>` (`/architect:init`,
+   `/architect:new`, `/architect:status`, …). A bare `/init` runs VS Code's own built-in `/init`,
+   which writes `AGENTS.md` or `.github/copilot-instructions.md`, not the Architect one (VS Code
+   1.145.2; C002-IF-001 §2 command reference; defect D-053).
+6. Known limitation (defect D-052; P-01 decision of 2026-11-11). VS Code 1.145.2 does not tell the
+   guard hook which agent makes a tool call (no `agent_type` on PreToolUse), so in a repository with
+   `.sdd/` the hook does not stop a subagent that is not an Architect agent, for example one that
+   P-03's own default agent starts, or one that the conductor starts against its instructions,
+   from editing files or running commands; the hook still refuses a call it cannot read and fails
+   closed when its CLI copy is missing. What holds without the hook: the specialists have no
+   generic edit or terminal tool, and their writes and commands go through the sdd MCP servers,
+   which refuse a write outside `.sdd/` and a command outside the allowlist; the conductor's
+   instructions tell it to start only the nine Architect specialists, but VS Code does not enforce
+   that, so a delegation planted in the content it reads and followed by the model is not stopped
+   (critic CR-156). On a host that names the subagent in its hook input, such a subagent can call
+   only read-only tools in a repository with `.sdd/`, and repositories without `.sdd/` are not
+   affected (C002-REQ-304, C002-REQ-327, C002-REQ-329).
+7. The Copilot hooks fallback (`copilot-hooks`) is not offered for VS Code 1.145.2: it decides the
+   Architect agents' calls by the same `agent_type`, so there it would leave the specialists'
+   generic edit and terminal calls undecided (C002-IF-008 §2; defect D-052).
+8. No MCP server runs before the first message of a session, and VS Code 1.145.2 starts each one
+   when an agent first uses one of its tools; a server that MCP: List Servers shows as not started
+   ("Start") is no fault (S-08 §3.2; defect D-053).
+9. Keep the setting `chat.autoReply` off: when it is on, VS Code answers the conductor's questions
+   itself with its auto-reply text ("The user is not available to respond …"), which the conductor
+   treats as no answer, so no interview round or gate goes forward (C002-IF-001 §6.1 No answer;
+   VS Code 1.145.2; critic CR-159).
 
 **Models** (added for defect D-027; P-01 answer to Q-copilot-map-01, "Keep opus, note fallback
 (Recommended)"). The Copilot package keeps `claude-opus-5.5` as the model of the opus tier
@@ -360,14 +426,21 @@ Claude models of the three tiers, the install notes state:
   so the agents of the opus tier then run a tier below their own (P-01 answer to Q-copilot-map-01;
   the S-08 record shows the default on agents without a `model`, `docs/spikes/S-08-copilot-vscode.md`
   §2.4, §3);
-- where P-03 sees which model ran: in VS Code, the model that the chat's model picker shows for the
-  session [ASSUMPTION: D-027 — VS Code shows in the chat's model picker the model that a session of an agent with a `model` field runs on, also when the host runs it on its default model; the fresh-install step of the manual VS Code checklist records the models shown (C002-IF-009 §4 Models used) and confirms it; if VS Code shows the model elsewhere, the install notes name that place]; on Copilot CLI, the models listed with their use in the file that `--usage-output-file` writes
-  (C002-IF-010 §4).
+- where P-03 sees which model ran: in VS Code, the model named in the footer of each reply (VS Code
+  1.145.2; revised for defect D-053: the earlier text named the model picker, which shows the model
+  chosen for the session, "Auto" included, and a new window resets it to "Auto"); on Copilot CLI,
+  the models listed with their use in the file that `--usage-output-file` writes (C002-IF-010 §4);
+- that P-03 picks the model in the chat's model picker (step 4), since on "Auto" VS Code 1.145.2
+  routed the conductor's session to a model of another vendor, on which the conductor once skipped
+  the doctor probes (T-050 findings pass; defect D-053).
 
 The notes name the tier (Sonnet), not a model ID: no token of C002-IF-001 §4 prints a model (as for
 the Copilot CLI note below). The doctor reports no model (C002-IF-006 §1, No model row).
 
-After the six steps, one note for Copilot CLI (revised for defect D-019 item 1; P-01 answer to
+After the nine steps (revised for defects D-051 … D-053: steps 5, 7 and 8 replaced the earlier
+step 5 on the first message, step 6 the earlier hook promise, and step 9 was added for critic
+CR-159), one note for Copilot CLI
+(revised for defect D-019 item 1; P-01 answer to
 Q-cli-model-01): Copilot CLI is no supported host of the package (C002-NG-01), and a P-03 who runs
 the conductor there with `--agent architect:sdd-conductor` chooses its model: Copilot CLI 1.0.98 runs
 the session agent on the CLI's default model, not on the `model` of the agent file, so the conductor
@@ -419,7 +492,7 @@ finding is printed in the format of C001-IF-08 §3 with the target name.
 | TGT-MODE-001 | Conductor primary, specialists subagent; every command or prompt file bound to the conductor | C002-REQ-202, C002-REQ-203, C002-REQ-303 |
 | TGT-MEM-001 | No agent has a `memory` field | C002-REQ-106 |
 | TGT-NPM-001 | The `architect-sdd` tarball satisfies the rules of C002-IF-003 §2, the shipped templates included (step `tarball` of `npm run check`, `scripts/check/tarball.mjs`) | C002-REQ-412, C002-REQ-414, C002-REQ-501, C002-REQ-502, C002-REQ-512, C002-REQ-518, C002-REQ-519 |
-| PLG-VAR-001 | On the source plugin: no agent file (`agents/*.md`), command file (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`ask_user`, `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is not in the source text its anchor replaces. The finding names the file, the line and the name or the variant file found | C002-REQ-113 (C002-TS-121, C002-TS-122) |
+| PLG-VAR-001 | On the source plugin: no agent file (`agents/*.md`), command file (`commands/*.md`) or `SKILL.md` holds a host-only name of a generated target (`ask_user`, `askQuestions` (added for defect D-051), `tool_search_tool`, `sdd-files`, `sdd-shell`, a token of C002-IF-001 §4 such as `{{host_name}}`) or a variant-only line: a line of 40 or more characters of a wiring variant file under `targets/` that is not in the source text its anchor replaces. The finding names the file, the line and the name or the variant file found | C002-REQ-113 (C002-TS-121, C002-TS-122) |
 | PLG-VER-001 | On the repository (revised for defect D-005): the `version` of the root `package.json` equals the `version` of `plugins/architect/.claude-plugin/plugin.json`, the single version source of a packaging run, which the build no longer reads from `package.json` (C002-ADR-004). One finding naming the file: `plugin.json has no version`, `root package.json has no version`, or `root package.json version <have> differs from plugin.json version <want>; set both to the same version` (`scripts/check/rules.mjs` › `ver001`) | C002-CON-16, C002-INV-11 |
 
 PLG-VAR-001 and PLG-VER-001 extend the plugin structure checks of C001-IF-08 §3 and run with them

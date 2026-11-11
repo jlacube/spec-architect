@@ -18,7 +18,7 @@ scope through the capabilities below, its "later" cells are listed in §2.
 |---|---|
 | Generator: neutral model, mapping tables, skill inlining, wiring variants, target packages written by `npm run package` | C002-CAP-01 |
 | OpenCode target package: agents, commands, skills, `opencode.json` with per-agent permission blocks and MCP configuration; interviews and gates through the `question` tool; post-write quick lint when spike S-07 finds a feedback channel; the sdd MCP server as fallback | C002-CAP-02 |
-| Copilot VS Code target package: custom agents, prompt files, skills, workspace MCP configuration, and the Copilot install command that writes the workspace agents and MCP servers into the adopter's repository; interviews and gates through `ask_user`; session-start brief and SubagentStop trace hooks; the Copilot subagent guard hook in both enforcement modes (Q-safety-06); the Copilot hooks fallback with Copilot guard hooks (C002-DEC-005 exception) | C002-CAP-03 |
+| Copilot VS Code target package: custom agents, prompt files, skills, workspace MCP configuration, and the Copilot install command that writes the workspace agents and MCP servers into the adopter's repository; interviews and gates through the question tool (`askQuestions` in VS Code, `ask_user` in Copilot CLI; defect D-051); session-start brief and SubagentStop trace hooks; the Copilot subagent guard hook in both enforcement modes (Q-safety-06), which acts only where PreToolUse hook input carries `agent_type`, a known limitation on VS Code 1.145.2 (defect D-052); the Copilot hooks fallback with Copilot guard hooks (C002-DEC-005 exception), not offered for VS Code 1.145.2 (defect D-052) | C002-CAP-03 |
 | sdd MCP server: guarded `.sdd/` writes, allowlisted commands, quick-lint findings with each write (C002-DEC-001) | C002-CAP-04 |
 | `architect-sdd` on npm (C002-DEC-007); the Bash allowlist accepting a bare `sdd` command and `node --version` (with D-011 of CHG-001) and confining `sdd serena-config` and `sdd serena-launch` to a data folder outside the repository on every host (Q-guards-04); the doctor on every target | C002-CAP-05 |
 | Per-target structure checks; corpus replay against each enforcement mechanism; OpenCode and Copilot CLI eval runners; the manual VS Code checklist (C002-DEC-003); the release check per target (C002-DEC-005); the Claude Code regression set | C002-CAP-06 |
@@ -51,6 +51,10 @@ spike record of a new tested version (C002-REQ-621).
   targets converge on it (ideation §5, Later).
 - Any change of behaviour on Claude Code other than the bash guard changes of C002-GOAL-05
   (C002-REQ-503, C002-REQ-517, C002-REQ-521).
+- Two findings of the T-050 findings pass of 2026-11-11 in shared conductor and CLI behaviour, which
+  hold on Claude Code too and are left to the follow-up change CHG-004 (not defects of this change):
+  [ASSUMPTION: CHG-004 — the G0 approval makes no commit while the constitution's Version control says to commit at each gate approval, and the conductor suggested `sdd gate approve --commit`; the conductor text is shared with Claude Code and stays unchanged in CHG-002]
+  [ASSUMPTION: CHG-004 — `sdd trace <NNN> --write` exits 1 at gate G1 on a lite change whose 10-spec scaffold still holds placeholder IDs; CHG-002 does not change it]
 
 ## 3. Assumptions
 
@@ -109,6 +113,16 @@ step VSC-54, the subagent tool-list confinement that the `sdd-mcp-server` mode r
 CR-150; P-01's answer to Q-guard-proof-01). The tested versions follow P-01's machine: when P-01 runs the checklist
 on another build, a revision records it before the release. Copilot CLI 1.0.98 stays the tested
 Copilot CLI of the eval runner, as S-08 recorded it.
+
+The T-050 findings pass of 2026-11-11 on this build (non-binding; C002-T-050 runs again after the
+revision) refuted three S-08 findings there: fact F-5, since the question tool of the Local session
+type is `askQuestions` and `ask_user` is Copilot CLI's (defect D-051); the plugin-level half of fact
+F-4, since no PreToolUse hook input carries `agent_type`, subagent calls included, while SubagentStop
+input does (defect D-052); and the wording that workspace MCP servers start after the first message,
+since each starts when one of its tools is first used (defect D-053). It confirmed the subagent
+tool-list confinement (C002-REQ-306). The revision for these defects takes them into C002-CAP-03,
+C002-CAP-06 and the interfaces; on VS Code the bar against subagent edits rests on that confinement
+(P-01 2026-11-11; C002-REQ-327).
 
 The facts of the S-08 record that contradict the earlier platform assumptions (F-1 … F-7, §5) are
 taken into C002-CAP-03, C002-REQ-103, C002-REQ-211, C002-REQ-612 and C002-REQ-614 by the revision for

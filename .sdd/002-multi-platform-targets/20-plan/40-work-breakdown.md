@@ -93,11 +93,16 @@ flowchart TB
     C002_T_048["T-048 Claude Code regression run"]
     C002_T_049["T-049 OpenCode release evidence"]
     C002_T_054["T-054 Copilot release evidence"]
-    C002_T_050["T-050 P-01 checklist run"]
+    C002_T_050["T-050 Checklist run (conductor for P-01), clean rerun after D-051…D-053"]
     C002_T_055["T-055 P-01 Copilot release"]
     C002_T_071["T-071 Release evidence retaken after the CHG-001 fixes (Copilot 0.0.3; OpenCode deferred)"]
     C002_T_075["T-075 P-01 publish architect-sdd"]
     C002_T_076["T-076 Fix D-041: Copilot evidence retaken at 0.1.0"]
+    C002_T_077["T-077 Fix D-051: askQuestions beside ask_user"]
+    C002_T_078["T-078 Fix D-053: SessionStart JSON under --host copilot"]
+    C002_T_079["T-079 Fix D-051…D-053: install notes and README"]
+    C002_T_080["T-080 Fix D-052, D-053: checklist, record template, run sheet"]
+    C002_T_081["T-081 New 0.1.0 candidate, Copilot CLI evidence retaken"]
   end
   C002_T_053 --> C002_T_006
   C002_T_007 --> C002_T_008
@@ -311,13 +316,45 @@ flowchart TB
   C002_T_070 --> C002_T_071
   C002_T_071 --> C002_T_055
   C002_T_071 --> C002_T_050
+  C002_T_037 --> C002_T_077
+  C002_T_076 --> C002_T_077
+  C002_T_032 --> C002_T_078
+  C002_T_076 --> C002_T_078
+  C002_T_039 --> C002_T_079
+  C002_T_076 --> C002_T_079
+  C002_T_046 --> C002_T_080
+  C002_T_079 --> C002_T_080
+  C002_T_076 --> C002_T_081
+  C002_T_077 --> C002_T_081
+  C002_T_078 --> C002_T_081
+  C002_T_079 --> C002_T_081
+  C002_T_080 --> C002_T_081
+  C002_T_077 --> C002_T_050
+  C002_T_078 --> C002_T_050
+  C002_T_079 --> C002_T_050
+  C002_T_080 --> C002_T_050
+  C002_T_081 --> C002_T_050
+  C002_T_081 --> C002_T_075
+  C002_T_081 --> C002_T_055
 ```
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. Of the 76 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
-to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85). The 73 others weigh 148 (22 S,
-27 M, 24 L). The longest chain weighs 53 and ends with the Copilot release. **The D-041 plan update
+Weights S = 1, M = 2, L = 3. Of the 81 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
+to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85), and C002-T-057 (S) is dropped
+(defect D-049). The 78 others weigh 156 (24 S, 30 M, 24 L). The longest chain weighs 58 and ends
+with the Copilot release.
+
+**The D-051 … D-053 plan update lengthens it by 5** (P-01's decision on D-052, 2026-11-11;
+`revision-D051-D053-digest.md`). The five fix tasks follow C002-T-076 (finishing at 50):
+- C002-T-078 (S, SessionStart JSON) finishes at 51, with 2 units of slack;
+- C002-T-077 (M, `askQuestions`) finishes at 52, with 1 unit of slack;
+- C002-T-079 (S, install notes) finishes at 51, and C002-T-080 (M, checklist and run sheet), which
+  quotes the install notes, at 53;
+- C002-T-081 (M, new candidate and Copilot CLI retake) waits for all four and finishes at 55;
+- C002-T-050 (S, the clean rerun) finishes at 56, C002-T-075 at 57 and C002-T-055 at 58.
+
+Before it, the chain weighed 53. **The D-041 plan update
 lengthens it by 2** (P-01 answer to Q-copilot-010-01): C002-T-076 (M, the Copilot evidence at 0.1.0)
 waits for C002-T-071 (48) and finishes at 50; C002-T-050 then finishes at 51 (C002-T-057, dropped by defect D-049, is no node),
 C002-T-075 at 52 and C002-T-055 at 53. C002-T-076 also waits, outside this graph, for the end of CHG-001's C001-M-4 toy
@@ -400,14 +437,17 @@ the eval auth switch, is already built and finishes at 1, before C002-T-010, C00
 and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
 
-**Overall (to C002-T-055, weight 53, from the D-041 revision):** items 1 … 14
+**Overall (to C002-T-055, weight 58, from the D-051 … D-053 revision):** items 1 … 14
 below, then C002-T-048 — Claude Code regression set run (M, 40), C002-T-068 — cap exceptions for the
 CHG-001 release cases (S, 41), C002-T-069 — Claude Code spend cap applied by the runner (M, 43),
 C002-T-070 — rule-1 rerun cap 3.00 USD (S, 44), C002-T-073 — `INJ-21` session cap and version 0.0.2
 (S, 45), C002-T-074 — version 0.0.3 (S, 46), C002-T-071 — release evidence retaken, Copilot at 0.0.3
-(M, 48), C002-T-076 — Copilot evidence retaken at 0.1.0 (M, 50; revision D-041), C002-T-050 — P-01
-checklist run (S, 51), C002-T-075 — P-01 npm publication after a `released` dry run (S, 52) and
-C002-T-055 — P-01 Copilot release (S, 53). The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
+(M, 48), C002-T-076 — Copilot evidence retaken at 0.1.0 (M, 50; revision D-041), C002-T-079 — install
+notes and README (S, 51), C002-T-080 — checklist, record template and run sheet (M, 53), C002-T-081 —
+new 0.1.0 candidate and Copilot CLI retake (M, 55), C002-T-050 — checklist run, clean rerun (S, 56),
+C002-T-075 — P-01 npm publication after a `released` dry run (S, 57) and C002-T-055 — P-01 Copilot
+release (S, 58). At the D-041 revision the chain ended at 53, with C002-T-050 directly after
+C002-T-076. The chain also waits for CHG-001's C001-T-082, C001-T-083 and C001-T-084 outside this graph
 (C002-T-074 waits for the C001-T-084 product commit; `handoff.md`), so its calendar end follows them.
 
 **Before the release retake (to C002-T-055, weight 45):**
@@ -540,7 +580,12 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-07 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | M | T-036, T-041, T-045, T-048, T-064, T-065, T-066 |
 | C002-M-07 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | M | T-049, T-054, T-068, T-069, T-070, T-073, T-074 |
 | C002-M-07 | C002-T-076 | Fix for revision D-041: Copilot release evidence retaken at version 0.1.0 | M | T-054, T-066, T-071 |
-| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-071, T-074, T-076 |
-| C002-M-07 | C002-T-050 | P-01: run the manual VS Code checklist and record it | S | T-046, T-054, T-071, T-076 |
+| C002-M-07 | C002-T-077 | Fix for revision D-051: the question tool askQuestions beside ask_user in the Copilot package | M | T-037, T-076 |
+| C002-M-07 | C002-T-078 | Fix for revision D-053: the session-start brief as JSON hookSpecificOutput under --host copilot | S | T-032, T-076 |
+| C002-M-07 | C002-T-079 | Fix for revisions D-051 … D-053: Copilot install notes and README section | S | T-039, T-076 |
+| C002-M-07 | C002-T-080 | Fix for revisions D-052, D-053: VS Code checklist, record template and T-050 run sheet | M | T-046, T-079 |
+| C002-M-07 | C002-T-081 | Fix for revisions D-051 … D-053: new 0.1.0 release candidate, unpaid release steps and the Copilot CLI evidence retaken | M | T-076, T-077, T-078, T-079, T-080 |
+| C002-M-07 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | S | T-046, T-054, T-071, T-076, T-077, T-078, T-079, T-080, T-081 |
+| C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-071, T-074, T-076, T-081 |
 | C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | S | T-023, T-034, T-039, T-058, T-071, T-076 |
-| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-071, T-075, T-076 |
+| C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-071, T-075, T-076, T-081 |

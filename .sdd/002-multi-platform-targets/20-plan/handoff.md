@@ -465,6 +465,35 @@ them; a row not exposed in its second session goes to P-01. The rule holds on Co
 correction only for the two listed t076 entries (critics CR-146, CR-147).
 **Close rules:** D-046 closes at the G2 and G3 approvals; D-041 still closes with C002-T-076.
 
+**D-051 … D-053: the T-050 findings pass on VS Code 1.145.2** (P-01's instruction "go ahead with the
+findings pass" and answer to Q-vscode-subagent-guard-01, "1, go ahead with the revision", 2026-11-11;
+`revision-D051-D053-digest.md`; `10-strategy.md` §2). The conductor's run of C002-T-050 failed at
+VSC-11 and continued as a non-binding findings pass; it is no record. Order:
+1. **C002-T-077** (M): `askQuestions` beside `ask_user` (tool map, body text, `command-reference`,
+   prompt-file tool lists, interview and gate wiring with the result shape and the auto-reply rule),
+   and one Copilot CLI session showing the extra name is accepted.
+2. **C002-T-078** (S): the session-start brief as JSON `hookSpecificOutput` under `--host copilot`;
+   Claude Code unchanged (C002-TS-708).
+3. **C002-T-079** (S): install notes and README: `/architect:<name>` and the built-in `/init`, the model
+   choice, servers on first tool use, `chat.autoReply`, and the **known limitation**: no `agent_type`
+   on PreToolUse in VS Code 1.145.2, so no subagent guard by hook there; confinement holds the boundary;
+   `copilot-hooks` not offered for VS Code (C002-RISK-041).
+4. **C002-T-080** (M): checklist, record template and run sheet (VSC-27 and VSC-28 check the
+   conductor's refusal; VSC-27's default-agent probe records `agent_type` present, with the hook's
+   denial, or absent, with the edit reverted, critics CR-154, CR-155; the `code chat -a` method;
+   Sonnet 5.5 per window).
+5. **C002-T-081** (M, conductor): the new 0.1.0 candidate, `dist/` rebuilt, unpaid steps, the 24
+   Copilot CLI rows retaken (labels `t081`, 15.00 USD stop; Q-d051-retake-01, the conductor, option 1), dry run
+   refusing ERR-REL-003 only. The local tag `v0.1.0` moves from 9eb56c0 to the candidate; never pushed
+   by an agent.
+6. **C002-T-050** runs again, clean, under a later date; P-01's end batch gains the free-text row of
+   VSC-20 (C002-TS-317, critic CR-157); then C002-T-075 and C002-T-055 as before.
+
+**Handoff condition:** C002-T-077 … C002-T-080 start after the G2 and G3 approvals of the revision;
+C002-T-081 after all four; C002-T-050 after C002-T-081. **Close rules:** `10-strategy.md` §2 (D-051
+with C002-T-077 and VSC-18; D-052 with the approvals and C002-T-079, C002-T-080; D-053 with C002-T-078
+… C002-T-080 and the VSC-11, 12, 21, 23 results of the clean run).
+
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
 OpenRouter credit (`10-strategy.md` §2, Moved to CHG-003).
@@ -578,6 +607,8 @@ C001-T-082 reports the same check for the sessions of its step 4 against that st
 - Spike tasks (C002-T-001, C002-T-002) write records in `docs/spikes/`. An outcome that contradicts
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
   defer branch of `75-rollout.md` §5.
+- C002-T-050 is executed by the conductor for P-01 since defect D-050, P-01 running the typed steps;
+  C002-T-076 and C002-T-081 are the conductor's.
 - P-01 steps are done by P-01: C002-T-003, C002-T-050, C002-T-051, C002-T-052, C002-T-055 and
   C002-T-057, the OpenRouter confirmation of C002-T-001 step 1, the Copilot subscription of C002-T-002, and the
   sign-offs. Never publish, never store a token or credential in the repository.
@@ -642,6 +673,10 @@ Insiders builds): record the version before each run.
 | Q-copilot-opus-01, Q-copilot-map-01: Copilot CLI refuses `claude-opus-5.5` on P-01's Copilot Pro plan (defect D-027) | C002-T-066, C002-T-054 | settled: P-01 answered "accept Sonnet" and "Keep opus, note fallback (Recommended)" (`../10-spec/questions-log.md` round 2026-10-21 (2)); `--copilot-model claude-opus-5.5=claude-sonnet-5.5` in the release run of C002-T-054 step 3, the fallback in the install notes (C002-T-066) |
 | Q-inj-result-01: whether the committed OpenCode injection summary, written before entries carried `result` and `models`, meets the clause of C002-DOD-009 that each entry names its result file | C002-T-066, C002-T-052 | settled: P-01 answered "Backfill, no spend (Recommended)" (`../10-spec/questions-log.md`); C002-T-066 step 8 copies `result` and `models` from each row's counted `t049-INJ-*` result file, `acted_upon` and the entry count unchanged, schema-validated |
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
+| Q-d051-retake-01: retake the 24 Copilot CLI rows at the new 0.1.0 candidate of C002-T-081, under the rule of C002-T-076 step 1 that P-01 decides a retake after a package-source change (revision D-051 … D-053) | C002-T-081 step 5 | settled: the conductor answered option 1, "Retake all 24 rows" (about 2.4 … 3.4 USD, within the 15.00 USD stop), under P-01's waiver of 2026-10-19 for paid batches within approved limits (`questions-log.md` round 2026-11-11) |
+| **Double guard run** (digest fact 10, D-053 observation): every PreToolUse in VS Code runs the guard twice, from the plugin `hooks.json` and from `.github/hooks/architect-guard.json`, about 3 s each | CHG-004 "Cost and token efficiency" | open: accepted cost at 0.1.0, no change in CHG-002 |
+| **Follow-ups of the findings pass** (digest fact 12, not defects): the doctor's Context7 and DeepWiki rows read `unreachable` without a probe (accepted on defect D-012: the conductor holds neither tool); the G0 approval makes no commit and the conductor suggests `sdd gate approve --commit` (shared conductor text, Claude Code too); `sdd trace <NNN> --write` exits 1 at G1 on a lite change whose 10-spec scaffold holds placeholder IDs | CHG-004 "Cost and token efficiency" | open: recorded for CHG-004, not addressed in CHG-002 |
+| **Local tag `v0.1.0` and the CHG-001 release record** (revision D-051 … D-053): C002-T-081 moves the local tag from 9eb56c0 to its candidate; CHG-001's release evidence names the tagged commit | C002-T-081; CHG-001 (its own record) | open: the T-081 report names both commits; any edit of a CHG-001 record is CHG-001's; pushing the tag stays P-01's |
 | **Untimed docs walkthroughs** (defects D-049 and CHG-001 D-031): a person follows the Copilot `INSTALL.md` and the Claude Code README once, untimed, in the isolated profiles, and notes any undocumented step | follow-up change "Cost and token efficiency" | open: moved there with the waivers of C002-NFR-601 and C001-NFR-602 |
 | **Cost of a small lite change to G3** (major post-release issue; defect D-044; P-01 answer to Q-toy-g3-limit-01): the cfg-full toy chain needs about 50 USD notional to take a one-function lite change to G3; every critic review found issues (11 at ideation, 6 at spec) and each fix round takes a full session at the cap; thinking tokens grew after the budget was hidden, a cause **not proven**: the earlier sessions could see their budget, and the skills changed in between (C002-IF-010 §2.2 rule 1, `TS-511`; `docs/release-0.1.0-evidence.md` §7) | **the follow-up change "Cost and token efficiency"** (owner; named by the conductor, CHG-002 plan critic CR-112, and its number recorded once it exists), which the conductor creates at C001-T-072's close; it also holds the cfg-bare part of C001-NFR-304 (P-01 answer to Q-nfr304-bare-01, CHG-001 critic CR-40); it also holds the deferred G3 run on cfg-bare with its cap row `toy-g3-cfg-bare` (plan critic CR-112) | open: logged, not addressed in CHG-001 or CHG-002 |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
@@ -770,10 +805,15 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 67 | C002-T-054 | Release evidence for Copilot: corpus replay and Copilot CLI dev-tier evals | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-054-copilot-release-evidence.md` |
 | 68 | C002-T-071 | Release evidence retaken at a release-candidate commit with the CHG-001 fixes: Copilot at 0.0.3, OpenCode moved to CHG-003 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-071-release-evidence-retake-after-chg001-fixes.md` |
 | 69 | C002-T-076 | Fix for revision D-041: Copilot release evidence retaken at version 0.1.0 | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-076-copilot-evidence-retake-0-1-0.md` |
-| 70 | C002-T-050 | P-01: run the manual VS Code checklist and record it | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 71 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 72 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
-| 73 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 70 | C002-T-077 | Fix for revision D-051: the question tool askQuestions beside ask_user in the Copilot package | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-077-question-tool-askquestions.md` |
+| 71 | C002-T-078 | Fix for revision D-053: the session-start brief as JSON hookSpecificOutput under --host copilot | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-078-session-start-json-copilot.md` |
+| 72 | C002-T-079 | Fix for revisions D-051 … D-053: Copilot install notes and README section | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-079-copilot-install-notes-d051-d053.md` |
+| 73 | C002-T-080 | Fix for revisions D-052, D-053: VS Code checklist, record template and T-050 run sheet | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-080-checklist-runsheet-d052-d053.md` |
+| 74 | C002-T-081 | Fix for revisions D-051 … D-053: new 0.1.0 release candidate, unpaid release steps and the Copilot CLI evidence retaken | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-081-release-candidate-0-1-0-after-d051-d053.md` |
+| 75 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 76 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 77 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
+| 78 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
 are not in this list. The OpenCode release moves to CHG-003 "OpenCode release" (created 2026-11-10; `.sdd/003-opencode-release/`); the follow-up "Cost and token efficiency" is CHG-004 (`.sdd/004-cost-and-token-efficiency/`).

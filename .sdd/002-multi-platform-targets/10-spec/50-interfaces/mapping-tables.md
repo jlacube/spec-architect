@@ -56,8 +56,8 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 | Kind | Found in | Translation rule | OpenCode (initial) | Copilot (initial) |
 |---|---|---|---|---|
 | tool name | agent `tools` field | `tools` entry; an empty list drops the tool on purpose | per §6.1 | per §6.1 |
-| MCP tool name | agent `tools`, skill bodies | `mcp_tool_names.target_pattern` (bodies) and `grant_pattern` (`tools` lists) | `serena_find_symbol` | body: `serena-find_symbol`, a deferred tool loaded through `tool_search_tool` (S-08 §3.2, fact F-7); grant: `serena/*` (per-server; `serena/find_symbol` per-tool works on Copilot CLI only, S-08 §2.1) |
-| `Agent(...)` grant | conductor `tools` | `agent_start` | `permission.task`: `"*": deny`, nine `sdd-*` specialists `allow`; and the tool `task` turned on in the conductor's tool map (`agent_start.tools`), because the catch-all `"*": false` of §6.1 would otherwise switch off the tool that starts the specialists (revised for defect D-010 item 1) | `agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`). Unlike `Agent(...)` and `permission.task`, the list does not bound the starts: the local agent host also offered its host built-in agents (`explore`, `task`, `general-purpose`, …) to such a parent (S-08 §3), and they run with the host's tools (§3.2); their write and terminal calls are denied by the Copilot subagent guard hook in repositories with `.sdd/` (C002-IF-008 §2 rule 6; C002-REQ-327; assumptions: C002-IF-005 §3) |
+| MCP tool name | agent `tools`, skill bodies | `mcp_tool_names.target_pattern` (bodies) and `grant_pattern` (`tools` lists) | `serena_find_symbol` | body: `serena-find_symbol`, a deferred tool loaded through `tool_search_tool` (S-08 §3.2, fact F-7); grant: `serena/*` (per-server; `serena/find_symbol` per-tool works on Copilot CLI only, S-08 §2.1). The body form is the reference form: VS Code 1.145.2 lists MCP tools under ids of the form `mcp_<command>[N]_<tool>`, named after the server's command with a numeric suffix for a further server of the same command (`mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`, `mcp_serena_*`), while the references `#sdd-files-write_file` and `#sdd-shell-run_command` and the grants `sdd-files/*` and `sdd-shell/*` resolve (T-050 findings pass of 2026-11-11; defect D-053) |
+| `Agent(...)` grant | conductor `tools` | `agent_start` | `permission.task`: `"*": deny`, nine `sdd-*` specialists `allow`; and the tool `task` turned on in the conductor's tool map (`agent_start.tools`), because the catch-all `"*": false` of §6.1 would otherwise switch off the tool that starts the specialists (revised for defect D-010 item 1) | `agents:` list of the nine specialists by bare name plus the `agent` tool (on both Copilot hosts, `docs/spikes/s08/agents/probe-parent.agent.md:5`). Unlike `Agent(...)` and `permission.task`, the list does not bound the starts: the local agent host also offered its host built-in agents (`explore`, `task`, `general-purpose`, …) to such a parent (S-08 §3), and they run with the host's tools (§3.2); their write and terminal calls are denied by the Copilot subagent guard hook in repositories with `.sdd/` on a host whose PreToolUse input names the subagent in `agent_type` (Copilot CLI; C002-IF-008 §2 rule 6; C002-REQ-327; assumptions: C002-IF-005 §3). VS Code 1.145.2 sends no `agent_type` on PreToolUse, so there the hook does not stop such calls (it still denies its own faults, C002-IF-008 §2 rules 1 and 2), and what holds is the specialists' tool lists, the sdd MCP server guard and the conductor's instructions to start only the nine specialists, which the host does not enforce: a planted delegation that the model follows is not stopped there (known limitation, P-01 decision of 2026-11-11 on defect D-052; critic CR-156; C002-IF-008 §2 rule 3) |
 | model name | agent `model` | `models` by tier; any other value is ERR-GEN-003 | opus `openrouter/anthropic/claude-opus-5.5`, sonnet `openrouter/anthropic/claude-sonnet-5.5`, haiku `openrouter/anthropic/claude-haiku-5.5` (S-07 record `host_versions.models`, §7: listed by `opencode models openrouter` on 1.18.31, accepted in a paid session on 1.15.10; the floating `~anthropic/…-latest` aliases are not used) | opus `claude-opus-5.5`, sonnet `claude-sonnet-5.5`, haiku `claude-haiku-5.5` (S-08 record, addendum of 2026-10-18: the Copilot CLI model list; §2.4 shows the default `claude-sonnet-5.5` of agents without `model`); the opus tier keeps `claude-opus-5.5` also for a plan that does not offer it, on which the host runs such an agent on its default model (P-01 answer to Q-copilot-map-01, "Keep opus, note fallback (Recommended)"; C002-IF-005 §5 Models; defect D-027) |
 | `effort`, `color` | agent frontmatter | `agent_fields` | `drop` (OpenCode passes unknown agent options to the provider, C002-R-001 C-08) | `drop` (no such field, C002-R-001 A-11) |
 | `memory` | agent frontmatter | always dropped | dropped | dropped |
@@ -67,11 +67,11 @@ the rule of its kind or generation stops with ERR-GEN-001 (C002-REQ-104, C002-IN
 | `${CLAUDE_PLUGIN_DATA}` | command bodies | `variables` | `--user-data` (C002-IF-007) | same |
 | `$ARGUMENTS` | command bodies | `variables` | kept (OpenCode supports it, C002-R-001 C-08) | "the text P-01 typed after the command" (C002-R-001 A-10) |
 | `architect:` agent reference | bodies, descriptions | `references.agent` | prefix `architect:` removed (`sdd-critic`) | prefix `architect:` removed. Copilot CLI names a plugin agent `<plugin>:<agent>` on its command line and in hook input (`architect:sdd-critic`, the package's plugin name being `architect`; S-08 §2.3, fact F-6); only the eval runner (C002-IF-010 §2) and the hook commands (C002-IF-007) use that form |
-| `/architect:<name>` command reference | bodies, README excerpts | `references.command` | `/architect:` → `/architect-` (avoids the built-in `/init`: OpenCode 1.18.31 has the built-in commands `init`, `review` and `customize-opencode`, no `new`, and only `init` shares a name with a source command; C002-TS-226, revised for defect D-011 item 1) | `/architect:` → `/` unless the manual VS Code checklist shows a collision (the S-08 record does not cover prompt files; C002-REQ-317), then `/architect-` |
+| `/architect:<name>` command reference | bodies, README excerpts | `references.command` | `/architect:` → `/architect-` (avoids the built-in `/init`: OpenCode 1.18.31 has the built-in commands `init`, `review` and `customize-opencode`, no `new`, and only `init` shares a name with a source command; C002-TS-226, revised for defect D-011 item 1) kept as `/architect:<name>` (revised for defect D-053): VS Code 1.145.2 registers the plugin's prompt files as `architect:<name>` (Customizations > Prompts > Plugins) and offers them as `/architect:<name>`, and it has a built-in `/init` of its own (it writes `AGENTS.md` or `.github/copilot-instructions.md`), which answered a bare `/init` in the T-050 findings pass of 2026-11-11. The Copilot construct `command-reference` therefore replaces nothing and accepts the spelling in the contexts `frontmatter` and `body` (`accepted_in`), so §3 step 8 does not report it; the prompt files keep their names `<name>.prompt.md` (C002-REQ-317). Before this revision: `/architect:` → `/`, with `/architect-` on a collision, a form that names no command VS Code offers |
 | `claude --agent` guard line | line 6 of every command | construct `guard-line`, `drop_line` (the `agent` field binds the command, C002-REQ-203, C002-REQ-303) | dropped | dropped |
 | conductor start `(claude --agent architect:sdd-conductor)` | conductor `description` | construct `conductor-start`, context `frontmatter`, `replace` | "(select the `sdd-conductor` primary agent: press Tab until it is selected, or start `opencode --agent sdd-conductor`)" | "(select `sdd-conductor` as the session agent in the Chat agent picker of a Local session)" |
 | host list of the doctor `(node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)` | `doctor.md` `description` | construct `doctor-description`, context `frontmatter`, `replace` (decided for defect D-010 item 4, below) | "(node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI)" | "(node, git, VS Code with GitHub Copilot Chat, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI, Copilot hooks)" |
-| AskUserQuestion | bodies | construct `ask-user-question` | "the `question` tool" | "the `ask_user` tool" (S-08 §3.2, fact F-5) |
+| AskUserQuestion | bodies | construct `ask-user-question` | "the `question` tool" | "the question tool (`askQuestions` in VS Code, `ask_user` in Copilot CLI)" (revised for defect D-051: S-08 fact F-5, "the question tool is `ask_user` in the Local agent host", is refuted on VS Code 1.145.2, whose Local session type offers `askQuestions`; §6.1 Question tool on Copilot) |
 | TaskCreate, TaskUpdate, TaskList | conductor body | construct `task-tools` | "the `todowrite` tool" | "the `todo` tool" |
 | ToolSearch | bodies | construct `tool-search` | "(MCP tools are loaded at start)" | "the `tool_search_tool` tool (MCP tools are deferred: load a `<server>-<tool>` tool through it before its first call)" (S-08 §3.2) |
 | CLI invocation line | `sdd-conventions` l.13, `sdd-conductor.md` l.19, `sdd-auditor.md` l.13 | `variant_required` (C002-REQ-111) | variant | variant |
@@ -120,8 +120,8 @@ the variant `file-inspection` added).
 | `code-discovery-toolchain` | `skills/code-discovery/SKILL.md` | lines: the five lines of the toolchain record item | the toolchain record rows of C002-IF-006 §1 (C002-REQ-507) |
 | `code-discovery` | `skills/code-discovery/SKILL.md` | section "Claude Code wiring" | the target's code-discovery wiring |
 | `gate-protocol-reference` | `skills/gate-protocol/SKILL.md` | line: `The presentation goes into the gate question itself (see Claude Code wiring), …` | the same sentence naming the target's wiring section (`{{host_name}} wiring`) |
-| `gate-protocol` | `skills/gate-protocol/SKILL.md` | section "Claude Code wiring" | the gate through the host question tool |
-| `interview-protocol` | `skills/interview-protocol/SKILL.md` | section "Claude Code wiring" | the interview through the host question tool |
+| `gate-protocol` | `skills/gate-protocol/SKILL.md` | section "Claude Code wiring" | the gate through the host question tool; on Copilot the input and result of `askQuestions` and `ask_user` and the no-answer rule of §6.1 (Question tool on Copilot; defect D-051) |
+| `interview-protocol` | `skills/interview-protocol/SKILL.md` | section "Claude Code wiring" | the interview through the host question tool; on Copilot the same input, result and no-answer rule (§6.1; defect D-051) |
 | `research-protocol` | `skills/research-protocol/SKILL.md` | section "Claude Code wiring" | the research wiring |
 
 A variant applies to every enforcement mode of its target: the table has one variant per anchor,
@@ -163,7 +163,7 @@ target; the exit code is 1 if any error was found (C002-IF-004).
 | `{{tested_version:<part>}}` | `host.tested_versions.<part>` (`opencode`, `vscode`, `copilot-chat`) |
 | `{{package_version}}` | version of the source plugin, which is also the `architect-sdd` version of the same run (C002-INV-11) |
 | `{{enforcement_mode}}` | glossary name of the table's enforcement mode |
-| `{{server_files}}`, `{{server_shell}}` | host names under which an agent calls the sdd MCP server tools (`sdd-files_write_file` on OpenCode, `sdd-files-write_file` on Copilot) |
+| `{{server_files}}`, `{{server_shell}}` | host names under which an agent calls the sdd MCP server tools (`sdd-files_write_file` on OpenCode, `sdd-files-write_file` on Copilot, the reference form; VS Code 1.145.2 lists the tools as `mcp_sdd-mcp_write_file` and `mcp_sdd-mcp2_run_command`, §2 MCP tool name, defect D-053) |
 
 ## §5 Semantic rules (checked in §3 step 1)
 
@@ -181,7 +181,10 @@ target; the exit code is 1 if any error was found (C002-IF-004).
 - Copilot: `mcp_tool_names.target_pattern` is `{server}-{tool}`, `grant_pattern` is
   `{server}/{tool}` and `deferred` is `true` (S-08 §2.1, §3.2, fact F-7; this replaces the `x/y`
   body form of ideation §8). OpenCode: no `grant_pattern` (grants use `target_pattern`), `deferred`
-  `false`.
+  `false`. The Copilot `target_pattern` stays the reference form also on VS Code 1.145.2, whose tool
+  ids `mcp_<command>[N]_<tool>` follow the server's command, with a numeric suffix for a further
+  server of the same command, not the server name, so no pattern of the table derives them (§2 MCP
+  tool name; defect D-053).
 - Every variant file exists and every variant `id` is unique.
 - OpenCode: `permissions.<mode>.question` is `deny` or absent. The `question` rule is written per
   agent: `allow` for each agent whose source `tools` holds AskUserQuestion, which is the conductor
@@ -207,7 +210,7 @@ tables, never from this list (C002-CAP-01 acceptance, verification note).
 | WebFetch | `webfetch` | `webfetch` | `web/fetch` | `web/fetch` |
 | LSP | `lsp` (offered only with `OPENCODE_EXPERIMENTAL_LSP_TOOL`, S-07 F-1) | same | usages tool (not in the S-08 record) | same |
 | ToolSearch | dropped | dropped | dropped (the host adds `tool_search_tool` to every agent, S-08 §3.2) | dropped |
-| AskUserQuestion | `question` | `question` | `ask_user` | `ask_user` |
+| AskUserQuestion | `question` | `question` | `askQuestions` and `ask_user` (both granted; revised for defect D-051) | `askQuestions` and `ask_user` |
 | TaskCreate, TaskUpdate, TaskList | `todowrite` | same | `todo` (not in the S-08 record) | same |
 | Skill | `skill` | `skill` | dropped (skills are inlined) | dropped |
 
@@ -264,7 +267,56 @@ spike record or a checklist step that shows the host's search tools listing `.sd
 
 Copilot entries are `tools` grant names; the S-08 probes granted `read`, `search`, `edit` and
 `execute` and recorded the host tools they gave (`docs/spikes/s08/agents/`, record §2.1, §2.2,
-§3.1). [ASSUMPTION: S-08 — the record names the question tool `ask_user` (§3.2) but not the tools entry that grants it, nor its input shape or its result without a choice; the generator grants `ask_user` and writes the question variants in the shape of C002-R-001 A-06 (`questions` with `header`, `question`, `options` with `recommended`, `multiSelect`, `allowFreeformInput`), and the interview and gate steps of the manual VS Code checklist confirm both (C002-REQ-614)]
+§3.1).
+
+**Question tool on Copilot** (revised for defect D-051; T-050 findings pass of 2026-11-11 on VS Code
+1.145.2 with GitHub Copilot Chat 0.73.0, `../../20-plan/revision-D051-D053-digest.md` item 1). The two
+Copilot hosts name the question tool differently:
+
+| Host | Tool | Names |
+|---|---|---|
+| VS Code, Local session type | `vscode_askQuestions` | reference name `askQuestions`; legacy full names `vscode_askQuestions` and `vscode/askQuestions` (VS Code 1.145.2; the tool of C002-R-001 A-06, A-07) |
+| Copilot CLI | `ask_user` | `ask_user`, a tool of the Copilot CLI session (S-08 §3.2, the tool S-08 fact F-5 names) |
+
+The table maps AskUserQuestion to both names, so the conductor's `tools` list, and each prompt
+file's, carries `askQuestions` and `ask_user` (C002-IF-005 §3). S-08 fact F-5 ("the question tool is
+`ask_user` in the Local agent host") is refuted on the tested build: with `ask_user` alone the
+conductor said "Question tools are not available in this session" and asked every round as plain
+text. [ASSUMPTION: D-051 — `askQuestions` alone in a tools list grants the tool on VS Code 1.145.2 (the findings pass added it beside the legacy `vscode/askQuestions`); VSC-18 of the C002-T-050 rerun confirms it; if not, the table adds `vscode/askQuestions`] [ASSUMPTION: D-051 — Copilot CLI accepts the name `askQuestions`, which it does not offer, in an agent's tools list without refusing the agent; one Copilot CLI eval case on the new release candidate confirms it]
+
+`askQuestions` input, as the variants `gate-protocol` and `interview-protocol` describe it on Copilot
+(§2.1):
+
+```json
+{ "questions": [ { "header": "<short key>", "question": "<text>",
+    "options": [ { "label": "<label>", "description": "<one line>", "recommended": true } ],
+    "multiSelect": false, "allowFreeformInput": true } ] }
+```
+
+Result: `{ "answers": { "<header>": { "selected": [ "<label>", … ], "freeText": "<text>" | null,
+"skipped": <boolean> } } }`, one entry per question, keyed by its `header`. The input matches
+C002-R-001 A-06; A-07 reported `{"skipped": true}` under auto-approve, which VS Code 1.145.2 did not
+show (below). The input and result of `ask_user` on Copilot CLI are not recorded; the variants give
+it the same question fields, and the no-answer rule below applies to its result as well.
+
+**No answer.** The conductor records neither an answer nor an approval for a question whose result
+is any of these (C002-REQ-311):
+
+- no selected label and no free text (`selected` empty or missing, `freeText` null, missing or
+  blank);
+- a dismissed call (closed with X), which returns no choice;
+- `skipped: true`;
+- free text equal to the host's auto-reply text: with the VS Code setting `chat.autoReply` true,
+  `askQuestions` returned `selected: []`, `skipped: false` and the `freeText` `The user is not
+  available to respond and will review your work later. Work autonomously and make good decisions.`
+  (VS Code 1.145.2; in the findings pass the conductor treated it as no answer, VSC-20 and VSC-29).
+
+Global tool auto-approve (`chat.tools.global.autoApprove`) does not answer questions on VS Code
+1.145.2 (its consent dialog names `chat.autoReply` for that). The install notes tell P-03 to keep
+`chat.autoReply` off (C002-IF-005 §5 step 9). The setting
+`chat.askQuestions.enabled` stays on in the install notes (C002-IF-005 §5 step 3) until VSC-19 shows
+that `askQuestions` works with and without it (checklist assumption A-6, which follows the rename;
+C002-REQ-304 open item).
 
 An agent without AskUserQuestion receives no question tool (C002-REQ-108, C002-TS-114).
 
@@ -272,7 +324,16 @@ An agent without AskUserQuestion receives no question tool (C002-REQ-108, C002-T
 the Architect agents. On Copilot VS Code an agent's or prompt file's `tools` list is an allowlist,
 so a tool of an adopter's MCP server is never granted (spike S-08, `subagent_tool_list_confined`);
 the host adds only `tool_search_tool` (S-08 §3.2), and an agent without a `tools` list would get
-every tool, so every generated agent has one (TGT-GRANT-001).
+every tool, so every generated agent has one (TGT-GRANT-001). On VS Code 1.145.2 the specialist
+`sdd-spec-writer` (`tools: ['read', 'search', 'sdd-files/*', 'sdd-shell/*']`), started as a
+subagent, listed `file_search`, `grep_search`, `get_errors`, `copilot_getNotebookSummary`,
+`list_dir`, `read_file`, `read_notebook_cell_output`, `semantic_search`, `session_store_sql`,
+`view_image`, `vscode_listCodeUsages`, `explore_subagent`, `get_task_output`,
+`mcp_sdd-mcp_replace_text`, `mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`,
+`terminal_last_command` and `terminal_selection`: no generic edit tool, no terminal tool and no
+`tool_search_tool`; the sdd MCP server denied its edit of `src/app.ts` with GUARD-PATH-001 (T-050
+findings pass; defect D-052). Which of these tools the `read` and `search`
+sets give and which the host adds is not recorded.
 OpenCode allows most tools by default, including the tools of the adopter's own MCP servers and
 plugins, which `permission.edit` does not govern (C002-R-001 C-01). The OpenCode agent entry of each
 Architect agent therefore starts its tool map with a catch-all entry that turns every tool off
@@ -291,14 +352,16 @@ target with ERR-REL-013 (C002-IF-009 §3, §5).
 |---|---|---|---|
 | context7 | http | `https://mcp.context7.com/mcp` | all |
 | deepwiki | http | `https://mcp.deepwiki.com/mcp` | all |
-| serena | stdio | `sdd serena-launch --user-data --read-only -- start-mcp-server --context <context> --mode planning --project . --enable-web-dashboard False --open-web-dashboard False`; `<context>` is `ide` on OpenCode (S-07 §7: Serena 1.7.0 has no OpenCode context, and `ide` is the generic one for a client with its own file and shell tools); on Copilot not in the S-08 record | all |
+| serena | stdio | `sdd serena-launch --user-data --read-only -- start-mcp-server --context <context> --mode planning --project . --enable-web-dashboard False --open-web-dashboard False`; `<context>` is `ide` on OpenCode (S-07 §7: Serena 1.7.0 has no OpenCode context, and `ide` is the generic one for a client with its own file and shell tools); `vscode` on Copilot (not in the S-08 record; on VS Code 1.145.2 Serena started from this entry when the cartographer first called it, T-050 findings pass, defect D-053; VSC-11 records its start arguments, checklist assumption A-8) | all |
 | sdd-files | stdio | `sdd-mcp --profile files` | `sdd-mcp-server`; on Copilot also `copilot-hooks` |
 | sdd-shell | stdio | `sdd-mcp --profile shell` | `sdd-mcp-server`; on Copilot also `copilot-hooks` |
 
 On Copilot every server is written to the workspace MCP configuration `install/mcp.json` (VS Code
 `servers` format, C002-IF-005 §3) and to no plugin MCP configuration: the local agent host reports
 plugin servers `not_configured` and starts workspace servers (S-08 §3.2, fact F-2; C002-REQ-301,
-C002-REQ-307).
+C002-REQ-307). VS Code 1.145.2 starts each workspace server when an agent first uses one of its
+tools: after the first message of a session only `sdd-shell` ran, and `sdd-files`, `serena`,
+`context7` and `deepwiki` showed "Start" until a tool of theirs was used (defect D-053).
 
 ### §6.3 OpenCode permission rules
 

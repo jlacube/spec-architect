@@ -1,4 +1,4 @@
----
+fixed: REQ-609/AC-609.1 out of T-081; markers replaced by the answer reference |fixed: T-050 stale lines rewritten, override clause dropped; delegation failure filed against REQ-614/REQ-107 |fixed: chat.autoReply item in REQ-304, IF-005 §5 step 9, TS-306; README limitation in REQ-305, TS-307, TC-307 |fixed: TS-306 wording in REQ-304; IF-005/IF-008 say the hook still denies its own faults |fixed: TS-317 outline with a P-01 free-text row (VSC-20 free-text half in P-01 batch); T-077 package-test assertion |fixed: the nine-specialist restriction is stated as instruction-only on VS Code, a followed planted delegation is not stopped; what still holds added to REQ-304 (REQ-302/306/327, IF-001 §2, IF-005 §3/§5, IF-008 rule 3, architecture, TS-306) |fixed: VSC-27 default-agent probe; the agent_type recheck reads that subagent call (REQ-614, REQ-616, REQ-327 fixed: the probe expects GUARD-HOOK-002/001 where agent_type is present; absent (1.145.2) → record, git revert, passes as the D-052 known limitation |item, TS-358/617/619, IF-009 §4, T-080, T-050, RISK-041) |---
 artifact: critic-report
 change: CHG-002
 phase: 20-plan
@@ -1346,3 +1346,27 @@ Scope: `git diff 405239b 5c359e7` (CHG-002 files and `docs/runsheets/`), against
 | CR-153 | minor | REQ-615, TS-618 | REQ-615 trigger narrower than the widened TS-618 Given | widen or note in Rationale | fixed: D-050 note in the REQ-615 Rationale |
 
 Why no further findings (critic): VSC-02 … VSC-29 and VSC-54 are feasible with new `code chat` sessions, clicks and the conductor's shell (`.sdd/` state persists; palette actions have click or file counterparts); the batch order meets every Do precondition and no batch step changes a hooks source; TS-618's new clause is observable; the instruction is verbatim in the questions-log; lint 002 shows only the nine waived LINT-DELTA-001.
+
+
+## Revision D-051 … D-053 (2026-11-11)
+
+Scope: the working-tree changes under `.sdd/002-multi-platform-targets/` (spec and plan revision for D-051, D-052, D-053) against `20-plan/revision-D051-D053-digest.md`, the defects and the questions-log round 2026-11-11. Read-only review. Appended by the conductor from the critic's reply (compact form).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 5 |
+
+| ID | Sev. | Refs | Finding | Suggested fix | Status |
+|---|---|---|---|---|---|
+| CR-154 | major | REQ-614, TS-358, REQ-327 open item, RISK-041, VSC-27/28 | the `agent_type` recheck reads a step in which no subagent makes a call (the conductor refuses; session-agent calls never carry it), so it can never find `agent_type` | read it from a subagent's calls (VSC-22/54 spec-writer, or a dedicated probe) | fixed: VSC-27 default-agent probe; the `agent_type` recheck reads that subagent call (REQ-614, REQ-616, REQ-327 open item, TS-358/617/619, IF-009 §4, T-080, T-050, RISK-041) |
+| CR-155 | major | REQ-616, REQ-614, TS-619, TS-358 | the required hook denial (for an `agent_type` host) cannot be observed in a step whose conductor starts no `general-purpose` | add a default-agent probe (`runSubagent` `general-purpose` with the planted edit), or drop the clause | fixed: the probe expects GUARD-HOOK-002/001 where `agent_type` is present; absent (1.145.2): record, git revert, passes as the D-052 known limitation |
+| CR-156 | major | REQ-304, IF-005 §5 step 6, IF-008 rule 3, TS-306, REQ-327 | the known limitation presents the conductor's own instructions as an enforced measure; what is unprotected on VS Code is not stated; REQ-304 lacks the "what still holds" item of TS-306 | state that the restriction to the nine specialists is instruction-only on VS Code and a planted delegation the model follows is not stopped; add the item to REQ-304 | fixed: the nine-specialist restriction is stated as instruction-only on VS Code and a followed planted delegation as not stopped; what still holds added to REQ-304 (REQ-302/306/327, IF-001 §2, IF-005 §3/§5, IF-008 rule 3, architecture, TS-306) |
+| CR-157 | minor | REQ-311, TS-317/318, T-077 | the complement of the no-answer rule (P-01's own free text with no label is an answer) is tested nowhere | package-test assertion and a VSC-18/19 record field | fixed: TS-317 outline with a P-01 free-text row (VSC-20 free-text half, P-01 end batch); T-077 package-test assertion |
+| CR-158 | minor | REQ-304, IF-008 rule 3, TS-361 | "the hook denies no call" contradicts IF-008 (rules 1–2 and errors still deny) | use TS-306's wording | fixed: TS-306 wording in REQ-304; IF-005/IF-008 say the hook still denies its own faults |
+| CR-159 | minor | T-079, REQ-304/305, TS-306/307, TC-307 | T-079's `chat.autoReply` item and README limitation sentence have no spec item | add to IF-005 §5, REQ-304, TS-306 and REQ-305, TS-307, or drop | fixed: `chat.autoReply` item in REQ-304, IF-005 §5 step 9, TS-306; README limitation in REQ-305, TS-307, TC-307 |
+| CR-160 | minor | T-050, AC-327.1 | stale T-050 lines kept under an override clause; delegation failure filed against REQ-327, which does not bind on 1.145.2 | rewrite; file against REQ-614 / REQ-107 | fixed: stale T-050 lines rewritten, override clause dropped; a delegation failure is filed against REQ-614 / REQ-107 |
+| CR-161 | minor | T-081, REQ-609, 10-strategy | T-081 implements the OpenCode REQ-609; strategy keeps the answered assumption marker of Q-d051-retake-01 | drop REQ-609 / AC-609.1; replace the markers | fixed: REQ-609 / AC-609.1 out of T-081; markers replaced by the answer reference |
+
+Why no further findings (critic): every current-fact statement of `ask_user` as the VS Code tool, `agent_type` on VS Code PreToolUse, "after the first message" and bare `/init` is revised or qualified, except T-050 (CR-160); REQ-313/TS-320/708/IF-008 §3/T-078, REQ-311/IF-001 §6.1, REQ-312/TS-319 and REQ-317/TS-329 agree; "copilot-hooks not offered for VS Code 1.145.2" is consistent; the dependency chain has no cycle and the critical path (58) checks; spend ≤ 14.29 USD of the 15.00 USD stop and the 30 USD pool; every digest item maps to an artifact except the `chat.autoReply` install-notes item (CR-159).
+
+Conductor's decision on CR-154/155: a default-agent probe in VSC-27 (`runSubagent` starts `general-purpose` with the planted edit): with `agent_type` present on that subagent's PreToolUse input, GUARD-HOOK-002/001 and `src/app.ts` unchanged; with it absent (1.145.2), the record notes `agent_type: absent`, the edit is reverted with git and the step passes as the D-052 known limitation; the conductor-refusal check stays.

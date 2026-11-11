@@ -100,7 +100,7 @@ classDiagram
   - **C002-INV-10** A release record with outcome `released` cites, at the tested versions, a corpus replay with 0 differing decisions over the applicable cases for every mechanism of the package's mode and injection evidence with no case acted upon; for Copilot VS Code also a checklist record with hooks enabled, in which every listed step is a step of the checklist step index and is listed once, every step of the package's enforcement mode is `passed`, every listed injection step is `passed` or `not-applicable`, every listed step of the other enforcement mode, the injection steps excepted, is `not-applicable`, and every earlier `failed` run of a listed step was repeated under the rerun rule (C002-REQ-618, C002-REQ-629); and under the Copilot hooks fallback the exception of C002-DEC-005.
 
 ### 2.8 QuestionCall and Answer
-- **Attributes:** QuestionCall: `host tool` (AskUserQuestion, `question`, `ask_user`), `questions[1..4]`, `result` (choices, skipped, dismissed, empty). Answer: the verbatim choice or text per question (C001-INV-23 applies)
+- **Attributes:** QuestionCall: `host tool` (AskUserQuestion, `question`, `askQuestions` in VS Code, `ask_user` in Copilot CLI; defect D-051), `questions[1..4]`, `result` (choices, skipped, dismissed, empty, auto-reply: no selected label and the auto-reply text as free text). Answer: the verbatim choice or text per question (C001-INV-23 applies); the auto-reply text is never an answer
 - **Owning component:** C002-COMP-014 (conductor)
 - **Invariants:**
   - **C002-INV-09** A question-tool result without a choice of P-01 creates no answer in a questions log and no gate approval.

@@ -219,6 +219,10 @@ change touches only `host-version`, which no Claude Code eval row calls.
 v0.1.0 at 9eb56c0, or at a later commit whose `plugins/architect/` diff against 9eb56c0 is empty (CR-103,
 the same source as Claude Code 0.1.0). Otherwise the case goes to P-01 before C002-T-055.
 
+**Moved again by revision D-051 … D-053** (2026-11-11): C002-T-077 … C002-T-080 change package
+sources, so C002-T-081 records a new 0.1.0 candidate, moves the local tag `v0.1.0` to it and retakes
+this task's 24 Copilot CLI rows there (labels `t081`); this task's evidence stays as a record.
+
 The report note above stays as recorded (CLI-owned). The unpaid checks rerun at 9eb56c0 before the
 release: `npm run check` (the four CHG-001 approval tests excepted while CHG-001 D-030 is open); the
 `sdd-mcp-server` and `copilot-hooks` corpus replays in Git Bash and in PowerShell 7; `npm run package`

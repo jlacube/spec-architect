@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-071, C002-T-074, C002-T-076]
+depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-071, C002-T-074, C002-T-076, C002-T-081]
 implements: [C002-REQ-501, C002-REQ-502, C002-REQ-509]
 satisfies_ac: [C002-AC-501.1, C002-AC-502.1, C002-AC-509.1]
 verified_by: [C002-TS-501, C002-TC-501]
@@ -46,7 +46,10 @@ the account of C002-T-003.
 - C002-T-003 done (P-01's npm account and the name), C002-T-023 done (install smoke and manifest
   check of the tarball), C002-T-074 done (version 0.0.3, history). The version is 0.1.0 since C001-T-072 (ab0cfc7; revision D-041).
 - C002-T-071 and **C002-T-076** done: the tarball is packed at the release-candidate commit of
-  C002-T-076, whose evidence the Copilot release check reads. Neither runs an OpenCode step, since
+  C002-T-076, whose evidence the Copilot release check reads. **Revision D-051 … D-053:** C002-T-081
+  done; the release-candidate commit is C002-T-081's, and the tarball is the
+  `dist/architect-sdd-0.1.0.tgz` it rebuilt there (its `scripts/sdd.mjs` holds the session-start
+  output of C002-T-078). Wherever this task names C002-T-076's commit, C002-T-081's applies. Neither runs an OpenCode step, since
   the OpenCode release moved to CHG-003.
 - **C002-T-050 done** (plan critics CR-82, CR-84): the checklist record exists at 0.1.0 (C002-T-057,
   the Copilot clean-profile run, is dropped: C002-NFR-601 waived, defect D-049). npm versions are immutable, so the CLI is published only

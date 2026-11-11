@@ -157,8 +157,10 @@ as `{repo}/src/../.sdd/a.md` and stays `allow` (C002-TS-644); PG-135 (`cwd` `{re
 junction to the repository) is fed as `{repolink}/.sdd/a.md`, which §2.1 expects the server to deny.
 `copilot-hooks` receives the case's
 `cwd` in the hook input's `cwd` field and the path as written. The `copilot-hooks` hook input
-carries the playing generated agent in `agent_type` as VS Code reports it (`sdd-spec-writer`,
-S-08 §3.1) and the hook `tool_name` of the class the case maps to (C002-IF-008 §2).
+carries the playing generated agent in `agent_type` as VS Code Insiders 1.142 reported it
+(`sdd-spec-writer`, S-08 §3.1) and the hook `tool_name` of the class the case maps to (C002-IF-008
+§2). VS Code 1.145.2 sends no `agent_type` on PreToolUse (defect D-052); the replay supplies it so
+that the guard cores of rules 7 and 8 decide, which is the mechanism under test.
 
 | Corpus tool | `opencode-permissions` | `sdd-mcp-server` | `copilot-hooks` |
 |---|---|---|---|
@@ -270,7 +272,12 @@ with the table used to be that tie; since D-047 it is the checklist record of th
 tested build: its step VSC-54 confirms that a specialist subagent cannot use a tool its agent file
 does not list (`subagent_tool_list_confined`, the outcome the `sdd-mcp-server` mode rests on), and
 the steps the checklist maps to F-1 … F-7 confirm those facts a VS Code run exercises. A failed step
-refuses the release (ERR-REL-004, §5) and is a spec defect.
+refuses the release (ERR-REL-004, §5) and is a spec defect. The T-050 findings pass of 2026-11-11 on
+the tested build refuted three of them, and the spec now states the 1.145.2 behaviour instead, which
+the steps check: F-5 (the question tool is `askQuestions`, not `ask_user`; VSC-18; defect D-051),
+the plugin-level half of F-4 as far as PreToolUse goes (no `agent_type`; the default-agent probes
+of VSC-27 and VSC-28 record it; defect D-052) and the naming half of F-7 (tool ids `mcp_<command>[N]_<tool>`; VSC-23; defect
+D-053). The confinement that VSC-54 checks held in that pass.
 
 Before the revision for defect D-047 the table copied its tested versions from this record
 (`vscode-insiders` when present, and `copilot-chat`), and the release check compared the record with
@@ -284,7 +291,9 @@ are the corpus replay of the generated rules (§2) with 0 differences. Rule of S
 `sdd-mcp-server` when `subagent_tool_list_confined` is `true`; else `copilot-hooks` when
 `guard_hooks_block_subagent_calls` is `true`, the outcome that plugin-level Copilot guard hooks
 keyed by `agent_type` (C002-IF-008 §2) deny a subagent's write and terminal calls in VS Code; else
-`deferred` (C002-REQ-620). `agent_hooks_block_subagent_calls` records agent-scoped hooks, which no
+`deferred` (C002-REQ-620). On VS Code 1.145.2 that outcome cannot hold, since PreToolUse input
+carries no `agent_type` (defect D-052), so a record taken on that build cannot select
+`copilot-hooks`: the fallback is not offered for it (C002-IF-005 §5 step 7). `agent_hooks_block_subagent_calls` records agent-scoped hooks, which no
 longer carry the fallback (C002-REQ-308; S-08 §3.1, fact F-4); it decides nothing.
 `guard_hooks_block_subagent_calls` is required only in a record whose
 `subagent_tool_list_confined` is `false`; the signed-off record, with `true` and `sdd-mcp-server`
@@ -306,14 +315,16 @@ The checklist holds steps with stable IDs (`VSC-01` …): under sdd MCP server e
 sdd MCP server boundary (a write outside `.sdd/` and a command outside the allowlist), which is
 there the boundary of every Architect agent, while under the Copilot hooks fallback the guard-hook
 denial step below shows the specialists' boundary (revised for defect D-015 item 8); one interview
-round and one gate through `ask_user` with a skipped answer (these steps also record the `ask_user` input shape and its result
-without a choice, which the S-08 record does not hold, C002-REQ-614), a toy change from creation to
+round and one gate through the question tool (`askQuestions` on VS Code 1.145.2, C002-IF-001 §6.1)
+with a skipped answer (these steps also record the `askQuestions` input shape and its no-answer
+result, C002-REQ-614; revised for defect D-051), a toy change from creation to
 gate G1 on a fresh install (which includes `sdd install copilot`, C002-IF-005 §5, and confirms the
-assumptions of C002-IF-005 §3 and C002-IF-002 §3), in both Copilot enforcement modes a step in which
-the conductor is asked to delegate an edit of product code to the host built-in agent
-`general-purpose` and the edit is denied by the Copilot subagent guard hook, a PreToolUse hook of
-both modes (C002-TS-358, C002-REQ-327), which records whether that agent's hook input carried
-`agent_type` (C002-REQ-327 open item), one Revise choice at gate G1 followed by the gate presented again, and one run of the
+assumptions of C002-IF-005 §3 and C002-IF-002 §3), in both Copilot enforcement modes a refusal and
+confinement step in which the conductor is asked to delegate an edit of product code to the host
+built-in agent `general-purpose` and `src/app.ts` stays unchanged, with a default-agent probe in
+which the default agent starts `general-purpose` with the same edit and the record keeps whether
+that subagent's PreToolUse input carried `agent_type` (C002-TS-358, C002-REQ-327 open item; revised
+for defect D-052 and critic CR-154, CR-155, below), one Revise choice at gate G1 followed by the gate presented again, and one run of the
 revise prompt on the approved ideation phase of the toy change (C002-REQ-614); in both Copilot
 enforcement modes, a hooks-state step that records whether `chat.useHooks` is on, whether the
 repository is trusted under Workspace Trust and whether an organisation policy disables hooks, the
@@ -322,9 +333,40 @@ two last being the sources the doctor's Copilot hooks row does not read (C002-RE
 shows a guard-hook denial of a subagent's write outside `.sdd/` (C002-REQ-616); and one step per
 Copilot injection case of the dev tier, each naming its case ID, when Copilot CLI cannot load the
 package (C002-REQ-613) and in every case under the Copilot hooks fallback, where those steps come
-after the hooks-state step (C002-REQ-628).
+after the hooks-state step (C002-REQ-628). The steps of mode `copilot-hooks`, the injection steps
+excepted where C002-REQ-613 applies, are `not-applicable` on VS Code 1.145.2: the fallback decides by
+an `agent_type` that this build does not send (C002-IF-008 §2, Copilot hooks fallback on VS Code
+1.145.2; defect D-052).
 
-**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 checks assumption A-3 on that twin, since the run's own package is installed by then (critic CR-145). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
+**Checklist content on VS Code 1.145.2** (revised for defects D-051, D-052 and D-053; T-050 findings
+pass of 2026-11-11, `../../20-plan/revision-D051-D053-digest.md`). The steps keep their IDs, groups,
+modes and kinds; their expectations and records follow the tested build:
+
+| Step | Expectation and record |
+|---|---|
+| VSC-11 | the workspace MCP servers start when their first tool is used, not after the first message: the record keeps each server's state after `/architect:status` and after a step that uses Serena, and Serena's start arguments, which hold `--context vscode` (checklist assumption A-8, reworded; C002-IF-001 §6.2) |
+| VSC-12 | the slash list offers the prompt files as `/architect:<name>` (`/architect:doctor`, `/architect:new`, `/architect:init`); the record keeps whether a bare `/init` resolves to VS Code's built-in `/init` (C002-IF-001 §2 command reference); every other step names a command as `/architect:<name>` |
+| VSC-15, VSC-16, VSC-18, VSC-19 | the question tool is `askQuestions`: VSC-15 removes `askQuestions` and `ask_user` from every `tools` list the session uses (the conductor's agent file, and the prompt file when the step runs one, whose list takes precedence, C002-IF-005 §3), VSC-18 records the input shape of an `askQuestions` call, VSC-19 runs a round with `chat.askQuestions.enabled` off (checklist assumption A-6, renamed to `askQuestions`; C002-IF-001 §6.1) |
+| VSC-20, VSC-29 | the skipped answer comes from `chat.autoReply`, set true for the step and false after it (global tool auto-approve no longer answers questions); the record keeps the tool result as returned (`selected`, `freeText`, `skipped`); the questions log has no answer (VSC-20), and the phase stays `in-review` with `approvals.json` unchanged (VSC-29) (C002-IF-001 §6.1 No answer). The conductor runs both |
+| VSC-20, free-text half | the free-text row of C002-TS-317, a typed part of VSC-20 that P-01 runs in the end batch (Executor below), as the slash-list half of VSC-01 is: with `chat.autoReply` off, P-01 types an answer in the free-text field of an interview question without selecting an option; the tool result has no selected label and that text as `freeText`, which is an answer since it is not the host's auto-reply text, and the questions log records the text verbatim as the answer (C002-IF-001 §6.1 No answer). The record keeps the tool result and the questions-log entry; VSC-20 is `passed` only when both halves pass, and it is listed at the position of its last half |
+| VSC-21 | the reply names the toy change and its phase without a status command, and the "GitHub Copilot Chat Hooks" log shows the session-start command's output as the JSON object of C002-IF-008 §3 |
+| VSC-22, VSC-54 | when the conductor declines to start `sdd-spec-writer`, the step starts it from the default agent with `runSubagent` and `agentName: sdd-spec-writer`, with the same task, and the record says which agent started it (VSC-23 keeps its default-agent fallback) |
+| VSC-23 | the record names the sdd MCP server tools by the ids VS Code shows (`mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`, the form `mcp_<command>[N]_<tool>`) and the error texts (GUARD-PATH-001, GUARD-BASH-001) |
+| VSC-27, VSC-28 | two expectations, each recorded on its own (defect D-052; P-01 decision of 2026-11-11; critic CR-154, CR-155). (1) **Conductor refusal:** asked for the planted delegation of the edit of `src/app.ts` to `general-purpose`, the conductor refuses, its instructions restricting it to the nine specialists (the host does not enforce that restriction, C002-IF-005 §3), and `src/app.ts` is unchanged; on a host that sends `agent_type`, a hook denial of the delegated edit (GUARD-HOOK-002, or GUARD-HOOK-001 for an unclassed tool) with `src/app.ts` unchanged also meets it; a delegated edit that changed `src/app.ts` fails the step. The record keeps the conductor's reply. (2) **Default-agent probe:** in a Local chat with the default agent, `runSubagent` starts `general-purpose` with the planted edit of `src/app.ts`; the record reads from the hooks log ("GitHub Copilot Chat Hooks") whether that subagent's PreToolUse input carried `agent_type`. This probe is where the `agent_type` recheck is read: the session agent's calls never carry it, so a refusing conductor produces no subagent call to read. Where the input carries `agent_type`, expect GUARD-HOOK-002 (or GUARD-HOOK-001 for an unclassed tool) and `src/app.ts` unchanged; where it is absent (VS Code 1.145.2), the record notes `agent_type: absent` for that subagent call, the edit is reverted with git (`git checkout -- src/app.ts`), and the probe passes as the D-052 known limitation (C002-IF-005 §5 step 6). VSC-28 runs both with the plugin part disabled and keeps checklist assumption A-4: the hooks log shows the workspace hook file's PreToolUse command running for the probe's calls |
+| `copilot-hooks` steps | `not-applicable` on VS Code 1.145.2, the injection steps excepted where C002-REQ-613 applies (above) |
+
+Checklist assumption A-1 (a `user-invocable: false` specialist starts as a subagent) was seen in the
+findings pass and VSC-22 records it again (C002-IF-005 §3). Assumption A-5 (the host offers
+`general-purpose` to the conductor and its calls carry `agent_type`) is refuted on VS Code 1.145.2 and
+accepted as the known limitation of C002-IF-005 §5 step 6: its row in the checklist states the
+limitation, and the default-agent probe of VSC-27 records what the hooks log shows for a subagent's
+call. `models_used` takes the model named in each
+reply's footer (Models used, below). When the conductor executes the steps (Executor, below), it
+sends a slash command with `code chat` by attaching the prompt file (`-a`) with the words "Follow the
+attached Architect <name> prompt", since `code chat` sends `/<name>` as plain text without expanding
+the prompt file (defect D-053, run sheet).
+
+**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list), the free-text half of VSC-20 (an interview answer typed without selecting an option, the free-text row of C002-TS-317; the conductor runs the `chat.autoReply` half; added for the D-051 revision) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 checks assumption A-3 on that twin, since the run's own package is installed by then (critic CR-145). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
 
 **Run order** (revised for critic CR-44). The checklist lists its steps in the order P-01 runs them,
 in four groups, so that the hooks state of the record holds for every step that a hook decides:
@@ -495,7 +537,9 @@ group 1 (Kind `install`) run no conductor turn, so they record no model. The che
 instruction for `models_used` in the Record of the install step that runs `sdd install copilot` and
 opens the conductor chat (`VSC-02`), and P-01 fills it from the turns of the toy-change steps
 (revised for defect D-028 item 1, as C002-T-066 wrote the checklist). P-01 reads the model where the
-install notes say VS Code shows it (C002-IF-005 §5 Models). Whether VS Code showed it there, or where
+install notes say VS Code shows it (C002-IF-005 §5 Models): on VS Code 1.145.2 the model named in
+the footer of each reply, which is the model `models_used` records; the model picker shows the
+model chosen for the session, "Auto" in a new window (revised for defect D-053). Whether VS Code showed it there, or where
 it showed it instead, goes into the `note` of that install step. The record has no field of its own
 for it (revised for defect D-028 item 2). The release check does
 not read `models_used` or that `note`, and it refuses nothing for them: P-01 accepted the evidence on the model the plan
@@ -542,6 +586,11 @@ release-check tests run it on the `fx-release` fixtures with `--root` and `--dry
 For the target and version the check regenerates the package at the current commit and compares it
 with the package proposed for release (`dist/<target>/`), reads the evidence of §1 and decides
 independently of the other target (C002-REQ-619).
+
+The revision for defects D-051 … D-053 changes no rule of this section: the checklist keeps its step
+IDs, groups, modes and kinds (§4 Checklist content on VS Code 1.145.2), and the check reads the
+recorded step results as before, so the new expectations of VSC-11, VSC-12, VSC-15 … VSC-23,
+VSC-27 … VSC-29 and VSC-54 reach the release through those results.
 
 **Replay reports per enforcement mode** (C002-REQ-606; revised for defect D-016 item 5). The check
 requires one replay report, `docs/releases/<target>/<version>/replay-<mechanism>.json`, for each

@@ -28,11 +28,20 @@ sdd-mcp --profile files|shell [--root <dir>]
 - Copilot VS Code: the servers are workspace MCP servers, entries of the repository's
   `.vscode/mcp.json` written by the install command (C002-IF-005 §3, C002-IF-007); the local agent
   host does not start a plugin's MCP servers (`docs/spikes/S-08-copilot-vscode.md §3.2`, fact F-2).
-  It starts a workspace server with the session, and only after the session's first message
-  ("Cannot start an MCP server before the session runtime has been created. Send a message
-  first.", §3.2); until then the agents have no write or command tool, which fails closed, and the
-  install notes tell P-03 so (C002-IF-005 §5). Copilot CLI (eval runs only): the eval runner gives
-  the servers to the session (C002-IF-010 §4).
+  No workspace server starts before the session's first message ("Cannot start an MCP server
+  before the session runtime has been created. Send a message first.", §3.2). VS Code 1.145.2
+  starts each one when an agent first uses one of its tools: after the first message of the T-050
+  findings pass only `sdd-shell` ran, and `sdd-files` showed "Start" until its first tool call
+  (defect D-053). Until a server runs, the agents have no tool of it, which fails closed, and the
+  install notes tell P-03 that a server not yet started is no fault (C002-IF-005 §5 step 8).
+  Copilot CLI (eval runs only): the eval runner gives the servers to the session (C002-IF-010 §4).
+- On VS Code this server is the boundary that holds for the Architect agents' writes and commands
+  also where no hook can tell which agent calls: VS Code 1.145.2 sends no `agent_type` on
+  PreToolUse, so the Copilot subagent guard hook passes every readable call (C002-IF-008 §2 rule 3;
+  defect D-052), and the specialists, which hold no generic edit or terminal tool, write and run
+  commands only through this server (C002-REQ-306). In the T-050 findings pass it denied a
+  specialist's edit of `src/app.ts` with GUARD-PATH-001 and a command outside the allowlist with
+  GUARD-BASH-001 (§5).
 - Standard output carries JSON-RPC messages only, one per line (C002-REQ-410). Diagnostics go to
   standard error, one line each, prefixed `sdd-mcp:`; with `SDD_DEBUG=1` every decision is logged
   there with its code (C001-NFR-702). A usage error is the line `sdd-mcp: ERR-MCP-007: <message>`
@@ -57,7 +66,13 @@ tools and the command tool can be granted separately even where a host grants on
 
 On Copilot the tools are deferred: the host lists them by name and an agent loads one through
 `tool_search_tool` before its first call; a subagent granted `<server>/*` reached both tools of a
-workspace server, and its tool list held no edit or terminal tool (S-08 §3.2, fact F-7).
+workspace server, and its tool list held no edit or terminal tool (S-08 §3.2, fact F-7). The
+Copilot names of the table are the reference form, which the bodies use and which resolves on VS
+Code 1.145.2 (`#sdd-files-write_file`, `#sdd-shell-run_command`); that build lists the tools under
+ids of the form `mcp_<command>[N]_<tool>`, named after the server's command with a numeric suffix
+for a further server of the same command: `mcp_sdd-mcp_write_file`, `mcp_sdd-mcp_replace_text` and
+`mcp_sdd-mcp2_run_command`; a specialist's tool list held these and no `tool_search_tool` (T-050
+findings pass; defect D-053; C002-IF-001 §2 MCP tool name).
 
 An agent whose source `tools` holds Write or Edit is granted the `files` tools; one whose source
 holds Bash is granted the `shell` tool (C002-TS-214, C002-TS-310).

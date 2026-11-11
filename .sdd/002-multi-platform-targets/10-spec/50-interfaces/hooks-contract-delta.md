@@ -20,7 +20,12 @@ Copilot session hooks, revised for defect D-003 after spike S-08 (`docs/spikes/S
 CR-38). Revised for defect D-010 (items 2 and 5: the tool shown for option-parser faults, and
 `--read-only` optional for `serena-launch`) and defect D-014 (item 4: the literal
 `${CLAUDE_PLUGIN_DATA}` is not expanded where the command runs without a shell) and defect D-024
-(the deny summary names the bounded ripwire default map, §1). Owner: C002-COMP-012.
+(the deny summary names the bounded ripwire default map, §1). Revised for defects D-052 and D-053
+(T-050 findings pass of 2026-11-11 on VS Code 1.145.2 with GitHub Copilot Chat 0.73.0,
+`../../20-plan/revision-D051-D053-digest.md`): VS Code 1.145.2 sends no `agent_type` on PreToolUse,
+so input without it stays `allow` and the rules that act on a subagent act only on hosts that send
+it (§2, P-01 decision of 2026-11-11, option 1); the Copilot session-start brief is a JSON object
+(§3). Owner: C002-COMP-012.
 
 ## §1 Allowlist rows changed (C001-IF-07 §3)
 
@@ -212,8 +217,8 @@ agent host (`docs/spikes/S-08-copilot-vscode.md §3.1`, fact F-4).
 
 | Hooks file | Loaded by | Why this file |
 |---|---|---|
-| `<package>/hooks.json` (plugin level) | VS Code from its copy of the plugin part; Copilot CLI with `--plugin-dir` | plugin-level hooks run for every tool call of every agent and carry `agent_type` on subagent calls, in VS Code and in Copilot CLI (S-08 §2.2, §2.3, §3, §3.1) |
-| `<repo>/.github/hooks/architect-guard.json` (workspace level) | the host that opens the repository | the guard is loaded wherever the workspace agents of `.github/agents/` are, also when the plugin part is not loaded, is disabled, or is a copy that VS Code took before the latest install (critic CR-38); assumptions: C002-IF-005 §3 |
+| `<package>/hooks.json` (plugin level) | VS Code from its copy of the plugin part; Copilot CLI with `--plugin-dir` | plugin-level hooks run for every tool call of every agent and carry `agent_type` on subagent calls, in VS Code Insiders 1.142 and in Copilot CLI (S-08 §2.2, §2.3, §3, §3.1); VS Code 1.145.2 runs them for every tool call but sends no `agent_type` on PreToolUse (defect D-052) |
+| `<repo>/.github/hooks/architect-guard.json` (workspace level) | the host that opens the repository | the guard is loaded wherever the workspace agents of `.github/agents/` are, also when the plugin part is not loaded, is disabled, or is a copy that VS Code took before the latest install (critic CR-38); VS Code 1.145.2 runs it beside the plugin-level entry, about 3 s per command, an accepted cost at 0.1.0 (defect D-053 observation); assumptions: C002-IF-005 §3 |
 
 When both files are loaded, the command runs twice on the same input and reaches the same
 decision; a deny of either denies the call (the most restrictive decision wins, C002-R-001 A-02).
@@ -222,17 +227,37 @@ package moved or deleted, a clone on another machine), the hook errors before th
 host denies every tool call of the session (S-08 §3): the guard fails closed (C002-CON-08,
 C002-CON-14). A plugin-level hook runs for every tool call in every repository the adopter opens
 (S-08 §2.2, §3), so the command sees P-03's own chats too: it passes the session agent's calls
-(rule 3) and, outside repositories with `.sdd/`, every subagent's calls (rule 6).
+(rule 3) and, outside repositories with `.sdd/`, every subagent's calls (rule 6); on VS Code 1.145.2
+it passes every readable call by rule 3 (Input below; defect D-052).
 
 **Input** (S-08 §2.3, §3.1; VS Code-compatible format on both hosts). Standard input carries
-`hook_event_name`, `session_id`, `timestamp`, `cwd`, `tool_name`, `tool_input`; a call made inside a
-subagent also carries `agent_id`, `agent_type` and `parent_agent_id`. The session agent's own calls
-carry no `agent_type` (S-08 §2.3, §3). `agent_type` is the workspace agent's name in VS Code
-(`sdd-spec-writer`) and `<plugin>:<agent>` in Copilot CLI (`architect:sdd-spec-writer`). Tool names
-seen in hook input: `Write` (create tool; `tool_input.path`, `tool_input.file_text`), `Bash`
-(terminal tool; `tool_input.command`, `tool_input.description`), `Glob`, `Agent` (subagent start;
-`tool_input.agent_type`, `description`, `name`), MCP tools as `<server>-<tool>`
-(`probe-stub-stub_read`), and the host-added `tool_search_tool`. The hook name of the `edit` tool
+`hook_event_name`, `session_id`, `timestamp`, `cwd`, `tool_name`, `tool_input`; on Copilot CLI and
+on VS Code Insiders 1.142 a call made inside a subagent also carries `agent_id`, `agent_type` and
+`parent_agent_id`. The session agent's own calls carry no `agent_type` (S-08 §2.3, §3). `agent_type`
+is the workspace agent's name in VS Code (`sdd-spec-writer`) and `<plugin>:<agent>` in Copilot CLI
+(`architect:sdd-spec-writer`).
+
+**VS Code 1.145.2 sends no `agent_type` on PreToolUse** (defect D-052; T-050 findings pass of
+2026-11-11, "GitHub Copilot Chat Hooks" log). All 436 PreToolUse inputs of the run carried
+`timestamp`, `hook_event_name`, `session_id`, `transcript_path`, `tool_name`, `tool_input`,
+`tool_use_id` and `cwd`, and none carried `agent_id` or `agent_type`, also for the calls made inside
+subagents (the critic, the cartographer, the auditor and a subagent of the default agent). Only its
+SubagentStop input carries `agent_id` and `agent_type` (`sdd-critic`, `sdd-cartographer`,
+`sdd-auditor`, `default`; §3). This refutes, on VS Code 1.145.2, the statement above for VS Code and
+the plugin-level half of S-08 fact F-4 as far as PreToolUse goes; S-08 found them on VS Code
+Insiders 1.142, which stays their historical evidence. Every PreToolUse call on VS Code 1.145.2
+therefore takes rule 3 below.
+
+Tool names seen in hook input (S-08): `Write` (create tool; `tool_input.path`,
+`tool_input.file_text`), `Bash` (terminal tool; `tool_input.command`, `tool_input.description`),
+`Glob`, `Agent` (subagent start; `tool_input.agent_type`, `description`, `name`), MCP tools as
+`<server>-<tool>` (`probe-stub-stub_read`; Copilot CLI's session events name the sdd MCP server
+tools so, `sdd-files-write_file` and `sdd-shell-run_command`, C002-T-045), and the host-added
+`tool_search_tool`.
+VS Code 1.145.2 lists MCP tools under ids of the form `mcp_<command>[N]_<tool>`
+(`mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`; C002-IF-001 §2 MCP tool name; defect D-053);
+the `tool_name` its hook input gives an MCP tool is not in the findings record, and no class lookup
+runs there (rule 3). The hook name of the `edit` tool
 and of the read tool is not in the S-08 record; a later spike record supplies them to the table
 (C002-REQ-308 open item), and until then such a call is denied by the last row of the class table
 (rule 8 for an Architect agent under the fallback, rule 6 for a non-Architect subagent).
@@ -241,7 +266,7 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
 
 | `agent_type` | Caller |
 |---|---|
-| absent (the key is missing) | the session agent (S-08 §2.3, §3) |
+| absent (the key is missing) | the session agent (S-08 §2.3, §3); on VS Code 1.145.2 any caller, a subagent included (defect D-052) |
 | a string that, with any `architect:` prefix removed, is a name of `--agents` | an Architect agent (`sdd-spec-writer` in VS Code, `architect:sdd-spec-writer` in Copilot CLI) |
 | any other value: a string that names no Architect agent (a host built-in agent such as `general-purpose`, an adopter's agent, `architect:my-reviewer`), the empty string, `null`, a number or another non-string value | a non-Architect subagent (glossary; C002-REQ-327) |
 
@@ -261,12 +286,29 @@ and of the read tool is not in the S-08 record; a later spike record supplies th
    (C002-REQ-309, C002-REQ-328: unreadable input; no identity can be read).
 3. No `agent_type` → allow, exit 0, in both modes, without reading the classes file or the file
    system (C002-REQ-320, C002-REQ-330). This covers the session agent; the conductor and its prompt
-   files hold no generic edit or terminal tool in either mode (C002-REQ-306, C002-REQ-321).
+   files hold no generic edit or terminal tool in either mode (C002-REQ-306, C002-REQ-321). On VS
+   Code 1.145.2 it covers every readable call, subagent calls included, since that build sends no
+   `agent_type` on PreToolUse (Input above; defect D-052). The decision stays `allow` (P-01
+   decision of 2026-11-11 on D-052, option 1 "Rely on confinement and say so"): the hook cannot
+   tell such a call from the session agent's, and a deny would refuse P-03's own chats and the
+   conductor's calls. Rules 4 to 8, and with them GUARD-HOOK-002 and the GUARD-HOOK-001 faults of
+   rules 6 to 8, therefore act only on hosts that send `agent_type` (Copilot CLI); on VS Code 1.145.2
+   the hook denies by rules 1 and 2 only, or by erroring (a missing CLI copy). There the safety bar
+   for the Architect agents rests on the specialists' tool lists, which hold no generic edit or
+   terminal tool (C002-REQ-306; confinement checked by VSC-54), and on the sdd MCP server guard,
+   which decides every write and command of an Architect agent (C002-IF-002 §5; GUARD-PATH-001 and
+   GUARD-BASH-001 both seen in the findings pass). The conductor's restriction to the nine
+   specialists comes from its instructions and is not enforced by the host, whose `agents` list does
+   not bound the agents it starts (C002-IF-005 §3): it refused the planted delegation in the findings
+   pass, but a planted delegation that the model follows is not stopped on VS Code 1.145.2 (critic
+   CR-156). A non-Architect subagent, started by the conductor or by P-03's own default agent, is not
+   stopped by the hook there: the known limitation of the install notes (C002-IF-005 §5 step 6).
 4. An Architect agent's call with `--mode sdd-mcp-server` → allow, exit 0, without reading the
    classes file (C002-REQ-330): the agent is confined by its tool list (C002-REQ-306; S-08 §2.1,
    §3.1), and no guard core runs on its calls (C002-REQ-302).
 5. An Architect agent's call with `--mode copilot-hooks` → rules 7 and 8.
-6. A non-Architect subagent's call, in both modes (C002-REQ-327, C002-REQ-328, C002-REQ-329):
+6. A non-Architect subagent's call, in both modes, on a host that sends `agent_type` (C002-REQ-327,
+   C002-REQ-328, C002-REQ-329):
    - no `cwd`, or an empty `cwd` → deny GUARD-HOOK-001 (the repository cannot be read);
    - the workspace lookup of C001-IF-01 from `cwd` (the nearest `.sdd/` at or above it, as the path
      guard takes it, `src/workspace/find.ts:5-15`) finds none → allow, exit 0, without reading the
@@ -319,6 +361,15 @@ specialists (`serena-…`, `context7-…`, `deepwiki-…`). The sdd MCP server t
 may hold the workspace MCP servers' tools; an Architect agent's call to them never reaches the class
 table (rules 3 and 4; under the fallback only the conductor holds them, C002-REQ-321).
 
+**Copilot hooks fallback on VS Code 1.145.2** (defect D-052). Under `--mode copilot-hooks` the hook
+decides an Architect agent's call by rules 7 and 8, which need its `agent_type`. On VS Code 1.145.2
+those calls carry none and pass by rule 3, so no guard core runs on them: on that build the fallback
+would leave the specialists' generic edit and terminal calls undecided, the hook denying only its
+own faults (rules 1 and 2; critic CR-158). The Copilot hooks fallback is not offered for VS Code 1.145.2 (C002-IF-005 §5
+step 7), and the checklist's steps of mode `copilot-hooks` are `not-applicable` there (C002-IF-009
+§4). The fallback, the classes file and rules 4 to 8 stay specified for a host that sends
+`agent_type`; the corpus replay of `copilot-hooks` (C002-IF-009 §2) feeds `agent_type` itself.
+
 **Allow and deny.** Allow: exit 0, nothing on standard output or standard error. Deny (a guard
 decision, GUARD-HOOK-001 or GUARD-HOOK-002): standard output holds one JSON object with the deny decision in both
 forms the S-08 probe wrote (`docs/spikes/s08/hooks/deny.mjs:6`),
@@ -343,12 +394,30 @@ caller identity and repository, not by the guard cores, so scenarios test them, 
 
 | Event | Fields used | Command (C002-IF-007) | Exit |
 |---|---|---|---|
-| SessionStart | `cwd` (else the process working folder; the SessionStart input shape is not in the S-08 record) | `hook session-start --host copilot` | always 0; brief of C001-IF-07 §4 when `.sdd/` exists, else no output (C002-REQ-313, C002-REQ-314) |
+| SessionStart | `cwd` (else the process working folder; the SessionStart input shape is not in the S-08 record) | `hook session-start --host copilot` | always 0; when `.sdd/` exists, the brief of C001-IF-07 §4 as the JSON object below, else no output (C002-REQ-313, C002-REQ-314) |
 | SubagentStop | `agent_type`, `cwd` (S-08 §2.3: also `agent_id`, `agent_name`, `last_assistant_message`, `stop_reason`, …) | `hook subagent-stop --host copilot --agents …` | always 0; trace refresh for the four author agents only (C002-REQ-315) |
 
+**SessionStart output** (revised for defect D-053). GitHub Copilot Chat 0.73.0
+(`executeSessionStartHook`) adds context to the session only from standard output that is a JSON
+object with `hookSpecificOutput.additionalContext`; plain text is ignored. In the T-050 findings pass
+the hook ran (5.2 s) and printed the plain-text brief, and the conductor answered "what is the
+status?" by reading the files itself. Under `--host copilot` the command therefore prints, when
+`.sdd/` exists, one JSON object on one line, followed by a line feed:
+
+```json
+{ "hookSpecificOutput": { "hookEventName": "SessionStart", "additionalContext": "<brief lines joined by \n>" } }
+```
+
+`additionalContext` holds the lines of the C001-IF-07 §4 brief, joined by line feeds (`\n` in the
+JSON string), without a final line feed. Without `.sdd/` the command prints nothing
+(C002-REQ-314). `--host claude-code`, and the command without `--host`, keep
+the plain-text brief of C001-IF-07 §4 unchanged (C002-GOAL-05). The same Copilot Chat build also
+reads `additionalContext` from SubagentStart hooks; the package declares none.
+
 Plugin-level SessionStart and SubagentStop hooks run in the local agent host when their commands
-hold no root token, and SubagentStop fires for workspace subagents (S-08 §3, §3.1). `agent_type` is
-`sdd-planner` in VS Code and `architect:sdd-planner` in Copilot CLI; the command compares it after
+hold no root token, and SubagentStop fires for workspace subagents (S-08 §3, §3.1; on VS Code
+1.145.2 also for subagents of the default agent, `agent_type` `default`, defect D-052). `agent_type`
+is `sdd-planner` in VS Code and `architect:sdd-planner` in Copilot CLI; the command compares it after
 removing an `architect:` prefix.
 
 ## §4 Hook command form
@@ -360,9 +429,9 @@ generator writes the commands into `install/hooks.template.json` with the token 
 place of `<package>/scripts/sdd.mjs`; the install command writes the package's `hooks.json` and the
 repository's workspace hook file `.github/hooks/architect-guard.json` with the token replaced
 (C002-IF-007 §Install, C002-IF-005 §3). The S-08 probe's hook commands of this form ran on both
-hosts (`docs/spikes/s08/hooks.json`; S-08 §3). The PreToolUse command is
-`node "<package>/scripts/sdd.mjs" hook guard --host copilot --mode <mode> --agents <the ten Architect
-agent names, comma-separated>` in both modes (§2).
+hosts (`docs/spikes/s08/hooks.json`; S-08 §3), and on VS Code 1.145.2 (T-050 findings pass). The
+PreToolUse command is `node "<package>/scripts/sdd.mjs" hook guard --host copilot --mode <mode>
+--agents <the ten Architect agent names, comma-separated>` in both modes (§2).
 
 No command holds `${PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_ROOT}`: VS Code on Windows does not expand
 `${PLUGIN_ROOT}` in hook commands, such a hook errors before its script runs and every tool call of

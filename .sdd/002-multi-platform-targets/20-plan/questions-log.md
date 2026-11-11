@@ -399,3 +399,22 @@ Questions on the S-07 record (C002-T-001).
 - **Answer:** P-01 (2026-11-10): "1. go ahead, test the setting for T-050 2. ok 3. do T-050 I will do mine afterwards"
 - **Extracted instructions:** the conductor executes C002-T-050 for P-01 with `code chat` and clicks under the two settings; `code chat` always starts a new session and the conductor cannot type in VS Code, so P-01 runs VSC-30, VSC-31, VSC-19 and VSC-12 as one batch at the end (group-4 order is free, C002-IF-009 §4); C002-TS-618 and C002-IF-009 §4 name both executors.
 - **Conductor's note** (D-050 critic review, 2026-11-10): VSC-01's slash-list half also needs typing and comes before the install, so P-01 checks it on a twin in the same pre-install state in a separate VS Code profile (CR-145); VSC-19 and VSC-31 stay with the conductor (no typing when assumption A-6 holds; CR-146); P-01's batch is VSC-30, VSC-12 and the twin check, after VSC-29; about 25 sessions (CR-151).
+
+## Round 2026-11-11 — defects D-051 … D-053 (T-050 findings pass on VS Code 1.145.2)
+
+### Instruction 2026-11-11 — findings pass instead of stopping at VSC-11
+- **Context:** the conductor's T-050 run failed at VSC-11 (workspace MCP servers start on demand). The run sheet stops a run at a failed step; the conductor proposed (1) continuing the remaining conductor steps as a non-binding findings pass, then one CHG-002 revision and a clean binding run under a later date (Recommended), or (2) stopping, fixing, rerunning.
+- **Answer:** P-01 (2026-11-11): "go ahead with the findings pass"
+- **Extracted instructions:** the remaining conductor steps run as a scratch pass whose results are not a record; the findings become defects; C002-T-050 runs again, clean, after the revision.
+
+### Q-vscode-subagent-guard-01 — What the package promises about subagent edits on VS Code (defect D-052)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3
+- **Context:** VS Code 1.145.2 sends no `agent_type` on PreToolUse (436 of 436 inputs; only SubagentStop carries it), and the Copilot guard allows input without it, so a default-agent subagent edited `src/app.ts` in the findings pass. The conductor refused every delegation to a non-Architect agent, and the spec-writer started as a subagent held no generic edit or terminal tool (its edit denied `GUARD-PATH-001`).
+- **Options:** 1. Rely on confinement and say so: drop the hook-denial promise for VS Code, state the known limitation in the install notes, replace the delegated-edit hook steps by refusal and confinement checks; no release delay (Recommended) · 2. Hold the Copilot release until VS Code sends `agent_type` on PreToolUse · 3. Find another signal for "inside a subagent" (for example the transcript the hook receives); research with an uncertain result
+- **Answer:** P-01 (2026-11-11): "1, go ahead with the revision"
+- **Extracted instructions:** working digest `revision-D051-D053-digest.md`; C002-REQ-327 … 329 stay for hosts that send `agent_type`; the Copilot hooks fallback is not offered for VS Code 1.145.2; the question tool maps to `askQuestions` and `ask_user`; the SessionStart brief is JSON under `--host copilot`; the checklist, install notes and run sheet follow the findings.
+
+### Q-d051-retake-01 — Retake the 24 Copilot CLI release rows at the new 0.1.0 candidate (C002-T-081)
+- **Blocking:** no · **Material:** no
+- **Options:** 1. Retake all 24 rows: ties the evidence to the shipped conductor text; about 2.4–3.4 USD of the Copilot pool, within the 15.00 USD stop of C002-T-076 (Recommended) · 2. Retake only ROUTE-auditor, INJ-19, INJ-21 and TS-359 (about 0.5 USD)
+- **Answer:** conductor (2026-11-11), under P-01's waiver of 2026-10-19 for paid batches within approved limits (Copilot CLI pool 30 USD, 10.33 used): option 1, retake all 24 rows.

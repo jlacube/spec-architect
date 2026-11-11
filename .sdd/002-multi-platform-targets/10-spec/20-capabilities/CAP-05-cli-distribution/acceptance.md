@@ -363,6 +363,10 @@ the status `ok`, the caveat Version text and an empty Fix of its Examples row, a
 `failed` otherwise, which the release check refuses with `ERR-REL-004: copilot: checklist step <step
 id> is failed` (C002-IF-009 §4 Run order, C002-TS-668).
 
+The rows of the Copilot hooks fallback run only on a VS Code whose PreToolUse hook input carries
+`agent_type`: the mode is not offered for VS Code 1.145.2, and a checklist record of that version
+gives them `not-applicable` (defect D-052).
+
 The rows of the package's mode are listed in run order (revised for critic CR-44): the rows that
 switch off `chat.useHooks` or Workspace Trust run first, then the restore step sets `chat.useHooks`
 true and trusts the workspace again, then the true-and-trusted row runs directly before the
