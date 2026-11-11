@@ -11,8 +11,9 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 
 > **The run of 2026-11-11 was a non-binding findings pass, not a record.** It ran on VS Code 1.145.2
 > and found defects D-051 … D-053 (`.sdd/002-multi-platform-targets/20-plan/revision-D051-D053-digest.md`).
-> This sheet is revised for them (C002-T-080). The clean run of T-050 starts from step 0 under a later
-> date, on the release candidate of C002-T-081; no part of the findings pass goes into its record.
+> This sheet is revised for them (C002-T-080). The clean run of T-050 starts from step 0 as a later
+> run, after C002-T-081 is done (on 2026-11-11 allowed: plan revision of 2026-11-11), in the fresh run folder
+> `C:\Sandbox\runs\t050c`, on the release candidate of C002-T-081; no part of the findings pass goes into its record.
 
 The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local** (method below). It stops after VSC-29 and hands you one batch, in this order: **VSC-30** (send `/architect:gate <NNN>`, choose Revise, type a short reason, then Approve), the **free-text half of VSC-20** (critic CR-157: with `chat.autoReply` false, during or after the VSC-30 rework, ask the conductor for one round, for example "ask me one question about the export scope", then type `Keep the CSV export out of v1` in the dialog's free-text field without selecting an option, and submit), **VSC-12** (type `/` in the chat input and read the list, type a bare `/init` and read which entry the list offers for it without sending it, then choose `/architect:doctor`) and the **slash-list half of VSC-01** on a twin: the conductor has unpacked a second package and made a second toy repository in VSC-01's pre-install state, opened in a separate VS Code profile `t050-twin` whose only plugin location is that second package; type `/` there and say what the list shows. Then the conductor runs VSC-31 and VSC-54, completes the record and runs the dry run. If an interview question needs a typed answer during the conductor's steps, it picks the recommended option, or calls you for that one turn. Where the steps below say "you", read "the executor", except the sign-off and `executed_by` (step 11 and Pass), which stay yours; the conductor records the sign-off under your standing waiver of 2026-10-19. This sheet's order overrides the checklist's run order (`vscode-copilot.md`, Run order) for VSC-01's slash-list half, VSC-12 and VSC-20; move their entries in the record to the position of their last half (VSC-20 passes only when both halves pass). `executed_by`: `"<your name>; conductor for P-01 (P-01 ran VSC-30, VSC-20 free-text half, VSC-12, VSC-01 slash list)"` (C002-IF-009 §4). The install in VSC-02 runs in the conductor's own shell, not through a chat agent.
 
@@ -136,7 +137,7 @@ sdd host-version vscode
    backtick.
 
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip -DestinationPath C:\Sandbox\runs\t050\architect-copilot-0.1.0
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip -DestinationPath C:\Sandbox\runs\t050c\architect-copilot-0.1.0
 ```
 
 4. Build the toy repository and the two-folder workspace exactly as the checklist's "Scope of a run"
@@ -150,7 +151,7 @@ Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip 
      from the root of `toy`:
 
 ```powershell
-sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
+sdd install copilot --package C:\Sandbox\runs\t050c\architect-copilot-0.1.0
 ```
 
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
@@ -203,7 +204,8 @@ sdd install copilot --package C:\Sandbox\runs\t050\architect-copilot-0.1.0
     F-7's naming are already replaced by the 1.145.2 behaviour the steps check) is recorded `failed`
     **and** becomes a spec defect.
 
-11. Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
+11. In the record's Notes, state: "Binding run of C002-T-050 after the non-binding findings pass of
+    2026-11-11, started <time>, after C002-T-081 was done (579c39b)." Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
     no `ERR-REL-003`, `ERR-REL-004`, `ERR-REL-009 … checklist` or `ERR-REL-010` line.
 
 ```powershell
