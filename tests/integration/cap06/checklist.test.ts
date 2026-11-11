@@ -14,6 +14,11 @@
 // of VSC-04 and VSC-06) and C002-TC-618 (the rerun rule with `earlier_results` and its causes, the
 // template's `earlier_results` example). C002-T-066 (revision D-026/D-027): the `models_used` Then line
 // of C002-TS-617 and the template check of C002-TC-618 (`models_used` with the key `sdd-conductor`).
+// C002-T-080 (revision D-051 … D-053, VS Code 1.145.2): the revised C002-TS-617 and C002-TS-619 (question
+// tool `askQuestions`, `chat.autoReply`, MCP servers on first use, the delegated-edit step's conductor
+// refusal and default-agent probe with `agent_type: present | absent`, `models_used` from the reply
+// footer), the `/architect:<name>` form, the step-index modes of VSC-25 and VSC-26 and C002-TC-618's
+// template checks (VSC-20, VSC-27, VSC-28 and VSC-29 fields, the A-5 row).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -232,24 +237,44 @@ test("C002-TS-617: the steps of the checklist content", () => {
   const boundary = one((s) => s.kind === "boundary", "the sdd MCP server boundary");
   assert.ok(/outside `\.sdd\/`/.test(boundary.body) && /GUARD-PATH-001/.test(boundary.body) && /outside the allowlist/.test(boundary.body) && /GUARD-BASH-001/.test(boundary.body));
   const interview = one((s) => s.scenarios.includes("C002-TS-216"), "the interview round");
-  assert.ok(/input shape of one `ask_user` call/.test(interview.body));
+  assert.ok(/input shape of one `askQuestions` call/.test(interview.body), interview.id);
   const gate = one((s) => s.scenarios.includes("C002-TS-318"), "the skipped gate answer");
-  assert.ok(/result that `ask_user` returned/.test(gate.body));
+  const gateText = gate.body.replace(/\s+/g, " ");
+  assert.ok(/`chat\.autoReply` to true/.test(gateText) && /result that `askQuestions` returned/.test(gateText), gate.id);
+  assert.ok(/`selected`/.test(gateText) && /auto-reply text/.test(gateText) && /`approvals\.json` is unchanged/.test(gateText), gate.id);
+  // Then 7: the MCP servers start when their first tool is used; Serena holds --context vscode.
+  const servers = one((s) => /Workspace MCP servers/.test(s.title), "the MCP servers step");
+  const serversText = servers.body.replace(/\s+/g, " ");
+  assert.ok(/when (its|their) first tool is used/.test(serversText), serversText);
+  assert.ok(/after `\/architect:status`/.test(serversText) && /after a step that uses Serena/.test(serversText) && /`--context vscode`/.test(serversText), servers.id);
   const install = one((s) => s.kind === "install" && s.body.includes("sdd install copilot --package"), "sdd install copilot");
   assert.ok(/P-03's terminal/.test(install.body));
   assert.ok(STEPS.some((s) => s.scenarios.includes("C002-TS-220")), "the toy change's creation");
   const revise = one((s) => s.scenarios.includes("C002-TS-218"), "Revise at G1");
   assert.ok(/\*\*Revise\*\*/.test(revise.body) && /Gate log of `change\.md` has a row `revise`/.test(revise.body) && /presented again/.test(revise.body));
-  const revisePrompt = one((s) => /^\/revise|`\/revise /m.test(s.body), "the revise prompt");
+  const revisePrompt = one((s) => /`\/architect:revise /.test(s.body), "the revise prompt");
   assert.ok(/`sdd status`/.test(revisePrompt.body) && /`in-revision`/.test(revisePrompt.body));
   for (const s of STEPS.filter((x) => x.kind === "delegated-edit")) {
     assert.equal(s.mode, "both", `${s.id} applies to both modes (C002-IF-009 §4)`);
     assert.ok(s.scenarios.includes("C002-TS-358"));
     assert.ok(/`src\/app\.ts` (is )?unchanged/.test(s.body) && /GUARD-HOOK-002/.test(s.body) && /`general-purpose`/.test(s.body), s.id);
   }
+  // Then 9 and 10 (critic CR-154, CR-155): the conductor's refusal, then the default-agent probe with both outcomes.
   const first = STEPS.find((s) => s.kind === "delegated-edit")!;
-  assert.ok(/whether the host offered `general-purpose`/.test(first.body) && /`agent_type`/.test(first.body) && /denied by a hook/.test(first.body));
+  assertDelegatedEdit(first);
 });
+
+/** The two parts of the delegated-edit step of C002-TS-617 / C002-TS-358 (revision D-052). */
+function assertDelegatedEdit(s: Step): void {
+  const b = s.body.replace(/\s+/g, " ");
+  assert.ok(/no agent other than the nine Architect specialists/.test(b), `${s.id}: the conductor starts only the nine specialists`);
+  assert.ok(/\*\*Conductor refusal/.test(b) && /\*\*Default-agent probe/.test(b), `${s.id}: both parts`);
+  assert.ok(/default agent/.test(b) && /`runSubagent`/.test(b) && /`general-purpose`/.test(b), `${s.id}: the probe starts general-purpose through runSubagent`);
+  assert.ok(/"GitHub Copilot Chat Hooks"/.test(b) && /PreToolUse/.test(b), `${s.id}: the probe's hook input is read from the hooks log`);
+  assert.ok(/`agent_type: present`/.test(b) && /`agent_type: absent`/.test(b), `${s.id}: both recorded values`);
+  assert.ok(/GUARD-HOOK-002/.test(b) && /GUARD-HOOK-001/.test(b) && /Copilot subagent guard hook/.test(b), `${s.id}: the denial where agent_type is present`);
+  assert.ok(/`git checkout -- src\/app\.ts`/.test(b) && /known limitation of (defect )?D-052/.test(b), `${s.id}: the revert where agent_type is absent`);
+}
 
 test("the planted line of C002-TS-358 is in the fixture file, which the delegated-edit steps name", () => {
   const planted = g1(/the planted line "([^"]+)"/.exec(acceptance("CAP-03-copilot-target")), "the planted line of C002-TS-358");
@@ -268,14 +293,20 @@ for (const [modeText, mode] of Object.entries(MODE_TEXT)) {
     assert.ok(/`enabled` exactly when\s+they read `on`, `trusted` and `none`/.test(hs.body));
     if (mode === "sdd-mcp-server") {
       const de = inMode(mode).find((s) => s.kind === "delegated-edit" && s.scenarios.includes("C002-TS-619"));
-      assert.ok(de && /denied by a hook/.test(de.body) && /Copilot subagent guard hook/.test(de.body), "the delegated-edit step expects the edit denied by the Copilot subagent guard hook");
+      assert.ok(de, "the delegated-edit step of C002-TS-619");
+      // The refusal check and the default-agent probe, whose hook denial is expected only where its PreToolUse input carries agent_type.
+      assertDelegatedEdit(de);
+      assert.ok(/[Ww]here (that subagent's|the probe's|its) PreToolUse input carries `agent_type`/.test(de.body.replace(/\s+/g, " ")), de.id);
     } else {
+      // The mode is not offered for VS Code 1.145.2, whose record gives its steps not-applicable.
+      assert.ok(/Copilot hooks fallback is not offered for VS Code 1\.145\.2/.test(CHECKLIST.replace(/\s+/g, " ")), "the checklist states that the hooks fallback is not offered for VS Code 1.145.2");
       const gds = inMode(mode).filter((s) => s.kind === "guard-denial");
       assert.equal(gds.length, 1);
       const gd = at(gds, 0);
       assert.equal(gd.mode, "copilot-hooks");
       assert.ok(gd.scenarios.includes("C002-TS-619") && gd.scenarios.includes("C002-TS-313"));
       assert.ok(/to `src\/app\.ts`/.test(gd.body) && /denied by a hook/.test(gd.body));
+      assert.ok(/PreToolUse hook input carries `agent_type`/.test(gd.body.replace(/\s+/g, " ")), `${gd.id}: for a VS Code that sends agent_type`);
     }
   });
 }
@@ -380,15 +411,19 @@ function vsc02(): { id: string; record: string } {
 test("C002-TS-617 Then 5: the Record of VSC-02 instructs P-01 to fill models_used from the turns of the toy-change steps, with at least the model ID VS Code showed for the turns of sdd-conductor, or not shown", () => {
   const { record } = vsc02();
   assert.ok(/for the turns of `sdd-conductor` in this chat and in the toy-change steps that follow/.test(record), record);
-  assert.ok(/record in `models_used` under the key `sdd-conductor` the model ID that VS Code showed for those turns, or `not shown`/.test(record), record);
+  assert.ok(/record in `models_used` under the key `sdd-conductor` the model ID that VS Code showed in the reply footer of those turns, or `not shown`/.test(record), record);
+  // Revision D-053: a new window starts on "Auto", so P-01 picks a model in the picker.
+  assert.ok(/pick a model in the chat's model picker in place of "Auto"/.test(record), record);
   assert.deepEqual(STEPS.map((s) => s.id), STEPS.map((_, i) => `VSC-${String(i + 1).padStart(2, "0")}`), "no step added, removed or renumbered");
 });
 
 test("C002-TS-617 Then 6: the Record of VSC-02 instructs P-01 to write into the note of VSC-02 whether VS Code showed the model where the install notes say it does, or where it showed it instead", () => {
   const { record } = vsc02();
-  assert.ok(/in this step's `note` whether VS Code showed the model where `INSTALL\.md` says it does \(the chat's model picker\), or where it showed it instead/.test(record), record);
-  // The install notes name the chat's model picker as that place (C002-IF-005 §5 Models).
-  assert.ok(/the model that the chat's model picker shows for the session/.test(read("plugins/architect/targets/copilot/install.md").replace(/\s+/g, " ")));
+  assert.ok(/in this step's `note` whether VS Code showed the model in the reply footer, where `INSTALL\.md` says it does, or where it showed it instead/.test(record), record);
+  // The install notes name the chat's model picker (C002-IF-005 §5 Models; the reply footer since C002-T-079).
+  const notes = read("plugins/architect/targets/copilot/install.md").replace(/\s+/g, " ");
+  assert.ok(/model picker/.test(notes), "the install notes name the model picker");
+  assert.ok(/footer of each reply names the model/.test(notes), "the install notes name the reply footer (C002-T-079)");
 });
 
 test("C002-TC-618 (template check): the record template holds models_used, a mapping with the key sdd-conductor, where C002-IF-009 §4 shows it", () => {
@@ -399,6 +434,7 @@ test("C002-TC-618 (template check): the record template holds models_used, a map
   assert.ok(used !== null && typeof used === "object" && !Array.isArray(used), "models_used is a mapping");
   assert.ok("sdd-conductor" in used, "the key sdd-conductor");
   assert.match(String(used["sdd-conductor"]), /not shown/);
+  assert.ok(/^models_used: .*reply footer/m.test(doc.raw!), "models_used is read from the reply footer (revision D-053)");
   const keys = Object.keys(fm);
   assert.equal(keys.indexOf("models_used"), keys.indexOf("hooks_sources") + 1, "after hooks_sources, as in C002-IF-009 §4");
   assert.equal(keys.indexOf("executed_by"), keys.indexOf("models_used") + 1, "before executed_by, as in C002-IF-009 §4");
@@ -456,9 +492,89 @@ test("C002-TS-319 (supporting): VSC-15 expects the text fallback, with no INSTAL
   assert.ok(/as plain text/.test(expect) && /recommended option first/.test(expect) && /ends its turn/.test(expect), expect);
   assert.ok(/No change folder `\.sdd\/<NNN>-\*` is created until you answer/.test(expect), expect);
   // The Expect states both absences in one sentence; outside it, it names no INSTALL.md step and no enable step.
-  const absent = "The reply names no `INSTALL.md` step and does not tell you to enable, install or switch on `ask_user` or another question tool.";
+  const absent = "The reply names no `INSTALL.md` step and does not tell you to enable, install or switch on `askQuestions`, `ask_user` or another question tool.";
   assert.ok(expect.includes(absent), expect);
   const rest = expect.replace(absent, "");
   assert.ok(!/INSTALL\.md/.test(rest), "no INSTALL.md step");
   assert.ok(!/\b(?:enable|install|switch on|turn on)/i.test(rest), "no enable step");
+});
+
+// --- C002-T-080 (revision D-051 … D-053): VS Code 1.145.2 ---------------------------------------------
+
+const stepText = (id: string) => STEPS.find((s) => s.id === id)!.body.replace(/\s+/g, " ");
+
+test("C002-T-080: every slash command of the checklist is in the /architect:<name> form; VSC-12 records a bare /init", () => {
+  const names = ["doctor", "init", "new", "status", "ideate", "specify", "plan", "gate", "revise", "decide", "research", "lint", "archive"];
+  const flat = CHECKLIST.replace(/\s+/g, " ");
+  const bare = [...flat.matchAll(new RegExp(`\`/(${names.join("|")})\\b`, "g"))];
+  // The one bare form allowed is VS Code's own built-in /init ("a bare `/init`", "built-in `/init`").
+  for (const m of bare) assert.ok(m[0] === "`/init" && /(bare|built-in) $/.test(flat.slice(Math.max(0, m.index - 9), m.index)), `bare ${m[0]}: …${flat.slice(Math.max(0, m.index - 40), m.index + 10)}`);
+  const vsc12 = stepText("VSC-12");
+  for (const c of ["/architect:doctor", "/architect:new", "/architect:init"]) assert.ok(vsc12.includes(`\`${c}\``), c);
+  assert.ok(/whether a bare `\/init` resolves to VS Code's built-in/.test(vsc12), vsc12);
+  for (const id of ["VSC-13", "VSC-14"]) assert.ok(/`\/architect:(doctor|init)`/.test(stepText(id)), id);
+});
+
+test("C002-T-080: the step-index modes of VSC-25 and VSC-26 stay copilot-hooks and are recorded not-applicable on a build without agent_type", () => {
+  for (const id of ["VSC-25", "VSC-26"]) {
+    const s = STEPS.find((x) => x.id === id)!;
+    assert.equal(s.mode, "copilot-hooks", id);
+    assert.ok(/`not-applicable`/.test(s.body) && /no `agent_type`/.test(s.body.replace(/\s+/g, " ")), `${id}: not-applicable without agent_type`);
+  }
+  const note = (/\*\*Steps of the Copilot hooks fallback on VS Code 1\.145\.2\.\*\*([\s\S]*?)\n\n/.exec(CHECKLIST)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/VSC-25/.test(note) && /VSC-26/.test(note) && /C002-TS-313/.test(note) && /C002-TS-335/.test(note) && /`not-applicable`/.test(note), note);
+});
+
+test("C002-T-080: VSC-15, VSC-18, VSC-20 … VSC-23, VSC-28, VSC-29 and VSC-54 carry the revised question tool, tool ids and fallbacks", () => {
+  const v15 = stepText("VSC-15");
+  assert.ok(/`askQuestions`/.test(v15) && /`ask_user`/.test(v15) && /`\.github\/agents\/sdd-conductor\.agent\.md`/.test(v15) && /prompt file/.test(v15) && /plain request/.test(v15), v15);
+  const v18 = stepText("VSC-18");
+  assert.ok(/`askQuestions` alone/.test(v18) && /`vscode\/askQuestions`/.test(v18), v18);
+  const v20 = stepText("VSC-20");
+  assert.ok(/`chat\.autoReply`/.test(v20) && /free-text half/.test(v20) && /Keep the CSV export out of v1/.test(v20) && /both halves pass/.test(v20) && /one round/.test(v20) && /`selected: \[\]`/.test(v20), v20);
+  const v23 = stepText("VSC-23");
+  assert.ok(/`mcp_<command>\[N\]_<tool>`/.test(v23) && /`tool_name`/.test(v23) && /hooks log/.test(v23), v23);
+  for (const id of ["VSC-22", "VSC-54"]) assert.ok(/`runSubagent`/.test(stepText(id)) && /`agentName: sdd-spec-writer`/.test(stepText(id)), id);
+  assert.ok(/`explore_subagent`/.test(stepText("VSC-54")));
+  assert.ok(/JSON/.test(stepText("VSC-21")) && /"GitHub Copilot Chat Hooks"/.test(stepText("VSC-21")));
+  assert.ok(/`chat\.autoReply`/.test(stepText("VSC-29")));
+  const v28 = stepText("VSC-28");
+  assert.ok(/assumption A-4/.test(v28) && /hooks log/.test(v28), v28);
+});
+
+test("C002-T-080: the assumption table and the S-08 fact mapping state the 1.145.2 results", () => {
+  const row = (id: string) => CHECKLIST.split("\n").find((l) => l.startsWith(`| ${id} |`)) ?? "";
+  assert.ok(/refuted/.test(row("A-5")) && /accepted/.test(row("A-5")) && /known limitation/.test(row("A-5")), row("A-5"));
+  assert.ok(/`askQuestions`/.test(row("A-6")), row("A-6"));
+  assert.ok(/when (its|their) first tool is used/.test(row("A-8")), row("A-8"));
+  const fact = (f: string) => CHECKLIST.split("\n").find((l) => l.startsWith(`  | ${f} `)) ?? "";
+  assert.ok(/refuted/.test(fact("F-4")) && /VSC-27/.test(fact("F-4")) && /VSC-54/.test(fact("F-4")), fact("F-4"));
+  assert.ok(/refuted/.test(fact("F-5")) && /`askQuestions`/.test(fact("F-5")), fact("F-5"));
+  assert.ok(/`mcp_<command>\[N\]_<tool>`/.test(fact("F-7")) && /VSC-23/.test(fact("F-7")), fact("F-7"));
+});
+
+test("C002-TC-618 (template check, revision D-051 … D-053): VSC-20, VSC-27, VSC-28 and VSC-29 fields; the A-5 row", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const recorded = doc.data!["steps"] as Record<string, unknown>[];
+  const entry = (id: string) => recorded.find((s) => s["id"] === id)!;
+  const v20 = entry("VSC-20");
+  assert.ok(typeof v20["auto_reply_result"] === "string" && /chat\.autoReply true/.test(String(v20["auto_reply_result"])), "VSC-20 autoReply-true result");
+  const ft = v20["free_text_half"] as Record<string, unknown>;
+  assert.ok(ft && typeof ft === "object" && "result" in ft && "askquestions_result" in ft && "questions_log" in ft, "VSC-20 free-text half fields");
+  assert.match(String(ft["askquestions_result"]), /selected: \[\]/);
+  const v29 = entry("VSC-29");
+  assert.ok(/chat\.autoReply true/.test(String(v29["auto_reply_result"])), "VSC-29 autoReply-true result");
+  assert.ok(typeof v29["auto_reply_off"] === "string" && typeof v20["auto_reply_off"] === "string", "VSC-20 and VSC-29: chat.autoReply set back to false");
+  for (const id of ["VSC-27", "VSC-28"]) {
+    const e = entry(id);
+    assert.ok(typeof e["conductor_refusal"] === "string", `${id} conductor_refusal`);
+    const probe = e["probe"] as Record<string, unknown>;
+    assert.ok(probe && typeof probe === "object", `${id} probe`);
+    assert.match(String(probe["agent_type"]), /present/);
+    assert.match(String(probe["agent_type"]), /absent/);
+    assert.ok("deny_message" in probe && "git_revert" in probe, `${id} deny_message and git_revert`);
+  }
+  const t = TEMPLATE.replace(/\s+/g, " ");
+  assert.ok(/A-5/.test(t) && /refuted, accepted/.test(t), "the A-5 row");
 });
