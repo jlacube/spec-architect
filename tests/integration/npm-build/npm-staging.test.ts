@@ -212,10 +212,13 @@ test("C002-TS-501 / C002-TS-517 (tarball row): the installed sdd --version print
   for (const bin of ["sdd", "sdd-mcp"]) assert.ok(readdirSync(fx.binDir).some((f) => f === bin || f === `${bin}.cmd`), bin);
 });
 
-test("C002-TS-502 (C002-TC-502): the installed sdd creates the same change folder as the bundled CLI (003-export, fx-bootstrap holding 001 and 002), apart from the translated CLI lines (CLAUDE_PLUGIN_ROOT unset)", () => {
+test("C002-TS-502 (C002-TC-502): the installed sdd creates the same change folder as the bundled CLI (the next free number of fx-bootstrap, a copy of the repository's .sdd/), apart from the translated CLI lines (CLAUDE_PLUGIN_ROOT unset)", () => {
   const a = fxBootstrap();
   const b = fxBootstrap();
   try {
+    // fx-bootstrap copies the repository's .sdd/, so the next free number follows the changes it holds.
+    const taken = readdirSync(join(a.root, ".sdd")).filter((d) => /^\d{3}-/.test(d)).map((d) => Number(d.slice(0, 3)));
+    const next = `${String(Math.max(0, ...taken) + 1).padStart(3, "0")}-export`;
     const args = ["change", "new", "Export", "--profile", "lite", "--kind", "greenfield"];
     const env = { CLAUDE_PLUGIN_ROOT: undefined, CLAUDE_PLUGIN_DATA: undefined };
     // Given: the bundled CLI has created the change of fx-b.
@@ -226,9 +229,9 @@ test("C002-TS-502 (C002-TC-502): the installed sdd creates the same change folde
     assert.equal(installed.code, 0, installed.stderr);
     const created = readdirSync(join(a.root, ".sdd")).filter((d) => d.endsWith("-export"));
     assert.equal(created.length, 1, readdirSync(join(a.root, ".sdd")).join(", "));
-    // The same change folder in both copies: the next free number of fx-bootstrap, which holds 001 and 002.
+    // The same change folder in both copies: the next free number of fx-bootstrap.
     const folder = created[0]!;
-    assert.equal(String(folder), "003-export", "the next free change number of fx-bootstrap");
+    assert.equal(String(folder), next, "the next free change number of fx-bootstrap");
     assert.deepEqual(readdirSync(join(b.root, ".sdd")).filter((d) => d.endsWith("-export")), [folder]);
     // The same list of relative file paths.
     const fa = filesUnder(join(a.root, ".sdd", folder)).sort();
