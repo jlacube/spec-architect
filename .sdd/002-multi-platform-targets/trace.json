@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-11-11T16:06:43.047Z",
+  "generated_at": "2026-11-11T21:57:18.663Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -2124,7 +2124,7 @@
       "file": "20-plan/10-strategy.md",
       "line": 130,
       "title": "Release evidence and release",
-      "content_hash": "sha256:911ead7fbcef1d3f542719a88c238addcdd4ec5430d447227b35b172fab5e433"
+      "content_hash": "sha256:6c591f35920fa92605adf2d04e1eab10af93cb2fe499653f338c7963e637afd6"
     },
     {
       "id": "C002-NFR-101",
@@ -4365,7 +4365,7 @@
       "file": "20-plan/50-tasks/T-050-vscode-checklist-run.md",
       "line": 1,
       "title": "Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)",
-      "content_hash": "sha256:4d01e3feb667a51d048b933a99876f0e6ed208b720d95301476d9e105c4453c2",
+      "content_hash": "sha256:1c3765425805fbba713590f83891af86501f69492533a51cddd7271df08eb9f6",
       "status": "todo"
     },
     {
@@ -4609,7 +4609,7 @@
       "line": 1,
       "title": "Fix for revision D-051: the question tool askQuestions beside ask_user in the Copilot package",
       "content_hash": "sha256:4b334f0236faf8581862c15b1ffb286da60fee075e67135dcde742fd30c4a376",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-078",
@@ -4618,7 +4618,7 @@
       "line": 1,
       "title": "Fix for revision D-053: the session-start brief as JSON hookSpecificOutput under --host copilot",
       "content_hash": "sha256:50854970bf0772ec8f81f05e1efa8e99068d6614efdca6ef75744b38fbb90c46",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-079",
@@ -4627,7 +4627,7 @@
       "line": 1,
       "title": "Fix for revisions D-051 … D-053: Copilot install notes and README section",
       "content_hash": "sha256:c6064a199a099ff506472d02fa2a9c86309bf3c75c31d064ed83a8112c2f1af2",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-080",
@@ -4636,7 +4636,7 @@
       "line": 1,
       "title": "Fix for revisions D-052, D-053: VS Code checklist, record template and T-050 run sheet",
       "content_hash": "sha256:0617cd342bf37e79e50e16aab442ceb7eeaaea3a401eb59739bae18c946f6f07",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-T-081",
@@ -4645,7 +4645,7 @@
       "line": 1,
       "title": "Fix for revisions D-051 … D-053: new 0.1.0 release candidate, unpaid release steps and the Copilot CLI evidence retaken",
       "content_hash": "sha256:fc25ccf74363cd82b17298a171076754ba1d5655de90eb387217aaff56437b53",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "C002-TC-101",
@@ -6925,7 +6925,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1300,
       "title": "C002-TS-618",
-      "content_hash": "sha256:e265126a1181cd36c3856fa4412fb4fb12ab48c1798abd7fa6fadcb8051b8751"
+      "content_hash": "sha256:b35d7284edbc558edb1fb8ab95be497e1f0bac19a447a5ae96ef74810dedd571"
     },
     {
       "id": "C002-TC-902",

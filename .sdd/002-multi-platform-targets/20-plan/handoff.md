@@ -486,7 +486,7 @@ VSC-11 and continued as a non-binding findings pass; it is no record. Order:
    Copilot CLI rows retaken (labels `t081`, 15.00 USD stop; Q-d051-retake-01, the conductor, option 1), dry run
    refusing ERR-REL-003 only. The local tag `v0.1.0` moves from 9eb56c0 to the candidate; never pushed
    by an agent.
-6. **C002-T-050** runs again, clean, under a later date; P-01's end batch gains the free-text row of
+6. **C002-T-050** runs again, clean, as a later run (on 2026-11-11 allowed: plan revision of 2026-11-11); P-01's end batch gains the free-text row of
    VSC-20 (C002-TS-317, critic CR-157); then C002-T-075 and C002-T-055 as before.
 
 **Handoff condition:** C002-T-077 … C002-T-080 start after the G2 and G3 approvals of the revision;

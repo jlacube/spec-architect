@@ -25,7 +25,7 @@ at VSC-11; by P-01's instruction ("go ahead with the findings pass", `../questio
 2026-11-11) the remaining conductor steps ran as a non-binding findings pass, whose results are no
 record (notes outside the repository; facts in `../revision-D051-D053-digest.md`). Its findings are
 defects D-051 … D-053, fixed by C002-T-077 … C002-T-080 and packed by C002-T-081. This task now runs
-**again, in full and clean, under a later date**, on the 0.1.0 packages of C002-T-081's candidate,
+**again, in full and clean, as a later run**, on the 0.1.0 packages of C002-T-081's candidate,
 with the revised checklist, record template and run sheet of C002-T-080. The executor split and the
 session allowance below are unchanged; **P-01's end batch gains VSC-20's free-text half**
 (C002-TS-317, critic CR-157): during or after the VSC-30 rework P-01 asks the conductor for one
@@ -84,14 +84,17 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | banner and run folder for the later run, the binding-run statement in step 11 (critic CR-163, CR-164; C002-T-080, its owner, is done) |
 
 ## Preconditions
 
 - **Revision D-051 … D-053** (supersedes the package commits named below): the G2 and G3 approvals of
   that revision, C002-T-077 … C002-T-080 done, and **C002-T-081 done**: the 0.1.0 packages are those of
   its release candidate, its dry run refuses on ERR-REL-003 only, and its Copilot CLI retake holds no
-  injection entry acted upon. The run date is later than 2026-11-11; the record is
-  `docs/checklists/records/vscode-<date>-0.1.0.md`.
+  injection entry acted upon. The run starts after C002-T-081 is done, in the fresh run folder `C:\Sandbox\runs\t050c` named by the run sheet (no earlier package or toy repository in it); it may run on 2026-11-11, since the
+  findings pass made no record (plan revision of 2026-11-11, P-01: "do the revision and start now"); the
+  record is `docs/checklists/records/vscode-<date>-0.1.0.md` and states that it is the binding run after
+  the findings pass.
 - **Revision D-047** (P-01's instruction of 2026-11-10): the G2 and G3 approvals of the D-047
   revision and its unpaid rerun list (`handoff.md`); by P-01's answer to Q-d047-ship-01, 'Fold into
   0.1.0 (Recommended)', the release candidate moves from b481e82 to the D-047 code commit 9eb56c0 (Q-d047-ship-02
@@ -193,5 +196,5 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
-- [ ] The record is dated after 2026-11-11 and names C002-T-081's candidate packages; the findings pass of 2026-11-11 appears in no record
+- [ ] The record's run started after C002-T-081 was done, the record names C002-T-081's candidate packages and states in its Notes that it is the binding run after the findings pass, with the run's start time and C002-T-081's done commit (579c39b), which this item compares; the findings pass of 2026-11-11 appears in no record
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

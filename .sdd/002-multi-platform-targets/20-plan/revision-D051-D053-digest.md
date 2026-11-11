@@ -5,7 +5,7 @@ revise). Source: the T-050 findings pass of 2026-11-11 on VS Code 1.145.2 with G
 0.73.0 (Local session type, Claude Sonnet 5.5), run by the conductor for P-01; notes in
 `C:\Sandbox\runs\t050b\t050-notes.md` (not in the repository; the facts below are the record).
 Owners: SW spec-writer, TD test-designer, AR architect, PL planner. The findings pass was
-non-binding: C002-T-050 runs again, clean, under a later date after this revision.
+non-binding: C002-T-050 runs again, clean, as a later run after this revision (the same date allowed: plan revision of 2026-11-11).
 
 ## P-01 decision
 
@@ -138,4 +138,4 @@ non-binding: C002-T-050 runs again, clean, under a later date after this revisio
 - **Plan.** New implementation tasks: question tool mapping and wiring (D-051); SessionStart JSON
   for Copilot (D-053); install notes (D-051 … D-053); checklist, record template and run sheet
   (D-052, D-053); new release candidate with a Copilot CLI check of the tools list. C002-T-050
-  depends on them and runs again under a later date; C002-T-055 and C002-T-075 follow.
+  depends on them and runs again as a later run; C002-T-055 and C002-T-075 follow.

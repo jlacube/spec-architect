@@ -418,3 +418,8 @@ Questions on the S-07 record (C002-T-001).
 - **Blocking:** no · **Material:** no
 - **Options:** 1. Retake all 24 rows: ties the evidence to the shipped conductor text; about 2.4–3.4 USD of the Copilot pool, within the 15.00 USD stop of C002-T-076 (Recommended) · 2. Retake only ROUTE-auditor, INJ-19, INJ-21 and TS-359 (about 0.5 USD)
 - **Answer:** conductor (2026-11-11), under P-01's waiver of 2026-10-19 for paid batches within approved limits (Copilot CLI pool 30 USD, 10.33 used): option 1, retake all 24 rows.
+
+### Instruction 2026-11-11 — C002-T-050's clean rerun on the same day
+- **Context:** C002-T-077 … C002-T-081 were done on 2026-11-11, and C002-T-050 required its record to be dated after 2026-11-11. P-01 asked why; the conductor answered that the date stood in for "a new run, after the fixes, distinct from the findings pass", that the release check does not read the date, and that the findings pass made no record; it proposed a plan-only revision replacing "later date" by "later run".
+- **Answer:** P-01 (2026-11-11): "do the revision and start now"
+- **Extracted instructions:** C002-T-050 (intent, preconditions, done item), the test plan (C002-TC-901), the hand-off and the working digest say "later run, started after C002-T-081 was done"; the record states that it is the binding run after the findings pass; no spec change (the "later date" of C002-IF-009 §5 concerns a record with a binding failed run, and the findings pass made no record).

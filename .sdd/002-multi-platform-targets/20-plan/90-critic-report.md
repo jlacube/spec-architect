@@ -1,4 +1,4 @@
-fixed: REQ-609/AC-609.1 out of T-081; markers replaced by the answer reference |fixed: T-050 stale lines rewritten, override clause dropped; delegation failure filed against REQ-614/REQ-107 |fixed: chat.autoReply item in REQ-304, IF-005 §5 step 9, TS-306; README limitation in REQ-305, TS-307, TC-307 |fixed: TS-306 wording in REQ-304; IF-005/IF-008 say the hook still denies its own faults |fixed: TS-317 outline with a P-01 free-text row (VSC-20 free-text half in P-01 batch); T-077 package-test assertion |fixed: the nine-specialist restriction is stated as instruction-only on VS Code, a followed planted delegation is not stopped; what still holds added to REQ-304 (REQ-302/306/327, IF-001 §2, IF-005 §3/§5, IF-008 rule 3, architecture, TS-306) |fixed: VSC-27 default-agent probe; the agent_type recheck reads that subagent call (REQ-614, REQ-616, REQ-327 fixed: the probe expects GUARD-HOOK-002/001 where agent_type is present; absent (1.145.2) → record, git revert, passes as the D-052 known limitation |item, TS-358/617/619, IF-009 §4, T-080, T-050, RISK-041) |---
+---
 artifact: critic-report
 change: CHG-002
 phase: 20-plan
@@ -1370,3 +1370,55 @@ Scope: the working-tree changes under `.sdd/002-multi-platform-targets/` (spec a
 Why no further findings (critic): every current-fact statement of `ask_user` as the VS Code tool, `agent_type` on VS Code PreToolUse, "after the first message" and bare `/init` is revised or qualified, except T-050 (CR-160); REQ-313/TS-320/708/IF-008 §3/T-078, REQ-311/IF-001 §6.1, REQ-312/TS-319 and REQ-317/TS-329 agree; "copilot-hooks not offered for VS Code 1.145.2" is consistent; the dependency chain has no cycle and the critical path (58) checks; spend ≤ 14.29 USD of the 15.00 USD stop and the 30 USD pool; every digest item maps to an artifact except the `chat.autoReply` install-notes item (CR-159).
 
 Conductor's decision on CR-154/155: a default-agent probe in VSC-27 (`runSubagent` starts `general-purpose` with the planted edit): with `agent_type` present on that subagent's PreToolUse input, GUARD-HOOK-002/001 and `src/app.ts` unchanged; with it absent (1.145.2), the record notes `agent_type: absent`, the edit is reverted with git and the step passes as the D-052 known limitation; the conductor-refusal check stays.
+
+## Revision T-050 run date (2026-11-11)
+
+Scope: working-tree diff of `20-plan/` (T-050, `60-test-plan.md`, `handoff.md`, `revision-D051-D053-digest.md`, last `questions-log.md` entry) against C002-IF-009 §4/§5 and C002-REQ-618, `scripts/release/check.ts` and `evidence.ts`, the T-050 run sheet and the checklist. Reviewed IDs: C002-T-050, C002-TC-901, C002-TC-618, C002-M-07, C002-T-080, C002-T-081, C002-REQ-618, C002-IF-009. `sdd lint 002 --phase 20-plan`: 0 findings. Read-only review; the conductor appended this section from the critic's reply.
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 1 | 2 |
+
+### CR-162 — "Later date" kept in the M-07 exit criterion, the strategy row and the TC-901 row
+- **Severity:** blocker
+- **Refs:** C002-M-07, C002-TC-901, C002-T-050
+- **Evidence:** "the checklist record is the clean rerun of C002-T-050, dated after 2026-11-11" — `20-plan/10-strategy.md:130`; "**C002-T-050 runs again**, clean, under a later date, after C002-T-081" — `20-plan/10-strategy.md:110`; "the binding run is the clean rerun after C002-T-081, dated later, on its candidate packages" — `20-plan/60-test-plan.md:1300`; against "it may run on 2026-11-11, since the findings pass made no record" — `20-plan/50-tasks/T-050-vscode-checklist-run.md:93-94`
+- **Why it matters:** a record dated 2026-11-11 met T-050's done item but failed C002-M-07's exit criterion and the C002-TC-901 case.
+- **Suggested fix:** in all three places, "a later run, started after C002-T-081 was done (the same date allowed: plan revision of 2026-11-11)".
+- **Status:** resolved: the three places reworded as suggested
+
+### CR-163 — The run sheet still requires a later date and never asks for the binding-run statement
+- **Severity:** major
+- **Refs:** C002-T-050, C002-T-080, C002-TC-618
+- **Evidence:** "The clean run of T-050 starts from step 0 under a later" / "date, on the release candidate of C002-T-081" — `docs/runsheets/T-050-vscode-checklist.md:14-15`; "states that it is the binding run after the findings pass" — `20-plan/50-tasks/T-050-vscode-checklist-run.md:95-96`
+- **Why it matters:** the conductor executes this sheet and P-01 signs off against it; it ruled out a 2026-11-11 run and no step asked for the statement T-050's done item requires.
+- **Suggested fix:** reword the banner; step 11 writes the statement in the record's Notes; the sheet becomes a `modify` target of C002-T-050.
+- **Status:** resolved: banner reworded, step 11 statement added, run sheet listed as a `modify` target of C002-T-050
+
+### CR-164 — "Fresh run folder" is undefined; the sheet's fixed folder already holds a package
+- **Severity:** minor
+- **Refs:** C002-T-050
+- **Evidence:** "in a fresh run folder" — `20-plan/50-tasks/T-050-vscode-checklist-run.md:93`; `-DestinationPath C:\Sandbox\runs\t050\architect-copilot-0.1.0` — `docs/runsheets/T-050-vscode-checklist.md:139`, `:153`; `C:\Sandbox\runs\t050\architect-copilot-0.1.0\` already holds an unpacked package.
+- **Why it matters:** an existing folder can mix two candidates while the record names C002-T-081's.
+- **Suggested fix:** the sheet names one run folder used in steps 3–5; T-050 points to it.
+- **Status:** resolved: the sheet and T-050 name `C:\Sandbox\runs\t050c` (created empty for this run)
+
+### CR-165 — "Run started after C002-T-081 was done" cannot be decided from the record
+- **Severity:** minor
+- **Refs:** C002-T-050, C002-T-081, C002-TC-618
+- **Evidence:** "The record's run started after C002-T-081 was done" — `20-plan/50-tasks/T-050-vscode-checklist-run.md:198`; `date: <YYYY-MM-DD>` — `docs/checklists/records/TEMPLATE.md:3`
+- **Why it matters:** both events fall on 2026-11-11 and the record holds a date only.
+- **Suggested fix:** the Notes statement gives the run's start time and C002-T-081's done commit (579c39b); the done item compares the two.
+- **Status:** resolved: T-050's done item and run-sheet step 11 ask for the start time and 579c39b
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | n/a: `implements` and `satisfies_ac` of C002-T-050 unchanged |
+| plan | P2 Targets, verification, done-checks | CR-163, CR-164, CR-165 |
+| plan | P3 Acyclic graph, coherent milestones | CR-162 (M-07 exit); `depends_on` unchanged |
+| plan | P4 Every scenario maps to a planned test | CR-162 (C002-TC-901 row); mapping unchanged |
+| plan | P5 Risks cover the hotspots | n/a: no code or hotspot touched |
+| plan | P6 Rollout and rollback | n/a: unchanged |
+| plan | P7 ADRs | n/a: wording of a manual run, no technical decision |
+
+**Checked without finding.** The "later date" of `10-spec/50-interfaces/verification-records.md:500-502` covers a record refused for a binding earlier `failed` run; the findings pass made no record, and `docs/checklists/records/` holds only `TEMPLATE.md`. `findChecklistRecord` (`scripts/release/evidence.ts:129-136`) takes the last `vscode-<YYYY-MM-DD>-<version>.md` in sort order and nothing under `scripts/release/` reads the frontmatter `date`, so no spec or C002-REQ-618 change is needed. The rule for a failure of the binding run itself stays correct in T-050, the run sheet and the checklist; the checklist and the template need no change.

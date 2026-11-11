@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:2622fc600ad65c80405d056fbaccc37e19b9b99cbb5e126f12bc0e31138bc9db", approved_at: 2026-11-11, approved_by: jerome.lacube }
-  20-plan: { status: approved, approved_hash: "sha256:d94b736961c8a21e84705d737453e436c33fab696de3b28b1e76b1eb43eb8fc0", approved_at: 2026-11-11, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:c2532e5974bf13576ad818d20230becb17087f29bde432a30a925b147672ce44", approved_at: 2026-11-11, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -535,3 +535,5 @@ waivers:
 | 2026-11-11 | G3 (plan) | **Revise** | "Plan revision for D-051, D-052, D-053: implementation tasks for the question tool, SessionStart JSON output and install notes; checklist and run sheet revision; new release candidate with Copilot CLI evidence; C002-T-050 rerun under a later date" | none | unavailable |
 | 2026-11-11 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601, C002-DOD-019 | unavailable |
 | 2026-11-11 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
+| 2026-11-11 | G3 (plan) | **Revise** | "Plan revision (P-01 2026-11-11: 'do the revision and start now'): C002-T-050's clean rerun may run on 2026-11-11, after C002-T-081 is done; 'later date' replaced by 'later run' in the plan. No spec change: the findings pass produced no record." | none | unavailable |
+| 2026-11-11 | G3 (plan) | **Approved** | "Plan revision for the T-050 run date (P-01 2026-11-11: 'do the revision and start now'): C002-T-050 runs as a later run after C002-T-081 (same date allowed), in C:\Sandbox\runs\t050c, with the binding-run statement in the record's Notes; critic CR-162…165 resolved. Standing approval (2026-10-24, renewed 2026-10-28)." | none | unavailable |
