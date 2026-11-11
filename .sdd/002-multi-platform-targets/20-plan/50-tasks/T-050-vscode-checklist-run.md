@@ -6,7 +6,7 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081]
+depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
 verified_by: [C002-TS-358, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
@@ -20,13 +20,25 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
+**Stopped run and rerun (defect D-054).** The binding run of 2026-11-11 (started 22:38 in
+`C:\Sandbox\runs\t050c`, on C002-T-081's candidate 54b83ff) stopped at VSC-14: on VS Code 1.145.2 the
+`tools` entry `askQuestions` grants no question tool, while `vscode/askQuestions` does (scratch test,
+tool call `vscode_askQuestions`). Steps passed before the stop: VSC-01 (conductor half), 02, 03, 04,
+07, 08, 10, 11 (both halves) and 13. No record was written (run sheet rule 10), and none of these
+results carries over. By P-01's decision ("Fix in 0.1.0 (Recommended)", Q-d054-fix-01,
+`../questions-log.md` round 2026-11-11 — defect D-054), C002-T-082 adds `vscode/askQuestions` to the
+Copilot mapping, records a new 0.1.0 candidate and retakes 4 Copilot CLI rows. This task then runs
+**again, in full from step 0, as a later run**, on the 0.1.0 packages of **C002-T-082's candidate**,
+in the fresh run folder `C:\Sandbox\runs\t050d`. Wherever the paragraphs below name C002-T-081's
+candidate or `t050c`, C002-T-082's candidate and `t050d` apply.
+
 **Findings pass and clean rerun (defects D-051 … D-053).** The conductor's run of 2026-11-11 failed
 at VSC-11; by P-01's instruction ("go ahead with the findings pass", `../questions-log.md` round
 2026-11-11) the remaining conductor steps ran as a non-binding findings pass, whose results are no
 record (notes outside the repository; facts in `../revision-D051-D053-digest.md`). Its findings are
 defects D-051 … D-053, fixed by C002-T-077 … C002-T-080 and packed by C002-T-081. This task now runs
-**again, in full and clean, as a later run**, on the 0.1.0 packages of C002-T-081's candidate,
-with the revised checklist, record template and run sheet of C002-T-080. The executor split and the
+**again, in full and clean, as a later run**, on the 0.1.0 packages of C002-T-081's candidate
+(C002-T-082's since revision D-054), with the revised checklist, record template and run sheet of C002-T-080. The executor split and the
 session allowance below are unchanged; **P-01's end batch gains VSC-20's free-text half**
 (C002-TS-317, critic CR-157): during or after the VSC-30 rework P-01 asks the conductor for one
 interview round (for example "ask me one question about the export scope"), since the phase is in
@@ -40,13 +52,15 @@ denied with GUARD-HOOK-002 (GUARD-HOOK-001 for an unclassed edit tool) and `src/
 where it is absent (VS Code 1.145.2) the record gives `agent_type: absent`, the edit is reverted with
 git and the step passes as the known limitation of D-052 (P-01's decision, C002-RISK-041); VSC-28
 repeats the refusal check with the plugin part disabled and checks A-4 in the hooks log; the question tool is
-`askQuestions` (VSC-18 … 20, VSC-29 with `chat.autoReply` true, then false); prompts run as
+`askQuestions`, granted by the `tools` entry `vscode/askQuestions` (defect D-054) (VSC-18 … 20, VSC-29 with `chat.autoReply` true, then false); prompts run as
 `/architect:<name>`, through `code chat -r -m sdd-conductor -a <pkg>\prompts\<name>.prompt.md`; each new
 window gets Claude Sonnet 5.5 in the model picker, and `models_used` comes from the reply footer;
 results are read from the chat session files and the "GitHub Copilot Chat Hooks" log; VSC-22 and
-VSC-54 use the default-agent fallback when the conductor declines. VSC-18 is the evidence that
-`askQuestions` alone works in VS Code without the legacy `vscode/askQuestions` (an assumption of the
-revised C002-IF-001 §6.1); a refuted assumption is a spec defect.
+VSC-54 use the default-agent fallback when the conductor declines. VSC-18 records, with the `tools`
+lists of the conductor and of the prompt file naming `ask_user`, `askQuestions` and
+`vscode/askQuestions`, that each dialog comes from a `vscode_askQuestions` call (C002-TS-216 as
+revised for D-054). History: the D-051 revision expected `askQuestions` alone to grant the tool
+(VSC-18 of that revision); the stopped run refuted it at VSC-14 (defect D-054).
 
 **The conductor executes this task for P-01** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"; C002-IF-009 §4 "Executor"): it drives VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings (backed up and restored with the rest of the profile's settings), so that each chat runs on the Local session type. **P-01 runs** the steps that need typing, as one batch after VSC-29: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor); the conductor then runs VSC-31 and VSC-54 and completes the record (critics CR-145, CR-146). Before D-050, P-01 executed this task; "P-01 step" below means the executor of D-050. The checklist is run on the Copilot release candidate in VS Code
 1.145.2 (stable, commit c4453f8ea4) with GitHub Copilot Chat 0.73.0, built in (Local session type;
@@ -84,10 +98,20 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record |
-| modify | `docs/runsheets/T-050-vscode-checklist.md` | banner and run folder for the later run, the binding-run statement in step 11 (critic CR-163, CR-164; C002-T-080, its owner, is done) |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
 
 ## Preconditions
 
+- **Revision D-054** (supersedes the candidate and run folder of the next item): the G2 and G3
+  approvals of that revision and **C002-T-082 done**: the 0.1.0 packages are those of its release
+  candidate (`plugins/architect/targets/copilot.json` mapping AskUserQuestion to `ask_user`,
+  `askQuestions` and `vscode/askQuestions`), its dry run refuses on ERR-REL-003 only, and its 4-row
+  Copilot CLI retake (label `t082`) passed with no injection entry acted upon. The run starts after
+  C002-T-082 is done, from step 0, in the fresh run folder `C:\Sandbox\runs\t050d` named by the run
+  sheet (no earlier package or toy repository in it). The stopped run of 2026-11-11 made no record
+  (run sheet rule 10), so no earlier `failed` run binds this one; the record is
+  `docs/checklists/records/vscode-<date>-0.1.0.md`, dated by the day of this run, and states that it
+  is the binding run after the findings pass and after the stopped run.
 - **Revision D-051 … D-053** (supersedes the package commits named below): the G2 and G3 approvals of
   that revision, C002-T-077 … C002-T-080 done, and **C002-T-081 done**: the 0.1.0 packages are those of
   its release candidate, its dry run refuses on ERR-REL-003 only, and its Copilot CLI retake holds no
@@ -196,5 +220,5 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
-- [ ] The record's run started after C002-T-081 was done, the record names C002-T-081's candidate packages and states in its Notes that it is the binding run after the findings pass, with the run's start time and C002-T-081's done commit (579c39b), which this item compares; the findings pass of 2026-11-11 appears in no record
+- [ ] The record's run started after C002-T-082 was done, in `C:\Sandbox\runs\t050d`; the record names C002-T-082's candidate packages and states in its Notes that it is the binding run after the findings pass of 2026-11-11 and after the stopped run of 2026-11-11 (VSC-14, D-054), with the run's start time and C002-T-082's done commit (<commit>, filled into run-sheet step 11 before the run), which this item compares; neither the findings pass nor the stopped run appears in any record (before revision D-054 this item named C002-T-081's done commit 579c39b)
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

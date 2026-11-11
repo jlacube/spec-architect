@@ -407,12 +407,16 @@ label nor free text, is no answer.
 #### C002-AC-312.1 — No question tool: the conductor asks as plain text, with no install detour
 ```gherkin
 @manual-vscode
-Scenario: C002-TS-319 — question tool unavailable
-  Given "askQuestions", "vscode/askQuestions" and "ask_user" are removed from the "tools" list of ".github/agents/sdd-conductor.agent.md" in the toy change repository
-  When P-01 runs the new-change prompt with the title "Toy change"
+Scenario Outline: C002-TS-319 — question tool unavailable
+  Given "askQuestions", "vscode/askQuestions" and "ask_user" are removed from <tools lists>
+  When P-01 <request>
   Then the conductor's reply asks its interview round as plain text, with the content of C001-IF-05 `questions.md` §3, and the conductor ends its turn
   And the reply does not name "INSTALL.md"
   And it does not tell P-01 to enable, install or switch on "askQuestions", "ask_user" or another question tool
+  Examples:
+    | tools lists                                                                                                                                                                  | request                                                                                              |
+    | the "tools" list of ".github/agents/sdd-conductor.agent.md" in the toy change repository and the "tools" list of "prompts/new.prompt.md" in the registered Copilot target package | runs the new-change prompt with the title "Toy change"                                               |
+    | the "tools" list of ".github/agents/sdd-conductor.agent.md" in the toy change repository                                                                                      | types the plain request "Start a new change titled Toy change" in the "sdd-conductor" chat, without a prompt file |
 ```
 
 Without a question tool the conductor falls back to the text form of the interview and gate
@@ -424,7 +428,15 @@ or a call to it is refused, and neither names `INSTALL.md` (wording: C002-IF-001
 test of C002-TC-319, `tests/integration/cap02/question-variants.test.ts`). This scenario is the
 checklist step that shows the behaviour in VS Code (`VSC-15`). The T-050 findings pass of
 2026-11-11 showed it on every round, since the package then listed only `ask_user`, which the VS
-Code Local session type does not offer (defect D-051).
+Code Local session type does not offer (defect D-051). The C002-T-050 binding run of 2026-11-11
+showed it again with `ask_user` and `askQuestions` listed (`VSC-14`), so the package lists
+`ask_user`, `askQuestions` and `vscode/askQuestions`, and this scenario removes all three (defect
+D-054) from every `tools` list the step uses: the conductor's agent file, and the prompt file when
+the step runs one, since a prompt file's `tools` list takes precedence over the agent's (C002-IF-005
+§3; first row; critic CR-166). The prompt file is the plugin part of the package
+(`prompts/new.prompt.md` in the registered Copilot target package), not a file of the toy change
+repository. A plain request to the conductor without a prompt file uses the agent file's list only
+(second row).
 
 ## C002-REQ-313
 
@@ -579,7 +591,7 @@ Scenario Outline: C002-TS-332 — tool missing from the tool classes file
     | mode                         | tool             | result                                                                                          |
     | the Copilot hooks fallback   | tool_search_tool | the error TGT-CLASS-001 naming "tool-classes.json", "tool_search_tool" and "sdd-critic.agent.md" |
     | the Copilot hooks fallback   | Glob             | the error TGT-CLASS-001 naming "tool-classes.json", "Glob" and each specialist that is offered it |
-    | the Copilot hooks fallback   | ask_user         | no TGT-CLASS-001 finding, because only the conductor is offered "ask_user" and "askQuestions"   |
+    | the Copilot hooks fallback   | ask_user         | no TGT-CLASS-001 finding, because only the conductor is offered "ask_user", "askQuestions" and "vscode/askQuestions" |
     | sdd MCP server enforcement   | tool_search_tool | the error TGT-CLASS-001 naming "tool-classes.json", "tool_search_tool" and "sdd-critic.agent.md" |
     | sdd MCP server enforcement   | Write            | the error TGT-CLASS-001 naming "tool-classes.json" and the generic tool "Write"                 |
     | sdd MCP server enforcement   | Bash             | the error TGT-CLASS-001 naming "tool-classes.json" and the generic tool "Bash"                  |
@@ -1188,7 +1200,7 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file), TS-367 (fault messages: no path in the tool input, `--agents` name without `sdd-`) | TS-314 (empty input, empty `cwd`) | TS-314, TS-367 | TS-367 (an `--agents` name without `sdd-` is never passed unchecked to a guard core) | n/a | TS-314 (unclassed tool, input not an object), TS-334 (letter case), TS-367 (`architect:` prefix on a non-`sdd-` name) |
 | C002-REQ-310 | TS-315 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-311 | TS-316, TS-317 | TS-318 (gate), TS-317 (P-01's own free text with no selected label: an answer, recorded verbatim) | TS-316 (empty list), TS-317 (no selected label, the host's auto-reply text as free text, `skipped` false) | TS-316 | n/a | n/a | TS-317, TS-318 (`chat.autoReply` answering for P-01: no answer, no gate decision) |
-| C002-REQ-312 | TS-319 | n/a | n/a | TS-319 (no question tool, neither `askQuestions` nor `ask_user`: the text form, no instruction to enable a tool) | n/a | n/a | TS-319 (no `INSTALL.md` detour in place of the question) |
+| C002-REQ-312 | TS-319 | n/a | n/a | TS-319 (no question tool, all three entries `ask_user`, `askQuestions` and `vscode/askQuestions` removed from every `tools` list the step uses, the prompt file's included: the text form, no instruction to enable a tool) | n/a | n/a | TS-319 (no `INSTALL.md` detour in place of the question) |
 | C002-REQ-313 | TS-320, TS-321 | TS-708 (JSON `hookSpecificOutput` under `--host copilot`, plain text on Claude Code) | TS-320 (10 lines) | n/a | n/a | n/a | n/a |
 | C002-REQ-314 | TS-322 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-315 | TS-323 | TS-323 (non-author agent; `architect:` form of Copilot CLI) | n/a | TS-324 | n/a | n/a | n/a |

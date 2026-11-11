@@ -224,9 +224,11 @@ The agent-file references `sdd-files/*` and `sdd-shell/*` grant the servers' too
   the form `mcp_<command>[N]_<tool>`, the reference form still resolves, and the tool list that a
   specialist reported held no `tool_search_tool`; whether the tools are deferred there is not
   recorded (C002-IF-001 §2, §6.1; defect D-053).
-- Conductor: `tools` adds `agent`, the question tool under both its names, `askQuestions` (VS Code)
-  and `ask_user` (Copilot CLI) (C002-IF-001 §6.1 Question tool on Copilot; defect D-051), and the
-  todo tool; every prompt file's `tools` list carries the same names; `agents` lists the nine
+- Conductor: `tools` adds `agent`, the question tool under three names, `ask_user` (Copilot CLI),
+  `askQuestions` (the VS Code reference name, which grants nothing on VS Code 1.145.2) and
+  `vscode/askQuestions` (the entry that grants VS Code's tool) (C002-IF-001 §6.1 Question tool on
+  Copilot; defect D-051, and defect D-054 from the C002-T-050 binding run of 2026-11-11, VSC-14), and
+  the todo tool; every prompt file's `tools` list carries the same names; `agents` lists the nine
   specialists; no `user-invocable: false`. P-03 selects it as the session agent in the Local
   session type (S-08 §3; §5).
 - The `agents` list does not bound the agents the conductor can start. In the 0.0.3 run the local
@@ -349,9 +351,11 @@ and shell or terminal tools instead.
 
 "Write only": on OpenCode the grant is `sdd-files_write_file` alone; on Copilot the package grants
 `sdd-files/*` (per-tool grants were shown on Copilot CLI only, S-08 §2.1), so the agent also
-receives `replace_text`, which writes under the same boundary. Question tool on Copilot: both
-names, `askQuestions` (VS Code Local session type) and `ask_user` (Copilot CLI) (C002-IF-001 §6.1;
-defect D-051, which refutes S-08 fact F-5 on VS Code 1.145.2). Under the Copilot hooks fallback the
+receives `replace_text`, which writes under the same boundary. Question tool on Copilot: three
+names, `ask_user` (Copilot CLI), `askQuestions` and `vscode/askQuestions` (VS Code Local session
+type, where only `vscode/askQuestions` grants the tool) (C002-IF-001 §6.1; defect D-051, which
+refutes S-08 fact F-5 on VS Code 1.145.2, and defect D-054, C002-T-050 binding run of 2026-11-11,
+VSC-14). Under the Copilot hooks fallback the
 conductor's row keeps "files" and "shell" (C002-REQ-321).
 
 ## §5 Install notes

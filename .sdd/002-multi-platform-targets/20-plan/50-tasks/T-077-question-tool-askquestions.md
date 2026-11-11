@@ -78,8 +78,10 @@ gate wiring. One Copilot CLI session shows that Copilot CLI accepts the extra na
    the host log shows no error for the name. Record the host log lines that name `askQuestions`, or
    "none". A refusal stops the task and is a defect against C002-IF-001 §6.1 (C002-RISK-042). This
    session is the evidence of the architect's Copilot CLI assumption on `askQuestions`; C002-T-081
-   repeats it at the candidate. The VS Code half of that assumption (`askQuestions` alone works,
-   without the legacy `vscode/askQuestions`) is VSC-18 of the C002-T-050 rerun.
+   repeats it at the candidate. History note (revision D-054): the VS Code half of that assumption
+   (`askQuestions` alone works, without the legacy `vscode/askQuestions`), then left to VSC-18 of the
+   C002-T-050 rerun, was refuted at VSC-14 of the binding run of 2026-11-11; C002-T-082 adds
+   `vscode/askQuestions` to the mapping and repeats this Copilot CLI check for that name.
 
 ## Verification
 

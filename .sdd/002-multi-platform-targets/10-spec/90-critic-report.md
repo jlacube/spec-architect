@@ -1648,3 +1648,45 @@ No spec text changed: the waiver is recorded at the G2 re-approval (C002-NFR-601
 Scope: `git diff 405239b 5c359e7` (CHG-002 files and `docs/runsheets/`), against D-050 and the questions-log round 2026-11-10 (D-050). Read-only review. Appended by the conductor from the critic's reply (compact form).
 
 One review covered spec and plan; its findings are listed in `../20-plan/90-critic-report.md`, section "Revision D-050". On the spec text: CR-153 (C002-REQ-615 trigger narrower than C002-TS-618) and the IF-009 §4 "Executor" wording of CR-145, CR-146, CR-147 and CR-152. All fixed.
+
+## Revision D-054 (2026-11-11)
+
+Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (working tree), against defect D-054 and the G2 Revise row of 2026-11-11 in `change.md`: `10-context/scope.md`; CAP-01, CAP-02, CAP-03 and CAP-06 `acceptance.md`; CAP-02 and CAP-03 `requirements.md`; CAP-03 `stories.md`; `40-domain/glossary-delta.md`; `50-interfaces/mapping-tables.md`, `target-packages.md`, `verification-records.md`; `60-architecture/architecture.md`; `70-dod.md`. Reviewed IDs: C002-REQ-211, C002-AC-211.1, C002-TS-215, C002-TS-216, C002-REQ-312, C002-AC-312.1, C002-TS-319, C002-REQ-108, C002-TS-114, C002-REQ-318, C002-TS-332, C002-REQ-614, C002-TS-617, C002-US-204, C002-US-304, C002-DOD-004, C002-COMP-004, C002-IF-001 §6.1, C002-IF-005 §3/§4, C002-IF-009 §4. `sdd lint 002 --phase 10-spec`: the nine earlier waived LINT-DELTA-001 errors only. `sdd trace 002`: TR-01 … TR-08 at 100 %. Read-only review; the conductor appended this section from the critic's reply.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 2 |
+
+### CR-166 — C002-TS-319 removes the question-tool names from the agent file only, but runs a prompt file that still grants `vscode/askQuestions`
+- **Severity:** major
+- **Refs:** C002-TS-319, C002-AC-312.1, C002-REQ-312, C002-IF-009 §4 (VSC-15), C002-IF-005 §3, C002-DOD-004
+- **Evidence:** the Given removed the three names from `.github/agents/sdd-conductor.agent.md` only while the When ran the new-change prompt — `CAP-03-copilot-target/acceptance.md:411-412`; against "VSC-15 removes … from every `tools` list the session uses (… the prompt file …, whose list takes precedence)" — `verification-records.md:349`
+- **Why it matters:** from D-054 on, the prompt file lists `vscode/askQuestions` and its list takes precedence, so the scenario as written fails against a correct package and disagrees with VSC-15.
+- **Suggested fix:** remove the names from the prompt file too, or use a plain request; reword the coverage cell and the note.
+- **Status:** resolved: C002-TS-319 is a Scenario Outline (prompt file: agent file and the package's `prompts/new.prompt.md`; plain request: agent file only), note `:431-439` and coverage cell `:1203` reworded (test-designer)
+
+### CR-167 — The D-054 Copilot CLI assumption names a confirming case that cannot show "without dropping the list"
+- **Severity:** major
+- **Refs:** C002-IF-001 §6.1, C002-REQ-211, C002-REQ-306, C002-IF-010 §5.1
+- **Evidence:** "[ASSUMPTION: D-054 — Copilot CLI also accepts `vscode/askQuestions` … without refusing the agent or dropping the list; the ROUTE-auditor-copilot-cli case … confirms it]" — `mapping-tables.md:306`; the earlier confirmation rested on a passing row and no host log line — `mapping-tables.md:304-305`
+- **Why it matters:** a routing row passes whether the conductor runs with its list or with every host tool, so "list kept" would read as confirmed without evidence; the Copilot CLI injection rows would then come from a tool set the package does not grant.
+- **Suggested fix:** name an observable that decides "list kept", or narrow to "without refusing the agent" and record the dropped-list case as an open item with its own check.
+- **Status:** resolved: both statements narrowed to "without refusing the agent" (`mapping-tables.md:303-306`); the t081 transcripts hold no session tool list and show the conductor calling the unlisted host tool `skill` before and after D-051 (`:308-313`); new `[ASSUMPTION: D-054]` "Copilot CLI keeps the tools list" with its own check, one Copilot CLI conductor session on the new candidate naming every tool it can call, passing when neither named tools nor calls include `create`, `edit` or the PowerShell tools (`:313`; `architecture.md:173-176`); the check is a step of C002-T-082 (architect, planner)
+
+### CR-168 — The VSC-18 entry of C002-IF-009 §4 does not carry the expectation that the scenario notes assign to it
+- **Severity:** minor
+- **Refs:** C002-IF-009 §4, C002-TS-216, C002-TS-617, C002-AC-614.1
+- **Evidence:** "VSC-18 records the input shape of an `askQuestions` call" — `verification-records.md:349`; against the three-name expectation in `CAP-06-cross-target-verification/acceptance.md:762-763` and `CAP-02-opencode-target/acceptance.md:243-244`
+- **Why it matters:** the checklist is written from IF-009 §4, so the step entry and its scenarios disagreed.
+- **Suggested fix:** replace the VSC-18 clause with the three-name check, the `vscode_askQuestions` expectation and the input shape.
+- **Status:** resolved: clause replaced as suggested (`verification-records.md:349`, architect)
+
+### CR-169 — The only entry that grants the VS Code tool is still labelled "legacy", and the table calls an entry with no effect "granted"
+- **Severity:** minor
+- **Refs:** glossary "Question tool", C002-IF-001 §6.1, C002-REQ-211, C002-US-304
+- **Evidence:** "legacy full names `vscode_askQuestions` and `vscode/askQuestions`" — `mapping-tables.md:279`, `glossary-delta.md:52`, `CAP-02-opencode-target/requirements.md:113`, `CAP-03-copilot-target/stories.md:53`; "(all three granted …)" — `mapping-tables.md:213`
+- **Why it matters:** a maintainer could drop the "legacy" entry, which would bring D-054 back.
+- **Suggested fix:** give the label's source, say it is the only entry that grants the tool on 1.145.2, rechecked by every checklist run; "all three listed".
+- **Status:** resolved: `mapping-tables.md:213` "all three listed"; source (VS Code 1.145.2 tool metadata read in the T-050 findings pass) and the only-granting-entry clause in `mapping-tables.md:279`, `glossary-delta.md:52`, `CAP-02-opencode-target/requirements.md:113`, `CAP-03-copilot-target/stories.md:53` (architect)
+
+**Checked without finding.** Every statement of what the Copilot `tools` lists carry names the three entries (mapping tables, IF-005 §3/§4, architecture D-054 note, COMP-004, F7, decision row, glossary, C002-REQ-211/312 rationales, C002-US-304, C002-TS-216, C002-TS-617, C002-DOD-004, TS-114 and TS-332 rows, VSC-15 row); text naming two tools describes the body text, which the decision row keeps. Every cited ID resolves. TGT-TOOLS-001 derives grants from the table; PLG-VAR-001 catches `vscode/askQuestions` through `askQuestions`. The binding run wrote no checklist record, so the later-date rule of `verification-records.md:500-502` does not apply; the restart is the plan's.

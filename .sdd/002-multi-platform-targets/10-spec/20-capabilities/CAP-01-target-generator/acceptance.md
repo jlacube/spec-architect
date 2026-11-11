@@ -251,7 +251,7 @@ Scenario Outline: C002-TS-114 — least-privilege grants per agent
     | sdd-researcher  | Bash                                 | OpenCode | "bash" tool                                |
     | sdd-researcher  | Bash                                 | Copilot  | "execute" tool and no "sdd-shell/*"        |
     | sdd-critic      | AskUserQuestion                      | OpenCode | "question" tool                            |
-    | sdd-critic      | AskUserQuestion                      | Copilot  | "ask_user" or "askQuestions" tool          |
+    | sdd-critic      | AskUserQuestion                      | Copilot  | "ask_user", "askQuestions" or "vscode/askQuestions" tool |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | OpenCode | Serena, Context7 or DeepWiki tool          |
     | sdd-auditor     | mcp__plugin_architect_serena__*      | Copilot  | Serena, Context7 or DeepWiki tool          |
 ```

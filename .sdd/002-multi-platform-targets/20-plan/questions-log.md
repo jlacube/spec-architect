@@ -423,3 +423,19 @@ Questions on the S-07 record (C002-T-001).
 - **Context:** C002-T-077 … C002-T-081 were done on 2026-11-11, and C002-T-050 required its record to be dated after 2026-11-11. P-01 asked why; the conductor answered that the date stood in for "a new run, after the fixes, distinct from the findings pass", that the release check does not read the date, and that the findings pass made no record; it proposed a plan-only revision replacing "later date" by "later run".
 - **Answer:** P-01 (2026-11-11): "do the revision and start now"
 - **Extracted instructions:** C002-T-050 (intent, preconditions, done item), the test plan (C002-TC-901), the hand-off and the working digest say "later run, started after C002-T-081 was done"; the record states that it is the binding run after the findings pass; no spec change (the "later date" of C002-IF-009 §5 concerns a record with a binding failed run, and the findings pass made no record).
+
+## Round 2026-11-11 — defect D-054
+
+### Q-d054-fix-01 — C002-T-050's binding run stopped at VSC-14: fix the question-tool mapping in 0.1.0, or stop
+- **Blocking:** yes · **Material:** yes
+- **Context:** the binding run of C002-T-050 (2026-11-11, started 22:38 in `C:\Sandbox\runs\t050c`, candidate 54b83ff) stopped at VSC-14: on VS Code 1.145.2 the `tools` entry `askQuestions` grants no question tool, and the constitution round of `/architect:init` fell back to plain text; a scratch test with `vscode/askQuestions` showed the dialog (tool call `vscode_askQuestions`). Steps passed before the stop: VSC-01 (conductor half), 02, 03, 04, 07, 08, 10, 11 (both halves), 13. No record was written (run sheet rule 10).
+- **Options (as presented):** 1. Fix in 0.1.0 (Recommended) · 2. Stop for tonight
+- **Answer:** P-01 (2026-11-11): "Fix in 0.1.0 (Recommended)"
+- **Extracted instructions:** defect D-054 and a spec and plan revision; the Copilot mapping adds `vscode/askQuestions` (C002-IF-001 §6.1); a new 0.1.0 release candidate (C002-T-082); C002-T-050 runs again from step 0 on it, in a fresh run folder.
+
+### Q-d054-retake-01 — which Copilot CLI rows to retake at the D-054 candidate
+- **Blocking:** yes · **Material:** no
+- **Context:** only the `tools` lists of the conductor and of the prompt files change; C002-T-076 step 1 leaves the retake after a package-source change to P-01. The 4 key rows cost about 0.5 USD, within C002-T-076's 15.00 USD stop (pool 12.62 USD before).
+- **Options (as presented):** 1. 4 key rows (Recommended): `ROUTE-auditor-copilot-cli` (Copilot CLI accepts `vscode/askQuestions` in the tools list), `INJ-19`, `INJ-21`, `TS-359` · 2. All 24 rows
+- **Answer:** P-01 (2026-11-11): "4 key rows (Recommended)"
+- **Extracted instructions:** C002-T-082 step 6 runs `ROUTE-auditor-copilot-cli` first and alone, then `INJ-19`, `INJ-21` and `TS-359` (label `t082`); the other 20 rows keep their C002-T-081 evidence.

@@ -122,7 +122,9 @@ input does (defect D-052); and the wording that workspace MCP servers start afte
 since each starts when one of its tools is first used (defect D-053). It confirmed the subagent
 tool-list confinement (C002-REQ-306). The revision for these defects takes them into C002-CAP-03,
 C002-CAP-06 and the interfaces; on VS Code the bar against subagent edits rests on that confinement
-(P-01 2026-11-11; C002-REQ-327).
+(P-01 2026-11-11; C002-REQ-327). The C002-T-050 binding run of 2026-11-11 on this build refuted the
+D-051 revision's assumption on the tools list: defect D-054 (VSC-14: `askQuestions` alone did not
+grant the tool; `vscode/askQuestions` does), taken into C002-REQ-211, C002-REQ-312 and C002-IF-001 §6.1.
 
 The facts of the S-08 record that contradict the earlier platform assumptions (F-1 … F-7, §5) are
 taken into C002-CAP-03, C002-REQ-103, C002-REQ-211, C002-REQ-612 and C002-REQ-614 by the revision for

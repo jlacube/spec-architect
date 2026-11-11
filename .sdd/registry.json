@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-11T21:57:27Z",
+  "generated_at": "2026-11-11T23:08:11Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -410,7 +410,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "20-plan",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -420,12 +420,12 @@
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:2622fc600ad65c80405d056fbaccc37e19b9b99cbb5e126f12bc0e31138bc9db",
-          "approved_at": "2026-11-11",
+          "approved_hash": "sha256:a29916635da8ee43768f49f80626933b5a5dee49abef83618313242bdc767574",
+          "approved_at": "2026-11-12",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "stale",
           "approved_hash": "sha256:c2532e5974bf13576ad818d20230becb17087f29bde432a30a925b147672ce44",
           "approved_at": "2026-11-11",
           "approved_by": "jerome.lacube"
@@ -434,7 +434,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 78,
+          "total": 79,
           "done": 75,
           "blocked": 0,
           "in_progress": 0
@@ -971,6 +971,16 @@
           "status": "closed",
           "resolution": "Revision approved at G2 and G3: SessionStart JSON under --host copilot (REQ-313, IF-008 §3, TS-320/708, C002-T-078); install notes /architect:<name>, model picker, chat.autoReply (C002-T-079); checklist VSC-11/12/20/21/22/23/27/28/29/54 and run sheet (IF-009 §4, C002-T-080); new candidate with 24-row Copilot CLI retake (C002-T-081); C002-T-050 reruns",
           "closed_at": "2026-11-11"
+        },
+        {
+          "id": "D-054",
+          "ref": "C002-IF-001",
+          "summary": "D-051 assumption refuted in the C002-T-050 binding run (2026-11-11, VSC-14): on VS Code 1.145.2 the tools entry askQuestions does not grant vscode_askQuestions (the model's call to askQuestions got 'The tool \"askQuestions\" does not exist', no question tool in the session, every round fell back to plain text); a scratch test with vscode/askQuestions in the conductor's tools showed the dialog. Fix per the assumption's own fallback: the Copilot mapping adds vscode/askQuestions.",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-11",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -3001,6 +3011,78 @@
           "gate": "10-spec",
           "date": "2026-11-11",
           "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise"
+        },
+        {
+          "item": "C002-REQ-211",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-212",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-213",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-503",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-504",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-505",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-506",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-507",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-601",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-DOD-G-01",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-TS-634",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-NFR-601",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
         }
       ]
     },

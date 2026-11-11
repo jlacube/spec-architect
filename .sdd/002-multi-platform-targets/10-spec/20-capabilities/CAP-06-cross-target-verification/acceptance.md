@@ -722,7 +722,7 @@ Scenario: C002-TS-616 — S-08 shows Copilot CLI cannot load the package
 Scenario: C002-TS-617 — checklist content
   When the manual VS Code checklist is reviewed
   Then it holds a step for the sdd MCP server boundary, with a write outside ".sdd/" and a command outside the allowlist, whose mode in the step index is the sdd MCP server enforcement mode
-  And a step for one interview round through "askQuestions" that records the input shape of the "askQuestions" call
+  And a step for one interview round through the question tool, with the "tools" lists of the conductor and of the prompt file it runs naming "ask_user", "askQuestions" and "vscode/askQuestions", which expects each dialog to come from a "vscode_askQuestions" call and records the input shape of that call
   And a step for one gate through "askQuestions" with "chat.autoReply" true, which expects no gate decision recorded and records the result "askQuestions" returned, with no selected label and the host's auto-reply text as free text
   And steps that take a toy change from its creation to gate G1 on a fresh install, the run of "sdd install copilot" in P-03's terminal included
   And the Record of the install step "VSC-02", which runs "sdd install copilot" and opens the conductor chat, instructs P-01 to pick a model in the chat's model picker in place of "Auto" and to fill "models_used" from the turns of the toy-change steps, with at least the model that VS Code showed in the reply footer of the turns of "sdd-conductor", or "not shown"
@@ -755,6 +755,12 @@ window resets the model picker to "Auto", which routes to another model, and the
 shows in each reply's footer; the workspace MCP servers start when their first tool is used, which
 refutes the "after the first message" wording of assumption A-8 while its Serena half, the
 `--context vscode` argument, stays to be shown (D-053).
+
+Revised for defect D-054 (C002-T-050 binding run of 2026-11-11, VS Code 1.145.2, GitHub Copilot
+Chat 0.73.0): with only `ask_user` and `askQuestions` in the tools lists VS Code offered no question
+tool and the rounds fell back to plain text (`VSC-14`); with `vscode/askQuestions` added the dialog
+came from a `vscode_askQuestions` call. The interview-round step therefore expects the three names
+and the `vscode_askQuestions` call (`VSC-18`; C002-TS-216).
 
 ## C002-REQ-615
 

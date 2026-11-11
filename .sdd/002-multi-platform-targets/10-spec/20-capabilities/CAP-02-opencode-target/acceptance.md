@@ -228,14 +228,20 @@ Scenario Outline: C002-TS-215 — round size on Claude Code and OpenCode
 ```gherkin
 @manual-vscode
 Scenario: C002-TS-216 — round size in VS Code
-  Given the conductor in VS Code needs answers to 5 questions of one interview topic
+  Given the "tools" list of ".github/agents/sdd-conductor.agent.md", and of the prompt file when the step runs one, names "ask_user", "askQuestions" and "vscode/askQuestions"
+  And the conductor in VS Code needs answers to 5 questions of one interview topic
   When the conductor asks P-01 for them
-  Then each question dialog comes from an "askQuestions" call of the conductor
-  And no "askQuestions" call shows more than 4 questions
+  Then each question dialog comes from a "vscode_askQuestions" call of the conductor
+  And no "vscode_askQuestions" call shows more than 4 questions
 ```
 
 In the VS Code Local session type the question tool is `askQuestions` (`vscode_askQuestions`);
-`ask_user` is the question tool of Copilot CLI (defect D-051; C002-IF-001 §6.1).
+`ask_user` is the question tool of Copilot CLI (defect D-051; C002-IF-001 §6.1). Revised for defect
+D-054: in the C002-T-050 binding run of 2026-11-11 (VS Code 1.145.2, GitHub Copilot Chat 0.73.0),
+tools lists that named only `ask_user` and `askQuestions` offered no question tool and the rounds
+fell back to plain text (`VSC-14`); with `vscode/askQuestions` in the list the dialog came from a
+`vscode_askQuestions` call. The tools lists therefore name all three, and this scenario checks it
+(checklist step `VSC-18`).
 
 ## C002-REQ-212
 

@@ -35,6 +35,10 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Preconditions
 
+- **Revision D-054: C002-T-082's candidate applies.** C002-T-082 done (reached through C002-T-050):
+  wherever this task names C002-T-081's candidate, C002-T-082's release candidate applies (the local
+  tag `v0.1.0` points at it), and the Copilot CLI evidence is C002-T-081's retake with the
+  `ROUTE-auditor-copilot-cli`, `INJ-19`, `INJ-21` and `TS-359` sessions of C002-T-082's (label `t082`).
 - **C002-T-081 done** (revision D-051 … D-053): the release is made from C002-T-081's release
   candidate, which replaces 9eb56c0 in the C002-T-076 item below; the Copilot CLI evidence and the
   near-cap list are those of C002-T-081's retake, and C002-T-050's record is taken on its packages.
@@ -89,6 +93,6 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 ## Done when
 
 - [ ] `architect-sdd@0.1.0` on npm (C002-T-075) no later than the Copilot release
-- [ ] The near-cap list of C002-T-081's report (C002-T-076's before revision D-051 … D-053) for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
+- [ ] The near-cap list of C002-T-081's report (C002-T-076's before revision D-051 … D-053; revision D-054: C002-T-082's candidate applies, so the list of C002-T-082's report is read too) for `copilot-cli` is "none", or each listed injection row has P-01's cap-exception decision recorded (C002-IF-010 §2.2 Caps of injection rows; plan critic CR-80, spec CR-122)
 - [ ] Copilot release record and released zip recorded, or the refusal recorded
 - [ ] Progress reported: `sdd task set C002-T-055 --status done --commit <sha>`

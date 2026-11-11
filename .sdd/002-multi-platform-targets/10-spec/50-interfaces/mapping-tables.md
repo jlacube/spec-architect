@@ -210,7 +210,7 @@ tables, never from this list (C002-CAP-01 acceptance, verification note).
 | WebFetch | `webfetch` | `webfetch` | `web/fetch` | `web/fetch` |
 | LSP | `lsp` (offered only with `OPENCODE_EXPERIMENTAL_LSP_TOOL`, S-07 F-1) | same | usages tool (not in the S-08 record) | same |
 | ToolSearch | dropped | dropped | dropped (the host adds `tool_search_tool` to every agent, S-08 §3.2) | dropped |
-| AskUserQuestion | `question` | `question` | `askQuestions` and `ask_user` (both granted; revised for defect D-051) | `askQuestions` and `ask_user` |
+| AskUserQuestion | `question` | `question` | `ask_user`, `askQuestions` and `vscode/askQuestions` (all three listed; revised for defects D-051 and D-054) | `ask_user`, `askQuestions` and `vscode/askQuestions` |
 | TaskCreate, TaskUpdate, TaskList | `todowrite` | same | `todo` (not in the S-08 record) | same |
 | Skill | `skill` | `skill` | dropped (skills are inlined) | dropped |
 
@@ -270,19 +270,47 @@ Copilot entries are `tools` grant names; the S-08 probes granted `read`, `search
 §3.1).
 
 **Question tool on Copilot** (revised for defect D-051; T-050 findings pass of 2026-11-11 on VS Code
-1.145.2 with GitHub Copilot Chat 0.73.0, `../../20-plan/revision-D051-D053-digest.md` item 1). The two
-Copilot hosts name the question tool differently:
+1.145.2 with GitHub Copilot Chat 0.73.0, `../../20-plan/revision-D051-D053-digest.md` item 1; revised
+for defect D-054, C002-T-050 binding run of 2026-11-11, VSC-14). The two Copilot hosts name the
+question tool differently, and on VS Code the `tools` entry that grants it is not its reference name:
 
-| Host | Tool | Names |
-|---|---|---|
-| VS Code, Local session type | `vscode_askQuestions` | reference name `askQuestions`; legacy full names `vscode_askQuestions` and `vscode/askQuestions` (VS Code 1.145.2; the tool of C002-R-001 A-06, A-07) |
-| Copilot CLI | `ask_user` | `ask_user`, a tool of the Copilot CLI session (S-08 §3.2, the tool S-08 fact F-5 names) |
+| Host | Tool | Names | `tools` entry that grants it |
+|---|---|---|---|
+| VS Code, Local session type | `vscode_askQuestions` | reference name `askQuestions`; legacy full names `vscode_askQuestions` and `vscode/askQuestions` (VS Code's tool metadata as read in the T-050 findings pass, `workbench.desktop.main.js` of 1.145.2; the tool of C002-R-001 A-06, A-07) | `vscode/askQuestions`, despite its "legacy" label the only `tools` entry that grants the tool on VS Code 1.145.2, rechecked by every checklist run (C002-TS-216); the entry `askQuestions` grants nothing there (defect D-054) |
+| Copilot CLI | `ask_user` | `ask_user`, a tool of the Copilot CLI session (S-08 §3.2, the tool S-08 fact F-5 names) | `ask_user` |
 
-The table maps AskUserQuestion to both names, so the conductor's `tools` list, and each prompt
-file's, carries `askQuestions` and `ask_user` (C002-IF-005 §3). S-08 fact F-5 ("the question tool is
-`ask_user` in the Local agent host") is refuted on the tested build: with `ask_user` alone the
-conductor said "Question tools are not available in this session" and asked every round as plain
-text. [ASSUMPTION: D-051 — `askQuestions` alone in a tools list grants the tool on VS Code 1.145.2 (the findings pass added it beside the legacy `vscode/askQuestions`); VSC-18 of the C002-T-050 rerun confirms it; if not, the table adds `vscode/askQuestions`] [ASSUMPTION: D-051 — Copilot CLI accepts the name `askQuestions`, which it does not offer, in an agent's tools list without refusing the agent; one Copilot CLI eval case on the new release candidate confirms it]
+The table maps AskUserQuestion to three names, so the conductor's `tools` list, and each prompt
+file's, carries `ask_user`, `askQuestions` and `vscode/askQuestions` (C002-IF-005 §3):
+`vscode/askQuestions` grants the VS Code tool and `ask_user` the Copilot CLI tool; `askQuestions`
+stays, since it does no harm and is the reference name the body text uses (construct
+`ask-user-question`, §2). S-08 fact F-5 ("the question tool is `ask_user` in the Local agent host") is
+refuted on the tested build: with `ask_user` alone the conductor said "Question tools are not
+available in this session" and asked every round as plain text (defect D-051).
+
+**The entry `askQuestions` alone grants nothing on VS Code 1.145.2** (defect D-054; C002-T-050
+binding run of 2026-11-11, 23:09–23:15, VS Code 1.145.2 with GitHub Copilot Chat 0.73.0, toy
+repository of run folder `C:\Sandbox\runs\t050c`, VSC-14). With the package's conductor
+`tools: ['agent', 'ask_user', 'askQuestions', 'read', 'search', 'sdd-files/*', 'sdd-shell/*', 'todo']`,
+and the same question-tool names in every prompt file, VS Code offered no question tool:
+`vscode_askQuestions` appeared in none of the session's tool lists, the model's call of a tool
+`askQuestions` returned `ERROR: The tool "askQuestions" does not exist`, and the constitution round
+of `/architect:init` fell back to plain text. A scratch test with `'vscode/askQuestions'` in place of
+`'askQuestions'` in the workspace conductor's `tools` showed the dialog at once (tool call
+`vscode_askQuestions`, answered). This refutes the first D-051 assumption ("`askQuestions` alone in a
+tools list grants the tool on VS Code 1.145.2"), and its own fallback applies: the table adds
+`vscode/askQuestions`.
+
+**Copilot CLI and the VS Code names.** Copilot CLI started the conductor with `askQuestions`, which
+it does not offer, in its `tools` list, without refusing the agent: `ROUTE-auditor-copilot-cli` passed
+on the release candidate 54b83ff, and no host log line named `askQuestions` (C002-T-077 step 6; the
+second D-051 assumption, confirmed in that respect). [ASSUMPTION: D-054 — Copilot CLI also starts an agent whose tools list names `vscode/askQuestions`, which it does not offer, without refusing the agent; the ROUTE-auditor-copilot-cli case on the new release candidate confirms it, as it did for `askQuestions`]
+
+Whether Copilot CLI keeps such a `tools` list, or drops it and gives the agent its full tool set, is
+not shown. The kept Copilot CLI evidence holds no session tool list and no refused call of an
+unlisted tool. The conductor sessions called the listed tools and the host tool `skill`, which the
+list does not name. They did so on the candidate of 2026-11-08, before `askQuestions` was added
+(`evals/results/transcripts/INJ-19-2026-11-08T08-04-13-475Z-run1.json`), and on 54b83ff
+(`evals/results/transcripts/INJ-19-2026-11-11T17-49-14-086Z-run1.json`, INJ-21 likewise). [ASSUMPTION: D-054 — Copilot CLI keeps an agent's tools list that names `askQuestions` and `vscode/askQuestions`; check: one Copilot CLI session of architect:sdd-conductor on the new release candidate, asked to name every tool it can call, passes when the named tools and the session's tool calls hold none of the generic edit and terminal tools (`create`, `edit` and the PowerShell tools) that an agent without a tools list gets (S-08 §3.2)]
 
 `askQuestions` input, as the variants `gate-protocol` and `interview-protocol` describe it on Copilot
 (§2.1):
