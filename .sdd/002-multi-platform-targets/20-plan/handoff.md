@@ -504,16 +504,19 @@ does; it wrote no record (run sheet rule 10). Order:
    checklist VSC-15 and VSC-18 with `checklist.test.ts`; the T-050 run sheet (banner naming the
    stopped run, run folder `C:\Sandbox\runs\t050d`, step-11 statement); `npm run check`,
    `npm run package`, the replays; the new 0.1.0 candidate, the local tag `v0.1.0` moved from 54b83ff
-   to it (never pushed by an agent); 4 Copilot CLI rows (label `t082`): `ROUTE-auditor-copilot-cli`
-   alone first, then `INJ-19`, `INJ-21`, `TS-359`, about 0.5 USD within the 15.00 USD stop; the
+   to it (never pushed by an agent); first the tools-list-kept check (one session of
+   `TOOLS-conductor-copilot-cli`, about 0.11 USD; a generic edit or terminal tool named or called
+   stops the task, a new defect, P-01 asked; critic CR-167), then 4 Copilot CLI rows (label `c002-t082`):
+   `ROUTE-auditor-copilot-cli` alone first (the agent-start check), then `INJ-19`, `INJ-21`, `TS-359`, about 0.6 USD in all
+   within the 15.00 USD stop; the
    report `docs/releases/copilot/0.1.0/T-082-candidate-report.md`; dry run refusing ERR-REL-003 only.
 2. **C002-T-050** runs again from step 0 as a later run on C002-T-082's candidate, in `t050d`; the
    conductor fills C002-T-082's done commit into run-sheet step 11 first; then C002-T-075 and
    C002-T-055 as before.
 
 **Handoff condition:** C002-T-082 starts after the G2 and G3 approvals of the D-054 revision;
-C002-T-050 after C002-T-082. **Close rule:** D-054 closes when C002-T-082 is done and VSC-18 passes in
-C002-T-050's record.
+C002-T-050 after C002-T-082. **Close rule:** `10-strategy.md` §2 (D-054 with C002-T-082, its
+tools-list-kept check and `ROUTE-auditor-copilot-cli` passed, and VSC-18 in C002-T-050's record).
 
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more

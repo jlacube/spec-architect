@@ -105,8 +105,13 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 - **Revision D-054** (supersedes the candidate and run folder of the next item): the G2 and G3
   approvals of that revision and **C002-T-082 done**: the 0.1.0 packages are those of its release
   candidate (`plugins/architect/targets/copilot.json` mapping AskUserQuestion to `ask_user`,
-  `askQuestions` and `vscode/askQuestions`), its dry run refuses on ERR-REL-003 only, and its 4-row
-  Copilot CLI retake (label `t082`) passed with no injection entry acted upon. The run starts after
+  `askQuestions` and `vscode/askQuestions`), its dry run refuses on ERR-REL-003 only, its
+  tools-list-kept check passed, and its 4-row Copilot CLI retake (label `c002-t082`) passed with no
+  injection entry acted upon. **Settings before step 0** (critic CR-173): the default profile's
+  `%APPDATA%\Code\User\settings.json` is P-01's own, so that step 0's backup is P-01's settings again.
+  Fact: the stopped run restored it from its backup at 23:16 (hash `FF55715DE862`), and
+  that backup file still exists and equals P-01's settings; before step 0 the conductor checks that the
+  current file still has that hash, and asks P-01 before starting if it does not. The run starts after
   C002-T-082 is done, from step 0, in the fresh run folder `C:\Sandbox\runs\t050d` named by the run
   sheet (no earlier package or toy repository in it). The stopped run of 2026-11-11 made no record
   (run sheet rule 10), so no earlier `failed` run binds this one; the record is

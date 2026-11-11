@@ -1422,3 +1422,87 @@ Scope: working-tree diff of `20-plan/` (T-050, `60-test-plan.md`, `handoff.md`, 
 | plan | P7 ADRs | n/a: wording of a manual run, no technical decision |
 
 **Checked without finding.** The "later date" of `10-spec/50-interfaces/verification-records.md:500-502` covers a record refused for a binding earlier `failed` run; the findings pass made no record, and `docs/checklists/records/` holds only `TEMPLATE.md`. `findChecklistRecord` (`scripts/release/evidence.ts:129-136`) takes the last `vscode-<YYYY-MM-DD>-<version>.md` in sort order and nothing under `scripts/release/` reads the frontmatter `date`, so no spec or C002-REQ-618 change is needed. The rule for a failure of the binding run itself stays correct in T-050, the run sheet and the checklist; the checklist and the template need no change.
+
+## Revision D-054 (2026-11-11)
+
+Scope: `git diff 24b197c -- .sdd/002-multi-platform-targets/20-plan/` (new task C002-T-082; T-050, T-055, T-075, T-077, T-080; `10-strategy.md`, `40-work-breakdown.md`, `60-test-plan.md`, `70-risks.md`, `75-rollout.md`, `handoff.md`, `questions-log.md`), against the approved spec (C002-IF-001 §6.1, C002-TS-216, C002-TS-319, C002-TS-617, C002-IF-010 §2.2/§5.2), the T-081 report, the T-050 run sheet, the checklist and the record template. `sdd lint 002 --phase 20-plan`: 0 findings. `sdd trace 002`: TR-01 … TR-11 at 100 %, DAG acyclic. Read-only review; the conductor appended this section from the critic's reply.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 7 |
+
+### CR-170 — Batch 1 still claims `ROUTE-auditor-copilot-cli` shows "no dropped tools list", which the approved spec says it cannot show
+- **Severity:** major
+- **Refs:** C002-T-082 step 6 (batch 1), C002-TC-615, C002-IF-001 §6.1, spec critic CR-167
+- **Evidence:** "Expected: the host starts the agent (no refusal of the agent file, no dropped tools list)" — T-082 step 6; against "Whether Copilot CLI keeps such a `tools` list … is not shown." — `10-spec/50-interfaces/mapping-tables.md:308-309`
+- **Why it matters:** a routing row passes whether the list is kept or dropped; the report would show the "list kept" assumption confirmed by a session that cannot show it.
+- **Suggested fix:** batch 1 is the agent-start check; only batch 0 decides "list kept".
+- **Status:** resolved: T-082 step 6 batch 1 renamed the agent-start check, its done item reworded; the C002-TC-615 row, test-plan §6 note, strategy, hand-off and RISK-042 say only batch 0 decides (planner)
+
+### CR-171 — The pool check is written for one batch of 4 rows while step 6 runs two; §4.2 has no row for the 5 sessions
+- **Severity:** minor
+- **Refs:** C002-T-082 Preconditions and step 6, `10-strategy.md` §2 and §3a, test plan §4.2
+- **Evidence:** "then the 4 rows, sized on the total read after it (about 12.73 + 4 × 0.55 = 14.93 ≤ 15.00)" — T-082 Preconditions; step 6 runs batch 1 (one row) and batch 2 (three rows)
+- **Why it matters:** the precondition could send the task to P-01 although both batches fit by step 6's own rule; the session table did not count the 5 sessions.
+- **Suggested fix:** write the per-batch sizing; add the §4.2 row.
+- **Status:** resolved: batch 0 12.62 + 0.55 = 13.17, batch 1 T1 + 0.55, batch 2 T2 + 3 × 0.55 ≤ 15.00 in T-082 and the strategy; §4.2 row "C002-T-082 step 6 (revision D-054): 1 + 4 on E-CPC" and the Copilot total (planner)
+
+### CR-172 — Two files that still state the pre-D-054 facts are not a target of any task
+- **Severity:** minor
+- **Refs:** C002-T-082 Targets and step 4, C002-T-050 Targets, C002-TC-618
+- **Evidence:** `docs/checklists/records/TEMPLATE.md:64` VSC-18 `observed` ("askQuestions alone worked"); run sheet Package line naming C002-T-081's candidate
+- **Why it matters:** the record is copied from the template; its VSC-18 field and the Package line would ask for the refuted facts.
+- **Suggested fix:** add both to T-082's Targets, steps and done items, and to the C002-TC-618 note.
+- **Status:** resolved: T-082 Targets, step 3 (template), step 4 (d) and step 5 (Package line), two done items; C002-TC-618 note; TS-618/TC-618 in T-082's `verified_by` (planner)
+
+### CR-173 — The rerun's preconditions cover the run folder but not the VS Code settings the stopped run left behind
+- **Severity:** minor
+- **Refs:** C002-T-050 Preconditions (D-054), run sheet steps 0 and 12
+- **Evidence:** step 0 copies `settings.json` over `settings.json.t050-backup`; no artifact said whether the stopped run restored P-01's settings
+- **Why it matters:** P-01's own settings could be lost.
+- **Suggested fix:** precondition: the default profile's settings are P-01's own before step 0.
+- **Status:** resolved: T-050 precondition records the stopped run's restore of 23:16 (hash FF55715DE862, the backup equal to P-01's settings) and checks the hash before step 0, asking P-01 if it differs (planner)
+
+### CR-174 — Label `t082` is already used by CHG-001's C001-T-082 sessions
+- **Severity:** minor
+- **Refs:** C002-T-082 Targets, step 6, Verification; C002-TC-615
+- **Evidence:** 23 files `evals/results/t082-*` of C001-T-082
+- **Why it matters:** the label no longer identifies one task's sessions.
+- **Suggested fix:** a distinct label.
+- **Status:** resolved: label `c002-t082` throughout (T-082, T-050, T-055, strategy, test plan, hand-off, questions log); C001-T-082's own labels unchanged (planner)
+
+### CR-175 — Batch 0 is not carried into C002-RISK-042 or into the transcript search
+- **Severity:** minor
+- **Refs:** C002-RISK-042, C002-T-082 step 9, C002-REQ-642
+- **Evidence:** RISK-042 mitigation and trigger name only ROUTE-auditor; step 9 searched "the 4 transcripts"
+- **Why it matters:** the register's "drop the list" cause had no check or trigger; the fifth transcript escaped the search.
+- **Suggested fix:** add batch 0 to the mitigation and its signal to the trigger; search the 5 transcripts.
+- **Status:** resolved: `70-risks.md:75` mitigation and trigger; T-082 step 9 "the 5 transcripts" (planner)
+
+### CR-176 — T-082 claims C002-AC-311.1 with no step and no verifying scenario
+- **Severity:** minor
+- **Refs:** C002-T-082 frontmatter, C002-REQ-311, C002-AC-311.1
+- **Evidence:** `implements` / `satisfies_ac` list C002-REQ-311 / C002-AC-311.1; no step or scenario of T-082 covers them
+- **Why it matters:** the trace listed T-082 as an implementer of the no-choice rule it neither changes nor tests.
+- **Suggested fix:** remove them; optionally add the requirements of the rewritten tests.
+- **Status:** resolved: C002-REQ-311 / AC-311.1 removed; C002-REQ-108 / AC-108.1 and C002-REQ-318 / AC-318.1 added (planner)
+
+### CR-177 — Two factual citations in T-082 are wrong
+- **Severity:** minor
+- **Refs:** C002-T-082 Preconditions and step 6 batch 0, `10-strategy.md` §2, C002-T-050 done item
+- **Evidence:** "the t081 transcripts of INJ-19 and INJ-21 … before and after `askQuestions` was added" (the "before" one is `t076-INJ-19-2026-11-08…`); "done commit 8f2cca4" (8f2cca4 is T-081's report commit, 579c39b its done commit)
+- **Why it matters:** the batch-0 report and C002-T-050's done item would cite the wrong baseline and commit.
+- **Suggested fix:** "the t076 (2026-11-08) and t081 transcripts"; "report commit 8f2cca4, done commit 579c39b".
+- **Status:** resolved: both citations corrected in T-082, the strategy and the C002-TC-615 row; "done commit" defined by step 7 only (planner)
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | CR-176 |
+| plan | P2 Targets, verification, done-checks | CR-170, CR-171, CR-172, CR-173, CR-174, CR-175, CR-177 |
+| plan | P3 Acyclic graph, coherent milestones | pass |
+| plan | P4 Every scenario maps to a planned test | CR-170 |
+| plan | P5 Risks cover the hotspots | CR-175 |
+| plan | P6 Rollout and rollback | pass |
+| plan | P7 ADRs | n/a: the three-name mapping is the spec's decision, the retake is P-01's answer |
+
+**Checked without finding.** C002-REQ-211, C002-REQ-312 and C002-REQ-614 are in T-082's `implements`; T-082 covers the spec's change set (tool map, fixtures, tests, VSC-15/VSC-18, run sheet, `dist/`, replays, injection merge, report, tag move, dry run); the one-off case needs no cap-exception row; the step-5 diff guard holds (`git diff --stat 54b83ff HEAD -- plugins/architect/` empty before the change). T-050 restarts at step 0 in t050d with the binding-run statement; no record of the stopped run exists. T-055 and T-075 reach T-082 through T-050; the T-077 and T-080 edits are history notes. The edges T-077/T-080/T-081 → T-082 → T-050 hold; critical path 60. Observations outside the plan text (no finding): T-082 steps 1–4 were already in the working tree before G3 (left uncommitted until G3); a source map appended to `plugins/architect/scripts/sdd.mjs` during the coverage step was transient (the file equals its committed version after the check).

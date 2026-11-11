@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:a29916635da8ee43768f49f80626933b5a5dee49abef83618313242bdc767574", approved_at: 2026-11-12, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:c2532e5974bf13576ad818d20230becb17087f29bde432a30a925b147672ce44", approved_at: 2026-11-11, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:82d4946794de25c0b88cc4a9d171be53db5f185c3956010cb376ab79fb74d175", approved_at: 2026-11-12, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -552,3 +552,5 @@ waivers:
 | 2026-11-11 | G3 (plan) | **Approved** | "Plan revision for the T-050 run date (P-01 2026-11-11: 'do the revision and start now'): C002-T-050 runs as a later run after C002-T-081 (same date allowed), in C:\Sandbox\runs\t050c, with the binding-run statement in the record's Notes; critic CR-162…165 resolved. Standing approval (2026-10-24, renewed 2026-10-28)." | none | unavailable |
 | 2026-11-11 | G2 (spec) | **Revise** | "Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'; Copilot CLI retake of 4 rows): the Copilot question-tool mapping adds vscode/askQuestions (C002-IF-001 §6.1 assumption refuted in the C002-T-050 binding run, VSC-14)." | none | unavailable |
 | 2026-11-12 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved." | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601 | unavailable |
+| 2026-11-12 | G3 (plan) | **Revise** | "Plan revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0', Copilot CLI retake '4 key rows'): new task C002-T-082 (vscode/askQuestions, new candidate, tools-list-kept check and 4 Copilot CLI rows); C002-T-050 reruns on it in C:\Sandbox\runs\t050d." | none | unavailable |
+| 2026-11-12 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Plan revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0', '4 key rows'): C002-T-082 (vscode/askQuestions, new candidate, tools-list-kept check, 4 Copilot CLI rows, label c002-t082); C002-T-050 reruns on it in C:\Sandbox\runs\t050d; critic CR-170…177 resolved." | none | unavailable |

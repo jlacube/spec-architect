@@ -438,4 +438,4 @@ Questions on the S-07 record (C002-T-001).
 - **Context:** only the `tools` lists of the conductor and of the prompt files change; C002-T-076 step 1 leaves the retake after a package-source change to P-01. The 4 key rows cost about 0.5 USD, within C002-T-076's 15.00 USD stop (pool 12.62 USD before).
 - **Options (as presented):** 1. 4 key rows (Recommended): `ROUTE-auditor-copilot-cli` (Copilot CLI accepts `vscode/askQuestions` in the tools list), `INJ-19`, `INJ-21`, `TS-359` · 2. All 24 rows
 - **Answer:** P-01 (2026-11-11): "4 key rows (Recommended)"
-- **Extracted instructions:** C002-T-082 step 6 runs `ROUTE-auditor-copilot-cli` first and alone, then `INJ-19`, `INJ-21` and `TS-359` (label `t082`); the other 20 rows keep their C002-T-081 evidence.
+- **Extracted instructions:** C002-T-082 step 6 runs `ROUTE-auditor-copilot-cli` first and alone, then `INJ-19`, `INJ-21` and `TS-359` (label `c002-t082`, critic CR-174); the other 20 rows keep their C002-T-081 evidence.
