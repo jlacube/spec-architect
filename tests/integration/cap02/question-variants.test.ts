@@ -39,9 +39,16 @@ const questionTools = (t: Target): string[] => {
   return e as string[];
 };
 const ticked = (s: string) => "`" + s + "`";
-/** The wiring names the host question tool: the OpenCode tool; on Copilot both names and a question-tool call. */
+/**
+ * The wiring names the host question tool: the OpenCode tool; on Copilot both names the body text uses
+ * (`askQuestions`, `ask_user`) and a question-tool call. The tools entry `vscode/askQuestions`
+ * (C002-T-082, defect D-054) grants the VS Code tool but is not a name the body text uses
+ * (C002-IF-001 §6.1, construct ask-user-question).
+ */
 const namesQuestionTool = (t: Target, w: string): boolean =>
-  t === "opencode" ? w.includes(ticked(questionTools(t)[0]!)) : questionTools(t).every((q) => w.includes(ticked(q))) && w.includes("question-tool call");
+  t === "opencode"
+    ? w.includes(ticked(questionTools(t)[0]!))
+    : questionTools(t).filter((q) => !q.includes("/")).every((q) => w.includes(ticked(q))) && w.includes("question-tool call");
 /** The host's auto-reply text while `chat.autoReply` is on (VS Code 1.145.2; C002-IF-001 §6.1 No answer). */
 const AUTO_REPLY = "The user is not available to respond and will review your work later. Work autonomously and make good decisions.";
 
@@ -172,10 +179,10 @@ for (const t of TARGETS) {
 
 // --- C002-T-077 (defect D-051; C002-IF-001 §6.1 Question tool on Copilot, C002-IF-005 §3) ---
 for (const mode of MODES.copilot) {
-  test(`C002-TC-114/C002-REQ-211 (C002-T-077): Copilot ${mode} — the conductor and every prompt file that lists a question tool list both askQuestions and ask_user`, () => {
+  test(`C002-TC-114/C002-REQ-211 (C002-T-077): Copilot ${mode} — the conductor and every prompt file that lists a question tool list ask_user, askQuestions and vscode/askQuestions (C002-T-082, defect D-054)`, () => {
     const p = pkg("copilot", mode);
     const both = questionTools("copilot");
-    assert.deepEqual([...both].sort(), ["askQuestions", "ask_user"], "the table maps AskUserQuestion to both names");
+    assert.deepEqual([...both].sort(), ["askQuestions", "ask_user", "vscode/askQuestions"], "the table maps AskUserQuestion to the three entries");
     for (const q of both) assert.ok(p.tools.includes(q), `conductor: ${q}`);
     assert.equal(p.prompts.size, 13, "the 13 prompt files");
     for (const [name, tools] of p.prompts) {

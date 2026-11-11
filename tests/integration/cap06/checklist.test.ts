@@ -529,7 +529,8 @@ test("C002-T-080: VSC-15, VSC-18, VSC-20 … VSC-23, VSC-28, VSC-29 and VSC-54 c
   const v15 = stepText("VSC-15");
   assert.ok(/`askQuestions`/.test(v15) && /`ask_user`/.test(v15) && /`\.github\/agents\/sdd-conductor\.agent\.md`/.test(v15) && /prompt file/.test(v15) && /plain request/.test(v15), v15);
   const v18 = stepText("VSC-18");
-  assert.ok(/`askQuestions` alone/.test(v18) && /`vscode\/askQuestions`/.test(v18), v18);
+  // C002-T-082 (defect D-054): the three tools entries, and the dialogs come from vscode_askQuestions.
+  assert.ok(/`ask_user`, `askQuestions` and `vscode\/askQuestions`/.test(v18) && /`vscode_askQuestions`/.test(v18) && /D-054/.test(v18), v18);
   const v20 = stepText("VSC-20");
   assert.ok(/`chat\.autoReply`/.test(v20) && /free-text half/.test(v20) && /Keep the CSV export out of v1/.test(v20) && /both halves pass/.test(v20) && /one round/.test(v20) && /`selected: \[\]`/.test(v20), v20);
   const v23 = stepText("VSC-23");

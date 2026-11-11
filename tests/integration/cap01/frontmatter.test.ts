@@ -187,7 +187,7 @@ test("C002-TS-112: a specialist with an Agent(...) grant, or a start list naming
 // --- C002-TC-114 ---
 const NO_TOOL: Record<string, { lacks: string; host: Record<Target, (tool: string) => boolean> }> = {
   "sdd-researcher": { lacks: "Bash", host: { opencode: (x) => x === "bash" || x.startsWith("sdd-shell"), copilot: (x) => x === "execute" || x.startsWith("sdd-shell") } },
-  "sdd-critic": { lacks: "AskUserQuestion", host: { opencode: (x) => x === "question", copilot: (x) => x === "ask_user" || x === "askQuestions" } },
+  "sdd-critic": { lacks: "AskUserQuestion", host: { opencode: (x) => x === "question", copilot: (x) => x === "ask_user" || x === "askQuestions" || x === "vscode/askQuestions" } },
   "sdd-auditor": { lacks: "mcp__plugin_architect_", host: { opencode: (x) => /^(serena|context7|deepwiki)[_/-]/.test(x), copilot: (x) => /^(serena|context7|deepwiki)[_/-]/.test(x) } },
 };
 for (const [agent, row] of Object.entries(NO_TOOL)) {

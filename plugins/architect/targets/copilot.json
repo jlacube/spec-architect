@@ -44,7 +44,7 @@
     "WebFetch": ["web/fetch"],
     "LSP": ["usages"],
     "ToolSearch": [],
-    "AskUserQuestion": ["ask_user", "askQuestions"],
+    "AskUserQuestion": ["ask_user", "askQuestions", "vscode/askQuestions"],
     "TaskCreate": ["todo"],
     "TaskUpdate": ["todo"],
     "TaskList": ["todo"],

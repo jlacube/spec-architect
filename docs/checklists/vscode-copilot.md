@@ -31,7 +31,7 @@ it, in both Copilot enforcement modes (C002-REQ-629).
   | F-2 workspace MCP servers start, plugin MCP servers do not | VSC-11 (workspace half) | the plugin half is not exercised: the package ships no plugin MCP server; on 1.145.2 the workspace servers start when their first tool is used, not after the first message (D-053) |
   | F-3 `${PLUGIN_ROOT}` not expanded in hook commands on Windows | none | not exercised: the hook commands use the root token, so a VS Code run cannot confirm it |
   | F-4 agent-scoped hooks do not run; plugin-level hooks carry `agent_type` | VSC-27, VSC-28 (refusal and default-agent probe), VSC-54 (confinement) | plugin-level half **refuted** on 1.145.2: no PreToolUse input carries `agent_type`, subagent calls included (D-052, P-01's decision of 2026-11-11); replaced by the conductor-refusal check of VSC-27 and VSC-28 and the confinement check of VSC-54, while the default-agent probe of VSC-27 and VSC-28 records `agent_type: present` or `absent`; the agent-scoped half is not exercised: the package has no agent-scoped hooks |
-  | F-5 the question tool is `ask_user` in the Local agent host | VSC-18 | **refuted** on 1.145.2: the VS Code tool is `askQuestions` (`vscode_askQuestions`); `ask_user` is the Copilot CLI tool (D-051); VSC-18 records that `askQuestions` alone works |
+  | F-5 the question tool is `ask_user` in the Local agent host | VSC-18 | **refuted** on 1.145.2: the VS Code tool is `askQuestions` (`vscode_askQuestions`); `ask_user` is the Copilot CLI tool (D-051); `askQuestions` alone in a tools list grants nothing, `vscode/askQuestions` grants it (D-054); VSC-18 checks the three entries and the `vscode_askQuestions` dialogs |
   | F-6 Copilot CLI exit code and agent IDs | none | Copilot CLI only; no VS Code step can confirm it (C002-T-076) |
   | F-7 MCP tools deferred and named `<server>-<tool>` | VSC-11, VSC-17, VSC-23 | naming half **replaced** by the observed form `mcp_<command>[N]_<tool>` (for example `mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`; D-053), which VSC-23 records; the agent-file references `sdd-files/*` and `sdd-shell/*` still work |
   | Subagent tool-list confinement (S-08 §3.1, `subagent_tool_list_confined`) | VSC-54 | a failure refuses the release (Q-guard-proof-01); held in the findings pass |
@@ -423,8 +423,8 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 
 ### VSC-15 — Question tools `askQuestions` and `ask_user` unavailable
 
-- **Do:** Remove both question-tool names, `askQuestions` and `ask_user` (and `vscode/askQuestions`
-  where listed), from the `tools` list of `.github/agents/sdd-conductor.agent.md` **and** from the
+- **Do:** Remove the three question-tool entries, `ask_user`, `askQuestions` and `vscode/askQuestions`
+  (defect D-054), from the `tools` list of `.github/agents/sdd-conductor.agent.md` **and** from the
   `tools` list of the `/architect:new` prompt file, `<package folder>\prompts\new.prompt.md` (copy it
   to `new.prompt.md.t050-backup` first): a prompt file's `tools` take precedence over the agent's
   (C002-IF-005 §3). Reload the window; in a new Local chat with `sdd-conductor` send
@@ -463,13 +463,14 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
   each `askQuestions` tool call in the chat to see its input and result.
 - **Expect:** each question dialog comes from an `askQuestions` call of the conductor (VS Code's
   question tool, defect D-051), and no `askQuestions` call shows more than 4 questions (for five
-  questions, calls of 4 and 1). `askQuestions` alone works: the conductor's `tools` list names
-  `askQuestions` and `ask_user`, without the legacy `vscode/askQuestions` (the architect's VS Code
-  assumption on the revised tool map, C002-IF-001 §6.1).
+  questions, calls of 4 and 1). The `tools` lists of the conductor and of the prompt file it runs
+  name `ask_user`, `askQuestions` and `vscode/askQuestions`; on VS Code 1.145.2 only
+  `vscode/askQuestions` grants the tool (defect D-054, C002-IF-001 §6.1), and each dialog comes from a
+  `vscode_askQuestions` call.
 - **Record:** as `observed`, the input shape of one `askQuestions` call (its field names and the shape
   of a question and of an option: `questions[].header`, `question`, `options[].label`,
-  `description`, `recommended`, `multiSelect`, `allowFreeformInput`), and that `askQuestions` alone
-  worked with `vscode/askQuestions` absent from the tools list. Where an answer is free text only,
+  `description`, `recommended`, `multiSelect`, `allowFreeformInput`), and the three entries of the
+  conductor's and the prompt file's `tools` lists (defect D-054). Where an answer is free text only,
   record its result in the form of VSC-20's free-text half (`selected: []`, your `freeText`) and the
   questions-log line.
 

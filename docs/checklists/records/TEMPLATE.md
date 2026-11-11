@@ -61,7 +61,7 @@ steps:
     observed: "<path of the first write of the toy change>"
   - id: VSC-18   # both
     result: <passed | failed | not-applicable>
-    observed: "<input shape of one askQuestions call: field names, question and option shape; askQuestions alone worked, vscode/askQuestions absent from the tools list>"
+    observed: "<input shape of one askQuestions call: field names, question and option shape; tools lists of the conductor and the prompt file name ask_user, askQuestions and vscode/askQuestions; dialogs from vscode_askQuestions (D-054); vscode/askQuestions present in the tools list>"
   - id: VSC-19   # both
     result: <passed | failed | not-applicable>
     observed: "<what the round showed with chat.askQuestions.enabled off; a free-text-only answer in the form of VSC-20's free_text_half>"

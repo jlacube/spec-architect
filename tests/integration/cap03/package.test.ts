@@ -164,11 +164,11 @@ for (const mode of MODES) {
       assert.deepEqual(data["tools"], fm.tools, `${fm.name}: the tools the table derives`);
       if (fm.name === CONDUCTOR) {
         assert.deepEqual([...(data["agents"] as string[])].sort(), [...specialists].sort(), "the conductor starts the nine specialists, by bare name");
-        for (const t of ["agent", "ask_user", "askQuestions", "todo"]) assert.ok((data["tools"] as string[]).includes(t), `conductor: ${t}`);
+        for (const t of ["agent", "ask_user", "askQuestions", "vscode/askQuestions", "todo"]) assert.ok((data["tools"] as string[]).includes(t), `conductor: ${t}`);
       } else {
         assert.deepEqual(data["agents"], [], fm.name);
         assert.equal(data["user-invocable"], false, fm.name);
-        for (const t of ["agent", "ask_user", "askQuestions"]) assert.ok(!(data["tools"] as string[]).includes(t), `${fm.name}: no ${t}`);
+        for (const t of ["agent", "ask_user", "askQuestions", "vscode/askQuestions"]) assert.ok(!(data["tools"] as string[]).includes(t), `${fm.name}: no ${t}`);
       }
     }
   });
