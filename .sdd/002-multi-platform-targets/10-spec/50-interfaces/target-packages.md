@@ -135,11 +135,37 @@ MCP configuration declares a server (C002-REQ-307). The hooks file that the plug
 `hooks.json` at the package root, is written by the install command from
 `install/hooks.template.json` with the absolute path of `scripts/sdd.mjs` in place of `@CLI_COPY@`
 (C002-IF-008 §4; C002-REQ-326), and the same install copies the manifest `install/plugin.json` to
-`plugin.json`. Until the install, the package folder is therefore no plugin: registering it in
-`chat.pluginLocations` loads no agent, prompt file or skill, so no Architect agent or prompt file runs
-before its guard hook exists. Otherwise the conductor, as a plugin agent selected in the picker, could
-start host built-in agents with no hook loaded (S-08 §3).
-[ASSUMPTION: S-08 — the record loaded the probe plugin with its plugin.json only; the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that VS Code adds no agent, prompt file or skill from a registered folder without plugin.json; if it does, the generator writes agents/ and prompts/ under install/ as well and the install command copies them to the package root with the manifest]
+`plugin.json`.
+
+**Registered before the install** (revised for defect D-056; C002-T-050 run of 2026-11-12, twin
+half of VSC-01, C002-IF-009 §4; before, an S-08 assumption stated that VS Code adds no agent, prompt
+file or skill from a registered folder without `plugin.json`, with a fallback that moved `agents/`
+and `prompts/` under `install/`). VS Code 1.145.2 loads a folder registered in
+`chat.pluginLocations` whether or not it holds a manifest. Of its plugin formats (`plugin.json` at
+the root, `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, `.plugin/plugin.json`, and
+`plugin.json` with the `com.github.copilot` namespace) only the last requires the manifest; a folder
+in which no manifest is found is read in the first format, and its components load from the default
+folders: agents, skills, prompt files (`resources/app/out/vs/workbench/workbench.desktop.main.js` of
+VS Code 1.145.2). In the run, an unpacked package that was never installed, the only
+`chat.pluginLocations` entry of a separate VS Code profile with no user prompt file and no other
+installed plugin, offered the Architect slash commands, and a chat there ran `sdd-conductor` with
+the revise prompt. Until the install the package root has no `hooks.json`, so the Architect agents,
+prompt files and skills of a folder registered before the install run with no Architect hook, and
+the conductor, as a plugin agent selected in the picker, can start host built-in agents with no hook
+loaded (S-08 §3). No `sdd-files` or `sdd-shell` server is configured then either: the same install
+merges them into `.vscode/mcp.json`.
+
+**Decision** (P-01 2026-11-12, Q-t050-a3-01 "Docs and spec fix (Recommended)", confirmed with the
+fallback named in Q-t050-a3-02 "Keep docs and spec fix (Recommended)"): the package layout stays as
+above, and the fallback that moved `agents/` and `prompts/` under `install/` is not applied. Reason:
+on VS Code 1.145.2 the guard hook does not stop host built-in subagents after the install either,
+since PreToolUse input carries no `agent_type` (the known limitation of defect D-052, §5 step 6), and
+before the install no sdd MCP server is configured, so the window between registering the folder and
+running the install adds little. The install notes warn of that window and have P-03 register the
+folder after the install (§5 step 3). The reason holds for VS Code 1.145.2: on a build whose
+PreToolUse input carries `agent_type`, the window before the install would be the one place where
+the subagent guard does not run, so the revision that a new tested build needs (C002-IF-009 §3)
+reviews this decision.
 
 **What the install command writes** (C002-IF-007, `install copilot`; C002-REQ-322 … C002-REQ-324),
 in the order of C002-IF-007 §Install step 5, the guard hook before the agents:
@@ -409,10 +435,16 @@ mode by its glossary name (C002-REQ-204, C002-REQ-304); on Copilot, the models s
    runs there (fail-closed, C002-CON-08).
 3. The settings `chat.plugins.enabled` (true), `chat.pluginLocations` (the package folder) and
    `chat.askQuestions.enabled` (true; kept per the open item of C002-REQ-304, until VSC-19 shows
-   that the question tool `askQuestions` works without it, C002-IF-001 §6.1). Step 2 comes first:
-   the package folder becomes a plugin only when the install has written its `plugin.json` and
-   `hooks.json` (§3); after a later install that changes `hooks.json`, reload the window, because
-   VS Code loads the plugin from a copy (S-08 §3).
+   that the question tool `askQuestions` works without it, C002-IF-001 §6.1). Step 2 comes first,
+   and the notes give the reason (revised for defect D-056; before, they said that the folder
+   becomes a plugin only once the install has written its `plugin.json` and `hooks.json`): VS Code
+   loads the package folder as soon as it is registered, also before the install, and its Architect
+   agents, prompt files and skills then run with no guard hook, since `hooks.json` does not exist yet
+   (§3, Registered before the install). Where the folder was registered before the install, P-03
+   uses no Architect agent, prompt file or skill in that window until the install has run and the
+   window is reloaded (critic CR-190).
+   After the install, and after each later install that changes `hooks.json`, reload the window,
+   because VS Code loads the plugin from a copy (S-08 §3).
 4. A chat of the **Local** session type (the Copilot CLI session type does not offer the agents,
    S-08 §3), with `sdd-conductor` selected as the session agent and a model picked in the chat's
    model picker: a new window starts the picker on "Auto", which may route the session to a model

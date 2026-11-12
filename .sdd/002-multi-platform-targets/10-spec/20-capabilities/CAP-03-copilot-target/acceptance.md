@@ -131,6 +131,9 @@ Scenario: C002-TS-306 — Copilot install notes
   And they give the npm command that installs "architect-sdd"
   And they give the step that runs "sdd install copilot --package <folder>" in P-03's own terminal in the repository, and again in each further repository and after the package moves or changes version
   And they name the settings "chat.plugins.enabled", "chat.pluginLocations" and "chat.askQuestions.enabled" with their values, in a step after the install command step
+  And that settings step has P-03 register the package folder in "chat.pluginLocations" only after the install command has run
+  And that settings step warns that VS Code loads a package folder registered before the install and runs its Architect agents, prompt files and skills with no Architect hook
+  And that settings step states that P-03, where the folder was registered before the install, uses no Architect agent, prompt file or skill in that window until the install has run and the window is reloaded
   And they state that the chat uses the Local session type with "sdd-conductor" selected as the session agent
   And they name the Architect prompt files in the slash form "/architect:<name>", for example "/architect:init", and state that a bare "/init" runs VS Code's built-in "/init"
   And they state that each workspace MCP server starts when the first of its tools is used in a session
@@ -160,6 +163,13 @@ resets the picker to "Auto" (defect D-053; C002-IF-005 §5 Models); the fresh-in
 checklist confirms them (C002-TS-617). The slash form, the start of the MCP servers on first use and
 the known limitation of the Copilot subagent guard hook are the same findings (defects D-052 and
 D-053; P-01 decision of 2026-11-11 on D-052: rely on confinement on VS Code and state the gap).
+The warning of the settings step is revised for defect D-056: in the C002-T-050 run of 2026-11-12,
+VS Code 1.145.2 offered the Architect agents and prompt files of a registered package folder that
+had no `plugin.json` and no `hooks.json` yet (twin half of VSC-01), so the package layout stays and
+the notes have the folder registered after the install and warn of the window before it (C002-IF-005
+§3 Registered before the install, §5 step 3; P-01's answers to Q-t050-a3-01 and Q-t050-a3-02;
+critic CR-188, CR-190). Before, the notes said that the folder becomes a plugin only once
+the install has written its `plugin.json` and `hooks.json`.
 
 ## C002-REQ-305
 
@@ -1046,9 +1056,9 @@ Scenario: C002-TS-359 — planted delegation to general-purpose on Copilot CLI
 ```
 
 ```gherkin
-Scenario Outline: C002-TS-360 — agents installed, plugin part not loaded
+Scenario Outline: C002-TS-360 — agents installed, plugin-level hooks not loaded
   Given "<package>" installed into "fx-cp" with "sdd install copilot --package C:/fx/<package>"
-  And "hooks.json" and "plugin.json" then deleted from "C:/fx/<package>", so that no host loads its plugin part
+  And "hooks.json" and "plugin.json" then deleted from "C:/fx/<package>", so that no host loads a plugin-level hook of the package
   And Copilot PreToolUse hook input in "fx-cp" with "agent_type" "<agent_type>", "tool_name" "Write" and "tool_input.path" "src/app.ts"
   When the PreToolUse command of ".github/hooks/architect-guard.json" of "fx-cp" runs
   Then the exit code is 2
@@ -1201,14 +1211,14 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
 |---|---|---|---|---|---|---|---|
-| C002-REQ-301 | TS-301 | n/a | n/a | TS-302 | n/a | n/a | TS-301 (no `.mcp.json`, `hooks.json` or `plugin.json` at the package root, so the folder is no plugin before the install; no hook command runs a PATH "sdd") |
+| C002-REQ-301 | TS-301 | n/a | n/a | TS-302 | n/a | n/a | TS-301 (no `.mcp.json`, `hooks.json` or `plugin.json` at the package root, so before the install no plugin MCP configuration declares a server and no plugin-level hook runs; VS Code still loads the folder's agents, prompt files and skills then, which the install notes warn of, TS-306, defect D-056; no hook command runs a PATH "sdd") |
 | C002-REQ-302 | TS-303 | n/a | n/a | TS-304 | TS-303 | n/a | TS-304 (Claude hooks file copied; a second PreToolUse entry, the other mode's `--mode`, the entry removed, PreToolUse in agent frontmatter) |
 | C002-REQ-303 | TS-305 | n/a | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-304 | TS-306 | TS-306 (known limitation of the subagent guard hook on VS Code without `agent_type`, the conductor's restriction to the specialists by instructions only and what still holds, hooks fallback not offered there; `chat.autoReply` kept off; `/architect:<name>` slash form; MCP servers started on first use; model picked in the picker, not "Auto"; default-model fallback on a plan without the agent file's model, where P-03 sees the model that ran; Copilot CLI model note with the refused `--model`, no other Copilot CLI setting) | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-304 | TS-306 | TS-306 (folder registered only after the install; registered before it: agents, prompt files and skills loaded with no Architect hook, no Architect agent, prompt file or skill used in that window until the install has run and the window is reloaded; known limitation of the subagent guard hook on VS Code without `agent_type`, the conductor's restriction to the specialists by instructions only and what still holds, hooks fallback not offered there; `chat.autoReply` kept off; `/architect:<name>` slash form; MCP servers started on first use; model picked in the picker, not "Auto"; default-model fallback on a plan without the agent file's model, where P-03 sees the model that ran; Copilot CLI model note with the refused `--model`, no other Copilot CLI setting) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-305 | TS-307 | TS-307 (known limitation on VS Code stated, linked to the install notes) | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-306 | TS-308 | TS-308 (tool sets) | n/a | n/a | TS-308 | n/a | TS-309 |
 | C002-REQ-307 | TS-310 | TS-310 (both modes) | n/a | TS-327 | n/a: grants per agent are C002-REQ-117 (C002-TS-129, C002-TS-130) | n/a | TS-327 (server declared in a plugin MCP configuration) |
-| C002-REQ-308 | TS-311, TS-312 | TS-312 (`architect:` form of Copilot CLI), TS-313 (in VS Code on a version that sends `agent_type`; `not-applicable` on 1.145.2), TS-336 (Copilot CLI), TS-311 (package and workspace hook file) | TS-369 (a tool in two classes takes the most restrictive one) | TS-312 | TS-312 | TS-311 (the same entry in both hook files, so both reach the same decision) | TS-312 (`..`, chaining, install command), TS-360 (specialist's write with the plugin part not loaded), TS-369 (a duplicate `read_only` entry does not open a write or terminal tool) |
+| C002-REQ-308 | TS-311, TS-312 | TS-312 (`architect:` form of Copilot CLI), TS-313 (in VS Code on a version that sends `agent_type`; `not-applicable` on 1.145.2), TS-336 (Copilot CLI), TS-311 (package and workspace hook file) | TS-369 (a tool in two classes takes the most restrictive one) | TS-312 | TS-312 | TS-311 (the same entry in both hook files, so both reach the same decision) | TS-312 (`..`, chaining, install command), TS-360 (specialist's write with no plugin-level hook loaded), TS-369 (a duplicate `read_only` entry does not open a write or terminal tool) |
 | C002-REQ-309 | TS-314 | TS-314 (unreadable tool classes file), TS-367 (fault messages: no path in the tool input, `--agents` name without `sdd-`) | TS-314 (empty input, empty `cwd`) | TS-314, TS-367 | TS-367 (an `--agents` name without `sdd-` is never passed unchecked to a guard core) | n/a | TS-314 (unclassed tool, input not an object), TS-334 (letter case), TS-367 (`architect:` prefix on a non-`sdd-` name) |
 | C002-REQ-310 | TS-315 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-311 | TS-316, TS-317 | TS-318 (gate), TS-317 (P-01's own free text with no selected label: an answer, recorded verbatim) | TS-316 (empty list), TS-317 (no selected label, the host's auto-reply text as free text, `skipped` false) | TS-316 | n/a | n/a | TS-317, TS-318 (`chat.autoReply` answering for P-01: no answer, no gate decision) |
@@ -1227,7 +1237,7 @@ Scenario: C002-TS-366 — Architect agent calls do not depend on the tool classe
 | C002-REQ-324 | TS-349 | TS-350 (files edited after an install) | TS-348 (equal agent file, hook file or entry is no conflict) | TS-349, TS-350 | n/a | TS-350 (a failed run changes nothing) | TS-349 (adopter server named "sdd-files"; adopter hook file `architect-guard.json`; comments a rewrite would drop) |
 | C002-REQ-325 | TS-351 | TS-352 (sdd MCP server command tool), TS-312 (Copilot guard hook) | TS-353 (other sdd commands, `install` as a later word) | TS-351 | TS-351 | n/a | TS-351 (script form, `--cwd` inside the root, `--help`, PowerShell) |
 | C002-REQ-326 | TS-354 | TS-354 (workspace hook file) | n/a | TS-355 | n/a | n/a | TS-356 (package path characters a hook command cannot carry) |
-| C002-REQ-327 | TS-357 | TS-357 (both modes; host built-in, adopter and `architect:`-prefixed agents; sdd MCP server tools), TS-358 (in VS Code: the conductor starts no non-Architect agent; default-agent probe of `general-purpose`, denied with `GUARD-HOOK-002` or `GUARD-HOOK-001` where its call carries `agent_type`, `agent_type: absent` recorded and the edit reverted on 1.145.2), TS-359 (Copilot CLI) | TS-357 (path inside `.sdd/`, allowlisted command, `cwd` in a subfolder, `.sdd/` above the repository root), TS-370 (a tool in `read_only` and in `write` or `terminal`) | n/a: a call the hook cannot decide is C002-REQ-328 (TS-362) | TS-357 | TS-360 (the workspace hook file decides alone, as the plugin-level entry does) | TS-358, TS-359 (planted instruction to delegate a product-code edit to `general-purpose`), TS-357 (non-string and `null` `agent_type`), TS-360 (agents installed, plugin part not loaded), TS-361 (package moved), TS-304 (PreToolUse entry removed) |
+| C002-REQ-327 | TS-357 | TS-357 (both modes; host built-in, adopter and `architect:`-prefixed agents; sdd MCP server tools), TS-358 (in VS Code: the conductor starts no non-Architect agent; default-agent probe of `general-purpose`, denied with `GUARD-HOOK-002` or `GUARD-HOOK-001` where its call carries `agent_type`, `agent_type: absent` recorded and the edit reverted on 1.145.2), TS-359 (Copilot CLI) | TS-357 (path inside `.sdd/`, allowlisted command, `cwd` in a subfolder, `.sdd/` above the repository root), TS-370 (a tool in `read_only` and in `write` or `terminal`) | n/a: a call the hook cannot decide is C002-REQ-328 (TS-362) | TS-357 | TS-360 (the workspace hook file decides alone, as the plugin-level entry does) | TS-358, TS-359 (planted instruction to delegate a product-code edit to `general-purpose`), TS-357 (non-string and `null` `agent_type`), TS-360 (agents installed, no plugin-level hook loaded), TS-361 (package moved), TS-304 (PreToolUse entry removed) |
 | C002-REQ-328 | TS-362 | TS-362 (both modes; unclassed `edit`, `Agent` and adopter MCP tools), TS-368 (`--host` missing or other than `copilot`, both packages) | TS-362 (empty input, empty `cwd`, letter case `write`), TS-368 (unreadable input under a usage fault: `tool call` shown) | TS-362, TS-368 | TS-362 (a hook command without `--mode` or `--agents` denies even the session agent's call), TS-368 (likewise without `--host copilot`) | n/a | TS-362 (a host tool the classes file does not name is never allowed by default; fault injection in the lookup and the decision) |
 | C002-REQ-329 | TS-363 | TS-363 (both modes; host built-in and adopter agents), TS-364 | TS-363 (`cwd` in a subfolder; an unclassed tool in a repository without `.sdd/`) | n/a: an unreadable input or classes file is C002-REQ-328 (TS-362) | TS-363 | n/a | TS-364 (a broken classes file does not block subagents outside repositories with `.sdd/`) |
 | C002-REQ-330 | TS-365 | TS-365 (`architect:` form, sdd MCP server tools) | TS-365 (no `cwd`; an Architect agent's unclassed tool, which its tool list confines, C002-TS-308) | n/a: unreadable input is C002-REQ-328 (TS-362) | TS-365, TS-366 | n/a | TS-366 (a missing classes file does not block the Architect agents or P-03's chats) |

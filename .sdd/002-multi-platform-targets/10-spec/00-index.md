@@ -45,23 +45,25 @@ status: draft
 |---|---|---|---|---|---|
 | C002-CAP-01 Target generation | `CAP-01-target-generator` | 101–104 (4) | 101–118 (18) | 20 | 40 (block 101–199, plus C002-TS-640, C002-TS-657, C002-TS-658, C002-TS-672 … C002-TS-674) |
 | C002-CAP-02 OpenCode target | `CAP-02-opencode-target` | 201–205 (5) | 201–217 (17) | 17 | 30 (block 201–299) |
-| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–307 (7) | 301–330 (30) | 30 | 72 (block 301–399, plus C002-TS-659, C002-TS-664) |
+| C002-CAP-03 Copilot VS Code target | `CAP-03-copilot-target` | 301–307 (7) | 301–330 (30) | 30 | 73 (block 301–399, plus C002-TS-659, C002-TS-664, C002-TS-708) |
 | C002-CAP-04 sdd MCP server | `CAP-04-sdd-mcp-server` | 401–404 (4) | 401–415 (15) | 15 | 31 (block 401–499, plus C002-TS-641, C002-TS-642, C002-TS-660, C002-TS-665, C002-TS-666, C002-TS-686, C002-TS-687) |
-| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–521 (21) | 21 | 42 (block 501–599, plus C002-TS-639, C002-TS-675, C002-TS-684, C002-TS-685) |
+| C002-CAP-05 CLI distribution, allowlist and doctor | `CAP-05-cli-distribution` | 501–505 (5) | 501–522 (22) | 21 | 44 (block 501–599, plus C002-TS-639, C002-TS-675, C002-TS-684, C002-TS-685, C002-TS-709, C002-TS-710) |
 | C002-CAP-06 Cross-target verification | `CAP-06-cross-target-verification` | 601–608 (8) | 601–623, 625–630, 632–634, 638–646 (41) | 42 | 86 (block 601–699, plus C002-TS-700 … C002-TS-707) |
-| **Total** | | **33** | **142** | **145** | **301** |
+| **Total** | | **33** | **143** | **145** | **304** |
 
 Scenarios C002-TS-639 … C002-TS-642 (step-7 rework), C002-TS-657 … C002-TS-660 and
 C002-TS-664 (revision D-010 … D-014), C002-TS-665 and C002-TS-666 (revision D-015 … D-017), and
 C002-TS-672 … C002-TS-675 and C002-TS-684 … C002-TS-687 (later revisions) were numbered in the
 601–699 block and are defined in the capability named in the TS column. C002-TS-700 and C002-TS-701
 (revision D-023 item 2, critic CR-87) C002-TS-702 … C002-TS-705 (revision D-031) and C002-TS-706 and C002-TS-707 (revision D-034) were allocated after the end
-of that block and are defined in C002-CAP-06. The AC and TS columns count the criteria and scenarios written.
+of that block and are defined in C002-CAP-06; C002-TS-708 (revision D-053, defined in C002-CAP-03)
+and C002-TS-709 and C002-TS-710 (revision D-057, defined in C002-CAP-05) were allocated after it as
+well. The AC and TS columns count the criteria and scenarios written.
 
 NFR blocks by category (`30-nfr/nfr.md`): 101–105 (5) · 201–205 (5) · 301 (1) · 401–402 (2) ·
 501 (1) · 601 (1) · 801 (1) — 16 in total.
 
 Other IDs: GOAL 5 · SC 5 · NG 4 · AS 5 · CON 17 · CAP 6 · COMP 18 · IF 10 · INV 13 · DOD 23.
 Tombstoned: `C002-US-001`, `C002-REQ-624`, `C002-REQ-631`, `C002-REQ-635`, `C002-REQ-636`,
-`C002-REQ-637`, `C002-TS-653` and `C002-TS-654` (allocated outside the capability blocks or by
+`C002-REQ-637`, `C002-REQ-647`, `C002-TS-653` and `C002-TS-654` (allocated outside the capability blocks or by
 mistake, unused) and `C002-INV-13` (skipped by the allocator, unused).

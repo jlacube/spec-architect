@@ -14,7 +14,8 @@ CHG-001 components that CHG-002 changes appear here under a new C002 ID with Sta
 CHG-001 component they modify and the cartographer's evidence (`../10-context/current-state.md`,
 "current-state E-n"; `../../00-ideation/evidence/baseline-survey.md`, "baseline E-n"). Components
 of CHG-001 that CHG-002 does not change (workspace, parser/lint/trace, gate, tracking and archive,
-templates, specialist agents) keep their C001 IDs and are not repeated. Decisions are those of
+templates) keep their C001 IDs and are not repeated; the specialist agents are modified for defect
+D-057 (C002-COMP-019). Decisions are those of
 C002-DEC-001 … C002-DEC-009; this step adds no ADR (§6.2 lists the design choices it fixes).
 Revised for defect D-003: the Copilot target follows the signed-off spike S-08 record
 (`docs/spikes/S-08-copilot-vscode.md`, facts F-1 … F-7 of §5); after the critic's D-003 review, the
@@ -175,6 +176,27 @@ every prompt file carry the three names, and the body text keeps the reference n
 C002-IF-001 §6.1, each with its own check. No component, interface or flow is added; C002-COMP-004
 changes its responsibility text.
 
+Revised for defects D-056 and D-057 (C002-T-050 run of 2026-11-12 on VS Code 1.145.2):
+
+- **Package registered before the install (D-056).** VS Code 1.145.2 loads a folder registered in
+  `chat.pluginLocations` without `plugin.json`, so before the install the package's agents, prompt
+  files and skills run with no hook. P-01 chose to fix the install notes and the spec, not the
+  layout (Q-t050-a3-01, Q-t050-a3-02): the notes have the folder registered after the install and
+  warn of the earlier window (C002-IF-005 §3, §5 step 3; C002-IF-009 §4, VSC-01; §5, §6.1, §6.2,
+  F13).
+- **Remote-server probe of the doctor and init (D-057).** The probe step gave the Context7 and
+  DeepWiki calls to the cartographer, which holds neither server's tools on any host. On every host,
+  Claude Code included, the doctor and the init command's toolchain survey now dispatch the
+  researcher for the two calls and pass their outcomes to the cartographer, which writes
+  `toolchain.md`; a server whose tools the researcher is not offered, or whose call the host
+  refuses, is `untested`, never `unreachable`, and the researcher's agent body answers such a probe
+  brief with outcome lines only and writes no note (P-01, "Fix shared source (Recommended)"; critic
+  CR-187, CR-192, CR-193; C002-IF-006 §2.1, C002-IF-001 §2.1; F8; §6.2).
+
+C002-COMP-019 is added for the specialist agents, which D-057 modifies (C001-COMP-02: the
+researcher's probe line); no interface is added. C002-COMP-014, C002-COMP-015 and C002-COMP-016
+change their responsibility text, and flow F8 also covers the toolchain survey of the init command.
+
 ## 1. Context and scope
 
 Architect stays a set of files and a Node.js CLI that runs inside the host's own process tree; it
@@ -190,9 +212,9 @@ package (sdd CLI and sdd MCP server) and the verification records under `docs/`.
 |---|---|---|
 | P-01 spec owner | Runs packaging, checks, the manual VS Code checklist and the release check; publishes `architect-sdd`; answers interviews and gates on any host | trusted (sole approver) |
 | P-03 adopter | Installs a package and `architect-sdd`, runs `sdd install copilot` in each repository for VS Code, runs the conductor on Claude Code, OpenCode or VS Code | trusted user; its own agents, MCP servers and settings are outside Architect |
-| Claude Code | Source target, unchanged except the allowlist rows (C002-REQ-503), the Serena-command confinement (C002-REQ-517) and the `--cwd` confinement of the writing `sdd` subcommands (C002-REQ-521) of the bash guard | platform |
+| Claude Code | Source target, unchanged except the allowlist rows (C002-REQ-503), the Serena-command confinement (C002-REQ-517) and the `--cwd` confinement of the writing `sdd` subcommands (C002-REQ-521) of the bash guard, and the Context7 and DeepWiki probe of the doctor and init commands, which the researcher makes on every host (C002-REQ-504, C002-REQ-507; defect D-057, C002-IF-006 §2.1) | platform |
 | OpenCode (tested version 1.18.31, spike S-07) | Loads the OpenCode package; enforces `permission` rules under native permission enforcement; starts the sdd MCP server under sdd MCP server enforcement, the provisional mode of the S-07 record; its `glob` lists no file inside a dot folder when it searches from the project root, so the package's texts find `.sdd/` files with `sdd status` and `read` (C002-IF-001 §6.1 Dot folders) | platform; permission engine verified by corpus replay (C002-AS-01, C002-AS-02, partly refuted by the S-07 hand sample, `../10-context/scope.md` §3) |
-| VS Code with GitHub Copilot Chat (tested versions; Local session type, local agent host) | Loads the Copilot package's plugin part (prompt files, offered as `/architect:<name>`, skills, hooks) once the install has written its manifest; runs the workspace agents of `.github/agents/` as subagents and starts each workspace MCP server of `.vscode/mcp.json` when an agent first uses one of its tools (1.145.2; after a session's first message on Insiders 1.142), both written by the install command; confines agents to their tool lists (C002-AS-03), but offers its host built-in agents beside a parent's `agents` list (S-08 §3); offers the question tool `askQuestions`; runs plugin-level hooks, and the workspace hook file written by the install command, for every agent's calls, with `agent_type` on subagent calls on Insiders 1.142 (S-08 §3.1) but on SubagentStop only on 1.145.2 (defect D-052); adds session-start context only from a JSON `hookSpecificOutput.additionalContext` (defect D-053) | platform; verified by spike S-08 §3 (plugin agents and plugin MCP servers are not used, facts F-1, F-2) and, on 1.145.2, by the T-050 findings pass (F-5, the PreToolUse half of F-4 and the naming half of F-7 refuted there; defects D-051 … D-053); workspace hook file: assumption of C002-IF-005 §3 |
+| VS Code with GitHub Copilot Chat (tested versions; Local session type, local agent host) | Loads the Copilot package's plugin part (prompt files, offered as `/architect:<name>`, skills, hooks) from the registered folder, on 1.145.2 also before the install has written its manifest and `hooks.json`, its agents, prompt files and skills then running with no hook (defect D-056, C002-IF-005 §3); runs the workspace agents of `.github/agents/` as subagents and starts each workspace MCP server of `.vscode/mcp.json` when an agent first uses one of its tools (1.145.2; after a session's first message on Insiders 1.142), both written by the install command; confines agents to their tool lists (C002-AS-03), but offers its host built-in agents beside a parent's `agents` list (S-08 §3); offers the question tool `askQuestions`; runs plugin-level hooks, and the workspace hook file written by the install command, for every agent's calls, with `agent_type` on subagent calls on Insiders 1.142 (S-08 §3.1) but on SubagentStop only on 1.145.2 (defect D-052); adds session-start context only from a JSON `hookSpecificOutput.additionalContext` (defect D-053) | platform; verified by spike S-08 §3 (plugin agents and plugin MCP servers are not used, facts F-1, F-2) and, on 1.145.2, by the T-050 findings pass (F-5, the PreToolUse half of F-4 and the naming half of F-7 refuted there; defects D-051 … D-053); workspace hook file: assumption of C002-IF-005 §3 |
 | Copilot CLI | Eval runner host only (C002-NG-01); loads the package with `--plugin-dir`, names its agents `architect:<agent>` on its command line and in hook input but reports started subagents by their bare names; offers the question tool `ask_user`; runs the `--agent` session agent on its default model unless `--model` names one, and refuses a `--model` that the account's Copilot plan does not offer (`claude-opus-5.5` on P-01's Pro plan, C002-T-054); in prompt mode loads workspace hook files only for a trusted folder or with `GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true` (C002-IF-010 §2 … §4, C002-IF-005 §3) | tool; verified by spike S-08 §2 and C002-T-045 (1.0.98) |
 | npm registry | Receives `architect-sdd` from P-01; serves it to P-03 | service |
 | OpenRouter | Eval runs only: the inference provider of the paid OpenCode eval sessions. Its key endpoint `GET /api/v1/key` gives the key's usage, from which the eval harness reconciles a `partial` session spend (C002-IF-010 §2.3; defect D-023 item 2) | service; called with the key of P-01's key file, which is never logged |
@@ -343,10 +365,10 @@ Architect agent (C002-REQ-325).
 - **Name:** `sdd-conductor` agent with its phase skills, on every host
 - **Status:** modified
 - **Modifies:** C001-COMP-01
-- **Responsibility:** as in CHG-001, plus: ask through the host's question tool (`question` on OpenCode; on Copilot `askQuestions` in VS Code, `ask_user` in Copilot CLI) in rounds of at most four, with OpenCode's header and description rules; treat a result without a choice as no answer: no selected label and no free text, a dismissed call, `skipped: true`, or free text equal to the host's auto-reply text (C002-IF-001 §6.1; defect D-051); when the question tool is not available, ask the round or present the gate as plain text and end the turn (C002-REQ-312); on Copilot run as the session agent, load the deferred sdd MCP server tools through `tool_search_tool` where the host defers them, and, by its instructions, start no agent but the nine specialists, a restriction the host does not enforce (the `agents` list does not bound the starts, C002-IF-005 §3), so a planted delegation that the model follows is not stopped on VS Code 1.145.2 (defect D-052; critic CR-156); run the doctor with the host rows of C002-IF-006
+- **Responsibility:** as in CHG-001, plus: ask through the host's question tool (`question` on OpenCode; on Copilot `askQuestions` in VS Code, `ask_user` in Copilot CLI) in rounds of at most four, with OpenCode's header and description rules; treat a result without a choice as no answer: no selected label and no free text, a dismissed call, `skipped: true`, or free text equal to the host's auto-reply text (C002-IF-001 §6.1; defect D-051); when the question tool is not available, ask the round or present the gate as plain text and end the turn (C002-REQ-312); on Copilot run as the session agent, load the deferred sdd MCP server tools through `tool_search_tool` where the host defers them, and, by its instructions, start no agent but the nine specialists, a restriction the host does not enforce (the `agents` list does not bound the starts, C002-IF-005 §3), so a planted delegation that the model follows is not stopped on VS Code 1.145.2 (defect D-052; critic CR-156); run the doctor with the host rows of C002-IF-006; in the doctor and in the init command's toolchain survey, on every host, dispatch the researcher for the one Context7 and the one DeepWiki probe call, then the cartographer with the researcher's outcomes, and take the two doctor rows from those outcomes (`ok`, `unreachable` after a failed call, or `untested` with the fix of its cause; C002-IF-006 §2.1; defect D-057)
 - **Realizes:** C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-214, C002-REQ-311, C002-REQ-312, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-508, C002-REQ-509, C002-REQ-510
 - **Interfaces:** C001-IF-05, C001-IF-13, C002-IF-006
-- **Depends on:** C002-COMP-016, C002-COMP-018
+- **Depends on:** C002-COMP-016, C002-COMP-018, C002-COMP-019
 - **Owned data:** questions logs, gate-log entries (through the CLI), as in CHG-001
 - **Evidence:** current-state E-24 (`plugins/architect/agents/sdd-conductor.md:7` › `tools`, layer: grep: AskUserQuestion granted); current-state E-25 (`plugins/architect/agents/sdd-conductor.md:61` › `Hard rules`, layer: grep: approval only after the AskUserQuestion answer)
 
@@ -354,18 +376,18 @@ Architect agent (C002-REQ-325).
 - **Name:** `commands/*.md` (`/architect:*` on Claude Code; `architect-<command>` on OpenCode; prompt files on Copilot)
 - **Status:** modified
 - **Modifies:** C001-COMP-09
-- **Responsibility:** as in CHG-001; the doctor command gains host-dependent rows, probes and outcome through wiring variants (on Copilot a Copilot hooks row that is `ok` on `chat.useHooks` and names Workspace Trust and organisation policy as not read), and its description names the target's rows through the frontmatter construct `doctor-description`; command bodies and descriptions keep their Claude Code text, translated per target by the generator
+- **Responsibility:** as in CHG-001; the doctor command gains host-dependent rows, probes and outcome through wiring variants (on Copilot a Copilot hooks row that is `ok` on `chat.useHooks` and names Workspace Trust and organisation policy as not read), and its description names the target's rows through the frontmatter construct `doctor-description`; on every host, in shared text, the doctor's probe step and the init command's toolchain survey dispatch `sdd-researcher` for the Context7 and DeepWiki probe calls and then `sdd-cartographer` with their outcomes, and the doctor's Report step gives a server whose probe call did not reach it `untested`, with the fix of its cause (C002-IF-006 §2.1; defect D-057, which changes the Claude Code doctor and init too); command bodies and descriptions keep their Claude Code text, translated per target by the generator
 - **Realizes:** C002-REQ-213, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510
 - **Interfaces:** C001-IF-10, C002-IF-006
-- **Depends on:** C002-COMP-014, C002-COMP-016
+- **Depends on:** C002-COMP-014, C002-COMP-016, C002-COMP-019
 - **Owned data:** none
-- **Evidence:** current-state E-14 (`plugins/architect/commands/doctor.md:17` › `Report`, layer: grep: eight rows, no host or sdd CLI row); current-state E-16 (`plugins/architect/commands/doctor.md:24` › `Outcome`, layer: grep); current-state E-28 (`plugins/architect/commands/new.md:14` › `step 3`, layer: grep: profile round; `archive.md:15` names AskUserQuestion)
+- **Evidence:** current-state E-14 (`plugins/architect/commands/doctor.md:17` › `Report`, layer: grep: eight rows, no host or sdd CLI row); current-state E-16 (`plugins/architect/commands/doctor.md:24` › `Outcome`, layer: grep); current-state E-19 (`plugins/architect/commands/doctor.md:11` › `Probe`, layer: grep: the cartographer makes the Context7 and DeepWiki calls, though `plugins/architect/agents/sdd-cartographer.md:8` grants it no tool of either server); current-state E-20 (`plugins/architect/commands/init.md:13` › `step 3`, layer: grep: the cartographer writes the toolchain record); current-state E-28 (`plugins/architect/commands/new.md:14` › `step 3`, layer: grep: profile round; `archive.md:15` names AskUserQuestion)
 
 ### C002-COMP-016 — Skills library (modified)
 - **Name:** `skills/*/SKILL.md`
 - **Status:** modified
 - **Modifies:** C001-COMP-10
-- **Responsibility:** as in CHG-001; the toolchain record of code-discovery becomes host-dependent through a wiring variant, and so does the file-inspection rule of sdd-conventions, which every agent preloads (variant `file-inspection`: on OpenCode `.sdd/` files are found with `sdd status` and `read`, never `glob`, C002-IF-001 §6.1); the "Claude Code wiring" sections and that rule stay the Claude Code text, their variants live in `targets/` (C002-CON-10)
+- **Responsibility:** as in CHG-001; the toolchain record of code-discovery records Context7 and DeepWiki, on every host, as detected from the researcher's probe outcome in the cartographer's brief, not from tools the cartographer loads (shared text and variant alike; C002-IF-006 §2.1; defect D-057); the record becomes host-dependent through a wiring variant, and so does the file-inspection rule of sdd-conventions, which every agent preloads (variant `file-inspection`: on OpenCode `.sdd/` files are found with `sdd status` and `read`, never `glob`, C002-IF-001 §6.1); the "Claude Code wiring" sections and that rule stay the Claude Code text, their variants live in `targets/` (C002-CON-10)
 - **Realizes:** C002-REQ-507, C002-REQ-111, C002-REQ-113
 - **Interfaces:** C001-IF-09 (`skills` field); anchors of C002-IF-001
 - **Depends on:** C001-COMP-13
@@ -394,6 +416,17 @@ Architect agent (C002-REQ-325).
 - **Owned data:** none
 - **Evidence:** current-state E-22 (`src/cli/commands.ts:420` › `serenaConfig()`, layer: serena: data folder taken as an argument); baseline E-14 (`src/workspace/templates.ts:32` › `defaultPluginRoot()`, layer: grep: templates resolved beside the bundle when `CLAUDE_PLUGIN_ROOT` is unset)
 
+### C002-COMP-019 — Specialist agents (modified)
+- **Name:** the nine specialist agents `agents/sdd-*.md` other than the conductor, translated per target by the generator
+- **Status:** modified
+- **Modifies:** C001-COMP-02
+- **Responsibility:** as in CHG-001, plus (defect D-057; critic CR-192): the researcher answers a probe brief of the doctor or of the init command's toolchain survey with the outcome lines of C002-IF-006 §2.1 only (`ok`, `failed: <text>`, `refused: <text>`, `not offered`, one per server), after one call per server and after loading a deferred tool of a server before it reports `not offered`, and writes no note for it; this is one probe line in the source agent's body, shared by every host; the cartographer writes `toolchain.md` with the researcher's outcomes from its brief (C002-COMP-016) and makes no call to either remote server
+- **Realizes:** C002-REQ-504, C002-REQ-507
+- **Interfaces:** C001-IF-09, C002-IF-006
+- **Depends on:** C002-COMP-016
+- **Owned data:** as in CHG-001 (research notes, the toolchain record and the other specialist artifacts)
+- **Evidence:** `plugins/architect/agents/sdd-researcher.md:8` › `tools` (both remote servers' tools, layer: read); `plugins/architect/agents/sdd-researcher.md:13` and `:18` (one research note per brief, written only at the path the brief names; layer: read); `plugins/architect/agents/sdd-cartographer.md:8` › `tools` (no tool of either remote server; layer: grep, cited in C002-REQ-504)
+
 ## 3. Runtime flows
 
 | Flow | Steps | Realizes |
@@ -405,7 +438,7 @@ Architect agent (C002-REQ-325).
 | F5 | Copilot PreToolUse hook, both modes: the same entry, loaded from the package's `hooks.json` and the workspace hook file, reads `agent_type`; passes calls without it (the session agent's, and on VS Code 1.145.2 every readable call, since that build sends none on PreToolUse; defect D-052); on a host that sends it (Copilot CLI), for a non-Architect subagent (a host built-in agent such as `general-purpose` that the conductor started) denies write and terminal calls and unclassed tools in a repository with `.sdd/`, allows read-only tools, and passes every call elsewhere; passes an Architect agent's calls under server enforcement and decides its edit, terminal or read call under the hooks fallback; a deny is a deny decision with exit 2, which Copilot CLI turns into a fail-closed hook error | C002-REQ-308, C002-REQ-309, C002-REQ-319, C002-REQ-320, C002-REQ-321, C002-REQ-327, C002-REQ-328, C002-REQ-329, C002-REQ-330; C002-TS-311, C002-TS-312, C002-TS-313, C002-TS-314, C002-TS-333, C002-TS-337, C002-TS-338 |
 | F6 | Copilot session-start brief, printed as a JSON `hookSpecificOutput.additionalContext` object (defect D-053), and SubagentStop trace refresh, through hook commands with the absolute CLI path written at install | C002-REQ-313, C002-REQ-314, C002-REQ-315, C002-REQ-316, C002-REQ-326; C002-TS-320, C002-TS-322, C002-TS-323, C002-TS-324, C002-TS-325 |
 | F7 | Gate through the host question tool on a generated target (`question` on OpenCode, allowed for the conductor; on Copilot `askQuestions` in VS Code, granted by the entry `vscode/askQuestions`, and `ask_user` in Copilot CLI; a skipped, dismissed or empty result or the host's auto-reply text is no answer; defects D-051, D-054) | C002-REQ-211, C002-REQ-212, C002-REQ-217, C002-REQ-311, C002-REQ-312; C002-TS-217, C002-TS-218, C002-TS-316, C002-TS-318, C002-TS-319 |
-| F8 | Doctor on a generated target | C002-REQ-504, C002-REQ-505, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516 |
+| F8 | Doctor on every host, with the host rows of a generated target, and the toolchain survey of the init command: the researcher's Context7 and DeepWiki probe calls, the cartographer's toolchain record with their outcomes (defect D-057) | C002-REQ-504, C002-REQ-505, C002-REQ-507, C002-REQ-508, C002-REQ-509, C002-REQ-510; C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516, C002-TS-709, C002-TS-710 |
 | F9 | Release check of one generated target | C002-REQ-617 … C002-REQ-622, C002-REQ-629, C002-REQ-634; C002-TS-620, C002-TS-621, C002-TS-622, C002-TS-623, C002-TS-624, C002-TS-625, C002-TS-633, C002-TS-668, C002-TS-669, C002-TS-670, C002-TS-671 |
 | F10 | `npm run check` with the target structure checks | C002-REQ-601 … C002-REQ-605; C002-TS-601, C002-TS-602, C002-TS-603, C002-TS-604, C002-TS-605 |
 | F11 | Corpus replay of one enforcement mechanism, with per-mechanism expectations (malformed calls, unknown `architect:sdd-*` callers on OpenCode, memory cases), the case's own `cwd`, cases that require a host capability, and the not-applicable list | C002-REQ-606, C002-REQ-625, C002-REQ-626, C002-REQ-627, C002-REQ-630, C002-REQ-632, C002-REQ-633; C002-TS-608, C002-TS-609, C002-TS-628, C002-TS-629, C002-TS-630, C002-TS-631, C002-TS-643, C002-TS-644, C002-TS-645, C002-TS-646, C002-TS-647 |
@@ -437,7 +470,7 @@ packages. Generated files are rebuildable at any commit (C002-NFR-301).
 | Maintainer machine (REF-WIN) | build, generator, structure and target checks, corpus replay, eval runners, release check; a corpus replay for a release runs here, on `win32` (the release check refuses a replay report of another platform), with Developer Mode on or elevated, so that the `file-symlink` capability is present (C002-REQ-634, C002-IF-009 §2.1); the OpenCode replay and the OpenCode eval runner start the pinned OpenCode binary of the tested version by its absolute path with a database and data folders of their own, the eval runner with the binary's folder first on the host's PATH (on REF-WIN `~/.opencode/bin` holds another install, 2.0.32, ahead of the tested one on the user PATH; C002-IF-010 §4 PATH lead), and need Node.js 22.22.2 or later for the OpenCode JS SDK; paid OpenCode eval sessions read P-01's OpenRouter key file `%USERPROFILE%\.architect-evals\openrouter-key.txt` (C002-IF-010 §4; `../10-context/scope.md` §3.1, §5) | P-01 (`npm run …`) | per command |
 | Adopter machine, Claude Code | plugin as today; hooks call `node <plugin-root>/scripts/sdd.mjs` | Claude Code | per session; per hook call |
 | Adopter machine, OpenCode | `.opencode/` and `opencode.json` of the OpenCode package (project or global placement); `sdd` from `architect-sdd`; under server mode one `sdd-mcp --profile files` and one `--profile shell` process per session; `sdd serena-launch` for Serena | OpenCode | per session (C002-CON-04) |
-| Adopter machine, VS Code | the Copilot package's plugin part as a local plugin (`chat.pluginLocations`; loadable once the install has written its `plugin.json`; VS Code loads it from its own copy, S-08 §3); in each repository, after `sdd install copilot` run by P-03, the ten agents in `.github/agents/`, the workspace hook file in `.github/hooks/` and the servers in `.vscode/mcp.json`; one `sdd-mcp --profile files` and one `--profile shell` process per Local chat session, each started when an agent first uses one of its tools (VS Code 1.145.2; never before the session's first message; defect D-053); hook commands `node "<package>/scripts/sdd.mjs" …` with the absolute path written at install, the PreToolUse command once per loaded hooks file (twice per call on VS Code 1.145.2, about 3 s each, an accepted cost at 0.1.0) | VS Code (local agent host); P-03 for the install | per chat session; per hook call; per install |
+| Adopter machine, VS Code | the Copilot package's plugin part as a local plugin (`chat.pluginLocations`, set after the install: VS Code 1.145.2 loads a registered folder also without `plugin.json`, then with no hook, defect D-056, C002-IF-005 §3, §5 step 3; VS Code loads it from its own copy, S-08 §3); in each repository, after `sdd install copilot` run by P-03, the ten agents in `.github/agents/`, the workspace hook file in `.github/hooks/` and the servers in `.vscode/mcp.json`; one `sdd-mcp --profile files` and one `--profile shell` process per Local chat session, each started when an agent first uses one of its tools (VS Code 1.145.2; never before the session's first message; defect D-053); hook commands `node "<package>/scripts/sdd.mjs" …` with the absolute path written at install, the PreToolUse command once per loaded hooks file (twice per call on VS Code 1.145.2, about 3 s each, an accepted cost at 0.1.0) | VS Code (local agent host); P-03 for the install | per chat session; per hook call; per install |
 | Maintainer machine, Copilot CLI eval runs | `copilot -p` per case (Copilot CLI 1.0.98), with a package copy installed into the case workspace, the sdd MCP servers given per session, the session agent's `--model` after the run's model substitution, the host's AI-Credit limit, a temporary Copilot home without a token (the token stays in the system credential store) and `GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true` (C002-IF-010 §4) | the Copilot CLI eval runner | per eval session |
 | npm registry | `architect-sdd` | P-01 publishes by hand | per version |
 | Remote | Context7 and DeepWiki endpoints; Claude models through each host's provider | hosts | — |
@@ -458,7 +491,7 @@ it then reads.
 | Concern | Approach |
 |---|---|
 | Authorization and boundary | Per target, the enforcement mechanism of its mode (C002-CON-03): Claude Code hooks; OpenCode `permission` rules generated from the allowlist, or the sdd MCP server; on Copilot no generic tool and the sdd MCP server, or one plugin-level Copilot guard hook with a conductor still on the server (flagged exception). One decision point: the guard cores and the one allowlist (C002-CON-06), which also confines the Serena commands to a data folder outside the repository and denies `sdd install` on every host (C002-IF-008 §1.1, §1.2). Closed tool sets: Copilot `tools` lists are allowlists (every agent has one; the host adds only `tool_search_tool`), and OpenCode agents start from a catch-all that turns every tool off (C002-IF-001 §6.1). On Copilot the conductor's `agents` list does not bound the agents it can start (host built-in agents, S-08 §3), so the Copilot subagent guard hook denies, in both modes, the write and terminal calls of every non-Architect subagent in a repository with `.sdd/` on a host whose hook input names the subagent (Copilot CLI; C002-REQ-327). Identity: the server needs none (only Architect agents are granted it); the Copilot hook takes it from the hook input's `agent_type`, present on subagent calls only, and on VS Code 1.145.2 never on PreToolUse (C002-IF-008 §2). On VS Code the bar for the Architect agents is therefore confinement: the specialists' tool lists without generic edit or terminal tools (VSC-54) and the sdd MCP server guard (GUARD-PATH-001, GUARD-BASH-001), with the conductor's instructions to start only the nine specialists, which the host does not enforce (critic CR-156); a non-Architect subagent, such as one of P-03's default agent or one that the conductor starts by following a planted delegation, is not stopped by the hook there, which denies only its own faults (rules 1 and 2), the known limitation of the install notes (P-01 decision of 2026-11-11 on defect D-052; C002-IF-005 §5 step 6) |
-| Fail closed | Server faults refuse and change nothing; guard-hook faults write a deny decision and exit 2, and both Copilot hosts deny a call whose hook errors (C002-CON-08; S-08 §2.2, §3); the Copilot hook denies a tool it cannot class (C002-REQ-328) and is installed beside the agents it guards, before them, and the package is no plugin until then (C002-IF-005 §3); a hook command whose CLI copy is missing errors, so every call is denied; a generator error leaves no package (C002-INV-02); a missing `sdd-mcp`, or a session before its first message, leaves agents without write tools, never with generic ones; an install conflict writes nothing (ERR-CLI-021) |
+| Fail closed | Server faults refuse and change nothing; guard-hook faults write a deny decision and exit 2, and both Copilot hosts deny a call whose hook errors (C002-CON-08; S-08 §2.2, §3); the Copilot hook denies a tool it cannot class (C002-REQ-328) and is installed beside the agents it guards, before them (C002-IF-005 §3); not covered: a package folder registered before the install, whose plugin agents, prompt files and skills VS Code 1.145.2 loads with no hook at all, accepted by P-01 and warned of in the install notes (defect D-056, Q-t050-a3-02; C002-IF-005 §3, §5 step 3); a hook command whose CLI copy is missing errors, so every call is denied; a generator error leaves no package (C002-INV-02); a missing `sdd-mcp`, or a session before its first message, leaves agents without write tools, never with generic ones; an install conflict writes nothing (ERR-CLI-021) |
 | Shell surface | The server never starts a shell (C002-CON-07); compound commands are refused by the core before any process starts |
 | Untrusted content | Unchanged rule (C001-NFR-205); injection evals per target (C002-NFR-203) |
 | Error handling | Stable codes with fixes: ERR-GEN, ERR-MCP, WARN-MCP, ERR-REL (001 … 013), ERR-BLD (001, 002), ERR-CLI-019 … 022, GUARD-HOOK-001, GUARD-HOOK-002, and the TGT-*, PLG-VAR-001 and PLG-VER-001 check codes (`../50-interfaces/errors.md`, C002-IF-005 §6); every code of `errors.md` §1 … §6 is shown as `<code>: <message>`; the §7 check codes keep the finding format of C001-IF-08 §3 (C002-IF-005 §6) (with `. Fix: <fix>` from the CLI and the generator), or as separate code and message fields in the generator's `--json` diagnostics and the release record's refusals (`errors.md` print form); the sdd MCP server's error results carry `<code>: <message>` as their only text and no structured content, since a host client validates every structured content against the advertised success schema (C002-IF-002 §6.1; defect D-017) |
@@ -489,7 +522,7 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | The Copilot question tool granted under three names, `ask_user` (Copilot CLI), `askQuestions` and `vscode/askQuestions` (VS Code Local session type, where only the entry `vscode/askQuestions` grants it), with one body text naming `askQuestions` and `ask_user` and one no-answer rule that also counts the host's auto-reply text (`chat.autoReply`) as no answer (C002-IF-001 §6.1) | defect D-051: VS Code 1.145.2 offers `askQuestions` only, Copilot CLI `ask_user` only, and the same package serves both (the Copilot CLI eval runner, C002-IF-010); defect D-054 (C002-T-050 binding run of 2026-11-11, VSC-14): the entry `askQuestions` grants nothing on VS Code 1.145.2, `vscode/askQuestions` does; C002-REQ-311, C002-INV-09 | `askQuestions` only (the Copilot CLI eval sessions would lose their question tool, and VS Code grants nothing for it); `vscode/askQuestions` in place of `askQuestions` (drops from the tools lists the reference name that the body text uses, for no gain); two packages per host (a second package to generate, check and release) |
 | The Copilot session-start command prints its brief as one JSON object with `hookSpecificOutput.additionalContext`; Claude Code keeps the plain-text brief (C002-IF-008 §3) | defect D-053: GitHub Copilot Chat 0.73.0 adds context only from that object and ignores plain text; C002-REQ-313; C002-GOAL-05 (no Claude Code change) | plain text on both hosts (ignored by VS Code); JSON on both hosts (changes CHG-001's Claude Code hook output for no gain) |
 | The Copilot construct `command-reference` keeps `/architect:<name>`, the name VS Code gives the plugin's prompt files (C002-IF-001 §2) | defect D-053: VS Code 1.145.2 offers them as `/architect:<name>` and has its own `/init`; C002-REQ-103 | `/architect:` → `/` (a bare `/init` runs VS Code's built-in); `/architect-` (names no command VS Code offers) |
-| The PreToolUse entry is written twice by the install command: into the package's `hooks.json` (plugin level) and into the workspace hook file `.github/hooks/architect-guard.json` beside the workspace agents; the guard hook is written before the agents, and the package's `plugin.json` is written by the same install, so the package is no plugin before it (critic CR-38) | C002-CON-08, C002-DEC-005: the workspace agents are loaded by every VS Code that opens the repository, with or without the plugin part, and a plugin conductor loaded before the install could start host built-in agents with no hook (S-08 §3); a missing CLI copy makes the hook error, which denies (S-08 §3) | plugin level only (fail-open where the plugin part is not loaded); workspace level only (rests on an unverified assumption, C002-IF-005 §3; the plugin level is the location S-08 showed); specialists on the server profiles also under the fallback (no help where subagents are not confined, the case the fallback exists for) |
+| The PreToolUse entry is written twice by the install command: into the package's `hooks.json` (plugin level) and into the workspace hook file `.github/hooks/architect-guard.json` beside the workspace agents; the guard hook is written before the agents (critic CR-38); the package's `plugin.json` is written by the same install, but VS Code 1.145.2 loads a registered package folder without it, so the install notes have the folder registered after the install and warn that a folder registered before it runs with no hook (defect D-056; C002-IF-005 §3, §5 step 3) | C002-CON-08, C002-DEC-005: the workspace agents are loaded by every VS Code that opens the repository, with or without the plugin part, and a plugin conductor loaded before the install can start host built-in agents with no hook (S-08 §3); a missing CLI copy makes the hook error, which denies (S-08 §3) | plugin level only (fail-open where the plugin part is not loaded); `agents/` and `prompts/` moved under `install/`, so that the folder offers no agent or prompt file before the install (not applied, P-01 2026-11-12, Q-t050-a3-02: on VS Code 1.145.2 the hook stops no host built-in subagent after the install either, defect D-052, and no sdd MCP server is configured before it); workspace level only (rests on an unverified assumption, C002-IF-005 §3; the plugin level is the location S-08 showed); specialists on the server profiles also under the fallback (no help where subagents are not confined, the case the fallback exists for) |
 | A Copilot deny is a deny decision on standard output plus exit 2 | C002-REQ-309, C002-CON-08; S-08 fact F-6 (Copilot CLI reports exit 2 as 1 and fails closed) | exit 0 with the deny decision only (an allow on a host that ignores the decision) |
 | The Copilot CLI eval runner installs a package copy into the case workspace and gives the session the servers of its workspace MCP configuration | C002-REQ-612, C002-REQ-307 | a plugin `.mcp.json` added to the runner's copy (the tested package would differ from the released one) |
 | Generator runs every target; the release check decides publication; a `deferred` S-08 record leads to the spec revision of scope §1.1, not to a table mode | C002-REQ-101, C002-REQ-619, Q-defer-01 | skip a refused target at generation |
@@ -498,6 +531,7 @@ without changing a requirement. The plan may record any of them as an ADR if the
 | Text of frontmatter fields translated per target by `frontmatter` constructs with a `replace` action (`conductor-start`, `doctor-description`), each with a stand-in detector in the generator (C002-IF-001 §2; decided for defect D-010 item 4) | C002-REQ-103, C002-REQ-104: no Claude Code construct left in a generated file | frontmatter variants (a second anchor mechanism for two lines); the Claude Code text accepted (the doctor description would name Claude Code and miss the generated rows) |
 | `sdd install copilot` refuses a package without its CLI copy `scripts/sdd.mjs`, before any write (C002-IF-007 §Install step 1; decided for defect D-013 item 8) | C002-CON-08, C002-CON-14: the hook commands name the copy by its absolute path, and a hook that errors denies every call of the session | install without it (fails closed, but leaves a repository in which every tool call is refused, with no message that names the cause) |
 | The doctor's Copilot hooks row is `ok` on `chat.useHooks` alone, read from the workspace settings and then the default profile's user settings, with a text naming profile and `.code-workspace` settings, Workspace Trust and organisation policy as not read; a workspace settings file that exists but cannot be used gives `hooks unknown`, never a fallback to the user settings (critic CR-45); the manual VS Code checklist records the three sources in both Copilot modes, `chat.useHooks` as VS Code shows it, after the steps that switch hooks off (C002-IF-006 §2, C002-IF-007 Output, C002-IF-009 §4) | P-01 decision on defect D-012 ("ok + caveat"), C002-REQ-510, C002-REQ-616 | read Workspace Trust and policy in `sdd host-version` (no source the CLI can read was found); keep the row `error` while two sources are unread (the row could never be `ok`) |
+| On every host the doctor and the init command's toolchain survey dispatch the researcher for one Context7 and one DeepWiki probe call, before the cartographer, which writes `toolchain.md` with the researcher's outcomes; the researcher's agent body gains one probe line: a doctor or init probe brief is answered with outcome lines only and writes no note (C002-COMP-019); `ok` only after a call that succeeded, `unreachable` only after one that failed, `untested` otherwise, with a fix per cause: no tool offered, call refused by the host, no outcome line (C002-IF-006 §2.1) | defect D-057 (C002-T-050 run of 2026-11-12, VSC-12); P-01, "Fix in 0.1.0 (Recommended)" and "Fix shared source (Recommended)"; conductor decisions on critic CR-187, CR-192, CR-193; C002-REQ-504, C002-REQ-507; the researcher holds both servers' tools on every host and the cartographer neither (C002-IF-005 §4); C002-REQ-108 (closed tool sets) | grant the cartographer the two servers' tools (widens its closed tool set on every host for one probe); fix only the generated variants (Claude Code would keep reporting both servers `unreachable` in every run); the probe brief alone, the researcher's body unchanged (its body says it writes one note per brief, which a probe brief would contradict; critic CR-192) |
 | Three replay expectations added per mechanism, each `deny`: write-tool cases of the shell corpus on every mechanism (C001-REQ-1103), and on the server the Serena literal cases (C002-REQ-517) and the cases whose `cwd` reaches the repository through a link (C002-REQ-401); ERR-MCP-003 read as the server's `allow`; Copilot hook input under the hook names of the classes file (C002-IF-009 §2.1 … §2.3; defects D-011 item 2, D-014) | C002-REQ-606, C002-NFR-201, C002-NFR-202: the expectations of §2.1 are what a correct mechanism decides on the input §2.2 gives it, and the release counts `sdd-mcp-server` and `copilot-hooks` | replay PG-135 with a server whose root is the link (closer to a session started there, but a second server per case spelling); count ERR-MCP-003 as `error` (a false difference for a case the guard allowed) |
 | Writing commands recognised by their first words (the rows of C002-IF-008 §1.2, `status` and `trace` with `--write`, `archive` without `--dry-run`); every `--cwd` of such a command resolved like a write target and compared with the repository root | C002-REQ-521 (Q-guards-05); the CLI reads its subcommand from the first words only (`src/cli/run.ts:33`) | deny `--cwd` on every subcommand (rejected by P-01: breaks read-only uses such as BG-019) |
 | Replay expectations by ordered rules (applicability, then C002-REQ-630, C002-REQ-632, C002-REQ-625, corpus), each case recording its `expected_source`; the report records its replay host so that the release check recomputes them (C002-IF-009 §2.1) | C002-REQ-630, C002-REQ-632 (Q-safety-04), C002-REQ-617 | let the report state expectations unchecked (the implementer would choose them, critic CR-23) |
@@ -557,6 +591,7 @@ flowchart LR
       C002_COMP_014[Conductor]
       C002_COMP_015[Commands]
       C002_COMP_016[Skills library]
+      C002_COMP_019[Specialist agents]
     end
     C002_COMP_013[Build and check tooling]
     C002_COMP_001[Target generator]
@@ -598,6 +633,9 @@ flowchart LR
   C002_COMP_015 --> C002_COMP_016
   C002_COMP_014 --> C002_COMP_016
   C002_COMP_014 --> C002_COMP_018
+  C002_COMP_014 --> C002_COMP_019
+  C002_COMP_015 --> C002_COMP_019
+  C002_COMP_019 --> C002_COMP_016
   C002_COMP_013 --> C002_COMP_001
   C002_COMP_013 --> C002_COMP_007
   C002_COMP_013 --> C002_COMP_017
@@ -888,45 +926,79 @@ sequenceDiagram
   end
 ```
 
-### 8.9 F8 — Doctor on a generated target (realizes C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516)
+### 8.9 F8 — Doctor on every host, with the host rows of a generated target, and the init toolchain survey (realizes C002-TS-506, C002-TS-509, C002-TS-513, C002-TS-515, C002-TS-516, C002-TS-709, C002-TS-710)
+
+The remote-server probe (the researcher's calls) runs on every host, Claude Code included, in the
+doctor and in step 3 of the init command. The cartographer then makes the probes of the
+command-line tools, the host and the sdd CLI and writes the record with every row, the researcher's
+outcomes included; init step 3 ends there and prints no table, and the steps marked "doctor only"
+build the table (C002-IF-006 §2.1; defect D-057; revised for critic CR-196, before which the host
+and sdd CLI probes came after the record). The host and sdd CLI rows are those of a generated target.
 
 ```mermaid
 sequenceDiagram
-  %% F8 doctor with host rows. Realizes C002-TS-506 C002-TS-509 C002-TS-513 C002-TS-515 C002-TS-516
+  %% F8 doctor with host rows and the remote-server probe, and init step 3. Realizes C002-TS-506 C002-TS-509 C002-TS-513 C002-TS-515 C002-TS-516 C002-TS-709 C002-TS-710
   actor P01 as P-01
-  participant C002_COMP_015 as Doctor command, generated variant
+  participant C002_COMP_015 as Doctor command, generated variant, or init command
   participant C002_COMP_014 as Conductor
+  participant C002_COMP_019 as Specialists, sdd-researcher then sdd-cartographer
+  participant MCP as Context7 and DeepWiki servers
   participant C002_COMP_018 as sdd CLI
   participant HOST as opencode or code executable
-  P01->>C002_COMP_015: doctor
+  P01->>C002_COMP_015: doctor, or init
   C002_COMP_015->>C002_COMP_014: steps with the host rows of the target
-  C002_COMP_014->>C002_COMP_018: sdd status, on OpenCode also a read of the .sdd folder, never glob, to learn whether .sdd exists
-  C002_COMP_014->>C002_COMP_018: sdd serena-config with user data folder
-  C002_COMP_014->>C002_COMP_018: sdd host-version opencode
+  C002_COMP_014->>C002_COMP_018: sdd serena-config with user data folder, in init after sdd init
+  opt doctor only
+    C002_COMP_014->>C002_COMP_018: sdd status, on OpenCode also a read of the .sdd folder, never glob, to learn whether .sdd exists
+  end
+  C002_COMP_014->>C002_COMP_019: sdd-researcher, probe brief
+  loop Context7, then DeepWiki
+    alt a tool of the server in the tool list or the deferred-tool list, a deferred one loaded first
+      alt the host runs the call
+        C002_COMP_019->>MCP: one call, resolve-library-id or read_wiki_structure on oraios/serena
+        MCP-->>C002_COMP_019: result, ok, or error, failed
+      else the host refuses the call, by a permission rule or a declined confirmation
+        C002_COMP_019->>C002_COMP_019: refused, with the host text
+      end
+    else no tool of the server in either list
+      C002_COMP_019->>C002_COMP_019: not offered, no call
+    end
+  end
+  C002_COMP_019-->>C002_COMP_014: outcome lines only, one per server, no note
+  C002_COMP_014->>C002_COMP_019: sdd-cartographer, probes and toolchain.md, with the two outcome lines
+  C002_COMP_019->>C002_COMP_018: version probes of the command-line tools, then sdd host-version opencode
   Note over C002_COMP_018,HOST: the PATH of the session as a terminal of P-03 resolves it, eval sessions put the pinned binary first
   C002_COMP_018->>C002_COMP_018: resolve opencode over the PATH folders only, never the working folder
   C002_COMP_018->>HOST: fixed version probe by absolute path, working folder the executable's own
   HOST-->>C002_COMP_018: version
-  C002_COMP_018-->>C002_COMP_014: opencode 1.15.10, another install first on this PATH
-  C002_COMP_014->>C002_COMP_014: compare with tested version 1.18.31, status untested
+  C002_COMP_018-->>C002_COMP_019: opencode 1.15.10, another install first on this PATH
   opt Copilot target, both enforcement modes
-    C002_COMP_014->>C002_COMP_018: sdd host-version vscode-insiders
-    C002_COMP_018->>HOST: fixed version and extension probes of code-insiders
+    C002_COMP_019->>C002_COMP_018: sdd host-version vscode, vscode-insiders for an Insiders tested build
+    C002_COMP_018->>HOST: fixed version and extension probes of code
     C002_COMP_018->>C002_COMP_018: read chat.useHooks, workspace settings first, then default-profile user settings, an unusable workspace file gives unknown
-    C002_COMP_018-->>C002_COMP_014: vscode, copilot-chat and hooks lines
-    alt hooks enabled
-      C002_COMP_014->>C002_COMP_014: Copilot hooks row ok, text says profile and code-workspace settings, Workspace Trust and policy not read, checklist confirms them
-    else hooks disabled or unknown
-      C002_COMP_014->>C002_COMP_014: Copilot hooks row error with its fix
-    end
+    C002_COMP_018-->>C002_COMP_019: vscode, copilot-chat and hooks lines
   end
-  C002_COMP_014->>C002_COMP_018: sdd version flag
-  alt sdd not reachable
-    C002_COMP_014-->>P01: table, then Doctor failed, sdd CLI not reachable
-  else version differs from the package version
-    C002_COMP_014-->>P01: sdd CLI row error with the npm install command
-  else versions equal
-    C002_COMP_014-->>P01: table node to sdd CLI and the outcome line
+  C002_COMP_019->>C002_COMP_018: sdd version flag
+  C002_COMP_018-->>C002_COMP_019: version, or no answer when sdd is not reachable
+  C002_COMP_019-->>C002_COMP_014: the readings of every row, toolchain.md written when .sdd exists, Context7 and DeepWiki detected yes only for ok
+  Note over C002_COMP_014,C002_COMP_019: init step 3 ends here with the record, the steps below are the doctor's
+  opt doctor only
+    C002_COMP_014->>C002_COMP_014: compare opencode with tested version 1.18.31, status untested
+    opt Copilot target, both enforcement modes
+      alt hooks enabled
+        C002_COMP_014->>C002_COMP_014: Copilot hooks row ok, text says profile and code-workspace settings, Workspace Trust and policy not read, checklist confirms them
+      else hooks disabled or unknown
+        C002_COMP_014->>C002_COMP_014: Copilot hooks row error with its fix
+      end
+    end
+    C002_COMP_014->>C002_COMP_014: remote rows, ok, unreachable with check network, or untested with the fix of its cause
+    alt sdd not reachable
+      C002_COMP_014-->>P01: table, then Doctor failed, sdd CLI not reachable
+    else version differs from the package version
+      C002_COMP_014-->>P01: sdd CLI row error with the npm install command
+    else versions equal
+      C002_COMP_014-->>P01: table node to sdd CLI and the outcome line
+    end
   end
 ```
 
@@ -1106,7 +1178,7 @@ sequenceDiagram
       Note over C002_COMP_018,REPO: guard first, so that an interrupted install never leaves agents without their guard hook
       C002_COMP_018->>C002_COMP_004: write hooks.json, the token replaced by the absolute scripts/sdd.mjs path
       C002_COMP_018->>REPO: write .github/hooks/architect-guard.json with the same PreToolUse entry
-      C002_COMP_018->>C002_COMP_004: copy install/plugin.json to plugin.json, the folder becomes a plugin
+      C002_COMP_018->>C002_COMP_004: copy install/plugin.json to plugin.json, the manifest of the plugin part
       C002_COMP_018->>REPO: write the agents of --agents, the ten, to .github/agents, temporary file then rename
       C002_COMP_018->>REPO: merge the package servers into .vscode/mcp.json, other entries kept
       C002_COMP_018->>REPO: write the install record last
@@ -1131,6 +1203,7 @@ flowchart LR
     C002_COMP_014[Conductor]
     C002_COMP_015[Commands]
     C002_COMP_016[Skills library]
+    C002_COMP_019[Specialist agents]
     C002_COMP_012[Hooks and guards]
   end
   C002_COMP_018[CLI front-end, plugin scripts/sdd.mjs only]
@@ -1143,6 +1216,8 @@ flowchart LR
   C002_COMP_015 --> C002_COMP_014
   C002_COMP_014 --> C002_COMP_016
   C002_COMP_014 --> C002_COMP_018
+  C002_COMP_014 --> C002_COMP_019
+  C002_COMP_019 --> C002_COMP_016
   C002_COMP_018 --> CORE
   C002_COMP_012 --> CORE
   C002_COMP_013 -.builds and checks.-> C002_COMP_017
@@ -1155,10 +1230,11 @@ flowchart LR
 |---|---|---|---|
 | C002-COMP-012 (C001-COMP-08) | Bash allowlist accepts only `node <path>/sdd.mjs`, with any subcommand, any Serena data folder and any `--cwd`; probes lack `node --version`; path guard allows the memory folder; Claude hook input only | Bare `sdd …` and `node --version` accepted (C002-REQ-503); the new subcommand `install` denied in every form (C002-REQ-325); `serena-config` and `serena-launch` only with `--user-data` or a data folder outside the repository, on every host (C002-REQ-517); `--cwd` of a writing subcommand only at or under the repository root, on every host (C002-REQ-521); `memoryFolder` option; Copilot host adapter (`hook guard` keyed by `agent_type` with `--mode`, the Copilot subagent guard hook in both modes, input without `agent_type` allowed, which on VS Code 1.145.2 is every readable call; `session-start` with a JSON `additionalContext` brief; `subagent-stop`; defects D-052, D-053); cores otherwise unchanged | current-state E-4, E-5, E-6, E-22; baseline E-13 |
 | C002-COMP-013 (C001-COMP-12) | One bundle; Claude-only staging and INSTALL.md; six check steps over `plugins/architect/` | Two more bundles with license check; generator in package and check; npm staging with the template CLI-line translation and scan, and pack; build errors printed with their code; PLG-VER-001 next to the plugin checks; target checks step; corpora extended (one case per writing sdd subcommand, and one per writing subcommand with an outside `--cwd`); `targets/` excluded from the Claude Code staging | current-state E-1, E-2, E-3, E-8 |
-| C002-COMP-014 (C001-COMP-01) | AskUserQuestion only; doctor rows fixed to Claude Code | Host question tool per wiring variant (`question`; `askQuestions` and `ask_user` on Copilot, defect D-051); no-choice handling, the host's auto-reply text included; doctor host rows (Claude Code text unchanged) | current-state E-24, E-25 |
-| C002-COMP-015 (C001-COMP-09) | Doctor with eight rows and Claude Code probe; commands name `claude --agent` | Doctor host rows and sdd CLI row through variants; guard line and `$ARGUMENTS` translated per target | current-state E-14, E-16, E-17, E-28 |
-| C002-COMP-016 (C001-COMP-10) | Four "Claude Code wiring" sections; toolchain record of eight rows; the file-inspection rule of sdd-conventions names Grep, Glob and Read | Same Claude Code text; variants kept in `targets/`; toolchain record host rows through a variant; the file-inspection rule through the variant `file-inspection` (on OpenCode `.sdd/` found with `sdd status` and `read`, never `glob`) | current-state E-21, E-26, E-27; `skills/sdd-conventions/SKILL.md:16` |
+| C002-COMP-014 (C001-COMP-01) | AskUserQuestion only; doctor rows fixed to Claude Code | Host question tool per wiring variant (`question`; `askQuestions` and `ask_user` on Copilot, defect D-051); no-choice handling, the host's auto-reply text included; doctor host rows (Claude Code text unchanged); on every host, Claude Code included, the researcher dispatched for the Context7 and DeepWiki probe of the doctor and init, its outcomes passed to the cartographer (defect D-057) | current-state E-24, E-25 |
+| C002-COMP-015 (C001-COMP-09) | Doctor with eight rows and Claude Code probe, the Context7 and DeepWiki calls given to the cartographer, which holds no tool of either server; commands name `claude --agent` | Doctor host rows and sdd CLI row through variants; on every host the remote-server probe by the researcher in the doctor and in init step 3, with `untested` and the fix of its cause for a server whose call did not reach it (shared text, defect D-057); guard line and `$ARGUMENTS` translated per target | current-state E-14, E-16, E-17, E-19, E-20, E-28 |
+| C002-COMP-016 (C001-COMP-10) | Four "Claude Code wiring" sections; toolchain record of eight rows, Context7 and DeepWiki "detected when their tools load"; the file-inspection rule of sdd-conventions names Grep, Glob and Read | Same Claude Code text, except the toolchain record's Context7 and DeepWiki rows, detected from the researcher's probe outcome on every host (defect D-057); variants kept in `targets/`; toolchain record host rows through a variant; the file-inspection rule through the variant `file-inspection` (on OpenCode `.sdd/` found with `sdd status` and `read`, never `glob`) | current-state E-21, E-26, E-27; `skills/sdd-conventions/SKILL.md:16` |
 | C002-COMP-017 (C001-COMP-11) | Claude Code plugin with `.mcp.json` in Claude spelling | Adds `targets/`; README sections for OpenCode and Copilot VS Code | current-state E-10, E-13 |
 | C002-COMP-018 (C001-COMP-07) | Bundled in the plugin only; templates beside the bundle or from `CLAUDE_PLUGIN_ROOT`; `sdd version` only | Same source also shipped as `architect-sdd` `sdd`; shipped templates from the folder above the running bundle first, `CLAUDE_PLUGIN_ROOT` only as the fallback (C002-IF-003 §1); `--version` (bare), `host-version` (the host first on the PATH), every executable it starts, `git` of the CHG-001 `gate` commands included, resolved over the PATH folders only and started by absolute path (C002-CON-17), `template show` (confined to the profile folder) and `template list`, `--user-data` (ERR-CLI-020 when not determinable, relative or inside the repository), `--read-only`, `--host copilot`, `install copilot` (guard hook in the package and the workspace hook file before the agents, package manifest; ERR-CLI-021, ERR-CLI-022, also for a package without its CLI copy) | current-state E-22; baseline E-14 |
+| C002-COMP-019 (C001-COMP-02) | Researcher with both remote servers' tools, one research note per brief; cartographer with neither, asked by the doctor and init to make the Context7 and DeepWiki calls | The researcher's body answers a doctor or init probe brief with outcome lines only and writes no note; the cartographer records the researcher's outcomes (defect D-057; critic CR-192) | `plugins/architect/agents/sdd-researcher.md:8`, `:13`, `:18`; `plugins/architect/agents/sdd-cartographer.md:8`; current-state E-19 |
 | New | — | C002-COMP-001 … C002-COMP-011 | — |
-| Unchanged | C001-COMP-02 … C001-COMP-06, C001-COMP-13 | used as they are; the sdd MCP server calls C001-COMP-03 and C001-COMP-04 in-process | baseline survey §4 note 1 |
+| Unchanged | C001-COMP-03 … C001-COMP-06, C001-COMP-13 | used as they are; the sdd MCP server calls C001-COMP-03 and C001-COMP-04 in-process | baseline survey §4 note 1 |

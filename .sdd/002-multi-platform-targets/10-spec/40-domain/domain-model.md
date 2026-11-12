@@ -106,5 +106,5 @@ classDiagram
   - **C002-INV-09** A question-tool result without a choice of P-01 creates no answer in a questions log and no gate approval.
 
 ### 2.9 DoctorRow
-- **Attributes:** `tool`, `status` (ok, missing, unreachable, error, untested), `version`, `fallback`, `fix`; host rows and the sdd CLI row per C002-IF-006
+- **Attributes:** `tool`, `status` (ok, missing, unreachable, error, untested), `version`, `fallback`, `fix`; host rows and the sdd CLI row per C002-IF-006; the Context7 and DeepWiki statuses from the researcher's probe call (C002-REQ-522)
 - **Owning component:** C002-COMP-015 (doctor command), C002-COMP-016 (toolchain record)

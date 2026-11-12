@@ -462,3 +462,113 @@ Questions on the S-07 record (C002-T-001).
 - **Rejected:** Conductor as a plugin agent only, specialists in the workspace — no run recorded which specialists a plugin-copy conductor starts · Defer and leave the assumption as written — leaves an assumption observed false with its fallback unapplied
 - **Answer:** P-01 (2026-11-12): "Keep both, record copy (Recommended)"
 - **Extracted instructions:** CHG-002 defect D-055 on C002-IF-005 §3; "Same names in two places" becomes a fact with this decision, its specialist half staying an assumption for VSC-22; C002-IF-009 §4 gains the Session agent paragraph; no package change; C002-T-083 revises checklist assumption A-2 (open and settled halves), the VSC-02, VSC-15, VSC-18 and VSC-22 Records, the record template and the run sheet so that the record names the copy each conductor session used; plan lines citing the old assumption or its fallback carry history notes (strategy §4, C002-T-031, C002-T-046, C002-T-050).
+
+## Round 2026-11-12 — C002-T-050 run 3 end batch
+
+Context: run 3 of C002-T-050 (run folder `C:\Sandbox\runs\t050e`, candidate e89dae8, started
+2026-11-12 07:19) passed every step except two findings of P-01's end batch: the twin half of VSC-01
+(the Architect slash commands and `sdd-conductor` offered in a window whose package folder has no
+`plugin.json`; VS Code loads a folder without a manifest as plugin format 0, with no hook before the
+install; assumption A-3 refuted; defect D-056) and VSC-12 (the doctor showed Context7 and DeepWiki
+`unreachable`, its probe having run on the cartographer, which lacks both servers' tools; shared source
+`plugins/architect/commands/doctor.md` step 2 and `commands/init.md`, Claude Code affected too; defect
+D-057). Passed in run 3: VSC-30, VSC-20 (both halves), VSC-31 and VSC-54 (default-agent fallback), and
+every earlier step (VSC-02 … VSC-29, VSC-15 and VSC-18 included).
+
+### Q-t050-doctor-01 — the doctor's Context7 and DeepWiki rows
+- **Blocking:** yes · **Material:** yes
+- **Options (as presented):** 1. Fix in 0.1.0 (Recommended) · 2. Known limitation, fix in 0.1.1
+- **Answer:** P-01 (2026-11-12): "Fix in 0.1.0 (Recommended)"
+- **Extracted instructions:** defect D-057; the fix ships in 0.1.0 (C002-T-084).
+
+### Q-t050-a3-01 — assumption A-3 refuted (a registered folder without plugin.json is loaded)
+- **Blocking:** yes · **Material:** yes
+- **Options (as presented):** 1. Docs and spec fix (Recommended) · 2. Structural fix
+- **Answer:** P-01 (2026-11-12): "Docs and spec fix (Recommended)"
+- **Extracted instructions:** defect D-056; the package layout stays; C002-IF-005 §3 states the pre-install window as a fact; the install notes warn of it and have the folder registered after the install; the checklist's A-3 row and VSC-01 follow (C002-T-084).
+
+### Q-t050-retake-01 — how C002-T-050 continues after run 3
+- **Blocking:** yes · **Material:** no
+- **Options (as presented):** 1. Targeted retake (Recommended): a plan revision; on the new candidate, retake only the rows the fixes touch (VSC-01 twin, VSC-02 install, VSC-12/13 doctor) plus a diff check that nothing else changed; one record cites run 3 for the rest · 2. Full binding run again, about 2–3 h
+- **Answer:** P-01 (2026-11-12): "Targeted retake (Recommended)"
+- **Extracted instructions:** C002-T-050 step 0 (targeted retake in `C:\Sandbox\runs\t050f` on C002-T-084's candidate, diff check against e89dae8's package, one record holding run 3 and the retake); the record rules for a two-run record were asked as Q-t050-record-01 and the retake of VSC-14 as Q-t050-retake-02 (planner's questions, settled by the conductor on 2026-11-13, below).
+
+### Q-t050-doctor-02 — where the probe fix goes
+- **Blocking:** yes · **Material:** yes
+- **Options (as presented):** 1. Fix shared source (Recommended): the researcher makes the probe calls; fixes Claude Code and Copilot together; the CHG-002 defect cites the CHG-001 doctor interface; one task, both candidates rebuilt · 2. Copilot-only fix (generator special case; Claude Code keeps the bug) · 3. Defer both
+- **Answer:** P-01 (2026-11-12): "Fix shared source (Recommended)"
+- **Extracted instructions:** C002-REQ-504 and C002-REQ-507 revised (C002-IF-006 §2.1); one task, C002-T-084, changes `doctor.md`, `init.md`, the code-discovery skill and the three wiring variants of both targets, and rebuilds the Claude Code plugin and the Copilot package; CHG-001's dogfoods C001-T-073 and C001-T-074 run on the rebuilt plugin (`handoff.md`).
+
+### Q-t050-a3-02 — keep the docs and spec fix although the spec had planned the install/ fallback
+- **Blocking:** yes · **Material:** yes
+- **Context:** asked after the conductor said that the spec's S-08 assumption had planned a fallback (agents and prompt files under `install/`, copied to the package root by the install).
+- **Options (as presented):** 1. Keep docs and spec fix (Recommended) · 2. Switch to structural fix
+- **Answer:** P-01 (2026-11-12): "Keep docs and spec fix (Recommended)"
+- **Extracted instructions:** the `install/` fallback is not applied; the reason holds for VS Code 1.145.2 (the guard stops no host built-in subagent after the install either, D-052), and the revision that a new tested build needs reviews it (C002-IF-005 §3; C002-RISK-044).
+
+The five questions below were raised by the planner in the plan revision for D-056 and D-057 and
+answered by the conductor on 2026-11-13, each with its recommended option, within P-01's decisions
+above and the approved limits (standing approval of 2026-10-24, renewed 2026-10-28; waiver of
+2026-10-19 for paid batches within approved limits).
+
+### Q-t050-record-01 — the record of run 3 completed by a targeted retake
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 4
+- **Context:** VSC-01 and VSC-12 failed in run 3; C002-IF-009 §4/§5 and the rationale of C002-REQ-618 made an earlier failed run binding unless the whole checklist ran again, and treated a record as the evidence of one run, so the targeted retake of Q-t050-retake-01 either hid run 3's failures or was refused (ERR-REL-004); the retaken group-4 steps also needed a hooks-state read of their own window.
+- **Options (as presented):** 1. Spec clause, run-3 results in Notes (Recommended): a "targeted retake after a revision" clause in C002-IF-009 §4, only when the earlier run wrote no record, its failures were fixed by an approved revision and the comparison shows only the files the fixes touch; the retake runs group 1, VSC-07, VSC-08 and VSC-10 (reading on, trusted, none), then the retaken group-4 steps; the record lists each step once in run order and keeps the run-3 results of the retaken steps in its Notes, not in `earlier_results`; the release check unchanged · 2. Spec clause plus a new `earlier_results` cause that the release check excuses (code, schema and test changes in the release check)
+- **Rejected:** record run 3's failures with the cause `repeated` — the release check refuses that record · full binding run again — rejected by P-01 in Q-t050-retake-01
+- **Answer:** conductor (2026-11-13): "Spec clause, run-3 results in Notes (Recommended)"
+- **Extracted instructions:** the architect added C002-IF-009 §4 "Targeted retake after a revision" and §5 "Record of a targeted retake"; the spec-writer narrowed C002-REQ-615 and C002-REQ-618; C002-T-050 step 0 follows §4: the conditions and the comparison, a usage audit of run 3, the retaken steps (group 1, VSC-07, VSC-08, VSC-10, the group-4 steps whose failure the revision fixed or whose run-3 run used a changed file), and the record rules; C002-T-084 writes the record template's Notes and `note` placeholders.
+
+### Q-t050-retake-02 — VSC-14 in the targeted retake
+- **Blocking:** no · **Material:** no
+- **Context:** D-057 changes the init prompt and the cartographer and researcher files that VSC-14 (`/architect:init`) runs; P-01's option text named VSC-01, VSC-02 and VSC-12/13.
+- **Options (as presented):** 1. Retake VSC-14 too (Recommended): about 2–3 more VS Code sessions; it shows on VS Code that `toolchain.md` records Context7 and DeepWiki as detected · 2. Only the named rows
+- **Answer:** conductor (2026-11-13): "Retake VSC-14 too (Recommended)"
+- **Extracted instructions:** VSC-14 is a retaken step of C002-T-050 step 0; C002-IF-009 §4 also makes any group-4 step whose run-3 run used a changed file a retaken step, which adds VSC-11 and VSC-17 and, by a usage audit of run 3's session files, any of VSC-18, VSC-19, VSC-20, VSC-29, VSC-30 and VSC-31 that used the cartographer or the researcher.
+
+### Q-t084-opencode-01 — the OpenCode rows of the changed doctor cases
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 4
+- **Context:** CHG-002 spends no more OpenRouter credit since D-036 (Q-opencode-scope-01); T-084 changes the OpenCode package, so CHG-003 retakes OpenCode evidence at its own version anyway.
+- **Options (as presented):** 1. Carry to CHG-003 (Recommended): no OpenRouter spend in CHG-002; the case files written now, the OpenCode variant text covered by structure tests · 2. Run them now from the general pool: about 8 sessions, about 2–3 USD, against the D-036 consequence, for a target CHG-002 does not release
+- **Rejected:** run only the TC-506 OpenCode row — TS-709 and TS-710 still unrun on OpenCode · waive the OpenCode rows — not needed, CHG-003 owns the OpenCode release and its evidence
+- **Answer:** conductor (2026-11-13): "Carry to CHG-003 (Recommended)"
+- **Extracted instructions:** the OpenCode rows of C002-TC-506, 509, 511, 512, 935 and 936 are written by C002-T-084 and run with CHG-003's OpenCode release evidence; no OpenRouter session in CHG-002.
+
+### Q-t084-copilot-cli-01 — Copilot CLI rows on C002-T-084's candidate
+- **Blocking:** no · **Material:** no
+- **Context:** the Copilot pool holds 13.14 of 30 USD, under C002-T-076's 15.00 USD stop.
+- **Options (as presented):** 1. No Copilot CLI retake (Recommended): no release-set row runs the doctor or init; TS-513 and TS-526 check only the host and hooks rows; the cartographer changes only in its inlined toolchain item, which the comparison verifies · 2. Retake INJ-01 … INJ-06 (about 0.85 USD in 3–4 batches under the 15.00 USD stop)
+- **Answer:** conductor (2026-11-13): "No Copilot CLI retake (Recommended)"
+- **Extracted instructions:** no Copilot CLI session in C002-T-084; the comparison of its step 7 bounds the cartographer's change to its toolchain item and the researcher's to its probe line (C002-COMP-019, settled after the question), which applies only to a doctor or init probe brief, so the researcher rows `INJ-08` … `INJ-12` keep their evidence too.
+
+### Q-spec-req623-01 — C002-REQ-623 and C002-TS-626 against C002-DOD-022
+- **Blocking:** yes · **Material:** no
+- **Context:** C002-REQ-623 and C002-TS-626 named only the bash guard changes as changed expectations, while C002-DOD-022 also named the D-057 doctor and toolchain changes, so C002-TC-626 would fail on the fix.
+- **Options (as presented):** 1. Revise REQ-623 and TS-626 now (Recommended) · 2. Leave them as they are
+- **Answer:** conductor (2026-11-13): "Revise REQ-623 and TS-626 now (Recommended)"
+- **Extracted instructions:** done in the spec (C002-REQ-623, C002-AC-623.1, C002-TS-626, with the `deepwiki-down` row of C001-TS-1112 named as a changed expectation); `30-impact/regression-set.md` §4.7 and C002-TC-626 follow.
+
+Three more questions, raised by the planner after the spec added C002-IF-009 §4 "Targeted retake
+after a revision", answered by the conductor on 2026-11-13 with the recommended options, on the same
+basis as above.
+
+### Q-spec-retake-list-01 — the list of retaken steps in C002-IF-009 §4
+- **Blocking:** yes · **Material:** no
+- **Context:** §4 named the retaken group-4 steps of the C002-T-050 retake as "VSC-13, VSC-14 and VSC-12", while its own rule (a step whose earlier run used a changed file is retaken) also adds VSC-11 and VSC-17 once the cartographer and the researcher files change (C002-COMP-019), plus what a usage audit of run 3 finds.
+- **Options (as presented):** 1. Name the rule and the expected list (Recommended): VSC-11, VSC-13, VSC-14, VSC-17 and VSC-12, plus audit additions among VSC-18 … VSC-31 · 2. Keep the three-step list
+- **Answer:** conductor (2026-11-13): "Name the rule and the expected list (Recommended)"
+- **Extracted instructions:** the architect updates §4; C002-T-050 step 0 keeps the expected list and the usage audit.
+
+### Q-spec-retake-group2-01 — group-2 steps that ran the changed doctor prompt
+- **Blocking:** no · **Material:** no
+- **Context:** VSC-03 and VSC-04 (the hooks-off rows of C002-TC-516) run the doctor prompt, which the comparison shows changed, but §4's rule covered group 4 only.
+- **Options (as presented):** 1. Extend the rule to group 2 (Recommended): about 2 more doctor sessions before VSC-07 · 2. Group 4 only, as written
+- **Answer:** conductor (2026-11-13): "Extend the rule to group 2 (Recommended)"
+- **Extracted instructions:** the architect extends §4's rule to every step after group 1; C002-T-050 step 0 retakes VSC-03 and VSC-04, in run order after VSC-02 and before VSC-07, and the usage audit covers every step after group 1; about 2 more VS Code sessions.
+
+### Q-spec-retake-setup-01 — set-up steps in the retake
+- **Blocking:** no · **Material:** no
+- **Context:** the retaken VSC-17 needs a toy change in the fresh repository, but VSC-16 (`/architect:new`) used no changed file and is no retaken step.
+- **Options (as presented):** 1. Allow set-up, named in the Notes (Recommended) · 2. Retake VSC-16 as a step
+- **Answer:** conductor (2026-11-13): "Allow set-up, named in the Notes (Recommended)"
+- **Extracted instructions:** C002-T-050 step 0 runs VSC-16's Do as set-up, names it in the record's Notes, and VSC-16 keeps run 3's result.

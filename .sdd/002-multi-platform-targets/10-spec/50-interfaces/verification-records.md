@@ -339,11 +339,13 @@ an `agent_type` that this build does not send (C002-IF-008 §2, Copilot hooks fa
 1.145.2; defect D-052).
 
 **Checklist content on VS Code 1.145.2** (revised for defects D-051, D-052 and D-053; T-050 findings
-pass of 2026-11-11, `../../20-plan/revision-D051-D053-digest.md`). The steps keep their IDs, groups,
-modes and kinds; their expectations and records follow the tested build:
+pass of 2026-11-11, `../../20-plan/revision-D051-D053-digest.md`; VSC-01 revised for defect D-056,
+C002-T-050 run of 2026-11-12). The steps keep their IDs, groups, modes and kinds; their expectations
+and records follow the tested build:
 
 | Step | Expectation and record |
 |---|---|
+| VSC-01 | with the package folder registered before the install (no `plugin.json` and no `hooks.json` at its root yet), the agent picker and the slash-command list offer the Architect agents and prompt files, VS Code having loaded the folder without a manifest (C002-IF-005 §3, Registered before the install; defect D-056). The step expects them to be shown; the record keeps as `observed` what the picker and the slash-command list show, and, for the twin (Executor, below), the state that ties the entries to the registered folder: the package is the twin profile's only `chat.pluginLocations` entry, the profile has no user prompt file and no other plugin is installed. The step passes when the entries are shown as stated. The twin method is unchanged: the slash-list half runs on the twin, the run's own package being installed by the time P-01's batch runs. Checklist assumption A-3 is refuted and its row states the observed fact (below) |
 | VSC-11 | the workspace MCP servers start when their first tool is used, not after the first message: the record keeps each server's state after `/architect:status` and after a step that uses Serena, and Serena's start arguments, which hold `--context vscode` (checklist assumption A-8, reworded; C002-IF-001 §6.2) |
 | VSC-12 | the slash list offers the prompt files as `/architect:<name>` (`/architect:doctor`, `/architect:new`, `/architect:init`); the record keeps whether a bare `/init` resolves to VS Code's built-in `/init` (C002-IF-001 §2 command reference); every other step names a command as `/architect:<name>` |
 | VSC-15, VSC-16, VSC-18, VSC-19 | the question tool is `askQuestions`, granted by the `tools` entry `vscode/askQuestions` (defect D-054, C002-T-050 binding run of 2026-11-11, VSC-14): VSC-15 removes `ask_user`, `askQuestions` and `vscode/askQuestions` from the `tools` lists of both conductor agent files, the package's `agents/sdd-conductor.agent.md` and the workspace's `.github/agents/sdd-conductor.agent.md`, and of the package's `prompts/new.prompt.md`, reloads the window and runs the new-change prompt (C002-TS-319); in the C002-T-050 run of 2026-11-12 the text form appeared only with the names removed from all three files, and the run did not separate the causes of the dialog in its earlier attempts, nor verify whether a prompt attached with `code chat -a` applies the prompt file's `tools` (the attempts: C002-IF-005 §3, Same names in two places; defect D-055); the step has no plain-request form (a request without the prompt file), since C001-REQ-116 binds the profile question only when `/architect:new` runs and a plain request that runs `sdd change new` with the CLI defaults is CHG-001 defect D-032 (C002-T-050 run of 2026-11-12); its `note` names the invocation form (the prompt attached with `code chat -a`, or a slash command typed by P-01) and, when it differs from VSC-02's, the copy the session used (Session agent, below), VSC-18 checks that the `tools` lists of the conductor and of the prompt file it runs name `ask_user`, `askQuestions` and `vscode/askQuestions`, expects each dialog to come from a `vscode_askQuestions` call, records the input shape of that call (C002-TS-216, C002-TS-617) and notes the invocation form as VSC-15 does, VSC-19 runs a round with `chat.askQuestions.enabled` off (checklist assumption A-6, renamed to `askQuestions`; C002-IF-001 §6.1) |
@@ -360,13 +362,19 @@ findings pass and VSC-22 records it again (C002-IF-005 §3). Assumption A-5 (the
 `general-purpose` to the conductor and its calls carry `agent_type`) is refuted on VS Code 1.145.2 and
 accepted as the known limitation of C002-IF-005 §5 step 6: its row in the checklist states the
 limitation, and the default-agent probe of VSC-27 records what the hooks log shows for a subagent's
-call. `models_used` takes the model named in each
+call. Assumption A-3 (VS Code adds no agent, prompt file or skill from a registered package folder
+without `plugin.json`) was refuted on VS Code 1.145.2 by the twin half of VSC-01 in the C002-T-050
+run of 2026-11-12 (defect D-056; P-01's answers to Q-t050-a3-01 and Q-t050-a3-02). Its row in the
+checklist now states the observed fact instead: VS Code loads the folder's agents, prompt files and
+skills before the install, and they run with no guard hook, as C002-IF-005 §3 (Registered before the
+install) records; the install notes warn of it (C002-IF-005 §5 step 3), and VSC-01 checks it
+(critic CR-191). `models_used` takes the model named in each
 reply's footer (Models used, below). When the conductor executes the steps (Executor, below), it
 sends a slash command with `code chat` by attaching the prompt file (`-a`) with the words "Follow the
 attached Architect <name> prompt", since `code chat` sends `/<name>` as plain text without expanding
 the prompt file (defect D-053, run sheet).
 
-**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type; started with `-m sdd-conductor`, its session agent may be either copy of the conductor, and it was the plugin copy in the C002-T-050 run of 2026-11-12, Session agent below), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list), the free-text half of VSC-20 (an interview answer typed without selecting an option, the free-text row of C002-TS-317; the conductor runs the `chat.autoReply` half; added for the D-051 revision) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 checks assumption A-3 on that twin, since the run's own package is installed by then (critic CR-145). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
+**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type; started with `-m sdd-conductor`, its session agent may be either copy of the conductor, and it was the plugin copy in the C002-T-050 run of 2026-11-12, Session agent below), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list), the free-text half of VSC-20 (an interview answer typed without selecting an option, the free-text row of C002-TS-317; the conductor runs the `chat.autoReply` half; added for the D-051 revision) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 runs on that twin, since the run's own package is installed by then (critic CR-145); in the C002-T-050 run of 2026-11-12 it showed the Architect entries before the install, which refuted assumption A-3 (defect D-056; VSC-01 row above). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
 
 **Session agent** (C002-T-050 run of 2026-11-12; defect D-055; critic CR-178 … CR-180). VS Code
 1.145.2 loads the conductor twice under the name `sdd-conductor`: the plugin copy,
@@ -528,6 +536,68 @@ An earlier run whose `result` is neither `passed` nor `failed`, an entry that is
 listed step, the injection steps and the steps of the other mode included. The release check does
 not read `note`, and it cannot tell whether a hooks source really changed: the `cause` is P-01's
 statement, which the sign-off of the record covers, as for the hooks state (derivation below).
+`earlier_results` holds the earlier runs of a step on the candidate the record is evidence for; a run
+on an earlier candidate goes there only as the targeted retake below allows.
+
+**Targeted retake after a revision** (added for Q-t050-record-01, the conductor's decision within
+P-01's answer "Targeted retake (Recommended)", after the C002-T-050 run of 2026-11-12 and the
+revision for defects D-056 and D-057). A run of the checklist may be completed by a targeted retake
+instead of a full new run, and the retake's record is the record of the run, under the retake's date.
+
+- **When it applies.** Only when all of these hold: (1) the earlier run wrote no checklist record;
+  (2) each step that failed in it was fixed by an approved revision of this change; (3) a
+  file-by-file SHA-256 comparison of the new packages (every file of the Copilot target package and
+  of the `architect-sdd` tarball, by path) against those of the earlier candidate shows as changed,
+  added or removed only files that the revision's fixes touch, the generation manifest
+  `architect-target.json` counting as touched by any fix, since it records the files' hashes
+  (C002-IF-004). Both runs are on the tested build (§3), which the record's `host_versions` names.
+  Any other difference, or a step of the earlier run that failed for a cause the revision did not
+  fix, rules the retake out, and a full new run is needed.
+- **Which steps are retaken.** Group 1 always. After group 1, by the **changed-file rule**
+  (Q-spec-retake-list-01 and Q-spec-retake-group2-01, conductor decisions of 2026-11-13, "Name the
+  rule and the expected list" and "Extend the rule to group 2"): every step of groups 2, 3 and 4 of
+  the package's mode whose failure the revision fixed, and every such step whose earlier run used a
+  file that the comparison shows changed, since its earlier result is no evidence for the new file.
+  The restore step VSC-07 and the group-3 steps VSC-08 and VSC-10 run in every retake, since they
+  set and read the hooks state of the retake. A step "used" a file when its earlier run ran that
+  prompt file, started that agent or loaded that skill, or called a hook command or the CLI copy that
+  the file is; the **usage audit** reads this per step from the earlier run's folder (transcripts,
+  chat session files, hooks log) and lists its result per step in the record's Notes.
+  **Expected list for the revision for defects D-056 and D-057** (C002-T-050 retake): VSC-03 and
+  VSC-04, which ran the doctor prompt; VSC-07, VSC-08 and VSC-10; VSC-11, VSC-13, VSC-14, VSC-17 and
+  VSC-12; and any step among VSC-18 … VSC-31 that the usage audit finds used a changed file.
+- **What the retake runs**, in a fresh run folder, in the checklist's run order: group 1, VSC-01
+  with both halves (the twin half on a fresh twin) and VSC-02; the retaken steps of group 2 with
+  their hooks-off settings; the restore step VSC-07; the group-3 steps VSC-08 and VSC-10, which must
+  read `chat.useHooks` on, the workspace trusted and no policy (`on`, `trusted`, `none`); then the
+  retaken steps of group 4, the steps that P-01 types in one batch at the end (Executor). Groups 3
+  and 4 keep their rule that no step of group 4 runs before the hooks-state step (Run order).
+- **Set-up** (Q-spec-retake-setup-01, conductor decision of 2026-11-13, "Allow set-up, named in the
+  Notes"). The retake may run the Do of a step that is not retaken as unrecorded set-up for a
+  retaken step, when that step used no changed file: for example the `/architect:new` of VSC-16, which
+  creates the toy change that the retaken VSC-17 needs. The set-up run gives no result; the step
+  keeps the earlier run's result, as every step not retaken does, and the record's Notes name the
+  set-up run and the retaken step it served. A set-up step in group 4 runs after the hooks-state
+  step, as group 4 does.
+- **What the record holds.** Each step once, in the checklist's run order, with the frontmatter of
+  this section and no field of its own:
+  - a retaken step: the result of its retake run, and in `earlier_results` only the earlier runs of
+    the retake itself;
+  - a step not retaken: the result of the earlier run, with the earlier runs that run had of it in
+    `earlier_results`, and a `note` that cites the earlier run by its run folder, candidate and date;
+  - in the record's Notes (the body below the frontmatter): the earlier run's results of the retaken
+    steps, each with the defect that fixed it or the changed file that made it retaken, not in
+    `earlier_results`, since they were taken on a candidate that the revision replaced; both
+    candidates, both run folders, and the comparison's result (every changed, added or removed file
+    with its SHA-256 on both sides and the fix that touches it); the usage audit's result per step;
+    each set-up run, with the retaken step it served;
+  - `hooks_state` and `hooks_sources` from the retake's VSC-10; `models_used` from the turns of the
+    retake, and for an agent seen only in a step not retaken, from the earlier run; `executed_by` for
+    both runs.
+
+  A step not retaken whose earlier `failed` run the rerun rule excused in the earlier run is not
+  excused in the retake's record, since the restore step's earlier runs stay in the earlier run
+  (Earlier runs, rule 2); such a record is refused (§5), and a full new run is needed.
 
 The injection steps are required only where the record is the injection evidence (§5: under the
 Copilot hooks fallback, and under sdd MCP server enforcement when Copilot CLI cannot load the
@@ -613,7 +683,19 @@ independently of the other target (C002-REQ-619).
 The revision for defects D-051 … D-053 changes no rule of this section: the checklist keeps its step
 IDs, groups, modes and kinds (§4 Checklist content on VS Code 1.145.2), and the check reads the
 recorded step results as before, so the new expectations of VSC-11, VSC-12, VSC-15 … VSC-23,
-VSC-27 … VSC-29 and VSC-54 reach the release through those results.
+VSC-27 … VSC-29 and VSC-54 reach the release through those results. The same holds for the
+revision for defect D-056: the new expectation of VSC-01 reaches the release through its result.
+
+**Record of a targeted retake** (Q-t050-record-01; §4 Targeted retake after a revision). The release
+check is unchanged for it: it reads the retake's record as any other checklist record of the
+version, by the same rules (the latest date in the file name, the step check, the hooks-state check,
+the host versions). It reads the earlier runs only as `earlier_results` holds them, so the earlier
+run's results of the retaken steps, which the record keeps in its Notes, refuse nothing, while a step
+not retaken is decided by the result and earlier runs that the record carries over from the earlier
+run, a step run only as set-up included. It does not read the Notes, the cited earlier run, the
+candidates, the comparison or the usage audit, and it does not check that the retake applied or that
+the changed-file rule chose every step it should: P-01's sign-off and the review of the record
+(C002-TS-618) cover them.
 
 **Replay reports per enforcement mode** (C002-REQ-606; revised for defect D-016 item 5). The check
 requires one replay report, `docs/releases/<target>/<version>/replay-<mechanism>.json`, for each

@@ -1168,15 +1168,24 @@ Scenario Outline: C002-TS-625 — release record by Copilot enforcement mode
 
 ## C002-REQ-623
 
-#### C002-AC-623.1 — Regression set passes with the three bash guard changes as the only changed expectations
+#### C002-AC-623.1 — Regression set passes with the bash guard changes and the remote-row doctor changes as the only changed expectations
 ```gherkin
 Scenario: C002-TS-626 — regression set after CHG-002
   Given the regression set of "20-plan/30-impact/regression-set.md"
   When it runs on the implementation of CHG-002
   Then every test and eval of the set passes
-  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325
+  And a diff of the set's expectations against the CHG-002 base commit shows only corpus cases and deny-message texts changed by C002-REQ-503, C002-REQ-517, C002-REQ-521 and C002-REQ-325, and doctor and toolchain-record expectations changed by C002-REQ-504, C002-REQ-507 and C002-REQ-522
   And every changed corpus case is a case of a bare "sdd" command, of "node --version", of "sdd serena-config" or "sdd serena-launch", or of a writing "sdd" subcommand with the option "--cwd"
+  And every changed doctor or toolchain-record expectation is a Context7 or DeepWiki status, fix or detected value, a doctor outcome line, or a copy of the doctor, init or code-discovery text that changes with them
+  And the changed expectations include the "deepwiki-down" row of C001-TS-1112, whose DeepWiki row is expected "untested" with the `not offered` fix of C002-IF-006 §2.1 in place of "unreachable", its outcome staying "completed with warnings"
 ```
+
+Revised for defect D-057 (Q-spec-req623-01, "Revise REQ-623 and TS-626 now"; critic CR-187): the
+researcher's probe changes the Claude Code doctor, init command and code-discovery skill, so the
+regression set's doctor and toolchain expectations of `20-plan/30-impact/regression-set.md` §4.7
+change with C002-REQ-504, C002-REQ-507 and C002-REQ-522. The unresolvable DeepWiki endpoint of
+"cfg-deepwiki-down" leaves the host with no DeepWiki tool to offer (C002-IF-006 §2.1 Blocked
+endpoint; C002-TS-710).
 
 ```gherkin
 Scenario Outline: C002-TS-627 — a Claude Code behaviour change is caught
@@ -1932,7 +1941,7 @@ check is decided, items 1, 5 and 6; critic CR-124). The stop on a `true` is C002
 | C002-REQ-620 | TS-623 | TS-623 (either mode holds) | TS-623 (guard-hook outcome absent from a record whose subagents are not confined) | TS-623 | n/a | n/a | n/a |
 | C002-REQ-621 | TS-624 | TS-624 (Copilot versions) | TS-624 (older and newer) | TS-624 | n/a | n/a | n/a |
 | C002-REQ-622 | TS-625 | TS-625 (server enforcement) | n/a | n/a | n/a | n/a | n/a |
-| C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor) | n/a | TS-627 | n/a | n/a | n/a |
+| C002-REQ-623 | TS-626 | TS-627 (Serena step of the Claude Code doctor), TS-626 (remote-row doctor and toolchain changes of defect D-057, among them the `deepwiki-down` row of C001-TS-1112) | n/a | TS-627 | n/a | n/a | n/a |
 | C002-REQ-625 | TS-628 | TS-628 (three mechanisms), TS-638 (non-Architect corpus caller replayed as an Architect write) | n/a | TS-629 | TS-638 (caller replaced by an Architect agent) | n/a | TS-629 (memory write allowed) |
 | C002-REQ-626 | TS-630 | TS-630 (server and hooks: not applicable), TS-652 (Architect caller BG-265 played by the generated conductor on OpenCode) | n/a | n/a | TS-630 (adopter agent as non-Architect caller), TS-652 (Architect caller keeps `deny`) | n/a | n/a |
 | C002-REQ-627 | TS-631 | TS-631 (empty list on OpenCode), TS-681 (a case limited by `platforms` to another platform listed with the rule `platforms` on each mechanism), TS-682 (that listing accepted at release in both OpenCode modes) | TS-631 (each case exactly once; C002-REQ-630 and C002-REQ-633 cases never not applicable), TS-681 (a memory case limited to another platform still replayed), TS-637 (a case limited by `platforms` to another platform: omitted, replayed or listed under the rule `C002-REQ-626`), TS-681 (a case with both `platforms` and `requires`: the platform rule first) | TS-637 | n/a | n/a | TS-637 (case omitted, hidden as not applicable, a memory case hidden under the rule `platforms`, a platform-rule case listed under another rule, excluded case replayed, expectation other than C002-IF-009 §2.1, replay host lacking a required capability) |

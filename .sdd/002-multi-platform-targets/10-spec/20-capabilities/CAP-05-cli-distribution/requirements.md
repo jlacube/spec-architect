@@ -9,12 +9,13 @@ capability: "CLI distribution, allowlist and doctor"
 # C002-CAP-05 — Requirements
 
 Brownfield change: every requirement carries a Delta. C002-REQ-503, C002-REQ-517 and C002-REQ-521
-are the only Claude Code behaviours CHG-002 changes (C002-GOAL-05, widened by Q-guards-04 and
-Q-guards-05). C002-REQ-503 is the single MODIFIED delta of C001-REQ-1106; C002-REQ-517 and
+are the bash guard behaviours CHG-002 changes on Claude Code (C002-GOAL-05, widened by Q-guards-04
+and Q-guards-05). C002-REQ-503 is the single MODIFIED delta of C001-REQ-1106; C002-REQ-517 and
 C002-REQ-521 are ADDED bash guard rules beside it, so that `sdd archive` applies one replacement of
 C001-REQ-1106. C002-REQ-504 to C002-REQ-507 make CHG-001's doctor requirements host-dependent and
-keep today's behaviour on Claude Code. LINT-DELTA-001 findings on the MODIFIED entries are expected
-until CHG-001 is archived (C002-CON-05, C002-DEC-008).
+keep today's behaviour on Claude Code, except the Context7 and DeepWiki probe, which the researcher
+makes on every host, Claude Code included (C002-REQ-522, C002-REQ-507; defect D-057). LINT-DELTA-001
+findings on the MODIFIED entries are expected until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 
 ### C002-REQ-501 — `sdd` executable from npm
 - **Delta:** ADDED
@@ -49,7 +50,7 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Delta:** MODIFIED C001-REQ-1110
 - **Pattern:** event-driven
 - **Statement:** WHEN the doctor command runs, THE conductor SHALL print a table with, for each of node, git, the host it runs on (Claude Code, OpenCode, or VS Code with GitHub Copilot Chat), ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI, its status (ok, missing, unreachable, error or untested), version (for VS Code with GitHub Copilot Chat: the VS Code version and the GitHub Copilot Chat version), fallback and, for rows other than ok, the install or fix command from the doctor remedies table (C001-IF-10 §3).
-- **Rationale:** C002-US-503; on Claude Code the rows are those of today (C002-GOAL-05); status `untested`: C002-REQ-508; both versions are pinned for Copilot VS Code (glossary: tested version), so the host row shows both (C002-IF-006 §2)
+- **Rationale:** C002-US-503; on Claude Code the rows are those of today (C002-GOAL-05); status `untested`: C002-REQ-508 for the host rows, C002-REQ-522 for Context7 and DeepWiki; both versions are pinned for Copilot VS Code (glossary: tested version), so the host row shows both (C002-IF-006 §2). The status and fix of the Context7 and DeepWiki rows follow C002-REQ-522 (defect D-057; critic CR-186: in a requirement of its own)
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-504.1
@@ -58,8 +59,8 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-505 — Doctor failure conditions
 - **Delta:** MODIFIED C001-REQ-1111
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF an optional tool is missing or a remote MCP server is unreachable, THEN THE conductor SHALL report it in the doctor table and complete the doctor run, reporting failure only when node is missing or older than version 20, or when the sdd CLI is not reachable on a generated target.
-- **Rationale:** on a generated target no agent works without the sdd CLI (C002-GOAL-04); under sdd MCP server enforcement an unreachable CLI also leaves the conductor without a command tool
+- **Statement:** IF an optional tool is missing or a remote MCP server is unreachable or untested, THEN THE conductor SHALL report it in the doctor table and complete the doctor run, reporting failure only when node is missing or older than version 20, or when the sdd CLI is not reachable on a generated target.
+- **Rationale:** on a generated target no agent works without the sdd CLI (C002-GOAL-04); under sdd MCP server enforcement an unreachable CLI also leaves the conductor without a command tool. A remote MCP server row is `untested` when the researcher made no probe call to it (C002-REQ-522, defect D-057); like `unreachable`, it is a warning, never a failure (critic CR-189)
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-505.1
@@ -78,12 +79,12 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 ### C002-REQ-507 — Toolchain record per host
 - **Delta:** MODIFIED C001-REQ-115
 - **Pattern:** event-driven
-- **Statement:** WHEN the baseline survey of the init command or of the doctor command completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, the host it runs on, ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI: detected (yes/no), version, path or endpoint, and the fallback in use.
-- **Rationale:** same rows as the doctor table (C002-REQ-504); unchanged on Claude Code
+- **Statement:** WHEN the baseline survey of the init command or of the doctor command completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, the host it runs on, ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI: detected (yes/no), version, path or endpoint, and the fallback in use, with Context7 and DeepWiki detected only when the one probe call that the researcher makes with that server's tools during the same command succeeds.
+- **Rationale:** same rows as the doctor table (C002-REQ-504); unchanged on Claude Code except the detection of Context7 and DeepWiki. Revised for defect D-057 (P-01, 2026-11-12: "Fix shared source (Recommended)"): the cartographer keeps writing the record, but it holds no tool of either remote server on any target, so it recorded both as not detected while both servers ran (`.sdd/_constitution/toolchain.md:22-23`: "no (this session)"); the two rows now take the result of the researcher's probe call, the call of C002-REQ-522 in the doctor command. The init command writes the same record through the same toolchain survey (current-state E-20, E-21) and uses the same researcher probe (conductor's decision within P-01's "Fix shared source (Recommended)"); otherwise its two rows would read "no" while both servers run
 - **Stories:** C002-US-503
 - **Priority:** Must
 - **Acceptance:** C002-AC-507.1
-- **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (cartographer writes `toolchain.md`, eight rows; layer: grep); current-state E-20 — `plugins/architect/commands/init.md:13` › `step 3` (toolchain record always written; layer: grep); current-state E-21 — `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` (row set and columns; layer: grep)
+- **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (cartographer writes `toolchain.md`, eight rows; layer: grep); current-state E-20 — `plugins/architect/commands/init.md:13` › `step 3` (toolchain record always written; layer: grep); current-state E-21 — `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` (row set and columns; Context7 and DeepWiki "detected when their tools load"; layer: grep); `plugins/architect/agents/sdd-cartographer.md:8` › `tools` (no Context7 or DeepWiki tool; layer: grep); `.sdd/_constitution/toolchain.md:22-23` › `Context7`, `DeepWiki` (detected "no (this session)"; layer: read)
 
 ### C002-REQ-508 — Untested host version
 - **Delta:** ADDED
@@ -214,3 +215,13 @@ until CHG-001 is archived (C002-CON-05, C002-DEC-008).
 - **Stories:** C002-US-502
 - **Priority:** Must
 - **Acceptance:** C002-AC-521.1
+
+### C002-REQ-522 — Context7 and DeepWiki rows from the researcher's probe
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN the doctor command runs, THE conductor SHALL show each of the Context7 and DeepWiki rows with status `ok` after a probe call that the researcher made with that server's tools and that succeeded, `unreachable` after such a call that failed, and `untested` when the researcher made no call to that server or reported no outcome for it, each status other than `ok` with its fix from C002-IF-006 §2.
+- **Rationale:** defect D-057 (P-01, 2026-11-12: Q-t050-doctor-01 "Fix in 0.1.0 (Recommended)", then Q-t050-doctor-02 "Fix shared source (Recommended)", `../../../20-plan/questions-log.md`); critic CR-186: the rule of the two remote rows is a requirement of its own, beside the table of C002-REQ-504. In the C002-T-050 run of 2026-11-12 (run sheet t050e, candidate e89dae8, VS Code 1.145.2, step VSC-12) the doctor showed Context7 and DeepWiki `unreachable` with the fix "check network" while both servers ran, and stated that no tool of either server was offered in its session, so no probe call was made: the probe step gave the two calls to the cartographer, which holds neither server's tools on any target, Claude Code included, whereas the researcher holds both on every target (Evidence). The researcher therefore makes the two probe calls on every host (C002-IF-006 §2.1), and `unreachable` states that a call was made and failed. A server whose tools the researcher is not offered in the session gets no call, and a hand-back without an outcome for a server shows no call either, so such a row is `untested`, never `unreachable` with the network fix (conductor's decision within P-01's "Fix shared source (Recommended)"). The fix texts are those of C002-IF-006 §2; both statuses are warnings (C002-REQ-505). This changes the doctor on Claude Code too, where both rows were `unreachable` in every run (`.sdd/_constitution/toolchain.md:22-23`: "no (this session)"), as C002-GOAL-05 now states; the toolchain record takes the same probe result (C002-REQ-507)
+- **Stories:** C002-US-503
+- **Priority:** Must
+- **Acceptance:** C002-AC-522.1
+- **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (the cartographer loads a Context7 and a DeepWiki tool and makes one small call, `unreachable` when it fails; layer: grep); current-state E-15 — `plugins/architect/commands/doctor.md:29` › `Install / fix command` (one Context7 and one DeepWiki fix, "check network; endpoint …", whatever the cause; layer: grep); `plugins/architect/agents/sdd-cartographer.md:8` › `tools` (no Context7 or DeepWiki tool; layer: grep); `dist/copilot/agents/sdd-cartographer.agent.md:5` › `tools` (`sdd-shell/*`, `read`, `search`, `usages`, `sdd-files/*`, `serena/*`; layer: grep); `plugins/architect/agents/sdd-researcher.md:8` › `tools` (`mcp__plugin_architect_context7__*` and `mcp__plugin_architect_deepwiki__*` tools; layer: grep); `dist/copilot/agents/sdd-researcher.agent.md:5` › `tools` (`context7/*`, `deepwiki/*`; layer: grep); C002-IF-005 §4 (OpenCode and Copilot grants: the researcher's MCP servers context7 and deepwiki, the cartographer's serena)

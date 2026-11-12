@@ -64,6 +64,11 @@ every prompt file still hold the server profiles instead (C002-REQ-321).
    either conductor copy may be the session agent, and P-01's decision on Q-copilot-agentcopy-01
    ("Keep both, record copy (Recommended)") keeps the agent files under `agents/` and does not apply
    the `install/agents/` fallback (C002-T-050 run of 2026-11-12; checklist follow-up C002-T-083).
+   History note (run 3 of C002-T-050, 2026-11-12, defect D-056): the second assumption was refuted
+   too (VS Code 1.145.2 loads a registered folder without `plugin.json`); P-01's answers to
+   Q-t050-a3-01 and Q-t050-a3-02 keep the agent and prompt files where they are and do not apply the
+   fallback; the install notes warn of the pre-install window instead (C002-IF-005 §3, §5 step 3;
+   C002-T-084).
 
 ## Verification
 

@@ -184,6 +184,7 @@ that the lint of CHG-002 resolves them until both glossaries are merged into
 |---|---|---|
 | conductor | As in CHG-001 | C001-COMP-01 (modified as C002-COMP-014) |
 | cartographer | As in CHG-001 | C001-COMP-02 (toolchain record through C002-COMP-016) |
+| researcher | As in CHG-001; also makes the Context7 and DeepWiki probe calls of the doctor and init commands (defect D-057) | C001-COMP-02 |
 | Architect agent | As in CHG-001 | C001-COMP-01, C001-COMP-02 |
 | agent | As in CHG-001 (used in NFRs) | C001-COMP-01, C001-COMP-02 |
 | bash guard | As in CHG-001 | C001-COMP-08 (modified as C002-COMP-012) |

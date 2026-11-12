@@ -1732,3 +1732,132 @@ Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (CAP-03 `acceptanc
 | DoD/index | O1–O3, X1 | pass / n/a |
 
 **Checked without finding.** The byte-copy claim holds (`target-packages.md:152`); the reinstall-after-update rule exists (`:392-394`); no spec text keeps the plain-request row or applies the `install/agents/` fallback; the F7 rows of `architecture.md` cite TS-319 without a form.
+
+## Revision D-056 and D-057 (2026-11-13)
+
+Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (uncommitted), the revision for CHG-002 defects D-056 (C002-T-050 VSC-01 twin, VS Code 1.145.2; P-01 Q-t050-a3-01 "Docs and spec fix (Recommended)", Q-t050-a3-02 "Keep docs and spec fix (Recommended)") and D-057 (P-01 "Fix in 0.1.0 (Recommended)", "Fix shared source (Recommended)"; conductor decisions: `untested` with the turn-on fix, the same probe in init, `untested` for a missing outcome line). Reviewed IDs: C002-GOAL-05, C002-SC-05, scope §2 non-goal; C002-US-301, 306, 307, 502, 503; C002-REQ-301, 304, 504, 505, 507 (308, 327 coverage cells); C002-AC-301.1, 304.1, 504.1, 505.1, 507.1; C002-TS-301, 306, 360, 506, 507, 508, 509, 511, 512, 639, 709, 710; C002-DOD-003, 004, 006, 022; C002-COMP-004, 014, 015, 016, C001-COMP-02; C002-IF-001 §2.1, C002-IF-005 §3 and §5 step 3, C002-IF-006, C002-IF-009 §4, C002-IF-010 §2.1; architecture §1, §5, §6.1, §6.2, F8, F13, §9; domain DoctorRow, glossary researcher row. Mechanical state at review: `sdd lint 002 --phase 10-spec` 11 errors (9 LINT-DELTA-001 expected, 2 TR-08 on C002-TS-709/710 before the planner's test-plan edit); `sdd trace 002` TR-01 … TR-07 100 %, TR-08 302/304. Read-only review; the conductor appended this section from the critic's reply (the critic has no append tool) and filled the Status lines from the authors' digests.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 3 | 8 |
+
+### CR-186 — C002-REQ-504 states `ok` and `unreachable` for the remote rows, but not `untested`
+- **Severity:** major
+- **Refs:** C002-REQ-504, C002-AC-504.1, C002-TS-710, C002-IF-006 §2, §2.1
+- **Evidence:** the statement defined only `ok` and `unreachable` from "one probe call" (`CAP-05-cli-distribution/requirements.md:52`); the `untested` rule sat only in the Rationale (`:53`) and in C002-IF-006 (`doctor-host-rows.md:63`), while TS-710 tests it (`acceptance.md:175`).
+- **Why it matters:** a doctor showing another status for a server the researcher was not offered would still meet REQ-504; the single SHALL carried the whole table and the probe rule (R1).
+- **Suggested fix:** an ADDED requirement for the remote rows under C002-US-503, or the `untested` clause in REQ-504.
+- **Status:** resolved: new C002-REQ-522 (ADDED, event-driven, US-503; `CAP-05-cli-distribution/requirements.md:219-222`) states `ok` / `unreachable` / `untested` with the fixes of C002-IF-006 §2; REQ-504 trimmed back to its pre-D-057 statement; C002-AC-522.1 holds TS-709 and TS-710, TS-506 and TS-508 mapped as its happy cases; C002-REQ-647 tombstoned (spec-writer, test-designer)
+
+### CR-187 — The `untested` fix names one cause; a blocked endpoint and a missing researcher line get "turn on or start" with no network hint
+- **Severity:** major
+- **Refs:** C002-REQ-504, C002-REQ-505, C002-IF-006 §2, §2.1, C002-TS-709, C002-TS-710, C002-DOD-022, C001-TS-1112
+- **Evidence:** a server not started or blocked is not listed and so `untested` (`doctor-host-rows.md:109-110`; TS-709 note `acceptance.md:190-192`); the only `untested` fix was "turn on or start …" (`doctor-host-rows.md:63`), also used for a missing outcome line (`:100-102`); TS-710 forbade "check network" (`acceptance.md:177`); C001-TS-1112 `deepwiki-down` (`evals/cap11/TS-1112.eval.mjs:8`) would switch to `untested`.
+- **Why it matters:** with no network the doctor would tell P-01 to start a server that is on — the misleading-fix kind D-057 removes.
+- **Suggested fix:** a fix naming both causes, a separate fix for a missing line, the exact fix in TS-710, a blocked-endpoint Examples row, and the C001-TS-1112 row named as a changed expectation.
+- **Status:** resolved: C002-IF-006 §2 row (`doctor-host-rows.md:63`) and §2.1 cause table (`:161-171`): not offered → "the researcher was offered no <server> tool: turn on or start the <server> MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint <endpoint>"; no outcome line → "no probe outcome from the researcher; run the doctor again"; refused → "allow the <server> tools for the researcher"; "Blocked endpoint" paragraph (`:184-190`); TS-710 checks the fix with "contains" and has `cfg-deepwiki-down` rows (`https://deepwiki-unreachable.invalid/mcp` → `untested`); C002-DOD-022 names C001-TS-1112 `deepwiki-down` as a changed expectation (architect, test-designer)
+
+### CR-188 — C002-REQ-304 does not require the pre-install warning that TS-306 tests
+- **Severity:** major
+- **Refs:** C002-REQ-304, C002-AC-304.1, C002-TS-306, C002-IF-005 §3, §5 step 3; defect D-056
+- **Evidence:** the statement lists the settings without the warning (`CAP-03-copilot-target/requirements.md:62`); TS-306 tests the warning (`acceptance.md:134-135`); IF-005 says the notes warn (`target-packages.md:164-165`).
+- **Why it matters:** the warning is the only remedy P-01 chose for the window; notes without it would still meet the requirement (A1, R6).
+- **Suggested fix:** add the warning and register-after-install to the REQ-304 statement; cite D-056, Q-t050-a3-01, Q-t050-a3-02.
+- **Status:** resolved: C002-REQ-304 statement (`CAP-03-copilot-target/requirements.md:62`) now requires registering the folder after the install, the warning that a folder registered before runs its Architect agents, prompt files and skills with no Architect hook, and "no Architect agent, prompt file or skill in that window until the install has run and the window is reloaded"; rationale cites D-056 and both questions; TS-306 checks both (spec-writer, test-designer)
+
+### CR-189 — The C002-REQ-505 trigger does not cover an `untested` remote row, which TS-509 now tests
+- **Severity:** minor
+- **Refs:** C002-REQ-505, C002-AC-505.1, C002-TS-509, C002-IF-006 §3
+- **Evidence:** "IF an optional tool is missing or a remote MCP server is unreachable, THEN …" (`CAP-05-cli-distribution/requirements.md:62`) against the TS-509 row "the researcher is offered no Context7 tool | completed with warnings" (`acceptance.md:249`).
+- **Why it matters:** "complete the run" for an `untested` row rested only on C002-IF-006 §3.
+- **Suggested fix:** "… unreachable or untested …".
+- **Status:** resolved: REQ-505 trigger reads "a remote MCP server is unreachable or untested"; rationale cites C002-REQ-522 and CR-189 (spec-writer)
+
+### CR-190 — Install-notes step 3 and TS-306 word the use-nothing instruction differently
+- **Severity:** minor
+- **Refs:** C002-IF-005 §5 step 3, C002-TS-306
+- **Evidence:** "uses no Architect agent, command or skill until …" (`target-packages.md:443-444`) against "no Architect agent, prompt file or skill in that window until …" (`CAP-03-copilot-target/acceptance.md:135`).
+- **Why it matters:** a text check of TS-306 fails on notes that follow the interface.
+- **Suggested fix:** one wording in both places.
+- **Status:** resolved: IF-005 §5 step 3 (`target-packages.md:443-445`), REQ-304 and TS-306 all read "no Architect agent, prompt file or skill in that window until the install has run and the window is reloaded" (architect, spec-writer, test-designer)
+
+### CR-191 — The A-3 sentence in C002-IF-009 §4 can be read as if the refuted claim were the settled fact
+- **Severity:** minor
+- **Refs:** C002-IF-009 §4 (A-3), C002-IF-005 §3
+- **Evidence:** "Assumption A-3 (VS Code adds no agent … without `plugin.json`) is refuted … and is now a settled fact" (`verification-records.md:365-367`).
+- **Why it matters:** the one 10-spec line where the refuted claim can be read as current.
+- **Suggested fix:** state that the refutation is settled and what VS Code does.
+- **Status:** resolved: A-3 "was refuted"; the paragraph and the end of the VSC-01 row now state the observed fact (VS Code loads the folder's agents, prompt files and skills before the install, with no guard hook; C002-IF-005 §3) (`verification-records.md:348`, `:365-371`) (architect)
+
+### CR-192 — "The researcher writes no file" is stated as fact, left open in §6.2, and checked by no scenario
+- **Severity:** minor
+- **Refs:** C002-IF-006 §2.1, architecture §6.2 and §9, C002-TS-506, C002-TS-511, C002-TS-512, C001-COMP-02
+- **Evidence:** "a probe brief that names no note path, so the researcher writes no file" (`doctor-host-rows.md:82-83`) against the researcher's "write one note" (`plugins/architect/agents/sdd-researcher.md:13`, `skills/research-protocol/SKILL.md:8`) and the open point in §6.2 (`architecture.md:520`).
+- **Why it matters:** a leftover note would be a Claude Code change outside C002-GOAL-05, caught by no scenario.
+- **Suggested fix:** settle the agent-body line; add a no-file Then line and a no-`.sdd/` row.
+- **Status:** resolved: conductor decision for the agent-body probe line (a doctor/init probe brief is answered with outcome lines only and writes no note); C002-IF-006 §2.1 step 1 and "Where the text lives" require it; new C002-COMP-019 (modifies C001-COMP-02, `architecture.md:419`), §6.2 open point settled (`:534`), delta row (`:1238`); TS-506 `written` column (only `.sdd/_constitution/toolchain.md`) with no-`.sdd/` rows on Claude Code and OpenCode expecting no file (architect, test-designer)
+
+### CR-193 — "Offered" depends on the researcher's own action, and TS-710's Claude Code rows rely on an unproven `disallowedTools` effect
+- **Severity:** minor
+- **Refs:** C002-IF-006 §2.1, C002-TS-710, C002-TS-506
+- **Evidence:** "offered … directly or as a deferred tool that the researcher loads" (`doctor-host-rows.md:86-88`); TS-710's Claude Code row uses `disallowedTools` (`acceptance.md:182`), which the harness never passes (`evals/harness/session.mjs:157`); a host-refused call was reported as `failed` (`doctor-host-rows.md:89-90`).
+- **Why it matters:** a researcher skipping tool search would be right to say "not offered"; a deny rule might give a refused call, i.e. `unreachable`.
+- **Suggested fix:** define "offered" by the tool lists, require loading a deferred tool first, a dependable off-switch with a Given line, and a rule for host-refused calls.
+- **Status:** resolved: "offered" = listed in the session's tool list or deferred-tool list, a deferred tool loaded before `not offered` is reported; a host refusal is `refused: <text>` → `untested` with "allow the <server> tools for the researcher" (`doctor-host-rows.md:141-149`); TS-710 uses `mcpOverrides: false` on every host with a Given that the researcher's tool list (deferred included) holds no tool of the server (architect, test-designer)
+
+### CR-194 — The Claude Code init change has no scenario
+- **Severity:** minor
+- **Refs:** C002-REQ-507, C002-AC-507.1, C002-TS-511, C002-TS-512, C002-GOAL-05
+- **Evidence:** TS-512 is "toolchain record written by init on OpenCode" (`CAP-05-cli-distribution/acceptance.md:311`) while GOAL-05 names the init change on Claude Code (`problem-and-goals.md:37`).
+- **Why it matters:** the shared step 3 of `init.md` is checked on no Claude Code scenario.
+- **Suggested fix:** TS-512 as an outline with a Claude Code row.
+- **Status:** resolved: C002-TS-512 is a Scenario Outline with OpenCode and Claude Code rows, Context7 and DeepWiki detected "yes" with calls by `sdd-researcher` only (test-designer)
+
+### CR-195 — C002-IF-010 §2.1 names a TS-509 row that no longer exists and has no field for TS-710's OpenCode setup
+- **Severity:** minor
+- **Refs:** C002-IF-010 §2.1, C002-TS-509, C002-TS-709, C002-TS-710
+- **Evidence:** `mcpOverrides` cited "the unreachable-DeepWiki row of C002-TS-509 on OpenCode" (`eval-runner.md:312`), a row since replaced (`CAP-05-cli-distribution/acceptance.md:248`, `:184`).
+- **Why it matters:** no case field to turn a server off for TS-710.
+- **Suggested fix:** reword the parenthesis; add an off value.
+- **Status:** resolved: `mcpOverrides` takes `<url> | false` — a URL points the server at the TS-709/TS-509 stub, `false` turns it off (`enabled: false` on OpenCode, entry left out on Copilot CLI, server removed from the overlay copy on Claude Code); an undeclared server name ends the row with exit code 1 (`eval-runner.md:306`, `:312`, `:414`) (architect)
+
+### CR-196 — F8 writes the toolchain record before the host and sdd CLI probes whose results the record lists
+- **Severity:** minor
+- **Refs:** architecture F8 (§8.9), C002-IF-006 §2.1 step 2, C002-REQ-507
+- **Evidence:** "toolchain.md written" (`architecture.md:945`) before `sdd host-version` (`:948`) and `sdd --version` (`:966`); the init participant also sent the doctor-only `sdd status` probe (`:932`).
+- **Why it matters:** two different orders for the implementer.
+- **Suggested fix:** move the probes before the record; mark doctor-only steps.
+- **Status:** resolved: in F8 the cartographer runs the command-line, host and sdd CLI probes before writing the record; doctor-only steps in `opt doctor only` blocks; `vscode-insiders` corrected to `vscode` (`architecture.md:929-1003`) (architect)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1–S6 | pass: US-502 and US-503 keep their personas, value and INVEST; US-503 lists REQ-504 … REQ-507 and traces to D-057 |
+| requirements | R1 Singular outcome | CR-186 |
+| requirements | R2 Testable | CR-186 |
+| requirements | R3 Unambiguous | CR-193 |
+| requirements | R4 EARS pattern | pass |
+| requirements | R5 Implementation-free | pass |
+| requirements | R6 Complete | CR-186, CR-188, CR-189 |
+| requirements | R7 Consistent | CR-187 |
+| requirements | R8 Feasible | CR-192 |
+| requirements | R9 Necessary | pass |
+| requirements | R10 Units and limits | n/a: no measured value changed |
+| requirements | R11 Delta and evidence | pass: MODIFIED deltas cite C001-REQ-1110, 1111 and 115; evidence checked against `doctor.md:11-15`, `:38-39`, `sdd-cartographer.md:8`, `sdd-researcher.md:8`, the generated Copilot agents, `toolchain.md:22-23` and `SKILL.md:101-102` |
+| requirements | R12 Priority | pass |
+| NFRs | N1–N5 | n/a: no NFR in the reviewed set |
+| acceptance | A1 Coverage | CR-188, CR-194 |
+| acceptance | A2 Observable and concrete | CR-193 |
+| acceptance | A3 One behaviour per scenario | pass |
+| acceptance | A4 Error and abuse cases | CR-187, CR-192 |
+| acceptance | A5 `n/a` justified | pass |
+| domain, interfaces, architecture | D1 Entities | pass |
+| domain, interfaces, architecture | D2 Lifecycles | n/a |
+| domain, interfaces, architecture | D3 Interfaces name their errors | CR-187, CR-195 |
+| domain, interfaces, architecture | D4 Components and flows | CR-196 |
+| domain, interfaces, architecture | D5 Decisions with alternatives | pass |
+| DoD and index | O1–O3, X1 | pass |
+| plan | P1–P7 | n/a: spec phase |
+
+**Checked without finding.** No 10-spec line states the refuted A-3 claim as current apart from CR-191 (the historical "before, …" mentions at `target-packages.md:141-143`, `:439-440` and CAP-03 `acceptance.md:169-170` are fine); the schema description, F13, Fail closed and the §6.2 PreToolUse row were restated. The VSC-01 row agrees with C002-IF-005 §3, the Executor paragraph and the release-check sentence. The Claude Code change is stated in the same terms in GOAL-05, the scope non-goal, the requirements intro, US-502/503, the architecture actor row, §9, the glossary and DoD-022. The C002-IF-001 variants carry the §2.1 probe; `init.md` has no variant. TS-506, 508, 511 and 512 agree with §2.1; TS-709 is testable with the stub. One more subagent per doctor run fits the eval cap (last Claude Code doctor run 0.248 USD under 0.50 USD).
+
+**Later additions in this revision (conductor, not reviewed by this critic pass):** C002-REQ-623 and C002-TS-626 aligned with DoD-022 (Q-spec-req623-01); the targeted-retake clause in C002-IF-009 §4/§5 with C002-REQ-615 and C002-REQ-618 narrowed (Q-t050-record-01); C002-AC-522.1 has no scenario for the `refused` and no-outcome-line causes (eval runners cannot set them up; recorded under TS-710 and the REQ-522 authorization cell).

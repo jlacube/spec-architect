@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 608, "AS": 5, "CON": 17, "DOD": 23, "COMP": 18, "IF": 10, "INV": 14, "REQ": 646, "TS": 708, "ADR": 5, "M": 7, "T": 83, "RISK": 43, "RB": 6, "TC": 934 },
+  "allocated": { "OA": 9, "R": 2, "DEC": 9, "GOAL": 5, "NG": 4, "SC": 5, "CAP": 6, "US": 608, "AS": 5, "CON": 17, "DOD": 23, "COMP": 19, "IF": 10, "INV": 14, "REQ": 647, "TS": 710, "ADR": 5, "M": 7, "T": 84, "RISK": 45, "RB": 6, "TC": 936 },
   "blocks": [],
   "tombstones": [
     { "id": "C002-OA-003", "reason": "allocated by mistake while registering IDs the specialists had already written (unused)", "date": "2026-10-14" },
@@ -14,6 +14,7 @@
     { "id": "C002-REQ-636", "reason": "allocated by mistake while registering REQ-633/634, which the ledger already counted from the files (unused)", "date": "2026-10-15" },
     { "id": "C002-TS-653", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during D-003 revision; the scenarios use block numbering C002-TS-134 and C002-TS-336 onwards (unused)", "date": "2026-10-17" },
     { "id": "C002-TS-654", "reason": "allocated without a capability block (ledger has no blocks; --block ignored) during D-003 revision; the scenarios use block numbering C002-TS-134 and C002-TS-336 onwards (unused)", "date": "2026-10-17" },
-    { "id": "C002-REQ-637", "reason": "allocated without a capability block (ledger has no blocks; --block 02 ignored) during the D-004…D-009 revision; the CAP-02 requirement uses block numbering C002-REQ-217 (unused)", "date": "2026-10-18" }
+    { "id": "C002-REQ-637", "reason": "allocated without a capability block (ledger has no blocks; --block 02 ignored) during the D-004…D-009 revision; the CAP-02 requirement uses block numbering C002-REQ-217 (unused)", "date": "2026-10-18" },
+    { "id": "C002-REQ-647", "reason": "allocated without a capability block (ledger has no blocks; --block 05 ignored) during the D-056/D-057 revision (critic CR-186); the CAP-05 requirement uses block numbering C002-REQ-522 (unused)", "date": "2026-11-13" }
   ]
 }

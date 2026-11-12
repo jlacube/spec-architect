@@ -64,7 +64,7 @@ C002-GOAL-05). A failure in any of them is a regression of the change, not an up
 | `tests/integration/cap11/TS-1101.test.ts`, `TS-1110`, `TS-1113`, `TS-1119`, `TS-1121`, `TS-1123` | tree of the plugin, 10 agents, Context7 and DeepWiki scoped to the researcher, licence, PLG-PORT-001, PLG-PATH-001, PLG-DUP-001 | BR-12, BR-15 | grep | `TS-1121` and the PLG-PATH-001 rule apply to the new `targets/` folder too (blast-radius E-16) |
 | `tests/integration/cap10/TS-1006`, `TS-1007`, `TS-1008`, `TS-1009`, `serena-tools.ts`, `serena-config.test.ts`; `tests/integration/cap11/TS-1109` | `.mcp.json` servers, `serena-launch ${CLAUDE_PLUGIN_DATA} -- start-mcp-server …`, read-only launch, Serena tool grants, `sdd serena-config data` creates and updates the config | BR-7 | grep + serena | `serena-config <folder>` with a positional folder keeps today's behaviour (C002-IF-007) |
 | `tests/integration/cap02/TS-204`, `TS-205`, `TS-219`, `TS-220`, `agents-if09.test.ts`, `skills-portability.test.ts` | command inventory, PLG-DUP-001, conductor `Agent(` allowlist, no `Agent` in specialists, agent rows of C001-IF-09, skills name Claude tools only inside a wiring section | BR-15 | grep | source plugin text is unchanged (C002-CON-10); any prompt edit lands here |
-| `tests/integration/cap11/TS-1116.test.ts` | README troubleshooting covers every doctor remedy (≥ 9 rows) | BR-15 | grep | stays green if `commands/doctor.md` is not edited; the new README sections must keep `readme.check` empty |
+| `tests/integration/cap11/TS-1116.test.ts` | README troubleshooting covers every doctor remedy (≥ 9 rows) | BR-15 | grep | stays green if `commands/doctor.md` is not edited; the new README sections must keep `readme.check` empty; C002-T-084 edits the doctor's remedies rows (§4.7), so the README gains their `untested` rows in the same commit |
 | `tests/unit/workspace/templates.test.ts`, `tests/integration/cap01/TS-123.test.ts` | every template of the two profiles resolves, renders and parses; the lite scaffold; `.sdd/_templates` override | BR-8 | serena | C002-T-012 puts the `template` confinement inside `resolveTemplate`; these tests stay green without edits under the conditions of section 4.5 |
 | `tests/unit/io/paths.test.ts` | `normalisePath`, `pathKey`, `realPath`, 8.3 names, links | BR-1, BR-3 | serena | the guards' resolution code; the repository-root helper should be tested next to it |
 | `tests/integration/cap11/TS-1118.test.ts` | `npm run check --steps validate,fixtures,structure` fails on a broken lint fixture and reports each step | BR-11 | grep | independent of a new step if the new step is not part of `structure` |
@@ -173,6 +173,25 @@ Additions: the resolver's unit cases in `tests/unit/io/paths.test.ts`, C002-TC-6
 C002-TC-684 (`tests/integration/cli/exec-lookup.test.ts`, new), C002-TC-685, C002-TC-686 and
 C002-TC-687, and the fixture `stub-exe` (test plan §2).
 
+### 4.7 Doctor and init remote-server probe (C002-T-084, C002-REQ-504, C002-REQ-507, C002-REQ-522; defect D-057)
+
+C002-T-084 changes the Claude Code `commands/doctor.md` (steps 2 and 3, the Context7 and DeepWiki
+remedies rows), `commands/init.md` (step 3), the toolchain-record item of
+`skills/code-discovery/SKILL.md` and the probe line of `agents/sdd-researcher.md` (C002-COMP-019):
+the researcher makes the two probe calls, the cartographer records their outcomes, and each outcome
+maps to a status and fix (C002-IF-006 §2.1). These are the changed expectations that C002-TS-626 and
+C002-DOD-022 name beside the bash guard changes.
+
+| Test or eval | What changes | Note |
+|---|---|---|
+| `tests/integration/cap05/doctor-variants.test.ts`, the C002-REQ-506 test | the SHA-256 pin of the Claude Code doctor; the eight rows, the minimum-version row and the three outcome lines stay asserted | the new pin is named as a changed expectation under C002-REQ-504 in the task report |
+| `tests/integration/cap11/TS-1116.test.ts` (C001-TC-1116) | none in the test: it must stay green; the README Troubleshooting gains the `untested` rows | the endpoint stays the first code span of each remedies row's fix cell |
+| `evals/cap11/TS-1112.eval.mjs` row `deepwiki-down` (C001-TC-1112) | the DeepWiki row expected `untested` with the `not offered` fix of C002-IF-006 §2.1 in place of `unreachable`; the outcome stays `completed with warnings` (C002-TS-626) | `cfg-deepwiki-down` in `evals/harness/machines.mjs` is unchanged: its unresolvable URL is the blocked endpoint of C002-TS-710 |
+| `tests/integration/cap05/doctor-variants.test.ts` and the agent tests that read `agents/sdd-researcher.md` or its generated copies | the probe line of C002-COMP-019 in the researcher's body; its `tools` list unchanged | the researcher cases of row 4 of §5 are not rerun: the line applies to a doctor or init probe brief only |
+| `evals/targets/doctor/TS-509.eval.mjs`, Claude Code row without a PATH `sdd` | `completed with warnings` becomes `completed` (C002-TS-509 as revised) | the new rows set up the failing call and the server not offered through `mcpOverrides` (C002-IF-010 §2.1) |
+| `evals/targets/doctor/TS-506.eval.mjs`, `TS-511.eval.mjs` | Context7 and DeepWiki `ok`, detected `yes` (C002-TS-506, C002-TS-511 as revised) | before: `unreachable`, detected `no`, on Claude Code |
+| generator golden or snapshot copies holding the doctor, init or cartographer text | regenerated | each named with its REQ in the task report |
+
 ## 5. Evals that exercise the changed code
 
 Claude Code sessions run the shipped bundle through `hooks.json`, so a guard defect shows in any eval
@@ -189,7 +208,13 @@ task:
 
 Run only the first row, at the task steps of `10-strategy.md` §3a: its three files at C002-T-010 step 5
 and C002-T-048 step 4, and only `evals/cap11/doctor-no-ripwire.eval.mjs` at C002-T-038 step 4. Run the
-rest only if the plan edits a source agent, command or skill (it should not, C002-CON-10).
+rest only if the plan edits a source agent, command or skill (it should not, C002-CON-10). **Revision
+D-057** edits two source commands, one skill item and one agent line (§4.7): C002-T-084 step 8 runs
+`doctor-no-ripwire.eval.mjs` and the `deepwiki-down` row of `TS-1112.eval.mjs` with the changed
+CHG-002 doctor rows; the cartographer cases of row 3 and the injection cases of row 4 are not rerun,
+since the cartographer's change is its toolchain-record item, which none of them asks for, and the
+researcher's is a line that applies only to a doctor or init probe brief (the comparison of
+C002-T-084 step 7 bounds both files to those changes).
 
 ## Evidence
 

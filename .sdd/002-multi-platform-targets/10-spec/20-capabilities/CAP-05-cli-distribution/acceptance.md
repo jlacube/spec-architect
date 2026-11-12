@@ -131,15 +131,27 @@ guard core denies a command.
 ```gherkin
 @eval
 Scenario Outline: C002-TS-506 — doctor table on Claude Code and OpenCode
-  Given machine configuration "cfg-full" on <host>
+  Given machine configuration "cfg-full" on <host> and <workspace>
   When P-01 runs the doctor command
   Then the reply contains a table with the columns Tool, Status, Version, Fallback and Fix
   And its rows are <rows>, in that order
+  And the Context7 and DeepWiki rows show status "ok" and an empty Fix column
+  And the session's tool calls hold exactly one Context7 tool call and exactly one DeepWiki tool call, both made by "sdd-researcher"
+  And the session wrote <written>
   Examples:
-    | host        | rows                                                                                   |
-    | Claude Code | node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki                  |
-    | OpenCode    | node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI            |
+    | host        | workspace                    | rows                                                                        | written                                               |
+    | Claude Code | a workspace with ".sdd/"     | node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki       | no file other than ".sdd/_constitution/toolchain.md"  |
+    | OpenCode    | a workspace with ".sdd/"     | node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI | no file other than ".sdd/_constitution/toolchain.md"  |
+    | Claude Code | a repository without ".sdd/" | node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki       | no file                                               |
+    | OpenCode    | a repository without ".sdd/" | node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI | no file                                               |
 ```
+
+The Context7 and DeepWiki rows are `ok` on every host with "cfg-full", Claude Code included, since
+the researcher makes their probe calls (C002-REQ-522; C002-IF-006 §2.1; revised for defect D-057).
+Before, the cartographer, which holds no tool of either server, made them, and both rows were
+`unreachable` in every run. The researcher's probe writes no note, so the doctor writes only
+`toolchain.md`, and nothing without `.sdd/` (C002-IF-006 §2.1 steps 1 and 2; critic CR-192). VS Code
+is C002-TS-508; the rows other than `ok` are C002-TS-709 and C002-TS-710 under C002-AC-522.1.
 
 ```gherkin
 @eval
@@ -170,11 +182,19 @@ Scenario: C002-TS-639 — tool found only as a `.cmd` shim under sdd MCP server 
 @manual-vscode
 Scenario: C002-TS-508 — doctor table in VS Code
   Given the toy change repository in VS Code with "architect-sdd" installed
+  And the workspace MCP servers "context7" and "deepwiki" of ".vscode/mcp.json" enabled, with network access to their endpoints
   When P-01 runs the doctor prompt
   Then the table has a host row for VS Code with GitHub Copilot Chat and a row for the sdd CLI
   And the host row's Version column shows the VS Code version and the GitHub Copilot Chat version that VS Code's About dialog reports
+  And the Context7 and DeepWiki rows show status "ok" and an empty Fix column
   And it has no Claude Code row
 ```
+
+The Context7 and DeepWiki expectation is revised for defect D-057: in the C002-T-050 run of
+2026-11-12 (VSC-12) both rows showed `unreachable` with "check network" while both servers ran, no
+tool of either being offered to the agent that probed. VS Code 1.145.2 lists a workspace server's
+tools before it starts the server at their first call, so the researcher's probe call starts it
+(C002-IF-006 §2.1 Not offered).
 
 ## C002-REQ-505
 
@@ -187,18 +207,24 @@ Scenario Outline: C002-TS-509 — doctor outcome per situation
   Then the doctor run reports "<outcome>"
   Examples:
     | host        | situation                               | outcome                     |
-    | OpenCode    | DeepWiki endpoint unreachable           | completed with warnings     |
+    | OpenCode    | the researcher's DeepWiki probe call fails | completed with warnings  |
+    | OpenCode    | the researcher is offered no Context7 tool | completed with warnings  |
     | OpenCode    | ripwire, Serena and ast-grep missing    | completed with warnings     |
     | OpenCode    | node 18 on PATH                         | failed: node ≥ 20 required  |
     | OpenCode with the package generated for native permission enforcement | no "sdd" executable on PATH | failed, naming the sdd CLI |
-    | Claude Code | no "sdd" executable on PATH             | completed with warnings     |
+    | Claude Code | "cfg-full" with no "sdd" executable on PATH | completed               |
+    | Claude Code | the researcher's DeepWiki probe call fails | completed with warnings  |
     | Claude Code | node 18 on PATH                         | failed: node ≥ 20 required  |
 ```
 
-On Claude Code the Context7 and DeepWiki rows are `unreachable` in every run, because neither the
-conductor nor the cartographer holds their tools (defect D-012), so the Claude Code row without a
-PATH `sdd` expects "completed with warnings": it checks that a missing `sdd` does not fail the run
-there. The OpenCode row without a PATH `sdd` uses the package generated for native permission
+Every situation starts from machine configuration "cfg-full" and changes what it names; the failing
+probe call and the tool not offered are set up through `mcpOverrides` as in C002-TS-709 and
+C002-TS-710 (C002-IF-010 §2.1). The Claude Code
+row without a PATH `sdd` expects "completed": the Claude Code table has no sdd CLI row, so a missing
+`sdd` is not even a warning there, and with "cfg-full" every other row, Context7 and DeepWiki
+included, is `ok` (revised for defect D-057; before, the two remote rows were `unreachable` in every
+Claude Code run, since the cartographer that probed them holds neither server's tools, and the row
+expected "completed with warnings"). The OpenCode row without a PATH `sdd` uses the package generated for native permission
 enforcement: under sdd MCP server enforcement the command tool runs the server's own CLI
 (C002-REQ-407), so the doctor's `sdd --version` probe never reaches a PATH `sdd`.
 
@@ -228,24 +254,38 @@ Scenario Outline: C002-TS-511 — toolchain.md per host
   When P-01 runs the doctor command
   Then ".sdd/_constitution/toolchain.md" has the rows <rows>
   And every row states detected (yes/no), version, path or endpoint, and the fallback in use
+  And its Context7 and DeepWiki rows state detected "yes" and their endpoints
   Examples:
     | host        | rows                                                                                 |
     | Claude Code | node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki                |
     | OpenCode    | node, git, OpenCode, ripwire, Serena, ast-grep, Context7, DeepWiki, sdd CLI          |
 ```
 
-C002-TS-511 keeps its expectation. On OpenCode at its tested version (1.18.31) it relies on the
+C002-TS-511 keeps its row expectation; its Context7 and DeepWiki rows state detected "yes" since the
+researcher's probe calls succeed with "cfg-full" (revised for defect D-057; before, the cartographer
+recorded both as not detected on Claude Code, `.sdd/_constitution/toolchain.md:22-23`). On OpenCode
+at its tested version (1.18.31) it relies on the
 variants `file-inspection` and `doctor-probe` (C002-TS-674): that version's `glob` lists no file
 inside `.sdd/`, and a doctor that took an empty `glob` result for no `.sdd/` wrote no
 `toolchain.md` (C002-IF-001 §6.1 Dot folders; defect D-020 item 1).
 
 ```gherkin
 @eval
-Scenario: C002-TS-512 — toolchain record written by init on OpenCode
-  Given machine configuration "cfg-full" on OpenCode and a repository without ".sdd/"
+Scenario Outline: C002-TS-512 — toolchain record written by init
+  Given machine configuration "cfg-full" on <host> and a repository without ".sdd/"
   When P-01 runs the init command and the baseline survey completes
-  Then ".sdd/_constitution/toolchain.md" has the OpenCode row and the sdd CLI row
+  Then ".sdd/_constitution/toolchain.md" has <host rows>
+  And its Context7 and DeepWiki rows state detected "yes"
+  And the session's tool calls hold exactly one Context7 tool call and exactly one DeepWiki tool call, both made by "sdd-researcher", and no Context7 or DeepWiki tool call by any other agent
+  Examples:
+    | host        | host rows                                |
+    | OpenCode    | the OpenCode row and the sdd CLI row     |
+    | Claude Code | the Claude Code row and no sdd CLI row   |
 ```
+
+The init command's toolchain survey takes the Context7 and DeepWiki rows from the same researcher
+probe as the doctor command, on Claude Code too (C002-REQ-507; C002-IF-006 §2.1; defect D-057; the
+Claude Code row added for critic CR-194).
 
 ## C002-REQ-508
 
@@ -731,6 +771,63 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
     | Bash       | sdd status --cwd C:/other-repo                                 | 0    | is empty                  |
 ```
 
+## C002-REQ-522
+
+#### C002-AC-522.1 — A remote row is `ok` after a successful researcher call, `unreachable` after a failed call, and `untested` without a call
+```gherkin
+@eval
+Scenario Outline: C002-TS-709 — remote server probe call that fails
+  Given machine configuration "cfg-full" on <host> and a workspace with ".sdd/"
+  And the case row's "mcpOverrides" gives "deepwiki" the URL of a stub MCP server that lists the DeepWiki tools and answers every tool call with <failure>
+  And the tool list of the session's "sdd-researcher", deferred tools included, holds the DeepWiki tools
+  When P-01 runs the doctor command
+  Then the DeepWiki row shows status "unreachable"
+  And its Fix column starts with "check network; endpoint "
+  And the Context7 row shows status "ok"
+  And the DeepWiki row of ".sdd/_constitution/toolchain.md" states detected "no" and the fallback in use
+  Examples:
+    | host        | failure                                                  |
+    | Claude Code | a tool result whose "isError" is true                    |
+    | Claude Code | the JSON-RPC error "-32603"                              |
+    | OpenCode    | a tool result whose "isError" is true                    |
+    | OpenCode    | the JSON-RPC error "-32603"                              |
+```
+
+```gherkin
+@eval
+Scenario Outline: C002-TS-710 — remote server whose tools the researcher is not offered
+  Given machine configuration "cfg-full" on <host> and a workspace with ".sdd/"
+  And the case row's "mcpOverrides" gives "<server>" the value <override>
+  And the tool list of the session's "sdd-researcher", deferred tools included, holds no tool of the "<server>" server
+  When P-01 runs the doctor command
+  Then the <row> row shows status "untested"
+  And its Fix column contains "the researcher was offered no <row> tool: turn on or start the <row> MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint "
+  And the session's tool calls hold no call of a <row> tool
+  And the <row> row of ".sdd/_constitution/toolchain.md" states detected "no" and the fallback in use
+  Examples:
+    | host        | server   | override                                                                     | row      |
+    | Claude Code | context7 | false                                                                        | Context7 |
+    | Claude Code | deepwiki | false                                                                        | DeepWiki |
+    | OpenCode    | context7 | false                                                                        | Context7 |
+    | OpenCode    | deepwiki | false                                                                        | DeepWiki |
+    | Claude Code | deepwiki | "https://deepwiki-unreachable.invalid/mcp", the URL of "cfg-deepwiki-down"   | DeepWiki |
+    | OpenCode    | deepwiki | "https://deepwiki-unreachable.invalid/mcp", the URL of "cfg-deepwiki-down"   | DeepWiki |
+```
+
+A row is `unreachable` only after a probe call that reached the server and failed, and `untested`
+when no call reached it (C002-REQ-522; C002-IF-006 §2 and §2.1 step 3; defect D-057). Both are
+warnings (C002-TS-509). The off-switch and the URL replacement are the case field `mcpOverrides`
+on every host (C002-IF-010 §2.1; critic CR-193): `false` removes the server from the session, and
+the Claude Code runner applies it through its overlay copy of the plugin. C002-TS-709 needs a stub
+that lists the tools; with the unresolvable endpoint of "cfg-deepwiki-down" the host lists no tool
+of the server, so the row is `untested` with the `not offered` fix, whose last part names the
+network check (C002-IF-006 §2.1 Blocked endpoint; critic CR-187). The Given lines on the
+researcher's tool list check that set-up: a row whose list does not match fails its set-up, not the
+doctor's behaviour. The two other `untested` causes of C002-IF-006 §2.1
+step 3, a call the host refused (`refused`) and a hand-back without an outcome line, have no
+scenario: the eval runners give no host setting that refuses an offered MCP call before it reaches
+the server, nor a researcher that omits its line, without changing the agent under test.
+
 ## Coverage table
 
 | REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |
@@ -738,10 +835,10 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-501 | TS-501, TS-502 | TS-684 (gate commands of the shared CLI start git from the PATH folders, also with `--commit`) | TS-502 (translated hand-off CLI lines are the only difference), TS-684 (relative PATH entry `.` skipped) | TS-684 (git missing or only a `.cmd` shim: approver `unknown`, ERR-CLI-018) | n/a | n/a | TS-684 (a `git.exe` planted in the repository never runs) |
 | C002-REQ-502 | TS-503 | n/a | n/a | n/a | n/a | n/a | n/a |
 | C002-REQ-503 | TS-504 | TS-504 (PowerShell, node -v) | TS-504 (extra word) | TS-504, TS-505 | TS-504 | n/a | TS-504 (npx, sddx, chaining, redirection) |
-| C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639 | n/a | n/a | n/a |
-| C002-REQ-505 | TS-509 | TS-509 (Claude Code: no sdd CLI row, completed with warnings) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
+| C002-REQ-504 | TS-506, TS-508 | TS-506 (Claude Code; repository without `.sdd/`), TS-513 (two VS Code versions), TS-639 (`.cmd` shim under sdd MCP server enforcement) | n/a | TS-507, TS-639; the Context7 and DeepWiki rows other than `ok` are C002-REQ-522 (TS-709, TS-710) | n/a | n/a | n/a |
+| C002-REQ-505 | TS-509 | TS-509 (Claude Code: no sdd CLI row, completed; failing probe call and tool not offered: completed with warnings) | TS-509 (node 18) | TS-509 | n/a | n/a | n/a |
 | C002-REQ-506 | TS-510 | TS-510 (OpenCode) | TS-510 (2.1.295) | TS-510 | n/a | n/a | n/a |
-| C002-REQ-507 | TS-511 | TS-512 (init) | n/a | n/a | n/a | n/a | n/a |
+| C002-REQ-507 | TS-511 (Context7 and DeepWiki detected yes) | TS-512 (init on OpenCode and Claude Code, remote rows from the researcher's probe, no remote call by another agent), TS-506 (doctor writes no file other than `toolchain.md`, none without `.sdd/`) | n/a | TS-709 (probe call failed: detected no), TS-710 (no tool offered: detected no) | n/a | n/a | n/a |
 | C002-REQ-508 | TS-513 | TS-513 (VS Code or GitHub Copilot Chat differs), TS-514 (outcome), TS-675 (two installs on the PATH: the first one's version, also as a `.cmd` shim) | TS-513 (equal, older, newer), TS-675 (empty and relative PATH entries skipped; only `.` on the PATH: `opencode missing`) | TS-513, TS-675 (`opencode missing`, exit code 1) | n/a | n/a | TS-675 (an `opencode.exe`, `opencode.cmd` or `node.exe` planted in the working folder never runs) |
 | C002-REQ-509 | TS-515 | TS-515 (older, newer) | TS-515 (equal, patch, minor and major differ) | TS-515 | n/a | n/a | n/a |
 | C002-REQ-510 | TS-516 | TS-516 (both Copilot enforcement modes; untrusted workspace shown `ok` with the caveat text; a restricted-mode row whose chat VS Code refused recorded `passed` with a `VS Code refused: ` note), TS-526 (both modes) | TS-526 (state not readable; workspace settings unparsable or with a non-boolean value, no fallback to user settings that read true) | TS-516 (`chat.useHooks` false), TS-526 | n/a | n/a | TS-526 (unread state never reported ok), TS-516 (an `ok` row names the sources it did not read; hooks-off rows run before the restore and the hooks-state step) |
@@ -756,6 +853,7 @@ Scenario Outline: C002-TS-536 — bash guard decisions on `--cwd`
 | C002-REQ-519 | TS-530 | TS-535 (no plugin path left) | n/a | TS-530 | n/a | n/a | n/a |
 | C002-REQ-520 | TS-531 | TS-532 (repository templates merged) | TS-532 (path in both places listed once; upper case before lower case) | n/a: the requirement states no failure path; an unknown profile prints no line | n/a | n/a | n/a |
 | C002-REQ-521 | TS-536 | TS-536 (script form, PowerShell, `--cwd=` spelling, relative folder inside; `lint` and `status` without `--write` keep `--cwd` unrestricted) | TS-536 (the root itself, a nested workspace, a case change, sibling folder `C:/repo-data`) | TS-536 | TS-536 | n/a | TS-536 (another repository's or the home folder's `.sdd/` through an absolute path, a relative path, `..` or a link) |
+| C002-REQ-522 | TS-506, TS-508 (both rows `ok` after one successful researcher call each, on Claude Code, OpenCode and VS Code) | TS-710 (researcher offered no tool of the server, by `mcpOverrides` `false`: `untested` with the `not offered` fix, no call made) | TS-710 (unresolvable endpoint of `cfg-deepwiki-down`: no tool listed, so `untested`, not `unreachable`) | TS-709 (call reaches a stub that fails it with an error result or a JSON-RPC error: `unreachable`, "check network; endpoint") | n/a: the researcher's grants are C002-REQ-117; a call refused by a host permission (`refused` cause) has no scenario, see the note below C002-TS-710 | n/a: one probe call per server per run | TS-710 (no row shows `unreachable` or is `ok` without a call that reached the server) |
 
 Per-column n/a reasons. *Alternate*: one expected path. *Boundary*: no numeric limit in the
 requirement. *Error*: packaging and record rules fail through the build or the doctor outcome tested

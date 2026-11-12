@@ -49,8 +49,10 @@ spike record of a new tested version (C002-REQ-621).
   quick lint when spike S-07 finds no feedback channel.
 - Other hosts (Codex, Cursor and others) once the generator exists; Agent Plugins 1.0 packaging if the
   targets converge on it (ideation §5, Later).
-- Any change of behaviour on Claude Code other than the bash guard changes of C002-GOAL-05
-  (C002-REQ-503, C002-REQ-517, C002-REQ-521).
+- Any change of behaviour on Claude Code other than the three bash guard changes of C002-GOAL-05
+  (C002-REQ-503, C002-REQ-517, C002-REQ-521) and its one other change, the researcher's Context7 and
+  DeepWiki probe in the doctor and init commands (C002-REQ-522, C002-REQ-507; defect D-057, P-01's
+  decision of 2026-11-12: "Fix shared source (Recommended)").
 - Two findings of the T-050 findings pass of 2026-11-11 in shared conductor and CLI behaviour, which
   hold on Claude Code too and are left to the follow-up change CHG-004 (not defects of this change):
   [ASSUMPTION: CHG-004 — the G0 approval makes no commit while the constitution's Version control says to commit at each gate approval, and the conductor suggested `sdd gate approve --commit`; the conductor text is shared with Claude Code and stays unchanged in CHG-002]

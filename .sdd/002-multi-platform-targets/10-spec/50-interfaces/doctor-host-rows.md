@@ -10,12 +10,17 @@ status: draft
 # C002-IF-006 — Doctor host rows
 
 Extends the doctor remedies table of C001-IF-10 §3 and the doctor and toolchain-record procedure
-(`commands/doctor.md`, `skills/code-discovery/SKILL.md`, current-state E-14 … E-21). On Claude Code
-every row, probe and outcome stays as today (C002-GOAL-05); the generated targets receive the host
-rows below through wiring variants of `doctor.md` and of the code-discovery toolchain section
-(C002-IF-001 §2.1), and the doctor command's description names the same rows through the
-frontmatter construct `doctor-description` (C002-IF-001 §2). The doctor table and `toolchain.md`
-have the same rows (C002-REQ-507).
+(`commands/doctor.md`, `commands/init.md`, `skills/code-discovery/SKILL.md`, current-state E-14 …
+E-21). On Claude Code every row and outcome line stays as today, and so does every probe except that
+of Context7 and DeepWiki: on every host, Claude Code included, the researcher makes the one probe
+call of each of the two remote servers and the cartographer records its result (§2.1; revised for
+defect D-057, P-01 2026-11-12, "Fix shared source (Recommended)"; before, the probe step gave the
+calls to the cartographer, which holds neither server's tools on any host, C002-IF-005 §4). That
+probe is shared text of the source commands and skill, so it reaches the three hosts together. The
+generated targets receive the host rows below through wiring variants of `doctor.md` and of the
+code-discovery toolchain section (C002-IF-001 §2.1), which carry the same probe, and the doctor
+command's description names the same rows through the frontmatter construct `doctor-description`
+(C002-IF-001 §2). The doctor table and `toolchain.md` have the same rows (C002-REQ-507).
 
 ## §1 Rows and order
 
@@ -43,9 +48,10 @@ notes name for P-03 (C002-IF-005 §5 Models). The rows of §1, the doctor table 
 
 ## §2 Detection and status
 
-All probes run through allowlisted commands (C002-IF-008 §1): a bare `sdd …` or a version probe. No
-probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the CLI runs those reads
-(C002-IF-007 `host-version`), which settles the open item of C002-REQ-508.
+All probes of command-line tools run through allowlisted commands (C002-IF-008 §1): a bare `sdd …`
+or a version probe. No probe of `opencode`, `code` or a VS Code setting is added to the allowlist;
+the CLI runs those reads (C002-IF-007 `host-version`), which settles the open item of C002-REQ-508.
+The probes of Context7 and DeepWiki are MCP tool calls of the researcher (§2.1).
 
 | Row | Detection | `ok` | Other statuses | Fix column |
 |---|---|---|---|---|
@@ -54,9 +60,12 @@ probe of `opencode`, `code` or a VS Code setting is added to the allowlist; the 
 | OpenCode | `sdd host-version opencode`: the `opencode` that PATH resolves for the CLI's process, so with two installs the one first on that PATH is reported (`docs/spikes/S-07-opencode.md §9`, fact F-7) | equals `{{tested_version:opencode}}` | `untested` when it differs (C002-REQ-508); `missing` when OpenCode is not found | `tested version: <tested>` |
 | VS Code with GitHub Copilot Chat | `sdd host-version {{host_version_arg}}`: `vscode-insiders` while the tested VS Code version is an Insiders build, as the one S-08 tested is, else `vscode` (C002-IF-001 §4); `vscode` since the revision for defect D-047, whose tested build is VS Code 1.145.2 | both parts equal `{{tested_version:vscode}}` and `{{tested_version:copilot-chat}}` | `untested` when either differs; `missing` when VS Code is not found | `tested versions: VS Code <v>, GitHub Copilot Chat <c>` |
 | sdd CLI | `sdd --version` (C002-IF-007, C002-REQ-511) | its major, minor and patch numbers equal those of `{{package_version}}` (exact match, Q-cli-03) | `missing` when not reachable; `error` when any of the three numbers differs, older or newer (C002-REQ-509) | `npm install -g architect-sdd@{{package_version}}` |
+| Context7, DeepWiki (every host, Claude Code included) | one probe call that the researcher makes with a tool of that server (§2.1) | the call returned a result (`ok`) | `unreachable` when the call reached the server and failed (`failed`); `untested` when no call reached the server: the researcher was offered no tool of it (`not offered`), the host refused the call (`refused`), or the hand-back gives no outcome for it (§2.1) | `unreachable`: `check network; endpoint <endpoint>`, as today; `untested`, by cause (§2.1 step 3): `the researcher was offered no <server> tool: turn on or start the <server> MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint <endpoint>`, or `allow the <server> tools for the researcher`, or `no probe outcome from the researcher; run the doctor again` |
 | Copilot hooks | the `hooks` line of `sdd host-version {{host_version_arg}}`, which reads `chat.useHooks` only (C002-IF-007 Output) | `hooks enabled`, with the Version text `chat.useHooks on; profile and .code-workspace settings, Workspace Trust and organisation policy not read, confirmed by the manual VS Code checklist` (C002-REQ-510) | `error` when `hooks disabled (chat.useHooks)`, Version `disabled (chat.useHooks)`; `error` when `hooks unknown` or no `hooks` line, Version `cannot be read` (C002-REQ-510) | `disabled`: `enable chat.useHooks and trust the workspace`; `unknown`: `check chat.useHooks and Workspace Trust by hand` |
 
-The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states.
+The `untested` and `error` statuses of the host and sdd CLI rows are warnings, except as §3 states;
+`unreachable` and `untested` on the Context7 and DeepWiki rows are warnings on every host
+(C002-REQ-505).
 
 **Which OpenCode the row reports** (revised for defect D-020 item 4). The OpenCode row reports the
 `opencode` that P-03 would run by that name: the first one that the PATH of the session resolves,
@@ -109,6 +118,87 @@ this rule in every enforcement mode of its target and names the package's mode t
 permission enforcement and the Copilot hooks fallback the probes run through the host's own shell or
 terminal tool, so no probe is refused with ERR-MCP-006 there and the rule has no effect (revised for
 defect D-012).
+
+### §2.1 Context7 and DeepWiki probe (every host)
+
+Revised for defect D-057 (C002-T-050 run of 2026-11-12, VSC-12: both rows `unreachable` with
+"check network" while both servers ran, no tool of either server being offered to the agent that
+probed; P-01 2026-11-12, "Fix in 0.1.0 (Recommended)", then "Fix shared source (Recommended)"; the
+`untested` causes and their fixes, the researcher's probe line and the same probe in the init
+command decided by the conductor within P-01's decision, after critic CR-187, CR-192 and CR-193).
+The same steps run on every host, Claude Code included, in step 2 (Probe) of the doctor command and
+in the toolchain survey of step 3 of the init command (C002-REQ-504, C002-REQ-507):
+
+1. **Researcher probe.** The conductor dispatches `sdd-researcher`, the one Architect agent that
+   holds the tools of both servers on every host (C002-IF-005 §4; on Claude Code
+   `plugins/architect/agents/sdd-researcher.md:8`), with a probe brief. The researcher's agent body
+   states that a doctor or init probe brief is answered with the outcome lines below only and
+   writes no note (C002-COMP-019; a line of the source agent, translated per target), so the probe
+   writes no file. For each server the researcher makes at most one call, with the tool and the
+   argument of the remedies table's Detection column, in the host's name for that tool (C002-IF-001
+   §2): Context7 `resolve-library-id` with a short library name, DeepWiki `read_wiki_structure` on
+   `oraios/serena`.
+   - A tool is **offered** when it is listed in the session's tool list or in its deferred-tool
+     list (Claude Code's tool search, Copilot's `tool_search_tool`). The researcher loads a deferred
+     tool of the server before it reports `not offered`; a server none of whose tools is in either
+     list gets no call.
+   - A call that the host refuses before it reaches the server, by a permission rule or a declined
+     confirmation, is `refused`; a call that reaches the server and returns an error, or no result,
+     is `failed`.
+   - The researcher's final message holds one line per server, in one of these forms: `Context7:
+     ok`, `Context7: failed: <error text as returned>`, `Context7: refused: <host text as returned>`,
+     `Context7: not offered`, and the same for `DeepWiki`.
+2. **Toolchain record.** The conductor then dispatches `sdd-cartographer`, as today, with the
+   researcher's two lines in its brief. The cartographer makes the probes of the command-line tools,
+   of the host and of the sdd CLI (§2), then writes the record `toolchain.md` with every row
+   (code-discovery skill, toolchain record). It makes no call to either remote server; it records
+   Context7 and DeepWiki as detected `yes` for `ok` and `no` otherwise, with the endpoint and, for
+   `no`, the fallback in use (C002-REQ-507). Without `.sdd/` the doctor probes the same way and
+   writes no file, as today. The init command needs no doctor table: its survey ends with the record.
+3. **Doctor rows.** The conductor takes each server's status and fix from the researcher's line,
+   `<server>` being `Context7` or `DeepWiki` and `<endpoint>` its endpoint in the remedies table:
+
+   | Researcher's line | Status | Fix |
+   |---|---|---|
+   | `ok` | `ok` | — |
+   | `failed: <text>` | `unreachable` | `check network; endpoint <endpoint>` |
+   | `not offered` | `untested` | `the researcher was offered no <server> tool: turn on or start the <server> MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint <endpoint>` |
+   | `refused: <text>` | `untested` | `allow the <server> tools for the researcher` |
+   | no line for that server (the researcher was not started, or its reply names no outcome for it) | `untested` | `no probe outcome from the researcher; run the doctor again` |
+
+   A row is therefore `ok` only after a call that succeeded and `unreachable` only after a call that
+   reached the server and failed; no row shows `unreachable` without such a call (C002-REQ-504). The
+   Version and Fallback columns stay as today (Context7 → web search and fetch, DeepWiki → fetch of
+   the repository, in the host's tool names).
+
+**Not offered.** The rule reads what the researcher is offered, not the server state that the host
+shows. A server turned off in the host's tool picker or server list, or one that is not started and
+whose tools the host therefore does not list, is `untested`. A server whose tools are listed although
+the host has not started it yet, as VS Code 1.145.2 starts a workspace server at the first call of
+one of its tools (C002-IF-005 §5 step 8), gets its call and is `ok` or `unreachable` by its result.
+"The package's MCP configuration" is, on Claude Code, the plugin's `.mcp.json`; on OpenCode, the
+`mcp` entries of the package's `opencode.json` (C002-IF-005 §2); on Copilot, the `servers` of
+`.vscode/mcp.json` that `sdd install copilot` writes from `install/mcp.json` (C002-IF-005 §3). The
+fix texts are the same on every host.
+
+**Blocked endpoint** (critic CR-187). When the server's endpoint cannot be reached (no network, a
+firewall, a name that does not resolve), the host usually fails to connect to the server and then
+lists no tool of it, so the row is usually `untested` with the `not offered` fix, whose last part
+names the network check. `unreachable` arises when the host lists the server's tools and the call
+then fails, for example after a connection that broke after the tools were listed, or with a server
+that lists its tools and fails the call; C002-TS-709 sets that up with a stub server that lists the
+tools (C002-IF-010 §2.1 `mcpOverrides`).
+
+**Where the text lives.** The shared source carries the probe: step 2 (Probe) of `commands/doctor.md`
+and the Context7 and DeepWiki rows of its remedies table (the fixes of step 3 beside the
+`unreachable` one), its step 3 (Report), whose status list gains `untested` for the two remote rows on
+Claude Code, step 3 of `commands/init.md`, the toolchain-record item of the code-discovery skill,
+where the two servers are detected from the researcher's outcome instead of "when their tools
+load", and the probe line of `agents/sdd-researcher.md` (critic CR-192). On the generated targets the
+variants `doctor-probe`, `doctor-report` and `code-discovery-toolchain` replace those anchors
+(C002-IF-001 §2.1) and carry the same probe and statuses; `init.md` and the researcher's agent file
+have no variant, and their text is translated by the constructs. Each doctor and init run on every
+host starts one more subagent, the researcher.
 
 ## §3 Outcome line
 
