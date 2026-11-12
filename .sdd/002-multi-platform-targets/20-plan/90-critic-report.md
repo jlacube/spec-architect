@@ -1506,3 +1506,64 @@ Scope: `git diff 24b197c -- .sdd/002-multi-platform-targets/20-plan/` (new task 
 | plan | P7 ADRs | n/a: the three-name mapping is the spec's decision, the retake is P-01's answer |
 
 **Checked without finding.** C002-REQ-211, C002-REQ-312 and C002-REQ-614 are in T-082's `implements`; T-082 covers the spec's change set (tool map, fixtures, tests, VSC-15/VSC-18, run sheet, `dist/`, replays, injection merge, report, tag move, dry run); the one-off case needs no cap-exception row; the step-5 diff guard holds (`git diff --stat 54b83ff HEAD -- plugins/architect/` empty before the change). T-050 restarts at step 0 in t050d with the binding-run statement; no record of the stopped run exists. T-055 and T-075 reach T-082 through T-050; the T-077 and T-080 edits are history notes. The edges T-077/T-080/T-081 → T-082 → T-050 hold; critical path 60. Observations outside the plan text (no finding): T-082 steps 1–4 were already in the working tree before G3 (left uncommitted until G3); a source map appended to `plugins/architect/scripts/sdd.mjs` during the coverage step was transient (the file equals its committed version after the check).
+
+## Revision VSC-15 / agent copy (2026-11-12)
+
+Scope: `git diff -- .sdd/002-multi-platform-targets/20-plan/` and the new `50-tasks/T-083-checklist-vsc15-conductor-copy.md`, revision for CHG-002 defect D-055. Reviewed IDs: C002-T-083, C002-T-050, C002-T-031, C002-T-046, C002-M-07, C002-TC-319, C002-TC-617, C002-TC-618, C002-TC-901, strategy §2 (new row) and §4 (assumption row), the §4.2 cost row, the WBS graph, critical path and task table, the hand-off, the questions-log round 2026-11-12; linked C002-T-082, C002-T-075, C002-T-055, C002-RISK-026, C002-RISK-030, C002-RISK-031. Read-only review; the conductor appended this section from the critic's reply.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 4 |
+
+### CR-181 — A-2 keeps the workspace-conductor claim that a plugin-copy session cannot show, while the strategy calls the whole row settled
+- **Severity:** major
+- **Refs:** C002-T-083, C002-T-046, C002-T-050, C002-TC-617, C002-TC-901, C002-IF-005 §3
+- **Evidence:** T-083's A-2 text kept "the workspace `sdd-conductor` starts the workspace specialists"; T-046:78 still expected the workspace specialist; `10-strategy.md:225` called the row settled.
+- **Why it matters:** a run whose conductor sessions use the plugin copy cannot decide A-2's first half.
+- **Suggested fix:** split A-2: specialist half open (settled by VSC-22), binding half settled by Q-copilot-agentcopy-01.
+- **Status:** resolved: T-083 A-2 split (`:44`) with a VSC-22 Record target (`:46`); T-046:78 and strategy §4 (`:225`) keep the specialist half open, settled by C002-T-050 VSC-22, linked to C002-RISK-043 (planner)
+
+### CR-182 — T-083 states the VSC-15 conductor-copy Record two ways
+- **Severity:** minor
+- **Refs:** C002-T-083, C002-TC-618, C002-IF-009 §4
+- **Evidence:** Targets "only when its session used the other copy" against Done when "its Record names the conductor copy that ran".
+- **Why it matters:** implementer and reviewer could disagree.
+- **Suggested fix:** Done when: "only when it differs from the one named in VSC-02"; record the invocation form.
+- **Status:** resolved: Done when (`:86-89`) reworded; invocation-form targets for VSC-15 and VSC-18 (`:47`), template (`:48`) and test (`:50`); TC-617/TC-618 rows (`60-test-plan.md:1274-1275`) (planner)
+
+### CR-183 — No CHG-002 defect for an assumption the run did not bear out, against the plan's own rule
+- **Severity:** minor
+- **Refs:** strategy §2, strategy §4, C002-T-050, C002-IF-005 §3, C002-TS-319
+- **Evidence:** "**Close rule:** no CHG-002 defect is raised" (`10-strategy.md:110`) against "a refuted assumption is a spec defect" (`:221`).
+- **Why it matters:** the revision had no defect ID to carry its close rule.
+- **Suggested fix:** raise a CHG-002 defect with its close rule.
+- **Status:** resolved: the conductor opened D-055 on C002-IF-005; strategy §2 (`:110`) and the hand-off (`:540`) carry its close rule (G2 and G3 approved, C002-T-083 done, VSC-15 passed in the C002-T-050 record) (conductor, planner)
+
+### CR-184 — The material question Q-copilot-agentcopy-01 is logged without its rejected candidates and with an elided question
+- **Severity:** minor
+- **Refs:** Q-copilot-agentcopy-01, Q-t050-vsc15-01, C002-IF-005 §3
+- **Evidence:** no Rejected line; "..." in both questions (`questions-log.md:448`, `:459-461`).
+- **Why it matters:** the decision's candidates and the question text P-01 saw were not traceable.
+- **Suggested fix:** full text, rationale per option, Rejected line.
+- **Status:** resolved: full question texts (`:448`, `:460`), rationales (`:461`), Rejected line (`:462`) (planner)
+
+### CR-185 — The divergence risk named by the decision has no row in the risk register
+- **Severity:** minor
+- **Refs:** C002-IF-005 §3, C002-T-083, C002-RISK-030
+- **Evidence:** IF-005 §3 names the drift risk; `70-risks.md` had no row for it.
+- **Why it matters:** a lasting adopter hazard had no trigger, owner or detection.
+- **Suggested fix:** add or extend a risk row and link it.
+- **Status:** resolved: new C002-RISK-043 (`70-risks.md:76`), mitigation install notes §5 step 2, recorded copy and VSC-22, trigger a copy whose file differs from the install record's SHA-256, owner the conductor; linked from T-083 and T-050 `risk_refs` (planner)
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Requirements covered | pass: TR-06 142/142 |
+| plan | P2 Targets, verification, done-checks | CR-182 |
+| plan | P3 DAG and milestones | pass: T-082 → T-083 → T-050; critical path 61 |
+| plan | P4 Scenarios mapped | pass: TR-08 302/302 |
+| plan | P5 Risks | CR-185 |
+| plan | P6 Rollout/rollback | pass: no package change; candidate stays e89dae8 |
+| plan | P7 ADRs | pass: P-01's decision recorded in C002-IF-005 §3 |
+| plan | consistency with spec and own rules | CR-181, CR-183 |
+
+**Checked without finding.** Weights add up (159) and the chain ends at 61; T-050 `depends_on` holds T-083; the hand-off is renumbered; T-083's AC/TS pairs match; the step-11 statement agrees across T-083, the T-050 done item and TC-901; the settings hash is defined; `scripts/release-check.mjs` exists. Process note: C002-T-083's edits were started in the working tree before G3 and are committed only after it.

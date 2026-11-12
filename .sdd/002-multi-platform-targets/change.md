@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:45f7201a610c88af01e39dd82c8de538aa3c950019036d09b08be0c29ef2a0fd", approved_at: 2026-11-12, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:82d4946794de25c0b88cc4a9d171be53db5f185c3956010cb376ab79fb74d175", approved_at: 2026-11-12, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:ce1a1726c788014be77aa70430d6a72d8678904518a8a79e458c372ac0c23cb7", approved_at: 2026-11-12, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -569,3 +569,5 @@ waivers:
 | 2026-11-12 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Plan revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0', '4 key rows'): C002-T-082 (vscode/askQuestions, new candidate, tools-list-kept check, 4 Copilot CLI rows, label c002-t082); C002-T-050 reruns on it in C:\Sandbox\runs\t050d; critic CR-170…177 resolved." | none | unavailable |
 | 2026-11-12 | G2 (spec) | **Revise** | "Spec revision after the C002-T-050 run of 2026-11-12 (stopped at VSC-15; P-01 2026-11-12: 'Fix test, finish findings pass (Recommended)'): C002-TS-319 and the VSC-15 row keep only the prompt-file form; the names come out of every conductor copy the session can use (plugin and workspace agent files) and the prompt file; the conductor's plain-request behaviour is defect D-055 (CHG-001) for a later change." | none | unavailable |
 | 2026-11-12 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect." | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601 | unavailable |
+| 2026-11-12 | G3 (plan) | **Revise** | "Plan revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15): new task C002-T-083 (docs/tests), C002-T-050 restart in C:\Sandbox\runs\t050e on e89dae8." | none | unavailable |
+| 2026-11-12 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Plan revision for CHG-002 defect D-055: C002-T-083 (checklist VSC-15 prompt-file form, A-2 halves, conductor copy and invocation form in the records, run sheet t050e), C002-T-050 rerun on e89dae8, C002-RISK-043; critic CR-181…185 resolved." | none | unavailable |
