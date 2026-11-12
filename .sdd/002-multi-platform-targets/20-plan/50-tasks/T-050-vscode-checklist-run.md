@@ -6,12 +6,12 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082]
+depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082, C002-T-083]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
 verified_by: [C002-TS-358, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
 components: [C002-COMP-011]
-risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031, C002-RISK-032, C002-RISK-041]
+risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031, C002-RISK-032, C002-RISK-041, C002-RISK-043]
 estimate: S
 report: { commit: null, completed_at: null, notes: null }
 ---
@@ -20,7 +20,28 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-**Stopped run and rerun (defect D-054).** The binding run of 2026-11-11 (started 22:38 in
+**Stopped run of 2026-11-12 and rerun (VSC-15, test design).** The binding run of 2026-11-12 (started
+01:10 in `C:\Sandbox\runs\t050d`, on C002-T-082's candidate e89dae8) stopped at VSC-15: in the
+plain-request form the conductor created CHG-001 with the CLI defaults and asked no profile question
+(CHG-001 defect D-032, for a later change). Steps passed before the stop: VSC-01 (conductor half), 02,
+03, 04, 07, 08, 10, 11, 13 and 14 (VSC-14: the dialogs work, D-054 fixed in practice). By P-01's
+answer to Q-t050-vsc15-01 ("Fix test, finish findings pass (Recommended)", `../questions-log.md`
+round 2026-11-12) the plain-request form is a test-design fault; the remaining steps ran as a
+non-binding findings pass (06:00–06:25; no record; finding F-P: `code chat -m sdd-conductor` ran the
+plugin copy of the conductor). By P-01's answer to Q-copilot-agentcopy-01 ("Keep both, record copy
+(Recommended)") either conductor copy may be the session agent, and the record names the copy used,
+from the chat session file's `mode`, in the `note` of VSC-02, or of each step whose session used the
+other copy (C002-IF-009 §4 Session agent; defect D-055); VSC-22 records the session's copy and the
+started specialist, and a plugin-copy session that starts no specialist goes back to P-01
+(assumption A-2, open half; C002-RISK-043). C002-T-083 brings VSC-15 to the prompt-file form only,
+with the names removed from both conductor copies and the prompt file, assumption A-2 and the VSC-02
+Record to that rule, and the run sheet to the conductor-copy method and the fresh run folder
+`C:\Sandbox\runs\t050e`. This task then runs **again, in full from
+step 0, as a later run**, on the **unchanged candidate e89dae8** of C002-T-082, in `t050e`, after
+C002-T-083 is done; none of the stopped run's or the findings pass's results carries over. Wherever
+the paragraphs below name `t050c` or `t050d`, `t050e` applies.
+
+**Stopped run of 2026-11-11 and rerun (defect D-054).** The binding run of 2026-11-11 (started 22:38 in
 `C:\Sandbox\runs\t050c`, on C002-T-081's candidate 54b83ff) stopped at VSC-14: on VS Code 1.145.2 the
 `tools` entry `askQuestions` grants no question tool, while `vscode/askQuestions` does (scratch test,
 tool call `vscode_askQuestions`). Steps passed before the stop: VSC-01 (conductor half), 02, 03, 04,
@@ -98,10 +119,21 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 | Kind | Target | Change |
 |---|---|---|
 | add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record |
-| modify | `docs/runsheets/T-050-vscode-checklist.md` | revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | revision after the run of 2026-11-12: the banner, the run folder `C:\Sandbox\runs\t050e`, the conductor-copy method and the step-11 statement are C002-T-083's; this task only fills the `<commit>` of step 11 with C002-T-083's done commit before the run starts. Earlier, revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
 
 ## Preconditions
 
+- **Revision after the run of 2026-11-12** (supersedes the run folder and the done commit of the next
+  item; the candidate stays): the G2 and G3 approvals of that revision (C002-TS-319 and VSC-15 in the
+  prompt-file form only) and **C002-T-083 done**. The packages are still those of C002-T-082's
+  candidate e89dae8 (C002-T-083 changes no package input). **Settings before step 0:** the default
+  profile's `%APPDATA%\Code\User\settings.json` is P-01's own: the run of 2026-11-12 restored it at
+  06:25 (hash `FF55715DE862`; its backup file equals it); before step 0 the conductor checks that the
+  file still has that hash, and asks P-01 before starting if it does not. The run starts from step 0
+  in the fresh run folder `C:\Sandbox\runs\t050e` (no earlier package or toy repository in it). The
+  run of 2026-11-12 made no record (run sheet rule 10), so no earlier `failed` run binds this one, and
+  any run started from now on is the later run that rule 10 asks for (plan revision of 2026-11-11:
+  "later run", not a later calendar date). The record is `docs/checklists/records/vscode-<date>-0.1.0.md`.
 - **Revision D-054** (supersedes the candidate and run folder of the next item): the G2 and G3
   approvals of that revision and **C002-T-082 done**: the 0.1.0 packages are those of its release
   candidate (`plugins/architect/targets/copilot.json` mapping AskUserQuestion to `ask_user`,
@@ -209,9 +241,13 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
      (C002-AC-327.1 applies only on a host that sends `agent_type`);
    - the workspace hook file not loaded: defect against C002-IF-005 §3;
    - a write outside the open repository's `.sdd/`: defect against C002-IF-002 §3;
-   - the same-name or no-`plugin.json` assumption refuted: the fallback layout of C002-IF-005 §3
-     (agents under `install/agents/`), which then needs a plan revision of C002-T-031, C002-T-045 and
-     C002-T-058.
+   - the no-`plugin.json` assumption refuted: the fallback layout of C002-IF-005 §3 (agents under
+     `install/agents/`), which then needs a plan revision of C002-T-031, C002-T-045 and C002-T-058.
+     History note (2026-11-12): the same-name half of this item no longer applies; the session agent
+     may be either conductor copy (C002-IF-005 §3 "Same names in two places", a fact since the run of
+     2026-11-12), P-01's decision on Q-copilot-agentcopy-01 keeps both copies without the fallback,
+     and the record names the copy used (C002-IF-009 §4 Session agent); a session on the plugin copy
+     is no failed step.
 
 ## Verification
 
@@ -225,5 +261,5 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
-- [ ] The record's run started after C002-T-082 was done, in `C:\Sandbox\runs\t050d`; the record names C002-T-082's candidate packages and states in its Notes that it is the binding run after the findings pass of 2026-11-11 and after the stopped run of 2026-11-11 (VSC-14, D-054), with the run's start time and C002-T-082's done commit (<commit>, filled into run-sheet step 11 before the run), which this item compares; neither the findings pass nor the stopped run appears in any record (before revision D-054 this item named C002-T-081's done commit 579c39b)
+- [ ] The record's run started after C002-T-083 was done, in `C:\Sandbox\runs\t050e`, on C002-T-082's candidate packages (e89dae8); its Notes state that it is the binding run of C002-T-050 after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design) and after C002-T-083 was done (<commit>, filled into run-sheet step 11 before the run), with the run's start time; the findings passes of 2026-11-11 and 2026-11-12 and both stopped runs appear in no record (before this revision the item named C002-T-082's done commit c8c1d10 and `t050d`; before revision D-054, C002-T-081's done commit 579c39b)
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

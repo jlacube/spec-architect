@@ -518,6 +518,30 @@ does; it wrote no record (run sheet rule 10). Order:
 C002-T-050 after C002-T-082. **Close rule:** `10-strategy.md` §2 (D-054 with C002-T-082, its
 tools-list-kept check and `ROUTE-auditor-copilot-cli` passed, and VSC-18 in C002-T-050's record).
 
+**The binding run of C002-T-050 of 2026-11-12 stopped at VSC-15** (P-01's answers of 2026-11-12 to
+Q-t050-vsc15-01, "Fix test, finish findings pass (Recommended)", and Q-copilot-agentcopy-01, "Keep
+both, record copy (Recommended)"; `10-strategy.md` §2). The run (started 01:10 in
+`C:\Sandbox\runs\t050d`, candidate e89dae8) failed VSC-15 in its plain-request form, a test-design
+fault (the conductor's behaviour is CHG-001 defect D-032, for a later change); the remaining steps ran
+as a non-binding findings pass; no record was written; P-01's settings were restored (hash
+`FF55715DE862`). Order:
+1. **C002-T-083** (S, docs and tests only): VSC-15 in the prompt-file form only (the three names
+   removed from the plugin conductor, the workspace conductor and `prompts/new.prompt.md`, two package
+   backups, reload, restore); assumption A-2 and the VSC-02 Record to the Session agent rule of
+   C002-IF-009 §4 (either conductor copy, the copy used recorded); the record template; the run sheet
+   (banner naming the stop at VSC-15, the conductor copy read from the chat session file's `mode`,
+   fresh run folder `C:\Sandbox\runs\t050e`, the Package line with e89dae8); `checklist.test.ts`;
+   `npm run check`. No code, no package, no paid session; the candidate stays e89dae8.
+2. **C002-T-050** runs again from step 0 as a later run on e89dae8, in `t050e`, after checking P-01's
+   settings hash before step 0; the conductor fills C002-T-083's done commit into run-sheet step 11
+   first; then C002-T-075 and C002-T-055 as before.
+
+**Handoff condition:** C002-T-083 starts after the G2 and G3 approvals of this revision; C002-T-050
+after C002-T-083. **Close rule:** defect D-055 (C002-IF-005 §3) closes when this revision is approved,
+C002-T-083 is done and VSC-15 passes in C002-T-050's record (`10-strategy.md` §2). VSC-22 of that
+record also settles the open half of A-2: a plugin-copy session that starts no specialist goes back
+to P-01 (C002-RISK-043).
+
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
 OpenRouter credit (`10-strategy.md` §2, Moved to CHG-003).
@@ -836,10 +860,11 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 73 | C002-T-080 | Fix for revisions D-052, D-053: VS Code checklist, record template and T-050 run sheet | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-080-checklist-runsheet-d052-d053.md` |
 | 74 | C002-T-081 | Fix for revisions D-051 … D-053: new 0.1.0 release candidate, unpaid release steps and the Copilot CLI evidence retaken | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-081-release-candidate-0-1-0-after-d051-d053.md` |
 | 75 | C002-T-082 | Fix for revision D-054: vscode/askQuestions in the Copilot question-tool mapping, new 0.1.0 candidate and a 4-row Copilot CLI retake | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-082-question-tool-vscode-askquestions-d054.md` |
-| 76 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 77 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 78 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
-| 79 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 76 | C002-T-083 | VSC-15 in the prompt-file form only, the conductor copy in the T-050 run sheet, and the fresh run folder t050e (C002-T-050 run of 2026-11-12) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-083-checklist-vsc15-conductor-copy.md` |
+| 77 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 78 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 79 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
+| 80 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
 are not in this list. The OpenCode release moves to CHG-003 "OpenCode release" (created 2026-11-10; `.sdd/003-opencode-release/`); the follow-up "Cost and token efficiency" is CHG-004 (`.sdd/004-cost-and-token-efficiency/`).

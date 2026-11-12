@@ -1690,3 +1690,45 @@ Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (working tree), ag
 - **Status:** resolved: `mapping-tables.md:213` "all three listed"; source (VS Code 1.145.2 tool metadata read in the T-050 findings pass) and the only-granting-entry clause in `mapping-tables.md:279`, `glossary-delta.md:52`, `CAP-02-opencode-target/requirements.md:113`, `CAP-03-copilot-target/stories.md:53` (architect)
 
 **Checked without finding.** Every statement of what the Copilot `tools` lists carry names the three entries (mapping tables, IF-005 §3/§4, architecture D-054 note, COMP-004, F7, decision row, glossary, C002-REQ-211/312 rationales, C002-US-304, C002-TS-216, C002-TS-617, C002-DOD-004, TS-114 and TS-332 rows, VSC-15 row); text naming two tools describes the body text, which the decision row keeps. Every cited ID resolves. TGT-TOOLS-001 derives grants from the table; PLG-VAR-001 catches `vscode/askQuestions` through `askQuestions`. The binding run wrote no checklist record, so the later-date rule of `verification-records.md:500-502` does not apply; the restart is the plan's.
+
+## Revision VSC-15 / agent copy (2026-11-12)
+
+Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (CAP-03 `acceptance.md`, `50-interfaces/target-packages.md`, `50-interfaces/verification-records.md`, generated `85-open-items.md`), revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12, stopped at VSC-15; P-01 Q-t050-vsc15-01 and Q-copilot-agentcopy-01). Reviewed IDs: C002-REQ-312, C002-AC-312.1, C002-TS-319, C002-US-304, C002-IF-005 §3, C002-IF-009 §4 (VSC-15, Executor, Session agent), C002-REQ-317, C002-REQ-614, C002-AC-614.1, C002-TS-617, C002-REQ-615, C002-AC-615.1, C002-TS-618, C002-DOD-004, C002-COMP-011. `sdd lint 002`: only the nine LINT-DELTA-001 errors waived at G2. `sdd trace 002`: 100 %. Read-only review; the conductor appended this section from the critic's reply. The CR-166 resolution above (TS-319 as a Scenario Outline with a plain-request row) is superseded by this revision: TS-319 is a single prompt-file scenario again.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 2 | 1 |
+
+### CR-178 — The 2026-11-12 observations are recorded with a cause and a scope the run did not establish
+- **Severity:** major
+- **Refs:** C002-AC-312.1, C002-TS-319, C002-IF-005 §3, C002-IF-009 §4, C002-REQ-317
+- **Evidence:** the TS-319 note cited prompt-file `tools` precedence and in the same paragraph a dialog that persisted with the prompt file stripped (`CAP-03-copilot-target/acceptance.md:431-440`); an agent-picker claim without logged evidence (`:437-438`); IF-005 §3 stated "the prompt files run on that session agent" as fact (`target-packages.md:265`), while the executor attaches prompt files with `code chat -a` (`verification-records.md:365-367`).
+- **Why it matters:** the run did not separate the `-a` attachment, the missing reload of the first attempt and the agent copy as causes.
+- **Suggested fix:** record the attempts as done; limit the agent-picker statement to "may"; qualify precedence and "prompt files run on the session agent" as not verified for an attachment; the VSC-15 and VSC-18 records note the invocation form.
+- **Status:** resolved: the TS-319 note (`acceptance.md:430-453`), IF-005 §3 (`target-packages.md:259-279`) and the IF-009 §4 VSC-15 row, Executor and Session agent paragraphs (`verification-records.md:349`, `:369-376`) list the three attempts (05:44 no reload; 05:47 restart, plugin copy; 05:50 all three files, restart → text form), state that the causes were not separated and that the `-a` question is not verified, and limit the agent-picker statement; VSC-15 and VSC-18 note the invocation form (test-designer, architect)
+
+### CR-179 — The specialists half of the same-name assumption lost its marker and has no settling step
+- **Severity:** major
+- **Refs:** C002-IF-005 §3, C002-IF-009 §4 (Session agent), C002-REQ-614, C002-TS-617
+- **Evidence:** "Which specialists a session on the plugin copy starts was not recorded in that run." (`target-packages.md:270-271`) with the S-08 marker removed from `85-open-items.md`.
+- **Why it matters:** whether a plugin-copy session starts the workspace specialists was untracked.
+- **Suggested fix:** keep a reduced marker and name VSC-22 in the Session agent paragraph.
+- **Status:** resolved: `[ASSUMPTION: S-08 — a conductor session on either copy starts the workspace specialists, plugin agents not being startable as subagents; VSC-22 records the session's copy and the started specialist; a plugin-copy session that starts no specialist goes back to P-01]` at `target-packages.md:280`; VSC-22 named at `verification-records.md:386-388` (architect)
+
+### CR-180 — VSC-15 row and the Session agent paragraph give different rules for where the conductor copy is recorded
+- **Severity:** minor
+- **Refs:** C002-IF-009 §4 (VSC-15, Session agent), C002-TS-618
+- **Evidence:** "its `note` names the copy the session used" (`verification-records.md:349`) against a VSC-02-or-deviation rule (`:381-383`).
+- **Why it matters:** the record obligation was ambiguous for mixed sessions.
+- **Suggested fix:** one rule: VSC-02 names the run's copy; a step whose session used a different copy names it in its own `note`.
+- **Status:** resolved: one rule at `verification-records.md:381-386`; the VSC-15 row says "when it differs from VSC-02's" (architect)
+
+| Rubric | Item | Result |
+|---|---|---|
+| requirements | R1–R12 | pass except R3 (CR-180), R6 (CR-179), R7 (CR-178); C002-REQ-312 statement unchanged |
+| stories | S1–S6 | pass: C002-US-304 unchanged |
+| acceptance | A1–A5 | pass except A2 (CR-178) |
+| domain/interfaces | D1–D5 | pass / n/a: no entity, lifecycle, component or error change |
+| DoD/index | O1–O3, X1 | pass / n/a |
+
+**Checked without finding.** The byte-copy claim holds (`target-packages.md:152`); the reinstall-after-update rule exists (`:392-394`); no spec text keeps the plain-request row or applies the `install/agents/` fallback; the F7 rows of `architecture.md` cite TS-319 without a form.

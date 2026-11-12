@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-12T00:09:58Z",
+  "generated_at": "2026-11-12T05:54:39Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -350,6 +350,16 @@
           "status": "closed",
           "resolution": "Revision D-031 approved at G2 (waivers C001-NFR-602, C001-DOD-018 timed part) and G3: C001-T-072 without P-01's timed run (functional check and scripted e2e flow stay); README part of C001-SC-09 and untimed walkthrough deferred to the follow-up change; critic CR-135…144 fixed (2ca3b1f)",
           "closed_at": "2026-11-10"
+        },
+        {
+          "id": "D-032",
+          "ref": "C001-REQ-116",
+          "summary": "For a later change (P-01 2026-11-12: log separately): asked in plain words without the /architect:new command ('Start a new change titled Toy change', VS Code 1.145.2, C002-T-050 run of 2026-11-12 01:33, question tools available), the conductor ran sdd change new with the CLI defaults (full, greenfield) and asked no profile question. C001-REQ-116 binds only WHEN /architect:new runs, so the natural-language path has no profile round; decide whether the conductor must run the new-change procedure for any request to create a change (shared agent text, both hosts).",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-12",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -410,7 +420,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "20-plan",
+      "phase": "10-spec",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -420,12 +430,12 @@
         },
         "10-spec": {
           "status": "approved",
-          "approved_hash": "sha256:a29916635da8ee43768f49f80626933b5a5dee49abef83618313242bdc767574",
+          "approved_hash": "sha256:45f7201a610c88af01e39dd82c8de538aa3c950019036d09b08be0c29ef2a0fd",
           "approved_at": "2026-11-12",
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "approved",
+          "status": "stale",
           "approved_hash": "sha256:82d4946794de25c0b88cc4a9d171be53db5f185c3956010cb376ab79fb74d175",
           "approved_at": "2026-11-12",
           "approved_by": "jerome.lacube"
@@ -434,7 +444,7 @@
       "implementation": {
         "status": "in-progress",
         "tasks": {
-          "total": 79,
+          "total": 80,
           "done": 76,
           "blocked": 0,
           "in_progress": 0
@@ -981,6 +991,16 @@
           "status": "open",
           "resolution": null,
           "closed_at": null
+        },
+        {
+          "id": "D-055",
+          "ref": "C002-IF-005",
+          "summary": "C002-T-050 run of 2026-11-12 (t050d, e89dae8) stopped at VSC-15: the plain-request form of C002-TS-319 (added at D-054) tests behaviour no requirement asks for (C001-REQ-116 binds only /architect:new; conductor behaviour is CHG-001 D-032), and the S-08 same-name assumption of C002-IF-005 §3 (prompt files bind to the workspace sdd-conductor) was not borne out: code chat -m sdd-conductor ran the plugin copy. Resolution: P-01 Q-t050-vsc15-01 'Fix test, finish findings pass' and Q-copilot-agentcopy-01 'Keep both, record copy'; close when this revision is approved, C002-T-083 is done and VSC-15 passes in the C002-T-050 record.",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-12",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -3083,6 +3103,78 @@
           "gate": "10-spec",
           "date": "2026-11-12",
           "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for defect D-054 (P-01 2026-11-11: 'Fix in 0.1.0'); critic CR-166…169 resolved."
+        },
+        {
+          "item": "C002-REQ-211",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-212",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-213",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-503",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-504",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-505",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-506",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-507",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-REQ-601",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-DOD-G-01",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-TS-634",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
+        },
+        {
+          "item": "C002-NFR-601",
+          "gate": "10-spec",
+          "date": "2026-11-12",
+          "note": "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defect D-055 (C002-T-050 run of 2026-11-12 stopped at VSC-15; P-01: 'Fix test, finish findings pass (Recommended)', 'Keep both, record copy (Recommended)'): TS-319 single prompt-file form, IF-009 §4 VSC-15 and Session agent, IF-005 §3 fact + decision with a reduced S-08 marker; critic CR-178…180 resolved. Correction to the Revise note of 2026-11-12: the conductor's plain-request behaviour is CHG-001 defect D-032; CHG-002 D-055 is this revision's defect."
         }
       ]
     },

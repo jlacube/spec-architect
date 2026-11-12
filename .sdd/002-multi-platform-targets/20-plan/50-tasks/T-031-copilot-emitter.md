@@ -59,7 +59,11 @@ every prompt file still hold the server profiles instead (C002-REQ-321).
 6. Keep the agent files under `agents/`. The fallback location `install/agents/` of C002-IF-005 §3
    is used only if the fresh-install step of the checklist (C002-T-050) refutes the same-name
    assumption or the assumption that VS Code loads nothing from a registered folder without
-   `plugin.json`; that is a plan change, not a choice of this task.
+   `plugin.json`; that is a plan change, not a choice of this task. History note (2026-11-12): the
+   same-name half is no longer an assumption; C002-IF-005 §3 "Same names in two places" states that
+   either conductor copy may be the session agent, and P-01's decision on Q-copilot-agentcopy-01
+   ("Keep both, record copy (Recommended)") keeps the agent files under `agents/` and does not apply
+   the `install/agents/` fallback (C002-T-050 run of 2026-11-12; checklist follow-up C002-T-083).
 
 ## Verification
 

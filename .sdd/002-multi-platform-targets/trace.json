@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-11-11T23:40:53.103Z",
+  "generated_at": "2026-11-12T05:54:29.171Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -392,13 +392,13 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 407,
       "title": "No question tool: the conductor asks as plain text, with no install detour",
-      "content_hash": "sha256:5c11f0c9881f4647c5057ff33cb89e38da627d558d51809b27482820f1882c59"
+      "content_hash": "sha256:7ccae280ae98bb7a01ac8e182f777a9811f28cde79d894a583f704f14455f339"
     },
     {
       "id": "C002-AC-313.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 443,
+      "line": 455,
       "title": "Session-start hook emits the status brief",
       "content_hash": "sha256:bd480d78f45fb832ebcc2c22b1c93a29001bb3a4eb7574df67d875d97b33dab4"
     },
@@ -406,7 +406,7 @@
       "id": "C002-AC-314.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 481,
+      "line": 493,
       "title": "No `.sdd/`, no output",
       "content_hash": "sha256:cf11c22fc695f69acb4d72009792afaa6a2a7e5d53d5d4366c74fead5fe27c73"
     },
@@ -414,7 +414,7 @@
       "id": "C002-AC-315.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 492,
+      "line": 504,
       "title": "Trace refreshed after an author agent in either `agent_type` form, exit code 0",
       "content_hash": "sha256:7ff34a602efc2316f13fffc9fc7c89007dff5b934679570cd8eca92c1107c057"
     },
@@ -422,7 +422,7 @@
       "id": "C002-AC-316.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 519,
+      "line": 531,
       "title": "Hook commands call the CLI copy with arguments only",
       "content_hash": "sha256:b4eeb4bb32a970946f3a383a9688cb874d7586c07f93689d8886743edfd86c37"
     },
@@ -430,7 +430,7 @@
       "id": "C002-AC-317.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 536,
+      "line": 548,
       "title": "Prompt files named after the source commands",
       "content_hash": "sha256:372fbc6b178c3df69231bbe4e7233aa2db0eb932458e9a0c466b5a2c0e1f8108"
     },
@@ -438,7 +438,7 @@
       "id": "C002-AC-318.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 561,
+      "line": 573,
       "title": "In both modes every tool offered to a specialist and every recorded generic tool has a class",
       "content_hash": "sha256:d7efc8517cf6f08453c6f138968595e3b26d2add1cfb4bd1ced06f505c6bb232"
     },
@@ -446,7 +446,7 @@
       "id": "C002-AC-319.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 602,
+      "line": 614,
       "title": "Read-only calls of an Architect agent are allowed with exit code 0",
       "content_hash": "sha256:6f2dbfd5809edc0187ddf85b096bfdbf9fbf6252497b5334e4c987d0481b7994"
     },
@@ -454,7 +454,7 @@
       "id": "C002-AC-320.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 642,
+      "line": 654,
       "title": "Under the hooks fallback calls without `agent_type` pass the guard hook",
       "content_hash": "sha256:2c1bc536281b41173baf141536a952c0c6d87b58549c21127a1d80fb4789e143"
     },
@@ -462,7 +462,7 @@
       "id": "C002-AC-321.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 674,
+      "line": 686,
       "title": "Under the hooks fallback the conductor and the prompt files hold the server profiles",
       "content_hash": "sha256:0f9828553b7747bda73e21eae1ee1342207b6ba03c7fa40234eb49e228b95c8a"
     },
@@ -470,7 +470,7 @@
       "id": "C002-AC-322.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 699,
+      "line": 711,
       "title": "The install command writes the ten workspace agents",
       "content_hash": "sha256:43233eec1fd1dc47d5e50acd85e133a25bf3be20879a719680988045d907df14"
     },
@@ -478,7 +478,7 @@
       "id": "C002-AC-323.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 808,
+      "line": 820,
       "title": "The install command merges the server entries into `.vscode/mcp.json`",
       "content_hash": "sha256:0f95198f36e434ceaee768409832f9a461ad77466e2ef908eb1e4266442b513b"
     },
@@ -486,7 +486,7 @@
       "id": "C002-AC-324.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 842,
+      "line": 854,
       "title": "An adopter file or server in the way: nothing written, each one named",
       "content_hash": "sha256:7aef7e05385275e35a72e4c97a92fb886145d3984861272f9185f65a3e081e3c"
     },
@@ -494,7 +494,7 @@
       "id": "C002-AC-325.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 874,
+      "line": 886,
       "title": "The bash guard denies the install command in every form",
       "content_hash": "sha256:3eebd1c6d311b5871691f5a4e9703020d5fab12468b98487e984e26ced0c08a8"
     },
@@ -502,7 +502,7 @@
       "id": "C002-AC-326.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 916,
+      "line": 928,
       "title": "Hook commands hold no plugin-root token, before and after the install",
       "content_hash": "sha256:b057fa70edab510b474630ec7aa1fd435e12b084a902611c44198ce784fb034e"
     },
@@ -510,7 +510,7 @@
       "id": "C002-AC-327.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 957,
+      "line": 969,
       "title": "In both modes, a non-Architect subagent's write and terminal calls in a repository with `.sdd/` are denied with GUARD-HOOK-002",
       "content_hash": "sha256:e0112844ca4601367c20c2e1241c506c7746ed3b5d3c234197d9ed47ef61874f"
     },
@@ -518,7 +518,7 @@
       "id": "C002-AC-328.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1079,
+      "line": 1091,
       "title": "The Copilot subagent guard hook denies with GUARD-HOOK-001 when it cannot decide",
       "content_hash": "sha256:81122b85b5790b866b764f9e94c99ac9c3175fc6d176f460480178ee1b8346f0"
     },
@@ -526,7 +526,7 @@
       "id": "C002-AC-329.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1128,
+      "line": 1140,
       "title": "Read-only calls of non-Architect subagents and their calls outside repositories with `.sdd/` pass",
       "content_hash": "sha256:49c068797e021b7a644fda6a0b7756924250e3170d31bb8b9918cab2999d7965"
     },
@@ -534,7 +534,7 @@
       "id": "C002-AC-330.1",
       "type": "AC",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1159,
+      "line": 1171,
       "title": "Under sdd MCP server enforcement the session agent's and the Architect agents' calls pass",
       "content_hash": "sha256:26228504735b5172e772315d3b894209919d5eba3b8bca46f7c50a0b190a82f9"
     },
@@ -2074,7 +2074,7 @@
       "id": "C002-M-01",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 125,
+      "line": 126,
       "title": "Spikes and P-01 prerequisites (P-01, 2026-10-16: C002-T-002 runs first; OpenCode through OpenRouter settled by Q-opencode-01, `questions-log.md` round 6)",
       "content_hash": "sha256:5055b726a71f4eef3b539b8aaee0811d43b0a5f8ce0ced28423244f12e0c94d4"
     },
@@ -2082,7 +2082,7 @@
       "id": "C002-M-02",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 126,
+      "line": 127,
       "title": "Shared guard and CLI deltas",
       "content_hash": "sha256:a6e35e2d996c3affde95603a30ca6c3dba696ea972afb8531a22906859299a56"
     },
@@ -2090,7 +2090,7 @@
       "id": "C002-M-03",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 127,
+      "line": 128,
       "title": "sdd MCP server and `architect-sdd`",
       "content_hash": "sha256:764398cfb9cd17463e1ce15992178199970469ea8634e96a03c2cdabda8e688c"
     },
@@ -2098,7 +2098,7 @@
       "id": "C002-M-04",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 128,
+      "line": 129,
       "title": "Target generator and packages",
       "content_hash": "sha256:d27b4a63f275e41a3c9ee400a91b7922ed7b978b6c024bdd9a2a7d4991877102"
     },
@@ -2106,7 +2106,7 @@
       "id": "C002-M-05",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 129,
+      "line": 130,
       "title": "Workflow on every host",
       "content_hash": "sha256:aa769d863dc3e3aa6cb3a7e8036d541ce57f7b1d2ec2a1f9d3a8be7b8ee5cb19"
     },
@@ -2114,7 +2114,7 @@
       "id": "C002-M-06",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 130,
+      "line": 131,
       "title": "Verification tooling",
       "content_hash": "sha256:cb18567fde21a4133a1193260adb08ac0e0ce570f79e274914df968e1fe2b087"
     },
@@ -2122,9 +2122,9 @@
       "id": "C002-M-07",
       "type": "M",
       "file": "20-plan/10-strategy.md",
-      "line": 131,
+      "line": 132,
       "title": "Release evidence and release",
-      "content_hash": "sha256:8fcfa4f4b72ad6175aa4c9140e0e5176151d4728bb5cbded829416d61095feed"
+      "content_hash": "sha256:2b35acd31059f6b532fafd6769c187f0b19d184973169b406b943eaf3d376807"
     },
     {
       "id": "C002-NFR-101",
@@ -3810,7 +3810,7 @@
       "id": "C002-RISK-034",
       "type": "RISK",
       "file": "20-plan/70-risks.md",
-      "line": 76,
+      "line": 77,
       "title": "The variant `file-inspection` is prompt guidance only: an OpenCode agent at the tested version (1.18.31) may still call `glob` for `.sdd/`, take an empty result for \"no `.sdd/`\" and fail C002-TS-511 or another session, or spend turns on empty results; `grep` from the project root may leave `.sdd/` out as `glob` does (the ASSUMPTION: D-020 of C002-IF-001 §6.1); and a later source line that names the Glob tool needs a variant on both targets",
       "content_hash": "sha256:84d1010eeca8caebbdc950b840e0a08080d6526b5df84da5e917ca379c9f2a93"
     },
@@ -3877,6 +3877,14 @@
       "line": 75,
       "title": "The question tool and the hook output of the Copilot package diverge between the two Copilot hosts: VS Code renamed its question tool (`askQuestions`, legacy `vscode_askQuestions` and `vscode/askQuestions`) and may rename it again, so the granted name finds no tool and the conductor falls back to text; Copilot CLI may refuse an agent file whose `tools` list names `askQuestions` or `vscode/askQuestions`, drop the list, or misread the JSON session-start output of C002-T-078. **Realised on VS Code 1.145.2** (defect D-054, C002-T-050 binding run of 2026-11-11, VSC-14): the `tools` entry `askQuestions` granted nothing, the rounds fell back to text, and only `vscode/askQuestions` grants the tool",
       "content_hash": "sha256:c4a7ef59dac759f0aac4d294abd9aaa3534ca629081be842f679d49f8a2494ae"
+    },
+    {
+      "id": "C002-RISK-043",
+      "type": "RISK",
+      "file": "20-plan/70-risks.md",
+      "line": 76,
+      "title": "The two copies of the conductor diverge: VS Code may run either the plugin copy (`<package folder>/agents/sdd-conductor.agent.md`) or the workspace copy (`.github/agents/sdd-conductor.agent.md`) as the session agent (C002-IF-005 §3 \"Same names in two places\", defect D-055; C002-T-050 run of 2026-11-12), and after a package update without a new `sdd install copilot` the two files differ, so the session runs whichever copy VS Code picks with a `tools` list or body other than the installed one; which specialists a plugin-copy session starts is not yet recorded",
+      "content_hash": "sha256:699ca603088ddbefd22e297d3c08e1eb3d1b059c1fa0561671e4496910e9c39c"
     },
     {
       "id": "C002-SC-01",
@@ -4194,7 +4202,7 @@
       "file": "20-plan/50-tasks/T-031-copilot-emitter.md",
       "line": 1,
       "title": "Copilot emitter: plugin part, agents, prompt files, skills, workspace MCP configuration and install notes",
-      "content_hash": "sha256:29515b911ed83beb15991b9b2f3fe10ac0a0cc4d98b21382134e9ead9c0945f2",
+      "content_hash": "sha256:057ee6275e263b6f55b8c6fc337ad0f612d01d7ec4f807b73aa7e190bfc3e429",
       "status": "done"
     },
     {
@@ -4329,7 +4337,7 @@
       "file": "20-plan/50-tasks/T-046-vscode-checklist.md",
       "line": 1,
       "title": "Manual VS Code checklist and its record template",
-      "content_hash": "sha256:d5ab8b8bc5f2575a2d8f117fb513573b33b3222ca5652b47d7dbed3e5323a394",
+      "content_hash": "sha256:16878a8d601672f6057cad1ce52f1b52b82178783dadcdc97d2f98120b21eef1",
       "status": "done"
     },
     {
@@ -4365,7 +4373,7 @@
       "file": "20-plan/50-tasks/T-050-vscode-checklist-run.md",
       "line": 1,
       "title": "Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)",
-      "content_hash": "sha256:786f85df58a26b2cdf562f842b31ab66f73f976d4a3df151adb5b39696739a79",
+      "content_hash": "sha256:4e7c81f05b56f91dce047fb16369905fd7e702ab78664aacdf8877ee0b2a6cde",
       "status": "todo"
     },
     {
@@ -4654,6 +4662,15 @@
       "line": 1,
       "title": "Fix for revision D-054: vscode/askQuestions in the Copilot question-tool mapping, new 0.1.0 candidate and a 4-row Copilot CLI retake",
       "content_hash": "sha256:9289aaaea1584f9c3a6f046f704a2fb2f36dd346536d83f1760cb3f10c83fad9",
+      "status": "done"
+    },
+    {
+      "id": "C002-T-083",
+      "type": "T",
+      "file": "20-plan/50-tasks/T-083-checklist-vsc15-conductor-copy.md",
+      "line": 1,
+      "title": "VSC-15 in the prompt-file form only, the conductor copy in the T-050 run sheet, and the fresh run folder t050e (C002-T-050 run of 2026-11-12)",
+      "content_hash": "sha256:1b649f0281d8107b78860ca1a3945919b4d043d87580e02504ad8b609576ffc8",
       "status": "todo"
     },
     {
@@ -5318,7 +5335,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1094,
       "title": "C002-TS-319",
-      "content_hash": "sha256:6af87deab17a9cbd20af77750cf83615dbbc354886a21d7cee3a84f2b8e49fe0"
+      "content_hash": "sha256:7197d3e4e09ef4ca40b75a0410e0c16d3d9039e266d79fda37118755f75d6bfd"
     },
     {
       "id": "C002-TC-320",
@@ -6358,7 +6375,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1274,
       "title": "C002-TS-617",
-      "content_hash": "sha256:df541c991c9b156b715c3e1c84619ec9a502c6a3bd4efe6b338c0182a3358c95"
+      "content_hash": "sha256:392c61c0e4a4d37c825e20ad30944aade89afeeb0ebea12431a12ace5e1ca096"
     },
     {
       "id": "C002-TC-618",
@@ -6366,7 +6383,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1275,
       "title": "C002-TS-618",
-      "content_hash": "sha256:0c4a22fd181e6dac0b9aa26cf4c685038ed741ae60bf7897e8682aa0746ef64f"
+      "content_hash": "sha256:1d30d397e9f243f42e3426066aa91a93ffc07abe97e61cc2e494d562b0110140"
     },
     {
       "id": "C002-TC-619",
@@ -6934,7 +6951,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1319,
       "title": "C002-TS-618",
-      "content_hash": "sha256:d2f670f440a2b284a22fb9a5cfaae4795c2bf9bcc1f3719a0a2ecc0bf492df0c"
+      "content_hash": "sha256:26ae48f35c40d1dcb5a348de7bc6fbb9c53900897c8f80fb1691e6cd5b78cc6b"
     },
     {
       "id": "C002-TC-902",
@@ -7862,13 +7879,13 @@
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
       "line": 410,
       "title": "question tool unavailable",
-      "content_hash": "sha256:b083e19cb0d4811bad2268c29048e0af4a5ca654e6682233bd1864b63c891a29"
+      "content_hash": "sha256:ea9bcd08b7ccfd37bb67f171dfcdd4b7733ae62f7ba2050a9bcfe9d8dece0b9d"
     },
     {
       "id": "C002-TS-320",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 445,
+      "line": 457,
       "title": "brief on a workspace with two active changes",
       "content_hash": "sha256:7faeea9c3612bb386daca1e5cbe58d6601ac87e304ed8b6022501bb896e65507"
     },
@@ -7876,7 +7893,7 @@
       "id": "C002-TS-321",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 472,
+      "line": 484,
       "title": "brief available to the conductor in VS Code",
       "content_hash": "sha256:f8aa7af782d4a06da404f3ee778ac8048cc4ac45615f05dde78996bd9cc3d232"
     },
@@ -7884,7 +7901,7 @@
       "id": "C002-TS-322",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 483,
+      "line": 495,
       "title": "repository without a workspace",
       "content_hash": "sha256:1ca195be00801a01700f77c981e700df5b40616c2224efd3ec2cbca63ff1a96f"
     },
@@ -7892,7 +7909,7 @@
       "id": "C002-TS-323",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 494,
+      "line": 506,
       "title": "SubagentStop by agent",
       "content_hash": "sha256:613946f61f98190978819512c58d14c04031e1e1a9cee3c9086cecb5829184a0"
     },
@@ -7900,7 +7917,7 @@
       "id": "C002-TS-324",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 511,
+      "line": 523,
       "title": "trace refresh fails",
       "content_hash": "sha256:1f4b4efc926f214675c537f442a18214d150d71e959232b2ed76af59a6290a70"
     },
@@ -7908,7 +7925,7 @@
       "id": "C002-TS-325",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 521,
+      "line": 533,
       "title": "hook command form",
       "content_hash": "sha256:dcf33da208780c936dedf18d0307bdc67ba075fd8311d26a9c93d8c63bf09406"
     },
@@ -7916,7 +7933,7 @@
       "id": "C002-TS-326",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 528,
+      "line": 540,
       "title": "shell operator in a hook command",
       "content_hash": "sha256:0aabf895272520fcd9c5062c6555b9f9005ac34522b85a346a4a48779db14fbe"
     },
@@ -7932,7 +7949,7 @@
       "id": "C002-TS-328",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 538,
+      "line": 550,
       "title": "prompt file names",
       "content_hash": "sha256:2f320a983a760fc557a702d876f4051eea7403a697022f98145b3f3c4b9113aa"
     },
@@ -7940,7 +7957,7 @@
       "id": "C002-TS-329",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 546,
+      "line": 558,
       "title": "prompt files offered as slash commands in VS Code",
       "content_hash": "sha256:2daf8609627c64aaaa5281f921b544320305738265917ccb1feb70e3f82d0c0b"
     },
@@ -7948,7 +7965,7 @@
       "id": "C002-TS-330",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 564,
+      "line": 576,
       "title": "tool classes file of the package under the hooks fallback",
       "content_hash": "sha256:f78810248067c32d8ab937e372a81f4a0484a9208fbfc732dcc4414646ebcf78"
     },
@@ -7956,7 +7973,7 @@
       "id": "C002-TS-331",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 575,
+      "line": 587,
       "title": "tool classes file under sdd MCP server enforcement",
       "content_hash": "sha256:6ea0331039277d051beeb881adc885f73f9d388faa4221a4ea06fbce229f93cc"
     },
@@ -7964,7 +7981,7 @@
       "id": "C002-TS-332",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 586,
+      "line": 598,
       "title": "tool missing from the tool classes file",
       "content_hash": "sha256:9a0dbc75e817312260f4d9e9ae3f3b2b6900052ef658017e7a011488347e1666"
     },
@@ -7972,7 +7989,7 @@
       "id": "C002-TS-333",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 605,
+      "line": 617,
       "title": "read-only calls through the guard hook",
       "content_hash": "sha256:513f280133412ef70e0cb5be584b6f74da080679cb4572ab51b5d1e639ed387c"
     },
@@ -7980,7 +7997,7 @@
       "id": "C002-TS-334",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 620,
+      "line": 632,
       "title": "read tool name in another letter case",
       "content_hash": "sha256:a8b8552dbee836ad4368af515207bee06baecb323a653d36380ee358ed9377a7"
     },
@@ -7988,7 +8005,7 @@
       "id": "C002-TS-335",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 630,
+      "line": 642,
       "title": "reads and searches pass the hooks in VS Code",
       "content_hash": "sha256:2b9273ba70c83bdc91e9e0af6e3d501ae58a69e0f339702a8ef97d7d5dd658c3"
     },
@@ -8004,7 +8021,7 @@
       "id": "C002-TS-337",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 645,
+      "line": 657,
       "title": "calls of the session agent",
       "content_hash": "sha256:403b029ddb2c41a904c74e3017f73975a61ff9a9d6ead91af0d74653b8bdfdd9"
     },
@@ -8012,7 +8029,7 @@
       "id": "C002-TS-338",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 659,
+      "line": 671,
       "title": "a session-agent call does not depend on the tool classes file",
       "content_hash": "sha256:9e99cb4fc770352bd03b8350f093f25960f2c88deb69ad9dbfb4a7930fec26fc"
     },
@@ -8020,7 +8037,7 @@
       "id": "C002-TS-339",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 677,
+      "line": 689,
       "title": "conductor and prompt-file grants under the hooks fallback",
       "content_hash": "sha256:a449eee24164864404188fd52b0a2ff91d1685bbfed640277324e113ff031455"
     },
@@ -8028,7 +8045,7 @@
       "id": "C002-TS-340",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 687,
+      "line": 699,
       "title": "generic tool granted to the conductor or a prompt file under the hooks fallback",
       "content_hash": "sha256:e31290cb33abb14a33c30f0f6665ecdf34853ab0b1929b3dc078ffb3eb6ab27a"
     },
@@ -8036,7 +8053,7 @@
       "id": "C002-TS-341",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 701,
+      "line": 713,
       "title": "first install into a repository",
       "content_hash": "sha256:ed8b48a81dc72e7067fd3136385154a8e53b53e468b5fe7d56abac1061f9a3ec"
     },
@@ -8044,7 +8061,7 @@
       "id": "C002-TS-342",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 714,
+      "line": 726,
       "title": "package taken from the running CLI copy",
       "content_hash": "sha256:5109c6b735a2a05866d275dfaf413511069652d449b78f952309fe23f5ba9f8e"
     },
@@ -8052,7 +8069,7 @@
       "id": "C002-TS-343",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 722,
+      "line": 734,
       "title": "second run with the same package",
       "content_hash": "sha256:065e68bacb59a0dd2cad0aafee5e157fb5dd3e2b8847fd0cbd3ea86a16c0fbf9"
     },
@@ -8060,7 +8077,7 @@
       "id": "C002-TS-344",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 731,
+      "line": 743,
       "title": "install after a package update",
       "content_hash": "sha256:d2682338ad3b25343e6deeaaa37ce8c3b1167d5f506d8a3b6641e7081143ea44"
     },
@@ -8068,7 +8085,7 @@
       "id": "C002-TS-345",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 742,
+      "line": 754,
       "title": "package that the install command cannot use",
       "content_hash": "sha256:85858ec9a3ca01f2bb509480bfa3884933492fe368d7b78368ad44ff1d22ce3e"
     },
@@ -8076,7 +8093,7 @@
       "id": "C002-TS-346",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 810,
+      "line": 822,
       "title": "merge into an adopter's workspace MCP configuration",
       "content_hash": "sha256:b8017e7d19380391e73c1c7af617e9567cf0f92d3ebad699f8cfdc48f95e384c"
     },
@@ -8084,7 +8101,7 @@
       "id": "C002-TS-347",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 821,
+      "line": 833,
       "title": "no workspace MCP configuration yet",
       "content_hash": "sha256:4056a72e0ef12aba7dc56810a5a84f4f986196184c386830af516fb11528f921"
     },
@@ -8092,7 +8109,7 @@
       "id": "C002-TS-348",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 830,
+      "line": 842,
       "title": "adopter copies equal to the package's are not conflicts",
       "content_hash": "sha256:6becae3d15dd64900b8876cc25322638d53e87dd3f38a3d12d1a564629728376"
     },
@@ -8100,7 +8117,7 @@
       "id": "C002-TS-349",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 844,
+      "line": 856,
       "title": "conflict with an adopter file or server",
       "content_hash": "sha256:6db0a06a2da390a515468211829d2c25415565d9d946a6b88e7b7f2b461336f6"
     },
@@ -8108,7 +8125,7 @@
       "id": "C002-TS-350",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 863,
+      "line": 875,
       "title": "files edited after an install are the adopter's",
       "content_hash": "sha256:a3aa2f3b13c93a0dcfe54913485aa89322f07e39d9e9bf1770379ae11ebdfb8a"
     },
@@ -8116,7 +8133,7 @@
       "id": "C002-TS-351",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 876,
+      "line": 888,
       "title": "install command requested by an Architect agent on Claude Code",
       "content_hash": "sha256:393a9ce29223964c7afd6d439e62ce4b061127b75bdee3188d34dda98ea01f45"
     },
@@ -8124,7 +8141,7 @@
       "id": "C002-TS-352",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 894,
+      "line": 906,
       "title": "install command through the sdd MCP server command tool",
       "content_hash": "sha256:a9d9197f4000b1f68ca080ad0cfc114c75bcdf5f7439d9c0144ac4cb7099d60e"
     },
@@ -8132,7 +8149,7 @@
       "id": "C002-TS-353",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 902,
+      "line": 914,
       "title": "other sdd commands keep their decision",
       "content_hash": "sha256:d00c16270f49627bd80017911a034f4092bc5535aa2833e1e67e3d80408769ad"
     },
@@ -8140,7 +8157,7 @@
       "id": "C002-TS-354",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 918,
+      "line": 930,
       "title": "installed hook commands",
       "content_hash": "sha256:ab619a0553952f484d55e88656834679b2e4ab74c762e49d9df9e65132d88022"
     },
@@ -8148,7 +8165,7 @@
       "id": "C002-TS-355",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 930,
+      "line": 942,
       "title": "plugin-root token in a generated hook command",
       "content_hash": "sha256:29e4df5b2add62ba5d844e539c9c7a97fde72c26978fb81ad6291e11df972b17"
     },
@@ -8156,7 +8173,7 @@
       "id": "C002-TS-356",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 941,
+      "line": 953,
       "title": "package path that a hook command cannot carry",
       "content_hash": "sha256:c678c5fd37e4eba30b8355c7a75a91dc07daf2d7930527fc8aa4a54bac511af5"
     },
@@ -8164,7 +8181,7 @@
       "id": "C002-TS-357",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 959,
+      "line": 971,
       "title": "write and terminal calls of non-Architect subagents",
       "content_hash": "sha256:973d2d712f57094cb3388c5c96516cd27f0f21ea5bdfa2e674e848ceafdf8bff"
     },
@@ -8172,7 +8189,7 @@
       "id": "C002-TS-358",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 991,
+      "line": 1003,
       "title": "planted delegation of an edit to general-purpose in VS Code: conductor refusal and default-agent probe",
       "content_hash": "sha256:dcb1d3953557aff0ea6d0d7eea22252f76f2a8c5d7e36badf957757830f6d209"
     },
@@ -8180,7 +8197,7 @@
       "id": "C002-TS-359",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1027,
+      "line": 1039,
       "title": "planted delegation to general-purpose on Copilot CLI",
       "content_hash": "sha256:106acfd905d45ddd83cef3a0f36150f61b2fdd29ba525887027d7090165e3e6a"
     },
@@ -8188,7 +8205,7 @@
       "id": "C002-TS-360",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1037,
+      "line": 1049,
       "title": "agents installed, plugin part not loaded",
       "content_hash": "sha256:b9e0bed1d893b65cea14a76ed8bb1a4b08b5984101c9fcf16b2806099b7834f6"
     },
@@ -8196,7 +8213,7 @@
       "id": "C002-TS-361",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1053,
+      "line": 1065,
       "title": "package moved after the install",
       "content_hash": "sha256:04febb4d085c18c867fa4b158c9ba5c0e5e08a7a42a5f428cc4a09c6b309dabd"
     },
@@ -8204,7 +8221,7 @@
       "id": "C002-TS-362",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1081,
+      "line": 1093,
       "title": "faults of the Copilot subagent guard hook",
       "content_hash": "sha256:5eda4dc609c177670a131e6dea49eec69c2cb10d0db88d6a521bce2127cb8edd"
     },
@@ -8212,7 +8229,7 @@
       "id": "C002-TS-363",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1130,
+      "line": 1142,
       "title": "read-only calls and calls outside Architect repositories",
       "content_hash": "sha256:50741a342c37de7710d4963b4fe22241e21f30b175c67f6e6f395dd278d660ce"
     },
@@ -8220,7 +8237,7 @@
       "id": "C002-TS-364",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1149,
+      "line": 1161,
       "title": "outside a repository with .sdd/ the tool classes file is not read",
       "content_hash": "sha256:1e4c078ee971ff4e9ab96b13bece4d761547d8b486f546f3f81657491ef2a521"
     },
@@ -8228,7 +8245,7 @@
       "id": "C002-TS-365",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1162,
+      "line": 1174,
       "title": "calls without agent_type or of Architect agents",
       "content_hash": "sha256:bd07b5a49e1c65d6e3b802c16bdb8373df3619b08e8d9a43772be89616293c99"
     },
@@ -8236,7 +8253,7 @@
       "id": "C002-TS-366",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1180,
+      "line": 1192,
       "title": "Architect agent calls do not depend on the tool classes file",
       "content_hash": "sha256:f805a65a7c2e37893f2f2e6d618fb14cd174363281330df58cf05b5f9068aadb"
     },
@@ -8252,7 +8269,7 @@
       "id": "C002-TS-368",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1111,
+      "line": 1123,
       "title": "a --host other than copilot is a usage fault, whatever the input",
       "content_hash": "sha256:98ea982aa88fc03e64579f81e6e33d73e8ccef1ed9f2821030c843ade6439403"
     },
@@ -8268,7 +8285,7 @@
       "id": "C002-TS-370",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 1063,
+      "line": 1075,
       "title": "a non-Architect subagent's tool listed as read-only and as write or terminal is denied",
       "content_hash": "sha256:fb93c5a2a41c3096dee44d0d8ac4fedd990928da16186195aa28662c48dfd822"
     },
@@ -9220,7 +9237,7 @@
       "id": "C002-TS-659",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 787,
+      "line": 799,
       "title": "a failed write names the files already written, and a second run completes the install",
       "content_hash": "sha256:0fb3093ddce05c4bd759848b3a6cc862b084eadb11ebbf210c8b2e9fdec1b439"
     },
@@ -9260,7 +9277,7 @@
       "id": "C002-TS-664",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 797,
+      "line": 809,
       "title": "the run after a failed write completes the install",
       "content_hash": "sha256:9b1a2fd0877bb9a8a43a383a64e6eb0c7f292c0a1c1953b0ffc9c13f80b7beb8"
     },
@@ -9612,7 +9629,7 @@
       "id": "C002-TS-708",
       "type": "TS",
       "file": "10-spec/20-capabilities/CAP-03-copilot-target/acceptance.md",
-      "line": 454,
+      "line": 466,
       "title": "output form of the session-start brief per host",
       "content_hash": "sha256:8da74ce7d605cf42df9e9ee955a465cce760a53bb1472bf8f29bf4c6a2333ee9"
     },
@@ -16350,6 +16367,11 @@
     {
       "from": "C002-M-07",
       "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-M-07",
+      "to": "C002-T-083",
       "relation": "references"
     },
     {
@@ -23413,6 +23435,41 @@
       "relation": "references"
     },
     {
+      "from": "C002-RISK-043",
+      "to": "C002-COMP-011",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-T-031",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-T-050",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-T-058",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-043",
+      "to": "C002-T-083",
+      "relation": "references"
+    },
+    {
       "from": "C002-SC-01",
       "to": "C002-GOAL-01",
       "relation": "references"
@@ -27949,6 +28006,11 @@
     },
     {
       "from": "C002-T-031",
+      "to": "C002-T-083",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-031",
       "to": "C002-TC-125",
       "relation": "references"
     },
@@ -31899,6 +31961,11 @@
     },
     {
       "from": "C002-T-046",
+      "to": "C002-T-083",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-046",
       "to": "C002-TC-358",
       "relation": "references"
     },
@@ -33054,6 +33121,16 @@
     },
     {
       "from": "C002-T-050",
+      "to": "C002-RISK-043",
+      "relation": "mitigates"
+    },
+    {
+      "from": "C002-T-050",
+      "to": "C002-RISK-043",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-050",
       "to": "C002-SC-02",
       "relation": "references"
     },
@@ -33184,6 +33261,16 @@
     },
     {
       "from": "C002-T-050",
+      "to": "C002-T-083",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C002-T-050",
+      "to": "C002-T-083",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-050",
       "to": "C002-TC-358",
       "relation": "references"
     },
@@ -33235,6 +33322,11 @@
     {
       "from": "C002-T-050",
       "to": "C002-TS-317",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-050",
+      "to": "C002-TS-319",
       "relation": "references"
     },
     {
@@ -41733,6 +41825,141 @@
       "relation": "verified-by"
     },
     {
+      "from": "C002-T-083",
+      "to": "C002-AC-312.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-AC-614.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-AC-615.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-COMP-011",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-M-07",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-REQ-312",
+      "relation": "implements"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-REQ-614",
+      "relation": "implements"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-REQ-615",
+      "relation": "implements"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-RISK-026",
+      "relation": "mitigates"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-RISK-031",
+      "relation": "mitigates"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-RISK-043",
+      "relation": "mitigates"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-T-050",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-T-080",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-T-082",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TC-319",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TC-617",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TC-617",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TC-618",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TC-618",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TS-319",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TS-319",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TS-617",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TS-618",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-083",
+      "to": "C002-TS-618",
+      "relation": "verified-by"
+    },
+    {
       "from": "C002-TC-101",
       "to": "C002-T-034",
       "relation": "references"
@@ -42940,6 +43167,11 @@
     {
       "from": "C002-TC-319",
       "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-TC-319",
+      "to": "C002-T-083",
       "relation": "references"
     },
     {
@@ -44949,6 +45181,11 @@
     },
     {
       "from": "C002-TC-617",
+      "to": "C002-IF-009",
+      "relation": "references"
+    },
+    {
+      "from": "C002-TC-617",
       "to": "C002-T-046",
       "relation": "references"
     },
@@ -44980,6 +45217,11 @@
     {
       "from": "C002-TC-617",
       "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-TC-617",
+      "to": "C002-T-083",
       "relation": "references"
     },
     {
@@ -45035,6 +45277,11 @@
     {
       "from": "C002-TC-618",
       "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-TC-618",
+      "to": "C002-T-083",
       "relation": "references"
     },
     {
@@ -46185,6 +46432,11 @@
     {
       "from": "C002-TC-901",
       "to": "C002-T-082",
+      "relation": "references"
+    },
+    {
+      "from": "C002-TC-901",
+      "to": "C002-T-083",
       "relation": "references"
     },
     {

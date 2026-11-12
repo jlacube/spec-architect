@@ -256,8 +256,34 @@ The agent-file references `sdd-files/*` and `sdd-shell/*` grant the servers' too
   not stopped by the hook in a repository with `.sdd/` (the hook still denies its own faults,
   C002-IF-008 §2 rules 1 and 2); the install notes say so (§5 step 6).
   [ASSUMPTION: S-08 — two points that §3 and §3.1 do not record: (1) the host also offers its built-in agents to a conductor whose specialists are workspace agents (taken as the worst case; the guard does not depend on it); (2) of the built-in agents' tools, only the hook names Write (create tool) and Bash (terminal tool) are known (§2.3, §3.1), so on a host that sends agent_type the edit tool and every other tool the classes file does not name are denied as unclassed (C002-REQ-328); on Copilot CLI a host built-in agent's tool calls are taken to carry agent_type, as those of plugin agents started as subagents do (S-08 §2.3); the Copilot CLI eval runner confirms it (C002-TS-359, C002-REQ-327 open item)]
-- Same names in two places: in VS Code the package's `agents/` are also loaded as plugin agents
-  (shown in the agent picker, not startable as subagents, S-08 §3). [ASSUMPTION: S-08 — the record tested workspace and plugin agents of different names only; the fresh-install step of the manual VS Code checklist (C002-REQ-614) confirms that the workspace sdd-conductor, selected as session agent, starts the workspace specialists and that the prompt files bind to it; if not, the generator moves the agent files to install/agents/, outside the plugin part, and the Copilot CLI eval runner restores agents/ in its package copy (C002-IF-010 §4)]
+- Same names in two places (revised for defect D-055 and Q-copilot-agentcopy-01; critic CR-178,
+  CR-179; before, an S-08 assumption bound the session agent and the prompt files to the workspace
+  copy, with a fallback that moved the agent files to `install/agents/`): in VS Code the package's
+  `agents/` are also loaded as plugin agents (shown in the agent picker, not startable as
+  subagents, S-08 §3), beside the workspace copies that the install writes to `.github/agents/`.
+  Both copies of the conductor carry the same `tools` list and the same body, since the workspace
+  copy is a byte copy of the package file (What the install command writes, above). A chat started
+  with `code chat -m sdd-conductor` ran the plugin copy as its session agent in the C002-T-050 run
+  of 2026-11-12 on VS Code 1.145.2, although the workspace copy was loaded too; a session that P-03
+  picks by name in the agent picker may run either copy. The attempts of that run at VSC-15, each
+  sending the new-change prompt as an attachment (`code chat -a`), were:
+  1. 05:44, the question-tool names removed from the workspace copy and from the package's
+     `prompts/new.prompt.md`, no window reload: the question dialog appeared;
+  2. 05:47, the same two files, after a restart of VS Code: the dialog appeared, the mode of the
+     chat session file naming the plugin copy, `<package folder>/agents/sdd-conductor.agent.md`;
+  3. 05:50, the names also removed from the plugin copy, after a restart: the text form appeared.
+
+  The run did not separate the causes of the dialog in attempts 1 and 2. Whether an attachment with
+  `-a` applies the prompt file's frontmatter `tools`, which take precedence over the agent's (Prompt
+  file, below), is not verified; that the prompt file runs on the session agent holds for that
+  attached-prompt method only.
+  [ASSUMPTION: S-08 — a conductor session on either copy starts the workspace specialists, plugin agents not being startable as subagents; VSC-22 records the session's copy and the started specialist; a plugin-copy session that starts no specialist goes back to P-01]
+  **Decision** (P-01 2026-11-12, Q-copilot-agentcopy-01, "Keep both, record copy (Recommended)"):
+  both copies stay, and the fallback that moved the agent files to `install/agents/`, outside the
+  plugin part, is not applied. The checklist record names the copy each conductor session used
+  (C002-IF-009 §4, Session agent). Risk: when the package is updated without a new
+  `sdd install copilot`, the two copies differ and the session runs whichever copy VS Code picks;
+  the install notes already require the install again after updating the package (§5 step 2).
 - The `serena` entry of `install/mcp.json` runs `sdd serena-launch --user-data --read-only --
   start-mcp-server …` (C002-REQ-114, TGT-SERENA-001); with a `serena/*` grant, the read-only mode
   file is what keeps Serena's editing and shell tools away from the agents.
