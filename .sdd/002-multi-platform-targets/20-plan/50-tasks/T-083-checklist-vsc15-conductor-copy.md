@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-082]
 implements: [C002-REQ-312, C002-REQ-614, C002-REQ-615]
 satisfies_ac: [C002-AC-312.1, C002-AC-614.1, C002-AC-615.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-319, C002-TS-617, C002-TS-618, C002-TC-319, C002-TC-617, C
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-026, C002-RISK-031, C002-RISK-043]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 8dbc89f, completed_at: 2026-11-12, notes: "Docs/tests only; npm run check 10/10 PASS; checklist test 34/34; dry run ERR-REL-003 only; candidate stays e89dae8. VSC-12 Expect also reworded to 'either copy' (Session agent rule)." }
 ---
 
 # C002-T-083 — VSC-15 in the prompt-file form only, the conductor copy in the T-050 run sheet, and the fresh run folder t050e (C002-T-050 run of 2026-11-12)
