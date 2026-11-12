@@ -18,7 +18,9 @@
 // tool `askQuestions`, `chat.autoReply`, MCP servers on first use, the delegated-edit step's conductor
 // refusal and default-agent probe with `agent_type: present | absent`, `models_used` from the reply
 // footer), the `/architect:<name>` form, the step-index modes of VSC-25 and VSC-26 and C002-TC-618's
-// template checks (VSC-20, VSC-27, VSC-28 and VSC-29 fields, the A-5 row).
+// template checks (VSC-20, VSC-27, VSC-28 and VSC-29 fields, the A-5 row). C002-T-083 (C002-T-050 run of
+// 2026-11-12): VSC-15 in the prompt-file form only across both conductor copies and the prompt file
+// (C002-TC-617), the revised assumption A-2 and the conductor copy in VSC-02 and the template (C002-TC-618).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -527,7 +529,8 @@ test("C002-T-080: the step-index modes of VSC-25 and VSC-26 stay copilot-hooks a
 
 test("C002-T-080: VSC-15, VSC-18, VSC-20 … VSC-23, VSC-28, VSC-29 and VSC-54 carry the revised question tool, tool ids and fallbacks", () => {
   const v15 = stepText("VSC-15");
-  assert.ok(/`askQuestions`/.test(v15) && /`ask_user`/.test(v15) && /`\.github\/agents\/sdd-conductor\.agent\.md`/.test(v15) && /prompt file/.test(v15) && /plain request/.test(v15), v15);
+  // C002-T-083 (C002-T-050 run of 2026-11-12): the prompt-file form only, no plain request (C002-TC-617, below).
+  assert.ok(/`askQuestions`/.test(v15) && /`ask_user`/.test(v15) && /`\.github\/agents\/sdd-conductor\.agent\.md`/.test(v15) && /prompt file/.test(v15) && !/plain request/i.test(v15), v15);
   const v18 = stepText("VSC-18");
   // C002-T-082 (defect D-054): the three tools entries, and the dialogs come from vscode_askQuestions.
   assert.ok(/`ask_user`, `askQuestions` and `vscode\/askQuestions`/.test(v18) && /`vscode_askQuestions`/.test(v18) && /D-054/.test(v18), v18);
@@ -578,4 +581,61 @@ test("C002-TC-618 (template check, revision D-051 … D-053): VSC-20, VSC-27, VS
   }
   const t = TEMPLATE.replace(/\s+/g, " ");
   assert.ok(/A-5/.test(t) && /refuted, accepted/.test(t), "the A-5 row");
+});
+
+// --- C002-T-083 (C002-T-050 run of 2026-11-12): VSC-15 in the prompt-file form only; the conductor copy ---
+
+test("C002-TC-617 (C002-T-083): VSC-15 edits both conductor copies and the prompt file, backs up the package files, reloads and restores; no plain request", () => {
+  const v15 = stepText("VSC-15").replace(/\\/g, "/");
+  assert.ok(/`<package folder>\/agents\/sdd-conductor\.agent\.md`/.test(v15), "the plugin conductor");
+  assert.ok(/`\.github\/agents\/sdd-conductor\.agent\.md`/.test(v15), "the workspace conductor");
+  assert.ok(/`<package folder>\/prompts\/new\.prompt\.md`/.test(v15), "the prompt file");
+  assert.ok(/`ask_user`, `askQuestions` and `vscode\/askQuestions`/.test(v15), "the three entries");
+  assert.ok(/`sdd-conductor\.agent\.md\.t050-backup`/.test(v15) && /`new\.prompt\.md\.t050-backup`/.test(v15), "the two package backups");
+  assert.ok(/[Rr]eload the window/.test(v15), "a reload");
+  assert.ok(/`git checkout -- \.github\/agents\/sdd-conductor\.agent\.md`/.test(v15) && /from their backups/.test(v15), "the restore");
+  assert.ok(/`\/architect:new "Toy change"`/.test(v15), "the prompt-file form");
+  assert.ok(!/plain request/i.test(v15) && !/[Aa]lternatively/.test(v15), "no plain-request alternative");
+  assert.ok(!/which form ran/.test(v15), "no which-form clause");
+  const record = (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(STEPS.find((x) => x.id === "VSC-15")!.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/conductor copy/.test(record) && /Session agent/.test(record) && /only when its session used the other copy/.test(record) && /VSC-02/.test(record), record);
+  assert.ok(/invocation form/.test(record) && /attached with `-a`/.test(record) && /slash command typed by P-01/.test(record), `VSC-15 invocation form: ${record}`);
+  assert.ok(/D-032/.test(v15), "the history note names CHG-001 defect D-032");
+});
+
+test("C002-TC-617 (C002-T-083): assumption A-2 lets either conductor copy be the session agent and the record names the copy; VSC-02 Record asks for it", () => {
+  const a2 = (CHECKLIST.split("\n").find((l) => l.startsWith("| A-2 |")) ?? "").replace(/\s+/g, " ");
+  assert.ok(/\*\*Open half\*\*/.test(a2) && /\*\*Settled half\*\*/.test(a2), `both halves: ${a2}`);
+  assert.ok(/starts the workspace specialists/.test(a2) && /VSC-22 records the session's copy and the started specialist/.test(a2) && /starts no specialist goes back to P-01/.test(a2), `open half: ${a2}`);
+  assert.ok(/[Ee]ither conductor copy/.test(a2) && /session agent/.test(a2) && /Q-copilot-agentcopy-01/.test(a2), a2);
+  const recordOf = (id: string) => (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(STEPS.find((x) => x.id === id)!.body)?.[1] ?? "").replace(/\s+/g, " ");
+  const v18 = recordOf("VSC-18");
+  assert.ok(/invocation form/.test(v18) && /attached with `-a`/.test(v18) && /slash command typed by P-01/.test(v18), `VSC-18: ${v18}`);
+  const v22 = recordOf("VSC-22");
+  assert.ok(/conductor copy/.test(v22) && /`mode`/.test(v22) && /specialist that session started/.test(v22) && /starts no specialist, report it to P-01/.test(v22), `VSC-22: ${v22}`);
+  assert.ok(/record names the copy/.test(a2) && /`mode`/.test(a2) && /VSC-02/.test(a2), a2);
+  assert.ok(!/prompt files bind/.test(a2) && !/bind to it/.test(a2), a2);
+  assert.ok(/slash commands/.test(a2), a2);
+  const v02 = (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(STEPS.find((x) => x.id === "VSC-02")!.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/conductor copy/.test(v02) && /`plugin` or `workspace`/.test(v02) && /`mode`/.test(v02), v02);
+  assert.ok(!/prompt files bind/.test(CHECKLIST.replace(/\s+/g, " ")), "no binding claim left in the checklist");
+});
+
+test("C002-TC-618 (C002-T-083): the template's VSC-15 observed names the three files without plain request; VSC-02 note and the A-2 row carry the conductor copy", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const recorded = doc.data!["steps"] as Record<string, unknown>[];
+  const entry = (id: string) => recorded.find((s) => s["id"] === id)!;
+  const v15 = String(entry("VSC-15")["observed"]);
+  assert.ok(!/plain request/i.test(v15), v15);
+  assert.ok(/plugin conductor/.test(v15) && /workspace conductor/.test(v15) && /prompt file/.test(v15), v15);
+  const v02 = String(entry("VSC-02")["note"]);
+  assert.ok(/conductor copy/.test(v02) && /plugin \| workspace/.test(v02) && /mode/.test(v02), v02);
+  const a2 = TEMPLATE.split("\n").find((l) => l.startsWith("| A-2 |")) ?? "";
+  assert.ok(/either conductor copy/.test(a2) && /copy used/.test(a2), a2);
+  assert.ok(/open half/.test(a2) && /settled half/.test(a2) && /VSC-22/.test(a2), `template A-2 both halves: ${a2}`);
+  for (const id of ["VSC-15", "VSC-18"]) assert.ok(/invocation form: prompt attached with -a \| slash command typed by P-01/.test(String(entry(id)["note"])), `${id} note: invocation form`);
+  assert.ok(/conductor copy: plugin \| workspace, only when it differs/.test(String(entry("VSC-15")["note"])), "VSC-15 copy only when it differs");
+  const v22 = String(entry("VSC-22")["observed"]);
+  assert.ok(/session's conductor copy/.test(v22) && /specialist that session started/.test(v22), v22);
 });

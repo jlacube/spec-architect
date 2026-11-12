@@ -211,12 +211,15 @@ hooks rows VSC-05, VSC-06 and VSC-09. The injection steps VSC-32 … VSC-53 foll
 The steps below confirm the assumptions that the spec leaves to this checklist. Each step names its
 expected observation; the record keeps the outcome (`observed`). A refuted assumption is a failed
 step and a spec defect, except A-5, which the revision for D-052 accepted as a known limitation
-(its row below). The record keeps one row per assumption in its "Assumptions" table.
+(its row below). The record keeps one row per assumption in its "Assumptions" table; its A-2 row
+holds both halves of the revised A-2 (C002-TS-618): for the open half, the outcome of VSC-22 (the
+session's conductor copy and the specialist it started), and for the settled half, the conductor
+copy, or copies, that the run's conductor sessions used.
 
 | Assumption | Statement | Spec | Step |
 |---|---|---|---|
 | A-1 | A specialist with `user-invocable: false` is still started as a subagent | C002-IF-005 §3 | VSC-22 |
-| A-2 | The workspace `sdd-conductor` starts the workspace specialists although plugin agents of the same names are loaded; the prompt files bind to it and are offered as slash commands | C002-IF-005 §3, C002-REQ-317 | VSC-12, VSC-22 |
+| A-2 | **Open half** (an assumption, settled by VSC-22): a conductor session on either copy, plugin or workspace, starts the workspace specialists although plugin agents of the same names are loaded (plugin agents are not startable as subagents); VSC-22 records the session's copy and the started specialist; a plugin-copy session that starts no specialist goes back to P-01. **Settled half** (defect D-055; P-01's answer to Q-copilot-agentcopy-01, "Keep both, record copy"): the prompt files are offered as slash commands, and **either conductor copy, plugin or workspace, may be the session agent** of a chat started with `code chat -m sdd-conductor` or picked by name, and a prompt file runs on that session agent (C002-IF-009 §4 Session agent). The record names the copy used, from the `mode` of the chat session file: in the `note` of VSC-02 when every conductor session used the same copy, else in the `note` of each step whose session used the other copy. History: until the C002-T-050 run of 2026-11-12 (finding F-P: `code chat -m sdd-conductor` ran the plugin copy) this row tied the prompt files to the workspace conductor | C002-IF-005 §3, C002-IF-009 §4, C002-REQ-317 | VSC-12, VSC-22 |
 | A-3 | VS Code adds no agent, prompt file or skill from a registered package folder without `plugin.json` | C002-IF-005 §3 | VSC-01 |
 | A-4 | VS Code loads `.github/hooks/architect-guard.json` of the open repository and runs its PreToolUse command, as the hooks log shows, with the same input as the plugin-level one (`agent_type` included where the host sends it) | C002-IF-005 §3 | VSC-28 |
 | A-5 | The host offers `general-purpose` to the workspace conductor, and its tool calls carry `agent_type`. **Refuted on VS Code 1.145.2 and accepted** (P-01's decision on D-052, 2026-11-11): no PreToolUse input carries `agent_type`, so the subagent guard hook cannot stop a non-Architect subagent; this is the known limitation of C002-IF-005 §5 step 6, stated in the install notes. VSC-27 passes on the conductor's refusal and records the default-agent probe's `agent_type: present` or `absent`; the record's A-5 row says "refuted, accepted" | C002-IF-005 §3, §5 step 6, C002-REQ-327 open item | VSC-27 |
@@ -267,7 +270,12 @@ step and a spec defect, except A-5, which the revision for D-052 accepted as a k
   footer of those turns, or `not shown` when it showed none, and add a specialist under its agent
   name where you read its model; and in this step's `note` whether VS Code showed the model in the
   reply footer, where `INSTALL.md` says it does, or where it showed it instead. The release check
-  does not read `models_used`.
+  does not read `models_used`. Also in this step's `note`, name the conductor copy, `plugin` or
+  `workspace`, of the run's conductor sessions, as the `mode` of each chat session file gives it
+  (`<package folder>/agents/sdd-conductor.agent.md` or `.github/agents/sdd-conductor.agent.md`),
+  as the Session agent rule says (C002-IF-009 §4, assumption A-2): when every conductor session used
+  the same copy, name it here; otherwise name here the copy of this step's conductor chat, and the
+  other copy in the `note` of each step whose session used it.
 
 ### VSC-03 — Copilot hooks row, `chat.useHooks` false (sdd MCP server enforcement)
 
@@ -397,12 +405,12 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
   choose `/architect:doctor`.
 - **Expect:** the list offers `/architect:doctor`, `/architect:new` and `/architect:init` from the
   Architect plugin (VS Code 1.145.2 registers the prompt files as `architect:<name>`, defect D-053);
-  `/architect:doctor` runs the Architect doctor prompt in the session of the workspace
-  `sdd-conductor` (`.github/agents/`), although the plugin's agents of the same names are loaded
-  (assumption A-2).
+  `/architect:doctor` runs the Architect doctor prompt on the session agent, which may be either
+  copy of `sdd-conductor`, plugin or workspace (assumption A-2).
 - **Record:** as `observed`, the commands the list offered, whether a bare `/init` resolves to VS
   Code's built-in `/init` (the list's description of that entry), and the source the agent picker
-  names for the session agent that ran `/architect:doctor`.
+  names for the session agent that ran `/architect:doctor`; the conductor copy as the Session agent
+  rule says (VSC-02).
 
 ### VSC-13 — Doctor table in VS Code
 
@@ -423,21 +431,33 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 
 ### VSC-15 — Question tools `askQuestions` and `ask_user` unavailable
 
-- **Do:** Remove the three question-tool entries, `ask_user`, `askQuestions` and `vscode/askQuestions`
-  (defect D-054), from the `tools` list of `.github/agents/sdd-conductor.agent.md` **and** from the
-  `tools` list of the `/architect:new` prompt file, `<package folder>\prompts\new.prompt.md` (copy it
-  to `new.prompt.md.t050-backup` first): a prompt file's `tools` take precedence over the agent's
-  (C002-IF-005 §3). Reload the window; in a new Local chat with `sdd-conductor` send
-  `/architect:new "Toy change"`. Alternatively leave the prompt file as it is and send a plain
-  request without it ("Create a new change titled Toy change"). Afterwards restore both files
-  (`git checkout -- .github/agents/sdd-conductor.agent.md`, and the prompt file from its backup)
-  and reload the window.
+- **Do:** Back up the two package files: copy `<package folder>\agents\sdd-conductor.agent.md` to
+  `sdd-conductor.agent.md.t050-backup` and `<package folder>\prompts\new.prompt.md` to
+  `new.prompt.md.t050-backup`, each beside its file. Remove the three question-tool entries,
+  `ask_user`, `askQuestions` and `vscode/askQuestions` (defect D-054), from the `tools` lists of
+  three files: the plugin conductor `<package folder>\agents\sdd-conductor.agent.md`, the workspace
+  conductor `.github/agents/sdd-conductor.agent.md` of the toy repository, and the `/architect:new`
+  prompt file `<package folder>\prompts\new.prompt.md`. A prompt file's `tools` take precedence over
+  the agent's (C002-IF-005 §3), and either conductor copy may be the session agent (assumption A-2),
+  so all three lists lose the entries. Reload the window; in a new Local chat with `sdd-conductor`
+  send `/architect:new "Toy change"`. Afterwards restore the workspace conductor with git
+  (`git checkout -- .github/agents/sdd-conductor.agent.md`) and both package files from their backups
+  (move each `.t050-backup` file back over its file), and reload the window.
 - **Expect:** the conductor asks its interview round, the profile question ("lite" or "full" with
   its size estimate), as plain text in the text form of C001-IF-05 `questions.md` §3, with the
   recommended option first, and then ends its turn. The reply names no `INSTALL.md` step and does not tell you to enable, install or switch on `askQuestions`, `ask_user` or another question tool. No change folder
   `.sdd/<NNN>-*` is created until you answer (do not answer; restore the files as Do says).
-- **Record:** which form ran (prompt file edited, or plain request), and the reply's wording in
-  `note` when it differs.
+- **Record:** as `observed`, the three files edited; in `note`, the invocation form (the prompt file
+  attached with `-a`, the conductor's `code chat` method, or the slash command typed by P-01) and
+  the reply's wording when it differs; and the conductor copy (plugin or workspace) as the Session
+  agent rule says (C002-IF-009 §4): in this step's `note` only when its session used the other copy
+  than the one named in the `note` of VSC-02, read from the `mode` of the chat session file.
+- **History:** until the C002-T-050 run of 2026-11-12 this step also had a plain-request form (a
+  request without the prompt file). That form was dropped after that run: asked without
+  `/architect:new`, the conductor ran `sdd change new` with the CLI defaults and asked no profile
+  question, which is CHG-001 defect D-032, left to a later change (C002-TS-319). The same run showed
+  that the plugin copy of the conductor can be the session agent (finding F-P), so the step now edits
+  both conductor copies as well as the prompt file.
 
 ### VSC-16 — Toy change created through the profile round
 
@@ -472,7 +492,8 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
   `description`, `recommended`, `multiSelect`, `allowFreeformInput`), and the three entries of the
   conductor's and the prompt file's `tools` lists (defect D-054). Where an answer is free text only,
   record its result in the form of VSC-20's free-text half (`selected: []`, your `freeText`) and the
-  questions-log line.
+  questions-log line. In `note`, the invocation form, as VSC-15 does: the prompt file attached with
+  `-a` (the conductor's `code chat` method) or the slash command typed by P-01.
 
 ### VSC-19 — Interview round with `chat.askQuestions.enabled` off
 
@@ -537,7 +558,11 @@ pass, and the record lists it at the position of its last half.
   (assumption A-1), and the started specialist is the workspace one of `.github/agents/`, not the plugin agent
   of the same name (assumption A-2); its write lands inside the toy change's `.sdd/` folder.
 - **Record:** as `observed`, which agent started it (the conductor, or the default agent with
-  `runSubagent`), the specialist started, where it comes from, and the file it wrote.
+  `runSubagent`), the specialist started, where it comes from (workspace `.github/agents/` or
+  plugin), and the file it wrote; and the session's conductor copy (plugin or workspace, from the
+  `mode` of the chat session file), with the specialist that session started (the open half of
+  assumption A-2). When a plugin-copy conductor session starts no specialist, report it to P-01
+  before going on.
 
 ### VSC-23 — sdd MCP server boundary: write outside `.sdd/`, command outside the allowlist
 

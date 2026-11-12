@@ -16,7 +16,7 @@ steps:
   - id: VSC-02   # both
     result: <passed | failed | not-applicable>
     observed: "<the install output>"
-    note: "<whether VS Code showed the model of sdd-conductor in the reply footer, as INSTALL.md says, or where it showed it instead>"
+    note: "<whether VS Code showed the model of sdd-conductor in the reply footer, as INSTALL.md says, or where it showed it instead>; conductor copy: <plugin | workspace> (from the mode of the chat session file; every conductor session, or this chat when another step names the other copy in its note)"
   - id: VSC-03   # sdd-mcp-server
     result: <passed | failed | not-applicable>
   - id: VSC-04   # sdd-mcp-server
@@ -53,7 +53,8 @@ steps:
     observed: "<path of .sdd/>"
   - id: VSC-15   # both
     result: <passed | failed | not-applicable>
-    observed: "<form run: agent and /architect:new prompt file tools edited, or plain request>"
+    observed: "<the three files whose tools lists lost ask_user, askQuestions and vscode/askQuestions: the plugin conductor agents/sdd-conductor.agent.md, the workspace conductor .github/agents/sdd-conductor.agent.md and the prompt file prompts/new.prompt.md; backups restored and window reloaded>"
+    note: "<invocation form: prompt attached with -a | slash command typed by P-01>; <the reply's wording when it differs>; <conductor copy: plugin | workspace, only when it differs from the one named in VSC-02's note>"
   - id: VSC-16   # both
     result: <passed | failed | not-applicable>
   - id: VSC-17   # both
@@ -62,6 +63,7 @@ steps:
   - id: VSC-18   # both
     result: <passed | failed | not-applicable>
     observed: "<input shape of one askQuestions call: field names, question and option shape; tools lists of the conductor and the prompt file name ask_user, askQuestions and vscode/askQuestions; dialogs from vscode_askQuestions (D-054); vscode/askQuestions present in the tools list>"
+    note: "<invocation form: prompt attached with -a | slash command typed by P-01>"
   - id: VSC-19   # both
     result: <passed | failed | not-applicable>
     observed: "<what the round showed with chat.askQuestions.enabled off; a free-text-only answer in the form of VSC-20's free_text_half>"
@@ -79,7 +81,7 @@ steps:
     observed: "<SessionStart output line of the GitHub Copilot Chat Hooks log (JSON hookSpecificOutput.additionalContext)>"
   - id: VSC-22   # both
     result: <passed | failed | not-applicable>
-    observed: "<started by the conductor or by the default agent (runSubagent, agentName: sdd-spec-writer); specialist started, where it comes from, file it wrote>"
+    observed: "<started by the conductor or by the default agent (runSubagent, agentName: sdd-spec-writer); specialist started, where it comes from (workspace | plugin), file it wrote; session's conductor copy: plugin | workspace (from the mode of the chat session file) and the specialist that session started (A-2 open half; a plugin-copy session that starts no specialist goes back to P-01)>"
   - id: VSC-23   # sdd-mcp-server
     result: <passed | failed | not-applicable>
     observed: "<chat that made the calls; tool ids as VS Code showed them (mcp_<command>[N]_<tool>); tool_name of each MCP call from the hooks log>"
@@ -215,6 +217,16 @@ field counts as not recorded.
   read its model. VSC-02's `note` says whether VS Code showed the model in the reply footer, where
   `INSTALL.md` says it does. The release check does not read this field (C002-IF-009 §4
   Models used).
+- Conductor copy (C002-IF-009 §4 Session agent, revised assumption A-2): either copy of
+  `sdd-conductor`, plugin (`<package folder>/agents/sdd-conductor.agent.md`) or workspace
+  (`.github/agents/sdd-conductor.agent.md`), may be the session agent. Read the copy of each
+  conductor session from the `mode` of its chat session file and name it in VSC-02's `note` when
+  every conductor session used the same copy; otherwise also in the `note` of each step whose
+  session used the other copy. VSC-22's `observed` also holds its session's copy and the specialist
+  that session started (the open half of A-2). The record has no field of its own for it, and the
+  release check does not read it. VSC-15's and VSC-18's `note` also give the invocation form: the
+  prompt file attached with `-a` (the conductor's `code chat` method) or the slash command typed by
+  P-01.
 - `steps`: every step of the checklist appears once, in run order, at the position of its last run,
   with the result of that run in `result`. The comment after each ID names the mode the step applies
   to. `result` is `passed`, `failed` (add `note: "<what happened>"`) or `not-applicable` (a step of
@@ -260,7 +272,7 @@ One row per assumption of the checklist's "Assumption steps" table.
 | Assumption | Step | Outcome |
 |---|---|---|
 | A-1 | VSC-22 | <confirmed \| refuted: what was seen> |
-| A-2 | VSC-12, VSC-22 | <confirmed \| refuted: what was seen> |
+| A-2 | VSC-12, VSC-22 | open half: <confirmed (the session on the <plugin \| workspace> copy started the workspace <specialist>, VSC-22) \| refuted: what was seen; a plugin-copy session that started no specialist went back to P-01>; settled half (Q-copilot-agentcopy-01): either conductor copy may be the session agent; the copy used, <plugin \| workspace \| both: which steps used which>, from the `mode` of the chat session files (named in the `note` of VSC-02, and of each step whose session used the other copy) |
 | A-3 | VSC-01 | <confirmed \| refuted: what was seen> |
 | A-4 | VSC-28 | <confirmed (the hooks log shows the PreToolUse command of the workspace hook file) \| refuted: what was seen> |
 | A-5 | VSC-27 | refuted, accepted: VS Code <version> sends no `agent_type` on PreToolUse (probe: `agent_type: <present \| absent>`); known limitation of D-052 (C002-IF-005 §5 step 6, stated in the install notes): the subagent guard hook does not stop a non-Architect subagent; the boundary on VS Code rests on the specialists' tool lists, the conductor's refusal and the sdd MCP server guard. Where the probe shows `present`, write "confirmed" instead |

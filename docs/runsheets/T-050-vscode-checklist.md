@@ -12,12 +12,22 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 > **The run of 2026-11-11 was a non-binding findings pass, not a record.** It ran on VS Code 1.145.2
 > and found defects D-051 … D-053 (`.sdd/002-multi-platform-targets/20-plan/revision-D051-D053-digest.md`).
 > This sheet is revised for them (C002-T-080). The clean run of T-050 starts from step 0 as a later
-> run, after C002-T-081 is done (on 2026-11-11 allowed: plan revision of 2026-11-11), in the fresh run folder
-> `C:\Sandbox\runs\t050d`, on the release candidate of C002-T-082; no part of the findings pass goes into its record.
+> run, after C002-T-081 is done (on 2026-11-11 allowed: plan revision of 2026-11-11), in a fresh run folder
+> (now `C:\Sandbox\runs\t050e`, below), on the release candidate of C002-T-082; no part of the findings pass goes into its record.
 > **The binding run of 2026-11-11 (22:38, `C:\Sandbox\runs\t050c`, candidate 54b83ff) stopped at VSC-14:** the
-> tools entry `askQuestions` did not grant VS Code's question tool (defect D-054). C002-T-082 adds
-> `vscode/askQuestions` and packs a new candidate; the run starts again from step 0 in `C:\Sandbox\runs\t050d`.
+> tools entry `askQuestions` did not grant VS Code's question tool (defect D-054). C002-T-082 added
+> `vscode/askQuestions` and packed the candidate e89dae8; the run was to start again from step 0 in `C:\Sandbox\runs\t050d`.
 > The stopped run wrote no record.
+> **The binding run of 2026-11-12 (01:10, `C:\Sandbox\runs\t050d`, candidate e89dae8) stopped at VSC-15 on a
+> test-design fault:** VSC-15 then had a plain-request form, and asked without `/architect:new` the conductor
+> ran `sdd change new` with the CLI defaults and asked no profile question (CHG-001 defect D-032, left to a
+> later change; P-01's answer to Q-t050-vsc15-01). Before it, VSC-01 (conductor half), VSC-02, VSC-03, VSC-04,
+> VSC-07, VSC-08, VSC-10, VSC-11, VSC-13 and VSC-14 passed. No record was written (step 10), and none of its
+> results carry over. Its remaining steps ran as a non-binding findings pass (06:00–06:25), which found that
+> `code chat -m sdd-conductor` can run the plugin copy of the conductor (finding F-P). C002-T-083 keeps VSC-15
+> in the prompt-file form only, across both conductor copies and the prompt file, and adds the conductor-copy
+> method below. **The run starts again from step 0 after C002-T-083 is done, on the same candidate e89dae8,
+> in the fresh run folder `C:\Sandbox\runs\t050e`** (no earlier package or toy repository in it).
 
 The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local** (method below). It stops after VSC-29 and hands you one batch, in this order: **VSC-30** (send `/architect:gate <NNN>`, choose Revise, type a short reason, then Approve), the **free-text half of VSC-20** (critic CR-157: with `chat.autoReply` false, during or after the VSC-30 rework, ask the conductor for one round, for example "ask me one question about the export scope", then type `Keep the CSV export out of v1` in the dialog's free-text field without selecting an option, and submit), **VSC-12** (type `/` in the chat input and read the list, type a bare `/init` and read which entry the list offers for it without sending it, then choose `/architect:doctor`) and the **slash-list half of VSC-01** on a twin: the conductor has unpacked a second package and made a second toy repository in VSC-01's pre-install state, opened in a separate VS Code profile `t050-twin` whose only plugin location is that second package; type `/` there and say what the list shows. Then the conductor runs VSC-31 and VSC-54, completes the record and runs the dry run. If an interview question needs a typed answer during the conductor's steps, it picks the recommended option, or calls you for that one turn. Where the steps below say "you", read "the executor", except the sign-off and `executed_by` (step 11 and Pass), which stay yours; the conductor records the sign-off under your standing waiver of 2026-10-19. This sheet's order overrides the checklist's run order (`vscode-copilot.md`, Run order) for VSC-01's slash-list half, VSC-12 and VSC-20; move their entries in the record to the position of their last half (VSC-20 passes only when both halves pass). `executed_by`: `"<your name>; conductor for P-01 (P-01 ran VSC-30, VSC-20 free-text half, VSC-12, VSC-01 slash list)"` (C002-IF-009 §4). The install in VSC-02 runs in the conductor's own shell, not through a chat agent.
 
@@ -55,9 +65,27 @@ code chat -r -m sdd-conductor -a <package folder>\prompts\<name>.prompt.md "Foll
   record which agent started it. VSC-23: when the conductor declines the tool calls, the default agent
   calls `#sdd-files-write_file` and `#sdd-shell-run_command`. VSC-27 and VSC-28 always run the
   default-agent probe after the conductor's refusal.
-- **VSC-15** edits the `tools` lists of `.github/agents/sdd-conductor.agent.md` and of
-  `<package folder>\prompts\new.prompt.md` (back it up first; a prompt file's `tools` override the
-  agent's), or sends a plain request without `-a`; it restores both afterwards.
+- **Conductor copy** (finding F-P; P-01's answer to Q-copilot-agentcopy-01, "Keep both, record
+  copy"). VS Code loads the conductor twice under the name `sdd-conductor`, the plugin copy
+  `<package folder>\agents\sdd-conductor.agent.md` and the workspace copy
+  `.github\agents\sdd-conductor.agent.md`, and `code chat -m sdd-conductor` may run either one, the
+  plugin copy included. For every conductor session, read the copy from the `mode` of its chat
+  session file (the path of the agent file it names), never guess it from the reply, and record it
+  as the checklist's Session agent rule says: in the `note` of VSC-02 when every conductor session
+  used the same copy, else also in the `note` of each step whose session used the other copy.
+  VSC-22 also records its session's copy and the specialist that session started (open half of
+  assumption A-2); a plugin-copy session that starts no specialist goes to P-01 before the run goes
+  on. VSC-15 and VSC-18 note the invocation form in their `note`: the prompt attached with `-a`
+  (this method) or the slash command typed by P-01.
+- **VSC-15** runs the checklist's Do in the prompt-file form only: back up the two package files
+  (`<package folder>\agents\sdd-conductor.agent.md` and `<package folder>\prompts\new.prompt.md`,
+  each to `<name>.t050-backup` beside it); remove `ask_user`, `askQuestions` and
+  `vscode/askQuestions` from the `tools` lists of the plugin conductor, the workspace conductor
+  `.github\agents\sdd-conductor.agent.md` and the prompt file (a prompt file's `tools` override the
+  agent's); reload the window; send the new prompt with `-a <package folder>\prompts\new.prompt.md`
+  and the title "Toy change"; then restore the workspace conductor with
+  `git checkout -- .github/agents/sdd-conductor.agent.md` and both package files from their backups,
+  and reload the window.
 
 ## Prerequisites
 
@@ -96,13 +124,20 @@ code chat -r -m sdd-conductor -a <package folder>\prompts\<name>.prompt.md "Foll
 - Node 22.22.3 first on PATH:
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
-  the release-candidate commit of C002-T-081 (<commit>; before: 9eb56c0 by revision D-047, b481e82 before that). The enforcement mode is **`sdd-mcp-server`**.
+  C002-T-082's release-candidate commit **e89dae8** (C002-T-083 changes no package input, so the
+  candidate stays; history: the candidate 54b83ff of the run stopped at VSC-14, 9eb56c0 by revision D-047, b481e82 before that). The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 25 VS Code chat sessions with `code chat` (defect D-050; about 13 before), or about 50
   if one repeat is needed; the conductor asks you before a 51st. They are billed in
   AI Credits to your Copilot plan, not to the prepaid API key, with no ledger entry. The Copilot CLI
   pool (7.70 of 30 USD before T-076) is not touched.
 
 ## Steps
+
+**Settings before step 0.** P-01's user settings file `%APPDATA%\Code\User\settings.json` has the
+hash `FF55715DE862` (as restored at 06:25 on 2026-11-12 after the stopped run; its backup file
+equalled it). Before step 0 the conductor checks that the file still has that hash (the first 12
+hex digits of its SHA-256, `(Get-FileHash "$env:APPDATA\Code\User\settings.json").Hash.Substring(0,12)`);
+if it differs, stop and ask P-01 before backing it up.
 
 0. Close VS Code and back up its user settings.
 
@@ -141,7 +176,7 @@ sdd host-version vscode
    backtick.
 
 ```powershell
-Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip -DestinationPath C:\Sandbox\runs\t050d\architect-copilot-0.1.0
+Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip -DestinationPath C:\Sandbox\runs\t050e\architect-copilot-0.1.0
 ```
 
 4. Build the toy repository and the two-folder workspace exactly as the checklist's "Scope of a run"
@@ -155,7 +190,7 @@ Expand-Archive C:\Sandbox\ClaudeCode\Architect\dist\architect-copilot-0.1.0.zip 
      from the root of `toy`:
 
 ```powershell
-sdd install copilot --package C:\Sandbox\runs\t050d\architect-copilot-0.1.0
+sdd install copilot --package C:\Sandbox\runs\t050e\architect-copilot-0.1.0
 ```
 
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
@@ -208,8 +243,9 @@ sdd install copilot --package C:\Sandbox\runs\t050d\architect-copilot-0.1.0
     F-7's naming are already replaced by the 1.145.2 behaviour the steps check) is recorded `failed`
     **and** becomes a spec defect.
 
-11. In the record's Notes, state: "Binding run of C002-T-050 after the non-binding findings pass of
-    2026-11-11, started <time>, after the stopped run of 2026-11-11 (VSC-14, D-054) and after C002-T-082 was done (<commit>)." Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
+11. In the record's Notes, state: "Binding run of C002-T-050, started <time>, after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design) and after C002-T-083 was done (<commit>)."
+    C002-T-050 fills `<commit>` before the run starts with C002-T-083's done commit (the commit that
+    records `sdd task set C002-T-083 --status done`). Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
     no `ERR-REL-003`, `ERR-REL-004`, `ERR-REL-009 … checklist` or `ERR-REL-010` line.
 
 ```powershell
