@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: in-progress
+status: done
 depends_on: [C002-T-077, C002-T-080, C002-T-081]
 implements: [C002-REQ-108, C002-REQ-211, C002-REQ-312, C002-REQ-318, C002-REQ-606, C002-REQ-612, C002-REQ-614, C002-REQ-617]
 satisfies_ac: [C002-AC-108.1, C002-AC-211.1, C002-AC-312.1, C002-AC-318.1, C002-AC-606.1, C002-AC-612.1, C002-AC-614.1, C002-AC-617.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-114, C002-TS-121, C002-TS-216, C002-TS-301, C002-TS-319, C
 components: [C002-COMP-002, C002-COMP-008, C002-COMP-009, C002-COMP-010, C002-COMP-011, C002-COMP-014, C002-COMP-016]
 risk_refs: [C002-RISK-022, C002-RISK-026, C002-RISK-036, C002-RISK-042]
 estimate: M
-report: { commit: null, completed_at: null, notes: "Steps 1-4 done: copilot.json AskUserQuestion -> ask_user, askQuestions, vscode/askQuestions; fixtures, tests, checklist VSC-15/VSC-18/F-5, record template VSC-18, run sheet t050d; case TOOLS-conductor; npm run check 10/10 PASS" }
+report: { commit: a63b6b1, completed_at: 2026-11-12, notes: "Candidate e89dae8 (tag v0.1.0 local). check 10/10, replays 0 differing x2 shells; c002-t082: TOOLS-conductor pass (list kept), ROUTE-auditor pass, INJ-19/INJ-21/TS-359 pass; 23 cases 0 acted upon; pool 13.14; dry run ERR-REL-003 only; report docs/releases/copilot/0.1.0/T-082-candidate-report.md" }
 ---
 
 # C002-T-082 — Fix for revision D-054: vscode/askQuestions in the Copilot question-tool mapping, new 0.1.0 candidate and a 4-row Copilot CLI retake
